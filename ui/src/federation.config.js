@@ -23,77 +23,77 @@ const {
 
 module.exports = withNativeFederation({
     shared: {
-        ...shareAll({
+        // ...shareAll({
+        //     singleton: true,
+        //     strictVersion: true,
+        //     requiredVersion: 'auto',
+        // }),
+        '@angular/animations': {
             singleton: true,
             strictVersion: true,
             requiredVersion: 'auto',
-        }),
-        // '@angular/animations': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/animations/browser': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/core': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/common': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/common/http': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/compiler': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/forms': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/platform-browser': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/platform-browser/animations': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/platform-browser-dynamic': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
-        // '@angular/router': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
+            eager: true,
+        },
+        '@angular/animations/browser': {
+            singleton: true,
+            strictVersion: true,
+            requiredVersion: 'auto',
+            eager: true,
+        },
+        '@angular/core': {
+            singleton: true,
+            strictVersion: true,
+            requiredVersion: 'auto',
+            eager: true,
+        },
+        '@angular/common': {
+            singleton: true,
+            strictVersion: true,
+            requiredVersion: 'auto',
+            eager: true,
+        },
+        '@angular/common/http': {
+            singleton: true,
+            strictVersion: true,
+            requiredVersion: 'auto',
+            eager: true,
+        },
+        '@angular/compiler': {
+            singleton: true,
+            strictVersion: true,
+            requiredVersion: 'auto',
+            eager: true,
+        },
+        '@angular/forms': {
+            singleton: true,
+            strictVersion: true,
+            requiredVersion: 'auto',
+            eager: true,
+        },
+        '@angular/platform-browser': {
+            singleton: true,
+            strictVersion: true,
+            requiredVersion: 'auto',
+            eager: true,
+        },
+        '@angular/platform-browser/animations': {
+            singleton: true,
+            strictVersion: true,
+            requiredVersion: 'auto',
+            eager: true,
+        },
+        '@angular/platform-browser-dynamic': {
+            singleton: true,
+            strictVersion: true,
+            requiredVersion: 'auto',
+            eager: true,
+        },
+        '@angular/router': {
+            singleton: true,
+            strictVersion: true,
+            requiredVersion: 'auto',
+            eager: true,
+        },
         // '@angular/cdk': {
         //   singleton: true,
         //   strictVersion: true,
@@ -292,18 +292,6 @@ module.exports = withNativeFederation({
         //   requiredVersion: 'auto',
         //   eager: true,
         // },
-        // '@streampipes/shared-ui': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   version: '0.0.1',
-        //   eager: true,
-        // },
-        '@streampipes/platform-services': {
-            singleton: true,
-            strictVersion: true,
-            version: '0.0.1',
-            eager: true,
-        },
         '@angular/core/primitives/signals': {
             singleton: true,
             strictVersion: true,
@@ -313,15 +301,15 @@ module.exports = withNativeFederation({
     },
 
     skip: [
-        pkg => {
-            return (
-                (!pkg.startsWith('@angular') &&
-                    !pkg.startsWith('@ngbracket') &&
-                    !pkg.startsWith('@streampipes')) ||
-                pkg.startsWith('@angular/platform-server') ||
-                pkg.startsWith('@ngbracket/ngx-layout/server')
-            );
-        },
+        // pkg => {
+        //     return (
+        //         (!pkg.startsWith('@angular') &&
+        //             !pkg.startsWith('@ngbracket') &&
+        //             !pkg.startsWith('@streampipes')) ||
+        //         pkg.startsWith('@angular/platform-server') ||
+        //         pkg.startsWith('@ngbracket/ngx-layout/server')
+        //     );
+        // },
         // Add further packages you don't need at runtime
     ],
 });

@@ -89,7 +89,6 @@ import * as $ from 'jquery';
         FormsModule,
         LoginModule,
         LoadingBarHttpClientModule,
-        HomeModule,
         InfoModule,
         NotificationModule,
         PipelineDetailsModule,
@@ -98,9 +97,6 @@ import * as $ from 'jquery';
         NgxEchartsModule.forRoot({
             echarts: () => import('echarts'),
         }),
-        {{#modulesActive}}
-        {{{ng5_moduleName}}},
-        {{/modulesActive}}
     ],
     providers: [
         AuthService,
