@@ -17,10 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import {
-    PipelineElementService,
-    SpDataStream,
-} from '@streampipes/platform-services';
+import { SpDataStream } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineElementUnion } from '../../editor/model/editor.model';
 
@@ -60,10 +57,7 @@ export class HelpComponent implements OnInit {
     @Input()
     pipelineElement: PipelineElementUnion;
 
-    constructor(
-        private pipelineElementService: PipelineElementService,
-        private dialogRef: DialogRef<HelpComponent>,
-    ) {
+    constructor(private dialogRef: DialogRef<HelpComponent>) {
         this.pollingActive = true;
     }
 
