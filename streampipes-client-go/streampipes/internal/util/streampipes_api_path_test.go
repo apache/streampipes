@@ -17,37 +17,94 @@
 
 package util
 
-import (
-	"github.com/stretchr/testify/assert"
-	"testing"
-)
+import "testing"
+
+func equal(x, y []string) bool {
+	if len(x) != len(y) {
+		return false
+	}
+	for i := range x {
+		if x[i] != y[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func TestEqual(t *testing.T) {
+	t.Run("equal slices", func(t *testing.T) {
+		x := []string{"a", "b", "c"}
+		y := []string{"a", "b", "c"}
+		if !equal(x, y) {
+			t.Errorf("expected equal(%v, %v) to return true, got false", x, y)
+		}
+	})
+
+	t.Run("different lengths", func(t *testing.T) {
+		x := []string{"a", "b", "c"}
+		y := []string{"a", "b"}
+		if equal(x, y) {
+			t.Errorf("expected equal(%v, %v) to return false, got true", x, y)
+		}
+	})
+
+	t.Run("different elements", func(t *testing.T) {
+		x := []string{"a", "b", "c"}
+		y := []string{"a", "b", "d"}
+		if equal(x, y) {
+			t.Errorf("expected equal(%v, %v) to return false, got true", x, y)
+		}
+	})
+
+	t.Run("empty slices", func(t *testing.T) {
+		x := []string{}
+		y := []string{}
+		if !equal(x, y) {
+			t.Errorf("expected equal(%v, %v) to return true, got false", x, y)
+		}
+	})
+}
 
 func TestNewStreamPipesApiPath(t *testing.T) {
 	initialItems := []string{"test"}
 	path := NewStreamPipesApiPath(initialItems)
-	assert.NotNil(t, path)
-	assert.Equal(t, initialItems, path.pathItems)
+	if path == nil {
+		t.Error("expected non-nil path")
+	}
+	if !equal(initialItems, path.pathItems) {
+		t.Errorf("expected path items %v, got %v", initialItems, path.pathItems)
+	}
 }
 
 func TestFromStreamPipesBasePath(t *testing.T) {
 	path := NewStreamPipesApiPath([]string{"test"})
 	path = path.FromStreamPipesBasePath()
-	assert.Equal(t, []string{"test", "streampipes-backend"}, path.pathItems)
+	expected := []string{"test", "streampipes-backend"}
+	if !equal(expected, path.pathItems) {
+		t.Errorf("expected path items %v, got %v", expected, path.pathItems)
+	}
 }
 
 func TestAddToPath(t *testing.T) {
 	path := NewStreamPipesApiPath([]string{"test"})
 	subPaths := []string{"sub1", "sub2"}
 	path = path.AddToPath(subPaths)
-	assert.Equal(t, []string{"test", "sub1", "sub2"}, path.pathItems)
+	expected := []string{"test", "sub1", "sub2"}
+	if !equal(expected, path.pathItems) {
+		t.Errorf("expected path items %v, got %v", expected, path.pathItems)
+	}
 }
 
 func TestString(t *testing.T) {
 	path := NewStreamPipesApiPath([]string{"test"})
 	str := path.String()
-	assert.Equal(t, "test", str)
+	if str != "test" {
+		t.Errorf("expected string %s, got %s", "test", str)
+	}
 
 	path = path.AddToPath([]string{"sub1", "sub2"})
 	str = path.String()
-	assert.Equal(t, "test/sub1/sub2", str)
+	if str != "test/sub1/sub2" {
+		t.Errorf("expected string %s, got %s", "test/sub1/sub2", str)
+	}
 }
