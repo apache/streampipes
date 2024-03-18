@@ -105,7 +105,7 @@ export interface FieldProvider {
 }
 
 export interface AxisConfig {
-    axisScaleMode: boolean;
+    autoScaleActive: boolean;
     axisMin: number;
     axisMax: number;
 }

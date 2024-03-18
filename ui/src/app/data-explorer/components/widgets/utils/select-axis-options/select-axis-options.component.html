@@ -18,14 +18,14 @@
 
 <div class="mb-10" fxLayout="column">
     <mat-checkbox
-        [(ngModel)]="axisConfig.axisScaleMode"
+        [(ngModel)]="axisConfig.autoScaleActive"
         (change)="viewRefreshEmitter.emit()"
         >Auto-scale {{ title }}
     </mat-checkbox>
     <div
         fxFlex
         fxLayoutAlign="start center"
-        *ngIf="!axisConfig.axisScaleMode"
+        *ngIf="!axisConfig.autoScaleActive"
         class="ml-10 mb-10"
     >
         <small>Min</small>
@@ -42,7 +42,7 @@
     <div
         fxFlex
         fxLayoutAlign="start center"
-        *ngIf="!axisConfig.axisScaleMode"
+        *ngIf="!axisConfig.autoScaleActive"
         class="ml-10 mb-10"
     >
         <small>Max</small>

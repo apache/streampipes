@@ -147,12 +147,12 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
             );
         config.showSpike ??= true;
         config.leftAxis ??= {
-            axisScaleMode: true,
+            autoScaleActive: true,
             axisMin: 0,
             axisMax: 100,
         };
         config.rightAxis ??= {
-            axisScaleMode: true,
+            autoScaleActive: true,
             axisMin: 0,
             axisMax: 100,
         };

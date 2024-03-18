@@ -249,8 +249,8 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             yAxisOptions.push({
                 type: 'value',
                 position: axis as CartesianAxisPosition,
-                min: settings.axisScaleMode ? undefined : settings.axisMin,
-                max: settings.axisScaleMode ? undefined : settings.axisMax,
+                min: settings.autoScaleActive ? undefined : settings.axisMin,
+                max: settings.autoScaleActive ? undefined : settings.axisMax,
             });
             axisIndex++;
         });
