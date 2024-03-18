@@ -57,8 +57,8 @@ func TestEqual(t *testing.T) {
 	})
 
 	t.Run("empty slices", func(t *testing.T) {
-		x := []string{}
-		y := []string{}
+		var x []string
+		var y []string
 		if !equal(x, y) {
 			t.Errorf("expected equal(%v, %v) to return true, got false", x, y)
 		}
