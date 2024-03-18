@@ -127,7 +127,6 @@ export class EchartsDatasetGeneratorService<T extends DataExplorerWidgetModel> {
     ): number {
         return (
             currentDatasetIndex +
-            1 + // raw dataset for each query result
             preparedDataset.initialTransformDatasets.length +
             preparedDataset.groupedDatasets.length +
             1

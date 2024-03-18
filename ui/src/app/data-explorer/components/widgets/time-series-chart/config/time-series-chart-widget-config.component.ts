@@ -79,7 +79,7 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
 
         const lenBefore = Object.keys(currentAxis).length;
 
-        numericPlusBooleanFields.map((field, index) => {
+        numericPlusBooleanFields.forEach((field, index) => {
             const name = field.fullDbName + field.sourceIndex;
             if (!(name in currentColors)) {
                 currentColors[name] = this.presetColors[lenBefore + index];
@@ -146,6 +146,16 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
                 },
             );
         config.showSpike ??= true;
+        config.leftAxis ??= {
+            autoScaleActive: true,
+            axisMin: 0,
+            axisMax: 100,
+        };
+        config.rightAxis ??= {
+            autoScaleActive: true,
+            axisMin: 0,
+            axisMax: 100,
+        };
     }
 
     private getConfigOrDefault(

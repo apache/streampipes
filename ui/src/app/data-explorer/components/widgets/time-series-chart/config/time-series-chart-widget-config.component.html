@@ -34,6 +34,26 @@
     >
     </sp-select-color-properties>
 
+    <sp-configuration-box title="Axes" marginTop="5px">
+        <sp-select-axis-options
+            (viewRefreshEmitter)="triggerViewRefresh()"
+            title="left axis"
+            [axisConfig]="
+                currentlyConfiguredWidget.visualizationConfig.leftAxis
+            "
+        >
+        </sp-select-axis-options>
+
+        <sp-select-axis-options
+            (viewRefreshEmitter)="triggerViewRefresh()"
+            title="right axis"
+            [axisConfig]="
+                currentlyConfiguredWidget.visualizationConfig.rightAxis
+            "
+        >
+        </sp-select-axis-options>
+    </sp-configuration-box>
+
     <sp-configuration-box title="Tooltip">
         <mat-checkbox
             [(ngModel)]="
