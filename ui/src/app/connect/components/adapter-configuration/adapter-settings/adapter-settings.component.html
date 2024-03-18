@@ -41,6 +41,7 @@
                             <mat-select
                                 (selectionChange)="loadTemplate($event)"
                                 [(value)]="selectedTemplate"
+                                data-cy="connect-use-template"
                             >
                                 <mat-option>--</mat-option>
                                 <mat-option
@@ -69,6 +70,7 @@
             mat-raised-button
             style="margin-right: 10px"
             (click)="removeSelection()"
+            data-cy="connect-new-adapter-cancel"
         >
             Cancel
         </button>
@@ -76,6 +78,7 @@
             mat-button
             mat-raised-button
             class="mat-basic"
+            data-cy="store-config-as-template"
             (click)="openTemplateDialog()"
         >
             Store config as template
