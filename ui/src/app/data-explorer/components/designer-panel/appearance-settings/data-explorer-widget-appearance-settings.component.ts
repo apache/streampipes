@@ -16,17 +16,22 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { WidgetBaseAppearanceConfig } from '../../../models/dataview-dashboard.model';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
+import { DataExplorerWidgetModel } from '@streampipes/platform-services';
+import { WidgetTypeService } from '../../../services/widget-type.service';
+import { DataExplorerWidgetRegistry } from '../../../registry/data-explorer-widget-registry';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'sp-data-explorer-widget-appearance-settings',
     templateUrl: './data-explorer-widget-appearance-settings.component.html',
     styleUrls: ['./data-explorer-widget-appearance-settings.component.scss'],
 })
-export class DataExplorerWidgetAppearanceSettingsComponent implements OnInit {
-    @Input() baseAppearanceConfig: WidgetBaseAppearanceConfig;
+export class DataExplorerWidgetAppearanceSettingsComponent
+    implements OnInit, OnDestroy
+{
+    @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
     @Input() widgetId: string;
 
     presetColors: string[] = [
@@ -39,17 +44,37 @@ export class DataExplorerWidgetAppearanceSettingsComponent implements OnInit {
         '#000000',
     ];
 
+    widgetTypeSubscription: Subscription;
+    extendedAppearanceConfigComponent: any;
+
     constructor(
+        private widgetTypeService: WidgetTypeService,
+        private widgetRegistryService: DataExplorerWidgetRegistry,
         private widgetConfigurationService: WidgetConfigurationService,
     ) {}
 
     ngOnInit(): void {
-        if (!this.baseAppearanceConfig.backgroundColor) {
-            this.baseAppearanceConfig.backgroundColor = '#FFFFFF';
+        this.findWidget(this.currentlyConfiguredWidget.widgetType);
+        this.widgetTypeSubscription =
+            this.widgetTypeService.widgetTypeChangeSubject.subscribe(() => {
+                this.findWidget(this.currentlyConfiguredWidget.widgetType);
+            });
+        if (
+            !this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor
+        ) {
+            this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor =
+                '#FFFFFF';
         }
-        if (!this.baseAppearanceConfig.textColor) {
-            this.baseAppearanceConfig.textColor = '#3e3e3e';
+        if (!this.currentlyConfiguredWidget.baseAppearanceConfig.textColor) {
+            this.currentlyConfiguredWidget.baseAppearanceConfig.textColor =
+                '#3e3e3e';
         }
+    }
+
+    findWidget(widgetType: string): void {
+        const widget = this.widgetRegistryService.getWidgetTemplate(widgetType);
+        this.extendedAppearanceConfigComponent =
+            widget.widgetAppearanceConfigurationComponent;
     }
 
     triggerViewUpdate() {
@@ -58,5 +83,9 @@ export class DataExplorerWidgetAppearanceSettingsComponent implements OnInit {
             refreshView: true,
             refreshData: false,
         });
+    }
+
+    ngOnDestroy() {
+        this.widgetTypeSubscription?.unsubscribe();
     }
 }

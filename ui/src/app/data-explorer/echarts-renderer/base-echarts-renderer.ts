@@ -16,7 +16,10 @@
  *
  */
 
-import { SpEchartsRenderer } from '../models/dataview-dashboard.model';
+import {
+    SpEchartsRenderer,
+    WidgetEchartsAppearanceConfig,
+} from '../models/dataview-dashboard.model';
 import {
     DataExplorerWidgetModel,
     SpQueryResult,
@@ -61,6 +64,7 @@ export abstract class SpBaseEchartsRenderer<T extends DataExplorerWidgetModel>
         widgetSize: WidgetSize,
     ): EChartsOption {
         const options = this.basicOptionsGeneratorService.makeBaseConfig(
+            widgetConfig.baseAppearanceConfig as WidgetEchartsAppearanceConfig,
             this.getAdditionalToolboxItems(),
         );
         const datasets = this.datasetGeneratorService.toDataset(
