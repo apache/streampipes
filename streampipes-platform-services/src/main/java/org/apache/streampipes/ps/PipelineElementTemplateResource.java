@@ -201,7 +201,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
 
       @Parameter(description = "Overwrite the name and description of the pipeline element with"
           + "the labels given in the pipeline element template")
-      @RequestParam("overwriteNames") String overwriteNameAndDescription,
+      @RequestParam(value = "overwriteNames", defaultValue = "false", required = false) String overwriteNameAndDescription,
 
       @RequestBody(description = "The data processor invocation that should be configured with the template contents",
                    content = @Content(schema = @Schema(implementation = DataProcessorInvocation.class)))
@@ -231,7 +231,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
 
       @Parameter(description = "Overwrite the name and description of the pipeline element"
           + "with the labels given in the pipeline element template")
-      @RequestParam("overwriteNames") String overwriteNameAndDescription,
+      @RequestParam(value = "overwriteNames", defaultValue = "false", required = false) String overwriteNameAndDescription,
 
       @RequestBody(description = "The adapter that should be configured with the template contents",
                    content = @Content(schema = @Schema(implementation = AdapterDescription.class)))
