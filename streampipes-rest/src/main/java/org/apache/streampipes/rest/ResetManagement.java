@@ -85,6 +85,8 @@ public class ResetManagement {
 
     removeAllAssets(username);
 
+    removeAllPipelineTemplates();
+
     logger.info("Resetting the system was completed");
   }
 
@@ -191,5 +193,17 @@ public class ResetManagement {
     } catch (IOException e) {
       throw new SpRuntimeException("Could not delete assets of user %s".formatted(username));
     }
+  }
+
+  private static void removeAllPipelineTemplates() {
+    var pipelineElementTemplateStorage = StorageDispatcher
+        .INSTANCE
+        .getNoSqlStore()
+        .getPipelineElementTemplateStorage();
+
+    pipelineElementTemplateStorage
+        .getAll()
+        .forEach(pipelineElementTemplateStorage::deleteElement);
+
   }
 }
