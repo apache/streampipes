@@ -73,8 +73,10 @@ export class DataExplorerWidgetAppearanceSettingsComponent
 
     findWidget(widgetType: string): void {
         const widget = this.widgetRegistryService.getWidgetTemplate(widgetType);
-        this.extendedAppearanceConfigComponent =
-            widget.widgetAppearanceConfigurationComponent;
+        if (widget) {
+            this.extendedAppearanceConfigComponent =
+                widget.widgetAppearanceConfigurationComponent;
+        }
     }
 
     triggerViewUpdate() {
