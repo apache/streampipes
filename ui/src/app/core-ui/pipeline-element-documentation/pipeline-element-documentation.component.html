@@ -20,6 +20,7 @@
     [data]="documentationMarkdown"
     *ngIf="documentationMarkdown && !error"
     [ngClass]="useStyling ? 'note' : ''"
+    data-cy="pipeline-element-documentation-markdown"
 ></markdown>
 <p *ngIf="error" [ngClass]="useStyling ? 'note' : ''">
     (no documentation available)

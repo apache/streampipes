@@ -35,9 +35,9 @@ export class PipelineUtils {
         cy.visit('#/pipelines');
     }
 
-    private static goToPipelineEditor() {
+    public static goToPipelineEditor() {
         // Go to StreamPipes editor
-        cy.visit('#/pipelines');
+        this.goToPipelines();
         cy.dataCy('pipelines-navigate-to-editor').click();
     }
 
