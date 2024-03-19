@@ -89,6 +89,7 @@ import { SpConfigurationBoxComponent } from './components/widgets/utils/layout/c
 import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/visualization-config-outer/visualization-config-outer.component';
 import { SpSelectAxisOptionsComponent } from './components/widgets/utils/select-axis-options/select-axis-options.component';
 import { SpTimeseriesItemConfigComponent } from './components/widgets/utils/select-color-properties/time-series-item-config/time-series-item-config.component';
+import { SpEchartsWidgetAppearanceConfigComponent } from './components/widgets/utils/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
 
 @NgModule({
     imports: [
@@ -186,6 +187,7 @@ import { SpTimeseriesItemConfigComponent } from './components/widgets/utils/sele
         SpVisualizationConfigOuterComponent,
         SpSelectAxisOptionsComponent,
         SpTimeseriesItemConfigComponent,
+        SpEchartsWidgetAppearanceConfigComponent,
     ],
     providers: [SemanticTypeUtilsService],
     exports: [],

@@ -44,8 +44,7 @@ export class SelectColorPropertiesComponent implements OnInit {
         }
     }
 
-    triggerSelectedProperties(selectedProperties: DataExplorerField[]) {
-        this.selectedProperties = selectedProperties;
+    triggerSelectedProperties() {
         this.changeSelectedProperties.emit(this.selectedProperties);
     }
 
@@ -59,7 +58,7 @@ export class SelectColorPropertiesComponent implements OnInit {
 
     selectFields(selected: boolean) {
         this.selectedProperties = selected ? this.availableProperties : [];
-        this.triggerSelectedProperties(this.selectedProperties);
+        this.triggerSelectedProperties();
     }
 
     triggerViewRefresh() {
@@ -69,4 +68,6 @@ export class SelectColorPropertiesComponent implements OnInit {
             refreshView: true,
         });
     }
+
+    protected readonly removeEventListener = removeEventListener;
 }

@@ -20,26 +20,35 @@ import { Injectable } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { SpEchartsToolboxService } from '@streampipes/shared-ui';
 import { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager';
+import { WidgetEchartsAppearanceConfig } from '../models/dataview-dashboard.model';
 
 @Injectable({ providedIn: 'root' })
 export class EchartsBasicOptionsGeneratorService {
     constructor(private echartsToolboxService: SpEchartsToolboxService) {}
 
     makeBaseConfig(
+        appearanceConfig: WidgetEchartsAppearanceConfig,
         additionalToolboxItems: Record<string, ToolboxFeatureOption> = {},
     ): EChartsOption {
+        appearanceConfig.chartAppearance ??= {
+            showToolbox: true,
+            showLegend: true,
+            showTooltip: true,
+        };
+
         return {
             legend: {
                 type: 'scroll',
                 orient: 'horizontal',
                 top: 30,
+                show: appearanceConfig.chartAppearance.showLegend,
             },
             tooltip: {
-                show: true,
+                show: appearanceConfig.chartAppearance.showTooltip,
             },
             toolbox: {
                 left: 10,
-                show: true,
+                show: appearanceConfig.chartAppearance.showToolbox,
                 feature: {
                     ...this.echartsToolboxService.getAllToolboxItems(),
                     ...additionalToolboxItems,

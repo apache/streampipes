@@ -41,7 +41,7 @@ export abstract class BaseWidgetConfig<
         T extends DataExplorerWidgetModel,
         V extends DataExplorerVisConfig,
     >
-    implements OnInit, OnChanges, OnDestroy
+    implements OnInit, OnDestroy
 {
     @Input() currentlyConfiguredWidget: T;
 
@@ -61,18 +61,13 @@ export abstract class BaseWidgetConfig<
             this.widgetConfigurationService.configurationChangedSubject.subscribe(
                 res => {
                     if (res.widgetId === this.currentlyConfiguredWidget._id) {
-                        this.makeFields();
-                        this.checkAndInitialize();
+                        if (res.refreshData) {
+                            this.makeFields();
+                            this.checkAndInitialize();
+                        }
                     }
                 },
             );
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        this.makeFields();
-        if (changes.currentlyConfiguredWidget) {
-            this.checkAndInitialize();
-        }
     }
 
     checkAndInitialize() {

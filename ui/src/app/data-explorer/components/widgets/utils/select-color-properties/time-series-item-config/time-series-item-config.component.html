@@ -103,7 +103,9 @@
                             ]
                         "
                         matInput
-                        (input)="onFilterChange($event.target.value, field)"
+                        (input)="
+                            onDisplayNameChange($event.target.value, field)
+                        "
                     />
                 </mat-form-field>
             </div>
