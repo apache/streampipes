@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { TimeSeriesChartWidgetModel } from '../../../time-series-chart/model/time-series-chart-widget.model';
 
@@ -39,9 +39,7 @@ export class SpTimeseriesItemConfigComponent {
     viewRefreshEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     @Output()
-    configChangeEmitter: EventEmitter<DataExplorerField[]> = new EventEmitter<
-        DataExplorerField[]
-    >();
+    configChangeEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     presetColors: string[] = [
         '#39B54A',
@@ -57,17 +55,16 @@ export class SpTimeseriesItemConfigComponent {
 
     toggleFieldSelection(field: DataExplorerField) {
         if (this.isSelected(field)) {
-            this.selectedProperties = this.selectedProperties.filter(
+            const index = this.selectedProperties.findIndex(
                 sp =>
-                    !(
-                        sp.fullDbName === field.fullDbName &&
-                        sp.sourceIndex === field.sourceIndex
-                    ),
+                    sp.fullDbName === field.fullDbName &&
+                    sp.sourceIndex === field.sourceIndex,
             );
+            this.selectedProperties.splice(index, 1);
         } else {
             this.selectedProperties.push(field);
         }
-        this.configChangeEmitter.emit(this.selectedProperties);
+        this.configChangeEmitter.emit();
     }
 
     isSelected(field: DataExplorerField): boolean {
@@ -84,7 +81,7 @@ export class SpTimeseriesItemConfigComponent {
         this.expanded = !this.expanded;
     }
 
-    onFilterChange(searchValue: string, field: DataExplorerField): void {
+    onDisplayNameChange(searchValue: string, field: DataExplorerField): void {
         this.currentlyConfiguredWidget.visualizationConfig.displayName[
             field.fullDbName + field.sourceIndex.toString()
         ] = searchValue;
