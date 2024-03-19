@@ -19,6 +19,7 @@
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { StaticPropertyUtils } from '../../support/utils/StaticPropertyUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
+import { PipelineElementTemplateUtils } from '../../support/utils/PipelineElementTemplateUtils';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -28,7 +29,7 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.goToNewAdapterPage();
     });
 
-    it('Successfully edit adapter', () => {
+    it('Create and use configuration templates for adapters', () => {
         const WAIT_TIME_MS = 'wait-time-ms';
         const SIMULATOR_OPTION_PRESSURE = 'simulator-option-pressure';
         const TEMPLATE_NAME = 'Test Template';
@@ -44,19 +45,16 @@ describe('Test Edit Adapter', () => {
         StaticPropertyUtils.input(adapterTemplateInput.adapterConfiguration);
 
         // store adapter template
-        cy.dataCy('connect-use-template').should('not.exist');
-        cy.dataCy('store-config-as-template').click();
-        cy.dataCy('template-name').type(TEMPLATE_NAME);
-        cy.dataCy('template-description').type('Test Description');
-        cy.dataCy('create-template').click();
+        PipelineElementTemplateUtils.addTemplate(TEMPLATE_NAME);
+
         cy.dataCy('connect-new-adapter-cancel').click();
 
         // Reload template configuration
         ConnectUtils.goToNewAdapterPage();
         ConnectUtils.selectAdapter(adapterTemplateInput.adapterType);
-        cy.dataCy('connect-use-template').should('exist');
-        cy.dataCy('connect-use-template').click({ force: true });
-        cy.get('mat-option').contains('Test Template').click();
+
+        // Select template
+        PipelineElementTemplateUtils.selectTemplate(TEMPLATE_NAME);
 
         // validate that the template values are selected
         cy.dataCy(WAIT_TIME_MS).should('have.value', '3000');
@@ -66,9 +64,6 @@ describe('Test Edit Adapter', () => {
         );
 
         // Delete the template
-        cy.dataCy('store-config-as-template').click();
-        cy.dataCy('delete-pipeline-element-template').should('have.length', 1);
-        cy.dataCy('delete-pipeline-element-template').click();
-        cy.dataCy('delete-pipeline-element-template').should('have.length', 0);
+        PipelineElementTemplateUtils.deleteTemplate();
     });
 });
