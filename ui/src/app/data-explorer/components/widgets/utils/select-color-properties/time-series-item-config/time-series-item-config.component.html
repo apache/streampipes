@@ -23,13 +23,14 @@
             [checked]="isSelected(field)"
             (change)="toggleFieldSelection(field)"
         >
-            <b>{{ field.runtimeName }}</b>
-            {{
-                '(' +
+            <b>{{ field.runtimeName }}</b
+            ><br />
+            <small>
+                {{
                     (field.aggregation ? field.aggregation + ', ' : '') +
-                    field.measure +
-                    ')'
-            }}
+                        field.measure
+                }}</small
+            >
         </mat-checkbox>
         <span fxFlex></span>
         <span
@@ -130,16 +131,13 @@
                         "
                         (selectionChange)="viewRefreshEmitter.emit()"
                     >
+                        <mat-option [value]="'bar'">Bar</mat-option>
                         <mat-option [value]="'lines'">Line</mat-option>
                         <mat-option [value]="'normal_markers'"
                             >Scatter
                         </mat-option>
                         <mat-option [value]="'lines+markers'"
                             >Scattered Line
-                        </mat-option>
-                        <mat-option [value]="'bar'">Bar</mat-option>
-                        <mat-option [value]="'symbol_markers'"
-                            >Symbol
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
