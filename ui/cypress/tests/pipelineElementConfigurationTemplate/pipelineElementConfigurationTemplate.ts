@@ -73,7 +73,8 @@ describe('Test Edit Adapter', () => {
             'have.class',
             'mat-mdc-radio-checked',
         );
-        cy.dataCy('number-mapping').contains('temperature');
+        // Mapping properties can not be stored in templates, therefore the default value is required
+        cy.dataCy('number-mapping').contains('density');
 
         // delete template
         PipelineElementTemplateUtils.deleteTemplate();
