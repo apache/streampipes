@@ -19,6 +19,7 @@
 import { PipelineInput } from '../model/PipelineInput';
 import { StaticPropertyUtils } from './StaticPropertyUtils';
 import { OutputStrategyUtils } from './OutputStrategyUtils';
+import { PipelineElementInput } from '../model/PipelineElementInput';
 
 export class PipelineUtils {
     public static addPipeline(pipelineInput: PipelineInput) {
@@ -50,22 +51,37 @@ export class PipelineUtils {
         cy.dataCy(pipelineInput.dataSource, { timeout: 10000 }).click();
     }
 
-    private static configurePipeline(pipelineInput: PipelineInput) {
-        // Open possible elements menu
-        cy.dataCy('sp-possible-elements-' + pipelineInput.dataSource, {
+    public static openPossibleElementsMenu(dataSourceName: string) {
+        cy.dataCy('sp-possible-elements-' + dataSourceName, {
             timeout: 10000,
         }).click();
+    }
+
+    public static selectCompatibleElement(elementName: string) {
+        cy.dataCy('sp-compatible-elements-' + elementName).click();
+    }
+
+    public static configureProcessingElement(
+        processingElement: PipelineElementInput,
+    ) {
+        this.selectCompatibleElement(processingElement.name);
+        StaticPropertyUtils.input(processingElement.config);
+        OutputStrategyUtils.input(processingElement.output);
+    }
+
+    private static savePipelineElementConfiguration() {
+        cy.dataCy('sp-element-configuration-save').click();
+    }
+
+    private static configurePipeline(pipelineInput: PipelineInput) {
+        this.openPossibleElementsMenu(pipelineInput.dataSource);
 
         // Select processor
         if (pipelineInput.processingElement) {
-            cy.dataCy(
-                'sp-compatible-elements-' +
-                    pipelineInput.processingElement.name,
-            ).click();
-            StaticPropertyUtils.input(pipelineInput.processingElement.config);
-            OutputStrategyUtils.input(pipelineInput.processingElement.output);
-            // Save configuration
-            cy.dataCy('sp-element-configuration-save').click();
+            this.configureProcessingElement(pipelineInput.processingElement);
+
+            this.savePipelineElementConfiguration();
+
             // Select sink
             cy.dataCy(
                 'sp-possible-elements-' + pipelineInput.processingElement.name,
