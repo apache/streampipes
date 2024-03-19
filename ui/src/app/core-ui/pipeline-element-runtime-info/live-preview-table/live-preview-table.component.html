@@ -1,36 +1,34 @@
 <div data-cy="sp-connect-adapter-success-live-preview">
     <p>Here is a preview of your data:</p>
-    <table class="dataTable row-border hover">
-        <thead>
-            <tr>
-                <th>Runtime Name</th>
-                <th>Value</th>
-            </tr>
-        </thead>
-        <tbody id="preview-data-rows-id">
-            <tr
-                *ngFor="let property of eventSchema.eventProperties"
-                class="preview-row"
-            >
-                <td>{{ property.runtimeName }}</td>
-                <td *ngIf="isImage(property)">
+    <table mat-table [dataSource]="runtimeData">
+        <ng-container matColumnDef="runtimeName">
+            <th mat-header-cell *matHeaderCellDef>
+                <strong>Runtime Name</strong>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                {{ element.runtimeName }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="value">
+            <th mat-header-cell *matHeaderCellDef><strong>Value</strong></th>
+            <td mat-cell *matCellDef="let element">
+                <ng-container *ngIf="isImage(element.runtimeName)">
                     <img
-                        src="data:image/png;base64,{{
-                            runtimeData[property.runtimeName]
-                        }}"
+                        src="data:image/png;base64,{{ element.value }}"
                         style="max-width: 150px"
                     />
-                </td>
-                <td *ngIf="isTimestamp(property)">
-                    {{
-                        runtimeData[property.runtimeName]
-                            | date: 'yyyy-MM-dd HH:mm:ss '
-                    }}
-                </td>
-                <td *ngIf="hasNoDomainProperty(property)">
-                    {{ runtimeData[property.runtimeName] }}
-                </td>
-            </tr>
-        </tbody>
+                </ng-container>
+                <ng-container *ngIf="isTimestamp(element.runtimeName)">
+                    {{ element.value | date: 'yyyy-MM-dd HH:mm:ss ' }}
+                </ng-container>
+                <ng-container *ngIf="hasNoDomainProperty(element.runtimeName)">
+                    {{ element.value }}
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 </div>

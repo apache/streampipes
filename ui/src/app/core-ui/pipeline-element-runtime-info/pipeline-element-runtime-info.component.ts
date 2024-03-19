@@ -31,7 +31,7 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
 
     _pollingActive: boolean;
 
-    runtimeData: Record<string, any>;
+    runtimeData: { runtimeName: string; value: any }[];
     timer: any;
     runtimeDataError = false;
 
@@ -52,7 +52,10 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
             .getRuntimeInfo(this.streamDescription)
             .subscribe(data => {
                 this.runtimeDataError = !data;
-                this.runtimeData = data;
+
+                this.runtimeData = Object.entries(data).map(
+                    ([runtimeName, value]) => ({ runtimeName, value }),
+                );
 
                 this.timer = setTimeout(
                     () => this.getLatestRuntimeInfo(),

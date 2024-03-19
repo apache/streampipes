@@ -1,8 +1,5 @@
 import { Component, Input } from '@angular/core';
-import {
-    EventPropertyUnion,
-    EventSchema,
-} from '@streampipes/platform-services';
+import { EventSchema } from '@streampipes/platform-services';
 import { SemanticTypeUtilsService } from '../../../core-services/semantic-type/semantic-type-utils.service';
 
 @Component({
@@ -15,19 +12,29 @@ export class LivePreviewTableComponent {
     eventSchema: EventSchema;
 
     @Input()
-    runtimeData: Record<string, any>;
+    runtimeData: { runtimeName: string; value: any }[];
+
+    displayedColumns: string[] = ['runtimeName', 'value'];
 
     constructor(private semanticTypeUtilsService: SemanticTypeUtilsService) {}
 
-    isImage(property: EventPropertyUnion) {
+    isImage(runtimeName: string) {
+        const property = this.getProperty(runtimeName);
         return this.semanticTypeUtilsService.isImage(property);
     }
 
-    isTimestamp(property: EventPropertyUnion) {
+    isTimestamp(runtimeName: string) {
+        const property = this.getProperty(runtimeName);
         return this.semanticTypeUtilsService.isTimestamp(property);
     }
 
-    hasNoDomainProperty(property: EventPropertyUnion) {
-        return !(this.isTimestamp(property) || this.isImage(property));
+    hasNoDomainProperty(runtimeName: string) {
+        return !(this.isTimestamp(runtimeName) || this.isImage(runtimeName));
+    }
+
+    getProperty(runtimeName: string) {
+        return this.eventSchema.eventProperties.find(
+            property => property.runtimeName === runtimeName,
+        );
     }
 }
