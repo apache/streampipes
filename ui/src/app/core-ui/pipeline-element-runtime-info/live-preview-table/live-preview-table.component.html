@@ -1,0 +1,36 @@
+<div data-cy="sp-connect-adapter-success-live-preview">
+    <p>Here is a preview of your data:</p>
+    <table class="dataTable row-border hover">
+        <thead>
+            <tr>
+                <th>Runtime Name</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody id="preview-data-rows-id">
+            <tr
+                *ngFor="let property of eventSchema.eventProperties"
+                class="preview-row"
+            >
+                <td>{{ property.runtimeName }}</td>
+                <td *ngIf="isImage(property)">
+                    <img
+                        src="data:image/png;base64,{{
+                            runtimeData[property.runtimeName]
+                        }}"
+                        style="max-width: 150px"
+                    />
+                </td>
+                <td *ngIf="isTimestamp(property)">
+                    {{
+                        runtimeData[property.runtimeName]
+                            | date: 'yyyy-MM-dd HH:mm:ss '
+                    }}
+                </td>
+                <td *ngIf="hasNoDomainProperty(property)">
+                    {{ runtimeData[property.runtimeName] }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

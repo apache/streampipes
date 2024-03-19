@@ -17,10 +17,7 @@
  */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-    EventPropertyUnion,
-    SpDataStream,
-} from '@streampipes/platform-services';
+import { SpDataStream } from '@streampipes/platform-services';
 import { RestService } from '../../connect/services/rest.service';
 
 @Component({
@@ -34,7 +31,7 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
 
     _pollingActive: boolean;
 
-    runtimeData: any;
+    runtimeData: Record<string, any>;
     timer: any;
     runtimeDataError = false;
 
@@ -54,50 +51,14 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
         this.restService
             .getRuntimeInfo(this.streamDescription)
             .subscribe(data => {
-                if (data) {
-                    this.runtimeDataError = false;
-                    if (
-                        !(
-                            Object.keys(data).length === 0 &&
-                            data.constructor === Object
-                        )
-                    ) {
-                        this.runtimeData = data;
-                    }
+                this.runtimeDataError = !data;
+                this.runtimeData = data;
 
-                    if (this._pollingActive) {
-                        this.timer = setTimeout(() => {
-                            this.getLatestRuntimeInfo();
-                        }, 1000);
-                    }
-                } else {
-                    this.runtimeDataError = true;
-                }
+                this.timer = setTimeout(
+                    () => this.getLatestRuntimeInfo(),
+                    1000,
+                );
             });
-    }
-
-    isPropertyType(property: EventPropertyUnion, type) {
-        return (
-            property.domainProperties !== undefined &&
-            property.domainProperties.length === 1 &&
-            property.domainProperties[0] === type
-        );
-    }
-
-    isImage(property) {
-        return this.isPropertyType(property, 'https://image.com');
-    }
-
-    isTimestamp(property) {
-        return this.isPropertyType(property, 'http://schema.org/DateTime');
-    }
-
-    hasNoDomainProperty(property) {
-        if (this.isTimestamp(property) || this.isImage(property)) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     @Input()

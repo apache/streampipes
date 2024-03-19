@@ -39,6 +39,10 @@ export class SemanticTypeUtilsService {
         return property.domainProperties.includes(this.TIMESTAMP);
     }
 
+    public isImage(property: EventProperty): boolean {
+        return property.domainProperties.includes(this.IMAGE);
+    }
+
     public is(property: EventProperty, uri: string): boolean {
         return property.domainProperties.includes(uri);
     }
