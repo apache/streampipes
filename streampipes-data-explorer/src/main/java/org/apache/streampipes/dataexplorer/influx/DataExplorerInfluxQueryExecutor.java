@@ -33,6 +33,7 @@ import org.influxdb.dto.QueryResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Query, QueryResult> {
 
@@ -96,7 +97,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   @Override
   protected QueryResult executeQuery(Query query) {
     try (final InfluxDB influxDB = InfluxClientProvider.getInfluxDBClient()) {
-      return influxDB.query(query);
+      return influxDB.query(query, TimeUnit.MILLISECONDS);
     }
   }
 
