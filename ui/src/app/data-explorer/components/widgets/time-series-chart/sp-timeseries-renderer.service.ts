@@ -246,10 +246,11 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         options: EChartsOption,
     ): void {
         Object.assign(options, {
-            dataZoom: {
-                type: config.baseAppearanceConfig.dataZoom?.type || 'inside',
-                disabled: !config.baseAppearanceConfig.dataZoom?.show,
-            },
+            dataZoom: config.baseAppearanceConfig.dataZoom?.show
+                ? {
+                      type: config.baseAppearanceConfig.dataZoom?.type,
+                  }
+                : [],
         });
     }
 
