@@ -21,13 +21,20 @@ import { EventSchema } from '@streampipes/platform-services';
 import { XsService } from '../../../NS/xs.service';
 
 @Component({
-    selector: 'sp-field-names',
-    templateUrl: './field-names.component.html',
-    styleUrls: ['./field-names.component.scss'],
+    selector: 'sp-field-names-table',
+    templateUrl: './field-names-table.component.html',
+    styleUrls: ['./field-names-table.component.scss'],
 })
-export class FieldNamesComponent {
+export class FieldNamesTableComponent {
     @Input()
     eventSchema: EventSchema;
+
+    displayedColumns: string[] = [
+        'label',
+        'description',
+        'runtimeName',
+        'runtimeType',
+    ];
 
     constructor(private xsService: XsService) {}
 

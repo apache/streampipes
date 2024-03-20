@@ -80,7 +80,7 @@ import { HelpComponent } from './help/help.component';
 import { PipelineElementRuntimeInfoComponent } from './pipeline-element-runtime-info/pipeline-element-runtime-info.component';
 import { PipelineElementDocumentationComponent } from './pipeline-element-documentation/pipeline-element-documentation.component';
 import { MarkdownModule } from 'ngx-markdown';
-import { FieldNamesComponent } from './help/help-field-names/field-names.component';
+import { FieldNamesTableComponent } from './help/field-names-table/field-names-table.component';
 
 @NgModule({
     imports: [
@@ -148,7 +148,7 @@ import { FieldNamesComponent } from './help/help-field-names/field-names.compone
         SpSimpleLogsComponent,
         SpSimpleMetricsComponent,
         StatusWidgetComponent,
-        FieldNamesComponent,
+        FieldNamesTableComponent,
     ],
     providers: [
         MatDatepickerModule,

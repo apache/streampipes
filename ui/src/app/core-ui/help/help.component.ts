@@ -27,31 +27,11 @@ import { PipelineElementUnion } from '../../editor/model/editor.model';
     styleUrls: ['./help.component.scss'],
 })
 export class HelpComponent implements OnInit {
-    selectedTab = 0;
     pollingActive: boolean;
+    selectedTabIndex = 0;
 
-    selectedIndex = 0;
-
-    availableTabs = [
-        {
-            title: 'Fields',
-            type: 'fields',
-            targets: ['set', 'stream'],
-        },
-        {
-            title: 'Values',
-            type: 'values',
-            targets: ['set', 'stream'],
-        },
-        {
-            title: 'Documentation',
-            type: 'documentation',
-            targets: ['set', 'stream', 'sepa', 'action'],
-        },
-    ];
-
-    tabs: any[] = [];
-    streamMode: boolean;
+    availableTabs = ['Fields', 'Values', 'Documentation'];
+    tabs: string[] = [];
 
     @Input()
     pipelineElement: PipelineElementUnion;
@@ -63,10 +43,9 @@ export class HelpComponent implements OnInit {
     ngOnInit() {
         if (this.pipelineElement instanceof SpDataStream) {
             this.tabs = this.availableTabs;
-            this.streamMode = true;
         } else {
             this.tabs.push(this.availableTabs[2]);
-            this.streamMode = false;
+            this.selectedTabIndex = 2;
         }
     }
 

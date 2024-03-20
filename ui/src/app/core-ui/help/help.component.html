@@ -25,24 +25,23 @@
 
         <mat-tab-group
             color="accent"
-            [selectedIndex]="selectedIndex"
-            (selectedIndexChange)="selectedIndex = $event"
+            [selectedIndex]="selectedTabIndex"
+            (selectedIndexChange)="selectedTabIndex = $event"
         >
-            <mat-tab *ngFor="let tab of tabs" label="{{ tab.title }}">
-            </mat-tab>
+            <mat-tab *ngFor="let tab of tabs" label="{{ tab }}"> </mat-tab>
         </mat-tab-group>
 
-        <sp-field-names
-            *ngIf="selectedIndex === 0 && streamMode"
+        <sp-field-names-table
+            *ngIf="selectedTabIndex === 0"
             [eventSchema]="pipelineElement.eventSchema"
-        ></sp-field-names>
+        ></sp-field-names-table>
         <sp-pipeline-element-runtime-info
-            *ngIf="selectedIndex === 1 && streamMode"
+            *ngIf="selectedTabIndex === 1"
             [streamDescription]="pipelineElement"
             [pollingActive]="pollingActive"
         ></sp-pipeline-element-runtime-info>
         <sp-pipeline-element-documentation
-            *ngIf="selectedTab === 2 || !streamMode"
+            *ngIf="selectedTabIndex === 2"
             [useStyling]="false"
             [appId]="pipelineElement.appId"
         ></sp-pipeline-element-documentation>
