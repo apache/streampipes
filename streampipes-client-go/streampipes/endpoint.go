@@ -28,7 +28,7 @@ type endpoint struct {
 	config config.StreamPipesClientConfig
 }
 
-func (e *endpoint) makeHeaderAndHttpClient(method string, endPointUrl string) (*http.Response, error) {
+func (e *endpoint) executeRequest(method string, endPointUrl string) (*http.Response, error) {
 	req, err := http.NewRequest(method, endPointUrl, nil)
 	if err != nil {
 		return nil, err
@@ -47,7 +47,7 @@ func (e *endpoint) makeHeaderAndHttpClient(method string, endPointUrl string) (*
 	return response, nil
 }
 
-func (e *endpoint) handleErrorCode(resp *http.Response) error {
+func (e *endpoint) handleStatusCode(resp *http.Response) error {
 
 	switch resp.StatusCode {
 	case http.StatusUnauthorized:
@@ -57,16 +57,17 @@ func (e *endpoint) handleErrorCode(resp *http.Response) error {
 			"Apparently, this user is not allowed to query the resource.\n" +
 			"Please check the user's permissions or contact your StreamPipes admin.")
 	case http.StatusNotFound:
-		return errors.New("There seems to be an issue with the Python Client calling the API inappropriately.\n" +
+		return errors.New("There seems to be an issue with the Go Client calling the API inappropriately.\n" +
 			"This should not happen, but unfortunately did.\n" +
 			"If you don't mind, it would be awesome to let us know by creating an issue at https://github.com/apache/streampipes.\n")
 	case http.StatusMethodNotAllowed:
-		return errors.New("There seems to be an issue with the Python Client calling the API inappropriately.\n" +
+		return errors.New("There seems to be an issue with the Go Client calling the API inappropriately.\n" +
 			"This should not happen, but unfortunately did.\n" +
 			"If you don't mind, it would be awesome to let us know by creating an issue at https://github.com/apache/streampipes.\n")
 	case http.StatusInternalServerError:
 		return errors.New("streamPipes internal error")
+	default:
+		return errors.New(resp.Status)
 	}
 
-	return nil
 }

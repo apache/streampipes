@@ -18,7 +18,6 @@
 package streampipes
 
 import (
-	"errors"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/serializer"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/util"
@@ -28,12 +27,9 @@ import (
 	"net/http"
 )
 
-/*
-	DataLakeMeasure connects to the DataLakeMeasure endpoint of streamPipes.
-	DataLakeMeasure supports GET and DELETE to delete or obtain resources
-	The specific interaction behavior is provided by the method bound to the DataLakeMeasure struct.
-*/
-
+// DataLakeMeasure connects to the DataLakeMeasure endpoint of streamPipes.
+// DataLakeMeasure supports GET and DELETE to delete or obtain resources
+// The specific interaction behavior is provided by the method bound to the DataLakeMeasure struct.
 type DataLakeMeasure struct {
 	endpoint
 }
@@ -49,61 +45,63 @@ func NewDataLakeMeasures(clientConfig config.StreamPipesClientConfig) *DataLakeM
 func (d *DataLakeMeasure) AllDataLakeMeasure() ([]data_lake.DataLakeMeasure, error) {
 	// Get a list of all measure
 
-	endPointUrl := util.NewStreamPipesApiPath([]string{d.config.Url}).FromStreamPipesBasePath().AddToPath([]string{"api", "v4", "datalake", "measurements"}).String()
-	log.Println(endPointUrl)
-	response, err := d.makeHeaderAndHttpClient("GET", endPointUrl)
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", nil)
+	log.Printf("Get data from: %s", endPointUrl)
+	response, err := d.executeRequest("GET", endPointUrl)
 	if err != nil {
 		return nil, err
 	}
 
-	if response.StatusCode == http.StatusOK {
-		body, err := io.ReadAll(response.Body)
-		if err != nil {
-			return nil, err
-		}
-		unmarshalData, err := serializer.NewUnmarshalDataLakeMeasures().GetUnmarshal(body)
-		if err != nil {
-			return nil, err
-		}
-		dataLakeMeasures := unmarshalData.([]data_lake.DataLakeMeasure)
-		return dataLakeMeasures, nil
-	} else {
-		err = d.handleStatusCode(response, "")
+	if response.StatusCode != http.StatusOK {
+		err = d.handleStatusCode(response)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return nil, nil
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	unmarshalData, err := serializer.NewUnmarshalDataLakeMeasures().GetUnmarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	dataLakeMeasures := unmarshalData.([]data_lake.DataLakeMeasure)
+
+	return dataLakeMeasures, nil
 }
 
 func (d *DataLakeMeasure) GetSingleDataLakeMeasure(elementId string) (data_lake.DataLakeMeasure, error) {
 	// Get a measure
 
-	endPointUrl := util.NewStreamPipesApiPath([]string{d.config.Url}).FromStreamPipesBasePath().AddToPath([]string{"api", "v4", "datalake", "measure", elementId}).String()
-	log.Println(endPointUrl)
-	response, err := d.makeHeaderAndHttpClient("GET", endPointUrl)
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measure", []string{elementId})
+	log.Printf("Get data from: %s", endPointUrl)
+	response, err := d.executeRequest("GET", endPointUrl)
 	if err != nil {
 		return data_lake.DataLakeMeasure{}, err
 	}
 
-	if response.StatusCode == http.StatusOK {
-		body, err := io.ReadAll(response.Body)
-		if err != nil {
-			return data_lake.DataLakeMeasure{}, err
-		}
-		unmarshalData, err := serializer.NewUnmarshalDataLakeMeasure().GetUnmarshal(body)
-		if err != nil {
-			return data_lake.DataLakeMeasure{}, err
-		}
-		dataLakeMeasure := unmarshalData.(data_lake.DataLakeMeasure)
-		return dataLakeMeasure, nil
-	} else {
-		err := d.handleStatusCode(response, "")
+	if response.StatusCode != http.StatusOK {
+		err = d.handleStatusCode(response)
 		if err != nil {
 			return data_lake.DataLakeMeasure{}, err
 		}
 	}
-	return data_lake.DataLakeMeasure{}, nil
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return data_lake.DataLakeMeasure{}, err
+	}
+
+	unmarshalData, err := serializer.NewUnmarshalDataLakeMeasure().GetUnmarshal(body)
+	if err != nil {
+		return data_lake.DataLakeMeasure{}, err
+	}
+	dataLakeMeasure := unmarshalData.(data_lake.DataLakeMeasure)
+
+	return dataLakeMeasure, nil
 }
 
 func (d *DataLakeMeasure) GetSingleDataSeries(measureName string) (*data_lake.DataSeries, error) {
@@ -111,84 +109,72 @@ func (d *DataLakeMeasure) GetSingleDataSeries(measureName string) (*data_lake.Da
 	// Get data from a single measurement series by a given id
 	// Currently not supporting parameter queries
 
-	endPointUrl := util.NewStreamPipesApiPath([]string{d.config.Url}).FromStreamPipesBasePath().AddToPath([]string{"api", "v4", "datalake", "measurements", measureName}).String()
-	log.Println(endPointUrl)
-	response, err := d.makeHeaderAndHttpClient("GET", endPointUrl)
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", []string{measureName})
+	log.Printf("Get data from: %s", endPointUrl)
+	response, err := d.executeRequest("GET", endPointUrl)
 	if err != nil {
 		return nil, err
 	}
 
-	if response.StatusCode == http.StatusOK {
-		body, err := io.ReadAll(response.Body)
-		if err != nil {
-			return nil, err
-		}
-		unmarshalData, err := serializer.NewUnmarshalDataSeries().GetUnmarshal(body)
-		if err != nil {
-			return nil, err
-		}
-		dataSeries := unmarshalData.(data_lake.DataSeries)
-		return &dataSeries, nil
-	} else {
-		err := d.handleStatusCode(response, "Measurement series with given id and requested query specification not found")
+	if response.StatusCode != http.StatusOK {
+		err = d.handleStatusCode(response)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return nil, nil
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	unmarshalData, err := serializer.NewUnmarshalDataSeries().GetUnmarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	dataSeries := unmarshalData.(data_lake.DataSeries)
+
+	return &dataSeries, nil
 }
 
 func (d *DataLakeMeasure) ClearDataLakeMeasureData(measureName string) error {
 	// Remove data from a single measurement series with given id
 
-	endPointUrl := util.NewStreamPipesApiPath([]string{d.config.Url}).FromStreamPipesBasePath().AddToPath([]string{"api", "v4", "datalake", "measurements", measureName}).String()
-	log.Println(endPointUrl)
-	response, err := d.makeHeaderAndHttpClient("DELETE", endPointUrl)
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", []string{measureName})
+	log.Printf("Clear data from: %s", endPointUrl)
+	response, err := d.executeRequest("DELETE", endPointUrl)
 	if err != nil {
 		return err
 	}
-	if response.StatusCode == http.StatusOK {
-		log.Printf("Successfully deleted data from a single measurement sequence of %s", measureName)
-		return nil
-	} else {
-		err = d.handleStatusCode(response, "Measurement series with given id not found")
+
+	if response.StatusCode != http.StatusOK {
+		err = d.handleStatusCode(response)
 		if err != nil {
 			return err
 		}
 	}
+	log.Printf("Successfully deleted data from a single measurement sequence of %s", measureName)
+
 	return nil
 }
 
 func (d *DataLakeMeasure) DeleteDataLakeMeasure(measureName string) error {
 	// Drop a single measurement series with given id from Data Lake and remove related event property
 
-	endPointUrl := util.NewStreamPipesApiPath([]string{d.config.Url}).FromStreamPipesBasePath().AddToPath([]string{"api", "v4", "datalake", "measurements", measureName, "drop"}).String()
-	response, err := d.makeHeaderAndHttpClient("DELETE", endPointUrl)
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", []string{measureName, "drop"})
+	log.Printf("Delete data from: %s", endPointUrl)
+	response, err := d.executeRequest("DELETE", endPointUrl)
 	if err != nil {
 		return err
 	}
-	if response.StatusCode == http.StatusOK {
-		log.Printf("Successfully dropped a single measurement series for %s from  DataLake and remove related event property", measureName)
-		return nil
-	} else {
-		err = d.handleStatusCode(response, "Measurement series with given id or related event property not found")
+
+	if response.StatusCode != http.StatusOK {
+		err = d.handleStatusCode(response)
 		if err != nil {
 			return err
 		}
 	}
-	return nil
-}
 
-func (d *DataLakeMeasure) handleStatusCode(resp *http.Response, message string) error {
-	err := d.handleErrorCode(resp)
-	if err != nil {
-		return err
-	} else {
-		switch resp.StatusCode {
-		case http.StatusBadRequest:
-			return errors.New(message)
-		default:
-			return errors.New(resp.Status)
-		}
-	}
+	log.Printf("Successfully dropped a single measurement series for %s from  DataLake and remove related event property", measureName)
+	return nil
 }

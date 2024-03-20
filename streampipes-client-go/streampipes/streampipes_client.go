@@ -21,7 +21,6 @@ import (
 	"errors"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/utils"
-	"log"
 	"net/url"
 	"strings"
 )
@@ -33,41 +32,41 @@ import (
 */
 
 type StreamPipesClient struct {
-	Config config.StreamPipesClientConfig
+	config config.StreamPipesClientConfig
 }
 
-func NewStreamPipesClient(Config config.StreamPipesClientConfig) (*StreamPipesClient, error) {
+func NewStreamPipesClient(c config.StreamPipesClientConfig) (*StreamPipesClient, error) {
 
-	//NewStreamPipesClient returns an instance of * StreamPipesClient
-	//Temporarily does not support HTTPS connections, nor does it support connecting to port 443
+	// NewStreamPipesClient returns an instance of *StreamPipesClient
+	// Currently, it does not support HTTPS connections or connections to port 443.
 
-	if Config.Credential == (config.StreamPipesApiKeyCredentials{}) {
-		log.Fatal("No credential entered")
+	if c.Credential == (config.StreamPipesApiKeyCredentials{}) {
+		return nil, errors.New("no credential entered")
 	}
 
-	if !utils.CheckUrl(Config.Url) {
-		log.Fatal("Please check if the URL is correct,Must be in the form of A://B:C," +
-			"where A is either HTTP, not case sensitive.B must be the host and C must be the port.")
+	if !utils.CheckUrl(c.Url) {
+		return nil, errors.New("please check if the URL is correct,Must be in the form of A://B:C," +
+			"where A is either HTTP, not case sensitive. B must be the host and C must be the port")
 	}
 
-	Url, err := url.Parse(Config.Url)
+	Url, err := url.Parse(c.Url)
 	if err != nil {
-		log.Fatal("Please enter the correct URL", err)
+		return nil, err
 	}
 
 	if strings.EqualFold(Url.Scheme, "https") || Url.Port() == "443" {
-		return &StreamPipesClient{}, errors.New(
+		return nil, errors.New(
 			"The URL passed in is invalid and does not support HTTPS or port 443.\n ")
 	}
 
 	return &StreamPipesClient{
-		Config,
+		c,
 	}, nil
 
 }
 
 func (s *StreamPipesClient) DataLakeMeasures() *DataLakeMeasure {
 
-	return NewDataLakeMeasures(s.Config)
+	return NewDataLakeMeasures(s.config)
 
 }

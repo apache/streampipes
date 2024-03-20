@@ -21,34 +21,19 @@ import (
 	"strings"
 )
 
-type StreamPipesApiPath struct {
-	pathItems []string // PathItems stores URL fragments
+func NewStreamPipesApiPath(baseUrl string, streamPipesUrl string, parameters []string) string {
+	path := []string{baseUrl, streamPipesUrl}
+	path = append(path, parameters...)
+	return join(path)
 }
 
-func NewStreamPipesApiPath(initialPathItems []string) *StreamPipesApiPath {
-
-	return &StreamPipesApiPath{
-		pathItems: initialPathItems,
+func join(path []string) string {
+	if path == nil {
+		return ""
 	}
-}
-
-func (s *StreamPipesApiPath) FromStreamPipesBasePath() *StreamPipesApiPath {
-	path := "streampipes-backend"
-	s.pathItems = append(s.pathItems, path)
-	return s
-}
-
-func (s *StreamPipesApiPath) AddToPath(pathItem []string) *StreamPipesApiPath {
-	s.pathItems = append(s.pathItems, pathItem...)
-	return s
-}
-
-func (s *StreamPipesApiPath) String() string {
-
-	if len(s.pathItems) == 1 {
-		return s.pathItems[0]
+	if len(path) == 1 {
+		return path[0]
 	}
-	path := strings.Join(s.pathItems, "/")
-	s.pathItems = []string{path}
-	return path
+	url := strings.Join(path, "/")
+	return url
 }

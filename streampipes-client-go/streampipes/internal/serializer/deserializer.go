@@ -36,7 +36,7 @@ func NewUnmarshalDataLakeMeasures() *UnmarshalDataLakeMeasures {
 	return &UnmarshalDataLakeMeasures{}
 }
 
-func (d *UnmarshalDataLakeMeasures) GetUnmarshal(data []byte) (interface{}, error) {
+func (u *UnmarshalDataLakeMeasures) GetUnmarshal(data []byte) (interface{}, error) {
 	var DeSerializerDataLakeMeasures []data_lake.DataLakeMeasure
 	err := json.Unmarshal(data, &DeSerializerDataLakeMeasures)
 	if err != nil {
@@ -51,7 +51,7 @@ func NewUnmarshalDataLakeMeasure() *UnmarshalDataLakeMeasure {
 	return &UnmarshalDataLakeMeasure{}
 }
 
-func (d *UnmarshalDataLakeMeasure) GetUnmarshal(data []byte) (interface{}, error) {
+func (u *UnmarshalDataLakeMeasure) GetUnmarshal(data []byte) (interface{}, error) {
 	var DeSerializerDataLakeMeasure data_lake.DataLakeMeasure
 	err := json.Unmarshal(data, &DeSerializerDataLakeMeasure)
 	if err != nil {
@@ -66,7 +66,7 @@ func NewUnmarshalDataSeries() *UnmarshalDataSeries {
 	return &UnmarshalDataSeries{}
 }
 
-func (d *UnmarshalDataSeries) GetUnmarshal(data []byte) (interface{}, error) {
+func (u *UnmarshalDataSeries) GetUnmarshal(data []byte) (interface{}, error) {
 	var DeSerializerDataLakeSeries data_lake.DataSeries
 	err := json.Unmarshal(data, &DeSerializerDataLakeSeries)
 	if err != nil {
