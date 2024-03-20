@@ -114,12 +114,6 @@ public class Utils {
     return getCouchDbStandardSerializerClient("visualizations");
   }
 
-  //TODO: Remove??
-  public static CouchDbClient getCouchDbRdfEndpointClient() {
-    CouchDbClient dbClient = new CouchDbClient(props("rdfendpoint"));
-    return dbClient;
-  }
-
   public static CouchDbClient getCouchDbDataExplorerDashboardClient() {
     return getCouchDbGsonClient("dataexplorerdashboard");
   }

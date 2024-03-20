@@ -24,7 +24,6 @@ import {
     PanelType,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
-import { AddEndpointComponent } from './dialogs/add-endpoint/add-endpoint.component';
 import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
 import { ExtensionsServiceEndpointItem } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
@@ -45,7 +44,6 @@ export class AddComponent implements OnInit {
     selectedTab: string;
     availableTypes: string[] = ['all', 'set', 'stream', 'sepa', 'action'];
 
-    selectedCategoryIndex = 0;
     selectedCategory = 'all';
 
     selectedEndpointItems: any[] = [];
@@ -92,12 +90,6 @@ export class AddComponent implements OnInit {
         }
     }
 
-    setSelectedTab(index: number) {
-        this.selectedEndpointItems = [];
-        this.selectAll(false);
-        this.selectedTab = this.availableTypes[index];
-    }
-
     isSelected(endpointItem) {
         return endpointItem.selected;
     }
@@ -122,21 +114,6 @@ export class AddComponent implements OnInit {
             }
         });
         this.changeDetectorRef.detectChanges();
-    }
-
-    showManageRdfEndpointsDialog() {
-        const dialogRef: DialogRef<AddEndpointComponent> =
-            this.dialogService.open(AddEndpointComponent, {
-                panelType: PanelType.STANDARD_PANEL,
-                title: 'Manage Endpoints',
-                width: '70vw',
-                data: {},
-            });
-        dialogRef.afterClosed().subscribe(data => {
-            if (data) {
-                this.getEndpointItems();
-            }
-        });
     }
 
     getEndpointItems() {
@@ -210,10 +187,5 @@ export class AddComponent implements OnInit {
 
     get selectedInstallationStatus(): string {
         return this._selectedInstallationStatus;
-    }
-
-    navigateTo(routeId: string): void {
-        this.router.navigate(['add', routeId]);
-        this.activeLink = routeId;
     }
 }

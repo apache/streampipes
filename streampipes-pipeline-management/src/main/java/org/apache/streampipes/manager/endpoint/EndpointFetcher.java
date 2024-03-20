@@ -18,14 +18,10 @@
 package org.apache.streampipes.manager.endpoint;
 
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class EndpointFetcher {
 
@@ -38,15 +34,7 @@ public class EndpointFetcher {
               new ExtensionsServiceEndpoint(endpoint);
       serviceExtensionsServiceEndpoints.add(extensionsServiceEndpoint);
     }
-    List<ExtensionsServiceEndpoint> databasedExtensionsServiceEndpoints = StorageDispatcher.INSTANCE.getNoSqlStore()
-            .getRdfEndpointStorage()
-            .getExtensionsServiceEndpoints();
 
-    List<ExtensionsServiceEndpoint> concatList =
-            Stream.of(databasedExtensionsServiceEndpoints, serviceExtensionsServiceEndpoints)
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.toList());
-
-    return concatList;
+    return serviceExtensionsServiceEndpoints;
   }
 }
