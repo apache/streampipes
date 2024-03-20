@@ -74,8 +74,19 @@ export interface IWidget<T extends DataExplorerWidgetModel> {
     label: string;
     widgetComponent: any;
     widgetConfigurationComponent?: any;
+    widgetAppearanceConfigurationComponent?: any;
     chartRenderer?: SpEchartsRenderer<T>;
     alias?: string;
+}
+
+export interface WidgetChartAppearanceConfig {
+    showLegend: boolean;
+    showToolbox: boolean;
+    showTooltip: boolean;
+}
+
+export interface WidgetEchartsAppearanceConfig {
+    chartAppearance: WidgetChartAppearanceConfig;
 }
 
 export interface WidgetBaseAppearanceConfig {

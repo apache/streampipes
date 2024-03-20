@@ -80,6 +80,9 @@ import { HelpComponent } from './help/help.component';
 import { PipelineElementRuntimeInfoComponent } from './pipeline-element-runtime-info/pipeline-element-runtime-info.component';
 import { PipelineElementDocumentationComponent } from './pipeline-element-documentation/pipeline-element-documentation.component';
 import { MarkdownModule } from 'ngx-markdown';
+import { LivePreviewLoadingComponent } from './pipeline-element-runtime-info/live-preview-loading/live-preview-loading.component';
+import { LivePreviewTableComponent } from './pipeline-element-runtime-info/live-preview-table/live-preview-table.component';
+import { LivePreviewErrorComponent } from './pipeline-element-runtime-info/live-preview-error/live-preview-error.component';
 import { FieldNamesTableComponent } from './help/field-names-table/field-names-table.component';
 
 @NgModule({
@@ -149,6 +152,9 @@ import { FieldNamesTableComponent } from './help/field-names-table/field-names-t
         SpSimpleMetricsComponent,
         StatusWidgetComponent,
         FieldNamesTableComponent,
+        LivePreviewLoadingComponent,
+        LivePreviewTableComponent,
+        LivePreviewErrorComponent,
     ],
     providers: [
         MatDatepickerModule,

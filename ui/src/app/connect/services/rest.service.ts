@@ -78,7 +78,7 @@ export class RestService {
             );
     }
 
-    getRuntimeInfo(sourceDescription): Observable<any> {
+    getRuntimeInfo(sourceDescription): Observable<Record<string, any>> {
         return this.http.post(
             `${this.platformServicesCommons.apiBasePath}/pipeline-element/runtime`,
             sourceDescription,
@@ -87,18 +87,6 @@ export class RestService {
             },
         );
     }
-
-    // getFormats(): Observable<FormatDescription[]> {
-    //     return this.http
-    //         .get(`${this.connectPath}/master/description/formats`)
-    //         .pipe(
-    //             map(response => {
-    //                 return (response as any[]).map(f =>
-    //                     FormatDescription.fromData(f),
-    //                 );
-    //             }),
-    //         );
-    // }
 
     getFittingUnits(
         unitDescription: UnitDescription,

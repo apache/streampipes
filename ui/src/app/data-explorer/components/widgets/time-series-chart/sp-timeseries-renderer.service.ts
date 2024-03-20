@@ -86,6 +86,8 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             },
         );
 
+        const showTooltip =
+            widgetConfig.baseAppearanceConfig.chartAppearance?.showTooltip;
         Object.assign(options, {
             series: finalSeries,
             dataset:
@@ -94,6 +96,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                 show: widgetConfig.visualizationConfig.showSpike,
             },
             tooltip: {
+                show: showTooltip,
                 trigger: 'axis',
                 axisPointer: {
                     type: 'cross',
