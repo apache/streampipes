@@ -32,7 +32,6 @@ export class HelpComponent implements OnInit {
 
     selectedIndex = 0;
 
-    nsPrefix = 'http://www.w3.org/2001/XMLSchema#';
     availableTabs = [
         {
             title: 'Fields',
@@ -69,29 +68,6 @@ export class HelpComponent implements OnInit {
             this.tabs.push(this.availableTabs[2]);
             this.streamMode = false;
         }
-    }
-
-    getFriendlyRuntimeType(runtimeType) {
-        if (this.isNumber(runtimeType)) {
-            return 'Number';
-        } else if (this.isBoolean(runtimeType)) {
-            return 'Boolean';
-        } else {
-            return 'Text';
-        }
-    }
-
-    isNumber(runtimeType) {
-        return (
-            runtimeType === this.nsPrefix + 'float' ||
-            runtimeType === this.nsPrefix + 'integer' ||
-            runtimeType === this.nsPrefix + 'long' ||
-            runtimeType === this.nsPrefix + 'double'
-        );
-    }
-
-    isBoolean(runtimeType) {
-        return runtimeType === this.nsPrefix + 'boolean';
     }
 
     close() {

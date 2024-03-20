@@ -16,4 +16,28 @@
  *
  */
 
-@import '../../../scss/sp/sp-dialog.scss';
+import { Component, Input } from '@angular/core';
+import { EventSchema } from '@streampipes/platform-services';
+import { XsService } from '../../../NS/xs.service';
+
+@Component({
+    selector: 'sp-field-names',
+    templateUrl: './field-names.component.html',
+    styleUrls: ['./field-names.component.scss'],
+})
+export class FieldNamesComponent {
+    @Input()
+    eventSchema: EventSchema;
+
+    constructor(private xsService: XsService) {}
+
+    getFriendlyRuntimeType(runtimeType: string) {
+        if (this.xsService.isNumber(runtimeType)) {
+            return 'Number';
+        } else if (this.xsService.isBoolean(runtimeType)) {
+            return 'Boolean';
+        } else {
+            return 'Text';
+        }
+    }
+}
