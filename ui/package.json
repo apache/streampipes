@@ -61,7 +61,7 @@
     "d3-array": "^3.2.4",
     "d3-contour": "^4.0.2",
     "dagre": "0.8.5",
-    "datatables.net": "^1.13.1",
+    "datatables.net": "^2.0.2",
     "datatables.net-dt": "^1.13.1",
     "date-fns": "^2.30.0",
     "echarts": "^5.4.3",
