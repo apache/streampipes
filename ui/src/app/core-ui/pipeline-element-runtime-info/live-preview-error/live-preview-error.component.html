@@ -16,14 +16,6 @@
   ~
   -->
 
-<sp-live-preview-loading *ngIf="!runtimeData && !runtimeDataError">
-</sp-live-preview-loading>
-
-<sp-live-preview-table
-    *ngIf="runtimeData"
-    [eventSchema]="streamDescription.eventSchema"
-    [runtimeData]="runtimeData"
->
-</sp-live-preview-table>
-
-<sp-live-preview-error *ngIf="runtimeDataError"> </sp-live-preview-error>
+<div>
+    <p>Preview is currently unavailable.</p>
+</div>

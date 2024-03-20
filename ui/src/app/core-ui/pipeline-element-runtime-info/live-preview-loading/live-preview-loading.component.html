@@ -16,14 +16,17 @@
   ~
   -->
 
-<sp-live-preview-loading *ngIf="!runtimeData && !runtimeDataError">
-</sp-live-preview-loading>
-
-<sp-live-preview-table
-    *ngIf="runtimeData"
-    [eventSchema]="streamDescription.eventSchema"
-    [runtimeData]="runtimeData"
->
-</sp-live-preview-table>
-
-<sp-live-preview-error *ngIf="runtimeDataError"> </sp-live-preview-error>
+<div fxLayout="column" data-cy="sp-connect-adapter-gathering-live-preview">
+    <div fxLayoutAlign="center">
+        <mat-spinner
+            [diameter]="40"
+            fxLayoutAlign="center"
+            style="margin: 10px 0 5px 0"
+            color="accent"
+            >Loading
+        </mat-spinner>
+    </div>
+    <div fxLayoutAlign="center">
+        <h3>Gathering data for live preview...</h3>
+    </div>
+</div>
