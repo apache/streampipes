@@ -20,14 +20,23 @@ import { Injectable } from '@angular/core';
 import { EventProperty } from '@streampipes/platform-services';
 
 @Injectable()
-export class SemanticTypeUtilsService {
+export class SemanticTypeService {
     public TIMESTAMP = 'http://schema.org/DateTime';
     public IMAGE = 'https://image.com';
-    public NUMBER = 'http://schema.org/Number';
+    public SO_NUMBER = 'http://schema.org/Number';
+    public SO_URL = 'https://schema.org/URL';
+
+    public XS_INTEGER = 'http://www.w3.org/2001/XMLSchema#integer';
+    public XS_FLOAT = 'http://www.w3.org/2001/XMLSchema#float';
+    public XS_LONG = 'http://www.w3.org/2001/XMLSchema#long';
+    public XS_DOUBLE = 'http://www.w3.org/2001/XMLSchema#double';
+    public XS_BOOLEAN = 'http://www.w3.org/2001/XMLSchema#boolean';
+    public XS_NUMBER = 'http://www.w3.org/2001/XMLSchema#number';
+    public XS_STRING = 'http://www.w3.org/2001/XMLSchema#string';
 
     constructor() {}
 
-    public getValue(inputValue, semanticType) {
+    public getValue(inputValue: any, semanticType: string) {
         if (semanticType === this.TIMESTAMP) {
             return new Date(inputValue).toLocaleString();
         } else {
@@ -43,11 +52,21 @@ export class SemanticTypeUtilsService {
         return property.domainProperties.includes(this.IMAGE);
     }
 
-    public is(property: EventProperty, uri: string): boolean {
-        return property.domainProperties.includes(uri);
+    public isNumber(property: EventProperty): boolean {
+        return property.domainProperties.includes(this.SO_NUMBER);
     }
 
-    public isNumeric(property: EventProperty): boolean {
-        return property.domainProperties.includes(this.NUMBER);
+    public isNumberType(datatype: string): boolean {
+        return (
+            datatype === this.XS_DOUBLE ||
+            datatype === this.XS_INTEGER ||
+            datatype === this.XS_LONG ||
+            datatype === this.XS_FLOAT ||
+            datatype === this.XS_NUMBER
+        );
+    }
+
+    isBooleanType(datatype: string): boolean {
+        return datatype === this.XS_BOOLEAN;
     }
 }

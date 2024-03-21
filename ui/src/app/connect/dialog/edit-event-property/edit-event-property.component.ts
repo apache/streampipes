@@ -35,7 +35,7 @@ import {
     EventPropertyPrimitive,
     EventPropertyUnion,
 } from '@streampipes/platform-services';
-import { SemanticTypeUtilsService } from '../../../core-services/semantic-type/semantic-type-utils.service';
+import { SemanticTypeService } from '../../../core-services/semantic-type/semantic-type.service';
 import { DataTypesService } from '../../services/data-type.service';
 import { DialogRef } from '@streampipes/shared-ui';
 import { EditSchemaTransformationComponent } from './components/edit-schema-transformation/edit-schema-transformation.component';
@@ -76,7 +76,7 @@ export class EditEventPropertyComponent implements OnInit {
         public dialogRef: DialogRef<EditEventPropertyComponent>,
         private formBuilder: UntypedFormBuilder,
         private dataTypeService: DataTypesService,
-        private semanticTypeUtilsService: SemanticTypeUtilsService,
+        private semanticTypeUtilsService: SemanticTypeService,
         private shepherdService: ShepherdService,
     ) {}
 
@@ -91,7 +91,7 @@ export class EditEventPropertyComponent implements OnInit {
         this.isEventPropertyNested =
             this.property instanceof EventPropertyNested;
         this.isNumericProperty =
-            this.semanticTypeUtilsService.isNumeric(this.cachedProperty) ||
+            this.semanticTypeUtilsService.isNumber(this.cachedProperty) ||
             this.dataTypeService.isNumeric(
                 (this.cachedProperty as any).runtimeType,
             );
