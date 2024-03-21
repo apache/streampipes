@@ -28,12 +28,12 @@ import Konva from 'konva';
 import { AddPipelineDialogComponent } from '../../dialog/add-pipeline/add-pipeline-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ShapeService } from '../../services/shape.service';
-import { SelectedVisualizationData } from '../../model/selected-visualization-data.model';
 import { SaveDashboardDialogComponent } from '../../dialog/save-dashboard/save-dashboard-dialog.component';
 import { PanelType, DialogService } from '@streampipes/shared-ui';
 import { DashboardConfiguration } from '../../model/dashboard-configuration.model';
 import { RestService } from '../../services/rest.service';
 import { AddLinkDialogComponent } from '../../dialog/add-link/add-link-dialog.component';
+import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 
 interface Window {
     Image: any;
@@ -57,7 +57,6 @@ export class CreateAssetComponent implements AfterViewInit {
     currentlySelectedShape: any;
 
     IMAGE_ID = 'main-image';
-    selectedVisualizationData: SelectedVisualizationData;
 
     backgroundImagePresent = false;
     measurementPresent = false;
@@ -75,6 +74,7 @@ export class CreateAssetComponent implements AfterViewInit {
         public shapeService: ShapeService,
         private dialogService: DialogService,
         private restService: RestService,
+        private idGeneratorService: IdGeneratorService,
     ) {}
 
     ngAfterViewInit() {
@@ -100,7 +100,7 @@ export class CreateAssetComponent implements AfterViewInit {
             this.mainLayer = this.mainCanvasStage.children[1];
             const groups = this.mainLayer.getChildren().find('Group');
             groups.forEach(g => {
-                const id = this.makeId();
+                const id = this.idGeneratorService.generate(6);
                 g.id(id);
                 g.setDraggable(true);
                 this.addTransformerToShape(id, g);
@@ -300,7 +300,7 @@ export class CreateAssetComponent implements AfterViewInit {
     }
 
     addNewVisulizationItem(visGroup) {
-        const id = this.makeId();
+        const id = this.idGeneratorService.generate(6);
         visGroup.id(id);
         this.mainLayer.add(visGroup);
         this.addTransformerToShape(id, visGroup);
@@ -324,20 +324,6 @@ export class CreateAssetComponent implements AfterViewInit {
             keepRatio: true,
             id: id + '-transformer',
         });
-    }
-
-    makeId() {
-        let text = '';
-        const possible =
-            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-        for (let i = 0; i < 6; i++) {
-            text += possible.charAt(
-                Math.floor(Math.random() * possible.length),
-            );
-        }
-
-        return text;
     }
 
     showImage() {

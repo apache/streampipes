@@ -16,7 +16,6 @@
  *
  */
 
-import { JsplumbConfigService } from './jsplumb-config.service';
 import { JsplumbBridge } from './jsplumb-bridge.service';
 import { Injectable } from '@angular/core';
 import {
@@ -34,17 +33,16 @@ import {
 } from '@streampipes/platform-services';
 import { JsplumbEndpointService } from './jsplumb-endpoint.service';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
-import { EditorService } from './editor.service';
+import { IdGeneratorService } from '../../core-services/id-generator/id-generator.service';
 
 @Injectable({ providedIn: 'root' })
 export class JsplumbService {
     idCounter = 0;
 
     constructor(
-        private jsplumbConfigService: JsplumbConfigService,
         private jsplumbFactory: JsplumbFactoryService,
         private jsplumbEndpointService: JsplumbEndpointService,
-        private editorService: EditorService,
+        private idGeneratorService: IdGeneratorService,
     ) {}
 
     isFullyConnected(
@@ -270,7 +268,10 @@ export class JsplumbService {
         };
         if (!pipelineElementConfig.payload.dom) {
             pipelineElementConfig.payload.dom =
-                'jsplumb_' + this.idCounter + '_' + this.makeId(4);
+                'jsplumb_' +
+                this.idCounter +
+                '_' +
+                this.idGeneratorService.generate(4);
             this.idCounter++;
         }
 
@@ -310,20 +311,6 @@ export class JsplumbService {
         newElementId: string,
     ) {
         pipelineElement.elementId = newElementId;
-    }
-
-    makeId(count: number) {
-        let text = '';
-        const possible =
-            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-        for (let i = 0; i < count; i++) {
-            text += possible.charAt(
-                Math.floor(Math.random() * possible.length),
-            );
-        }
-
-        return text;
     }
 
     elementDropped(
