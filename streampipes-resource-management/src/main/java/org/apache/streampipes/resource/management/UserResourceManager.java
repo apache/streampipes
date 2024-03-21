@@ -42,7 +42,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
