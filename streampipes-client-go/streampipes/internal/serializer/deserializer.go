@@ -32,7 +32,7 @@ var _ Deserializer = (*DataLakeMeasureDeSerializer)(nil)
 
 type DataLakeMeasuresDeserializer struct{}
 
-func NewUnmarshalDataLakeMeasures() *DataLakeMeasuresDeserializer {
+func NewDataLakeMeasuresDeserializer() *DataLakeMeasuresDeserializer {
 	return &DataLakeMeasuresDeserializer{}
 }
 
@@ -47,7 +47,7 @@ func (u *DataLakeMeasuresDeserializer) Unmarshal(data []byte) (interface{}, erro
 
 type DataLakeMeasureDeSerializer struct{}
 
-func NewUnmarshalDataLakeMeasure() *DataLakeMeasureDeSerializer {
+func NewDataLakeMeasureDeSerializer() *DataLakeMeasureDeSerializer {
 	return &DataLakeMeasureDeSerializer{}
 }
 
@@ -62,7 +62,7 @@ func (u *DataLakeMeasureDeSerializer) Unmarshal(data []byte) (interface{}, error
 
 type DataSeriesDeSerializer struct{}
 
-func NewUnmarshalDataSeries() *DataSeriesDeSerializer {
+func NewDataSeriesDeSerializer() *DataSeriesDeSerializer {
 	return &DataSeriesDeSerializer{}
 }
 
