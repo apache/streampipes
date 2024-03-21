@@ -22,6 +22,8 @@ import { Injectable } from '@angular/core';
 export class XsService {
     XS_STRING = 'xs:string';
     XS_INTEGER = 'http://www.w3.org/2001/XMLSchema#integer';
+    XS_FLOAT = 'http://www.w3.org/2001/XMLSchema#float';
+    XS_LONG = 'http://www.w3.org/2001/XMLSchema#long';
     XS_DOUBLE = 'http://www.w3.org/2001/XMLSchema#double';
     XS_BOOLEAN = 'http://www.w3.org/2001/XMLSchema#boolean';
     XS_NUMBER = 'http://www.w3.org/2001/XMLSchema#number';
@@ -32,7 +34,13 @@ export class XsService {
         return (
             datatype === this.XS_DOUBLE ||
             datatype === this.XS_INTEGER ||
+            datatype === this.XS_LONG ||
+            datatype === this.XS_FLOAT ||
             datatype === this.XS_NUMBER
         );
+    }
+
+    isBoolean(datatype: string): boolean {
+        return datatype === this.XS_BOOLEAN;
     }
 }

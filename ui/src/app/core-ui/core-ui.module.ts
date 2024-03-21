@@ -83,6 +83,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { LivePreviewLoadingComponent } from './pipeline-element-runtime-info/live-preview-loading/live-preview-loading.component';
 import { LivePreviewTableComponent } from './pipeline-element-runtime-info/live-preview-table/live-preview-table.component';
 import { LivePreviewErrorComponent } from './pipeline-element-runtime-info/live-preview-error/live-preview-error.component';
+import { FieldNamesTableComponent } from './help/field-names-table/field-names-table.component';
 
 @NgModule({
     imports: [
@@ -150,6 +151,7 @@ import { LivePreviewErrorComponent } from './pipeline-element-runtime-info/live-
         SpSimpleLogsComponent,
         SpSimpleMetricsComponent,
         StatusWidgetComponent,
+        FieldNamesTableComponent,
         LivePreviewLoadingComponent,
         LivePreviewTableComponent,
         LivePreviewErrorComponent,

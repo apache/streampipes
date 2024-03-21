@@ -27,32 +27,11 @@ import { PipelineElementUnion } from '../../editor/model/editor.model';
     styleUrls: ['./help.component.scss'],
 })
 export class HelpComponent implements OnInit {
-    selectedTab = 0;
     pollingActive: boolean;
+    selectedTabIndex = 0;
 
-    selectedIndex = 0;
-
-    nsPrefix = 'http://www.w3.org/2001/XMLSchema#';
-    availableTabs = [
-        {
-            title: 'Fields',
-            type: 'fields',
-            targets: ['set', 'stream'],
-        },
-        {
-            title: 'Values',
-            type: 'values',
-            targets: ['set', 'stream'],
-        },
-        {
-            title: 'Documentation',
-            type: 'documentation',
-            targets: ['set', 'stream', 'sepa', 'action'],
-        },
-    ];
-
-    tabs: any[] = [];
-    streamMode: boolean;
+    availableTabs = ['Fields', 'Values', 'Documentation'];
+    tabs: string[] = [];
 
     @Input()
     pipelineElement: PipelineElementUnion;
@@ -64,34 +43,10 @@ export class HelpComponent implements OnInit {
     ngOnInit() {
         if (this.pipelineElement instanceof SpDataStream) {
             this.tabs = this.availableTabs;
-            this.streamMode = true;
         } else {
             this.tabs.push(this.availableTabs[2]);
-            this.streamMode = false;
+            this.selectedTabIndex = 2;
         }
-    }
-
-    getFriendlyRuntimeType(runtimeType) {
-        if (this.isNumber(runtimeType)) {
-            return 'Number';
-        } else if (this.isBoolean(runtimeType)) {
-            return 'Boolean';
-        } else {
-            return 'Text';
-        }
-    }
-
-    isNumber(runtimeType) {
-        return (
-            runtimeType === this.nsPrefix + 'float' ||
-            runtimeType === this.nsPrefix + 'integer' ||
-            runtimeType === this.nsPrefix + 'long' ||
-            runtimeType === this.nsPrefix + 'double'
-        );
-    }
-
-    isBoolean(runtimeType) {
-        return runtimeType === this.nsPrefix + 'boolean';
     }
 
     close() {
