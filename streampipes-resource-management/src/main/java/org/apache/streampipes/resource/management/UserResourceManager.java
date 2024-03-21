@@ -29,22 +29,23 @@ import org.apache.streampipes.model.client.user.RegistrationData;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.client.user.UserActivationToken;
-import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.storage.api.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
+import org.apache.streampipes.user.management.util.TokenUtil;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
+
+  private static final int RECOVERY_TOKEN_LENGTH = 40;
 
   public UserResourceManager() {
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI());
@@ -89,7 +90,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
         throw new UsernameAlreadyTakenException("Username already taken");
       }
       String encryptedPassword = PasswordUtil.encryptPassword(data.getPassword());
-      List<Role> roles = data.getRoles().stream().map(Role::valueOf).collect(Collectors.toList());
+      List<Role> roles = data.getRoles().stream().map(Role::valueOf).toList();
       UserAccount user = UserAccount.from(data.getUsername(), encryptedPassword, new HashSet<>(roles));
       user.setUsername(data.getUsername());
       user.setPassword(encryptedPassword);
@@ -118,7 +119,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
   private void createTokenAndSendActivationMail(String username) throws IOException {
-    String activationCode = ElementIdGenerator.makeRecoveryToken();
+    String activationCode =  TokenUtil.generateToken(RECOVERY_TOKEN_LENGTH);
     storeActivationCode(username, activationCode);
   }
 
@@ -132,7 +133,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   public void sendPasswordRecoveryLink(String username) throws UserNotFoundException, IOException {
     // send a password recovery link to the user
     if (db.checkUser(username)) {
-      String recoveryCode = ElementIdGenerator.makeRecoveryToken();
+      String recoveryCode = TokenUtil.generateToken(RECOVERY_TOKEN_LENGTH);
       storeRecoveryCode(username, recoveryCode);
       new MailSender().sendPasswordRecoveryMail(username, recoveryCode);
     }

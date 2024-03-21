@@ -21,7 +21,7 @@ import org.apache.streampipes.model.client.user.RawUserApiToken;
 import org.apache.streampipes.model.client.user.UserApiToken;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.text.RandomStringGenerator;
 
 import java.util.UUID;
 
@@ -53,7 +53,15 @@ public class TokenUtil {
   }
 
   private static String generateToken() {
-    return RandomStringUtils.randomAlphanumeric(TOKEN_LENGTH);
+    return generateToken(TOKEN_LENGTH);
+  }
+
+  public static String generateToken(int tokenLength){
+    // allowing all ASCII-characters from decimal id 33 to 125
+    // see https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html for full list
+    var pwdGenerator = new RandomStringGenerator.Builder().withinRange(33, 125)
+                                                          .build();
+    return pwdGenerator.generate(tokenLength);
   }
 
   public static String hashToken(String token) {
