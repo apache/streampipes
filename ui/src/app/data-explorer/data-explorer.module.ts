@@ -90,6 +90,8 @@ import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/
 import { SpSelectAxisOptionsComponent } from './components/widgets/utils/select-axis-options/select-axis-options.component';
 import { SpTimeseriesItemConfigComponent } from './components/widgets/utils/select-color-properties/time-series-item-config/time-series-item-config.component';
 import { SpEchartsWidgetAppearanceConfigComponent } from './components/widgets/utils/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
+import { SpTimeSeriesAppearanceConfigComponent } from './components/widgets/time-series-chart/appearance-config/time-series-appearance-config.component';
+import { SpDataZoomConfigComponent } from './components/widgets/utils/data-zoom-config/data-zoom-config.component';
 
 @NgModule({
     imports: [
@@ -188,6 +190,8 @@ import { SpEchartsWidgetAppearanceConfigComponent } from './components/widgets/u
         SpSelectAxisOptionsComponent,
         SpTimeseriesItemConfigComponent,
         SpEchartsWidgetAppearanceConfigComponent,
+        SpTimeSeriesAppearanceConfigComponent,
+        SpDataZoomConfigComponent,
     ],
     providers: [SemanticTypeUtilsService],
     exports: [],

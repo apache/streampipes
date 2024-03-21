@@ -48,6 +48,7 @@ import { SpIndicatorRendererService } from '../components/widgets/indicator/indi
 import { TimeSeriesChartWidgetModel } from '../components/widgets/time-series-chart/model/time-series-chart-widget.model';
 import { SpTimeseriesRendererService } from '../components/widgets/time-series-chart/sp-timeseries-renderer.service';
 import { SpEchartsWidgetAppearanceConfigComponent } from '../components/widgets/utils/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
+import { SpTimeSeriesAppearanceConfigComponent } from '../components/widgets/time-series-chart/appearance-config/time-series-appearance-config.component';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerWidgetRegistry {
@@ -89,7 +90,7 @@ export class DataExplorerWidgetRegistry {
                 id: 'time-series-chart',
                 label: 'Time Series Chart',
                 widgetAppearanceConfigurationComponent:
-                    SpEchartsWidgetAppearanceConfigComponent,
+                    SpTimeSeriesAppearanceConfigComponent,
                 widgetConfigurationComponent:
                     TimeSeriesChartWidgetConfigComponent,
                 widgetComponent:

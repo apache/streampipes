@@ -85,6 +85,16 @@ export interface WidgetChartAppearanceConfig {
     showTooltip: boolean;
 }
 
+export interface DataZoomConfig {
+    show: boolean;
+    type: 'slider' | 'inside';
+}
+
+export interface TimeSeriesAppearanceConfig
+    extends WidgetEchartsAppearanceConfig {
+    dataZoom: DataZoomConfig;
+}
+
 export interface WidgetEchartsAppearanceConfig {
     chartAppearance: WidgetChartAppearanceConfig;
 }

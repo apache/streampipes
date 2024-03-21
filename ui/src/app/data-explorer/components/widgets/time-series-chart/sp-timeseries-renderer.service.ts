@@ -16,7 +16,12 @@
  *
  */
 
-import { BarSeriesOption, EChartsOption, LineSeriesOption } from 'echarts';
+import {
+    BarSeriesOption,
+    EChartsOption,
+    LineSeriesOption,
+    ScatterSeriesOption,
+} from 'echarts';
 import { SeriesOption } from 'echarts/types/src/util/types';
 import { Injectable } from '@angular/core';
 import { TimeSeriesChartWidgetModel } from './model/time-series-chart-widget.model';
@@ -86,8 +91,11 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             },
         );
 
+        this.addDataZoomOptions(widgetConfig, options);
+
         const showTooltip =
             widgetConfig.baseAppearanceConfig.chartAppearance?.showTooltip;
+
         Object.assign(options, {
             series: finalSeries,
             dataset:
@@ -152,13 +160,15 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                 y: fieldIndex,
             },
             datasetIndex,
-        } as LineSeriesOption | BarSeriesOption;
+        } as LineSeriesOption | BarSeriesOption | ScatterSeriesOption;
         if (seriesType === 'line') {
             this.appendLineOptions(
                 series as LineSeriesOption,
                 widgetConfig,
                 field,
             );
+        } else if (seriesType === 'scatter') {
+            this.appendScatterOptions(series as ScatterSeriesOption);
         }
         return series;
     }
@@ -166,10 +176,12 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
     private makeSeriesType(
         displayTypes: Record<string, string>,
         field: DataExplorerField,
-    ) {
+    ): 'bar' | 'line' | 'scatter' {
         const type = this.getDisplayType(displayTypes, field);
         if (type === 'bar') {
             return 'bar';
+        } else if (type === 'normal_markers') {
+            return 'scatter';
         } else {
             return 'line';
         }
@@ -180,6 +192,10 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         field: DataExplorerField,
     ): string {
         return displayTypes[field.fullDbName + field.sourceIndex];
+    }
+
+    private appendScatterOptions(series: ScatterSeriesOption): void {
+        series.symbolSize = 4;
     }
 
     private appendLineOptions(
@@ -223,6 +239,19 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         } else {
             return 0;
         }
+    }
+
+    private addDataZoomOptions(
+        config: TimeSeriesChartWidgetModel,
+        options: EChartsOption,
+    ): void {
+        Object.assign(options, {
+            dataZoom: config.baseAppearanceConfig.dataZoom?.show
+                ? {
+                      type: config.baseAppearanceConfig.dataZoom?.type,
+                  }
+                : [],
+        });
     }
 
     private addAxisOptions(
