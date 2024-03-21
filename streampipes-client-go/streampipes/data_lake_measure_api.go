@@ -23,7 +23,7 @@ import (
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/util"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/data_lake"
 	"io"
-	"log"
+	"log/slog"
 	"net/http"
 )
 
@@ -42,11 +42,12 @@ func NewDataLakeMeasures(clientConfig config.StreamPipesClientConfig) *DataLakeM
 	}
 }
 
+// AllDataLakeMeasure retrieves all the measures from the Data Lake.
 func (d *DataLakeMeasure) AllDataLakeMeasure() ([]data_lake.DataLakeMeasure, error) {
-	// Get a list of all measure
 
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", nil)
-	log.Printf("Get data from: %s", endPointUrl)
+	slog.Info("Get data from: %s", endPointUrl)
+
 	response, err := d.executeRequest("GET", endPointUrl)
 	if err != nil {
 		return nil, err
@@ -64,7 +65,7 @@ func (d *DataLakeMeasure) AllDataLakeMeasure() ([]data_lake.DataLakeMeasure, err
 		return nil, err
 	}
 
-	unmarshalData, err := serializer.NewUnmarshalDataLakeMeasures().GetUnmarshal(body)
+	unmarshalData, err := serializer.NewUnmarshalDataLakeMeasures().Unmarshal(body)
 	if err != nil {
 		return nil, err
 	}
@@ -73,11 +74,12 @@ func (d *DataLakeMeasure) AllDataLakeMeasure() ([]data_lake.DataLakeMeasure, err
 	return dataLakeMeasures, nil
 }
 
+// GetSingleDataLakeMeasure retrieves a specific measure from the Data Lake.
 func (d *DataLakeMeasure) GetSingleDataLakeMeasure(elementId string) (data_lake.DataLakeMeasure, error) {
-	// Get a measure
 
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measure", []string{elementId})
-	log.Printf("Get data from: %s", endPointUrl)
+	slog.Info("Get data from: %s", endPointUrl)
+
 	response, err := d.executeRequest("GET", endPointUrl)
 	if err != nil {
 		return data_lake.DataLakeMeasure{}, err
@@ -95,7 +97,7 @@ func (d *DataLakeMeasure) GetSingleDataLakeMeasure(elementId string) (data_lake.
 		return data_lake.DataLakeMeasure{}, err
 	}
 
-	unmarshalData, err := serializer.NewUnmarshalDataLakeMeasure().GetUnmarshal(body)
+	unmarshalData, err := serializer.NewUnmarshalDataLakeMeasure().Unmarshal(body)
 	if err != nil {
 		return data_lake.DataLakeMeasure{}, err
 	}
@@ -104,13 +106,14 @@ func (d *DataLakeMeasure) GetSingleDataLakeMeasure(elementId string) (data_lake.
 	return dataLakeMeasure, nil
 }
 
-func (d *DataLakeMeasure) GetSingleDataSeries(measureName string) (*data_lake.DataSeries, error) {
+// GetSingleDataSeries retrieves the measurement series for the specified measureId from the Data Lake.
+// Currently not supporting parameter queries.
+// The measureId can also be considered measureName.
+func (d *DataLakeMeasure) GetSingleDataSeries(measureId string) (*data_lake.DataSeries, error) {
 
-	// Get data from a single measurement series by a given id
-	// Currently not supporting parameter queries
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", []string{measureId})
+	slog.Info("Get data from: %s", endPointUrl)
 
-	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", []string{measureName})
-	log.Printf("Get data from: %s", endPointUrl)
 	response, err := d.executeRequest("GET", endPointUrl)
 	if err != nil {
 		return nil, err
@@ -128,7 +131,7 @@ func (d *DataLakeMeasure) GetSingleDataSeries(measureName string) (*data_lake.Da
 		return nil, err
 	}
 
-	unmarshalData, err := serializer.NewUnmarshalDataSeries().GetUnmarshal(body)
+	unmarshalData, err := serializer.NewUnmarshalDataSeries().Unmarshal(body)
 	if err != nil {
 		return nil, err
 	}
@@ -137,11 +140,12 @@ func (d *DataLakeMeasure) GetSingleDataSeries(measureName string) (*data_lake.Da
 	return &dataSeries, nil
 }
 
-func (d *DataLakeMeasure) ClearDataLakeMeasureData(measureName string) error {
-	// Remove data from a single measurement series with given id
+// ClearDataLakeMeasureData removes data from a single measurement series with given id.
+func (d *DataLakeMeasure) ClearDataLakeMeasureData(measureId string) error {
 
-	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", []string{measureName})
-	log.Printf("Clear data from: %s", endPointUrl)
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", []string{measureId})
+	slog.Info("Clear data from: %s", endPointUrl)
+
 	response, err := d.executeRequest("DELETE", endPointUrl)
 	if err != nil {
 		return err
@@ -153,16 +157,16 @@ func (d *DataLakeMeasure) ClearDataLakeMeasureData(measureName string) error {
 			return err
 		}
 	}
-	log.Printf("Successfully deleted data from a single measurement sequence of %s", measureName)
+	slog.Info("Successfully deleted data from a single measurement sequence of %s", measureId)
 
 	return nil
 }
 
-func (d *DataLakeMeasure) DeleteDataLakeMeasure(measureName string) error {
-	// Drop a single measurement series with given id from Data Lake and remove related event property
+// DeleteDataLakeMeasure  drops a single measurement series with given id from Data Lake and remove related event property.
+func (d *DataLakeMeasure) DeleteDataLakeMeasure(measureId string) error {
 
-	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", []string{measureName, "drop"})
-	log.Printf("Delete data from: %s", endPointUrl)
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", []string{measureId, "drop"})
+	slog.Info("Delete data from: %s", endPointUrl)
 	response, err := d.executeRequest("DELETE", endPointUrl)
 	if err != nil {
 		return err
@@ -175,6 +179,6 @@ func (d *DataLakeMeasure) DeleteDataLakeMeasure(measureName string) error {
 		}
 	}
 
-	log.Printf("Successfully dropped a single measurement series for %s from  DataLake and remove related event property", measureName)
+	slog.Info("Successfully dropped a single measurement series for %s from  DataLake and remove related event property", measureId)
 	return nil
 }

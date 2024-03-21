@@ -23,20 +23,20 @@ import (
 )
 
 type Deserializer interface {
-	GetUnmarshal(body []byte) (interface{}, error)
+	Unmarshal(body []byte) (interface{}, error)
 }
 
-var _ Deserializer = (*UnmarshalDataLakeMeasures)(nil)
-var _ Deserializer = (*UnmarshalDataSeries)(nil)
-var _ Deserializer = (*UnmarshalDataLakeMeasure)(nil)
+var _ Deserializer = (*DataLakeMeasuresDeserializer)(nil)
+var _ Deserializer = (*DataSeriesDeSerializer)(nil)
+var _ Deserializer = (*DataLakeMeasureDeSerializer)(nil)
 
-type UnmarshalDataLakeMeasures struct{}
+type DataLakeMeasuresDeserializer struct{}
 
-func NewUnmarshalDataLakeMeasures() *UnmarshalDataLakeMeasures {
-	return &UnmarshalDataLakeMeasures{}
+func NewUnmarshalDataLakeMeasures() *DataLakeMeasuresDeserializer {
+	return &DataLakeMeasuresDeserializer{}
 }
 
-func (u *UnmarshalDataLakeMeasures) GetUnmarshal(data []byte) (interface{}, error) {
+func (u *DataLakeMeasuresDeserializer) Unmarshal(data []byte) (interface{}, error) {
 	var DeSerializerDataLakeMeasures []data_lake.DataLakeMeasure
 	err := json.Unmarshal(data, &DeSerializerDataLakeMeasures)
 	if err != nil {
@@ -45,13 +45,13 @@ func (u *UnmarshalDataLakeMeasures) GetUnmarshal(data []byte) (interface{}, erro
 	return DeSerializerDataLakeMeasures, nil
 }
 
-type UnmarshalDataLakeMeasure struct{}
+type DataLakeMeasureDeSerializer struct{}
 
-func NewUnmarshalDataLakeMeasure() *UnmarshalDataLakeMeasure {
-	return &UnmarshalDataLakeMeasure{}
+func NewUnmarshalDataLakeMeasure() *DataLakeMeasureDeSerializer {
+	return &DataLakeMeasureDeSerializer{}
 }
 
-func (u *UnmarshalDataLakeMeasure) GetUnmarshal(data []byte) (interface{}, error) {
+func (u *DataLakeMeasureDeSerializer) Unmarshal(data []byte) (interface{}, error) {
 	var DeSerializerDataLakeMeasure data_lake.DataLakeMeasure
 	err := json.Unmarshal(data, &DeSerializerDataLakeMeasure)
 	if err != nil {
@@ -60,13 +60,13 @@ func (u *UnmarshalDataLakeMeasure) GetUnmarshal(data []byte) (interface{}, error
 	return DeSerializerDataLakeMeasure, nil
 }
 
-type UnmarshalDataSeries struct{}
+type DataSeriesDeSerializer struct{}
 
-func NewUnmarshalDataSeries() *UnmarshalDataSeries {
-	return &UnmarshalDataSeries{}
+func NewUnmarshalDataSeries() *DataSeriesDeSerializer {
+	return &DataSeriesDeSerializer{}
 }
 
-func (u *UnmarshalDataSeries) GetUnmarshal(data []byte) (interface{}, error) {
+func (u *DataSeriesDeSerializer) Unmarshal(data []byte) (interface{}, error) {
 	var DeSerializerDataLakeSeries data_lake.DataSeries
 	err := json.Unmarshal(data, &DeSerializerDataLakeSeries)
 	if err != nil {
