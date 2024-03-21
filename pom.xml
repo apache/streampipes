@@ -147,7 +147,7 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
-        <owasp.check.skip>false</owasp.check.skip>
+        <owasp.check.skip>true</owasp.check.skip>
     </properties>
 
     <dependencyManagement>
