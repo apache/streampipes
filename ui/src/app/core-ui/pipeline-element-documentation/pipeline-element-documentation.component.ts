@@ -38,15 +38,15 @@ export class PipelineElementDocumentationComponent implements OnInit {
     constructor(private pipelineElementService: PipelineElementService) {}
 
     ngOnInit(): void {
-        this.pipelineElementService.getDocumentation(this.appId).subscribe(
-            msg => {
+        this.pipelineElementService.getDocumentation(this.appId).subscribe({
+            next: msg => {
                 this.error = false;
                 this.documentationMarkdown = this.compileMarkdown(msg);
             },
-            error => {
+            error: () => {
                 this.error = true;
             },
-        );
+        });
     }
 
     compileMarkdown(value: string): string {

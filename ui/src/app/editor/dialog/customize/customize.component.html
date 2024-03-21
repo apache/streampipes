@@ -38,6 +38,7 @@
                         <mat-select
                             (selectionChange)="loadTemplate($event)"
                             [(value)]="selectedTemplate"
+                            data-cy="use-template"
                         >
                             <mat-option>--</mat-option>
                             <mat-option
@@ -160,6 +161,7 @@
                 mat-raised-button
                 class="mat-basic"
                 (click)="close()"
+                data-cy="cancel-customize"
             >
                 Cancel
             </button>
@@ -169,6 +171,7 @@
                 mat-raised-button
                 color="accent"
                 [disabled]="!formValid"
+                data-cy="create-template"
                 (click)="triggerTemplateMode()"
             >
                 <i class="material-icons">add_circle_outline</i
@@ -183,6 +186,7 @@
                 (click)="saveTemplate()"
                 style="margin-right: 10px"
                 [disabled]="!formValid"
+                data-cy="save-template"
             >
                 <i class="material-icons">save</i
                 ><span>&nbsp;Save template</span>

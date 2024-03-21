@@ -87,6 +87,9 @@ import { SpPieChartWidgetConfigComponent } from './components/widgets/pie/config
 import { SpInvalidConfigurationComponent } from './components/widgets/utils/invalid-configuration/invalid-configuration.component';
 import { SpConfigurationBoxComponent } from './components/widgets/utils/layout/configuration-box.component';
 import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/visualization-config-outer/visualization-config-outer.component';
+import { SpSelectAxisOptionsComponent } from './components/widgets/utils/select-axis-options/select-axis-options.component';
+import { SpTimeseriesItemConfigComponent } from './components/widgets/utils/select-color-properties/time-series-item-config/time-series-item-config.component';
+import { SpEchartsWidgetAppearanceConfigComponent } from './components/widgets/utils/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
 
 @NgModule({
     imports: [
@@ -116,7 +119,7 @@ import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/
         NgxEchartsModule.forChild(),
         RouterModule.forChild([
             {
-                path: 'dataexplorer',
+                path: '',
                 children: [
                     {
                         path: '',
@@ -182,6 +185,9 @@ import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/
         SpInvalidConfigurationComponent,
         SpConfigurationBoxComponent,
         SpVisualizationConfigOuterComponent,
+        SpSelectAxisOptionsComponent,
+        SpTimeseriesItemConfigComponent,
+        SpEchartsWidgetAppearanceConfigComponent,
     ],
     providers: [SemanticTypeUtilsService],
     exports: [],

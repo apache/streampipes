@@ -24,7 +24,6 @@ from streampipes.model.common import (
     EventSchema,
     MeasurementCapability,
     MeasurementObject,
-    random_letters,
 )
 from streampipes.model.resource.resource import Resource
 
@@ -81,11 +80,13 @@ class DataStream(Resource):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        if not self.element_id:
+            self.element_id = f"sp:spdatastream:{self.name.replace(':', '')}"
         if not self.uri:
             self.uri = self.element_id
 
     class_name: StrictStr = Field(alias="@class", default_factory=lambda: "org.apache.streampipes.model.SpDataStream")
-    element_id: StrictStr = Field(default_factory=lambda: f"sp:spdatastream:{random_letters(6)}")
+    element_id: StrictStr = Field(default="")
     name: StrictStr = Field(default="Unnamed")
     description: Optional[StrictStr]
     icon_url: Optional[StrictStr]

@@ -76,6 +76,13 @@ import { StatusWidgetComponent } from './status/status-widget.component';
 import { SpSimpleMetricsComponent } from './monitoring/simple-metrics/simple-metrics.component';
 import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.component';
 import { DateInputComponent } from './date-input/date-input.component';
+import { HelpComponent } from './help/help.component';
+import { PipelineElementRuntimeInfoComponent } from './pipeline-element-runtime-info/pipeline-element-runtime-info.component';
+import { PipelineElementDocumentationComponent } from './pipeline-element-documentation/pipeline-element-documentation.component';
+import { MarkdownModule } from 'ngx-markdown';
+import { LivePreviewLoadingComponent } from './pipeline-element-runtime-info/live-preview-loading/live-preview-loading.component';
+import { LivePreviewTableComponent } from './pipeline-element-runtime-info/live-preview-table/live-preview-table.component';
+import { LivePreviewErrorComponent } from './pipeline-element-runtime-info/live-preview-error/live-preview-error.component';
 
 @NgModule({
     imports: [
@@ -103,6 +110,7 @@ import { DateInputComponent } from './date-input/date-input.component';
         OverlayModule,
         QuillModule.forRoot(),
         MatTreeModule,
+        MarkdownModule.forRoot(),
     ],
     declarations: [
         DataDownloadDialogComponent,
@@ -111,6 +119,9 @@ import { DateInputComponent } from './date-input/date-input.component';
         ObjectPermissionDialogComponent,
         PipelineElementTemplateConfigComponent,
         PipelineElementTemplatePipe,
+        PipelineElementRuntimeInfoComponent,
+        PipelineElementDocumentationComponent,
+        HelpComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,
         StaticFreeInputComponent,
@@ -139,6 +150,9 @@ import { DateInputComponent } from './date-input/date-input.component';
         SpSimpleLogsComponent,
         SpSimpleMetricsComponent,
         StatusWidgetComponent,
+        LivePreviewLoadingComponent,
+        LivePreviewTableComponent,
+        LivePreviewErrorComponent,
     ],
     providers: [
         MatDatepickerModule,
@@ -149,6 +163,9 @@ import { DateInputComponent } from './date-input/date-input.component';
         DataDownloadDialogComponent,
         DateInputComponent,
         PipelineElementTemplateConfigComponent,
+        PipelineElementRuntimeInfoComponent,
+        PipelineElementDocumentationComponent,
+        HelpComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,
         StaticFreeInputComponent,

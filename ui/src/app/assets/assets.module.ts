@@ -65,7 +65,7 @@ import { SpManageAssetLinksDialogComponent } from './dialog/manage-asset-links/m
         PlatformServicesModule,
         RouterModule.forChild([
             {
-                path: 'assets',
+                path: '',
                 children: [
                     {
                         path: '',

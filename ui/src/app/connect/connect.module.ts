@@ -50,7 +50,6 @@ import { EditDataTypeComponent } from './dialog/edit-event-property/components/e
 import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-timestamp-property/edit-timestamp-property.component';
 import { EditUnitTransformationComponent } from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
 import { EditEventPropertyComponent } from './dialog/edit-event-property/edit-event-property.component';
-import { PipelineElementRuntimeInfoComponent } from './components/runtime-info/pipeline-element-runtime-info.component';
 import { EventPropertyRowComponent } from './components/adapter-configuration/schema-editor/event-property-row/event-property-row.component';
 import { EventSchemaPreviewComponent } from './components/adapter-configuration/schema-editor/event-schema-preview/event-schema-preview.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
@@ -107,16 +106,14 @@ import { MatDividerModule } from '@angular/material/divider';
         MatSliderModule,
         MatSnackBarModule,
         PlatformServicesModule,
-        CoreUiModule,
         TreeModule,
         RouterModule.forChild([
             {
-                path: 'connect',
+                path: '',
                 children: [
                     {
                         path: '',
                         component: ExistingAdaptersComponent,
-                        pathMatch: 'full',
                     },
                     {
                         path: 'create',
@@ -147,7 +144,7 @@ import { MatDividerModule } from '@angular/material/divider';
         ]),
         SharedUiModule,
     ],
-    exports: [PipelineElementRuntimeInfoComponent, ErrorMessageComponent],
+    exports: [ErrorMessageComponent],
     declarations: [
         AdapterConfigurationHeaderComponent,
         AdapterConfigurationComponent,
@@ -169,7 +166,6 @@ import { MatDividerModule } from '@angular/material/divider';
         AdapterFilterPipe,
         JsonPrettyPrintPipe,
         AdapterConfigurationComponent,
-        PipelineElementRuntimeInfoComponent,
         TimestampPipe,
         EditCorrectionValueComponent,
         AdapterConfigurationComponent,

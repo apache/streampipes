@@ -59,14 +59,15 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
         '#D466A1',
     ];
 
+    numericPlusBooleanFields: DataExplorerField[] = [];
+
     setSelectedProperties(selectedColumns: DataExplorerField[]) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedTimeSeriesChartProperties =
             selectedColumns;
 
-        const numericPlusBooleanFields =
-            this.fieldProvider.numericFields.concat(
-                this.fieldProvider.booleanFields,
-            );
+        this.numericPlusBooleanFields = this.fieldProvider.numericFields.concat(
+            this.fieldProvider.booleanFields,
+        );
 
         const currentColors =
             this.currentlyConfiguredWidget.visualizationConfig.chosenColor;
@@ -79,7 +80,7 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
 
         const lenBefore = Object.keys(currentAxis).length;
 
-        numericPlusBooleanFields.map((field, index) => {
+        this.numericPlusBooleanFields.forEach((field, index) => {
             const name = field.fullDbName + field.sourceIndex;
             if (!(name in currentColors)) {
                 currentColors[name] = this.presetColors[lenBefore + index];
@@ -108,29 +109,28 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
     }
 
     protected applyWidgetConfig(config: TimeSeriesChartVisConfig): void {
-        const numericPlusBooleanFields =
-            this.fieldProvider.numericFields.concat(
-                this.fieldProvider.booleanFields,
-            );
+        this.numericPlusBooleanFields = this.fieldProvider.numericFields.concat(
+            this.fieldProvider.booleanFields,
+        );
 
         config.chosenColor = this.getConfigOrDefault(
             config.chosenColor,
-            numericPlusBooleanFields,
+            this.numericPlusBooleanFields,
             (field, index) => this.presetColors[index],
         );
         config.displayName = this.getConfigOrDefault(
             config.displayName,
-            numericPlusBooleanFields,
+            this.numericPlusBooleanFields,
             field => field.fullDbName,
         );
         config.displayType = this.getConfigOrDefault(
             config.displayType,
-            numericPlusBooleanFields,
+            this.numericPlusBooleanFields,
             () => 'lines',
         );
         config.chosenAxis = this.getConfigOrDefault(
             config.chosenAxis,
-            numericPlusBooleanFields,
+            this.numericPlusBooleanFields,
             () => 'left',
         );
 
@@ -138,14 +138,24 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
         config.selectedTimeSeriesChartProperties =
             this.fieldService.getSelectedFields(
                 config.selectedTimeSeriesChartProperties,
-                numericPlusBooleanFields,
+                this.numericPlusBooleanFields,
                 () => {
-                    return numericPlusBooleanFields.length > 6
-                        ? numericPlusBooleanFields.slice(0, 5)
-                        : numericPlusBooleanFields;
+                    return this.numericPlusBooleanFields.length > 6
+                        ? this.numericPlusBooleanFields.slice(0, 5)
+                        : this.numericPlusBooleanFields;
                 },
             );
         config.showSpike ??= true;
+        config.leftAxis ??= {
+            autoScaleActive: true,
+            axisMin: 0,
+            axisMax: 100,
+        };
+        config.rightAxis ??= {
+            autoScaleActive: true,
+            axisMin: 0,
+            axisMax: 100,
+        };
     }
 
     private getConfigOrDefault(

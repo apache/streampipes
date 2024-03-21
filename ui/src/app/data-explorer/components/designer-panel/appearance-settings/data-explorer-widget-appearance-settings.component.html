@@ -19,8 +19,12 @@
 <sp-configuration-box title="Widget Title" marginTop="5px">
     <div fxFlex="100" fxLayout="row" class="mt-10 form-field-small">
         <mat-form-field appearance="outline" color="accent" fxFlex="100">
-            <mat-label>Widget Title</mat-label>
-            <input matInput [(ngModel)]="baseAppearanceConfig.widgetTitle" />
+            <input
+                matInput
+                [(ngModel)]="
+                    currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle
+                "
+            />
         </mat-form-field>
     </div>
 </sp-configuration-box>
@@ -31,9 +35,15 @@
             <span>Background</span>
             <span fxFlex></span>
             <input
-                [(colorPicker)]="baseAppearanceConfig.backgroundColor"
+                [(colorPicker)]="
+                    currentlyConfiguredWidget.baseAppearanceConfig
+                        .backgroundColor
+                "
                 [cpPosition]="'left'"
-                [style.background]="baseAppearanceConfig.backgroundColor"
+                [style.background]="
+                    currentlyConfiguredWidget.baseAppearanceConfig
+                        .backgroundColor
+                "
                 required
                 [cpPresetColors]="presetColors"
                 (colorPickerSelect)="triggerViewUpdate()"
@@ -45,9 +55,13 @@
             <span>Text</span>
             <span fxFlex></span>
             <input
-                [(colorPicker)]="baseAppearanceConfig.textColor"
+                [(colorPicker)]="
+                    currentlyConfiguredWidget.baseAppearanceConfig.textColor
+                "
                 [cpPosition]="'left'"
-                [style.background]="baseAppearanceConfig.textColor"
+                [style.background]="
+                    currentlyConfiguredWidget.baseAppearanceConfig.textColor
+                "
                 required
                 [cpPresetColors]="presetColors"
                 (colorPickerSelect)="triggerViewUpdate()"
@@ -56,3 +70,16 @@
         </div>
     </div>
 </sp-configuration-box>
+
+<div *ngIf="extendedAppearanceConfigComponent">
+    <ng-container
+        *ngComponentOutlet="
+            extendedAppearanceConfigComponent;
+            inputs: {
+                appearanceConfig:
+                    currentlyConfiguredWidget.baseAppearanceConfig,
+                widgetId: widgetId
+            }
+        "
+    />
+</div>

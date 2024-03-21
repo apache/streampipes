@@ -39,7 +39,6 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         _widgetSize: WidgetSize,
     ): void {
         this.addAxisOptions(widgetConfig, options);
-
         const finalSeries: SeriesOption[] = [];
 
         widgetConfig.visualizationConfig.selectedTimeSeriesChartProperties.forEach(
@@ -87,6 +86,8 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             },
         );
 
+        const showTooltip =
+            widgetConfig.baseAppearanceConfig.chartAppearance?.showTooltip;
         Object.assign(options, {
             series: finalSeries,
             dataset:
@@ -95,6 +96,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                 show: widgetConfig.visualizationConfig.showSpike,
             },
             tooltip: {
+                show: showTooltip,
                 trigger: 'axis',
                 axisPointer: {
                     type: 'cross',
@@ -232,6 +234,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             0,
             config.baseAppearanceConfig as WidgetBaseAppearanceConfig,
         );
+
         const yAxisOptions: YAXisOption[] = [];
 
         const uniqueAxes = new Set(
@@ -239,12 +242,20 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                 a.localeCompare(b),
             ),
         );
+        let axisIndex = 0;
 
         uniqueAxes.forEach(axis => {
+            const settings =
+                axisIndex === 0
+                    ? config.visualizationConfig.leftAxis
+                    : config.visualizationConfig.rightAxis;
             yAxisOptions.push({
                 type: 'value',
                 position: axis as CartesianAxisPosition,
+                min: settings.autoScaleActive ? undefined : settings.axisMin,
+                max: settings.autoScaleActive ? undefined : settings.axisMax,
             });
+            axisIndex++;
         });
 
         Object.assign(options, {

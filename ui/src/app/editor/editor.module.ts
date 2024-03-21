@@ -37,8 +37,6 @@ import { SavePipelineComponent } from './dialog/save-pipeline/save-pipeline.comp
 import { PipelineElementRecommendationComponent } from './components/pipeline-element-recommendation/pipeline-element-recommendation.component';
 import { CompatibleElementsComponent } from './dialog/compatible-elements/compatible-elements.component';
 import { MatListModule } from '@angular/material/list';
-import { HelpComponent } from './dialog/help/help.component';
-import { PipelineElementDocumentationComponent } from './components/pipeline-element-documentation/pipeline-element-documentation.component';
 import { SafeCss } from './utils/style-sanitizer';
 import { MatchingErrorComponent } from './dialog/matching-error/matching-error.component';
 import { MissingElementsForTutorialComponent } from './dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
@@ -46,7 +44,6 @@ import { OutputStrategyComponent } from './components/output-strategy/output-str
 import { CustomOutputStrategyComponent } from './components/output-strategy/custom-output/custom-output-strategy.component';
 import { PropertySelectionComponent } from './components/output-strategy/property-selection/property-selection.component';
 import { UserDefinedOutputStrategyComponent } from './components/output-strategy/user-defined-output/user-defined-output.component';
-import { ConnectModule } from '../connect/connect.module';
 import { EnabledPipelineElementFilter } from './filter/enabled-pipeline-element.filter';
 import { PipelineElementPreviewComponent } from './components/pipeline-element-preview/pipeline-element-preview.component';
 import { PipelineElementDiscoveryComponent } from './dialog/pipeline-element-discovery/pipeline-element-discovery.component';
@@ -55,16 +52,13 @@ import { PipelineElementIconStandRowComponent } from './components/pipeline-elem
 import { PipelineElementTypeFilterPipe } from './services/pipeline-element-type-filter.pipe';
 import { PipelineElementNameFilterPipe } from './services/pipeline-element-name-filter.pipe';
 import { PipelineElementGroupFilterPipe } from './services/pipeline-element-group-filter.pipe';
-import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
     imports: [
         CoreUiModule,
         CommonModule,
-        ConnectModule,
         MatTabsModule,
         MatListModule,
-        FlexLayoutModule,
         GridsterModule,
         FlexLayoutModule,
         CustomMaterialModule,
@@ -72,7 +66,6 @@ import { MarkdownModule } from 'ngx-markdown';
         MatProgressSpinnerModule,
         ReactiveFormsModule,
         PlatformServicesModule,
-        MarkdownModule.forRoot(),
     ],
     declarations: [
         CompatibleElementsComponent,
@@ -80,7 +73,6 @@ import { MarkdownModule } from 'ngx-markdown';
         CustomOutputStrategyComponent,
         EditorComponent,
         EnabledPipelineElementFilter,
-        HelpComponent,
         MatchingErrorComponent,
         MissingElementsForTutorialComponent,
         OutputStrategyComponent,
@@ -88,7 +80,6 @@ import { MarkdownModule } from 'ngx-markdown';
         PipelineAssemblyComponent,
         PipelineElementComponent,
         PipelineElementDiscoveryComponent,
-        PipelineElementDocumentationComponent,
         PipelineElementIconStandComponent,
         PipelineElementIconStandRowComponent,
         PipelineElementGroupFilterPipe,

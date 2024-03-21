@@ -317,10 +317,11 @@ export class ConnectUtils {
             timeout: 10000,
         }).should('be.visible');
 
-        // validate that three event properties
-        cy.get('.preview-row', { timeout: 10000 })
-            .its('length')
-            .should('eq', amountOfProperties);
+        // validate that X event properties. The +1 is for the header row
+        cy.get('tr.mat-mdc-row', { timeout: 10000 }).should(
+            'have.length',
+            amountOfProperties + 1,
+        );
     }
 
     public static tearDownPreprocessingRuleTest(

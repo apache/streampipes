@@ -15,14 +15,3 @@
  * limitations under the License.
  *
  */
-
-@import '../../../../scss/sp/sp-dialog.scss';
-
-.preview-row,
-.preview-table {
-    background: var(--color-bg-dialog);
-}
-
-.dataTable tbody tr:hover {
-    background: var(--color-bg-1);
-}

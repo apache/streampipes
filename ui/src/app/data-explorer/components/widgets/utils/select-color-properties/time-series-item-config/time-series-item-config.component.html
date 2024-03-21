@@ -1,0 +1,175 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="column">
+    <div fxLayout="row" fxLayoutAlign="start center">
+        <mat-checkbox
+            color="accent"
+            [checked]="isSelected(field)"
+            (change)="toggleFieldSelection(field)"
+        >
+            <b>{{ field.runtimeName }}</b>
+            {{
+                '(' +
+                    (field.aggregation ? field.aggregation + ', ' : '') +
+                    field.measure +
+                    ')'
+            }}
+        </mat-checkbox>
+        <span fxFlex></span>
+        <span
+            class="color-indicator"
+            [ngStyle]="{
+                background:
+                    currentlyConfiguredWidget.visualizationConfig.chosenColor[
+                        field.fullDbName + field.sourceIndex.toString()
+                    ]
+            }"
+        ></span>
+        <button
+            mat-icon-button
+            color="accent"
+            matTooltip="Field settings"
+            (click)="toggleExpand()"
+            [disabled]="!isSelected(field)"
+        >
+            <i class="material-icons">{{
+                expanded ? 'expand_less' : 'expand_more'
+            }}</i>
+        </button>
+    </div>
+    <div
+        fxLayout="column"
+        fxFlex="100"
+        *ngIf="isSelected(field) && expanded"
+        fxLayoutGap="5px"
+        class="ml-10"
+    >
+        <div fxLayout="row" fxFlex="100">
+            <div fxFlex="30"><small>Color</small></div>
+            <div fxFlex="70" fxLayoutAlign="start center">
+                <input
+                    class="color-field"
+                    [(colorPicker)]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .chosenColor[
+                            field.fullDbName + field.sourceIndex.toString()
+                        ]
+                    "
+                    [style.background]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .chosenColor[
+                            field.fullDbName + field.sourceIndex.toString()
+                        ]
+                    "
+                    required
+                    [cpPosition]="'bottom'"
+                    [cpPresetColors]="presetColors"
+                    (colorPickerSelect)="viewRefreshEmitter.emit()"
+                    autocomplete="off"
+                />
+            </div>
+        </div>
+        <div fxLayout="row" fxFlex="100">
+            <div fxFlex="30" fxLayoutAlign="start center">
+                <small>Label</small>
+            </div>
+            <div fxFlex="70" fxLayoutAlign="start center">
+                <mat-form-field
+                    appearance="outline"
+                    color="accent"
+                    class="w-100"
+                >
+                    <input
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .displayName[
+                                field.fullDbName + field.sourceIndex.toString()
+                            ]
+                        "
+                        matInput
+                        (input)="
+                            onDisplayNameChange($event.target.value, field)
+                        "
+                    />
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div fxLayout="row" fxFlex="100">
+            <div fxFlex="30" fxLayoutAlign="start center">
+                <small>Type</small>
+            </div>
+            <div fxFlex="70" fxLayoutAlign="start center">
+                <mat-form-field
+                    appearance="outline"
+                    color="accent"
+                    class="w-100"
+                >
+                    <mat-select
+                        [(value)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .displayType[
+                                field.fullDbName + field.sourceIndex.toString()
+                            ]
+                        "
+                        (selectionChange)="viewRefreshEmitter.emit()"
+                    >
+                        <mat-option [value]="'lines'">Line</mat-option>
+                        <mat-option [value]="'normal_markers'"
+                            >Scatter
+                        </mat-option>
+                        <mat-option [value]="'lines+markers'"
+                            >Scattered Line
+                        </mat-option>
+                        <mat-option [value]="'bar'">Bar</mat-option>
+                        <mat-option [value]="'symbol_markers'"
+                            >Symbol
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div fxLayout="row" fxFlex="100">
+            <div fxFlex="30" fxLayoutAlign="start center">
+                <small>Axis</small>
+            </div>
+            <div fxFlex="70" fxLayoutAlign="start center">
+                <mat-form-field
+                    appearance="outline"
+                    color="accent"
+                    class="w-100"
+                >
+                    <mat-select
+                        [(value)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .chosenAxis[
+                                field.fullDbName + field.sourceIndex.toString()
+                            ]
+                        "
+                        (selectionChange)="viewRefreshEmitter.emit()"
+                    >
+                        <mat-option [value]="'left'">Left</mat-option>
+                        <mat-option [value]="'right'">Right</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</div>

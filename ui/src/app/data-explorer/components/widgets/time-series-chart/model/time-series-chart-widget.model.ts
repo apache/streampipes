@@ -22,7 +22,10 @@ import {
     DataExplorerWidgetModel,
     EventPropertyUnion,
 } from '@streampipes/platform-services';
-import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
+import {
+    AxisConfig,
+    DataExplorerVisConfig,
+} from '../../../../models/dataview-dashboard.model';
 
 export interface TimeSeriesChartVisConfig extends DataExplorerVisConfig {
     selectedTimeSeriesChartProperties: DataExplorerField[];
@@ -36,6 +39,8 @@ export interface TimeSeriesChartVisConfig extends DataExplorerVisConfig {
     displayName: { [id: string]: string };
     displayType: { [id: string]: string };
     chosenAxis: { [id: string]: string };
+    leftAxis: AxisConfig;
+    rightAxis: AxisConfig;
     showSpike: boolean;
 }
 
