@@ -97,7 +97,7 @@ func (d *DataLakeMeasure) GetSingleDataLakeMeasure(elementId string) (data_lake.
 		return data_lake.DataLakeMeasure{}, err
 	}
 
-	unmarshalData, err := serializer.NewDataLakeMeasureDeSerializer().Unmarshal(body)
+	unmarshalData, err := serializer.NewDataLakeMeasureDeserializer().Unmarshal(body)
 	if err != nil {
 		return data_lake.DataLakeMeasure{}, err
 	}
@@ -131,7 +131,7 @@ func (d *DataLakeMeasure) GetSingleDataSeries(measureId string) (*data_lake.Data
 		return nil, err
 	}
 
-	unmarshalData, err := serializer.NewDataSeriesDeSerializer().Unmarshal(body)
+	unmarshalData, err := serializer.NewDataSeriesDeserializer().Unmarshal(body)
 	if err != nil {
 		return nil, err
 	}

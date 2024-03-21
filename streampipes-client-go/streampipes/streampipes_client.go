@@ -25,20 +25,17 @@ import (
 	"strings"
 )
 
-/*
- This is the central point of contact with StreamPipes and provides all the functionalities to interact with it.
- The client provides so-called "API", each of which refers to the endpoint of the StreamPipes API.
- e.g. `DataLakeMeasure` provides the actual methods to interact with StreamPipes API.
-*/
+// This is the central point of contact with StreamPipes and provides all the functionalities to interact with it.
+// The client provides so-called "API", each of which refers to the endpoint of the StreamPipes API.
+// e.g. `DataLakeMeasure` provides the actual methods to interact with StreamPipes API.
 
 type StreamPipesClient struct {
 	config config.StreamPipesClientConfig
 }
 
+// NewStreamPipesClient returns an instance of *StreamPipesClient
+// Currently, it does not support HTTPS connections or connections to port 443.
 func NewStreamPipesClient(c config.StreamPipesClientConfig) (*StreamPipesClient, error) {
-
-	// NewStreamPipesClient returns an instance of *StreamPipesClient
-	// Currently, it does not support HTTPS connections or connections to port 443.
 
 	if c.Credential == (config.StreamPipesApiKeyCredentials{}) {
 		return nil, errors.New("no credential entered")
@@ -68,5 +65,4 @@ func NewStreamPipesClient(c config.StreamPipesClientConfig) (*StreamPipesClient,
 func (s *StreamPipesClient) DataLakeMeasures() *DataLakeMeasure {
 
 	return NewDataLakeMeasures(s.config)
-
 }

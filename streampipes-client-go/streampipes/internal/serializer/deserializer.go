@@ -27,8 +27,8 @@ type Deserializer interface {
 }
 
 var _ Deserializer = (*DataLakeMeasuresDeserializer)(nil)
-var _ Deserializer = (*DataSeriesDeSerializer)(nil)
-var _ Deserializer = (*DataLakeMeasureDeSerializer)(nil)
+var _ Deserializer = (*DataSeriesDeserializer)(nil)
+var _ Deserializer = (*DataLakeMeasureDeserializer)(nil)
 
 type DataLakeMeasuresDeserializer struct{}
 
@@ -37,40 +37,40 @@ func NewDataLakeMeasuresDeserializer() *DataLakeMeasuresDeserializer {
 }
 
 func (u *DataLakeMeasuresDeserializer) Unmarshal(data []byte) (interface{}, error) {
-	var DeSerializerDataLakeMeasures []data_lake.DataLakeMeasure
-	err := json.Unmarshal(data, &DeSerializerDataLakeMeasures)
+	var dataLakeMeasures []data_lake.DataLakeMeasure
+	err := json.Unmarshal(data, &dataLakeMeasures)
 	if err != nil {
 		return nil, err
 	}
-	return DeSerializerDataLakeMeasures, nil
+	return dataLakeMeasures, nil
 }
 
-type DataLakeMeasureDeSerializer struct{}
+type DataLakeMeasureDeserializer struct{}
 
-func NewDataLakeMeasureDeSerializer() *DataLakeMeasureDeSerializer {
-	return &DataLakeMeasureDeSerializer{}
+func NewDataLakeMeasureDeserializer() *DataLakeMeasureDeserializer {
+	return &DataLakeMeasureDeserializer{}
 }
 
-func (u *DataLakeMeasureDeSerializer) Unmarshal(data []byte) (interface{}, error) {
-	var DeSerializerDataLakeMeasure data_lake.DataLakeMeasure
-	err := json.Unmarshal(data, &DeSerializerDataLakeMeasure)
+func (u *DataLakeMeasureDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var dataLakeMeasure data_lake.DataLakeMeasure
+	err := json.Unmarshal(data, &dataLakeMeasure)
 	if err != nil {
 		return nil, err
 	}
-	return DeSerializerDataLakeMeasure, nil
+	return dataLakeMeasure, nil
 }
 
-type DataSeriesDeSerializer struct{}
+type DataSeriesDeserializer struct{}
 
-func NewDataSeriesDeSerializer() *DataSeriesDeSerializer {
-	return &DataSeriesDeSerializer{}
+func NewDataSeriesDeserializer() *DataSeriesDeserializer {
+	return &DataSeriesDeserializer{}
 }
 
-func (u *DataSeriesDeSerializer) Unmarshal(data []byte) (interface{}, error) {
-	var DeSerializerDataLakeSeries data_lake.DataSeries
-	err := json.Unmarshal(data, &DeSerializerDataLakeSeries)
+func (u *DataSeriesDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var dataSeries data_lake.DataSeries
+	err := json.Unmarshal(data, &dataSeries)
 	if err != nil {
 		return nil, err
 	}
-	return DeSerializerDataLakeSeries, nil
+	return dataSeries, nil
 }
