@@ -29,7 +29,6 @@ import org.apache.streampipes.storage.api.IDataLakeStorage;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.IDataSinkStorage;
 import org.apache.streampipes.storage.api.IDataStreamStorage;
-import org.apache.streampipes.storage.api.IExtensionsServiceEndpointStorage;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.api.IImageStorage;
@@ -62,7 +61,6 @@ import org.apache.streampipes.storage.couchdb.impl.DataProcessorStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataSinkStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataStreamStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceConfigStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceEndpointStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.FileMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.GenericStorageImpl;
@@ -137,11 +135,6 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IVisualizationStorage getVisualizationStorageApi() {
     return new VisualizationStorageImpl();
-  }
-
-  @Override
-  public IExtensionsServiceEndpointStorage getRdfEndpointStorage() {
-    return new ExtensionsServiceEndpointStorageImpl();
   }
 
   @Override

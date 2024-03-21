@@ -31,16 +31,13 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.storage.api.IExtensionsServiceEndpointStorage;
 
 import org.apache.http.client.fluent.Request;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,32 +51,6 @@ import java.util.List;
 @RequestMapping("/api/v2/rdfendpoints")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestResource {
-
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<ExtensionsServiceEndpoint>> getAllEndpoints() {
-    //TODO: return the endpoint of passing services
-    return ok(getEndpoints());
-  }
-
-  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> addRdfEndpoint(@RequestBody ExtensionsServiceEndpoint extensionsServiceEndpoint) {
-    getRdfEndpointStorage()
-        .addExtensionsServiceEndpoint(extensionsServiceEndpoint);
-
-    return ok();
-  }
-
-
-  @DeleteMapping(
-      path = "/{rdfEndpointId}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> removeRdfEndpoint(@PathVariable("rdfEndpointId") String rdfEndpointId) {
-    getRdfEndpointStorage()
-        .removeExtensionsServiceEndpoint(rdfEndpointId);
-
-    return ok();
-  }
 
   @GetMapping(path = "/items", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<ExtensionsServiceEndpointItem>> getEndpointContents() {
@@ -212,9 +183,5 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
 
   private List<DataSinkDescription> getAllDataSinks() {
     return getNoSqlStorage().getDataSinkStorage().getAll();
-  }
-
-  private IExtensionsServiceEndpointStorage getRdfEndpointStorage() {
-    return getNoSqlStorage().getRdfEndpointStorage();
   }
 }

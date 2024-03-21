@@ -32,12 +32,6 @@ export class AddService {
         private platformServicesCommons: PlatformServicesCommons,
     ) {}
 
-    getRdfEndpoints(): Observable<any> {
-        return this.http.get(
-            this.platformServicesCommons.apiBasePath + '/rdfendpoints',
-        );
-    }
-
     getRdfEndpointItems(): Observable<ExtensionsServiceEndpointItem[]> {
         return this.http
             .get(
@@ -51,21 +45,6 @@ export class AddService {
                     );
                 }),
             );
-    }
-
-    addRdfEndpoint(rdfEndpoint): Observable<any> {
-        return this.http.post(
-            this.platformServicesCommons.apiBasePath + '/rdfendpoints',
-            rdfEndpoint,
-        );
-    }
-
-    removeRdfEndpoint(rdfEndpointId): Observable<any> {
-        return this.http.delete(
-            this.platformServicesCommons.apiBasePath +
-                '/rdfendpoints/' +
-                rdfEndpointId,
-        );
     }
 
     getRdfEndpointIcon(item: ExtensionsServiceEndpointItem): Observable<any> {
