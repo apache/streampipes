@@ -23,6 +23,7 @@ import {
     UserDefinedOutputStrategy,
 } from '@streampipes/platform-services';
 import { UntypedFormControl } from '@angular/forms';
+import { IdGeneratorService } from '../../../../core-services/id-generator/id-generator.service';
 
 @Component({
     selector: 'sp-user-defined-output-strategy',
@@ -33,13 +34,6 @@ export class UserDefinedOutputStrategyComponent
     extends BaseOutputStrategy<UserDefinedOutputStrategy>
     implements OnInit
 {
-    private prefix = 'urn:streampipes.org:spi:';
-    private chars =
-        '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-    collectedPropertiesFirstStream: any;
-    collectedPropertiesSecondStream: any;
-
     primitiveClasses = [
         { label: 'String', id: 'http://www.w3.org/2001/XMLSchema#string' },
         { label: 'Boolean', id: 'http://www.w3.org/2001/XMLSchema#boolean' },
@@ -49,7 +43,7 @@ export class UserDefinedOutputStrategyComponent
         { label: 'Float', id: 'http://www.w3.org/2001/XMLSchema#float' },
     ];
 
-    constructor() {
+    constructor(private idGeneratorService: IdGeneratorService) {
         super();
     }
 
@@ -87,21 +81,10 @@ export class UserDefinedOutputStrategyComponent
             'org.apache.streampipes.model.schema.EventPropertyPrimitive';
         ep.domainProperties = [];
         ep.elementId =
-            'urn:streampipes.org:spi:eventpropertyprimitive:' + this.makeId();
+            'urn:streampipes.org:spi:eventpropertyprimitive:' +
+            this.idGeneratorService.generatePrefixedId();
 
         return ep;
-    }
-
-    makeId() {
-        return this.prefix + this.randomString(6);
-    }
-
-    randomString(length) {
-        let result = '';
-        for (let i = length; i > 0; --i) {
-            result += this.chars[Math.floor(Math.random() * this.chars.length)];
-        }
-        return result;
     }
 
     checkFormValidity() {

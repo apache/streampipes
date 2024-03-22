@@ -25,7 +25,6 @@ import {
     PipelineService,
     PipelineCanvasMetadataService,
 } from '@streampipes/platform-services';
-import { ObjectProvider } from '../../services/object-provider.service';
 import { EditorService } from '../../services/editor.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
@@ -35,7 +34,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { InvocablePipelineElementUnion } from '../../model/editor.model';
-import { JsplumbService } from '../../services/jsplumb.service';
+import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 
 @Component({
     selector: 'sp-save-pipeline',
@@ -72,8 +71,7 @@ export class SavePipelineComponent implements OnInit {
     constructor(
         private editorService: EditorService,
         private dialogRef: DialogRef<SavePipelineComponent>,
-        private jsplumbService: JsplumbService,
-        private objectProvider: ObjectProvider,
+        private idGeneratorService: IdGeneratorService,
         private pipelineService: PipelineService,
         private router: Router,
         private shepherdService: ShepherdService,
@@ -178,7 +176,7 @@ export class SavePipelineComponent implements OnInit {
         const lastIdIndex = entity.elementId.lastIndexOf(':');
         const newElementId =
             entity.elementId.substring(0, lastIdIndex + 1) +
-            this.jsplumbService.makeId(5);
+            this.idGeneratorService.generate(5);
         entity.elementId = newElementId;
     }
 

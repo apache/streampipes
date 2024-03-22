@@ -17,7 +17,6 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UUID } from 'angular2-uuid';
 import { TreeNode } from '@ali-hm/angular-tree-component';
 import {
     EventProperty,
@@ -27,13 +26,13 @@ import {
     EventPropertyUnion,
     EventSchema,
     FieldStatusInfo,
-    TransformationRuleDescription,
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
 import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
+import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
 
 @Component({
     selector: 'sp-event-property-row',
@@ -74,6 +73,7 @@ export class EventPropertyRowComponent implements OnInit {
         private dialogService: DialogService,
         private epUtils: EventPropertyUtilsService,
         private shepherdService: ShepherdService,
+        private idGeneratorService: IdGeneratorService,
     ) {}
 
     ngOnInit() {
@@ -251,7 +251,7 @@ export class EventPropertyRowComponent implements OnInit {
     }
 
     public addNestedProperty(eventProperty: EventPropertyNested): void {
-        const uuid: string = UUID.UUID();
+        const uuid: string = this.idGeneratorService.generate(25);
         if (!eventProperty.eventProperties) {
             eventProperty.eventProperties = new Array<EventPropertyUnion>();
         }
