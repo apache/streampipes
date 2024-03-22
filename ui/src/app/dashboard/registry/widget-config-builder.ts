@@ -122,7 +122,7 @@ export class WidgetConfigBuilder {
             WidgetConfigBuilder.QUERY_LIMIT_KEY,
             'Past data',
             'The number of historic events that should be shown',
-            Datatypes.Integer.toUri(),
+            Datatypes.Integer,
         );
         fst.value = '50';
         this.widget.config.push(fst);
@@ -139,7 +139,7 @@ export class WidgetConfigBuilder {
             id,
             label,
             description,
-            Datatypes.String.toUri(),
+            Datatypes.String,
         );
         this.widget.config.push(fst);
         return this;
@@ -174,7 +174,7 @@ export class WidgetConfigBuilder {
             id,
             label,
             description,
-            Datatypes.Integer.toUri(),
+            Datatypes.Integer,
         );
         if (defaultValue) {
             fst.value = defaultValue.toString();
@@ -220,7 +220,7 @@ export class WidgetConfigBuilder {
             id,
             label,
             description,
-            Datatypes.Float.toUri(),
+            Datatypes.Float,
         );
         this.widget.config.push(fst);
         return this;

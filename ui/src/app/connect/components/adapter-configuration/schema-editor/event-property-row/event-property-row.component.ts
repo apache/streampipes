@@ -33,7 +33,7 @@ import { StaticValueTransformService } from '../../../../services/static-value-t
 import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
-import { SemanticTypeService } from '../../../../../core-services/types/semantic-type.service';
+import { SemanticTypeService } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
 
 @Component({
     selector: 'sp-event-property-row',

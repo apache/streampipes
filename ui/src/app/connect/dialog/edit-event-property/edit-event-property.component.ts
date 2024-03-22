@@ -41,7 +41,7 @@ import { EditSchemaTransformationComponent } from './components/edit-schema-tran
 import { EditValueTransformationComponent } from './components/edit-value-transformation/edit-value-transformation.component';
 import { EditUnitTransformationComponent } from './components/edit-unit-transformation/edit-unit-transformation.component';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { SemanticTypeService } from '../../../core-services/types/semantic-type.service';
+import { SemanticTypeService } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
 
 @Component({
     selector: 'sp-edit-event-property',
@@ -69,8 +69,6 @@ export class EditEventPropertyComponent implements OnInit {
     isSaveBtnEnabled: boolean;
 
     private propertyForm: UntypedFormGroup;
-
-    private runtimeDataTypes;
 
     constructor(
         public dialogRef: DialogRef<EditEventPropertyComponent>,

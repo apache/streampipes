@@ -17,7 +17,6 @@
  */
 
 import { Datatypes } from './model/datatypes';
-import { Vocabulary } from './model/vocabulary';
 import {
     EventPropertyList,
     EventPropertyNested,
@@ -55,11 +54,15 @@ export class EpRequirements {
     }
 
     static latitudeReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq(Vocabulary.GEO + 'lat');
+        return EpRequirements.domainPropertyReq(
+            'http://www.w3.org/2003/01/geo/wgs84_pos#lat',
+        );
     }
 
     static longitudeReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq(Vocabulary.GEO + 'long');
+        return EpRequirements.domainPropertyReq(
+            'http://www.w3.org/2003/01/geo/wgs84_pos#long',
+        );
     }
 
     static timestampReq(): EventPropertyUnion {
@@ -110,9 +113,9 @@ export class EpRequirements {
         return eventProperty;
     }
 
-    static datatypeReq(datatype: Datatypes): EventPropertyPrimitive {
+    static datatypeReq(datatype: string): EventPropertyPrimitive {
         const eventProperty = EpRequirements.ep();
-        eventProperty.runtimeType = datatype.toUri();
+        eventProperty.runtimeType = datatype;
         return eventProperty;
     }
 }

@@ -18,7 +18,7 @@
 
 import { Component, Input } from '@angular/core';
 import { EventSchema } from '@streampipes/platform-services';
-import { SemanticTypeService } from '../../../core-services/types/semantic-type.service';
+import { SemanticTypeService } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
 
 @Component({
     selector: 'sp-field-names-table',

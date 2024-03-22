@@ -24,7 +24,7 @@ import {
 } from '@streampipes/platform-services';
 import { UntypedFormControl } from '@angular/forms';
 import { IdGeneratorService } from '../../../../core-services/id-generator/id-generator.service';
-import { SemanticTypeService } from '../../../../core-services/types/semantic-type.service';
+import { SemanticTypeService } from '../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
 
 @Component({
     selector: 'sp-user-defined-output-strategy',

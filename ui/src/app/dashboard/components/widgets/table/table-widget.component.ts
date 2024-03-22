@@ -24,7 +24,7 @@ import { TableConfig } from './table-config';
 import { ResizeService } from '../../../services/resize.service';
 import { DatalakeRestService } from '@streampipes/platform-services';
 import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
-import { SemanticTypeService } from '../../../../core-services/types/semantic-type.service';
+import { SemanticTypeService } from '../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
 
 @Component({
     selector: 'sp-table-widget',

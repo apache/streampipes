@@ -43,7 +43,7 @@ import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessag
 import { TransformationRuleService } from '../../../../services/transformation-rule.service';
 import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
 import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
-import { SemanticTypeService } from '../../../../../core-services/types/semantic-type.service';
+import { SemanticTypeService } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
 
 @Component({
     selector: 'sp-event-schema',
