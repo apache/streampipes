@@ -34,7 +34,6 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GridsterModule } from 'angular-gridster2';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { SemanticTypeService } from '../core-services/semantic-type/semantic-type.service';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
@@ -193,7 +192,7 @@ import { SpDataZoomConfigComponent } from './components/widgets/utils/data-zoom-
         SpTimeSeriesAppearanceConfigComponent,
         SpDataZoomConfigComponent,
     ],
-    providers: [SemanticTypeService],
+    providers: [],
     exports: [],
 })
 export class DataExplorerModule {

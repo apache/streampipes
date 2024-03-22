@@ -37,7 +37,7 @@ import {
 } from '@streampipes/platform-services';
 import { TimestampTransformationRuleMode } from '../model/TimestampTransformationRuleMode';
 import { StaticValueTransformService } from './static-value-transform.service';
-import { SemanticTypeService } from '../../core-services/semantic-type/semantic-type.service';
+import { SemanticTypeService } from '../../core-services/types/semantic-type.service';
 
 @Injectable({ providedIn: 'root' })
 export class TransformationRuleService {

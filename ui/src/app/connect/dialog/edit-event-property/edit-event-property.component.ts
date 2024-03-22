@@ -35,13 +35,13 @@ import {
     EventPropertyPrimitive,
     EventPropertyUnion,
 } from '@streampipes/platform-services';
-import { SemanticTypeService } from '../../../core-services/semantic-type/semantic-type.service';
 import { DataTypesService } from '../../services/data-type.service';
 import { DialogRef } from '@streampipes/shared-ui';
 import { EditSchemaTransformationComponent } from './components/edit-schema-transformation/edit-schema-transformation.component';
 import { EditValueTransformationComponent } from './components/edit-value-transformation/edit-value-transformation.component';
 import { EditUnitTransformationComponent } from './components/edit-unit-transformation/edit-unit-transformation.component';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { SemanticTypeService } from '../../../core-services/types/semantic-type.service';
 
 @Component({
     selector: 'sp-edit-event-property',

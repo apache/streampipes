@@ -18,7 +18,7 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 import { EventPropertyUnion } from '@streampipes/platform-services';
-import { SemanticTypeService } from '../../core-services/semantic-type/semantic-type.service';
+import { SemanticTypeService } from '../../core-services/types/semantic-type.service';
 
 @Pipe({
     name: 'timestampFilter',

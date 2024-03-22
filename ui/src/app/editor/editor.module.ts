@@ -23,7 +23,6 @@ import { GridsterModule } from 'angular-gridster2';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SemanticTypeService } from '../core-services/semantic-type/semantic-type.service';
 import { EditorComponent } from './editor.component';
 import { PipelineElementIconStandComponent } from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
 import { PipelineAssemblyComponent } from './components/pipeline-assembly/pipeline-assembly.component';
@@ -93,7 +92,7 @@ import { PipelineElementGroupFilterPipe } from './services/pipeline-element-grou
         SavePipelineComponent,
         SafeCss,
     ],
-    providers: [SemanticTypeService, SafeCss],
+    providers: [SafeCss],
     exports: [EditorComponent, PipelineComponent, PipelineElementComponent],
 })
 export class EditorModule {

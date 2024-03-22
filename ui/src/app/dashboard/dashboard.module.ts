@@ -37,7 +37,6 @@ import { ResizeService } from './services/resize.service';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { CdkTableModule } from '@angular/cdk/table';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
-import { SemanticTypeService } from '../core-services/semantic-type/semantic-type.service';
 import { GaugeWidgetComponent } from './components/widgets/gauge/gauge-widget.component';
 import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
 import { AreaWidgetComponent } from './components/widgets/area/area-widget.component';
@@ -132,7 +131,6 @@ import { DashboardPanelCanDeactivateGuard } from './dashboard.can-deactivate.gua
         ReloadPipelineService,
         ResizeService,
         RefreshDashboardService,
-        SemanticTypeService,
     ],
     exports: [DashboardWidgetComponent, StandaloneDashboardComponent],
 })

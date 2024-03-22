@@ -27,7 +27,7 @@ import {
 } from '../input.validator';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { QuillEditorComponent } from 'ngx-quill';
-import { SemanticTypeService } from '../../../core-services/semantic-type/semantic-type.service';
+import { SemanticTypeService } from '../../../core-services/types/semantic-type.service';
 
 @Component({
     selector: 'sp-app-static-free-input',

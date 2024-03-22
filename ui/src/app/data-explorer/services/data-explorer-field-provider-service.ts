@@ -26,7 +26,7 @@ import {
     FieldConfig,
     SourceConfig,
 } from '@streampipes/platform-services';
-import { SemanticTypeService } from '../../core-services/semantic-type/semantic-type.service';
+import { SemanticTypeService } from '../../core-services/types/semantic-type.service';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerFieldProviderService {
