@@ -37,7 +37,7 @@
             <sp-service-configs-text
                 fxFlex="100"
                 *ngIf="
-                    configuration.valueType === service.XS_STRING &&
+                    configuration.valueType === semanticTypeService.XS_STRING &&
                     !configuration.isPassword
                 "
                 [configuration]="configuration"
@@ -47,8 +47,9 @@
             <sp-service-configs-number
                 fxFlex="100"
                 *ngIf="
-                    configuration.valueType === service.XS_INTEGER ||
-                    configuration.valueType === service.XS_DOUBLE
+                    configuration.valueType ===
+                        semanticTypeService.XS_INTEGER ||
+                    configuration.valueType === semanticTypeService.XS_DOUBLE
                 "
                 [configuration]="configuration"
             >
@@ -56,7 +57,9 @@
 
             <sp-service-configs-boolean
                 fxFlex="100"
-                *ngIf="configuration.valueType === service.XS_BOOLEAN"
+                *ngIf="
+                    configuration.valueType === semanticTypeService.XS_BOOLEAN
+                "
                 [configuration]="configuration"
             >
             </sp-service-configs-boolean>

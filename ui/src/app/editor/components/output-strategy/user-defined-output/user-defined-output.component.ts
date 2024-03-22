@@ -24,6 +24,7 @@ import {
 } from '@streampipes/platform-services';
 import { UntypedFormControl } from '@angular/forms';
 import { IdGeneratorService } from '../../../../core-services/id-generator/id-generator.service';
+import { SemanticTypeService } from '../../../../core-services/types/semantic-type.service';
 
 @Component({
     selector: 'sp-user-defined-output-strategy',
@@ -35,15 +36,18 @@ export class UserDefinedOutputStrategyComponent
     implements OnInit
 {
     primitiveClasses = [
-        { label: 'String', id: 'http://www.w3.org/2001/XMLSchema#string' },
-        { label: 'Boolean', id: 'http://www.w3.org/2001/XMLSchema#boolean' },
-        { label: 'Integer', id: 'http://www.w3.org/2001/XMLSchema#integer' },
-        { label: 'Long', id: 'http://www.w3.org/2001/XMLSchema#long' },
-        { label: 'Double', id: 'http://www.w3.org/2001/XMLSchema#double' },
-        { label: 'Float', id: 'http://www.w3.org/2001/XMLSchema#float' },
+        { label: 'String', id: this.semanticTypeService.XS_STRING },
+        { label: 'Boolean', id: this.semanticTypeService.XS_BOOLEAN },
+        { label: 'Integer', id: this.semanticTypeService.XS_INTEGER },
+        { label: 'Long', id: this.semanticTypeService.XS_LONG },
+        { label: 'Double', id: this.semanticTypeService.XS_DOUBLE },
+        { label: 'Float', id: this.semanticTypeService.XS_FLOAT },
     ];
 
-    constructor(private idGeneratorService: IdGeneratorService) {
+    constructor(
+        private idGeneratorService: IdGeneratorService,
+        private semanticTypeService: SemanticTypeService,
+    ) {
         super();
     }
 

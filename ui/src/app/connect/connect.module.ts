@@ -45,7 +45,6 @@ import { TimestampPipe } from './filter/timestamp.pipe';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 import { TreeModule } from '@ali-hm/angular-tree-component';
-import { XsService } from '../NS/xs.service';
 import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-data-type/edit-data-type.component';
 import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-timestamp-property/edit-timestamp-property.component';
 import { EditUnitTransformationComponent } from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
@@ -198,7 +197,6 @@ import { MatDividerModule } from '@angular/material/divider';
         StaticPropertyUtilService,
         UnitProviderService,
         TimestampPipe,
-        XsService,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
