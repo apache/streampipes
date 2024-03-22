@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
 
   private static final Logger LOG = LoggerFactory.getLogger(SpServiceDiscoveryCore.class);
-  private static final int MAX_RETRIES = 3;
+  private static final int MAX_RETRIES = 1;
 
   private final CRUDStorage<String, SpServiceRegistration> serviceStorage;
 
@@ -85,7 +85,6 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
       if (retryCount < MAX_RETRIES) {
         try {
           retryCount++;
-          LOG.info("Could not find any extensions services, retrying ({}/{})", retryCount, MAX_RETRIES);
           TimeUnit.MILLISECONDS.sleep(1000);
           return findService(retryCount);
         } catch (InterruptedException e) {
@@ -93,7 +92,7 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
           return Collections.emptyList();
         }
       } else {
-        LOG.info("No service found");
+        LOG.info("Could not find any extensions services");
         return Collections.emptyList();
       }
     } else {

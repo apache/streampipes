@@ -118,7 +118,7 @@ public class AdapterHealthCheck implements Runnable {
                                       adapterDescription.getElementId(),
                                       adapterDescription.getName()
                                   ));
-    LOG.info("Monitoring {} adapter instances", adapterMetrics.size());
+    LOG.debug("Monitoring {} adapter instances", adapterMetrics.size());
   }
 
   private void updateTotalEventsPublished(AdapterMetrics adapterMetrics, String adapterId, String adapterName) {
