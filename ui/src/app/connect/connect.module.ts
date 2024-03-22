@@ -88,7 +88,6 @@ import { SpAdapterStartedSuccessComponent } from './dialog/adapter-started/adapt
 import { SpAdapterStartedUpdateMigrationComponent } from './dialog/adapter-started/adapter-started-update-migration/adapter-started-update-migration.component';
 import { SpAdapterStartedPreviewComponent } from './dialog/adapter-started/adapter-started-preview/adapter-started-preview.component';
 import { MatDividerModule } from '@angular/material/divider';
-import { IdGeneratorService } from '../core-services/id-generator/id-generator.service';
 
 @NgModule({
     imports: [
@@ -197,7 +196,6 @@ import { IdGeneratorService } from '../core-services/id-generator/id-generator.s
         ConnectService,
         DataTypesService,
         StaticPropertyUtilService,
-        IdGeneratorService,
         UnitProviderService,
         TimestampPipe,
         XsService,
