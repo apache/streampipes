@@ -62,22 +62,24 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
     SpQueryResult dataResult;
 
     boolean isFirstDataItem = true;
+    var resultsCount = 0;
     configuredWriter.beforeFirstItem(outputStream);
     do {
       dataResult = getData();
-
       long lastTimestamp = 0;
-      if (dataResult.getTotal() > 0) {
+      resultsCount = dataResult.getTotal() > 0 ? dataResult.getAllDataSeries().get(0).getTotal() : 0;
+      if (resultsCount > 0) {
+
         changeTimestampHeader(measurement, dataResult);
         var columns = dataResult.getHeaders();
         for (List<Object> row : dataResult.getAllDataSeries().get(0).getRows()) {
           configuredWriter.writeItem(outputStream, row, columns, isFirstDataItem);
           isFirstDataItem = false;
-          lastTimestamp = ((Double) row.get(0)).longValue();
+          lastTimestamp = dataResult.getLastTimestamp();
         }
       }
       queryParams.update(SupportedRestQueryParams.QP_START_DATE, lastTimestamp + 1);
-    } while (queryNextPage(dataResult.getTotal(), usesLimit, limit));
+    } while (queryNextPage(resultsCount, usesLimit, limit));
     configuredWriter.afterLastItem(outputStream);
   }
 
