@@ -16,7 +16,7 @@
  *
  */
 
-import { Datatypes } from './model/datatypes';
+import { DataTypeService } from '../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
 import {
     EventPropertyList,
     EventPropertyNested,
@@ -70,15 +70,15 @@ export class EpRequirements {
     }
 
     static numberReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(Datatypes.Number);
+        return EpRequirements.datatypeReq(DataTypeService.Number);
     }
 
     static stringReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(Datatypes.String);
+        return EpRequirements.datatypeReq(DataTypeService.String);
     }
 
     static integerReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(Datatypes.Integer);
+        return EpRequirements.datatypeReq(DataTypeService.Integer);
     }
 
     static listReq(): EventPropertyList {

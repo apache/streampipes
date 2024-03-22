@@ -16,7 +16,7 @@
  *
  */
 
-import { Datatypes } from '../model/datatypes';
+import { DataTypeService } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
 
 export class DatatypeMatch {
     match(datatypeRequirement: string, datatypeOffer: string) {
@@ -31,14 +31,14 @@ export class DatatypeMatch {
     }
 
     subClassOf(offer: string, requirement: string): boolean {
-        if (!(requirement === Datatypes.Number)) {
+        if (!(requirement === DataTypeService.Number)) {
             return false;
         } else {
             if (
-                offer === Datatypes.Integer ||
-                offer === Datatypes.Long ||
-                offer === Datatypes.Double ||
-                offer === Datatypes.Float
+                offer === DataTypeService.Integer ||
+                offer === DataTypeService.Long ||
+                offer === DataTypeService.Double ||
+                offer === DataTypeService.Float
             ) {
                 return true;
             }
