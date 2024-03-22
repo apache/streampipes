@@ -54,7 +54,6 @@
     "@panzoom/panzoom": "^4.5.1",
     "@swimlane/ngx-charts": "^20.4.1",
     "angular-gridster2": "^16.0.0",
-    "angular2-uuid": "1.1.1",
     "codemirror": "^5.65.11",
     "console-browserify": "^1.2.0",
     "d3-array": "^3.2.4",

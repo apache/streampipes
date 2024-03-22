@@ -35,12 +35,15 @@ import {
     StaticPropertyAlternatives,
     StaticPropertyGroup,
 } from '@streampipes/platform-services';
+import { IdGeneratorService } from '../../core-services/id-generator/id-generator.service';
 
 @Injectable()
 export class StaticPropertyUtilService {
+    constructor(private idGeneratorService: IdGeneratorService) {}
+
     public clone(val: StaticProperty) {
         let clone;
-        const id = 'urn:streampipes.org:spi::' + this.generateID(6);
+        const id = this.idGeneratorService.generatePrefixedId();
         if (val instanceof FreeTextStaticProperty) {
             clone = new FreeTextStaticProperty();
             clone.elementId = id;
@@ -142,20 +145,11 @@ export class StaticPropertyUtilService {
     private cloneOption(val: Option) {
         const clone = new Option();
         clone['@class'] = 'org.apache.streampipes.model.staticproperty.Option';
-        clone.elementId = 'urn:streampipes.org:spi::' + this.generateID(6);
+        clone.elementId = this.idGeneratorService.generatePrefixedId();
         clone.name = val.name;
         clone.internalName = val.internalName;
         clone.selected = val.selected;
         return clone;
-    }
-
-    private generateID(length): string {
-        const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        let result = '';
-        for (let i = length; i > 0; --i) {
-            result += chars[Math.round(Math.random() * (chars.length - 1))];
-        }
-        return result;
     }
 
     public asFreeTextStaticProperty(
@@ -168,13 +162,5 @@ export class StaticPropertyUtilService {
         val: StaticProperty,
     ): ColorPickerStaticProperty {
         return val as ColorPickerStaticProperty;
-    }
-
-    public asSecretStaticProperty(val: StaticProperty): SecretStaticProperty {
-        return val as SecretStaticProperty;
-    }
-
-    public asCollectionProperty(val: StaticProperty): CollectionStaticProperty {
-        return val as CollectionStaticProperty;
     }
 }

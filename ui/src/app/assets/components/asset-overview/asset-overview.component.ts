@@ -35,6 +35,7 @@ import { SpCreateAssetDialogComponent } from '../../dialog/create-asset/create-a
 import { DataExportService } from '../../../configuration/export/data-export.service';
 import { mergeMap } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
+import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 
 @Component({
     selector: 'sp-asset-overview-component',
@@ -54,6 +55,7 @@ export class SpAssetOverviewComponent implements OnInit {
         private dialogService: DialogService,
         private router: Router,
         private dataExportService: DataExportService,
+        private idGeneratorService: IdGeneratorService,
     ) {}
 
     ngOnInit(): void {
@@ -80,8 +82,8 @@ export class SpAssetOverviewComponent implements OnInit {
                 assetName: 'New Asset',
                 assetDescription: '',
                 assetLinks: [],
-                assetId: this.generateId(6),
-                _id: this.generateId(24),
+                assetId: this.idGeneratorService.generate(6),
+                _id: this.idGeneratorService.generate(24),
                 appDocType: 'asset-management',
                 removable: true,
                 _rev: undefined,
@@ -105,15 +107,6 @@ export class SpAssetOverviewComponent implements OnInit {
         dialogRef.afterClosed().subscribe(() => {
             this.loadAssets();
         });
-    }
-
-    private generateId(length): string {
-        const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        let result = '';
-        for (let i = length; i > 0; --i) {
-            result += chars[Math.round(Math.random() * (chars.length - 1))];
-        }
-        return result;
     }
 
     uploadAsset() {
