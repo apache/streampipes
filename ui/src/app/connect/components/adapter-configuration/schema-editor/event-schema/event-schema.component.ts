@@ -43,6 +43,7 @@ import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessag
 import { TransformationRuleService } from '../../../../services/transformation-rule.service';
 import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
 import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
+import { SemanticTypeService } from '../../../../../core-services/semantic-type/semantic-type.service';
 
 @Component({
     selector: 'sp-event-schema',
@@ -56,6 +57,7 @@ export class EventSchemaComponent implements OnChanges {
         private transformationRuleService: TransformationRuleService,
         private staticValueTransformService: StaticValueTransformService,
         private idGeneratorService: IdGeneratorService,
+        private semanticTypeService: SemanticTypeService,
     ) {}
 
     @Input()
@@ -248,9 +250,9 @@ export class EventSchemaComponent implements OnChanges {
         eventProperty.runtimeName = 'timestamp';
         eventProperty.label = 'Timestamp';
         eventProperty.description = 'The current timestamp value';
-        eventProperty.domainProperties = ['http://schema.org/DateTime'];
+        eventProperty.domainProperties = [this.semanticTypeService.TIMESTAMP];
         eventProperty.propertyScope = 'HEADER_PROPERTY';
-        eventProperty.runtimeType = 'http://www.w3.org/2001/XMLSchema#long';
+        eventProperty.runtimeType = this.semanticTypeService.XS_LONG;
         eventProperty.additionalMetadata = {};
 
         this.targetSchema.eventProperties.push(eventProperty);

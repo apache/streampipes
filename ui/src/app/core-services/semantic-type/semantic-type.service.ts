@@ -19,7 +19,7 @@
 import { Injectable } from '@angular/core';
 import { EventProperty } from '@streampipes/platform-services';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class SemanticTypeService {
     public TIMESTAMP = 'http://schema.org/DateTime';
     public IMAGE = 'https://image.com';

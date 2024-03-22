@@ -44,7 +44,7 @@ export * from './lib/apis/pipeline-element-endpoint.service';
 export * from './lib/apis/pipeline-element-template.service';
 export * from './lib/apis/pipeline-monitoring.service';
 export * from './lib/apis/pipeline-template.service';
-export * from './lib/apis/semantic-types.service';
+export * from './lib/apis/semantic-types-rest.service';
 export * from './lib/apis/user.service';
 export * from './lib/apis/user-admin.service';
 export * from './lib/apis/user-group.service';

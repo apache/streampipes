@@ -33,6 +33,7 @@ import { StaticValueTransformService } from '../../../../services/static-value-t
 import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
+import { SemanticTypeService } from '../../../../../core-services/semantic-type/semantic-type.service';
 
 @Component({
     selector: 'sp-event-property-row',
@@ -74,6 +75,7 @@ export class EventPropertyRowComponent implements OnInit {
         private epUtils: EventPropertyUtilsService,
         private shepherdService: ShepherdService,
         private idGeneratorService: IdGeneratorService,
+        private semanticTypeService: SemanticTypeService,
     ) {}
 
     ngOnInit() {
@@ -160,10 +162,10 @@ export class EventPropertyRowComponent implements OnInit {
         if (
             node.domainProperties &&
             node.domainProperties.some(
-                dp => dp === 'http://schema.org/DateTime',
+                dp => dp === this.semanticTypeService.TIMESTAMP,
             )
         ) {
-            node.runtimeType = 'http://www.w3.org/2001/XMLSchema#long';
+            node.runtimeType = this.semanticTypeService.XS_LONG;
             return true;
         } else {
             return false;

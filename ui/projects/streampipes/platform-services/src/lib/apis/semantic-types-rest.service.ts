@@ -25,7 +25,7 @@ import { Observable } from 'rxjs';
 @Injectable({
     providedIn: 'root',
 })
-export class SemanticTypesService {
+export class SemanticTypesRestService {
     constructor(
         private http: HttpClient,
         private platformServicesCommons: PlatformServicesCommons,

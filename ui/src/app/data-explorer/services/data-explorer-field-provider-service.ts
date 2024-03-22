@@ -26,9 +26,12 @@ import {
     FieldConfig,
     SourceConfig,
 } from '@streampipes/platform-services';
+import { SemanticTypeService } from '../../core-services/semantic-type/semantic-type.service';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerFieldProviderService {
+    constructor(private semanticTypeService: SemanticTypeService) {}
+
     public generateFieldLists(sourceConfigs: SourceConfig[]): FieldProvider {
         const provider: FieldProvider = {
             allFields: [],
@@ -141,7 +144,7 @@ export class DataExplorerFieldProviderService {
         return (
             this.isPrimitive(p) &&
             (p as EventPropertyPrimitive).runtimeType ===
-                'http://www.w3.org/2001/XMLSchema#boolean'
+                this.semanticTypeService.XS_BOOLEAN
         );
     }
 
@@ -149,13 +152,13 @@ export class DataExplorerFieldProviderService {
         return (
             this.isPrimitive(p) &&
             (p as EventPropertyPrimitive).runtimeType ===
-                'http://www.w3.org/2001/XMLSchema#string'
+                this.semanticTypeService.XS_STRING
         );
     }
 
     public isTimestamp(p: EventProperty) {
         return p.domainProperties.some(
-            dp => dp === 'http://schema.org/DateTime',
+            dp => dp === this.semanticTypeService.TIMESTAMP,
         );
     }
 
@@ -188,14 +191,7 @@ export class DataExplorerFieldProviderService {
     isNumber(p: EventPropertyUnion): boolean {
         if (this.isPrimitive(p)) {
             const runtimeType = (p as EventPropertyPrimitive).runtimeType;
-
-            return (
-                runtimeType === 'http://schema.org/Number' ||
-                runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
-                runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
-                runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
-                runtimeType === 'http://www.w3.org/2001/XMLSchema#long'
-            );
+            return this.semanticTypeService.isNumberType(runtimeType);
         } else {
             return false;
         }
