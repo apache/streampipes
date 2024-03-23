@@ -33,6 +33,8 @@ import org.influxdb.dto.QueryResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Query, QueryResult> {
 
@@ -72,14 +74,19 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   protected SpQueryResult postQuery(QueryResult queryResult,
                                     boolean ignoreMissingValues) throws RuntimeException {
     SpQueryResult result = new SpQueryResult();
+    AtomicLong lastTimestamp = new AtomicLong();
 
     if (hasResult(queryResult)) {
-      result.setTotal(queryResult.getResults().get(0).getSeries().size());
       queryResult.getResults().get(0).getSeries().forEach(rs -> {
         DataSeries series = convertResult(rs, ignoreMissingValues);
         result.setHeaders(series.getHeaders());
         result.addDataResult(series);
+        List<Object> lastValue = rs.getValues().get(rs.getValues().size() - 1);
+        lastTimestamp.set(Math.max(lastTimestamp.get(), ((Double) lastValue.get(0)).longValue()));
       });
+
+      result.setTotal(result.getAllDataSeries().stream().mapToInt(DataSeries::getTotal).sum());
+      result.setLastTimestamp(lastTimestamp.get());
     }
 
     if (this.appendId) {
@@ -96,7 +103,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   @Override
   protected QueryResult executeQuery(Query query) {
     try (final InfluxDB influxDB = InfluxClientProvider.getInfluxDBClient()) {
-      return influxDB.query(query);
+      return influxDB.query(query, TimeUnit.MILLISECONDS);
     }
   }
 

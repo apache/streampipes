@@ -32,11 +32,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_LIMIT;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_PAGE;
 
 public class StreamedQueryResultProvider extends QueryResultProvider {
 
-  private static final int MAX_RESULTS_PER_QUERY = 500000;
+  private static final int MAX_RESULTS_PER_QUERY = 200000;
   private static final String TIME_FIELD = "time";
 
   private final OutputFormat format;
@@ -61,36 +60,34 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
     var measurement = findByMeasurementName(queryParams.getMeasurementId()).get();
 
     SpQueryResult dataResult;
-    int page = 0;
-    if (queryParams.has(QP_PAGE)) {
-      page = queryParams.getAsInt(QP_PAGE);
-    }
 
     boolean isFirstDataItem = true;
+    var resultsCount = 0;
     configuredWriter.beforeFirstItem(outputStream);
     do {
-      queryParams.update(SupportedRestQueryParams.QP_PAGE, String.valueOf(page));
       dataResult = getData();
+      long lastTimestamp = 0;
+      resultsCount = dataResult.getTotal() > 0 ? dataResult.getAllDataSeries().get(0).getTotal() : 0;
+      if (resultsCount > 0) {
 
-      if (dataResult.getTotal() > 0) {
         changeTimestampHeader(measurement, dataResult);
         var columns = dataResult.getHeaders();
         for (List<Object> row : dataResult.getAllDataSeries().get(0).getRows()) {
           configuredWriter.writeItem(outputStream, row, columns, isFirstDataItem);
           isFirstDataItem = false;
+          lastTimestamp = dataResult.getLastTimestamp();
         }
       }
-      page++;
-    } while (queryNextPage(dataResult.getTotal(), usesLimit, limit, page));
+      queryParams.update(SupportedRestQueryParams.QP_START_DATE, lastTimestamp + 1);
+    } while (queryNextPage(resultsCount, usesLimit, limit));
     configuredWriter.afterLastItem(outputStream);
   }
 
   private boolean queryNextPage(int lastResultsCount,
                                 boolean usesLimit,
-                                int limit,
-                                int lastPage) {
+                                int limit) {
     if (usesLimit) {
-      return !(limit <= (lastPage) * MAX_RESULTS_PER_QUERY);
+      return lastResultsCount >= limit;
     } else {
       return lastResultsCount > 0;
     }

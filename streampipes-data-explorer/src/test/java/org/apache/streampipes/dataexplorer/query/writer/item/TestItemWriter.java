@@ -30,7 +30,7 @@ public abstract class TestItemWriter {
 
   @BeforeEach
   public void before() {
-    this.row = Arrays.asList("2022-11-16T05:54:37.051Z", "test", 1);
+    this.row = Arrays.asList(1668578077051.0, "test", 1);
     this.columns = Arrays.asList("time", "string", "number");
   }
 }

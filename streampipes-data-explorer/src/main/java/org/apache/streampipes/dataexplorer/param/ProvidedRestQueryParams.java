@@ -65,6 +65,10 @@ public class ProvidedRestQueryParams {
     this.providedParams.put(key, value);
   }
 
+  public void update(String key, long value) {
+    update(key, String.valueOf(value));
+  }
+
   public void update(String key, Integer value) {
     update(key, String.valueOf(value));
   }
