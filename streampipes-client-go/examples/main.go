@@ -68,7 +68,6 @@ func main() {
 		log.Fatal(err)
 	}
 	dataSeries.Print()
-
 	/*
 			output format:
 
