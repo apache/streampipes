@@ -31,7 +31,7 @@ type Versions struct {
 	endpoint
 }
 
-func NewVersion(clientConfig config.StreamPipesClientConfig) *Versions {
+func NewVersions(clientConfig config.StreamPipesClientConfig) *Versions {
 
 	return &Versions{
 		endpoint{config: clientConfig},

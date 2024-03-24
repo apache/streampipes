@@ -69,5 +69,5 @@ func (s *StreamPipesClient) DataLakeMeasures() *DataLakeMeasure {
 
 func (s *StreamPipesClient) StreamPipesVersion() *Versions {
 
-	return NewVersion(s.config)
+	return NewVersions(s.config)
 }
