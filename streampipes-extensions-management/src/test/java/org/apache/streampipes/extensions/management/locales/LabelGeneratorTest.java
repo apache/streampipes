@@ -37,7 +37,7 @@ public class LabelGeneratorTest {
   private static final String TEST_APP_ID = "test-app-id";
 
   @Test
-  public void getElementDescriptionThrowExceptiojn() {
+  public void getElementDescriptionThrowException() {
     var labelGenerator = getLabelGeneratorWithoutLocalesFile();
     assertThrows(IOException.class, labelGenerator::getElementDescription);
   }
@@ -67,7 +67,6 @@ public class LabelGeneratorTest {
 
     Assertions.assertEquals(expectedTitle, labelGenerator.getElementTitle());
   }
-
 
   private LabelGenerator getLabelGeneratorWithoutLocalesFile() {
     var mockDescription = Mockito.mock(NamedStreamPipesEntity.class);

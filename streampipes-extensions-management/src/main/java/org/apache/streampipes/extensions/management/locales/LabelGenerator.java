@@ -174,7 +174,11 @@ public class LabelGenerator<T extends NamedStreamPipesEntity> {
   }
 
   protected Properties loadResourceAndMakeProperties() throws IOException {
-    return assetResolver.getLocale(desc.getIncludedLocales().get(0));
+    if (!desc.getIncludedLocales().isEmpty()) {
+      return assetResolver.getLocale(desc.getIncludedLocales().get(0));
+    } else {
+      throw new IOException("No locales file defined");
+    }
   }
 
   private boolean isConsumable() {
