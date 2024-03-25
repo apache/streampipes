@@ -46,7 +46,6 @@ export class TableWidgetComponent
     constructor(
         dataLakeService: DatalakeRestService,
         resizeService: ResizeService,
-        private semanticTypeUtils: SemanticTypeService,
     ) {
         super(dataLakeService, resizeService, false);
     }
@@ -60,7 +59,7 @@ export class TableWidgetComponent
             },
         );
         this.semanticTypes[BaseStreamPipesWidget.TIMESTAMP_KEY] =
-            this.semanticTypeUtils.TIMESTAMP;
+            SemanticTypeService.TIMESTAMP;
     }
 
     ngOnDestroy(): void {
@@ -91,7 +90,7 @@ export class TableWidgetComponent
     createTableObject(event: any) {
         const object = {};
         this.selectedProperties.forEach((key, index) => {
-            event[key] = this.semanticTypeUtils.getValue(
+            event[key] = SemanticTypeService.getValue(
                 event[key],
                 this.semanticTypes[key],
             );

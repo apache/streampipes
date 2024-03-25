@@ -74,13 +74,12 @@ export class EditEventPropertyComponent implements OnInit {
         public dialogRef: DialogRef<EditEventPropertyComponent>,
         private formBuilder: UntypedFormBuilder,
         private dataTypeService: DataTypesService,
-        private semanticTypeUtilsService: SemanticTypeService,
         private shepherdService: ShepherdService,
     ) {}
 
     ngOnInit(): void {
         this.cachedProperty = this.copyEp(this.property);
-        this.isTimestampProperty = this.semanticTypeUtilsService.isTimestamp(
+        this.isTimestampProperty = SemanticTypeService.isTimestamp(
             this.cachedProperty,
         );
         this.isEventPropertyList = this.property instanceof EventPropertyList;
@@ -89,7 +88,7 @@ export class EditEventPropertyComponent implements OnInit {
         this.isEventPropertyNested =
             this.property instanceof EventPropertyNested;
         this.isNumericProperty =
-            this.semanticTypeUtilsService.isNumber(this.cachedProperty) ||
+            SemanticTypeService.isNumber(this.cachedProperty) ||
             this.dataTypeService.isNumeric(
                 (this.cachedProperty as any).runtimeType,
             );

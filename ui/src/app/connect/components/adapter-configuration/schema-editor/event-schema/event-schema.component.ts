@@ -56,7 +56,6 @@ export class EventSchemaComponent implements OnChanges {
         private transformationRuleService: TransformationRuleService,
         private staticValueTransformService: StaticValueTransformService,
         private idGeneratorService: IdGeneratorService,
-        private semanticTypeService: SemanticTypeService,
     ) {}
 
     @Input()
@@ -249,7 +248,7 @@ export class EventSchemaComponent implements OnChanges {
         eventProperty.runtimeName = 'timestamp';
         eventProperty.label = 'Timestamp';
         eventProperty.description = 'The current timestamp value';
-        eventProperty.domainProperties = [this.semanticTypeService.TIMESTAMP];
+        eventProperty.domainProperties = [SemanticTypeService.TIMESTAMP];
         eventProperty.propertyScope = 'HEADER_PROPERTY';
         eventProperty.runtimeType = DataTypeService.Long;
         eventProperty.additionalMetadata = {};

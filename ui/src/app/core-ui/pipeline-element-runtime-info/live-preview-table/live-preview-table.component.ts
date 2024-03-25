@@ -34,16 +34,16 @@ export class LivePreviewTableComponent {
 
     displayedColumns: string[] = ['runtimeName', 'value'];
 
-    constructor(private semanticTypeUtilsService: SemanticTypeService) {}
+    constructor() {}
 
     isImage(runtimeName: string) {
         const property = this.getProperty(runtimeName);
-        return this.semanticTypeUtilsService.isImage(property);
+        return SemanticTypeService.isImage(property);
     }
 
     isTimestamp(runtimeName: string) {
         const property = this.getProperty(runtimeName);
-        return this.semanticTypeUtilsService.isTimestamp(property);
+        return SemanticTypeService.isTimestamp(property);
     }
 
     hasNoDomainProperty(runtimeName: string) {

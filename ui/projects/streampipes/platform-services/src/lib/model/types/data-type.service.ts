@@ -17,17 +17,17 @@
  */
 
 export class DataTypeService {
-    static readonly XSD: string = 'http://www.w3.org/2001/XMLSchema#';
+    public static readonly XSD: string = 'http://www.w3.org/2001/XMLSchema#';
 
-    static readonly Integer = this.XSD + 'integer';
-    static readonly Long = this.XSD + 'long';
-    static readonly Float = this.XSD + 'float';
-    static readonly Boolean = this.XSD + 'boolean';
-    static readonly String = this.XSD + 'string';
-    static readonly Double = this.XSD + 'double';
+    public static readonly Integer = this.XSD + 'integer';
+    public static readonly Long = this.XSD + 'long';
+    public static readonly Float = this.XSD + 'float';
+    public static readonly Boolean = this.XSD + 'boolean';
+    public static readonly String = this.XSD + 'string';
+    public static readonly Double = this.XSD + 'double';
 
     // Should we support data type number?
-    static readonly Number = this.XSD + 'number';
+    public static readonly Number = this.XSD + 'number';
 
     public static isNumberType(datatype: string): boolean {
         return (

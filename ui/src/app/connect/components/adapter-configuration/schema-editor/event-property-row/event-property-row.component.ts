@@ -76,7 +76,6 @@ export class EventPropertyRowComponent implements OnInit {
         private epUtils: EventPropertyUtilsService,
         private shepherdService: ShepherdService,
         private idGeneratorService: IdGeneratorService,
-        private semanticTypeService: SemanticTypeService,
     ) {}
 
     ngOnInit() {
@@ -163,7 +162,7 @@ export class EventPropertyRowComponent implements OnInit {
         if (
             node.domainProperties &&
             node.domainProperties.some(
-                dp => dp === this.semanticTypeService.TIMESTAMP,
+                dp => dp === SemanticTypeService.TIMESTAMP,
             )
         ) {
             node.runtimeType = DataTypeService.Long;

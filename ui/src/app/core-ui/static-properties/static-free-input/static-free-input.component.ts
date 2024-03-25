@@ -56,7 +56,7 @@ export class StaticFreeInputComponent
     @ViewChild('textEditor', { static: false })
     quillEditorComponent: QuillEditorComponent;
 
-    constructor(private semanticTypeService: SemanticTypeService) {
+    constructor() {
         super();
     }
 
@@ -81,7 +81,7 @@ export class StaticFreeInputComponent
             this.errorMessage = 'The value should be a number';
         } else if (
             this.staticProperty.requiredDomainProperty ===
-            this.semanticTypeService.SO_URL
+            SemanticTypeService.SO_URL
         ) {
             validators.push(ValidateUrl);
             this.errorMessage = 'Please enter a valid URL';

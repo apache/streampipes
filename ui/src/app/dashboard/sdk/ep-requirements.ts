@@ -23,6 +23,7 @@ import {
     EventPropertyPrimitive,
     EventPropertyUnion,
 } from '@streampipes/platform-services';
+import { SemanticTypeService } from '../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
 
 export class EpRequirements {
     private static ep(): EventPropertyPrimitive {
@@ -50,7 +51,7 @@ export class EpRequirements {
     }
 
     static imageReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq('https://image.com');
+        return EpRequirements.domainPropertyReq(SemanticTypeService.IMAGE);
     }
 
     static latitudeReq(): EventPropertyUnion {
@@ -66,7 +67,7 @@ export class EpRequirements {
     }
 
     static timestampReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq('http://schema.org/DateTime');
+        return EpRequirements.domainPropertyReq(SemanticTypeService.TIMESTAMP);
     }
 
     static numberReq(): EventPropertyUnion {

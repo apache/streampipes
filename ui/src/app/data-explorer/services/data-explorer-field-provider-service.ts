@@ -31,7 +31,7 @@ import { DataTypeService } from '../../../../projects/streampipes/platform-servi
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerFieldProviderService {
-    constructor(private semanticTypeService: SemanticTypeService) {}
+    constructor() {}
 
     public generateFieldLists(sourceConfigs: SourceConfig[]): FieldProvider {
         const provider: FieldProvider = {
@@ -158,7 +158,7 @@ export class DataExplorerFieldProviderService {
 
     public isTimestamp(p: EventProperty) {
         return p.domainProperties.some(
-            dp => dp === this.semanticTypeService.TIMESTAMP,
+            dp => dp === SemanticTypeService.TIMESTAMP,
         );
     }
 

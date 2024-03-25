@@ -21,33 +21,39 @@ import { EventProperty } from '@streampipes/platform-services';
 
 @Injectable({ providedIn: 'root' })
 export class SemanticTypeService {
-    static readonly SO: string = 'http://schema.org/';
+    public static readonly SO: string = 'http://schema.org/';
 
-    public TIMESTAMP = SemanticTypeService.SO + 'DateTime';
-    public SO_NUMBER = SemanticTypeService.SO + 'Number';
-    public SO_URL = SemanticTypeService.SO + 'URL';
+    public static readonly TIMESTAMP: string =
+        SemanticTypeService.SO + 'DateTime';
 
-    public IMAGE = 'https://image.com';
+    public static readonly SO_NUMBER: string =
+        SemanticTypeService.SO + 'Number';
+    public static readonly SO_URL: string = SemanticTypeService.SO + 'URL';
 
-    constructor() {}
+    public static readonly IMAGE: string = 'https://image.com';
 
-    public getValue(inputValue: any, semanticType: string) {
-        if (semanticType === this.TIMESTAMP) {
+    public static getValue(inputValue: any, semanticType: string) {
+        if (semanticType === SemanticTypeService.TIMESTAMP) {
             return new Date(inputValue).toLocaleString();
         } else {
             return inputValue;
         }
     }
 
-    public isTimestamp(property: EventProperty): boolean {
-        return property.domainProperties.includes(this.TIMESTAMP);
+    public static isTimestamp(property: EventProperty): boolean {
+        return property.domainProperties.includes(
+            SemanticTypeService.TIMESTAMP,
+        );
     }
 
-    public isImage(property: EventProperty): boolean {
-        return property.domainProperties.includes(this.IMAGE);
+    public static isImage(property: EventProperty): boolean {
+        return property.domainProperties.includes(SemanticTypeService.IMAGE);
     }
 
-    public isNumber(property: EventProperty): boolean {
-        return property.domainProperties.includes(this.SO_NUMBER);
+    // TODO should we move this to DataTypeService, and check for the data type instead of domain properties?
+    public static isNumber(property: EventProperty): boolean {
+        return property.domainProperties.includes(
+            SemanticTypeService.SO_NUMBER,
+        );
     }
 }

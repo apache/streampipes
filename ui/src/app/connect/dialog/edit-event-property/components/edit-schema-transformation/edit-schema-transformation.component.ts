@@ -52,7 +52,6 @@ export class EditSchemaTransformationComponent implements OnInit {
 
     constructor(
         private semanticTypesRestService: SemanticTypesRestService,
-        private semanticTypeService: SemanticTypeService,
         private shepherdService: ShepherdService,
     ) {}
 
@@ -73,7 +72,7 @@ export class EditSchemaTransformationComponent implements OnInit {
         if (checked) {
             this.isTimestampProperty = true;
             this.cachedProperty.domainProperties = [
-                this.semanticTypeService.TIMESTAMP,
+                SemanticTypeService.TIMESTAMP,
             ];
             this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
             this.cachedProperty.runtimeType = DataTypeService.Long;

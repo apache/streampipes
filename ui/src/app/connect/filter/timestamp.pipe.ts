@@ -25,12 +25,12 @@ import { SemanticTypeService } from '../../../../projects/streampipes/platform-s
     pure: false,
 })
 export class TimestampPipe implements PipeTransform {
-    constructor(private semanticTypeService: SemanticTypeService) {}
+    constructor() {}
 
     transform(items: EventPropertyUnion[]): EventPropertyUnion[] {
         return items.filter(item =>
             item.domainProperties.some(
-                dp => dp === this.semanticTypeService.TIMESTAMP,
+                dp => dp === SemanticTypeService.TIMESTAMP,
             ),
         );
     }

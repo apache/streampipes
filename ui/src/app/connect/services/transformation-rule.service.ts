@@ -43,7 +43,6 @@ import { SemanticTypeService } from '../../../../projects/streampipes/platform-s
 export class TransformationRuleService {
     constructor(
         private staticValueTransformService: StaticValueTransformService,
-        private semanticTypeService: SemanticTypeService,
     ) {}
 
     public getTransformationRuleDescriptions(
@@ -585,7 +584,7 @@ export class TransformationRuleService {
 
     isTimestampProperty(property: EventPropertyPrimitive) {
         return property.domainProperties.some(
-            dp => dp === this.semanticTypeService.TIMESTAMP,
+            dp => dp === SemanticTypeService.TIMESTAMP,
         );
     }
 
