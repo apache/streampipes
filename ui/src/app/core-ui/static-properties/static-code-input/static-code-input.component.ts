@@ -71,7 +71,6 @@ export class StaticCodeInputComponent
             ? (this.editorOptions.mode = '')
             : (this.editorOptions.mode =
                   this.staticProperty.language.toLowerCase());
-        console.log(this.editorOptions);
     }
 
     ngAfterViewInit() {

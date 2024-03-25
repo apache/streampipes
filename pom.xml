@@ -101,7 +101,7 @@
         <okhttp.version>3.13.1</okhttp.version>
         <opencsv.version>5.9</opencsv.version>
         <opennlp.version>2.3.1</opennlp.version>
-        <plc4x.version>0.10.0</plc4x.version>
+        <plc4x.version>0.12.0</plc4x.version>
         <plexus-component-annotations.version>2.2.0</plexus-component-annotations.version>
         <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
         <plexus-utils.version>4.0.0</plexus-utils.version>
@@ -650,11 +650,6 @@
             <dependency>
                 <groupId>org.apache.plc4x</groupId>
                 <artifactId>plc4j-api</artifactId>
-                <version>${plc4x.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.plc4x</groupId>
-                <artifactId>plc4j-connection-pool</artifactId>
                 <version>${plc4x.version}</version>
             </dependency>
             <dependency>

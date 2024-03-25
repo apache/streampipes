@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2023-12-04 13:14:24.
+// Generated using typescript-generator version 3.2.1263 on 2024-03-23 15:04:04.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -381,6 +382,7 @@ export class StaticProperty {
         | 'org.apache.streampipes.model.staticproperty.StaticPropertyAlternative'
         | 'org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives'
         | 'org.apache.streampipes.model.staticproperty.StaticPropertyGroup'
+        | 'org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.SelectionStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.AnyStaticProperty'
@@ -460,6 +462,8 @@ export class StaticProperty {
                 return StaticPropertyGroup.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty':
                 return SlideToggleStaticProperty.fromData(data);
+            case 'org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty':
+                return RuntimeResolvableGroupStaticProperty.fromData(data);
         }
     }
 }
@@ -1814,8 +1818,8 @@ export class FileMetadata {
     createdAt: number;
     createdByUser: string;
     fileId: string;
-    filetype: string;
     filename: string;
+    filetype: string;
     lastModified: number;
     rev: string;
 
@@ -1827,8 +1831,8 @@ export class FileMetadata {
         instance.createdAt = data.createdAt;
         instance.createdByUser = data.createdByUser;
         instance.fileId = data.fileId;
-        instance.filetype = data.filetype;
         instance.filename = data.filename;
+        instance.filetype = data.filetype;
         instance.lastModified = data.lastModified;
         instance.rev = data.rev;
         return instance;
@@ -3275,6 +3279,52 @@ export class RuntimeResolvableAnyStaticProperty extends AnyStaticProperty {
     }
 }
 
+export class StaticPropertyGroup extends StaticProperty {
+    '@class':
+        | 'org.apache.streampipes.model.staticproperty.StaticPropertyGroup'
+        | 'org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty';
+    'horizontalRendering': boolean;
+    'showLabel': boolean;
+    'staticProperties': StaticPropertyUnion[];
+
+    static 'fromData'(
+        data: StaticPropertyGroup,
+        target?: StaticPropertyGroup,
+    ): StaticPropertyGroup {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new StaticPropertyGroup();
+        super.fromData(data, instance);
+        instance.horizontalRendering = data.horizontalRendering;
+        instance.showLabel = data.showLabel;
+        instance.staticProperties = __getCopyArrayFn(
+            StaticProperty.fromDataUnion,
+        )(data.staticProperties);
+        return instance;
+    }
+}
+
+export class RuntimeResolvableGroupStaticProperty extends StaticPropertyGroup {
+    '@class': 'org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty';
+    'dependsOn': string[];
+
+    static 'fromData'(
+        data: RuntimeResolvableGroupStaticProperty,
+        target?: RuntimeResolvableGroupStaticProperty,
+    ): RuntimeResolvableGroupStaticProperty {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new RuntimeResolvableGroupStaticProperty();
+        super.fromData(data, instance);
+        instance.dependsOn = __getCopyArrayFn(__identity<string>())(
+            data.dependsOn,
+        );
+        return instance;
+    }
+}
+
 export class RuntimeResolvableOneOfStaticProperty extends OneOfStaticProperty {
     '@class': 'org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty';
     'dependsOn': string[];
@@ -3684,30 +3734,6 @@ export class StaticPropertyAlternatives extends StaticProperty {
         instance.alternatives = __getCopyArrayFn(
             StaticPropertyAlternative.fromData,
         )(data.alternatives);
-        return instance;
-    }
-}
-
-export class StaticPropertyGroup extends StaticProperty {
-    '@class': 'org.apache.streampipes.model.staticproperty.StaticPropertyGroup';
-    'horizontalRendering': boolean;
-    'showLabel': boolean;
-    'staticProperties': StaticPropertyUnion[];
-
-    static 'fromData'(
-        data: StaticPropertyGroup,
-        target?: StaticPropertyGroup,
-    ): StaticPropertyGroup {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new StaticPropertyGroup();
-        super.fromData(data, instance);
-        instance.horizontalRendering = data.horizontalRendering;
-        instance.showLabel = data.showLabel;
-        instance.staticProperties = __getCopyArrayFn(
-            StaticProperty.fromDataUnion,
-        )(data.staticProperties);
         return instance;
     }
 }
@@ -4131,6 +4157,7 @@ export type StaticPropertyType =
     | 'MatchingStaticProperty'
     | 'OneOfStaticProperty'
     | 'RuntimeResolvableAnyStaticProperty'
+    | 'RuntimeResolvableGroupStaticProperty'
     | 'RuntimeResolvableOneOfStaticProperty'
     | 'RuntimeResolvableTreeInputStaticProperty'
     | 'StaticPropertyGroup'
@@ -4158,7 +4185,8 @@ export type StaticPropertyUnion =
     | StaticPropertyAlternative
     | StaticPropertyAlternatives
     | StaticPropertyGroup
-    | SlideToggleStaticProperty;
+    | SlideToggleStaticProperty
+    | RuntimeResolvableGroupStaticProperty;
 
 export type StreamTransformationRuleDescriptionUnion =
     | EventRateTransformationRuleDescription

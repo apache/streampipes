@@ -75,8 +75,6 @@ public class LabelGeneratorTest {
 
     var labelGenerator = new LabelGenerator(mockDescription);
     var labelGeneratorMock = spy(labelGenerator);
-    doReturn(false).when(labelGeneratorMock)
-                   .existsLocalesFile();
     return labelGeneratorMock;
   }
 
@@ -87,7 +85,7 @@ public class LabelGeneratorTest {
     var labelGenerator = new LabelGenerator(mockDescription);
     var labelGeneratorMock = spy(labelGenerator);
     doReturn(properties).when(labelGeneratorMock)
-                        .checkIfResourceFileExistsAndMakeProperties();
+                        .loadResourceAndMakeProperties();
     return labelGeneratorMock;
   }
 

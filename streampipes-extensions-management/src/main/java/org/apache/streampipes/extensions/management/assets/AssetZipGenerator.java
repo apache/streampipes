@@ -17,6 +17,10 @@
  */
 package org.apache.streampipes.extensions.management.assets;
 
+import org.apache.streampipes.extensions.api.assets.AssetResolver;
+import org.apache.streampipes.extensions.api.assets.DefaultAssetResolver;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,9 +33,20 @@ public class AssetZipGenerator {
   private List<String> includedAssets;
   private String appId;
 
+  private final AssetResolver assetResolver;
+
   public AssetZipGenerator(String appId, List<String> includedAssets) {
     this.includedAssets = includedAssets;
     this.appId = appId;
+    this.assetResolver = new DefaultAssetResolver(appId);
+  }
+
+  public AssetZipGenerator(String appId,
+                           List<String> includedAssets,
+                           AssetResolver assetResolver) {
+    this.includedAssets = includedAssets;
+    this.appId = appId;
+    this.assetResolver = assetResolver;
   }
 
   public byte[] makeZip() throws IOException {
@@ -51,7 +66,8 @@ public class AssetZipGenerator {
       InputStream in = null;
       try {
         ClassLoader classLoader = this.getClass().getClassLoader();
-        in = classLoader.getResourceAsStream(makePath(asset));
+        //in = classLoader.getResourceAsStream(makePath(asset));
+        in = new ByteArrayInputStream(assetResolver.getAsset(asset));
         int len;
         while ((len = in.read(buffer)) > 0) {
           out.write(buffer, 0, len);
@@ -67,7 +83,7 @@ public class AssetZipGenerator {
     return outputStream.toByteArray();
   }
 
-  private String makePath(String assetAppendix) {
-    return this.appId + "/" + assetAppendix;
-  }
+//  private String makePath(String assetAppendix) {
+//    return this.appId + "/" + assetAppendix;
+//  }
 }

@@ -84,6 +84,7 @@ import { LivePreviewLoadingComponent } from './pipeline-element-runtime-info/liv
 import { LivePreviewTableComponent } from './pipeline-element-runtime-info/live-preview-table/live-preview-table.component';
 import { LivePreviewErrorComponent } from './pipeline-element-runtime-info/live-preview-error/live-preview-error.component';
 import { FieldNamesTableComponent } from './help/field-names-table/field-names-table.component';
+import { StaticRuntimeResolvableGroupComponent } from './static-properties/static-runtime-resolvable-group/static-runtime-resolvable-group.component';
 
 @NgModule({
     imports: [
@@ -137,6 +138,7 @@ import { FieldNamesTableComponent } from './help/field-names-table/field-names-t
         StaticCodeInputComponent,
         StaticOneOfInputComponent,
         StaticRuntimeResolvableAnyInputComponent,
+        StaticRuntimeResolvableGroupComponent,
         StaticRuntimeResolvableOneOfInputComponent,
         StaticRuntimeResolvableTreeInputComponent,
         StaticSlideToggleComponent,

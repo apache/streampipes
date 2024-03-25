@@ -54,4 +54,6 @@ public interface StaticPropertyVisitor {
   void visit(SlideToggleStaticProperty slideToggleStaticProperty);
 
   void visit(RuntimeResolvableTreeInputStaticProperty treeInputStaticProperty);
+
+  void visit(RuntimeResolvableGroupStaticProperty groupStaticProperty);
 }

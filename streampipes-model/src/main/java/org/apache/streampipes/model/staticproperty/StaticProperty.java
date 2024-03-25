@@ -44,7 +44,8 @@ import java.util.Objects;
     @JsonSubTypes.Type(StaticPropertyAlternative.class),
     @JsonSubTypes.Type(StaticPropertyAlternatives.class),
     @JsonSubTypes.Type(StaticPropertyGroup.class),
-    @JsonSubTypes.Type(SlideToggleStaticProperty.class)
+    @JsonSubTypes.Type(SlideToggleStaticProperty.class),
+    @JsonSubTypes.Type(RuntimeResolvableGroupStaticProperty.class)
 })
 @TsModel
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")

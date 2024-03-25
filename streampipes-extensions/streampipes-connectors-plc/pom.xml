@@ -52,24 +52,11 @@
         </dependency>
         <dependency>
             <groupId>org.apache.plc4x</groupId>
-            <artifactId>plc4j-connection-pool</artifactId>
+            <artifactId>plc4j-driver-all</artifactId>
+            <version>0.12.0</version>
+            <type>pom</type>
         </dependency>
-        <dependency>
-            <groupId>org.apache.plc4x</groupId>
-            <artifactId>plc4j-driver-s7</artifactId>
-            <scope>runtime</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.woodstox</groupId>
-                    <artifactId>woodstox-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.plc4x</groupId>
-            <artifactId>plc4j-driver-modbus</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+
 
         <!-- Test dependencies -->
         <dependency>

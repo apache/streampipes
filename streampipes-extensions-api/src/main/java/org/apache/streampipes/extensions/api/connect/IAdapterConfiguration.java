@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.extensions.api.connect;
 
+import org.apache.streampipes.extensions.api.assets.AssetResolvable;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-public interface IAdapterConfiguration {
+public interface IAdapterConfiguration extends AssetResolvable {
   List<IParser> getSupportedParsers();
 
   AdapterDescription getAdapterDescription();
