@@ -18,18 +18,12 @@
 
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { CommonModule } from '@angular/common';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { ApidocsComponent } from './apidocs.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FlexLayoutModule,
-        CoreUiModule,
-        CustomMaterialModule,
-    ],
+    imports: [CommonModule, FlexLayoutModule, CoreUiModule],
     declarations: [ApidocsComponent],
     providers: [],
     exports: [ApidocsComponent],

@@ -20,7 +20,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { FormsModule } from '@angular/forms';
 import { NotificationsComponent } from './notifications.component';
 import { NotificationItemComponent } from './components/notification-item.component';
