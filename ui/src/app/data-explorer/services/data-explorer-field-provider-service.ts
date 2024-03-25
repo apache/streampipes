@@ -145,14 +145,14 @@ export class DataExplorerFieldProviderService {
         return (
             this.isPrimitive(p) &&
             (p as EventPropertyPrimitive).runtimeType ===
-                DataTypeService.Boolean
+                DataTypeService.BOOLEAN
         );
     }
 
     public isString(p: EventPropertyUnion): boolean {
         return (
             this.isPrimitive(p) &&
-            (p as EventPropertyPrimitive).runtimeType === DataTypeService.String
+            (p as EventPropertyPrimitive).runtimeType === DataTypeService.STRING
         );
     }
 

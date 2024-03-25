@@ -86,7 +86,7 @@ export class StaticFreeInputComponent
             validators.push(ValidateUrl);
             this.errorMessage = 'Please enter a valid URL';
         } else if (
-            this.staticProperty.requiredDatatype === DataTypeService.String
+            this.staticProperty.requiredDatatype === DataTypeService.STRING
         ) {
             validators.push(ValidateString);
             this.errorMessage = 'Please enter a valid String';

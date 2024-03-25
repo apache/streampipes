@@ -75,7 +75,7 @@ export class EditSchemaTransformationComponent implements OnInit {
                 SemanticTypeService.TIMESTAMP,
             ];
             this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
-            this.cachedProperty.runtimeType = DataTypeService.Long;
+            this.cachedProperty.runtimeType = DataTypeService.LONG;
         } else {
             this.cachedProperty.domainProperties = [];
             this.cachedProperty.propertyScope = 'MEASUREMENT_PROPERTY';

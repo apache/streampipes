@@ -165,7 +165,7 @@ export class EventPropertyRowComponent implements OnInit {
                 dp => dp === SemanticTypeService.TIMESTAMP,
             )
         ) {
-            node.runtimeType = DataTypeService.Long;
+            node.runtimeType = DataTypeService.LONG;
             return true;
         } else {
             return false;

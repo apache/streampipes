@@ -71,15 +71,15 @@ export class EpRequirements {
     }
 
     static numberReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(DataTypeService.Number);
+        return EpRequirements.datatypeReq(DataTypeService.NUMBER);
     }
 
     static stringReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(DataTypeService.String);
+        return EpRequirements.datatypeReq(DataTypeService.STRING);
     }
 
     static integerReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(DataTypeService.Integer);
+        return EpRequirements.datatypeReq(DataTypeService.INTEGER);
     }
 
     static listReq(): EventPropertyList {

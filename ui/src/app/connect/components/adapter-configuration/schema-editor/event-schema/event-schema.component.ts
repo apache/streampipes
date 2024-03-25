@@ -228,7 +228,7 @@ export class EventSchemaComponent implements OnChanges {
             this.staticValueTransformService.makeDefaultElementId();
 
         eventProperty.runtimeName = runtimeName;
-        eventProperty.runtimeType = DataTypeService.String;
+        eventProperty.runtimeType = DataTypeService.STRING;
         eventProperty.domainProperties = [];
         eventProperty.propertyScope = 'DIMENSION_PROPERTY';
         eventProperty.additionalMetadata = {};
@@ -250,7 +250,7 @@ export class EventSchemaComponent implements OnChanges {
         eventProperty.description = 'The current timestamp value';
         eventProperty.domainProperties = [SemanticTypeService.TIMESTAMP];
         eventProperty.propertyScope = 'HEADER_PROPERTY';
-        eventProperty.runtimeType = DataTypeService.Long;
+        eventProperty.runtimeType = DataTypeService.LONG;
         eventProperty.additionalMetadata = {};
 
         this.targetSchema.eventProperties.push(eventProperty);

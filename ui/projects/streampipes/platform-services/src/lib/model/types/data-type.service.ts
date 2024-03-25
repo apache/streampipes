@@ -19,27 +19,27 @@
 export class DataTypeService {
     public static readonly XSD: string = 'http://www.w3.org/2001/XMLSchema#';
 
-    public static readonly Integer = this.XSD + 'integer';
-    public static readonly Long = this.XSD + 'long';
-    public static readonly Float = this.XSD + 'float';
-    public static readonly Boolean = this.XSD + 'boolean';
-    public static readonly String = this.XSD + 'string';
-    public static readonly Double = this.XSD + 'double';
+    public static readonly INTEGER = this.XSD + 'integer';
+    public static readonly LONG = this.XSD + 'long';
+    public static readonly FLOAT = this.XSD + 'float';
+    public static readonly BOOLEAN = this.XSD + 'boolean';
+    public static readonly STRING = this.XSD + 'string';
+    public static readonly DOUBLE = this.XSD + 'double';
 
     // Should we support data type number?
-    public static readonly Number = this.XSD + 'number';
+    public static readonly NUMBER = this.XSD + 'number';
 
     public static isNumberType(datatype: string): boolean {
         return (
-            datatype === DataTypeService.Double ||
-            datatype === DataTypeService.Integer ||
-            datatype === DataTypeService.Long ||
-            datatype === DataTypeService.Float ||
-            datatype === DataTypeService.Number
+            datatype === DataTypeService.DOUBLE ||
+            datatype === DataTypeService.INTEGER ||
+            datatype === DataTypeService.LONG ||
+            datatype === DataTypeService.FLOAT ||
+            datatype === DataTypeService.NUMBER
         );
     }
 
     public static isBooleanType(datatype: string): boolean {
-        return datatype === DataTypeService.Boolean;
+        return datatype === DataTypeService.BOOLEAN;
     }
 }

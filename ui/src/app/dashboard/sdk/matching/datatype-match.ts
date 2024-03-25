@@ -31,14 +31,14 @@ export class DatatypeMatch {
     }
 
     subClassOf(offer: string, requirement: string): boolean {
-        if (!(requirement === DataTypeService.Number)) {
+        if (!(requirement === DataTypeService.NUMBER)) {
             return false;
         } else {
             if (
-                offer === DataTypeService.Integer ||
-                offer === DataTypeService.Long ||
-                offer === DataTypeService.Double ||
-                offer === DataTypeService.Float
+                offer === DataTypeService.INTEGER ||
+                offer === DataTypeService.LONG ||
+                offer === DataTypeService.DOUBLE ||
+                offer === DataTypeService.FLOAT
             ) {
                 return true;
             }

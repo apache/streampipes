@@ -37,12 +37,12 @@ export class UserDefinedOutputStrategyComponent
     implements OnInit
 {
     primitiveClasses = [
-        { label: 'String', id: DataTypeService.String },
-        { label: 'Boolean', id: DataTypeService.Boolean },
-        { label: 'Integer', id: DataTypeService.Integer },
-        { label: 'Long', id: DataTypeService.Long },
-        { label: 'Double', id: DataTypeService.Double },
-        { label: 'Float', id: DataTypeService.Float },
+        { label: 'String', id: DataTypeService.STRING },
+        { label: 'Boolean', id: DataTypeService.BOOLEAN },
+        { label: 'Integer', id: DataTypeService.INTEGER },
+        { label: 'Long', id: DataTypeService.LONG },
+        { label: 'Double', id: DataTypeService.DOUBLE },
+        { label: 'Float', id: DataTypeService.FLOAT },
     ];
 
     constructor(private idGeneratorService: IdGeneratorService) {
