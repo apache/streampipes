@@ -34,6 +34,7 @@ import { EventPropertyUtilsService } from '../../../../services/event-property-u
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
 import { SemanticTypeService } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
+import { DataTypeService } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
 
 @Component({
     selector: 'sp-event-property-row',
@@ -165,7 +166,7 @@ export class EventPropertyRowComponent implements OnInit {
                 dp => dp === this.semanticTypeService.TIMESTAMP,
             )
         ) {
-            node.runtimeType = this.semanticTypeService.XS_LONG;
+            node.runtimeType = DataTypeService.Long;
             return true;
         } else {
             return false;

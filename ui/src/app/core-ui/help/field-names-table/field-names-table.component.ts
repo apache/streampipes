@@ -18,7 +18,7 @@
 
 import { Component, Input } from '@angular/core';
 import { EventSchema } from '@streampipes/platform-services';
-import { SemanticTypeService } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
+import { DataTypeService } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
 
 @Component({
     selector: 'sp-field-names-table',
@@ -36,12 +36,12 @@ export class FieldNamesTableComponent {
         'runtimeType',
     ];
 
-    constructor(private semanticTypeService: SemanticTypeService) {}
+    constructor() {}
 
     getFriendlyRuntimeType(runtimeType: string) {
-        if (this.semanticTypeService.isNumberType(runtimeType)) {
+        if (DataTypeService.isNumberType(runtimeType)) {
             return 'Number';
-        } else if (this.semanticTypeService.isBooleanType(runtimeType)) {
+        } else if (DataTypeService.isBooleanType(runtimeType)) {
             return 'Boolean';
         } else {
             return 'Text';

@@ -21,18 +21,13 @@ import { EventProperty } from '@streampipes/platform-services';
 
 @Injectable({ providedIn: 'root' })
 export class SemanticTypeService {
-    public TIMESTAMP = 'http://schema.org/DateTime';
-    public IMAGE = 'https://image.com';
-    public SO_NUMBER = 'http://schema.org/Number';
-    public SO_URL = 'https://schema.org/URL';
+    static readonly SO: string = 'http://schema.org/';
 
-    public XS_INTEGER = 'http://www.w3.org/2001/XMLSchema#integer';
-    public XS_FLOAT = 'http://www.w3.org/2001/XMLSchema#float';
-    public XS_LONG = 'http://www.w3.org/2001/XMLSchema#long';
-    public XS_DOUBLE = 'http://www.w3.org/2001/XMLSchema#double';
-    public XS_BOOLEAN = 'http://www.w3.org/2001/XMLSchema#boolean';
-    public XS_NUMBER = 'http://www.w3.org/2001/XMLSchema#number';
-    public XS_STRING = 'http://www.w3.org/2001/XMLSchema#string';
+    public TIMESTAMP = SemanticTypeService.SO + 'DateTime';
+    public SO_NUMBER = SemanticTypeService.SO + 'Number';
+    public SO_URL = SemanticTypeService.SO + 'URL';
+
+    public IMAGE = 'https://image.com';
 
     constructor() {}
 
@@ -54,19 +49,5 @@ export class SemanticTypeService {
 
     public isNumber(property: EventProperty): boolean {
         return property.domainProperties.includes(this.SO_NUMBER);
-    }
-
-    public isNumberType(datatype: string): boolean {
-        return (
-            datatype === this.XS_DOUBLE ||
-            datatype === this.XS_INTEGER ||
-            datatype === this.XS_LONG ||
-            datatype === this.XS_FLOAT ||
-            datatype === this.XS_NUMBER
-        );
-    }
-
-    isBooleanType(datatype: string): boolean {
-        return datatype === this.XS_BOOLEAN;
     }
 }

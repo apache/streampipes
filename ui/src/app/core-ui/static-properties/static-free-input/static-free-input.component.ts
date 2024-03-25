@@ -28,6 +28,7 @@ import {
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { QuillEditorComponent } from 'ngx-quill';
 import { SemanticTypeService } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
+import { DataTypeService } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
 
 @Component({
     selector: 'sp-app-static-free-input',
@@ -69,10 +70,10 @@ export class StaticFreeInputComponent
         const validators: ValidatorFn[] = [];
         validators.push(Validators.required);
         if (
-            this.semanticTypeService.isNumberType(
+            DataTypeService.isNumberType(
                 this.staticProperty.requiredDatatype,
             ) ||
-            this.semanticTypeService.isNumberType(
+            DataTypeService.isNumberType(
                 this.staticProperty.requiredDomainProperty,
             )
         ) {
@@ -85,8 +86,7 @@ export class StaticFreeInputComponent
             validators.push(ValidateUrl);
             this.errorMessage = 'Please enter a valid URL';
         } else if (
-            this.staticProperty.requiredDatatype ===
-            this.semanticTypeService.XS_STRING
+            this.staticProperty.requiredDatatype === DataTypeService.String
         ) {
             validators.push(ValidateString);
             this.errorMessage = 'Please enter a valid String';

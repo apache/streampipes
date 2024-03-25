@@ -18,7 +18,6 @@
 
 export class DataTypeService {
     static readonly XSD: string = 'http://www.w3.org/2001/XMLSchema#';
-    static readonly SO: string = 'http://schema.org/';
 
     static readonly Integer = this.XSD + 'integer';
     static readonly Long = this.XSD + 'long';
@@ -27,5 +26,20 @@ export class DataTypeService {
     static readonly String = this.XSD + 'string';
     static readonly Double = this.XSD + 'double';
 
-    static readonly Number = this.SO + 'Number';
+    // Should we support data type number?
+    static readonly Number = this.XSD + 'number';
+
+    public static isNumberType(datatype: string): boolean {
+        return (
+            datatype === DataTypeService.Double ||
+            datatype === DataTypeService.Integer ||
+            datatype === DataTypeService.Long ||
+            datatype === DataTypeService.Float ||
+            datatype === DataTypeService.Number
+        );
+    }
+
+    public static isBooleanType(datatype: string): boolean {
+        return datatype === DataTypeService.Boolean;
+    }
 }

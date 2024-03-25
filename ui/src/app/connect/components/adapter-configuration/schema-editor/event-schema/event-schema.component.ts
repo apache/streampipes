@@ -27,7 +27,6 @@ import {
 } from '@angular/core';
 import { RestService } from '../../../../services/rest.service';
 import { ITreeOptions, TreeComponent } from '@ali-hm/angular-tree-component';
-import { DataTypesService } from '../../../../services/data-type.service';
 import {
     AdapterDescription,
     EventPropertyNested,
@@ -44,6 +43,7 @@ import { TransformationRuleService } from '../../../../services/transformation-r
 import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
 import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
 import { SemanticTypeService } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
+import { DataTypeService } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
 
 @Component({
     selector: 'sp-event-schema',
@@ -53,7 +53,6 @@ import { SemanticTypeService } from '../../../../../../../projects/streampipes/p
 export class EventSchemaComponent implements OnChanges {
     constructor(
         private restService: RestService,
-        private dataTypesService: DataTypesService,
         private transformationRuleService: TransformationRuleService,
         private staticValueTransformService: StaticValueTransformService,
         private idGeneratorService: IdGeneratorService,
@@ -230,7 +229,7 @@ export class EventSchemaComponent implements OnChanges {
             this.staticValueTransformService.makeDefaultElementId();
 
         eventProperty.runtimeName = runtimeName;
-        eventProperty.runtimeType = this.dataTypesService.getStringTypeUrl();
+        eventProperty.runtimeType = DataTypeService.String;
         eventProperty.domainProperties = [];
         eventProperty.propertyScope = 'DIMENSION_PROPERTY';
         eventProperty.additionalMetadata = {};
@@ -252,7 +251,7 @@ export class EventSchemaComponent implements OnChanges {
         eventProperty.description = 'The current timestamp value';
         eventProperty.domainProperties = [this.semanticTypeService.TIMESTAMP];
         eventProperty.propertyScope = 'HEADER_PROPERTY';
-        eventProperty.runtimeType = this.semanticTypeService.XS_LONG;
+        eventProperty.runtimeType = DataTypeService.Long;
         eventProperty.additionalMetadata = {};
 
         this.targetSchema.eventProperties.push(eventProperty);

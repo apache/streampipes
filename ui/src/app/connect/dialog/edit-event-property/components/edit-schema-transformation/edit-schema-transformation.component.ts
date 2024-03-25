@@ -28,6 +28,7 @@ import { Observable } from 'rxjs';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import { SemanticTypesRestService } from '../../../../../../../projects/streampipes/platform-services/src/lib/apis/semantic-types-rest.service';
 import { SemanticTypeService } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
+import { DataTypeService } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
 
 @Component({
     selector: 'sp-edit-schema-transformation',
@@ -75,7 +76,7 @@ export class EditSchemaTransformationComponent implements OnInit {
                 this.semanticTypeService.TIMESTAMP,
             ];
             this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
-            this.cachedProperty.runtimeType = this.semanticTypeService.XS_LONG;
+            this.cachedProperty.runtimeType = DataTypeService.Long;
         } else {
             this.cachedProperty.domainProperties = [];
             this.cachedProperty.propertyScope = 'MEASUREMENT_PROPERTY';

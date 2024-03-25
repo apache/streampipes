@@ -27,6 +27,7 @@ import {
     SourceConfig,
 } from '@streampipes/platform-services';
 import { SemanticTypeService } from '../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
+import { DataTypeService } from '../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerFieldProviderService {
@@ -144,15 +145,14 @@ export class DataExplorerFieldProviderService {
         return (
             this.isPrimitive(p) &&
             (p as EventPropertyPrimitive).runtimeType ===
-                this.semanticTypeService.XS_BOOLEAN
+                DataTypeService.Boolean
         );
     }
 
     public isString(p: EventPropertyUnion): boolean {
         return (
             this.isPrimitive(p) &&
-            (p as EventPropertyPrimitive).runtimeType ===
-                this.semanticTypeService.XS_STRING
+            (p as EventPropertyPrimitive).runtimeType === DataTypeService.String
         );
     }
 
@@ -191,7 +191,7 @@ export class DataExplorerFieldProviderService {
     isNumber(p: EventPropertyUnion): boolean {
         if (this.isPrimitive(p)) {
             const runtimeType = (p as EventPropertyPrimitive).runtimeType;
-            return this.semanticTypeService.isNumberType(runtimeType);
+            return DataTypeService.isNumberType(runtimeType);
         } else {
             return false;
         }
