@@ -65,8 +65,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         MatTableModule,
         MatAutocompleteModule,
         MatExpansionModule,
-        MatExpansionModule,
-        MatTableModule,
         MatPaginatorModule,
         MatSortModule,
         MatDividerModule,
