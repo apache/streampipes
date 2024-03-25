@@ -21,7 +21,6 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { GridsterModule } from 'angular-gridster2';
 import { MatTabsModule } from '@angular/material/tabs';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditorComponent } from './editor.component';
 import { PipelineElementIconStandComponent } from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
@@ -51,16 +50,65 @@ import { PipelineElementIconStandRowComponent } from './components/pipeline-elem
 import { PipelineElementTypeFilterPipe } from './services/pipeline-element-type-filter.pipe';
 import { PipelineElementNameFilterPipe } from './services/pipeline-element-name-filter.pipe';
 import { PipelineElementGroupFilterPipe } from './services/pipeline-element-group-filter.pipe';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTableModule } from '@angular/material/table';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
     imports: [
+        MatButtonModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatMenuModule,
+        MatSelectModule,
+        MatSidenavModule,
+        MatSlideToggleModule,
+        MatTabsModule,
+        MatToolbarModule,
+        MatStepperModule,
+        MatRadioModule,
+        MatTableModule,
+        MatAutocompleteModule,
+        MatExpansionModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatDividerModule,
+        MatTooltipModule,
+        MatProgressBarModule,
+        MatButtonToggleModule,
+        MatChipsModule,
+        MatSliderModule,
         CoreUiModule,
         CommonModule,
         MatTabsModule,
         MatListModule,
         GridsterModule,
         FlexLayoutModule,
-        CustomMaterialModule,
         FormsModule,
         MatProgressSpinnerModule,
         ReactiveFormsModule,

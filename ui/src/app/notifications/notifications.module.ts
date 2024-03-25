@@ -36,7 +36,6 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
         FlexLayoutModule,
         CommonModule,
         FlexLayoutModule,
-        CustomMaterialModule,
         FormsModule,
         PlatformServicesModule,
     ],
