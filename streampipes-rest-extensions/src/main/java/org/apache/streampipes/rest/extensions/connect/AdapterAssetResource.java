@@ -52,7 +52,6 @@ public class AdapterAssetResource extends AbstractSharedRestInterface {
     if (adapterConfig.isPresent()) {
       try {
         return ok(new AssetZipGenerator(
-            id,
             adapterConfig.get().getAdapterDescription().getIncludedAssets(),
             adapterConfig.get().getAssetResolver()).makeZip()
         );

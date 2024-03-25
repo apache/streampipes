@@ -28,9 +28,9 @@ import { BaseRuntimeResolvableInput } from '../static-runtime-resolvable-input/b
 import {
     RuntimeResolvableGroupStaticProperty,
     StaticPropertyUnion,
-    TreeInputNode,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
+
 @Component({
     selector: 'sp-app-static-runtime-resolvable-group',
     templateUrl: './static-runtime-resolvable-group.component.html',
@@ -45,45 +45,20 @@ export class StaticRuntimeResolvableGroupComponent
 
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    //dependentStaticProperties: Map<string, boolean> = new Map<string, boolean>();
-
-    handleConfigurationUpdate(event: ConfigurationInfo): void {
-        // this.dependentStaticProperties.set(
-        //   event.staticPropertyInternalName,
-        //   event.configured,
-        // );
-        // if (
-        //   Array.from(this.dependentStaticProperties.values()).every(
-        //     v => v === true,
-        //   )
-        // ) {
-        //   this.emitUpdate(true);
-        // } else {
-        //   this.emitUpdate(false);
-        // }
-    }
+    handleConfigurationUpdate(event: ConfigurationInfo): void {}
 
     ngOnInit(): void {
         super.onInit();
         if (this.staticProperty.staticProperties.length === 0) {
             this.loadOptionsFromRestApi();
         }
-        this.applyDependentStaticProperties();
         this.emitUpdate(true);
-    }
-
-    applyDependentStaticProperties(): void {
-        // this.dependentStaticProperties = new Map();
-        // this.staticProperty.staticProperties.forEach(sp => {
-        //   this.dependentStaticProperties.set(sp.internalName, false);
-        // });
     }
 
     afterErrorReceived() {}
 
     afterOptionsLoaded(staticProperty: RuntimeResolvableGroupStaticProperty) {
         this.staticProperty.staticProperties = staticProperty.staticProperties;
-        this.applyDependentStaticProperties();
     }
 
     parse(
