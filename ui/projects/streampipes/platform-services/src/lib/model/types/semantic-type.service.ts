@@ -22,6 +22,7 @@ import { EventProperty } from '@streampipes/platform-services';
 @Injectable({ providedIn: 'root' })
 export class SemanticTypeService {
     public static readonly SO: string = 'http://schema.org/';
+    public static readonly GEO: string = 'http://www.w3.org/2003/01/geo/';
 
     public static readonly TIMESTAMP: string =
         SemanticTypeService.SO + 'DateTime';
@@ -31,6 +32,11 @@ export class SemanticTypeService {
     public static readonly SO_URL: string = SemanticTypeService.SO + 'URL';
 
     public static readonly IMAGE: string = 'https://image.com';
+
+    public static readonly GEO_LAT: string =
+        SemanticTypeService.GEO + 'wgs84_pos#lat';
+    public static readonly GEO_LONG: string =
+        SemanticTypeService.GEO + 'wgs84_pos#long';
 
     public static getValue(inputValue: any, semanticType: string) {
         if (semanticType === SemanticTypeService.TIMESTAMP) {

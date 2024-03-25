@@ -55,15 +55,11 @@ export class EpRequirements {
     }
 
     static latitudeReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq(
-            'http://www.w3.org/2003/01/geo/wgs84_pos#lat',
-        );
+        return EpRequirements.domainPropertyReq(SemanticTypeService.GEO_LAT);
     }
 
     static longitudeReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq(
-            'http://www.w3.org/2003/01/geo/wgs84_pos#long',
-        );
+        return EpRequirements.domainPropertyReq(SemanticTypeService.GEO_LONG);
     }
 
     static timestampReq(): EventPropertyUnion {
