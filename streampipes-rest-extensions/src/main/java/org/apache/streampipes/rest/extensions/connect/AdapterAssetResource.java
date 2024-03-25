@@ -80,7 +80,9 @@ public class AdapterAssetResource extends AbstractSharedRestInterface {
   public String getDocumentationAsset(@PathVariable("id") String elementId) throws IOException {
     var adapterConfig = this.connectWorkerDescriptionProvider.getAdapterConfiguration(elementId);
     if (adapterConfig.isPresent()) {
-      return new String(adapterConfig.get().getAssetResolver().getAsset(GlobalStreamPipesConstants.STD_DOCUMENTATION_NAME));
+      return new String(adapterConfig.get().getAssetResolver().getAsset(
+          GlobalStreamPipesConstants.STD_DOCUMENTATION_NAME)
+      );
     } else {
       throw new IOException("Could not find documentation");
     }

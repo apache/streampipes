@@ -72,12 +72,20 @@ public class WelcomePageGenerator {
 
   private Description getAdapterDescription(StreamPipesAdapter adapter) {
     var entity = adapter.declareConfig().getAdapterDescription();
-    return getDescription(entity, adapter.declareConfig().getAssetResolver(), "adapter", "api/v1/worker/adapters/");
+    return getDescription(
+        entity,
+        adapter.declareConfig().getAssetResolver(),
+        "adapter",
+        "api/v1/worker/adapters/"
+    );
   }
 
   private Description getPipelineElementDescription(IStreamPipesPipelineElement<?> declarer) {
     var entity = declarer.declareConfig().getDescription();
-    return getDescription(entity, new DefaultAssetResolver(entity.getAppId()), getType(declarer), getPathPrefix(declarer));
+    return getDescription(
+        entity,
+        new DefaultAssetResolver(entity.getAppId()), getType(declarer), getPathPrefix(declarer)
+    );
   }
 
   private Description getDescription(NamedStreamPipesEntity entity,
