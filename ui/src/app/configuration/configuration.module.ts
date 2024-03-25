@@ -28,7 +28,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfigurationService } from './shared/configuration.service';
 
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { MessagingConfigurationComponent } from './messaging-configuration/messaging-configuration.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DatalakeConfigurationComponent } from './datalake-configuration/datalake-configuration.component';
@@ -67,11 +66,12 @@ import { SpMessagingBrokerConfigComponent } from './messaging-configuration/brok
 import { SpExtensionsServiceDetailsDialogComponent } from './dialog/extensions-service-details/extensions-service-details-dialog.component';
 import { SpEmailTemplateConfigurationComponent } from './email-configuration/email-template-configuration/email-template-configuration.component';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
     imports: [
         CommonModule,
-        CustomMaterialModule,
         FlexLayoutModule,
         MatGridListModule,
         MatButtonModule,
@@ -81,6 +81,8 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
         MatCheckboxModule,
         MatDividerModule,
         MatTooltipModule,
+        MatTableModule,
+        MatPaginatorModule,
         FormsModule,
         DragDropModule,
         CoreUiModule,

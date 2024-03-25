@@ -26,7 +26,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CoreUiModule } from '../core-ui/core-ui.module';
@@ -48,7 +47,6 @@ import { SpManageAssetLinksDialogComponent } from './dialog/manage-asset-links/m
 @NgModule({
     imports: [
         CommonModule,
-        CustomMaterialModule,
         FlexLayoutModule,
         MatGridListModule,
         MatButtonModule,
