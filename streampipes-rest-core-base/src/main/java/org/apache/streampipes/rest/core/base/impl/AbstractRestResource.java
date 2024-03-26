@@ -34,7 +34,6 @@ import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
-import org.apache.streampipes.storage.api.IVisualizationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.http.client.ClientProtocolException;
@@ -65,10 +64,6 @@ public class AbstractRestResource extends AbstractSharedRestInterface {
 
   protected IUserStorage getUserStorage() {
     return getNoSqlStorage().getUserStorageAPI();
-  }
-
-  protected IVisualizationStorage getVisualizationStorage() {
-    return getNoSqlStorage().getVisualizationStorageApi();
   }
 
   protected INotificationStorage getNotificationStorage() {

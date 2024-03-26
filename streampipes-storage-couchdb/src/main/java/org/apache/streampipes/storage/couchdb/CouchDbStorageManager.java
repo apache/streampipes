@@ -46,7 +46,6 @@ import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.IUserGroupStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
-import org.apache.streampipes.storage.api.IVisualizationStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AssetDashboardStorageImpl;
@@ -76,7 +75,6 @@ import org.apache.streampipes.storage.couchdb.impl.PipelineStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserActivationTokenImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserStorage;
-import org.apache.streampipes.storage.couchdb.impl.VisualizationStorageImpl;
 
 public enum CouchDbStorageManager implements INoSqlStorage {
 
@@ -130,11 +128,6 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IPipelineCategoryStorage getPipelineCategoryStorageApi() {
     return new PipelineCategoryStorageImpl();
-  }
-
-  @Override
-  public IVisualizationStorage getVisualizationStorageApi() {
-    return new VisualizationStorageImpl();
   }
 
   @Override

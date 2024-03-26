@@ -22,8 +22,6 @@ import { CommonModule } from '@angular/common';
 
 import { AppAssetMonitoringComponent } from './app-asset-monitoring.component';
 
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
-
 import { ViewAssetComponent } from './components/view-asset/view-asset.component';
 import { CreateAssetComponent } from './components/create-asset/create-asset.component';
 import { AddPipelineDialogComponent } from './dialog/add-pipeline/add-pipeline-dialog.component';
@@ -41,13 +39,18 @@ import { AddLinkDialogComponent } from './dialog/add-link/add-link-dialog.compon
 import { DashboardModule } from '../dashboard/dashboard.module';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
     imports: [
         CommonModule,
         FlexLayoutModule,
-        CustomMaterialModule,
+        MatDividerModule,
         MatGridListModule,
+        MatIconModule,
+        MatTabsModule,
         MatInputModule,
         MatFormFieldModule,
         FormsModule,
