@@ -43,6 +43,7 @@ import { SpAssetLinkItemComponent } from './components/asset-details/asset-detai
 import { EditAssetLinkDialogComponent } from './dialog/edit-asset-link/edit-asset-link-dialog.component';
 import { SpCreateAssetDialogComponent } from './dialog/create-asset/create-asset-dialog.component';
 import { SpManageAssetLinksDialogComponent } from './dialog/manage-asset-links/manage-asset-links-dialog.component';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
     imports: [
@@ -53,6 +54,7 @@ import { SpManageAssetLinksDialogComponent } from './dialog/manage-asset-links/m
         MatProgressSpinnerModule,
         MatIconModule,
         MatInputModule,
+        MatTableModule,
         MatCheckboxModule,
         MatDividerModule,
         MatTooltipModule,

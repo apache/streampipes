@@ -52,6 +52,7 @@ import { SpFunctionsMetricsComponent } from './components/functions-overview/fun
 import { SpFunctionsLogsComponent } from './components/functions-overview/functions-logs/functions-logs.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
     imports: [
@@ -61,6 +62,7 @@ import { MatDividerModule } from '@angular/material/divider';
         MatButtonModule,
         CommonModule,
         MatProgressSpinnerModule,
+        MatCheckboxModule,
         MatSortModule,
         MatTableModule,
         MatTooltipModule,
