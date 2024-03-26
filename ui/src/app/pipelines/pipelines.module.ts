@@ -23,7 +23,6 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { CommonModule } from '@angular/common';
 import { PipelineOverviewComponent } from './components/pipeline-overview/pipeline-overview.component';
 import { PipelineStatusDialogComponent } from './dialog/pipeline-status/pipeline-status-dialog.component';
@@ -51,6 +50,8 @@ import { PipelineLogsComponent } from '../pipeline-details/components/pipeline-l
 import { FunctionsOverviewComponent } from './components/functions-overview/functions-overview.component';
 import { SpFunctionsMetricsComponent } from './components/functions-overview/functions-metrics/functions-metrics.component';
 import { SpFunctionsLogsComponent } from './components/functions-overview/functions-logs/functions-logs.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
     imports: [
@@ -58,11 +59,12 @@ import { SpFunctionsLogsComponent } from './components/functions-overview/functi
         FormsModule,
         MatTabsModule,
         MatButtonModule,
-        CustomMaterialModule,
         CommonModule,
         MatProgressSpinnerModule,
         MatSortModule,
         MatTableModule,
+        MatTooltipModule,
+        MatDividerModule,
         CoreUiModule,
         PlatformServicesModule,
         EditorModule,
