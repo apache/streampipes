@@ -34,18 +34,28 @@ public class GenericAdapterGenerator {
 
   private static final Logger LOG = LoggerFactory.getLogger(GenericAdapterGenerator.class);
 
+  private final List<String> excludedDrivers = List.of(
+      "simulated",
+      "c-bus",
+      "plc4x"
+  );
+
+
   public List<StreamPipesAdapter> makeAvailableAdapters() {
     var adapters = new ArrayList<StreamPipesAdapter>();
     var protocolCodes = getDrivers();
     var driverManager = PlcDriverManager.getDefault();
-    protocolCodes.forEach(protocolCode -> {
-      try {
-        var driver = driverManager.getDriver(protocolCode);
-        adapters.add(new GenericPlc4xAdapter(driver));
-      } catch (PlcConnectionException e) {
-        LOG.error("Could not generate PLC adapter for protocol {}", protocolCode);
-      }
-    });
+    protocolCodes
+        .stream()
+        .filter(pc -> !excludedDrivers.contains(pc))
+        .forEach(protocolCode -> {
+          try {
+            var driver = driverManager.getDriver(protocolCode);
+            adapters.add(new GenericPlc4xAdapter(driver));
+          } catch (PlcConnectionException e) {
+            LOG.error("Could not generate PLC adapter for protocol {}", protocolCode);
+          }
+        });
     return adapters;
   }
 
