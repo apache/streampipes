@@ -74,7 +74,6 @@ import { AdapterConfigurationHeaderComponent } from './components/adapter-config
 import { NewAdapterComponent } from './components/new-adapter/new-adapter.component';
 import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.component';
 import { EventSchemaErrorHintsComponent } from './components/adapter-configuration/schema-editor/event-schema-error-hints/event-schema-error-hints.component';
-import { SpAdapterDetailsOverviewComponent } from './components/adapter-details/adapter-details-overview/adapter-details-overview.component';
 import { SpAdapterDetailsLogsComponent } from './components/adapter-details/adapter-details-logs/adapter-details-logs.component';
 import { SpAdapterDetailsMetricsComponent } from './components/adapter-details/adapter-details-metrics/adapter-details-metrics.component';
 import { CanNotEditAdapterDialog } from './dialog/can-not-edit-adapter-dialog/can-not-edit-adapter-dialog.component';
@@ -167,10 +166,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
                         path: 'edit/:elementId',
                         component: EditAdapterComponent,
                     },
-                    // {
-                    //   path: 'details/:elementId/overview',
-                    //   component: SpAdapterDetailsOverviewComponent
-                    // },
                     {
                         path: 'details/:elementId/metrics',
                         component: SpAdapterDetailsMetricsComponent,
@@ -215,7 +210,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
         SchemaEditorHeaderComponent,
         SpEpSettingsSectionComponent,
         StartAdapterConfigurationComponent,
-        SpAdapterDetailsOverviewComponent,
         SpAdapterDetailsLogsComponent,
         SpAdapterDetailsMetricsComponent,
         SpAdapterOptionsPanelComponent,
