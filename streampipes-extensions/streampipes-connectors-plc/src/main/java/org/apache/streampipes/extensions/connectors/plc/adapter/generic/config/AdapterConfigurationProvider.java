@@ -29,6 +29,7 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
+import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.PlcDriver;
 
 import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.PLC_CODE_BLOCK;
@@ -44,13 +45,14 @@ public class AdapterConfigurationProvider {
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.plc4x.generic.";
 
 
-  public IAdapterConfiguration makeConfig(PlcDriver driver) {
+  public IAdapterConfiguration makeConfig(PlcDriver driver,
+                                          PlcConnectionManager connectionManager) {
     var driverMetadata = driver.getMetadata();
     var appId = getAdapterAppId(driver);
     var adapterBuilder = AdapterConfigurationBuilder.create(
             appId,
             1,
-            () -> new GenericPlc4xAdapter(driver)
+            () -> new GenericPlc4xAdapter(driver, connectionManager)
         )
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)

@@ -41,6 +41,7 @@ import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticP
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 
+import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.PlcDriver;
 import org.apache.plc4x.java.api.metadata.Option;
 import org.apache.plc4x.java.api.metadata.OptionMetadata;
@@ -65,16 +66,19 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
   private ContinuousPlcRequestReader plcRequestReader;
 
   private final PlcDriver driver;
+  private final PlcConnectionManager connectionManager;
 
-  public GenericPlc4xAdapter(PlcDriver driver) {
+  public GenericPlc4xAdapter(PlcDriver driver,
+                             PlcConnectionManager connectionManager) {
     this.requestProvider = new PlcRequestProvider();
     this.schemaProvider = new EventSchemaProvider();
     this.driver = driver;
+    this.connectionManager = connectionManager;
   }
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return new AdapterConfigurationProvider().makeConfig(driver);
+    return new AdapterConfigurationProvider().makeConfig(driver, connectionManager);
   }
 
   @Override
@@ -84,7 +88,7 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
     var settings = new Plc4xConnectionExtractor(
         extractor.getStaticPropertyExtractor(), driver.getProtocolCode()
     ).makeSettings();
-    this.plcRequestReader = new ContinuousPlcRequestReader(settings, requestProvider, collector);
+    this.plcRequestReader = new ContinuousPlcRequestReader(connectionManager, settings, requestProvider, collector);
     this.pullAdapterScheduler = new PullAdapterScheduler();
     this.pullAdapterScheduler.schedule(plcRequestReader, extractor.getAdapterDescription().getElementId());
   }
@@ -111,7 +115,7 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
       var schemaBuilder = GuessSchemaBuilder.create();
       var allProperties = schemaProvider.makeSchema(settings.nodes());
 
-      var event = new OneTimePlcRequestReader(settings, requestProvider).readPlcDataSynchronized();
+      var event = new OneTimePlcRequestReader(connectionManager, settings, requestProvider).readPlcDataSynchronized();
 
       schemaBuilder.properties(allProperties);
       schemaBuilder.preview(event);

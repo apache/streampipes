@@ -26,6 +26,7 @@ import org.apache.streampipes.extensions.connectors.plc.adapter.s7.PlcReadRespon
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 
 import org.apache.plc4x.java.api.PlcConnection;
+import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
 import org.slf4j.Logger;
@@ -42,10 +43,11 @@ public class ContinuousPlcRequestReader
   private final IEventCollector collector;
   private PlcConnection plcConnection;
 
-  public ContinuousPlcRequestReader(Plc4xConnectionSettings settings,
+  public ContinuousPlcRequestReader(PlcConnectionManager connectionManager,
+                                    Plc4xConnectionSettings settings,
                                     PlcRequestProvider requestProvider,
                                     IEventCollector collector) {
-    super(settings, requestProvider);
+    super(connectionManager, settings, requestProvider);
     this.collector = collector;
   }
 
@@ -55,13 +57,13 @@ public class ContinuousPlcRequestReader
       var connection = getConnection();
       readPlcData(connection, this);
     } catch (Exception e) {
-      LOG.error("Error while reading from PLC with IP ", e);
+      LOG.error("Error while reading from PLC with connection string {} ", settings.connectionString(), e);
     }
   }
 
   private PlcConnection getConnection() throws PlcConnectionException {
     if (plcConnection == null || !plcConnection.isConnected()) {
-      this.plcConnection = getDriver().getConnectionManager().getConnection(settings.connectionString());
+      this.plcConnection = connectionManager.getConnection(settings.connectionString());
     }
     return this.plcConnection;
   }

@@ -61,7 +61,10 @@ public class Plc4xConnectionExtractor {
                                      String transportCode,
                                      String protocolCode,
                                      String parameters) {
-    return String.format("%s:%s://%s?%s", protocolCode, transportCode, host, parameters);
+    if (!parameters.isEmpty()) {
+      parameters = "?" + parameters;
+    }
+    return String.format("%s:%s://%s%s", protocolCode, transportCode, host, parameters);
   }
 
   private String makeConfigParameters(Map<String, Object> transportConfigs,

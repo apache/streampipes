@@ -21,7 +21,7 @@ package org.apache.streampipes.extensions.connectors.plc.adapter.generic.connect
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionSettings;
 
 import org.apache.plc4x.java.api.PlcConnection;
-import org.apache.plc4x.java.api.PlcDriverManager;
+import org.apache.plc4x.java.api.PlcConnectionManager;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -32,24 +32,23 @@ public class OneTimePlcRequestReader {
   protected final PlcRequestProvider requestProvider;
   protected final PlcEventGenerator eventGenerator;
 
-  public OneTimePlcRequestReader(Plc4xConnectionSettings settings,
+  protected final PlcConnectionManager connectionManager;
+
+  public OneTimePlcRequestReader(PlcConnectionManager connectionManager,
+                                 Plc4xConnectionSettings settings,
                                  PlcRequestProvider requestProvider) {
+    this.connectionManager = connectionManager;
     this.settings = settings;
     this.requestProvider = requestProvider;
     this.eventGenerator = new PlcEventGenerator(settings.nodes());
   }
 
   public Map<String, Object> readPlcDataSynchronized() throws Exception {
-    var driverManager = getDriver();
     var connectionString = settings.connectionString();
-    try (PlcConnection plcConnection = driverManager.getConnectionManager().getConnection(connectionString)) {
+    try (PlcConnection plcConnection = connectionManager.getConnection(connectionString)) {
       var readRequest = requestProvider.makeReadRequest(plcConnection, settings.nodes());
       var readResponse = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);
       return eventGenerator.makeEvent(readResponse);
     }
-  }
-
-  protected PlcDriverManager getDriver() {
-    return PlcDriverManager.getDefault();
   }
 }

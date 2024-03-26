@@ -45,13 +45,14 @@ public class GenericAdapterGenerator {
     var adapters = new ArrayList<StreamPipesAdapter>();
     var protocolCodes = getDrivers();
     var driverManager = PlcDriverManager.getDefault();
+    var connectionManager = driverManager.getConnectionManager();
     protocolCodes
         .stream()
         .filter(pc -> !excludedDrivers.contains(pc))
         .forEach(protocolCode -> {
           try {
             var driver = driverManager.getDriver(protocolCode);
-            adapters.add(new GenericPlc4xAdapter(driver));
+            adapters.add(new GenericPlc4xAdapter(driver, connectionManager));
           } catch (PlcConnectionException e) {
             LOG.error("Could not generate PLC adapter for protocol {}", protocolCode);
           }

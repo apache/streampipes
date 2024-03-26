@@ -84,10 +84,14 @@ public class MetadataOptionGenerator {
   }
 
   public StaticProperty[] getOptions(List<Option> options) {
-    return options.stream().map(option -> StaticProperties.freeTextProperty(
-        Labels.from(option.getKey(), option.getKey(), option.getDescription()),
-        getDatatype(option.getType())
-    )).toArray(StaticProperty[]::new);
+    return options.stream().map(option -> {
+      var sp = StaticProperties.freeTextProperty(
+          Labels.from(option.getKey(), option.getKey(), option.getDescription()),
+          getDatatype(option.getType())
+      );
+      sp.setValueRequired(option.isRequired());
+      return sp;
+    }).toArray(StaticProperty[]::new);
   }
 
   private Datatypes getDatatype(OptionType optionType) {
