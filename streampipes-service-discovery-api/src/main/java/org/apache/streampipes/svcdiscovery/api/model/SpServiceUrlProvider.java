@@ -29,7 +29,6 @@ public enum SpServiceUrlProvider {
   DATA_STREAM(SpServicePathPrefix.DATA_STREAM, SpServiceTagPrefix.DATA_STREAM),
   ADAPTER(SpServicePathPrefix.ADAPTER, SpServiceTagPrefix.ADAPTER);
 
-  private final String http = "http://";
   private final String slash = "/";
 
   private final String prefix;

@@ -91,7 +91,7 @@ export class EndpointInstallationComponent {
     installElement(extensionItem: ExtensionItemDescription, index: number) {
         this.extensionInstallationService
             .add({
-                appId: extensionItem.appId,
+                appId: extensionItem.appId || extensionItem.elementId,
                 publicElement: this.installAsPublicElement,
                 serviceTagPrefix: extensionItem.serviceTagPrefix,
             })

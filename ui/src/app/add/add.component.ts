@@ -113,7 +113,7 @@ export class AddComponent implements OnInit {
 
     getEndpointItems() {
         this.endpointItemsLoadingComplete = false;
-        this.addService.getRdfEndpointItems().subscribe(endpointItems => {
+        this.addService.getExtensionItems().subscribe(endpointItems => {
             this.endpointItems = endpointItems;
             this.endpointItemsLoadingComplete = true;
         });

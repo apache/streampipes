@@ -28,7 +28,6 @@ import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 
 import org.apache.http.client.fluent.Request;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

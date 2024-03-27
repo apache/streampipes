@@ -71,7 +71,7 @@ export class EndpointItemComponent implements OnInit {
         this.findItemTypeTitle();
         this.findItemStyle();
         if (this.item.includesIcon) {
-            this.addService.getRdfEndpointIcon(this.item).subscribe(
+            this.addService.getExtensionItemIcon(this.item).subscribe(
                 blob => {
                     const objectURL = URL.createObjectURL(blob);
                     this.image =

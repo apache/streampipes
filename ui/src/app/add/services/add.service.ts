@@ -32,7 +32,7 @@ export class AddService {
         private platformServicesCommons: PlatformServicesCommons,
     ) {}
 
-    getRdfEndpointItems(): Observable<ExtensionItemDescription[]> {
+    getExtensionItems(): Observable<ExtensionItemDescription[]> {
         return this.http
             .get(this.platformServicesCommons.apiBasePath + '/extension-items')
             .pipe(
@@ -44,7 +44,7 @@ export class AddService {
             );
     }
 
-    getRdfEndpointIcon(item: ExtensionItemDescription): Observable<any> {
+    getExtensionItemIcon(item: ExtensionItemDescription): Observable<any> {
         return this.http.post(
             this.platformServicesCommons.apiBasePath + '/extension-items/icon',
             item,
