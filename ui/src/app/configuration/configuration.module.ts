@@ -68,6 +68,8 @@ import { SpEmailTemplateConfigurationComponent } from './email-configuration/ema
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
     imports: [
@@ -83,6 +85,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
         MatTooltipModule,
         MatTableModule,
         MatPaginatorModule,
+        MatRadioModule,
+        MatSelectModule,
         FormsModule,
         DragDropModule,
         CoreUiModule,
