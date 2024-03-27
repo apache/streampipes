@@ -37,7 +37,7 @@ import {
 } from '@streampipes/platform-services';
 import { TimestampTransformationRuleMode } from '../model/TimestampTransformationRuleMode';
 import { StaticValueTransformService } from './static-value-transform.service';
-import { SemanticTypeService } from '../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
+import { SemanticType } from '../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
 
 @Injectable({ providedIn: 'root' })
 export class TransformationRuleService {
@@ -584,7 +584,7 @@ export class TransformationRuleService {
 
     isTimestampProperty(property: EventPropertyPrimitive) {
         return property.domainProperties.some(
-            dp => dp === SemanticTypeService.TIMESTAMP,
+            dp => dp === SemanticType.TIMESTAMP,
         );
     }
 

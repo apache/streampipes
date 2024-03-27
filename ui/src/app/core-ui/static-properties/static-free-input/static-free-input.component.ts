@@ -27,8 +27,8 @@ import {
 } from '../input.validator';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { QuillEditorComponent } from 'ngx-quill';
-import { SemanticTypeService } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
-import { DataTypeService } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
+import { SemanticType } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
+import { DataType } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
 
 @Component({
     selector: 'sp-app-static-free-input',
@@ -70,24 +70,17 @@ export class StaticFreeInputComponent
         const validators: ValidatorFn[] = [];
         validators.push(Validators.required);
         if (
-            DataTypeService.isNumberType(
-                this.staticProperty.requiredDatatype,
-            ) ||
-            DataTypeService.isNumberType(
-                this.staticProperty.requiredDomainProperty,
-            )
+            DataType.isNumberType(this.staticProperty.requiredDatatype) ||
+            DataType.isNumberType(this.staticProperty.requiredDomainProperty)
         ) {
             validators.push(ValidateNumber);
             this.errorMessage = 'The value should be a number';
         } else if (
-            this.staticProperty.requiredDomainProperty ===
-            SemanticTypeService.SO_URL
+            this.staticProperty.requiredDomainProperty === SemanticType.SO_URL
         ) {
             validators.push(ValidateUrl);
             this.errorMessage = 'Please enter a valid URL';
-        } else if (
-            this.staticProperty.requiredDatatype === DataTypeService.STRING
-        ) {
+        } else if (this.staticProperty.requiredDatatype === DataType.STRING) {
             validators.push(ValidateString);
             this.errorMessage = 'Please enter a valid String';
         }

@@ -18,7 +18,7 @@
 
 import { Component, Input } from '@angular/core';
 import { EventSchema } from '@streampipes/platform-services';
-import { DataTypeService } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
+import { DataType } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
 
 @Component({
     selector: 'sp-field-names-table',
@@ -39,9 +39,9 @@ export class FieldNamesTableComponent {
     constructor() {}
 
     getFriendlyRuntimeType(runtimeType: string) {
-        if (DataTypeService.isNumberType(runtimeType)) {
+        if (DataType.isNumberType(runtimeType)) {
             return 'Number';
-        } else if (DataTypeService.isBooleanType(runtimeType)) {
+        } else if (DataType.isBooleanType(runtimeType)) {
             return 'Boolean';
         } else {
             return 'Text';

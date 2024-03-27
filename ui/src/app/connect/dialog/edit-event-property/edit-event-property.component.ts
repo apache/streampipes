@@ -41,7 +41,7 @@ import { EditSchemaTransformationComponent } from './components/edit-schema-tran
 import { EditValueTransformationComponent } from './components/edit-value-transformation/edit-value-transformation.component';
 import { EditUnitTransformationComponent } from './components/edit-unit-transformation/edit-unit-transformation.component';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { SemanticTypeService } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
+import { SemanticType } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
 
 @Component({
     selector: 'sp-edit-event-property',
@@ -79,7 +79,7 @@ export class EditEventPropertyComponent implements OnInit {
 
     ngOnInit(): void {
         this.cachedProperty = this.copyEp(this.property);
-        this.isTimestampProperty = SemanticTypeService.isTimestamp(
+        this.isTimestampProperty = SemanticType.isTimestamp(
             this.cachedProperty,
         );
         this.isEventPropertyList = this.property instanceof EventPropertyList;
@@ -88,7 +88,7 @@ export class EditEventPropertyComponent implements OnInit {
         this.isEventPropertyNested =
             this.property instanceof EventPropertyNested;
         this.isNumericProperty =
-            SemanticTypeService.isNumber(this.cachedProperty) ||
+            SemanticType.isNumber(this.cachedProperty) ||
             this.dataTypeService.isNumeric(
                 (this.cachedProperty as any).runtimeType,
             );

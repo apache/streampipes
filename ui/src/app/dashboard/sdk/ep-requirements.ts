@@ -16,14 +16,14 @@
  *
  */
 
-import { DataTypeService } from '../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
+import { DataType } from '../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
 import {
     EventPropertyList,
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
 } from '@streampipes/platform-services';
-import { SemanticTypeService } from '../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
+import { SemanticType } from '../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
 
 export class EpRequirements {
     private static ep(): EventPropertyPrimitive {
@@ -51,31 +51,31 @@ export class EpRequirements {
     }
 
     static imageReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq(SemanticTypeService.IMAGE);
+        return EpRequirements.domainPropertyReq(SemanticType.IMAGE);
     }
 
     static latitudeReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq(SemanticTypeService.GEO_LAT);
+        return EpRequirements.domainPropertyReq(SemanticType.GEO_LAT);
     }
 
     static longitudeReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq(SemanticTypeService.GEO_LONG);
+        return EpRequirements.domainPropertyReq(SemanticType.GEO_LONG);
     }
 
     static timestampReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq(SemanticTypeService.TIMESTAMP);
+        return EpRequirements.domainPropertyReq(SemanticType.TIMESTAMP);
     }
 
     static numberReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(DataTypeService.NUMBER);
+        return EpRequirements.datatypeReq(DataType.NUMBER);
     }
 
     static stringReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(DataTypeService.STRING);
+        return EpRequirements.datatypeReq(DataType.STRING);
     }
 
     static integerReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(DataTypeService.INTEGER);
+        return EpRequirements.datatypeReq(DataType.INTEGER);
     }
 
     static listReq(): EventPropertyList {

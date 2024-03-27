@@ -33,8 +33,8 @@ import { StaticValueTransformService } from '../../../../services/static-value-t
 import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
-import { SemanticTypeService } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
-import { DataTypeService } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
+import { SemanticType } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
+import { DataType } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
 
 @Component({
     selector: 'sp-event-property-row',
@@ -161,11 +161,9 @@ export class EventPropertyRowComponent implements OnInit {
     isTimestampProperty(node) {
         if (
             node.domainProperties &&
-            node.domainProperties.some(
-                dp => dp === SemanticTypeService.TIMESTAMP,
-            )
+            node.domainProperties.some(dp => dp === SemanticType.TIMESTAMP)
         ) {
-            node.runtimeType = DataTypeService.LONG;
+            node.runtimeType = DataType.LONG;
             return true;
         } else {
             return false;

@@ -42,8 +42,8 @@ import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessag
 import { TransformationRuleService } from '../../../../services/transformation-rule.service';
 import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
 import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
-import { SemanticTypeService } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
-import { DataTypeService } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
+import { SemanticType } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
+import { DataType } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
 
 @Component({
     selector: 'sp-event-schema',
@@ -228,7 +228,7 @@ export class EventSchemaComponent implements OnChanges {
             this.staticValueTransformService.makeDefaultElementId();
 
         eventProperty.runtimeName = runtimeName;
-        eventProperty.runtimeType = DataTypeService.STRING;
+        eventProperty.runtimeType = DataType.STRING;
         eventProperty.domainProperties = [];
         eventProperty.propertyScope = 'DIMENSION_PROPERTY';
         eventProperty.additionalMetadata = {};
@@ -248,9 +248,9 @@ export class EventSchemaComponent implements OnChanges {
         eventProperty.runtimeName = 'timestamp';
         eventProperty.label = 'Timestamp';
         eventProperty.description = 'The current timestamp value';
-        eventProperty.domainProperties = [SemanticTypeService.TIMESTAMP];
+        eventProperty.domainProperties = [SemanticType.TIMESTAMP];
         eventProperty.propertyScope = 'HEADER_PROPERTY';
-        eventProperty.runtimeType = DataTypeService.LONG;
+        eventProperty.runtimeType = DataType.LONG;
         eventProperty.additionalMetadata = {};
 
         this.targetSchema.eventProperties.push(eventProperty);

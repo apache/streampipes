@@ -16,7 +16,7 @@
  *
  */
 
-export class DataTypeService {
+export class DataType {
     public static readonly XSD: string = 'http://www.w3.org/2001/XMLSchema#';
 
     public static readonly INTEGER = this.XSD + 'integer';
@@ -31,15 +31,15 @@ export class DataTypeService {
 
     public static isNumberType(datatype: string): boolean {
         return (
-            datatype === DataTypeService.DOUBLE ||
-            datatype === DataTypeService.INTEGER ||
-            datatype === DataTypeService.LONG ||
-            datatype === DataTypeService.FLOAT ||
-            datatype === DataTypeService.NUMBER
+            datatype === DataType.DOUBLE ||
+            datatype === DataType.INTEGER ||
+            datatype === DataType.LONG ||
+            datatype === DataType.FLOAT ||
+            datatype === DataType.NUMBER
         );
     }
 
     public static isBooleanType(datatype: string): boolean {
-        return datatype === DataTypeService.BOOLEAN;
+        return datatype === DataType.BOOLEAN;
     }
 }

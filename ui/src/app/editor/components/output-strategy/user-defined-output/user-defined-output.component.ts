@@ -24,8 +24,7 @@ import {
 } from '@streampipes/platform-services';
 import { UntypedFormControl } from '@angular/forms';
 import { IdGeneratorService } from '../../../../core-services/id-generator/id-generator.service';
-import { SemanticTypeService } from '../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
-import { DataTypeService } from '../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
+import { DataType } from '../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
 
 @Component({
     selector: 'sp-user-defined-output-strategy',
@@ -37,12 +36,12 @@ export class UserDefinedOutputStrategyComponent
     implements OnInit
 {
     primitiveClasses = [
-        { label: 'String', id: DataTypeService.STRING },
-        { label: 'Boolean', id: DataTypeService.BOOLEAN },
-        { label: 'Integer', id: DataTypeService.INTEGER },
-        { label: 'Long', id: DataTypeService.LONG },
-        { label: 'Double', id: DataTypeService.DOUBLE },
-        { label: 'Float', id: DataTypeService.FLOAT },
+        { label: 'String', id: DataType.STRING },
+        { label: 'Boolean', id: DataType.BOOLEAN },
+        { label: 'Integer', id: DataType.INTEGER },
+        { label: 'Long', id: DataType.LONG },
+        { label: 'Double', id: DataType.DOUBLE },
+        { label: 'Float', id: DataType.FLOAT },
     ];
 
     constructor(private idGeneratorService: IdGeneratorService) {

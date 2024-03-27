@@ -27,8 +27,8 @@ import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import { SemanticTypesRestService } from '../../../../../../../projects/streampipes/platform-services/src/lib/apis/semantic-types-rest.service';
-import { SemanticTypeService } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
-import { DataTypeService } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
+import { SemanticType } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
+import { DataType } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
 
 @Component({
     selector: 'sp-edit-schema-transformation',
@@ -71,11 +71,9 @@ export class EditSchemaTransformationComponent implements OnInit {
     editTimestampDomainProperty(checked: boolean) {
         if (checked) {
             this.isTimestampProperty = true;
-            this.cachedProperty.domainProperties = [
-                SemanticTypeService.TIMESTAMP,
-            ];
+            this.cachedProperty.domainProperties = [SemanticType.TIMESTAMP];
             this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
-            this.cachedProperty.runtimeType = DataTypeService.LONG;
+            this.cachedProperty.runtimeType = DataType.LONG;
         } else {
             this.cachedProperty.domainProperties = [];
             this.cachedProperty.propertyScope = 'MEASUREMENT_PROPERTY';

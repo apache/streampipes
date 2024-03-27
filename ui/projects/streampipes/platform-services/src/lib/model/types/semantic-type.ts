@@ -16,30 +16,25 @@
  *
  */
 
-import { Injectable } from '@angular/core';
 import { EventProperty } from '@streampipes/platform-services';
 
-@Injectable({ providedIn: 'root' })
-export class SemanticTypeService {
+export class SemanticType {
     public static readonly SO: string = 'http://schema.org/';
     public static readonly GEO: string = 'http://www.w3.org/2003/01/geo/';
 
-    public static readonly TIMESTAMP: string =
-        SemanticTypeService.SO + 'DateTime';
+    public static readonly TIMESTAMP: string = SemanticType.SO + 'DateTime';
 
-    public static readonly SO_NUMBER: string =
-        SemanticTypeService.SO + 'Number';
-    public static readonly SO_URL: string = SemanticTypeService.SO + 'URL';
+    public static readonly SO_NUMBER: string = SemanticType.SO + 'Number';
+    public static readonly SO_URL: string = SemanticType.SO + 'URL';
 
     public static readonly IMAGE: string = 'https://image.com';
 
-    public static readonly GEO_LAT: string =
-        SemanticTypeService.GEO + 'wgs84_pos#lat';
+    public static readonly GEO_LAT: string = SemanticType.GEO + 'wgs84_pos#lat';
     public static readonly GEO_LONG: string =
-        SemanticTypeService.GEO + 'wgs84_pos#long';
+        SemanticType.GEO + 'wgs84_pos#long';
 
     public static getValue(inputValue: any, semanticType: string) {
-        if (semanticType === SemanticTypeService.TIMESTAMP) {
+        if (semanticType === SemanticType.TIMESTAMP) {
             return new Date(inputValue).toLocaleString();
         } else {
             return inputValue;
@@ -47,19 +42,15 @@ export class SemanticTypeService {
     }
 
     public static isTimestamp(property: EventProperty): boolean {
-        return property.domainProperties.includes(
-            SemanticTypeService.TIMESTAMP,
-        );
+        return property.domainProperties.includes(SemanticType.TIMESTAMP);
     }
 
     public static isImage(property: EventProperty): boolean {
-        return property.domainProperties.includes(SemanticTypeService.IMAGE);
+        return property.domainProperties.includes(SemanticType.IMAGE);
     }
 
-    // TODO should we move this to DataTypeService, and check for the data type instead of domain properties?
+    // TODO should we move this to DataType, and check for the data type instead of domain properties?
     public static isNumber(property: EventProperty): boolean {
-        return property.domainProperties.includes(
-            SemanticTypeService.SO_NUMBER,
-        );
+        return property.domainProperties.includes(SemanticType.SO_NUMBER);
     }
 }

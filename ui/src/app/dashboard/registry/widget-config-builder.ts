@@ -17,7 +17,7 @@
  */
 
 import { CollectedSchemaRequirements } from '../sdk/collected-schema-requirements';
-import { DataTypeService } from '../../../../projects/streampipes/platform-services/src/lib/model/types/data-type.service';
+import { DataType } from '../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
 import { Tuple2 } from '../../core-model/base/Tuple2';
 import {
     ColorPickerStaticProperty,
@@ -122,7 +122,7 @@ export class WidgetConfigBuilder {
             WidgetConfigBuilder.QUERY_LIMIT_KEY,
             'Past data',
             'The number of historic events that should be shown',
-            DataTypeService.INTEGER,
+            DataType.INTEGER,
         );
         fst.value = '50';
         this.widget.config.push(fst);
@@ -139,7 +139,7 @@ export class WidgetConfigBuilder {
             id,
             label,
             description,
-            DataTypeService.STRING,
+            DataType.STRING,
         );
         this.widget.config.push(fst);
         return this;
@@ -174,7 +174,7 @@ export class WidgetConfigBuilder {
             id,
             label,
             description,
-            DataTypeService.INTEGER,
+            DataType.INTEGER,
         );
         if (defaultValue) {
             fst.value = defaultValue.toString();
@@ -220,7 +220,7 @@ export class WidgetConfigBuilder {
             id,
             label,
             description,
-            DataTypeService.FLOAT,
+            DataType.FLOAT,
         );
         this.widget.config.push(fst);
         return this;

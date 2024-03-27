@@ -18,7 +18,7 @@
 
 import { Component, Input } from '@angular/core';
 import { EventSchema } from '@streampipes/platform-services';
-import { SemanticTypeService } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type.service';
+import { SemanticType } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
 
 @Component({
     selector: 'sp-live-preview-table',
@@ -38,12 +38,12 @@ export class LivePreviewTableComponent {
 
     isImage(runtimeName: string) {
         const property = this.getProperty(runtimeName);
-        return SemanticTypeService.isImage(property);
+        return SemanticType.isImage(property);
     }
 
     isTimestamp(runtimeName: string) {
         const property = this.getProperty(runtimeName);
-        return SemanticTypeService.isTimestamp(property);
+        return SemanticType.isTimestamp(property);
     }
 
     hasNoDomainProperty(runtimeName: string) {
