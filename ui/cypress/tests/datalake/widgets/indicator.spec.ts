@@ -27,7 +27,7 @@ describe('Test Indicator View in Data Explorer', () => {
         DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Indicator');
 
         // Check checkbox
-        DataLakeUtils.selectVisualizationConfig();
+        DataLakeUtils.openVisualizationConfig();
         cy.dataCy('data-explorer-select-delta-checkbox').click();
 
         cy.dataCy('indicator-chart').should('be.visible');

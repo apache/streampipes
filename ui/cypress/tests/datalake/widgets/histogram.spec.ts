@@ -27,7 +27,7 @@ describe('Test Histogram View in Data Explorer', () => {
         DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Histogram');
 
         // Change field for histogram
-        DataLakeUtils.selectVisualizationConfig();
+        DataLakeUtils.openVisualizationConfig();
 
         // Check if histogram chart is displayed
         cy.dataCy('histogram-chart').should('be.visible');

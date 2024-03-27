@@ -27,7 +27,7 @@ describe('Test Map View in Data Explorer', () => {
         DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Map');
 
         // Change marker positions
-        DataLakeUtils.selectVisualizationConfig();
+        DataLakeUtils.openVisualizationConfig();
         cy.dataCy('data-view-map-select-latitude')
             .click()
             .get('mat-option')
@@ -48,7 +48,7 @@ describe('Test Map View in Data Explorer', () => {
         );
 
         // Change from markers to trace
-        DataLakeUtils.selectVisualizationConfig();
+        DataLakeUtils.openVisualizationConfig();
         cy.dataCy('data-view-map-select-marker-or-trace')
             .click()
             .get('mat-option')

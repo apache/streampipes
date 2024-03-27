@@ -46,6 +46,7 @@
             mat-icon-button
             color="accent"
             matTooltip="Field settings"
+            data-cy="time-series-item-config-toggle"
             (click)="toggleExpand()"
             [disabled]="!isSelected(field)"
         >
@@ -121,6 +122,7 @@
                     appearance="outline"
                     color="accent"
                     class="w-100"
+                    data-cy="time-series-item-config-type"
                 >
                     <mat-select
                         [(value)]="
