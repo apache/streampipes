@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2023-12-04 13:14:24.
+// Generated using typescript-generator version 3.2.1263 on 2024-03-27 09:18:38.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -1790,6 +1791,60 @@ export class ExportItem {
     }
 }
 
+export class ExtensionItemDescription {
+    appId: string;
+    available: boolean;
+    description: string;
+    editable: boolean;
+    elementId: string;
+    includesDocs: boolean;
+    includesIcon: boolean;
+    installed: boolean;
+    name: string;
+    serviceTagPrefix: SpServiceTagPrefix;
+
+    static fromData(
+        data: ExtensionItemDescription,
+        target?: ExtensionItemDescription,
+    ): ExtensionItemDescription {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ExtensionItemDescription();
+        instance.appId = data.appId;
+        instance.available = data.available;
+        instance.description = data.description;
+        instance.editable = data.editable;
+        instance.elementId = data.elementId;
+        instance.includesDocs = data.includesDocs;
+        instance.includesIcon = data.includesIcon;
+        instance.installed = data.installed;
+        instance.name = data.name;
+        instance.serviceTagPrefix = data.serviceTagPrefix;
+        return instance;
+    }
+}
+
+export class ExtensionItemInstallationRequest {
+    appId: string;
+    publicElement: boolean;
+    serviceTagPrefix: SpServiceTagPrefix;
+
+    static fromData(
+        data: ExtensionItemInstallationRequest,
+        target?: ExtensionItemInstallationRequest,
+    ): ExtensionItemInstallationRequest {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ExtensionItemInstallationRequest();
+        instance.appId = data.appId;
+        instance.publicElement = data.publicElement;
+        instance.serviceTagPrefix = data.serviceTagPrefix;
+        return instance;
+    }
+}
+
 export class FieldStatusInfo {
     additionalInfo: string;
     changesRequired: boolean;
@@ -1814,8 +1869,8 @@ export class FileMetadata {
     createdAt: number;
     createdByUser: string;
     fileId: string;
-    filetype: string;
     filename: string;
+    filetype: string;
     lastModified: number;
     rev: string;
 
@@ -1827,8 +1882,8 @@ export class FileMetadata {
         instance.createdAt = data.createdAt;
         instance.createdByUser = data.createdByUser;
         instance.fileId = data.fileId;
-        instance.filetype = data.filetype;
         instance.filename = data.filename;
+        instance.filetype = data.filetype;
         instance.lastModified = data.lastModified;
         instance.rev = data.rev;
         return instance;
@@ -3545,6 +3600,7 @@ export class SpQueryResult {
     allDataSeries: DataSeries[];
     forId: string;
     headers: string[];
+    lastTimestamp: number;
     sourceIndex: number;
     spQueryStatus: SpQueryStatus;
     total: number;
@@ -3562,6 +3618,7 @@ export class SpQueryResult {
         );
         instance.forId = data.forId;
         instance.headers = __getCopyArrayFn(__identity<string>())(data.headers);
+        instance.lastTimestamp = data.lastTimestamp;
         instance.sourceIndex = data.sourceIndex;
         instance.spQueryStatus = data.spQueryStatus;
         instance.total = data.total;
@@ -3596,6 +3653,7 @@ export class SpServiceRegistration {
     healthCheckPath: string;
     host: string;
     port: number;
+    providedExtensions: ExtensionItemDescription[];
     rev: string;
     scheme: string;
     serviceUrl: string;
@@ -3617,6 +3675,9 @@ export class SpServiceRegistration {
         instance.healthCheckPath = data.healthCheckPath;
         instance.host = data.host;
         instance.port = data.port;
+        instance.providedExtensions = __getCopyArrayFn(
+            ExtensionItemDescription.fromData,
+        )(data.providedExtensions);
         instance.rev = data.rev;
         instance.scheme = data.scheme;
         instance.serviceUrl = data.serviceUrl;
@@ -4111,7 +4172,6 @@ export type SpServiceStatus =
     | 'UNHEALTHY';
 
 export type SpServiceTagPrefix =
-    | 'SYSTEM'
     | 'SP_GROUP'
     | 'ADAPTER'
     | 'DATA_STREAM'

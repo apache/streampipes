@@ -15,54 +15,28 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.extensions.management.util;
+package org.apache.streampipes.model.util;
 
-import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
-import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class ServiceDefinitionUtil {
 
-  public static List<SpServiceTag> extractAppIds(Collection<IStreamPipesPipelineElement<?>> declarers) {
-    return declarers
-        .stream()
-        .map(d -> {
-          var model = d.declareConfig().getDescription();
-          return SpServiceTag.create(getPrefix(model), model.getAppId());
-        })
-        .collect(Collectors.toList());
-  }
-
-  private static SpServiceTagPrefix getPrefix(NamedStreamPipesEntity entity) {
+  public static SpServiceTagPrefix getPrefix(NamedStreamPipesEntity entity) {
     if (entity instanceof SpDataStream) {
       return SpServiceTagPrefix.DATA_STREAM;
     } else if (entity instanceof DataProcessorDescription) {
       return SpServiceTagPrefix.DATA_PROCESSOR;
     } else if (entity instanceof DataSinkDescription) {
       return SpServiceTagPrefix.DATA_SINK;
+    } else if (entity instanceof AdapterDescription) {
+      return SpServiceTagPrefix.ADAPTER;
     } else {
       throw new RuntimeException("Could not find service tag for entity " + entity.getClass().getSimpleName());
     }
   }
-
-  public static List<SpServiceTag> extractAppIdsFromAdapters(Collection<StreamPipesAdapter> adapters) {
-    return adapters
-        .stream()
-        .map(d -> SpServiceTag.create(
-                SpServiceTagPrefix.ADAPTER,
-                d.declareConfig().getAdapterDescription().getAppId()
-            )
-        )
-        .collect(Collectors.toList());
-  }
-
 }

@@ -25,9 +25,9 @@ import {
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
-import { ExtensionsServiceEndpointItem } from '@streampipes/platform-services';
-import { Router } from '@angular/router';
 import { SpAddRoutes } from './add.routes';
+import { ExtensionItemDescription } from '@streampipes/platform-services';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
     selector: 'sp-add',
@@ -39,14 +39,12 @@ export class AddComponent implements OnInit {
 
     results: any[];
     loading: boolean;
-    endpointItems: ExtensionsServiceEndpointItem[];
+    endpointItems: ExtensionItemDescription[];
     endpointItemsLoadingComplete: boolean;
     selectedTab: string;
-    availableTypes: string[] = ['all', 'set', 'stream', 'sepa', 'action'];
-
     selectedCategory = 'all';
 
-    selectedEndpointItems: any[] = [];
+    selectedEndpointItems: ExtensionItemDescription[] = [];
 
     _filterTerm = '';
     _selectedInstallationStatus = 'all';
@@ -55,7 +53,6 @@ export class AddComponent implements OnInit {
         private addService: AddService,
         private dialogService: DialogService,
         private changeDetectorRef: ChangeDetectorRef,
-        private router: Router,
         private breadcrumbService: SpBreadcrumbService,
     ) {
         this.results = [];
@@ -72,43 +69,41 @@ export class AddComponent implements OnInit {
         this.selectedTab = 'all';
     }
 
-    toggleSelected(endpointItem) {
+    toggleSelected(endpointItem: ExtensionItemDescription) {
         if (endpointItem.editable) {
             if (
-                this.selectedEndpointItems.some(
-                    item => item === endpointItem.uri,
-                )
+                this.selectedEndpointItems.some(item => item === endpointItem)
             ) {
                 this.selectedEndpointItems.splice(
-                    this.selectedEndpointItems.indexOf(endpointItem.uri),
+                    this.selectedEndpointItems.indexOf(endpointItem),
                     1,
                 );
             } else {
-                this.selectedEndpointItems.push(endpointItem.uri);
+                this.selectedEndpointItems.push(endpointItem);
             }
-            endpointItem.selected = !endpointItem.selected;
+            (endpointItem as any).selected = !(endpointItem as any).selected;
         }
     }
 
-    isSelected(endpointItem) {
-        return endpointItem.selected;
+    isSelected(endpointItem: ExtensionItemDescription) {
+        return (endpointItem as any).selected;
     }
 
-    filterByCatergory(category) {
+    filterByCategory(category: MatSelectChange) {
         this.selectedTab = category.value;
     }
 
-    selectAll(selected) {
+    selectAll(selected: boolean) {
         this.selectedEndpointItems = [];
         this.endpointItems.forEach(item => {
             if (item.editable) {
                 if (
-                    item.type === this.selectedTab ||
+                    item.serviceTagPrefix === this.selectedTab ||
                     this.selectedTab === 'all'
                 ) {
                     (item as any).selected = selected;
                     if (selected) {
-                        this.selectedEndpointItems.push(item.uri);
+                        this.selectedEndpointItems.push(item);
                     }
                 }
             }
@@ -136,7 +131,10 @@ export class AddComponent implements OnInit {
         const elementsToInstall = [];
 
         this.endpointItems.forEach(item => {
-            if (item.type === this.selectedTab || this.selectedTab === 'all') {
+            if (
+                item.serviceTagPrefix === this.selectedTab ||
+                this.selectedTab === 'all'
+            ) {
                 if (item.installed === !install && (item as any).selected) {
                     elementsToInstall.push(item);
                 }

@@ -19,16 +19,23 @@
 package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.extensions.configuration.ConfigItem;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
+import org.apache.streampipes.rest.extensions.WelcomePage;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
+import org.apache.streampipes.service.base.rest.ServiceHealthResource;
+import org.apache.streampipes.service.extensions.function.StreamPipesFunctionHandler;
+import org.apache.streampipes.service.extensions.security.WebSecurityConfig;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 
 import org.slf4j.Logger;
@@ -36,10 +43,23 @@ import org.slf4j.LoggerFactory;
 
 import jakarta.annotation.PreDestroy;
 
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+@Configuration
+@EnableAutoConfiguration
+@Import({WebSecurityConfig.class, WelcomePage.class, ServiceHealthResource.class})
+@ComponentScan({"org.apache.streampipes.rest.extensions.*", "org.apache.streampipes.service.base.rest.*"})
 public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesExtensionsServiceBase.class);
@@ -64,22 +84,31 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     }
   }
 
-  public abstract SpServiceDefinition provideServiceDefinition();
+  public void afterServiceRegistered(SpServiceDefinition serviceDef,
+                                     SpServiceRegistration serviceReg) {
+    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
 
-  public abstract void afterServiceRegistered(SpServiceDefinition serviceDef,
-                                              SpServiceRegistration serviceReg);
+    // register all migrations at StreamPipes Core
+    var migrationConfigs = serviceDef.getMigrators().stream().map(IModelMigrator::config).toList();
+    new CoreRequestSubmitter().submitMigrationRequest(client, migrationConfigs, serviceId(), serviceReg);
+
+    // initialize all function instances
+    StreamPipesFunctionHandler.INSTANCE.initializeFunctions(serviceDef.getServiceGroup());
+  }
 
   public void startExtensionsService(Class<?> serviceClass,
                                      SpServiceDefinition serviceDef,
                                      BaseNetworkingConfig networkingConfig) throws UnknownHostException {
+    var extensions = getAllExtensions();
     var req = SpServiceRegistration.from(
         DefaultSpServiceTypes.EXT,
         serviceDef.getServiceGroup(),
         serviceId(),
         networkingConfig.getHost(),
         networkingConfig.getPort(),
-        getServiceTags(),
-        getHealthCheckPath());
+        getServiceTags(extensions),
+        getHealthCheckPath(),
+        extensions);
 
     LOG.info("Registering service {} with id {} at core", req.getSvcGroup(), req.getSvcId());
     registerService(req);
@@ -98,20 +127,48 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     new CoreRequestSubmitter().submitRegistrationRequest(client, serviceRegistration);
   }
 
-  protected List<SpServiceTag> getServiceTags() {
-    List<SpServiceTag> tags = new ArrayList<>();
+  protected Set<SpServiceTag> getServiceTags(Set<ExtensionItemDescription> extensions) {
+    Set<SpServiceTag> tags = new HashSet<>();
     if (DeclarersSingleton.getInstance().getServiceDefinition() != null) {
       tags.add(SpServiceTag.create(SpServiceTagPrefix.SP_GROUP,
           DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup()));
     }
-    tags.addAll(getExtensionsServiceTags());
+    tags.addAll(getExtensionsServiceTags(extensions));
     return tags;
+  }
+
+  private Set<ExtensionItemDescription> getAllExtensions() {
+    return Stream.concat(
+            DeclarersSingleton.getInstance().getDeclarers().values().stream()
+                .map(declarer -> declarer.declareConfig().getDescription()),
+            DeclarersSingleton.getInstance().getAdapters().stream().map(a -> a.declareConfig().getAdapterDescription())
+        )
+        .peek(entity -> {
+          try {
+            if (entity.isIncludesLocales()) {
+              var labelGenerator = new LabelGenerator<>(entity);
+              entity.setName(labelGenerator.getElementTitle());
+              entity.setDescription(labelGenerator.getElementDescription());
+            }
+          } catch (IOException e) {
+
+          }
+        })
+        .map(entity -> entity.toExtensionDescription(false, true, true))
+        .collect(Collectors.toSet());
   }
 
   protected void deregisterService(String serviceId) {
     LOG.info("Deregistering service (id={})...", serviceId);
     StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
     client.adminApi().deregisterService(serviceId);
+  }
+
+  protected Set<SpServiceTag> getExtensionsServiceTags(Set<ExtensionItemDescription> extensions) {
+    return extensions
+        .stream()
+        .map(e -> SpServiceTag.create(e.getServiceTagPrefix(), e.getAppId()))
+        .collect(Collectors.toSet());
   }
 
   private void registerConfigs(String serviceGroup,
@@ -123,13 +180,17 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     client.adminApi().registerServiceConfiguration(serviceConfiguration);
   }
 
-  protected abstract List<SpServiceTag> getExtensionsServiceTags();
-
   @PreDestroy
-  public abstract void onExit();
+  public void onExit() {
+    new ExtensionsServiceShutdownHandler().onShutdown();
+    StreamPipesFunctionHandler.INSTANCE.cleanupFunctions();
+    deregisterService(DeclarersSingleton.getInstance().getServiceId());
+  }
 
   public String serviceId() {
     return DeclarersSingleton.getInstance().getServiceId();
   }
+
+  public abstract SpServiceDefinition provideServiceDefinition();
 
 }

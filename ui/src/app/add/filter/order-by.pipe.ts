@@ -17,10 +17,15 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
+import { ExtensionItemDescription } from '@streampipes/platform-services';
 
 @Pipe({ name: 'orderBy' })
 export class OrderByPipe implements PipeTransform {
-    transform(value: any[], order = '', column: string = ''): any[] {
+    transform(
+        value: ExtensionItemDescription[],
+        order = '',
+        column: string = '',
+    ): ExtensionItemDescription[] {
         if (!value || order === '' || !order) {
             return value;
         }

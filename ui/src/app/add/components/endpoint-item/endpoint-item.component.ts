@@ -21,8 +21,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddService } from '../../services/add.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
-    ExtensionsServiceEndpointItem,
-    PipelineElementEndpointService,
+    ExtensionItemInstallationRequest,
+    ExtensionInstallationService,
+    ExtensionItemDescription,
 } from '@streampipes/platform-services';
 import { AppConstants } from '../../../services/app.constants';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
@@ -35,7 +36,7 @@ import { PanelType, DialogService } from '@streampipes/shared-ui';
 })
 export class EndpointItemComponent implements OnInit {
     @Input()
-    item: ExtensionsServiceEndpointItem;
+    item: ExtensionItemDescription;
 
     itemTypeTitle: string;
     itemTypeStyle: string;
@@ -47,12 +48,19 @@ export class EndpointItemComponent implements OnInit {
     iconReady = false;
     iconError = false;
 
+    cssMapper: Record<string, string> = {
+        ADAPTER: 'adapter',
+        DATA_STREAM: 'stream',
+        DATA_PROCESSOR: 'sepa',
+        DATA_SINK: 'action',
+    };
+
     @Output()
     triggerInstallation: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
         private snackBar: MatSnackBar,
-        private pipelineElementEndpointService: PipelineElementEndpointService,
+        private extensionInstallationService: ExtensionInstallationService,
         private addService: AddService,
         private sanitizer: DomSanitizer,
         public appConstants: AppConstants,
@@ -99,11 +107,11 @@ export class EndpointItemComponent implements OnInit {
     }
 
     findItemTypeTitle() {
-        if (this.item.type === 'adapter') {
+        if (this.item.serviceTagPrefix === 'ADAPTER') {
             this.itemTypeTitle = 'Adapter';
-        } else if (this.item.type === 'stream') {
+        } else if (this.item.serviceTagPrefix === 'DATA_STREAM') {
             this.itemTypeTitle = 'Data Stream';
-        } else if (this.item.type === 'sepa') {
+        } else if (this.item.serviceTagPrefix === 'DATA_PROCESSOR') {
             this.itemTypeTitle = 'Data Processor';
         } else {
             this.itemTypeTitle = 'Data Sink';
@@ -112,62 +120,59 @@ export class EndpointItemComponent implements OnInit {
 
     findItemStyle() {
         const baseType = 'pe-label ';
-        if (this.item.type === 'stream') {
+        if (this.item.serviceTagPrefix === 'DATA_STREAM') {
             this.itemTypeStyle = baseType + 'stream-label';
-        } else if (this.item.type === 'adapter') {
+        } else if (this.item.serviceTagPrefix === 'ADAPTER') {
             this.itemTypeStyle = baseType + 'adapter-label';
-        } else if (this.item.type === 'sepa') {
+        } else if (this.item.serviceTagPrefix === 'DATA_PROCESSOR') {
             this.itemTypeStyle = baseType + 'processor-label';
         } else {
             this.itemTypeStyle = baseType + 'sink-label';
         }
     }
 
-    installSingleElement(event: Event, endpointItem) {
+    installSingleElement(event: Event, endpointItem: ExtensionItemDescription) {
         const endpointItems = [];
         endpointItems.push(endpointItem);
         this.triggerInstallation.emit({ endpointItems, install: true });
         event.stopPropagation();
     }
 
-    uninstallSingleElement(event: Event, endpointItem) {
+    uninstallSingleElement(
+        event: Event,
+        endpointItem: ExtensionItemDescription,
+    ) {
         const endpointItems = [];
         endpointItems.push(endpointItem);
         this.triggerInstallation.emit({ endpointItems, install: false });
         event.stopPropagation();
     }
 
-    refresh(elementId: string) {
-        this.pipelineElementEndpointService
-            .update(elementId)
+    refresh(extensionItem: ExtensionItemDescription) {
+        const installationReq: ExtensionItemInstallationRequest = {
+            serviceTagPrefix: extensionItem.serviceTagPrefix,
+            publicElement: false,
+            appId: extensionItem.appId,
+        };
+        this.extensionInstallationService
+            .update(installationReq)
             .subscribe(msg => {
                 this.snackBar.open(msg.notifications[0].title, 'Ok', {
                     duration: 2000,
                 });
-            })
-            .add(() => {
-                // this.loadCurrentElements(type);
             });
     }
 
     showPermissionsDialog(elementId: string, elementName: string) {
-        const dialogRef = this.dialogService.open(
-            ObjectPermissionDialogComponent,
-            {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: 'Manage permissions',
-                width: '50vw',
-                data: {
-                    objectInstanceId: elementId,
-                    headerTitle:
-                        'Manage permissions for pipeline element ' +
-                        elementName,
-                },
+        this.dialogService.open(ObjectPermissionDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Manage permissions',
+            width: '50vw',
+            data: {
+                objectInstanceId: elementId,
+                headerTitle:
+                    'Manage permissions for pipeline element ' + elementName,
             },
-        );
-
-        dialogRef.afterClosed().subscribe(refresh => {
-            console.log(refresh);
         });
     }
 }

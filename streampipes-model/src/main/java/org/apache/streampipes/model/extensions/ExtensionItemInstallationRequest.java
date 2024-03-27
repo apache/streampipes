@@ -16,17 +16,22 @@
  *
  */
 
-package org.apache.streampipes.storage.api;
+package org.apache.streampipes.model.extensions;
 
-import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
-import java.util.List;
+@TsModel
+public record ExtensionItemInstallationRequest(String appId,
+                                               SpServiceTagPrefix serviceTagPrefix,
+                                               boolean publicElement) {
 
-public interface IExtensionsServiceEndpointStorage {
-
-  void addExtensionsServiceEndpoint(ExtensionsServiceEndpoint extensionsServiceEndpoint);
-
-  void removeExtensionsServiceEndpoint(String extensionServiceEndpointId);
-
-  List<ExtensionsServiceEndpoint> getExtensionsServiceEndpoints();
+  public static ExtensionItemInstallationRequest fromDescription(ExtensionItemDescription itemDescription,
+                                                          boolean publicElement) {
+    return new ExtensionItemInstallationRequest(
+        itemDescription.getAppId(),
+        itemDescription.getServiceTagPrefix(),
+        publicElement
+    );
+  }
 }

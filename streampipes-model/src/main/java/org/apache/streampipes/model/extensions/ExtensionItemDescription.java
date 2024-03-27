@@ -16,20 +16,18 @@
  *
  */
 
-package org.apache.streampipes.model.client.endpoint;
+package org.apache.streampipes.model.extensions;
 
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
-import java.util.List;
-
 @TsModel
-public class ExtensionsServiceEndpointItem {
+public class ExtensionItemDescription {
 
   private String name;
   private String description;
   private String elementId;
-  private String uri;
-  private String type;
+  private SpServiceTagPrefix serviceTagPrefix;
   private String appId;
 
   private boolean includesIcon;
@@ -39,9 +37,7 @@ public class ExtensionsServiceEndpointItem {
   private boolean editable;
   private boolean available;
 
-  private List<ExtensionsServiceEndpointItem> streams;
-
-  public ExtensionsServiceEndpointItem() {
+  public ExtensionItemDescription() {
 
   }
 
@@ -61,22 +57,6 @@ public class ExtensionsServiceEndpointItem {
     this.description = description;
   }
 
-  public String getUri() {
-    return uri;
-  }
-
-  public void setUri(String uri) {
-    this.uri = uri;
-  }
-
-  public List<ExtensionsServiceEndpointItem> getStreams() {
-    return streams;
-  }
-
-  public void setStreams(List<ExtensionsServiceEndpointItem> streams) {
-    this.streams = streams;
-  }
-
   public boolean isInstalled() {
     return installed;
   }
@@ -85,12 +65,12 @@ public class ExtensionsServiceEndpointItem {
     this.installed = installed;
   }
 
-  public String getType() {
-    return type;
+  public SpServiceTagPrefix getServiceTagPrefix() {
+    return serviceTagPrefix;
   }
 
-  public void setType(String type) {
-    this.type = type;
+  public void setServiceTagPrefix(SpServiceTagPrefix serviceTagPrefix) {
+    this.serviceTagPrefix = serviceTagPrefix;
   }
 
   public String getAppId() {

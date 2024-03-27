@@ -18,7 +18,10 @@
 
 import { Component, Input } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
-import { PipelineElementEndpointService } from '@streampipes/platform-services';
+import {
+    ExtensionInstallationService,
+    ExtensionItemDescription,
+} from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-endpoint-installation-dialog',
@@ -26,7 +29,7 @@ import { PipelineElementEndpointService } from '@streampipes/platform-services';
     styleUrls: ['./endpoint-installation.component.scss'],
 })
 export class EndpointInstallationComponent {
-    endpointItems: any;
+    endpointItems: ExtensionItemDescription[];
 
     @Input()
     install: boolean;
@@ -46,7 +49,7 @@ export class EndpointInstallationComponent {
 
     constructor(
         private dialogRef: DialogRef<EndpointInstallationComponent>,
-        private pipelineElementEndpointService: PipelineElementEndpointService,
+        private extensionInstallationService: ExtensionInstallationService,
     ) {
         this.installationStatus = [];
         this.installationFinished = false;
@@ -68,25 +71,30 @@ export class EndpointInstallationComponent {
         }
     }
 
-    initiateInstallation(endpointUri, index) {
+    initiateInstallation(
+        extensionItem: ExtensionItemDescription,
+        index: number,
+    ) {
         this.installationRunning = true;
         this.installationStatus.push({
-            name: endpointUri.name,
+            name: extensionItem.name,
             id: index,
             status: 'waiting',
         });
         if (this.install) {
-            this.installElement(endpointUri, index);
+            this.installElement(extensionItem, index);
         } else {
-            this.uninstallElement(endpointUri, index);
+            this.uninstallElement(extensionItem, index);
         }
     }
 
-    installElement(endpointUri, index) {
-        endpointUri = encodeURIComponent(endpointUri.uri);
-
-        this.pipelineElementEndpointService
-            .add(endpointUri, this.installAsPublicElement)
+    installElement(extensionItem: ExtensionItemDescription, index: number) {
+        this.extensionInstallationService
+            .add({
+                appId: extensionItem.appId,
+                publicElement: this.installAsPublicElement,
+                serviceTagPrefix: extensionItem.serviceTagPrefix,
+            })
             .subscribe(
                 data => {
                     if (data.success) {
@@ -116,9 +124,9 @@ export class EndpointInstallationComponent {
             });
     }
 
-    uninstallElement(endpointUri, index) {
-        this.pipelineElementEndpointService
-            .del(endpointUri.elementId)
+    uninstallElement(extensionItem: ExtensionItemDescription, index: number) {
+        this.extensionInstallationService
+            .delete(extensionItem.elementId)
             .subscribe(
                 data => {
                     this.installationStatus[index].status = data.success

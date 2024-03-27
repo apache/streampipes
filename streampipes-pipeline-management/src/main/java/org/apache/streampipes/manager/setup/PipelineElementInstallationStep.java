@@ -17,71 +17,41 @@
  */
 package org.apache.streampipes.manager.setup;
 
-import org.apache.streampipes.manager.endpoint.EndpointItemParser;
-import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
-import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
-import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.commons.exceptions.SepaParseException;
+import org.apache.streampipes.manager.endpoint.ExtensionItemInstaller;
+import org.apache.streampipes.manager.endpoint.ExtensionsResourceUrlProvider;
+import org.apache.streampipes.model.extensions.ExtensionItemDescription;
+import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.io.IOException;
 
 public class PipelineElementInstallationStep extends InstallationStep {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PipelineElementInstallationStep.class);
-  private static final int MAX_RETRIES = 8;
-
-  private final ExtensionsServiceEndpoint endpoint;
+  private final ExtensionItemDescription extensionItem;
   private final String principalSid;
-  private int retries = 0;
 
 
-  public PipelineElementInstallationStep(ExtensionsServiceEndpoint endpoint,
+  public PipelineElementInstallationStep(ExtensionItemDescription extensionItem,
                                          String principalSid) {
-    this.endpoint = endpoint;
+    this.extensionItem = extensionItem;
     this.principalSid = principalSid;
   }
 
   @Override
   public void install() {
-    List<Message> statusMessages = new ArrayList<>();
-    List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(Collections.singletonList(endpoint));
-    if (items.isEmpty() && retries <= MAX_RETRIES) {
-      retries++;
-      LOG.info(
-          "Endpoint available but no extensions yet found, so we will retry to fetch pipeline elements ({}/{})",
-          retries,
-          MAX_RETRIES
-      );
-      try {
-        TimeUnit.SECONDS.sleep(2);
-        install();
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
-    } else {
-      LOG.info("Found {} endpoint items for endpoint {}", items.size(), endpoint.getEndpointUrl());
-      for (ExtensionsServiceEndpointItem item : items) {
-        statusMessages.add(new EndpointItemParser().parseAndAddEndpointItem(item.getUri(),
-            principalSid, true));
-      }
-
-      if (statusMessages.stream().allMatch(Message::isSuccess)) {
-        logSuccess(getTitle());
-      } else {
-        logFailure(getTitle());
-      }
+    var installationReq = ExtensionItemInstallationRequest.fromDescription(extensionItem, true);
+    var resourceUrlProvider = new ExtensionsResourceUrlProvider(SpServiceDiscovery.getServiceDiscovery());
+    try {
+      new ExtensionItemInstaller(resourceUrlProvider).installExtension(installationReq, principalSid);
+      logSuccess(getTitle());
+    } catch (SepaParseException | IOException e) {
+      logFailure(getTitle());
     }
-
   }
 
   @Override
   public String getTitle() {
-    return "Installing pipeline elements from " + endpoint.getEndpointUrl();
+    return "Installing extension " + extensionItem.getName();
   }
 }

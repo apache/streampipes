@@ -23,7 +23,6 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 
 import org.slf4j.Logger;
@@ -49,8 +48,9 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   @Override
   public List<String> getActivePipelineElementEndpoints() {
     LOG.info("Discovering active pipeline element service endpoints");
-    return getServiceEndpoints(DefaultSpServiceTypes.EXT, true,
-        Collections.singletonList(DefaultSpServiceTags.PE.asString()));
+    return getServiceEndpoints(DefaultSpServiceTypes.EXT,
+        true,
+        List.of());
   }
 
   @Override

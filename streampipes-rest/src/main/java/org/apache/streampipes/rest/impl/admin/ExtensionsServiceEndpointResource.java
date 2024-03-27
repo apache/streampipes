@@ -18,21 +18,17 @@
 
 package org.apache.streampipes.rest.impl.admin;
 
-import org.apache.streampipes.manager.endpoint.EndpointFetcher;
-import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
-import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.manager.assets.AssetManager;
+import org.apache.streampipes.manager.endpoint.AvailableExtensionsProvider;
+import org.apache.streampipes.manager.endpoint.ExtensionsResourceUrlProvider;
+import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 
 import org.apache.http.client.fluent.Request;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -44,144 +40,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v2/rdfendpoints")
+@RequestMapping("/api/v2/extension-items")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestResource {
 
-  @GetMapping(path = "/items", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<ExtensionsServiceEndpointItem>> getEndpointContents() {
-    List<ExtensionsServiceEndpoint> endpoints = getEndpoints();
-
-    var installedExtensions = getAllInstalledExtensions();
-    List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(endpoints);
-    items.forEach(item -> item.setInstalled(isInstalled(installedExtensions, item.getAppId())));
-
-    // also add installed elements that are currently not running or available
-    items.addAll(getAllAdapterEndpoints(items));
-    items.addAll(getAllDataStreamEndpoints(items));
-    items.addAll(getAllDataProcessorEndpoints(items));
-    items.addAll(getAllDataSinkEndpoints(items));
-
-    return ok(items);
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<ExtensionItemDescription>> getExtensionItems() {
+    var allExtensions = new AvailableExtensionsProvider(getNoSqlStorage()).getExtensions();
+    return ok(allExtensions);
   }
 
-  @PostMapping(path = "/items/icon", produces = "image/png")
-  public ResponseEntity<byte[]> getEndpointItemIcon(@RequestBody ExtensionsServiceEndpointItem endpointItem) {
+  @PostMapping(path = "/icon", produces = "image/png")
+  public ResponseEntity<byte[]> getExtensionItemIcon(@RequestBody ExtensionItemDescription endpointItem) {
     try {
-      byte[] imageBytes = Request.Get(makeIconUrl(endpointItem)).execute().returnContent().asBytes();
+      byte[] imageBytes = getIconImage(endpointItem);
       return ok(imageBytes);
     } catch (IOException e) {
       throw new SpMessageException(HttpStatus.BAD_REQUEST, e);
     }
   }
 
-  private String makeIconUrl(ExtensionsServiceEndpointItem endpointItem) {
-    return endpointItem.getUri() + "/assets/icon";
-  }
-
-  private List<ExtensionsServiceEndpoint> getEndpoints() {
-    return new EndpointFetcher().getEndpoints();
-  }
-
-  private boolean isInstalled(List<NamedStreamPipesEntity> installedElements,
-                              String appId) {
-    return installedElements
-        .stream()
-        .filter(e -> !(e instanceof SpDataStream))  // DataStreams are not getting installed
-        .anyMatch(e -> e.getAppId().equals(appId));
-  }
-
-  private List<NamedStreamPipesEntity> getAllInstalledExtensions() {
-    List<NamedStreamPipesEntity> elements = new ArrayList<>();
-    elements.addAll(getAllAdapters());
-    elements.addAll(getAllDataStreams());
-    elements.addAll(getAllDataProcessors());
-    elements.addAll(getAllDataSinks());
-    return elements;
-  }
-
-  private List<ExtensionsServiceEndpointItem> getAllAdapterEndpoints(
-      List<ExtensionsServiceEndpointItem> existingItems) {
-    return getAllAdapters()
-        .stream()
-        .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
-        .map(adapter -> makeItem(adapter, "adapter"))
-        .toList();
-  }
-
-  private List<ExtensionsServiceEndpointItem> getAllDataStreamEndpoints(
-      List<ExtensionsServiceEndpointItem> existingItems) {
-    return getAllDataStreams()
-        .stream()
-        // compared to similar methods we use the elementId here instead of the appId
-        // because data streams are supposed to do not have an appId
-        .filter(s -> existingItems.stream().noneMatch(item -> s.getElementId().equals(item.getElementId())))
-        .filter(s -> !s.isInternallyManaged())
-        .map(stream -> makeItem(stream, "stream"))
-        .toList();
-  }
-
-
-  private List<ExtensionsServiceEndpointItem> getAllDataProcessorEndpoints(
-      List<ExtensionsServiceEndpointItem> existingItems) {
-
-    return getAllDataProcessors()
-        .stream()
-        .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
-        .map(source -> makeItem(source, "sepa"))
-        .toList();
-  }
-
-  private List<ExtensionsServiceEndpointItem> getAllDataSinkEndpoints(
-      List<ExtensionsServiceEndpointItem> existingItems) {
-
-    return getAllDataSinks()
-        .stream()
-        .filter(s -> existingItems.stream().noneMatch(item -> s.getAppId().equals(item.getAppId())))
-        .map(source -> makeItem(source, "action"))
-        .toList();
-  }
-
-  private ExtensionsServiceEndpointItem makeItem(NamedStreamPipesEntity entity, String type) {
-    ExtensionsServiceEndpointItem endpoint = new ExtensionsServiceEndpointItem();
-    endpoint.setInstalled(true);
-    endpoint.setDescription(entity.getDescription());
-    endpoint.setName(entity.getName());
-    endpoint.setType(type);
-    endpoint.setAvailable(false);
-    endpoint.setElementId(entity.getElementId());
-    endpoint.setUri(entity.getElementId());
-    endpoint.setEditable(!(entity.isInternallyManaged()));
-    endpoint.setIncludesIcon(entity.isIncludesAssets() && entity.getIncludedAssets().contains(Assets.ICON));
-    endpoint.setIncludesDocs(entity.isIncludesAssets() && entity.getIncludedAssets().contains(Assets.DOCUMENTATION));
-
-    if (!(entity instanceof SpDataStream)) {
-      endpoint.setAppId(entity.getAppId());
+  private byte[] getIconImage(ExtensionItemDescription extensionItemDescription) throws IOException {
+    if (extensionItemDescription.isInstalled()) {
+      return AssetManager.getAssetIcon(extensionItemDescription.getAppId());
+    } else {
+      var iconUrl = new ExtensionsResourceUrlProvider(
+          SpServiceDiscovery.getServiceDiscovery()
+      ).getIconUrl(extensionItemDescription);
+      return Request.Get(iconUrl).execute().returnContent().asBytes();
     }
-
-    return endpoint;
-  }
-
-  private List<AdapterDescription> getAllAdapters() {
-    return getNoSqlStorage().getAdapterDescriptionStorage().getAllAdapters();
-  }
-
-  private List<SpDataStream> getAllDataStreams() {
-    return getNoSqlStorage().getDataStreamStorage().getAll()
-        .stream()
-        .filter(stream -> !stream.isInternallyManaged())
-        .toList();
-  }
-
-  private List<DataProcessorDescription> getAllDataProcessors() {
-    return getNoSqlStorage().getDataProcessorStorage().getAll();
-  }
-
-  private List<DataSinkDescription> getAllDataSinks() {
-    return getNoSqlStorage().getDataSinkStorage().getAll();
   }
 }
