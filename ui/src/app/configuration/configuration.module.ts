@@ -70,6 +70,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
     imports: [
@@ -77,6 +78,7 @@ import { MatSelectModule } from '@angular/material/select';
         FlexLayoutModule,
         MatGridListModule,
         MatButtonModule,
+        MatButtonToggleModule,
         MatProgressSpinnerModule,
         MatIconModule,
         MatInputModule,
