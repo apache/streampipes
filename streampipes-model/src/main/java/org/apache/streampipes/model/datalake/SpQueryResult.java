@@ -33,6 +33,8 @@ public class SpQueryResult {
   private SpQueryStatus spQueryStatus;
   private String forId;
 
+  private long lastTimestamp;
+
   public SpQueryResult() {
     this.total = 0;
     this.allDataSeries = new ArrayList<>();
@@ -100,5 +102,13 @@ public class SpQueryResult {
 
   public void setForId(String forId) {
     this.forId = forId;
+  }
+
+  public long getLastTimestamp() {
+    return lastTimestamp;
+  }
+
+  public void setLastTimestamp(long lastTimestamp) {
+    this.lastTimestamp = lastTimestamp;
   }
 }
