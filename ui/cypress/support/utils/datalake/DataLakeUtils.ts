@@ -99,7 +99,7 @@ export class DataLakeUtils {
         // DataLakeUtils.addNewWidget();
         DataLakeUtils.selectDataSet(dataSet);
         DataLakeUtils.dataConfigSelectAllFields();
-        DataLakeUtils.selectVisualizationConfig();
+        DataLakeUtils.openVisualizationConfig();
         DataLakeUtils.selectVisualizationType(widgetType);
         DataLakeUtils.clickCreateButton();
 
@@ -266,8 +266,7 @@ export class DataLakeUtils {
         cy.get('.mdc-tab__text-label').contains('Data').parent().click();
     }
 
-    public static selectVisualizationConfig() {
-        // Click Next button
+    public static openVisualizationConfig() {
         cy.get('.mdc-tab__text-label')
             .contains('Visualization')
             .parent()

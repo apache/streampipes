@@ -27,7 +27,7 @@ describe('Test Heatmap View in Data Explorer', () => {
         DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Heatmap');
 
         // Check checkbox
-        DataLakeUtils.selectVisualizationConfig();
+        DataLakeUtils.openVisualizationConfig();
         cy.get('mat-checkbox input').click({ force: true });
 
         // Check if heatmap chart is visible
