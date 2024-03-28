@@ -15,39 +15,9 @@
 // limitations under the License.
 //
 
-package util
+package streampipes_version
 
-import "testing"
-
-func TestJoin(t *testing.T) {
-
-	testCases := []struct {
-		name     string
-		input    []string
-		expected string
-	}{
-		{
-			name:     "Single URL",
-			input:    []string{"http://localhost:8030"},
-			expected: "http://localhost:8030",
-		},
-		{
-			name:     "Empty slice",
-			input:    []string{},
-			expected: "",
-		},
-		{
-			name:     "Multiple URL parts",
-			input:    []string{"http://localhost:8030", "test1", "test2"},
-			expected: "http://localhost:8030/test1/test2",
-		},
-	}
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			result := join(tc.input)
-			if result != tc.expected {
-				t.Errorf("Expected '%s', got '%s'", tc.expected, result)
-			}
-		})
-	}
+type Versions struct {
+	BackendVersion string   `json:"backendVersion"`
+	ItemVersions   []string `json:"itemVersions"`
 }
