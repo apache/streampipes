@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.model.client.user.RegistrationData;
+import org.apache.streampipes.model.client.user.UserRegistrationData;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import org.springframework.http.MediaType;
@@ -51,9 +51,10 @@ public class RestorePasswordResource extends AbstractRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> changePassword(@PathVariable("recoveryCode") String recoveryCode,
-                                             @RequestBody RegistrationData registrationData) {
+                                             @RequestBody UserRegistrationData userRegistrationData
+  ) {
     try {
-      getSpResourceManager().manageUsers().changePassword(recoveryCode, registrationData);
+      getSpResourceManager().manageUsers().changePassword(recoveryCode, userRegistrationData);
       return ok();
     } catch (IllegalArgumentException e) {
       return badRequest();

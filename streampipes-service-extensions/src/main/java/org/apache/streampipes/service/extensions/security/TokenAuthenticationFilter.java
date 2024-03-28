@@ -25,7 +25,6 @@ import org.apache.streampipes.security.jwt.JwtTokenUtils;
 import org.apache.streampipes.security.jwt.JwtTokenValidator;
 import org.apache.streampipes.security.jwt.PublicKeyResolver;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -75,7 +74,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
   }
 
   private void applySuccessfulAuth(HttpServletRequest request,
-                                   Claims claims) throws JsonProcessingException {
+                                   Claims claims) {
     UserInfo userInfo = parseUserInfo((Map<String, Object>) claims.get("user"));
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userInfo, null, null);
     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -87,7 +86,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     UserInfo userInfo = new UserInfo();
     userInfo.setUsername(user.get("username").toString());
     userInfo.setDisplayName(user.get("displayName").toString());
-    userInfo.setRoles(new HashSet<>((List<String>) user.get("roles")));
+    userInfo.setRoles(new HashSet<>((List<String>) user.get("roleNames")));
 
     return userInfo;
   }
