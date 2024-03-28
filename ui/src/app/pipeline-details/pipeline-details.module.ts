@@ -21,7 +21,6 @@ import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PipelinePreviewComponent } from './components/preview/pipeline-preview.component';
@@ -40,6 +39,7 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
 import { SpPipelineDetailsOverviewComponent } from './components/overview/pipeline-details-overview.component';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { PipelineLogsComponent } from './components/pipeline-logs/pipeline-logs.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
     imports: [
@@ -48,7 +48,7 @@ import { PipelineLogsComponent } from './components/pipeline-logs/pipeline-logs.
         FormsModule,
         MatTabsModule,
         MatButtonModule,
-        CustomMaterialModule,
+        MatIconModule,
         CommonModule,
         MatProgressSpinnerModule,
         NgxChartsModule,

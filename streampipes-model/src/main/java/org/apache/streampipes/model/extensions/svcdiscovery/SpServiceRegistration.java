@@ -17,11 +17,12 @@
  */
 package org.apache.streampipes.model.extensions.svcdiscovery;
 
+import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.util.Set;
 
 @TsModel
 public class SpServiceRegistration {
@@ -34,10 +35,12 @@ public class SpServiceRegistration {
   private String scheme = "http";
   private String host;
   private int port;
-  private List<SpServiceTag> tags;
+  private Set<SpServiceTag> tags;
   private String healthCheckPath;
   private long firstTimeSeenUnhealthy = 0;
   private SpServiceStatus status = SpServiceStatus.REGISTERED;
+
+  private Set<ExtensionItemDescription> providedExtensions;
 
   public SpServiceRegistration() {
   }
@@ -47,8 +50,9 @@ public class SpServiceRegistration {
                                String svcId,
                                String host,
                                int port,
-                               List<SpServiceTag> tags,
-                               String healthCheckPath) {
+                               Set<SpServiceTag> tags,
+                               String healthCheckPath,
+                               Set<ExtensionItemDescription> providedExtensions) {
     this.svcType = svcType;
     this.svcGroup = svcGroup;
     this.svcId = svcId;
@@ -56,6 +60,7 @@ public class SpServiceRegistration {
     this.port = port;
     this.tags = tags;
     this.healthCheckPath = healthCheckPath;
+    this.providedExtensions = providedExtensions;
   }
 
   public static SpServiceRegistration from(String svcType,
@@ -63,18 +68,10 @@ public class SpServiceRegistration {
                                            String svcId,
                                            String host,
                                            Integer port,
-                                           List<SpServiceTag> tags) {
-    return new SpServiceRegistration(svcType, svcGroup, svcId, host, port, tags, "");
-  }
-
-  public static SpServiceRegistration from(String svcType,
-                                           String svcGroup,
-                                           String svcId,
-                                           String host,
-                                           Integer port,
-                                           List<SpServiceTag> tags,
-                                           String healthCheckPath) {
-    return new SpServiceRegistration(svcType, svcGroup, svcId, host, port, tags, healthCheckPath);
+                                           Set<SpServiceTag> tags,
+                                           String healthCheckPath,
+                                           Set<ExtensionItemDescription> providedExtensions) {
+    return new SpServiceRegistration(svcType, svcGroup, svcId, host, port, tags, healthCheckPath, providedExtensions);
   }
 
   public String getSvcGroup() {
@@ -109,11 +106,11 @@ public class SpServiceRegistration {
     this.port = port;
   }
 
-  public List<SpServiceTag> getTags() {
+  public Set<SpServiceTag> getTags() {
     return tags;
   }
 
-  public void setTags(List<SpServiceTag> tags) {
+  public void setTags(Set<SpServiceTag> tags) {
     this.tags = tags;
   }
 
@@ -167,5 +164,13 @@ public class SpServiceRegistration {
 
   public void setStatus(SpServiceStatus status) {
     this.status = status;
+  }
+
+  public Set<ExtensionItemDescription> getProvidedExtensions() {
+    return providedExtensions;
+  }
+
+  public void setProvidedExtensions(Set<ExtensionItemDescription> providedExtensions) {
+    this.providedExtensions = providedExtensions;
   }
 }

@@ -20,7 +20,6 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { CommonModule } from '@angular/common';
 import { AddComponent } from './add.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
@@ -34,16 +33,35 @@ import { PipelineElementNameFilter } from './filter/pipeline-element-name.pipe';
 import { PipelineElementInstallationStatusFilter } from './filter/pipeline-element-installation-status.pipe';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '../../../projects/streampipes/shared-ui/src/lib/shared-ui.module';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatOptionModule } from '@angular/material/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
     imports: [
         CommonModule,
-        FormsModule,
-        MatTabsModule,
-        FlexLayoutModule,
         CoreUiModule,
-        CustomMaterialModule,
+        FormsModule,
+        FlexLayoutModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatDividerModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatMenuModule,
+        MatOptionModule,
+        MatIconModule,
+        MatSelectModule,
+        MatTooltipModule,
         MatProgressSpinnerModule,
+        MatTabsModule,
         RouterModule.forChild([
             {
                 path: '',

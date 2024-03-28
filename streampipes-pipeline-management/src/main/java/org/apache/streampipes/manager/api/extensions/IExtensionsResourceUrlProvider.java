@@ -16,17 +16,15 @@
  *
  */
 
-package org.apache.streampipes.storage.api;
+package org.apache.streampipes.manager.api.extensions;
 
-import org.apache.streampipes.model.client.ontology.Context;
+import org.apache.streampipes.model.extensions.ExtensionItemDescription;
+import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
 
-import java.util.List;
+public interface IExtensionsResourceUrlProvider {
 
-public interface IOntologyContextStorage {
+  String getDescriptionUrl(ExtensionItemInstallationRequest installationReq);
 
-  List<String> getAvailableContexts();
+  String getIconUrl(ExtensionItemDescription endpointItem);
 
-  boolean addContext(Context context);
-
-  boolean deleteContext(String contextId);
 }

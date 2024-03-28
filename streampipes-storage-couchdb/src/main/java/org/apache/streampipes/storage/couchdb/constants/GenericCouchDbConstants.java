@@ -21,7 +21,6 @@ package org.apache.streampipes.storage.couchdb.constants;
 public class GenericCouchDbConstants {
 
   public static final String DESIGN_DOC_NAME = "appDocType";
-  public static final String VIEW_NAME = "appDocType";
   public static final String DB_NAME = "genericstorage";
 
 }

@@ -16,17 +16,10 @@
  *
  */
 
-package org.apache.streampipes.storage.api;
+package org.apache.streampipes.model.extensions;
 
-import org.apache.streampipes.model.client.RunningVisualization;
+public class ExtensionAssetType {
 
-import java.util.List;
-
-public interface IVisualizationStorage {
-
-  List<RunningVisualization> getRunningVisualizations();
-
-  void storeVisualization(RunningVisualization vizualization);
-
-  void deleteVisualization(String pipelineId);
+  public static final String DOCUMENTATION = "documentation.md";
+  public static final String ICON = "icon.png";
 }
