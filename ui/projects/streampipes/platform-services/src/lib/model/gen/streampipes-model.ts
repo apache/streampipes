@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-03-27 22:31:26.
+// Generated using typescript-generator version 3.2.1263 on 2024-03-28 13:06:29.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -395,9 +395,9 @@ export class StaticProperty {
     'index': number;
     'internalName': string;
     'label': string;
-    'optional': boolean;
     'predefined': boolean;
     'staticPropertyType': StaticPropertyType;
+    'valueRequired': boolean;
 
     static 'fromData'(
         data: StaticProperty,
@@ -412,9 +412,9 @@ export class StaticProperty {
         instance.index = data.index;
         instance.internalName = data.internalName;
         instance.label = data.label;
-        instance.optional = data.optional;
         instance.predefined = data.predefined;
         instance.staticPropertyType = data.staticPropertyType;
+        instance.valueRequired = data.valueRequired;
         return instance;
     }
 
@@ -3546,7 +3546,6 @@ export class SpQueryResult {
     allDataSeries: DataSeries[];
     forId: string;
     headers: string[];
-    lastTimestamp: number;
     sourceIndex: number;
     spQueryStatus: SpQueryStatus;
     total: number;
@@ -3564,7 +3563,6 @@ export class SpQueryResult {
         );
         instance.forId = data.forId;
         instance.headers = __getCopyArrayFn(__identity<string>())(data.headers);
-        instance.lastTimestamp = data.lastTimestamp;
         instance.sourceIndex = data.sourceIndex;
         instance.spQueryStatus = data.spQueryStatus;
         instance.total = data.total;

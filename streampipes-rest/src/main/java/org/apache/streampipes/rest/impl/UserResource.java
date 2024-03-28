@@ -238,9 +238,9 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
     if (principalId.equals(authenticatedUserId) || isAdmin()) {
       try {
-        String existingPw = passwordRequest.getExistingPassword();
+        String existingPw = passwordRequest.existingPassword();
         if (PasswordUtil.validatePassword(existingPw, existingUser.getPassword())) {
-          String newEncryptedPw = PasswordUtil.encryptPassword(passwordRequest.getNewPassword());
+          String newEncryptedPw = PasswordUtil.encryptPassword(passwordRequest.newPassword());
           updateUser(existingUser, existingUser, isAdmin(), newEncryptedPw);
           getUserStorage().updateUser(existingUser);
 
