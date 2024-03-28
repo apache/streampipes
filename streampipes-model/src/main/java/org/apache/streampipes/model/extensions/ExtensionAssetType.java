@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.model.extensions;
 
-public class ExtensionAsset {
+public class ExtensionAssetType {
 
   public static final String DOCUMENTATION = "documentation.md";
   public static final String ICON = "icon.png";

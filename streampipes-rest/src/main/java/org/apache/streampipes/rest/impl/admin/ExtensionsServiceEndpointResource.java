@@ -19,8 +19,8 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.manager.assets.AssetManager;
-import org.apache.streampipes.manager.endpoint.AvailableExtensionsProvider;
-import org.apache.streampipes.manager.endpoint.ExtensionsResourceUrlProvider;
+import org.apache.streampipes.manager.extensions.AvailableExtensionsProvider;
+import org.apache.streampipes.manager.extensions.ExtensionsResourceUrlProvider;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -48,7 +48,7 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<ExtensionItemDescription>> getExtensionItems() {
-    var allExtensions = new AvailableExtensionsProvider(getNoSqlStorage()).getExtensions();
+    var allExtensions = new AvailableExtensionsProvider(getNoSqlStorage()).getExtensionItemDescriptions();
     return ok(allExtensions);
   }
 

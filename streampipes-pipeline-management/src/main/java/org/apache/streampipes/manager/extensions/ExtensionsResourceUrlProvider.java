@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.manager.endpoint;
+package org.apache.streampipes.manager.extensions;
 
 import org.apache.streampipes.manager.api.extensions.IExtensionsResourceUrlProvider;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;

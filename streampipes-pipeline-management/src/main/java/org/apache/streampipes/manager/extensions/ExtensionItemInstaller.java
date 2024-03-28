@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.endpoint;
+package org.apache.streampipes.manager.extensions;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.api.extensions.IExtensionsResourceUrlProvider;

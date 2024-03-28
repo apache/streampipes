@@ -20,8 +20,8 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.assets.AssetManager;
-import org.apache.streampipes.manager.endpoint.ExtensionItemInstaller;
-import org.apache.streampipes.manager.endpoint.ExtensionsResourceUrlProvider;
+import org.apache.streampipes.manager.extensions.ExtensionItemInstaller;
+import org.apache.streampipes.manager.extensions.ExtensionsResourceUrlProvider;
 import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;

@@ -22,7 +22,6 @@ import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
-import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.extensions.configuration.ConfigItem;
@@ -47,13 +46,11 @@ import org.springframework.context.annotation.Import;
 
 import jakarta.annotation.PreDestroy;
 
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Configuration
 @EnableAutoConfiguration
@@ -98,7 +95,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   public void startExtensionsService(Class<?> serviceClass,
                                      SpServiceDefinition serviceDef,
                                      BaseNetworkingConfig networkingConfig) throws UnknownHostException {
-    var extensions = getAllExtensions();
+    var extensions = new ExtensionItemProvider().getAllItemDescriptions();
     var req = SpServiceRegistration.from(
         DefaultSpServiceTypes.EXT,
         serviceDef.getServiceGroup(),
@@ -134,27 +131,6 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     }
     tags.addAll(getExtensionsServiceTags(extensions));
     return tags;
-  }
-
-  private Set<ExtensionItemDescription> getAllExtensions() {
-    return Stream.concat(
-            DeclarersSingleton.getInstance().getDeclarers().values().stream()
-                .map(declarer -> declarer.declareConfig().getDescription()),
-            DeclarersSingleton.getInstance().getAdapters().stream().map(a -> a.declareConfig().getAdapterDescription())
-        )
-        .peek(entity -> {
-          try {
-            if (entity.isIncludesLocales()) {
-              var labelGenerator = new LabelGenerator<>(entity);
-              entity.setName(labelGenerator.getElementTitle());
-              entity.setDescription(labelGenerator.getElementDescription());
-            }
-          } catch (IOException e) {
-
-          }
-        })
-        .map(entity -> entity.toExtensionDescription(false, true, true))
-        .collect(Collectors.toSet());
   }
 
   protected void deregisterService(String serviceId) {

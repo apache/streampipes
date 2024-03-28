@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.manager.setup;
 
-import org.apache.streampipes.manager.endpoint.AvailableExtensionsProvider;
+import org.apache.streampipes.manager.extensions.AvailableExtensionsProvider;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.storage.api.INoSqlStorage;
@@ -58,7 +58,7 @@ public class ExtensionsInstallationTask implements Runnable {
       int numberOfAttempts = 0;
       do {
 
-        availableExtensions = new AvailableExtensionsProvider(storage).getExtensions();
+        availableExtensions = new AvailableExtensionsProvider(storage).getExtensionItemDescriptions();
         numberOfAttempts++;
         if (availableExtensions.isEmpty()) {
           LOG.info("Found 0 extensions - waiting {} seconds to make sure all extension services have properly started",

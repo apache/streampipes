@@ -18,8 +18,8 @@
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
-import org.apache.streampipes.manager.endpoint.ExtensionItemInstaller;
-import org.apache.streampipes.manager.endpoint.ExtensionsResourceUrlProvider;
+import org.apache.streampipes.manager.extensions.ExtensionItemInstaller;
+import org.apache.streampipes.manager.extensions.ExtensionsResourceUrlProvider;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
