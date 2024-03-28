@@ -75,7 +75,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
   }
 
   private void applySuccessfulAuth(HttpServletRequest request,
-                                   Claims claims) throws JsonProcessingException {
+                                   Claims claims) {
     UserInfo userInfo = parseUserInfo((Map<String, Object>) claims.get("user"));
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userInfo, null, null);
     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
