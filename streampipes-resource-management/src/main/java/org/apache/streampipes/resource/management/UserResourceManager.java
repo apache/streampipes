@@ -26,10 +26,10 @@ import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
 import org.apache.streampipes.mail.MailSender;
 import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.UserRegistrationData;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.client.user.UserActivationToken;
+import org.apache.streampipes.model.client.user.UserRegistrationData;
 import org.apache.streampipes.storage.api.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
@@ -88,16 +88,16 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
         .orElseThrow(IllegalArgumentException::new);
   }
 
-   public void registerUser(UserRegistrationData data) throws UsernameAlreadyTakenException {
-      try {
-        createUser(data);
-        createTokenAndSendActivationMail(data.username());
-      } catch (IOException  e) {
-        LOG.error("Registration of user could not be completed: {}", e.getMessage());
-      }
+  public void registerUser(UserRegistrationData data) throws UsernameAlreadyTakenException {
+    try {
+      createUser(data);
+      createTokenAndSendActivationMail(data.username());
+    } catch (IOException e) {
+      LOG.error("Registration of user could not be completed: {}", e.getMessage());
+    }
   }
 
-  private synchronized void createUser(UserRegistrationData data){
+  private synchronized void createUser(UserRegistrationData data) {
     if (db.checkUserExists(data.username())) {
       throw new UsernameAlreadyTakenException("Username already taken");
     }
@@ -130,7 +130,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
   private void createTokenAndSendActivationMail(String username) throws IOException {
-    String activationCode =  TokenUtil.generateToken(RECOVERY_TOKEN_LENGTH);
+    String activationCode = TokenUtil.generateToken(RECOVERY_TOKEN_LENGTH);
     storeActivationCode(username, activationCode);
   }
 
