@@ -105,6 +105,7 @@
                                     >
                                         <button
                                             mat-icon-button
+                                            matTooltip="Open dashboard"
                                             color="accent"
                                             (click)="showDashboard(element)"
                                             [attr.data-cy]="
@@ -124,6 +125,7 @@
                                     >
                                         <button
                                             mat-icon-button
+                                            matTooltip="Open dashboard in new window"
                                             color="accent"
                                             (click)="
                                                 openExternalDashboard(element)
@@ -143,6 +145,7 @@
                                     >
                                         <button
                                             mat-icon-button
+                                            matTooltip="Edit dashboard settings"
                                             color="accent"
                                             (click)="
                                                 openEditDashboardDialog(element)
@@ -163,6 +166,7 @@
                                     >
                                         <button
                                             mat-icon-button
+                                            matTooltip="Edit dashboard"
                                             color="accent"
                                             (click)="editDashboard(element)"
                                             [attr.data-cy]="
@@ -181,6 +185,7 @@
                                     >
                                         <button
                                             mat-icon-button
+                                            matTooltip="Manage permissions"
                                             color="accent"
                                             (click)="
                                                 showPermissionsDialog(element)
@@ -198,6 +203,7 @@
                                     >
                                         <button
                                             mat-icon-button
+                                            matTooltip="Delete dashboard"
                                             color="accent"
                                             (click)="
                                                 openDeleteDashboardDialog(
