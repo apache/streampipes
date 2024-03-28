@@ -29,7 +29,7 @@ public class AdapterConfigurationTest {
   @Test
   public void simpleAdapterDescriptionTest() {
     var adapterDescription = new AdapterDescription();
-    var adapterConfiguration = new AdapterConfiguration(adapterDescription, null, null);
+    var adapterConfiguration = new AdapterConfiguration(adapterDescription, null, null, null);
 
     Assertions.assertEquals(adapterDescription, adapterConfiguration.getAdapterDescription());
   }

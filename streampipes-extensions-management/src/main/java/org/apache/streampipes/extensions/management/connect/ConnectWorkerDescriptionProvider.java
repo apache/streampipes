@@ -17,32 +17,22 @@
  */
 package org.apache.streampipes.extensions.management.connect;
 
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
-import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 public class ConnectWorkerDescriptionProvider {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ConnectWorkerDescriptionProvider.class);
-
-  /**
-   *  Retrieves a list of all adapter descriptions that are currently registered.
-   *  @return a list of {@link AdapterDescription} objects representing the registered adapters
-   */
-  public List<AdapterDescription> getAdapterDescriptions() {
+  public Optional<IAdapterConfiguration> getAdapterConfiguration(String id) {
     return getRegisteredAdapters()
         .stream()
-        .map(adapter -> applyLocales(adapter.declareConfig().getAdapterDescription()))
-        .toList();
+        .filter(ad -> ad.declareConfig().getAdapterDescription().getAppId().equals(id))
+        .map(StreamPipesAdapter::declareConfig)
+        .findFirst();
   }
 
   public Optional<AdapterDescription> getAdapterDescription(String id) {
@@ -59,22 +49,5 @@ public class ConnectWorkerDescriptionProvider {
    */
   public Collection<StreamPipesAdapter> getRegisteredAdapters() {
     return DeclarersSingleton.getInstance().getAdapters();
-  }
-
-
-  private AdapterDescription applyLocales(AdapterDescription entity) {
-    if (entity.isIncludesLocales()) {
-      LabelGenerator lg = new LabelGenerator(entity);
-      try {
-        entity = (AdapterDescription) lg.generateLabels();
-      } catch (IOException e) {
-        LOG.error("Could not load labels for: " + entity.getAppId());
-      }
-    } else {
-      LOG.error(
-          "The adapter configuration of %s is missing the locales configurations. Add it to the declareConfig method"
-              .formatted(entity.getAppId()));
-    }
-    return entity;
   }
 }

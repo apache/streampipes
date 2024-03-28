@@ -35,6 +35,7 @@ import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
@@ -118,6 +119,11 @@ public class UpdateStaticPropertiesVisitor extends DefaultStaticPropertyVisitor 
 
   @Override
   public void visit(RuntimeResolvableTreeInputStaticProperty treeInputStaticProperty) {
+
+  }
+
+  @Override
+  public void visit(RuntimeResolvableGroupStaticProperty groupStaticProperty) {
 
   }
 

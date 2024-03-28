@@ -37,7 +37,7 @@ public class LabelGeneratorTest {
   private static final String TEST_APP_ID = "test-app-id";
 
   @Test
-  public void getElementDescriptionThrowExceptiojn() {
+  public void getElementDescriptionThrowException() {
     var labelGenerator = getLabelGeneratorWithoutLocalesFile();
     assertThrows(IOException.class, labelGenerator::getElementDescription);
   }
@@ -68,15 +68,12 @@ public class LabelGeneratorTest {
     Assertions.assertEquals(expectedTitle, labelGenerator.getElementTitle());
   }
 
-
   private LabelGenerator getLabelGeneratorWithoutLocalesFile() {
     var mockDescription = Mockito.mock(NamedStreamPipesEntity.class);
     when(mockDescription.getAppId()).thenReturn(TEST_APP_ID);
 
     var labelGenerator = new LabelGenerator(mockDescription);
     var labelGeneratorMock = spy(labelGenerator);
-    doReturn(false).when(labelGeneratorMock)
-                   .existsLocalesFile();
     return labelGeneratorMock;
   }
 
@@ -87,7 +84,7 @@ public class LabelGeneratorTest {
     var labelGenerator = new LabelGenerator(mockDescription);
     var labelGeneratorMock = spy(labelGenerator);
     doReturn(properties).when(labelGeneratorMock)
-                        .checkIfResourceFileExistsAndMakeProperties();
+                        .loadResourceAndMakeProperties();
     return labelGeneratorMock;
   }
 

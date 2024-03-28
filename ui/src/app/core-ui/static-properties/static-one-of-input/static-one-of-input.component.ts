@@ -19,6 +19,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import { OneOfStaticProperty } from '@streampipes/platform-services';
+import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 
 @Component({
     selector: 'sp-static-one-of-input',
@@ -30,6 +31,8 @@ export class StaticOneOfInputComponent
     implements OnInit
 {
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() updateEmitter: EventEmitter<ConfigurationInfo> =
+        new EventEmitter<ConfigurationInfo>();
 
     selectedOption: string;
 
@@ -49,6 +52,7 @@ export class StaticOneOfInputComponent
             ).elementId;
         }
         this.inputEmitter.emit(true);
+        this.emitUpdate(true);
         this.parentForm.updateValueAndValidity();
     }
 
@@ -67,5 +71,6 @@ export class StaticOneOfInputComponent
             option => option.elementId === id,
         ).selected = true;
         this.inputEmitter.emit(true);
+        this.emitUpdate(true);
     }
 }

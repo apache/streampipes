@@ -47,8 +47,8 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.apache.plc4x.java.PlcDriverManager;
 import org.apache.plc4x.java.api.PlcConnection;
+import org.apache.plc4x.java.api.PlcDriverManager;
 import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
 import org.apache.plc4x.java.api.messages.PlcReadRequest;
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
@@ -179,10 +179,10 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
     getConfigurations(extractor);
 
     try {
-      this.plcConnection = new PlcDriverManager().getConnection(
+      this.plcConnection = PlcDriverManager.getDefault().getConnectionManager().getConnection(
           "modbus-tcp:tcp://" + this.ip + ":" + this.port + "?unit-identifier=" + this.slaveID);
 
-      if (!this.plcConnection.getMetadata().canRead()) {
+      if (!this.plcConnection.getMetadata().isReadSupported()) {
         throw new AdapterException("The Modbus device on IP: " + this.ip + " does not support reading data");
       }
     } catch (PlcConnectionException pce) {
@@ -202,12 +202,12 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
 
       switch (node.get(PLC_NODE_TYPE)) {
         case "Coil" ->
-            builder.addItem(node.get(PLC_NODE_RUNTIME_NAME), "coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
-        case "HoldingRegister" -> builder.addItem(node.get(PLC_NODE_RUNTIME_NAME),
+            builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME), "coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+        case "HoldingRegister" -> builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME),
             "holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
-        case "DiscreteInput" -> builder.addItem(node.get(PLC_NODE_RUNTIME_NAME),
+        case "DiscreteInput" -> builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME),
             "discrete-input:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
-        case "InputRegister" -> builder.addItem(node.get(PLC_NODE_RUNTIME_NAME),
+        case "InputRegister" -> builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME),
             "input-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
       }
     }

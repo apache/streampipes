@@ -31,6 +31,7 @@ import {
     MappingPropertyUnary,
     OneOfStaticProperty,
     RuntimeResolvableAnyStaticProperty,
+    RuntimeResolvableGroupStaticProperty,
     RuntimeResolvableOneOfStaticProperty,
     RuntimeResolvableTreeInputStaticProperty,
     SecretStaticProperty,
@@ -141,6 +142,10 @@ export class StaticPropertyComponent implements OnInit {
 
     isGroupStaticProperty(val) {
         return val instanceof StaticPropertyGroup;
+    }
+
+    isRuntimeResolvableGroupStaticProperty(val) {
+        return val instanceof RuntimeResolvableGroupStaticProperty;
     }
 
     isAlternativesStaticProperty(val) {

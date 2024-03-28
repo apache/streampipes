@@ -66,6 +66,7 @@ import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
@@ -111,6 +112,8 @@ public class Cloner {
   public StaticProperty staticProperty(StaticProperty o) {
     if (o instanceof FreeTextStaticProperty) {
       return new FreeTextStaticProperty((FreeTextStaticProperty) o);
+    } else if (o instanceof RuntimeResolvableGroupStaticProperty) {
+      return new RuntimeResolvableGroupStaticProperty((RuntimeResolvableGroupStaticProperty) o);
     } else if (o instanceof RuntimeResolvableOneOfStaticProperty) {
       return new RuntimeResolvableOneOfStaticProperty((RuntimeResolvableOneOfStaticProperty) o);
     } else if (o instanceof RuntimeResolvableAnyStaticProperty) {

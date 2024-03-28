@@ -19,6 +19,7 @@
 package org.apache.streampipes.sdk.builder.adapter;
 
 
+import org.apache.streampipes.extensions.api.assets.AssetResolver;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -40,14 +41,18 @@ public class AdapterConfiguration extends NamedStreamPipesEntity implements IAda
   private AdapterDescription adapterDescription;
   private Supplier<StreamPipesAdapter> supplier;
 
+  private AssetResolver assetResolver;
+
   public AdapterConfiguration() {
   }
 
   public AdapterConfiguration(AdapterDescription adapterDescription,
                               List<IParser> supportedParsers,
+                              AssetResolver assetResolver,
                               Supplier<StreamPipesAdapter> supplier) {
     this.adapterDescription = adapterDescription;
     this.supportedParsers = supportedParsers;
+    this.assetResolver = assetResolver;
     this.supplier = supplier;
   }
 
@@ -105,4 +110,8 @@ public class AdapterConfiguration extends NamedStreamPipesEntity implements IAda
     return alternativesContainer;
   }
 
+  @Override
+  public AssetResolver getAssetResolver() {
+    return assetResolver;
+  }
 }

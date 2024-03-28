@@ -105,6 +105,7 @@
                 [parentForm]="parentForm"
                 [staticProperties]="staticProperties"
                 [adapterId]="adapterId"
+                (updateEmitter)="emitUpdate($event)"
             ></sp-app-static-runtime-resolvable-oneof-input>
 
             <sp-app-static-any-input
@@ -124,6 +125,7 @@
                     !isRuntimeResolvableOneOfStaticProperty(staticProperty)
                 "
                 (inputEmitter)="valueChange($event)"
+                (updateEmitter)="emitUpdate($event)"
                 [parentForm]="parentForm"
                 [staticProperty]="staticProperty"
             >
@@ -159,6 +161,7 @@
                 [eventSchemas]="eventSchemas"
                 [parentForm]="parentForm"
                 [staticProperty]="staticProperty"
+                [staticProperties]="staticProperties"
                 [displayRecommended]="displayRecommended"
                 class="test fullWidth"
                 (inputEmitter)="valueChange($event)"
@@ -167,17 +170,36 @@
             </sp-app-static-alternatives>
 
             <sp-app-static-group
-                *ngIf="isGroupStaticProperty(staticProperty)"
+                *ngIf="
+                    isGroupStaticProperty(staticProperty) &&
+                    !isRuntimeResolvableGroupStaticProperty(staticProperty)
+                "
                 [adapterId]="adapterId"
                 [eventSchemas]="eventSchemas"
                 [parentForm]="parentForm"
                 [fieldName]="fieldName"
                 [staticProperty]="staticProperty"
+                [staticProperties]="staticProperties"
                 [displayRecommended]="displayRecommended"
                 class="test fullWidth"
                 (updateEmitter)="emitUpdate($event)"
             >
             </sp-app-static-group>
+
+            <sp-app-static-runtime-resolvable-group
+                *ngIf="isRuntimeResolvableGroupStaticProperty(staticProperty)"
+                [adapterId]="adapterId"
+                [eventSchemas]="eventSchemas"
+                [parentForm]="parentForm"
+                [fieldName]="fieldName"
+                [staticProperties]="staticProperties"
+                [staticProperty]="staticProperty"
+                [completedStaticProperty]="completedStaticProperty"
+                [displayRecommended]="displayRecommended"
+                class="test fullWidth"
+                (updateEmitter)="emitUpdate($event)"
+            >
+            </sp-app-static-runtime-resolvable-group>
 
             <sp-static-collection
                 *ngIf="isCollectionStaticProperty(staticProperty)"

@@ -70,6 +70,12 @@
         <maven.deploy.skip>false</maven.deploy.skip>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+
+        </dependencies>
+    </dependencyManagement>
+
     <build>
         <pluginManagement>
             <plugins>

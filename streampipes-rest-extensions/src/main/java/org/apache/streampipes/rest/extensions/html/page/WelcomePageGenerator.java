@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.rest.extensions.html.page;
 
+import org.apache.streampipes.extensions.api.assets.AssetResolver;
+import org.apache.streampipes.extensions.api.assets.DefaultAssetResolver;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
@@ -70,20 +72,29 @@ public class WelcomePageGenerator {
 
   private Description getAdapterDescription(StreamPipesAdapter adapter) {
     var entity = adapter.declareConfig().getAdapterDescription();
-    return getDescription(entity, "adapter", "api/v1/worker/adapters/");
+    return getDescription(
+        entity,
+        adapter.declareConfig().getAssetResolver(),
+        "adapter",
+        "api/v1/worker/adapters/"
+    );
   }
 
   private Description getPipelineElementDescription(IStreamPipesPipelineElement<?> declarer) {
     var entity = declarer.declareConfig().getDescription();
-    return getDescription(entity, getType(declarer), getPathPrefix(declarer));
+    return getDescription(
+        entity,
+        new DefaultAssetResolver(entity.getAppId()), getType(declarer), getPathPrefix(declarer)
+    );
   }
 
   private Description getDescription(NamedStreamPipesEntity entity,
+                                     AssetResolver assetResolver,
                                      String type,
                                      String pathPrefix) {
     Description desc = new Description();
     // TODO remove after full internationalization support has been implemented
-    updateLabel(entity, desc);
+    updateLabel(entity, desc, assetResolver);
     desc.setType(type);
     desc.setElementId(entity.getElementId());
     desc.setAppId(entity.getAppId());
@@ -124,12 +135,14 @@ public class WelcomePageGenerator {
     }
   }
 
-  private void updateLabel(NamedStreamPipesEntity entity, Description desc) {
+  private void updateLabel(NamedStreamPipesEntity entity,
+                           Description desc,
+                           AssetResolver assetResolver) {
     if (!entity.isIncludesLocales()) {
       desc.setName(entity.getName());
       desc.setDescription(entity.getDescription());
     } else {
-      LabelGenerator lg = new LabelGenerator(entity);
+      LabelGenerator lg = new LabelGenerator(entity, true, assetResolver);
       try {
         desc.setName(lg.getElementTitle());
         desc.setDescription(lg.getElementDescription());
