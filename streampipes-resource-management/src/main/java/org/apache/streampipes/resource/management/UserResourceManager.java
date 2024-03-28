@@ -107,7 +107,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
       throw new SpException("Error during password encryption: %s".formatted(e.getMessage()));
     }
-    List<Role> roles = data.roles().stream().map(Role::valueOf).toList();
+    List<Role> roles = data.roleNames().stream().map(Role::valueOf).toList();
     UserAccount user = UserAccount.from(data.username(), encryptedPassword, new HashSet<>(roles));
     user.setUsername(data.username());
     user.setPassword(encryptedPassword);

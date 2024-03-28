@@ -98,7 +98,6 @@ public class Authentication extends AbstractRestResource {
     var enrichedUserRegistrationData = new UserRegistrationData(
       userRegistrationData.username(),
       userRegistrationData.password(),
-      null,
       config.getDefaultUserRoles()
     );
     try {
