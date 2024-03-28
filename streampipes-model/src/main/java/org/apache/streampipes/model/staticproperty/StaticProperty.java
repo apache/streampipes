@@ -50,8 +50,7 @@ import java.util.Objects;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 public abstract class StaticProperty {
 
-  private static final long serialVersionUID = 2509153122084646025L;
-  protected boolean valueRequired;
+  protected boolean optional;
   protected StaticPropertyType staticPropertyType;
   private int index;
   private String label;
@@ -74,7 +73,7 @@ public abstract class StaticProperty {
     this.index = other.getIndex();
     this.description = other.getDescription();
     this.internalName = other.getInternalName();
-    this.valueRequired = other.isValueRequired();
+    this.optional = other.isOptional();
     this.staticPropertyType = other.getStaticPropertyType();
     this.label = other.getLabel();
     this.predefined = other.isPredefined();
@@ -114,12 +113,12 @@ public abstract class StaticProperty {
     this.label = label;
   }
 
-  public boolean isValueRequired() {
-    return valueRequired;
+  public boolean isOptional() {
+    return optional;
   }
 
-  public void setValueRequired(boolean valueRequired) {
-    this.valueRequired = valueRequired;
+  public void setOptional(boolean optional) {
+    this.optional = optional;
   }
 
   public StaticPropertyType getStaticPropertyType() {
@@ -161,7 +160,7 @@ public abstract class StaticProperty {
       return false;
     }
 
-    if (valueRequired != that.valueRequired) {
+    if (optional != that.optional) {
       return false;
     }
     if (index != that.index) {
@@ -184,7 +183,7 @@ public abstract class StaticProperty {
 
   @Override
   public int hashCode() {
-    int result = (valueRequired ? 1 : 0);
+    int result = (optional ? 1 : 0);
     result = 31 * result + (staticPropertyType != null ? staticPropertyType.hashCode() : 0);
     result = 31 * result + index;
     result = 31 * result + (label != null ? label.hashCode() : 0);
