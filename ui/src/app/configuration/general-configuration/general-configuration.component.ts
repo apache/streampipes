@@ -153,7 +153,6 @@ export class GeneralConfigurationComponent implements OnInit {
                 this.generalConfig.defaultUserRoles = v.defaultUserRoles.map(
                     r => UserRole[r],
                 );
-                console.log(this.generalConfig);
             });
 
             this.formReady = true;
