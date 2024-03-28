@@ -18,20 +18,18 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 import { EventPropertyUnion } from '@streampipes/platform-services';
-import { SemanticTypeService } from '../../core-services/types/semantic-type.service';
+import { SemanticType } from '../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
 
 @Pipe({
     name: 'timestampFilter',
     pure: false,
 })
 export class TimestampPipe implements PipeTransform {
-    constructor(private semanticTypeService: SemanticTypeService) {}
+    constructor() {}
 
     transform(items: EventPropertyUnion[]): EventPropertyUnion[] {
         return items.filter(item =>
-            item.domainProperties.some(
-                dp => dp === this.semanticTypeService.TIMESTAMP,
-            ),
+            item.domainProperties.some(dp => dp === SemanticType.TIMESTAMP),
         );
     }
 }
