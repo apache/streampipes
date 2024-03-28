@@ -37,7 +37,10 @@ import { CurrentUserService } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-pipeline-overview',
     templateUrl: './pipeline-overview.component.html',
-    styleUrls: ['./pipeline-overview.component.scss'],
+    styleUrls: [
+        './pipeline-overview.component.scss',
+        '../../../../scss/sp/status-light.scss',
+    ],
 })
 export class PipelineOverviewComponent implements OnInit {
     _pipelines: Pipeline[];

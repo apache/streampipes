@@ -52,7 +52,10 @@ import { HelpComponent } from '../../../core-ui/help/help.component';
 @Component({
     selector: 'sp-existing-adapters',
     templateUrl: './existing-adapters.component.html',
-    styleUrls: ['./existing-adapters.component.scss'],
+    styleUrls: [
+        './existing-adapters.component.scss',
+        '../../../../scss/sp/status-light.scss',
+    ],
 })
 export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     existingAdapters: AdapterDescription[] = [];
@@ -67,6 +70,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     sort: MatSort;
 
     displayedColumns: string[] = [
+        'status',
         'start',
         'name',
         'adapterBase',
