@@ -73,6 +73,9 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
     return service.getServiceUrl();
   }
 
+/**
+* Checks if all the tags specified in the filter are supported by the service.
+*/
   private boolean allFiltersSupported(SpServiceRegistration service,
                                       List<String> filterByTags) {
     if (filterByTags.isEmpty()) {
