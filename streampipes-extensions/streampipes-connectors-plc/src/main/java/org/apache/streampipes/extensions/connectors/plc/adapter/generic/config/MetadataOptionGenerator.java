@@ -89,7 +89,7 @@ public class MetadataOptionGenerator {
           Labels.from(option.getKey(), option.getKey(), option.getDescription()),
           getDatatype(option.getType())
       );
-      sp.setValueRequired(option.isRequired());
+      sp.setOptional(!option.isRequired());
       return sp;
     }).toArray(StaticProperty[]::new);
   }
