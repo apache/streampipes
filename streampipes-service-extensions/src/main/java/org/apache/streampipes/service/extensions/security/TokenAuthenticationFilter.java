@@ -25,7 +25,6 @@ import org.apache.streampipes.security.jwt.JwtTokenUtils;
 import org.apache.streampipes.security.jwt.JwtTokenValidator;
 import org.apache.streampipes.security.jwt.PublicKeyResolver;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
