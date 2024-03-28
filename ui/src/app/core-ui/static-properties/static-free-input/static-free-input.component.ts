@@ -67,7 +67,9 @@ export class StaticFreeInputComponent
 
     collectValidators() {
         const validators: ValidatorFn[] = [];
-        validators.push(Validators.required);
+        if (!this.staticProperty.optional) {
+            validators.push(Validators.required);
+        }
         if (
             this.semanticTypeService.isNumberType(
                 this.staticProperty.requiredDatatype,
