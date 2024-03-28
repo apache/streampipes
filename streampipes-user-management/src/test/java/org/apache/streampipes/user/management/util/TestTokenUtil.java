@@ -30,10 +30,10 @@ public class TestTokenUtil {
     String tokenName = "test-token";
 
     RawUserApiToken rawToken = TokenUtil.createToken(tokenName);
-    Assertions.assertEquals("test-token", rawToken.getTokenName());
-    Assertions.assertNotNull(rawToken.getTokenId());
-    Assertions.assertNotNull(rawToken.getRawToken());
-    Assertions.assertNotNull(rawToken.getHashedToken());
+    Assertions.assertEquals("test-token", rawToken.tokenName());
+    Assertions.assertNotNull(rawToken.tokenId());
+    Assertions.assertNotNull(rawToken.rawToken());
+    Assertions.assertNotNull(rawToken.hashedToken());
   }
 
   @Test
@@ -41,17 +41,17 @@ public class TestTokenUtil {
     RawUserApiToken rawToken = TokenUtil.createToken("test-token");
     UserApiToken token = TokenUtil.toUserToken(rawToken);
 
-    Assertions.assertEquals(rawToken.getHashedToken(), token.getHashedToken());
-    Assertions.assertEquals(rawToken.getTokenId(), token.getTokenId());
-    Assertions.assertEquals(rawToken.getTokenName(), token.getTokenName());
+    Assertions.assertEquals(rawToken.hashedToken(), token.getHashedToken());
+    Assertions.assertEquals(rawToken.tokenId(), token.getTokenId());
+    Assertions.assertEquals(rawToken.tokenName(), token.getTokenName());
   }
 
   @Test
   public void testTokenValidation() {
     RawUserApiToken rawToken = TokenUtil.createToken("test-token");
-    String rawApiKey = rawToken.getRawToken();
+    String rawApiKey = rawToken.rawToken();
 
-    Assertions.assertTrue(TokenUtil.validateToken(rawApiKey, rawToken.getHashedToken()));
+    Assertions.assertTrue(TokenUtil.validateToken(rawApiKey, rawToken.hashedToken()));
   }
 
 }
