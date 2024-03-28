@@ -20,18 +20,18 @@ package org.apache.streampipes.svcdiscovery;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -49,8 +49,9 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   @Override
   public List<String> getActivePipelineElementEndpoints() {
     LOG.info("Discovering active pipeline element service endpoints");
-    return getServiceEndpoints(DefaultSpServiceTypes.EXT, true,
-        Collections.singletonList(DefaultSpServiceTags.PE.asString()));
+    return getServiceEndpoints(DefaultSpServiceTypes.EXT,
+        true,
+        List.of());
   }
 
   @Override
@@ -72,11 +73,19 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
     return service.getServiceUrl();
   }
 
+/**
+* Checks if all the tags specified in the filter are supported by the service.
+*/
   private boolean allFiltersSupported(SpServiceRegistration service,
                                       List<String> filterByTags) {
-    return new HashSet<>(service.getTags())
-        .stream()
-        .anyMatch(tag -> filterByTags.contains(tag.asString()));
+    if (filterByTags.isEmpty()) {
+      return true;
+    }
+
+    Set<String> serviceTags = service.getTags().stream()
+        .map(SpServiceTag::asString)
+        .collect(Collectors.toSet());
+    return serviceTags.containsAll(filterByTags);
   }
 
   private List<SpServiceRegistration> findService(int retryCount) {

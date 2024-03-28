@@ -16,46 +16,15 @@
  *
  */
 
-package org.apache.streampipes.model.client.endpoint;
+package org.apache.streampipes.manager.api.extensions;
 
-import com.google.gson.annotations.SerializedName;
+import org.apache.streampipes.model.extensions.ExtensionItemDescription;
+import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
 
-public class ExtensionsServiceEndpoint {
+public interface IExtensionsResourceUrlProvider {
 
-  private @SerializedName("_id") String id;
-  private @SerializedName("_rev") String rev;
+  String getDescriptionUrl(ExtensionItemInstallationRequest installationReq);
 
-  private String endpointUrl;
+  String getIconUrl(ExtensionItemDescription endpointItem);
 
-  public ExtensionsServiceEndpoint() {
-
-  }
-
-  public ExtensionsServiceEndpoint(String endpointUrl) {
-    this.endpointUrl = endpointUrl;
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getRev() {
-    return rev;
-  }
-
-  public void setRev(String rev) {
-    this.rev = rev;
-  }
-
-  public String getEndpointUrl() {
-    return endpointUrl;
-  }
-
-  public void setEndpointUrl(String endpointUrl) {
-    this.endpointUrl = endpointUrl;
-  }
 }

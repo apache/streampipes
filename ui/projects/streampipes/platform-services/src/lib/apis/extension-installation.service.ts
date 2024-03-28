@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
+import { ExtensionItemInstallationRequest } from '../model/gen/streampipes-model';
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -24,36 +25,33 @@ import { Observable } from 'rxjs';
 @Injectable({
     providedIn: 'root',
 })
-export class PipelineElementEndpointService {
+export class ExtensionInstallationService {
     constructor(
         private http: HttpClient,
         private platformServicesCommons: PlatformServicesCommons,
     ) {}
 
-    add(elementUri, ispublic): Observable<any> {
-        const payload = new HttpParams()
-            .set('uri', elementUri)
-            .set('publicElement', ispublic);
+    add(
+        installationRequest: ExtensionItemInstallationRequest,
+    ): Observable<any> {
         return this.http.post(
-            this.platformServicesCommons.apiBasePath + '/element',
-            payload,
+            `${this.platformServicesCommons.apiBasePath}/extension-installation`,
+            installationRequest,
         );
     }
 
-    update(elementUri): Observable<any> {
+    update(
+        installationRequest: ExtensionItemInstallationRequest,
+    ): Observable<any> {
         return this.http.put(
-            this.platformServicesCommons.apiBasePath +
-                '/element/' +
-                encodeURIComponent(elementUri),
-            undefined,
+            `${this.platformServicesCommons.apiBasePath}/extension-installation`,
+            installationRequest,
         );
     }
 
-    del(elementUri): Observable<any> {
+    delete(elementId: string): Observable<any> {
         return this.http.delete(
-            this.platformServicesCommons.apiBasePath +
-                '/element/' +
-                encodeURIComponent(elementUri),
+            `${this.platformServicesCommons.apiBasePath}/extension-installation/${elementId}`,
         );
     }
 }

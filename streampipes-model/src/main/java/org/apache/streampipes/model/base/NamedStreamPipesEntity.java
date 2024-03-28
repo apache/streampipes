@@ -19,7 +19,11 @@
 package org.apache.streampipes.model.base;
 
 
+import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
+import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.util.ServiceDefinitionUtil;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -206,6 +210,26 @@ public abstract class NamedStreamPipesEntity implements Serializable {
 
   public void setElementId(String elementId) {
     this.elementId = elementId;
+  }
+
+  public ExtensionItemDescription toExtensionDescription(boolean installed,
+                                                         boolean editable,
+                                                         boolean available) {
+    ExtensionItemDescription endpoint = new ExtensionItemDescription();
+    endpoint.setDescription(getDescription());
+    endpoint.setName(getName());
+    endpoint.setServiceTagPrefix(ServiceDefinitionUtil.getPrefix(this));
+    endpoint.setAvailable(available);
+    endpoint.setElementId(getElementId());
+    endpoint.setEditable(editable);
+    endpoint.setInstalled(installed);
+    endpoint.setIncludesIcon(isIncludesAssets() && getIncludedAssets().contains(ExtensionAssetType.ICON));
+    endpoint.setIncludesDocs(isIncludesAssets() && getIncludedAssets().contains(ExtensionAssetType.DOCUMENTATION));
+
+    if (!(this instanceof SpDataStream)) {
+      endpoint.setAppId(getAppId());
+    }
+    return endpoint;
   }
 
   @Override

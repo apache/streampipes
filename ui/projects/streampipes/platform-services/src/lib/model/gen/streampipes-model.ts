@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-03-27 22:31:26.
+// Generated using typescript-generator version 3.2.1263 on 2024-03-28 10:31:32.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -1787,6 +1787,60 @@ export class ExportItem {
         instance.label = data.label;
         instance.resourceId = data.resourceId;
         instance.selected = data.selected;
+        return instance;
+    }
+}
+
+export class ExtensionItemDescription {
+    appId: string;
+    available: boolean;
+    description: string;
+    editable: boolean;
+    elementId: string;
+    includesDocs: boolean;
+    includesIcon: boolean;
+    installed: boolean;
+    name: string;
+    serviceTagPrefix: SpServiceTagPrefix;
+
+    static fromData(
+        data: ExtensionItemDescription,
+        target?: ExtensionItemDescription,
+    ): ExtensionItemDescription {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ExtensionItemDescription();
+        instance.appId = data.appId;
+        instance.available = data.available;
+        instance.description = data.description;
+        instance.editable = data.editable;
+        instance.elementId = data.elementId;
+        instance.includesDocs = data.includesDocs;
+        instance.includesIcon = data.includesIcon;
+        instance.installed = data.installed;
+        instance.name = data.name;
+        instance.serviceTagPrefix = data.serviceTagPrefix;
+        return instance;
+    }
+}
+
+export class ExtensionItemInstallationRequest {
+    appId: string;
+    publicElement: boolean;
+    serviceTagPrefix: SpServiceTagPrefix;
+
+    static fromData(
+        data: ExtensionItemInstallationRequest,
+        target?: ExtensionItemInstallationRequest,
+    ): ExtensionItemInstallationRequest {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ExtensionItemInstallationRequest();
+        instance.appId = data.appId;
+        instance.publicElement = data.publicElement;
+        instance.serviceTagPrefix = data.serviceTagPrefix;
         return instance;
     }
 }
@@ -3599,6 +3653,7 @@ export class SpServiceRegistration {
     healthCheckPath: string;
     host: string;
     port: number;
+    providedExtensions: ExtensionItemDescription[];
     rev: string;
     scheme: string;
     serviceUrl: string;
@@ -3620,6 +3675,9 @@ export class SpServiceRegistration {
         instance.healthCheckPath = data.healthCheckPath;
         instance.host = data.host;
         instance.port = data.port;
+        instance.providedExtensions = __getCopyArrayFn(
+            ExtensionItemDescription.fromData,
+        )(data.providedExtensions);
         instance.rev = data.rev;
         instance.scheme = data.scheme;
         instance.serviceUrl = data.serviceUrl;
@@ -4114,7 +4172,6 @@ export type SpServiceStatus =
     | 'UNHEALTHY';
 
 export type SpServiceTagPrefix =
-    | 'SYSTEM'
     | 'SP_GROUP'
     | 'ADAPTER'
     | 'DATA_STREAM'
