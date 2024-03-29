@@ -18,20 +18,13 @@
 package org.apache.streampipes.model.extensions.svcdiscovery;
 
 public enum SpServiceTagPrefix {
-  SYSTEM("sys"),
-  SP_GROUP("spgroup"),
-  ADAPTER("adapter"),
-  DATA_STREAM("dstream"),
-  DATA_PROCESSOR("dprocessor"),
-  DATA_SINK("dsink");
-
-  private String prefix;
-
-  SpServiceTagPrefix(String prefix) {
-    this.prefix = prefix;
-  }
+  SP_GROUP,
+  ADAPTER,
+  DATA_STREAM,
+  DATA_PROCESSOR,
+  DATA_SINK;
 
   public String asString() {
-    return this.prefix;
+    return this.name();
   }
 }

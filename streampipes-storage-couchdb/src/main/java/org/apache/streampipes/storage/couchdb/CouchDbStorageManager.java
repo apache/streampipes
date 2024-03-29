@@ -29,7 +29,6 @@ import org.apache.streampipes.storage.api.IDataLakeStorage;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.IDataSinkStorage;
 import org.apache.streampipes.storage.api.IDataStreamStorage;
-import org.apache.streampipes.storage.api.IExtensionsServiceEndpointStorage;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.api.IImageStorage;
@@ -47,7 +46,6 @@ import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.IUserGroupStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
-import org.apache.streampipes.storage.api.IVisualizationStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AssetDashboardStorageImpl;
@@ -62,7 +60,6 @@ import org.apache.streampipes.storage.couchdb.impl.DataProcessorStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataSinkStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataStreamStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceConfigStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceEndpointStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.FileMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.GenericStorageImpl;
@@ -78,7 +75,6 @@ import org.apache.streampipes.storage.couchdb.impl.PipelineStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserActivationTokenImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserStorage;
-import org.apache.streampipes.storage.couchdb.impl.VisualizationStorageImpl;
 
 public enum CouchDbStorageManager implements INoSqlStorage {
 
@@ -132,16 +128,6 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IPipelineCategoryStorage getPipelineCategoryStorageApi() {
     return new PipelineCategoryStorageImpl();
-  }
-
-  @Override
-  public IVisualizationStorage getVisualizationStorageApi() {
-    return new VisualizationStorageImpl();
-  }
-
-  @Override
-  public IExtensionsServiceEndpointStorage getRdfEndpointStorage() {
-    return new ExtensionsServiceEndpointStorageImpl();
   }
 
   @Override

@@ -47,6 +47,8 @@ import { IndicatorChartWidgetModel } from '../components/widgets/indicator/model
 import { SpIndicatorRendererService } from '../components/widgets/indicator/indicator-renderer.service';
 import { TimeSeriesChartWidgetModel } from '../components/widgets/time-series-chart/model/time-series-chart-widget.model';
 import { SpTimeseriesRendererService } from '../components/widgets/time-series-chart/sp-timeseries-renderer.service';
+import { SpEchartsWidgetAppearanceConfigComponent } from '../components/widgets/utils/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
+import { SpTimeSeriesAppearanceConfigComponent } from '../components/widgets/time-series-chart/appearance-config/time-series-appearance-config.component';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerWidgetRegistry {
@@ -78,6 +80,8 @@ export class DataExplorerWidgetRegistry {
             {
                 id: 'heatmap',
                 label: 'Time-Series Heatmap',
+                widgetAppearanceConfigurationComponent:
+                    SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent: HeatmapWidgetConfigComponent,
                 widgetComponent: SpEchartsWidgetComponent<HeatmapWidgetModel>,
                 chartRenderer: this.heatmapRenderer,
@@ -85,6 +89,8 @@ export class DataExplorerWidgetRegistry {
             {
                 id: 'time-series-chart',
                 label: 'Time Series Chart',
+                widgetAppearanceConfigurationComponent:
+                    SpTimeSeriesAppearanceConfigComponent,
                 widgetConfigurationComponent:
                     TimeSeriesChartWidgetConfigComponent,
                 widgetComponent:
@@ -100,6 +106,8 @@ export class DataExplorerWidgetRegistry {
             {
                 id: 'indicator-chart',
                 label: 'Indicator',
+                widgetAppearanceConfigurationComponent:
+                    SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent: IndicatorWidgetConfigComponent,
                 widgetComponent:
                     SpEchartsWidgetComponent<IndicatorChartWidgetModel>,
@@ -108,6 +116,8 @@ export class DataExplorerWidgetRegistry {
             {
                 id: 'scatter-chart',
                 label: 'Scatter',
+                widgetAppearanceConfigurationComponent:
+                    SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent: CorrelationWidgetConfigComponent,
                 widgetComponent:
                     SpEchartsWidgetComponent<CorrelationChartWidgetModel>,
@@ -117,6 +127,8 @@ export class DataExplorerWidgetRegistry {
             {
                 id: 'histogram-chart',
                 label: 'Histogram',
+                widgetAppearanceConfigurationComponent:
+                    SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent:
                     SpHistogramChartWidgetConfigComponent,
                 widgetComponent:
@@ -127,6 +139,8 @@ export class DataExplorerWidgetRegistry {
             {
                 id: 'pie-chart',
                 label: 'Pie',
+                widgetAppearanceConfigurationComponent:
+                    SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent: SpPieChartWidgetConfigComponent,
                 widgetComponent: SpEchartsWidgetComponent<PieChartWidgetModel>,
                 chartRenderer: this.pieRenderer,
@@ -134,6 +148,8 @@ export class DataExplorerWidgetRegistry {
             {
                 id: 'value-heatmap-chart',
                 label: 'Value Distribution Heatmap',
+                widgetAppearanceConfigurationComponent:
+                    SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent:
                     SpValueHeatmapWidgetConfigComponent,
                 widgetComponent:
@@ -143,6 +159,8 @@ export class DataExplorerWidgetRegistry {
             {
                 id: 'density-chart',
                 label: '2D Density Contour',
+                widgetAppearanceConfigurationComponent:
+                    SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent: CorrelationWidgetConfigComponent,
                 widgetComponent:
                     SpEchartsWidgetComponent<CorrelationChartWidgetModel>,

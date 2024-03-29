@@ -37,7 +37,6 @@ import { ResizeService } from './services/resize.service';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { CdkTableModule } from '@angular/cdk/table';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
-import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
 import { GaugeWidgetComponent } from './components/widgets/gauge/gauge-widget.component';
 import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
 import { AreaWidgetComponent } from './components/widgets/area/area-widget.component';
@@ -56,14 +55,61 @@ import { StackedLineChartWidgetComponent } from './components/widgets/stacked-li
 import { EditModeService } from './services/edit-mode.service';
 import { ReloadPipelineService } from './services/reload-pipeline.service';
 import { PlatformServicesModule } from '@streampipes/platform-services';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { ServicesModule } from '../services/services.module';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { DashboardPanelCanDeactivateGuard } from './dashboard.can-deactivate.guard';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
     imports: [
+        MatCardModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatMenuModule,
+        MatSelectModule,
+        MatSidenavModule,
+        MatSlideToggleModule,
+        MatToolbarModule,
+        MatStepperModule,
+        MatRadioModule,
+        MatAutocompleteModule,
+        MatExpansionModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatTooltipModule,
+        MatProgressBarModule,
+        MatButtonToggleModule,
+        MatChipsModule,
+        MatSliderModule,
         NgxEchartsModule.forRoot({
             /**
              * This will import all modules from echarts.
@@ -77,10 +123,13 @@ import { DashboardPanelCanDeactivateGuard } from './dashboard.can-deactivate.gua
         MatTabsModule,
         GridsterModule,
         FlexLayoutModule,
-        CustomMaterialModule,
         FormsModule,
         ColorPickerModule,
         MatGridListModule,
+        MatDividerModule,
+        MatFormFieldModule,
+        MatTableModule,
+        MatButtonModule,
         NgxChartsModule,
         CdkTableModule,
         LeafletModule,
@@ -103,7 +152,6 @@ import { DashboardPanelCanDeactivateGuard } from './dashboard.can-deactivate.gua
                 ],
             },
         ]),
-        SharedUiModule,
     ],
     declarations: [
         BarRaceWidgetComponent,
@@ -133,7 +181,6 @@ import { DashboardPanelCanDeactivateGuard } from './dashboard.can-deactivate.gua
         ReloadPipelineService,
         ResizeService,
         RefreshDashboardService,
-        SemanticTypeUtilsService,
     ],
     exports: [DashboardWidgetComponent, StandaloneDashboardComponent],
 })

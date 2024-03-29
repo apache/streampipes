@@ -52,7 +52,7 @@ public class RemoteOneOfStaticProperty extends StaticProperty {
     this.valueFieldName = valueFieldName;
     this.labelFieldName = labelFieldName;
     this.descriptionFieldName = descriptionFieldName;
-    this.valueRequired = valueRequired;
+    this.optional = valueRequired;
     this.options = new ArrayList<>();
   }
 

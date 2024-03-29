@@ -51,7 +51,6 @@
             "styles": ["src/scss/main.scss"],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/datatables.net/js/jquery.dataTables.js",
               "node_modules/jquery-ui-dist/jquery-ui.js",
               "node_modules/quill/dist/quill.js"
             ]

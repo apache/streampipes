@@ -27,7 +27,6 @@ import java.io.IOException;
 
 import static org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants.DB_NAME;
 import static org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants.DESIGN_DOC_NAME;
-import static org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants.VIEW_NAME;
 
 public class CouchDbViewGenerator {
 
@@ -77,7 +76,7 @@ public class CouchDbViewGenerator {
         .getStatusCode();
 
     if (status == HttpStatus.SC_CREATED) {
-      LOG.info("View {} successfully created", VIEW_NAME);
+      LOG.info("View {} successfully created", DESIGN_DOC_NAME);
     } else {
       LOG.warn("Status code {} from CouchDB - something went wrong during view generation!", status);
     }

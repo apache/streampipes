@@ -18,7 +18,6 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-import { XsService } from '../../NS/xs.service';
 import { ConfigurationInfo } from '../../connect/model/ConfigurationInfo';
 import {
     AnyStaticProperty,
@@ -47,7 +46,6 @@ import { InvocablePipelineElementUnion } from '../../editor/model/editor.model';
     selector: 'sp-app-static-property',
     templateUrl: './static-property.component.html',
     styleUrls: ['./static-property.component.css'],
-    providers: [XsService],
 })
 export class StaticPropertyComponent implements OnInit {
     @Input()

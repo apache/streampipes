@@ -34,10 +34,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GridsterModule } from 'angular-gridster2';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { DataExplorerDashboardGridComponent } from './components/widget-view/grid-view/data-explorer-dashboard-grid.component';
 import { DataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview.component';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
@@ -87,16 +85,64 @@ import { SpPieChartWidgetConfigComponent } from './components/widgets/pie/config
 import { SpInvalidConfigurationComponent } from './components/widgets/utils/invalid-configuration/invalid-configuration.component';
 import { SpConfigurationBoxComponent } from './components/widgets/utils/layout/configuration-box.component';
 import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/visualization-config-outer/visualization-config-outer.component';
+import { SpSelectAxisOptionsComponent } from './components/widgets/utils/select-axis-options/select-axis-options.component';
+import { SpTimeseriesItemConfigComponent } from './components/widgets/utils/select-color-properties/time-series-item-config/time-series-item-config.component';
+import { SpEchartsWidgetAppearanceConfigComponent } from './components/widgets/utils/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
+import { SpTimeSeriesAppearanceConfigComponent } from './components/widgets/time-series-chart/appearance-config/time-series-appearance-config.component';
+import { SpDataZoomConfigComponent } from './components/widgets/utils/data-zoom-config/data-zoom-config.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTableModule } from '@angular/material/table';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
     imports: [
+        MatButtonModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatMenuModule,
+        MatSelectModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatStepperModule,
+        MatRadioModule,
+        MatTableModule,
+        MatAutocompleteModule,
+        MatExpansionModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatDividerModule,
+        MatTooltipModule,
+        MatProgressBarModule,
+        MatButtonToggleModule,
         CommonModule,
         LeafletModule,
         CoreUiModule,
         MatTabsModule,
         GridsterModule,
         FlexLayoutModule,
-        CustomMaterialModule,
         FormsModule,
         ColorPickerModule,
         MatGridListModule,
@@ -182,8 +228,13 @@ import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/
         SpInvalidConfigurationComponent,
         SpConfigurationBoxComponent,
         SpVisualizationConfigOuterComponent,
+        SpSelectAxisOptionsComponent,
+        SpTimeseriesItemConfigComponent,
+        SpEchartsWidgetAppearanceConfigComponent,
+        SpTimeSeriesAppearanceConfigComponent,
+        SpDataZoomConfigComponent,
     ],
-    providers: [SemanticTypeUtilsService],
+    providers: [],
     exports: [],
 })
 export class DataExplorerModule {

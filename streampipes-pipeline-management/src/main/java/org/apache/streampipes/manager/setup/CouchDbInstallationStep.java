@@ -21,28 +21,22 @@ package org.apache.streampipes.manager.setup;
 import org.apache.streampipes.manager.setup.design.UserDesignDocument;
 import org.apache.streampipes.manager.setup.tasks.CreateAssetLinkTypeTask;
 import org.apache.streampipes.manager.setup.tasks.CreateDefaultAssetTask;
-import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
-import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceEndpointStorageImpl;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import org.lightcouch.DesignDocument;
 import org.lightcouch.DesignDocument.MapReduce;
 import org.lightcouch.Response;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.apache.streampipes.manager.setup.design.DesignDocumentUtils.prepareDocument;
 
 public class CouchDbInstallationStep extends InstallationStep {
 
-  private static final String initRdfEndpointHost = "http://localhost:";
   private static final String PREPARING_NOTIFICATIONS_TEXT = "Preparing database "
       + "'notifications'...";
   private static final String PREPARING_USERS_TEXT = "Preparing database 'users'...";
-  private static List<String> initRdfEndpointPorts = new ArrayList<>();
 
   public CouchDbInstallationStep() {
 
@@ -52,7 +46,6 @@ public class CouchDbInstallationStep extends InstallationStep {
   public void install() {
     createDatabases();
     createViews();
-    addRdfEndpoints();
     new CreateAssetLinkTypeTask().execute();
     new CreateDefaultAssetTask().execute();
   }
@@ -77,7 +70,6 @@ public class CouchDbInstallationStep extends InstallationStep {
       Utils.getCouchDbNotificationClient();
       Utils.getCouchDbPipelineCategoriesClient();
       Utils.getCouchDbVisualizationClient();
-      Utils.getCouchDbRdfEndpointClient();
       Utils.getCouchDbDashboardClient();
       Utils.getCouchDbDashboardWidgetClient();
       Utils.getCouchDbLabelClient();
@@ -95,15 +87,6 @@ public class CouchDbInstallationStep extends InstallationStep {
     addNotificationView();
     addLabelView();
     addPipelineView();
-  }
-
-  private void addRdfEndpoints() {
-    ExtensionsServiceEndpointStorageImpl rdfEndpointStorage = new ExtensionsServiceEndpointStorageImpl();
-    initRdfEndpointPorts
-        .forEach(p -> rdfEndpointStorage
-            .addExtensionsServiceEndpoint(new ExtensionsServiceEndpoint(initRdfEndpointHost + p)));
-
-    logSuccess("Discovering pipeline element endpoints...");
   }
 
   private void addNotificationView() {

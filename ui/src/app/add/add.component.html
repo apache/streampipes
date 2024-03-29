@@ -74,13 +74,15 @@
                 <mat-form-field color="accent" appearance="outline">
                     <mat-select
                         [(value)]="selectedCategory"
-                        (selectionChange)="filterByCatergory($event)"
+                        (selectionChange)="filterByCategory($event)"
                     >
-                        <mat-option [value]="'all'"> All </mat-option>
-                        <mat-option [value]="'adapter'"> Adapters </mat-option>
-                        <mat-option [value]="'stream'"> Streams </mat-option>
-                        <mat-option [value]="'sepa'"> Processors </mat-option>
-                        <mat-option [value]="'action'"> Sinks </mat-option>
+                        <mat-option value="all"> All </mat-option>
+                        <mat-option value="ADAPTER"> Adapters </mat-option>
+                        <mat-option value="DATA_STREAM"> Streams </mat-option>
+                        <mat-option value="DATA_PROCESSOR">
+                            Processors
+                        </mat-option>
+                        <mat-option value="DATA_SINK"> Sinks </mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -131,14 +133,6 @@
                 <mat-icon>refresh</mat-icon>
             </button>
         </div>
-        <button
-            mat-icon-button
-            color="accent"
-            (click)="showManageRdfEndpointsDialog()"
-            matTooltip="Manage Endpoints"
-        >
-            <i class="material-icons">settings</i>
-        </button>
     </div>
     <div fxLayout="column" fxFlex="100">
         <div

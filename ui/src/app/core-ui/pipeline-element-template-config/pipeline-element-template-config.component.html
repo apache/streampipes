@@ -27,6 +27,7 @@
                 name="templateName"
                 class="sp"
                 required
+                data-cy="template-name"
             />
         </mat-form-field>
         <mat-form-field fxFlex color="accent">
@@ -37,6 +38,7 @@
                 name="templateDescription"
                 class="sp"
                 required
+                data-cy="template-description"
             />
         </mat-form-field>
         <mat-divider class="divider"></mat-divider>
@@ -85,6 +87,7 @@
                         mat-icon-button
                         color="accent"
                         (click)="deleteTemplate(template._id)"
+                        data-cy="delete-pipeline-element-template"
                     >
                         <mat-icon>delete</mat-icon>
                     </button>

@@ -19,8 +19,6 @@
 
 package org.apache.streampipes.dataexplorer.query.writer.item;
 
-import org.apache.streampipes.dataexplorer.utils.TimeParser;
-
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -39,9 +37,9 @@ public abstract class ItemGenerator {
     StringJoiner joiner = new StringJoiner(separator);
 
     for (int i = 0; i < row.size(); i++) {
-      var value = row.get(i);
+      Object value = row.get(i);
       if (i == 0) {
-        value = TimeParser.parseTime(value.toString());
+        value = getTimestampValue((Double) row.get(i));
       }
       joiner.add(makeItemString(columns.get(i), value));
     }
@@ -53,5 +51,9 @@ public abstract class ItemGenerator {
                                            Object value);
 
   protected abstract String finalizeItem(String item);
+
+  private long getTimestampValue(Double value) {
+    return value.longValue();
+  }
 
 }

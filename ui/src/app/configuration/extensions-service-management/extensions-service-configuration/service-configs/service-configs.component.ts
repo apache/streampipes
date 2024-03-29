@@ -17,20 +17,18 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { XsService } from '../../../../NS/xs.service';
 import { SpServiceConfiguration } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-service-configs',
     templateUrl: './service-configs.component.html',
-    providers: [XsService],
 })
 export class ServiceConfigsComponent {
     @Input() serviceConfiguration: SpServiceConfiguration;
     @Output() updateServiceConfiguration: EventEmitter<SpServiceConfiguration> =
         new EventEmitter<SpServiceConfiguration>();
 
-    constructor(private service: XsService) {}
+    constructor() {}
 
     updateConfiguration(): void {
         this.updateServiceConfiguration.emit(this.serviceConfiguration);

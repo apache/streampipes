@@ -21,7 +21,6 @@ import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { CommonModule } from '@angular/common';
 import { ProfileComponent } from './profile.component';
 import { TokenManagementSettingsComponent } from './components/token/token-management-settings.component';
@@ -35,16 +34,19 @@ import { ChangePasswordDialogComponent } from './dialog/change-password/change-p
 import { ChangeEmailDialogComponent } from './dialog/change-email/change-email-dialog.component';
 import { RouterLink } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
     imports: [
         FlexLayoutModule,
         FormsModule,
+        MatInputModule,
+        MatRadioModule,
         ReactiveFormsModule,
         MatDividerModule,
         MatTabsModule,
         MatButtonModule,
-        CustomMaterialModule,
         CommonModule,
         ClipboardModule,
         CoreUiModule,

@@ -19,7 +19,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -36,7 +35,6 @@ import { SharedUiModule } from '@streampipes/shared-ui';
     imports: [
         AppAssetMonitoringModule,
         CommonModule,
-        CustomMaterialModule,
         FlexLayoutModule,
         FormsModule,
         MatGridListModule,

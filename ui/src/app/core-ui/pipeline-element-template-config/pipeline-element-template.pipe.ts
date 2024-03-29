@@ -18,6 +18,8 @@
 
 import { Injectable, Pipe, PipeTransform } from '@angular/core';
 import {
+    MappingPropertyNary,
+    MappingPropertyUnary,
     RuntimeResolvableAnyStaticProperty,
     RuntimeResolvableOneOfStaticProperty,
     RuntimeResolvableTreeInputStaticProperty,
@@ -34,7 +36,9 @@ export class PipelineElementTemplatePipe implements PipeTransform {
                 !(
                     p instanceof RuntimeResolvableOneOfStaticProperty &&
                     !(p instanceof RuntimeResolvableTreeInputStaticProperty)
-                ),
+                ) &&
+                !(p instanceof MappingPropertyUnary) &&
+                !(p instanceof MappingPropertyNary),
         );
     }
 }

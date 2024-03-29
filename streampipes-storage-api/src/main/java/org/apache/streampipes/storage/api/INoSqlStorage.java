@@ -42,10 +42,6 @@ public interface INoSqlStorage {
 
   IPipelineCategoryStorage getPipelineCategoryStorageApi();
 
-  IVisualizationStorage getVisualizationStorageApi();
-
-  IExtensionsServiceEndpointStorage getRdfEndpointStorage();
-
   IAssetDashboardStorage getAssetDashboardStorage();
 
   IDataLakeStorage getDataLakeStorage();

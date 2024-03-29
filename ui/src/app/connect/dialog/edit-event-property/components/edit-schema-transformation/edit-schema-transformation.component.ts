@@ -18,10 +18,6 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
-    EventPropertyUnion,
-    SemanticTypesService,
-} from '@streampipes/platform-services';
-import {
     debounceTime,
     distinctUntilChanged,
     startWith,
@@ -30,6 +26,8 @@ import {
 import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
+import { SemanticTypesRestService } from '../../../../../../../projects/streampipes/platform-services/src/lib/apis/semantic-types-rest.service';
+import { SemanticTypeService } from '../../../../../core-services/types/semantic-type.service';
 
 @Component({
     selector: 'sp-edit-schema-transformation',
@@ -37,8 +35,6 @@ import { ShepherdService } from '../../../../../services/tour/shepherd.service';
     styleUrls: ['./edit-schema-transformation.component.scss'],
 })
 export class EditSchemaTransformationComponent implements OnInit {
-    soTimestamp = 'http://schema.org/DateTime';
-
     @Input()
     cachedProperty: any;
 
@@ -54,7 +50,8 @@ export class EditSchemaTransformationComponent implements OnInit {
     semanticTypes: Observable<string[]>;
 
     constructor(
-        private semanticTypesService: SemanticTypesService,
+        private semanticTypesRestService: SemanticTypesRestService,
+        private semanticTypeService: SemanticTypeService,
         private shepherdService: ShepherdService,
     ) {}
 
@@ -65,7 +62,7 @@ export class EditSchemaTransformationComponent implements OnInit {
             distinctUntilChanged(),
             switchMap(val => {
                 return val
-                    ? this.semanticTypesService.getSemanticTypes(val)
+                    ? this.semanticTypesRestService.getSemanticTypes(val)
                     : [];
             }),
         );
@@ -74,10 +71,11 @@ export class EditSchemaTransformationComponent implements OnInit {
     editTimestampDomainProperty(checked: boolean) {
         if (checked) {
             this.isTimestampProperty = true;
-            this.cachedProperty.domainProperties = [this.soTimestamp];
+            this.cachedProperty.domainProperties = [
+                this.semanticTypeService.TIMESTAMP,
+            ];
             this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
-            this.cachedProperty.runtimeType =
-                'http://www.w3.org/2001/XMLSchema#long';
+            this.cachedProperty.runtimeType = this.semanticTypeService.XS_LONG;
         } else {
             this.cachedProperty.domainProperties = [];
             this.cachedProperty.propertyScope = 'MEASUREMENT_PROPERTY';

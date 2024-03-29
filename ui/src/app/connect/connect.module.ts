@@ -27,8 +27,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AdapterConfigurationComponent } from './components/adapter-configuration/adapter-configuration.component';
 import { EventSchemaComponent } from './components/adapter-configuration/schema-editor/event-schema/event-schema.component';
 
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
-
 import { RestService } from './services/rest.service';
 
 import { MatInputModule } from '@angular/material/input';
@@ -45,7 +43,6 @@ import { TimestampPipe } from './filter/timestamp.pipe';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 import { TreeModule } from '@ali-hm/angular-tree-component';
-import { XsService } from '../NS/xs.service';
 import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-data-type/edit-data-type.component';
 import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-timestamp-property/edit-timestamp-property.component';
 import { EditUnitTransformationComponent } from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
@@ -77,7 +74,6 @@ import { AdapterConfigurationHeaderComponent } from './components/adapter-config
 import { NewAdapterComponent } from './components/new-adapter/new-adapter.component';
 import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.component';
 import { EventSchemaErrorHintsComponent } from './components/adapter-configuration/schema-editor/event-schema-error-hints/event-schema-error-hints.component';
-import { SpAdapterDetailsOverviewComponent } from './components/adapter-details/adapter-details-overview/adapter-details-overview.component';
 import { SpAdapterDetailsLogsComponent } from './components/adapter-details/adapter-details-logs/adapter-details-logs.component';
 import { SpAdapterDetailsMetricsComponent } from './components/adapter-details/adapter-details-metrics/adapter-details-metrics.component';
 import { CanNotEditAdapterDialog } from './dialog/can-not-edit-adapter-dialog/can-not-edit-adapter-dialog.component';
@@ -88,9 +84,49 @@ import { SpAdapterStartedSuccessComponent } from './dialog/adapter-started/adapt
 import { SpAdapterStartedUpdateMigrationComponent } from './dialog/adapter-started/adapter-started-update-migration/adapter-started-update-migration.component';
 import { SpAdapterStartedPreviewComponent } from './dialog/adapter-started/adapter-started-preview/adapter-started-preview.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatListModule } from '@angular/material/list';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
     imports: [
+        MatCardModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatListModule,
+        MatSelectModule,
+        MatSidenavModule,
+        MatSlideToggleModule,
+        MatTabsModule,
+        MatToolbarModule,
+        MatStepperModule,
+        MatRadioModule,
+        MatAutocompleteModule,
+        MatExpansionModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatTooltipModule,
+        MatProgressBarModule,
+        MatButtonToggleModule,
         CoreUiModule,
         FormsModule,
         ReactiveFormsModule,
@@ -98,10 +134,13 @@ import { MatDividerModule } from '@angular/material/divider';
         FlexLayoutModule,
         MatGridListModule,
         MatDividerModule,
-        CustomMaterialModule,
         MatProgressSpinnerModule,
         MatChipsModule,
         MatInputModule,
+        MatTableModule,
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule,
         MatFormFieldModule,
         MatSliderModule,
         MatSnackBarModule,
@@ -127,10 +166,6 @@ import { MatDividerModule } from '@angular/material/divider';
                         path: 'edit/:elementId',
                         component: EditAdapterComponent,
                     },
-                    // {
-                    //   path: 'details/:elementId/overview',
-                    //   component: SpAdapterDetailsOverviewComponent
-                    // },
                     {
                         path: 'details/:elementId/metrics',
                         component: SpAdapterDetailsMetricsComponent,
@@ -175,7 +210,6 @@ import { MatDividerModule } from '@angular/material/divider';
         SchemaEditorHeaderComponent,
         SpEpSettingsSectionComponent,
         StartAdapterConfigurationComponent,
-        SpAdapterDetailsOverviewComponent,
         SpAdapterDetailsLogsComponent,
         SpAdapterDetailsMetricsComponent,
         SpAdapterOptionsPanelComponent,
@@ -198,7 +232,6 @@ import { MatDividerModule } from '@angular/material/divider';
         StaticPropertyUtilService,
         UnitProviderService,
         TimestampPipe,
-        XsService,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

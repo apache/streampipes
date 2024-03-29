@@ -16,7 +16,12 @@
  *
  */
 
-import { BarSeriesOption, EChartsOption, LineSeriesOption } from 'echarts';
+import {
+    BarSeriesOption,
+    EChartsOption,
+    LineSeriesOption,
+    ScatterSeriesOption,
+} from 'echarts';
 import { SeriesOption } from 'echarts/types/src/util/types';
 import { Injectable } from '@angular/core';
 import { TimeSeriesChartWidgetModel } from './model/time-series-chart-widget.model';
@@ -39,7 +44,6 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         _widgetSize: WidgetSize,
     ): void {
         this.addAxisOptions(widgetConfig, options);
-
         const finalSeries: SeriesOption[] = [];
 
         widgetConfig.visualizationConfig.selectedTimeSeriesChartProperties.forEach(
@@ -87,6 +91,11 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             },
         );
 
+        this.addDataZoomOptions(widgetConfig, options);
+
+        const showTooltip =
+            widgetConfig.baseAppearanceConfig.chartAppearance?.showTooltip;
+
         Object.assign(options, {
             series: finalSeries,
             dataset:
@@ -95,6 +104,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                 show: widgetConfig.visualizationConfig.showSpike,
             },
             tooltip: {
+                show: showTooltip,
                 trigger: 'axis',
                 axisPointer: {
                     type: 'cross',
@@ -150,13 +160,15 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                 y: fieldIndex,
             },
             datasetIndex,
-        } as LineSeriesOption | BarSeriesOption;
+        } as LineSeriesOption | BarSeriesOption | ScatterSeriesOption;
         if (seriesType === 'line') {
             this.appendLineOptions(
                 series as LineSeriesOption,
                 widgetConfig,
                 field,
             );
+        } else if (seriesType === 'scatter') {
+            this.appendScatterOptions(series as ScatterSeriesOption);
         }
         return series;
     }
@@ -164,10 +176,12 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
     private makeSeriesType(
         displayTypes: Record<string, string>,
         field: DataExplorerField,
-    ) {
+    ): 'bar' | 'line' | 'scatter' {
         const type = this.getDisplayType(displayTypes, field);
         if (type === 'bar') {
             return 'bar';
+        } else if (type === 'normal_markers') {
+            return 'scatter';
         } else {
             return 'line';
         }
@@ -178,6 +192,10 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         field: DataExplorerField,
     ): string {
         return displayTypes[field.fullDbName + field.sourceIndex];
+    }
+
+    private appendScatterOptions(series: ScatterSeriesOption): void {
+        series.symbolSize = 4;
     }
 
     private appendLineOptions(
@@ -223,6 +241,19 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         }
     }
 
+    private addDataZoomOptions(
+        config: TimeSeriesChartWidgetModel,
+        options: EChartsOption,
+    ): void {
+        Object.assign(options, {
+            dataZoom: config.baseAppearanceConfig.dataZoom?.show
+                ? {
+                      type: config.baseAppearanceConfig.dataZoom?.type,
+                  }
+                : [],
+        });
+    }
+
     private addAxisOptions(
         config: TimeSeriesChartWidgetModel,
         options: EChartsOption,
@@ -232,6 +263,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             0,
             config.baseAppearanceConfig as WidgetBaseAppearanceConfig,
         );
+
         const yAxisOptions: YAXisOption[] = [];
 
         const uniqueAxes = new Set(
@@ -239,12 +271,20 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                 a.localeCompare(b),
             ),
         );
+        let axisIndex = 0;
 
         uniqueAxes.forEach(axis => {
+            const settings =
+                axisIndex === 0
+                    ? config.visualizationConfig.leftAxis
+                    : config.visualizationConfig.rightAxis;
             yAxisOptions.push({
                 type: 'value',
                 position: axis as CartesianAxisPosition,
+                min: settings.autoScaleActive ? undefined : settings.axisMin,
+                max: settings.autoScaleActive ? undefined : settings.axisMax,
             });
+            axisIndex++;
         });
 
         Object.assign(options, {

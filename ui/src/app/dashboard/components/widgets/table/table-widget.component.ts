@@ -21,10 +21,10 @@ import { BaseStreamPipesWidget } from '../base/base-widget';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 import { MatTableDataSource } from '@angular/material/table';
 import { TableConfig } from './table-config';
-import { SemanticTypeUtilsService } from '../../../../core-services/semantic-type/semantic-type-utils.service';
 import { ResizeService } from '../../../services/resize.service';
 import { DatalakeRestService } from '@streampipes/platform-services';
 import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
+import { SemanticTypeService } from '../../../../core-services/types/semantic-type.service';
 
 @Component({
     selector: 'sp-table-widget',
@@ -46,7 +46,7 @@ export class TableWidgetComponent
     constructor(
         dataLakeService: DatalakeRestService,
         resizeService: ResizeService,
-        private semanticTypeUtils: SemanticTypeUtilsService,
+        private semanticTypeUtils: SemanticTypeService,
     ) {
         super(dataLakeService, resizeService, false);
     }

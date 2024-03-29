@@ -74,8 +74,29 @@ export interface IWidget<T extends DataExplorerWidgetModel> {
     label: string;
     widgetComponent: any;
     widgetConfigurationComponent?: any;
+    widgetAppearanceConfigurationComponent?: any;
     chartRenderer?: SpEchartsRenderer<T>;
     alias?: string;
+}
+
+export interface WidgetChartAppearanceConfig {
+    showLegend: boolean;
+    showToolbox: boolean;
+    showTooltip: boolean;
+}
+
+export interface DataZoomConfig {
+    show: boolean;
+    type: 'slider' | 'inside';
+}
+
+export interface TimeSeriesAppearanceConfig
+    extends WidgetEchartsAppearanceConfig {
+    dataZoom: DataZoomConfig;
+}
+
+export interface WidgetEchartsAppearanceConfig {
+    chartAppearance: WidgetChartAppearanceConfig;
 }
 
 export interface WidgetBaseAppearanceConfig {
@@ -102,6 +123,12 @@ export interface FieldProvider {
     booleanFields: DataExplorerField[];
     dimensionFields: DataExplorerField[];
     nonNumericFields: DataExplorerField[];
+}
+
+export interface AxisConfig {
+    autoScaleActive: boolean;
+    axisMin: number;
+    axisMax: number;
 }
 
 export interface DataExplorerVisConfig {

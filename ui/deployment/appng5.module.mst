@@ -25,8 +25,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 
-import { CustomMaterialModule } from './CustomMaterial/custom-material.module';
-
 import { CoreModule } from './core/core.module';
 import { LoginModule } from './login/login.module';
 import { HomeModule } from './home/home.module';
@@ -81,7 +79,6 @@ import * as $ from 'jquery';
         BrowserModule,
         BrowserAnimationsModule,
         CoreModule,
-        CustomMaterialModule,
         MatGridListModule,
         MatIconModule,
         FlexLayoutModule,

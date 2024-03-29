@@ -19,8 +19,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
+    ExtensionItemDescription,
     PlatformServicesCommons,
-    ExtensionsServiceEndpointItem,
 } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -32,46 +32,21 @@ export class AddService {
         private platformServicesCommons: PlatformServicesCommons,
     ) {}
 
-    getRdfEndpoints(): Observable<any> {
-        return this.http.get(
-            this.platformServicesCommons.apiBasePath + '/rdfendpoints',
-        );
-    }
-
-    getRdfEndpointItems(): Observable<ExtensionsServiceEndpointItem[]> {
+    getExtensionItems(): Observable<ExtensionItemDescription[]> {
         return this.http
-            .get(
-                this.platformServicesCommons.apiBasePath +
-                    '/rdfendpoints/items',
-            )
+            .get(this.platformServicesCommons.apiBasePath + '/extension-items')
             .pipe(
                 map(response => {
                     return (response as any[]).map(item =>
-                        ExtensionsServiceEndpointItem.fromData(item),
+                        ExtensionItemDescription.fromData(item),
                     );
                 }),
             );
     }
 
-    addRdfEndpoint(rdfEndpoint): Observable<any> {
+    getExtensionItemIcon(item: ExtensionItemDescription): Observable<any> {
         return this.http.post(
-            this.platformServicesCommons.apiBasePath + '/rdfendpoints',
-            rdfEndpoint,
-        );
-    }
-
-    removeRdfEndpoint(rdfEndpointId): Observable<any> {
-        return this.http.delete(
-            this.platformServicesCommons.apiBasePath +
-                '/rdfendpoints/' +
-                rdfEndpointId,
-        );
-    }
-
-    getRdfEndpointIcon(item: ExtensionsServiceEndpointItem): Observable<any> {
-        return this.http.post(
-            this.platformServicesCommons.apiBasePath +
-                '/rdfendpoints/items/icon',
+            this.platformServicesCommons.apiBasePath + '/extension-items/icon',
             item,
             { responseType: 'blob' },
         );

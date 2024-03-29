@@ -69,6 +69,7 @@ import {
     EVENT_CONNECTION_MOVED,
 } from '@jsplumb/browser-ui';
 import { PipelineStyleService } from '../../services/pipeline-style.service';
+import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 
 @Component({
     selector: 'sp-pipeline',
@@ -112,9 +113,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     idCounter: any;
     currentZoomLevel: any;
 
-    canvasWidth = '100%';
-    canvasHeight = '100%';
-
     JsplumbBridge: JsplumbBridge;
 
     previewModeActive = false;
@@ -127,6 +125,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         private jsplumbFactoryService: JsplumbFactoryService,
         private objectProvider: ObjectProvider,
         private editorService: EditorService,
+        private idGeneratorService: IdGeneratorService,
         private shepherdService: ShepherdService,
         private pipelineStyleService: PipelineStyleService,
         private pipelineValidationService: PipelineValidationService,
@@ -244,7 +243,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
                     const newElementId =
                         pipelineElement.elementId +
                         ':' +
-                        this.jsplumbService.makeId(5);
+                        this.idGeneratorService.generate(5);
                     const pipelineElementConfig =
                         this.jsplumbService.createNewPipelineElementConfig(
                             pipelineElement,

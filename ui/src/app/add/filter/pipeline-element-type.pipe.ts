@@ -17,17 +17,21 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
+import { ExtensionItemDescription } from '@streampipes/platform-services';
 
 @Pipe({
     name: 'pipelineElementTypeFilter',
     pure: false,
 })
 export class PipelineElementTypeFilter implements PipeTransform {
-    transform(value: any[], type: string): any[] {
-        if (type === 'all') {
+    transform(
+        value: ExtensionItemDescription[],
+        serviceTagPrefix: string,
+    ): ExtensionItemDescription[] {
+        if (serviceTagPrefix === 'all') {
             return value;
         } else {
-            return value.filter(v => v.type === type);
+            return value.filter(v => v.serviceTagPrefix === serviceTagPrefix);
         }
     }
 }
