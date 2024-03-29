@@ -35,20 +35,21 @@ export class UserDefinedOutputStrategyComponent
     extends BaseOutputStrategy<UserDefinedOutputStrategy>
     implements OnInit
 {
-    primitiveClasses = [
-        { label: 'String', id: this.semanticTypeService.XS_STRING },
-        { label: 'Boolean', id: this.semanticTypeService.XS_BOOLEAN },
-        { label: 'Integer', id: this.semanticTypeService.XS_INTEGER },
-        { label: 'Long', id: this.semanticTypeService.XS_LONG },
-        { label: 'Double', id: this.semanticTypeService.XS_DOUBLE },
-        { label: 'Float', id: this.semanticTypeService.XS_FLOAT },
-    ];
+    primitiveClasses = [];
 
     constructor(
         private idGeneratorService: IdGeneratorService,
         private semanticTypeService: SemanticTypeService,
     ) {
         super();
+        this.primitiveClasses = [
+            { label: 'String', id: this.semanticTypeService.XS_STRING },
+            { label: 'Boolean', id: this.semanticTypeService.XS_BOOLEAN },
+            { label: 'Integer', id: this.semanticTypeService.XS_INTEGER },
+            { label: 'Long', id: this.semanticTypeService.XS_LONG },
+            { label: 'Double', id: this.semanticTypeService.XS_DOUBLE },
+            { label: 'Float', id: this.semanticTypeService.XS_FLOAT },
+        ];
     }
 
     ngOnInit() {

@@ -100,12 +100,6 @@ module.exports = withNativeFederation({
         //   requiredVersion: 'auto',
         //   eager: true,
         // },
-        // '@angular/dialog': {
-        //   singleton: true,
-        //   strictVersion: true,
-        //   requiredVersion: 'auto',
-        //   eager: true,
-        // },
         // '@angular/cdk/a11y': {
         //   singleton: true,
         //   strictVersion: true,
