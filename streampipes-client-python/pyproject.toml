@@ -90,7 +90,7 @@ mkdocs-jupyter = "0.24.0"
 mkdocs-literate-nav = "0.6.0"
 mkdocs-material = "9.3.1"
 mkdocstrings = { version = "0.24.0", extras = ["python"] }
-numpydoc = "1.6.0"
+numpydoc = "1.7.0"
 pytkdocs = { version = "0.16.1", extras = ["numpy-style"] }
 
 [tool.poetry.group.stubs]
