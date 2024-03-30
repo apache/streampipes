@@ -1,16 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "paths": {
-      "@streampipes/platform-services": [
-        "../projects/streampipes/platform-services/src/public-api.ts"
-      ],
-      "@streampipes/shared-ui": [
-        "../projects/streampipes/shared-ui/src/public-api.ts"
-      ]
-    },
     "outDir": "../out-tsc/app",
-    "baseUrl": "./",
     "types": []
   },
   "files": ["main.ts", "polyfills.ts"],

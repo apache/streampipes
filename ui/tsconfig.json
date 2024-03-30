@@ -1,6 +1,14 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "@streampipes/platform-services": [
+        "projects/streampipes/platform-services/src/public-api.ts"
+      ],
+      "@streampipes/shared-ui": [
+        "projects/streampipes/shared-ui/src/public-api.ts"
+      ]
+    },
     "downlevelIteration": true,
     "importHelpers": true,
     "outDir": "./dist/out-tsc",

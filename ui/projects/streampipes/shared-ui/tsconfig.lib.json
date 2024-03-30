@@ -2,11 +2,6 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "paths": {
-      "@streampipes/platform-services": [
-        "../platform-services/src/public-api.ts"
-      ]
-    },
     "outDir": "../../../out-tsc/lib",
     "target": "es2020",
     "declaration": true,
