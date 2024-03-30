@@ -150,8 +150,8 @@ fs.writeFileSync(
 console.log('Moved: styling variables file');
 
 fs.writeFileSync(
-    'webpack.partial.dev.js',
-    fs.readFileSync('deployment/webpack.partial.dev.js', 'utf8'),
+    'src/proxy.conf.json',
+    fs.readFileSync('deployment/proxy.conf.json', 'utf8'),
 );
 console.log('Moved: webpack dev config');
 

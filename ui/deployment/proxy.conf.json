@@ -1,0 +1,6 @@
+{
+  "/streampipes-backend": {
+    "target": "http://localhost:8030",
+    "secure": false
+  }
+}

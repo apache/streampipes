@@ -35,7 +35,7 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "browser": "src/main.ts",
-            "outputPath": "dist/app",
+            "outputPath": "dist/streampipes/ui",
             "index": "src/index.html",
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": ["src/polyfills.ts", "es-module-shims"],
