@@ -31,6 +31,7 @@ src/assets/img/sp/logo.png
 src/assets/img/sp/logo-navigation.png
 src/assets/img/favicon/favicon-96x96.png
 src/proxy.conf.json
+src/tsconfig.federation.json
 src/scss/_variables.scss
 # compiled output
 /dist
