@@ -17,7 +17,6 @@
  */
 
 import { CategoryAlreadyInPipelinePipe } from './category-already-in-pipeline.filter';
-import { PipelineOperationsService } from './services/pipeline-operations.service';
 import { PipelinesComponent } from './pipelines.component';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
@@ -141,11 +140,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         SpFunctionsMetricsComponent,
         SpFunctionsLogsComponent,
     ],
-    providers: [
-        PipelineOperationsService,
-        CategoryAlreadyInPipelinePipe,
-        PipelineInCategoryPipe,
-    ],
+    providers: [CategoryAlreadyInPipelinePipe, PipelineInCategoryPipe],
     exports: [PipelinesComponent],
 })
 export class PipelinesModule {

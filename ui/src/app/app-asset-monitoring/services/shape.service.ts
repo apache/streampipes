@@ -24,7 +24,7 @@ import {
     SelectedVisualizationData,
 } from '../model/selected-visualization-data.model';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ShapeService {
     constructor() {}
 

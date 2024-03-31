@@ -26,7 +26,6 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PipelineElementTypeFilter } from './filter/pipeline-element-type.pipe';
 import { EndpointItemComponent } from './components/endpoint-item/endpoint-item.component';
-import { AddService } from './services/add.service';
 import { OrderByPipe } from './filter/order-by.pipe';
 import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
 import { PipelineElementNameFilter } from './filter/pipeline-element-name.pipe';
@@ -85,7 +84,6 @@ import { SharedUiModule } from '@streampipes/shared-ui';
         PipelineElementTypeFilter,
     ],
     providers: [
-        AddService,
         OrderByPipe,
         PipelineElementInstallationStatusFilter,
         PipelineElementNameFilter,

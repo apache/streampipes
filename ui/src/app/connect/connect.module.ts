@@ -27,11 +27,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AdapterConfigurationComponent } from './components/adapter-configuration/adapter-configuration.component';
 import { EventSchemaComponent } from './components/adapter-configuration/schema-editor/event-schema/event-schema.component';
 
-import { RestService } from './services/rest.service';
-
 import { MatInputModule } from '@angular/material/input';
 import { AdapterStartedDialog } from './dialog/adapter-started/adapter-started-dialog.component';
-import { StaticPropertyUtilService } from '../core-ui/static-properties/static-property-util.service';
 import { AdapterDescriptionComponent } from './components/data-marketplace/adapter-description/adapter-description.component';
 import { DataMarketplaceComponent } from './components/data-marketplace/data-marketplace.component';
 
@@ -222,7 +219,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
         CanNotEditAdapterDialog,
         AllAdapterActionsComponent,
     ],
-    providers: [StaticPropertyUtilService, TimestampPipe],
+    providers: [TimestampPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ConnectModule {}

@@ -22,7 +22,7 @@ import { PlatformServicesCommons } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 import { RegistrationModel } from '../components/register/registration.model';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class RestorePasswordService {
     constructor(
         private http: HttpClient,

@@ -19,7 +19,7 @@ import { Injectable } from '@angular/core';
 import { RestApi } from './rest-api.service';
 import { BehaviorSubject } from 'rxjs';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class NotificationCountService {
     public unreadNotificationCount$ = new BehaviorSubject(0);
     lockNotificationId: string;
