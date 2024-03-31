@@ -19,7 +19,7 @@
 import { UnitDescription } from '../model/UnitDescription';
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class UnitProviderService {
     private units: UnitDescription[] = [
         {

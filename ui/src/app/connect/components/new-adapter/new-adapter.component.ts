@@ -22,7 +22,6 @@ import {
     AdapterService,
 } from '@streampipes/platform-services';
 import { ActivatedRoute } from '@angular/router';
-import { ConnectService } from '../../services/connect.service';
 import { SpConnectRoutes } from '../../connect.routes';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
 
@@ -38,7 +37,6 @@ export class NewAdapterComponent implements OnInit {
 
     constructor(
         private breadcrumbService: SpBreadcrumbService,
-        private connectService: ConnectService,
         private adapterService: AdapterService,
         private route: ActivatedRoute,
     ) {}
