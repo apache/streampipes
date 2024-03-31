@@ -22,7 +22,7 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class RestApi {
     encodeURIComponent: any;
 
