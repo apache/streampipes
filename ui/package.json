@@ -81,7 +81,7 @@
     "rxjs": "^7.8.0",
     "shepherd.js": "^11.2.0",
     "stream-browserify": "3.0.0",
-    "swagger-ui": "5.11.10",
+    "swagger-ui-dist": "5.13.0",
     "tslib": "^2.6.2",
     "zone.js": "~0.14.4"
   },
@@ -127,9 +127,7 @@
     "ng-packagr": "^17.3.0",
     "path": "^0.12.7",
     "prettier": "3.1.0",
-    "raw-loader": "^4.0.2",
     "resize-observer-polyfill": "^1.5.1",
-    "to-string-loader": "^1.2.0",
     "typescript": "5.3.3"
   }
 }

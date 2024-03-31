@@ -17,7 +17,7 @@
  */
 
 import { Component, ElementRef, OnInit } from '@angular/core';
-import SwaggerUI from 'swagger-ui';
+import { SwaggerUIBundle } from 'swagger-ui-dist';
 
 @Component({
     selector: 'sp-apidocs',
@@ -28,11 +28,11 @@ export class ApidocsComponent implements OnInit {
     constructor(private el: ElementRef) {}
 
     ngOnInit(): void {
-        SwaggerUI({
+        SwaggerUIBundle({
             url: '/streampipes-backend/apidocs',
             domNode: this.el.nativeElement.querySelector('.swagger-ui'),
             deepLinking: false,
-            presets: [SwaggerUI.presets.apis],
+            presets: [SwaggerUIBundle.presets.apis],
         });
     }
 }
