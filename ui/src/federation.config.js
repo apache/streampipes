@@ -22,31 +22,36 @@ const {
 } = require('@angular-architects/native-federation/config');
 
 module.exports = withNativeFederation({
-    shared: share(
-        [
-            '@angular/animations',
-            '@angular/core',
-            '@angular/common',
-            '@angular/compiler',
-            '@angular/forms',
-            '@angular/platform-browser',
-            '@angular/platform-browser-dynamic',
-            '@angular/router',
-            '@angular/cdk',
-            '@angular/material',
-        ].reduce(
-            (acc, name) => ({
-                ...acc,
-                [name]: {
-                    singleton: true,
-                    strictVersion: true,
-                    requiredVersion: 'auto',
-                    includeSecondaries: true,
-                },
-            }),
-            {},
+    shared: {
+        ...share(
+            [
+                '@angular/animations',
+                '@angular/core',
+                '@angular/common',
+                '@angular/compiler',
+                '@angular/forms',
+                '@angular/platform-browser',
+                '@angular/platform-browser-dynamic',
+                '@angular/router',
+                '@angular/cdk',
+                '@angular/material',
+                'echarts',
+                'ngx-echarts',
+                'rxjs',
+            ].reduce(
+                (acc, name) => ({
+                    ...acc,
+                    [name]: {
+                        singleton: true,
+                        strictVersion: true,
+                        requiredVersion: 'auto',
+                        includeSecondaries: true,
+                    },
+                }),
+                {},
+            ),
         ),
-    ),
+    },
 
     skip: [],
 });
