@@ -188,8 +188,10 @@ $accent: map-get($custom-theme-light, accent);
     font-size: 11pt;
 }
 
+@include mat.all-component-themes($custom-theme-light);
+
 .dark-mode {
-    @include mat.all-component-themes($custom-theme-dark);
+    @include mat.all-component-colors($custom-theme-dark);
 
     .base-style {
         color: rgba(255, 255, 255, 0.87);
@@ -220,9 +222,7 @@ $accent: map-get($custom-theme-light, accent);
 }
 
 .light-mode {
-    @include mat.core-theme($custom-theme-light);
-    @include mat.all-component-typographies();
-    @include mat.all-component-themes($custom-theme-light);
+    @include mat.all-component-colors($custom-theme-light);
 
     .small-form-field-density {
         @include mat.form-field-density(-3);
