@@ -50,7 +50,7 @@ public class UserInfoUtil {
     UserInfo userInfo = new UserInfo();
     userInfo.setUsername(principal.getUsername());
     userInfo.setDisplayName(principal.getUsername());
-    userInfo.setRoleNames(roles);
+    userInfo.setRoles(roles);
 
     return userInfo;
   }

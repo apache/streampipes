@@ -113,7 +113,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
   private synchronized void createNewUser(UserRegistrationData data, String encryptedPassword) {
 
-    List<Role> roles = data.roleNames().stream().map(Role::valueOf).toList();
+    List<Role> roles = data.roles().stream().map(Role::valueOf).toList();
     UserAccount user = UserAccount.from(data.username(), encryptedPassword, new HashSet<>(roles));
     user.setUsername(data.username());
     user.setPassword(encryptedPassword);

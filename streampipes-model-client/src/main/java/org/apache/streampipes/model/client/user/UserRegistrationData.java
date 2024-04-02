@@ -20,5 +20,5 @@ package org.apache.streampipes.model.client.user;
 
 import java.util.List;
 
-public record UserRegistrationData(String username, String password, List<String> roleNames) {
+public record UserRegistrationData(String username, String password, List<String> roles) {
 }
