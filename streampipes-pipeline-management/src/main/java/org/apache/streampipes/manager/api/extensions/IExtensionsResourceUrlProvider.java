@@ -15,13 +15,16 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.svcdiscovery.api.model;
 
-public class SpServicePathPrefix {
+package org.apache.streampipes.manager.api.extensions;
 
-  public static final String DATA_PROCESSOR = "sepa";
-  public static final String DATA_SINK = "sec";
-  public static final String DATA_STREAM = "stream";
-  public static final String ADAPTER = "api/v1/worker/adapters";
+import org.apache.streampipes.model.extensions.ExtensionItemDescription;
+import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
+
+public interface IExtensionsResourceUrlProvider {
+
+  String getDescriptionUrl(ExtensionItemInstallationRequest installationReq);
+
+  String getIconUrl(ExtensionItemDescription endpointItem);
 
 }

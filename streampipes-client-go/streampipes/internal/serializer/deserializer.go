@@ -20,6 +20,7 @@ package serializer
 import (
 	"encoding/json"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/data_lake"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/streampipes_version"
 )
 
 type Deserializer interface {
@@ -36,7 +37,7 @@ func NewDataLakeMeasuresDeserializer() *DataLakeMeasuresDeserializer {
 	return &DataLakeMeasuresDeserializer{}
 }
 
-func (u *DataLakeMeasuresDeserializer) Unmarshal(data []byte) (interface{}, error) {
+func (d *DataLakeMeasuresDeserializer) Unmarshal(data []byte) (interface{}, error) {
 	var dataLakeMeasures []data_lake.DataLakeMeasure
 	err := json.Unmarshal(data, &dataLakeMeasures)
 	if err != nil {
@@ -51,7 +52,7 @@ func NewDataLakeMeasureDeserializer() *DataLakeMeasureDeserializer {
 	return &DataLakeMeasureDeserializer{}
 }
 
-func (u *DataLakeMeasureDeserializer) Unmarshal(data []byte) (interface{}, error) {
+func (d *DataLakeMeasureDeserializer) Unmarshal(data []byte) (interface{}, error) {
 	var dataLakeMeasure data_lake.DataLakeMeasure
 	err := json.Unmarshal(data, &dataLakeMeasure)
 	if err != nil {
@@ -66,8 +67,23 @@ func NewDataSeriesDeserializer() *DataSeriesDeserializer {
 	return &DataSeriesDeserializer{}
 }
 
-func (u *DataSeriesDeserializer) Unmarshal(data []byte) (interface{}, error) {
+func (d *DataSeriesDeserializer) Unmarshal(data []byte) (interface{}, error) {
 	var dataSeries data_lake.DataSeries
+	err := json.Unmarshal(data, &dataSeries)
+	if err != nil {
+		return nil, err
+	}
+	return dataSeries, nil
+}
+
+type StreamPipesVersionDeserializer struct{}
+
+func NewStreamPipesVersionDeserializer() *StreamPipesVersionDeserializer {
+	return &StreamPipesVersionDeserializer{}
+}
+
+func (d *StreamPipesVersionDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var dataSeries streampipes_version.Versions
 	err := json.Unmarshal(data, &dataSeries)
 	if err != nil {
 		return nil, err

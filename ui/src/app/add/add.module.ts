@@ -38,6 +38,11 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
     imports: [
@@ -45,7 +50,12 @@ import { MatSelectModule } from '@angular/material/select';
         CoreUiModule,
         FormsModule,
         FlexLayoutModule,
+        MatButtonModule,
+        MatCheckboxModule,
         MatDividerModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatMenuModule,
         MatOptionModule,
         MatIconModule,
         MatSelectModule,

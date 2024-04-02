@@ -17,8 +17,14 @@
  */
 package org.apache.streampipes.sdk.utils;
 
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
+
+/**
+ * @deprecated Use {@link ExtensionAssetType instead}
+ */
+@Deprecated(forRemoval = true, since = "0.95.0")
 public class Assets {
 
-  public static final String DOCUMENTATION = "documentation.md";
-  public static final String ICON = "icon.png";
+  public static final String DOCUMENTATION = ExtensionAssetType.DOCUMENTATION;
+  public static final String ICON = ExtensionAssetType.ICON;
 }

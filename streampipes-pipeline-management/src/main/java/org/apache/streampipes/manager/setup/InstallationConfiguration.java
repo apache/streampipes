@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.model.client.setup.InitialSettings;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,6 @@ public class InstallationConfiguration {
 
   public static List<Runnable> getBackgroundInstallationSteps(InitialSettings settings,
                                                               BackgroundTaskNotifier callback) {
-    return List.of(new ExtensionsInstallationTask(settings, callback));
+    return List.of(new ExtensionsInstallationTask(settings, StorageDispatcher.INSTANCE.getNoSqlStore(), callback));
   }
 }

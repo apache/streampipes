@@ -40,7 +40,7 @@ export * from './lib/apis/permissions.service';
 export * from './lib/apis/pipeline.service';
 export * from './lib/apis/pipeline-canvas-metadata.service';
 export * from './lib/apis/pipeline-element.service';
-export * from './lib/apis/pipeline-element-endpoint.service';
+export * from './lib/apis/extension-installation.service';
 export * from './lib/apis/pipeline-element-template.service';
 export * from './lib/apis/pipeline-monitoring.service';
 export * from './lib/apis/pipeline-template.service';

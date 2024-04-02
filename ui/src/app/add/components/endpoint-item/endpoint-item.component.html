@@ -49,13 +49,13 @@
         <div style="margin-right: 10px; margin-left: 10px; margin-top: 10px">
             <div
                 *ngIf="!item.includesIcon || iconError"
-                class="draggable-icon {{ item.type }}"
+                class="draggable-icon {{ cssMapper[item.serviceTagPrefix] }}"
             >
                 {{ iconText(item.name) }}
             </div>
             <div
                 *ngIf="item.includesIcon && iconReady"
-                class="draggable-icon {{ item.type }}"
+                class="draggable-icon {{ cssMapper[item.serviceTagPrefix] }}"
             >
                 <img class="icon" [src]="image" />
             </div>
@@ -101,7 +101,7 @@
                     <mat-menu #menu="matMenu">
                         <button
                             mat-menu-item
-                            (click)="refresh(item.elementId)"
+                            (click)="refresh(item)"
                             [disabled]="!item.available"
                         >
                             <mat-icon>refresh</mat-icon>
