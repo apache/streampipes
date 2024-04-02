@@ -90,14 +90,14 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
   public void registerUser(UserRegistrationData data) throws UsernameAlreadyTakenException {
     try {
-      createUser(data);
+      validateAndRegisterNewUser(data);
       createTokenAndSendActivationMail(data.username());
     } catch (IOException e) {
       LOG.error("Registration of user could not be completed: {}", e.getMessage());
     }
   }
 
-  private synchronized void createUser(UserRegistrationData data) {
+  private synchronized void validateAndRegisterNewUser(UserRegistrationData data) {
     if (db.checkUserExists(data.username())) {
       throw new UsernameAlreadyTakenException("Username already taken");
     }
@@ -107,6 +107,12 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
       throw new SpException("Error during password encryption: %s".formatted(e.getMessage()));
     }
+
+    createNewUser(data, encryptedPassword);
+  }
+
+  private synchronized void createNewUser(UserRegistrationData data, String encryptedPassword) {
+
     List<Role> roles = data.roleNames().stream().map(Role::valueOf).toList();
     UserAccount user = UserAccount.from(data.username(), encryptedPassword, new HashSet<>(roles));
     user.setUsername(data.username());

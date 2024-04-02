@@ -27,7 +27,7 @@ public class UserInfo {
 
   private String username;
   private String displayName;
-  private Set<String> roles;
+  private Set<String> roleNames;
   private boolean showTutorial;
   private boolean darkMode;
 
@@ -50,12 +50,12 @@ public class UserInfo {
     this.displayName = displayName;
   }
 
-  public Set<String> getRoles() {
-    return roles;
+  public Set<String> getRoleNames() {
+    return roleNames;
   }
 
-  public void setRoles(Set<String> roles) {
-    this.roles = roles;
+  public void setRoleNames(Set<String> roleNames) {
+    this.roleNames = roleNames;
   }
 
   public boolean isShowTutorial() {

@@ -86,7 +86,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     UserInfo userInfo = new UserInfo();
     userInfo.setUsername(user.get("username").toString());
     userInfo.setDisplayName(user.get("displayName").toString());
-    userInfo.setRoles(new HashSet<>((List<String>) user.get("roleNames")));
+    userInfo.setRoleNames(new HashSet<>((List<String>) user.get("roleNames")));
 
     return userInfo;
   }
