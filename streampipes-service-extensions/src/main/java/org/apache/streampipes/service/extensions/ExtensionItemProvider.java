@@ -18,6 +18,10 @@
 
 package org.apache.streampipes.service.extensions;
 
+import org.apache.streampipes.extensions.api.assets.AssetResolver;
+import org.apache.streampipes.extensions.api.assets.DefaultAssetResolver;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -42,19 +46,36 @@ public class ExtensionItemProvider {
    */
   public Set<ExtensionItemDescription> getAllItemDescriptions() {
     return Stream.concat(
-            DeclarersSingleton.getInstance().getDeclarers().values().stream()
-                .map(declarer -> declarer.declareConfig().getDescription()),
-            DeclarersSingleton.getInstance().getAdapters().stream().map(a -> a.declareConfig().getAdapterDescription())
+            getPipelineElements(),
+            getAdapterDescriptions()
         )
-        .peek(this::applyLocales)
         .map(entity -> entity.toExtensionDescription(false, true, true))
         .collect(Collectors.toSet());
   }
 
-  private void applyLocales(NamedStreamPipesEntity entity) {
+  private Stream<NamedStreamPipesEntity> getPipelineElements() {
+    return
+        DeclarersSingleton.getInstance().getDeclarers().values()
+            .stream()
+            .map(declarer -> declarer.declareConfig().getDescription())
+            .peek(entity -> applyLocales(entity, new DefaultAssetResolver(entity.getAppId())))
+            .map(e -> (NamedStreamPipesEntity) e);
+  }
+
+  private Stream<NamedStreamPipesEntity> getAdapterDescriptions() {
+    return
+        DeclarersSingleton.getInstance().getAdapters()
+            .stream()
+            .map(StreamPipesAdapter::declareConfig)
+            .peek(config -> applyLocales(config.getAdapterDescription(), config.getAssetResolver()))
+            .map(IAdapterConfiguration::getAdapterDescription);
+  }
+
+  private void applyLocales(NamedStreamPipesEntity entity,
+                            AssetResolver assetResolver) {
     try {
       if (entity.isIncludesLocales()) {
-        var labelGenerator = new LabelGenerator<>(entity);
+        var labelGenerator = new LabelGenerator<>(entity, true, assetResolver);
         entity.setName(labelGenerator.getElementTitle());
         entity.setDescription(labelGenerator.getElementDescription());
       }
