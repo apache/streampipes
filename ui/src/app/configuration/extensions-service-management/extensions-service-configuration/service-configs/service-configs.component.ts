@@ -18,6 +18,7 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SpServiceConfiguration } from '@streampipes/platform-services';
+import { SemanticTypeService } from '../../../../core-services/types/semantic-type.service';
 
 @Component({
     selector: 'sp-service-configs',
@@ -28,7 +29,7 @@ export class ServiceConfigsComponent {
     @Output() updateServiceConfiguration: EventEmitter<SpServiceConfiguration> =
         new EventEmitter<SpServiceConfiguration>();
 
-    constructor() {}
+    constructor(public semanticTypeService: SemanticTypeService) {}
 
     updateConfiguration(): void {
         this.updateServiceConfiguration.emit(this.serviceConfiguration);

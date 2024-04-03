@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.extensions.connect;
 
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -44,8 +45,8 @@ public class AdapterDescriptionResource extends AbstractSharedRestInterface {
     var adapterDescriptionOpt = DeclarersSingleton.getInstance().getAdapter(id);
     if (adapterDescriptionOpt.isPresent()) {
       try {
-        var adapterDescription = adapterDescriptionOpt.get().declareConfig().getAdapterDescription();
-        var localizedDescription = applyLocales(adapterDescription);
+        var adapterConfiguration = adapterDescriptionOpt.get().declareConfig();
+        var localizedDescription = applyLocales(adapterConfiguration);
         return ok(localizedDescription);
       } catch (IOException e) {
         throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
@@ -57,9 +58,11 @@ public class AdapterDescriptionResource extends AbstractSharedRestInterface {
     }
   }
 
-  private AdapterDescription applyLocales(AdapterDescription adapterDescription) throws IOException {
+  private AdapterDescription applyLocales(IAdapterConfiguration adapterConfiguration) throws IOException {
+    var adapterDescription = adapterConfiguration.getAdapterDescription();
     if (adapterDescription.isIncludesLocales()) {
-      return new LabelGenerator<>(adapterDescription).generateLabels();
+      return new LabelGenerator<>(adapterDescription, true, adapterConfiguration.getAssetResolver())
+          .generateLabels();
     } else {
       return adapterDescription;
     }

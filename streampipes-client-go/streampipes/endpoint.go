@@ -29,6 +29,7 @@ type endpoint struct {
 }
 
 func (e *endpoint) executeRequest(method string, endPointUrl string) (*http.Response, error) {
+
 	req, err := http.NewRequest(method, endPointUrl, nil)
 	if err != nil {
 		return nil, err

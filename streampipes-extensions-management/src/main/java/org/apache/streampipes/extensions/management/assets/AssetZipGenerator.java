@@ -17,6 +17,13 @@
  */
 package org.apache.streampipes.extensions.management.assets;
 
+import org.apache.streampipes.extensions.api.assets.AssetResolver;
+import org.apache.streampipes.extensions.api.assets.DefaultAssetResolver;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,12 +33,21 @@ import java.util.zip.ZipOutputStream;
 
 public class AssetZipGenerator {
 
-  private List<String> includedAssets;
-  private String appId;
+  private static final Logger LOG = LoggerFactory.getLogger(AssetZipGenerator.class);
+
+  private final List<String> includedAssets;
+
+  private final AssetResolver assetResolver;
 
   public AssetZipGenerator(String appId, List<String> includedAssets) {
     this.includedAssets = includedAssets;
-    this.appId = appId;
+    this.assetResolver = new DefaultAssetResolver(appId);
+  }
+
+  public AssetZipGenerator(List<String> includedAssets,
+                           AssetResolver assetResolver) {
+    this.includedAssets = includedAssets;
+    this.assetResolver = assetResolver;
   }
 
   public byte[] makeZip() throws IOException {
@@ -48,26 +64,17 @@ public class AssetZipGenerator {
       ZipEntry ze = new ZipEntry(asset);
       out.putNextEntry(ze);
 
-      InputStream in = null;
-      try {
-        ClassLoader classLoader = this.getClass().getClassLoader();
-        in = classLoader.getResourceAsStream(makePath(asset));
+      try (InputStream in = new ByteArrayInputStream(assetResolver.getAsset(asset))) {
         int len;
         while ((len = in.read(buffer)) > 0) {
           out.write(buffer, 0, len);
         }
       } catch (Exception e) {
-        e.printStackTrace();
-      } finally {
-        in.close();
+        LOG.error("Could not resolve assets", e);
       }
     }
     out.closeEntry();
     out.close();
     return outputStream.toByteArray();
-  }
-
-  private String makePath(String assetAppendix) {
-    return this.appId + "/" + assetAppendix;
   }
 }

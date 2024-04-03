@@ -42,7 +42,7 @@ func NewDataLakeMeasures(clientConfig config.StreamPipesClientConfig) *DataLakeM
 	}
 }
 
-// AllDataLakeMeasure retrieves all the measures from the Data Lake.
+// AllDataLakeMeasure retrieves a list of all measurements series from the Data Lake.
 func (d *DataLakeMeasure) AllDataLakeMeasure() ([]data_lake.DataLakeMeasure, error) {
 
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", nil)
@@ -72,6 +72,27 @@ func (d *DataLakeMeasure) AllDataLakeMeasure() ([]data_lake.DataLakeMeasure, err
 	dataLakeMeasures := unmarshalData.([]data_lake.DataLakeMeasure)
 
 	return dataLakeMeasures, nil
+}
+
+// DeleteDataLakeMeasurements removes all stored measurement series form Data Lake.
+func (d *DataLakeMeasure) DeleteDataLakeMeasurements() error {
+
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", nil)
+	log.Printf("Delete data from: %s", endPointUrl)
+
+	response, err := d.executeRequest("DELETE", endPointUrl)
+	if err != nil {
+		return err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		err = d.handleStatusCode(response)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // GetSingleDataLakeMeasure retrieves a specific measure from the Data Lake.
@@ -104,6 +125,27 @@ func (d *DataLakeMeasure) GetSingleDataLakeMeasure(elementId string) (data_lake.
 	dataLakeMeasure := unmarshalData.(data_lake.DataLakeMeasure)
 
 	return dataLakeMeasure, nil
+}
+
+// DeleteSingleDataLakeMeasure deletes a specific measure from the Data Lake.
+func (d *DataLakeMeasure) DeleteSingleDataLakeMeasure(elementId string) error {
+
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measure", []string{elementId})
+	log.Printf("Delete data from: %s", endPointUrl)
+
+	response, err := d.executeRequest("DELETE", endPointUrl)
+	if err != nil {
+		return err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		err = d.handleStatusCode(response)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // GetSingleDataSeries retrieves the measurement series for the specified measureId from the Data Lake.
@@ -141,6 +183,7 @@ func (d *DataLakeMeasure) GetSingleDataSeries(measureId string) (*data_lake.Data
 }
 
 // ClearDataLakeMeasureData removes data from a single measurement series with given id.
+// The measureId can also be considered measureName.
 func (d *DataLakeMeasure) ClearDataLakeMeasureData(measureId string) error {
 
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", []string{measureId})
@@ -163,6 +206,7 @@ func (d *DataLakeMeasure) ClearDataLakeMeasureData(measureId string) error {
 }
 
 // DeleteDataLakeMeasure  drops a single measurement series with given id from Data Lake and remove related event property.
+// The measureId can also be considered measureName.
 func (d *DataLakeMeasure) DeleteDataLakeMeasure(measureId string) error {
 
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", []string{measureId, "drop"})

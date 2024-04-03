@@ -21,6 +21,7 @@ import {
     RuntimeOptionsRequest,
     RuntimeOptionsResponse,
     RuntimeResolvableAnyStaticProperty,
+    RuntimeResolvableGroupStaticProperty,
     RuntimeResolvableOneOfStaticProperty,
     RuntimeResolvableTreeInputStaticProperty,
     SpLogMessage,
@@ -38,6 +39,7 @@ import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 export abstract class BaseRuntimeResolvableInput<
         T extends
             | RuntimeResolvableAnyStaticProperty
+            | RuntimeResolvableGroupStaticProperty
             | RuntimeResolvableOneOfStaticProperty
             | RuntimeResolvableTreeInputStaticProperty,
     >
@@ -51,7 +53,10 @@ export abstract class BaseRuntimeResolvableInput<
     loading = false;
     error = false;
     errorMessage: SpLogMessage;
-    dependentStaticProperties: any = new Map();
+    dependentStaticProperties: Map<string, boolean> = new Map<
+        string,
+        boolean
+    >();
 
     constructor(private runtimeResolvableService: RuntimeResolvableService) {
         super();
@@ -83,7 +88,6 @@ export abstract class BaseRuntimeResolvableInput<
             resolvableOptionsParameterRequest.belongsTo =
                 this.pipelineElement.belongsTo;
         }
-
         this.showOptions = false;
         this.loading = true;
         this.error = false;
@@ -121,17 +125,30 @@ export abstract class BaseRuntimeResolvableInput<
         return (
             property instanceof RuntimeResolvableAnyStaticProperty ||
             property instanceof RuntimeResolvableOneOfStaticProperty ||
-            property instanceof RuntimeResolvableTreeInputStaticProperty
+            property instanceof RuntimeResolvableTreeInputStaticProperty ||
+            property instanceof RuntimeResolvableGroupStaticProperty
         );
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['completedStaticProperty']) {
-            if (this.completedStaticProperty !== undefined) {
-                this.dependentStaticProperties.set(
-                    this.completedStaticProperty.staticPropertyInternalName,
-                    this.completedStaticProperty.configured,
-                );
+            if (
+                this.completedStaticProperty !== undefined &&
+                !(
+                    this.completedStaticProperty.staticPropertyInternalName ===
+                    this.staticProperty.internalName
+                )
+            ) {
+                if (
+                    this.dependentStaticProperties.has(
+                        this.completedStaticProperty.staticPropertyInternalName,
+                    )
+                ) {
+                    this.dependentStaticProperties.set(
+                        this.completedStaticProperty.staticPropertyInternalName,
+                        this.completedStaticProperty.configured,
+                    );
+                }
                 if (
                     Array.from(this.dependentStaticProperties.values()).every(
                         v => v === true,
@@ -145,7 +162,7 @@ export abstract class BaseRuntimeResolvableInput<
 
     abstract parse(staticProperty: StaticPropertyUnion): T;
 
-    abstract afterOptionsLoaded(staticProperty: T, node?: TreeInputNode);
+    abstract afterOptionsLoaded(staticProperty: T, node?: TreeInputNode): void;
 
-    abstract afterErrorReceived();
+    abstract afterErrorReceived(): void;
 }

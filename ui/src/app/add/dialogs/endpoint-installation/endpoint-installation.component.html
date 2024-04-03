@@ -50,9 +50,7 @@
                 <div>
                     <div fxFlex fxLayout="column" *ngIf="status.details">
                         <b>More Details:</b>
-                        <div class="md-padding">
-                            <i class="fa fa-terminal">{{ status.details }}</i>
-                        </div>
+                        <div class="error-message">{{ status.details }}</div>
                     </div>
                 </div>
             </div>
@@ -64,8 +62,8 @@
             class="mr-15"
             [(ngModel)]="installAsPublicElement"
             *ngIf="install"
-            >Make available to all users with appropriate role</mat-checkbox
-        >
+            >Make available to all users with appropriate role
+        </mat-checkbox>
         <button
             mat-button
             mat-raised-button

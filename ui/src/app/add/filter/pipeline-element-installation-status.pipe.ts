@@ -17,13 +17,17 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
+import { ExtensionItemDescription } from '@streampipes/platform-services';
 
 @Pipe({
     name: 'pipelineElementInstallationStatusFilter',
     pure: false,
 })
 export class PipelineElementInstallationStatusFilter implements PipeTransform {
-    transform(values: any[], filterTerm: string): any[] {
+    transform(
+        values: ExtensionItemDescription[],
+        filterTerm: string,
+    ): ExtensionItemDescription[] {
         if (filterTerm === 'all') {
             return values;
         } else {

@@ -29,6 +29,7 @@ import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
@@ -138,6 +139,11 @@ public class SecretVisitor implements StaticPropertyVisitor {
 
   @Override
   public void visit(RuntimeResolvableTreeInputStaticProperty treeInputStaticProperty) {
+    // Do nothing
+  }
+
+  @Override
+  public void visit(RuntimeResolvableGroupStaticProperty groupStaticProperty) {
     // Do nothing
   }
 }
