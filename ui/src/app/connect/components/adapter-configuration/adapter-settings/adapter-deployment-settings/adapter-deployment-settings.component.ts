@@ -33,7 +33,6 @@ import { MatRadioChange } from '@angular/material/radio';
 @Component({
     selector: 'sp-adapter-deployment-settings',
     templateUrl: './adapter-deployment-settings.component.html',
-    styleUrls: ['./adapter-deployment-settings.component.scss'],
 })
 export class SpAdapterDeploymentSettingsComponent implements OnInit {
     @Input()
