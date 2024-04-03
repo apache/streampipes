@@ -117,5 +117,6 @@ nav:
       - Introduction to the StreamPipes Python Client: tutorials/1-introduction-to-streampipes-python-client.ipynb
       - Extracting Data from the StreamPipes Data Lake: tutorials/2-extracting-data-from-the-streampipes-data-lake.ipynb
       - Exploring Live Data from a StreamPipes Data Stream: tutorials/3-getting-live-data-from-the-streampipes-data-stream.ipynb
-      - Applying Online Machine Learning on a StreamPipes Data Stream: tutorials/4-using-online-machine-learning-on-a-streampipes-data-stream.ipynb
+      - Using Online Machine Learning on a StreamPipes Data Stream: tutorials/4-using-online-machine-learning-on-a-streampipes-data-stream.ipynb
+      - Applying Interoperable Machine Learning in StreamPipes: tutorials/5-applying-interoperable-machine-learning-in-streampipes.ipynb
   - 📚 Reference: reference/*
