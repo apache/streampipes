@@ -20,15 +20,16 @@ package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.commons.exceptions.SpException;
 import org.apache.streampipes.commons.exceptions.UserNotFoundException;
 import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
 import org.apache.streampipes.mail.MailSender;
 import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.RegistrationData;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.client.user.UserActivationToken;
+import org.apache.streampipes.model.client.user.UserRegistrationData;
 import org.apache.streampipes.storage.api.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
@@ -36,6 +37,9 @@ import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 import org.apache.streampipes.user.management.util.TokenUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -46,6 +50,7 @@ import java.util.List;
 public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
   private static final int RECOVERY_TOKEN_LENGTH = 40;
+  private static final Logger LOG = LoggerFactory.getLogger(UserResourceManager.class);
 
   public UserResourceManager() {
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI());
@@ -83,25 +88,37 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
         .orElseThrow(IllegalArgumentException::new);
   }
 
-  public boolean registerUser(RegistrationData data) throws UsernameAlreadyTakenException {
-
+  public void registerUser(UserRegistrationData data) throws UsernameAlreadyTakenException {
     try {
-      if (db.checkUser(data.getUsername())) {
-        throw new UsernameAlreadyTakenException("Username already taken");
-      }
-      String encryptedPassword = PasswordUtil.encryptPassword(data.getPassword());
-      List<Role> roles = data.getRoles().stream().map(Role::valueOf).toList();
-      UserAccount user = UserAccount.from(data.getUsername(), encryptedPassword, new HashSet<>(roles));
-      user.setUsername(data.getUsername());
-      user.setPassword(encryptedPassword);
-      user.setAccountEnabled(false);
-      db.storeUser(user);
-      createTokenAndSendActivationMail(data.getUsername());
-    } catch (NoSuchAlgorithmException | InvalidKeySpecException | IOException e) {
-      return false;
+      validateAndRegisterNewUser(data);
+      createTokenAndSendActivationMail(data.username());
+    } catch (IOException e) {
+      LOG.error("Registration of user could not be completed: {}", e.getMessage());
+    }
+  }
+
+  private synchronized void validateAndRegisterNewUser(UserRegistrationData data) {
+    if (db.checkUserExists(data.username())) {
+      throw new UsernameAlreadyTakenException("Username already taken");
+    }
+    String encryptedPassword;
+    try {
+      encryptedPassword = PasswordUtil.encryptPassword(data.password());
+    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+      throw new SpException("Error during password encryption: %s".formatted(e.getMessage()));
     }
 
-    return true;
+    createNewUser(data, encryptedPassword);
+  }
+
+  private synchronized void createNewUser(UserRegistrationData data, String encryptedPassword) {
+
+    List<Role> roles = data.roles().stream().map(Role::valueOf).toList();
+    UserAccount user = UserAccount.from(data.username(), encryptedPassword, new HashSet<>(roles));
+    user.setUsername(data.username());
+    user.setPassword(encryptedPassword);
+    user.setAccountEnabled(false);
+    db.storeUser(user);
   }
 
   public void activateAccount(String activationCode) throws UserNotFoundException {
@@ -119,7 +136,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
   private void createTokenAndSendActivationMail(String username) throws IOException {
-    String activationCode =  TokenUtil.generateToken(RECOVERY_TOKEN_LENGTH);
+    String activationCode = TokenUtil.generateToken(RECOVERY_TOKEN_LENGTH);
     storeActivationCode(username, activationCode);
   }
 
@@ -132,7 +149,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
   public void sendPasswordRecoveryLink(String username) throws UserNotFoundException, IOException {
     // send a password recovery link to the user
-    if (db.checkUser(username)) {
+    if (db.checkUserExists(username)) {
       String recoveryCode = TokenUtil.generateToken(RECOVERY_TOKEN_LENGTH);
       storeRecoveryCode(username, recoveryCode);
       new MailSender().sendPasswordRecoveryMail(username, recoveryCode);
@@ -148,12 +165,12 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
   public void changePassword(String recoveryCode,
-                             RegistrationData data) throws NoSuchAlgorithmException, InvalidKeySpecException {
+                             UserRegistrationData data) throws NoSuchAlgorithmException, InvalidKeySpecException {
     checkPasswordRecoveryCode(recoveryCode);
     PasswordRecoveryToken token = getPasswordRecoveryTokenStorage().getElementById(recoveryCode);
     Principal user = db.getUser(token.getUsername());
     if (user instanceof UserAccount) {
-      String encryptedPassword = PasswordUtil.encryptPassword(data.getPassword());
+      String encryptedPassword = PasswordUtil.encryptPassword(data.password());
       ((UserAccount) user).setPassword(encryptedPassword);
       db.updateUser(user);
       getPasswordRecoveryTokenStorage().deleteElement(token);

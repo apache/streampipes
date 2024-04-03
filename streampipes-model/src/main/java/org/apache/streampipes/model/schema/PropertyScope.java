@@ -23,7 +23,7 @@ package org.apache.streampipes.model.schema;
  * properties, properties might differ in terms of their purpose. For instance, a property indicating a timestamp
  * are typically not be used for performing calculations (e.g., filter operations or sensor measurement value
  * transformations). In contrast, a property that describes an identifier (e.g., machineId) is often used for
- * partitioning a stream (e.g., calculating seperate temperature values per machine).
+ * partitioning a stream (e.g., calculating separate temperature values per machine).
  * <p>
  * Use the SDK to assign property scopes to stream descriptions and stream (property) requirements.
  * <p>

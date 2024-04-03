@@ -346,11 +346,6 @@
                 <version>${jakarta-xml-bind-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>jakarta.persistence</groupId>
-                <artifactId>persistence-api</artifactId>
-                <version>${jakarta-persistence-api.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-client</artifactId>
                 <version>${activemq-client.version}</version>

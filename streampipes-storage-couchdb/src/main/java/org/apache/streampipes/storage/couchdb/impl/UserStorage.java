@@ -104,10 +104,10 @@ public class UserStorage extends CrudViewDao implements IUserStorage {
    * @return True if user exists exactly once, false otherwise
    */
   @Override
-  public boolean checkUser(String username) {
+  public boolean checkUserExists(String username) {
     List<Principal> users = findByKey(viewName, username.toLowerCase(), Principal.class);
 
-    return users.size() == 1;
+    return !users.isEmpty();
   }
 
   @Override
