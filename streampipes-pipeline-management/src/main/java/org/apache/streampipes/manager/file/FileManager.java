@@ -64,6 +64,7 @@ public class FileManager {
 
     fileInputStream = cleanFile(fileInputStream, filetype);
 
+
     FileMetadata fileMetadata = makeFileMetadata(user, filename, filetype);
     new FileHandler().storeFile(filename, fileInputStream);
     storeFileMetadata(fileMetadata);
@@ -95,6 +96,10 @@ public class FileManager {
   public static boolean checkFileContentChanged(String filename, String hash) throws IOException {
     var fileHash = FileHasher.hash(getFile(filename));
     return !fileHash.equals(hash);
+  }
+
+  public static String sanitizeFilename(String filename) {
+    return filename.replaceAll("[^a-zA-Z0-9.\\-]", "_");
   }
 
   private static void storeFileMetadata(FileMetadata fileMetadata) {
