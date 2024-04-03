@@ -15,35 +15,23 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.sdk.helpers;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
+import org.junit.jupiter.api.Test;
 
-public enum Filetypes {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-  CSV("csv"),
-  JPG("jpg", "jpeg"),
-  JSON("json"),
-  XLS("xls"),
-  XLSX("xlsx"),
-  XML("xml"),
-  ZIP("zip");
+class FiletypesTest {
 
-  private final List<String> fileExtensions;
+  @Test
+  public void getAllFileExtensions_returnsAllExtensions() {
+    var actualExtensions = Filetypes.getAllFileExtensions();
 
-  Filetypes(String... fileExtensions) {
-    this.fileExtensions = Arrays.asList(fileExtensions);
-  }
-
-  public List<String> getFileExtensions() {
-    return fileExtensions;
-  }
-
-  public static List<String> getAllFileExtensions() {
-    return Stream.of(Filetypes.values())
-        .flatMap(filetype -> filetype.getFileExtensions().stream())
-        .toList();
+    assertEquals(8, actualExtensions.size());
+    assertTrue(actualExtensions.contains("jpg"));
+    assertTrue(actualExtensions.contains("jpeg"));
+    assertTrue(actualExtensions.contains("csv"));
   }
 }

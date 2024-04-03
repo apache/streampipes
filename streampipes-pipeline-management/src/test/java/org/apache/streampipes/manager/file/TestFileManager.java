@@ -21,11 +21,24 @@ import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 public class TestFileManager {
+
+  @Test
+  public void storeFile_throwsExceptionForInvalidFileType() {
+    var filename = "testFile.invalid";
+
+    assertThrows(IllegalArgumentException.class, () ->
+        FileManager.storeFile("", filename, mock(InputStream.class)));
+  }
 
   @Test
   public void testCleanFileWithoutBom() throws IOException {
@@ -101,5 +114,20 @@ public class TestFileManager {
     var filename = "../../file";
     var sanitizedFilename = FileManager.sanitizeFilename(filename);
     assertEquals(".._.._file", sanitizedFilename);
+  }
+
+  @Test
+  public void validateFileName_returnsTrueForCsv() {
+    assertTrue(FileManager.validateFileType("file.csv"));
+  }
+
+  @Test
+  public void validateFileName_returnsTrueForJson() {
+    assertTrue(FileManager.validateFileType("file.json"));
+  }
+
+  @Test
+  public void validateFileName_returnsFalseForSh() {
+    assertFalse(FileManager.validateFileType("file.sh"));
   }
 }
