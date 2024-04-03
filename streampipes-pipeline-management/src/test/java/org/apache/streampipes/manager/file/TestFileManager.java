@@ -91,9 +91,9 @@ public class TestFileManager {
 
   @Test
   public void sanitizeFilename_removesSingleParentDirectory() {
-    var filename = "../file";
+    var filename = "../file.csv";
     var sanitizedFilename = FileManager.sanitizeFilename(filename);
-    assertEquals(".._file", sanitizedFilename);
+    assertEquals(".._file.csv", sanitizedFilename);
   }
 
   @Test

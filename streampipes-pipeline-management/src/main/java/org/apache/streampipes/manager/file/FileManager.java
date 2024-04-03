@@ -60,13 +60,16 @@ public class FileManager {
                                        String filename,
                                        InputStream fileInputStream) throws IOException {
 
-    String filetype = filename.substring(filename.lastIndexOf(".") + 1);
+    // prevent the user from using special characters in the file name
+    var sanitizedFilename = sanitizeFilename(filename);
+
+    var filetype = filename.substring(sanitizedFilename.lastIndexOf(".") + 1);
 
     fileInputStream = cleanFile(fileInputStream, filetype);
 
 
-    FileMetadata fileMetadata = makeFileMetadata(user, filename, filetype);
-    new FileHandler().storeFile(filename, fileInputStream);
+    var fileMetadata = makeFileMetadata(user, sanitizedFilename, filetype);
+    new FileHandler().storeFile(sanitizedFilename, fileInputStream);
     storeFileMetadata(fileMetadata);
     return fileMetadata;
   }
