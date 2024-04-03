@@ -95,9 +95,16 @@ testing:
               - "streampipes-client-python/tests/**/*"
               - "streampipes-*/**/test/**/*"
               - "ui/cypress/**/*"
+              - "streampipes-client-go/**/*_test.go"
 
 ui:
   - any:
       - changed-files:
           - any-glob-to-any-file:
               - "ui/**/*"
+
+go:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "**/*.go"
