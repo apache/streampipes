@@ -24,15 +24,18 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
-import org.apache.streampipes.connect.management.management.WorkerUrlProvider;
+import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,23 +44,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
+
 @RestController
 @RequestMapping("/api/v2/connect/master/resolvable")
 public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdministrationManagement> {
 
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeResolvableResource.class);
 
-  private final WorkerUrlProvider workerUrlProvider;
+  private final IExtensionsServiceEndpointGenerator endpointGenerator;
 
   public RuntimeResolvableResource() {
     super(() -> new WorkerAdministrationManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getAdapterInstanceStorage(),
+            .getAdapterInstanceStorage(),
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
         new SpResourceManager().manageAdapters(),
         new SpResourceManager().manageDataStreams()
     ));
-    this.workerUrlProvider = new WorkerUrlProvider();
+    this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
   }
 
   @PostMapping(
@@ -68,7 +73,11 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdm
                                                @RequestBody RuntimeOptionsRequest runtimeOptionsRequest) {
 
     try {
-      String workerEndpoint = workerUrlProvider.getWorkerBaseUrl(appId);
+      String workerEndpoint = endpointGenerator.getEndpointBaseUrl(
+          appId,
+          SpServiceUrlProvider.ADAPTER,
+          Collections.emptySet()
+      );
       RuntimeOptionsResponse result = WorkerRestClient.getConfiguration(workerEndpoint, appId, runtimeOptionsRequest);
 
       return ok(result);

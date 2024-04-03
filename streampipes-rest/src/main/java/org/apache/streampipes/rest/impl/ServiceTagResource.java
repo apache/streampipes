@@ -15,31 +15,29 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.svcdiscovery.api;
+
+package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
-import java.util.List;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.Set;
 
-public interface ISpServiceDiscovery {
+@RestController
+@RequestMapping("/api/v2/service-tags")
+public class ServiceTagResource extends AbstractAuthGuardedRestResource {
 
-  /**
-   * Get custom service tags
-   *
-   * @return set of service tags
-   */
-  Set<SpServiceTag> getCustomServiceTags(boolean restrictToHealthy);
+  private final ISpServiceDiscovery serviceDiscovery = SpServiceDiscovery.getServiceDiscovery();
 
-  /**
-   * Get service endpoints
-   *
-   * @param svcGroup          service group for registered service
-   * @param restrictToHealthy retrieve healthy or all registered services for a service group
-   * @param filterByTags      filter param to filter list of registered services
-   * @return list of services
-   */
-  List<String> getServiceEndpoints(String svcGroup,
-                                   boolean restrictToHealthy,
-                                   List<String> filterByTags);
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public Set<SpServiceTag> getCustomServiceTags() {
+    return serviceDiscovery.getCustomServiceTags(true);
+  }
 }

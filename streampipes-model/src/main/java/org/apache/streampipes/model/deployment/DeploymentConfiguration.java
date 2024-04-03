@@ -16,17 +16,35 @@
  *
  */
 
-package org.apache.streampipes.manager.execution.endpoint;
+package org.apache.streampipes.model.deployment;
 
-import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 
-public class ExtensionsServiceEndpointProvider {
+import java.util.HashSet;
+import java.util.Set;
 
-  public String findSelectedEndpoint(InvocableStreamPipesEntity g) throws NoServiceEndpointsAvailableException {
-    return new ExtensionsServiceEndpointGenerator(
-        g.getAppId(),
-        ExtensionsServiceEndpointUtils.getPipelineElementType(g))
-        .getEndpointResourceUrl();
+public class DeploymentConfiguration {
+
+  private Set<SpServiceTag> desiredServiceTags;
+  private String selectedEndpointUrl;
+
+  public DeploymentConfiguration() {
+    this.desiredServiceTags = new HashSet<>();
+  }
+
+  public Set<SpServiceTag> getDesiredServiceTags() {
+    return desiredServiceTags;
+  }
+
+  public void setDesiredServiceTags(Set<SpServiceTag> desiredServiceTags) {
+    this.desiredServiceTags = desiredServiceTags;
+  }
+
+  public String getSelectedEndpointUrl() {
+    return selectedEndpointUrl;
+  }
+
+  public void setSelectedEndpointUrl(String selectedEndpointUrl) {
+    this.selectedEndpointUrl = selectedEndpointUrl;
   }
 }

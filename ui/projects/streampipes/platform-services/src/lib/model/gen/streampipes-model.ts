@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-03-28 15:50:50.
+// Generated using typescript-generator version 3.2.1263 on 2024-04-02 22:53:18.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -112,6 +112,7 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     'correspondingServiceGroup': string;
     'createdAt': number;
     'dataStream': SpDataStream;
+    'deploymentConfiguration': DeploymentConfiguration;
     'eventGrounding': EventGrounding;
     'eventSchema': EventSchema;
     'icon': string;
@@ -142,6 +143,9 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
         instance.correspondingServiceGroup = data.correspondingServiceGroup;
         instance.createdAt = data.createdAt;
         instance.dataStream = SpDataStream.fromData(data.dataStream);
+        instance.deploymentConfiguration = DeploymentConfiguration.fromData(
+            data.deploymentConfiguration,
+        );
         instance.eventGrounding = EventGrounding.fromData(data.eventGrounding);
         instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.icon = data.icon;
@@ -1364,6 +1368,26 @@ export class DeleteRuleDescription extends SchemaTransformationRuleDescription {
     }
 }
 
+export class DeploymentConfiguration {
+    desiredServiceTags: SpServiceTag[];
+    selectedEndpointUrl: string;
+
+    static fromData(
+        data: DeploymentConfiguration,
+        target?: DeploymentConfiguration,
+    ): DeploymentConfiguration {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new DeploymentConfiguration();
+        instance.desiredServiceTags = __getCopyArrayFn(SpServiceTag.fromData)(
+            data.desiredServiceTags,
+        );
+        instance.selectedEndpointUrl = data.selectedEndpointUrl;
+        return instance;
+    }
+}
+
 export class DomainStaticProperty extends StaticProperty {
     '@class': 'org.apache.streampipes.model.staticproperty.DomainStaticProperty';
     'requiredClass': string;
@@ -2517,28 +2541,6 @@ export class PageResult extends DataSeries {
         super.fromData(data, instance);
         instance.page = data.page;
         instance.pageSum = data.pageSum;
-        return instance;
-    }
-}
-
-export class PersistedDataStream {
-    measureName: string;
-    pipelineId: string;
-    pipelineName: string;
-    schema: EventSchema;
-
-    static fromData(
-        data: PersistedDataStream,
-        target?: PersistedDataStream,
-    ): PersistedDataStream {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new PersistedDataStream();
-        instance.measureName = data.measureName;
-        instance.pipelineId = data.pipelineId;
-        instance.pipelineName = data.pipelineName;
-        instance.schema = EventSchema.fromData(data.schema);
         return instance;
     }
 }
@@ -4198,6 +4200,7 @@ export type SpServiceStatus =
 
 export type SpServiceTagPrefix =
     | 'SP_GROUP'
+    | 'CUSTOM'
     | 'ADAPTER'
     | 'DATA_STREAM'
     | 'DATA_PROCESSOR'

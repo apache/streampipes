@@ -106,6 +106,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { SpAdapterDeploymentSettingsComponent } from './components/adapter-configuration/adapter-settings/adapter-deployment-settings/adapter-deployment-settings.component';
 
 @NgModule({
     imports: [
@@ -210,6 +211,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
         SchemaEditorHeaderComponent,
         SpEpSettingsSectionComponent,
         StartAdapterConfigurationComponent,
+        SpAdapterDeploymentSettingsComponent,
         SpAdapterDetailsLogsComponent,
         SpAdapterDetailsMetricsComponent,
         SpAdapterOptionsPanelComponent,

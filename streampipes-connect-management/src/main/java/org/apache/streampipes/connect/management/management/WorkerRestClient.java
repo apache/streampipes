@@ -52,10 +52,10 @@ public class WorkerRestClient {
 
   private static final Logger LOG = LoggerFactory.getLogger(WorkerRestClient.class);
 
-  public static void invokeStreamAdapter(String endpointUrl,
+  public static void invokeStreamAdapter(String baseUrl,
                                          String elementId) throws AdapterException {
     var adapterStreamDescription = getAndDecryptAdapter(elementId);
-    var url = endpointUrl + WorkerPaths.getStreamInvokePath();
+    var url = baseUrl + WorkerPaths.getStreamInvokePath();
 
     startAdapter(url, adapterStreamDescription);
     updateStreamAdapterStatus(adapterStreamDescription.getElementId(), true);

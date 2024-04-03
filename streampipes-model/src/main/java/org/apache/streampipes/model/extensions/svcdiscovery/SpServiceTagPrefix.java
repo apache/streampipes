@@ -19,6 +19,7 @@ package org.apache.streampipes.model.extensions.svcdiscovery;
 
 public enum SpServiceTagPrefix {
   SP_GROUP,
+  CUSTOM,
   ADAPTER,
   DATA_STREAM,
   DATA_PROCESSOR,

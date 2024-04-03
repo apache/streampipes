@@ -25,6 +25,7 @@ import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRul
 import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
+import org.apache.streampipes.model.deployment.DeploymentConfiguration;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -55,6 +56,8 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
   //  Is used to store where the adapter is running to stop it
   private String selectedEndpointUrl;
 
+  private DeploymentConfiguration deploymentConfiguration;
+
   /**
    * This is used to identify all the service within the service group the adapter can be invoked in
    */
@@ -72,6 +75,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.config = new ArrayList<>();
     this.category = new ArrayList<>();
     this.dataStream = new SpDataStream();
+    this.deploymentConfiguration = new DeploymentConfiguration();
   }
 
   public AdapterDescription(int version) {
@@ -81,6 +85,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.config = new ArrayList<>();
     this.category = new ArrayList<>();
     this.dataStream = new SpDataStream();
+    this.deploymentConfiguration = new DeploymentConfiguration();
     this.setVersion(version);
   }
 
@@ -89,6 +94,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.rules = new ArrayList<>();
     this.category = new ArrayList<>();
     this.dataStream = new SpDataStream();
+    this.deploymentConfiguration = new DeploymentConfiguration();
   }
 
 
@@ -109,6 +115,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
       this.dataStream = new SpDataStream(other.getDataStream());
     }
     this.running = other.isRunning();
+    this.deploymentConfiguration = other.getDeploymentConfiguration();
   }
 
   public String getRev() {
@@ -258,5 +265,13 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   public void setRunning(boolean running) {
     this.running = running;
+  }
+
+  public DeploymentConfiguration getDeploymentConfiguration() {
+    return deploymentConfiguration;
+  }
+
+  public void setDeploymentConfiguration(DeploymentConfiguration deploymentConfiguration) {
+    this.deploymentConfiguration = deploymentConfiguration;
   }
 }

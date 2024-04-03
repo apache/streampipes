@@ -97,7 +97,9 @@ public enum Envs {
   SP_NATS_HOST("SP_NATS_HOST", "nats"),
   SP_NATS_PORT("SP_NATS_PORT", "4222"),
 
-  SP_PULSAR_URL("SP_PULSAR_URL", "pulsar://localhost:6650");
+  SP_PULSAR_URL("SP_PULSAR_URL", "pulsar://localhost:6650"),
+
+  SP_SERVICE_TAGS("SP_SERVICE_TAGS", "");
 
   private final String envVariableName;
   private String defaultValue;

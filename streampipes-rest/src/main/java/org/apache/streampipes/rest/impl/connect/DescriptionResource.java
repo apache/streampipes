@@ -22,11 +22,14 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.DescriptionManagement;
-import org.apache.streampipes.connect.management.management.WorkerUrlProvider;
+import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,11 +46,11 @@ import java.util.Optional;
 public class DescriptionResource extends AbstractAdapterResource<DescriptionManagement> {
 
   private static final Logger LOG = LoggerFactory.getLogger(DescriptionResource.class);
-  private final WorkerUrlProvider workerUrlProvider;
+  private final IExtensionsServiceEndpointGenerator endpointGenerator;
 
   public DescriptionResource() {
     super(DescriptionManagement::new);
-    workerUrlProvider = new WorkerUrlProvider();
+    endpointGenerator = new ExtensionsServiceEndpointGenerator();
   }
 
   @GetMapping(path = "/adapters", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +68,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
       Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
       if (adapterDescriptionOptional.isPresent()) {
         AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-        String workerUrl = workerUrlProvider.getWorkerUrl(adapterDescription.getAppId());
+        String workerUrl = getServiceResourceUrl(adapterDescription.getAppId());
 
         result = managementService.getAssets(workerUrl);
       }
@@ -93,7 +96,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
       Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
       if (adapterDescriptionOptional.isPresent()) {
         AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-        String workerUrl = workerUrlProvider.getWorkerUrl(adapterDescription.getAppId());
+        String workerUrl = getServiceResourceUrl(adapterDescription.getAppId());
 
         result = managementService.getIconAsset(workerUrl);
       }
@@ -120,7 +123,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
       Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
       if (adapterDescriptionOptional.isPresent()) {
         AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-        String workerUrl = workerUrlProvider.getWorkerUrl(adapterDescription.getAppId());
+        String workerUrl = getServiceResourceUrl(adapterDescription.getAppId());
 
         result = managementService.getDocumentationAsset(workerUrl);
       }
@@ -147,5 +150,9 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
     } catch (SpRuntimeException e) {
       return badRequest(e);
     }
+  }
+
+  private String getServiceResourceUrl(String appId) throws NoServiceEndpointsAvailableException {
+    return endpointGenerator.getEndpointResourceUrl(appId, SpServiceUrlProvider.ADAPTER);
   }
 }
