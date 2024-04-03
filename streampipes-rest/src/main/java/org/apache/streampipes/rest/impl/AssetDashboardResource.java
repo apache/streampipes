@@ -126,6 +126,13 @@ public class AssetDashboardResource extends AbstractRestResource {
   @PostMapping(path = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<Void> storeDashboardImage(@RequestPart("file_upload") MultipartFile fileDetail) {
     try {
+      var fileName = fileDetail.getName();
+
+      if (!FileManager.validateFileType(fileName)) {
+        LOG.error("File type of file " + fileName + " is not supported");
+        fail();
+      }
+
       storeFile(fileDetail.getName(), fileDetail.getInputStream());
       return ok();
     } catch (IOException e) {
