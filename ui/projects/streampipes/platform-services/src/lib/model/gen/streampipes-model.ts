@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-04-02 22:53:18.
+// Generated using typescript-generator version 3.2.1263 on 2024-04-04 07:44:56.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -3269,6 +3269,7 @@ export class RuntimeOptionsRequest {
         | 'org.apache.streampipes.model.runtime.RuntimeOptionsResponse';
     'appId': string;
     'belongsTo': string;
+    'deploymentConfiguration': DeploymentConfiguration;
     'inputStreams': SpDataStream[];
     'requestId': string;
     'staticProperties': StaticPropertyUnion[];
@@ -3284,6 +3285,9 @@ export class RuntimeOptionsRequest {
         instance['@class'] = data['@class'];
         instance.appId = data.appId;
         instance.belongsTo = data.belongsTo;
+        instance.deploymentConfiguration = DeploymentConfiguration.fromData(
+            data.deploymentConfiguration,
+        );
         instance.inputStreams = __getCopyArrayFn(SpDataStream.fromData)(
             data.inputStreams,
         );

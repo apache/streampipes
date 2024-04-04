@@ -20,11 +20,13 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
+    Input,
     OnInit,
     Output,
 } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import {
+    DeploymentConfiguration,
     StaticPropertyAlternative,
     StaticPropertyAlternatives,
 } from '@streampipes/platform-services';
@@ -40,6 +42,9 @@ export class StaticAlternativesComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyAlternatives>
     implements OnInit
 {
+    @Input()
+    deploymentConfiguration: DeploymentConfiguration;
+
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     completedStaticProperty: ConfigurationInfo;

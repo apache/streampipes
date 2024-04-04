@@ -18,7 +18,10 @@
 
 import { Component, Input } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { StaticPropertyUnion } from '@streampipes/platform-services';
+import {
+    DeploymentConfiguration,
+    StaticPropertyUnion,
+} from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../model/ConfigurationInfo';
 
 @Component({
@@ -32,6 +35,8 @@ export class ConfigurationGroupComponent {
     @Input() adapterId: string;
 
     @Input() configuration: StaticPropertyUnion[];
+
+    @Input() deploymentConfiguration: DeploymentConfiguration;
 
     completedStaticProperty: ConfigurationInfo;
 

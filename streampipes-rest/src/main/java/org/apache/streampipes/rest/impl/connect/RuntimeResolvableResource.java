@@ -44,8 +44,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
-
 @RestController
 @RequestMapping("/api/v2/connect/master/resolvable")
 public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdministrationManagement> {
@@ -73,12 +71,12 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdm
                                                @RequestBody RuntimeOptionsRequest runtimeOptionsRequest) {
 
     try {
-      String workerEndpoint = endpointGenerator.getEndpointBaseUrl(
+      String baseUrl = endpointGenerator.getEndpointBaseUrl(
           appId,
           SpServiceUrlProvider.ADAPTER,
-          Collections.emptySet()
+          runtimeOptionsRequest.getDeploymentConfiguration().getDesiredServiceTags()
       );
-      RuntimeOptionsResponse result = WorkerRestClient.getConfiguration(workerEndpoint, appId, runtimeOptionsRequest);
+      RuntimeOptionsResponse result = WorkerRestClient.getConfiguration(baseUrl, appId, runtimeOptionsRequest);
 
       return ok(result);
     } catch (AdapterException e) {

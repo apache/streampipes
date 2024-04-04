@@ -127,11 +127,11 @@ public class WorkerRestClient {
     return request.execute().returnResponse();
   }
 
-  public static RuntimeOptionsResponse getConfiguration(String workerEndpoint,
+  public static RuntimeOptionsResponse getConfiguration(String baseUrl,
                                                         String appId,
                                                         RuntimeOptionsRequest runtimeOptionsRequest)
           throws AdapterException, SpConfigurationException {
-    String url = workerEndpoint + WorkerPaths.getRuntimeResolvablePath(appId);
+    String url = baseUrl + WorkerPaths.getRuntimeResolvablePath(appId);
 
     try {
       String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);

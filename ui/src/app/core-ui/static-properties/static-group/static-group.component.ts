@@ -16,9 +16,12 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
-import { StaticPropertyGroup } from '@streampipes/platform-services';
+import {
+    DeploymentConfiguration,
+    StaticPropertyGroup,
+} from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 
 @Component({
@@ -30,6 +33,9 @@ export class StaticGroupComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyGroup>
     implements OnInit
 {
+    @Input()
+    deploymentConfiguration: DeploymentConfiguration;
+
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     dependentStaticProperties: Map<string, boolean> = new Map<
