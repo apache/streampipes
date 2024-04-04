@@ -37,9 +37,7 @@ export class UserDefinedOutputStrategyComponent
 {
     primitiveClasses = [];
 
-    constructor(
-        private idGeneratorService: IdGeneratorService,
-    ) {
+    constructor(private idGeneratorService: IdGeneratorService) {
         super();
         this.primitiveClasses = [
             { label: 'String', id: DataType.STRING },
