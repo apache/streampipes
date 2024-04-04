@@ -51,7 +51,6 @@
     "@ngx-loading-bar/http-client": "6.0.2",
     "@panzoom/panzoom": "^4.5.1",
     "@swimlane/ngx-charts": "^20.5.0",
-   
     "angular-gridster2": "^17.0.0",
     "codemirror": "^5.65.11",
     "console-browserify": "^1.2.0",
