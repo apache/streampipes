@@ -16,12 +16,14 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="ml-0 mr-0">
+<sp-visualization-config-outer
+    [configurationValid]="
+        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    "
+>
     <sp-select-color-properties
         (changeSelectedProperties)="setSelectedProperties($event)"
-        [availableProperties]="
-            fieldProvider.numericFields.concat(fieldProvider.booleanFields)
-        "
+        [availableProperties]="numericPlusBooleanFields"
         [selectedProperties]="
             currentlyConfiguredWidget.visualizationConfig
                 .selectedTimeSeriesChartProperties
@@ -30,10 +32,33 @@
     >
     </sp-select-color-properties>
 
-    <h5>Spike mode</h5>
-    <mat-checkbox
-        [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.showSpike"
-        (change)="setShowSpikeProperty($event)"
-        >Vertical axis
-    </mat-checkbox>
-</div>
+    <sp-configuration-box title="Axes" marginTop="5px">
+        <sp-select-axis-options
+            (viewRefreshEmitter)="triggerViewRefresh()"
+            title="left axis"
+            [axisConfig]="
+                currentlyConfiguredWidget.visualizationConfig.leftAxis
+            "
+        >
+        </sp-select-axis-options>
+
+        <sp-select-axis-options
+            (viewRefreshEmitter)="triggerViewRefresh()"
+            title="right axis"
+            [axisConfig]="
+                currentlyConfiguredWidget.visualizationConfig.rightAxis
+            "
+        >
+        </sp-select-axis-options>
+    </sp-configuration-box>
+
+    <sp-configuration-box title="Axis Pointer">
+        <mat-checkbox
+            [(ngModel)]="
+                currentlyConfiguredWidget.visualizationConfig.showSpike
+            "
+            (change)="setShowSpikeProperty($event)"
+            >Enable
+        </mat-checkbox>
+    </sp-configuration-box>
+</sp-visualization-config-outer>

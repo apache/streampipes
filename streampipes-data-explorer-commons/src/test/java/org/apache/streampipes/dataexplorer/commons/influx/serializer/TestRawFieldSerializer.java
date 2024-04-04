@@ -18,17 +18,19 @@
 
 package org.apache.streampipes.dataexplorer.commons.influx.serializer;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class TestRawFieldSerializer {
   private RawFieldSerializer rawFieldSerializer = new RawFieldSerializer();
-  private Map<String, Object> primitives = new HashMap<String, Object>();
+  private Map<String, Object> primitives = new HashMap<>();
 
   public TestRawFieldSerializer() {
     primitives.put("Integer", 1);
@@ -42,7 +44,7 @@ public class TestRawFieldSerializer {
   // Test able to deserialize back the original data
   @Test
   public void testRawFieldSerializerListInMap() {
-    var rawListField = new ArrayList<Object>();
+    var rawListField = new ArrayList<>();
     rawListField.addAll(primitives.values());
 
     var rawNestedField = new HashMap<String, Object>();
@@ -59,7 +61,7 @@ public class TestRawFieldSerializer {
     var rawNestedField = new HashMap<String, Object>();
     rawNestedField.putAll(primitives);
 
-    var rawListField = new ArrayList<Object>();
+    var rawListField = new ArrayList<>();
     rawListField.addAll(primitives.values());
     rawListField.add(rawNestedField);
 

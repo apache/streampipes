@@ -24,11 +24,10 @@ import {
     PanelType,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
-import { AddEndpointComponent } from './dialogs/add-endpoint/add-endpoint.component';
 import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
-import { ExtensionsServiceEndpointItem } from '@streampipes/platform-services';
-import { Router } from '@angular/router';
 import { SpAddRoutes } from './add.routes';
+import { ExtensionItemDescription } from '@streampipes/platform-services';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
     selector: 'sp-add',
@@ -40,15 +39,12 @@ export class AddComponent implements OnInit {
 
     results: any[];
     loading: boolean;
-    endpointItems: ExtensionsServiceEndpointItem[];
+    endpointItems: ExtensionItemDescription[];
     endpointItemsLoadingComplete: boolean;
     selectedTab: string;
-    availableTypes: string[] = ['all', 'set', 'stream', 'sepa', 'action'];
-
-    selectedCategoryIndex = 0;
     selectedCategory = 'all';
 
-    selectedEndpointItems: any[] = [];
+    selectedEndpointItems: ExtensionItemDescription[] = [];
 
     _filterTerm = '';
     _selectedInstallationStatus = 'all';
@@ -57,7 +53,6 @@ export class AddComponent implements OnInit {
         private addService: AddService,
         private dialogService: DialogService,
         private changeDetectorRef: ChangeDetectorRef,
-        private router: Router,
         private breadcrumbService: SpBreadcrumbService,
     ) {
         this.results = [];
@@ -74,49 +69,41 @@ export class AddComponent implements OnInit {
         this.selectedTab = 'all';
     }
 
-    toggleSelected(endpointItem) {
+    toggleSelected(endpointItem: ExtensionItemDescription) {
         if (endpointItem.editable) {
             if (
-                this.selectedEndpointItems.some(
-                    item => item === endpointItem.uri,
-                )
+                this.selectedEndpointItems.some(item => item === endpointItem)
             ) {
                 this.selectedEndpointItems.splice(
-                    this.selectedEndpointItems.indexOf(endpointItem.uri),
+                    this.selectedEndpointItems.indexOf(endpointItem),
                     1,
                 );
             } else {
-                this.selectedEndpointItems.push(endpointItem.uri);
+                this.selectedEndpointItems.push(endpointItem);
             }
-            endpointItem.selected = !endpointItem.selected;
+            (endpointItem as any).selected = !(endpointItem as any).selected;
         }
     }
 
-    setSelectedTab(index: number) {
-        this.selectedEndpointItems = [];
-        this.selectAll(false);
-        this.selectedTab = this.availableTypes[index];
+    isSelected(endpointItem: ExtensionItemDescription) {
+        return (endpointItem as any).selected;
     }
 
-    isSelected(endpointItem) {
-        return endpointItem.selected;
-    }
-
-    filterByCatergory(category) {
+    filterByCategory(category: MatSelectChange) {
         this.selectedTab = category.value;
     }
 
-    selectAll(selected) {
+    selectAll(selected: boolean) {
         this.selectedEndpointItems = [];
         this.endpointItems.forEach(item => {
             if (item.editable) {
                 if (
-                    item.type === this.selectedTab ||
+                    item.serviceTagPrefix === this.selectedTab ||
                     this.selectedTab === 'all'
                 ) {
                     (item as any).selected = selected;
                     if (selected) {
-                        this.selectedEndpointItems.push(item.uri);
+                        this.selectedEndpointItems.push(item);
                     }
                 }
             }
@@ -124,24 +111,9 @@ export class AddComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
     }
 
-    showManageRdfEndpointsDialog() {
-        const dialogRef: DialogRef<AddEndpointComponent> =
-            this.dialogService.open(AddEndpointComponent, {
-                panelType: PanelType.STANDARD_PANEL,
-                title: 'Manage Endpoints',
-                width: '70vw',
-                data: {},
-            });
-        dialogRef.afterClosed().subscribe(data => {
-            if (data) {
-                this.getEndpointItems();
-            }
-        });
-    }
-
     getEndpointItems() {
         this.endpointItemsLoadingComplete = false;
-        this.addService.getRdfEndpointItems().subscribe(endpointItems => {
+        this.addService.getExtensionItems().subscribe(endpointItems => {
             this.endpointItems = endpointItems;
             this.endpointItemsLoadingComplete = true;
         });
@@ -159,7 +131,10 @@ export class AddComponent implements OnInit {
         const elementsToInstall = [];
 
         this.endpointItems.forEach(item => {
-            if (item.type === this.selectedTab || this.selectedTab === 'all') {
+            if (
+                item.serviceTagPrefix === this.selectedTab ||
+                this.selectedTab === 'all'
+            ) {
                 if (item.installed === !install && (item as any).selected) {
                     elementsToInstall.push(item);
                 }
@@ -210,10 +185,5 @@ export class AddComponent implements OnInit {
 
     get selectedInstallationStatus(): string {
         return this._selectedInstallationStatus;
-    }
-
-    navigateTo(routeId: string): void {
-        this.router.navigate(['add', routeId]);
-        this.activeLink = routeId;
     }
 }

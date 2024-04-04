@@ -19,7 +19,9 @@ package org.apache.streampipes.model.staticproperty;
 
 import org.apache.streampipes.model.util.Cloner;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class StaticPropertyGroup extends StaticProperty {
 
@@ -33,6 +35,10 @@ public class StaticPropertyGroup extends StaticProperty {
     super(StaticPropertyType.StaticPropertyGroup);
   }
 
+  public StaticPropertyGroup(StaticPropertyType staticPropertyType) {
+    super(staticPropertyType);
+  }
+
   public StaticPropertyGroup(StaticPropertyGroup other) {
     super(other);
     this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
@@ -42,11 +48,19 @@ public class StaticPropertyGroup extends StaticProperty {
 
   public StaticPropertyGroup(String internalName, String label, String description) {
     super(StaticPropertyType.StaticPropertyGroup, internalName, label, description);
+    this.staticProperties = new ArrayList<>();
+  }
+
+  public StaticPropertyGroup(StaticPropertyType type,
+                             String internalName, String label, String description) {
+    super(type, internalName, label, description);
+    this.staticProperties = new ArrayList<>();
   }
 
   public StaticPropertyGroup(String internalName, String label, String description, boolean horizontalRendering) {
     super(StaticPropertyType.StaticPropertyGroup, internalName, label, description);
     this.horizontalRendering = horizontalRendering;
+    this.staticProperties = new ArrayList<>();
   }
 
   public StaticPropertyGroup(String internalName, String label, String description,
@@ -82,5 +96,42 @@ public class StaticPropertyGroup extends StaticProperty {
   @Override
   public void accept(StaticPropertyVisitor visitor) {
     visitor.visit(this);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof StaticPropertyGroup that)) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+
+    if (horizontalRendering != that.horizontalRendering) {
+      return false;
+    }
+
+    if (!(this.staticProperties.size() == that.staticProperties.size())) {
+      return false;
+    }
+
+    for (var i = 0; i < staticProperties.size(); i++){
+      if (!staticProperties.get(i).equals(that.staticProperties.get(i))){
+        return false;
+      }
+    }
+    return Objects.equals(showLabel, that.showLabel);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (staticProperties != null ? staticProperties.hashCode() : 0);
+    result = 31 * result + (showLabel != null ? showLabel.hashCode() : 0);
+    result = 31 * result + (horizontalRendering ? 1 : 0);
+    return result;
   }
 }

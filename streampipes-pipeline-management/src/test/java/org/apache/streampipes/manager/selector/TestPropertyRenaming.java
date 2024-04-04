@@ -22,12 +22,11 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 public class TestPropertyRenaming {
 
@@ -41,6 +40,6 @@ public class TestPropertyRenaming {
     Tuple2<List<EventProperty>, List<PropertyRenameRule>> properties =
         new PropertySelector(schema1, schema2).createRenamedPropertyList(propertySelectors);
 
-    assertEquals(properties.k.size(), 2);
+    Assertions.assertEquals(properties.k.size(), 2);
   }
 }

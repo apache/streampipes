@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -149,7 +150,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     }
   }
 
-  @GetMapping(path = "/measurements/", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/measurements", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all measurement series", tags = {"Data Lake"},
       responses = {
           @ApiResponse(
@@ -246,7 +247,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
       path = "/query",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<SpQueryResult>> getData(List<Map<String, String>> queryParams) {
+  public ResponseEntity<List<SpQueryResult>> getData(@RequestBody List<Map<String, String>> queryParams) {
     var results = queryParams
         .stream()
         .map(qp -> new ProvidedRestQueryParams(qp.get("measureName"), qp))

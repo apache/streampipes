@@ -25,8 +25,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 
-import { CustomMaterialModule } from './CustomMaterial/custom-material.module';
-
 import { CoreModule } from './core/core.module';
 import { LoginModule } from './login/login.module';
 import { HomeModule } from './home/home.module';
@@ -57,14 +55,17 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { ValueDistributionTransform } from './core-ui/echarts-transform/value-distribution.transform';
 import { HistogramTransform } from './core-ui/echarts-transform/histogram.transform';
 import { RoundValuesTransform} from './core-ui/echarts-transform/round-values.transform';
+import { MapTransform } from './core-ui/echarts-transform/map.transform';
 
 import * as echarts from 'echarts';
 import * as transform from 'echarts-simple-transform';
+import 'echarts-gl';
 
 echarts.registerTransform(transform.aggregate);
 echarts.registerTransform(ValueDistributionTransform);
 echarts.registerTransform(HistogramTransform);
 echarts.registerTransform(RoundValuesTransform);
+echarts.registerTransform(MapTransform);
 
 
 import * as $ from 'jquery';
@@ -79,7 +80,6 @@ import * as $ from 'jquery';
         BrowserModule,
         BrowserAnimationsModule,
         CoreModule,
-        CustomMaterialModule,
         MatGridListModule,
         MatIconModule,
         FlexLayoutModule,

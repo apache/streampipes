@@ -18,7 +18,7 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div fxFlex="100">
+        <div fxFlex="100" *ngIf="this.duplicateFileNames.length === 0">
             <div fxFlex="100" style="margin: 5px; width: 100%">
                 <mat-form-field
                     style="width: 95%"
@@ -82,10 +82,38 @@
                 </button>
             </div>
         </div>
+        <div
+            *ngIf="this.duplicateFileNames.length !== 0"
+            fxLayout="column"
+            style="width: 100%"
+        >
+            <div fxFlex="100" fxLayoutAlign="center" fxLayout="column">
+                <b>
+                    <h4>
+                        The following files already exist. Please rename them.
+                    </h4>
+                </b>
+                <div
+                    *ngFor="let name of this.duplicateFileNames; let i = index"
+                >
+                    <div class="input-group">
+                        <span style="margin-right: 10px">{{ name }}:</span>
+                        <mat-form-field>
+                            <input
+                                matInput
+                                placeholder="e.g. {{ '_' + name }}"
+                                [(ngModel)]="this.renamedFileNames[i]"
+                            />
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
         <button
+            *ngIf="this.duplicateFileNames.length === 0"
             mat-button
             mat-raised-button
             color="accent"
@@ -95,6 +123,18 @@
             style="margin-right: 10px"
         >
             Import files
+        </button>
+
+        <button
+            *ngIf="this.duplicateFileNames.length !== 0"
+            mat-button
+            mat-raised-button
+            color="accent"
+            (click)="renameDuplicateFiles()"
+            [disabled]="fileNames.length === 0"
+            style="margin-right: 10px"
+        >
+            Rename files
         </button>
         <button
             mat-button

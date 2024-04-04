@@ -23,6 +23,8 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.util.Objects;
+
 @JsonSubTypes({
     @JsonSubTypes.Type(AnyStaticProperty.class),
     @JsonSubTypes.Type(CodeInputStaticProperty.class),
@@ -42,14 +44,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(StaticPropertyAlternative.class),
     @JsonSubTypes.Type(StaticPropertyAlternatives.class),
     @JsonSubTypes.Type(StaticPropertyGroup.class),
-    @JsonSubTypes.Type(SlideToggleStaticProperty.class)
+    @JsonSubTypes.Type(SlideToggleStaticProperty.class),
+    @JsonSubTypes.Type(RuntimeResolvableGroupStaticProperty.class)
 })
 @TsModel
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 public abstract class StaticProperty {
 
-  private static final long serialVersionUID = 2509153122084646025L;
-  protected boolean valueRequired;
+  protected boolean optional;
   protected StaticPropertyType staticPropertyType;
   private int index;
   private String label;
@@ -72,7 +74,7 @@ public abstract class StaticProperty {
     this.index = other.getIndex();
     this.description = other.getDescription();
     this.internalName = other.getInternalName();
-    this.valueRequired = other.isValueRequired();
+    this.optional = other.isOptional();
     this.staticPropertyType = other.getStaticPropertyType();
     this.label = other.getLabel();
     this.predefined = other.isPredefined();
@@ -112,12 +114,12 @@ public abstract class StaticProperty {
     this.label = label;
   }
 
-  public boolean isValueRequired() {
-    return valueRequired;
+  public boolean isOptional() {
+    return optional;
   }
 
-  public void setValueRequired(boolean valueRequired) {
-    this.valueRequired = valueRequired;
+  public void setOptional(boolean optional) {
+    this.optional = optional;
   }
 
   public StaticPropertyType getStaticPropertyType() {
@@ -150,4 +152,45 @@ public abstract class StaticProperty {
 
   public abstract void accept(StaticPropertyVisitor visitor);
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof StaticProperty that)) {
+      return false;
+    }
+
+    if (optional != that.optional) {
+      return false;
+    }
+    if (index != that.index) {
+      return false;
+    }
+    if (predefined != that.predefined) {
+      return false;
+    }
+    if (staticPropertyType != that.staticPropertyType) {
+      return false;
+    }
+    if (!Objects.equals(label, that.label)) {
+      return false;
+    }
+    if (!Objects.equals(description, that.description)) {
+      return false;
+    }
+    return Objects.equals(internalName, that.internalName);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = (optional ? 1 : 0);
+    result = 31 * result + (staticPropertyType != null ? staticPropertyType.hashCode() : 0);
+    result = 31 * result + index;
+    result = 31 * result + (label != null ? label.hashCode() : 0);
+    result = 31 * result + (description != null ? description.hashCode() : 0);
+    result = 31 * result + (internalName != null ? internalName.hashCode() : 0);
+    result = 31 * result + (predefined ? 1 : 0);
+    return result;
+  }
 }

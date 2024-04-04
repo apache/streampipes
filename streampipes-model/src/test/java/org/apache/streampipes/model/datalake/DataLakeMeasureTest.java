@@ -18,9 +18,8 @@
 
 package org.apache.streampipes.model.datalake;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DataLakeMeasureTest {
 
@@ -36,7 +35,7 @@ public class DataLakeMeasureTest {
 
     var result = dataLakeMeasure.getTimestampField();
 
-    assertEquals(TIMESTAMP_FIELD_NAME, result);
+    Assertions.assertEquals(TIMESTAMP_FIELD_NAME, result);
   }
 
   @Test
@@ -44,7 +43,7 @@ public class DataLakeMeasureTest {
     try {
       dataLakeMeasure.setTimestampField(TIMESTAMP_FIELD);
     } catch (AssertionError assertionError) {
-      assertEquals(DataLakeMeasure.ASSERTION_ERROR_MESSAGE, assertionError.getMessage());
+      Assertions.assertEquals(DataLakeMeasure.ASSERTION_ERROR_MESSAGE, assertionError.getMessage());
     }
   }
 
@@ -54,7 +53,7 @@ public class DataLakeMeasureTest {
 
     var result = dataLakeMeasure.getTimestampFieldName();
 
-    assertEquals(TIMESTAMP_FIELD, result);
+    Assertions.assertEquals(TIMESTAMP_FIELD, result);
   }
 
 }

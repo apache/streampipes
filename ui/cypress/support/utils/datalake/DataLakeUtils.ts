@@ -99,7 +99,7 @@ export class DataLakeUtils {
         // DataLakeUtils.addNewWidget();
         DataLakeUtils.selectDataSet(dataSet);
         DataLakeUtils.dataConfigSelectAllFields();
-        DataLakeUtils.selectVisualizationConfig();
+        DataLakeUtils.openVisualizationConfig();
         DataLakeUtils.selectVisualizationType(widgetType);
         DataLakeUtils.clickCreateButton();
 
@@ -266,8 +266,7 @@ export class DataLakeUtils {
         cy.get('.mdc-tab__text-label').contains('Data').parent().click();
     }
 
-    public static selectVisualizationConfig() {
-        // Click Next button
+    public static openVisualizationConfig() {
         cy.get('.mdc-tab__text-label')
             .contains('Visualization')
             .parent()
@@ -316,29 +315,15 @@ export class DataLakeUtils {
 
     public static selectTimeRange(from: Date, to: Date) {
         DataLakeUtils.setTimeInput('time-range-from', from);
-        DataLakeUtils.clickSetTime();
         DataLakeUtils.setTimeInput('time-range-to', to);
-        DataLakeUtils.clickSetTime();
     }
 
     public static setTimeInput(field: string, date: Date) {
-        cy.dataCy(field)
-            .clear({ force: true })
-            .type(DataLakeUtils.makeTimeString(date), { force: true });
-    }
-
-    public static clickSetTime() {
-        cy.get('.owl-dt-container-buttons > button:nth-child(2)').click();
+        cy.dataCy(field).type(DataLakeUtils.makeTimeString(date));
     }
 
     public static makeTimeString(date: Date) {
-        return date.toLocaleString('en-US', {
-            month: 'numeric',
-            day: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-        });
+        return date.toISOString().slice(0, 16);
     }
 
     public static getFutureDate() {

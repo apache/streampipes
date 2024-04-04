@@ -21,12 +21,10 @@ package org.apache.streampipes.sdk.builder;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class NestedPropertyBuilderTest {
 
@@ -45,13 +43,10 @@ public class NestedPropertyBuilderTest {
                                                                                                  .build())
                                                       .build();
 
-    assertNotNull(result);
-    assertEquals("TestProperty", result.getRuntimeName());
-    assertEquals(
-        2,
-        result.getEventProperties()
-              .size()
-    );
+    Assertions.assertNotNull(result);
+    Assertions.assertEquals("TestProperty", result.getRuntimeName());
+    Assertions.assertEquals(2, result.getEventProperties()
+                                 .size());
   }
 
   @Test
@@ -59,10 +54,10 @@ public class NestedPropertyBuilderTest {
     EventPropertyNested result = NestedPropertyBuilder.create("TestProperty")
                                                       .build();
 
-    assertNotNull(result);
-    assertEquals("TestProperty", result.getRuntimeName());
-    assertTrue(result.getEventProperties()
-                     .isEmpty());
+    Assertions.assertNotNull(result);
+    Assertions.assertEquals("TestProperty", result.getRuntimeName());
+    Assertions.assertTrue(result.getEventProperties()
+                                .isEmpty());
   }
 
   @Test
@@ -82,13 +77,10 @@ public class NestedPropertyBuilderTest {
                                                       )
                                                       .build();
 
-    assertNotNull(result);
-    assertEquals("TestProperty", result.getRuntimeName());
-    assertEquals(
-        2,
-        result.getEventProperties()
-              .size()
-    );
+    Assertions.assertNotNull(result);
+    Assertions.assertEquals("TestProperty", result.getRuntimeName());
+    Assertions.assertEquals(2, result.getEventProperties()
+                                 .size());
   }
 
   @Test

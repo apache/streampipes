@@ -16,7 +16,7 @@
 #
 from typing import List, Optional
 
-from pydantic import Field, StrictBool, StrictInt, StrictStr
+from pydantic.v1 import Field, StrictBool, StrictInt, StrictStr
 
 from streampipes.model.common import (
     ApplicationLink,
@@ -24,7 +24,6 @@ from streampipes.model.common import (
     EventSchema,
     MeasurementCapability,
     MeasurementObject,
-    random_letters,
 )
 from streampipes.model.resource.resource import Resource
 
@@ -68,9 +67,9 @@ class DataStream(Resource):
                 }
             ),
             "num_transport_protocols": len(self.event_grounding.transport_protocols),
-            "num_measurement_capability": len(self.measurement_capability)
-            if self.measurement_capability is not None
-            else 0,
+            "num_measurement_capability": (
+                len(self.measurement_capability) if self.measurement_capability is not None else 0
+            ),
             "num_application_links": len(self.application_links) if self.application_links is not None else 0,
             "num_included_assets": len(self.included_assets) if self.included_assets is not None else 0,
             "num_connected_to": len(self.connected_to) if self.connected_to is not None else 0,
@@ -81,11 +80,13 @@ class DataStream(Resource):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        if not self.element_id:
+            self.element_id = f"sp:spdatastream:{self.name.replace(':', '')}"
         if not self.uri:
             self.uri = self.element_id
 
     class_name: StrictStr = Field(alias="@class", default_factory=lambda: "org.apache.streampipes.model.SpDataStream")
-    element_id: StrictStr = Field(default_factory=lambda: f"sp:spdatastream:{random_letters(6)}")
+    element_id: StrictStr = Field(default="")
     name: StrictStr = Field(default="Unnamed")
     description: Optional[StrictStr]
     icon_url: Optional[StrictStr]

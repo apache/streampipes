@@ -39,6 +39,8 @@ services:
 
   ui:
     image: "${SP_DOCKER_REGISTRY}/ui:${SP_VERSION}"
+    environment:
+      - SP_HTTP_SERVER_ADAPTER_ENDPOINT=extensions-all-jvm:8090
     ports:
       - "80:8088"
     depends_on:
@@ -149,17 +151,6 @@ services:
     restart: unless-stopped
     networks:
       spnet:
-
-  # Full version pipeline elements
-  pipeline-elements-all-flink:
-    image: "${SP_DOCKER_REGISTRY}/pipeline-elements-all-flink:${SP_VERSION}"
-    depends_on:
-      - jobmanager
-    logging: *default-logging
-    restart: unless-stopped
-    networks:
-      spnet:
-
 
 volumes:
   backend:

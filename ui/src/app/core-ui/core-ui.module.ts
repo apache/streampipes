@@ -26,11 +26,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
-import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { PortalModule } from '@angular/cdk/portal';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { StaticAnyInputComponent } from './static-properties/static-any-input/static-any-input.component';
@@ -54,8 +52,6 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { QuillModule } from 'ngx-quill';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ConfigureLabelsComponent } from './labels/components/configure-labels/configure-labels.component';
-import { LabelListItemComponent } from './labels/components/label-list-item/label-list-item.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ErrorHintComponent } from './error-hint/error-hint.component';
 import { AddToCollectionComponent } from './static-properties/static-collection/add-to-collection/add-to-collection.component';
@@ -70,10 +66,6 @@ import { SharedUiModule } from '@streampipes/shared-ui';
 import { PipelineElementTemplateConfigComponent } from './pipeline-element-template-config/pipeline-element-template-config.component';
 import { PipelineElementTemplatePipe } from './pipeline-element-template-config/pipeline-element-template.pipe';
 import { DataDownloadDialogComponent } from './data-download-dialog/data-download-dialog.component';
-import {
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-} from '@danielmoncada/angular-datetime-picker';
 import { SelectDataComponent } from './data-download-dialog/components/select-data/select-data.component';
 import { SelectFormatComponent } from './data-download-dialog/components/select-format/select-format.component';
 import { DownloadComponent } from './data-download-dialog/components/download/download.component';
@@ -82,14 +74,67 @@ import { SelectDataMissingValuesComponent } from './data-download-dialog/compone
 import { StatusWidgetComponent } from './status/status-widget.component';
 import { SpSimpleMetricsComponent } from './monitoring/simple-metrics/simple-metrics.component';
 import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.component';
+import { DateInputComponent } from './date-input/date-input.component';
+import { HelpComponent } from './help/help.component';
+import { PipelineElementRuntimeInfoComponent } from './pipeline-element-runtime-info/pipeline-element-runtime-info.component';
+import { PipelineElementDocumentationComponent } from './pipeline-element-documentation/pipeline-element-documentation.component';
+import { MarkdownModule } from 'ngx-markdown';
+import { LivePreviewLoadingComponent } from './pipeline-element-runtime-info/live-preview-loading/live-preview-loading.component';
+import { LivePreviewTableComponent } from './pipeline-element-runtime-info/live-preview-table/live-preview-table.component';
+import { LivePreviewErrorComponent } from './pipeline-element-runtime-info/live-preview-error/live-preview-error.component';
+import { FieldNamesTableComponent } from './help/field-names-table/field-names-table.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { StaticRuntimeResolvableGroupComponent } from './static-properties/static-runtime-resolvable-group/static-runtime-resolvable-group.component';
 
 @NgModule({
     imports: [
+        MatButtonModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatMenuModule,
+        MatSelectModule,
+        MatSidenavModule,
+        MatTabsModule,
+        MatToolbarModule,
+        MatStepperModule,
+        MatRadioModule,
+        MatTableModule,
+        MatExpansionModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatDividerModule,
+        MatTooltipModule,
+        MatProgressBarModule,
+        MatButtonToggleModule,
         CommonModule,
         ColorPickerModule,
         FlexLayoutModule,
         CodemirrorModule,
-        CustomMaterialModule,
         ReactiveFormsModule,
         FormsModule,
         CdkTableModule,
@@ -99,27 +144,28 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
         MatDatepickerModule,
         MatNativeDateModule,
         NgxChartsModule,
-        PlotlyViaWindowModule,
         MatSliderModule,
         MatSlideToggleModule,
         MatChipsModule,
         MatTreeModule,
-        OwlDateTimeModule,
-        OwlNativeDateTimeModule,
         PlatformServicesModule,
         PortalModule,
         SharedUiModule,
         OverlayModule,
         QuillModule.forRoot(),
         MatTreeModule,
+        MarkdownModule.forRoot(),
     ],
     declarations: [
-        ConfigureLabelsComponent,
         DataDownloadDialogComponent,
+        DateInputComponent,
         DisplayRecommendedPipe,
         ObjectPermissionDialogComponent,
         PipelineElementTemplateConfigComponent,
         PipelineElementTemplatePipe,
+        PipelineElementRuntimeInfoComponent,
+        PipelineElementDocumentationComponent,
+        HelpComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,
         StaticFreeInputComponent,
@@ -134,10 +180,10 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
         StaticCodeInputComponent,
         StaticOneOfInputComponent,
         StaticRuntimeResolvableAnyInputComponent,
+        StaticRuntimeResolvableGroupComponent,
         StaticRuntimeResolvableOneOfInputComponent,
         StaticRuntimeResolvableTreeInputComponent,
         StaticSlideToggleComponent,
-        LabelListItemComponent,
         ErrorHintComponent,
         AddToCollectionComponent,
         PipelineStartedStatusComponent,
@@ -149,6 +195,10 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
         SpSimpleLogsComponent,
         SpSimpleMetricsComponent,
         StatusWidgetComponent,
+        FieldNamesTableComponent,
+        LivePreviewLoadingComponent,
+        LivePreviewTableComponent,
+        LivePreviewErrorComponent,
     ],
     providers: [
         MatDatepickerModule,
@@ -156,9 +206,12 @@ import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.comp
         RuntimeResolvableService,
     ],
     exports: [
-        ConfigureLabelsComponent,
         DataDownloadDialogComponent,
+        DateInputComponent,
         PipelineElementTemplateConfigComponent,
+        PipelineElementRuntimeInfoComponent,
+        PipelineElementDocumentationComponent,
+        HelpComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,
         StaticFreeInputComponent,

@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { RefreshMessage } from '../models/dataview-dashboard.model';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class WidgetConfigurationService {
     public configurationChangedSubject: Subject<RefreshMessage> =
         new Subject<RefreshMessage>();

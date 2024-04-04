@@ -28,13 +28,9 @@ public interface INoSqlStorage {
 
   IAdapterStorage getAdapterDescriptionStorage();
 
-  ICategoryStorage getCategoryStorageAPI();
-
   IImageStorage getImageStorage();
 
   IUserGroupStorage getUserGroupStorage();
-
-  ILabelStorage getLabelStorageAPI();
 
   IPipelineStorage getPipelineStorageAPI();
 
@@ -42,15 +38,9 @@ public interface INoSqlStorage {
 
   IUserStorage getUserStorageAPI();
 
-  IPipelineMonitoringDataStorage getMonitoringDataStorageApi();
-
   INotificationStorage getNotificationStorageApi();
 
   IPipelineCategoryStorage getPipelineCategoryStorageApi();
-
-  IVisualizationStorage getVisualizationStorageApi();
-
-  IExtensionsServiceEndpointStorage getRdfEndpointStorage();
 
   IAssetDashboardStorage getAssetDashboardStorage();
 

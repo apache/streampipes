@@ -32,7 +32,7 @@ export class EditDataTypeComponent implements OnInit {
     constructor(private dataTypeService: DataTypesService) {}
 
     ngOnInit() {
-        this.runtimeDataTypes = this.dataTypeService.getDataTypes();
+        this.runtimeDataTypes = this.dataTypeService.dataTypes;
     }
 
     valueChanged() {

@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.manager.file;
 
+import org.apache.streampipes.commons.file.FileHasher;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
@@ -29,7 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class FileManager {
@@ -43,28 +43,18 @@ public class FileManager {
     return filetypes != null ? filterFiletypes(allFiles, filetypes) : allFiles;
   }
 
-  public static File getFileByOriginalName(String originalName) throws IOException {
-    List<FileMetadata> allFiles = getFileMetadataStorage().getAllFileMetadataDescriptions();
-
-    var file = allFiles
-            .stream()
-            .filter(fileMetadata -> fileMetadata.getOriginalFilename().equals(originalName))
-            .findFirst();
-
-    if (file.isEmpty()){
-      throw new IOException("No file with original name '%s' found".formatted(originalName));
-    }
-    return new FileHandler().getFile(file.get().getInternalFilename());
+  public static File getFile(String filename) {
+    return new FileHandler().getFile(filename);
   }
 
   /**
    * Store a file in the internal file storage.
    * For csv files the bom is removed
    *
-   * @param user            who created the file
-   * @param filename
+   * @param user who created the file
+   * @param filename name of file
    * @param fileInputStream content of file
-   * @return
+   * @return metadata of file
    */
   public static FileMetadata storeFile(String user,
                                        String filename,
@@ -74,29 +64,25 @@ public class FileManager {
 
     fileInputStream = cleanFile(fileInputStream, filetype);
 
-    String internalFilename = makeInternalFilename(filetype);
-    FileMetadata fileMetadata = makeFileMetadata(user, filename, internalFilename, filetype);
-    new FileHandler().storeFile(internalFilename, fileInputStream);
+    FileMetadata fileMetadata = makeFileMetadata(user, filename, filetype);
+    new FileHandler().storeFile(filename, fileInputStream);
     storeFileMetadata(fileMetadata);
     return fileMetadata;
   }
 
   public static void deleteFile(String id) {
     FileMetadata fileMetadata = getFileMetadataStorage().getMetadataById(id);
-    new FileHandler().deleteFile(fileMetadata.getInternalFilename());
+    new FileHandler().deleteFile(fileMetadata.getFilename());
     getFileMetadataStorage().deleteFileMetadata(id);
   }
 
-  public static File getFile(String filename) {
-    return new FileHandler().getFile(filename);
-  }
 
   /**
    * Remove Byte Order Mark (BOM) from csv files
    *
-   * @param fileInputStream
-   * @param filetype
-   * @return
+   * @param fileInputStream content of file
+   * @param filetype file of type
+   * @return input stream without BOM
    */
   public static InputStream cleanFile(InputStream fileInputStream, String filetype) {
     if (Filetypes.CSV.getFileExtensions().contains(filetype.toLowerCase())) {
@@ -104,6 +90,11 @@ public class FileManager {
     }
 
     return fileInputStream;
+  }
+
+  public static boolean checkFileContentChanged(String filename, String hash) throws IOException {
+    var fileHash = FileHasher.hash(getFile(filename));
+    return !fileHash.equals(hash);
   }
 
   private static void storeFileMetadata(FileMetadata fileMetadata) {
@@ -118,22 +109,16 @@ public class FileManager {
   }
 
   private static FileMetadata makeFileMetadata(String user,
-                                               String originalFilename,
-                                               String internalFilename,
+                                               String filename,
                                                String filetype) {
 
     FileMetadata fileMetadata = new FileMetadata();
     fileMetadata.setCreatedAt(System.currentTimeMillis());
     fileMetadata.setCreatedByUser(user);
     fileMetadata.setFiletype(filetype);
-    fileMetadata.setInternalFilename(internalFilename);
-    fileMetadata.setOriginalFilename(originalFilename);
+    fileMetadata.setFilename(filename);
 
     return fileMetadata;
-  }
-
-  private static String makeInternalFilename(String filetype) {
-    return UUID.randomUUID() + "." + filetype;
   }
 
   private static List<FileMetadata> filterFiletypes(List<FileMetadata> allFiles, String filetypes) {

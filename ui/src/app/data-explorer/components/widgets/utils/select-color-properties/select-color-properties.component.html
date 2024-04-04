@@ -16,149 +16,40 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="form-field-small">
-    <div fxLayout="row" fxLayoutAlign="start center">
-        <span class="data-explorer-header">Fields </span>
-        <div fxLayout="row" fxLayoutAlign="start center">
-            <button
-                mat-button
-                mat-raised-button
-                color="accent"
-                class="small-button"
-                style="margin-right: 10px"
-                (click)="selectAllFields()"
-            >
-                Select all
-            </button>
-            <button
-                mat-button
-                mat-raised-button
-                class="small-button mat-basic"
-                style="margin-right: 10px"
-                (click)="deselectAllFields()"
-            >
-                Deselect all
-            </button>
-        </div>
-    </div>
-    <div
-        style="margin-left: 1px; margin-right: 1px"
-        *ngFor="let field of availableProperties"
-        fxLayout="column"
-        class="field-scroll-panel"
-    >
-        <mat-checkbox
+<sp-configuration-box title="Fields" marginTop="5px">
+    <div header>
+        <button
+            mat-button
+            mat-raised-button
             color="accent"
-            [checked]="isSelected(field)"
-            (change)="toggleFieldSelection(field)"
+            class="small-button"
+            style="margin-right: 10px"
+            (click)="selectAllFields()"
         >
-            <b>{{ field.runtimeName }}</b>
-            {{
-                '(' +
-                    (field.aggregation ? field.aggregation + ', ' : '') +
-                    field.measure +
-                    ' #' +
-                    (field.sourceIndex + 1).toString() +
-                    ')'
-            }}
-        </mat-checkbox>
-        <div fxFlex fxLayoutAlign="end center" *ngIf="isSelected(field)">
-            <input
-                class="color-field"
-                [(colorPicker)]="
-                    currentlyConfiguredWidget.visualizationConfig.chosenColor[
-                        field.fullDbName + field.sourceIndex.toString()
-                    ]
-                "
-                [style.background]="
-                    currentlyConfiguredWidget.visualizationConfig.chosenColor[
-                        field.fullDbName + field.sourceIndex.toString()
-                    ]
-                "
-                required
-                [cpPosition]="'bottom'"
-                [cpPresetColors]="presetColors"
-                (colorPickerSelect)="triggerDataRefresh()"
-                autocomplete="off"
-            />
-            <mat-form-field
-                appearance="outline"
-                class="marginColorField"
-                color="accent"
-                fxFlex="60"
-            >
-                <input
-                    [(ngModel)]="
-                        currentlyConfiguredWidget.visualizationConfig
-                            .displayName[
-                            field.fullDbName + field.sourceIndex.toString()
-                        ]
-                    "
-                    matInput
-                    (input)="onFilterChange($event.target.value, field)"
-                />
-            </mat-form-field>
-            <mat-form-field
-                appearance="outline"
-                class="marginColorField"
-                color="accent"
-                fxFlex="35"
-            >
-                <mat-select
-                    [(value)]="
-                        currentlyConfiguredWidget.visualizationConfig
-                            .displayType[
-                            field.fullDbName + field.sourceIndex.toString()
-                        ]
-                    "
-                    (selectionChange)="triggerDataRefresh()"
-                >
-                    <mat-option [value]="'lines'">Line</mat-option>
-                    <mat-option [value]="'normal_markers'">Scatter</mat-option>
-                    <mat-option [value]="'lines+markers'"
-                        >Scattered Line</mat-option
-                    >
-                    <mat-option [value]="'bar'">Bar</mat-option>
-                    <mat-option [value]="'symbol_markers'">Symbol</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+            Select all
+        </button>
+        <button
+            mat-button
+            mat-raised-button
+            class="small-button mat-basic"
+            style="margin-right: 10px"
+            (click)="deselectAllFields()"
+        >
+            Deselect all
+        </button>
     </div>
-    <span class="data-explorer-header">Axis Selection </span>
     <div
-        style="margin-left: 1px; margin-right: 1px"
         *ngFor="let field of availableProperties"
         fxLayout="column"
-        class="field-scroll-panel mb-10"
+        class="field-selection-box"
     >
-        <div fxFlex fxLayoutAlign="start center" *ngIf="isSelected(field)">
-            <b>{{
-                field.runtimeName +
-                    ' (' +
-                    (field.aggregation ? field.aggregation + ', ' : '') +
-                    field.measure +
-                    ')'
-            }}</b>
-            <span fxFlex></span>
-            <mat-form-field
-                appearance="outline"
-                color="accent"
-                fxFlex="60"
-                class="marginColorFieldMore"
-            >
-                <mat-select
-                    [(value)]="
-                        currentlyConfiguredWidget.visualizationConfig
-                            .chosenAxis[
-                            field.fullDbName + field.sourceIndex.toString()
-                        ]
-                    "
-                    (selectionChange)="triggerDataRefresh()"
-                >
-                    <mat-option [value]="'left'">Left</mat-option>
-                    <mat-option [value]="'right'">Right</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+        <sp-time-series-item-config
+            [selectedProperties]="selectedProperties"
+            [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+            [field]="field"
+            (viewRefreshEmitter)="triggerViewRefresh()"
+            (configChangeEmitter)="triggerSelectedProperties()"
+        >
+        </sp-time-series-item-config>
     </div>
-</div>
+</sp-configuration-box>

@@ -19,7 +19,6 @@
 package org.apache.streampipes.manager.migration;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
-import org.apache.streampipes.manager.endpoint.HttpJsonParser;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
@@ -36,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -137,7 +135,10 @@ public abstract class AbstractMigrationManager {
   protected void performUpdate(String requestUrl) {
 
     try {
-      var entityPayload = HttpJsonParser.getContentFromUrl(URI.create(requestUrl));
+      var entityPayload = ExtensionServiceExecutions.extServiceGetRequest(requestUrl)
+          .execute()
+          .returnContent()
+          .asString();
       var updateResult = Operations.verifyAndUpdateElement(entityPayload);
       if (!updateResult.isSuccess()) {
         LOG.error(

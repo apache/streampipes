@@ -39,6 +39,7 @@ import {
     PipelineService,
 } from '@streampipes/platform-services';
 import { zip } from 'rxjs';
+import { UserInfo } from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
     templateUrl: './home.component.html',
@@ -62,6 +63,7 @@ export class HomeComponent implements OnInit {
     missingElementsForTutorial: any = [];
 
     isTutorialOpen = false;
+    currentUser: UserInfo;
 
     constructor(
         private homeService: HomeService,
@@ -79,16 +81,17 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.currentUserService.user$.subscribe(userInfo => {
-            const isAdmin = userInfo.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
-            this.showStatus =
-                isAdmin ||
-                userInfo.roles.indexOf(UserRole.ROLE_PIPELINE_ADMIN) > -1;
-            if (isAdmin) {
-                this.loadResources();
-            }
-        });
+        this.currentUser = this.currentUserService.getCurrentUser();
+        const isAdmin = this.hasRole(UserRole.ROLE_ADMIN);
+        this.showStatus = isAdmin || this.hasRole(UserRole.ROLE_PIPELINE_ADMIN);
+        if (isAdmin) {
+            this.loadResources();
+        }
         this.breadcrumbService.updateBreadcrumb([]);
+    }
+
+    hasRole(role: UserRole): boolean {
+        return this.currentUser.roles.indexOf(role) > -1;
     }
 
     openLink(link) {
@@ -100,8 +103,7 @@ export class HomeComponent implements OnInit {
     }
 
     checkForTutorial() {
-        const currentUser = this.currentUserService.getCurrentUser();
-        if (currentUser.showTutorial) {
+        if (this.currentUser.showTutorial) {
             if (this.requiredPipelineElementsForTourPresent()) {
                 this.isTutorialOpen = true;
                 const dialogRef = this.dialogService.open(
@@ -110,7 +112,7 @@ export class HomeComponent implements OnInit {
                         panelType: PanelType.STANDARD_PANEL,
                         title: 'Welcome to ' + this.appConstants.APP_NAME,
                         data: {
-                            userInfo: currentUser,
+                            userInfo: this.currentUser,
                         },
                     },
                 );
@@ -125,7 +127,7 @@ export class HomeComponent implements OnInit {
 
     startTutorial() {
         if (this.requiredPipelineElementsForTourPresent()) {
-            this.router.navigate(['connect']).then(next => {
+            this.router.navigate(['connect']).then(() => {
                 this.shepherdService.startAdapterTour();
             });
         } else {

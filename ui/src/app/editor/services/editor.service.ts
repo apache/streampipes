@@ -26,6 +26,7 @@ import {
     PipelineElementRecommendationMessage,
     PipelineModificationMessage,
     PipelinePreviewModel,
+    PipelineService,
     PlatformServicesCommons,
     SpDataStream,
 } from '@streampipes/platform-services';
@@ -36,9 +37,9 @@ import {
     PipelineElementUnion,
 } from '../model/editor.model';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { HelpComponent } from '../dialog/help/help.component';
 import { map } from 'rxjs/operators';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
+import { HelpComponent } from '../../core-ui/help/help.component';
 
 @Injectable({ providedIn: 'root' })
 export class EditorService {
@@ -53,6 +54,7 @@ export class EditorService {
         private http: HttpClient,
         private platformServicesCommons: PlatformServicesCommons,
         private dialogService: DialogService,
+        private pipelineService: PipelineService,
     ) {}
 
     get apiBasePath() {
@@ -63,26 +65,14 @@ export class EditorService {
         pipeline: Pipeline,
         currentDomId: string,
     ): Observable<PipelineElementRecommendationMessage> {
-        return this.http
-            .post(
-                this.pipelinesResourceUrl + '/recommend/' + currentDomId,
-                pipeline,
-            )
-            .pipe(
-                map(data =>
-                    PipelineElementRecommendationMessage.fromData(data as any),
-                ),
-            );
+        return this.pipelineService.recommendPipelineElement(
+            pipeline,
+            currentDomId,
+        );
     }
 
     updatePartialPipeline(pipeline): Observable<PipelineModificationMessage> {
-        return this.http
-            .post(this.pipelinesResourceUrl + '/update', pipeline)
-            .pipe(
-                map(data => {
-                    return PipelineModificationMessage.fromData(data as any);
-                }),
-            );
+        return this.pipelineService.validatePipeline(pipeline);
     }
 
     getCachedPipeline(): Observable<PipelineElementConfig[]> {
@@ -164,10 +154,6 @@ export class EditorService {
 
     removeCanvasMetadataFromCache() {
         return this.http.delete(this.apiBasePath + '/pipeline-canvas-cache');
-    }
-
-    private get pipelinesResourceUrl() {
-        return this.platformServicesCommons.apiBasePath + '/pipelines';
     }
 
     announceConfiguredElement(pipelineElementDomId: string) {

@@ -38,7 +38,7 @@ public class SpServiceTag {
   }
 
   public String asString() {
-    return prefix.asString() + COLON + value;
+    return prefix + COLON + value;
   }
 
   public SpServiceTagPrefix getPrefix() {

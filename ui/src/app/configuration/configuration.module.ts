@@ -28,7 +28,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfigurationService } from './shared/configuration.service';
 
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { MessagingConfigurationComponent } from './messaging-configuration/messaging-configuration.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DatalakeConfigurationComponent } from './datalake-configuration/datalake-configuration.component';
@@ -67,20 +66,29 @@ import { SpMessagingBrokerConfigComponent } from './messaging-configuration/brok
 import { SpExtensionsServiceDetailsDialogComponent } from './dialog/extensions-service-details/extensions-service-details-dialog.component';
 import { SpEmailTemplateConfigurationComponent } from './email-configuration/email-template-configuration/email-template-configuration.component';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
     imports: [
         CommonModule,
-        CustomMaterialModule,
         FlexLayoutModule,
         MatGridListModule,
         MatButtonModule,
+        MatButtonToggleModule,
         MatProgressSpinnerModule,
         MatIconModule,
         MatInputModule,
         MatCheckboxModule,
         MatDividerModule,
         MatTooltipModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatRadioModule,
+        MatSelectModule,
         FormsModule,
         DragDropModule,
         CoreUiModule,
@@ -88,7 +96,7 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
         PlatformServicesModule,
         RouterModule.forChild([
             {
-                path: 'configuration',
+                path: '',
                 children: [
                     {
                         path: '',

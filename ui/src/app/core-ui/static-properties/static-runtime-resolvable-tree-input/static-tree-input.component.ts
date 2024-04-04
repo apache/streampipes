@@ -90,7 +90,9 @@ export class StaticRuntimeResolvableTreeInputComponent
         ) {
             this.staticProperty.latestFetchedNodes =
                 staticProperty.latestFetchedNodes;
-            node.children = staticProperty.latestFetchedNodes;
+            if (node) {
+                node.children = staticProperty.latestFetchedNodes;
+            }
         } else {
             this.staticProperty.nodes = staticProperty.nodes;
             this.dataSource.data = this.staticProperty.nodes;
@@ -135,6 +137,10 @@ export class StaticRuntimeResolvableTreeInputComponent
         this.staticProperty.selectedNodesInternalNames = [];
         this.staticProperty.latestFetchedNodes = [];
         this.dataSource.data = [];
+        this.loadOptionsFromRestApi();
+    }
+
+    reload(): void {
         this.loadOptionsFromRestApi();
     }
 

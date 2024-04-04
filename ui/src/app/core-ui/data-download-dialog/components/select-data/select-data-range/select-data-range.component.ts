@@ -35,8 +35,6 @@ export class SelectDataRangeComponent implements OnInit {
     @Input() dataExplorerDataConfig: DataExplorerDataConfig;
     @Input() dataExportConfig: DataExportConfig;
 
-    datePickerSelection: Date[] = [];
-
     ngOnInit(): void {
         if (!this.dataExportConfig.dateRange) {
             this.initDateSelection();
@@ -46,19 +44,6 @@ export class SelectDataRangeComponent implements OnInit {
     initDateSelection() {
         const startDate = new Date();
         startDate.setDate(startDate.getDate() - 5);
-        this.datePickerSelection[0] = startDate;
-        this.datePickerSelection[1] = new Date();
-        this.dataExportConfig.dateRange = new DateRange(
-            this.datePickerSelection[0],
-            this.datePickerSelection[1],
-        );
-        this.setDateRangeFromSelection();
-    }
-
-    private setDateRangeFromSelection() {
-        this.dataExportConfig.dateRange = new DateRange(
-            this.datePickerSelection[0],
-            this.datePickerSelection[1],
-        );
+        this.dataExportConfig.dateRange = new DateRange(startDate, new Date());
     }
 }

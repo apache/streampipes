@@ -53,10 +53,10 @@ export const HistogramTransform: ExternalDataTransform<HistogramConfig> = {
         values.shift();
 
         let bins = bin();
-        if (!autoBin && numberOfBins) {
+        if (!autoBin && numberOfBins !== undefined) {
             bins = bins.thresholds(numberOfBins);
         }
-        if (!autoDomain && domainMin && domainMax) {
+        if (!autoDomain && domainMin !== undefined && domainMax !== undefined) {
             bins = bins.domain([domainMin, domainMax]);
         }
         const d3h = bins(values);

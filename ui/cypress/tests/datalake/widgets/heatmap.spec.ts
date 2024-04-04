@@ -27,10 +27,10 @@ describe('Test Heatmap View in Data Explorer', () => {
         DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Heatmap');
 
         // Check checkbox
-        DataLakeUtils.selectVisualizationConfig();
+        DataLakeUtils.openVisualizationConfig();
         cy.get('mat-checkbox input').click({ force: true });
 
         // Check if heatmap chart is visible
-        cy.get('sp-data-explorer-heatmap-widget').should('be.visible');
+        cy.dataCy('heatmap').should('be.visible');
     });
 });

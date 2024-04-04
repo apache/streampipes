@@ -46,38 +46,19 @@
 
     <div
         fxLayout="row"
-        fxLayoutAlign="start center"
+        fxLayoutGap="10px"
         class="ml-35"
         *ngIf="dataExportConfig.dataRangeConfiguration === 'customInterval'"
     >
-        <mat-form-field class="form-field-date">
-            <input
-                matInput
-                [owlDateTime]="dt1"
-                [owlDateTimeTrigger]="dt1"
-                [(ngModel)]="datePickerSelection"
-                [selectMode]="'range'"
-                (dateTimeChange)="setDateRangeFromSelection()"
-            />
-            <mat-icon
-                matSuffix
-                [owlDateTimeTrigger]="dt1"
-                *ngIf="
-                    dataExportConfig.dataRangeConfiguration === 'customInterval'
-                "
-            >
-                event
-            </mat-icon>
-            <mat-icon
-                matSuffix
-                class="event-color"
-                *ngIf="
-                    dataExportConfig.dataRangeConfiguration !== 'customInterval'
-                "
-            >
-                event
-            </mat-icon>
-            <owl-date-time #dt1></owl-date-time>
-        </mat-form-field>
+        <div>
+            <h5>From&nbsp;</h5>
+            <sp-date-input [(date)]="dataExportConfig.dateRange.startDate">
+            </sp-date-input>
+        </div>
+        <div>
+            <h5>To&nbsp;</h5>
+            <sp-date-input [(date)]="dataExportConfig.dateRange.endDate">
+            </sp-date-input>
+        </div>
     </div>
 </mat-radio-group>

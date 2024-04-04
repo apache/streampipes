@@ -63,7 +63,8 @@ class StreamPipesFunction(ABC):
         -------
         None
         """
-        event["timestamp"] = int(1000 * time())
+        if "timestamp" not in event.keys():
+            event["timestamp"] = int(1000 * time())
         self.output_collectors[stream_id].collect(event)
 
     def getFunctionId(self) -> FunctionId:

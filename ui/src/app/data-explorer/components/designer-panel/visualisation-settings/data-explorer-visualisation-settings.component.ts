@@ -31,13 +31,24 @@ import { DataExplorerWidgetRegistry } from '../../../registry/data-explorer-widg
 export class DataExplorerVisualisationSettingsComponent implements OnInit {
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
 
-    constructor(private widgetTypeService: WidgetTypeService) {}
+    constructor(
+        private widgetTypeService: WidgetTypeService,
+        private widgetRegistryService: DataExplorerWidgetRegistry,
+    ) {}
 
     availableWidgets: IWidget<any>[];
+    activeWidgetType: IWidget<any>;
 
     ngOnInit(): void {
         this.availableWidgets =
-            DataExplorerWidgetRegistry.getAvailableWidgetTemplates();
+            this.widgetRegistryService.getAvailableWidgetTemplates();
+        this.selectWidget();
+    }
+
+    selectWidget(): void {
+        this.activeWidgetType = this.availableWidgets.find(
+            w => w.id === this.currentlyConfiguredWidget.widgetType,
+        );
     }
 
     triggerWidgetTypeChange(ev: MatSelectChange) {
@@ -45,5 +56,6 @@ export class DataExplorerVisualisationSettingsComponent implements OnInit {
             widgetId: this.currentlyConfiguredWidget._id,
             newWidgetTypeId: ev.value,
         });
+        this.selectWidget();
     }
 }

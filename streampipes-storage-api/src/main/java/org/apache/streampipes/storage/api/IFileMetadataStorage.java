@@ -32,4 +32,6 @@ public interface IFileMetadataStorage {
   void deleteFileMetadata(String id);
 
   void addFileMetadata(FileMetadata fileMetadata);
+
+  void updateFileMetadata(FileMetadata fileMetadata);
 }

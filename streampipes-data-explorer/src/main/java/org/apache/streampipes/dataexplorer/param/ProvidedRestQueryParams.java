@@ -46,7 +46,7 @@ public class ProvidedRestQueryParams {
   }
 
   public Integer getAsInt(String key) {
-    return has(key) ? Integer.parseInt(providedParams.get(key)) : null;
+    return has(key) ? Integer.parseInt(String.valueOf(providedParams.get(key))) : null;
   }
 
   public String getAsString(String key) {
@@ -63,6 +63,10 @@ public class ProvidedRestQueryParams {
 
   public void update(String key, String value) {
     this.providedParams.put(key, value);
+  }
+
+  public void update(String key, long value) {
+    update(key, String.valueOf(value));
   }
 
   public void update(String key, Integer value) {

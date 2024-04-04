@@ -16,21 +16,14 @@
  *
  */
 
-import {
-    ActivatedRouteSnapshot,
-    CanActivateChild,
-    Router,
-} from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { PageName } from '../_enums/page-name.enum';
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class PageAuthGuard implements CanActivateChild {
-    constructor(
-        private router: Router,
-        private authService: AuthService,
-    ) {}
+export class PageAuthGuard {
+    constructor(private authService: AuthService) {}
 
     canActivateChild(activatedRouteSnapshot: ActivatedRouteSnapshot): boolean {
         const pageNames: PageName[] = activatedRouteSnapshot.data.authPageNames;

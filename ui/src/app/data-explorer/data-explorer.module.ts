@@ -31,32 +31,17 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
-import {
-    OWL_DATE_TIME_FORMATS,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-} from '@danielmoncada/angular-datetime-picker';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GridsterModule } from 'angular-gridster2';
-import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
-import {
-    DatalakeRestService,
-    DataViewDataExplorerService,
-    DataViewQueryGeneratorService,
-    PlatformServicesModule,
-    SharedDatalakeRestService,
-} from '@streampipes/platform-services';
+import { PlatformServicesModule } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { DataExplorerDashboardGridComponent } from './components/widget-view/grid-view/data-explorer-dashboard-grid.component';
 import { DataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview.component';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
 import { TimeRangeSelectorComponent } from './components/time-selector/timeRangeSelector.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
 import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
-import { TimeSeriesChartWidgetComponent } from './components/widgets/time-series-chart/time-series-chart-widget.component';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { AggregateConfigurationComponent } from './components/widgets/utils/aggregate-configuration/aggregate-configuration.component';
 import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
@@ -64,28 +49,18 @@ import { NoDataInDateRangeComponent } from './components/widgets/utils/no-data/n
 import { SelectPropertiesComponent } from './components/widgets/utils/select-properties/select-properties.component';
 import { SelectColorPropertiesComponent } from './components/widgets/utils/select-color-properties/select-color-properties.component';
 import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
-import { RefreshDashboardService } from './services/refresh-dashboard.service';
-import { ResizeService } from './services/resize.service';
 import { GroupConfigurationComponent } from './components/widgets/utils/group-configuration/group-configuration.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { ColorService } from './components/widgets/time-series-chart/services/color.service';
 import { DataExplorerDesignerPanelComponent } from './components/designer-panel/data-explorer-designer-panel.component';
 import { TableWidgetConfigComponent } from './components/widgets/table/config/table-widget-config.component';
 import { MapWidgetComponent } from './components/widgets/map/map-widget.component';
 import { MapWidgetConfigComponent } from './components/widgets/map/config/map-widget-config.component';
-import { HeatmapWidgetComponent } from './components/widgets/heatmap/heatmap-widget.component';
 import { HeatmapWidgetConfigComponent } from './components/widgets/heatmap/config/heatmap-widget-config.component';
 import { DataExplorerWidgetAppearanceSettingsComponent } from './components/designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component';
 import { DataExplorerWidgetDataSettingsComponent } from './components/designer-panel/data-settings/data-explorer-widget-data-settings.component';
-import { WidgetConfigurationService } from './services/widget-configuration.service';
 import { TimeSeriesChartWidgetConfigComponent } from './components/widgets/time-series-chart/config/time-series-chart-widget-config.component';
 import { ImageWidgetConfigComponent } from './components/widgets/image/config/image-widget-config.component';
-import { IndicatorChartWidgetComponent } from './components/widgets/indicator/indicator-chart-widget.component';
 import { IndicatorWidgetConfigComponent } from './components/widgets/indicator/config/indicator-chart-widget-config.component';
-import { CorrelationChartWidgetComponent } from './components/widgets/correlation-chart/correlation-chart-widget.component';
-import { DistributionChartWidgetComponent } from './components/widgets/distribution-chart/distribution-chart-widget.component';
-import { DistributionWidgetConfigComponent } from './components/widgets/distribution-chart/config/distribution-chart-widget-config.component';
-import { DataExplorerFieldProviderService } from './services/data-explorer-field-provider-service';
 import { FieldSelectionPanelComponent } from './components/designer-panel/data-settings/field-selection-panel/field-selection-panel.component';
 import { FieldSelectionComponent } from './components/designer-panel/data-settings/field-selection/field-selection.component';
 import { FilterSelectionPanelComponent } from './components/designer-panel/data-settings/filter-selection-panel/filter-selection-panel.component';
@@ -94,7 +69,6 @@ import { DataExplorerVisualisationSettingsComponent } from './components/designe
 import { GroupSelectionPanelComponent } from './components/designer-panel/data-settings/group-selection-panel/group-selection-panel.component';
 import { WidgetDirective } from './components/widget/widget.directive';
 import { CorrelationWidgetConfigComponent } from './components/widgets/correlation-chart/config/correlation-chart-widget-config.component';
-import { TimeSelectionService } from './services/time-selection.service';
 import { TooMuchDataComponent } from './components/widgets/utils/too-much-data/too-much-data.component';
 import { RouterModule } from '@angular/router';
 import { DataExplorerDashboardSlideViewComponent } from './components/widget-view/slide-view/data-explorer-dashboard-slide-view.component';
@@ -104,42 +78,71 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { ImageViewerComponent } from './components/widgets/image/image-viewer/image-viewer.component';
 import { ImageBarComponent } from './components/widgets/image/image-bar/image-bar.component';
 import { ImageBarPreviewComponent } from './components/widgets/image/image-bar/image-bar-preview/image-bar-preview.component';
-
-export const MY_NATIVE_FORMATS = {
-    fullPickerInput: {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        hourCycle: 'h23',
-    },
-    datePickerInput: {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour12: false,
-    },
-    timePickerInput: { hour: 'numeric', minute: 'numeric', hour12: false },
-    monthYearLabel: { year: 'numeric', month: 'short', hour12: false },
-    dateA11yLabel: {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour12: false,
-    },
-    monthYearA11yLabel: { year: 'numeric', month: 'long', hour12: false },
-};
+import { SpEchartsWidgetComponent } from './components/widgets/base/echarts-widget.component';
+import { SpValueHeatmapWidgetConfigComponent } from './components/widgets/value-heatmap/config/value-heatmap-chart-widget-config.component';
+import { SpHistogramChartWidgetConfigComponent } from './components/widgets/histogram/config/histogram-chart-widget-config.component';
+import { SpPieChartWidgetConfigComponent } from './components/widgets/pie/config/pie-chart-widget-config.component';
+import { SpInvalidConfigurationComponent } from './components/widgets/utils/invalid-configuration/invalid-configuration.component';
+import { SpConfigurationBoxComponent } from './components/widgets/utils/layout/configuration-box.component';
+import { SpVisualizationConfigOuterComponent } from './components/widgets/utils/visualization-config-outer/visualization-config-outer.component';
+import { SpSelectAxisOptionsComponent } from './components/widgets/utils/select-axis-options/select-axis-options.component';
+import { SpTimeseriesItemConfigComponent } from './components/widgets/utils/select-color-properties/time-series-item-config/time-series-item-config.component';
+import { SpEchartsWidgetAppearanceConfigComponent } from './components/widgets/utils/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
+import { SpTimeSeriesAppearanceConfigComponent } from './components/widgets/time-series-chart/appearance-config/time-series-appearance-config.component';
+import { SpDataZoomConfigComponent } from './components/widgets/utils/data-zoom-config/data-zoom-config.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTableModule } from '@angular/material/table';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
     imports: [
+        MatButtonModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatMenuModule,
+        MatSelectModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatStepperModule,
+        MatRadioModule,
+        MatTableModule,
+        MatAutocompleteModule,
+        MatExpansionModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatDividerModule,
+        MatTooltipModule,
+        MatProgressBarModule,
+        MatButtonToggleModule,
         CommonModule,
         LeafletModule,
         CoreUiModule,
         MatTabsModule,
         GridsterModule,
         FlexLayoutModule,
-        CustomMaterialModule,
         FormsModule,
         ColorPickerModule,
         MatGridListModule,
@@ -149,9 +152,6 @@ export const MY_NATIVE_FORMATS = {
         MatProgressSpinnerModule,
         ReactiveFormsModule,
         CoreUiModule,
-        OwlDateTimeModule,
-        OwlNativeDateTimeModule,
-        PlotlyViaWindowModule,
         MatDatepickerModule,
         MatNativeDateModule,
         MatSliderModule,
@@ -162,7 +162,7 @@ export const MY_NATIVE_FORMATS = {
         NgxEchartsModule.forChild(),
         RouterModule.forChild([
             {
-                path: 'dataexplorer',
+                path: '',
                 children: [
                     {
                         path: '',
@@ -193,7 +193,6 @@ export const MY_NATIVE_FORMATS = {
         DataExplorerEditDataViewDialogComponent,
         DataExplorerWidgetAppearanceSettingsComponent,
         DataExplorerWidgetDataSettingsComponent,
-        CorrelationChartWidgetComponent,
         CorrelationWidgetConfigComponent,
         FieldSelectionPanelComponent,
         FieldSelectionComponent,
@@ -203,14 +202,10 @@ export const MY_NATIVE_FORMATS = {
         ImageBarComponent,
         ImageBarPreviewComponent,
         ImageWidgetConfigComponent,
-        IndicatorChartWidgetComponent,
         IndicatorWidgetConfigComponent,
-        TimeSeriesChartWidgetComponent,
         TimeSeriesChartWidgetConfigComponent,
         LoadDataSpinnerComponent,
         NoDataInDateRangeComponent,
-        DistributionChartWidgetComponent,
-        DistributionWidgetConfigComponent,
         SelectPropertiesComponent,
         SelectColorPropertiesComponent,
         SelectPropertyComponent,
@@ -219,7 +214,6 @@ export const MY_NATIVE_FORMATS = {
         MapWidgetConfigComponent,
         MapWidgetComponent,
         HeatmapWidgetConfigComponent,
-        HeatmapWidgetComponent,
         ImageViewerComponent,
         TimeRangeSelectorComponent,
         DataExplorerVisualisationSettingsComponent,
@@ -227,24 +221,20 @@ export const MY_NATIVE_FORMATS = {
         DataExplorerVisualisationSettingsComponent,
         WidgetDirective,
         TooMuchDataComponent,
+        SpEchartsWidgetComponent,
+        SpValueHeatmapWidgetConfigComponent,
+        SpHistogramChartWidgetConfigComponent,
+        SpPieChartWidgetConfigComponent,
+        SpInvalidConfigurationComponent,
+        SpConfigurationBoxComponent,
+        SpVisualizationConfigOuterComponent,
+        SpSelectAxisOptionsComponent,
+        SpTimeseriesItemConfigComponent,
+        SpEchartsWidgetAppearanceConfigComponent,
+        SpTimeSeriesAppearanceConfigComponent,
+        SpDataZoomConfigComponent,
     ],
-    providers: [
-        DatalakeRestService,
-        SharedDatalakeRestService,
-        DataExplorerFieldProviderService,
-        DataViewDataExplorerService,
-        DataViewQueryGeneratorService,
-        ResizeService,
-        ColorService,
-        RefreshDashboardService,
-        SemanticTypeUtilsService,
-        TimeSelectionService,
-        WidgetConfigurationService,
-        {
-            provide: OWL_DATE_TIME_FORMATS,
-            useValue: MY_NATIVE_FORMATS,
-        },
-    ],
+    providers: [],
     exports: [],
 })
 export class DataExplorerModule {

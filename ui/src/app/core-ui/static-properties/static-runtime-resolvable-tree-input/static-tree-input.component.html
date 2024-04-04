@@ -29,6 +29,16 @@
             >
                 <span>Clear selection & reload</span>
             </button>
+            <button
+                mat-raised-button
+                color="accent"
+                class="small-button"
+                (click)="reload()"
+                style="margin-right: 10px"
+                [disabled]="!showOptions"
+            >
+                <span>Reload</span>
+            </button>
         </div>
         <div fxLayout="column" *ngIf="loading" class="mt-10">
             <mat-spinner

@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class DataTypesService {
-    private dataTypes: { label: string; url: string }[] = [
+    public dataTypes: { label: string; url: string }[] = [
         {
             label: "String - A textual datatype, e.g., 'machine1'",
             url: 'http://www.w3.org/2001/XMLSchema#string',
@@ -49,33 +49,8 @@ export class DataTypesService {
 
     constructor() {}
 
-    getLabel(url: string): string {
-        for (const dataType of this.dataTypes) {
-            if (dataType.url === url) {
-                return dataType.label;
-            }
-        }
-        return 'Invalid data type';
-    }
-
-    getUrl(id: number): string {
-        return this.dataTypes[id].url;
-    }
-
-    getDataTypes() {
-        return this.dataTypes;
-    }
-
-    getNumberTypeUrl(): string {
-        return String(this.dataTypes[2].url);
-    }
-
     getStringTypeUrl(): string {
         return String(this.dataTypes[0].url);
-    }
-
-    getBooleanTypeUrl(): string {
-        return String(this.dataTypes[1].url);
     }
 
     isNumeric(uri: string) {

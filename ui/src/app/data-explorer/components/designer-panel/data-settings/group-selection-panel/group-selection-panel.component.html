@@ -15,30 +15,27 @@
   ~ limitations under the License.
   ~
   -->
-<div fxLayout="column">
-    <div fxLayout="row" fxLayoutAlign="start center">
-        <span class="data-explorer-header">Group By</span>
-        <div fxLayout="row" fxLayoutAlign="start center">
-            <button
-                mat-button
-                mat-raised-button
-                color="accent"
-                class="small-button"
-                style="margin-right: 10px"
-                (click)="selectAllFields()"
-            >
-                Select all
-            </button>
-            <button
-                mat-button
-                mat-raised-button
-                class="small-button mat-basic"
-                style="margin-right: 10px"
-                (click)="deselectAllFields()"
-            >
-                Deselect all
-            </button>
-        </div>
+<sp-configuration-box title="Group by" marginTop="5px">
+    <div header>
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            class="small-button"
+            style="margin-right: 10px"
+            (click)="selectAllFields()"
+        >
+            Select all
+        </button>
+        <button
+            mat-button
+            mat-raised-button
+            class="small-button mat-basic"
+            style="margin-right: 10px"
+            (click)="deselectAllFields()"
+        >
+            Deselect all
+        </button>
     </div>
     <div fxLayout="column" class="field-scroll-panel">
         <div
@@ -57,4 +54,4 @@
             </mat-checkbox>
         </div>
     </div>
-</div>
+</sp-configuration-box>

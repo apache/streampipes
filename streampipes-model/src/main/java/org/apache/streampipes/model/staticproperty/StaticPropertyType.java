@@ -31,6 +31,7 @@ public enum StaticPropertyType {
   MatchingStaticProperty,
   OneOfStaticProperty,
   RuntimeResolvableAnyStaticProperty,
+  RuntimeResolvableGroupStaticProperty,
   RuntimeResolvableOneOfStaticProperty,
   RuntimeResolvableTreeInputStaticProperty,
   StaticPropertyGroup,

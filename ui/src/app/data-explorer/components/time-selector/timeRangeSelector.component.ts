@@ -45,7 +45,7 @@ export class TimeRangeSelectorComponent implements OnInit {
         { value: '1 hour', offset: 60 },
         { value: '1 day', offset: 1440 },
         { value: '1 week', offset: 10080 },
-        { value: '1 month', offset: 43800 },
+        { value: '1 month', offset: 43200 },
         { value: '1 year', offset: 525600 },
         { value: 'custom', offset: -1 },
     ];

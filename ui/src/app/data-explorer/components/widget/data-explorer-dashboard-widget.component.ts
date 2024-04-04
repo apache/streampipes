@@ -33,7 +33,6 @@ import {
     DataExplorerDataConfig,
     DataExplorerWidgetModel,
     DataLakeMeasure,
-    DataViewDataExplorerService,
     DateRange,
     SpLogMessage,
     TimeSettings,
@@ -43,7 +42,6 @@ import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
 import { WidgetDirective } from './widget.directive';
-import { BaseWidgetData } from '../widgets/base/data-explorer-widget-data';
 import { WidgetTypeService } from '../../services/widget-type.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
@@ -52,6 +50,7 @@ import {
     DialogService,
     PanelType,
 } from '@streampipes/shared-ui';
+import { BaseWidgetData } from '../../models/dataview-dashboard.model';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-widget',
@@ -118,7 +117,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     @ViewChild(WidgetDirective, { static: true }) widgetHost!: WidgetDirective;
 
     constructor(
-        private dataViewDataExplorerService: DataViewDataExplorerService,
+        private widgetRegistryService: DataExplorerWidgetRegistry,
         private dialogService: DialogService,
         private componentFactoryResolver: ComponentFactoryResolver,
         private widgetTypeService: WidgetTypeService,
@@ -159,11 +158,11 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
 
     chooseWidget(widgetTypeId: string) {
         const widgets =
-            DataExplorerWidgetRegistry.getAvailableWidgetTemplates();
+            this.widgetRegistryService.getAvailableWidgetTemplates();
         const widgetToDisplay = widgets.find(
             widget => widget.id === widgetTypeId,
         );
-        this.loadComponent(widgetToDisplay.componentClass);
+        this.loadComponent(widgetToDisplay.widgetComponent);
     }
 
     loadComponent(widgetToDisplay) {

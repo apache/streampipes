@@ -47,8 +47,8 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.apache.plc4x.java.PlcDriverManager;
 import org.apache.plc4x.java.api.PlcConnection;
+import org.apache.plc4x.java.api.PlcDriverManager;
 import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
 import org.apache.plc4x.java.api.messages.PlcReadRequest;
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
@@ -76,14 +76,14 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
   /**
    * Keys of user configuration parameters
    */
-  private static final String PLC_IP = "plc_ip";
-  private static final String PLC_PORT = "plc_port";
+  public static final String PLC_IP = "plc_ip";
+  public static final String PLC_PORT = "plc_port";
 
-  private static final String PLC_NODES = "plc_nodes";
-  private static final String PLC_NODE_ID = "plc_node_id";
-  private static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
-  private static final String PLC_NODE_ADDRESS = "plc_node_address";
-  private static final String PLC_NODE_TYPE = "plc_node_type";
+  public static final String PLC_NODES = "plc_nodes";
+  public static final String PLC_NODE_ID = "plc_node_id";
+  public static final String PLC_NODE_RUNTIME_NAME = "plc_node_runtime_name";
+  public static final String PLC_NODE_ADDRESS = "plc_node_address";
+  public static final String PLC_NODE_TYPE = "plc_node_type";
   private static final String CONFIGURE = "configure";
 
   /**
@@ -179,10 +179,10 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
     getConfigurations(extractor);
 
     try {
-      this.plcConnection = new PlcDriverManager().getConnection(
+      this.plcConnection = PlcDriverManager.getDefault().getConnectionManager().getConnection(
           "modbus-tcp:tcp://" + this.ip + ":" + this.port + "?unit-identifier=" + this.slaveID);
 
-      if (!this.plcConnection.getMetadata().canRead()) {
+      if (!this.plcConnection.getMetadata().isReadSupported()) {
         throw new AdapterException("The Modbus device on IP: " + this.ip + " does not support reading data");
       }
     } catch (PlcConnectionException pce) {
@@ -202,12 +202,12 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
 
       switch (node.get(PLC_NODE_TYPE)) {
         case "Coil" ->
-            builder.addItem(node.get(PLC_NODE_RUNTIME_NAME), "coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
-        case "HoldingRegister" -> builder.addItem(node.get(PLC_NODE_RUNTIME_NAME),
+            builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME), "coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+        case "HoldingRegister" -> builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME),
             "holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
-        case "DiscreteInput" -> builder.addItem(node.get(PLC_NODE_RUNTIME_NAME),
+        case "DiscreteInput" -> builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME),
             "discrete-input:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
-        case "InputRegister" -> builder.addItem(node.get(PLC_NODE_RUNTIME_NAME),
+        case "InputRegister" -> builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME),
             "input-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
       }
     }
@@ -273,11 +273,11 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
    */
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 0, Plc4xModbusAdapter::new)
+    return AdapterConfigurationBuilder.create(ID, 1, Plc4xModbusAdapter::new)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withCategory(AdapterType.Manufacturing)
-        .requiredTextParameter(Labels.withId(PLC_IP)).requiredTextParameter(Labels.withId(PLC_PORT))
+        .requiredTextParameter(Labels.withId(PLC_IP)).requiredIntegerParameter(Labels.withId(PLC_PORT))
         .requiredTextParameter(Labels.withId(PLC_NODE_ID)).requiredCollection(Labels.withId(PLC_NODES),
             StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
             StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ADDRESS)),

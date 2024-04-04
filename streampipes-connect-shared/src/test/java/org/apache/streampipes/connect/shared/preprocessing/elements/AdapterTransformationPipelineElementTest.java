@@ -22,15 +22,13 @@ import org.apache.streampipes.connect.shared.preprocessing.generator.StatelessTr
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class AdapterTransformationPipelineElementTest {
@@ -52,9 +50,9 @@ public class AdapterTransformationPipelineElementTest {
 
     var result = pipelineElement.process(event);
 
-    assertEquals(2, result.size());
-    assertTrue(result.containsKey("temp"));
-    assertFalse(result.containsKey("temperature"));
-    assertTrue(result.containsKey("timestamp"));
+    Assertions.assertEquals(2, result.size());
+    Assertions.assertTrue(result.containsKey("temp"));
+    Assertions.assertFalse(result.containsKey("temperature"));
+    Assertions.assertTrue(result.containsKey("timestamp"));
   }
 }

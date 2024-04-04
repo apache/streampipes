@@ -21,13 +21,12 @@ package org.apache.streampipes.extensions.management.connect;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -38,7 +37,7 @@ public class ConnectWorkerDescriptionProviderTest {
   private String adapterId = "adapterAppId";
   private ConnectWorkerDescriptionProvider provider;
 
-  @Before
+  @BeforeEach
   public void initializeProvider() {
     provider = spy(new ConnectWorkerDescriptionProvider());
 
@@ -55,24 +54,13 @@ public class ConnectWorkerDescriptionProviderTest {
   }
 
   @Test
-  public void getAdapterDescriptions() {
-    var expected = AdapterConfigurationBuilder
-        .create(adapterId, null)
-        .buildConfiguration()
-        .getAdapterDescription();
-
-    var result = provider.getAdapterDescriptions();
-
-    assertEquals(1, result.size());
-    assertEquals(expected, result.get(0));
-  }
-
-  @Test
   public void getAdapterDescription() {
     var result = provider.getAdapterDescription(adapterId);
 
-    assertTrue(result.isPresent());
-    assertEquals(adapterId, result.get().getAppId());
+    Assertions.assertTrue(result.isPresent());
+    Assertions.assertEquals(adapterId,
+                            result.get().getAppId()
+    );
   }
 
 

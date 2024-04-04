@@ -17,8 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UUID } from 'angular2-uuid';
-import { TreeNode } from '@circlon/angular-tree-component';
+import { TreeNode } from '@ali-hm/angular-tree-component';
 import {
     EventProperty,
     EventPropertyList,
@@ -27,13 +26,14 @@ import {
     EventPropertyUnion,
     EventSchema,
     FieldStatusInfo,
-    TransformationRuleDescription,
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
 import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
+import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
+import { SemanticTypeService } from '../../../../../core-services/types/semantic-type.service';
 
 @Component({
     selector: 'sp-event-property-row',
@@ -74,6 +74,8 @@ export class EventPropertyRowComponent implements OnInit {
         private dialogService: DialogService,
         private epUtils: EventPropertyUtilsService,
         private shepherdService: ShepherdService,
+        private idGeneratorService: IdGeneratorService,
+        private semanticTypeService: SemanticTypeService,
     ) {}
 
     ngOnInit() {
@@ -160,10 +162,10 @@ export class EventPropertyRowComponent implements OnInit {
         if (
             node.domainProperties &&
             node.domainProperties.some(
-                dp => dp === 'http://schema.org/DateTime',
+                dp => dp === this.semanticTypeService.TIMESTAMP,
             )
         ) {
-            node.runtimeType = 'http://www.w3.org/2001/XMLSchema#long';
+            node.runtimeType = this.semanticTypeService.XS_LONG;
             return true;
         } else {
             return false;
@@ -251,7 +253,7 @@ export class EventPropertyRowComponent implements OnInit {
     }
 
     public addNestedProperty(eventProperty: EventPropertyNested): void {
-        const uuid: string = UUID.UUID();
+        const uuid: string = this.idGeneratorService.generate(25);
         if (!eventProperty.eventProperties) {
             eventProperty.eventProperties = new Array<EventPropertyUnion>();
         }

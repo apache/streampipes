@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    NgModule,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import {
     FilesService,
@@ -26,6 +32,8 @@ import {
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { UntypedFormControl, ValidatorFn, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { FileRenameDialogComponent } from '../../../files/dialog/file-rename/file-rename-dialog.component';
 
 @Component({
     selector: 'sp-static-file-input',
@@ -39,6 +47,8 @@ export class StaticFileInputComponent
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     public chooseExistingFileControl = new UntypedFormControl();
+
+    dialogRef: MatDialogRef<FileRenameDialogComponent>;
 
     fileName: string;
 
@@ -54,7 +64,10 @@ export class StaticFileInputComponent
 
     filesLoaded = false;
 
-    constructor(private filesService: FilesService) {
+    constructor(
+        private filesService: FilesService,
+        public dialog: MatDialog,
+    ) {
         super();
     }
 
@@ -76,15 +89,14 @@ export class StaticFileInputComponent
         return validators;
     }
 
-    fetchFileMetadata(internalFilenameToSelect?: any) {
+    fetchFileMetadata(filenameToSelect?: any) {
         this.filesService
             .getFileMetadata(this.staticProperty.requiredFiletypes)
             .subscribe(fm => {
                 this.fileMetadata = fm;
-                if (internalFilenameToSelect) {
+                if (filenameToSelect) {
                     this.selectedFile = this.fileMetadata.find(
-                        fmi =>
-                            fmi.internalFilename === internalFilenameToSelect,
+                        fmi => fmi.filename === filenameToSelect,
                     );
                     this.selectOption(this.selectedFile);
                     this.emitUpdate(true);
@@ -96,8 +108,7 @@ export class StaticFileInputComponent
                 } else if (this.staticProperty.locationPath) {
                     this.selectedFile = this.fileMetadata.find(
                         fmi =>
-                            fmi.internalFilename ===
-                            this.staticProperty.locationPath,
+                            fmi.filename === this.staticProperty.locationPath,
                     );
                 } else {
                     if (this.fileMetadata.length > 0) {
@@ -122,45 +133,75 @@ export class StaticFileInputComponent
     }
 
     upload() {
-        this.uploadStatus = 0;
         if (this.selectedUploadFile !== undefined) {
-            this.filesService.uploadFile(this.selectedUploadFile).subscribe(
-                event => {
-                    if (event.type === HttpEventType.UploadProgress) {
-                        this.uploadStatus = Math.round(
-                            (100 * event.loaded) / event.total,
+            this.filesService.getAllFilenames().subscribe(allFileNames => {
+                if (
+                    !allFileNames.includes(
+                        this.selectedUploadFile.name.toLowerCase(),
+                    )
+                ) {
+                    this.uploadStatus = 0;
+                    this.filesService
+                        .uploadFile(this.selectedUploadFile)
+                        .subscribe(
+                            event => {
+                                if (
+                                    event.type === HttpEventType.UploadProgress
+                                ) {
+                                    this.uploadStatus = Math.round(
+                                        (100 * event.loaded) / event.total,
+                                    );
+                                } else if (event instanceof HttpResponse) {
+                                    const filename = event.body.filename;
+                                    this.parentForm.controls[
+                                        this.fieldName
+                                    ].setValue(filename);
+                                    this.fetchFileMetadata(filename);
+                                }
+                            },
+                            error => {},
                         );
-                    } else if (event instanceof HttpResponse) {
-                        const internalFilename = event.body.internalFilename;
-                        this.parentForm.controls[this.fieldName].setValue(
-                            internalFilename,
-                        );
-                        this.fetchFileMetadata(internalFilename);
-                    }
-                },
-                error => {},
-            );
+                } else {
+                    this.openRenameDialog();
+                }
+            });
         }
     }
 
     selectOption(fileMetadata: FileMetadata) {
-        this.staticProperty.locationPath = fileMetadata.internalFilename;
+        this.staticProperty.locationPath = fileMetadata.filename;
         const valid: boolean =
-            fileMetadata.internalFilename !== '' ||
-            fileMetadata.internalFilename !== undefined;
+            fileMetadata.filename !== '' || fileMetadata.filename !== undefined;
         this.updateEmitter.emit(
             new ConfigurationInfo(this.staticProperty.internalName, valid),
         );
     }
 
     displayFn(fileMetadata: FileMetadata) {
-        return fileMetadata ? fileMetadata.originalFilename : '';
+        return fileMetadata ? fileMetadata.filename : '';
     }
 
     onStatusChange(status: any) {}
 
     onValueChange(value: any) {
-        this.staticProperty.locationPath = value.internalFilename;
+        this.staticProperty.locationPath = value.filename;
         this.parentForm.updateValueAndValidity();
+    }
+
+    openRenameDialog() {
+        this.dialogRef = this.dialog.open(FileRenameDialogComponent);
+        this.dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                this.fileName = data;
+                this.selectedUploadFile = new File(
+                    [this.selectedUploadFile],
+                    this.fileName,
+                    {
+                        type: this.selectedUploadFile.type,
+                        lastModified: this.selectedUploadFile.lastModified,
+                    },
+                );
+            }
+        });
     }
 }

@@ -22,8 +22,6 @@ import org.apache.streampipes.client.http.BinaryGetRequest;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
-import java.util.Map;
-
 
 public class FileApi extends AbstractClientApi implements IFileApi {
 
@@ -31,23 +29,29 @@ public class FileApi extends AbstractClientApi implements IFileApi {
     super(clientConfig);
   }
 
+
+  /**
+   * @deprecated As of release 0.95.0, replaced by {@link #getFileContent(String)}.
+   * The parameter isOriginalFileName is not used anymore.
+   */
+  @Deprecated(since = "0.95.0", forRemoval = true)
   public byte[] getFileContent(String filename, boolean isOriginalFileName) {
-    return new BinaryGetRequest(clientConfig, getBaseResourcePath(filename)
-            .withQueryParameters(Map.of("isOriginalFilename", String.valueOf(isOriginalFileName))), null)
-            .executeRequest();
-  }
-  @Override
-  public byte[] getFileContent(String fileId) {
-    return getFileContent(fileId, false);
-  }
-
-  public String getFileContentAsString(String filename, boolean isOriginalFileName) {
-    return new String(getFileContent(filename, isOriginalFileName));
+    return this.getFileContent(filename);
   }
 
   @Override
-  public String getFileContentAsString(String fileId) {
-    return getFileContentAsString(fileId, false);
+  public byte[] getFileContent(String filename) {
+    return new BinaryGetRequest(
+        clientConfig,
+        getBaseResourcePath(filename),
+        null
+    )
+        .executeRequest();
+  }
+
+  @Override
+  public String getFileContentAsString(String filename) {
+    return new String(getFileContent(filename));
   }
 
   @Override
@@ -56,9 +60,19 @@ public class FileApi extends AbstractClientApi implements IFileApi {
         .writeToFile(fileLocation);
   }
 
+  @Override
+  public boolean checkFileContentChanged(String filename, String hash) {
+    return getSingle(
+        getBaseResourcePath(filename)
+            .addToPath("checkFileContentChanged")
+            .addToPath(hash),
+        Boolean.class
+    );
+  }
+
   protected StreamPipesApiPath getBaseResourcePath(String fileName) {
     return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("files")
-        .addToPath(fileName);
+                             .addToPath("files")
+                             .addToPath(fileName);
   }
 }

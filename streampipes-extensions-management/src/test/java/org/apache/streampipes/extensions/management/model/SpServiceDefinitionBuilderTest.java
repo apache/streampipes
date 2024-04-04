@@ -32,9 +32,8 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SpServiceDefinitionBuilderTest {
 
@@ -45,8 +44,11 @@ public class SpServiceDefinitionBuilderTest {
         .registerAdapter(expected)
         .build();
 
-    assertEquals(1, result.getAdapters().size());
-    assertEquals(expected, result.getAdapters().get(0));
+    Assertions.assertEquals(1,
+                            result.getAdapters().size());
+    Assertions.assertEquals(expected,
+                            result.getAdapters().get(0)
+    );
   }
 
   @Test
@@ -62,12 +64,19 @@ public class SpServiceDefinitionBuilderTest {
             .build();
 
     // assert de-duplication (last migration should not be registered)
-    assertEquals(3, result.getMigrators().size());
+    Assertions.assertEquals(3,
+                            result.getMigrators().size());
 
     // assert ordering
-    assertEquals(migration2, result.getMigrators().get(0));
-    assertEquals(migration1, result.getMigrators().get(1));
-    assertEquals(migration3, result.getMigrators().get(2));
+    Assertions.assertEquals(migration2,
+                            result.getMigrators().get(0)
+    );
+    Assertions.assertEquals(migration1,
+                            result.getMigrators().get(1)
+    );
+    Assertions.assertEquals(migration3,
+                            result.getMigrators().get(2)
+    );
   }
 
   private static class TestAdapter implements StreamPipesAdapter {

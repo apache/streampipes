@@ -24,4 +24,7 @@ public interface IFileApi {
   String getFileContentAsString(String filename);
 
   void writeToFile(String file, String fileLocation);
+
+  boolean checkFileContentChanged(String filename, String hash);
+
 }

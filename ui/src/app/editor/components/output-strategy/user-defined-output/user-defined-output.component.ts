@@ -23,6 +23,8 @@ import {
     UserDefinedOutputStrategy,
 } from '@streampipes/platform-services';
 import { UntypedFormControl } from '@angular/forms';
+import { IdGeneratorService } from '../../../../core-services/id-generator/id-generator.service';
+import { SemanticTypeService } from '../../../../core-services/types/semantic-type.service';
 
 @Component({
     selector: 'sp-user-defined-output-strategy',
@@ -33,23 +35,19 @@ export class UserDefinedOutputStrategyComponent
     extends BaseOutputStrategy<UserDefinedOutputStrategy>
     implements OnInit
 {
-    private prefix = 'urn:streampipes.org:spi:';
-    private chars =
-        '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-    collectedPropertiesFirstStream: any;
-    collectedPropertiesSecondStream: any;
-
     primitiveClasses = [
-        { label: 'String', id: 'http://www.w3.org/2001/XMLSchema#string' },
-        { label: 'Boolean', id: 'http://www.w3.org/2001/XMLSchema#boolean' },
-        { label: 'Integer', id: 'http://www.w3.org/2001/XMLSchema#integer' },
-        { label: 'Long', id: 'http://www.w3.org/2001/XMLSchema#long' },
-        { label: 'Double', id: 'http://www.w3.org/2001/XMLSchema#double' },
-        { label: 'Float', id: 'http://www.w3.org/2001/XMLSchema#float' },
+        { label: 'String', id: this.semanticTypeService.XS_STRING },
+        { label: 'Boolean', id: this.semanticTypeService.XS_BOOLEAN },
+        { label: 'Integer', id: this.semanticTypeService.XS_INTEGER },
+        { label: 'Long', id: this.semanticTypeService.XS_LONG },
+        { label: 'Double', id: this.semanticTypeService.XS_DOUBLE },
+        { label: 'Float', id: this.semanticTypeService.XS_FLOAT },
     ];
 
-    constructor() {
+    constructor(
+        private idGeneratorService: IdGeneratorService,
+        private semanticTypeService: SemanticTypeService,
+    ) {
         super();
     }
 
@@ -87,21 +85,10 @@ export class UserDefinedOutputStrategyComponent
             'org.apache.streampipes.model.schema.EventPropertyPrimitive';
         ep.domainProperties = [];
         ep.elementId =
-            'urn:streampipes.org:spi:eventpropertyprimitive:' + this.makeId();
+            'urn:streampipes.org:spi:eventpropertyprimitive:' +
+            this.idGeneratorService.generatePrefixedId();
 
         return ep;
-    }
-
-    makeId() {
-        return this.prefix + this.randomString(6);
-    }
-
-    randomString(length) {
-        let result = '';
-        for (let i = length; i > 0; --i) {
-            result += this.chars[Math.floor(Math.random() * this.chars.length)];
-        }
-        return result;
     }
 
     checkFormValidity() {

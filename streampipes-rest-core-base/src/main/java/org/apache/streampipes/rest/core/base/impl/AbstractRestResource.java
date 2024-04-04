@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.core.base.impl;
 
-import org.apache.streampipes.manager.endpoint.HttpJsonParser;
 import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
@@ -34,15 +33,10 @@ import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
-import org.apache.streampipes.storage.api.IVisualizationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.apache.http.client.ClientProtocolException;
 import org.springframework.http.ResponseEntity;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLDecoder;
 
 public class AbstractRestResource extends AbstractSharedRestInterface {
@@ -67,10 +61,6 @@ public class AbstractRestResource extends AbstractSharedRestInterface {
     return getNoSqlStorage().getUserStorageAPI();
   }
 
-  protected IVisualizationStorage getVisualizationStorage() {
-    return getNoSqlStorage().getVisualizationStorageApi();
-  }
-
   protected INotificationStorage getNotificationStorage() {
     return getNoSqlStorage().getNotificationStorageApi();
   }
@@ -89,17 +79,6 @@ public class AbstractRestResource extends AbstractSharedRestInterface {
 
   protected IFileMetadataStorage getFileMetadataStorage() {
     return getNoSqlStorage().getFileMetadataStorage();
-  }
-
-  protected String parseURIContent(String payload) throws URISyntaxException,
-      ClientProtocolException, IOException {
-    return parseURIContent(payload, null);
-  }
-
-  protected String parseURIContent(String payload, String mediaType) throws URISyntaxException,
-      ClientProtocolException, IOException {
-    URI uri = new URI(payload);
-    return HttpJsonParser.getContentFromUrl(uri, mediaType);
   }
 
   protected ResponseEntity<Message> constructSuccessMessage(Notification... notifications) {

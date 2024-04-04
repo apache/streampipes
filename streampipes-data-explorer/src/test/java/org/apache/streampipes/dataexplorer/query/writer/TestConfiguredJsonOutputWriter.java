@@ -20,14 +20,14 @@ package org.apache.streampipes.dataexplorer.query.writer;
 
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestConfiguredJsonOutputWriter extends TestConfiguredOutputWriter {
 

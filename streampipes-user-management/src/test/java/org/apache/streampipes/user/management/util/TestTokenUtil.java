@@ -20,11 +20,8 @@ package org.apache.streampipes.user.management.util;
 import org.apache.streampipes.model.client.user.RawUserApiToken;
 import org.apache.streampipes.model.client.user.UserApiToken;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestTokenUtil {
 
@@ -33,10 +30,10 @@ public class TestTokenUtil {
     String tokenName = "test-token";
 
     RawUserApiToken rawToken = TokenUtil.createToken(tokenName);
-    assertEquals("test-token", rawToken.getTokenName());
-    assertNotNull(rawToken.getTokenId());
-    assertNotNull(rawToken.getRawToken());
-    assertNotNull(rawToken.getHashedToken());
+    Assertions.assertEquals("test-token", rawToken.getTokenName());
+    Assertions.assertNotNull(rawToken.getTokenId());
+    Assertions.assertNotNull(rawToken.getRawToken());
+    Assertions.assertNotNull(rawToken.getHashedToken());
   }
 
   @Test
@@ -44,9 +41,9 @@ public class TestTokenUtil {
     RawUserApiToken rawToken = TokenUtil.createToken("test-token");
     UserApiToken token = TokenUtil.toUserToken(rawToken);
 
-    assertEquals(rawToken.getHashedToken(), token.getHashedToken());
-    assertEquals(rawToken.getTokenId(), token.getTokenId());
-    assertEquals(rawToken.getTokenName(), token.getTokenName());
+    Assertions.assertEquals(rawToken.getHashedToken(), token.getHashedToken());
+    Assertions.assertEquals(rawToken.getTokenId(), token.getTokenId());
+    Assertions.assertEquals(rawToken.getTokenName(), token.getTokenName());
   }
 
   @Test
@@ -54,7 +51,7 @@ public class TestTokenUtil {
     RawUserApiToken rawToken = TokenUtil.createToken("test-token");
     String rawApiKey = rawToken.getRawToken();
 
-    assertTrue(TokenUtil.validateToken(rawApiKey, rawToken.getHashedToken()));
+    Assertions.assertTrue(TokenUtil.validateToken(rawApiKey, rawToken.getHashedToken()));
   }
 
 }

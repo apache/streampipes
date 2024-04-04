@@ -22,17 +22,18 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class AdapterWorkerManagementTest {
 
-  @Test(expected = AdapterException.class)
+  @Test
   public void invokeAdapterNotPresent() throws AdapterException {
     var adapterDescription = AdapterConfigurationBuilder
         .create("id", null)
@@ -44,6 +45,7 @@ public class AdapterWorkerManagementTest {
     var adapterWorkerManagement = new AdapterWorkerManagement(
         null, declarerSingleton);
 
-    adapterWorkerManagement.invokeAdapter(adapterDescription);
+    assertThrows(AdapterException.class, () -> adapterWorkerManagement.invokeAdapter(adapterDescription));
+
   }
 }

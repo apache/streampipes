@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.sdk.builder.adapter;
 
+import org.apache.streampipes.extensions.api.assets.AssetResolver;
+import org.apache.streampipes.extensions.api.assets.DefaultAssetResolver;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.model.AdapterType;
@@ -37,11 +39,14 @@ public class AdapterConfigurationBuilder extends
   private final List<IParser> supportedParsers;
   private final Supplier<StreamPipesAdapter> supplier;
 
+  private AssetResolver assetResolver;
+
   protected AdapterConfigurationBuilder(String appId,
                                         int version,
                                         Supplier<StreamPipesAdapter> supplier) {
     super(appId, new AdapterDescription(version));
     supportedParsers = new ArrayList<>();
+    assetResolver = new DefaultAssetResolver(appId);
     this.supplier = supplier;
   }
 
@@ -88,7 +93,12 @@ public class AdapterConfigurationBuilder extends
 
   public AdapterConfiguration buildConfiguration() {
     this.elementDescription.setConfig(getStaticProperties());
-    return new AdapterConfiguration(this.elementDescription, this.supportedParsers, supplier);
+    return new AdapterConfiguration(
+        this.elementDescription,
+        this.supportedParsers,
+        assetResolver,
+        supplier
+    );
   }
 
   public AdapterConfigurationBuilder withSupportedParsers(IParser... parsers) {
@@ -112,6 +122,11 @@ public class AdapterConfigurationBuilder extends
 
   public AdapterConfigurationBuilder withVersion(int version) {
     this.elementDescription.setVersion(version);
+    return this;
+  }
+
+  public AdapterConfigurationBuilder withAssetResolver(AssetResolver assetResolver) {
+    this.assetResolver = assetResolver;
     return this;
   }
 }

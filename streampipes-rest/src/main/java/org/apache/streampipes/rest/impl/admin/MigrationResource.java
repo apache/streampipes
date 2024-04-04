@@ -22,7 +22,6 @@ import org.apache.streampipes.connect.management.management.AdapterMigrationMana
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.manager.health.ServiceRegistrationManager;
-import org.apache.streampipes.manager.migration.AdapterDescriptionMigration093;
 import org.apache.streampipes.manager.migration.PipelineElementMigrationManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
@@ -64,8 +63,6 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
 
   private final CRUDStorage<String, SpServiceRegistration> extensionsServiceStorage =
       getNoSqlStorage().getExtensionsServiceStorage();
-
-  private final IAdapterStorage adapterDescriptionStorage = getNoSqlStorage().getAdapterDescriptionStorage();
   private final IAdapterStorage adapterStorage = getNoSqlStorage().getAdapterInstanceStorage();
 
   private final IDataProcessorStorage dataProcessorStorage = getNoSqlStorage().getDataProcessorStorage();
@@ -104,13 +101,12 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
     try {
       var extensionsServiceConfig = serviceManager.getService(serviceId);
       if (!CoreInitialInstallationProgress.INSTANCE.isInitiallyInstalling()) {
-        new AdapterDescriptionMigration093(adapterDescriptionStorage).reinstallAdapters(extensionsServiceConfig);
         if (!migrationConfigs.isEmpty()) {
           var anyServiceMigrating = serviceManager.isAnyServiceMigrating();
           var coreReady = isCoreReady();
           if (anyServiceMigrating || !coreReady) {
             LOG.info(
-                "Refusing migration request since precondition is not met (anyServiceMigratione={}, coreReady={}.",
+                "Refusing migration request since precondition is not met (anyServiceMigrating={}, coreReady={}.",
                 anyServiceMigrating,
                 coreReady
             );

@@ -24,6 +24,7 @@ import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV1;
+import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV2;
 import org.apache.streampipes.extensions.connectors.opcua.sink.OpcUaSink;
 
 import java.util.List;
@@ -46,7 +47,8 @@ public class OpcUaConnectorsModuleExport implements IExtensionModuleExport {
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
     return List.of(
-        new OpcUaAdapterMigrationV1()
+        new OpcUaAdapterMigrationV1(),
+        new OpcUaAdapterMigrationV2()
     );
   }
 }

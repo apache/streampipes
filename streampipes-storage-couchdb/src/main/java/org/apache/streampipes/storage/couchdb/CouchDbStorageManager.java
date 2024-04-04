@@ -22,7 +22,6 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IAssetDashboardStorage;
-import org.apache.streampipes.storage.api.ICategoryStorage;
 import org.apache.streampipes.storage.api.IDashboardStorage;
 import org.apache.streampipes.storage.api.IDashboardWidgetStorage;
 import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
@@ -30,11 +29,9 @@ import org.apache.streampipes.storage.api.IDataLakeStorage;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.IDataSinkStorage;
 import org.apache.streampipes.storage.api.IDataStreamStorage;
-import org.apache.streampipes.storage.api.IExtensionsServiceEndpointStorage;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.api.IImageStorage;
-import org.apache.streampipes.storage.api.ILabelStorage;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.api.INotificationStorage;
 import org.apache.streampipes.storage.api.IPasswordRecoveryTokenStorage;
@@ -44,17 +41,14 @@ import org.apache.streampipes.storage.api.IPipelineCategoryStorage;
 import org.apache.streampipes.storage.api.IPipelineElementConnectionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
-import org.apache.streampipes.storage.api.IPipelineMonitoringDataStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.IUserGroupStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
-import org.apache.streampipes.storage.api.IVisualizationStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AssetDashboardStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.CategoryStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ConnectionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.CoreConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DashboardStorageImpl;
@@ -66,13 +60,10 @@ import org.apache.streampipes.storage.couchdb.impl.DataProcessorStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataSinkStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataStreamStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceConfigStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceEndpointStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.FileMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.GenericStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ImageStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.LabelStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.MonitoringDataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.NotificationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PasswordRecoveryTokenImpl;
 import org.apache.streampipes.storage.couchdb.impl.PermissionStorageImpl;
@@ -84,7 +75,6 @@ import org.apache.streampipes.storage.couchdb.impl.PipelineStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserActivationTokenImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserStorage;
-import org.apache.streampipes.storage.couchdb.impl.VisualizationStorageImpl;
 
 public enum CouchDbStorageManager implements INoSqlStorage {
 
@@ -105,12 +95,6 @@ public enum CouchDbStorageManager implements INoSqlStorage {
     return new AdapterInstanceStorageImpl();
   }
 
-
-  @Override
-  public ICategoryStorage getCategoryStorageAPI() {
-    return new CategoryStorageImpl();
-  }
-
   @Override
   public IImageStorage getImageStorage() {
     return new ImageStorageImpl();
@@ -119,11 +103,6 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IUserGroupStorage getUserGroupStorage() {
     return new UserGroupStorageImpl();
-  }
-
-  @Override
-  public ILabelStorage getLabelStorageAPI() {
-    return new LabelStorageImpl();
   }
 
   @Override
@@ -142,11 +121,6 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public IPipelineMonitoringDataStorage getMonitoringDataStorageApi() {
-    return new MonitoringDataStorageImpl();
-  }
-
-  @Override
   public INotificationStorage getNotificationStorageApi() {
     return new NotificationStorageImpl();
   }
@@ -154,16 +128,6 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IPipelineCategoryStorage getPipelineCategoryStorageApi() {
     return new PipelineCategoryStorageImpl();
-  }
-
-  @Override
-  public IVisualizationStorage getVisualizationStorageApi() {
-    return new VisualizationStorageImpl();
-  }
-
-  @Override
-  public IExtensionsServiceEndpointStorage getRdfEndpointStorage() {
-    return new ExtensionsServiceEndpointStorageImpl();
   }
 
   @Override

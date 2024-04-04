@@ -53,11 +53,15 @@ services:
       context: ./ui
       dockerfile: Dockerfile
     image: streampipes_ui:release-validation
+    environment:
+      - SP_HTTP_SERVER_ADAPTER_ENDPOINT=extensions-all-jvm:8090
     ports:
       - "80:8088"
     depends_on:
       - couchdb
       - backend
+    volumes:
+      - nginx:/etc/nginx/
     logging: *default-logging
     networks:
       spnet:
@@ -139,6 +143,7 @@ volumes:
   influxdb:
   influxdb2:
   backend:
+  nginx:
 
 networks:
   spnet:

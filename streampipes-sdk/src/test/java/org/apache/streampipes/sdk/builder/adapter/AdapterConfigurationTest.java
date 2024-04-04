@@ -21,17 +21,16 @@ package org.apache.streampipes.sdk.builder.adapter;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AdapterConfigurationTest {
 
   @Test
   public void simpleAdapterDescriptionTest() {
     var adapterDescription = new AdapterDescription();
-    var adapterConfiguration = new AdapterConfiguration(adapterDescription, null, null);
+    var adapterConfiguration = new AdapterConfiguration(adapterDescription, null, null, null);
 
-    assertEquals(adapterDescription, adapterConfiguration.getAdapterDescription());
+    Assertions.assertEquals(adapterDescription, adapterConfiguration.getAdapterDescription());
   }
 }

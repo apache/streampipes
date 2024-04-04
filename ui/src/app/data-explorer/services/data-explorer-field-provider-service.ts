@@ -26,9 +26,12 @@ import {
     FieldConfig,
     SourceConfig,
 } from '@streampipes/platform-services';
+import { SemanticTypeService } from '../../core-services/types/semantic-type.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DataExplorerFieldProviderService {
+    constructor(private semanticTypeService: SemanticTypeService) {}
+
     public generateFieldLists(sourceConfigs: SourceConfig[]): FieldProvider {
         const provider: FieldProvider = {
             allFields: [],
@@ -141,7 +144,7 @@ export class DataExplorerFieldProviderService {
         return (
             this.isPrimitive(p) &&
             (p as EventPropertyPrimitive).runtimeType ===
-                'http://www.w3.org/2001/XMLSchema#boolean'
+                this.semanticTypeService.XS_BOOLEAN
         );
     }
 
@@ -149,13 +152,13 @@ export class DataExplorerFieldProviderService {
         return (
             this.isPrimitive(p) &&
             (p as EventPropertyPrimitive).runtimeType ===
-                'http://www.w3.org/2001/XMLSchema#string'
+                this.semanticTypeService.XS_STRING
         );
     }
 
     public isTimestamp(p: EventProperty) {
         return p.domainProperties.some(
-            dp => dp === 'http://schema.org/DateTime',
+            dp => dp === this.semanticTypeService.TIMESTAMP,
         );
     }
 
@@ -188,14 +191,7 @@ export class DataExplorerFieldProviderService {
     isNumber(p: EventPropertyUnion): boolean {
         if (this.isPrimitive(p)) {
             const runtimeType = (p as EventPropertyPrimitive).runtimeType;
-
-            return (
-                runtimeType === 'http://schema.org/Number' ||
-                runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
-                runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
-                runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
-                runtimeType === 'http://www.w3.org/2001/XMLSchema#long'
-            );
+            return this.semanticTypeService.isNumberType(runtimeType);
         } else {
             return false;
         }
@@ -215,5 +211,49 @@ export class DataExplorerFieldProviderService {
     ): string {
         const prefix = aggregation ? aggregation.toLowerCase() + '_' : '';
         return prefix + fieldConfig.runtimeName;
+    }
+
+    getSelectedField(
+        currentlySelectedField: DataExplorerField,
+        availableFields: DataExplorerField[],
+        getDefaultField: () => DataExplorerField,
+    ): DataExplorerField {
+        if (
+            currentlySelectedField !== undefined &&
+            this.existsField(currentlySelectedField, availableFields)
+        ) {
+            return currentlySelectedField;
+        } else {
+            return getDefaultField();
+        }
+    }
+
+    getSelectedFields(
+        currentlySelectedFields: DataExplorerField[],
+        availableFields: DataExplorerField[],
+        getDefaultFields: () => DataExplorerField[],
+    ): DataExplorerField[] {
+        if (currentlySelectedFields !== undefined) {
+            return currentlySelectedFields.filter(field =>
+                availableFields.find(f => f.fullDbName === field.fullDbName),
+            );
+        } else {
+            return getDefaultFields();
+        }
+    }
+
+    existsField(
+        currentlySelectedField: DataExplorerField,
+        fieldsToSearch: DataExplorerField[],
+    ): boolean {
+        return (
+            fieldsToSearch.find(field => {
+                return this.isEqualField(currentlySelectedField, field);
+            }) !== undefined
+        );
+    }
+
+    isEqualField(field1: DataExplorerField, field2: DataExplorerField) {
+        return field1.fullDbName === field2.fullDbName;
     }
 }

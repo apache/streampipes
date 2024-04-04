@@ -22,9 +22,8 @@ import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.helpers.Labels;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StaticPropertiesTest {
 
@@ -36,8 +35,8 @@ public class StaticPropertiesTest {
     String codeTemplate = "// This is a test";
     var result = StaticProperties.codeStaticProperty(defaultLabel, CodeLanguage.Javascript, codeTemplate);
 
-    assertEquals(TEST_PROPERTY_LABEL, result.getLabel());
-    assertEquals(CodeLanguage.Javascript.name(), result.getLanguage());
-    assertEquals(codeTemplate, result.getCodeTemplate());
+    Assertions.assertEquals(TEST_PROPERTY_LABEL, result.getLabel());
+    Assertions.assertEquals(CodeLanguage.Javascript.name(), result.getLanguage());
+    Assertions.assertEquals(codeTemplate, result.getCodeTemplate());
   }
 }

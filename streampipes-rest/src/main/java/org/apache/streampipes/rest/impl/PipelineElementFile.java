@@ -47,6 +47,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 @RestController
 @RequestMapping("/api/v2/files")
 public class PipelineElementFile extends AbstractAuthGuardedRestResource {
@@ -61,7 +63,8 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
           FileManager.storeFile(
               getAuthenticatedUsername(),
               fileDetail.getOriginalFilename(),
-              fileDetail.getInputStream());
+              fileDetail.getInputStream()
+          );
       return ok(metadata);
     } catch (Exception e) {
       return fail();
@@ -78,7 +81,8 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
   public ResponseEntity<List<FileMetadata>> getFileInfo(
-      @RequestParam(value = "filetypes", required = false) String filetypes) {
+      @RequestParam(value = "filetypes", required = false) String filetypes
+  ) {
     return ok(FileManager.getAllFiles(filetypes));
   }
 
@@ -102,28 +106,49 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
           description = "The name of the file to be retrieved",
           required = true
       )
-      @PathVariable("filename") String filename,
-      @Parameter(
-          in = ParameterIn.QUERY,
-          description = "Determines if the provided file name is the original file name "
-              + "as per upload."
-      )
-      @RequestParam(value = "isOriginalFilename", defaultValue = "false") boolean isOriginalFilename
+      @PathVariable("filename") String filename
   ) {
     try {
-      if (isOriginalFilename) {
-        return ok(getFileContents(FileManager.getFileByOriginalName(filename)));
-      } else {
-        return ok(getFileContents(FileManager.getFile(filename)));
-      }
+      return ok(getFileContents(FileManager.getFile(filename)));
     } catch (IOException e) {
       throw new SpMessageException(
-          org.springframework.http.HttpStatus.NOT_FOUND,
-          Notifications.error("File not found"));
+          NOT_FOUND,
+          Notifications.error("File not found")
+      );
     }
   }
 
   private byte[] getFileContents(File file) throws IOException {
     return Files.readAllBytes(file.toPath());
   }
+
+  @GetMapping(path = "/allFilenames", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
+  public ResponseEntity<List<String>> getAllOriginalFilenames() {
+    return ok(FileManager.getAllFiles()
+                         .stream()
+                         .map(fileMetadata -> fileMetadata.getFilename()
+                                                          .toLowerCase())
+                         .toList());
+  }
+
+  @GetMapping(
+      path = "/{filename}/checkFileContentChanged/{hash}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
+  public ResponseEntity<Boolean> checkFileContentChanged(
+      @PathVariable(value = "filename") String filename,
+      @PathVariable(value = "hash") String hash
+  ) {
+    try {
+      return ok(FileManager.checkFileContentChanged(filename, hash));
+    } catch (IOException e) {
+      throw new SpMessageException(
+          NOT_FOUND,
+          Notifications.error("File not found")
+      );
+    }
+  }
+
+
 }

@@ -18,13 +18,12 @@
 
 package org.apache.streampipes.commons.prometheus.adapter;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AdapterMetricsTest {
 
@@ -37,12 +36,12 @@ public class AdapterMetricsTest {
 
     var metrics = AdapterMetricsManager.INSTANCE.getAdapterMetrics();
 
-    assertEquals(0, metrics.size());
+    Assertions.assertEquals(0, metrics.size());
 
     metrics.register(ADAPTER_ID, ADAPTER_NAME);
 
-    assertEquals(1, metrics.size());
-    assertTrue(metrics.contains(ADAPTER_ID));
+    Assertions.assertEquals(1, metrics.size());
+    Assertions.assertTrue(metrics.contains(ADAPTER_ID));
   }
 
   @Test

@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.query.writer;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,11 +28,11 @@ public abstract class TestConfiguredOutputWriter {
   protected List<List<Object>> rows;
   protected List<String> columns;
 
-  @Before
+  @BeforeEach
   public void before() {
     this.rows = Arrays.asList(
-        Arrays.asList("2022-11-16T05:54:37.051Z", "test", 1),
-        Arrays.asList("2022-11-16T05:55:27.05Z", "test2", 2)
+        Arrays.asList(1668578077051.0, "test", 1),
+        Arrays.asList(1668578127050.0, "test2", 2)
     );
 
     this.columns = Arrays.asList("time", "string", "number");

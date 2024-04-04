@@ -32,17 +32,20 @@ export function ValidateUrl(control: AbstractControl) {
 }
 
 export function ValidateNumber(control: AbstractControl) {
-    if (control.value == null) {
-        return { validUrl: true };
-    } else if (isNaN(control.value)) {
-        return { validUrl: true };
+    if (control.value == null || control.value == '') {
+        return null;
     }
-    return null;
+
+    if (!isNaN(parseFloat(control.value)) && isFinite(control.value)) {
+        return null;
+    }
+
+    return { validNumber: true };
 }
 
 export function ValidateString(control: AbstractControl) {
     if (control.value == null) {
-        return { validUrl: true };
+        return { validString: true };
     }
     return null;
 }

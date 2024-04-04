@@ -26,12 +26,10 @@ import {
     ViewChild,
 } from '@angular/core';
 import { RestService } from '../../../../services/rest.service';
-import { ITreeOptions, TreeComponent } from '@circlon/angular-tree-component';
-import { UUID } from 'angular2-uuid';
+import { ITreeOptions, TreeComponent } from '@ali-hm/angular-tree-component';
 import { DataTypesService } from '../../../../services/data-type.service';
 import {
     AdapterDescription,
-    CorrectionValueTransformationRuleDescription,
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
@@ -44,7 +42,8 @@ import { MatStepper } from '@angular/material/stepper';
 import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
 import { TransformationRuleService } from '../../../../services/transformation-rule.service';
 import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
-import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
+import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
+import { SemanticTypeService } from '../../../../../core-services/types/semantic-type.service';
 
 @Component({
     selector: 'sp-event-schema',
@@ -57,7 +56,8 @@ export class EventSchemaComponent implements OnChanges {
         private dataTypesService: DataTypesService,
         private transformationRuleService: TransformationRuleService,
         private staticValueTransformService: StaticValueTransformService,
-        private epUtilsService: EventPropertyUtilsService,
+        private idGeneratorService: IdGeneratorService,
+        private semanticTypeService: SemanticTypeService,
     ) {}
 
     @Input()
@@ -189,7 +189,7 @@ export class EventSchemaComponent implements OnChanges {
     }
 
     public addNestedProperty(eventProperty?: EventPropertyNested): void {
-        const uuid: string = UUID.UUID();
+        const uuid: string = this.idGeneratorService.generate(25);
         const nested: EventPropertyNested = new EventPropertyNested();
         nested['@class'] =
             'org.apache.streampipes.model.schema.EventPropertyNested';
@@ -244,14 +244,15 @@ export class EventSchemaComponent implements OnChanges {
         eventProperty['@class'] =
             'org.apache.streampipes.model.schema.EventPropertyPrimitive';
         eventProperty.elementId =
-            'http://eventProperty.de/timestamp/' + UUID.UUID();
+            'http://eventProperty.de/timestamp/' +
+            this.idGeneratorService.generate(25);
 
         eventProperty.runtimeName = 'timestamp';
         eventProperty.label = 'Timestamp';
         eventProperty.description = 'The current timestamp value';
-        eventProperty.domainProperties = ['http://schema.org/DateTime'];
+        eventProperty.domainProperties = [this.semanticTypeService.TIMESTAMP];
         eventProperty.propertyScope = 'HEADER_PROPERTY';
-        eventProperty.runtimeType = 'http://www.w3.org/2001/XMLSchema#long';
+        eventProperty.runtimeType = this.semanticTypeService.XS_LONG;
         eventProperty.additionalMetadata = {};
 
         this.targetSchema.eventProperties.push(eventProperty);

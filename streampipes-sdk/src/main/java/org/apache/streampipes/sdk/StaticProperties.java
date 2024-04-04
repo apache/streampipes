@@ -28,6 +28,7 @@ import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.PropertyValueSpecification;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
@@ -114,6 +115,13 @@ public class StaticProperties {
     return freeTextProperty(label, Datatypes.Integer);
   }
 
+  public static FreeTextStaticProperty integerFreeTextProperty(Label label, int defaultValue) {
+    var property = freeTextProperty(label, Datatypes.Integer);
+    property.setValue(String.valueOf(defaultValue));
+    return property;
+  }
+
+
   public static FreeTextStaticProperty doubleFreeTextProperty(Label label) {
     return freeTextProperty(label, Datatypes.Double);
   }
@@ -162,6 +170,14 @@ public class StaticProperties {
   public static RuntimeResolvableAnyStaticProperty multiValueSelectionFromContainer(Label label) {
     return new RuntimeResolvableAnyStaticProperty(label.getInternalId(), label
         .getLabel(), label.getDescription());
+  }
+
+  public static RuntimeResolvableGroupStaticProperty runtimeResolvableGroupStaticProperty(Label label,
+                                                                                          List<String> dependsOn) {
+    var property = new RuntimeResolvableGroupStaticProperty(label.getInternalId(), label
+        .getLabel(), label.getDescription(), dependsOn);
+    property.setShowLabel(true);
+    return property;
   }
 
   public static RuntimeResolvableAnyStaticProperty multiValueSelectionFromContainer(Label label,

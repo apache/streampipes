@@ -26,13 +26,14 @@ import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -102,20 +103,21 @@ public class CsvParserTest extends ParserTest {
     assertEquals(expected, result);
   }
 
-  @Test(expected = ParseException.class)
+  @Test
   public void getGuessSchemaParseException() {
     var parser = new CsvParser(true, ';');
 
     InputStream event = toStream("k1;k2\nv1");
 
-    parser.getGuessSchema(event);
+    assertThrows(ParseException.class, () -> parser.getGuessSchema(event));
   }
 
-  @Test(expected = ParseException.class)
+  @Test
   public void getGuessSchemaNoValuesParseException() {
     var parser = new CsvParser(true, ';');
     InputStream event = toStream("k1;k2");
-    parser.getGuessSchema(event);
+
+    assertThrows(ParseException.class, () -> parser.getGuessSchema(event));
   }
 
   @Test

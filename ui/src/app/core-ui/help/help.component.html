@@ -1,0 +1,62 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15">
+        <h4>{{ pipelineElement.name }}</h4>
+        <p>
+            {{ pipelineElement.description }}
+        </p>
+
+        <mat-tab-group
+            color="accent"
+            [selectedIndex]="selectedTabIndex"
+            (selectedIndexChange)="selectedTabIndex = $event"
+        >
+            <mat-tab *ngFor="let tab of tabs" label="{{ tab }}"> </mat-tab>
+        </mat-tab-group>
+
+        <sp-field-names-table
+            *ngIf="selectedTabIndex === 0"
+            [eventSchema]="pipelineElement.eventSchema"
+        ></sp-field-names-table>
+        <sp-pipeline-element-runtime-info
+            *ngIf="selectedTabIndex === 1"
+            [streamDescription]="pipelineElement"
+            [pollingActive]="pollingActive"
+        ></sp-pipeline-element-runtime-info>
+        <sp-pipeline-element-documentation
+            *ngIf="selectedTabIndex === 2"
+            [useStyling]="false"
+            [appId]="pipelineElement.appId"
+        ></sp-pipeline-element-documentation>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="sp-dialog-actions actions-align-right">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close()"
+        >
+            Close
+        </button>
+    </div>
+</div>

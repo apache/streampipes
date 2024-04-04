@@ -20,6 +20,7 @@ import {
     Directive,
     EventEmitter,
     HostBinding,
+    inject,
     Input,
     OnInit,
     Output,
@@ -38,12 +39,16 @@ import {
     TimeSettings,
 } from '@streampipes/platform-services';
 import { ResizeService } from '../../../services/resize.service';
-import { FieldProvider } from '../../../models/dataview-dashboard.model';
+import {
+    BaseWidgetData,
+    FieldProvider,
+} from '../../../models/dataview-dashboard.model';
 import { Observable, Subject, Subscription, zip } from 'rxjs';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
-import { BaseWidgetData } from './data-explorer-widget-data';
 import { TimeSelectionService } from '../../../services/time-selection.service';
 import { catchError, switchMap } from 'rxjs/operators';
+import { DataExplorerWidgetRegistry } from '../../../registry/data-explorer-widget-registry';
+import { SpFieldUpdateService } from '../../../services/field-update.service';
 
 @Directive()
 export abstract class BaseDataExplorerWidgetDirective<
@@ -86,6 +91,7 @@ export abstract class BaseDataExplorerWidgetDirective<
     public showData: boolean;
     public showIsLoadingData: boolean;
     public showTooMuchData: boolean;
+    public showInvalidConfiguration = false;
     public amountOfTooMuchEvents: number;
 
     fieldProvider: FieldProvider;
@@ -101,14 +107,17 @@ export abstract class BaseDataExplorerWidgetDirective<
         Observable<SpQueryResult>[]
     >();
 
-    constructor(
-        protected dataLakeRestService: DatalakeRestService,
-        protected widgetConfigurationService: WidgetConfigurationService,
-        protected resizeService: ResizeService,
-        protected dataViewQueryGeneratorService: DataViewQueryGeneratorService,
-        public fieldService: DataExplorerFieldProviderService,
-        protected timeSelectionService: TimeSelectionService,
-    ) {}
+    // inject services to avoid constructor overload
+    protected dataLakeRestService = inject(DatalakeRestService);
+    protected widgetConfigurationService = inject(WidgetConfigurationService);
+    protected resizeService = inject(ResizeService);
+    protected dataViewQueryGeneratorService = inject(
+        DataViewQueryGeneratorService,
+    );
+    protected timeSelectionService = inject(TimeSelectionService);
+    protected widgetRegistryService = inject(DataExplorerWidgetRegistry);
+    protected fieldUpdateService = inject(SpFieldUpdateService);
+    public fieldService = inject(DataExplorerFieldProviderService);
 
     ngOnInit(): void {
         this.heightOffset = this.gridMode ? 70 : 65;
@@ -173,7 +182,6 @@ export abstract class BaseDataExplorerWidgetDirective<
                             );
                             this.updateData();
                         }
-
                         if (refreshMessage.refreshView) {
                             this.refreshView();
                         }
@@ -283,68 +291,20 @@ export abstract class BaseDataExplorerWidgetDirective<
         this.updateData(false);
     }
 
-    isTimestamp(field: DataExplorerField) {
-        return (
-            this.fieldProvider.primaryTimestampField &&
-            this.fieldProvider.primaryTimestampField.fullDbName ===
-                field.fullDbName
-        );
-    }
-
     getColumnIndex(field: DataExplorerField, data: SpQueryResult) {
         return data.headers.indexOf(field.fullDbName);
     }
 
-    protected updateFieldSelection(
-        fieldSelection: DataExplorerField[],
-        addedFields: DataExplorerField[],
-        removedFields: DataExplorerField[],
-        filterFunction: (field: DataExplorerField) => boolean,
-    ): DataExplorerField[] {
-        const fields = fieldSelection.filter(
-            field =>
-                !removedFields.find(rm => rm.fullDbName === field.fullDbName),
-        );
-        addedFields.forEach(field => {
-            if (filterFunction(field)) {
-                fields.push(field);
-            }
-        });
-        return fields;
-    }
+    public abstract refreshView(): void;
 
-    protected updateSingleField(
-        fieldSelection: DataExplorerField,
-        availableFields: DataExplorerField[],
-        addedFields: DataExplorerField[],
-        removedFields: DataExplorerField[],
-        filterFunction: (field: DataExplorerField) => boolean,
-    ): DataExplorerField {
-        let result = fieldSelection;
-        if (
-            removedFields.find(
-                rf => rf.fullDbName === fieldSelection.fullDbName,
-            )
-        ) {
-            const existingFields = availableFields.concat(addedFields);
-            if (existingFields.length > 0) {
-                result = existingFields.find(field => filterFunction(field));
-            }
-        }
+    public abstract beforeDataFetched(): void;
 
-        return result;
-    }
+    public abstract onDataReceived(spQueryResult: SpQueryResult[]): void;
 
-    public abstract refreshView();
-
-    public abstract beforeDataFetched();
-
-    public abstract onDataReceived(spQueryResult: SpQueryResult[]);
-
-    public abstract onResize(width: number, height: number);
+    public abstract onResize(width: number, height: number): void;
 
     protected abstract handleUpdatedFields(
         addedFields: DataExplorerField[],
         removedFields: DataExplorerField[],
-    );
+    ): void;
 }

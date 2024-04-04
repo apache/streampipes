@@ -39,6 +39,11 @@ spec:
       services:
         - name: {{ .Values.streampipes.ui.appName }}
           port: {{ .Values.streampipes.ui.service.port }}
+    - match: Host(`{{ .Values.streampipes.ingressroute.host }}`) && PathPrefix(`/endpoints/`)
+      kind: Rule
+      services:
+        - name: {{ .Values.extensions.iiot.appName }}
+          port: {{ .Values.extensions.iiot.service.port }}
   {{- if .Values.streampipes.ingressroute.certResolverActive }}
   tls:
     certResolver: {{ .Values.streampipes.ingressroute.certResolver}}

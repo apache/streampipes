@@ -21,7 +21,7 @@ __all__ = [
 
 from typing import Dict, Optional
 
-from pydantic import StrictStr, validator
+from pydantic.v1 import StrictStr, validator
 
 from streampipes.model.resource.resource import Resource
 

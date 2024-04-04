@@ -20,13 +20,12 @@ package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertTrue;
 
 public class TestMeasurementUnitMatch {
 
@@ -38,6 +37,6 @@ public class TestMeasurementUnitMatch {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
     boolean matches = new MeasurementUnitMatch().match(offered, required, errorLog);
-    assertTrue(matches);
+    Assertions.assertTrue(matches);
   }
 }

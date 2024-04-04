@@ -22,22 +22,25 @@ import {
     DataExplorerWidgetModel,
     EventPropertyUnion,
 } from '@streampipes/platform-services';
-import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
+import {
+    AxisConfig,
+    DataExplorerVisConfig,
+} from '../../../../models/dataview-dashboard.model';
 
 export interface TimeSeriesChartVisConfig extends DataExplorerVisConfig {
     selectedTimeSeriesChartProperties: DataExplorerField[];
     selectedBackgroundColorProperty?: EventPropertyUnion;
     groupValue?: string;
-    showCountValue?: boolean;
     showBackgroundColorProperty?: boolean;
     yKeys: DataExplorerField[];
     xKey?: DataExplorerField;
     backgroundColorPropertyKey?: string;
-    labelingModeOn?: boolean;
     chosenColor: { [id: string]: string };
     displayName: { [id: string]: string };
     displayType: { [id: string]: string };
     chosenAxis: { [id: string]: string };
+    leftAxis: AxisConfig;
+    rightAxis: AxisConfig;
     showSpike: boolean;
 }
 

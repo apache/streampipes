@@ -21,9 +21,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { GridsterModule } from 'angular-gridster2';
 import { MatTabsModule } from '@angular/material/tabs';
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
 import { EditorComponent } from './editor.component';
 import { PipelineElementIconStandComponent } from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
 import { PipelineAssemblyComponent } from './components/pipeline-assembly/pipeline-assembly.component';
@@ -37,9 +35,6 @@ import { SavePipelineComponent } from './dialog/save-pipeline/save-pipeline.comp
 import { PipelineElementRecommendationComponent } from './components/pipeline-element-recommendation/pipeline-element-recommendation.component';
 import { CompatibleElementsComponent } from './dialog/compatible-elements/compatible-elements.component';
 import { MatListModule } from '@angular/material/list';
-import { HelpComponent } from './dialog/help/help.component';
-import { PipelineElementDocumentationComponent } from './components/pipeline-element-documentation/pipeline-element-documentation.component';
-import { ShowdownModule } from 'ngx-showdown';
 import { SafeCss } from './utils/style-sanitizer';
 import { MatchingErrorComponent } from './dialog/matching-error/matching-error.component';
 import { MissingElementsForTutorialComponent } from './dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
@@ -47,7 +42,6 @@ import { OutputStrategyComponent } from './components/output-strategy/output-str
 import { CustomOutputStrategyComponent } from './components/output-strategy/custom-output/custom-output-strategy.component';
 import { PropertySelectionComponent } from './components/output-strategy/property-selection/property-selection.component';
 import { UserDefinedOutputStrategyComponent } from './components/output-strategy/user-defined-output/user-defined-output.component';
-import { ConnectModule } from '../connect/connect.module';
 import { EnabledPipelineElementFilter } from './filter/enabled-pipeline-element.filter';
 import { PipelineElementPreviewComponent } from './components/pipeline-element-preview/pipeline-element-preview.component';
 import { PipelineElementDiscoveryComponent } from './dialog/pipeline-element-discovery/pipeline-element-discovery.component';
@@ -56,22 +50,67 @@ import { PipelineElementIconStandRowComponent } from './components/pipeline-elem
 import { PipelineElementTypeFilterPipe } from './services/pipeline-element-type-filter.pipe';
 import { PipelineElementNameFilterPipe } from './services/pipeline-element-name-filter.pipe';
 import { PipelineElementGroupFilterPipe } from './services/pipeline-element-group-filter.pipe';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTableModule } from '@angular/material/table';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
     imports: [
+        MatButtonModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatMenuModule,
+        MatSelectModule,
+        MatSidenavModule,
+        MatSlideToggleModule,
+        MatTabsModule,
+        MatToolbarModule,
+        MatStepperModule,
+        MatRadioModule,
+        MatTableModule,
+        MatAutocompleteModule,
+        MatExpansionModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatDividerModule,
+        MatTooltipModule,
+        MatProgressBarModule,
+        MatButtonToggleModule,
+        MatChipsModule,
+        MatSliderModule,
         CoreUiModule,
         CommonModule,
-        ConnectModule,
         MatTabsModule,
         MatListModule,
-        FlexLayoutModule,
         GridsterModule,
-        CommonModule,
         FlexLayoutModule,
-        CustomMaterialModule,
         FormsModule,
         MatProgressSpinnerModule,
-        ShowdownModule,
         ReactiveFormsModule,
         PlatformServicesModule,
     ],
@@ -81,7 +120,6 @@ import { PipelineElementGroupFilterPipe } from './services/pipeline-element-grou
         CustomOutputStrategyComponent,
         EditorComponent,
         EnabledPipelineElementFilter,
-        HelpComponent,
         MatchingErrorComponent,
         MissingElementsForTutorialComponent,
         OutputStrategyComponent,
@@ -89,7 +127,6 @@ import { PipelineElementGroupFilterPipe } from './services/pipeline-element-grou
         PipelineAssemblyComponent,
         PipelineElementComponent,
         PipelineElementDiscoveryComponent,
-        PipelineElementDocumentationComponent,
         PipelineElementIconStandComponent,
         PipelineElementIconStandRowComponent,
         PipelineElementGroupFilterPipe,
@@ -103,7 +140,7 @@ import { PipelineElementGroupFilterPipe } from './services/pipeline-element-grou
         SavePipelineComponent,
         SafeCss,
     ],
-    providers: [SemanticTypeUtilsService, SafeCss],
+    providers: [SafeCss],
     exports: [EditorComponent, PipelineComponent, PipelineElementComponent],
 })
 export class EditorModule {

@@ -17,7 +17,10 @@
 import asyncio
 import json
 import logging
+from http import HTTPStatus
 from typing import AsyncIterator, Dict, List
+
+from requests import HTTPError
 
 from streampipes.client.client import StreamPipesClient
 from streampipes.functions.broker import Broker, Consumer, get_broker
@@ -67,10 +70,19 @@ class FunctionHandler:
         for streampipes_function in self.registration.getFunctions():
             # Create the output data streams for every function
             for stream_id, output_stream in streampipes_function.function_definition.get_output_data_streams().items():
-                self.client.dataStreamApi.post(output_stream)
+                try:
+                    self.client.dataStreamApi.post(output_stream)
+                except HTTPError as e:
+                    logger.info("The data stream could not be created.")
+                    if e.response.status_code == HTTPStatus.BAD_REQUEST:
+                        logger.info(
+                            "This is due to the fact that this data stream already exists. "
+                            "Continuing with the existing data stream."
+                        )
+                    else:
+                        raise RuntimeError from e
                 logger.info(
-                    f'Create output data stream "{stream_id}" '
-                    f'for the function "{streampipes_function.getFunctionId().id}"'
+                    f"Using output data stream '{stream_id}' for function '{streampipes_function.getFunctionId().id}'"
                 )
             # Choose the broker and collect the schema for every data stream
             for stream_id in streampipes_function.requiredStreamIds():
@@ -134,7 +146,11 @@ class FunctionHandler:
             if stream_id == "stop":
                 break
             for streampipes_function in self.stream_contexts[stream_id].functions:
-                streampipes_function.onEvent(json.loads(msg.data.decode()), stream_id)
+                msg_str = msg.data.decode()
+                try:
+                    streampipes_function.onEvent(json.loads(msg_str), stream_id)
+                except json.JSONDecodeError:
+                    logger.warn(f"Message isn't in json format: {msg_str}")
 
         # Stop the functions
         self._stop_functions()

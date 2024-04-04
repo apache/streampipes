@@ -34,7 +34,7 @@ export class DatalakeQueryParameterBuilder {
     }
 
     private constructor(startTime?: number, endTime?: number) {
-        this.queryParams = new DatalakeQueryParameters();
+        this.queryParams = {};
         if (startTime) {
             this.queryParams.startDate = startTime;
         }
