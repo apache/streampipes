@@ -33,10 +33,8 @@ import { EditDashboardDialogComponent } from './dialogs/edit-dashboard/edit-dash
 import { DashboardGridComponent } from './components/grid/dashboard-grid.component';
 import { LineWidgetComponent } from './components/widgets/line/line-widget.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { ResizeService } from './services/resize.service';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { CdkTableModule } from '@angular/cdk/table';
-import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { GaugeWidgetComponent } from './components/widgets/gauge/gauge-widget.component';
 import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
 import { AreaWidgetComponent } from './components/widgets/area/area-widget.component';
@@ -52,8 +50,6 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { StatusWidgetComponent } from './components/widgets/status/status-widget.component';
 import { BarRaceWidgetComponent } from './components/widgets/bar-race/bar-race-widget.component';
 import { StackedLineChartWidgetComponent } from './components/widgets/stacked-line-chart/stacked-line-chart-widget.component';
-import { EditModeService } from './services/edit-mode.service';
-import { ReloadPipelineService } from './services/reload-pipeline.service';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { ServicesModule } from '../services/services.module';
 import { RouterModule } from '@angular/router';
@@ -176,12 +172,7 @@ import { MatSliderModule } from '@angular/material/slider';
         WordcloudWidgetComponent,
         StandaloneDashboardComponent,
     ],
-    providers: [
-        EditModeService,
-        ReloadPipelineService,
-        ResizeService,
-        RefreshDashboardService,
-    ],
+    providers: [],
     exports: [DashboardWidgetComponent, StandaloneDashboardComponent],
 })
 export class DashboardModule {

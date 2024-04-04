@@ -27,10 +27,7 @@ import 'codemirror/addon/hint/show-hint';
 import 'codemirror/addon/hint/javascript-hint';
 import 'codemirror/addon/lint/javascript-lint';
 import 'codemirror/addon/lint/lint';
-import { JSHINT } from 'jshint';
-import * as CodeMirror from 'codemirror';
-
-(window as any).JSHINT = JSHINT;
+import CodeMirror from 'codemirror';
 
 @Component({
     selector: 'sp-static-code-input',

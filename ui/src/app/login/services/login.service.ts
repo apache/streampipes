@@ -25,7 +25,7 @@ import { map } from 'rxjs/operators';
 import { RegistrationModel } from '../components/register/registration.model';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class LoginService {
     constructor(
         private http: HttpClient,

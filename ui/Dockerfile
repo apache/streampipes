@@ -15,7 +15,7 @@
 
 FROM nginx:mainline-alpine3.18
 
-COPY dist/streampipes/ui/ /usr/share/nginx/html/
+COPY dist/streampipes/ui/browser/ /usr/share/nginx/html/
 
 #Store a copy to have a version if the other is hidden in the volume. Required for migration from 0.93.0 to 0.95.0. Could be removed after the release of 0.95.0.
 RUN mkdir -p /etc/opt/nginx/

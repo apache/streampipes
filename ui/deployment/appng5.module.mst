@@ -59,7 +59,6 @@ import { MapTransform } from './core-ui/echarts-transform/map.transform';
 
 import * as echarts from 'echarts';
 import * as transform from 'echarts-simple-transform';
-import 'echarts-gl';
 
 echarts.registerTransform(transform.aggregate);
 echarts.registerTransform(ValueDistributionTransform);
@@ -87,7 +86,6 @@ import * as $ from 'jquery';
         FormsModule,
         LoginModule,
         LoadingBarHttpClientModule,
-        HomeModule,
         InfoModule,
         NotificationModule,
         PipelineDetailsModule,
@@ -96,9 +94,6 @@ import * as $ from 'jquery';
         NgxEchartsModule.forRoot({
             echarts: () => import('echarts'),
         }),
-        {{#modulesActive}}
-        {{{ng5_moduleName}}},
-        {{/modulesActive}}
     ],
     providers: [
         AuthService,

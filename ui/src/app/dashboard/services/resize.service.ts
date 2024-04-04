@@ -20,7 +20,7 @@ import { Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { GridsterInfo } from '../models/gridster-info.model';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ResizeService {
     public resizeSubject: Subject<GridsterInfo> = new Subject<GridsterInfo>();
 

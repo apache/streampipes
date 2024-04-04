@@ -30,7 +30,7 @@ import {
     CurrentUserService,
 } from '@streampipes/shared-ui';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthService {
     constructor(
         private restApi: RestApi,

@@ -21,7 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AccountActivationService {
     constructor(
         private http: HttpClient,

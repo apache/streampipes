@@ -2,19 +2,23 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "@streampipes/platform-services": ["dist/streampipes/platform-services"],
-      "@streampipes/shared-ui": ["dist/streampipes/shared-ui"]
+      "@streampipes/platform-services": [
+        "projects/streampipes/platform-services/src/public-api.ts"
+      ],
+      "@streampipes/shared-ui": [
+        "projects/streampipes/shared-ui/src/public-api.ts"
+      ]
     },
     "downlevelIteration": true,
     "importHelpers": true,
-    "module": "es2020",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es2020",
+    "target": "es2022",
+    "module": "es2022",
     "allowSyntheticDefaultImports": true,
     "typeRoots": ["node_modules/@types"],
     "types": ["node"],
