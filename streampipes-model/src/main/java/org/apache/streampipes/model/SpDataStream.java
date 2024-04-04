@@ -110,4 +110,9 @@ public class SpDataStream extends NamedStreamPipesEntity {
   public void setCorrespondingAdapterId(String correspondingAdapterId) {
     this.correspondingAdapterId = correspondingAdapterId;
   }
+
+  @Override
+  public String getAppId() {
+    return this.elementId;
+  }
 }

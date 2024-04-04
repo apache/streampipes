@@ -32,7 +32,7 @@ import {
 } from '@streampipes/platform-services';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class RestService {
     constructor(
         private http: HttpClient,

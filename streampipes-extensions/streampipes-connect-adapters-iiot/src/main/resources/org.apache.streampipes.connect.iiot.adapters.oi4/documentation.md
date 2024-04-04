@@ -56,7 +56,7 @@ Choose between unauthenticated access or input your credentials for authenticate
 
 You should provide information about the sensor you want to connect to. This can be achieved in two ways:
 
-a) **By Type**: Specify the type of sensor you want to connect to, e.g., `'VVB001'`. </br>
+a) **By Type**: Specify the type of sensor you want to connect to, e.g., `'VVB001'`. <\br>
 b) **By IODD**: Simply upload the IODD description of the respective sensor. Please note: This feature is not yet available! If you're interested in this feature, please notify us through the mailing list or GitHub discussions and share your use case with us.
 
 ### Selected Sensors

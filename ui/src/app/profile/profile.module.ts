@@ -25,7 +25,6 @@ import { CommonModule } from '@angular/common';
 import { ProfileComponent } from './profile.component';
 import { TokenManagementSettingsComponent } from './components/token/token-management-settings.component';
 import { GeneralProfileSettingsComponent } from './components/general/general-profile-settings.component';
-import { ProfileService } from './profile.service';
 import { MatDividerModule } from '@angular/material/divider';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CoreUiModule } from '../core-ui/core-ui.module';
@@ -61,7 +60,7 @@ import { MatRadioModule } from '@angular/material/radio';
         ProfileComponent,
         TokenManagementSettingsComponent,
     ],
-    providers: [ProfileService],
+    providers: [],
     exports: [ProfileComponent],
 })
 export class ProfileModule {

@@ -37,9 +37,9 @@ import {
     Pipeline,
     PipelineElementService,
     PipelineService,
+    UserInfo,
 } from '@streampipes/platform-services';
 import { zip } from 'rxjs';
-import { UserInfo } from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
     templateUrl: './home.component.html',

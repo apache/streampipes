@@ -17,11 +17,12 @@
  */
 
 @use '@angular/material' as mat;
-
-@import '@angular/material/theming';
-@import '../variables';
+@use '../_variables' as sp;
 
 @include mat.core();
+
+$dark-primary-text: rgba(black, 0.87);
+$light-primary-text: white;
 
 .nav-input {
     @include mat.input-density(-3);
@@ -37,7 +38,7 @@ $mat-streampipes-primary: (
     200: #72e879,
     300: #49e750,
     400: #49e750,
-    500: $sp-color-primary,
+    500: sp.$sp-color-primary,
     600: #06c12a,
     700: #01a51d,
     800: #00841b,
@@ -47,17 +48,17 @@ $mat-streampipes-primary: (
     A400: #ff1744,
     A700: #d50000,
     contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
+        50: $dark-primary-text,
+        100: $dark-primary-text,
+        200: $dark-primary-text,
+        300: $dark-primary-text,
+        400: $dark-primary-text,
         500: white,
         600: white,
         700: white,
-        800: $white-87-opacity,
-        900: $white-87-opacity,
-        A100: $black-87-opacity,
+        800: $light-primary-text,
+        900: $light-primary-text,
+        A100: $dark-primary-text,
         A200: white,
         A400: white,
         A700: white,
@@ -70,7 +71,7 @@ $mat-streampipes-accent: (
     200: #4e3c93,
     300: #2a0c9a,
     400: #395481,
-    500: $sp-color-accent,
+    500: sp.$sp-color-accent,
     600: #0303a3,
     700: #01016a,
     800: #000039,
@@ -80,17 +81,17 @@ $mat-streampipes-accent: (
     A400: #ff1744,
     A700: #d50000,
     contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
+        50: $dark-primary-text,
+        100: $dark-primary-text,
+        200: $dark-primary-text,
+        300: $dark-primary-text,
+        400: $dark-primary-text,
         500: white,
         600: white,
         700: white,
-        800: $white-87-opacity,
-        900: $white-87-opacity,
-        A100: $black-87-opacity,
+        800: $light-primary-text,
+        900: $light-primary-text,
+        A100: $dark-primary-text,
         A200: white,
         A400: white,
         A700: white,
@@ -103,7 +104,7 @@ $mat-streampipes-accent-dark: (
     200: #4e3c93,
     300: #2a0c9a,
     400: #395481,
-    500: $sp-color-accent-dark,
+    500: sp.$sp-color-accent-dark,
     600: #0303a3,
     700: #01016a,
     800: #000039,
@@ -113,17 +114,17 @@ $mat-streampipes-accent-dark: (
     A400: #ff1744,
     A700: #d50000,
     contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
+        50: $dark-primary-text,
+        100: $dark-primary-text,
+        200: $dark-primary-text,
+        300: $dark-primary-text,
+        400: $dark-primary-text,
         500: white,
         600: white,
         700: white,
-        800: $white-87-opacity,
-        900: $white-87-opacity,
-        A100: $black-87-opacity,
+        800: $light-primary-text,
+        900: $light-primary-text,
+        A100: $dark-primary-text,
         A200: white,
         A400: white,
         A700: white,
@@ -133,7 +134,7 @@ $mat-streampipes-accent-dark: (
 $custom-theme-primary: mat.define-palette($mat-streampipes-primary);
 $custom-theme-accent-dark: mat.define-palette($mat-streampipes-accent-dark);
 $custom-theme-accent: mat.define-palette($mat-streampipes-accent);
-$custom-theme-warn: mat.define-palette($mat-red);
+$custom-theme-warn: mat.define-palette(mat.$red-palette);
 
 $custom-typography: mat.define-typography-config(
     $font-family: 'Roboto-Regular, Arial',
@@ -187,8 +188,10 @@ $accent: map-get($custom-theme-light, accent);
     font-size: 11pt;
 }
 
+@include mat.all-component-themes($custom-theme-light);
+
 .dark-mode {
-    @include mat.all-component-themes($custom-theme-dark);
+    @include mat.all-component-colors($custom-theme-dark);
 
     .base-style {
         color: rgba(255, 255, 255, 0.87);
@@ -219,9 +222,7 @@ $accent: map-get($custom-theme-light, accent);
 }
 
 .light-mode {
-    @include mat.core-theme($custom-theme-light);
-    @include mat.all-component-typographies();
-    @include mat.all-component-themes($custom-theme-light);
+    @include mat.all-component-colors($custom-theme-light);
 
     .small-form-field-density {
         @include mat.form-field-density(-3);
@@ -271,6 +272,7 @@ $accent: map-get($custom-theme-light, accent);
 
     .form-field-small-min-width {
         min-width: 130px;
+
         .mdc-list-item__primary-text {
             font-size: 14px;
         }

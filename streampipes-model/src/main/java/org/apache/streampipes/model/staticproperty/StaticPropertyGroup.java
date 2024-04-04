@@ -19,6 +19,7 @@ package org.apache.streampipes.model.staticproperty;
 
 import org.apache.streampipes.model.util.Cloner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,6 +35,10 @@ public class StaticPropertyGroup extends StaticProperty {
     super(StaticPropertyType.StaticPropertyGroup);
   }
 
+  public StaticPropertyGroup(StaticPropertyType staticPropertyType) {
+    super(staticPropertyType);
+  }
+
   public StaticPropertyGroup(StaticPropertyGroup other) {
     super(other);
     this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
@@ -43,11 +48,19 @@ public class StaticPropertyGroup extends StaticProperty {
 
   public StaticPropertyGroup(String internalName, String label, String description) {
     super(StaticPropertyType.StaticPropertyGroup, internalName, label, description);
+    this.staticProperties = new ArrayList<>();
+  }
+
+  public StaticPropertyGroup(StaticPropertyType type,
+                             String internalName, String label, String description) {
+    super(type, internalName, label, description);
+    this.staticProperties = new ArrayList<>();
   }
 
   public StaticPropertyGroup(String internalName, String label, String description, boolean horizontalRendering) {
     super(StaticPropertyType.StaticPropertyGroup, internalName, label, description);
     this.horizontalRendering = horizontalRendering;
+    this.staticProperties = new ArrayList<>();
   }
 
   public StaticPropertyGroup(String internalName, String label, String description,

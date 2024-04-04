@@ -2,6 +2,9 @@
 {
   "extends": "./tsconfig.lib.json",
   "compilerOptions": {
+    "paths": {
+      "@streampipes/platform-services": ["dist/streampipes/platform-services"]
+    },
     "declarationMap": false
   },
   "angularCompilerOptions": {

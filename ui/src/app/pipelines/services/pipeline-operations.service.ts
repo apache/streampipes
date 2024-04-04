@@ -27,7 +27,7 @@ import { PipelineAction } from '../model/pipeline-model';
 import { PipelineNotificationsComponent } from '../dialog/pipeline-notifications/pipeline-notifications.component';
 import { ObjectPermissionDialogComponent } from '../../core-ui/object-permission-dialog/object-permission-dialog.component';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PipelineOperationsService {
     starting: any;
     stopping: any;

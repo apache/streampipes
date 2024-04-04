@@ -68,6 +68,9 @@ import { SpEmailTemplateConfigurationComponent } from './email-configuration/ema
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
     imports: [
@@ -75,6 +78,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
         FlexLayoutModule,
         MatGridListModule,
         MatButtonModule,
+        MatButtonToggleModule,
         MatProgressSpinnerModule,
         MatIconModule,
         MatInputModule,
@@ -83,6 +87,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
         MatTooltipModule,
         MatTableModule,
         MatPaginatorModule,
+        MatRadioModule,
+        MatSelectModule,
         FormsModule,
         DragDropModule,
         CoreUiModule,
@@ -167,6 +173,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
         SpRegisteredExtensionsServiceComponent,
         SpExtensionsServiceConfigurationComponent,
     ],
-    providers: [ConfigurationService],
+    providers: [],
 })
 export class ConfigurationModule {}

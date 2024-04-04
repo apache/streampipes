@@ -994,6 +994,12 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     return me();
   }
 
+  public K requiredRuntimeResolvableGroup(Label label,
+                                          List<String> dependsOn) {
+    this.staticProperties.add(StaticProperties.runtimeResolvableGroupStaticProperty(label, dependsOn));
+    return me();
+  }
+
   public K requiredMultiValueSelectionFromContainer(Label label) {
     this.staticProperties.add(StaticProperties.multiValueSelectionFromContainer(label));
     return me();

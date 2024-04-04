@@ -57,10 +57,12 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
                     ([runtimeName, value]) => ({ runtimeName, value }),
                 );
 
-                this.timer = setTimeout(
-                    () => this.getLatestRuntimeInfo(),
-                    1000,
-                );
+                if (this._pollingActive) {
+                    this.timer = setTimeout(
+                        () => this.getLatestRuntimeInfo(),
+                        1000,
+                    );
+                }
             });
     }
 

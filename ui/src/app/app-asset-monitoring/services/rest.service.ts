@@ -23,7 +23,7 @@ import { Observable } from 'rxjs';
 import { DashboardConfiguration } from '../model/dashboard-configuration.model';
 import { PlatformServicesCommons } from '@streampipes/platform-services';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class RestService {
     constructor(
         private http: HttpClient,

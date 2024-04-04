@@ -19,7 +19,7 @@
 import { Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class EditModeService {
     public editModeSubject: Subject<boolean> = new Subject<boolean>();
 

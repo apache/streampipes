@@ -58,16 +58,25 @@ const runTestCase = (editOption: boolean) => {
     }
 
     // Change first field from line plot to scatter plot
-    DataLakeUtils.selectVisualizationConfig();
-    cy.get('div').contains('Line').click();
-    cy.get('div').contains('Scatter').click();
+    DataLakeUtils.openVisualizationConfig();
+
+    // select type scatter
+    cy.dataCy('time-series-item-config-toggle').first().click();
+    cy.dataCy('time-series-item-config-type')
+        .click()
+        .get('mat-option')
+        .contains('Scatter')
+        .click();
 
     // Check if scatter plot is displayed
     cy.dataCy('time-series-chart').should('be.visible');
 
     // Change second field from line plot to bar plot
-    cy.get('div').contains('Line').click();
-    cy.get('div').contains('Bar').click();
+    cy.dataCy('time-series-item-config-type')
+        .click()
+        .get('mat-option')
+        .contains('Line')
+        .click();
 
     // Check if bar plot is displayed
     cy.dataCy('time-series-chart').should('be.visible');

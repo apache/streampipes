@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { RoleDescription } from '../_models/auth.model';
 import { UserRole } from '../_enums/user-role.enum';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AvailableRolesService {
     availableRoles: RoleDescription[] = [
         { role: UserRole.ROLE_ADMIN, roleTitle: 'Admin', roleDescription: '' },

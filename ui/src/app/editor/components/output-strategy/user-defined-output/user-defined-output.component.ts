@@ -35,17 +35,20 @@ export class UserDefinedOutputStrategyComponent
     extends BaseOutputStrategy<UserDefinedOutputStrategy>
     implements OnInit
 {
-    primitiveClasses = [
-        { label: 'String', id: DataType.STRING },
-        { label: 'Boolean', id: DataType.BOOLEAN },
-        { label: 'Integer', id: DataType.INTEGER },
-        { label: 'Long', id: DataType.LONG },
-        { label: 'Double', id: DataType.DOUBLE },
-        { label: 'Float', id: DataType.FLOAT },
-    ];
+    primitiveClasses = [];
 
-    constructor(private idGeneratorService: IdGeneratorService) {
+    constructor(
+        private idGeneratorService: IdGeneratorService,
+    ) {
         super();
+        this.primitiveClasses = [
+            { label: 'String', id: DataType.STRING },
+            { label: 'Boolean', id: DataType.BOOLEAN },
+            { label: 'Integer', id: DataType.INTEGER },
+            { label: 'Long', id: DataType.LONG },
+            { label: 'Double', id: DataType.DOUBLE },
+            { label: 'Float', id: DataType.FLOAT },
+        ];
     }
 
     ngOnInit() {

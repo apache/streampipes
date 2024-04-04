@@ -115,7 +115,7 @@ export class ObjectProvider {
                     );
                     const connections = jsplumbBridge.getConnections({
                         target: document.getElementById(payload.dom),
-                    });
+                    }) as any;
                     for (let i = 0; i < connections.length; i++) {
                         payload.connectedTo.push(connections[i].sourceId);
                     }

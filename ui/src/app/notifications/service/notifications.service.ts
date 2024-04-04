@@ -27,7 +27,7 @@ import { map } from 'rxjs/operators';
 import { PlatformServicesCommons } from '@streampipes/platform-services';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class NotificationsService {
     constructor(
         private http: HttpClient,
