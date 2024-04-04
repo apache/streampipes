@@ -97,7 +97,7 @@ pytkdocs = { version = "0.16.1", extras = ["numpy-style"] }
 optional = true
 
 [tool.poetry.group.stubs.dependencies]
-pandas-stubs = "2.0.0.230412"
+pandas-stubs = "2.0.3.230814"
 types-Jinja2 = "2.11.9"
 types-requests = "2.31.0.0"
 
