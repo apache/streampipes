@@ -92,10 +92,9 @@ export class RestService {
         unitDescription: UnitDescription,
     ): Observable<UnitDescription[]> {
         return this.http
-            .post<UnitDescription[]>(
-                `${this.connectPath}/master/unit`,
-                unitDescription,
-            )
+            .post<
+                UnitDescription[]
+            >(`${this.connectPath}/master/unit`, unitDescription)
             .pipe(
                 map(response => {
                     const descriptions = response as UnitDescription[];
