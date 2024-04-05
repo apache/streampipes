@@ -29,6 +29,7 @@ import { RestService } from '../../../../services/rest.service';
 import { ITreeOptions, TreeComponent } from '@ali-hm/angular-tree-component';
 import {
     AdapterDescription,
+    DataType,
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
@@ -42,8 +43,7 @@ import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessag
 import { TransformationRuleService } from '../../../../services/transformation-rule.service';
 import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
 import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
-import { SemanticType } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
-import { DataType } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
+import { SemanticType } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-event-schema',

@@ -49,7 +49,6 @@ export class SemanticType {
         return property.domainProperties.includes(SemanticType.IMAGE);
     }
 
-    // TODO should we move this to DataType, and check for the data type instead of domain properties?
     public static isNumber(property: EventProperty): boolean {
         return property.domainProperties.includes(SemanticType.SO_NUMBER);
     }

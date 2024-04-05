@@ -16,7 +16,7 @@
  *
  */
 
-import { DataType } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
+import { DataType } from '@streampipes/platform-services';
 
 export class DatatypeMatch {
     match(datatypeRequirement: string, datatypeOffer: string) {

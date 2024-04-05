@@ -26,9 +26,11 @@ import {
 import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
-import { SemanticTypesRestService } from '../../../../../../../projects/streampipes/platform-services/src/lib/apis/semantic-types-rest.service';
-import { SemanticType } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
-import { DataType } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
+import {
+    DataType,
+    SemanticType,
+    SemanticTypesRestService,
+} from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-edit-schema-transformation',

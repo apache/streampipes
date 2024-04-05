@@ -19,12 +19,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TreeNode } from '@ali-hm/angular-tree-component';
 import {
+    DataType,
     EventProperty,
     EventPropertyList,
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
     EventSchema,
+    SemanticType,
     FieldStatusInfo,
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
@@ -33,8 +35,6 @@ import { StaticValueTransformService } from '../../../../services/static-value-t
 import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
-import { SemanticType } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
-import { DataType } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
 
 @Component({
     selector: 'sp-event-property-row',

@@ -20,14 +20,14 @@ import { Injectable } from '@angular/core';
 import { FieldProvider } from '../models/dataview-dashboard.model';
 import {
     DataExplorerField,
+    DataType,
     EventProperty,
     EventPropertyPrimitive,
     EventPropertyUnion,
     FieldConfig,
+    SemanticType,
     SourceConfig,
 } from '@streampipes/platform-services';
-import { SemanticType } from '../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
-import { DataType } from '../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerFieldProviderService {

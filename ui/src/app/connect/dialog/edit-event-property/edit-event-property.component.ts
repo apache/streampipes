@@ -34,6 +34,7 @@ import {
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
+    SemanticType,
 } from '@streampipes/platform-services';
 import { DataTypesService } from '../../services/data-type.service';
 import { DialogRef } from '@streampipes/shared-ui';
@@ -41,7 +42,6 @@ import { EditSchemaTransformationComponent } from './components/edit-schema-tran
 import { EditValueTransformationComponent } from './components/edit-value-transformation/edit-value-transformation.component';
 import { EditUnitTransformationComponent } from './components/edit-unit-transformation/edit-unit-transformation.component';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { SemanticType } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
 
 @Component({
     selector: 'sp-edit-event-property',

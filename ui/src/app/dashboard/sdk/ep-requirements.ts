@@ -16,14 +16,14 @@
  *
  */
 
-import { DataType } from '../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
+import { DataType } from '@streampipes/platform-services';
 import {
     EventPropertyList,
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
+    SemanticType,
 } from '@streampipes/platform-services';
-import { SemanticType } from '../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
 
 export class EpRequirements {
     private static ep(): EventPropertyPrimitive {

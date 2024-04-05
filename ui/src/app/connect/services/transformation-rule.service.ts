@@ -31,13 +31,13 @@ import {
     EventSchema,
     MoveRuleDescription,
     RenameRuleDescription,
+    SemanticType,
     TimestampTranfsformationRuleDescription,
     TransformationRuleDescriptionUnion,
     UnitTransformRuleDescription,
 } from '@streampipes/platform-services';
 import { TimestampTransformationRuleMode } from '../model/TimestampTransformationRuleMode';
 import { StaticValueTransformService } from './static-value-transform.service';
-import { SemanticType } from '../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
 
 @Injectable({ providedIn: 'root' })
 export class TransformationRuleService {

@@ -17,11 +17,11 @@
  */
 
 import { CollectedSchemaRequirements } from '../sdk/collected-schema-requirements';
-import { DataType } from '../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
 import { Tuple2 } from '../../core-model/base/Tuple2';
 import {
     ColorPickerStaticProperty,
     DashboardWidgetSettings,
+    DataType,
     FreeTextStaticProperty,
     OneOfStaticProperty,
     Option,

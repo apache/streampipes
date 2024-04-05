@@ -17,8 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { EventSchema } from '@streampipes/platform-services';
-import { DataType } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
+import { DataType, EventSchema } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-field-names-table',

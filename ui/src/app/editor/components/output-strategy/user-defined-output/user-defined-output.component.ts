@@ -19,12 +19,12 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseOutputStrategy } from '../base/BaseOutputStrategy';
 import {
+    DataType,
     EventPropertyPrimitive,
     UserDefinedOutputStrategy,
 } from '@streampipes/platform-services';
 import { UntypedFormControl } from '@angular/forms';
 import { IdGeneratorService } from '../../../../core-services/id-generator/id-generator.service';
-import { DataType } from '../../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
 
 @Component({
     selector: 'sp-user-defined-output-strategy',

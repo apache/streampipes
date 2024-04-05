@@ -19,7 +19,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ValidatorFn, Validators } from '@angular/forms';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
-import { FreeTextStaticProperty } from '@streampipes/platform-services';
+import {
+    DataType,
+    FreeTextStaticProperty,
+    SemanticType,
+} from '@streampipes/platform-services';
 import {
     ValidateNumber,
     ValidateString,
@@ -27,8 +31,6 @@ import {
 } from '../input.validator';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { QuillEditorComponent } from 'ngx-quill';
-import { SemanticType } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
-import { DataType } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/data-type';
 
 @Component({
     selector: 'sp-app-static-free-input',

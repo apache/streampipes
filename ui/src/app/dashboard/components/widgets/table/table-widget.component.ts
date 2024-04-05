@@ -22,9 +22,11 @@ import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-
 import { MatTableDataSource } from '@angular/material/table';
 import { TableConfig } from './table-config';
 import { ResizeService } from '../../../services/resize.service';
-import { DatalakeRestService } from '@streampipes/platform-services';
+import {
+    DatalakeRestService,
+    SemanticType,
+} from '@streampipes/platform-services';
 import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
-import { SemanticType } from '../../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
 
 @Component({
     selector: 'sp-table-widget',

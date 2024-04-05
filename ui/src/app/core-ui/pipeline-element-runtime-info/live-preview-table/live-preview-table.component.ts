@@ -17,8 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { EventSchema } from '@streampipes/platform-services';
-import { SemanticType } from '../../../../../projects/streampipes/platform-services/src/lib/model/types/semantic-type';
+import { EventSchema, SemanticType } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-live-preview-table',

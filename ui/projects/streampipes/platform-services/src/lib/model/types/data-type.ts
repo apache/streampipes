@@ -25,8 +25,6 @@ export class DataType {
     public static readonly BOOLEAN = this.XSD + 'boolean';
     public static readonly STRING = this.XSD + 'string';
     public static readonly DOUBLE = this.XSD + 'double';
-
-    // Should we support data type number?
     public static readonly NUMBER = this.XSD + 'number';
 
     public static isNumberType(datatype: string): boolean {
