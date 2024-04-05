@@ -16,7 +16,7 @@
  *
  */
 
-import { EventProperty } from '@streampipes/platform-services';
+import { EventProperty } from '../gen/streampipes-model';
 
 export class SemanticType {
     public static readonly SO: string = 'http://schema.org/';
