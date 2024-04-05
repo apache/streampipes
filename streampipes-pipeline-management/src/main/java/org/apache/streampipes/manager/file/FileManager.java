@@ -60,15 +60,17 @@ public class FileManager {
                                        String filename,
                                        InputStream fileInputStream) throws IOException {
 
-    String filetype = filename.substring(filename.lastIndexOf(".") + 1);
+    var filetype = filename.substring(filename.lastIndexOf(".") + 1);
 
-    fileInputStream = cleanFile(fileInputStream, filetype);
+    fileInputStream = validateFileNameAndCleanFile(filename, filetype, fileInputStream);
 
-    FileMetadata fileMetadata = makeFileMetadata(user, filename, filetype);
-    new FileHandler().storeFile(filename, fileInputStream);
-    storeFileMetadata(fileMetadata);
-    return fileMetadata;
+    var sanitizedFilename = sanitizeFilename(filename);
+
+    writeToFile(sanitizedFilename, fileInputStream);
+
+    return makeAndStoreFileMetadata(user, sanitizedFilename, filetype);
   }
+
 
   public static void deleteFile(String id) {
     FileMetadata fileMetadata = getFileMetadataStorage().getMetadataById(id);
@@ -76,6 +78,15 @@ public class FileManager {
     getFileMetadataStorage().deleteFileMetadata(id);
   }
 
+  private static InputStream validateFileNameAndCleanFile(String filename,
+                                                  String filetype,
+                                                  InputStream fileInputStream) {
+    if (!validateFileType(filename)) {
+      throw new IllegalArgumentException("Filetype for file %s not allowed".formatted(filename));
+    }
+
+    return cleanFile(fileInputStream, filetype);
+  }
 
   /**
    * Remove Byte Order Mark (BOM) from csv files
@@ -84,7 +95,7 @@ public class FileManager {
    * @param filetype file of type
    * @return input stream without BOM
    */
-  public static InputStream cleanFile(InputStream fileInputStream, String filetype) {
+  protected static InputStream cleanFile(InputStream fileInputStream, String filetype) {
     if (Filetypes.CSV.getFileExtensions().contains(filetype.toLowerCase())) {
       fileInputStream = new BOMInputStream(fileInputStream);
     }
@@ -97,15 +108,35 @@ public class FileManager {
     return !fileHash.equals(hash);
   }
 
-  private static void storeFileMetadata(FileMetadata fileMetadata) {
-    getFileMetadataStorage().addFileMetadata(fileMetadata);
+  public static String sanitizeFilename(String filename) {
+    return filename.replaceAll("[^a-zA-Z0-9.\\-]", "_");
   }
+
+  public static boolean validateFileType(String filename) {
+    return Filetypes.getAllFileExtensions()
+                    .stream()
+                    .anyMatch(filename::endsWith);
+  }
+
+  protected static void writeToFile(String sanitizedFilename, InputStream fileInputStream) throws IOException {
+    new FileHandler().storeFile(sanitizedFilename, fileInputStream);
+  }
+
 
   private static IFileMetadataStorage getFileMetadataStorage() {
     return StorageDispatcher
         .INSTANCE
         .getNoSqlStore()
         .getFileMetadataStorage();
+  }
+
+  protected static FileMetadata makeAndStoreFileMetadata(String user,
+                                                       String sanitizedFilename,
+                                                       String filetype) {
+    var fileMetadata = makeFileMetadata(user, sanitizedFilename, filetype);
+    storeFileMetadata(fileMetadata);
+
+    return fileMetadata;
   }
 
   private static FileMetadata makeFileMetadata(String user,
@@ -121,6 +152,11 @@ public class FileManager {
     return fileMetadata;
   }
 
+  private static void storeFileMetadata(FileMetadata fileMetadata) {
+    getFileMetadataStorage().addFileMetadata(fileMetadata);
+  }
+
+
   private static List<FileMetadata> filterFiletypes(List<FileMetadata> allFiles, String filetypes) {
     return allFiles
         .stream()
@@ -129,4 +165,5 @@ public class FileManager {
             .anyMatch(ft -> ft.equals(fileMetadata.getFiletype())))
         .collect(Collectors.toList());
   }
+
 }

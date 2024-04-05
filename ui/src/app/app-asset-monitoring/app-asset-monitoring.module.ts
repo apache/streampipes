@@ -33,12 +33,12 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { SaveDashboardDialogComponent } from './dialog/save-dashboard/save-dashboard-dialog.component';
 import { AssetDashboardOverviewComponent } from './components/dashboard-overview/dashboard-overview.component';
 import { AddLinkDialogComponent } from './dialog/add-link/add-link-dialog.component';
-import { DashboardModule } from '../dashboard/dashboard.module';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
     imports: [
@@ -48,11 +48,11 @@ import { MatTabsModule } from '@angular/material/tabs';
         MatGridListModule,
         MatIconModule,
         MatTabsModule,
+        MatButtonModule,
         MatInputModule,
         MatFormFieldModule,
         FormsModule,
         ColorPickerModule,
-        DashboardModule,
         RouterModule.forChild([
             {
                 path: '',
