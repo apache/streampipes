@@ -2,8 +2,8 @@
   "name": "@streampipes/platform-services",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^17.3.2",
-    "@angular/core": "^17.3.2",
+    "@angular/common": "^17.3.3",
+    "@angular/core": "^17.3.3",
     "rxjs": "^7.5.7",
     "angular-gridster2": "^17.0.0"
   },
