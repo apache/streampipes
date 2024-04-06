@@ -72,7 +72,7 @@ func (s *StreamPipesClient) StreamPipesVersion() *Versions {
 	return NewVersions(s.config)
 }
 
-func (s *StreamPipesClient) UserInfo() *StreamPipesUserInfo {
+func (s *StreamPipesClient) DataLakeDashboard() *DataLakeDashboard {
 
-	return NewStreamPipesUserInfo(s.config)
+	return NewDataLakeDashborad(s.config)
 }

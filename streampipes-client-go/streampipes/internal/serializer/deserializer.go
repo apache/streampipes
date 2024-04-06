@@ -20,7 +20,6 @@ package serializer
 import (
 	"encoding/json"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/data_lake"
-	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/streampipes_user"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/streampipes_version"
 )
 
@@ -92,32 +91,32 @@ func (d *StreamPipesVersionDeserializer) Unmarshal(data []byte) (interface{}, er
 	return dataSeries, nil
 }
 
-type ShortUserInfosDeserializer struct{}
+type DataLakeDashboardDeserializer struct{}
 
-func NewShortUserInfosDeserializer() *ShortUserInfosDeserializer {
-	return &ShortUserInfosDeserializer{}
+func NewDataLakeDashboardDeserializer() *DataLakeDashboardDeserializer {
+	return &DataLakeDashboardDeserializer{}
 }
 
-func (s *ShortUserInfosDeserializer) Unmarshal(data []byte) (interface{}, error) {
-	var shortUserInfo []streampipes_user.ShortUserInfo
-	err := json.Unmarshal(data, &shortUserInfo)
+func (d *DataLakeDashboardDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var dashborad data_lake.Dashboard
+	err := json.Unmarshal(data, &dashborad)
 	if err != nil {
 		return nil, err
 	}
-	return shortUserInfo, nil
+	return dashborad, nil
 }
 
-type UserAccountDeserializer struct{}
+type DataLakeDashboardsDeserializer struct{}
 
-func NewUserAccountDeserializer() *UserAccountDeserializer {
-	return &UserAccountDeserializer{}
+func NewDataLakeDashboardsDeserializer() *DataLakeDashboardsDeserializer {
+	return &DataLakeDashboardsDeserializer{}
 }
 
-func (p *UserAccountDeserializer) Unmarshal(data []byte) (interface{}, error) {
-	var userAccount streampipes_user.UserAccount
-	err := json.Unmarshal(data, &userAccount)
+func (d *DataLakeDashboardsDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var dashborad []data_lake.Dashboard
+	err := json.Unmarshal(data, &dashborad)
 	if err != nil {
 		return nil, err
 	}
-	return userAccount, nil
+	return dashborad, nil
 }
