@@ -114,12 +114,12 @@ func NewSpMetricsEntryDeserializer() *SpMetricsEntryDeserializer {
 }
 
 func (p *SpMetricsEntryDeserializer) Unmarshal(data []byte) (interface{}, error) {
-	var userAccount functions.SpMetricsEntry
-	err := json.Unmarshal(data, &userAccount)
+	var spMetricsEntry functions.SpMetricsEntry
+	err := json.Unmarshal(data, &spMetricsEntry)
 	if err != nil {
 		return nil, err
 	}
-	return userAccount, nil
+	return spMetricsEntry, nil
 }
 
 type FunctionDefinitionsDeserializer struct{}
