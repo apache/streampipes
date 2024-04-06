@@ -71,3 +71,8 @@ func (s *StreamPipesClient) StreamPipesVersion() *Versions {
 
 	return NewVersions(s.config)
 }
+
+func (s *StreamPipesClient) DataLakeWidget() *DataLakeWidget {
+
+	return NewDataLakeWidget(s.config)
+}
