@@ -71,3 +71,8 @@ func (s *StreamPipesClient) StreamPipesVersion() *Versions {
 
 	return NewVersions(s.config)
 }
+
+func (s *StreamPipesClient) Function() *Functions {
+
+	return NewFunctions(s.config)
+}
