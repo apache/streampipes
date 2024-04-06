@@ -90,3 +90,33 @@ func (d *StreamPipesVersionDeserializer) Unmarshal(data []byte) (interface{}, er
 	}
 	return dataSeries, nil
 }
+
+type DataLakeWidgetDeserializer struct{}
+
+func NewDataLakeWidgetDeserializer() *DataLakeWidgetDeserializer {
+	return &DataLakeWidgetDeserializer{}
+}
+
+func (d *DataLakeWidgetDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var widget data_lake.DataExplorerWidgetModel
+	err := json.Unmarshal(data, &widget)
+	if err != nil {
+		return nil, err
+	}
+	return widget, nil
+}
+
+type DataLakeWidgetsDeserializer struct{}
+
+func NewDataLakeWidgetsDeserializer() *DataLakeWidgetsDeserializer {
+	return &DataLakeWidgetsDeserializer{}
+}
+
+func (d *DataLakeWidgetsDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var widget []data_lake.DataExplorerWidgetModel
+	err := json.Unmarshal(data, &widget)
+	if err != nil {
+		return nil, err
+	}
+	return widget, nil
+}
