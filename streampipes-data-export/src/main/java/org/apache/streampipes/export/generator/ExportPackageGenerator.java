@@ -124,7 +124,7 @@ public class ExportPackageGenerator {
         String filename = fileResolver.findDocument(item.getResourceId()).getFilename();
         addDoc(builder, item, new FileResolver(), manifest::addFile);
         try {
-          builder.addBinary(filename, Files.readAllBytes(FileManager.getFile(filename).toPath()));
+          builder.addBinary(filename, Files.readAllBytes(new FileManager().getFile(filename).toPath()));
         } catch (IOException e) {
           e.printStackTrace();
         }

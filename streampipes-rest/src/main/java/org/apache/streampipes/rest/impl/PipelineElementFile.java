@@ -53,6 +53,12 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RequestMapping("/api/v2/files")
 public class PipelineElementFile extends AbstractAuthGuardedRestResource {
 
+  private final FileManager fileManager;
+
+  public PipelineElementFile() {
+    this.fileManager = new FileManager();
+  }
+
   @PostMapping(
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
@@ -60,7 +66,7 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   public ResponseEntity<?> storeFile(@RequestPart("file_upload") MultipartFile fileDetail) {
     try {
       FileMetadata metadata =
-          FileManager.storeFile(
+          fileManager.storeFile(
               getAuthenticatedUsername(),
               fileDetail.getOriginalFilename(),
               fileDetail.getInputStream()
@@ -74,7 +80,7 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   @DeleteMapping(path = "{fileId}")
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> deleteFile(@PathVariable("fileId") String fileId) {
-    FileManager.deleteFile(fileId);
+    fileManager.deleteFile(fileId);
     return ok();
   }
 
@@ -83,7 +89,7 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   public ResponseEntity<List<FileMetadata>> getFileInfo(
       @RequestParam(value = "filetypes", required = false) String filetypes
   ) {
-    return ok(FileManager.getAllFiles(filetypes));
+    return ok(fileManager.getAllFiles(filetypes));
   }
 
   @GetMapping(path = "/{filename}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
@@ -109,7 +115,7 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
       @PathVariable("filename") String filename
   ) {
     try {
-      return ok(getFileContents(FileManager.getFile(filename)));
+      return ok(getFileContents(fileManager.getFile(filename)));
     } catch (IOException e) {
       throw new SpMessageException(
           NOT_FOUND,
@@ -125,7 +131,7 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   @GetMapping(path = "/allFilenames", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
   public ResponseEntity<List<String>> getAllOriginalFilenames() {
-    return ok(FileManager.getAllFiles()
+    return ok(fileManager.getAllFiles()
                          .stream()
                          .map(fileMetadata -> fileMetadata.getFilename()
                                                           .toLowerCase())
@@ -141,7 +147,7 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
       @PathVariable(value = "hash") String hash
   ) {
     try {
-      return ok(FileManager.checkFileContentChanged(filename, hash));
+      return ok(fileManager.checkFileContentChanged(filename, hash));
     } catch (IOException e) {
       throw new SpMessageException(
           NOT_FOUND,

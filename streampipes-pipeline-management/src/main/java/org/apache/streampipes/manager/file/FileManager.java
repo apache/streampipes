@@ -34,16 +34,16 @@ import java.util.stream.Collectors;
 
 public class FileManager {
 
-  public static List<FileMetadata> getAllFiles() {
+  public List<FileMetadata> getAllFiles() {
     return getAllFiles(null);
   }
 
-  public static List<FileMetadata> getAllFiles(String filetypes) {
+  public List<FileMetadata> getAllFiles(String filetypes) {
     List<FileMetadata> allFiles = getFileMetadataStorage().getAllFileMetadataDescriptions();
     return filetypes != null ? filterFiletypes(allFiles, filetypes) : allFiles;
   }
 
-  public static File getFile(String filename) {
+  public File getFile(String filename) {
     return new FileHandler().getFile(filename);
   }
 
@@ -56,7 +56,7 @@ public class FileManager {
    * @param fileInputStream content of file
    * @return metadata of file
    */
-  public static FileMetadata storeFile(String user,
+  public FileMetadata storeFile(String user,
                                        String filename,
                                        InputStream fileInputStream) throws IOException {
 
@@ -72,13 +72,13 @@ public class FileManager {
   }
 
 
-  public static void deleteFile(String id) {
+  public void deleteFile(String id) {
     FileMetadata fileMetadata = getFileMetadataStorage().getMetadataById(id);
     new FileHandler().deleteFile(fileMetadata.getFilename());
     getFileMetadataStorage().deleteFileMetadata(id);
   }
 
-  private static InputStream validateFileNameAndCleanFile(String filename,
+  private InputStream validateFileNameAndCleanFile(String filename,
                                                   String filetype,
                                                   InputStream fileInputStream) {
     if (!validateFileType(filename)) {
@@ -95,7 +95,7 @@ public class FileManager {
    * @param filetype file of type
    * @return input stream without BOM
    */
-  protected static InputStream cleanFile(InputStream fileInputStream, String filetype) {
+  protected InputStream cleanFile(InputStream fileInputStream, String filetype) {
     if (Filetypes.CSV.getFileExtensions().contains(filetype.toLowerCase())) {
       fileInputStream = new BOMInputStream(fileInputStream);
     }
@@ -103,34 +103,34 @@ public class FileManager {
     return fileInputStream;
   }
 
-  public static boolean checkFileContentChanged(String filename, String hash) throws IOException {
+  public boolean checkFileContentChanged(String filename, String hash) throws IOException {
     var fileHash = FileHasher.hash(getFile(filename));
     return !fileHash.equals(hash);
   }
 
-  public static String sanitizeFilename(String filename) {
+  public String sanitizeFilename(String filename) {
     return filename.replaceAll("[^a-zA-Z0-9.\\-]", "_");
   }
 
-  public static boolean validateFileType(String filename) {
+  public boolean validateFileType(String filename) {
     return Filetypes.getAllFileExtensions()
                     .stream()
                     .anyMatch(filename::endsWith);
   }
 
-  protected static void writeToFile(String sanitizedFilename, InputStream fileInputStream) throws IOException {
+  protected void writeToFile(String sanitizedFilename, InputStream fileInputStream) throws IOException {
     new FileHandler().storeFile(sanitizedFilename, fileInputStream);
   }
 
 
-  private static IFileMetadataStorage getFileMetadataStorage() {
+  private IFileMetadataStorage getFileMetadataStorage() {
     return StorageDispatcher
         .INSTANCE
         .getNoSqlStore()
         .getFileMetadataStorage();
   }
 
-  protected static FileMetadata makeAndStoreFileMetadata(String user,
+  protected FileMetadata makeAndStoreFileMetadata(String user,
                                                        String sanitizedFilename,
                                                        String filetype) {
     var fileMetadata = makeFileMetadata(user, sanitizedFilename, filetype);
@@ -139,7 +139,7 @@ public class FileManager {
     return fileMetadata;
   }
 
-  private static FileMetadata makeFileMetadata(String user,
+  private FileMetadata makeFileMetadata(String user,
                                                String filename,
                                                String filetype) {
 
@@ -152,12 +152,12 @@ public class FileManager {
     return fileMetadata;
   }
 
-  private static void storeFileMetadata(FileMetadata fileMetadata) {
+  private void storeFileMetadata(FileMetadata fileMetadata) {
     getFileMetadataStorage().addFileMetadata(fileMetadata);
   }
 
 
-  private static List<FileMetadata> filterFiletypes(List<FileMetadata> allFiles, String filetypes) {
+  private List<FileMetadata> filterFiletypes(List<FileMetadata> allFiles, String filetypes) {
     return allFiles
         .stream()
         .filter(fileMetadata -> Arrays

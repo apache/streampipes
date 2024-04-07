@@ -18,6 +18,7 @@
 package org.apache.streampipes.manager.file;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -32,19 +33,26 @@ import static org.mockito.Mockito.mock;
 
 public class TestFileManager {
 
+  private FileManager fileManager;
+
+  @BeforeEach
+  public void setup() {
+    fileManager = new FileManager();
+  }
+
   @Test
   public void storeFile_throwsExceptionForInvalidFileType() {
     var filename = "testFile.invalid";
 
     assertThrows(IllegalArgumentException.class, () ->
-        FileManager.storeFile("", filename, mock(InputStream.class)));
+        fileManager.storeFile("", filename, mock(InputStream.class)));
   }
 
   @Test
   public void testCleanFileWithoutBom() throws IOException {
     var expected = "test";
     var inputStream = IOUtils.toInputStream(expected, StandardCharsets.UTF_8);
-    var resultStream = FileManager.cleanFile(inputStream, "CSV");
+    var resultStream = fileManager.cleanFile(inputStream, "CSV");
     var resultString = IOUtils.toString(resultStream, StandardCharsets.UTF_8);
 
     assertEquals(expected, resultString);
@@ -56,7 +64,7 @@ public class TestFileManager {
     var utf8Bom = "\uFEFF";
     var inputString = utf8Bom + expected;
     var inputStream = IOUtils.toInputStream(inputString, StandardCharsets.UTF_8);
-    var resultStream = FileManager.cleanFile(inputStream, "CSV");
+    var resultStream = fileManager.cleanFile(inputStream, "CSV");
     var resultString = IOUtils.toString(resultStream, StandardCharsets.UTF_8);
 
     assertEquals(expected, resultString);
@@ -68,7 +76,7 @@ public class TestFileManager {
     var utf8Bom = "\uFEFF";
     var inputString = utf8Bom + expected;
     var inputStream = IOUtils.toInputStream(inputString, StandardCharsets.UTF_8);
-    var resultStream = FileManager.cleanFile(inputStream, "CSV");
+    var resultStream = fileManager.cleanFile(inputStream, "CSV");
     var resultString = IOUtils.toString(resultStream, StandardCharsets.UTF_8);
 
     assertEquals(expected, resultString);
@@ -77,57 +85,57 @@ public class TestFileManager {
   @Test
   public void sanitizeFilename_replacesNonAlphanumericCharactersWithUnderscore() {
     var filename = "file@name#with$special%characters";
-    var sanitizedFilename = FileManager.sanitizeFilename(filename);
+    var sanitizedFilename = fileManager.sanitizeFilename(filename);
     assertEquals("file_name_with_special_characters", sanitizedFilename);
   }
 
   @Test
   public void sanitizeFilename_keepsAlphanumericAndDotAndHyphenCharacters() {
     var filename = "file.name-with_alphanumeric123";
-    var sanitizedFilename = FileManager.sanitizeFilename(filename);
+    var sanitizedFilename = fileManager.sanitizeFilename(filename);
     assertEquals(filename, sanitizedFilename);
   }
 
   @Test
   public void sanitizeFilename_returnsUnderscoreForFilenameWithAllSpecialCharacters() {
     var filename = "@#$%^&*()";
-    var sanitizedFilename = FileManager.sanitizeFilename(filename);
+    var sanitizedFilename = fileManager.sanitizeFilename(filename);
     assertEquals("_________", sanitizedFilename);
   }
 
   @Test
   public void sanitizeFilename_returnsEmptyStringForEmptyFilename() {
     var filename = "";
-    var sanitizedFilename = FileManager.sanitizeFilename(filename);
+    var sanitizedFilename = fileManager.sanitizeFilename(filename);
     assertEquals("", sanitizedFilename);
   }
 
   @Test
   public void sanitizeFilename_removesSingleParentDirectory() {
     var filename = "../file.csv";
-    var sanitizedFilename = FileManager.sanitizeFilename(filename);
+    var sanitizedFilename = fileManager.sanitizeFilename(filename);
     assertEquals(".._file.csv", sanitizedFilename);
   }
 
   @Test
   public void sanitizeFilename_removesDoubleParentDirectoryy() {
     var filename = "../../file";
-    var sanitizedFilename = FileManager.sanitizeFilename(filename);
+    var sanitizedFilename = fileManager.sanitizeFilename(filename);
     assertEquals(".._.._file", sanitizedFilename);
   }
 
   @Test
   public void validateFileName_returnsTrueForCsv() {
-    assertTrue(FileManager.validateFileType("file.csv"));
+    assertTrue(fileManager.validateFileType("file.csv"));
   }
 
   @Test
   public void validateFileName_returnsTrueForJson() {
-    assertTrue(FileManager.validateFileType("file.json"));
+    assertTrue(fileManager.validateFileType("file.json"));
   }
 
   @Test
   public void validateFileName_returnsFalseForSh() {
-    assertFalse(FileManager.validateFileType("file.sh"));
+    assertFalse(fileManager.validateFileType("file.sh"));
   }
 }
