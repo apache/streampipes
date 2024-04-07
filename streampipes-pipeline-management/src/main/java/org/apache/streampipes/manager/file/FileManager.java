@@ -34,12 +34,25 @@ import java.util.stream.Collectors;
 
 public class FileManager {
 
+  private final IFileMetadataStorage fileMetadataStorage;
+
+  public FileManager(IFileMetadataStorage fileMetadataStorage) {
+    this.fileMetadataStorage = fileMetadataStorage;
+  }
+
+  public FileManager() {
+    this.fileMetadataStorage = StorageDispatcher
+        .INSTANCE
+        .getNoSqlStore()
+        .getFileMetadataStorage();
+  }
+
   public List<FileMetadata> getAllFiles() {
     return getAllFiles(null);
   }
 
   public List<FileMetadata> getAllFiles(String filetypes) {
-    List<FileMetadata> allFiles = getFileMetadataStorage().getAllFileMetadataDescriptions();
+    List<FileMetadata> allFiles = fileMetadataStorage.getAllFileMetadataDescriptions();
     return filetypes != null ? filterFiletypes(allFiles, filetypes) : allFiles;
   }
 
@@ -123,6 +136,7 @@ public class FileManager {
   }
 
 
+  @Deprecated
   private IFileMetadataStorage getFileMetadataStorage() {
     return StorageDispatcher
         .INSTANCE

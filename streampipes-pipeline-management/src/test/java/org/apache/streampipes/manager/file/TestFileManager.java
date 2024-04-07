@@ -17,6 +17,9 @@
  */
 package org.apache.streampipes.manager.file;
 
+import org.apache.streampipes.model.file.FileMetadata;
+import org.apache.streampipes.storage.api.IFileMetadataStorage;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,21 +27,77 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TestFileManager {
 
   private FileManager fileManager;
+  private IFileMetadataStorage fileMetadataStorage;
 
   @BeforeEach
   public void setup() {
-    fileManager = new FileManager();
+    fileMetadataStorage = mock(IFileMetadataStorage.class);
+    fileManager = new FileManager(fileMetadataStorage);
   }
+
+  @Test
+  public void getAllFiles_returnsAllFiles() {
+    var expected = prepareFileMetadataStorageWithTwoSampleFiles();
+
+    var result = fileManager.getAllFiles();
+
+    assertEquals(expected, result);
+  }
+
+  @Test
+  public void getAllFiles_returnsAllFilesWhenFiletypesIsNull() {
+    var expected = prepareFileMetadataStorageWithTwoSampleFiles();
+
+    var result = fileManager.getAllFiles(null);
+
+    assertEquals(expected, result);
+  }
+
+  @Test
+  public void getAllFiles_returnsFilteredFilesWhenFiletypesIsNotNull() {
+    var files = prepareFileMetadataStorageWithTwoSampleFiles();
+
+    List<FileMetadata> result = fileManager.getAllFiles("csv");
+
+    assertEquals(1, result.size());
+    assertEquals(files.get(0), result.get(0));
+  }
+
+  @Test
+  public void getAllFiles_returnsEmptyListWhenNoMatchingFiletypes() {
+    prepareFileMetadataStorageWithTwoSampleFiles();
+
+    var result = fileManager.getAllFiles("xml");
+
+    assertEquals(0, result.size());
+  }
+
+  private List<FileMetadata> prepareFileMetadataStorageWithTwoSampleFiles() {
+    List<FileMetadata> allFiles = Arrays.asList(createFile("csv"), createFile("json"));
+    when(fileMetadataStorage.getAllFileMetadataDescriptions()).thenReturn(allFiles);
+
+    return allFiles;
+  }
+
+  private FileMetadata createFile(String fileType) {
+    FileMetadata file = new FileMetadata();
+    file.setFiletype(fileType);
+    return file;
+  }
+
 
   @Test
   public void storeFile_throwsExceptionForInvalidFileType() {
