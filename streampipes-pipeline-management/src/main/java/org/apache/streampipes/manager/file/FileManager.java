@@ -35,9 +35,12 @@ import java.util.stream.Collectors;
 public class FileManager {
 
   private final IFileMetadataStorage fileMetadataStorage;
+  private final FileHandler fileHandler;
 
-  public FileManager(IFileMetadataStorage fileMetadataStorage) {
+  public FileManager(IFileMetadataStorage fileMetadataStorage,
+                     FileHandler fileHandler) {
     this.fileMetadataStorage = fileMetadataStorage;
+    this.fileHandler = fileHandler;
   }
 
   public FileManager() {
@@ -45,6 +48,7 @@ public class FileManager {
         .INSTANCE
         .getNoSqlStore()
         .getFileMetadataStorage();
+    this.fileHandler = new FileHandler();
   }
 
   public List<FileMetadata> getAllFiles() {
@@ -57,7 +61,7 @@ public class FileManager {
   }
 
   public File getFile(String filename) {
-    return new FileHandler().getFile(filename);
+    return fileHandler.getFile(filename);
   }
 
   /**
@@ -87,7 +91,7 @@ public class FileManager {
 
   public void deleteFile(String id) {
     FileMetadata fileMetadata = getFileMetadataStorage().getMetadataById(id);
-    new FileHandler().deleteFile(fileMetadata.getFilename());
+    fileHandler.deleteFile(fileMetadata.getFilename());
     getFileMetadataStorage().deleteFileMetadata(id);
   }
 
@@ -132,7 +136,7 @@ public class FileManager {
   }
 
   protected void writeToFile(String sanitizedFilename, InputStream fileInputStream) throws IOException {
-    new FileHandler().storeFile(sanitizedFilename, fileInputStream);
+    fileHandler.storeFile(sanitizedFilename, fileInputStream);
   }
 
 

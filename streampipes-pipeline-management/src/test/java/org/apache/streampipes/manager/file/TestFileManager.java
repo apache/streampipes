@@ -24,6 +24,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -32,6 +33,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -41,11 +43,13 @@ public class TestFileManager {
 
   private FileManager fileManager;
   private IFileMetadataStorage fileMetadataStorage;
+  private FileHandler fileHandler;
 
   @BeforeEach
   public void setup() {
     fileMetadataStorage = mock(IFileMetadataStorage.class);
-    fileManager = new FileManager(fileMetadataStorage);
+    fileHandler = mock(FileHandler.class);
+    fileManager = new FileManager(fileMetadataStorage, fileHandler);
   }
 
   @Test
@@ -86,18 +90,36 @@ public class TestFileManager {
   }
 
   private List<FileMetadata> prepareFileMetadataStorageWithTwoSampleFiles() {
-    List<FileMetadata> allFiles = Arrays.asList(createFile("csv"), createFile("json"));
+    List<FileMetadata> allFiles = Arrays.asList(createFileMetadata("csv"), createFileMetadata("json"));
     when(fileMetadataStorage.getAllFileMetadataDescriptions()).thenReturn(allFiles);
 
     return allFiles;
   }
 
-  private FileMetadata createFile(String fileType) {
+  private FileMetadata createFileMetadata(String fileType) {
     FileMetadata file = new FileMetadata();
     file.setFiletype(fileType);
     return file;
   }
 
+  @Test
+  public void getFile_returnsExistingFile() {
+    var filename = "existingFile.txt";
+    var expectedFile = new File(filename);
+    when(fileHandler.getFile(filename)).thenReturn(expectedFile);
+
+    var result = fileManager.getFile(filename);
+
+    assertEquals(expectedFile, result);
+  }
+
+  @Test
+  public void getFile_returnsNullForNonExistingFile() {
+    var filename = "fileDoesNotExist.txt";
+    when(fileHandler.getFile(filename)).thenReturn(null);
+
+    assertNull(fileManager.getFile(filename));
+  }
 
   @Test
   public void storeFile_throwsExceptionForInvalidFileType() {
