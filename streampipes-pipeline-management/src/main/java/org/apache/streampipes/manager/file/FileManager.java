@@ -36,11 +36,14 @@ public class FileManager {
 
   private final IFileMetadataStorage fileMetadataStorage;
   private final FileHandler fileHandler;
+  private final FileHasher fileHasher;
 
   public FileManager(IFileMetadataStorage fileMetadataStorage,
-                     FileHandler fileHandler) {
+                     FileHandler fileHandler,
+                     FileHasher fileHasher) {
     this.fileMetadataStorage = fileMetadataStorage;
     this.fileHandler = fileHandler;
+    this.fileHasher = fileHasher;
   }
 
   public FileManager() {
@@ -49,6 +52,7 @@ public class FileManager {
         .getNoSqlStore()
         .getFileMetadataStorage();
     this.fileHandler = new FileHandler();
+    this.fileHasher = new FileHasher();
   }
 
   public List<FileMetadata> getAllFiles() {
@@ -123,7 +127,7 @@ public class FileManager {
   }
 
   public boolean checkFileContentChanged(String filename, String hash) throws IOException {
-    var fileHash = new FileHasher().hash(getFile(filename));
+    var fileHash = fileHasher.hash(getFile(filename));
     return !fileHash.equals(hash);
   }
 

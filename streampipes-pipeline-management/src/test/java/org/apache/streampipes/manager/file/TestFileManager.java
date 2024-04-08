@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.manager.file;
 
+import org.apache.streampipes.commons.file.FileHasher;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
 
@@ -51,6 +52,8 @@ public class TestFileManager {
   private FileManager fileManager;
   private IFileMetadataStorage fileMetadataStorage;
   private FileHandler fileHandler;
+  private FileHasher fileHasher;
+
 
   private static final String TEST_USER = "testUser";
 
@@ -58,7 +61,8 @@ public class TestFileManager {
   public void setup() {
     fileMetadataStorage = mock(IFileMetadataStorage.class);
     fileHandler = mock(FileHandler.class);
-    fileManager = new FileManager(fileMetadataStorage, fileHandler);
+    fileHasher = mock(FileHasher.class);
+    fileManager = new FileManager(fileMetadataStorage, fileHandler, fileHasher);
   }
 
   @Test
@@ -303,4 +307,32 @@ public class TestFileManager {
   public void validateFileName_returnsFalseForSh() {
     assertFalse(fileManager.validateFileType("file.sh"));
   }
+
+  @Test
+  public void checkFileContentChanged_returnsTrueWhenContentHasChanged() throws IOException {
+    var filename = "testFile.csv";
+    var originalHash = "originalHash";
+    var changedHash = "changedHash";
+
+    when(fileHandler.getFile(filename)).thenReturn(new File(filename));
+    when(fileHasher.hash(any(File.class))).thenReturn(changedHash);
+
+    var result = fileManager.checkFileContentChanged(filename, originalHash);
+
+    assertTrue(result);
+  }
+
+  @Test
+  public void checkFileContentChanged_returnsFalseWhenContentHasNotChanged() throws IOException {
+    var filename = "testFile.csv";
+    var originalHash = "originalHash";
+
+    when(fileHandler.getFile(filename)).thenReturn(new File(filename));
+    when(fileHasher.hash(any(File.class))).thenReturn(originalHash);
+
+    var result = fileManager.checkFileContentChanged(filename, originalHash);
+
+    assertFalse(result);
+  }
+
 }
