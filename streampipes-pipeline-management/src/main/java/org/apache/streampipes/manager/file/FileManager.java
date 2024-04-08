@@ -123,7 +123,7 @@ public class FileManager {
   }
 
   public boolean checkFileContentChanged(String filename, String hash) throws IOException {
-    var fileHash = FileHasher.hash(getFile(filename));
+    var fileHash = new FileHasher().hash(getFile(filename));
     return !fileHash.equals(hash);
   }
 
