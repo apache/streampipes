@@ -951,13 +951,13 @@ files = [
 
 [[package]]
 name = "interrogate"
-version = "1.5.0"
+version = "1.7.0"
 description = "Interrogate a codebase for docstring coverage."
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 files = [
-    {file = "interrogate-1.5.0-py3-none-any.whl", hash = "sha256:a4ccc5cbd727c74acc98dee6f5e79ef264c0bcfa66b68d4e123069b2af89091a"},
-    {file = "interrogate-1.5.0.tar.gz", hash = "sha256:b6f325f0aa84ac3ac6779d8708264d366102226c5af7d69058cecffcff7a6d6c"},
+    {file = "interrogate-1.7.0-py3-none-any.whl", hash = "sha256:b13ff4dd8403369670e2efe684066de9fcb868ad9d7f2b4095d8112142dc9d12"},
+    {file = "interrogate-1.7.0.tar.gz", hash = "sha256:a320d6ec644dfd887cc58247a345054fc4d9f981100c45184470068f4b3719b0"},
 ]
 
 [package.dependencies]
@@ -967,13 +967,13 @@ click = ">=7.1"
 colorama = "*"
 py = "*"
 tabulate = "*"
-toml = "*"
+tomli = {version = "*", markers = "python_version < \"3.11\""}
 
 [package.extras]
-dev = ["cairosvg", "pre-commit", "pytest", "pytest-cov", "pytest-mock", "sphinx", "sphinx-autobuild", "wheel"]
+dev = ["cairosvg", "coverage[toml]", "pre-commit", "pytest", "pytest-cov", "pytest-mock", "sphinx", "sphinx-autobuild", "wheel"]
 docs = ["sphinx", "sphinx-autobuild"]
 png = ["cairosvg"]
-tests = ["pytest", "pytest-cov", "pytest-mock"]
+tests = ["coverage[toml]", "pytest", "pytest-cov", "pytest-mock"]
 
 [[package]]
 name = "ipython"
@@ -3826,4 +3826,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">3.8.1,<3.12"
-content-hash = "defd7f0109cd32ae300c3255d7132f9694a145f8e9f765c19a3962c93e12856e"
+content-hash = "fa7153515f8a8be13eb4d2b58eeb48add0290789bf49a864f2df57bfc0bd258d"
