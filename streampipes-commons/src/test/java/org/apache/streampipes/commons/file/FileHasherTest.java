@@ -18,24 +18,38 @@
 
 package org.apache.streampipes.commons.file;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
-public class FileHasher {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-  public String hash(File file) throws IOException {
+class FileHasherTest {
 
-    if (file == null) {
-      throw new IOException("Input file is null. Please provide a valid file to calculate the hash.");
-    }
+  private FileHasher fileHasher;
 
-    try (InputStream is = Files.newInputStream(Paths.get(file.toURI()))) {
-      return DigestUtils.md5Hex(is);
-    }
+  @BeforeEach
+  public void setup() {
+    this.fileHasher = new FileHasher();
+  }
+
+  @Test
+  void hash_returnsCorrectHashForFile() throws IOException {
+    var file = new File("src/test/resources/test.txt");
+    assertEquals("6df4d50a41a5d20bc4faad8a6f09aa8f", fileHasher.hash(file));
+  }
+
+  @Test
+  void hash_throwsIOExceptionForNonExistingFile() {
+    var file = new File("src/test/resources/nonExistingFile.txt");
+    assertThrows(IOException.class, () -> fileHasher.hash(file));
+  }
+
+  @Test
+  void hash_throwsIOExceptionForNullFile() {
+    assertThrows(IOException.class, () -> fileHasher.hash(null));
   }
 }

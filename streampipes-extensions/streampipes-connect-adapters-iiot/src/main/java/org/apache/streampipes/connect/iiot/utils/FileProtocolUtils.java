@@ -56,7 +56,7 @@ public class FileProtocolUtils {
    */
   private static boolean checkIfFileChanged(String selectedFilename) {
     try {
-      var hash = FileHasher.hash(getFile(selectedFilename));
+      var hash = new FileHasher().hash(getFile(selectedFilename));
       StreamPipesClient client = getStreamPipesClientInstance();
       return client.fileApi()
                    .checkFileContentChanged(selectedFilename, hash);
