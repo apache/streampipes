@@ -23,7 +23,9 @@ import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +38,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class TestFileManager {
@@ -44,6 +51,8 @@ public class TestFileManager {
   private FileManager fileManager;
   private IFileMetadataStorage fileMetadataStorage;
   private FileHandler fileHandler;
+
+  private static final String TEST_USER = "testUser";
 
   @BeforeEach
   public void setup() {
@@ -127,6 +136,81 @@ public class TestFileManager {
 
     assertThrows(IllegalArgumentException.class, () ->
         fileManager.storeFile("", filename, mock(InputStream.class)));
+  }
+
+  @Test
+  public void storeFile_storesFileWithValidInput() throws IOException {
+    var filename = "testFile.csv";
+
+    var fileMetadata = fileManager.storeFile(TEST_USER, filename, mock(InputStream.class));
+
+    assertEquals(TEST_USER, fileMetadata.getCreatedByUser());
+    assertEquals(filename, fileMetadata.getFilename());
+    assertEquals("csv", fileMetadata.getFiletype());
+    verify(fileHandler, times(1)).storeFile(eq(filename), any(InputStream.class));
+    verify(fileMetadataStorage, times(1)).addFileMetadata(any(FileMetadata.class));
+  }
+
+  @Test
+  public void storeFile_sanitizesFilename() throws IOException {
+    var filename = "test@File.csv";
+    var expectedSanitizedFilename = "test_File.csv";
+
+    var fileMetadata = fileManager.storeFile(TEST_USER, filename, mock(InputStream.class));
+
+    assertEquals(expectedSanitizedFilename, fileMetadata.getFilename());
+    verify(fileHandler, times(1)).storeFile(eq(expectedSanitizedFilename), any(InputStream.class));
+    verify(fileMetadataStorage, times(1)).addFileMetadata(any(FileMetadata.class));
+  }
+
+  /**
+   * This test validates that the storeFile method removes the BOM from the file before it is stored.
+   */
+  @Test
+  public void storeFile_removesBom() throws IOException {
+    var expectedContent = "test content";
+    // prepare input stream with BOM
+    var fileInputStream = new ByteArrayInputStream(("\uFEFF" + expectedContent)
+                                                       .getBytes(StandardCharsets.UTF_8));
+
+    fileManager.storeFile(TEST_USER, "testfile.csv", fileInputStream);
+
+    var inputStreamCaptor = ArgumentCaptor.forClass(InputStream.class);
+    verify(fileHandler, times(1)).storeFile(any(), inputStreamCaptor.capture());
+
+    // Convert the captured InputStream to a String
+    var capturedInputStream = inputStreamCaptor.getValue();
+    var capturedContent = IOUtils.toString(capturedInputStream, StandardCharsets.UTF_8);
+
+    // Assert that the captured content is equal to the expected content
+    assertEquals(expectedContent, capturedContent);
+  }
+
+
+  @Test
+  public void deleteFile_removesExistingFile() {
+    var id = "existingFileId";
+    var fileMetadata = new FileMetadata();
+    fileMetadata.setFilename("existingFile.txt");
+
+    when(fileMetadataStorage.getMetadataById(id)).thenReturn(fileMetadata);
+
+    fileManager.deleteFile(id);
+
+    verify(fileHandler, times(1)).deleteFile(fileMetadata.getFilename());
+    verify(fileMetadataStorage, times(1)).deleteFileMetadata(id);
+  }
+
+  @Test
+  public void deleteFile_doesNothingForNonExistingFile() {
+    var id = "nonExistingFileId";
+
+    when(fileMetadataStorage.getMetadataById(id)).thenReturn(null);
+
+    fileManager.deleteFile(id);
+
+    verify(fileHandler, times(0)).deleteFile(anyString());
+    verify(fileMetadataStorage, times(0)).deleteFileMetadata(id);
   }
 
   @Test

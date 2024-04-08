@@ -21,6 +21,8 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 @TsModel
 public class FileMetadata {
 
@@ -90,5 +92,24 @@ public class FileMetadata {
 
   public void setFiletype(String filetype) {
     this.filetype = filetype;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {return true;}
+    if (o == null || getClass() != o.getClass()) {return false;}
+    FileMetadata that = (FileMetadata) o;
+    return createdAt == that.createdAt && lastModified == that.lastModified && Objects.equals(
+        fileId,
+        that.fileId
+    ) && Objects.equals(rev, that.rev) && Objects.equals(
+        filename,
+        that.filename
+    ) && Objects.equals(filetype, that.filetype) && Objects.equals(createdByUser, that.createdByUser);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(fileId, rev, filename, filetype, createdAt, lastModified, createdByUser);
   }
 }

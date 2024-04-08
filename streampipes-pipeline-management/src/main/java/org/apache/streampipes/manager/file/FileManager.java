@@ -90,9 +90,11 @@ public class FileManager {
 
 
   public void deleteFile(String id) {
-    FileMetadata fileMetadata = getFileMetadataStorage().getMetadataById(id);
-    fileHandler.deleteFile(fileMetadata.getFilename());
-    getFileMetadataStorage().deleteFileMetadata(id);
+    var fileMetadata = fileMetadataStorage.getMetadataById(id);
+    if (fileMetadata != null) {
+      fileHandler.deleteFile(fileMetadata.getFilename());
+      fileMetadataStorage.deleteFileMetadata(id);
+    }
   }
 
   private InputStream validateFileNameAndCleanFile(String filename,
@@ -139,15 +141,6 @@ public class FileManager {
     fileHandler.storeFile(sanitizedFilename, fileInputStream);
   }
 
-
-  @Deprecated
-  private IFileMetadataStorage getFileMetadataStorage() {
-    return StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getFileMetadataStorage();
-  }
-
   protected FileMetadata makeAndStoreFileMetadata(String user,
                                                        String sanitizedFilename,
                                                        String filetype) {
@@ -171,7 +164,7 @@ public class FileManager {
   }
 
   private void storeFileMetadata(FileMetadata fileMetadata) {
-    getFileMetadataStorage().addFileMetadata(fileMetadata);
+    fileMetadataStorage.addFileMetadata(fileMetadata);
   }
 
 
