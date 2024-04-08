@@ -18,16 +18,10 @@
 
 package org.apache.streampipes.connect;
 
-import org.apache.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
-import org.apache.streampipes.connect.adapters.flic.FlicMQTTAdapter;
 import org.apache.streampipes.connect.adapters.image.stream.ImageStreamAdapter;
 import org.apache.streampipes.connect.adapters.iss.IssAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioMQTTAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioRestAdapter;
-import org.apache.streampipes.connect.adapters.slack.SlackAdapter;
-import org.apache.streampipes.connect.adapters.ti.TISensorTag;
-import org.apache.streampipes.connect.adapters.wikipedia.WikipediaEditedArticlesAdapter;
-import org.apache.streampipes.connect.adapters.wikipedia.WikipediaNewArticlesAdapter;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
@@ -41,19 +35,10 @@ public class GeneralAdaptersExtensionModuleExport implements IExtensionModuleExp
   @Override
   public List<StreamPipesAdapter> adapters() {
     return List.of(
-        //new GdeltAdapter(),
-        new CoindeskBitcoinAdapter(),
         new NetioRestAdapter(),
         new NetioMQTTAdapter(),
-        //new IexCloudNewsAdapter(),
-        //new IexCloudStockAdapter(),
-        new SlackAdapter(),
-        new WikipediaEditedArticlesAdapter(),
-        new WikipediaNewArticlesAdapter(),
         new ImageStreamAdapter(),
-        new IssAdapter(),
-        new FlicMQTTAdapter(),
-        new TISensorTag()
+        new IssAdapter()
     );
   }
 
