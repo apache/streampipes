@@ -15,24 +15,20 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.user.management.util;
 
-import com.google.common.base.CharMatcher;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.apache.commons.text.RandomStringGenerator;
 
-import static org.apache.streampipes.user.management.util.PasswordUtil.generateRandomPassword;
+import java.security.SecureRandom;
 
-public class TestPasswordUtil {
-
-  @Test
-  public void testGenerateRandomPassword() {
-
-    String randomPassword = generateRandomPassword();
-
-    Assertions.assertNotNull(randomPassword);
-    Assertions.assertEquals(10, randomPassword.length());
-    Assertions.assertTrue(CharMatcher.ascii().matchesAllOf(randomPassword));
+public class SecureStringGenerator {
+  public String generateSecureString(int length) {
+    // allowing all ASCII-characters from decimal id 33 to 125
+    // see https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html for full list
+    var pwdGenerator = new RandomStringGenerator.Builder().usingRandom(new SecureRandom()::nextInt)
+        .withinRange(33, 125)
+        .build();
+    return pwdGenerator.generate(length);
   }
-
 }
