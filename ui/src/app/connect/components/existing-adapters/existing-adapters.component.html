@@ -121,19 +121,10 @@
                                     Status
                                 </th>
                                 <td mat-cell *matCellDef="let adapter">
-                                    <div
-                                        fxLayout="row"
-                                        fxLayoutAlign="start center"
+                                    <sp-adapter-status-light
+                                        [adapterRunning]="adapter.running"
                                     >
-                                        <div
-                                            *ngIf="adapter.running"
-                                            class="light light-green"
-                                        ></div>
-                                        <div
-                                            *ngIf="!adapter.running"
-                                            class="light light-neutral"
-                                        ></div>
-                                    </div>
+                                    </sp-adapter-status-light>
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="start">
