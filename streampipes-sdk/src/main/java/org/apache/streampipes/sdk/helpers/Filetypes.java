@@ -19,6 +19,7 @@ package org.apache.streampipes.sdk.helpers;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public enum Filetypes {
 
@@ -30,7 +31,7 @@ public enum Filetypes {
   XML("xml"),
   ZIP("zip");
 
-  private List<String> fileExtensions;
+  private final List<String> fileExtensions;
 
   Filetypes(String... fileExtensions) {
     this.fileExtensions = Arrays.asList(fileExtensions);
@@ -38,5 +39,11 @@ public enum Filetypes {
 
   public List<String> getFileExtensions() {
     return fileExtensions;
+  }
+
+  public static List<String> getAllFileExtensions() {
+    return Stream.of(Filetypes.values())
+        .flatMap(filetype -> filetype.getFileExtensions().stream())
+        .toList();
   }
 }

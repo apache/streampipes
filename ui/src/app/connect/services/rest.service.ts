@@ -32,7 +32,7 @@ import {
 } from '@streampipes/platform-services';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class RestService {
     constructor(
         private http: HttpClient,
@@ -92,10 +92,9 @@ export class RestService {
         unitDescription: UnitDescription,
     ): Observable<UnitDescription[]> {
         return this.http
-            .post<UnitDescription[]>(
-                `${this.connectPath}/master/unit`,
-                unitDescription,
-            )
+            .post<
+                UnitDescription[]
+            >(`${this.connectPath}/master/unit`, unitDescription)
             .pipe(
                 map(response => {
                     const descriptions = response as UnitDescription[];

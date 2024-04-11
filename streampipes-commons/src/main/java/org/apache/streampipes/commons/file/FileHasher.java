@@ -28,7 +28,12 @@ import java.nio.file.Paths;
 
 public class FileHasher {
 
-  public static String hash(File file) throws IOException {
+  public String hash(File file) throws IOException {
+
+    if (file == null) {
+      throw new IOException("Input file is null. Please provide a valid file to calculate the hash.");
+    }
+
     try (InputStream is = Files.newInputStream(Paths.get(file.toURI()))) {
       return DigestUtils.md5Hex(is);
     }

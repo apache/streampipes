@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public abstract class Principal {
@@ -62,11 +61,6 @@ public abstract class Principal {
 
   public void setPrincipalId(String principalId) {
     this.principalId = principalId;
-  }
-
-  private Element find(String elementId, List<Element> source) {
-    return source.stream().filter(f -> f.getElementId().equals(elementId)).findFirst()
-        .orElseThrow(IllegalArgumentException::new);
   }
 
   public boolean isAccountEnabled() {

@@ -23,7 +23,6 @@ import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule } from '@angular/forms';
 import { NotificationsComponent } from './notifications.component';
 import { NotificationItemComponent } from './components/notification-item.component';
-import { NotificationsService } from './service/notifications.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 
@@ -39,7 +38,7 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
         PlatformServicesModule,
     ],
     declarations: [NotificationsComponent, NotificationItemComponent],
-    providers: [NotificationsService],
+    providers: [],
     exports: [NotificationsComponent],
 })
 export class NotificationModule {

@@ -22,9 +22,11 @@ import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-
 import { MatTableDataSource } from '@angular/material/table';
 import { TableConfig } from './table-config';
 import { ResizeService } from '../../../services/resize.service';
-import { DatalakeRestService } from '@streampipes/platform-services';
+import {
+    DatalakeRestService,
+    SemanticType,
+} from '@streampipes/platform-services';
 import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
-import { SemanticTypeService } from '../../../../core-services/types/semantic-type.service';
 
 @Component({
     selector: 'sp-table-widget',
@@ -46,7 +48,6 @@ export class TableWidgetComponent
     constructor(
         dataLakeService: DatalakeRestService,
         resizeService: ResizeService,
-        private semanticTypeUtils: SemanticTypeService,
     ) {
         super(dataLakeService, resizeService, false);
     }
@@ -60,7 +61,7 @@ export class TableWidgetComponent
             },
         );
         this.semanticTypes[BaseStreamPipesWidget.TIMESTAMP_KEY] =
-            this.semanticTypeUtils.TIMESTAMP;
+            SemanticType.TIMESTAMP;
     }
 
     ngOnDestroy(): void {
@@ -91,7 +92,7 @@ export class TableWidgetComponent
     createTableObject(event: any) {
         const object = {};
         this.selectedProperties.forEach((key, index) => {
-            event[key] = this.semanticTypeUtils.getValue(
+            event[key] = SemanticType.getValue(
                 event[key],
                 this.semanticTypes[key],
             );

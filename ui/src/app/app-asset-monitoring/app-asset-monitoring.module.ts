@@ -25,23 +25,20 @@ import { AppAssetMonitoringComponent } from './app-asset-monitoring.component';
 import { ViewAssetComponent } from './components/view-asset/view-asset.component';
 import { CreateAssetComponent } from './components/create-asset/create-asset.component';
 import { AddPipelineDialogComponent } from './dialog/add-pipeline/add-pipeline-dialog.component';
-import { RestService } from './services/rest.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
-import { ElementIconText } from '../services/get-element-icon-text.service';
 import { FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { ShapeService } from './services/shape.service';
 import { SaveDashboardDialogComponent } from './dialog/save-dashboard/save-dashboard-dialog.component';
 import { AssetDashboardOverviewComponent } from './components/dashboard-overview/dashboard-overview.component';
 import { AddLinkDialogComponent } from './dialog/add-link/add-link-dialog.component';
-import { DashboardModule } from '../dashboard/dashboard.module';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
     imports: [
@@ -51,11 +48,11 @@ import { MatTabsModule } from '@angular/material/tabs';
         MatGridListModule,
         MatIconModule,
         MatTabsModule,
+        MatButtonModule,
         MatInputModule,
         MatFormFieldModule,
         FormsModule,
         ColorPickerModule,
-        DashboardModule,
         RouterModule.forChild([
             {
                 path: '',
@@ -73,7 +70,7 @@ import { MatTabsModule } from '@angular/material/tabs';
         SaveDashboardDialogComponent,
         AssetDashboardOverviewComponent,
     ],
-    providers: [RestService, ShapeService, ElementIconText],
+    providers: [],
     exports: [AppAssetMonitoringComponent],
 })
 export class AppAssetMonitoringModule {}

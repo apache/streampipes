@@ -37,7 +37,7 @@ import {
 } from '@streampipes/platform-services';
 import { IdGeneratorService } from '../../core-services/id-generator/id-generator.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class StaticPropertyUtilService {
     constructor(private idGeneratorService: IdGeneratorService) {}
 

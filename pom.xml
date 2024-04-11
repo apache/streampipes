@@ -91,7 +91,7 @@
         <jts-core.version>1.19.0</jts-core.version>
         <kafka.version>3.4.0</kafka.version>
         <lightcouch.version>0.2.0</lightcouch.version>
-        <maven-plugin-annotations.version>3.11.0</maven-plugin-annotations.version>
+        <maven-plugin-annotations.version>3.12.0</maven-plugin-annotations.version>
         <mailapi.version>1.4.3</mailapi.version>
         <micrometer-prometheus.version>1.12.0</micrometer-prometheus.version>
         <micrometer-observation.version>1.12.0</micrometer-observation.version>
@@ -101,12 +101,12 @@
         <okhttp.version>3.13.1</okhttp.version>
         <opencsv.version>5.9</opencsv.version>
         <opennlp.version>2.3.1</opennlp.version>
-        <plc4x.version>0.10.0</plc4x.version>
+        <plc4x.version>0.12.0</plc4x.version>
         <plexus-component-annotations.version>2.2.0</plexus-component-annotations.version>
         <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
         <plexus-utils.version>4.0.0</plexus-utils.version>
         <postgresql.version>42.7.2</postgresql.version>
-        <protobuf.version>3.25.0</protobuf.version>
+        <protobuf.version>4.26.1</protobuf.version>
         <pulsar.version>3.1.1</pulsar.version>
         <quartz.version>2.3.2</quartz.version>
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
@@ -125,6 +125,7 @@
         <swagger.version>2.2.19</swagger.version>
         <type-parser.version>0.8.1</type-parser.version>
         <hawtbuf.version>1.11</hawtbuf.version>
+        <woodstox.version>6.6.1</woodstox.version>
 
         <!-- Test dependencies -->
         <junit.version>5.10.1</junit.version>
@@ -203,6 +204,11 @@
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-xml</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.woodstox</groupId>
+                <artifactId>woodstox-core</artifactId>
+                <version>${woodstox.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.drapostolos</groupId>
@@ -338,11 +344,6 @@
                 <groupId>jakarta.xml.bind</groupId>
                 <artifactId>jakarta.xml.bind-api</artifactId>
                 <version>${jakarta-xml-bind-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.persistence</groupId>
-                <artifactId>persistence-api</artifactId>
-                <version>${jakarta-persistence-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.activemq</groupId>
@@ -650,11 +651,6 @@
             <dependency>
                 <groupId>org.apache.plc4x</groupId>
                 <artifactId>plc4j-api</artifactId>
-                <version>${plc4x.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.plc4x</groupId>
-                <artifactId>plc4j-connection-pool</artifactId>
                 <version>${plc4x.version}</version>
             </dependency>
             <dependency>

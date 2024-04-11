@@ -19,12 +19,11 @@
 import { Injectable, Pipe, PipeTransform } from '@angular/core';
 import { AdapterDescription } from '@streampipes/platform-services';
 import { AdapterFilterSettingsModel } from '../model/adapter-filter-settings.model';
-import { ConnectService } from '../services/connect.service';
 
 @Pipe({ name: 'adapterFilter' })
 @Injectable({ providedIn: 'root' })
 export class AdapterFilterPipe implements PipeTransform {
-    constructor(private connectService: ConnectService) {}
+    constructor() {}
 
     transform(
         adapterDescriptions: AdapterDescription[],

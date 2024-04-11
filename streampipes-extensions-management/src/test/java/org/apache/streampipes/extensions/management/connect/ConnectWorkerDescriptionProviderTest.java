@@ -54,19 +54,6 @@ public class ConnectWorkerDescriptionProviderTest {
   }
 
   @Test
-  public void getAdapterDescriptions() {
-    var expected = AdapterConfigurationBuilder
-        .create(adapterId, null)
-        .buildConfiguration()
-        .getAdapterDescription();
-
-    var result = provider.getAdapterDescriptions();
-
-    Assertions.assertEquals(1, result.size());
-    Assertions.assertEquals(expected, result.get(0));
-  }
-
-  @Test
   public void getAdapterDescription() {
     var result = provider.getAdapterDescription(adapterId);
 

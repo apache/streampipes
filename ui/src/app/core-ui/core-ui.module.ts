@@ -46,7 +46,6 @@ import { StaticCodeInputComponent } from './static-properties/static-code-input/
 import { StaticOneOfInputComponent } from './static-properties/static-one-of-input/static-one-of-input.component';
 import { StaticRuntimeResolvableAnyInputComponent } from './static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component';
 import { StaticRuntimeResolvableOneOfInputComponent } from './static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component';
-import { RuntimeResolvableService } from './static-properties/static-runtime-resolvable-input/runtime-resolvable.service';
 import { DisplayRecommendedPipe } from './static-properties/filter/display-recommended.pipe';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { QuillModule } from 'ngx-quill';
@@ -105,6 +104,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { StaticRuntimeResolvableGroupComponent } from './static-properties/static-runtime-resolvable-group/static-runtime-resolvable-group.component';
 
 @NgModule({
     imports: [
@@ -179,6 +179,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
         StaticCodeInputComponent,
         StaticOneOfInputComponent,
         StaticRuntimeResolvableAnyInputComponent,
+        StaticRuntimeResolvableGroupComponent,
         StaticRuntimeResolvableOneOfInputComponent,
         StaticRuntimeResolvableTreeInputComponent,
         StaticSlideToggleComponent,
@@ -198,11 +199,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
         LivePreviewTableComponent,
         LivePreviewErrorComponent,
     ],
-    providers: [
-        MatDatepickerModule,
-        DisplayRecommendedPipe,
-        RuntimeResolvableService,
-    ],
+    providers: [MatDatepickerModule, DisplayRecommendedPipe],
     exports: [
         DataDownloadDialogComponent,
         DateInputComponent,

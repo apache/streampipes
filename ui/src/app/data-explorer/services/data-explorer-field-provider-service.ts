@@ -20,17 +20,18 @@ import { Injectable } from '@angular/core';
 import { FieldProvider } from '../models/dataview-dashboard.model';
 import {
     DataExplorerField,
+    DataType,
     EventProperty,
     EventPropertyPrimitive,
     EventPropertyUnion,
     FieldConfig,
+    SemanticType,
     SourceConfig,
 } from '@streampipes/platform-services';
-import { SemanticTypeService } from '../../core-services/types/semantic-type.service';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerFieldProviderService {
-    constructor(private semanticTypeService: SemanticTypeService) {}
+    constructor() {}
 
     public generateFieldLists(sourceConfigs: SourceConfig[]): FieldProvider {
         const provider: FieldProvider = {
@@ -143,23 +144,19 @@ export class DataExplorerFieldProviderService {
     public isBoolean(p: EventPropertyUnion): boolean {
         return (
             this.isPrimitive(p) &&
-            (p as EventPropertyPrimitive).runtimeType ===
-                this.semanticTypeService.XS_BOOLEAN
+            (p as EventPropertyPrimitive).runtimeType === DataType.BOOLEAN
         );
     }
 
     public isString(p: EventPropertyUnion): boolean {
         return (
             this.isPrimitive(p) &&
-            (p as EventPropertyPrimitive).runtimeType ===
-                this.semanticTypeService.XS_STRING
+            (p as EventPropertyPrimitive).runtimeType === DataType.STRING
         );
     }
 
     public isTimestamp(p: EventProperty) {
-        return p.domainProperties.some(
-            dp => dp === this.semanticTypeService.TIMESTAMP,
-        );
+        return p.domainProperties.some(dp => dp === SemanticType.TIMESTAMP);
     }
 
     public getAddedFields(
@@ -191,7 +188,7 @@ export class DataExplorerFieldProviderService {
     isNumber(p: EventPropertyUnion): boolean {
         if (this.isPrimitive(p)) {
             const runtimeType = (p as EventPropertyPrimitive).runtimeType;
-            return this.semanticTypeService.isNumberType(runtimeType);
+            return DataType.isNumberType(runtimeType);
         } else {
             return false;
         }

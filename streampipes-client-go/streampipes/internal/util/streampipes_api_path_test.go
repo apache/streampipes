@@ -20,6 +20,7 @@ package util
 import "testing"
 
 func TestJoin(t *testing.T) {
+
 	testCases := []struct {
 		name     string
 		input    []string

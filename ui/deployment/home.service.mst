@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { PageName } from '../_enums/page-name.enum';
 import { AuthService } from '../services/auth.service';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class HomeService {
 
     constructor(private authService: AuthService) {

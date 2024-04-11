@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.client.assetdashboard.AssetDashboardConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
@@ -43,6 +44,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -51,6 +53,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/asset-dashboards")
+@Deprecated(forRemoval = true, since = "0.95.0")
 public class AssetDashboardResource extends AbstractRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(AssetDashboardResource.class);
@@ -59,44 +62,52 @@ public class AssetDashboardResource extends AbstractRestResource {
 
   @GetMapping(path = "/{dashboardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AssetDashboardConfig> getAssetDashboard(@PathVariable("dashboardId") String dashboardId) {
-    return ok(getNoSqlStorage().getAssetDashboardStorage().getAssetDashboard(dashboardId));
+    return ok(getNoSqlStorage().getAssetDashboardStorage()
+                               .getAssetDashboard(dashboardId));
   }
 
   @PutMapping(
       path = "/{dashboardId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> updateAssetDashboard(@PathVariable("dashboardId") String dashboardId,
-                                                   @RequestBody AssetDashboardConfig dashboardConfig) {
+  public ResponseEntity<Void> updateAssetDashboard(
+      @PathVariable("dashboardId") String dashboardId,
+      @RequestBody AssetDashboardConfig dashboardConfig
+  ) {
     AssetDashboardConfig dashboard = getAssetDashboardStorage().getAssetDashboard(dashboardId);
     dashboardConfig.setRev(dashboard.getRev());
-    getNoSqlStorage().getAssetDashboardStorage().updateAssetDashboard(dashboardConfig);
+    getNoSqlStorage().getAssetDashboardStorage()
+                     .updateAssetDashboard(dashboardConfig);
     return ok();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<AssetDashboardConfig>> getAllDashboards() {
-    return ok(getNoSqlStorage().getAssetDashboardStorage().getAllAssetDashboards());
+    return ok(getNoSqlStorage().getAssetDashboardStorage()
+                               .getAllAssetDashboards());
   }
 
   @PostMapping(
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> storeAssetDashboard(@RequestBody AssetDashboardConfig dashboardConfig) {
-    getNoSqlStorage().getAssetDashboardStorage().storeAssetDashboard(dashboardConfig);
+    getNoSqlStorage().getAssetDashboardStorage()
+                     .storeAssetDashboard(dashboardConfig);
     return ok();
   }
 
   @DeleteMapping(path = "/{dashboardId}")
   public ResponseEntity<Void> deleteAssetDashboard(@PathVariable("dashboardId") String dashboardId) {
-    getNoSqlStorage().getAssetDashboardStorage().deleteAssetDashboard(dashboardId);
+    getNoSqlStorage().getAssetDashboardStorage()
+                     .deleteAssetDashboard(dashboardId);
     return ok();
   }
 
   @GetMapping(path = "/images/{imageName}")
   public ResponseEntity<byte[]> getDashboardImage(@PathVariable("imageName") String imageName) {
     try {
-      java.nio.file.Path path = Paths.get(getTargetFile(imageName));
+      var sanitizedFileName = new FileManager().sanitizeFilename(imageName);
+      java.nio.file.Path path = Paths.get(getTargetFile(sanitizedFileName));
       File file = new File(path.toString());
       FileNameMap fileNameMap = URLConnection.getFileNameMap();
       String mimeType = fileNameMap.getContentTypeFor(file.getName());
@@ -114,16 +125,35 @@ public class AssetDashboardResource extends AbstractRestResource {
 
   @PostMapping(path = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<Void> storeDashboardImage(@RequestPart("file_upload") MultipartFile fileDetail) {
-    File targetDirectory = new File(getTargetDirectory());
+    try {
+      var fileName = fileDetail.getName();
+
+      if (!new FileManager().validateFileType(fileName)) {
+        LOG.error("File type of file " + fileName + " is not supported");
+        fail();
+      }
+
+      storeFile(fileDetail.getName(), fileDetail.getInputStream());
+      return ok();
+    } catch (IOException e) {
+      LOG.error("Could not extract image input stream from request", e);
+      return fail();
+    }
+  }
+
+  private void storeFile(String fileName, InputStream fileInputStream) {
+
+    var targetDirectory = new File(getTargetDirectory());
     if (!targetDirectory.exists()) {
       targetDirectory.mkdirs();
     }
 
-    File targetFile = new File(getTargetFile(fileDetail.getName()));
+    var sanitizedFileName = new FileManager().sanitizeFilename(fileName);
+
+    var targetFile = new File(getTargetFile(sanitizedFileName));
 
     try {
-      FileUtils.copyInputStreamToFile(fileDetail.getInputStream(), targetFile);
-      return ok();
+      FileUtils.copyInputStreamToFile(fileInputStream, targetFile);
     } catch (IOException e) {
       LOG.error(e.getMessage(), e);
       throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
@@ -140,6 +170,7 @@ public class AssetDashboardResource extends AbstractRestResource {
   }
 
   private IAssetDashboardStorage getAssetDashboardStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getAssetDashboardStorage();
+    return StorageDispatcher.INSTANCE.getNoSqlStore()
+                                     .getAssetDashboardStorage();
   }
 }

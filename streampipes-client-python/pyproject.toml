@@ -69,7 +69,7 @@ autoflake = "2.3.0"
 black = "24.3.0"
 blacken-docs = "1.16.0"
 flake8 = "6.1.0"
-interrogate = { version = "1.5.0", extras = ["png"] }
+interrogate = { version = "1.7.0", extras = ["png"] }
 isort = "5.13.0"
 mypy = "1.9.0"
 ruff = "0.3.0"
@@ -88,16 +88,16 @@ mkdocs-awesome-pages-plugin = "2.9.0"
 mkdocs-gen-files = "0.5.0"
 mkdocs-jupyter = "0.24.0"
 mkdocs-literate-nav = "0.6.0"
-mkdocs-material = "9.3.1"
+mkdocs-material = "9.3.2"
 mkdocstrings = { version = "0.24.0", extras = ["python"] }
-numpydoc = "1.6.0"
+numpydoc = "1.7.0"
 pytkdocs = { version = "0.16.1", extras = ["numpy-style"] }
 
 [tool.poetry.group.stubs]
 optional = true
 
 [tool.poetry.group.stubs.dependencies]
-pandas-stubs = "2.0.0.230412"
+pandas-stubs = "2.0.2.230605"  # do not upgrade to keep compability with Python 3.8
 types-Jinja2 = "2.11.9"
 types-requests = "2.31.0.0"
 
