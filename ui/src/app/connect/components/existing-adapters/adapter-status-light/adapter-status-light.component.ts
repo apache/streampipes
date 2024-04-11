@@ -16,42 +16,14 @@
  *
  */
 
-.mat-mdc-paginator {
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
-}
+import { Component, Input } from '@angular/core';
 
-.mat-mdc-row:nth-child(even) {
-    background-color: var(--color-bg-1);
-}
-.mat-mdc-row:nth-child(odd) {
-    background-color: var(--color-bg-2);
-}
-
-.adapter-icon {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    max-height: 40px;
-}
-
-.real-time {
-    cursor: pointer;
-    color: #ffeb3b;
-}
-
-.filter-bar-margin {
-    margin-left: 10px;
-    padding-left: 10px;
-}
-
-.monitoring-info {
-    color: var(--color-default-text);
-    border: 1px solid var(--color-default-text);
-    background: var(--color-bg-0);
-    border-radius: 5px;
-    padding: 5px;
-    text-align: center;
-}
-
-.icon {
-    max-width: 60px;
+@Component({
+    selector: 'sp-adapter-status-light',
+    templateUrl: './adapter-status-light.component.html',
+    styleUrl: '../../../../../scss/sp/status-light.scss',
+})
+export class AdapterStatusLightComponent {
+    @Input()
+    adapterRunning: boolean;
 }
