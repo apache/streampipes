@@ -100,7 +100,7 @@ public class ProcessingElementTestExecutor {
 
     // initialize the extractor with the provided configuration of the user input
     var dataProcessorInvocation = getProcessorInvocation(processor, userConfiguration);
-    if (!(invocationConfig == null)){
+    if (invocationConfig != null){
       invocationConfig.accept(dataProcessorInvocation);
     }
 
