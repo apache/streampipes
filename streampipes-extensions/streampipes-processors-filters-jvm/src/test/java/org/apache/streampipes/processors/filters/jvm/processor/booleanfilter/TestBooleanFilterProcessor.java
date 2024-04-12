@@ -22,6 +22,7 @@ package org.apache.streampipes.processors.filters.jvm.processor.booleanfilter;
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.ProcessingElementTestExecutor;
 
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -35,8 +36,13 @@ import java.util.stream.Stream;
 
 public class TestBooleanFilterProcessor {
 
+  BooleanFilterProcessor processor;
   private static final String FIELD_NAME = "Test";
   private static final String FIELD_NAME_WITH_PREFIX = "s0::" + FIELD_NAME;
+  @BeforeEach
+  public void setup(){
+    processor = new BooleanFilterProcessor();
+  }
   @ParameterizedTest
   @MethodSource("data")
   public void test(
@@ -44,8 +50,6 @@ public class TestBooleanFilterProcessor {
       List<Boolean> eventBooleans,
       List<Boolean> outputEventBooleans
   ) {
-
-    var processor = new BooleanFilterProcessor();
 
     Map<String, Object> userConfiguration =
         Map.of(
