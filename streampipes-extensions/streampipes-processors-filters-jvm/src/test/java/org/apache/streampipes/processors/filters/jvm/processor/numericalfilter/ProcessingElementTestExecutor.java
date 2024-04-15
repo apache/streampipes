@@ -86,7 +86,7 @@ public class ProcessingElementTestExecutor {
 
 
     // initialize the extractor with the provided configuration of the user input
-    var dataProcessorInvocation = getProcessorInvocation(processor, userConfiguration);
+    var dataProcessorInvocation = getProcessorInvocation();
     if (invocationConfig != null){
       invocationConfig.accept(dataProcessorInvocation);
     }
@@ -130,11 +130,8 @@ public class ProcessingElementTestExecutor {
     return ProcessingElementParameterExtractor.from(dataProcessorInvocation);
   }
 
-  private static DataProcessorInvocation getProcessorInvocation(
-      IStreamPipesDataProcessor processor,
-      Map<String, Object> userConfiguration
-  ) {
-    var pipelineElementTemplate = getPipelineElementTemplate(processor, userConfiguration);
+  private DataProcessorInvocation getProcessorInvocation() {
+    var pipelineElementTemplate = getPipelineElementTemplate();
 
     var invocation = new DataProcessorInvocation(
         processor
@@ -153,10 +150,7 @@ public class ProcessingElementTestExecutor {
         .applyTemplateOnPipelineElement();
   }
 
-  private static PipelineElementTemplate getPipelineElementTemplate(
-      IStreamPipesDataProcessor processor,
-      Map<String, Object> userConfiguration
-  ) {
+  private PipelineElementTemplate getPipelineElementTemplate() {
     var staticProperties = processor
         .declareConfig()
         .getDescription()
@@ -176,7 +170,7 @@ public class ProcessingElementTestExecutor {
     return new PipelineElementTemplate("name", "description", configs);
   }
 
-  private static Event getEvent(Map<String, Object> rawEvent) {
+  private Event getEvent(Map<String, Object> rawEvent) {
 
     // separate the prefix and remove it from the map
     Map<String, Object> eventMap = new HashMap<>(rawEvent);
