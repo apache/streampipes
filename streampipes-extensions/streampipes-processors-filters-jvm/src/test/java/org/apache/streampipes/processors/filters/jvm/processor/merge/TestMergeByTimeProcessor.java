@@ -73,7 +73,10 @@ public class TestMergeByTimeProcessor {
       outputKeySelectors.add(S1_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY);
     });
 
-    ProcessingElementTestExecutor.run(processor, userConfiguration, events, outputEvents, invocationConfig);
+    ProcessingElementTestExecutor testExecutor =
+        new ProcessingElementTestExecutor(processor, userConfiguration, invocationConfig);
+
+    testExecutor.run(events, outputEvents);
   }
 
   static Stream<Arguments> data() {

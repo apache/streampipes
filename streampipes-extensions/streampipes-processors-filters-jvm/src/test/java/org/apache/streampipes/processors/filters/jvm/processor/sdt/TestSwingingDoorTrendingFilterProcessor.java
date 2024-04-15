@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class TestSwingingDoorTrendingFilterProcessor {
 
@@ -81,7 +84,9 @@ public class TestSwingingDoorTrendingFilterProcessor {
                 sdtValueField, 800.0)
     );
 
-    ProcessingElementTestExecutor.run(processor, userConfiguration, inputEvents, outputEvents, null);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
+
+    testExecutor.run(inputEvents, outputEvents);
   }
 
   @Test
@@ -98,10 +103,17 @@ public class TestSwingingDoorTrendingFilterProcessor {
 
     List<Map<String, Object>> outputEvents = new ArrayList<>();
 
-    Exception exception = new SpRuntimeException("Compression Deviation should be positive!");
+    Exception expectedException = new SpRuntimeException("Compression Deviation should be positive!");
 
-    ProcessingElementTestExecutor
-        .runWithException(processor, userConfiguration, inputEvents, outputEvents, null, exception);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
+
+    Exception exception = assertThrows(expectedException.getClass(), () -> {
+      testExecutor.run(inputEvents, outputEvents);
+    });
+    String expectedMessage = expectedException.getMessage();
+    String actualMessage = exception.getMessage();
+    assertTrue(actualMessage.contains(expectedMessage));
+
   }
 
   @Test
@@ -118,10 +130,16 @@ public class TestSwingingDoorTrendingFilterProcessor {
 
     List<Map<String, Object>> outputEvents = new ArrayList<>();
 
-    Exception exception = new SpRuntimeException("Compression Minimum Time Interval should be >= 0!");
+    Exception expectedException = new SpRuntimeException("Compression Minimum Time Interval should be >= 0!");
 
-    ProcessingElementTestExecutor
-        .runWithException(processor, userConfiguration, inputEvents, outputEvents, null, exception);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
+
+    Exception exception = assertThrows(expectedException.getClass(), () -> {
+      testExecutor.run(inputEvents, outputEvents);
+    });
+    String expectedMessage = expectedException.getMessage();
+    String actualMessage = exception.getMessage();
+    assertTrue(actualMessage.contains(expectedMessage));
   }
 
   @Test
@@ -138,10 +156,16 @@ public class TestSwingingDoorTrendingFilterProcessor {
 
     List<Map<String, Object>> outputEvents = new ArrayList<>();
 
-    Exception exception = new
+    Exception expectedException = new
         SpRuntimeException("Compression Minimum Time Interval should be < Compression Maximum Time Interval!");
 
-    ProcessingElementTestExecutor
-        .runWithException(processor, userConfiguration, inputEvents, outputEvents, null, exception);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
+
+    Exception exception = assertThrows(expectedException.getClass(), () -> {
+      testExecutor.run(inputEvents, outputEvents);
+    });
+    String expectedMessage = expectedException.getMessage();
+    String actualMessage = exception.getMessage();
+    assertTrue(actualMessage.contains(expectedMessage));
   }
 }

@@ -63,7 +63,9 @@ public class TestTextFilterProcessor {
     List<Map<String, Object>> outputEvents = new ArrayList<>();
     outputEventValues.forEach(value->outputEvents.add(Map.of(FIELD_NAME, value)));
 
-    ProcessingElementTestExecutor.run(processor, userConfiguration, events, outputEvents, null);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
+
+    testExecutor.run(events, outputEvents);
   }
 
 

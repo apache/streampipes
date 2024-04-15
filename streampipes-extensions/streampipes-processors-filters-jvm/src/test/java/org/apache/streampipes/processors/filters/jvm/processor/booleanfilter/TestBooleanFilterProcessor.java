@@ -63,7 +63,9 @@ public class TestBooleanFilterProcessor {
     List<Map<String, Object>> outputEvents = new ArrayList<>();
     outputEventBooleans.forEach(bool->outputEvents.add(Map.of(FIELD_NAME, bool)));
 
-    ProcessingElementTestExecutor.run(processor, userConfiguration, events, outputEvents, null);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
+
+    testExecutor.run(events, outputEvents);
   }
 
   static Stream<Arguments> data() {

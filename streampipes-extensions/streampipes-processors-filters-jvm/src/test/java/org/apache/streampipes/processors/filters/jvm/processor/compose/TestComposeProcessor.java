@@ -59,7 +59,9 @@ public class TestComposeProcessor {
       invocation.setOutputStrategies(outputStrategies);
     });
 
-    ProcessingElementTestExecutor.run(processor, Map.of(), events, outputEvents, invocationConfig);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, invocationConfig);
+
+    testExecutor.run(events, outputEvents);
   }
   static Stream<Arguments> data() {
 

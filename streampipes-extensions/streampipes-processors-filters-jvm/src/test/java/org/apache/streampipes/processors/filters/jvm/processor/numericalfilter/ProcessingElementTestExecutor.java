@@ -42,8 +42,6 @@ import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -51,50 +49,39 @@ import static org.mockito.Mockito.when;
 
 public class ProcessingElementTestExecutor {
 
-  /**
-   * This method is used to run a data processor with a given configuration and a list of input events.
-   * It then verifies the output events against the expected output events.
-   *
-   * @param processor            The data processor under test.
-   * @param userConfiguration    The user input configuration for the processor.
-   * @param inputEvents          The list of input events to be processed.
-   * @param expectedOutputEvents The list of expected output events.
-   * @param expectedException    Exception expected to occur.
-   */
-  public static void runWithException(
-      IStreamPipesDataProcessor processor,
-      Map<String, Object> userConfiguration,
-      List<Map<String, Object>> inputEvents,
-      List<Map<String, Object>> expectedOutputEvents,
-      Consumer<DataProcessorInvocation> invocationConfig,
-      Exception expectedException
-  ) {
-    Exception exception = assertThrows(expectedException.getClass(), () -> {
-      run(processor, userConfiguration, inputEvents, expectedOutputEvents, invocationConfig);
-    });
+  private final IStreamPipesDataProcessor processor;
+  private final Map<String, Object> userConfiguration;
+  private Consumer<DataProcessorInvocation> invocationConfig;
 
-    String expectedMessage = expectedException.getMessage();
-    String actualMessage = exception.getMessage();
+  public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor, Map<String, Object> userConfiguration,
+                                       Consumer<DataProcessorInvocation> invocationConfig) {
+    this.processor = processor;
+    this.userConfiguration = userConfiguration;
+    this.invocationConfig = invocationConfig;
+  }
 
-    assertTrue(actualMessage.contains(expectedMessage));
+  public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor, Map<String, Object> userConfiguration) {
+    this.processor = processor;
+    this.userConfiguration = userConfiguration;
+  }
 
+  public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor,
+                                       Consumer<DataProcessorInvocation> invocationConfig) {
+    this.processor = processor;
+    this.userConfiguration = new HashMap<>();
+    this.invocationConfig = invocationConfig;
   }
 
   /**
    * This method is used to run a data processor with a given configuration and a list of input events.
    * It then verifies the output events against the expected output events.
    *
-   * @param processor            The data processor under test.
-   * @param userConfiguration    The user input configuration for the processor.
    * @param inputEvents          The list of input events to be processed.
    * @param expectedOutputEvents The list of expected output events.
    */
-  public static void run(
-      IStreamPipesDataProcessor processor,
-      Map<String, Object> userConfiguration,
+  public void run(
       List<Map<String, Object>> inputEvents,
-      List<Map<String, Object>> expectedOutputEvents,
-      Consumer<DataProcessorInvocation> invocationConfig
+      List<Map<String, Object>> expectedOutputEvents
   ) {
 
 

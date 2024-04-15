@@ -53,8 +53,9 @@ public class NumericalFilterProcessorTest {
         Map.of(PROPERTY_NAME, 1.0f)
     );
 
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
 
-    ProcessingElementTestExecutor.run(processor, userConfiguration, inputEvents, outputEvents, null);
+    testExecutor.run(inputEvents, outputEvents);
   }
 
   @Test
@@ -73,9 +74,9 @@ public class NumericalFilterProcessorTest {
 
     List<Map<String, Object>> outputEvents = List.of();
 
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
 
-    ProcessingElementTestExecutor.run(processor, userConfiguration, inputEvents, outputEvents, null);
+    testExecutor.run(inputEvents, outputEvents);
   }
-
 
 }
