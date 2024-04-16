@@ -88,9 +88,7 @@ export class EditEventPropertyComponent implements OnInit {
             this.property instanceof EventPropertyNested;
         this.isNumericProperty =
             SemanticType.isNumber(this.cachedProperty) ||
-            DataType.isNumberType(
-                (this.cachedProperty as any).runtimeType,
-            );
+            DataType.isNumberType((this.cachedProperty as any).runtimeType);
         this.createForm();
     }
 

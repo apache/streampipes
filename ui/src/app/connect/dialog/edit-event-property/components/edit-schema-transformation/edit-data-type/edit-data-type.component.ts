@@ -30,7 +30,7 @@ export class EditDataTypeComponent {
 
     runtimeDataTypes: { label: string; url: string }[] = [
         {
-            label: 'String - A textual datatype, e.g., \'machine1\'',
+            label: "String - A textual datatype, e.g., 'machine1'",
             url: DataType.STRING,
         },
         {
@@ -38,19 +38,19 @@ export class EditDataTypeComponent {
             url: DataType.BOOLEAN,
         },
         {
-            label: 'Double - A number, e.g., \'1.25\'',
+            label: "Double - A number, e.g., '1.25'",
             url: DataType.DOUBLE,
         },
         {
-            label: 'Float - A number, e.g., \'1.25\'',
+            label: "Float - A number, e.g., '1.25'",
             url: DataType.FLOAT,
         },
         {
-            label: 'Integer - A number, e.g., \'2\'',
+            label: "Integer - A number, e.g., '2'",
             url: DataType.INTEGER,
         },
         {
-            label: 'Long - A number, e.g., \'1623871455232\'',
+            label: "Long - A number, e.g., '1623871455232'",
             url: DataType.LONG,
         },
     ];
