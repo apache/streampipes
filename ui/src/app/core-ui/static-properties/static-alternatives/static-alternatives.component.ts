@@ -34,7 +34,7 @@ import { MatRadioChange } from '@angular/material/radio';
 @Component({
     selector: 'sp-app-static-alternatives',
     templateUrl: './static-alternatives.component.html',
-    styleUrls: ['./static-alternatives.component.css'],
+    styleUrls: ['./static-alternatives.component.scss'],
 })
 export class StaticAlternativesComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyAlternatives>
