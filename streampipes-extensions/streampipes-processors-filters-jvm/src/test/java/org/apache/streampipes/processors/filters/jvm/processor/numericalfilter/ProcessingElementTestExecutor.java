@@ -30,6 +30,7 @@ import org.apache.streampipes.model.runtime.SourceInfo;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.apache.streampipes.test.generator.EventStreamGenerator;
 
 import org.mockito.ArgumentCaptor;
 
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
@@ -47,27 +49,53 @@ import static org.mockito.Mockito.when;
 
 public class ProcessingElementTestExecutor {
 
+  private final IStreamPipesDataProcessor processor;
+  private final Map<String, Object> userConfiguration;
+  private Consumer<DataProcessorInvocation> invocationConfig;
+
+  public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor, Map<String, Object> userConfiguration,
+                                       Consumer<DataProcessorInvocation> invocationConfig) {
+    this.processor = processor;
+    this.userConfiguration = userConfiguration;
+    this.invocationConfig = invocationConfig;
+  }
+
+  public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor, Map<String, Object> userConfiguration) {
+    this.processor = processor;
+    this.userConfiguration = userConfiguration;
+  }
+
+  public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor,
+                                       Consumer<DataProcessorInvocation> invocationConfig) {
+    this.processor = processor;
+    this.userConfiguration = new HashMap<>();
+    this.invocationConfig = invocationConfig;
+  }
+
   /**
    * This method is used to run a data processor with a given configuration and a list of input events.
    * It then verifies the output events against the expected output events.
    *
-   * @param processor            The data processor under test.
-   * @param userConfiguration    The user input configuration for the processor.
    * @param inputEvents          The list of input events to be processed.
    * @param expectedOutputEvents The list of expected output events.
    */
-  public static void run(
-      IStreamPipesDataProcessor processor,
-      Map<String, Object> userConfiguration,
+  public void run(
       List<Map<String, Object>> inputEvents,
       List<Map<String, Object>> expectedOutputEvents
   ) {
 
-    // initialize the extractor with the provided configuration of the user input
-    var e = getProcessingElementParameterExtractor(processor, userConfiguration);
-    var mockParams = mock(IDataProcessorParameters.class);
-    when(mockParams.extractor()).thenReturn(e);
 
+    // initialize the extractor with the provided configuration of the user input
+    var dataProcessorInvocation = getProcessorInvocation();
+    if (invocationConfig != null){
+      invocationConfig.accept(dataProcessorInvocation);
+    }
+
+    var e = getProcessingElementParameterExtractor(dataProcessorInvocation);
+    var mockParams = mock(IDataProcessorParameters.class);
+
+    when(mockParams.getModel()).thenReturn(dataProcessorInvocation);
+    when(mockParams.extractor()).thenReturn(e);
 
     // calls the onPipelineStarted method of the processor to initialize it
     processor.onPipelineStarted(mockParams, null, null);
@@ -92,31 +120,27 @@ public class ProcessingElementTestExecutor {
                                 .getRaw()
              ));
 
-    // vlaidate that the processor is stopped correctly
+    // validate that the processor is stopped correctly
     processor.onPipelineStopped();
   }
 
   private static ProcessingElementParameterExtractor getProcessingElementParameterExtractor(
-      IStreamPipesDataProcessor processor,
-      Map<String, Object> userConfiguration
+      DataProcessorInvocation dataProcessorInvocation
   ) {
-
-    var dataProcessorInvocation = getProcessorInvocation(processor, userConfiguration);
-
     return ProcessingElementParameterExtractor.from(dataProcessorInvocation);
   }
 
-  private static DataProcessorInvocation getProcessorInvocation(
-      IStreamPipesDataProcessor processor,
-      Map<String, Object> userConfiguration
-  ) {
-    var pipelineElementTemplate = getPipelineElementTemplate(processor, userConfiguration);
+  private DataProcessorInvocation getProcessorInvocation() {
+    var pipelineElementTemplate = getPipelineElementTemplate();
 
     var invocation = new DataProcessorInvocation(
         processor
             .declareConfig()
             .getDescription()
     );
+
+    invocation.setOutputStream(EventStreamGenerator.makeEmptyStream());
+
 
     return new DataProcessorTemplateHandler(
         pipelineElementTemplate,
@@ -126,10 +150,7 @@ public class ProcessingElementTestExecutor {
         .applyTemplateOnPipelineElement();
   }
 
-  private static PipelineElementTemplate getPipelineElementTemplate(
-      IStreamPipesDataProcessor processor,
-      Map<String, Object> userConfiguration
-  ) {
+  private PipelineElementTemplate getPipelineElementTemplate() {
     var staticProperties = processor
         .declareConfig()
         .getDescription()
@@ -149,11 +170,26 @@ public class ProcessingElementTestExecutor {
     return new PipelineElementTemplate("name", "description", configs);
   }
 
-  private static Event getEvent(Map<String, Object> rawEvent) {
-    // TODO here we need a better solution to deal with the event schema and the selector prefix
-    var sourceInfo = new SourceInfo("", "");
+  private Event getEvent(Map<String, Object> rawEvent) {
+
+    // separate the prefix and remove it from the map
+    Map<String, Object> eventMap = new HashMap<>(rawEvent);
+    String selectorPrefix = eventMap.keySet().stream()
+        .filter(s->s.contains("::"))
+        .map(s->s.split("::")[0])
+        .findFirst().orElse("");
+
+    for (var key : eventMap.keySet()){
+      if (key.contains("::")){
+        var value = rawEvent.get(key);
+        var newKey = key.split("::")[1];
+        eventMap.remove(key);
+        eventMap.put(newKey, value);
+      }
+    }
+    var sourceInfo = new SourceInfo("", selectorPrefix);
     var schemaInfo = new SchemaInfo(null, new ArrayList<>());
 
-    return EventFactory.fromMap(rawEvent, sourceInfo, schemaInfo);
+    return EventFactory.fromMap(eventMap, sourceInfo, schemaInfo);
   }
 }

@@ -18,19 +18,19 @@
 
 package org.apache.streampipes.processors.filters.jvm.processor.numericalfilter;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
 public class NumericalFilterProcessorTest {
 
-  private static final String PROPERTY_NAME = "proptertyName";
+  private static final String PROPERTY_NAME = "propertyName";
   private NumericalFilterProcessor processor;
 
 
-  @Before
+  @BeforeEach
   public void setup() {
     processor = new NumericalFilterProcessor();
   }
@@ -53,8 +53,9 @@ public class NumericalFilterProcessorTest {
         Map.of(PROPERTY_NAME, 1.0f)
     );
 
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
 
-    ProcessingElementTestExecutor.run(processor, userConfiguration, inputEvents, outputEvents);
+    testExecutor.run(inputEvents, outputEvents);
   }
 
   @Test
@@ -73,9 +74,9 @@ public class NumericalFilterProcessorTest {
 
     List<Map<String, Object>> outputEvents = List.of();
 
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
 
-    ProcessingElementTestExecutor.run(processor, userConfiguration, inputEvents, outputEvents);
+    testExecutor.run(inputEvents, outputEvents);
   }
-
 
 }
