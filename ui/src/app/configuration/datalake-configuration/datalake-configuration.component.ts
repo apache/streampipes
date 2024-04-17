@@ -40,7 +40,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
     selector: 'sp-datalake-configuration',
     templateUrl: './datalake-configuration.component.html',
-    styleUrls: ['./datalake-configuration.component.css'],
+    styleUrls: ['./datalake-configuration.component.scss'],
 })
 export class DatalakeConfigurationComponent implements OnInit {
     tabs = SpConfigurationTabs.getTabs();

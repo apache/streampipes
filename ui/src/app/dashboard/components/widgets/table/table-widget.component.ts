@@ -31,7 +31,7 @@ import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 @Component({
     selector: 'sp-table-widget',
     templateUrl: './table-widget.component.html',
-    styleUrls: ['./table-widget.component.css'],
+    styleUrls: ['./table-widget.component.scss'],
 })
 export class TableWidgetComponent
     extends BaseStreamPipesWidget

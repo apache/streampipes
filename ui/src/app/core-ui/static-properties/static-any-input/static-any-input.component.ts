@@ -23,7 +23,7 @@ import { AnyStaticProperty } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-app-static-any-input',
     templateUrl: './static-any-input.component.html',
-    styleUrls: ['./static-any-input.component.css'],
+    styleUrls: ['./static-any-input.component.scss'],
 })
 export class StaticAnyInputComponent
     extends AbstractStaticPropertyRenderer<AnyStaticProperty>
