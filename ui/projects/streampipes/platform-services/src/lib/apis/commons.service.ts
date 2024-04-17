@@ -32,7 +32,4 @@ export class PlatformServicesCommons {
         return this.basePath + '/api/v2';
     }
 
-    get unauthenticatedBasePath() {
-        return this.basePath + '/api/v2';
-    }
 }
