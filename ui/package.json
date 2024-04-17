@@ -61,7 +61,7 @@
     "echarts": "^5.5.0",
     "echarts-simple-transform": "^1.0.0",
     "echarts-wordcloud": "^2.1.0",
-    "es-module-shims": "^1.5.12",
+    "es-module-shims": "^1.9.0",
     "file-saver": "2.0.5",
     "jquery": "^3.7.0",
     "jquery-ui-dist": "1.13.2",
