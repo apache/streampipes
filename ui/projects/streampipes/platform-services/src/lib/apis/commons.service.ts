@@ -31,5 +31,4 @@ export class PlatformServicesCommons {
     get apiBasePath() {
         return this.basePath + '/api/v2';
     }
-
 }
