@@ -30,13 +30,13 @@ import {
     Validators,
 } from '@angular/forms';
 import {
+    DataType,
     EventPropertyList,
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
     SemanticType,
 } from '@streampipes/platform-services';
-import { DataTypesService } from '../../services/data-type.service';
 import { DialogRef } from '@streampipes/shared-ui';
 import { EditSchemaTransformationComponent } from './components/edit-schema-transformation/edit-schema-transformation.component';
 import { EditValueTransformationComponent } from './components/edit-value-transformation/edit-value-transformation.component';
@@ -73,7 +73,6 @@ export class EditEventPropertyComponent implements OnInit {
     constructor(
         public dialogRef: DialogRef<EditEventPropertyComponent>,
         private formBuilder: UntypedFormBuilder,
-        private dataTypeService: DataTypesService,
         private shepherdService: ShepherdService,
     ) {}
 
@@ -89,9 +88,7 @@ export class EditEventPropertyComponent implements OnInit {
             this.property instanceof EventPropertyNested;
         this.isNumericProperty =
             SemanticType.isNumber(this.cachedProperty) ||
-            this.dataTypeService.isNumeric(
-                (this.cachedProperty as any).runtimeType,
-            );
+            DataType.isNumberType((this.cachedProperty as any).runtimeType);
         this.createForm();
     }
 
@@ -188,7 +185,7 @@ export class EditEventPropertyComponent implements OnInit {
     }
 
     handleDataTypeChange(changed: boolean) {
-        this.isNumericProperty = this.dataTypeService.isNumeric(
+        this.isNumericProperty = DataType.isNumberType(
             (this.cachedProperty as any).runtimeType,
         );
     }
