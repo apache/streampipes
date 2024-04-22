@@ -37,13 +37,13 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.json.
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -101,7 +101,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
     return AdapterConfigurationBuilder
         .create(ID, 0, Oi4Adapter::new)
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
         .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
