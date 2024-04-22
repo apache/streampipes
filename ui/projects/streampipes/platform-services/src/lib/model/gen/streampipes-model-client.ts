@@ -19,47 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2023-12-04 13:14:26.
-
-export class ExtensionsServiceEndpointItem {
-    appId: string;
-    available: boolean;
-    description: string;
-    editable: boolean;
-    elementId: string;
-    includesDocs: boolean;
-    includesIcon: boolean;
-    installed: boolean;
-    name: string;
-    streams: ExtensionsServiceEndpointItem[];
-    type: string;
-    uri: string;
-
-    static fromData(
-        data: ExtensionsServiceEndpointItem,
-        target?: ExtensionsServiceEndpointItem,
-    ): ExtensionsServiceEndpointItem {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new ExtensionsServiceEndpointItem();
-        instance.appId = data.appId;
-        instance.available = data.available;
-        instance.description = data.description;
-        instance.editable = data.editable;
-        instance.elementId = data.elementId;
-        instance.includesDocs = data.includesDocs;
-        instance.includesIcon = data.includesIcon;
-        instance.installed = data.installed;
-        instance.name = data.name;
-        instance.streams = __getCopyArrayFn(
-            ExtensionsServiceEndpointItem.fromData,
-        )(data.streams);
-        instance.type = data.type;
-        instance.uri = data.uri;
-        return instance;
-    }
-}
+// Generated using typescript-generator version 3.2.1263 on 2024-04-22 14:35:38.
 
 export class Group {
     groupId: string;
