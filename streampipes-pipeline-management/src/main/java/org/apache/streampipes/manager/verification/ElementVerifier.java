@@ -36,7 +36,7 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.management.StorageManager;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -58,8 +58,8 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   protected List<VerificationResult> validationResults;
   protected List<Verifier> validators;
 
-  protected IPipelineElementDescriptionStorage storageApi =
-      StorageManager.INSTANCE.getPipelineElementStorage();
+  protected IPipelineElementDescriptionStorage storageApi = StorageDispatcher.INSTANCE.getNoSqlStore()
+                                                                                      .getPipelineElementDescriptionStorage();
 
   public ElementVerifier(String graphData, Class<T> elementClass) {
     this.elementClass = elementClass;
