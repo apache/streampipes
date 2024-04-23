@@ -19,28 +19,35 @@
 
 package org.apache.streampipes.dataexplorer.query.writer.item;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JsonItemWriter extends ItemGenerator {
+
+  private static final Logger LOG = LoggerFactory.getLogger(JsonItemWriter.class);
 
   private static final String BEGIN_OBJECT = "{";
   private static final String END_OBJECT = "}";
 
-  private final Gson gson;
+  private final ObjectMapper objectMapper;
 
-  public JsonItemWriter(Gson gson) {
+  public JsonItemWriter(ObjectMapper objectMapper) {
     super(COMMA_SEPARATOR);
-    this.gson = gson;
+    this.objectMapper = objectMapper;
   }
 
   @Override
   protected String makeItemString(String key,
                                   Object value) {
-    var stringValue = value != null ? gson.toJson(value) : null;
-    return "\""
-        + key
-        + "\": "
-        + stringValue;
+    String valueJsonString = null;
+    try {
+      valueJsonString = value != null ? this.objectMapper.writeValueAsString(value) : null;
+    } catch (JsonProcessingException e) {
+      LOG.error("Error while converting value to JSON string: {}", e.getMessage());
+    }
+    return "\"%s\": %s".formatted(key, valueJsonString);
   }
 
   @Override
