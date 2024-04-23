@@ -111,9 +111,9 @@ public class ProvidedRestQueryParamConverter {
   }
 
   public static DeleteQueryParams getDeleteQueryParams(String measurementId,
-                                                                    Long startTime,
-                                                                    Long endTime) {
-      return new DeleteQueryParams(measurementId, startTime, endTime);
+                                                       Long startTime,
+                                                       Long endTime) {
+    return new DeleteQueryParams(measurementId, startTime, endTime);
   }
 
   private static boolean hasTimeParams(ProvidedRestQueryParams params) {
