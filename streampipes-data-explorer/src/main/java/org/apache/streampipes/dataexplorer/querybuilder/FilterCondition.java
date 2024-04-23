@@ -17,28 +17,5 @@
  */
 package org.apache.streampipes.dataexplorer.querybuilder;
 
-public class FilterCondition {
-
-  private String field;
-  private String operator;
-  private Object condition;
-
-  public FilterCondition(String field, String operator, Object condition) {
-    this.field = field;
-    this.operator = operator;
-    this.condition = condition;
-  }
-
-  public String getField() {
-    return field;
-  }
-
-  public String getOperator() {
-    return operator;
-  }
-
-  public Object getCondition() {
-    return condition;
-  }
-
+public record FilterCondition(String field, String operator, Object condition) {
 }
