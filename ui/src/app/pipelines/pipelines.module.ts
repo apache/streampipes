@@ -52,6 +52,7 @@ import { SpFunctionsLogsComponent } from './components/functions-overview/functi
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
     imports: [
@@ -66,6 +67,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         MatTableModule,
         MatTooltipModule,
         MatDividerModule,
+        MatIconModule,
         CoreUiModule,
         PlatformServicesModule,
         EditorModule,

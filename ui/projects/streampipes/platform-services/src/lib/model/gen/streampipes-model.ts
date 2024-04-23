@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-03-28 15:50:50.
+// Generated using typescript-generator version 3.2.1263 on 2024-04-22 14:32:58.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -2517,28 +2517,6 @@ export class PageResult extends DataSeries {
         super.fromData(data, instance);
         instance.page = data.page;
         instance.pageSum = data.pageSum;
-        return instance;
-    }
-}
-
-export class PersistedDataStream {
-    measureName: string;
-    pipelineId: string;
-    pipelineName: string;
-    schema: EventSchema;
-
-    static fromData(
-        data: PersistedDataStream,
-        target?: PersistedDataStream,
-    ): PersistedDataStream {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new PersistedDataStream();
-        instance.measureName = data.measureName;
-        instance.pipelineId = data.pipelineId;
-        instance.pipelineName = data.pipelineName;
-        instance.schema = EventSchema.fromData(data.schema);
         return instance;
     }
 }

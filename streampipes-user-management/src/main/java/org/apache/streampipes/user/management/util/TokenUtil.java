@@ -29,20 +29,16 @@ public class TokenUtil {
   private static final Integer TOKEN_LENGTH = 24;
 
   public static RawUserApiToken createToken(String tokenName) {
-    RawUserApiToken rawToken = new RawUserApiToken();
-    rawToken.setTokenId(UUID.randomUUID().toString());
-    rawToken.setTokenName(tokenName);
-    rawToken.setRawToken(generateToken());
-    rawToken.setHashedToken(hashToken(rawToken.getRawToken()));
+    var rawToken = generateToken();
 
-    return rawToken;
+    return new RawUserApiToken(rawToken, hashToken(rawToken), tokenName, UUID.randomUUID().toString());
   }
 
   public static UserApiToken toUserToken(RawUserApiToken rawToken) {
     UserApiToken userApiToken = new UserApiToken();
-    userApiToken.setTokenId(rawToken.getTokenId());
-    userApiToken.setHashedToken(rawToken.getHashedToken());
-    userApiToken.setTokenName(rawToken.getTokenName());
+    userApiToken.setTokenId(rawToken.tokenId());
+    userApiToken.setHashedToken(rawToken.hashedToken());
+    userApiToken.setTokenName(rawToken.tokenName());
 
     return userApiToken;
   }
