@@ -24,14 +24,7 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.storage.api.IDataLakeStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import com.google.gson.JsonObject;
-import org.lightcouch.CouchDbClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,8 +33,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DataExplorerSchemaManagement implements IDataExplorerSchemaManagement {
-
-  private static final Logger LOG = LoggerFactory.getLogger(DataExplorerSchemaManagement.class);
 
   IDataLakeStorage dataLakeStorage;
 
@@ -80,7 +71,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
   }
 
   /**
-   * Destiguishes between the update straregy for existing measurments
+   * Distinguishes between the update strategy for existing measurements
    */
   private void handleExistingMeasurement(
       DataLakeMeasure measure,
@@ -126,33 +117,19 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
   @Override
   public boolean deleteMeasurementByName(String measureName) {
     boolean isSuccess = false;
-    CouchDbClient couchDbClient = Utils.getCouchDbDataLakeClient();
-    List<JsonObject> docs = couchDbClient.view("_all_docs")
-                                         .includeDocs(true)
-                                         .query(JsonObject.class);
+    List<DataLakeMeasure> docs = dataLakeStorage.getAllDataLakeMeasures();
 
-    for (JsonObject document : docs) {
-      if (document.get("measureName")
-                  .toString()
+    for (var measure : docs) {
+      if (measure.getMeasureName()
                   .replace("\"", "")
                   .equals(measureName)) {
-        couchDbClient.remove(
-            document.get("_id")
-                    .toString()
-                    .replace("\"", ""),
-            document.get("_rev")
-                    .toString()
+        dataLakeStorage.deleteDataLakeMeasure(
+            measure.getElementId()
                     .replace("\"", "")
         );
         isSuccess = true;
         break;
       }
-    }
-
-    try {
-      couchDbClient.close();
-    } catch (IOException e) {
-      LOG.error("Could not close CouchDB client", e);
     }
     return isSuccess;
   }
