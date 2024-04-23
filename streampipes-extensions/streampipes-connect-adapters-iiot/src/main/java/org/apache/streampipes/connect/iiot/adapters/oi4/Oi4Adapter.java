@@ -313,7 +313,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
     if (!dataMessages.isEmpty()) {
 
-      for(var dataMessage: dataMessages) {
+      for (var dataMessage: dataMessages) {
 
         var sensorId = getSensorIdFromSource(dataMessage.source());
 
