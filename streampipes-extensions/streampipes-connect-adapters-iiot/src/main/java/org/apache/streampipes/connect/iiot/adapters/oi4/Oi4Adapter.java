@@ -195,7 +195,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
   public void onAdapterStopped(
       IAdapterParameterExtractor extractor,
       IAdapterRuntimeContext adapterRuntimeContext
-  ) throws AdapterException {
+  ) {
     mqttConsumer.close();
   }
 
