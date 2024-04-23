@@ -18,19 +18,21 @@
 
 package org.apache.streampipes.dataexplorer.query.writer.item;
 
-import org.junit.jupiter.api.BeforeEach;
+import com.google.gson.Gson;
+import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public abstract class TestItemWriter {
+public class TestJsonItemGenerator extends TestItemGenerator {
 
-  protected List<Object> row;
-  protected List<String> columns;
+  private static final String Expected = "{\"time\": 1668578077051,\"string\": \"test\",\"number\": 1}";
 
-  @BeforeEach
-  public void before() {
-    this.row = Arrays.asList(1668578077051.0, "test", 1);
-    this.columns = Arrays.asList("time", "string", "number");
+  @Test
+  public void testJsonWriter() {
+    var writer = new JsonItemGenerator(new Gson());
+
+    String result = writer.createItem(row, columns);
+
+    assertEquals(Expected, result);
   }
 }
