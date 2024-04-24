@@ -19,10 +19,10 @@
 package org.apache.streampipes.dataexplorer.param;
 
 
-public record DeleteQueryParams(String measurementId, long startTime, long endTime, boolean timeRestricted) {
+public record DeleteQueryParams(String measurementId, Long startTime, Long endTime, boolean timeRestricted) {
 
   public DeleteQueryParams(String measurementId, Long startTime, Long endTime) {
-    this(measurementId, startTime != null ? startTime : 0, endTime != null ? endTime : 0, true);
+    this(measurementId, startTime != null ? startTime : 0, endTime != null ? endTime : 99999999999999L, true);
   }
 }
 
