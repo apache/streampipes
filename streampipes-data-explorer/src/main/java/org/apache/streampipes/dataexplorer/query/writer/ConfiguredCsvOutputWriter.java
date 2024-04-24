@@ -19,7 +19,7 @@
 package org.apache.streampipes.dataexplorer.query.writer;
 
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
-import org.apache.streampipes.dataexplorer.query.writer.item.CsvItemWriter;
+import org.apache.streampipes.dataexplorer.query.writer.item.CsvItemGenerator;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,7 +34,7 @@ public class ConfiguredCsvOutputWriter extends ConfiguredOutputWriter {
   private static final String COMMA = ",";
   private static final String SEMICOLON = ";";
 
-  private CsvItemWriter itemWriter;
+  private CsvItemGenerator itemGenerator;
   private String delimiter = COMMA;
 
   @Override
@@ -43,7 +43,7 @@ public class ConfiguredCsvOutputWriter extends ConfiguredOutputWriter {
     if (params.has(QP_CSV_DELIMITER)) {
       delimiter = params.getAsString(QP_CSV_DELIMITER).equals("comma") ? COMMA : SEMICOLON;
     }
-    this.itemWriter = new CsvItemWriter(delimiter);
+    this.itemGenerator = new CsvItemGenerator(delimiter);
   }
 
   @Override
@@ -65,7 +65,7 @@ public class ConfiguredCsvOutputWriter extends ConfiguredOutputWriter {
       outputStream.write(toBytes(makeHeaderLine(columnNames)));
     }
 
-    outputStream.write(toBytes(itemWriter.createItem(row, columnNames) + LINE_SEPARATOR));
+    outputStream.write(toBytes(itemGenerator.createItem(row, columnNames) + LINE_SEPARATOR));
   }
 
   private String makeHeaderLine(List<String> columns) {

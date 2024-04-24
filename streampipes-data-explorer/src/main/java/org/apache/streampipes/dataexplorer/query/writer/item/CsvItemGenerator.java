@@ -19,9 +19,9 @@
 
 package org.apache.streampipes.dataexplorer.query.writer.item;
 
-public class CsvItemWriter extends ItemGenerator {
+public class CsvItemGenerator extends ItemGenerator {
 
-  public CsvItemWriter(String delimiter) {
+  public CsvItemGenerator(String delimiter) {
     super(delimiter);
   }
 

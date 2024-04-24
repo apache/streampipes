@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JsonItemWriter extends ItemGenerator {
+public class JsonItemGenerator extends ItemGenerator {
 
   private static final Logger LOG = LoggerFactory.getLogger(JsonItemWriter.class);
 
@@ -33,7 +33,7 @@ public class JsonItemWriter extends ItemGenerator {
 
   private final ObjectMapper objectMapper;
 
-  public JsonItemWriter(ObjectMapper objectMapper) {
+  public JsonItemGenerator(ObjectMapper objectMapper) {
     super(COMMA_SEPARATOR);
     this.objectMapper = objectMapper;
   }

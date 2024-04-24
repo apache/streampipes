@@ -23,7 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class TestItemWriter {
+public abstract class TestItemGenerator {
 
   protected List<Object> row;
   protected List<String> columns;

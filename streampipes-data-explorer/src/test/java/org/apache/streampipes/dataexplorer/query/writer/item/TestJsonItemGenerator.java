@@ -23,13 +23,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestJsonItemWriter extends TestItemWriter {
+public class TestJsonItemGenerator extends TestItemGenerator {
 
   private static final String Expected = "{\"time\": 1668578077051,\"string\": \"test\",\"number\": 1}";
 
   @Test
   public void testJsonWriter() {
-    var writer = new JsonItemWriter(new ObjectMapper());
+    var writer = new JsonItemGenerator(new ObjectMapper());
 
     String result = writer.createItem(row, columns);
 
