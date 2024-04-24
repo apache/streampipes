@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.dataexplorer.query;
 
-import org.apache.streampipes.dataexplorer.influx.DataExplorerInfluxQueryExecutor;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
 import org.apache.streampipes.model.datalake.DataSeries;
@@ -30,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class DataExplorerQueryExecutor<X, W> {
 
-  private static final Logger LOG = LoggerFactory.getLogger(DataExplorerInfluxQueryExecutor.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DataExplorerQueryExecutor.class);
   protected int maximumAmountOfEvents;
 
   protected boolean appendId = false;
