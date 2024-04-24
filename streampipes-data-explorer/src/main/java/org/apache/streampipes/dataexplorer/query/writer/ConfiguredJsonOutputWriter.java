@@ -22,7 +22,7 @@ import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
 import org.apache.streampipes.dataexplorer.query.writer.item.ItemGenerator;
 import org.apache.streampipes.dataexplorer.query.writer.item.JsonItemGenerator;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,8 +36,7 @@ public class ConfiguredJsonOutputWriter extends ConfiguredOutputWriter {
   private final ItemGenerator itemGenerator;
 
   public ConfiguredJsonOutputWriter() {
-    Gson gson = new Gson();
-    this.itemGenerator = new JsonItemGenerator(gson);
+    this.itemGenerator = new JsonItemGenerator(new ObjectMapper());
   }
 
   @Override

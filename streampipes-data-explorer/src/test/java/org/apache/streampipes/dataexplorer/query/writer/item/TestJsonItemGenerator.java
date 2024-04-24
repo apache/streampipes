@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.query.writer.item;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,7 +29,7 @@ public class TestJsonItemGenerator extends TestItemGenerator {
 
   @Test
   public void testJsonWriter() {
-    var writer = new JsonItemGenerator(new Gson());
+    var writer = new JsonItemGenerator(new ObjectMapper());
 
     String result = writer.createItem(row, columns);
 
