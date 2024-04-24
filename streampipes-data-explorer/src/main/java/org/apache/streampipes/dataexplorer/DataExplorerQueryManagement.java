@@ -64,8 +64,8 @@ public class DataExplorerQueryManagement implements IDataExplorerQueryManagement
     var queryExecutor = new DataExplorerInfluxQueryExecutor();
 
     for (DataLakeMeasure measure : allMeasurements) {
-     boolean success = queryExecutor.deleteData(measure);
-     if (!success) {
+      boolean success = queryExecutor.deleteData(measure);
+      if (!success) {
         return false;
       }
     }

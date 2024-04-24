@@ -159,7 +159,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
         List<String> fieldList = Arrays.asList(fields.split(","));
         fieldList.forEach(f -> {
           String q =
-            "SHOW TAG VALUES ON \"" + getDatabaseName() + "\" FROM \"" + measurementId
+              "SHOW TAG VALUES ON \"" + getDatabaseName() + "\" FROM \"" + measurementId
               + "\" WITH KEY = \"" + f + "\"";
           Query query = new Query(q);
           QueryResult queryResult = influxDB.query(query);
@@ -168,7 +168,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
               if (!series.getValues().isEmpty()) {
                 String field = series.getValues().get(0).get(0).toString();
                 List<String> values =
-                  series.getValues().stream().map(v -> v.get(1).toString()).collect(Collectors.toList());
+                    series.getValues().stream().map(v -> v.get(1).toString()).collect(Collectors.toList());
                 tags.put(field, values);
               }
             });
