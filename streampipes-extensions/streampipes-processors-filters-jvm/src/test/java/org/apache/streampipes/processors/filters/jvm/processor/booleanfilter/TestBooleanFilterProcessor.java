@@ -20,6 +20,7 @@ package org.apache.streampipes.processors.filters.jvm.processor.booleanfilter;
 
 
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.ProcessingElementTestExecutor;
+import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.TestConfiguration;
 
 
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +39,7 @@ public class TestBooleanFilterProcessor {
 
   BooleanFilterProcessor processor;
   private static final String FIELD_NAME = "Test";
-  private static final String FIELD_NAME_WITH_PREFIX = "s0::" + FIELD_NAME;
+
   @BeforeEach
   public void setup(){
     processor = new BooleanFilterProcessor();
@@ -51,19 +52,18 @@ public class TestBooleanFilterProcessor {
       List<Boolean> outputEventBooleans
   ) {
 
-    Map<String, Object> userConfiguration =
-        Map.of(
-            BooleanFilterProcessor.BOOLEAN_MAPPING, FIELD_NAME_WITH_PREFIX,
-            BooleanFilterProcessor.VALUE, boolToKeep
-        );
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix(BooleanFilterProcessor.BOOLEAN_MAPPING, FIELD_NAME)
+        .config(BooleanFilterProcessor.VALUE, boolToKeep)
+        .build();
 
     List<Map<String, Object>> events = new ArrayList<>();
-    eventBooleans.forEach(bool->events.add(Map.of(FIELD_NAME_WITH_PREFIX, bool)));
+    eventBooleans.forEach(bool->events.add(Map.of(FIELD_NAME, bool)));
 
     List<Map<String, Object>> outputEvents = new ArrayList<>();
     outputEventBooleans.forEach(bool->outputEvents.add(Map.of(FIELD_NAME, bool)));
 
-    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 
     testExecutor.run(events, outputEvents);
   }

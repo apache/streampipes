@@ -21,7 +21,9 @@ package org.apache.streampipes.processors.filters.jvm.processor.compose;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.CustomOutputStrategy;
 import org.apache.streampipes.model.output.OutputStrategy;
+import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.PrefixStrategy;
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.ProcessingElementTestExecutor;
+import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.TestConfiguration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -51,7 +53,8 @@ public class TestComposeProcessor {
   @ParameterizedTest
   @MethodSource("data")
   public void test(List<Map<String, Object>> events,
-                   List<Map<String, Object>> outputEvents) {
+                   List<Map<String, Object>> outputEvents,
+                   PrefixStrategy prefixStrategy) {
 
     Consumer<DataProcessorInvocation> invocationConfig = (invocation->{
       List<OutputStrategy> outputStrategies = new ArrayList<>();
@@ -59,7 +62,10 @@ public class TestComposeProcessor {
       invocation.setOutputStrategies(outputStrategies);
     });
 
-    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, invocationConfig);
+    TestConfiguration configuration = TestConfiguration.builder().prefixStrategy(prefixStrategy).build();
+
+    ProcessingElementTestExecutor testExecutor =
+        new ProcessingElementTestExecutor(processor, configuration, invocationConfig);
 
     testExecutor.run(events, outputEvents);
   }
@@ -71,34 +77,39 @@ public class TestComposeProcessor {
     return Stream.of(
         Arguments.of(
             List.of(
-              Map.of(S0_PREFIX + SELECTOR_1, object1)),
-            List.of()),
+              Map.of(SELECTOR_1, object1)),
+            List.of(),
+            PrefixStrategy.SAME_PREFIX),
         Arguments.of(
             List.of(
-              Map.of(S0_PREFIX + SELECTOR_1, object1),
-              Map.of(S0_PREFIX + SELECTOR_2, object2)),
-            List.of()),
+              Map.of(SELECTOR_1, object1),
+              Map.of(SELECTOR_2, object2)),
+            List.of(),
+            PrefixStrategy.SAME_PREFIX),
         Arguments.of(
             List.of(
-                Map.of(S0_PREFIX + SELECTOR_1, object1),
-                Map.of(S1_PREFIX + SELECTOR_2, object2)),
+                Map.of(SELECTOR_1, object1),
+                Map.of(SELECTOR_2, object2)),
             List.of(
                 Map.of(SELECTOR_1, object1, SELECTOR_2, object2)
-            )),
+            ),
+            PrefixStrategy.ALTERNATE),
         Arguments.of(
             List.of(
-                Map.of(S0_PREFIX + SELECTOR_1, object1),
-                Map.of(S1_PREFIX + INVALID_SELECTOR, object2)),
+                Map.of(SELECTOR_1, object1),
+                Map.of(INVALID_SELECTOR, object2)),
             List.of(
                 Map.of(SELECTOR_1, object1)
-            )),
+            ),
+            PrefixStrategy.ALTERNATE),
         Arguments.of(
             List.of(
-                Map.of(S0_PREFIX + INVALID_SELECTOR, object1),
-                Map.of(S1_PREFIX + INVALID_SELECTOR, object2)),
+                Map.of(INVALID_SELECTOR, object1),
+                Map.of(INVALID_SELECTOR, object2)),
             List.of(
                 Map.of()
-            ))
+            ),
+            PrefixStrategy.ALTERNATE)
     );
   }
 }

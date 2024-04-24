@@ -38,12 +38,11 @@ public class NumericalFilterProcessorTest {
   @Test
   public void testLowerThenOperatorFilterNotApplied() {
 
-    Map<String, Object> userConfiguration = Map.of(
-        // TODO Here we need a better solution for the mapping to deal with the selector prefix
-        NumericalFilterProcessor.NUMBER_MAPPING, "::" + PROPERTY_NAME,
-        NumericalFilterProcessor.VALUE, 10.0,
-        NumericalFilterProcessor.OPERATION, "<"
-    );
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix(NumericalFilterProcessor.NUMBER_MAPPING, PROPERTY_NAME)
+        .config(NumericalFilterProcessor.VALUE, 10.0)
+        .config(NumericalFilterProcessor.OPERATION, "<")
+        .build();
 
     List<Map<String, Object>> inputEvents = List.of(
         Map.of(PROPERTY_NAME, 1.0f)
@@ -53,7 +52,7 @@ public class NumericalFilterProcessorTest {
         Map.of(PROPERTY_NAME, 1.0f)
     );
 
-    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 
     testExecutor.run(inputEvents, outputEvents);
   }
@@ -61,12 +60,11 @@ public class NumericalFilterProcessorTest {
   @Test
   public void testLowerThenOperatorFilterApplied() {
 
-    Map<String, Object> userConfiguration = Map.of(
-        // TODO Here we need a better solution for the mapping to deal with the selector prefix
-        NumericalFilterProcessor.NUMBER_MAPPING, "::" + PROPERTY_NAME,
-        NumericalFilterProcessor.VALUE, 10.0,
-        NumericalFilterProcessor.OPERATION, "<"
-    );
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix(NumericalFilterProcessor.NUMBER_MAPPING, PROPERTY_NAME)
+        .config(NumericalFilterProcessor.VALUE, 10.0)
+        .config(NumericalFilterProcessor.OPERATION, "<")
+        .build();
 
     List<Map<String, Object>> inputEvents = List.of(
         Map.of(PROPERTY_NAME, 11.0f)
@@ -74,7 +72,7 @@ public class NumericalFilterProcessorTest {
 
     List<Map<String, Object>> outputEvents = List.of();
 
-    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 
     testExecutor.run(inputEvents, outputEvents);
   }

@@ -19,6 +19,7 @@
 package org.apache.streampipes.processors.filters.jvm.processor.textfilter;
 
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.ProcessingElementTestExecutor;
+import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.TestConfiguration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,7 +37,6 @@ public class TestTextFilterProcessor {
   TextFilterProcessor processor;
 
   public static final String FIELD_NAME = "selectedField";
-  public static final String FIELD_NAME_WITH_PREFIX = "s0::" + FIELD_NAME;
 
   @BeforeEach
   public void setup(){
@@ -50,20 +50,19 @@ public class TestTextFilterProcessor {
                    List<String> eventValues,
                    List<String> outputEventValues){
 
-    Map<String, Object> userConfiguration =
-        Map.of(
-            TextFilterProcessor.MAPPING_PROPERTY_ID, FIELD_NAME_WITH_PREFIX,
-            TextFilterProcessor.OPERATION_ID, stringOperator,
-            TextFilterProcessor.KEYWORD_ID, keyword
-        );
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix(TextFilterProcessor.MAPPING_PROPERTY_ID, FIELD_NAME)
+        .config(TextFilterProcessor.OPERATION_ID, stringOperator)
+        .config(TextFilterProcessor.KEYWORD_ID, keyword)
+        .build();
 
     List<Map<String, Object>> events = new ArrayList<>();
-    eventValues.forEach(value->events.add(Map.of(FIELD_NAME_WITH_PREFIX, value)));
+    eventValues.forEach(value->events.add(Map.of(FIELD_NAME, value)));
 
     List<Map<String, Object>> outputEvents = new ArrayList<>();
     outputEventValues.forEach(value->outputEvents.add(Map.of(FIELD_NAME, value)));
 
-    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 
     testExecutor.run(events, outputEvents);
   }

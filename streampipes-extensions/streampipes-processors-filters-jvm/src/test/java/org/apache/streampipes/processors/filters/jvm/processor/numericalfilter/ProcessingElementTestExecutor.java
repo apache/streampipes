@@ -36,6 +36,7 @@ import org.mockito.ArgumentCaptor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -50,27 +51,31 @@ import static org.mockito.Mockito.when;
 public class ProcessingElementTestExecutor {
 
   private final IStreamPipesDataProcessor processor;
-  private final Map<String, Object> userConfiguration;
+  private TestConfiguration testConfiguration;
+  private Iterator<String> selectorPrefixes;
   private Consumer<DataProcessorInvocation> invocationConfig;
 
-  public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor, Map<String, Object> userConfiguration,
+  public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor, TestConfiguration testConfiguration,
                                        Consumer<DataProcessorInvocation> invocationConfig) {
     this.processor = processor;
-    this.userConfiguration = userConfiguration;
+    this.testConfiguration = testConfiguration;
+    this.selectorPrefixes = testConfiguration.getPrefixes().iterator();
     this.invocationConfig = invocationConfig;
   }
 
-  public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor, Map<String, Object> userConfiguration) {
+  public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor, TestConfiguration testConfiguration) {
     this.processor = processor;
-    this.userConfiguration = userConfiguration;
+    this.testConfiguration = testConfiguration;
+    this.selectorPrefixes = testConfiguration.getPrefixes().iterator();
   }
 
   public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor,
                                        Consumer<DataProcessorInvocation> invocationConfig) {
     this.processor = processor;
-    this.userConfiguration = new HashMap<>();
     this.invocationConfig = invocationConfig;
+    this.selectorPrefixes = List.of("").iterator();
   }
+
 
   /**
    * This method is used to run a data processor with a given configuration and a list of input events.
@@ -160,7 +165,7 @@ public class ProcessingElementTestExecutor {
     var configs = new HashMap<String, PipelineElementTemplateConfig>();
 
     staticProperties.forEach(staticProperty -> {
-      var value = userConfiguration.get(staticProperty.getInternalName());
+      var value = testConfiguration.getFieldConfiguration().get(staticProperty.getInternalName());
       configs.put(
           staticProperty.getInternalName(),
           new PipelineElementTemplateConfig(true, true, value)
@@ -172,24 +177,16 @@ public class ProcessingElementTestExecutor {
 
   private Event getEvent(Map<String, Object> rawEvent) {
 
-    // separate the prefix and remove it from the map
-    Map<String, Object> eventMap = new HashMap<>(rawEvent);
-    String selectorPrefix = eventMap.keySet().stream()
-        .filter(s->s.contains("::"))
-        .map(s->s.split("::")[0])
-        .findFirst().orElse("");
-
-    for (var key : eventMap.keySet()){
-      if (key.contains("::")){
-        var value = rawEvent.get(key);
-        var newKey = key.split("::")[1];
-        eventMap.remove(key);
-        eventMap.put(newKey, value);
-      }
+    if (!selectorPrefixes.hasNext()){
+      selectorPrefixes = testConfiguration.getPrefixes().iterator();
     }
+
+    String selectorPrefix = selectorPrefixes.next();
+
+
     var sourceInfo = new SourceInfo("", selectorPrefix);
     var schemaInfo = new SchemaInfo(null, new ArrayList<>());
 
-    return EventFactory.fromMap(eventMap, sourceInfo, schemaInfo);
+    return EventFactory.fromMap(rawEvent, sourceInfo, schemaInfo);
   }
 }

@@ -20,6 +20,7 @@ package org.apache.streampipes.processors.filters.jvm.processor.sdt;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.ProcessingElementTestExecutor;
+import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.TestConfiguration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,13 +47,13 @@ public class TestSwingingDoorTrendingFilterProcessor {
 
   @Test
   public void test(){
-    Map<String, Object> userConfiguration = Map.of(
-        SwingingDoorTrendingFilterProcessor.SDT_TIMESTAMP_FIELD_KEY, "::" + sdtTimestampField,
-        SwingingDoorTrendingFilterProcessor.SDT_VALUE_FIELD_KEY, "::" + sdtValueField,
-        SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_DEVIATION_KEY, "10.0",
-        SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MIN_INTERVAL_KEY, "100",
-        SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MAX_INTERVAL_KEY, "500"
-    );
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix(SwingingDoorTrendingFilterProcessor.SDT_TIMESTAMP_FIELD_KEY, sdtTimestampField)
+        .configWithDefaultPrefix(SwingingDoorTrendingFilterProcessor.SDT_VALUE_FIELD_KEY, sdtValueField)
+        .config(SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_DEVIATION_KEY, "10.0")
+        .config(SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MIN_INTERVAL_KEY, "100")
+        .config(SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MAX_INTERVAL_KEY, "500")
+        .build();
 
     List<Map<String, Object>> inputEvents = List.of(
         Map.of(sdtTimestampField, 0,
@@ -84,20 +85,20 @@ public class TestSwingingDoorTrendingFilterProcessor {
                 sdtValueField, 800.0)
     );
 
-    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 
     testExecutor.run(inputEvents, outputEvents);
   }
 
   @Test
   public void testInvalidDeviationKey(){
-    Map<String, Object> userConfiguration = Map.of(
-        SwingingDoorTrendingFilterProcessor.SDT_TIMESTAMP_FIELD_KEY, "::" + sdtTimestampField,
-        SwingingDoorTrendingFilterProcessor.SDT_VALUE_FIELD_KEY, "::" + sdtValueField,
-        SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_DEVIATION_KEY, "-10.0",
-        SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MIN_INTERVAL_KEY, "100",
-        SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MAX_INTERVAL_KEY, "500"
-    );
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix(SwingingDoorTrendingFilterProcessor.SDT_TIMESTAMP_FIELD_KEY, sdtTimestampField)
+        .configWithDefaultPrefix(SwingingDoorTrendingFilterProcessor.SDT_VALUE_FIELD_KEY, sdtValueField)
+        .config(SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_DEVIATION_KEY, "-10.0")
+        .config(SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MIN_INTERVAL_KEY, "100")
+        .config(SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MAX_INTERVAL_KEY, "500")
+        .build();
 
     List<Map<String, Object>> inputEvents = new ArrayList<>();
 
@@ -105,7 +106,7 @@ public class TestSwingingDoorTrendingFilterProcessor {
 
     Exception expectedException = new SpRuntimeException("Compression Deviation should be positive!");
 
-    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 
     Exception exception = assertThrows(expectedException.getClass(), () -> {
       testExecutor.run(inputEvents, outputEvents);
@@ -118,13 +119,13 @@ public class TestSwingingDoorTrendingFilterProcessor {
 
   @Test
   public void testNegativeMinimumTime(){
-    Map<String, Object> userConfiguration = Map.of(
-        SwingingDoorTrendingFilterProcessor.SDT_TIMESTAMP_FIELD_KEY, "::" + sdtTimestampField,
-        SwingingDoorTrendingFilterProcessor.SDT_VALUE_FIELD_KEY, "::" + sdtValueField,
-        SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_DEVIATION_KEY, "10.0",
-        SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MIN_INTERVAL_KEY, "-100",
-        SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MAX_INTERVAL_KEY, "500"
-    );
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix(SwingingDoorTrendingFilterProcessor.SDT_TIMESTAMP_FIELD_KEY, sdtTimestampField)
+        .configWithDefaultPrefix(SwingingDoorTrendingFilterProcessor.SDT_VALUE_FIELD_KEY, sdtValueField)
+        .config(SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_DEVIATION_KEY, "10.0")
+        .config(SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MIN_INTERVAL_KEY, "-100")
+        .config(SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MAX_INTERVAL_KEY, "500")
+        .build();
 
     List<Map<String, Object>> inputEvents = new ArrayList<>();
 
@@ -132,7 +133,7 @@ public class TestSwingingDoorTrendingFilterProcessor {
 
     Exception expectedException = new SpRuntimeException("Compression Minimum Time Interval should be >= 0!");
 
-    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 
     Exception exception = assertThrows(expectedException.getClass(), () -> {
       testExecutor.run(inputEvents, outputEvents);
@@ -144,13 +145,13 @@ public class TestSwingingDoorTrendingFilterProcessor {
 
   @Test
   public void testInvalidTimeInterval(){
-    Map<String, Object> userConfiguration = Map.of(
-        SwingingDoorTrendingFilterProcessor.SDT_TIMESTAMP_FIELD_KEY, "::" + sdtTimestampField,
-        SwingingDoorTrendingFilterProcessor.SDT_VALUE_FIELD_KEY, "::" + sdtValueField,
-        SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_DEVIATION_KEY, "10.0",
-        SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MIN_INTERVAL_KEY, "1000",
-        SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MAX_INTERVAL_KEY, "500"
-    );
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix(SwingingDoorTrendingFilterProcessor.SDT_TIMESTAMP_FIELD_KEY, sdtTimestampField)
+        .configWithDefaultPrefix(SwingingDoorTrendingFilterProcessor.SDT_VALUE_FIELD_KEY, sdtValueField)
+        .config(SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_DEVIATION_KEY, "10.0")
+        .config(SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MIN_INTERVAL_KEY, "1000")
+        .config(SwingingDoorTrendingFilterProcessor.SDT_COMPRESSION_MAX_INTERVAL_KEY, "500")
+        .build();
 
     List<Map<String, Object>> inputEvents = new ArrayList<>();
 
@@ -159,7 +160,7 @@ public class TestSwingingDoorTrendingFilterProcessor {
     Exception expectedException = new
         SpRuntimeException("Compression Minimum Time Interval should be < Compression Maximum Time Interval!");
 
-    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, userConfiguration);
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 
     Exception exception = assertThrows(expectedException.getClass(), () -> {
       testExecutor.run(inputEvents, outputEvents);

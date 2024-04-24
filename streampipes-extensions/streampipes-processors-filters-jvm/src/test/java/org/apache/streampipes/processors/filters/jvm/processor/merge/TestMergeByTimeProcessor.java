@@ -19,7 +19,9 @@ package org.apache.streampipes.processors.filters.jvm.processor.merge;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.CustomOutputStrategy;
+import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.PrefixStrategy;
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.ProcessingElementTestExecutor;
+import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.TestConfiguration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,8 +38,8 @@ import java.util.stream.Stream;
 
 public class TestMergeByTimeProcessor {
 
-  private static final String S0_PREFIX = "s0::";
-  private static final String S1_PREFIX = "s1::";
+  private static final String S0_PREFIX = "s0";
+  private static final String S1_PREFIX = "s1";
   private static final Integer timeInterval = 100;
 
   MergeByTimeProcessor processor;
@@ -49,17 +51,24 @@ public class TestMergeByTimeProcessor {
   @ParameterizedTest
   @MethodSource("data")
   public void test(List<Map<String, Object>> events,
-                   List<Map<String, Object>> outputEvents){
+                   List<Map<String, Object>> outputEvents,
+                   PrefixStrategy prefixStrategy,
+                   List<String> customPrefixes){
 
 
-    Map<String, Object> userConfiguration =
-        Map.of(
-            MergeByTimeProcessor.TIME_INTERVAL, timeInterval,
-            MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY,
-            S0_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY,
-            MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY,
-            S1_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY
-    );
+    TestConfiguration.TestConfigurationBuilder configurationBuilder = TestConfiguration.builder()
+        .config(MergeByTimeProcessor.TIME_INTERVAL, timeInterval)
+        .configWithPrefix(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY,
+            MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, S0_PREFIX)
+        .configWithPrefix(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY,
+            MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, S1_PREFIX);
+
+    if (customPrefixes != null){
+      configurationBuilder.customPrefixStrategy(customPrefixes);
+    } else {
+      configurationBuilder.prefixStrategy(prefixStrategy);
+    }
+
 
     Consumer<DataProcessorInvocation> invocationConfig = (invocation->{
       List<String> outputKeySelectors = invocation.getOutputStrategies()
@@ -69,54 +78,63 @@ public class TestMergeByTimeProcessor {
           .findFirst()
           .map(CustomOutputStrategy::getSelectedPropertyKeys)
           .orElse(new ArrayList<>());
-      outputKeySelectors.add(S0_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY);
-      outputKeySelectors.add(S1_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY);
+      outputKeySelectors.add(S0_PREFIX + "::" + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY);
+      outputKeySelectors.add(S1_PREFIX + "::" + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY);
     });
 
     ProcessingElementTestExecutor testExecutor =
-        new ProcessingElementTestExecutor(processor, userConfiguration, invocationConfig);
+        new ProcessingElementTestExecutor(processor, configurationBuilder.build(), invocationConfig);
 
     testExecutor.run(events, outputEvents);
   }
 
   static Stream<Arguments> data() {
     return Stream.of(
-        Arguments.of(List.of(
-                Map.of(S0_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "0"),
-                Map.of(S1_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "90")
+        Arguments.of(
+            List.of(
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "0"),
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "90")
             ),
             List.of(
                 Map.of(
                     MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "90",
                     MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "0"
-                )
-            )),
-        Arguments.of(List.of(
-            Map.of(S0_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "0"),
-            Map.of(S1_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "110")
-        ), List.of()),
-        Arguments.of(List.of(
-                Map.of(S0_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "0"),
-                Map.of(S1_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "80"),
-                Map.of(S0_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "110"),
-                Map.of(S1_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "500")
+                )),
+            PrefixStrategy.ALTERNATE,
+            null),
+        Arguments.of(
+            List.of(
+            Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "0"),
+            Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "110")
+          ),
+            List.of(),
+            PrefixStrategy.ALTERNATE,
+            null),
+        Arguments.of(
+            List.of(
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "0"),
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "80"),
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "110"),
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "500")
             ),
             List.of(
                 Map.of(
                     MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "80",
                     MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "0"
-                )
-            )),
-        Arguments.of(List.of(
-                Map.of(S1_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "0"),
-                Map.of(S0_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "10"),
-                Map.of(S0_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "110"),
-                Map.of(S1_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "115"),
-                Map.of(S0_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "120"),
-                Map.of(S1_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "230"),
-                Map.of(S0_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "340"),
-                Map.of(S0_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "500"),
-                Map.of(S1_PREFIX + MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "510")
+                )),
+            PrefixStrategy.ALTERNATE,
+            null),
+        Arguments.of(
+            List.of(
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "0"),
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "10"),
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "110"),
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "115"),
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "120"),
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "230"),
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "340"),
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "500"),
+                Map.of(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "510")
             ),
             List.of(
                 Map.of(
@@ -131,7 +149,9 @@ public class TestMergeByTimeProcessor {
                     MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_2_KEY, "510",
                     MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, "500"
                 )
-            ))
+            ),
+            null,
+            List.of(S1_PREFIX, S0_PREFIX, S0_PREFIX, S1_PREFIX, S0_PREFIX, S1_PREFIX, S0_PREFIX, S0_PREFIX, S1_PREFIX))
     );
   }
 }
