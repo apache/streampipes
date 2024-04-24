@@ -37,13 +37,13 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.json.
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,7 +60,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -87,7 +86,6 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
   private List<String> selectedSensors;
   private String givenSensorType;
-  private String appId;
   protected final ObjectMapper mapper;
 
 
@@ -101,7 +99,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
     return AdapterConfigurationBuilder
         .create(ID, 0, Oi4Adapter::new)
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
         .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
@@ -174,7 +172,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
         OI4AdapterLabels.LABEL_KEY_SENSORS_ALTERNATIVES
     );
 
-    appId = extractor.textParameter(OI4AdapterLabels.LABEL_KEY_APP_ID);
+    String appId = extractor.textParameter(OI4AdapterLabels.LABEL_KEY_APP_ID);
 
     if (selectedAlternativeSelectedSensors.equals(OI4AdapterLabels.LABEL_KEY_SENSORS_ALL_ALTERNATIVE)) {
       // An empty list is used to indicated that messages from all sensors should be collected
@@ -197,7 +195,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
   public void onAdapterStopped(
       IAdapterParameterExtractor extractor,
       IAdapterRuntimeContext adapterRuntimeContext
-  ) throws AdapterException {
+  ) {
     mqttConsumer.close();
   }
 
@@ -311,40 +309,42 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
   private Map<String, Object> extractPayload(NetworkMessage message) throws ParseException {
 
-    var dataMessageOpt = findProcessDataInputMessage(message);
+    var dataMessages = findProcessDataInputMessage(message);
 
-    if (dataMessageOpt.isPresent()) {
+    if (!dataMessages.isEmpty()) {
 
-      var dataMessage = dataMessageOpt.get();
+      for (var dataMessage: dataMessages) {
 
-      var sensorId = getSensorIdFromSource(dataMessage.source());
+        var sensorId = getSensorIdFromSource(dataMessage.source());
 
-      // Verify that the message corresponds to the designated sensor type.
-      // This validation relies on the assumption that the source information includes the sensor type.
-      if (dataMessage.source()
-          .contains(givenSensorType)) {
+        // Verify that the message corresponds to the designated sensor type.
+        // This validation relies on the assumption that the source information includes the sensor type.
+        if (dataMessage.source()
+                       .contains(givenSensorType)) {
 
-        // an empty list of selected sensors means that we want to collect data from all sensors available
-        if (selectedSensors.isEmpty() || selectedSensors.contains(sensorId)) {
+          // an empty list of selected sensors means that we want to collect data from all sensors available
+          if (selectedSensors.isEmpty() || selectedSensors.contains(sensorId)) {
 
-          return extractAndEnrichMessagePayload(dataMessage, sensorId);
+            return extractAndEnrichMessagePayload(dataMessage, sensorId);
+          }
         }
       }
     }
     throw new ParseException("No process data message");
   }
 
-  private Optional<DataSetMessage> findProcessDataInputMessage(NetworkMessage message) {
+  private List<DataSetMessage> findProcessDataInputMessage(NetworkMessage message) {
     return message.messages()
-        .stream()
-        .filter(msg -> msg.filter()
-            .equals(OI4AdapterLabels.MESSAGE_VALUE_FILTER))
-        .findFirst();
+                  .stream()
+                  .filter(msg -> msg.filter()
+                  .equals(OI4AdapterLabels.MESSAGE_VALUE_FILTER))
+                  .toList();
   }
 
   private Map<String, Object> extractAndEnrichMessagePayload(DataSetMessage dataSetMessage, String sensorId) {
     var payload = dataSetMessage
-        .payload();
+        .payload()
+        .get(0);
     try {
       payload.put(
           OI4AdapterLabels.EVENT_KEY_TIMESTAMP,
