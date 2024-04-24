@@ -19,8 +19,8 @@
 package org.apache.streampipes.processors.filters.jvm.processor.sdt;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.ProcessingElementTestExecutor;
-import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.TestConfiguration;
+import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
+import org.apache.streampipes.test.executors.TestConfiguration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

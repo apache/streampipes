@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.processors.filters.jvm.processor.numericalfilter;
+package org.apache.streampipes.test.executors;
 
 public enum PrefixStrategy {
   SAME_PREFIX, ALTERNATE

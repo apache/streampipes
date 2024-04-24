@@ -19,9 +19,9 @@ package org.apache.streampipes.processors.filters.jvm.processor.merge;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.CustomOutputStrategy;
-import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.PrefixStrategy;
-import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.ProcessingElementTestExecutor;
-import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.TestConfiguration;
+import org.apache.streampipes.test.executors.PrefixStrategy;
+import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
+import org.apache.streampipes.test.executors.TestConfiguration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;

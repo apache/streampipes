@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.processors.filters.jvm.processor.numericalfilter;
+package org.apache.streampipes.test.executors;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
 import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
@@ -33,6 +33,7 @@ import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,11 +43,8 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class ProcessingElementTestExecutor {
 
@@ -97,16 +95,16 @@ public class ProcessingElementTestExecutor {
     }
 
     var e = getProcessingElementParameterExtractor(dataProcessorInvocation);
-    var mockParams = mock(IDataProcessorParameters.class);
+    var mockParams = Mockito.mock(IDataProcessorParameters.class);
 
-    when(mockParams.getModel()).thenReturn(dataProcessorInvocation);
-    when(mockParams.extractor()).thenReturn(e);
+    Mockito.when(mockParams.getModel()).thenReturn(dataProcessorInvocation);
+    Mockito.when(mockParams.extractor()).thenReturn(e);
 
     // calls the onPipelineStarted method of the processor to initialize it
     processor.onPipelineStarted(mockParams, null, null);
 
     // mock the output collector to capture the output events and validate the results later
-    var mockCollector = mock(SpOutputCollector.class);
+    var mockCollector = Mockito.mock(SpOutputCollector.class);
     var spOutputCollectorCaptor = ArgumentCaptor.forClass(Event.class);
 
 
@@ -116,7 +114,8 @@ public class ProcessingElementTestExecutor {
     }
 
     // Validate the output of the processor
-    verify(mockCollector, times(expectedOutputEvents.size())).collect(spOutputCollectorCaptor.capture());
+    Mockito.verify(mockCollector,
+        Mockito.times(expectedOutputEvents.size())).collect(spOutputCollectorCaptor.capture());
     var resultingEvents = spOutputCollectorCaptor.getAllValues();
     IntStream.range(0, expectedOutputEvents.size())
              .forEach(i -> assertEquals(

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.processors.filters.jvm.processor.numericalfilter;
+package org.apache.streampipes.test.executors;
 
 import java.util.HashMap;
 import java.util.List;
@@ -92,14 +92,6 @@ public class TestConfiguration {
     public TestConfiguration build(){
       return new TestConfiguration(this);
     }
-
-
-
-//    public TestConfigurationBuilder customPrefixStrategy(List<String> prefixes){
-//      this.prefixStrategy = PrefixStrategy.CUSTOM;
-//      this.prefixes = prefixes;
-//      return this;
-//    }
 
   }
 }
