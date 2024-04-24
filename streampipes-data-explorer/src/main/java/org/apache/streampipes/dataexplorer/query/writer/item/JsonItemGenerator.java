@@ -19,19 +19,32 @@
 
 package org.apache.streampipes.dataexplorer.query.writer.item;
 
-public class CsvItemWriter extends ItemGenerator {
+import com.google.gson.Gson;
 
-  public CsvItemWriter(String delimiter) {
-    super(delimiter);
+public class JsonItemGenerator extends ItemGenerator {
+
+  private static final String BEGIN_OBJECT = "{";
+  private static final String END_OBJECT = "}";
+
+  private final Gson gson;
+
+  public JsonItemGenerator(Gson gson) {
+    super(COMMA_SEPARATOR);
+    this.gson = gson;
   }
 
   @Override
-  protected String makeItemString(String key, Object value) {
-    return value != null ? value.toString() : "";
+  protected String makeItemString(String key,
+                                  Object value) {
+    var stringValue = value != null ? gson.toJson(value) : null;
+    return "\""
+        + key
+        + "\": "
+        + stringValue;
   }
 
   @Override
   protected String finalizeItem(String item) {
-    return item;
+    return BEGIN_OBJECT + item + END_OBJECT;
   }
 }
