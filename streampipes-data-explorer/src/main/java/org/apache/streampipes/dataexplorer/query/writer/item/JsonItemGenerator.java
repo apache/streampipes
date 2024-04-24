@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 public class JsonItemGenerator extends ItemGenerator {
 
-  private static final Logger LOG = LoggerFactory.getLogger(JsonItemWriter.class);
+  private static final Logger LOG = LoggerFactory.getLogger(JsonItemGenerator.class);
 
   private static final String BEGIN_OBJECT = "{";
   private static final String END_OBJECT = "}";
