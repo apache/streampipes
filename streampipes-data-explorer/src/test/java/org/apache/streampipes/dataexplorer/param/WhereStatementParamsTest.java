@@ -53,9 +53,9 @@ public class WhereStatementParamsTest {
   private void assertWhereCondition(WhereClauseParams result, FilterCondition expected) {
     assertEquals(1, result.getWhereConditions().size());
     FilterCondition resultingFilterCondition = result.getWhereConditions().get(0);
-    assertEquals(expected.getField(), resultingFilterCondition.getField());
-    assertEquals(expected.getOperator(), resultingFilterCondition.getOperator());
-    assertEquals(expected.getCondition(), resultingFilterCondition.getCondition());
+    assertEquals(expected.field(), resultingFilterCondition.field());
+    assertEquals(expected.operator(), resultingFilterCondition.operator());
+    assertEquals(expected.condition(), resultingFilterCondition.condition());
   }
 
 

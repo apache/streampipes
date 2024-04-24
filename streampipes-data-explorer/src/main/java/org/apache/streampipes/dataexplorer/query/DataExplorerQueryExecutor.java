@@ -95,12 +95,12 @@ public abstract class DataExplorerQueryExecutor<X, W> {
   public SpQueryResult executeQuery(X query,
                                     boolean ignoreMissingValues) {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Data Lake Query " + asQueryString(query));
+      LOG.debug("Data Lake Query {}", asQueryString(query));
     }
 
     W result = executeQuery(query);
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Data Lake Query Result: " + result.toString());
+      LOG.debug("Data Lake Query Result: {}", result.toString());
     }
 
     return postQuery(result, ignoreMissingValues);
