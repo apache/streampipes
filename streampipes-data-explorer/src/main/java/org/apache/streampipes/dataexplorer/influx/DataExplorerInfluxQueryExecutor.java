@@ -183,9 +183,9 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   public boolean deleteData(DataLakeMeasure measure) {
     QueryResult queryResult = new DeleteDataQuery(measure).executeQuery();
 
-    return !queryResult.hasError() && queryResult.getResults()
-                                                 .get(0)
-                                                 .getError() == null;
+    return !queryResult.hasError() && (queryResult.getResults() == null || queryResult.getResults()
+                                                                                      .get(0)
+                                                                                      .getError() == null);
 
   }
 }
