@@ -51,8 +51,10 @@ public class AutoAggregationHandler {
   private static final String TIMESTAMP_FIELD = "time";
   private static final String COMMA = ",";
 
-  private final SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-  private final SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+  // Date format for ISO 8601 timestamps with milliseconds
+  private final SimpleDateFormat isoFormatWithMillis = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+  // Date format for ISO 8601 timestamps without milliseconds
+  private final SimpleDateFormat isoFormatOnlySeconds = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
   private final IDataExplorerQueryManagement dataLakeQueryManagement;
   private final ProvidedRestQueryParams queryParams;
@@ -91,7 +93,7 @@ public class AutoAggregationHandler {
         return disableAutoAgg(this.queryParams);
       }
     } catch (ParseException e) {
-      e.printStackTrace();
+      LOG.error("Parsing of timestamp failed during auto aggregation of query parameters: {}", e.getMessage());
     }
     return null;
   }
@@ -144,7 +146,7 @@ public class AutoAggregationHandler {
     List<SelectColumn> columns =
         Arrays.stream(rawQuery.split(COMMA))
               .map(SelectColumn::fromApiQueryString)
-              .collect(Collectors.toList());
+              .toList();
     return columns.stream()
                   .map(SelectColumn::getOriginalField)
                   .collect(Collectors.joining(COMMA));
@@ -172,9 +174,9 @@ public class AutoAggregationHandler {
 
   private Date tryParseDate(String v) throws ParseException {
     try {
-      return dateFormat1.parse(v);
+      return isoFormatWithMillis.parse(v);
     } catch (ParseException e) {
-      return dateFormat2.parse(v);
+      return isoFormatOnlySeconds.parse(v);
     }
   }
 }
