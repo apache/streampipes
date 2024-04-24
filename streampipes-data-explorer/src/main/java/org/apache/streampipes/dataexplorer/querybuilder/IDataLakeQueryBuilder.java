@@ -20,8 +20,6 @@ package org.apache.streampipes.dataexplorer.querybuilder;
 
 import org.apache.streampipes.dataexplorer.param.model.AggregationFunction;
 
-import org.influxdb.querybuilder.clauses.NestedClause;
-
 import java.util.List;
 
 public interface IDataLakeQueryBuilder<T> {
@@ -62,8 +60,6 @@ public interface IDataLakeQueryBuilder<T> {
                                             List<?> values);
 
   IDataLakeQueryBuilder<T> withInclusiveFilter(List<FilterCondition> filterConditions);
-
-  IDataLakeQueryBuilder<T> withFilter(NestedClause clause);
 
   IDataLakeQueryBuilder<T> withGroupByTime(String timeInterval);
 

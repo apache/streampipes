@@ -178,13 +178,6 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withFilter(NestedClause clause) {
-    this.whereClauses.add(clause);
-
-    return this;
-  }
-
-  @Override
   public DataLakeInfluxQueryBuilder withGroupByTime(String timeInterval) {
 
     this.groupByClauses.add(new RawTextClause("time(" + timeInterval + ")"));
