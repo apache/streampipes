@@ -43,15 +43,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
-  protected static final Logger LOGGER = Logger.getAnonymousLogger();
-
   private String graphData;
   private Class<T> elementClass;
-  private boolean shouldTransform;
+  private final boolean shouldTransform;
 
   protected T elementDescription;
 
@@ -59,9 +56,9 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   protected List<Verifier> validators;
 
   protected IPipelineElementDescriptionStorage storageApi = StorageDispatcher
-    .INSTANCE
-    .getNoSqlStore()
-    .getPipelineElementDescriptionStorage();
+      .INSTANCE
+      .getNoSqlStore()
+      .getPipelineElementDescriptionStorage();
 
   public ElementVerifier(String graphData, Class<T> elementClass) {
     this.elementClass = elementClass;
@@ -121,7 +118,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
   }
 
-  public Message verifyAndUpdate() throws SepaParseException {
+  public Message verifyAndUpdate() {
     try {
       this.elementDescription = transform();
     } catch (JsonProcessingException e) {
@@ -190,23 +187,23 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   }
 
   private void createAndStorePermission(
-    String principalSid,
-    boolean publicElement
+      String principalSid,
+      boolean publicElement
   ) {
     Permission permission = makePermission(
-      this.elementDescription.getElementId(),
-      this.elementDescription.getClass(),
-      principalSid, publicElement
+        this.elementDescription.getElementId(),
+        this.elementDescription.getClass(),
+        principalSid, publicElement
     );
 
     storeNewObjectPermission(permission);
   }
 
   protected Permission makePermission(
-    String objectInstanceId,
-    Class<?> objectInstanceClass,
-    String principalSid,
-    boolean publicElement
+      String objectInstanceId,
+      Class<?> objectInstanceClass,
+      String principalSid,
+      boolean publicElement
   ) {
     return PermissionBuilder
       .create(objectInstanceId, objectInstanceClass, principalSid)
