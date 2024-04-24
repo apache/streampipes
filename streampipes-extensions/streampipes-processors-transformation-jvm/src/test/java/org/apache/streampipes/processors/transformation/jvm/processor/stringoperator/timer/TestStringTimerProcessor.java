@@ -175,7 +175,7 @@ public class TestStringTimerProcessor {
                 .getAsDouble();
         LOG.info(field + " time: " + timeDiff);
       } catch (IllegalArgumentException e) {
-        LOG.info(e.getMessage(),e);
+        LOG.info(e.getMessage(), e);
       }
     }
     return new Tuple2<>(field, timeDiff);
