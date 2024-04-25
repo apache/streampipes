@@ -114,12 +114,12 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
 
   @Override
   protected Query makeDeleteQuery(DeleteQueryParams params) {
-    String query = "DELETE FROM \"" + params.getMeasurementId() + "\"";
-    if (params.isTimeRestricted()) {
+    String query = "DELETE FROM \"" + params.measurementId() + "\"";
+    if (params.timeRestricted()) {
       query += "WHERE time > "
-          + params.getStartTime() * 1000000
+          + params.startTime() * 1000000
           + " AND time < "
-          + params.getEndTime() * 1000000;
+          + params.endTime() * 1000000;
     }
     return new Query(query, getDatabaseName());
   }

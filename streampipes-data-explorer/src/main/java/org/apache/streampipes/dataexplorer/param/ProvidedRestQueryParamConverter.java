@@ -111,13 +111,9 @@ public class ProvidedRestQueryParamConverter {
   }
 
   public static DeleteQueryParams getDeleteQueryParams(String measurementId,
-                                                                    Long startTime,
-                                                                    Long endTime) {
-    if (startTime != null || endTime != null) {
-      return new DeleteQueryParams(measurementId, startTime, endTime);
-    } else {
-      return new DeleteQueryParams(measurementId);
-    }
+                                                       Long startTime,
+                                                       Long endTime) {
+    return new DeleteQueryParams(measurementId, startTime, endTime);
   }
 
   private static boolean hasTimeParams(ProvidedRestQueryParams params) {
