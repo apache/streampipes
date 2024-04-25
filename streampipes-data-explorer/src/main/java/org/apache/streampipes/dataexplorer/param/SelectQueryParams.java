@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.dataexplorer.param;
 
+import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
 import org.apache.streampipes.dataexplorer.param.model.FillClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.GroupByTagsClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.GroupByTimeClauseParams;
@@ -25,7 +26,6 @@ import org.apache.streampipes.dataexplorer.param.model.OffsetClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.OrderByClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.SelectClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.WhereClauseParams;
-import org.apache.streampipes.dataexplorer.querybuilder.IDataLakeQueryBuilder;
 
 import java.util.Objects;
 

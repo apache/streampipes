@@ -20,7 +20,7 @@ package org.apache.streampipes.ps;
 
 import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.influx.DataLakeMeasurementCount;
+import org.apache.streampipes.dataexplorer.influx.migrate.DataLakeMeasurementCount;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;

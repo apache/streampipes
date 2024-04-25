@@ -20,12 +20,15 @@ package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.SpQueryStatus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 public abstract class DataExplorerQueryExecutor<X, W> {
 
@@ -108,11 +111,14 @@ public abstract class DataExplorerQueryExecutor<X, W> {
   protected abstract SpQueryResult postQuery(W queryResult,
                                              boolean ignoreMissingValues);
 
-  protected abstract W executeQuery(X query);
+  public abstract W executeQuery(X query);
 
   protected abstract String asQueryString(X query);
 
   protected abstract X makeDeleteQuery(DeleteQueryParams params);
 
   protected abstract X makeSelectQuery(SelectQueryParams params);
+
+  public abstract Map<String, Object> getTagValues(String measurementId, String fields);
+  public abstract boolean deleteData(DataLakeMeasure measure);
 }

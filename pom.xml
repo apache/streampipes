@@ -823,7 +823,9 @@
         <module>streampipes-extensions-api</module>
         <module>streampipes-extensions-management</module>
         <module>streampipes-data-explorer</module>
-        <module>streampipes-data-explorer-commons</module>
+        <module>streampipes-data-explorer-api</module>
+        <module>streampipes-data-explorer-influx</module>
+        <module>streampipes-data-explorer-management</module>
         <module>streampipes-data-export</module>
         <module>streampipes-dataformat</module>
         <module>streampipes-dataformat-cbor</module>
@@ -864,7 +866,6 @@
         <module>streampipes-storage-api</module>
         <module>streampipes-storage-couchdb</module>
         <module>streampipes-storage-management</module>
-        <module>streampipes-storage-ts-influx</module>
         <module>streampipes-test-utils</module>
         <module>streampipes-user-management</module>
         <module>streampipes-vocabulary</module>

@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.rest.impl.datalake;
 
-import org.apache.streampipes.dataexplorer.commons.sanitizer.MeasureNameSanitizer;
+import org.apache.streampipes.dataexplorer.influx.sanitize.MeasureNameSanitizer;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;

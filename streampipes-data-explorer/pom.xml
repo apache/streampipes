@@ -28,9 +28,10 @@
     <artifactId>streampipes-data-explorer</artifactId>
 
     <dependencies>
+        <!--StreamPipes dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-data-explorer-commons</artifactId>
+            <artifactId>streampipes-data-explorer-api</artifactId>
             <version>0.95.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -43,22 +44,17 @@
             <artifactId>streampipes-storage-management</artifactId>
             <version>0.95.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.influxdb</groupId>
-            <artifactId>influxdb-java</artifactId>
-        </dependency>
-
 
         <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-test-utils</artifactId>
             <version>0.95.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
