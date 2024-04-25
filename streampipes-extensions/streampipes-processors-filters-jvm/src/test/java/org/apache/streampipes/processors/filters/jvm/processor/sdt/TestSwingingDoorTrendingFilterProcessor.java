@@ -117,9 +117,9 @@ public class TestSwingingDoorTrendingFilterProcessor {
     StoreEventCollector eventCollector = new StoreEventCollector();
     if (expectException) {
       LOG.info("Expecting Error Message: {}", expectedErrorMessage);
-      SpRuntimeException ex = assertThrows(SpRuntimeException.class, () -> {
-        processor.onInvocation(params, eventCollector, null);
-      });
+      SpRuntimeException ex = assertThrows(SpRuntimeException.class,
+          () -> processor.onInvocation(params, eventCollector, null)
+      );
       assertTrue(ex.getMessage().contains(expectedErrorMessage));
     } else {
       processor.onInvocation(params, eventCollector, null);
