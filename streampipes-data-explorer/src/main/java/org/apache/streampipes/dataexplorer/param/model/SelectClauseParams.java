@@ -33,10 +33,6 @@ public class SelectClauseParams implements IQueryStatement {
   private List<SelectColumn> selectedColumnsCountOnly;
   private boolean selectWildcard = false;
 
-  public SelectClauseParams() {
-    this.selectWildcard = true;
-  }
-
   public SelectClauseParams(String columns,
                             boolean countOnly) {
     this.selectWildcard = false;
