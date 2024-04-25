@@ -95,7 +95,7 @@ public class SelectQueryParams {
 
   public int getLimit() {
     if (Objects.nonNull(limitParams)) {
-      return limitParams.getLimit();
+      return limitParams.limit();
     } else {
       return Integer.MIN_VALUE;
     }
