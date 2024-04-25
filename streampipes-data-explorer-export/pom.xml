@@ -10,6 +10,9 @@
     </parent>
 
     <artifactId>streampipes-data-explorer-export</artifactId>
+    <description>
+        This module contains all components and functionalities related to exporting data from the data explorer storage.
+    </description>
 
     <dependencies>
         <!-- StreamPipes dependencies -->
