@@ -26,6 +26,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>streampipes-data-explorer</artifactId>
+    <description>
+        This Maven module encompasses all StreamPipes-specific implementation endeavors concerning data explorer functionalities.
+    </description>
 
     <dependencies>
         <!--StreamPipes dependencies -->
