@@ -16,17 +16,16 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.query.writer;
+package org.apache.streampipes.dataexplorer.export;
 
-import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
-import org.apache.streampipes.dataexplorer.query.writer.item.CsvItemGenerator;
+import org.apache.streampipes.dataexplorer.export.item.CsvItemGenerator;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.StringJoiner;
-
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_CSV_DELIMITER;
 
 public class ConfiguredCsvOutputWriter extends ConfiguredOutputWriter {
 
@@ -40,8 +39,8 @@ public class ConfiguredCsvOutputWriter extends ConfiguredOutputWriter {
   @Override
   public void configure(ProvidedRestQueryParams params,
                         boolean ignoreMissingValues) {
-    if (params.has(QP_CSV_DELIMITER)) {
-      delimiter = params.getAsString(QP_CSV_DELIMITER).equals("comma") ? COMMA : SEMICOLON;
+    if (params.has(SupportedRestQueryParams.QP_CSV_DELIMITER)) {
+      delimiter = params.getAsString(SupportedRestQueryParams.QP_CSV_DELIMITER).equals("comma") ? COMMA : SEMICOLON;
     }
     this.itemGenerator = new CsvItemGenerator(delimiter);
   }

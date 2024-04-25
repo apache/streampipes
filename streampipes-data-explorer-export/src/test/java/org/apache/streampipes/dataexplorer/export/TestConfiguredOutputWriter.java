@@ -16,22 +16,27 @@
  *
  */
 
+package org.apache.streampipes.dataexplorer.export;
 
-package org.apache.streampipes.dataexplorer.query.writer.item;
+import org.junit.jupiter.api.BeforeEach;
 
-public class CsvItemGenerator extends ItemGenerator {
+import java.util.Arrays;
+import java.util.List;
 
-  public CsvItemGenerator(String delimiter) {
-    super(delimiter);
+public abstract class TestConfiguredOutputWriter {
+
+  protected List<List<Object>> rows;
+  protected List<String> columns;
+
+  @BeforeEach
+  public void before() {
+    this.rows = Arrays.asList(
+        Arrays.asList(1668578077051.0, "test", 1),
+        Arrays.asList(1668578127050.0, "test2", 2)
+    );
+
+    this.columns = Arrays.asList("time", "string", "number");
   }
 
-  @Override
-  protected String makeItemString(String key, Object value) {
-    return value != null ? value.toString() : "";
-  }
 
-  @Override
-  protected String finalizeItem(String item) {
-    return item;
-  }
 }

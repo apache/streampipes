@@ -16,27 +16,21 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.query.writer;
+package org.apache.streampipes.dataexplorer.export;
 
-import org.junit.jupiter.api.BeforeEach;
+import java.util.function.Supplier;
 
-import java.util.Arrays;
-import java.util.List;
+public enum OutputFormat {
+  JSON(ConfiguredJsonOutputWriter::new),
+  CSV(ConfiguredCsvOutputWriter::new);
 
-public abstract class TestConfiguredOutputWriter {
+  private final Supplier<ConfiguredOutputWriter> writerSupplier;
 
-  protected List<List<Object>> rows;
-  protected List<String> columns;
-
-  @BeforeEach
-  public void before() {
-    this.rows = Arrays.asList(
-        Arrays.asList(1668578077051.0, "test", 1),
-        Arrays.asList(1668578127050.0, "test2", 2)
-    );
-
-    this.columns = Arrays.asList("time", "string", "number");
+  OutputFormat(Supplier<ConfiguredOutputWriter> writerSupplier) {
+    this.writerSupplier = writerSupplier;
   }
 
-
+  public ConfiguredOutputWriter getWriter() {
+    return writerSupplier.get();
+  }
 }

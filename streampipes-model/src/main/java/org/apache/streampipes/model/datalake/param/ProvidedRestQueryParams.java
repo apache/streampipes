@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.param;
+package org.apache.streampipes.model.datalake.param;
 
 import java.util.HashMap;
 import java.util.Map;

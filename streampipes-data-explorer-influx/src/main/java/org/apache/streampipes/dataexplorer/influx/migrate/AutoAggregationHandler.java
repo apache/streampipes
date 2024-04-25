@@ -18,8 +18,8 @@
 package org.apache.streampipes.dataexplorer.influx.migrate;
 
 import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
-import org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 import org.apache.streampipes.dataexplorer.param.model.SelectColumn;
 import org.apache.streampipes.model.datalake.DataLakeQueryOrdering;
 import org.apache.streampipes.model.datalake.SpQueryResult;

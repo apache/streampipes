@@ -824,6 +824,7 @@
         <module>streampipes-extensions-management</module>
         <module>streampipes-data-explorer</module>
         <module>streampipes-data-explorer-api</module>
+        <module>streampipes-data-explorer-export</module>
         <module>streampipes-data-explorer-influx</module>
         <module>streampipes-data-explorer-management</module>
         <module>streampipes-data-export</module>

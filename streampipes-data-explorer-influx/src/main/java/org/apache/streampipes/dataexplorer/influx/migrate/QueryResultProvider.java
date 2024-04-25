@@ -20,9 +20,9 @@ package org.apache.streampipes.dataexplorer.influx.migrate;
 
 import org.apache.streampipes.dataexplorer.influx.DataExplorerInfluxQueryExecutor;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
-import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
-import org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 
 

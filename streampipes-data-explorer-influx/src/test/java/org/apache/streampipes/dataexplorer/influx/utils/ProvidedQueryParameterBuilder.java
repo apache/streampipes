@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.dataexplorer.influx.utils;
 
-import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
-import org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 
 import java.util.HashMap;
 import java.util.List;

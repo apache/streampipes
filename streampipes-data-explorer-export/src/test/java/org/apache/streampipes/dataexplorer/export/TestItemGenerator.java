@@ -16,32 +16,21 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.query.writer.item;
+package org.apache.streampipes.dataexplorer.export;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Arrays;
+import java.util.List;
 
-public class TestCsvItemGenerator extends TestItemGenerator {
+public abstract class TestItemGenerator {
 
-  private static final String ExpectedComma = "1668578077051,test,1";
-  private static final String ExpectedSemicolon = "1668578077051;test;1";
+  protected List<Object> row;
+  protected List<String> columns;
 
-  @Test
-  public void testCsvItemWriterCommaSeparated() {
-    var writer = new CsvItemGenerator(",");
-
-    String result = writer.createItem(row, columns);
-
-    assertEquals(ExpectedComma, result);
-  }
-
-  @Test
-  public void testCsvItemWriterSemicolonSeparated() {
-    var writer = new CsvItemGenerator(";");
-
-    String result = writer.createItem(row, columns);
-
-    assertEquals(ExpectedSemicolon, result);
+  @BeforeEach
+  public void before() {
+    this.row = Arrays.asList(1668578077051.0, "test", 1);
+    this.columns = Arrays.asList("time", "string", "number");
   }
 }

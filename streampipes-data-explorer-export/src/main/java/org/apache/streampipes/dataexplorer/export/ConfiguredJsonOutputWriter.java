@@ -16,11 +16,11 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.query.writer;
+package org.apache.streampipes.dataexplorer.export;
 
-import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
-import org.apache.streampipes.dataexplorer.query.writer.item.ItemGenerator;
-import org.apache.streampipes.dataexplorer.query.writer.item.JsonItemGenerator;
+import org.apache.streampipes.dataexplorer.export.item.ItemGenerator;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.dataexplorer.export.item.JsonItemGenerator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

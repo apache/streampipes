@@ -17,7 +17,7 @@
  */
 
 
-package org.apache.streampipes.dataexplorer.query.writer.item;
+package org.apache.streampipes.dataexplorer.export.item;
 
 import java.util.List;
 import java.util.StringJoiner;

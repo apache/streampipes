@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.dataexplorer.influx.migrate;
 
-import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
-import org.apache.streampipes.dataexplorer.query.writer.OutputFormat;
+import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 
 import java.io.IOException;
 import java.io.OutputStream;

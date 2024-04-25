@@ -17,7 +17,7 @@
  */
 
 
-package org.apache.streampipes.dataexplorer.query.writer.item;
+package org.apache.streampipes.dataexplorer.export.item;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

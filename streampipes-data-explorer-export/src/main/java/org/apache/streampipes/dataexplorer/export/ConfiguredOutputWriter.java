@@ -16,9 +16,9 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.query.writer;
+package org.apache.streampipes.dataexplorer.export;
 
-import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 
 import java.io.IOException;
 import java.io.OutputStream;

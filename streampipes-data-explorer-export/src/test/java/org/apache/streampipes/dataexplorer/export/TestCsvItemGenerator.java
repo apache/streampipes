@@ -16,23 +16,34 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.query.writer.item;
+package org.apache.streampipes.dataexplorer.export;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.streampipes.dataexplorer.export.item.CsvItemGenerator;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestJsonItemGenerator extends TestItemGenerator {
+public class TestCsvItemGenerator extends TestItemGenerator {
 
-  private static final String Expected = "{\"time\": 1668578077051,\"string\": \"test\",\"number\": 1}";
+  private static final String ExpectedComma = "1668578077051,test,1";
+  private static final String ExpectedSemicolon = "1668578077051;test;1";
 
   @Test
-  public void testJsonWriter() {
-    var writer = new JsonItemGenerator(new ObjectMapper());
+  public void testCsvItemWriterCommaSeparated() {
+    var writer = new CsvItemGenerator(",");
 
     String result = writer.createItem(row, columns);
 
-    assertEquals(Expected, result);
+    assertEquals(ExpectedComma, result);
+  }
+
+  @Test
+  public void testCsvItemWriterSemicolonSeparated() {
+    var writer = new CsvItemGenerator(";");
+
+    String result = writer.createItem(row, columns);
+
+    assertEquals(ExpectedSemicolon, result);
   }
 }

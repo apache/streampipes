@@ -16,21 +16,25 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.query.writer;
+package org.apache.streampipes.dataexplorer.export;
 
-import java.util.function.Supplier;
+import org.apache.streampipes.dataexplorer.export.item.JsonItemGenerator;
 
-public enum OutputFormat {
-  JSON(ConfiguredJsonOutputWriter::new),
-  CSV(ConfiguredCsvOutputWriter::new);
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
 
-  private final Supplier<ConfiguredOutputWriter> writerSupplier;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-  OutputFormat(Supplier<ConfiguredOutputWriter> writerSupplier) {
-    this.writerSupplier = writerSupplier;
-  }
+public class TestJsonItemGenerator extends TestItemGenerator {
 
-  public ConfiguredOutputWriter getWriter() {
-    return writerSupplier.get();
+  private static final String Expected = "{\"time\": 1668578077051,\"string\": \"test\",\"number\": 1}";
+
+  @Test
+  public void testJsonWriter() {
+    var writer = new JsonItemGenerator(new ObjectMapper());
+
+    String result = writer.createItem(row, columns);
+
+    assertEquals(Expected, result);
   }
 }

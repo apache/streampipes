@@ -26,6 +26,8 @@ import org.apache.streampipes.dataexplorer.param.model.OffsetClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.OrderByClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.SelectClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.WhereClauseParams;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 
 import java.util.ArrayList;
 import java.util.Arrays;
