@@ -123,11 +123,10 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
                                             .findFirst();
 
     return measureToDeleteOpt.map(measure -> {
-                                    dataLakeStorage.deleteDataLakeMeasure(measure.getElementId());
-                                    return true;
-                                  }
-                             )
-                             .orElse(false);
+      dataLakeStorage.deleteDataLakeMeasure(measure.getElementId());
+      return true;
+    }
+    ).orElse(false);
   }
 
   @Override
