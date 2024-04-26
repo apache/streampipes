@@ -116,22 +116,18 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   @Override
   public boolean deleteMeasurementByName(String measureName) {
-    boolean isSuccess = false;
-    List<DataLakeMeasure> docs = dataLakeStorage.getAllDataLakeMeasures();
+    var measureToDeleteOpt = dataLakeStorage.getAllDataLakeMeasures()
+                                            .stream()
+                                            .filter(measurement -> measurement.getMeasureName()
+                                                                               .equals(measureName))
+                                            .findFirst();
 
-    for (var measure : docs) {
-      if (measure.getMeasureName()
-                  .replace("\"", "")
-                  .equals(measureName)) {
-        dataLakeStorage.deleteDataLakeMeasure(
-            measure.getElementId()
-                    .replace("\"", "")
-        );
-        isSuccess = true;
-        break;
-      }
-    }
-    return isSuccess;
+    return measureToDeleteOpt.map(measure -> {
+                                    dataLakeStorage.deleteDataLakeMeasure(measure.getElementId());
+                                    return true;
+                                  }
+                             )
+                             .orElse(false);
   }
 
   @Override
