@@ -22,14 +22,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestCsvItemWriter extends TestItemWriter {
+public class TestCsvItemGenerator extends TestItemGenerator {
 
   private static final String ExpectedComma = "1668578077051,test,1";
   private static final String ExpectedSemicolon = "1668578077051;test;1";
 
   @Test
   public void testCsvItemWriterCommaSeparated() {
-    var writer = new CsvItemWriter(",");
+    var writer = new CsvItemGenerator(",");
 
     String result = writer.createItem(row, columns);
 
@@ -38,7 +38,7 @@ public class TestCsvItemWriter extends TestItemWriter {
 
   @Test
   public void testCsvItemWriterSemicolonSeparated() {
-    var writer = new CsvItemWriter(";");
+    var writer = new CsvItemGenerator(";");
 
     String result = writer.createItem(row, columns);
 

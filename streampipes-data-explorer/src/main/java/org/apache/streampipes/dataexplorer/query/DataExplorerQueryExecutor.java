@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.dataexplorer.query;
 
-import org.apache.streampipes.dataexplorer.influx.DataExplorerInfluxQueryExecutor;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
 import org.apache.streampipes.model.datalake.DataSeries;
@@ -30,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class DataExplorerQueryExecutor<X, W> {
 
-  private static final Logger LOG = LoggerFactory.getLogger(DataExplorerInfluxQueryExecutor.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DataExplorerQueryExecutor.class);
   protected int maximumAmountOfEvents;
 
   protected boolean appendId = false;
@@ -95,12 +94,12 @@ public abstract class DataExplorerQueryExecutor<X, W> {
   public SpQueryResult executeQuery(X query,
                                     boolean ignoreMissingValues) {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Data Lake Query " + asQueryString(query));
+      LOG.debug("Data Lake Query {}", asQueryString(query));
     }
 
     W result = executeQuery(query);
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Data Lake Query Result: " + result.toString());
+      LOG.debug("Data Lake Query Result: {}", result.toString());
     }
 
     return postQuery(result, ignoreMissingValues);
