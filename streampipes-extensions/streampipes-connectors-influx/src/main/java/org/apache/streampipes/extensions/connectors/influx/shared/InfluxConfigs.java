@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.connectors.influx.shared;
 
-import org.apache.streampipes.dataexplorer.commons.influx.InfluxConnectionSettings;
+import org.apache.streampipes.dataexplorer.influx.client.InfluxConnectionSettings;
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;

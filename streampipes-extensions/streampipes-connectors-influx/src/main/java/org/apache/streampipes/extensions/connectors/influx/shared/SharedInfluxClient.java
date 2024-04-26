@@ -19,8 +19,8 @@
 package org.apache.streampipes.extensions.connectors.influx.shared;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
-import org.apache.streampipes.dataexplorer.commons.influx.InfluxConnectionSettings;
+import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
+import org.apache.streampipes.dataexplorer.influx.client.InfluxConnectionSettings;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Pong;

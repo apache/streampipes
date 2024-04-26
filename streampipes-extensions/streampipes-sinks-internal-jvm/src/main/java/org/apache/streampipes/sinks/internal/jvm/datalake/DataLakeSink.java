@@ -20,7 +20,7 @@ package org.apache.streampipes.sinks.internal.jvm.datalake;
 
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataexplorer.commons.TimeSeriesStore;
+import org.apache.streampipes.dataexplorer.influx.migrate.TimeSeriesStore;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
