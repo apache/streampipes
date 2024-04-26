@@ -36,30 +36,29 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.management.StorageManager;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
-  protected static final Logger LOGGER = Logger.getAnonymousLogger();
-
   private String graphData;
   private Class<T> elementClass;
-  private boolean shouldTransform;
+  private final boolean shouldTransform;
 
   protected T elementDescription;
 
   protected List<VerificationResult> validationResults;
   protected List<Verifier> validators;
 
-  protected IPipelineElementDescriptionStorage storageApi =
-      StorageManager.INSTANCE.getPipelineElementStorage();
+  protected IPipelineElementDescriptionStorage storageApi = StorageDispatcher
+      .INSTANCE
+      .getNoSqlStore()
+      .getPipelineElementDescriptionStorage();
 
   public ElementVerifier(String graphData, Class<T> elementClass) {
     this.elementClass = elementClass;
@@ -119,7 +118,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
   }
 
-  public Message verifyAndUpdate() throws SepaParseException {
+  public Message verifyAndUpdate() {
     try {
       this.elementDescription = transform();
     } catch (JsonProcessingException e) {
@@ -178,15 +177,19 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   }
 
   private boolean isVerifiedSuccessfully() {
-    return validationResults.stream().noneMatch(validator -> (validator instanceof VerificationError));
+    return validationResults.stream()
+                            .noneMatch(validator -> (validator instanceof VerificationError));
   }
 
   protected T transform() throws JsonProcessingException {
-    return JacksonSerializer.getObjectMapper().readValue(graphData, elementClass);
+    return JacksonSerializer.getObjectMapper()
+                            .readValue(graphData, elementClass);
   }
 
-  private void createAndStorePermission(String principalSid,
-                                        boolean publicElement) {
+  private void createAndStorePermission(
+      String principalSid,
+      boolean publicElement
+  ) {
     Permission permission = makePermission(
         this.elementDescription.getElementId(),
         this.elementDescription.getClass(),
@@ -196,17 +199,20 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
     storeNewObjectPermission(permission);
   }
 
-  protected Permission makePermission(String objectInstanceId,
-                                      Class<?> objectInstanceClass,
-                                      String principalSid,
-                                      boolean publicElement) {
+  protected Permission makePermission(
+      String objectInstanceId,
+      Class<?> objectInstanceClass,
+      String principalSid,
+      boolean publicElement
+  ) {
     return PermissionBuilder
-        .create(objectInstanceId, objectInstanceClass, principalSid)
-        .publicElement(publicElement)
-        .build();
+      .create(objectInstanceId, objectInstanceClass, principalSid)
+      .publicElement(publicElement)
+      .build();
   }
 
   protected void storeNewObjectPermission(Permission permission) {
-    new SpResourceManager().managePermissions().create(permission);
+    new SpResourceManager().managePermissions()
+                           .create(permission);
   }
 }
