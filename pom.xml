@@ -114,7 +114,7 @@
         <rendersnake.version>1.9.0</rendersnake.version>
         <rocketmq.version>5.0.2</rocketmq.version>
         <siddhi.version>5.1.27</siddhi.version>
-        <simple-java-mail.version>8.8.0</simple-java-mail.version>
+        <simple-java-mail.version>8.9.0</simple-java-mail.version>
         <slack-api.version>1.4.0</slack-api.version>
         <slf4j.version>2.0.6</slf4j.version>
         <snakeyaml.version>2.2</snakeyaml.version>
