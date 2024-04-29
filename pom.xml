@@ -46,7 +46,7 @@
         <boofcv.version>1.1.0</boofcv.version>
         <classindex.version>3.9</classindex.version>
         <checker-qual.version>3.42.0</checker-qual.version>
-        <commons-codec.version>1.16.0</commons-codec.version>
+        <commons-codec.version>1.17.0</commons-codec.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-compress.version>1.26.0</commons-compress.version>
         <commons-io.version>2.16.1</commons-io.version>
