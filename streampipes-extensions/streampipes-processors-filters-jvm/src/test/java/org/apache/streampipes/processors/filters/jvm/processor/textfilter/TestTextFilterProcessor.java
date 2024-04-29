@@ -20,7 +20,6 @@ package org.apache.streampipes.processors.filters.jvm.processor.textfilter;
 
 import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.TestConfiguration;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
-
 
 public class TestTextFilterProcessor {
 

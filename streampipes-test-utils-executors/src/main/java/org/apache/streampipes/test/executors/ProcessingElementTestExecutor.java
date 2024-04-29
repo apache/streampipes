@@ -32,6 +32,7 @@ import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 
+import org.junit.jupiter.api.Assertions;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -42,8 +43,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class ProcessingElementTestExecutor {
@@ -118,7 +117,7 @@ public class ProcessingElementTestExecutor {
         Mockito.times(expectedOutputEvents.size())).collect(spOutputCollectorCaptor.capture());
     var resultingEvents = spOutputCollectorCaptor.getAllValues();
     IntStream.range(0, expectedOutputEvents.size())
-             .forEach(i -> assertEquals(
+             .forEach(i -> Assertions.assertEquals(
                  expectedOutputEvents.get(i),
                  resultingEvents.get(i)
                                 .getRaw()
