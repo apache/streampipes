@@ -26,7 +26,7 @@ import {
 } from '@streampipes/platform-services';
 import { Directive } from '@angular/core';
 import { Observable, zip } from 'rxjs';
-import { SpBreadcrumbService } from '../../../../../dist/streampipes/shared-ui';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { SpPipelineRoutes } from '../../pipelines.routes';
 
 @Directive()

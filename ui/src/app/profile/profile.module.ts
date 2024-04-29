@@ -25,7 +25,6 @@ import { CommonModule } from '@angular/common';
 import { ProfileComponent } from './profile.component';
 import { TokenManagementSettingsComponent } from './components/token/token-management-settings.component';
 import { GeneralProfileSettingsComponent } from './components/general/general-profile-settings.component';
-import { ProfileService } from './profile.service';
 import { MatDividerModule } from '@angular/material/divider';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CoreUiModule } from '../core-ui/core-ui.module';
@@ -36,6 +35,7 @@ import { RouterLink } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
     imports: [
@@ -47,6 +47,7 @@ import { MatRadioModule } from '@angular/material/radio';
         MatDividerModule,
         MatTabsModule,
         MatButtonModule,
+        MatTableModule,
         CommonModule,
         ClipboardModule,
         CoreUiModule,
@@ -61,7 +62,7 @@ import { MatRadioModule } from '@angular/material/radio';
         ProfileComponent,
         TokenManagementSettingsComponent,
     ],
-    providers: [ProfileService],
+    providers: [],
     exports: [ProfileComponent],
 })
 export class ProfileModule {

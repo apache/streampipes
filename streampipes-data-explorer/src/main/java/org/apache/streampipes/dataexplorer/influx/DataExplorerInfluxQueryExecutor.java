@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
-import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
+import org.apache.streampipes.dataexplorer.query.DeleteDataQuery;
 import org.apache.streampipes.dataexplorer.querybuilder.IDataLakeQueryBuilder;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 
@@ -32,9 +33,15 @@ import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+
+import static org.apache.streampipes.commons.environment.Environments.getEnvironment;
 
 public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Query, QueryResult> {
 
@@ -114,12 +121,12 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
 
   @Override
   protected Query makeDeleteQuery(DeleteQueryParams params) {
-    String query = "DELETE FROM \"" + params.getMeasurementId() + "\"";
-    if (params.isTimeRestricted()) {
+    String query = "DELETE FROM \"" + params.measurementId() + "\"";
+    if (params.timeRestricted()) {
       query += "WHERE time > "
-          + params.getStartTime() * 1000000
+          + params.startTime() * 1000000
           + " AND time < "
-          + params.getEndTime() * 1000000;
+          + params.endTime() * 1000000;
     }
     return new Query(query, getDatabaseName());
   }
@@ -142,6 +149,43 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   }
 
   private String getDatabaseName() {
-    return Environments.getEnvironment().getTsStorageBucket().getValueOrDefault();
+    return getEnvironment().getTsStorageBucket().getValueOrDefault();
+  }
+
+  public Map<String, Object> getTagValues(String measurementId, String fields) {
+    try (final InfluxDB influxDB = InfluxClientProvider.getInfluxDBClient()) {
+      Map<String, Object> tags = new HashMap<>();
+      if (fields != null && !(fields.isEmpty())) {
+        List<String> fieldList = Arrays.asList(fields.split(","));
+        fieldList.forEach(f -> {
+          String q =
+              "SHOW TAG VALUES ON \"" + getDatabaseName() + "\" FROM \"" + measurementId
+              + "\" WITH KEY = \"" + f + "\"";
+          Query query = new Query(q);
+          QueryResult queryResult = influxDB.query(query);
+          queryResult.getResults().forEach(res -> {
+            res.getSeries().forEach(series -> {
+              if (!series.getValues().isEmpty()) {
+                String field = series.getValues().get(0).get(0).toString();
+                List<String> values =
+                    series.getValues().stream().map(v -> v.get(1).toString()).collect(Collectors.toList());
+                tags.put(field, values);
+              }
+            });
+          });
+        });
+      }
+
+      return tags;
+    }
+  }
+
+  public boolean deleteData(DataLakeMeasure measure) {
+    QueryResult queryResult = new DeleteDataQuery(measure).executeQuery();
+
+    return !queryResult.hasError() && (queryResult.getResults() == null || queryResult.getResults()
+                                                                                      .get(0)
+                                                                                      .getError() == null);
+
   }
 }

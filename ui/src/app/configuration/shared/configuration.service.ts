@@ -27,7 +27,7 @@ import {
     SpServiceRegistration,
 } from '@streampipes/platform-services';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ConfigurationService {
     constructor(private http: HttpClient) {}
 

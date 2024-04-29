@@ -170,16 +170,9 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   public IDataLakeQueryBuilder<Query> withInclusiveFilter(List<FilterCondition> filterConditions) {
     List<ConjunctionClause> and = new ArrayList<>();
     filterConditions.forEach(c -> and
-        .add(new AndConjunction(new SimpleClause(c.getField(), c.getOperator(), c.getCondition()))));
+        .add(new AndConjunction(new SimpleClause(c.field(), c.operator(), c.condition()))));
 
     addNestedWhereClause(and);
-
-    return this;
-  }
-
-  @Override
-  public DataLakeInfluxQueryBuilder withFilter(NestedClause clause) {
-    this.whereClauses.add(clause);
 
     return this;
   }
@@ -251,7 +244,7 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
         this.selectionQuery.from(env.getTsStorageBucket().getValueOrDefault(), escapeIndex(measurementId));
     this.whereClauses.forEach(selectQuery::where);
 
-    if (this.groupByClauses.size() > 0) {
+    if (!this.groupByClauses.isEmpty()) {
       selectQuery.groupBy(this.groupByClauses.toArray());
     }
 

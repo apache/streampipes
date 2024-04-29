@@ -26,11 +26,11 @@ import {
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
+    PipelineModificationMessage,
 } from '@streampipes/platform-services';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
 import { UserErrorMessage } from '../../core-model/base/UserErrorMessage';
 import { Connection } from '@jsplumb/browser-ui';
-import { PipelineModificationMessage } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Injectable({ providedIn: 'root' })
 export class PipelineValidationService {

@@ -22,7 +22,7 @@ import {
     EventPropertyUnion,
 } from '@streampipes/platform-services';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PropertySelectorService {
     firstStreamPrefix = 's0';
     secondStreamPrefix = 's1';

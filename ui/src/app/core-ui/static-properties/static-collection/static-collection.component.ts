@@ -27,7 +27,7 @@ import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-valida
 @Component({
     selector: 'sp-static-collection',
     templateUrl: './static-collection.component.html',
-    styleUrls: ['./static-collection.component.css'],
+    styleUrls: ['./static-collection.component.scss'],
 })
 export class StaticCollectionComponent extends AbstractValidatedStaticPropertyRenderer<CollectionStaticProperty> {
     @Input()

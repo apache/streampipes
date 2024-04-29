@@ -23,8 +23,8 @@ import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
 import org.apache.streampipes.model.client.user.JwtAuthenticationResponse;
 import org.apache.streampipes.model.client.user.LoginRequest;
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.RegistrationData;
 import org.apache.streampipes.model.client.user.UserAccount;
+import org.apache.streampipes.model.client.user.UserRegistrationData;
 import org.apache.streampipes.model.configuration.GeneralConfig;
 import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.NotificationType;
@@ -63,10 +63,10 @@ public class Authentication extends AbstractRestResource {
       path = "/login",
       produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
       consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> doLogin(@RequestBody LoginRequest token) {
+  public ResponseEntity<?> doLogin(@RequestBody LoginRequest login) {
     try {
       org.springframework.security.core.Authentication authentication = authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(token.getUsername(), token.getPassword()));
+          new UsernamePasswordAuthenticationToken(login.username(), login.password()));
       SecurityContextHolder.getContext().setAuthentication(authentication);
       return processAuth(authentication);
     } catch (BadCredentialsException e) {
@@ -90,14 +90,20 @@ public class Authentication extends AbstractRestResource {
       path = "/register",
       produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
       consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<SuccessMessage> doRegister(@RequestBody RegistrationData data) {
+  public synchronized ResponseEntity<SuccessMessage> doRegister(
+      @RequestBody UserRegistrationData userRegistrationData
+  ) {
     GeneralConfig config = getSpCoreConfigurationStorage().get().getGeneralConfig();
     if (!config.isAllowSelfRegistration()) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
-    data.setRoles(config.getDefaultUserRoles());
+    var enrichedUserRegistrationData = new UserRegistrationData(
+        userRegistrationData.username(),
+        userRegistrationData.password(),
+        config.getDefaultUserRoles()
+    );
     try {
-      getSpResourceManager().manageUsers().registerUser(data);
+      getSpResourceManager().manageUsers().registerUser(enrichedUserRegistrationData);
       return ok(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
     } catch (UsernameAlreadyTakenException e) {
       throw new SpMessageException(
@@ -144,6 +150,6 @@ public class Authentication extends AbstractRestResource {
 
   private JwtAuthenticationResponse makeJwtResponse(org.springframework.security.core.Authentication auth) {
     String jwt = new JwtTokenProvider().createToken(auth);
-    return JwtAuthenticationResponse.from(jwt);
+    return new JwtAuthenticationResponse(jwt);
   }
 }

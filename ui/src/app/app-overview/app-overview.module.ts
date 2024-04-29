@@ -30,6 +30,7 @@ import { RouterModule } from '@angular/router';
 import { AvailableAppsService } from './apps';
 import { PageName } from '../_enums/page-name.enum';
 import { SharedUiModule } from '@streampipes/shared-ui';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
     imports: [
@@ -39,13 +40,14 @@ import { SharedUiModule } from '@streampipes/shared-ui';
         FormsModule,
         MatGridListModule,
         MatInputModule,
+        MatButtonModule,
         MatFormFieldModule,
         SharedUiModule,
         RouterModule.forChild([
             {
                 path: '',
                 children: [
-                    { path: '', component: AppOverviewComponent },
+                    { path: 'overview', component: AppOverviewComponent },
                     ...(AvailableAppsService.apps.map(app => {
                         return {
                             path: app.appLink,

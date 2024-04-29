@@ -17,26 +17,13 @@
  */
 
 import { NgModule } from '@angular/core';
-import { RestApi } from './rest-api.service';
-import { AuthService } from './auth.service';
-import { NotificationCountService } from './notification-count-service';
-import { PropertySelectorService } from './property-selector.service';
-import { ElementIconText } from './get-element-icon-text.service';
 import { AppConstants } from './app.constants';
 import { SecurePipe } from './secure.pipe';
 
 @NgModule({
     imports: [],
     declarations: [SecurePipe],
-    providers: [
-        AppConstants,
-        RestApi,
-        AuthService,
-        ElementIconText,
-        NotificationCountService,
-        PropertySelectorService,
-        SecurePipe,
-    ],
+    providers: [AppConstants, SecurePipe],
     exports: [SecurePipe],
 })
 export class ServicesModule {}

@@ -173,6 +173,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
         SpRegisteredExtensionsServiceComponent,
         SpExtensionsServiceConfigurationComponent,
     ],
-    providers: [ConfigurationService],
+    providers: [],
 })
 export class ConfigurationModule {}

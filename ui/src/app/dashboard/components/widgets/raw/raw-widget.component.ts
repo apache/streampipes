@@ -25,7 +25,7 @@ import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 @Component({
     selector: 'sp-raw-widget',
     templateUrl: './raw-widget.component.html',
-    styleUrls: ['./raw-widget.component.css'],
+    styleUrls: ['./raw-widget.component.scss'],
 })
 export class RawWidgetComponent
     extends BaseStreamPipesWidget

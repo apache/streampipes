@@ -27,16 +27,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AdapterConfigurationComponent } from './components/adapter-configuration/adapter-configuration.component';
 import { EventSchemaComponent } from './components/adapter-configuration/schema-editor/event-schema/event-schema.component';
 
-import { RestService } from './services/rest.service';
-
 import { MatInputModule } from '@angular/material/input';
 import { AdapterStartedDialog } from './dialog/adapter-started/adapter-started-dialog.component';
-import { DataTypesService } from './services/data-type.service';
-import { StaticPropertyUtilService } from '../core-ui/static-properties/static-property-util.service';
-import { ConnectService } from './services/connect.service';
 import { AdapterDescriptionComponent } from './components/data-marketplace/adapter-description/adapter-description.component';
 import { DataMarketplaceComponent } from './components/data-marketplace/data-marketplace.component';
-import { UnitProviderService } from './services/unit-provider.service';
 
 import { AdapterFilterPipe } from './filter/adapter-filter.pipe';
 import { TimestampPipe } from './filter/timestamp.pipe';
@@ -106,6 +100,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { AdapterStatusLightComponent } from './components/existing-adapters/adapter-status-light/adapter-status-light.component';
 import { SpAdapterDeploymentSettingsComponent } from './components/adapter-configuration/adapter-settings/adapter-deployment-settings/adapter-deployment-settings.component';
 
 @NgModule({
@@ -186,6 +181,7 @@ import { SpAdapterDeploymentSettingsComponent } from './components/adapter-confi
         AdapterConfigurationComponent,
         AdapterDescriptionComponent,
         AdapterStartedDialog,
+        AdapterStatusLightComponent,
         AdapterSettingsComponent,
         DataMarketplaceComponent,
         DeleteAdapterDialogComponent,
@@ -227,14 +223,7 @@ import { SpAdapterDeploymentSettingsComponent } from './components/adapter-confi
         CanNotEditAdapterDialog,
         AllAdapterActionsComponent,
     ],
-    providers: [
-        RestService,
-        ConnectService,
-        DataTypesService,
-        StaticPropertyUtilService,
-        UnitProviderService,
-        TimestampPipe,
-    ],
+    providers: [TimestampPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ConnectModule {}

@@ -27,7 +27,7 @@ import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 @Component({
     selector: 'sp-app-static-group',
     templateUrl: './static-group.component.html',
-    styleUrls: ['./static-group.component.css'],
+    styleUrls: ['./static-group.component.scss'],
 })
 export class StaticGroupComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyGroup>

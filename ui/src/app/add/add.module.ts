@@ -26,13 +26,11 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PipelineElementTypeFilter } from './filter/pipeline-element-type.pipe';
 import { EndpointItemComponent } from './components/endpoint-item/endpoint-item.component';
-import { AddService } from './services/add.service';
 import { OrderByPipe } from './filter/order-by.pipe';
 import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
 import { PipelineElementNameFilter } from './filter/pipeline-element-name.pipe';
 import { PipelineElementInstallationStatusFilter } from './filter/pipeline-element-installation-status.pipe';
 import { RouterModule } from '@angular/router';
-import { SharedUiModule } from '../../../projects/streampipes/shared-ui/src/lib/shared-ui.module';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatOptionModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -43,6 +41,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { SharedUiModule } from '@streampipes/shared-ui';
 
 @NgModule({
     imports: [
@@ -85,7 +84,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         PipelineElementTypeFilter,
     ],
     providers: [
-        AddService,
         OrderByPipe,
         PipelineElementInstallationStatusFilter,
         PipelineElementNameFilter,

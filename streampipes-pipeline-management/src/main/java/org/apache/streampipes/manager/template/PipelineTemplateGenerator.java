@@ -29,7 +29,7 @@ import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.management.StorageManager;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,8 +131,7 @@ public class PipelineTemplateGenerator {
   }
 
   protected IPipelineElementDescriptionStorage getStorage() {
-    return StorageManager
-        .INSTANCE
-        .getPipelineElementStorage();
+    return StorageDispatcher.INSTANCE.getNoSqlStore()
+                                     .getPipelineElementDescriptionStorage();
   }
 }

@@ -25,7 +25,7 @@ import { SpAppAssetMonitoringRoutes } from './app-asset-monitoring.routes';
 @Component({
     selector: 'sp-app-asset-monitoring',
     templateUrl: './app-asset-monitoring.component.html',
-    styleUrls: ['./app-asset-monitoring.component.css'],
+    styleUrls: ['./app-asset-monitoring.component.scss'],
 })
 export class AppAssetMonitoringComponent implements OnInit {
     selectedIndex = 0;

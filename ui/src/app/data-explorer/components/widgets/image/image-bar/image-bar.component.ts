@@ -26,7 +26,7 @@ import {
 @Component({
     selector: 'sp-image-bar',
     templateUrl: './image-bar.component.html',
-    styleUrls: ['./image-bar.component.css'],
+    styleUrls: ['./image-bar.component.scss'],
 })
 export class ImageBarComponent {
     public _imageRoutes;

@@ -131,8 +131,9 @@ public class ResetManagement {
   }
 
   private static void deleteAllFiles() {
-    List<FileMetadata> allFiles = FileManager.getAllFiles();
-    allFiles.forEach(fileMetadata -> FileManager.deleteFile(fileMetadata.getFileId()));
+    var fileManager = new FileManager();
+    List<FileMetadata> allFiles = fileManager.getAllFiles();
+    allFiles.forEach(fileMetadata -> fileManager.deleteFile(fileMetadata.getFileId()));
   }
 
   private static void removeAllDataInDataLake() {

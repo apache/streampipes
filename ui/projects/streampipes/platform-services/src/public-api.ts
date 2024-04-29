@@ -54,8 +54,8 @@ export * from './lib/apis/shared-dashboard.service';
 export * from './lib/model/datalake/DateRange';
 export * from './lib/model/datalake/DatalakeQueryParameters';
 export * from './lib/model/dashboard/dashboard.model';
-export * from './lib/model/email-config.model';
-export * from './lib/model/general-config.model';
+export * from './lib/model/config/email-config.model';
+export * from './lib/model/config/general-config.model';
 export * from './lib/model/measurement-unit/MeasurementUnit';
 export * from './lib/model/gen/streampipes-model-client';
 export * from './lib/model/gen/streampipes-model';
@@ -68,3 +68,6 @@ export * from './lib/model/user/user.model';
 
 export * from './lib/model/assets/asset.model';
 export * from './lib/model/labels/labels.model';
+
+export * from './lib/model/types/data-type';
+export * from './lib/model/types/semantic-type';

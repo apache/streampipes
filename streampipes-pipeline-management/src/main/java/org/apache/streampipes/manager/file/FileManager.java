@@ -34,17 +34,38 @@ import java.util.stream.Collectors;
 
 public class FileManager {
 
-  public static List<FileMetadata> getAllFiles() {
+  private final IFileMetadataStorage fileMetadataStorage;
+  private final FileHandler fileHandler;
+  private final FileHasher fileHasher;
+
+  public FileManager(IFileMetadataStorage fileMetadataStorage,
+                     FileHandler fileHandler,
+                     FileHasher fileHasher) {
+    this.fileMetadataStorage = fileMetadataStorage;
+    this.fileHandler = fileHandler;
+    this.fileHasher = fileHasher;
+  }
+
+  public FileManager() {
+    this.fileMetadataStorage = StorageDispatcher
+        .INSTANCE
+        .getNoSqlStore()
+        .getFileMetadataStorage();
+    this.fileHandler = new FileHandler();
+    this.fileHasher = new FileHasher();
+  }
+
+  public List<FileMetadata> getAllFiles() {
     return getAllFiles(null);
   }
 
-  public static List<FileMetadata> getAllFiles(String filetypes) {
-    List<FileMetadata> allFiles = getFileMetadataStorage().getAllFileMetadataDescriptions();
+  public List<FileMetadata> getAllFiles(String filetypes) {
+    List<FileMetadata> allFiles = fileMetadataStorage.getAllFileMetadataDescriptions();
     return filetypes != null ? filterFiletypes(allFiles, filetypes) : allFiles;
   }
 
-  public static File getFile(String filename) {
-    return new FileHandler().getFile(filename);
+  public File getFile(String filename) {
+    return fileHandler.getFile(filename);
   }
 
   /**
@@ -56,26 +77,39 @@ public class FileManager {
    * @param fileInputStream content of file
    * @return metadata of file
    */
-  public static FileMetadata storeFile(String user,
+  public FileMetadata storeFile(String user,
                                        String filename,
                                        InputStream fileInputStream) throws IOException {
 
-    String filetype = filename.substring(filename.lastIndexOf(".") + 1);
+    var filetype = filename.substring(filename.lastIndexOf(".") + 1);
 
-    fileInputStream = cleanFile(fileInputStream, filetype);
+    fileInputStream = validateFileNameAndCleanFile(filename, filetype, fileInputStream);
 
-    FileMetadata fileMetadata = makeFileMetadata(user, filename, filetype);
-    new FileHandler().storeFile(filename, fileInputStream);
-    storeFileMetadata(fileMetadata);
-    return fileMetadata;
+    var sanitizedFilename = sanitizeFilename(filename);
+
+    writeToFile(sanitizedFilename, fileInputStream);
+
+    return makeAndStoreFileMetadata(user, sanitizedFilename, filetype);
   }
 
-  public static void deleteFile(String id) {
-    FileMetadata fileMetadata = getFileMetadataStorage().getMetadataById(id);
-    new FileHandler().deleteFile(fileMetadata.getFilename());
-    getFileMetadataStorage().deleteFileMetadata(id);
+
+  public void deleteFile(String id) {
+    var fileMetadata = fileMetadataStorage.getMetadataById(id);
+    if (fileMetadata != null) {
+      fileHandler.deleteFile(fileMetadata.getFilename());
+      fileMetadataStorage.deleteFileMetadata(id);
+    }
   }
 
+  private InputStream validateFileNameAndCleanFile(String filename,
+                                                  String filetype,
+                                                  InputStream fileInputStream) {
+    if (!validateFileType(filename)) {
+      throw new IllegalArgumentException("Filetype for file %s not allowed".formatted(filename));
+    }
+
+    return cleanFile(fileInputStream, filetype);
+  }
 
   /**
    * Remove Byte Order Mark (BOM) from csv files
@@ -84,7 +118,7 @@ public class FileManager {
    * @param filetype file of type
    * @return input stream without BOM
    */
-  public static InputStream cleanFile(InputStream fileInputStream, String filetype) {
+  protected InputStream cleanFile(InputStream fileInputStream, String filetype) {
     if (Filetypes.CSV.getFileExtensions().contains(filetype.toLowerCase())) {
       fileInputStream = new BOMInputStream(fileInputStream);
     }
@@ -92,23 +126,35 @@ public class FileManager {
     return fileInputStream;
   }
 
-  public static boolean checkFileContentChanged(String filename, String hash) throws IOException {
-    var fileHash = FileHasher.hash(getFile(filename));
+  public boolean checkFileContentChanged(String filename, String hash) throws IOException {
+    var fileHash = fileHasher.hash(getFile(filename));
     return !fileHash.equals(hash);
   }
 
-  private static void storeFileMetadata(FileMetadata fileMetadata) {
-    getFileMetadataStorage().addFileMetadata(fileMetadata);
+  public String sanitizeFilename(String filename) {
+    return filename.replaceAll("[^a-zA-Z0-9.\\-]", "_");
   }
 
-  private static IFileMetadataStorage getFileMetadataStorage() {
-    return StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getFileMetadataStorage();
+  public boolean validateFileType(String filename) {
+    return Filetypes.getAllFileExtensions()
+                    .stream()
+                    .anyMatch(filename::endsWith);
   }
 
-  private static FileMetadata makeFileMetadata(String user,
+  protected void writeToFile(String sanitizedFilename, InputStream fileInputStream) throws IOException {
+    fileHandler.storeFile(sanitizedFilename, fileInputStream);
+  }
+
+  protected FileMetadata makeAndStoreFileMetadata(String user,
+                                                       String sanitizedFilename,
+                                                       String filetype) {
+    var fileMetadata = makeFileMetadata(user, sanitizedFilename, filetype);
+    storeFileMetadata(fileMetadata);
+
+    return fileMetadata;
+  }
+
+  private FileMetadata makeFileMetadata(String user,
                                                String filename,
                                                String filetype) {
 
@@ -121,7 +167,12 @@ public class FileManager {
     return fileMetadata;
   }
 
-  private static List<FileMetadata> filterFiletypes(List<FileMetadata> allFiles, String filetypes) {
+  private void storeFileMetadata(FileMetadata fileMetadata) {
+    fileMetadataStorage.addFileMetadata(fileMetadata);
+  }
+
+
+  private List<FileMetadata> filterFiletypes(List<FileMetadata> allFiles, String filetypes) {
     return allFiles
         .stream()
         .filter(fileMetadata -> Arrays
@@ -129,4 +180,5 @@ public class FileManager {
             .anyMatch(ft -> ft.equals(fileMetadata.getFiletype())))
         .collect(Collectors.toList());
   }
+
 }

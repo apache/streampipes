@@ -29,15 +29,6 @@ and the amazing universe of data analytics libraries in Python. </p>
 
 ---
 
-<br>
-
-!!! warning "StreamPipes Python is in beta"
-
-    The current version of this Python library is still a beta version.<br>
-    This means that it is still heavily under development, which may result in frequent and extensive API changes, unstable behavior, etc.
-
----
-
 ## ⚡️ Quickstart
 
 As a quick example, we demonstrate how to set up and configure a StreamPipes client.

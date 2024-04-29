@@ -20,9 +20,9 @@ package org.apache.streampipes.dataexplorer.query.writer;
 
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
 import org.apache.streampipes.dataexplorer.query.writer.item.ItemGenerator;
-import org.apache.streampipes.dataexplorer.query.writer.item.JsonItemWriter;
+import org.apache.streampipes.dataexplorer.query.writer.item.JsonItemGenerator;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,11 +33,10 @@ public class ConfiguredJsonOutputWriter extends ConfiguredOutputWriter {
   private static final String BEGIN_ARRAY = "[";
   private static final String END_ARRAY = "]";
 
-  private final ItemGenerator jsonObjectWriter;
+  private final ItemGenerator itemGenerator;
 
   public ConfiguredJsonOutputWriter() {
-    Gson gson = new Gson();
-    this.jsonObjectWriter = new JsonItemWriter(gson);
+    this.itemGenerator = new JsonItemGenerator(new ObjectMapper());
   }
 
   @Override
@@ -65,7 +64,7 @@ public class ConfiguredJsonOutputWriter extends ConfiguredOutputWriter {
       outputStream.write(toBytes(","));
     }
 
-    var item = jsonObjectWriter.createItem(row, columnNames);
+    var item = itemGenerator.createItem(row, columnNames);
     outputStream.write(toBytes(item));
   }
 }

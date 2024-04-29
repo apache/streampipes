@@ -10,14 +10,35 @@
       "prefix": "sp",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular-architects/native-federation:build",
+          "options": {},
+          "configurations": {
+            "production": {
+              "target": "app:esbuild:production"
+            },
+            "development": {
+              "target": "app:esbuild:development",
+              "dev": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-architects/native-federation:build",
           "options": {
-            "aot": true,
+            "target": "app:serve-original:development",
+            "rebuildDelay": 0,
+            "dev": true
+          }
+        },
+        "esbuild": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "browser": "src/main.ts",
             "outputPath": "dist/streampipes/ui",
             "index": "src/index.html",
-            "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["src/polyfills.ts", "es-module-shims"],
             "allowedCommonJsDependencies": ["codemirror"],
             "assets": [
               "src/assets",
@@ -32,8 +53,7 @@
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/jquery-ui-dist/jquery-ui.js",
               "node_modules/quill/dist/quill.js"
-            ],
-            "outputHashing": "bundles"
+            ]
           },
           "configurations": {
             "production": {
@@ -49,33 +69,30 @@
                   "maximumWarning": "6kb"
                 }
               ],
-              "optimization": true,
-              "outputHashing": "bundles",
-              "sourceMap": false,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "customWebpackConfig": {
-                "path": "./webpack.partial.prod.js"
-              }
+              "outputHashing": "all"
             },
             "development": {
-              "sourceMap": true,
               "optimization": false,
-              "customWebpackConfig": {
-                "path": "./webpack.partial.dev.js"
-              }
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
-          }
-        },
-        "serve": {
-          "builder": "@angular-builders/custom-webpack:dev-server",
-          "options": {
-            "browserTarget": "app:build:development"
           },
-          "configurations": {}
+          "defaultConfiguration": "production"
+        },
+        "serve-original": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "app:esbuild:production"
+            },
+            "development": {
+              "buildTarget": "app:esbuild:development",
+              "proxyConfig": "src/proxy.conf.json",
+              "port": 8082
+            }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

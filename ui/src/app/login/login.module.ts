@@ -33,15 +33,12 @@ import { MatInputModule } from '@angular/material/input';
 import { StartupComponent } from './components/startup/startup.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { LoginService } from './services/login.service';
 import { AppRoutingModule } from '../app-routing.module';
 import { AuthBoxComponent } from './components/auth-box/auth-box.component';
 import { RestorePasswordComponent } from './components/restore-password/restore-password.component';
 import { RegisterComponent } from './components/register/register.component';
-import { RestorePasswordService } from './services/restore-password.service';
 import { SetNewPasswordComponent } from './components/set-new-password/set-new-password.component';
 import { ActivateAccountComponent } from './components/activate-account/activate-account.component';
-import { AccountActivationService } from './services/account-activation.service';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
@@ -73,6 +70,6 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
         SetupComponent,
         StartupComponent,
     ],
-    providers: [AccountActivationService, LoginService, RestorePasswordService],
+    providers: [],
 })
 export class LoginModule {}
