@@ -16,10 +16,9 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.influx.migrate;
+package org.apache.streampipes.dataexplorer.influx;
 
-import org.apache.streampipes.dataexplorer.influx.DataExplorerInfluxQueryExecutor;
-import org.apache.streampipes.dataexplorer.influx.DataLakeInfluxQueryBuilder;
+import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
 import org.apache.streampipes.model.datalake.AggregationFunction;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.SpQueryResult;
@@ -29,19 +28,20 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class DataLakeMeasurementCount {
+public class DataLakeMeasurementCounterInflux implements IDataLakeMeasurementCounter {
 
   private final List<DataLakeMeasure> allMeasurements;
   private final List<String> measurementNames;
 
   private static final String COUNT_FIELD = "count";
 
-  public DataLakeMeasurementCount(List<DataLakeMeasure> allMeasurements,
-                                  List<String> measurementNames) {
+  public DataLakeMeasurementCounterInflux(List<DataLakeMeasure> allMeasurements,
+                                          List<String> measurementNames) {
     this.allMeasurements = allMeasurements;
     this.measurementNames = measurementNames;
   }
@@ -55,7 +55,7 @@ public class DataLakeMeasurementCount {
           var builder = DataLakeInfluxQueryBuilder
               .create(m.getMeasureName()).withEndTime(System.currentTimeMillis())
               .withAggregatedColumn(firstColumn, AggregationFunction.COUNT);
-          var queryResult = new DataExplorerInfluxQueryExecutor().executeQuery(builder.build(), true);
+          var queryResult = new DataExplorerInfluxQueryExecutor().executeQuery(builder.build(), Optional.empty(), true);
           if (queryResult.getTotal() > 0) {
             var headers = queryResult.getHeaders();
             return extractResult(queryResult, headers);
