@@ -25,6 +25,7 @@ import {
     CollectionStaticProperty,
     ColorPickerStaticProperty,
     EventSchema,
+    ExtensionDeploymentConfiguration,
     FileStaticProperty,
     FreeTextStaticProperty,
     MappingPropertyNary,
@@ -81,6 +82,9 @@ export class StaticPropertyComponent implements OnInit {
 
     @Input()
     pipelineElement: InvocablePipelineElementUnion;
+
+    @Input()
+    deploymentConfiguration: ExtensionDeploymentConfiguration;
 
     showLabel = true;
 

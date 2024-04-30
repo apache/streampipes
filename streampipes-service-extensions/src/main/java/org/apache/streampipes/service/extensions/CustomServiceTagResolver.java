@@ -15,31 +15,35 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.svcdiscovery.api;
 
+package org.apache.streampipes.service.extensions;
+
+import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public interface ISpServiceDiscovery {
+public class CustomServiceTagResolver {
 
-  /**
-   * Get custom service tags
-   *
-   * @return set of service tags
-   */
-  Set<SpServiceTag> getCustomServiceTags(boolean restrictToHealthy);
+  private final Environment env;
 
-  /**
-   * Get service endpoints
-   *
-   * @param svcGroup          service group for registered service
-   * @param restrictToHealthy retrieve healthy or all registered services for a service group
-   * @param filterByTags      filter param to filter list of registered services
-   * @return list of services
-   */
-  List<String> getServiceEndpoints(String svcGroup,
-                                   boolean restrictToHealthy,
-                                   List<String> filterByTags);
+  public CustomServiceTagResolver(Environment env) {
+    this.env = env;
+  }
+
+  public Set<SpServiceTag> getCustomServiceTags() {
+    if (env.getCustomServiceTags().exists()) {
+      var serviceTags = env.getCustomServiceTags().getValue();
+      return Arrays.stream(
+              serviceTags.split(",")
+          ).map(serviceTagString -> SpServiceTag.create(SpServiceTagPrefix.CUSTOM, serviceTagString))
+          .collect(Collectors.toSet());
+    } else {
+      return Collections.emptySet();
+    }
+  }
 }

@@ -15,31 +15,36 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.svcdiscovery.api;
+
+package org.apache.streampipes.model.deployment;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
-public interface ISpServiceDiscovery {
+public class ExtensionDeploymentConfiguration {
 
-  /**
-   * Get custom service tags
-   *
-   * @return set of service tags
-   */
-  Set<SpServiceTag> getCustomServiceTags(boolean restrictToHealthy);
+  private Set<SpServiceTag> desiredServiceTags;
+  private String selectedEndpointUrl;
 
-  /**
-   * Get service endpoints
-   *
-   * @param svcGroup          service group for registered service
-   * @param restrictToHealthy retrieve healthy or all registered services for a service group
-   * @param filterByTags      filter param to filter list of registered services
-   * @return list of services
-   */
-  List<String> getServiceEndpoints(String svcGroup,
-                                   boolean restrictToHealthy,
-                                   List<String> filterByTags);
+  public ExtensionDeploymentConfiguration() {
+    this.desiredServiceTags = new HashSet<>();
+  }
+
+  public Set<SpServiceTag> getDesiredServiceTags() {
+    return desiredServiceTags;
+  }
+
+  public void setDesiredServiceTags(Set<SpServiceTag> desiredServiceTags) {
+    this.desiredServiceTags = desiredServiceTags;
+  }
+
+  public String getSelectedEndpointUrl() {
+    return selectedEndpointUrl;
+  }
+
+  public void setSelectedEndpointUrl(String selectedEndpointUrl) {
+    this.selectedEndpointUrl = selectedEndpointUrl;
+  }
 }

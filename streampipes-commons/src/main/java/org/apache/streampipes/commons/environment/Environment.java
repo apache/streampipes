@@ -135,4 +135,6 @@ public interface Environment {
 
   StringEnvironmentVariable getPulsarUrl();
 
+  StringEnvironmentVariable getCustomServiceTags();
+
 }

@@ -139,7 +139,7 @@ public class PipelineHealthCheck implements Runnable {
 
   private String findEndpointUrl(InvocableStreamPipesEntity graph) throws NoServiceEndpointsAvailableException {
     SpServiceUrlProvider serviceUrlProvider = ExtensionsServiceEndpointUtils.getPipelineElementType(graph);
-    return new ExtensionsServiceEndpointGenerator(graph.getAppId(), serviceUrlProvider).getEndpointResourceUrl();
+    return new ExtensionsServiceEndpointGenerator().getEndpointResourceUrl(graph.getAppId(), serviceUrlProvider);
   }
 
   private boolean shouldRetry(String instanceId) {

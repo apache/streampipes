@@ -16,9 +16,10 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {
     CollectionStaticProperty,
+    ExtensionDeploymentConfiguration,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
@@ -29,6 +30,9 @@ import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-valida
     styleUrls: ['./static-collection.component.scss'],
 })
 export class StaticCollectionComponent extends AbstractValidatedStaticPropertyRenderer<CollectionStaticProperty> {
+    @Input()
+    deploymentConfiguration: ExtensionDeploymentConfiguration;
+
     constructor() {
         super();
     }

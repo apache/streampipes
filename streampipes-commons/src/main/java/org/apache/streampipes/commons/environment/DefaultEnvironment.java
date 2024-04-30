@@ -274,4 +274,9 @@ public class DefaultEnvironment implements Environment {
     return new StringEnvironmentVariable(Envs.SP_PULSAR_URL);
   }
 
+  @Override
+  public StringEnvironmentVariable getCustomServiceTags() {
+    return new StringEnvironmentVariable(Envs.SP_SERVICE_TAGS);
+  }
+
 }
