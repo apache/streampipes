@@ -39,7 +39,6 @@ public class TimeSeriesStore {
 
   public TimeSeriesStore(
     ITimeSeriesStorage timeSeriesStorage,
-    IStreamPipesClient client,
     DataLakeMeasure measure,
     Environment environment,
     boolean enableImageStore

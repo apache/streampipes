@@ -18,13 +18,10 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
-import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.TimeSeriesStorage;
-import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
-import org.apache.streampipes.dataexplorer.influx.sanitize.DataLakeMeasurementSanitizerInflux;
 import org.apache.streampipes.dataexplorer.influx.sanitize.InfluxNameSanitizer;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;

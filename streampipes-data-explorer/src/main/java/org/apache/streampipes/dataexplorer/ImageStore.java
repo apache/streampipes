@@ -36,8 +36,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class ImageStore {
-
-  private static final Logger LOG = LoggerFactory.getLogger(ImageStore.class);
   private static final String DB_NAME = "images";
 
   private List<EventProperty> imageProperties;
