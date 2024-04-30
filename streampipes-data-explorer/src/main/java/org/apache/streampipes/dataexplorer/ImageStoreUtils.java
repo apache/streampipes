@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.influx.migrate;
+package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.schema.EventProperty;

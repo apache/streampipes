@@ -16,13 +16,12 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.influx.migrate;
+package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
-import org.apache.streampipes.dataexplorer.influx.InfluxStore;
+import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;
 
@@ -34,23 +33,22 @@ import java.io.IOException;
 public class TimeSeriesStore {
 
   private static final Logger LOG = LoggerFactory.getLogger(TimeSeriesStore.class);
-  private final InfluxStore influxStore;
+  private final ITimeSeriesStorage timeSeriesStorage;
   private ImageStore imageStore;
 
 
-  public TimeSeriesStore(Environment environment,
-                         IStreamPipesClient client,
-                         DataLakeMeasure measure,
-                         boolean enableImageStore) {
-
-    DataExplorerUtils.sanitizeAndRegisterAtDataLake(client, measure);
+  public TimeSeriesStore(
+    ITimeSeriesStorage timeSeriesStorage,
+    IStreamPipesClient client,
+    DataLakeMeasure measure,
+    Environment environment,
+    boolean enableImageStore
+  ) {
 
     if (enableImageStore) {
       this.imageStore = new ImageStore(measure, environment);
     }
-
-    this.influxStore = new InfluxStore(measure, environment, new InfluxClientProvider());
-
+    this.timeSeriesStorage = timeSeriesStorage;
   }
 
   public boolean onEvent(Event event) throws SpRuntimeException {
@@ -60,7 +58,7 @@ public class TimeSeriesStore {
     }
 
     // Store event in time series database
-    this.influxStore.onEvent(event);
+    this.timeSeriesStorage.onEvent(event);
 
     return true;
   }
@@ -75,6 +73,6 @@ public class TimeSeriesStore {
       }
     }
 
-    this.influxStore.close();
+    this.timeSeriesStorage.close();
   }
 }
