@@ -16,44 +16,54 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.influx.migrate;
+package org.apache.streampipes.dataexplorer;
 
-import org.apache.streampipes.dataexplorer.influx.DataExplorerInfluxQueryExecutor;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
+
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
+import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 import org.apache.streampipes.model.datalake.SpQueryResult;
+
+import java.util.Optional;
 
 
 public class QueryResultProvider {
 
   public static final String FOR_ID_KEY = "forId";
   protected final boolean ignoreMissingData;
+  protected final IDataExplorerQueryManagement dataExplorerQueryManagement;
+  protected final DataExplorerQueryExecutor<?, ?> queryExecutor;
   protected ProvidedRestQueryParams queryParams;
 
   public QueryResultProvider(ProvidedRestQueryParams queryParams,
+                             IDataExplorerQueryManagement dataExplorerQueryManagement,
+                             DataExplorerQueryExecutor<?, ?> queryExecutor,
                              boolean ignoreMissingData) {
     this.queryParams = queryParams;
     this.ignoreMissingData = ignoreMissingData;
+    this.dataExplorerQueryManagement =dataExplorerQueryManagement;
+    this.queryExecutor = queryExecutor;
   }
 
   public SpQueryResult getData() {
     if (queryParams.has(SupportedRestQueryParams.QP_AUTO_AGGREGATE)) {
-      queryParams = new AutoAggregationHandler(queryParams).makeAutoAggregationQueryParams();
+      queryParams = new AutoAggregationHandler(queryParams, dataExplorerQueryManagement).makeAutoAggregationQueryParams();
     }
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(queryParams);
 
     if (queryParams.getProvidedParams().containsKey(SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS)) {
       int maximumAmountOfEvents = Integer.parseInt(queryParams.getProvidedParams().get(SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS));
-      return new DataExplorerInfluxQueryExecutor(maximumAmountOfEvents).executeQuery(qp, ignoreMissingData);
+      return queryExecutor.executeQuery(qp, maximumAmountOfEvents, Optional.empty(), ignoreMissingData);
     }
 
     if (queryParams.getProvidedParams().containsKey(FOR_ID_KEY)) {
       String forWidgetId = queryParams.getProvidedParams().get(FOR_ID_KEY);
-      return new DataExplorerInfluxQueryExecutor(forWidgetId).executeQuery(qp, ignoreMissingData);
+      return queryExecutor.executeQuery(qp, -1, Optional.of(forWidgetId), ignoreMissingData);
     } else {
-      return new DataExplorerInfluxQueryExecutor().executeQuery(qp, ignoreMissingData);
+      return queryExecutor.executeQuery(qp, -1, Optional.empty(), ignoreMissingData);
     }
   }
 }
