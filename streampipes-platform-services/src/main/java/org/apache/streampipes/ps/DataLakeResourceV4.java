@@ -18,13 +18,13 @@
 
 package org.apache.streampipes.ps;
 
-import org.apache.streampipes.dataexplorer.DataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
-import org.apache.streampipes.dataexplorer.query.writer.OutputFormat;
+import org.apache.streampipes.dataexplorer.export.OutputFormat;
+import org.apache.streampipes.dataexplorer.influx.migrate.DataExplorerQueryManagement;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
@@ -57,24 +57,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_AGGREGATION_FUNCTION;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_AUTO_AGGREGATE;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_COLUMNS;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_COUNT_ONLY;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_CSV_DELIMITER;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_END_DATE;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_FILTER;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_FORMAT;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_GROUP_BY;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_LIMIT;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_OFFSET;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_ORDER;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_PAGE;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_START_DATE;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_TIME_INTERVAL;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.SUPPORTED_PARAMS;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_AGGREGATION_FUNCTION;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_AUTO_AGGREGATE;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_COLUMNS;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_COUNT_ONLY;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_CSV_DELIMITER;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_END_DATE;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_FILTER;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_FORMAT;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_GROUP_BY;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_LIMIT;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_OFFSET;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_ORDER;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_PAGE;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_START_DATE;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_TIME_INTERVAL;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.SUPPORTED_PARAMS;
 
 @RestController
 @RequestMapping("/api/v4/datalake")

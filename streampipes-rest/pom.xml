@@ -42,7 +42,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-data-explorer</artifactId>
+            <artifactId>streampipes-data-explorer-influx</artifactId>
             <version>0.95.0-SNAPSHOT</version>
         </dependency>
         <dependency>
