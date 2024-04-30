@@ -134,7 +134,7 @@
         <!-- Maven settings & dependencies -->
         <apache-rat-plugin.version>0.13</apache-rat-plugin.version>
         <checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
-        <checkstyle.version>10.15.0</checkstyle.version>
+        <checkstyle.version>10.16.0</checkstyle.version>
         <extra-enforcer-rules.version>1.8.0</extra-enforcer-rules.version>
         <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
         <maven.compiler.source>17</maven.compiler.source>
