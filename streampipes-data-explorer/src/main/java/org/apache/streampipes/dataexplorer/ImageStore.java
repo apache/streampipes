@@ -27,8 +27,6 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.commons.codec.binary.Base64;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,8 +36,8 @@ import java.util.UUID;
 public class ImageStore {
   private static final String DB_NAME = "images";
 
-  private List<EventProperty> imageProperties;
-  private CouchDbClient couchDbClient;
+  private final List<EventProperty> imageProperties;
+  private final CouchDbClient couchDbClient;
 
   public ImageStore(DataLakeMeasure measure,
                     Environment environment) {

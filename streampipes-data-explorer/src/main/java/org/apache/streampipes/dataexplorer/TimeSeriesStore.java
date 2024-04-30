@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.dataexplorer;
 
-import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
