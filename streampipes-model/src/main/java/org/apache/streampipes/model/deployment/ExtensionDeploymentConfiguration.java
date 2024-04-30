@@ -23,12 +23,12 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DeploymentConfiguration {
+public class ExtensionDeploymentConfiguration {
 
   private Set<SpServiceTag> desiredServiceTags;
   private String selectedEndpointUrl;
 
-  public DeploymentConfiguration() {
+  public ExtensionDeploymentConfiguration() {
     this.desiredServiceTags = new HashSet<>();
   }
 

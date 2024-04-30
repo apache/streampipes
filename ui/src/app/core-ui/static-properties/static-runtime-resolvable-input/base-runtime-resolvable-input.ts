@@ -18,7 +18,7 @@
 
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import {
-    DeploymentConfiguration,
+    ExtensionDeploymentConfiguration,
     RuntimeOptionsRequest,
     RuntimeOptionsResponse,
     RuntimeResolvableAnyStaticProperty,
@@ -50,7 +50,7 @@ export abstract class BaseRuntimeResolvableInput<
     @Input()
     completedStaticProperty: ConfigurationInfo;
 
-    @Input() deploymentConfiguration: DeploymentConfiguration;
+    @Input() deploymentConfiguration: ExtensionDeploymentConfiguration;
 
     showOptions = false;
     loading = false;

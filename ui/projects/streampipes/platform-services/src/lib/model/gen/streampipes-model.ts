@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-04-29 20:46:18.
+// Generated using typescript-generator version 3.2.1263 on 2024-04-30 20:29:03.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -112,7 +112,7 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     'correspondingServiceGroup': string;
     'createdAt': number;
     'dataStream': SpDataStream;
-    'deploymentConfiguration': DeploymentConfiguration;
+    'deploymentConfiguration': ExtensionDeploymentConfiguration;
     'eventGrounding': EventGrounding;
     'eventSchema': EventSchema;
     'icon': string;
@@ -143,9 +143,10 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
         instance.correspondingServiceGroup = data.correspondingServiceGroup;
         instance.createdAt = data.createdAt;
         instance.dataStream = SpDataStream.fromData(data.dataStream);
-        instance.deploymentConfiguration = DeploymentConfiguration.fromData(
-            data.deploymentConfiguration,
-        );
+        instance.deploymentConfiguration =
+            ExtensionDeploymentConfiguration.fromData(
+                data.deploymentConfiguration,
+            );
         instance.eventGrounding = EventGrounding.fromData(data.eventGrounding);
         instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.icon = data.icon;
@@ -1368,26 +1369,6 @@ export class DeleteRuleDescription extends SchemaTransformationRuleDescription {
     }
 }
 
-export class DeploymentConfiguration {
-    desiredServiceTags: SpServiceTag[];
-    selectedEndpointUrl: string;
-
-    static fromData(
-        data: DeploymentConfiguration,
-        target?: DeploymentConfiguration,
-    ): DeploymentConfiguration {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new DeploymentConfiguration();
-        instance.desiredServiceTags = __getCopyArrayFn(SpServiceTag.fromData)(
-            data.desiredServiceTags,
-        );
-        instance.selectedEndpointUrl = data.selectedEndpointUrl;
-        return instance;
-    }
-}
-
 export class DomainStaticProperty extends StaticProperty {
     '@class': 'org.apache.streampipes.model.staticproperty.DomainStaticProperty';
     'requiredClass': string;
@@ -1814,6 +1795,26 @@ export class ExportItem {
         instance.label = data.label;
         instance.resourceId = data.resourceId;
         instance.selected = data.selected;
+        return instance;
+    }
+}
+
+export class ExtensionDeploymentConfiguration {
+    desiredServiceTags: SpServiceTag[];
+    selectedEndpointUrl: string;
+
+    static fromData(
+        data: ExtensionDeploymentConfiguration,
+        target?: ExtensionDeploymentConfiguration,
+    ): ExtensionDeploymentConfiguration {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ExtensionDeploymentConfiguration();
+        instance.desiredServiceTags = __getCopyArrayFn(SpServiceTag.fromData)(
+            data.desiredServiceTags,
+        );
+        instance.selectedEndpointUrl = data.selectedEndpointUrl;
         return instance;
     }
 }
@@ -3269,7 +3270,7 @@ export class RuntimeOptionsRequest {
         | 'org.apache.streampipes.model.runtime.RuntimeOptionsResponse';
     'appId': string;
     'belongsTo': string;
-    'deploymentConfiguration': DeploymentConfiguration;
+    'deploymentConfiguration': ExtensionDeploymentConfiguration;
     'inputStreams': SpDataStream[];
     'requestId': string;
     'staticProperties': StaticPropertyUnion[];
@@ -3285,9 +3286,10 @@ export class RuntimeOptionsRequest {
         instance['@class'] = data['@class'];
         instance.appId = data.appId;
         instance.belongsTo = data.belongsTo;
-        instance.deploymentConfiguration = DeploymentConfiguration.fromData(
-            data.deploymentConfiguration,
-        );
+        instance.deploymentConfiguration =
+            ExtensionDeploymentConfiguration.fromData(
+                data.deploymentConfiguration,
+            );
         instance.inputStreams = __getCopyArrayFn(SpDataStream.fromData)(
             data.inputStreams,
         );

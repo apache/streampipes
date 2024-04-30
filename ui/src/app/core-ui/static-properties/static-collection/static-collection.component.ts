@@ -19,7 +19,7 @@
 import { Component, Input } from '@angular/core';
 import {
     CollectionStaticProperty,
-    DeploymentConfiguration,
+    ExtensionDeploymentConfiguration,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
@@ -31,7 +31,7 @@ import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-valida
 })
 export class StaticCollectionComponent extends AbstractValidatedStaticPropertyRenderer<CollectionStaticProperty> {
     @Input()
-    deploymentConfiguration: DeploymentConfiguration;
+    deploymentConfiguration: ExtensionDeploymentConfiguration;
 
     constructor() {
         super();

@@ -19,7 +19,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import {
-    DeploymentConfiguration,
+    ExtensionDeploymentConfiguration,
     StaticPropertyGroup,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
@@ -34,7 +34,7 @@ export class StaticGroupComponent
     implements OnInit
 {
     @Input()
-    deploymentConfiguration: DeploymentConfiguration;
+    deploymentConfiguration: ExtensionDeploymentConfiguration;
 
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 

@@ -26,12 +26,11 @@ import {
 } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import {
-    DeploymentConfiguration,
+    ExtensionDeploymentConfiguration,
     StaticPropertyAlternative,
     StaticPropertyAlternatives,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
-import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
     selector: 'sp-app-static-alternatives',
@@ -43,7 +42,7 @@ export class StaticAlternativesComponent
     implements OnInit
 {
     @Input()
-    deploymentConfiguration: DeploymentConfiguration;
+    deploymentConfiguration: ExtensionDeploymentConfiguration;
 
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 

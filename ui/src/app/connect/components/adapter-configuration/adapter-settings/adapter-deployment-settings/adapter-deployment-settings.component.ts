@@ -18,7 +18,7 @@
 
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import {
-    DeploymentConfiguration,
+    ExtensionDeploymentConfiguration,
     ServiceTagService,
     SpServiceTag,
 } from '@streampipes/platform-services';
@@ -36,7 +36,7 @@ import { MatRadioChange } from '@angular/material/radio';
 })
 export class SpAdapterDeploymentSettingsComponent implements OnInit {
     @Input()
-    deploymentConfiguration: DeploymentConfiguration;
+    deploymentConfiguration: ExtensionDeploymentConfiguration;
 
     availableServiceTags: SpServiceTag[] = [];
     availableServiceTagValues: string[] = [];
