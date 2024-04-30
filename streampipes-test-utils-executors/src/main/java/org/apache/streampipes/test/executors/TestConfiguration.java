@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.test.executors;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,21 +25,16 @@ public class TestConfiguration {
 
   private final Map<String, Object> fieldConfiguration;
 
-  private final PrefixStrategy prefixStrategy;
   private final List<String> prefixes;
 
-  private TestConfiguration(TestConfigurationBuilder builder) {
-    this.fieldConfiguration = builder.fieldConfiguration;
-    this.prefixStrategy = builder.prefixStrategy;
-    this.prefixes = builder.eventPrefixes;
+  public TestConfiguration(Map<String, Object> fieldConfiguration,
+                            List<String> eventPrefixes) {
+    this.fieldConfiguration = fieldConfiguration;
+    this.prefixes = eventPrefixes;
   }
 
   public Map<String, Object> getFieldConfiguration() {
     return fieldConfiguration;
-  }
-
-  public PrefixStrategy getPrefixStrategy() {
-    return prefixStrategy;
   }
 
   public List<String> getPrefixes() {
@@ -49,49 +43,5 @@ public class TestConfiguration {
 
   public static TestConfigurationBuilder builder() {
     return new TestConfigurationBuilder();
-  }
-
-  public static class TestConfigurationBuilder{
-    private Map<String, Object> fieldConfiguration = new HashMap<>();
-
-    private PrefixStrategy prefixStrategy;
-    private List<String> eventPrefixes = List.of("");
-
-    public TestConfigurationBuilder config(String key, Object value){
-      this.fieldConfiguration.put(key, value);
-      return this;
-    }
-    public TestConfigurationBuilder configWithPrefix(String key, Object value, String prefix){
-      this.fieldConfiguration.put(key, prefix + "::" + value);
-      return this;
-    }
-
-    public TestConfigurationBuilder configWithDefaultPrefix(String key, Object value){
-      return this.configWithPrefix(key, value, "");
-    }
-
-    public TestConfigurationBuilder config(Map<String, Object> config){
-      this.fieldConfiguration = config;
-      return this;
-    }
-
-    public TestConfigurationBuilder prefixStrategy(PrefixStrategy strategy){
-      this.prefixStrategy = strategy;
-      this.eventPrefixes = switch (strategy){
-        case SAME_PREFIX -> List.of("s0");
-        case ALTERNATE -> List.of("s0", "s1");
-      };
-      return this;
-    }
-
-    public TestConfigurationBuilder customPrefixStrategy(List<String> eventPrefixes) {
-      this.eventPrefixes = eventPrefixes;
-      return this;
-    }
-
-    public TestConfiguration build(){
-      return new TestConfiguration(this);
-    }
-
   }
 }

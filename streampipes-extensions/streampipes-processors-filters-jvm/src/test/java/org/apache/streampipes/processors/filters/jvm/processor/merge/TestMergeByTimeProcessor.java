@@ -22,6 +22,7 @@ import org.apache.streampipes.model.output.CustomOutputStrategy;
 import org.apache.streampipes.test.executors.PrefixStrategy;
 import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.TestConfiguration;
+import org.apache.streampipes.test.executors.TestConfigurationBuilder;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -55,7 +56,7 @@ public class TestMergeByTimeProcessor {
                    List<String> customPrefixes){
 
 
-    TestConfiguration.TestConfigurationBuilder configurationBuilder = TestConfiguration.builder()
+    TestConfigurationBuilder configurationBuilder = TestConfiguration.builder()
         .config(MergeByTimeProcessor.TIME_INTERVAL, timeInterval)
         .configWithPrefix(MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY,
             MergeByTimeProcessor.TIMESTAMP_MAPPING_STREAM_1_KEY, S0_PREFIX)
