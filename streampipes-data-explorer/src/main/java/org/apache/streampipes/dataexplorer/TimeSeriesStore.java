@@ -37,10 +37,10 @@ public class TimeSeriesStore {
 
 
   public TimeSeriesStore(
-    ITimeSeriesStorage timeSeriesStorage,
-    DataLakeMeasure measure,
-    Environment environment,
-    boolean enableImageStore
+      ITimeSeriesStorage timeSeriesStorage,
+      DataLakeMeasure measure,
+      Environment environment,
+      boolean enableImageStore
   ) {
 
     if (enableImageStore) {

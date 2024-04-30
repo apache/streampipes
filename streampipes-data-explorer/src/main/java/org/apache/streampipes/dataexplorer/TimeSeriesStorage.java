@@ -75,9 +75,9 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
     var missingFields = getMissingProperties(allEventProperties, event);
     if (!missingFields.isEmpty()) {
       LOG.debug(
-        "Ignored {} fields which were present in the schema, but not in the provided event: {}",
-        missingFields.size(),
-        String.join(", ", missingFields)
+          "Ignored {} fields which were present in the schema, but not in the provided event: {}",
+          missingFields.size(),
+          String.join(", ", missingFields)
       );
     }
   }
@@ -86,8 +86,8 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
    * Returns a list of the runtime names that are missing within the event
    */
   private List<String> getMissingProperties(
-    List<EventProperty> allEventProperties,
-    Event event
+      List<EventProperty> allEventProperties,
+      Event event
   ) {
     return allEventProperties.stream()
                              .map(EventProperty::getRuntimeName)
@@ -101,18 +101,18 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
    */
   private void logNullFields(Event event) {
     List<String> nullFields = allEventProperties
-      .stream()
-      .filter(EventPropertyPrimitive.class::isInstance)
-      .filter(ep -> {
-        var runtimeName = ep.getRuntimeName();
-        var field = event.getOptionalFieldByRuntimeName(runtimeName);
+        .stream()
+        .filter(EventPropertyPrimitive.class::isInstance)
+        .filter(ep -> {
+          var runtimeName = ep.getRuntimeName();
+          var field = event.getOptionalFieldByRuntimeName(runtimeName);
 
-        return field.isPresent() && field.get()
-                                         .getAsPrimitive()
-                                         .getRawValue() == null;
-      })
-      .map(EventProperty::getRuntimeName)
-      .collect(Collectors.toList());
+          return field.isPresent() && field.get()
+                                           .getAsPrimitive()
+                                           .getRawValue() == null;
+        })
+        .map(EventProperty::getRuntimeName)
+        .collect(Collectors.toList());
 
     if (!nullFields.isEmpty()) {
       LOG.warn("Ignored {} fields which had a value 'null': {}", nullFields.size(), String.join(", ", nullFields));

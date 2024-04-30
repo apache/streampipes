@@ -106,9 +106,12 @@ public abstract class DataLakeMeasurementSanitizer implements IDataLakeMeasureme
       throw new SpRuntimeException("Data lake measurement does not have a timestamp field - timestamp field is null.");
     }
 
-    List<EventProperty> eventPropertiesWithoutTimestamp = measure.getEventSchema().getEventProperties()
+    List<EventProperty> eventPropertiesWithoutTimestamp = measure.getEventSchema()
+                                                                 .getEventProperties()
                                                                  .stream()
-                                                                 .filter(eventProperty -> !timestampField.endsWith(eventProperty.getRuntimeName()))
+                                                                 .filter(eventProperty -> !timestampField.endsWith(
+                                                                   eventProperty.getRuntimeName()
+                                                                 ))
                                                                  .toList();
     measure.getEventSchema().setEventProperties(eventPropertiesWithoutTimestamp);
   }

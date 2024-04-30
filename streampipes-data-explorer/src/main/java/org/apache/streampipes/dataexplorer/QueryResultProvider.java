@@ -19,13 +19,12 @@
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
-import org.apache.streampipes.model.datalake.SpQueryResult;
 
 import java.util.Optional;
 
@@ -44,18 +43,21 @@ public class QueryResultProvider {
                              boolean ignoreMissingData) {
     this.queryParams = queryParams;
     this.ignoreMissingData = ignoreMissingData;
-    this.dataExplorerQueryManagement =dataExplorerQueryManagement;
+    this.dataExplorerQueryManagement = dataExplorerQueryManagement;
     this.queryExecutor = queryExecutor;
   }
 
   public SpQueryResult getData() {
     if (queryParams.has(SupportedRestQueryParams.QP_AUTO_AGGREGATE)) {
-      queryParams = new AutoAggregationHandler(queryParams, dataExplorerQueryManagement).makeAutoAggregationQueryParams();
+      queryParams = new AutoAggregationHandler(queryParams,
+                                               dataExplorerQueryManagement).makeAutoAggregationQueryParams();
     }
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(queryParams);
 
     if (queryParams.getProvidedParams().containsKey(SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS)) {
-      int maximumAmountOfEvents = Integer.parseInt(queryParams.getProvidedParams().get(SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS));
+      int maximumAmountOfEvents = Integer.parseInt(queryParams.getProvidedParams()
+                                                              .get(SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS)
+      );
       return queryExecutor.executeQuery(qp, maximumAmountOfEvents, Optional.empty(), ignoreMissingData);
     }
 
