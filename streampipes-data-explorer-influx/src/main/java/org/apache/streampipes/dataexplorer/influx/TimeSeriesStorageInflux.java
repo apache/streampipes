@@ -102,10 +102,10 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
    */
   private Point.Builder initializePointWithTimestamp(Event event) {
     var timestampValue = event.getFieldBySelector(measure.getTimestampField())
-                              .getAsPrimitive()
-                              .getAsLong();
+        .getAsPrimitive()
+        .getAsLong();
     return Point.measurement(measure.getMeasureName())
-                .time((long) timestampValue, TimeUnit.MILLISECONDS);
+        .time((long) timestampValue, TimeUnit.MILLISECONDS);
   }
 
   /**
@@ -125,12 +125,8 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
    */
   protected void sanitizeRuntimeNamesInEvent(Event event) {
     // sanitize event
-    for (var key : event.getRaw()
-                        .keySet()) {
-      if (InfluxDbReservedKeywords.KEYWORD_LIST.stream()
-                                               .anyMatch(k -> k.equalsIgnoreCase(key))) {
-        event.renameFieldByRuntimeName(key, key + "_");
-      }
-    }
+    event.getRaw()
+         .keySet()
+         .forEach(key -> event.renameFieldByRuntimeName(key, InfluxNameSanitizer.renameReservedKeywords(key)));
   }
 }
