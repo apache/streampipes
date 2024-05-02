@@ -20,16 +20,17 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
+    Input,
     OnInit,
     Output,
 } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import {
+    ExtensionDeploymentConfiguration,
     StaticPropertyAlternative,
     StaticPropertyAlternatives,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
-import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
     selector: 'sp-app-static-alternatives',
@@ -40,6 +41,9 @@ export class StaticAlternativesComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyAlternatives>
     implements OnInit
 {
+    @Input()
+    deploymentConfiguration: ExtensionDeploymentConfiguration;
+
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     completedStaticProperty: ConfigurationInfo;

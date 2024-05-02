@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-04-22 14:32:58.
+// Generated using typescript-generator version 3.2.1263 on 2024-04-30 20:29:03.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -112,6 +112,7 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     'correspondingServiceGroup': string;
     'createdAt': number;
     'dataStream': SpDataStream;
+    'deploymentConfiguration': ExtensionDeploymentConfiguration;
     'eventGrounding': EventGrounding;
     'eventSchema': EventSchema;
     'icon': string;
@@ -142,6 +143,10 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
         instance.correspondingServiceGroup = data.correspondingServiceGroup;
         instance.createdAt = data.createdAt;
         instance.dataStream = SpDataStream.fromData(data.dataStream);
+        instance.deploymentConfiguration =
+            ExtensionDeploymentConfiguration.fromData(
+                data.deploymentConfiguration,
+            );
         instance.eventGrounding = EventGrounding.fromData(data.eventGrounding);
         instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.icon = data.icon;
@@ -1794,6 +1799,26 @@ export class ExportItem {
     }
 }
 
+export class ExtensionDeploymentConfiguration {
+    desiredServiceTags: SpServiceTag[];
+    selectedEndpointUrl: string;
+
+    static fromData(
+        data: ExtensionDeploymentConfiguration,
+        target?: ExtensionDeploymentConfiguration,
+    ): ExtensionDeploymentConfiguration {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ExtensionDeploymentConfiguration();
+        instance.desiredServiceTags = __getCopyArrayFn(SpServiceTag.fromData)(
+            data.desiredServiceTags,
+        );
+        instance.selectedEndpointUrl = data.selectedEndpointUrl;
+        return instance;
+    }
+}
+
 export class ExtensionItemDescription {
     appId: string;
     available: boolean;
@@ -3245,6 +3270,7 @@ export class RuntimeOptionsRequest {
         | 'org.apache.streampipes.model.runtime.RuntimeOptionsResponse';
     'appId': string;
     'belongsTo': string;
+    'deploymentConfiguration': ExtensionDeploymentConfiguration;
     'inputStreams': SpDataStream[];
     'requestId': string;
     'staticProperties': StaticPropertyUnion[];
@@ -3260,6 +3286,10 @@ export class RuntimeOptionsRequest {
         instance['@class'] = data['@class'];
         instance.appId = data.appId;
         instance.belongsTo = data.belongsTo;
+        instance.deploymentConfiguration =
+            ExtensionDeploymentConfiguration.fromData(
+                data.deploymentConfiguration,
+            );
         instance.inputStreams = __getCopyArrayFn(SpDataStream.fromData)(
             data.inputStreams,
         );
@@ -4176,6 +4206,7 @@ export type SpServiceStatus =
 
 export type SpServiceTagPrefix =
     | 'SP_GROUP'
+    | 'CUSTOM'
     | 'ADAPTER'
     | 'DATA_STREAM'
     | 'DATA_PROCESSOR'

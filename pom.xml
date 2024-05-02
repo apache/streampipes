@@ -45,7 +45,7 @@
         <apache-sis-referencing.version>1.2</apache-sis-referencing.version>
         <boofcv.version>1.1.0</boofcv.version>
         <classindex.version>3.9</classindex.version>
-        <checker-qual.version>3.42.0</checker-qual.version>
+        <checker-qual.version>3.43.0</checker-qual.version>
         <commons-codec.version>1.17.0</commons-codec.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-compress.version>1.26.0</commons-compress.version>
@@ -67,7 +67,7 @@
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
         <influxdb.version>2.24</influxdb.version>
-        <inlong.version>1.11.0</inlong.version>
+        <inlong.version>1.12.0</inlong.version>
         <jackson.version>2.17.0</jackson.version>
         <jackson.databind.version>2.17.0</jackson.databind.version>
         <jakarta-annotation.version>3.0.0</jakarta-annotation.version>
@@ -114,7 +114,7 @@
         <rendersnake.version>1.9.0</rendersnake.version>
         <rocketmq.version>5.0.2</rocketmq.version>
         <siddhi.version>5.1.27</siddhi.version>
-        <simple-java-mail.version>8.9.0</simple-java-mail.version>
+        <simple-java-mail.version>8.10.0</simple-java-mail.version>
         <slack-api.version>1.4.0</slack-api.version>
         <slf4j.version>2.0.6</slf4j.version>
         <snakeyaml.version>2.2</snakeyaml.version>
@@ -868,6 +868,7 @@
         <module>streampipes-storage-couchdb</module>
         <module>streampipes-storage-management</module>
         <module>streampipes-test-utils</module>
+        <module>streampipes-test-utils-executors</module>
         <module>streampipes-user-management</module>
         <module>streampipes-vocabulary</module>
         <module>streampipes-wrapper</module>

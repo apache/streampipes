@@ -16,17 +16,8 @@
  *
  */
 
-package org.apache.streampipes.manager.execution.endpoint;
+package org.apache.streampipes.test.executors;
 
-import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-
-public class ExtensionsServiceEndpointProvider {
-
-  public String findSelectedEndpoint(InvocableStreamPipesEntity g) throws NoServiceEndpointsAvailableException {
-    return new ExtensionsServiceEndpointGenerator(
-        g.getAppId(),
-        ExtensionsServiceEndpointUtils.getPipelineElementType(g))
-        .getEndpointResourceUrl();
-  }
+public enum PrefixStrategy {
+  SAME_PREFIX, ALTERNATE
 }
