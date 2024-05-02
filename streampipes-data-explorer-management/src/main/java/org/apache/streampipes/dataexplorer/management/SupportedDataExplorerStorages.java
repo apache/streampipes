@@ -27,5 +27,5 @@ package org.apache.streampipes.dataexplorer.management;
  * </ul>
  */
 public class SupportedDataExplorerStorages {
-  public static final String INFLUX_DB = "influxDB";
+  public static final String INFLUX_DB = "influxdb";
 }
