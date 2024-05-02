@@ -84,18 +84,19 @@ public class DataLakeResourceV4 extends AbstractRestResource {
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
 
   public DataLakeResourceV4() {
-    this.dataExplorerSchemaManagement = DataExplorerDispatcher.INSTANCE
+    this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getSchemaManagement();
-    this.dataExplorerQueryManagement = DataExplorerDispatcher.INSTANCE
-      .getDataExplorerManager()
-      .getQueryManagement(this.dataExplorerSchemaManagement);
+    this.dataExplorerQueryManagement = new DataExplorerDispatcher()
+        .getDataExplorerManager()
+        .getQueryManagement(this.dataExplorerSchemaManagement);
   }
 
   public DataLakeResourceV4(IDataExplorerQueryManagement dataExplorerQueryManagement) {
     this.dataExplorerQueryManagement = dataExplorerQueryManagement;
-    this.dataExplorerSchemaManagement = DataExplorerDispatcher.INSTANCE.getDataExplorerManager()
-                                                                       .getSchemaManagement();
+    this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
+        .getDataExplorerManager()
+        .getSchemaManagement();
   }
 
   @DeleteMapping(path = "/measurements/{measurementID}")
