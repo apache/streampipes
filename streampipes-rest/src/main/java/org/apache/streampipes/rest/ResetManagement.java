@@ -136,10 +136,12 @@ public class ResetManagement {
   }
 
   private static void removeAllDataInDataLake() {
-    var dataLakeMeasureManagement = DataExplorerDispatcher.INSTANCE.getDataExplorerManager()
-                                                                   .getSchemaManagement();
-    var dataExplorerQueryManagement =
-        DataExplorerDispatcher.INSTANCE.getDataExplorerManager().getQueryManagement(dataLakeMeasureManagement);
+    var dataLakeMeasureManagement = new DataExplorerDispatcher()
+        .getDataExplorerManager()
+        .getSchemaManagement();
+    var dataExplorerQueryManagement = new DataExplorerDispatcher()
+        .getDataExplorerManager()
+        .getQueryManagement(dataLakeMeasureManagement);
     List<DataLakeMeasure> allMeasurements = dataLakeMeasureManagement.getAllMeasurements();
     allMeasurements.forEach(measurement -> {
       boolean isSuccessDataLake = dataExplorerQueryManagement.deleteData(measurement.getMeasureName());

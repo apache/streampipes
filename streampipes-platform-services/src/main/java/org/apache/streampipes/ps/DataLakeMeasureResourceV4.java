@@ -46,8 +46,8 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
   private final IDataExplorerSchemaManagement dataLakeMeasureManagement;
 
   public DataLakeMeasureResourceV4() {
-    this.dataLakeMeasureManagement = DataExplorerDispatcher.INSTANCE.getDataExplorerManager()
-                                                                    .getSchemaManagement();
+    this.dataLakeMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
+        .getSchemaManagement();
   }
 
   @PostMapping(
@@ -63,12 +63,12 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
   public ResponseEntity<Map<String, Integer>> getDataLakeInfos(
       @RequestParam(value = "filter", required = false) List<String> measurementNames) {
     var allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
-    return ok(DataExplorerDispatcher.INSTANCE.getDataExplorerManager()
-                                             .getMeasurementCounter(
-                                                      allMeasurements,
-                                                      measurementNames
-                                                    )
-                                             .countMeasurementSizes());
+    return ok(new DataExplorerDispatcher().getDataExplorerManager()
+        .getMeasurementCounter(
+            allMeasurements,
+            measurementNames
+        )
+        .countMeasurementSizes());
   }
 
   @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)

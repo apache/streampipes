@@ -22,8 +22,7 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.influx.DataExplorerManagerInflux;
 
-public enum DataExplorerDispatcher {
-  INSTANCE;
+public class DataExplorerDispatcher {
 
   public IDataExplorerManager getDataExplorerManager() {
 

@@ -96,15 +96,15 @@ public class DataLakeSink extends StreamPipesDataSink {
       measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
     }
 
-    measure = DataExplorerDispatcher.INSTANCE.getDataExplorerManager()
-                                     .getMeasurementSanitizer(runtimeContext.getStreamPipesClient(), measure)
-                                     .sanitizeAndRegister();
+    measure = new DataExplorerDispatcher().getDataExplorerManager()
+        .getMeasurementSanitizer(runtimeContext.getStreamPipesClient(), measure)
+        .sanitizeAndRegister();
 
     this.timeSeriesStore = new TimeSeriesStore(
-      DataExplorerDispatcher.INSTANCE.getDataExplorerManager().getTimeseriesStorage(measure),
-      measure,
-      Environments.getEnvironment(),
-      true
+        new DataExplorerDispatcher().getDataExplorerManager().getTimeseriesStorage(measure),
+        measure,
+        Environments.getEnvironment(),
+        true
     );
 
   }
