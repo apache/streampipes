@@ -79,7 +79,9 @@ export class SpAdapterDeploymentSettingsComponent implements OnInit {
             );
         }
 
-        event.chipInput!.clear();
+        if (event.chipInput) {
+            event.chipInput.clear();
+        }
 
         this.serviceTagCtrl.setValue(null);
     }
