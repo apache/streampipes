@@ -94,7 +94,7 @@ export class ObjectProvider {
                     pipelineElementConfig.type === 'sepa' ||
                     pipelineElementConfig.type === 'action'
                 ) {
-                    let payload = pipelineElementConfig.payload;
+                    const payload = pipelineElementConfig.payload;
                     payload.connectedTo = [];
                     const connections = jsplumbBridge.getConnections({
                         target: document.getElementById(payload.dom),
