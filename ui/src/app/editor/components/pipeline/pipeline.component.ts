@@ -392,7 +392,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
                 this.rawPipelineModel,
             );
 
-            if (this.shouldOpenCustomizeSettings) {
+            if (
+                this.shouldOpenCustomizeSettings ||
+                info.connection.data.openCustomize
+            ) {
                 this.currentPipelineModel = this.objectProvider.makePipeline(
                     this.rawPipelineModel,
                 );

@@ -45,9 +45,7 @@ export class CompatibleElementsComponent implements OnInit {
     constructor(
         private dialogRef: DialogRef<CompatibleElementsComponent>,
         private JsPlumbService: JsplumbService,
-    ) {
-        // this.ElementIconText = ElementIconText;
-    }
+    ) {}
 
     ngOnInit() {
         this.possibleElements.sort((a, b) => a.name.localeCompare(b.name));
@@ -63,10 +61,6 @@ export class CompatibleElementsComponent implements OnInit {
             this.pipelineElementDomId,
         );
         this.hide();
-    }
-
-    iconText(elementId) {
-        // return this.ElementIconText.getElementIconText(elementId);
     }
 
     hide() {
