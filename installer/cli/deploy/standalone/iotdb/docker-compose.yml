@@ -20,22 +20,26 @@ services:
     ports:
       - "6667:6667"
     environment:
-      - cn_internal_address=iotdb-service
+      - cn_internal_address=iotdb
       - cn_internal_port=10710
       - cn_consensus_port=10720
-      - cn_seed_config_node=iotdb-service:10710
-      - dn_rpc_address=iotdb-service
-      - dn_internal_address=iotdb-service
+      - cn_seed_config_node=iotdb:10710
+      - dn_rpc_address=iotdb
+      - dn_internal_address=iotdb
       - dn_rpc_port=6667
       - dn_mpp_data_exchange_port=10740
       - dn_schema_region_consensus_port=10750
       - dn_data_region_consensus_port=10760
-      - dn_seed_config_node=iotdb-service:10710
+      - dn_seed_config_node=iotdb:10710
     volumes:
-      - ./data:/iotdb/data
-      - ./logs:/iotdb/logs
+      - data:/iotdb/data
+      - logs:/iotdb/logs
     networks:
       spnet:
+
+volumes:
+  - data:
+  - logs:
 
 networks:
   spnet:
