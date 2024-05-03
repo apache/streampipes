@@ -20,11 +20,13 @@ package org.apache.streampipes.sinks.internal.jvm.datalake;
 
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataexplorer.influx.migrate.TimeSeriesStore;
+import org.apache.streampipes.dataexplorer.TimeSeriesStore;
+import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -34,7 +36,6 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
@@ -54,25 +55,25 @@ public class DataLakeSink extends StreamPipesDataSink {
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.internal.jvm.datalake", 1)
-        .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-        .category(DataSinkType.INTERNAL)
-        .requiredStream(StreamRequirementsBuilder
-                            .create()
-                            .requiredPropertyWithUnaryMapping(
-                                EpRequirements.timestampReq(),
-                                Labels.withId(TIMESTAMP_MAPPING_KEY),
-                                PropertyScope.NONE
-                            )
-                            .build())
-        .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
-        .requiredSingleValueSelection(
-            Labels.withId(SCHEMA_UPDATE_KEY),
-            Options.from(SCHEMA_UPDATE_OPTION, EXTEND_EXISTING_SCHEMA_OPTION)
-        )
+      .create("org.apache.streampipes.sinks.internal.jvm.datalake", 1)
+      .withLocales(Locales.EN)
+      .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+      .category(DataSinkType.INTERNAL)
+      .requiredStream(StreamRequirementsBuilder
+                        .create()
+                        .requiredPropertyWithUnaryMapping(
+                          EpRequirements.timestampReq(),
+                          Labels.withId(TIMESTAMP_MAPPING_KEY),
+                          PropertyScope.NONE
+                        )
+                        .build())
+      .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
+      .requiredSingleValueSelection(
+        Labels.withId(SCHEMA_UPDATE_KEY),
+        Options.from(SCHEMA_UPDATE_OPTION, EXTEND_EXISTING_SCHEMA_OPTION)
+      )
 
-        .build();
+      .build();
   }
 
   @Override
@@ -95,10 +96,14 @@ public class DataLakeSink extends StreamPipesDataSink {
       measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
     }
 
+    measure = new DataExplorerDispatcher().getDataExplorerManager()
+        .getMeasurementSanitizer(runtimeContext.getStreamPipesClient(), measure)
+        .sanitizeAndRegister();
+
     this.timeSeriesStore = new TimeSeriesStore(
-        Environments.getEnvironment(),
-        runtimeContext.getStreamPipesClient(),
+        new DataExplorerDispatcher().getDataExplorerManager().getTimeseriesStorage(measure),
         measure,
+        Environments.getEnvironment(),
         true
     );
 

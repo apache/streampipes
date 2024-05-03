@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.influx.migrate;
+package org.apache.streampipes.dataexplorer;
 
-import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
-import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.param.model.SelectColumn;
 import org.apache.streampipes.model.datalake.DataLakeQueryOrdering;
 import org.apache.streampipes.model.datalake.SpQueryResult;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,16 +49,10 @@ public class AutoAggregationHandler {
   private final IDataExplorerQueryManagement dataLakeQueryManagement;
   private final ProvidedRestQueryParams queryParams;
 
-  public AutoAggregationHandler(ProvidedRestQueryParams params) {
+  public AutoAggregationHandler(ProvidedRestQueryParams params,
+                                IDataExplorerQueryManagement dataExplorerQueryManagement) {
     this.queryParams = params;
-    this.dataLakeQueryManagement = getDataLakeQueryManagement();
-  }
-
-  private IDataExplorerQueryManagement getDataLakeQueryManagement() {
-    var dataLakeStorage = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getDataLakeStorage();
-    return new DataExplorerQueryManagement(new DataExplorerSchemaManagement(dataLakeStorage));
+    this.dataLakeQueryManagement = dataExplorerQueryManagement;
   }
 
   public ProvidedRestQueryParams makeAutoAggregationQueryParams() throws IllegalArgumentException {
@@ -129,7 +122,7 @@ public class AutoAggregationHandler {
     singleEvent.update(SupportedRestQueryParams.QP_LIMIT, 1);
     singleEvent.update(SupportedRestQueryParams.QP_ORDER, order.name());
     singleEvent.update(SupportedRestQueryParams.QP_COLUMNS, transformColumns(singleEvent.getAsString(
-      SupportedRestQueryParams.QP_COLUMNS)));
+        SupportedRestQueryParams.QP_COLUMNS)));
 
     return fireQuery(singleEvent);
   }

@@ -16,10 +16,16 @@
  *
  */
 
+package org.apache.streampipes.dataexplorer.management;
+
 /**
- * This package contains classes that have direct dependencies on InfluxDB-specific implementations.
- * To enhance code organization and promote agnostic design, these classes are slated for migration to other modules,
- * such as 'streampipes-data-explorer' or 'streampipes-data-explorer-api'.
- * Pending migration, they are temporarily housed within this package.
+ * Class containing constants for supported time series storage implementations.
+ * <p>
+ * Supported time series storage implementations:
+ * <ul>
+ *     <li>{@link #INFLUX_DB}: Represents the InfluxDB time series storage implementation.</li>
+ * </ul>
  */
-package org.apache.streampipes.dataexplorer.influx.migrate;
+public class SupportedDataExplorerStorages {
+  public static final String INFLUX_DB = "influxdb";
+}

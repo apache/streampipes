@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.influx.migrate;
+package org.apache.streampipes.dataexplorer.api;
 
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.model.datalake.SpQueryResult;
@@ -28,8 +28,9 @@ import java.util.Map;
 
 public interface IDataExplorerQueryManagement {
 
-  SpQueryResult getData(ProvidedRestQueryParams queryParams,
-                        boolean ignoreMissingData) throws IllegalArgumentException;
+  SpQueryResult getData(
+    ProvidedRestQueryParams queryParams,
+    boolean ignoreMissingData) throws IllegalArgumentException;
 
   void getDataAsStream(ProvidedRestQueryParams params,
                        OutputFormat format,

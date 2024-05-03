@@ -54,6 +54,7 @@ public enum Envs {
 
 
   // Time Series Storage
+  SP_TS_STORAGE("SP_TS_STORAGE", "influxdb"),
   SP_TS_STORAGE_PROTOCOL("SP_TS_STORAGE_PROTOCOL", "http"),
   SP_TS_STORAGE_HOST("SP_TS_STORAGE_HOST", "influxdb", DefaultEnvValues.LOCALHOST),
   SP_TS_STORAGE_PORT("SP_TS_STORAGE_PORT", "8086"),

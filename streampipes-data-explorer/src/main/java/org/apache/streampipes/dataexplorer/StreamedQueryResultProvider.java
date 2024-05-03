@@ -16,15 +16,17 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.influx.migrate;
+package org.apache.streampipes.dataexplorer;
 
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
-import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriter;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
+import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -40,8 +42,10 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
 
   public StreamedQueryResultProvider(ProvidedRestQueryParams params,
                                      OutputFormat format,
+                                     IDataExplorerQueryManagement dataExplorerQueryManagement,
+                                     DataExplorerQueryExecutor<?, ?> queryExecutor,
                                      boolean ignoreMissingValues) {
-    super(params, ignoreMissingValues);
+    super(params, dataExplorerQueryManagement, queryExecutor, ignoreMissingValues);
     this.format = format;
   }
 

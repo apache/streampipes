@@ -16,11 +16,13 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.influx.migrate;
+package org.apache.streampipes.dataexplorer.influx;
 
+import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
-import org.apache.streampipes.dataexplorer.influx.DataExplorerInfluxQueryExecutor;
+import org.apache.streampipes.dataexplorer.QueryResultProvider;
+import org.apache.streampipes.dataexplorer.StreamedQueryResultProvider;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
@@ -32,18 +34,22 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
-public class DataExplorerQueryManagement implements IDataExplorerQueryManagement {
+public class DataExplorerQueryManagementInflux implements IDataExplorerQueryManagement {
 
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
 
-  public DataExplorerQueryManagement(IDataExplorerSchemaManagement dataExplorerSchemaManagement) {
+  public DataExplorerQueryManagementInflux(IDataExplorerSchemaManagement dataExplorerSchemaManagement) {
     this.dataExplorerSchemaManagement = dataExplorerSchemaManagement;
   }
 
   @Override
   public SpQueryResult getData(ProvidedRestQueryParams queryParams,
                                boolean ignoreMissingData) throws IllegalArgumentException {
-    return new QueryResultProvider(queryParams, ignoreMissingData).getData();
+    return new QueryResultProvider(queryParams,
+                                   this,
+                                   new DataExplorerInfluxQueryExecutor(),
+                                   ignoreMissingData
+    ).getData();
   }
 
   @Override
@@ -52,7 +58,11 @@ public class DataExplorerQueryManagement implements IDataExplorerQueryManagement
                               boolean ignoreMissingValues,
                               OutputStream outputStream) throws IOException {
 
-    new StreamedQueryResultProvider(params, format, ignoreMissingValues).getDataAsStream(outputStream);
+    new StreamedQueryResultProvider(params, format,
+                                    this,
+                                    new DataExplorerInfluxQueryExecutor(),
+                                    ignoreMissingValues
+    ).getDataAsStream(outputStream);
   }
 
   @Override

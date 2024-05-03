@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class InfluxStoreTest {
+public class TimeSeriesStorageInfluxTest {
 
   private InfluxDB influxDBMock;
 
@@ -300,8 +300,8 @@ public class InfluxStoreTest {
   /**
    * Executes the onEvent method and returns the resuting data point using an argument captor
    */
-  private Point executeOnEvent(InfluxStore influxStore, Event event) {
-    influxStore.onEvent(event);
+  private Point executeOnEvent(TimeSeriesStorageInflux timeSeriesStorageInflux, Event event) {
+    timeSeriesStorageInflux.onEvent(event);
     var pointArgumentCaptor = ArgumentCaptor.forClass(Point.class);
 
     Mockito.verify(influxDBMock).write(pointArgumentCaptor.capture());
@@ -374,7 +374,7 @@ public class InfluxStoreTest {
   /**
    * Initializes an influx store with the given event schema
    */
-  private InfluxStore getInfluxStore(EventSchema eventSchema) {
+  private TimeSeriesStorageInflux getInfluxStore(EventSchema eventSchema) {
 
     DataLakeMeasure measure = new DataLakeMeasure(
         EXPECTED_MEASUREMENT,
@@ -386,7 +386,7 @@ public class InfluxStoreTest {
     Mockito.when(influxClientProviderMock.getInitializedInfluxDBClient(ArgumentMatchers.any()))
            .thenReturn(influxDBMock);
 
-    return new InfluxStore(measure, null, influxClientProviderMock);
+    return new TimeSeriesStorageInflux(measure, null, influxClientProviderMock);
   }
 
 }

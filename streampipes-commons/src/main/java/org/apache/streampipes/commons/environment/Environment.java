@@ -38,6 +38,8 @@ public interface Environment {
 
   // Time series storage env variables
 
+  StringEnvironmentVariable getTsStorage();
+
   StringEnvironmentVariable getTsStorageProtocol();
 
   StringEnvironmentVariable getTsStorageHost();

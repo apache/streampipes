@@ -19,7 +19,6 @@
 package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
-import org.apache.streampipes.dataexplorer.influx.migrate.DeleteDataQuery;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
 import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
@@ -37,6 +36,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -44,18 +44,6 @@ import java.util.stream.Collectors;
 import static org.apache.streampipes.commons.environment.Environments.getEnvironment;
 
 public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Query, QueryResult> {
-
-  public DataExplorerInfluxQueryExecutor() {
-    super();
-  }
-
-  public DataExplorerInfluxQueryExecutor(String forId) {
-    super(forId);
-  }
-
-  public DataExplorerInfluxQueryExecutor(int maximumAmountOfEvents) {
-    super(maximumAmountOfEvents);
-  }
 
   protected DataSeries convertResult(QueryResult.Series series,
                                      boolean ignoreMissingValues) {
@@ -79,6 +67,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   }
 
   protected SpQueryResult postQuery(QueryResult queryResult,
+                                    Optional<String> forIdOpt,
                                     boolean ignoreMissingValues) throws RuntimeException {
     SpQueryResult result = new SpQueryResult();
     AtomicLong lastTimestamp = new AtomicLong();
@@ -96,9 +85,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
       result.setLastTimestamp(lastTimestamp.get());
     }
 
-    if (this.appendId) {
-      result.setForId(this.forId);
-    }
+    forIdOpt.ifPresent(result::setForId);
 
     return result;
   }

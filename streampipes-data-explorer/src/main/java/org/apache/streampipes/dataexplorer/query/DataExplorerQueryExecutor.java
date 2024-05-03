@@ -29,54 +29,39 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.Optional;
 
 public abstract class DataExplorerQueryExecutor<X, W> {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataExplorerQueryExecutor.class);
-  protected int maximumAmountOfEvents;
-
-  protected boolean appendId = false;
-  protected String forId;
-
-  public DataExplorerQueryExecutor() {
-    this.maximumAmountOfEvents = -1;
-  }
-
-  public DataExplorerQueryExecutor(String forId) {
-    this();
-    this.appendId = true;
-    this.forId = forId;
-  }
-
-  public DataExplorerQueryExecutor(int maximumAmountOfEvents) {
-    this();
-    this.maximumAmountOfEvents = maximumAmountOfEvents;
-  }
 
   /**
    * Execute the data explorer query and return the result or a warning message
    * in case the maximum amount of events to return is defined
    */
   public SpQueryResult executeQuery(SelectQueryParams params,
+                                    int maximumAmountOfEvents,
+                                    Optional<String> forIdOpt,
                                     boolean ignoreMissingValues) throws RuntimeException {
     X query = makeSelectQuery(params);
-    var result = executeQuery(query, ignoreMissingValues);
-    if (this.maximumAmountOfEvents != -1) {
-      return validateAndReturnQueryResult(result, params.getLimit());
+    var result = executeQuery(query, forIdOpt, ignoreMissingValues);
+    if (maximumAmountOfEvents != -1) {
+      return validateAndReturnQueryResult(result, params.getLimit(), maximumAmountOfEvents);
     } else {
       return result;
     }
   }
 
   private SpQueryResult validateAndReturnQueryResult(SpQueryResult queryResult,
-                                                     int limit) {
+                                                     int limit,
+                                                     int maximumAmountOfEvents) {
     var amountOfResults = queryResult.getAllDataSeries()
         .stream()
         .mapToInt(DataSeries::getTotal)
         .sum();
 
     var amountOfQueryResults = limit == Integer.MIN_VALUE ? amountOfResults : Math.min(amountOfResults, limit);
-    if (amountOfQueryResults > this.maximumAmountOfEvents) {
+    if (amountOfQueryResults > maximumAmountOfEvents) {
       return makeTooMuchDataResult(amountOfQueryResults);
     } else {
       return queryResult;
@@ -91,10 +76,11 @@ public abstract class DataExplorerQueryExecutor<X, W> {
   }
 
   public SpQueryResult executeQuery(DeleteQueryParams params) {
-    return executeQuery(makeDeleteQuery(params), true);
+    return executeQuery(makeDeleteQuery(params), Optional.empty(), true);
   }
 
   public SpQueryResult executeQuery(X query,
+                                    Optional<String> forIdOpt,
                                     boolean ignoreMissingValues) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Data Lake Query {}", asQueryString(query));
@@ -105,10 +91,11 @@ public abstract class DataExplorerQueryExecutor<X, W> {
       LOG.debug("Data Lake Query Result: {}", result.toString());
     }
 
-    return postQuery(result, ignoreMissingValues);
+    return postQuery(result, forIdOpt, ignoreMissingValues);
   }
 
   protected abstract SpQueryResult postQuery(W queryResult,
+                                             Optional<String> forIdOpt,
                                              boolean ignoreMissingValues);
 
   public abstract W executeQuery(X query);
