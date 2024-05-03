@@ -34,12 +34,14 @@ services:
     volumes:
       - data:/iotdb/data
       - logs:/iotdb/logs
-    networks:
-      spnet:
 
 volumes:
-  - data:
-  - logs:
+  data:
+  logs:
+
+# If you want to influence iotdb's logging behavior, e.g., to adapt the log retention
+# then you need to adapt the log configurations and map them into the container
+# see: https://stackoverflow.com/questions/78177657/for-apache-iotdb-service-deployed-by-docker-how-to-modify-to-only-print-specifi
 
 networks:
   spnet:
