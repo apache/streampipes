@@ -250,7 +250,6 @@ export class JsplumbService {
         );
         pipelineElementConfig.settings = {
             connectable,
-            openCustomize: !(pipelineElement as any).configured,
             preview: isPreview,
             completed:
                 pipelineElement instanceof SpDataStream ||

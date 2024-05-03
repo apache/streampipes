@@ -246,7 +246,7 @@ export class PipelineAssemblyComponent implements OnInit, AfterViewInit {
      */
     submit() {
         const pipelineModel = this.pipelineComponent.rawPipelineModel;
-        const pipeline = this.objectProvider.makeFinalPipeline(pipelineModel);
+        const pipeline = this.objectProvider.makePipeline(pipelineModel);
         this.pipelinePositioningService.collectPipelineElementPositions(
             this.pipelineCanvasMetadata,
             pipelineModel,

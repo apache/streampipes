@@ -41,7 +41,6 @@ export enum PipelineElementConfigurationStatus {
 export interface PipelineElementConfig {
     type: string;
     settings: {
-        openCustomize: boolean;
         preview: boolean;
         displaySettings: string;
         connectable: string;
