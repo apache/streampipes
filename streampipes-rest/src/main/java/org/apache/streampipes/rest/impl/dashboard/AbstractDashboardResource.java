@@ -39,13 +39,13 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
-  @PostFilter("hasPermission(filterObject.couchDbId, 'READ')")
+  @PostFilter("hasPermission(filterObject.couchDbId, '')")
   public List<DashboardModel> getAllDashboards() {
     return getResourceManager().findAll();
   }
 
   @GetMapping(path = "/{dashboardId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasReadAuthority() and hasPermission(#dashboardId, 'READ')")
+  @PreAuthorize("this.hasReadAuthority() and hasPermission(#dashboardId, '')")
   public DashboardModel getDashboard(@PathVariable("dashboardId") String dashboardId) {
     return getResourceManager().find(dashboardId);
   }

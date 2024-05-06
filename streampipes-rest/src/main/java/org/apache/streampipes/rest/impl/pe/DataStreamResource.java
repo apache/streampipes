@@ -46,14 +46,14 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/available", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.elementId, 'READ')")
+  @PostFilter("hasPermission(filterObject.elementId, '')")
   public List<SpDataStream> getAvailable() {
     return getDataStreamResourceManager().findAll();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.elementId, 'READ')")
+  @PostFilter("hasPermission(filterObject.elementId, '')")
   public List<SpDataStream> get() {
     return getDataStreamResourceManager().findAllAsInvocation();
   }

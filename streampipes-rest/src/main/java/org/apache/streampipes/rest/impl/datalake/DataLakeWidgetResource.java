@@ -20,10 +20,13 @@ package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,11 +43,14 @@ import java.util.List;
 public class DataLakeWidgetResource extends AbstractRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_DATA_EXPLORER_PRIVILEGE)
+  @PostFilter("hasPermission(filterObject.widgetId, '')")
   public ResponseEntity<List<DataExplorerWidgetModel>> getAllDataExplorerWidgets() {
     return ok(getDataExplorerWidgetStorage().getAllDataExplorerWidgets());
   }
 
   @GetMapping(path = "/{widgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_DATA_EXPLORER_PRIVILEGE + " AND hasPermission(#widgetId, '')")
   public ResponseEntity<DataExplorerWidgetModel> getDataExplorerWidget(@PathVariable("widgetId") String widgetId) {
     return ok(getDataExplorerWidgetStorage().getDataExplorerWidget(widgetId));
   }
@@ -53,13 +59,17 @@ public class DataLakeWidgetResource extends AbstractRestResource {
       path = "/{widgetId}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_DATA_EXPLORER_PRIVILEGE +
+      " AND hasPermission(#dataExplorerWidgetModel.widgetId, '')")
   public ResponseEntity<DataExplorerWidgetModel> modifyDataExplorerWidget(
-      @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
+      @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel
+  ) {
     getDataExplorerWidgetStorage().updateDataExplorerWidget(dataExplorerWidgetModel);
     return ok(getDataExplorerWidgetStorage().getDataExplorerWidget(dataExplorerWidgetModel.getId()));
   }
 
   @DeleteMapping(path = "/{widgetId}")
+  @PreAuthorize(AuthConstants.HAS_WRITE_DATA_EXPLORER_PRIVILEGE + " AND hasPermission(#widgetId, '')")
   public ResponseEntity<Void> deleteDataExplorerWidget(@PathVariable("widgetId") String widgetId) {
     getDataExplorerWidgetStorage().deleteDataExplorerWidget(widgetId);
     return ok();
@@ -69,8 +79,11 @@ public class DataLakeWidgetResource extends AbstractRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
+  @PreAuthorize(AuthConstants.HAS_WRITE_DATA_EXPLORER_PRIVILEGE +
+      " AND hasPermission(#dataExplorerWidgetModel.widgetId, '')")
   public ResponseEntity<DataExplorerWidgetModel> createDataExplorerWidget(
-      @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
+      @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel
+  ) {
     String widgetId = getDataExplorerWidgetStorage().storeDataExplorerWidget(dataExplorerWidgetModel);
     return ok(getDataExplorerWidgetStorage().getDataExplorerWidget(widgetId));
   }

@@ -44,7 +44,7 @@ public class VisualizablePipelineResource extends AbstractPipelineExtractionReso
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_DASHBOARD_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
+  @PostFilter("hasPermission(filterObject.pipelineId, '')")
   public List<VisualizablePipeline> getVisualizablePipelines() {
     return extract(new ArrayList<>(), DashboardAppId);
   }

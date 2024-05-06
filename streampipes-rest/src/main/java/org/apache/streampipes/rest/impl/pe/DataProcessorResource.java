@@ -45,14 +45,14 @@ public class DataProcessorResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/available", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.elementId, 'READ')")
+  @PostFilter("hasPermission(filterObject.elementId, '')")
   public List<DataProcessorDescription> getAvailable() {
     return getDataProcessorResourceManager().findAll();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.belongsTo, 'READ')")
+  @PostFilter("hasPermission(filterObject.belongsTo, '')")
   public List<DataProcessorInvocation> getOwn() {
     return getDataProcessorResourceManager().findAllAsInvocation();
   }

@@ -89,7 +89,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
               array = @ArraySchema(schema = @Schema(implementation = Pipeline.class))
           )})})
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
+  @PostFilter("hasPermission(filterObject.pipelineId, '')")
   public List<Pipeline> get() {
     return PipelineManager.getAllPipelines();
   }
@@ -98,7 +98,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       path = "{pipelineId}/status",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get the pipeline status of a given pipeline", tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE + " AND hasPermission(#pipelineId, '')")
   public List<PipelineStatusMessage> getPipelineStatus(@PathVariable("pipelineId") String pipelineId) {
     return PipelineStatusManager.getPipelineStatus(pipelineId, 5);
   }
@@ -107,7 +107,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       path = "/{pipelineId}",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Delete a pipeline with a given id", tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_PRIVILEGE + " AND hasPermission(#pipelineId, '')")
   public Message removeOwn(@PathVariable("pipelineId") String pipelineId) {
     PipelineManager.deletePipeline(pipelineId);
     return Notifications.success("Pipeline deleted");
@@ -115,7 +115,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/{pipelineId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a specific pipeline with the given id", tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE + " AND hasPermission(#pipelineId, '')")
   public ResponseEntity<Pipeline> getElement(@PathVariable("pipelineId") String pipelineId) {
     Pipeline foundPipeline = PipelineManager.getPipeline(pipelineId);
 
@@ -128,9 +128,10 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/{pipelineId}/start", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Start the pipeline with the given id", tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE + " AND hasPermission(#pipelineId, '')")
   public ResponseEntity<?> start(@PathVariable("pipelineId") String pipelineId) {
     try {
+
       PipelineOperationStatus status = PipelineManager.startPipeline(pipelineId);
 
       return ok(status);
@@ -142,7 +143,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/{pipelineId}/stop", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Stop the pipeline with the given id", tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE + " AND hasPermission(#pipelineId, '')")
   public ResponseEntity<?> stop(@PathVariable("pipelineId") String pipelineId,
                                 @RequestParam(value = "forceStop", defaultValue = "false") boolean forceStop) {
     try {
@@ -174,7 +175,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Hidden
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
-  @PostAuthorize("hasPermission(returnObject, 'READ')")
+  @PostAuthorize("hasPermission(returnObject, '')")
   public PipelineElementRecommendationMessage recommend(@RequestBody Pipeline pipeline,
                                                         @PathVariable("recId") String baseRecElement) {
     try {
@@ -204,7 +205,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Hidden
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE + " AND hasPermission(#pipeline.pipelineId, '')")
   public ResponseEntity<?> validatePipeline(@RequestBody Pipeline pipeline) {
     try {
       return ok(Operations.validatePipeline(pipeline));
@@ -231,7 +232,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Update an existing pipeline", tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE + " AND hasPermission(#pipelineId, '')")
   public ResponseEntity<SuccessMessage> overwritePipeline(@PathVariable("pipelineId") String pipelineId,
                                                           @RequestBody Pipeline pipeline) {
     Pipeline storedPipeline = getPipelineStorage().getPipeline(pipelineId);
@@ -259,7 +260,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
         @Content(mediaType = "application/json",
           array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))})})
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
+  @PostFilter("hasPermission(filterObject.pipelineId, '')")
   public List<Pipeline> getPipelinesContainingElement(@PathVariable("elementId") String elementId) {
     return PipelineManager.getPipelinesContainingElements(elementId);
   }
