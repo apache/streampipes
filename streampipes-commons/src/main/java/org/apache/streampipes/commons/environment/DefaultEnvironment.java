@@ -91,6 +91,26 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public IntEnvironmentVariable getIotDbSessionPoolSize(){
+    return new IntEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_SESSION_POOL_SIZE);
+  }
+
+  @Override
+  public BooleanEnvironmentVariable getIotDbSessionEnableCompression(){
+    return new BooleanEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_SESSION_POOL_ENABLE_COMPRESSION);
+  }
+
+  @Override
+  public StringEnvironmentVariable getIotDbUser(){
+    return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_USER);
+  }
+
+  @Override
+  public StringEnvironmentVariable getIotDbPassword(){
+    return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_PASSWORD);
+  }
+
+  @Override
   public StringEnvironmentVariable getCouchDbProtocol() {
     return new StringEnvironmentVariable(Envs.SP_COUCHDB_PROTOCOL);
   }
