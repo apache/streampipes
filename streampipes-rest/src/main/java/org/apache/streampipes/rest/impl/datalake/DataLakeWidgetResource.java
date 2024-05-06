@@ -59,8 +59,8 @@ public class DataLakeWidgetResource extends AbstractRestResource {
       path = "/{widgetId}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_WRITE_DATA_EXPLORER_PRIVILEGE +
-      " AND hasPermission(#dataExplorerWidgetModel.widgetId, '')")
+  @PreAuthorize(AuthConstants.HAS_WRITE_DATA_EXPLORER_PRIVILEGE
+      + " AND hasPermission(#dataExplorerWidgetModel.widgetId, '')")
   public ResponseEntity<DataExplorerWidgetModel> modifyDataExplorerWidget(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel
   ) {
@@ -79,8 +79,8 @@ public class DataLakeWidgetResource extends AbstractRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
-  @PreAuthorize(AuthConstants.HAS_WRITE_DATA_EXPLORER_PRIVILEGE +
-      " AND hasPermission(#dataExplorerWidgetModel.widgetId, '')")
+  @PreAuthorize(AuthConstants.HAS_WRITE_DATA_EXPLORER_PRIVILEGE
+      + " AND hasPermission(#dataExplorerWidgetModel.widgetId, '')")
   public ResponseEntity<DataExplorerWidgetModel> createDataExplorerWidget(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel
   ) {
