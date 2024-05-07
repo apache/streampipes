@@ -58,14 +58,14 @@ public class DataSinkResource extends AbstractAuthGuardedRestResource {
   }
 
   @DeleteMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE + " AND hasPermission(#elementId, '')")
   public ResponseEntity<Message> removeOwn(@PathVariable("elementId") String elementId) {
     getDataSinkResourceManager().delete(elementId);
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
 
   @GetMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE + " AND hasPermission(#elementId, '')")
   public ResponseEntity<?> getElement(@PathVariable("elementId") String elementId) {
     try {
       return ok(getDataSinkResourceManager().findAsInvocation(elementId));

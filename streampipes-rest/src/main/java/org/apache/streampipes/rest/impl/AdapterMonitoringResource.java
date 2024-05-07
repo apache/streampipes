@@ -22,9 +22,11 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
+import org.apache.streampipes.rest.security.AuthConstants;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,11 +39,13 @@ import java.util.List;
 public class AdapterMonitoringResource extends AbstractMonitoringResource {
 
   @GetMapping(path = "adapter/{elementId}/logs", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE + " AND hasPermission(#elementId, '')")
   public ResponseEntity<List<SpLogEntry>> getLogInfoForAdapter(@PathVariable("elementId") String elementId) {
     return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForResource(elementId));
   }
 
   @GetMapping(path = "adapter/{elementId}/metrics", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE + " AND hasPermission(#elementId, '')")
   public ResponseEntity<SpMetricsEntry> getMetricsInfoForAdapter(@PathVariable("elementId") String elementId) {
     return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForResource(elementId));
   }
