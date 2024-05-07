@@ -16,7 +16,6 @@
  *
  */
 
-import { CategoryAlreadyInPipelinePipe } from './category-already-in-pipeline.filter';
 import { PipelinesComponent } from './pipelines.component';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
@@ -27,11 +26,8 @@ import { PipelineOverviewComponent } from './components/pipeline-overview/pipeli
 import { PipelineStatusDialogComponent } from './dialog/pipeline-status/pipeline-status-dialog.component';
 import { DeletePipelineDialogComponent } from './dialog/delete-pipeline/delete-pipeline-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ImportPipelineDialogComponent } from './dialog/import-pipeline/import-pipeline-dialog.component';
 import { StartAllPipelinesDialogComponent } from './dialog/start-all-pipelines/start-all-pipelines-dialog.component';
-import { PipelineCategoriesDialogComponent } from './dialog/pipeline-categories/pipeline-categories-dialog.component';
 import { FormsModule } from '@angular/forms';
-import { PipelineInCategoryPipe } from './pipeline-category.filter';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { PipelineNotificationsComponent } from './dialog/pipeline-notifications/pipeline-notifications.component';
@@ -130,19 +126,15 @@ import { MatIconModule } from '@angular/material/icon';
     declarations: [
         DeletePipelineDialogComponent,
         FunctionsOverviewComponent,
-        ImportPipelineDialogComponent,
         PipelinesComponent,
-        PipelineCategoriesDialogComponent,
         PipelineNotificationsComponent,
         PipelineOverviewComponent,
         PipelineStatusDialogComponent,
         StartAllPipelinesDialogComponent,
-        PipelineInCategoryPipe,
-        CategoryAlreadyInPipelinePipe,
         SpFunctionsMetricsComponent,
         SpFunctionsLogsComponent,
     ],
-    providers: [CategoryAlreadyInPipelinePipe, PipelineInCategoryPipe],
+    providers: [],
     exports: [PipelinesComponent],
 })
 export class PipelinesModule {

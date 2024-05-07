@@ -57,41 +57,20 @@
         <button
             mat-icon-button
             color="accent"
+            (click)="startPipelineTour()"
+            [matTooltip]="'Tutorial'"
+            [disabled]="tutorialActive"
+        >
+            <i class="material-icons"> school </i>
+        </button>
+        <button
+            mat-icon-button
+            color="accent"
             matTooltip="Refresh pipelines"
             matTooltipPosition="above"
             (click)="refreshPipelines()"
         >
             <i class="material-icons"> refresh </i>
-        </button>
-        <button
-            mat-icon-button
-            color="accent"
-            matTooltip="Export pipelines"
-            matTooltipPosition="above"
-            (click)="exportPipelines()"
-            data-cy="export-pipelines-btn"
-        >
-            <i class="material-icons"> cloud_download </i>
-        </button>
-        <button
-            mat-icon-button
-            color="accent"
-            matTooltip="Import pipelines"
-            matTooltipPosition="above"
-            (click)="openImportPipelinesDialog()"
-            data-cy="import-pipelines-btn"
-        >
-            <i class="material-icons"> cloud_upload </i>
-        </button>
-        <button
-            mat-icon-button
-            color="accent"
-            (click)="startPipelineTour()"
-            [matTooltip]="'Tutorial'"
-            [disabled]="tutorialActive"
-            style="margin-right: 5px"
-        >
-            <i class="material-icons"> school </i>
         </button>
     </div>
     <div fxFlex="100" fxLayout="column">
