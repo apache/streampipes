@@ -132,6 +132,7 @@ export class JsplumbService {
                 pipelineElementConfig.payload as InvocablePipelineElementUnion,
                 sourceElement,
                 false,
+                true,
             );
         });
     }
@@ -141,6 +142,7 @@ export class JsplumbService {
         pipelineElement: InvocablePipelineElementUnion,
         sourceElement,
         previewConfig: boolean,
+        openCustomize = false,
     ) {
         let targetElementId;
         if (pipelineElement instanceof DataProcessorInvocation) {
@@ -150,7 +152,12 @@ export class JsplumbService {
                 true,
                 false,
             );
-            this.connectNodes(sourceElement, targetElementId, previewConfig);
+            this.connectNodes(
+                sourceElement,
+                targetElementId,
+                previewConfig,
+                openCustomize,
+            );
         } else {
             targetElementId = this.dataSinkDropped(
                 pipelineElementDomId,
@@ -158,7 +165,12 @@ export class JsplumbService {
                 true,
                 false,
             );
-            this.connectNodes(sourceElement, targetElementId, previewConfig);
+            this.connectNodes(
+                sourceElement,
+                targetElementId,
+                previewConfig,
+                openCustomize,
+            );
         }
     }
 
@@ -166,6 +178,7 @@ export class JsplumbService {
         sourceElementSelector,
         targetElementId,
         previewConfig: boolean,
+        openCustomize = false,
     ) {
         const sourceElement = sourceElementSelector.get()[0];
         const jsplumbBridge = this.getBridge(previewConfig);
@@ -195,6 +208,9 @@ export class JsplumbService {
             source: sourceEndPoint,
             target: targetEndPoint,
             detachable: true,
+            data: {
+                openCustomize,
+            },
         });
         jsplumbBridge.repaintEverything();
     }
@@ -250,7 +266,6 @@ export class JsplumbService {
         );
         pipelineElementConfig.settings = {
             connectable,
-            openCustomize: !(pipelineElement as any).configured,
             preview: isPreview,
             completed:
                 pipelineElement instanceof SpDataStream ||

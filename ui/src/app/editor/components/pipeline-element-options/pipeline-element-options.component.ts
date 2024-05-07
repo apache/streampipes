@@ -111,7 +111,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
         this.pipelineElementConfiguredObservable =
             this.editorService.pipelineElementConfigured$.subscribe(
                 pipelineElementDomId => {
-                    this.pipelineElement.settings.openCustomize = false;
                     this.restApi.updateCachedPipeline(this.rawPipelineModel);
                     if (
                         pipelineElementDomId ===
