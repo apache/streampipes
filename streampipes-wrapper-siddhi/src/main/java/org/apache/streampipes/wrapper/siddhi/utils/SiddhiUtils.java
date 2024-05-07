@@ -19,10 +19,12 @@ package org.apache.streampipes.wrapper.siddhi.utils;
 
 
 import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
+import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.runtime.SchemaInfo;
 import org.apache.streampipes.model.runtime.SourceInfo;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
+import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
 
 import io.siddhi.core.event.Event;
 import io.siddhi.query.api.definition.Attribute;
@@ -68,7 +70,7 @@ public class SiddhiUtils {
         outputKey = outputKey.substring(2);
       }
       Object data = event.getData(i);
-      outMap.put(outputKey, data);
+      outMap.put(EventPropertyDef.toOriginalFieldName(outputKey), data);
     }
 
     return outMap;
@@ -101,11 +103,13 @@ public class SiddhiUtils {
     return eventName
         .replaceAll("\\.", "")
         .replaceAll("-", "")
-        .replaceAll("::", "");
+        .replaceAll(PropertySelectorConstants.PROPERTY_DELIMITER, "");
   }
 
   public static String prepareProperty(String propertyName) {
-    return propertyName.replaceAll("::", "");
+    return propertyName
+        .replaceAll(PropertySelectorConstants.PROPERTY_DELIMITER, "")
+        .replaceAll(" ", EventPropertyDef.WHITESPACE_REPLACEMENT);
   }
 
 }
