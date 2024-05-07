@@ -124,9 +124,16 @@ public class TimeSeriesStorageIotDb extends TimeSeriesStorage {
         // timestamp is already known and is not part of the measurement thus we ignore it here
         if (!ep.getRuntimeName().equals(measure.getTimestampFieldName())) {
           if (ep instanceof EventPropertyPrimitive) {
-            iotDbRecords.add(propertyConverter.convertPrimitiveProperty((EventPropertyPrimitive) ep, event.getFieldByRuntimeName(ep.getRuntimeName()).getAsPrimitive(), sanitizedRuntimeNames.get(ep.getRuntimeName())));
+            iotDbRecords.add(propertyConverter.convertPrimitiveProperty(
+                (EventPropertyPrimitive) ep,
+                event.getFieldByRuntimeName(ep.getRuntimeName()).getAsPrimitive(),
+                sanitizedRuntimeNames.get(ep.getRuntimeName())
+                ));
           } else {
-            iotDbRecords.add(propertyConverter.convertNonPrimitiveProperty(ep, sanitizedRuntimeNames.get(ep.getRuntimeName())));
+            iotDbRecords.add(propertyConverter.convertNonPrimitiveProperty(
+                ep,
+                sanitizedRuntimeNames.get(ep.getRuntimeName())
+            ));
           }
         }
       } catch (SpRuntimeException e) {
