@@ -869,6 +869,7 @@
         <module>streampipes-storage-management</module>
         <module>streampipes-test-utils</module>
         <module>streampipes-test-utils-executors</module>
+        <module>streampipes-ts-store-iotdb</module>
         <module>streampipes-user-management</module>
         <module>streampipes-vocabulary</module>
         <module>streampipes-wrapper</module>
