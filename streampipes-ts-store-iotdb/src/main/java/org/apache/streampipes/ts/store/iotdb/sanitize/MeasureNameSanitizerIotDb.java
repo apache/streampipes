@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.ts.store.iotdb;
+package org.apache.streampipes.ts.store.iotdb.sanitize;
 
 /**
  * Ensures that measurement names comply with IoTDB path specifications.

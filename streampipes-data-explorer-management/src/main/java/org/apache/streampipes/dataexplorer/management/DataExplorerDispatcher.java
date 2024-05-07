@@ -21,6 +21,7 @@ package org.apache.streampipes.dataexplorer.management;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.influx.DataExplorerManagerInflux;
+import org.apache.streampipes.ts.store.iotdb.DataExplorerManagerIotDb;
 
 public class DataExplorerDispatcher {
 
@@ -31,7 +32,7 @@ public class DataExplorerDispatcher {
     return switch (Environments.getEnvironment()
                                .getTsStorage()
                                .getValueOrDefault()) {
-      case SupportedDataExplorerStorages.INFLUX_DB -> DataExplorerManagerInflux.INSTANCE;
+      case SupportedDataExplorerStorages.IOT_DB -> DataExplorerManagerIotDb.INSTANCE;
       default -> DataExplorerManagerInflux.INSTANCE;
     };
   }
