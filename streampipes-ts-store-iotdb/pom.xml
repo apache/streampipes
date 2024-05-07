@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.95.0-SNAPSHOT</version>
+        <version>0.97.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>streampipes-ts-store-iotdb</artifactId>
@@ -39,27 +39,27 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-client-api</artifactId>
-            <version>0.95.0-SNAPSHOT</version>
+            <version>0.97.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-commons</artifactId>
-            <version>0.95.0-SNAPSHOT</version>
+            <version>0.97.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-data-explorer</artifactId>
-            <version>0.95.0-SNAPSHOT</version>
+            <version>0.97.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
-            <version>0.95.0-SNAPSHOT</version>
+            <version>0.97.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-vocabulary</artifactId>
-            <version>0.95.0-SNAPSHOT</version>
+            <version>0.97.0-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
