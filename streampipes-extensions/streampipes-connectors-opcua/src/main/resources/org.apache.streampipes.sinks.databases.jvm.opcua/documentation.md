@@ -26,7 +26,7 @@
 
 ## Description
 
-Stores events in an Apache CouchDB database.
+Allows to write events to an OPC-UA server.
 
 ***
 
@@ -37,8 +37,6 @@ This sink does not have any requirements and works with any incoming event type.
 ***
 
 ## Configuration
-
-Describe the configuration parameters here
 
 ### Hostname
 
@@ -59,8 +57,3 @@ The node id of the resulting node
 ### Number Mapping
 
 The property of the event that should be written to the OPC-UA server
-
-
-## Output
-
-(not applicable for data sinks)
