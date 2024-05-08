@@ -117,8 +117,10 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
         }
       }
     } else {
-      String firstSelector = mappingPropertyUnary.getMapsFromOptions().get(0);
-      mappingPropertyUnary.setSelectedProperty(firstSelector);
+      if (!mappingPropertyUnary.getMapsFromOptions().isEmpty()){
+        String firstSelector = mappingPropertyUnary.getMapsFromOptions().get(0);
+        mappingPropertyUnary.setSelectedProperty(firstSelector);
+      }
     }
   }
 

@@ -24,7 +24,7 @@ import { DatalakeRestService } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-area-widget',
     templateUrl: './area-widget.component.html',
-    styleUrls: ['./area-widget.component.css'],
+    styleUrls: ['./area-widget.component.scss'],
 })
 export class AreaWidgetComponent
     extends BaseNgxLineChartsStreamPipesWidget

@@ -25,7 +25,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 @Component({
     selector: 'sp-pipeline-element',
     templateUrl: './pipeline-element.component.html',
-    styleUrls: ['./pipeline-element.component.css'],
+    styleUrls: ['./pipeline-element.component.scss'],
 })
 export class PipelineElementComponent {
     showImage: any;

@@ -16,13 +16,13 @@
  *
  */
 
-import { Datatypes } from './model/datatypes';
-import { Vocabulary } from './model/vocabulary';
+import { DataType } from '@streampipes/platform-services';
 import {
     EventPropertyList,
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
+    SemanticType,
 } from '@streampipes/platform-services';
 
 export class EpRequirements {
@@ -51,31 +51,31 @@ export class EpRequirements {
     }
 
     static imageReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq('https://image.com');
+        return EpRequirements.domainPropertyReq(SemanticType.IMAGE);
     }
 
     static latitudeReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq(Vocabulary.GEO + 'lat');
+        return EpRequirements.domainPropertyReq(SemanticType.GEO_LAT);
     }
 
     static longitudeReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq(Vocabulary.GEO + 'long');
+        return EpRequirements.domainPropertyReq(SemanticType.GEO_LONG);
     }
 
     static timestampReq(): EventPropertyUnion {
-        return EpRequirements.domainPropertyReq('http://schema.org/DateTime');
+        return EpRequirements.domainPropertyReq(SemanticType.TIMESTAMP);
     }
 
     static numberReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(Datatypes.Number);
+        return EpRequirements.datatypeReq(DataType.NUMBER);
     }
 
     static stringReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(Datatypes.String);
+        return EpRequirements.datatypeReq(DataType.STRING);
     }
 
     static integerReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(Datatypes.Integer);
+        return EpRequirements.datatypeReq(DataType.INTEGER);
     }
 
     static listReq(): EventPropertyList {
@@ -110,9 +110,9 @@ export class EpRequirements {
         return eventProperty;
     }
 
-    static datatypeReq(datatype: Datatypes): EventPropertyPrimitive {
+    static datatypeReq(datatype: string): EventPropertyPrimitive {
         const eventProperty = EpRequirements.ep();
-        eventProperty.runtimeType = datatype.toUri();
+        eventProperty.runtimeType = datatype;
         return eventProperty;
     }
 }

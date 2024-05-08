@@ -17,11 +17,11 @@
  */
 
 import { CollectedSchemaRequirements } from '../sdk/collected-schema-requirements';
-import { Datatypes } from '../sdk/model/datatypes';
 import { Tuple2 } from '../../core-model/base/Tuple2';
 import {
     ColorPickerStaticProperty,
     DashboardWidgetSettings,
+    DataType,
     FreeTextStaticProperty,
     OneOfStaticProperty,
     Option,
@@ -122,7 +122,7 @@ export class WidgetConfigBuilder {
             WidgetConfigBuilder.QUERY_LIMIT_KEY,
             'Past data',
             'The number of historic events that should be shown',
-            Datatypes.Integer.toUri(),
+            DataType.INTEGER,
         );
         fst.value = '50';
         this.widget.config.push(fst);
@@ -139,7 +139,7 @@ export class WidgetConfigBuilder {
             id,
             label,
             description,
-            Datatypes.String.toUri(),
+            DataType.STRING,
         );
         this.widget.config.push(fst);
         return this;
@@ -174,7 +174,7 @@ export class WidgetConfigBuilder {
             id,
             label,
             description,
-            Datatypes.Integer.toUri(),
+            DataType.INTEGER,
         );
         if (defaultValue) {
             fst.value = defaultValue.toString();
@@ -220,7 +220,7 @@ export class WidgetConfigBuilder {
             id,
             label,
             description,
-            Datatypes.Float.toUri(),
+            DataType.FLOAT,
         );
         this.widget.config.push(fst);
         return this;

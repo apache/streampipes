@@ -76,3 +76,9 @@ func (s *StreamPipesClient) Function() *Functions {
 
 	return NewFunctions(s.config)
 }
+
+func (s *StreamPipesClient) UserInfo() *StreamPipesUserInfo {
+
+	return NewStreamPipesUserInfo(s.config)
+
+}

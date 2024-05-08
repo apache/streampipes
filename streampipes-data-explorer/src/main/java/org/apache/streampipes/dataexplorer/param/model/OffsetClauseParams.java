@@ -18,23 +18,13 @@
 
 package org.apache.streampipes.dataexplorer.param.model;
 
+import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
 import org.apache.streampipes.dataexplorer.api.IQueryStatement;
-import org.apache.streampipes.dataexplorer.querybuilder.IDataLakeQueryBuilder;
 
-public class OffsetClauseParams implements IQueryStatement {
-
-  private final Integer offset;
-
-  public OffsetClauseParams(Integer offset) {
-    this.offset = offset;
-  }
+public record OffsetClauseParams(Integer offset) implements IQueryStatement {
 
   public static OffsetClauseParams from(Integer offset) {
     return new OffsetClauseParams(offset);
-  }
-
-  public Integer getOffset() {
-    return offset;
   }
 
   @Override
