@@ -20,6 +20,7 @@ package serializer
 import (
 	"encoding/json"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/data_lake"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/streampipes_user"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/streampipes_version"
 )
 
@@ -91,6 +92,7 @@ func (d *StreamPipesVersionDeserializer) Unmarshal(data []byte) (interface{}, er
 	return dataSeries, nil
 }
 
+
 type DataLakeWidgetDeserializer struct{}
 
 func NewDataLakeWidgetDeserializer() *DataLakeWidgetDeserializer {
@@ -119,4 +121,35 @@ func (d *DataLakeWidgetsDeserializer) Unmarshal(data []byte) (interface{}, error
 		return nil, err
 	}
 	return widget, nil
+}
+
+type ShortUserInfosDeserializer struct{}
+
+func NewShortUserInfosDeserializer() *ShortUserInfosDeserializer {
+	return &ShortUserInfosDeserializer{}
+}
+
+func (s *ShortUserInfosDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var shortUserInfo []streampipes_user.ShortUserInfo
+	err := json.Unmarshal(data, &shortUserInfo)
+	if err != nil {
+		return nil, err
+	}
+	return shortUserInfo, nil
+}
+
+type UserAccountDeserializer struct{}
+
+func NewUserAccountDeserializer() *UserAccountDeserializer {
+	return &UserAccountDeserializer{}
+}
+
+func (p *UserAccountDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var userAccount streampipes_user.UserAccount
+	err := json.Unmarshal(data, &userAccount)
+	if err != nil {
+		return nil, err
+	}
+	return userAccount, nil
+
 }

@@ -25,7 +25,7 @@ import { DatalakeRestService } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-traffic-light-widget',
     templateUrl: './traffic-light-widget.component.html',
-    styleUrls: ['./traffic-light-widget.component.css'],
+    styleUrls: ['./traffic-light-widget.component.scss'],
 })
 export class TrafficLightWidgetComponent
     extends BaseStreamPipesWidget

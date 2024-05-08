@@ -56,6 +56,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getTsStorage() {
+    return new StringEnvironmentVariable(Envs.SP_TS_STORAGE);
+  }
+
+  @Override
   public StringEnvironmentVariable getTsStorageProtocol() {
     return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_PROTOCOL);
   }
@@ -83,6 +88,26 @@ public class DefaultEnvironment implements Environment {
   @Override
   public StringEnvironmentVariable getTsStorageBucket() {
     return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_BUCKET);
+  }
+
+  @Override
+  public IntEnvironmentVariable getIotDbSessionPoolSize(){
+    return new IntEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_SESSION_POOL_SIZE);
+  }
+
+  @Override
+  public BooleanEnvironmentVariable getIotDbSessionEnableCompression(){
+    return new BooleanEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_SESSION_POOL_ENABLE_COMPRESSION);
+  }
+
+  @Override
+  public StringEnvironmentVariable getIotDbUser(){
+    return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_USER);
+  }
+
+  @Override
+  public StringEnvironmentVariable getIotDbPassword(){
+    return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_PASSWORD);
   }
 
   @Override
@@ -272,6 +297,11 @@ public class DefaultEnvironment implements Environment {
   @Override
   public StringEnvironmentVariable getPulsarUrl() {
     return new StringEnvironmentVariable(Envs.SP_PULSAR_URL);
+  }
+
+  @Override
+  public StringEnvironmentVariable getCustomServiceTags() {
+    return new StringEnvironmentVariable(Envs.SP_SERVICE_TAGS);
   }
 
 }

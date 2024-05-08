@@ -21,10 +21,10 @@ package org.apache.streampipes.svcdiscovery;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,18 +47,21 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   }
 
   @Override
-  public List<String> getActivePipelineElementEndpoints() {
-    LOG.info("Discovering active pipeline element service endpoints");
-    return getServiceEndpoints(DefaultSpServiceTypes.EXT,
-        true,
-        List.of());
+  public Set<SpServiceTag> getCustomServiceTags(boolean restrictToHealthy) {
+    var activeServices = findServices(0);
+    return activeServices
+        .stream()
+        .filter(service -> !restrictToHealthy || service.getStatus() != SpServiceStatus.UNHEALTHY)
+        .flatMap(service -> service.getTags().stream())
+        .filter(serviceTag -> serviceTag.getPrefix() == SpServiceTagPrefix.CUSTOM)
+        .collect(Collectors.toSet());
   }
 
   @Override
   public List<String> getServiceEndpoints(String serviceGroup,
                                           boolean restrictToHealthy,
                                           List<String> filterByTags) {
-    List<SpServiceRegistration> activeServices = findService(0);
+    List<SpServiceRegistration> activeServices = findServices(0);
 
     return activeServices
         .stream()
@@ -73,9 +76,9 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
     return service.getServiceUrl();
   }
 
-/**
-* Checks if all the tags specified in the filter are supported by the service.
-*/
+  /**
+  * Checks if all the tags specified in the filter are supported by the service.
+  */
   private boolean allFiltersSupported(SpServiceRegistration service,
                                       List<String> filterByTags) {
     if (filterByTags.isEmpty()) {
@@ -88,7 +91,7 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
     return serviceTags.containsAll(filterByTags);
   }
 
-  private List<SpServiceRegistration> findService(int retryCount) {
+  private List<SpServiceRegistration> findServices(int retryCount) {
     var services = serviceStorage.getAll();
     if (services.isEmpty()) {
       if (retryCount < MAX_RETRIES) {
@@ -96,7 +99,7 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
           retryCount++;
           LOG.info("Could not find any extensions services, retrying ({}/{})", retryCount, MAX_RETRIES);
           TimeUnit.MILLISECONDS.sleep(1000);
-          return findService(retryCount);
+          return findServices(retryCount);
         } catch (InterruptedException e) {
           LOG.warn("Could not find a service currently due to exception {}", e.getMessage());
           return Collections.emptyList();

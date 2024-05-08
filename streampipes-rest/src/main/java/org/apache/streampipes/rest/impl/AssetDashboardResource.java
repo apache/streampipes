@@ -106,7 +106,7 @@ public class AssetDashboardResource extends AbstractRestResource {
   @GetMapping(path = "/images/{imageName}")
   public ResponseEntity<byte[]> getDashboardImage(@PathVariable("imageName") String imageName) {
     try {
-      var sanitizedFileName = FileManager.sanitizeFilename(imageName);
+      var sanitizedFileName = new FileManager().sanitizeFilename(imageName);
       java.nio.file.Path path = Paths.get(getTargetFile(sanitizedFileName));
       File file = new File(path.toString());
       FileNameMap fileNameMap = URLConnection.getFileNameMap();
@@ -128,7 +128,7 @@ public class AssetDashboardResource extends AbstractRestResource {
     try {
       var fileName = fileDetail.getName();
 
-      if (!FileManager.validateFileType(fileName)) {
+      if (!new FileManager().validateFileType(fileName)) {
         LOG.error("File type of file " + fileName + " is not supported");
         fail();
       }
@@ -148,7 +148,7 @@ public class AssetDashboardResource extends AbstractRestResource {
       targetDirectory.mkdirs();
     }
 
-    var sanitizedFileName = FileManager.sanitizeFilename(fileName);
+    var sanitizedFileName = new FileManager().sanitizeFilename(fileName);
 
     var targetFile = new File(getTargetFile(sanitizedFileName));
 

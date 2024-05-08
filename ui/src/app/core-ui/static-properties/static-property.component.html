@@ -86,6 +86,7 @@
 
             <sp-app-static-runtime-resolvable-any-input
                 *ngIf="isRuntimeResolvableAnyStaticProperty(staticProperty)"
+                [deploymentConfiguration]="deploymentConfiguration"
                 [staticProperty]="staticProperty"
                 [staticProperties]="staticProperties"
                 [eventSchemas]="eventSchemas"
@@ -98,6 +99,7 @@
 
             <sp-app-static-runtime-resolvable-oneof-input
                 *ngIf="isRuntimeResolvableOneOfStaticProperty(staticProperty)"
+                [deploymentConfiguration]="deploymentConfiguration"
                 [completedStaticProperty]="completedStaticProperty"
                 [pipelineElement]="pipelineElement"
                 [eventSchemas]="eventSchemas"
@@ -158,6 +160,7 @@
             <sp-app-static-alternatives
                 *ngIf="isAlternativesStaticProperty(staticProperty)"
                 [adapterId]="adapterId"
+                [deploymentConfiguration]="deploymentConfiguration"
                 [eventSchemas]="eventSchemas"
                 [parentForm]="parentForm"
                 [staticProperty]="staticProperty"
@@ -175,6 +178,7 @@
                     !isRuntimeResolvableGroupStaticProperty(staticProperty)
                 "
                 [adapterId]="adapterId"
+                [deploymentConfiguration]="deploymentConfiguration"
                 [eventSchemas]="eventSchemas"
                 [parentForm]="parentForm"
                 [fieldName]="fieldName"
@@ -188,6 +192,7 @@
 
             <sp-app-static-runtime-resolvable-group
                 *ngIf="isRuntimeResolvableGroupStaticProperty(staticProperty)"
+                [deploymentConfiguration]="deploymentConfiguration"
                 [adapterId]="adapterId"
                 [eventSchemas]="eventSchemas"
                 [parentForm]="parentForm"
@@ -203,6 +208,7 @@
 
             <sp-static-collection
                 *ngIf="isCollectionStaticProperty(staticProperty)"
+                [deploymentConfiguration]="deploymentConfiguration"
                 [adapterId]="adapterId"
                 [eventSchemas]="eventSchemas"
                 [parentForm]="parentForm"
@@ -227,6 +233,7 @@
             </sp-static-slide-toggle>
             <sp-runtime-resolvable-tree-input
                 *ngIf="isTreeInputStaticProperty(staticProperty)"
+                [deploymentConfiguration]="deploymentConfiguration"
                 [adapterId]="adapterId"
                 [parentForm]="parentForm"
                 [completedStaticProperty]="completedStaticProperty"

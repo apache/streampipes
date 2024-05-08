@@ -31,19 +31,18 @@ import {
     EventSchema,
     MoveRuleDescription,
     RenameRuleDescription,
+    SemanticType,
     TimestampTranfsformationRuleDescription,
     TransformationRuleDescriptionUnion,
     UnitTransformRuleDescription,
 } from '@streampipes/platform-services';
 import { TimestampTransformationRuleMode } from '../model/TimestampTransformationRuleMode';
 import { StaticValueTransformService } from './static-value-transform.service';
-import { SemanticTypeService } from '../../core-services/types/semantic-type.service';
 
 @Injectable({ providedIn: 'root' })
 export class TransformationRuleService {
     constructor(
         private staticValueTransformService: StaticValueTransformService,
-        private semanticTypeService: SemanticTypeService,
     ) {}
 
     public getTransformationRuleDescriptions(
@@ -585,7 +584,7 @@ export class TransformationRuleService {
 
     isTimestampProperty(property: EventPropertyPrimitive) {
         return property.domainProperties.some(
-            dp => dp === this.semanticTypeService.TIMESTAMP,
+            dp => dp === SemanticType.TIMESTAMP,
         );
     }
 

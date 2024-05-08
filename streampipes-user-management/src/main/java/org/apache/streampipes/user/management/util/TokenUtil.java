@@ -21,7 +21,6 @@ import org.apache.streampipes.model.client.user.RawUserApiToken;
 import org.apache.streampipes.model.client.user.UserApiToken;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.text.RandomStringGenerator;
 
 import java.util.UUID;
 
@@ -30,38 +29,26 @@ public class TokenUtil {
   private static final Integer TOKEN_LENGTH = 24;
 
   public static RawUserApiToken createToken(String tokenName) {
-    RawUserApiToken rawToken = new RawUserApiToken();
-    rawToken.setTokenId(UUID.randomUUID().toString());
-    rawToken.setTokenName(tokenName);
-    rawToken.setRawToken(generateToken());
-    rawToken.setHashedToken(hashToken(rawToken.getRawToken()));
+    var rawToken = generateToken();
 
-    return rawToken;
+    return new RawUserApiToken(rawToken, hashToken(rawToken), tokenName, UUID.randomUUID().toString());
   }
 
   public static UserApiToken toUserToken(RawUserApiToken rawToken) {
     UserApiToken userApiToken = new UserApiToken();
-    userApiToken.setTokenId(rawToken.getTokenId());
-    userApiToken.setHashedToken(rawToken.getHashedToken());
-    userApiToken.setTokenName(rawToken.getTokenName());
+    userApiToken.setTokenId(rawToken.tokenId());
+    userApiToken.setHashedToken(rawToken.hashedToken());
+    userApiToken.setTokenName(rawToken.tokenName());
 
     return userApiToken;
-  }
-
-  public static boolean validateToken(String providedToken, String hashedToken) {
-    return hashToken(providedToken).equals(hashedToken);
   }
 
   private static String generateToken() {
     return generateToken(TOKEN_LENGTH);
   }
 
-  public static String generateToken(int tokenLength){
-    // allowing all ASCII-characters from decimal id 33 to 125
-    // see https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html for full list
-    var pwdGenerator = new RandomStringGenerator.Builder().withinRange(33, 125)
-                                                          .build();
-    return pwdGenerator.generate(tokenLength);
+  public static String generateToken(int tokenLength) {
+    return new SecureStringGenerator().generateSecureString(tokenLength);
   }
 
   public static String hashToken(String token) {

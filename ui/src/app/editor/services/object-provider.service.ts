@@ -17,11 +17,13 @@
  */
 
 import { Injectable } from '@angular/core';
+import { PipelineElementConfig } from '../model/editor.model';
 import {
-    InvocablePipelineElementUnion,
-    PipelineElementConfig,
-} from '../model/editor.model';
-import { DataSinkInvocation, Pipeline } from '@streampipes/platform-services';
+    DataProcessorInvocation,
+    DataSinkInvocation,
+    Pipeline,
+    SpDataStream,
+} from '@streampipes/platform-services';
 import { EditorService } from './editor.service';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
 
@@ -32,11 +34,6 @@ export class ObjectProvider {
         private jsplumbFactoryService: JsplumbFactoryService,
     ) {}
 
-    prepareElement(pipelineElement: InvocablePipelineElementUnion) {
-        pipelineElement.connectedTo = [];
-        return pipelineElement;
-    }
-
     preparePipeline(): Pipeline {
         const pipeline = new Pipeline();
         pipeline.name = '';
@@ -45,16 +42,6 @@ export class ObjectProvider {
         pipeline.sepas = [];
         pipeline.actions = [];
 
-        return pipeline;
-    }
-
-    makeFinalPipeline(currentPipelineElements: PipelineElementConfig[]) {
-        return this.makePipeline(currentPipelineElements);
-    }
-
-    makePipeline(currentPipelineElements: PipelineElementConfig[]): Pipeline {
-        let pipeline = this.preparePipeline();
-        pipeline = this.addElementNew(pipeline, currentPipelineElements);
         return pipeline;
     }
 
@@ -85,7 +72,7 @@ export class ObjectProvider {
     }
 
     findElement(
-        elementId,
+        elementId: string,
         rawPipelineModel: PipelineElementConfig[],
     ): PipelineElementConfig {
         return (
@@ -94,10 +81,8 @@ export class ObjectProvider {
         );
     }
 
-    addElementNew(
-        pipeline,
-        currentPipelineElements: PipelineElementConfig[],
-    ): Pipeline {
+    makePipeline(currentPipelineElements: PipelineElementConfig[]): Pipeline {
+        const pipeline = this.preparePipeline();
         const jsplumbBridge =
             this.jsplumbFactoryService.getJsplumbBridge(false);
         currentPipelineElements.forEach(pipelineElementConfig => {
@@ -109,10 +94,8 @@ export class ObjectProvider {
                     pipelineElementConfig.type === 'sepa' ||
                     pipelineElementConfig.type === 'action'
                 ) {
-                    let payload = pipelineElementConfig.payload;
-                    payload = this.prepareElement(
-                        payload as InvocablePipelineElementUnion,
-                    );
+                    const payload = pipelineElementConfig.payload;
+                    payload.connectedTo = [];
                     const connections = jsplumbBridge.getConnections({
                         target: document.getElementById(payload.dom),
                     }) as any;
@@ -121,11 +104,17 @@ export class ObjectProvider {
                     }
                     if (payload.connectedTo && payload.connectedTo.length > 0) {
                         pipelineElementConfig.type === 'action'
-                            ? pipeline.actions.push(payload)
-                            : pipeline.sepas.push(payload);
+                            ? pipeline.actions.push(
+                                  payload as DataSinkInvocation,
+                              )
+                            : pipeline.sepas.push(
+                                  payload as DataProcessorInvocation,
+                              );
                     }
                 } else {
-                    pipeline.streams.push(pipelineElementConfig.payload);
+                    pipeline.streams.push(
+                        pipelineElementConfig.payload as SpDataStream,
+                    );
                 }
             }
         });

@@ -26,7 +26,7 @@ import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-valida
 @Component({
     selector: 'sp-app-static-color-picker',
     templateUrl: './static-color-picker.component.html',
-    styleUrls: ['./static-color-picker.component.css'],
+    styleUrls: ['./static-color-picker.component.scss'],
 })
 export class StaticColorPickerComponent
     extends AbstractValidatedStaticPropertyRenderer<ColorPickerStaticProperty>

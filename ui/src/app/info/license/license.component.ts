@@ -21,7 +21,7 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'sp-license',
     templateUrl: './license.component.html',
-    styleUrls: ['./license.component.css'],
+    styleUrls: ['./license.component.scss'],
 })
 export class LicenseComponent {
     constructor() {}
