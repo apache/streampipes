@@ -20,46 +20,5 @@ package org.apache.streampipes.model.client.user;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
-public class RawUserApiToken {
-
-  private String rawToken;
-  private String hashedToken;
-  private String tokenName;
-  private String tokenId;
-
-  public RawUserApiToken() {
-
-  }
-
-  public String getRawToken() {
-    return rawToken;
-  }
-
-  public void setRawToken(String rawToken) {
-    this.rawToken = rawToken;
-  }
-
-  public String getTokenName() {
-    return tokenName;
-  }
-
-  public void setTokenName(String tokenName) {
-    this.tokenName = tokenName;
-  }
-
-  public String getTokenId() {
-    return tokenId;
-  }
-
-  public void setTokenId(String tokenId) {
-    this.tokenId = tokenId;
-  }
-
-  public String getHashedToken() {
-    return hashedToken;
-  }
-
-  public void setHashedToken(String hashedToken) {
-    this.hashedToken = hashedToken;
-  }
+public record RawUserApiToken(String rawToken, String hashedToken, String tokenName, String tokenId) {
 }

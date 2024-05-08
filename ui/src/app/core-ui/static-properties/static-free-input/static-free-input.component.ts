@@ -19,7 +19,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ValidatorFn, Validators } from '@angular/forms';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
-import { FreeTextStaticProperty } from '@streampipes/platform-services';
+import {
+    DataType,
+    FreeTextStaticProperty,
+    SemanticType,
+} from '@streampipes/platform-services';
 import {
     ValidateNumber,
     ValidateString,
@@ -27,7 +31,6 @@ import {
 } from '../input.validator';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { QuillEditorComponent } from 'ngx-quill';
-import { SemanticTypeService } from '../../../core-services/types/semantic-type.service';
 
 @Component({
     selector: 'sp-app-static-free-input',
@@ -55,7 +58,7 @@ export class StaticFreeInputComponent
     @ViewChild('textEditor', { static: false })
     quillEditorComponent: QuillEditorComponent;
 
-    constructor(private semanticTypeService: SemanticTypeService) {
+    constructor() {
         super();
     }
 
@@ -71,25 +74,17 @@ export class StaticFreeInputComponent
             validators.push(Validators.required);
         }
         if (
-            this.semanticTypeService.isNumberType(
-                this.staticProperty.requiredDatatype,
-            ) ||
-            this.semanticTypeService.isNumberType(
-                this.staticProperty.requiredDomainProperty,
-            )
+            DataType.isNumberType(this.staticProperty.requiredDatatype) ||
+            DataType.isNumberType(this.staticProperty.requiredDomainProperty)
         ) {
             validators.push(ValidateNumber);
             this.errorMessage = 'The value should be a number';
         } else if (
-            this.staticProperty.requiredDomainProperty ===
-            this.semanticTypeService.SO_URL
+            this.staticProperty.requiredDomainProperty === SemanticType.SO_URL
         ) {
             validators.push(ValidateUrl);
             this.errorMessage = 'Please enter a valid URL';
-        } else if (
-            this.staticProperty.requiredDatatype ===
-            this.semanticTypeService.XS_STRING
-        ) {
+        } else if (this.staticProperty.requiredDatatype === DataType.STRING) {
             validators.push(ValidateString);
             this.errorMessage = 'Please enter a valid String';
         }

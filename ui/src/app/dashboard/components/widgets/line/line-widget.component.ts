@@ -24,7 +24,7 @@ import { DatalakeRestService } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-line-widget',
     templateUrl: './line-widget.component.html',
-    styleUrls: ['./line-widget.component.css'],
+    styleUrls: ['./line-widget.component.scss'],
 })
 export class LineWidgetComponent
     extends BaseNgxLineChartsStreamPipesWidget

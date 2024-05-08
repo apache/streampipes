@@ -21,7 +21,7 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'sp-load-data-spinner',
     templateUrl: './load-data-spinner.component.html',
-    styleUrls: ['./load-data-spinner.component.css'],
+    styleUrls: ['./load-data-spinner.component.scss'],
 })
 export class LoadDataSpinnerComponent {
     constructor() {}

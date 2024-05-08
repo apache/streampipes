@@ -54,6 +54,7 @@ public enum Envs {
 
 
   // Time Series Storage
+  SP_TS_STORAGE("SP_TS_STORAGE", "influxdb"),
   SP_TS_STORAGE_PROTOCOL("SP_TS_STORAGE_PROTOCOL", "http"),
   SP_TS_STORAGE_HOST("SP_TS_STORAGE_HOST", "influxdb", DefaultEnvValues.LOCALHOST),
   SP_TS_STORAGE_PORT("SP_TS_STORAGE_PORT", "8086"),
@@ -63,6 +64,10 @@ public enum Envs {
   SP_TS_STORAGE_ORG("SP_TS_STORAGE_ORG", "sp"),
 
   SP_TS_STORAGE_BUCKET("SP_TS_STORAGE_BUCKET", "sp"),
+  SP_TS_STORAGE_IOT_DB_SESSION_POOL_SIZE("SP_TS_STORAGE_IOT_DB_SESSION_POOL_SIZE", "10"),
+  SP_TS_STORAGE_IOT_DB_SESSION_POOL_ENABLE_COMPRESSION("SP_TS_STORAGE_IOT_DB_SESSION_POOL_ENABLE_COMPRESSION", "false"),
+  SP_TS_STORAGE_IOT_DB_USER("SP_TS_STORAGE_IOT_DB_USER", "root"),
+  SP_TS_STORAGE_IOT_DB_PASSWORD("SP_TS_STORAGE_IOT_DB_PASSWORD", "root"),
 
   SP_FLINK_JAR_FILE_LOC(
       "SP_FLINK_JAR_FILE_LOC",
@@ -97,7 +102,10 @@ public enum Envs {
   SP_NATS_HOST("SP_NATS_HOST", "nats"),
   SP_NATS_PORT("SP_NATS_PORT", "4222"),
 
-  SP_PULSAR_URL("SP_PULSAR_URL", "pulsar://localhost:6650");
+  SP_PULSAR_URL("SP_PULSAR_URL", "pulsar://localhost:6650"),
+
+  // expects a comma separated string of service names
+  SP_SERVICE_TAGS("SP_SERVICE_TAGS", "");
 
   private final String envVariableName;
   private String defaultValue;

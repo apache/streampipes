@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.iiot.adapters.oi4.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,7 +37,7 @@ public record DataSetMessage(
     @JsonProperty("Timestamp") String timestamp,
     @JsonProperty("Filter") String filter,
     @JsonProperty("Source") String source,
-    @JsonProperty("Payload") Map<String, Object> payload
+    @JsonProperty("Payload") List<Map<String, Object>> payload
 ) {
 
 }

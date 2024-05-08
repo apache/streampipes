@@ -19,12 +19,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TreeNode } from '@ali-hm/angular-tree-component';
 import {
+    DataType,
     EventProperty,
     EventPropertyList,
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
     EventSchema,
+    SemanticType,
     FieldStatusInfo,
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
@@ -33,7 +35,6 @@ import { StaticValueTransformService } from '../../../../services/static-value-t
 import { EventPropertyUtilsService } from '../../../../services/event-property-utils.service';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
-import { SemanticTypeService } from '../../../../../core-services/types/semantic-type.service';
 
 @Component({
     selector: 'sp-event-property-row',
@@ -75,7 +76,6 @@ export class EventPropertyRowComponent implements OnInit {
         private epUtils: EventPropertyUtilsService,
         private shepherdService: ShepherdService,
         private idGeneratorService: IdGeneratorService,
-        private semanticTypeService: SemanticTypeService,
     ) {}
 
     ngOnInit() {
@@ -161,11 +161,9 @@ export class EventPropertyRowComponent implements OnInit {
     isTimestampProperty(node) {
         if (
             node.domainProperties &&
-            node.domainProperties.some(
-                dp => dp === this.semanticTypeService.TIMESTAMP,
-            )
+            node.domainProperties.some(dp => dp === SemanticType.TIMESTAMP)
         ) {
-            node.runtimeType = this.semanticTypeService.XS_LONG;
+            node.runtimeType = DataType.LONG;
             return true;
         } else {
             return false;

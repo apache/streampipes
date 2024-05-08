@@ -16,24 +16,44 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DataTypesService } from '../../../../../services/data-type.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DataType } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-edit-data-type',
     templateUrl: './edit-data-type.component.html',
     styleUrls: ['./edit-data-type.component.scss'],
 })
-export class EditDataTypeComponent implements OnInit {
+export class EditDataTypeComponent {
     @Input() cachedProperty: any;
     @Output() dataTypeChanged = new EventEmitter<boolean>();
 
-    runtimeDataTypes;
-    constructor(private dataTypeService: DataTypesService) {}
-
-    ngOnInit() {
-        this.runtimeDataTypes = this.dataTypeService.dataTypes;
-    }
+    runtimeDataTypes: { label: string; url: string }[] = [
+        {
+            label: "String - A textual datatype, e.g., 'machine1'",
+            url: DataType.STRING,
+        },
+        {
+            label: 'Boolean - A true/false value',
+            url: DataType.BOOLEAN,
+        },
+        {
+            label: "Double - A number, e.g., '1.25'",
+            url: DataType.DOUBLE,
+        },
+        {
+            label: "Float - A number, e.g., '1.25'",
+            url: DataType.FLOAT,
+        },
+        {
+            label: "Integer - A number, e.g., '2'",
+            url: DataType.INTEGER,
+        },
+        {
+            label: "Long - A number, e.g., '1623871455232'",
+            url: DataType.LONG,
+        },
+    ];
 
     valueChanged() {
         this.dataTypeChanged.emit(true);

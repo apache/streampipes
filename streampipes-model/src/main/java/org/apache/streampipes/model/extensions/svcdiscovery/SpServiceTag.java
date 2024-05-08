@@ -17,6 +17,11 @@
  */
 package org.apache.streampipes.model.extensions.svcdiscovery;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+import java.util.Objects;
+
+@TsModel
 public class SpServiceTag {
 
   private static final String COLON = ":";
@@ -55,5 +60,22 @@ public class SpServiceTag {
 
   public void setValue(String value) {
     this.value = value;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    SpServiceTag that = (SpServiceTag) o;
+    return prefix == that.prefix && Objects.equals(value, that.value);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(prefix, value);
   }
 }

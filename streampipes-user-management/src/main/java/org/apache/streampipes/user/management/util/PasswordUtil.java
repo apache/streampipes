@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.user.management.util;
 
-import org.apache.commons.text.RandomStringGenerator;
-
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
@@ -31,6 +29,7 @@ import java.security.spec.InvalidKeySpecException;
 public class PasswordUtil {
 
   private static final int DEFAULT_PASSWORD_LENGTH = 10;
+  private static final String SECRET_KEY_ALGORITHM_NAME = "PBKDF2WithHmacSHA1";
 
   public static byte[] createSalt() {
     SecureRandom random = new SecureRandom();
@@ -46,7 +45,7 @@ public class PasswordUtil {
     byte[] salt = createSalt();
 
     PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
-    SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+    SecretKeyFactory skf = SecretKeyFactory.getInstance(SECRET_KEY_ALGORITHM_NAME);
     byte[] hash = skf.generateSecret(spec).getEncoded();
     return iterations + ":" + toHex(salt) + ":" + toHex(hash);
   }
@@ -71,7 +70,7 @@ public class PasswordUtil {
 
     PBEKeySpec spec = new PBEKeySpec(originalProperty.toCharArray(), salt, iterations,
         hash.length * 8);
-    SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+    SecretKeyFactory skf = SecretKeyFactory.getInstance(SECRET_KEY_ALGORITHM_NAME);
     byte[] testHash = skf.generateSecret(spec).getEncoded();
 
     int diff = hash.length ^ testHash.length;
@@ -92,11 +91,6 @@ public class PasswordUtil {
 
 
   public static String generateRandomPassword() {
-
-    // allowing all ASCII-characters from decimal id 33 to 125
-    // see https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html for full list
-    var pwdGenerator = new RandomStringGenerator.Builder().withinRange(33, 125)
-            .build();
-    return pwdGenerator.generate(DEFAULT_PASSWORD_LENGTH);
+    return new SecureStringGenerator().generateSecureString(DEFAULT_PASSWORD_LENGTH);
   }
 }
