@@ -66,3 +66,15 @@ type DataSeries struct {
 	Headers []string          `json:"http_headers"`
 	Tags    map[string]string `json:"tags"`
 }
+
+type ResponseMessage struct {
+	Success       bool           `json:"success"`
+	ElementName   interface{}    `json:"elementName"`
+	Notifications []Notification `json:"notifications"`
+}
+
+type Notification struct {
+	Title                 string `json:"title"`
+	Description           string `json:"description"`
+	AdditionalInformation string `json:"additionalInformation"`
+}

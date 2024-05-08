@@ -19,11 +19,16 @@ package serializer
 
 import (
 	"encoding/json"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/model"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/data_lake"
+
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/pipeline"
+
 
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/functions"
 
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/streampipes_user"
+
 
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/streampipes_version"
 )
@@ -94,6 +99,37 @@ func (d *StreamPipesVersionDeserializer) Unmarshal(data []byte) (interface{}, er
 		return nil, err
 	}
 	return dataSeries, nil
+}
+
+
+type ResponseMessageDeserializer struct{}
+
+func NewResponseMessageDeserializer() *ResponseMessageDeserializer {
+	return &ResponseMessageDeserializer{}
+}
+
+func (r *ResponseMessageDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var responseMessage model.ResponseMessage
+	err := json.Unmarshal(data, &responseMessage)
+	if err != nil {
+		return nil, err
+	}
+	return responseMessage, nil
+}
+
+type PipelineCategoriesDeserializer struct{}
+
+func NewPipelineCategoriesDeserializer() *PipelineCategoriesDeserializer {
+	return &PipelineCategoriesDeserializer{}
+}
+
+func (p *PipelineCategoriesDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var pipelineCategory []pipeline.PipelineCategory
+	err := json.Unmarshal(data, &pipelineCategory)
+	if err != nil {
+		return nil, err
+	}
+	return pipelineCategory, nil
 }
 
 type DataLakeDashboardDeserializer struct{}
