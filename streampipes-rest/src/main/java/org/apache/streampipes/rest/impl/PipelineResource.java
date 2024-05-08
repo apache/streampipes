@@ -205,7 +205,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Hidden
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE + " AND hasPermission(#pipeline.pipelineId, '')")
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
   public ResponseEntity<?> validatePipeline(@RequestBody Pipeline pipeline) {
     try {
       return ok(Operations.validatePipeline(pipeline));
