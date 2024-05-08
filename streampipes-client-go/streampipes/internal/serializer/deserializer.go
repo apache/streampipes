@@ -96,6 +96,36 @@ func (d *StreamPipesVersionDeserializer) Unmarshal(data []byte) (interface{}, er
 	return dataSeries, nil
 }
 
+type DataLakeDashboardDeserializer struct{}
+
+func NewDataLakeDashboardDeserializer() *DataLakeDashboardDeserializer {
+	return &DataLakeDashboardDeserializer{}
+}
+
+func (d *DataLakeDashboardDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var dashborad data_lake.Dashboard
+	err := json.Unmarshal(data, &dashborad)
+	if err != nil {
+		return nil, err
+	}
+	return dashborad, nil
+}
+
+type DataLakeDashboardsDeserializer struct{}
+
+func NewDataLakeDashboardsDeserializer() *DataLakeDashboardsDeserializer {
+	return &DataLakeDashboardsDeserializer{}
+}
+
+func (d *DataLakeDashboardsDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var dashborad []data_lake.Dashboard
+	err := json.Unmarshal(data, &dashborad)
+	if err != nil {
+		return nil, err
+	}
+  
+	return dashborad, nil
+}
 
 type DataLakeWidgetDeserializer struct{}
 
