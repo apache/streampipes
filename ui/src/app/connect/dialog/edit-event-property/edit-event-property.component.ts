@@ -30,18 +30,18 @@ import {
     Validators,
 } from '@angular/forms';
 import {
+    DataType,
     EventPropertyList,
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
+    SemanticType,
 } from '@streampipes/platform-services';
-import { DataTypesService } from '../../services/data-type.service';
 import { DialogRef } from '@streampipes/shared-ui';
 import { EditSchemaTransformationComponent } from './components/edit-schema-transformation/edit-schema-transformation.component';
 import { EditValueTransformationComponent } from './components/edit-value-transformation/edit-value-transformation.component';
 import { EditUnitTransformationComponent } from './components/edit-unit-transformation/edit-unit-transformation.component';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { SemanticTypeService } from '../../../core-services/types/semantic-type.service';
 
 @Component({
     selector: 'sp-edit-event-property',
@@ -70,19 +70,15 @@ export class EditEventPropertyComponent implements OnInit {
 
     private propertyForm: UntypedFormGroup;
 
-    private runtimeDataTypes;
-
     constructor(
         public dialogRef: DialogRef<EditEventPropertyComponent>,
         private formBuilder: UntypedFormBuilder,
-        private dataTypeService: DataTypesService,
-        private semanticTypeUtilsService: SemanticTypeService,
         private shepherdService: ShepherdService,
     ) {}
 
     ngOnInit(): void {
         this.cachedProperty = this.copyEp(this.property);
-        this.isTimestampProperty = this.semanticTypeUtilsService.isTimestamp(
+        this.isTimestampProperty = SemanticType.isTimestamp(
             this.cachedProperty,
         );
         this.isEventPropertyList = this.property instanceof EventPropertyList;
@@ -91,10 +87,8 @@ export class EditEventPropertyComponent implements OnInit {
         this.isEventPropertyNested =
             this.property instanceof EventPropertyNested;
         this.isNumericProperty =
-            this.semanticTypeUtilsService.isNumber(this.cachedProperty) ||
-            this.dataTypeService.isNumeric(
-                (this.cachedProperty as any).runtimeType,
-            );
+            SemanticType.isNumber(this.cachedProperty) ||
+            DataType.isNumberType((this.cachedProperty as any).runtimeType);
         this.createForm();
     }
 
@@ -191,7 +185,7 @@ export class EditEventPropertyComponent implements OnInit {
     }
 
     handleDataTypeChange(changed: boolean) {
-        this.isNumericProperty = this.dataTypeService.isNumeric(
+        this.isNumericProperty = DataType.isNumberType(
             (this.cachedProperty as any).runtimeType,
         );
     }

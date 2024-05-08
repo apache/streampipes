@@ -20,6 +20,11 @@ package serializer
 import (
 	"encoding/json"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/data_lake"
+
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/functions"
+
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/streampipes_user"
+
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/streampipes_version"
 )
 
@@ -118,5 +123,113 @@ func (d *DataLakeDashboardsDeserializer) Unmarshal(data []byte) (interface{}, er
 	if err != nil {
 		return nil, err
 	}
+  
 	return dashborad, nil
+}
+
+type DataLakeWidgetDeserializer struct{}
+
+func NewDataLakeWidgetDeserializer() *DataLakeWidgetDeserializer {
+	return &DataLakeWidgetDeserializer{}
+}
+
+func (d *DataLakeWidgetDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var widget data_lake.DataExplorerWidgetModel
+	err := json.Unmarshal(data, &widget)
+	if err != nil {
+		return nil, err
+	}
+	return widget, nil
+}
+
+type DataLakeWidgetsDeserializer struct{}
+
+func NewDataLakeWidgetsDeserializer() *DataLakeWidgetsDeserializer {
+	return &DataLakeWidgetsDeserializer{}
+}
+
+func (d *DataLakeWidgetsDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var widget []data_lake.DataExplorerWidgetModel
+	err := json.Unmarshal(data, &widget)
+	if err != nil {
+		return nil, err
+	}
+	return widget, nil
+}
+
+type SpLogEntriesDeserializer struct{}
+
+func NewSpLogEntriesDeserializer() *SpLogEntriesDeserializer {
+	return &SpLogEntriesDeserializer{}
+}
+
+func (p *SpLogEntriesDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var userAccount []functions.SpLogEntry
+	err := json.Unmarshal(data, &userAccount)
+	if err != nil {
+		return nil, err
+	}
+	return userAccount, nil
+}
+
+type SpMetricsEntryDeserializer struct{}
+
+func NewSpMetricsEntryDeserializer() *SpMetricsEntryDeserializer {
+	return &SpMetricsEntryDeserializer{}
+}
+
+func (p *SpMetricsEntryDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var spMetricsEntry functions.SpMetricsEntry
+	err := json.Unmarshal(data, &spMetricsEntry)
+	if err != nil {
+		return nil, err
+	}
+	return spMetricsEntry, nil
+}
+
+type FunctionDefinitionsDeserializer struct{}
+
+func NewFunctionDefinitionsDeserializer() *FunctionDefinitionsDeserializer {
+	return &FunctionDefinitionsDeserializer{}
+}
+
+func (p *FunctionDefinitionsDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var functionDefinitions []functions.FunctionDefinition
+	err := json.Unmarshal(data, &functionDefinitions)
+	if err != nil {
+		return nil, err
+	}
+	return functionDefinitions, nil
+  
+}
+
+type ShortUserInfosDeserializer struct{}
+
+func NewShortUserInfosDeserializer() *ShortUserInfosDeserializer {
+	return &ShortUserInfosDeserializer{}
+}
+
+func (s *ShortUserInfosDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var shortUserInfo []streampipes_user.ShortUserInfo
+	err := json.Unmarshal(data, &shortUserInfo)
+	if err != nil {
+		return nil, err
+	}
+	return shortUserInfo, nil
+}
+
+type UserAccountDeserializer struct{}
+
+func NewUserAccountDeserializer() *UserAccountDeserializer {
+	return &UserAccountDeserializer{}
+}
+
+func (p *UserAccountDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var userAccount streampipes_user.UserAccount
+	err := json.Unmarshal(data, &userAccount)
+	if err != nil {
+		return nil, err
+	}
+	return userAccount, nil
+
 }

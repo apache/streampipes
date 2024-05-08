@@ -35,6 +35,7 @@ import { RouterLink } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
     imports: [
@@ -46,6 +47,7 @@ import { MatRadioModule } from '@angular/material/radio';
         MatDividerModule,
         MatTabsModule,
         MatButtonModule,
+        MatTableModule,
         CommonModule,
         ClipboardModule,
         CoreUiModule,

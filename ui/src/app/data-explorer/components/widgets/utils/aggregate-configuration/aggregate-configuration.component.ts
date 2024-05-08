@@ -23,7 +23,7 @@ import { WidgetConfigurationService } from '../../../../services/widget-configur
 @Component({
     selector: 'sp-aggregate-configuration',
     templateUrl: './aggregate-configuration.component.html',
-    styleUrls: ['./aggregate-configuration.component.css'],
+    styleUrls: ['./aggregate-configuration.component.scss'],
 })
 export class AggregateConfigurationComponent {
     @Input() queryConfig: QueryConfig;

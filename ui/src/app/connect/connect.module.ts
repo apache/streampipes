@@ -100,6 +100,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { AdapterStatusLightComponent } from './components/existing-adapters/adapter-status-light/adapter-status-light.component';
+import { SpAdapterDeploymentSettingsComponent } from './components/adapter-configuration/adapter-settings/adapter-deployment-settings/adapter-deployment-settings.component';
 
 @NgModule({
     imports: [
@@ -179,6 +181,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
         AdapterConfigurationComponent,
         AdapterDescriptionComponent,
         AdapterStartedDialog,
+        AdapterStatusLightComponent,
         AdapterSettingsComponent,
         DataMarketplaceComponent,
         DeleteAdapterDialogComponent,
@@ -204,6 +207,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
         SchemaEditorHeaderComponent,
         SpEpSettingsSectionComponent,
         StartAdapterConfigurationComponent,
+        SpAdapterDeploymentSettingsComponent,
         SpAdapterDetailsLogsComponent,
         SpAdapterDetailsMetricsComponent,
         SpAdapterOptionsPanelComponent,

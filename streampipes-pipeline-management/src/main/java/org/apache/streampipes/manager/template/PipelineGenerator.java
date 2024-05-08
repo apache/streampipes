@@ -27,7 +27,7 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineModification;
 import org.apache.streampipes.model.template.BoundPipelineElement;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
-import org.apache.streampipes.storage.management.StorageManager;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -126,10 +126,9 @@ public class PipelineGenerator {
   }
 
   private SpDataStream getStream(String datasetId) {
-    return StorageManager
-        .INSTANCE
-        .getPipelineElementStorage()
-        .getEventStreamById(datasetId);
+    return StorageDispatcher.INSTANCE.getNoSqlStore()
+                                     .getPipelineElementDescriptionStorage()
+                                     .getEventStreamById(datasetId);
   }
 
 

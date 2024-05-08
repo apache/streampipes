@@ -74,7 +74,7 @@ import { IdGeneratorService } from '../../../core-services/id-generator/id-gener
 @Component({
     selector: 'sp-pipeline',
     templateUrl: './pipeline.component.html',
-    styleUrls: ['./pipeline.component.css'],
+    styleUrls: ['./pipeline.component.scss'],
 })
 export class PipelineComponent implements OnInit, OnDestroy {
     @Input()
@@ -117,6 +117,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     previewModeActive = false;
     pipelinePreview: PipelinePreviewModel;
+
+    shouldOpenCustomizeSettings = false;
 
     constructor(
         private jsplumbService: JsplumbService,
@@ -168,11 +170,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
         this.jsplumbFactoryService.destroy(this.preview);
     }
 
-    updateMouseover(elementId) {
+    updateMouseover(elementId: string) {
         this.currentMouseOverElement = elementId;
     }
 
-    updateOptionsClick(elementId) {
+    updateOptionsClick(elementId: string) {
         this.currentMouseOverElement =
             this.currentMouseOverElement === elementId ? '' : elementId;
     }
@@ -191,11 +193,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
         );
     }
 
-    getElementCssClasses(currentPipelineElement) {
+    getElementCssClasses(currentPipelineElement: PipelineElementConfig) {
         return (
             currentPipelineElement.type +
             ' ' +
-            (currentPipelineElement.settings.openCustomize ? '' : '') +
             currentPipelineElement.settings.connectable +
             ' ' +
             currentPipelineElement.settings.displaySettings
@@ -210,7 +211,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         return this.isInPipeline('set');
     }
 
-    isInPipeline(type) {
+    isInPipeline(type: string) {
         return this.rawPipelineModel.some(
             x => x.type === type && !x.settings.disabled,
         );
@@ -336,6 +337,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
     initPlumb() {
         this.JsplumbBridge.unbind(EVENT_CONNECTION);
 
+        this.JsplumbBridge.bind(EVENT_CONNECTION_DRAG, () => {
+            this.shouldOpenCustomizeSettings = true;
+        });
+
+        this.JsplumbBridge.bind(EVENT_CONNECTION_ABORT, () => {
+            this.shouldOpenCustomizeSettings = false;
+        });
+
         this.JsplumbBridge.bind(EVENT_CONNECTION_MOVED, info => {
             const pe = this.objectProvider.findElement(
                 info.newTargetEndpoint.elementId,
@@ -355,7 +364,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
                 this.rawPipelineModel,
             );
             (pe.payload as InvocablePipelineElementUnion).configured = false;
-            pe.settings.openCustomize = true;
             info.targetEndpoint.setType('empty');
             this.JsplumbBridge.repaintEverything();
             this.validatePipeline();
@@ -383,10 +391,15 @@ export class PipelineComponent implements OnInit, OnDestroy {
                 info.target.id,
                 this.rawPipelineModel,
             );
-            if (pe.settings.openCustomize) {
+
+            if (
+                this.shouldOpenCustomizeSettings ||
+                info.connection.data.openCustomize
+            ) {
                 this.currentPipelineModel = this.objectProvider.makePipeline(
                     this.rawPipelineModel,
                 );
+
                 pe.settings.loadingStatus = true;
                 this.objectProvider
                     .updatePipeline(this.currentPipelineModel)
@@ -399,10 +412,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
                                     info.target.id,
                                 );
                             const currentConnectionValid =
-                                this.currentConnectionValid(
-                                    pe,
-                                    edgeValidations,
-                                );
+                                this.currentConnectionValid(edgeValidations);
                             if (currentConnectionValid) {
                                 this.validatePipeline(
                                     pipelineModificationMessage,
@@ -467,11 +477,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         };
     }
 
-    currentConnectionValid(
-        pe: PipelineElementConfig,
-        targetEdges: PipelineEdgeValidation[],
-    ) {
-        const entity = pe.payload as InvocablePipelineElementUnion;
+    currentConnectionValid(targetEdges: PipelineEdgeValidation[]) {
         return targetEdges.every(
             e => e.status.validationStatusType === 'COMPLETE',
         );
@@ -511,10 +517,17 @@ export class PipelineComponent implements OnInit, OnDestroy {
                             ).outputStream = modification.outputStream;
                         }
                     }
-                    if (modification.inputStreams) {
+                    if (
+                        modification.inputStreams &&
+                        modification.inputStreams.length > 0
+                    ) {
                         (
                             pe.payload as InvocablePipelineElementUnion
                         ).inputStreams = modification.inputStreams;
+                    }
+                    if (modification.pipelineElementValid) {
+                        pe.settings.completed =
+                            PipelineElementConfigurationStatus.OK;
                     }
                     if (modification.validationInfos.length > 0) {
                         this.pipelineStyleService.updatePeConfigurationStatus(
@@ -536,7 +549,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         }
     }
 
-    isCustomOutput(pe) {
+    isCustomOutput(pe: PipelineElementConfig) {
         let custom = false;
         if (pe.payload instanceof DataProcessorInvocation) {
             pe.payload.outputStrategies.forEach(strategy => {
@@ -576,7 +589,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         });
     }
 
-    showErrorDialog(title, description) {
+    showErrorDialog(title: string, description: string) {
         this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {
@@ -610,7 +623,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe(c => {
             if (c) {
-                pipelineElementConfig.settings.openCustomize = false;
                 (
                     pipelineElementConfig.payload as InvocablePipelineElementUnion
                 ).configured = true;

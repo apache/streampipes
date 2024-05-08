@@ -38,7 +38,7 @@ import { FileRenameDialogComponent } from '../../../files/dialog/file-rename/fil
 @Component({
     selector: 'sp-static-file-input',
     templateUrl: './static-file-input.component.html',
-    styleUrls: ['./static-file-input.component.css'],
+    styleUrls: ['./static-file-input.component.scss'],
 })
 export class StaticFileInputComponent
     extends AbstractValidatedStaticPropertyRenderer<FileStaticProperty>

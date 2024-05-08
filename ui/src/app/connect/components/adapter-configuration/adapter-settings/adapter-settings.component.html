@@ -19,6 +19,17 @@
 <div fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayout="column">
         <sp-basic-inner-panel
+            panelTitle="Service Selection"
+            outerMargin="20px 0px"
+        >
+            <sp-adapter-deployment-settings
+                [deploymentConfiguration]="
+                    adapterDescription.deploymentConfiguration
+                "
+            >
+            </sp-adapter-deployment-settings>
+        </sp-basic-inner-panel>
+        <sp-basic-inner-panel
             panelTitle="Basic Settings"
             outerMargin="20px 0px"
         >
@@ -59,6 +70,9 @@
                 [configurationGroup]="specificAdapterForm"
                 [adapterId]="adapterDescription.appId"
                 [configuration]="adapterDescription.config"
+                [deploymentConfiguration]="
+                    adapterDescription.deploymentConfiguration
+                "
             >
             </sp-configuration-group>
         </sp-basic-inner-panel>
