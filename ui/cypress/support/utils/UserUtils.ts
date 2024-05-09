@@ -69,7 +69,7 @@ export class UserUtils {
         cy.dataCy('login-password').type(user.password);
         cy.dataCy('login-button').click();
         cy.wait(1000);
-    };
+    }
 
     public static deleteUser(user: User) {
         this.goToUserConfiguration();
