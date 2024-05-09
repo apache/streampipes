@@ -79,7 +79,7 @@ describe('Test User Roles for Pipelines', () => {
         cy.dataCy('sp-element-edit-user-save').click();
 
         // Login as user and check if pipeline is visible to user
-        cy.switchUser(user);
+        UserUtils.switchUser(user);
 
         cy.dataCy('navigation-icon', { timeout: 10000 }).should(
             'have.length',
@@ -97,7 +97,7 @@ describe('Test User Roles for Pipelines', () => {
         );
 
         // Delete user
-        cy.switchUser(UserUtils.adminUser);
+        UserUtils.switchUser(UserUtils.adminUser);
         UserUtils.deleteUser(user);
     });
 });

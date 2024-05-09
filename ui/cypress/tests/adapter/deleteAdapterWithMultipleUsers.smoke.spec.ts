@@ -49,17 +49,17 @@ describe('Test Enhanced Adapter Deletion', () => {
     // In the beginning, create the non-admin user
     before(() => {
         cy.initStreamPipesTest();
-        UserUtils.addUser(UserUtils.adapterAndPipelineAdminUser);
+        UserUtils.addUser(UserUtils.userWithAdapterAndPipelineAdminRights);
         cy.logout();
     });
 
     beforeEach('Setup Test', () => {
         cy.visit('#/login');
         cy.dataCy('login-email').type(
-            UserUtils.adapterAndPipelineAdminUser.email,
+            UserUtils.userWithAdapterAndPipelineAdminRights.email,
         );
         cy.dataCy('login-password').type(
-            UserUtils.adapterAndPipelineAdminUser.password,
+            UserUtils.userWithAdapterAndPipelineAdminRights.password,
         );
         cy.dataCy('login-button').click();
         cy.wait(1000);
@@ -78,18 +78,18 @@ describe('Test Enhanced Adapter Deletion', () => {
         PipelineUtils.addPipeline(pipelineInput);
         PipelineUtils.addPipeline(pipelineInput);
         // Then let the admin delete them
-        cy.switchUser(UserUtils.adminUser);
+        UserUtils.switchUser(UserUtils.adminUser);
         ConnectUtils.deleteAdapterAndAssociatedPipelines(true);
     });
 
     it('Test Delete Adapter and Associated Pipelines Permission Denied', () => {
         // Let the admin create the adapter and the pipeline
-        cy.switchUser(UserUtils.adminUser);
+        UserUtils.switchUser(UserUtils.adminUser);
         ConnectUtils.testAdapter(adapterInput);
         PipelineUtils.addPipeline(pipelineInput);
         PipelineUtils.addPipeline(pipelineInput);
         // Then the user shouldn't be able to delete them
-        cy.switchUser(UserUtils.adapterAndPipelineAdminUser);
+        UserUtils.switchUser(UserUtils.userWithAdapterAndPipelineAdminRights);
         ConnectUtils.deleteAdapterAndAssociatedPipelinesPermissionDenied();
     });
 });
