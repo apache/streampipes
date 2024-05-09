@@ -40,7 +40,7 @@ export default {
                 stepId: 'step-3',
                 title: 'Pipeline assembly',
                 classes: 'shepherd shepherd-welcome',
-                text: '<p>The pipeline assembly is the place where you can create pipelines. <br>Pipelines combine data streams, processors and sinks and can be used to trigger alarms, to transform data or to apply data analytics algoritms.<br> Click <b>Next</b> to continue.</p>',
+                text: '<p>The pipeline assembly is the place where you can create pipelines. <br>Pipelines combine data streams, processors and sinks and can be used to trigger alarms, to transform data or to apply data analytics algorithms.<br> Click <b>Next</b> to continue.</p>',
                 buttons: ['cancel', 'next'],
             },
             {
@@ -68,7 +68,7 @@ export default {
             {
                 stepId: 'step-7',
                 title: 'Data processors',
-                text: 'No we will add a data processor. This is the data processor list which shows all currently available data processors.<p>Click <b>Next</b> to continue.</p>',
+                text: 'Now we will add a data processor. This is the data processor list which shows all currently available data processors.<p>Click <b>Next</b> to continue.</p>',
                 attachToElement: '#panel-1',
                 attachPosition: 'left',
                 buttons: ['cancel', 'next'],
