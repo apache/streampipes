@@ -272,7 +272,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
     thread.setUncaughtExceptionHandler((t, e) -> exceptionRef.set(e.getCause()));
     thread.start();
 
-    while (sampleMessages.isEmpty() && exceptionRef.get() == null && timeElapsed < ReceiveSchemaSleepTime) {
+    while (sampleMessages.isEmpty() && exceptionRef.get() == null && timeElapsed < ReceiveSchemaMaxTimeout) {
       try {
         TimeUnit.MILLISECONDS.sleep(ReceiveSchemaSleepTime);
         timeElapsed += ReceiveSchemaSleepTime;
@@ -338,15 +338,12 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
           // an empty list of selected sensors means that we want to collect data from all sensors available
           if (selectedSensors.isEmpty() || selectedSensors.contains(sensorId)) {
-
             return extractAndEnrichMessagePayload(dataMessage, sensorId);
           }
-        } else {
-          throw new ParseException(String.format("No sensor of type %s found in message", givenSensorType));
         }
       }
     }
-    throw new ParseException("No process data message");
+    throw new ParseException(String.format("No sensor of type %s found in message", givenSensorType));
   }
 
   private List<DataSetMessage> findProcessDataInputMessage(NetworkMessage message) {
