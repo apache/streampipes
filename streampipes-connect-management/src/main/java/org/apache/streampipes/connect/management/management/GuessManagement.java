@@ -19,7 +19,6 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.connect.management.AdapterEventPreviewPipeline;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
@@ -28,6 +27,7 @@ import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -67,8 +67,8 @@ public class GuessManagement {
     if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
       return objectMapper.readValue(responseString, GuessSchema.class);
     } else {
-      var exception = objectMapper.readValue(responseString, SpConfigurationException.class);
-      throw new WorkerAdapterException(exception.getMessage(), exception.getCause());
+      var exception = objectMapper.readValue(responseString, SpLogMessage.class);
+      throw new WorkerAdapterException(exception);
     }
   }
 

@@ -60,8 +60,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
@@ -77,6 +77,8 @@ public class Oi4Adapter implements StreamPipesAdapter {
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.oi4";
 
   private static final Logger LOG = LoggerFactory.getLogger(Oi4Adapter.class);
+  private static final long ReceiveSchemaSleepTime = 100;
+  private static final long ReceiveSchemaMaxTimeout = 5000;
 
   // Information about the topic structure can be found at page 57 of the above-mentioned development guide
   // The app id (missing here) needs to be provided by the user
@@ -204,13 +206,17 @@ public class Oi4Adapter implements StreamPipesAdapter {
       IAdapterParameterExtractor extractor,
       IAdapterGuessSchemaContext adapterGuessSchemaContext
   ) throws AdapterException {
-    this.applyConfiguration(extractor.getStaticPropertyExtractor());
+    try {
+      this.applyConfiguration(extractor.getStaticPropertyExtractor());
 
-    var sampleMessage = getSampleMessage();
-    var guessSchema = guessSchemaFromSampleMessage(sampleMessage);
-    updateTimestampPropertyIfExists(guessSchema);
+      var sampleMessage = getSampleMessage();
+      var guessSchema = guessSchemaFromSampleMessage(sampleMessage);
+      updateTimestampPropertyIfExists(guessSchema);
 
-    return guessSchema;
+      return guessSchema;
+    } catch (RuntimeException e) {
+      throw new AdapterException(e.getMessage(), e);
+    }
   }
 
   /**
@@ -256,23 +262,37 @@ public class Oi4Adapter implements StreamPipesAdapter {
     }
   }
 
-  private byte[] getSampleMessage() {
+  private byte[] getSampleMessage() throws AdapterException {
     List<byte[]> sampleMessages = new ArrayList<>();
+    long timeElapsed = 0;
+    AtomicReference<Throwable> exceptionRef = new AtomicReference<>();
     MqttConsumer guessConsumer = getGuessMqttConsumer(sampleMessages);
 
-    var executor = Executors.newSingleThreadExecutor();
-    executor.submit(guessConsumer);
+    var thread = new Thread(guessConsumer);
+    thread.setUncaughtExceptionHandler((t, e) -> exceptionRef.set(e.getCause()));
+    thread.start();
 
-    while (sampleMessages.isEmpty()) {
+    while (sampleMessages.isEmpty() && exceptionRef.get() == null && timeElapsed < ReceiveSchemaSleepTime) {
       try {
-        TimeUnit.MILLISECONDS.sleep(100);
+        TimeUnit.MILLISECONDS.sleep(ReceiveSchemaSleepTime);
+        timeElapsed += ReceiveSchemaSleepTime;
       } catch (InterruptedException e) {
         LOG.error("Schema guessing failed during waiting for an incoming event: {}", e.getMessage());
+        break;
       }
     }
     guessConsumer.close();
-    executor.shutdown();
-    return sampleMessages.get(0);
+
+    Throwable threadException = exceptionRef.get();
+    if (threadException != null) {
+      throw new AdapterException(threadException.getMessage(), threadException);
+    }
+
+    if (!sampleMessages.isEmpty()) {
+      return sampleMessages.get(0);
+    } else {
+      throw new AdapterException("No messages received");
+    }
   }
 
   /**
@@ -293,19 +313,13 @@ public class Oi4Adapter implements StreamPipesAdapter {
         LOG.error("Error during parsing of incoming MQTT event.");
         throw new RuntimeException(e);
       }
-      try {
-        // Attempt to extract payload from the NetworkMessage
-        extractPayload(networkMessage);
-        // If successful, add the event to the sampleMessages array
-        sampleMessages.add(event);
-      } catch (ParseException e) {
-        LOG.debug("Collected sample could not be parsed successfully - "
-            + "this could be a message from a different sensor type.");
-      }
+      // Attempt to extract payload from the NetworkMessage
+      extractPayload(networkMessage);
+      // If successful, add the event to the sampleMessages array
+      sampleMessages.add(event);
     };
     return new MqttConsumer(this.mqttConfig, eventProcessor);
   }
-
 
   private Map<String, Object> extractPayload(NetworkMessage message) throws ParseException {
 
@@ -313,20 +327,22 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
     if (!dataMessages.isEmpty()) {
 
-      for (var dataMessage: dataMessages) {
+      for (var dataMessage : dataMessages) {
 
         var sensorId = getSensorIdFromSource(dataMessage.source());
 
         // Verify that the message corresponds to the designated sensor type.
         // This validation relies on the assumption that the source information includes the sensor type.
         if (dataMessage.source()
-                       .contains(givenSensorType)) {
+            .contains(givenSensorType)) {
 
           // an empty list of selected sensors means that we want to collect data from all sensors available
           if (selectedSensors.isEmpty() || selectedSensors.contains(sensorId)) {
 
             return extractAndEnrichMessagePayload(dataMessage, sensorId);
           }
+        } else {
+          throw new ParseException(String.format("No sensor of type %s found in message", givenSensorType));
         }
       }
     }
@@ -335,16 +351,15 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
   private List<DataSetMessage> findProcessDataInputMessage(NetworkMessage message) {
     return message.messages()
-                  .stream()
-                  .filter(msg -> msg.filter()
-                  .equals(OI4AdapterLabels.MESSAGE_VALUE_FILTER))
-                  .toList();
+        .stream()
+        .filter(msg -> msg.filter()
+            .equals(OI4AdapterLabels.MESSAGE_VALUE_FILTER))
+        .toList();
   }
 
   private Map<String, Object> extractAndEnrichMessagePayload(DataSetMessage dataSetMessage, String sensorId) {
     var payload = dataSetMessage
-        .payload()
-        .get(0);
+        .payload();
     try {
       payload.put(
           OI4AdapterLabels.EVENT_KEY_TIMESTAMP,
