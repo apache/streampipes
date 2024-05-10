@@ -31,6 +31,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.rest.extensions.WelcomePage;
+import org.apache.streampipes.rest.shared.exception.RestResponseLogMessageExceptionHandler;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.service.base.rest.ServiceHealthResource;
@@ -55,7 +56,12 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({WebSecurityConfig.class, WelcomePage.class, ServiceHealthResource.class})
+@Import({
+    WebSecurityConfig.class,
+    WelcomePage.class,
+    ServiceHealthResource.class,
+    RestResponseLogMessageExceptionHandler.class
+})
 @ComponentScan({"org.apache.streampipes.rest.extensions.*", "org.apache.streampipes.service.base.rest.*"})
 public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
 

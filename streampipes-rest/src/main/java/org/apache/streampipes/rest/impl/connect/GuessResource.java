@@ -63,7 +63,7 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
       LOG.error("Error while parsing events: ", e);
       return badRequest(SpLogMessage.from(e));
     } catch (WorkerAdapterException e) {
-      return serverError(SpLogMessage.from(e));
+      return serverError(e.getExceptionMessage());
     } catch (NoServiceEndpointsAvailableException | IOException e) {
       LOG.error(e.getMessage());
       return serverError(SpLogMessage.from(e));

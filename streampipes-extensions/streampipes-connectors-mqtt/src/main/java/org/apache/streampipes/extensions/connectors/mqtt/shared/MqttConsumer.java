@@ -27,19 +27,21 @@ import org.fusesource.mqtt.client.Topic;
 
 public class MqttConsumer implements Runnable {
 
-  private InternalEventProcessor<byte[]> consumer;
+  private final InternalEventProcessor<byte[]> consumer;
   private boolean running;
   private int maxElementsToReceive = -1;
   private int messageCount = 0;
 
-  private MqttConfig mqttConfig;
+  private final MqttConfig mqttConfig;
 
-  public MqttConsumer(MqttConfig mqttConfig, InternalEventProcessor<byte[]> consumer) {
+  public MqttConsumer(MqttConfig mqttConfig,
+                      InternalEventProcessor<byte[]> consumer) {
     this.mqttConfig = mqttConfig;
     this.consumer = consumer;
   }
 
-  public MqttConsumer(MqttConfig mqttConfig, InternalEventProcessor<byte[]> consumer,
+  public MqttConsumer(MqttConfig mqttConfig,
+                      InternalEventProcessor<byte[]> consumer,
                       int maxElementsToReceive) {
     this(mqttConfig, consumer);
     this.maxElementsToReceive = maxElementsToReceive;
@@ -51,6 +53,7 @@ public class MqttConsumer implements Runnable {
     MQTT mqtt = new MQTT();
     try {
       mqtt.setHost(mqttConfig.getUrl());
+      mqtt.setConnectAttemptsMax(1);
       if (mqttConfig.getAuthenticated()) {
         mqtt.setUserName(mqttConfig.getUsername());
         mqtt.setPassword(mqttConfig.getPassword());
@@ -69,7 +72,7 @@ public class MqttConsumer implements Runnable {
       }
       connection.disconnect();
     } catch (Exception e) {
-      e.printStackTrace();
+      throw new RuntimeException("Error when receiving data from MQTT", e);
     }
   }
 

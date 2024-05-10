@@ -24,7 +24,8 @@ import org.apache.streampipes.extensions.management.connect.GuessManagement;
 import org.apache.streampipes.extensions.management.context.AdapterContextGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
+import org.apache.streampipes.rest.shared.exception.SpLogMessageException;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
 import org.slf4j.Logger;
@@ -65,11 +66,11 @@ public class GuessResource extends AbstractSharedRestInterface {
       return ok(result);
     } catch (ParseException e) {
       logger.error("Error while parsing events: ", e);
-      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+      throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));
     } catch (AdapterException e) {
       logger.error("Error while guessing schema for AdapterDescription: {}, {}", adapterDescription.getElementId(),
           e.getMessage());
-      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+      throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));
     }
 
   }

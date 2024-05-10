@@ -18,24 +18,20 @@
 
 package org.apache.streampipes.extensions.api.connect.exception;
 
-import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 
 public class WorkerAdapterException extends Exception {
-  private Message content;
+
+  private SpLogMessage exceptionMessage;
 
   public WorkerAdapterException() {
   }
 
-  public WorkerAdapterException(Message message) {
-    super(message.getElementName());
-    this.content = message;
+  public WorkerAdapterException(SpLogMessage exceptionMessage) {
+    this.exceptionMessage = exceptionMessage;
   }
 
-  public WorkerAdapterException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
-  public Message getContent() {
-    return content;
+  public SpLogMessage getExceptionMessage() {
+    return exceptionMessage;
   }
 }
