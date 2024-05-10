@@ -84,8 +84,8 @@ public class TimeSeriesStorageIotDb extends TimeSeriesStorage {
     }
 
     var timestampValue = event.getFieldBySelector(measure.getTimestampField())
-                              .getAsPrimitive()
-                              .getAsLong();
+        .getAsPrimitive()
+        .getAsLong();
 
     if (timestampValue == null) {
       LOG.warn("Timestamp of input event is null - skipping event");
@@ -117,23 +117,33 @@ public class TimeSeriesStorageIotDb extends TimeSeriesStorage {
    * @param event The event from which measurement records are extracted.
    * @return An ArrayList of IotDbMeasurementRecord objects containing the extracted measurement records.
    */
-  private ArrayList<IotDbMeasurementRecord> extractMeasurementRecords(Event event){
+  private ArrayList<IotDbMeasurementRecord> extractMeasurementRecords(Event event) {
     var iotDbRecords = new ArrayList<IotDbMeasurementRecord>();
     allEventProperties.forEach(ep -> {
       try {
         // timestamp is already known and is not part of the measurement thus we ignore it here
         if (!ep.getRuntimeName().equals(measure.getTimestampFieldName())) {
-          if (ep instanceof EventPropertyPrimitive) {
-            iotDbRecords.add(propertyConverter.convertPrimitiveProperty(
-                (EventPropertyPrimitive) ep,
-                event.getFieldByRuntimeName(ep.getRuntimeName()).getAsPrimitive(),
-                sanitizedRuntimeNames.get(ep.getRuntimeName())
-                ));
-          } else {
-            iotDbRecords.add(propertyConverter.convertNonPrimitiveProperty(
-                ep,
-                sanitizedRuntimeNames.get(ep.getRuntimeName())
-            ));
+
+          try {
+            var eventField = event.getFieldByRuntimeName(ep.getRuntimeName()).getAsPrimitive();
+
+            if (ep instanceof EventPropertyPrimitive) {
+              iotDbRecords.add(propertyConverter.convertPrimitiveProperty(
+                  (EventPropertyPrimitive) ep,
+                  event.getFieldByRuntimeName(ep.getRuntimeName()).getAsPrimitive(),
+                  sanitizedRuntimeNames.get(ep.getRuntimeName())
+              ));
+            } else {
+              iotDbRecords.add(propertyConverter.convertNonPrimitiveProperty(
+                  ep,
+                  sanitizedRuntimeNames.get(ep.getRuntimeName())
+              ));
+            }
+          } catch (SpRuntimeException e) {
+            LOG.debug("Value and metadata for event field '{}' could not be extracted - "
+                    + "property will not be written to storage",
+                ep.getRuntimeName()
+            );
           }
         }
       } catch (SpRuntimeException e) {
