@@ -33,20 +33,25 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.Parse
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MqttProtocol implements StreamPipesAdapter {
 
+  private static final Logger LOG = LoggerFactory.getLogger(MqttProtocol.class);
+
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.mqtt";
 
-  private Thread thread;
   private MqttConsumer mqttConsumer;
   private MqttConfig mqttConfig;
 
@@ -63,7 +68,7 @@ public class MqttProtocol implements StreamPipesAdapter {
         .create(ID, 0, MqttProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
         .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
         .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
@@ -80,12 +85,10 @@ public class MqttProtocol implements StreamPipesAdapter {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     this.mqttConsumer = new MqttConsumer(
         this.mqttConfig,
-        new BrokerEventProcessor(extractor.selectedParser(), (event) -> {
-          collector.collect(event);
-        })
+        new BrokerEventProcessor(extractor.selectedParser(), collector)
     );
 
-    thread = new Thread(this.mqttConsumer);
+    Thread thread = new Thread(this.mqttConsumer);
     thread.start();
   }
 
@@ -98,22 +101,36 @@ public class MqttProtocol implements StreamPipesAdapter {
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
                                        IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    this.applyConfiguration(extractor.getStaticPropertyExtractor());
-    List<byte[]> elements = new ArrayList<>();
-    InternalEventProcessor<byte[]> eventProcessor = elements::add;
+    try {
+      AtomicReference<Throwable> exceptionRef = new AtomicReference<>();
+      this.applyConfiguration(extractor.getStaticPropertyExtractor());
+      List<byte[]> elements = new ArrayList<>();
+      InternalEventProcessor<byte[]> eventProcessor = elements::add;
 
-    MqttConsumer consumer = new MqttConsumer(this.mqttConfig, eventProcessor);
 
-    Thread thread = new Thread(consumer);
-    thread.start();
+      MqttConsumer consumer = new MqttConsumer(this.mqttConfig, eventProcessor);
 
-    while (consumer.getMessageCount() < 1) {
-      try {
-        TimeUnit.MILLISECONDS.sleep(100);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
+      Thread thread = new Thread(consumer);
+      thread.setUncaughtExceptionHandler((t, e) -> exceptionRef.set(e.getCause()));
+      thread.start();
+
+      while (consumer.getMessageCount() < 1 && exceptionRef.get() == null) {
+        try {
+          TimeUnit.MILLISECONDS.sleep(100);
+        } catch (InterruptedException e) {
+          break;
+        }
       }
+      consumer.close();
+
+      Throwable threadException = exceptionRef.get();
+      if (threadException != null) {
+        throw new AdapterException(threadException.getMessage(), threadException);
+      }
+
+      return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(elements.get(0)));
+    } catch (Exception e) {
+      throw new AdapterException(e.getMessage(), e);
     }
-    return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(elements.get(0)));
   }
 }
