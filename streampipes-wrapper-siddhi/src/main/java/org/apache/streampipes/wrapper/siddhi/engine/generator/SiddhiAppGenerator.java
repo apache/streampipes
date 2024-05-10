@@ -78,7 +78,7 @@ public class SiddhiAppGenerator {
         .getQueries()
         .forEach(query -> this.siddhiAppString.append(query).append("\n"));
 
-    LOG.info("Registering statement: \n" + this.siddhiAppString);
+    LOG.info("Registering statement: \n{}", this.siddhiAppString);
 
   }
 }

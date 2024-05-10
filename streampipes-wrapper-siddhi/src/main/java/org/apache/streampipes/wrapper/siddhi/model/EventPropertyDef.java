@@ -19,9 +19,15 @@ package org.apache.streampipes.wrapper.siddhi.model;
 
 public class EventPropertyDef {
 
+  public static final String WHITESPACE_REPLACEMENT = "__w__";
+
   private String selectorPrefix;
   private final String fieldName;
   private final String fieldType;
+
+  public static String toOriginalFieldName(String sanitizedFieldName) {
+    return sanitizedFieldName.replaceAll(WHITESPACE_REPLACEMENT, " ");
+  }
 
   public EventPropertyDef(String fieldName,
                           String fieldType) {
@@ -40,7 +46,7 @@ public class EventPropertyDef {
   }
 
   public String getFieldName() {
-    return fieldName;
+    return fieldName.replaceAll(" ", WHITESPACE_REPLACEMENT);
   }
 
   public String getFieldType() {
