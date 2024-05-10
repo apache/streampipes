@@ -49,7 +49,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-ts-store-iotdb</artifactId>
+            <artifactId>streampipes-data-explorer-iotdb</artifactId>
             <version>0.97.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

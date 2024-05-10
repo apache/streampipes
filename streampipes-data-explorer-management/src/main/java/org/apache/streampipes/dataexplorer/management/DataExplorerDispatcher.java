@@ -21,7 +21,7 @@ package org.apache.streampipes.dataexplorer.management;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.influx.DataExplorerManagerInflux;
-import org.apache.streampipes.ts.store.iotdb.DataExplorerManagerIotDb;
+import org.apache.streampipes.dataexplorer.iotdb.DataExplorerManagerIotDb;
 
 public class DataExplorerDispatcher {
 
