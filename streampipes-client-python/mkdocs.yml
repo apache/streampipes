@@ -29,7 +29,7 @@ copyright: "Apache License 2.0"
 theme:
   name: material
   logo: https://streampipes.apache.org/img/sp-logo-white-right.png
-  favicon: https://streampipes.apache.org/img/favicon/favicon.png
+  favicon: https://streampipes.apache.org/img/favicon.png
   custom_dir: docs/overrides
   features:
     - navigation.tabs
