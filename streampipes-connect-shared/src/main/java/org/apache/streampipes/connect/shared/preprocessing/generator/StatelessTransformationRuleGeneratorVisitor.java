@@ -117,7 +117,7 @@ public class StatelessTransformationRuleGeneratorVisitor extends TransformationR
     if (ruleDesc.getMode().equals(TimestampTranformationRuleMode.FORMAT_STRING.internalName())) {
       mode = TimestampTranformationRuleMode.FORMAT_STRING;
     } else {
-      mode = TimestampTranformationRuleMode.FORMAT_STRING;
+      mode = TimestampTranformationRuleMode.TIME_UNIT;
     }
 
     rules.add(new TimestampTransformationRule(Utils.toKeyArray(
