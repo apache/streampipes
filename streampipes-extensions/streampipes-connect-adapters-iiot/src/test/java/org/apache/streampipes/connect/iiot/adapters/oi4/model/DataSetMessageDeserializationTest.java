@@ -25,34 +25,40 @@ import org.junit.jupiter.api.Test;
 
 public class DataSetMessageDeserializationTest {
 
-  private String datasetMessageObjectPayload = "{\n"
-      + "      \"DataSetWriterId\": 1,\n"
-      + "      \"SequenceNumber\": 123,\n"
-      + "      \"Timestamp\": \"2024-05-10T07:28:01.711Z\",\n"
-      + "      \"Filter\": \"processDataInput\",\n"
-      + "      \"Source\": \"ABC\",\n"
-      + "      \"Payload\": {\n"
-      + "        \"Device status\": 0,\n"
-      + "        \"Level\": 163,\n"
-      + "        \"OUT1\": false,\n"
-      + "        \"OUT2\": false\n"
-      + "      }\n"
-      + "    }";
+  private String datasetMessageObjectPayload = """
+      {
+        "DataSetWriterId": 1,
+        "SequenceNumber": 123,
+        "Timestamp": "2024-05-10T07:28:01.711Z",
+        "Filter": "processDataInput",
+        "Source": "ABC",
+        "Payload": {
+          "Device status": 0,
+          "Level": 163,
+          "OUT1": false,
+          "OUT2": false
+        }
+      }
+      """;
 
 
-  private String datasetMessageArrayPayload = "{\n"
-      + "      \"DataSetWriterId\": 1,\n"
-      + "      \"SequenceNumber\": 123,\n"
-      + "      \"Timestamp\": \"2024-05-10T07:28:01.711Z\",\n"
-      + "      \"Filter\": \"processDataInput\",\n"
-      + "      \"Source\": \"ABC\",\n"
-      + "      \"Payload\": [{\n"
-      + "        \"Device status\": 0,\n"
-      + "        \"Level\": 163,\n"
-      + "        \"OUT1\": false,\n"
-      + "        \"OUT2\": false\n"
-      + "      }]\n"
-      + "    }";
+  private String datasetMessageArrayPayload = """
+      {
+        "DataSetWriterId": 1,
+        "SequenceNumber": 123,
+        "Timestamp": "2024-05-10T07:28:01.711Z",
+        "Filter": "processDataInput",
+        "Source": "ABC",
+        "Payload": [
+          {
+            "Device status": 0,
+            "Level": 163,
+            "OUT1": false,
+            "OUT2": false
+          }
+        ]
+      }
+      """;
 
 
   @Test
