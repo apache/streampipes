@@ -41,7 +41,6 @@ import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -57,7 +56,12 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({WebSecurityConfig.class, WelcomePage.class, ServiceHealthResource.class, RestResponseLogMessageExceptionHandler.class})
+@Import({
+    WebSecurityConfig.class,
+    WelcomePage.class,
+    ServiceHealthResource.class,
+    RestResponseLogMessageExceptionHandler.class
+})
 @ComponentScan({"org.apache.streampipes.rest.extensions.*", "org.apache.streampipes.service.base.rest.*"})
 public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
 
