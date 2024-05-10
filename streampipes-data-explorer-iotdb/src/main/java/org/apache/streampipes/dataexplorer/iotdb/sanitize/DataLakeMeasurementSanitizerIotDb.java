@@ -23,6 +23,15 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.DataLakeMeasurementSanitizer;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
+/**
+ * Ensures proper sanitization of data lake measurements with respect to Apache IoTDB specifics.
+ * <p>
+ * This includes both sanitizing the measurement name according to IoTDB's path specifications,
+ * because the measurement name is used as part of the path in IoTDB,
+ * and sanitizing the runtime names of the event properties so that they do not match any reserved keywords.
+ *
+ * @see <a href="https://iotdb.apache.org/UserGuide/latest/Basic-Concept/Data-Model-and-Terminology.html#path">IotDB Path Spec</a>
+ */
 public class DataLakeMeasurementSanitizerIotDb extends DataLakeMeasurementSanitizer {
   public DataLakeMeasurementSanitizerIotDb(IStreamPipesClient client, DataLakeMeasure measure) {
     super(client, measure);

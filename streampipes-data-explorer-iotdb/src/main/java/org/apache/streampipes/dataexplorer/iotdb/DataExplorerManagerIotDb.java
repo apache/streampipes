@@ -27,9 +27,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 
-public enum DataExplorerManagerIotDb implements IDataExplorerManager {
-
-  INSTANCE;
+public class DataExplorerManagerIotDb implements IDataExplorerManager {
 
   @Override
   public IDataLakeMeasurementCounter getMeasurementCounter(List<DataLakeMeasure> allMeasurements, List<String> measurementsToCount) {

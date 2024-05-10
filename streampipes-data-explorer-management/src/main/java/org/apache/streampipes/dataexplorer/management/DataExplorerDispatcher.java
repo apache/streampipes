@@ -32,8 +32,8 @@ public class DataExplorerDispatcher {
     return switch (Environments.getEnvironment()
                                .getTsStorage()
                                .getValueOrDefault()) {
-      case SupportedDataExplorerStorages.IOT_DB -> DataExplorerManagerIotDb.INSTANCE;
-      default -> DataExplorerManagerInflux.INSTANCE;
+      case SupportedDataExplorerStorages.IOT_DB -> new DataExplorerManagerIotDb();
+      default -> new DataExplorerManagerInflux();
     };
   }
 }
