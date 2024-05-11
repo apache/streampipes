@@ -34,7 +34,7 @@ class FunctionId(BasicModel):
 
     Maps to the `FunctionId` class defined in the StreamPipes model.
 
-    Parameters
+    Attributes
     ----------
     id: str
         unique identifier of the function instance
@@ -56,15 +56,12 @@ class FunctionDefinition(Resource):
     This class maps to the `FunctionDefinition` class in the StreamPipes model.
     It contains all metadata that are required to register a function at the StreamPipes backend.
 
-    Parameters
+    Attributes
     ----------
     consumed_streams: List[str]
         List of data streams the function is consuming from
     function_id: FunctionId
         identifier object of a StreamPipes function
-
-    Attributes
-    ----------
     output_data_streams: Dict[str, DataStream]
         Map off all output data streams added to the function definition
 
