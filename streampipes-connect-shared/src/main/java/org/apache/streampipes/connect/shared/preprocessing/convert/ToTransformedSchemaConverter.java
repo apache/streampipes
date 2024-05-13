@@ -36,6 +36,7 @@ import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescrip
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.utils.Datatypes;
@@ -149,6 +150,7 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
     var property = findPrimitiveProperty(properties, rule.getRuntimeKey());
     property.setDomainProperties(List.of(URI.create("http://schema.org/DateTime")));
     property.setRuntimeType(Datatypes.Long.toString());
+    property.setPropertyScope(PropertyScope.HEADER_PROPERTY.toString());
     var metadata = property.getAdditionalMetadata();
     metadata.put("mode", rule.getMode());
     metadata.put("formatString", rule.getFormatString());
