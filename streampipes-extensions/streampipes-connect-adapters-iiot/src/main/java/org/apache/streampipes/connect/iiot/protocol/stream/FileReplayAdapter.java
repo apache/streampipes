@@ -33,6 +33,7 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.X
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Alternatives;
@@ -40,7 +41,6 @@ import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 
 import org.slf4j.Logger;
@@ -91,7 +91,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
             new XmlParser(),
             new ImageParser()
         )
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic)
         .requiredFile(
@@ -192,7 +192,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
    *
    * @param extractor An instance of {@code IAdapterParameterExtractor} used for extracting adapter parameters.
    * @throws AdapterException If there are multiple renaming rules detected affecting the timestamp property,
-   * indicating an invalid configuration.
+   *                          indicating an invalid configuration.
    */
   private void determineSourceTimestampField(IAdapterParameterExtractor extractor) throws AdapterException {
     var renamingRulesTimestamp = getRenamingRulesTimestamp(extractor);
@@ -245,22 +245,27 @@ public class FileReplayAdapter implements StreamPipesAdapter {
           .parse(inputStream, (event) -> {
 
             long actualEventTimestamp = -1;
-            if (event.get(timestampSourceFieldName) instanceof Long) {
+            try {
               actualEventTimestamp = (long) event.get(timestampSourceFieldName);
-            } else {
-              LOG.error(
-                  "The timestamp field is not a unix timestamp in ms. Value: %s"
-                      .formatted(event.get(timestampSourceFieldName)));
+            } catch (ClassCastException e) {
+              adapterRuntimeContext
+                  .getLogger()
+                  .error(
+                      new AdapterException("The timestamp field is not a unix timestamp in ms, skipping event. Value: %s"
+                          .formatted(event.get(timestampSourceFieldName))
+                      ));
             }
 
-            if (timestampLastEvent != -1) {
+            if (timestampLastEvent == -1) {
+              return;
+            } else {
               long sleepTime = (long) ((actualEventTimestamp - timestampLastEvent) / speedUp);
               // speed up is set to Float.MAX_VALUE when user selected fastest option
               if (sleepTime > 0 && speedUp != Float.MAX_VALUE) {
                 try {
                   Thread.sleep(sleepTime);
                 } catch (InterruptedException e) {
-                  LOG.info("File stream adapter was stopped, the current replay is interuppted", e);
+                  LOG.info("File stream adapter was stopped, the current replay is interrupted", e);
                 }
               }
             }
