@@ -246,7 +246,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
 
             long actualEventTimestamp = -1;
             try {
-              actualEventTimestamp = (long) event.get(timestampSourceFieldName);
+              actualEventTimestamp = (int) event.get(timestampSourceFieldName);
             } catch (ClassCastException e) {
               adapterRuntimeContext
                   .getLogger()
@@ -256,9 +256,11 @@ public class FileReplayAdapter implements StreamPipesAdapter {
                       ));
             }
 
-            if (timestampLastEvent == -1) {
+            if (actualEventTimestamp == -1) {
               return;
-            } else {
+            }
+
+            if (timestampLastEvent != -1) {
               long sleepTime = (long) ((actualEventTimestamp - timestampLastEvent) / speedUp);
               // speed up is set to Float.MAX_VALUE when user selected fastest option
               if (sleepTime > 0 && speedUp != Float.MAX_VALUE) {
