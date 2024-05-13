@@ -128,7 +128,7 @@
 
         <!-- Test dependencies -->
         <junit.version>5.10.1</junit.version>
-        <mockito.version>5.11.0</mockito.version>
+        <mockito.version>5.12.0</mockito.version>
 
         <!-- Maven settings & dependencies -->
         <apache-rat-plugin.version>0.13</apache-rat-plugin.version>
