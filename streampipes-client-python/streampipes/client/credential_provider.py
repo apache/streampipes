@@ -81,7 +81,7 @@ class CredentialProvider(ABC):
 class StreamPipesApiKeyCredentials(CredentialProvider):
     """A credential provider that allows authentication via a StreamPipes API Token.
 
-    The required token can be generated via the StreamPipes UI (see the description on our [start-page](../../../).
+    The required token can be generated via the StreamPipes UI (see the description on our [start-page](../../index.md).
 
     Both parameters can either be passed as arguments or remain unset.
     If they are not passed, they are retrieved from environment variables:
