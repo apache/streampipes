@@ -17,16 +17,16 @@
 
 
 org.apache.streampipes.connect.iiot.protocol.stream.file.title=File Stream
-org.apache.streampipes.connect.iiot.protocol.stream.file.description=Continuously streams the content from a file.
+org.apache.streampipes.connect.iiot.protocol.stream.file.description=allows you to continuously stream the contents of a file to Apache StreamPipes, creating a data stream that allows you to use the data within StreamPipes
 
 filePath.title=File
-filePath.description=File Path
+filePath.description=Choose between an already existing file or upload a new file
 
-replaceTimestamp.title=Use current time
-replaceTimestamp.description=Replace Event Time with Current Timestamp
+replaceTimestamp.title=Overwrite file time
+replaceTimestamp.description=Always use the current time as the timestamp when emitting the event, regardless of any time value in the file.
 
 speed.title=Replay Speed
-speed.description=
+speed.description=Determine the event frequency.
 
 speedUp.title=Speed Up
 speedUp.description=original = 1; speedup 2x = 2; half speed  =  0.5
