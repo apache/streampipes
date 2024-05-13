@@ -251,7 +251,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
               adapterRuntimeContext
                   .getLogger()
                   .error(
-                      new AdapterException("The timestamp field is not a unix timestamp in ms, skipping event. Value: %s"
+                      new AdapterException("Timestamp field is not a unix timestamp in ms, skipping event. Value: %s"
                           .formatted(event.get(timestampSourceFieldName))
                       ));
             }
