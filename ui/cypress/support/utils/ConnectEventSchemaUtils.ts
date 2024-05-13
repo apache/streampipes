@@ -178,7 +178,7 @@ export class ConnectEventSchemaUtils {
     }
 
     public static deleteProperty(propertyName: string) {
-        cy.dataCy('delete-property-' + propertyName, { timeout: 10000 })
+        cy.dataCy('"delete-property-' + propertyName + '"', { timeout: 10000 })
             .children()
             .click({ force: true });
         cy.dataCy('connect-schema-delete-properties-btn', {
