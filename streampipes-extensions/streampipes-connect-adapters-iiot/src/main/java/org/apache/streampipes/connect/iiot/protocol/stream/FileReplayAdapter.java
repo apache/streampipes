@@ -245,9 +245,12 @@ public class FileReplayAdapter implements StreamPipesAdapter {
           .parse(inputStream, (event) -> {
 
             long actualEventTimestamp = -1;
-            try {
-              actualEventTimestamp = (int) event.get(timestampSourceFieldName);
-            } catch (ClassCastException e) {
+            var timestampFieldValue = event.get(timestampSourceFieldName);
+            if (timestampFieldValue instanceof Long) {
+              actualEventTimestamp = (Long) timestampFieldValue;
+            } else if (timestampFieldValue instanceof Integer) {
+              actualEventTimestamp = (Integer) timestampFieldValue;
+            } else {
               adapterRuntimeContext
                   .getLogger()
                   .error(
@@ -257,6 +260,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
             }
 
             if (actualEventTimestamp == -1) {
+              // Do not emit any data if timestamp could not be processed
               return;
             }
 
