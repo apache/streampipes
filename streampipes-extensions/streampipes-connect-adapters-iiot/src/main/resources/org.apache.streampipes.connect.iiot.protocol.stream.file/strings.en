@@ -23,7 +23,7 @@ filePath.title=File
 filePath.description=Choose between an already existing file or upload a new file
 
 replaceTimestamp.title=Overwrite file time
-replaceTimestamp.description=Always use the current time as the timestamp when emitting the event, regardless of any time value in the file.
+replaceTimestamp.description=Always use the current time as the timestamp when emitting the event, regardless of any time value in the file. Needs to be activated if file does not contain a timestamp.
 
 speed.title=Replay Speed
 speed.description=Determine the event frequency.

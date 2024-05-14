@@ -250,7 +250,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
               actualEventTimestamp = (Long) timestampFieldValue;
             } else if (timestampFieldValue instanceof Integer) {
               actualEventTimestamp = (Integer) timestampFieldValue;
-            } else {
+            } else if(!(timestampFieldValue == null && replaceTimestamp)){
               adapterRuntimeContext
                   .getLogger()
                   .error(
@@ -259,20 +259,23 @@ public class FileReplayAdapter implements StreamPipesAdapter {
                       ));
             }
 
-            if (actualEventTimestamp == -1) {
+            if (actualEventTimestamp == -1 && !replaceTimestamp) {
               // Do not emit any data if timestamp could not be processed
               return;
             }
 
-            if (timestampLastEvent != -1) {
-              long sleepTime = (long) ((actualEventTimestamp - timestampLastEvent) / speedUp);
-              // speed up is set to Float.MAX_VALUE when user selected fastest option
-              if (sleepTime > 0 && speedUp != Float.MAX_VALUE) {
-                try {
-                  Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                  LOG.info("File stream adapter was stopped, the current replay is interrupted", e);
-                }
+            long sleepTime;
+            if (timestampLastEvent != -1 && actualEventTimestamp != -1) {
+              sleepTime = (long) ((actualEventTimestamp - timestampLastEvent) / speedUp);
+            } else {
+              sleepTime = 1;
+            }
+            // speed up is set to Float.MAX_VALUE when user selected fastest option
+            if (sleepTime > 0 && speedUp != Float.MAX_VALUE) {
+              try {
+                Thread.sleep(sleepTime);
+              } catch (InterruptedException e) {
+                LOG.info("File stream adapter was stopped, the current replay is interrupted", e);
               }
             }
 
