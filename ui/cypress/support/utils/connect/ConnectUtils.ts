@@ -274,7 +274,9 @@ export class ConnectUtils {
         );
     }
 
-    public static setUpPreprocessingRuleTest(overwriteTimestamp: boolean): AdapterInput {
+    public static setUpPreprocessingRuleTest(
+        overwriteTimestamp: boolean,
+    ): AdapterInput {
         const adapterConfiguration = AdapterBuilder.create('File_Stream')
             .setStoreInDataLake()
             .setTimestampProperty('timestamp')
@@ -290,8 +292,12 @@ export class ConnectUtils {
             .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
 
         if (overwriteTimestamp) {
-            adapterConfiguration.addProtocolInput('checkbox', 'replaceTimestamp', 'check')
-            }
+            adapterConfiguration.addProtocolInput(
+                'checkbox',
+                'replaceTimestamp',
+                'check',
+            );
+        }
         adapterConfiguration = adapterConfiguration.build();
 
         ConnectUtils.goToConnect();
