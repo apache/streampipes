@@ -250,7 +250,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
               actualEventTimestamp = (Long) timestampFieldValue;
             } else if (timestampFieldValue instanceof Integer) {
               actualEventTimestamp = (Integer) timestampFieldValue;
-            } else if(!(timestampFieldValue == null && replaceTimestamp)){
+            } else if (!(timestampFieldValue == null && replaceTimestamp)){
               adapterRuntimeContext
                   .getLogger()
                   .error(
