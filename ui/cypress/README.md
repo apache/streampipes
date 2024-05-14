@@ -51,7 +51,7 @@ This folder contains a WIP framework for automated E2E tests of StreamPipes.
 
 ## Automated test runs
 
-- Each night the whole test suite is run within github actions
+- Each night the whole test suite is run within GitHub actions
   - See:
   - To add a test to the test suite add the suffix .spec.ts
 - Each PR triggers the smoke tests to detect errors before the branch is merged into the development

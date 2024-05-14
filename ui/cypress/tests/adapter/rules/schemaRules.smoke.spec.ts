@@ -27,7 +27,7 @@ describe('Connect schema rule transformations', () => {
     });
 
     it('Perform Test', () => {
-        const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
+        const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest(true);
 
         // Add static value to event
         ConnectEventSchemaUtils.addStaticProperty('staticPropertyName', 'id1');

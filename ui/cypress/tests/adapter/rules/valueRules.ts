@@ -27,7 +27,7 @@ describe('Connect value rule transformations', () => {
     });
 
     it('Perform Test', () => {
-        const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
+        const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest(false);
 
         // Edit timestamp property
         ConnectEventSchemaUtils.editTimestampProperty(

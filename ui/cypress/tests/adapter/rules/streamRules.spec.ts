@@ -27,7 +27,7 @@ describe('Connect aggregation rule transformations', () => {
     });
 
     it('Perform Test', () => {
-        const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
+        const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest(false);
 
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
@@ -50,7 +50,7 @@ describe('Remove duplicates rule transformations', () => {
     });
 
     it('Perform Test', () => {
-        const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
+        const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest(false);
 
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
