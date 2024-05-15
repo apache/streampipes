@@ -16,38 +16,27 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.influx;
+package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
-import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
-import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
-import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
-import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
-import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
-import org.apache.streampipes.dataexplorer.influx.sanitize.DataLakeMeasurementSanitizerInflux;
+import org.apache.streampipes.dataexplorer.api.*;
+import org.apache.streampipes.dataexplorer.iotdb.sanitize.DataLakeMeasurementSanitizerIotDb;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 
-public class DataExplorerManagerInflux implements IDataExplorerManager {
+public class DataExplorerManagerIotDb implements IDataExplorerManager {
 
   @Override
-  public IDataLakeMeasurementCounter getMeasurementCounter(
-    List<DataLakeMeasure> allMeasurements,
-    List<String> measurementsToCount) {
-    return new DataLakeMeasurementCounterInflux(allMeasurements, measurementsToCount);
+  public IDataLakeMeasurementCounter getMeasurementCounter(List<DataLakeMeasure> allMeasurements, List<String> measurementsToCount) {
+    return null;
   }
 
   @Override
-  public IDataExplorerQueryManagement getQueryManagement(
-    IDataExplorerSchemaManagement dataExplorerSchemaManagement
-    ) {
-    return new DataExplorerQueryManagementInflux(dataExplorerSchemaManagement);
+  public IDataExplorerQueryManagement getQueryManagement(IDataExplorerSchemaManagement dataExplorerSchemaManagement) {
+    return null;
   }
 
   @Override
@@ -59,11 +48,11 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
 
   @Override
   public ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure) {
-    return new TimeSeriesStorageInflux(measure, Environments.getEnvironment(), new InfluxClientProvider());
+    return new TimeSeriesStorageIotDb(measure, new IotDbPropertyConverter(), new IotDbSessionProvider());
   }
 
   @Override
   public IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DataLakeMeasure measure) {
-    return new DataLakeMeasurementSanitizerInflux(client, measure);
+    return new DataLakeMeasurementSanitizerIotDb(client, measure);
   }
 }

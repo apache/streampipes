@@ -16,9 +16,8 @@
  *
  */
 
-package org.apache.streampipes.ts.store.iotdb.sanitize;
+package org.apache.streampipes.dataexplorer.iotdb.sanitize;
 
-import org.apache.streampipes.ts.store.iotdb.MeasureNameSanitizerIotDb;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,6 +29,7 @@ public class MeasureNameSanitizerIotDbTest {
     var sanitizer = new MeasureNameSanitizerIotDb();
 
     assertEquals("myMeasure", sanitizer.sanitize("myMeasure"));
+    assertEquals("my_Measure", sanitizer.sanitize("my.Measure"));
     assertEquals("我的措施", sanitizer.sanitize("我的措施"));
     assertEquals("my_Measure", sanitizer.sanitize("my-Measure"));
     assertEquals("my_Measure_", sanitizer.sanitize("my-Measure?"));

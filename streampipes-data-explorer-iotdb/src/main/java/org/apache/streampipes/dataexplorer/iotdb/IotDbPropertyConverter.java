@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.ts.store.iotdb;
+package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;

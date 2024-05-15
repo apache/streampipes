@@ -67,6 +67,7 @@
         <httpcore.version>4.4.9</httpcore.version>
         <influxdb.version>2.24</influxdb.version>
         <inlong.version>1.12.0</inlong.version>
+        <iotdb.version>1.3.0</iotdb.version>
         <jackson.version>2.17.0</jackson.version>
         <jackson.databind.version>2.17.0</jackson.databind.version>
         <jakarta-annotation.version>3.0.0</jakarta-annotation.version>
@@ -388,6 +389,11 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpcore</artifactId>
                 <version>${httpcore.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.iotdb</groupId>
+                <artifactId>iotdb-session</artifactId>
+                <version>${iotdb.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.kafka</groupId>
@@ -825,6 +831,7 @@
         <module>streampipes-data-explorer-api</module>
         <module>streampipes-data-explorer-export</module>
         <module>streampipes-data-explorer-influx</module>
+        <module>streampipes-data-explorer-iotdb</module>
         <module>streampipes-data-explorer-management</module>
         <module>streampipes-data-export</module>
         <module>streampipes-dataformat</module>
@@ -868,7 +875,6 @@
         <module>streampipes-storage-management</module>
         <module>streampipes-test-utils</module>
         <module>streampipes-test-utils-executors</module>
-        <module>streampipes-ts-store-iotdb</module>
         <module>streampipes-user-management</module>
         <module>streampipes-vocabulary</module>
         <module>streampipes-wrapper</module>

@@ -16,22 +16,21 @@
  *
  */
 
-package org.apache.streampipes.ts.store.iotdb;
+package org.apache.streampipes.dataexplorer.iotdb;
 
-import org.junit.jupiter.api.Test;
+import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class IotDbNameSanitizerTest {
-
-  @Test
-  public void renameReservedKeywords() {
-    var sanitizer = new IotDbNameSanitizer();
-
-    assertEquals("runtimeName", sanitizer.renameReservedKeywords("runtimeName"));
-    assertEquals("CREATE_", sanitizer.renameReservedKeywords("CREATE"));
-    assertEquals("create_", sanitizer.renameReservedKeywords("create"));
-    assertEquals("Create_", sanitizer.renameReservedKeywords("Create"));
-    assertEquals("CREATE1", sanitizer.renameReservedKeywords("CREATE1"));
-  }
+/**
+ * Represents a record containing a measurement and its associated metadata
+ * to be inserted into the Apache IoTDB.
+ * <p>
+ * This record encapsulates the measurement name, data type, and its corresponding value.
+ *
+ * @param measurementName The name of the measurement.
+ * @param dataType        The data type of the measurement value.
+ * @param value           The value of the measurement.
+ */
+public record IotDbMeasurementRecord(String measurementName,
+                                     TSDataType dataType,
+                                     Object value) {
 }

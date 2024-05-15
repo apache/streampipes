@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.ts.store.iotdb;
+package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.iotdb.session.pool.SessionPool;
 import org.apache.streampipes.commons.environment.Environment;

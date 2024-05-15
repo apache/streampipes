@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.ts.store.iotdb;
+package org.apache.streampipes.dataexplorer.iotdb.sanitize;
 
 import java.util.Arrays;
 import java.util.List;

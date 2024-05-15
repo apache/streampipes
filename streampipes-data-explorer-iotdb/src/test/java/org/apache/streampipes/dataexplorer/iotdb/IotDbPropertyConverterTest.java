@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.ts.store.iotdb;
+package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -81,7 +81,7 @@ public class IotDbPropertyConverterTest {
   @Test
   public void convertPrimitivePropertyNumber() {
 
-    var property = new EventPropertyPrimitive(SO.NUMBER.toString(), "test", null, null);
+    var property = new EventPropertyPrimitive(SO.NUMBER, "test", null, null);
     var field = new PrimitiveField("test", "test", 5.24);
 
     var result = new IotDbPropertyConverter().convertPrimitiveProperty(property, field, "sanitizedTest");
