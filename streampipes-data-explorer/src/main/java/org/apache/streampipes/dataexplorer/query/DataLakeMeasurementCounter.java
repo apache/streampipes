@@ -23,6 +23,7 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.PropertyScope;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,18 +61,6 @@ public abstract class DataLakeMeasurementCounter implements IDataLakeMeasurement
     return getQueryResults(countQueriesFutures);
   }
 
-  @Override
-  public int countMeasurementSize(String measurementName) {
-    var measure = getMeasure(measurementName);
-    var query = createQueryAsAsyncFuture(measure);
-    try {
-      return query.get();
-    } catch (InterruptedException | ExecutionException e) {
-      LOG.error("Could not count measurement size - query failed: {}", e.getMessage());
-      return 0;
-    }
-  }
-
   /**
    * Retrieves the {@link DataLakeMeasure} with the specified measure name from the collection of all measurements.
    *
@@ -89,8 +78,10 @@ public abstract class DataLakeMeasurementCounter implements IDataLakeMeasurement
   /**
    * Retrieves the results of asynchronous count queries from the given CompletableFuture map.
    *
-   * @param queryFutures A Map<String, CompletableFuture<Integer>> containing the futures of asynchronous count queries mapped by their respective keys.
-   * @return A Map<String, Integer> representing the results of the queries, where each key corresponds to a measure name and the value is the count result.
+   * @param queryFutures A Map containing the futures of
+   *                     asynchronous count queries mapped by their respective keys.
+   * @return A Map representing the results of the queries, where each key corresponds to
+   *         a measure name and the value is the count result.
    */
   private Map<String, Integer> getQueryResults(Map<String, CompletableFuture<Integer>> queryFutures) {
     Map<String, Integer> resultPerMeasure = new HashMap<>();
@@ -133,7 +124,7 @@ public abstract class DataLakeMeasurementCounter implements IDataLakeMeasurement
   }
 
   /**
-   * Create the count query for the given DataLakeMeasure and return it as a {@link CompletableFuture<Integer>}
+   * Create the count query for the given DataLakeMeasure and return it as a {@link CompletableFuture}.
    */
   protected abstract CompletableFuture<Integer> createQueryAsAsyncFuture(DataLakeMeasure measure);
 }
