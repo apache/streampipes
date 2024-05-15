@@ -39,7 +39,6 @@ theme:
     - navigation.tracking
   font: false
   palette:
-
     # Palette toggle for light mode
     - scheme: default
       toggle:
@@ -94,9 +93,10 @@ plugins:
             docstring_style: numpy
             docstring_section_style: spacy
             show_source: False
-            merge_init_into_class: True
+            merge_init_into_class: true
+            inherited_members: true
   - mike:
-      canonical_version: 'latest'
+      canonical_version: "latest"
       version_selector: true
       css_dir: css
       javascript_dir: js
