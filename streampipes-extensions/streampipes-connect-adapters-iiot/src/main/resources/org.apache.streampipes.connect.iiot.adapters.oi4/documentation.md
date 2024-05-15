@@ -79,3 +79,4 @@ The output consists of all values from the selected sensor type. Below is an exa
     "Device status": 0,
     "timestamp": 1685525380729
 }
+```
