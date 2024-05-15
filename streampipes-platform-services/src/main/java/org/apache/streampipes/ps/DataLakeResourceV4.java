@@ -104,7 +104,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
       responses = {
           @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
           @ApiResponse(responseCode = "400", description = "Measurement series with given id not found")})
-  public ResponseEntity<Void> deleteData(
+  public ResponseEntity<?> deleteData(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
       @PathVariable("measurementID") String measurementID
       , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation")
@@ -112,8 +112,13 @@ public class DataLakeResourceV4 extends AbstractRestResource {
       , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation")
       @RequestParam(value = "endDate", required = false) Long endDate) {
 
-    SpQueryResult result = this.dataExplorerQueryManagement.deleteData(measurementID, startDate, endDate);
-    return ok();
+    if(this.dataExplorerQueryManagement.deleteData(measurementID, startDate, endDate)){
+      return ok();
+    } else {
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body("Given measurement could not be found");
+    }
   }
 
   @DeleteMapping(path = "/measurements/{measurementID}/drop")
