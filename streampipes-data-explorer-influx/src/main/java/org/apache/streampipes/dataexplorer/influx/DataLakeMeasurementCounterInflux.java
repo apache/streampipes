@@ -18,86 +18,36 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
-import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
+import org.apache.streampipes.dataexplorer.query.DataLakeMeasurementCounter;
 import org.apache.streampipes.model.datalake.AggregationFunction;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.SpQueryResult;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.PropertyScope;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
-public class DataLakeMeasurementCounterInflux implements IDataLakeMeasurementCounter {
-
-  private final List<DataLakeMeasure> allMeasurements;
-  private final List<String> measurementNames;
+public class DataLakeMeasurementCounterInflux extends DataLakeMeasurementCounter {
 
   private static final String COUNT_FIELD = "count";
 
   public DataLakeMeasurementCounterInflux(List<DataLakeMeasure> allMeasurements,
                                           List<String> measurementNames) {
-    this.allMeasurements = allMeasurements;
-    this.measurementNames = measurementNames;
+    super(allMeasurements, measurementNames);
   }
 
-  public Map<String, Integer> countMeasurementSizes() {
-    Map<String, CompletableFuture<Integer>> futures = measurementNames.stream()
-        .distinct()
-        .map(this::getMeasure)
-        .collect(Collectors.toMap(DataLakeMeasure::getMeasureName, m -> CompletableFuture.supplyAsync(() -> {
-          var firstColumn = getFirstColumn(m);
-          var builder = DataLakeInfluxQueryBuilder
-              .create(m.getMeasureName()).withEndTime(System.currentTimeMillis())
-              .withAggregatedColumn(firstColumn, AggregationFunction.COUNT);
-          var queryResult = new DataExplorerInfluxQueryExecutor().executeQuery(builder.build(), Optional.empty(), true);
-          if (queryResult.getTotal() > 0) {
-            var headers = queryResult.getHeaders();
-            return extractResult(queryResult, headers);
-          } else {
-            return 0;
-          }
-        })));
-
-    Map<String, Integer> result = new HashMap<>();
-    futures.entrySet().forEach((entry -> {
-      try {
-        result.put(entry.getKey(), entry.getValue().get());
-      } catch (InterruptedException | ExecutionException e) {
-        result.put(entry.getKey(), 0);
+  @Override
+  protected CompletableFuture<Integer> createQueryAsAsyncFuture(DataLakeMeasure measure) {
+    return CompletableFuture.supplyAsync(() -> {
+      var firstColumn = getFirstMeasurementProperty(measure);
+      var builder = DataLakeInfluxQueryBuilder
+          .create(measure.getMeasureName()).withEndTime(System.currentTimeMillis())
+          .withAggregatedColumn(firstColumn, AggregationFunction.COUNT);
+      var queryResult = new DataExplorerInfluxQueryExecutor().executeQuery(builder.build(), Optional.empty(), true);
+      if (queryResult.getTotal() > 0) {
+        return extractResult(queryResult, COUNT_FIELD);
+      } else {
+        return 0;
       }
-    }));
-
-    return result;
-  }
-
-  private Integer extractResult(SpQueryResult queryResult,
-                                List<String> headers) {
-    return ((Double) (
-        queryResult.getAllDataSeries().get(0).getRows().get(0).get(headers.indexOf(COUNT_FIELD)))
-    ).intValue();
-  }
-
-  private DataLakeMeasure getMeasure(String measureName) {
-    return allMeasurements
-        .stream()
-        .filter(m -> m.getMeasureName().equals(measureName))
-        .findFirst()
-        .orElse(null);
-  }
-
-  private String getFirstColumn(DataLakeMeasure measure) {
-    return measure.getEventSchema().getEventProperties()
-        .stream()
-        .filter(ep -> ep.getPropertyScope() != null
-            && ep.getPropertyScope().equals(PropertyScope.MEASUREMENT_PROPERTY.name()))
-        .map(EventProperty::getRuntimeName)
-        .findFirst()
-        .orElse(null);
+    });
   }
 }
