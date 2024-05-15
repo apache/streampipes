@@ -93,7 +93,7 @@
         <maven-plugin-annotations.version>3.13.0</maven-plugin-annotations.version>
         <mailapi.version>1.4.3</mailapi.version>
         <micrometer-prometheus.version>1.12.0</micrometer-prometheus.version>
-        <micrometer-observation.version>1.12.0</micrometer-observation.version>
+        <micrometer-observation.version>1.13.0</micrometer-observation.version>
         <mqtt-client.version>1.12</mqtt-client.version>
         <nats.version>2.18.0</nats.version>
         <netty.version>4.1.72.Final</netty.version>
