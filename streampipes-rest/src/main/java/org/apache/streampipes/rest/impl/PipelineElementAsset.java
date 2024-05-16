@@ -19,8 +19,8 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-
 import org.apache.streampipes.storage.management.StorageDispatcher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
