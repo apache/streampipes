@@ -16,7 +16,6 @@
  *
  */
 
-import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
@@ -24,11 +23,6 @@ import { UserUtils } from '../../support/utils/UserUtils';
 import { PipelineUtils } from '../../support/utils/PipelineUtils';
 
 const adapterName = 'simulator';
-
-const adapterInput = AdapterBuilder.create('Machine_Data_Simulator')
-    .setName(adapterName)
-    .addInput('input', 'wait-time-ms', '1000')
-    .build();
 
 const pipelineInput = PipelineBuilder.create('Pipeline Test')
     .addSource(adapterName)
@@ -46,50 +40,36 @@ const pipelineInput = PipelineBuilder.create('Pipeline Test')
     .build();
 
 describe('Test Enhanced Adapter Deletion', () => {
-    // In the beginning, create the non-admin user
-    before(() => {
-        cy.initStreamPipesTest();
-        UserUtils.addUser(UserUtils.adapterAndPipelineAdminUser);
-        cy.logout();
-    });
-
     beforeEach('Setup Test', () => {
-        cy.visit('#/login');
-        cy.dataCy('login-email').type(
-            UserUtils.adapterAndPipelineAdminUser.email,
-        );
-        cy.dataCy('login-password').type(
-            UserUtils.adapterAndPipelineAdminUser.password,
-        );
-        cy.dataCy('login-button').click();
-        cy.wait(1000);
+        cy.initStreamPipesTest();
+        UserUtils.addUser(UserUtils.userWithAdapterAndPipelineAdminRights);
     });
 
     it('Test Delete Adapter and Associated Pipelines', () => {
-        ConnectUtils.testAdapter(adapterInput);
+        ConnectUtils.addMachineDataSimulator(adapterName, false);
         PipelineUtils.addPipeline(pipelineInput);
-        PipelineUtils.addPipeline(pipelineInput);
+
         ConnectUtils.deleteAdapterAndAssociatedPipelines();
     });
 
     it('Test Admin Should Be Able to Delete Adapter and Not Owned Associated Pipelines', () => {
         // Let the user create the adapter and the pipeline
-        ConnectUtils.testAdapter(adapterInput);
+        ConnectUtils.addMachineDataSimulator(adapterName, false);
         PipelineUtils.addPipeline(pipelineInput);
-        PipelineUtils.addPipeline(pipelineInput);
+
         // Then let the admin delete them
-        cy.switchUser(UserUtils.adminUser);
+        UserUtils.switchUser(UserUtils.adminUser);
         ConnectUtils.deleteAdapterAndAssociatedPipelines(true);
     });
 
     it('Test Delete Adapter and Associated Pipelines Permission Denied', () => {
         // Let the admin create the adapter and the pipeline
-        cy.switchUser(UserUtils.adminUser);
-        ConnectUtils.testAdapter(adapterInput);
+        UserUtils.switchUser(UserUtils.adminUser);
+        ConnectUtils.addMachineDataSimulator(adapterName, false);
         PipelineUtils.addPipeline(pipelineInput);
-        PipelineUtils.addPipeline(pipelineInput);
+
         // Then the user shouldn't be able to delete them
-        cy.switchUser(UserUtils.adapterAndPipelineAdminUser);
+        UserUtils.switchUser(UserUtils.userWithAdapterAndPipelineAdminRights);
         ConnectUtils.deleteAdapterAndAssociatedPipelinesPermissionDenied();
     });
 });

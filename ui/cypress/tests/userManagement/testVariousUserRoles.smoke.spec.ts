@@ -64,7 +64,7 @@ for (var i = 0; i < testedRoles.length; i++) {
             );
 
             // Login as user
-            cy.switchUser(user);
+            UserUtils.switchUser(user);
 
             // Check if every role displays correct navigation menu
             if (testRole == UserRole.ROLE_PIPELINE_ADMIN) {
@@ -95,7 +95,7 @@ for (var i = 0; i < testedRoles.length; i++) {
             }
 
             // Login as admin and delete user
-            cy.switchUser(UserUtils.adminUser);
+            UserUtils.switchUser(UserUtils.adminUser);
             UserUtils.deleteUser(user);
         });
     });
