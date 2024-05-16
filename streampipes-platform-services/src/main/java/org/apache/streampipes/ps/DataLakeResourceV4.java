@@ -112,7 +112,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
       , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation")
       @RequestParam(value = "endDate", required = false) Long endDate) {
 
-    if(this.dataExplorerQueryManagement.deleteData(measurementID, startDate, endDate)){
+    if (this.dataExplorerQueryManagement.deleteData(measurementID, startDate, endDate)){
       return ok();
     } else {
       return ResponseEntity
