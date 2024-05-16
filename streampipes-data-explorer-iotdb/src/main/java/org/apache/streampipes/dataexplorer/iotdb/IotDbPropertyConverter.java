@@ -32,7 +32,7 @@ import org.apache.streampipes.vocabulary.XSD;
 public class IotDbPropertyConverter {
 
   /**
-   * Converts a {@link EventPropertyPrimitive }into an {@link IotDbMeasurementRecord}.
+   * Converts a {@link EventPropertyPrimitive } into an {@link IotDbMeasurementRecord}.
    *
    * @param eventPropertyPrimitive The primitive event property to be converted
    * @param primitiveField         The primitive field containing the property value

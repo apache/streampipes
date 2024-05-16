@@ -37,7 +37,7 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
 
   @Override
   public IDataLakeMeasurementCounter getMeasurementCounter(List<DataLakeMeasure> allMeasurements, List<String> measurementsToCount) {
-    return null;
+    return new DataLakeMeasurementCounterIotDb(allMeasurements, measurementsToCount);
   }
 
   @Override
