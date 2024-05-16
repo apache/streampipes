@@ -67,6 +67,7 @@
         <httpcore.version>4.4.9</httpcore.version>
         <influxdb.version>2.24</influxdb.version>
         <inlong.version>1.12.0</inlong.version>
+        <iotdb.version>1.3.0</iotdb.version>
         <jackson.version>2.17.0</jackson.version>
         <jackson.databind.version>2.17.0</jackson.databind.version>
         <jakarta-annotation.version>3.0.0</jakarta-annotation.version>
@@ -139,7 +140,6 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
-        <maven.dependency.check.plugin.version>9.1.0</maven.dependency.check.plugin.version>
         <maven-shade-plugin.version>3.5.1</maven-shade-plugin.version>
         <maven.version>3.8.7</maven.version>
         <typescript-generator-maven-plugin.version>3.2.1263</typescript-generator-maven-plugin.version>
@@ -147,7 +147,6 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
-        <owasp.check.skip>true</owasp.check.skip>
     </properties>
 
     <dependencyManagement>
@@ -388,6 +387,11 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpcore</artifactId>
                 <version>${httpcore.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.iotdb</groupId>
+                <artifactId>iotdb-session</artifactId>
+                <version>${iotdb.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.kafka</groupId>
@@ -825,6 +829,7 @@
         <module>streampipes-data-explorer-api</module>
         <module>streampipes-data-explorer-export</module>
         <module>streampipes-data-explorer-influx</module>
+        <module>streampipes-data-explorer-iotdb</module>
         <module>streampipes-data-explorer-management</module>
         <module>streampipes-data-export</module>
         <module>streampipes-dataformat</module>
@@ -868,7 +873,6 @@
         <module>streampipes-storage-management</module>
         <module>streampipes-test-utils</module>
         <module>streampipes-test-utils-executors</module>
-        <module>streampipes-ts-store-iotdb</module>
         <module>streampipes-user-management</module>
         <module>streampipes-vocabulary</module>
         <module>streampipes-wrapper</module>
@@ -1026,11 +1030,6 @@
                         <logViolationsToConsole>true</logViolationsToConsole>
                         <failOnViolation>true</failOnViolation>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.owasp</groupId>
-                    <artifactId>dependency-check-maven</artifactId>
-                    <version>${maven.dependency.check.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
@@ -1280,28 +1279,6 @@
                         </manifest>
                     </archive>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <configuration>
-                    <!-- use -Dowasp.check.skip=true to skip dependency check -->
-                    <skip>${owasp.check.skip}</skip>
-                    <format>HTML</format>
-                    <bundleAuditAnalyzerEnabled>false</bundleAuditAnalyzerEnabled>
-                    <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
-                    <failOnError>false</failOnError>
-                    <suppressionFile>tools/maven/owasp-dependency-check-suppression.xml</suppressionFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <!-- generates aggregated reports in target/ -->
-                            <goal>check</goal>
-                            <goal>aggregate</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>

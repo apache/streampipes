@@ -223,7 +223,9 @@ export class ConnectUtils {
             'be.visible',
         );
         if (switchUserCheck) {
-            cy.switchUser(UserUtils.adapterAndPipelineAdminUser);
+            UserUtils.switchUser(
+                UserUtils.userWithAdapterAndPipelineAdminRights,
+            );
         }
         this.checkAdapterAndAssociatedPipelinesDeleted();
     }
@@ -274,7 +276,9 @@ export class ConnectUtils {
         );
     }
 
-    public static setUpPreprocessingRuleTest(): AdapterInput {
+    public static setUpPreprocessingRuleTest(
+        overwriteTimestamp: boolean,
+    ): AdapterInput {
         const adapterConfiguration = AdapterBuilder.create('File_Stream')
             .setStoreInDataLake()
             .setTimestampProperty('timestamp')
@@ -287,8 +291,16 @@ export class ConnectUtils {
             .setName('Adapter to test rules')
             .setFormat('csv')
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
-            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
-            .build();
+            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
+
+        if (overwriteTimestamp) {
+            adapterConfiguration.addProtocolInput(
+                'checkbox',
+                'replaceTimestamp',
+                'check',
+            );
+        }
+        adapterConfiguration = adapterConfiguration.build();
 
         ConnectUtils.goToConnect();
         ConnectUtils.goToNewAdapterPage();

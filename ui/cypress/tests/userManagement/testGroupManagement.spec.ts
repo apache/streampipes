@@ -100,7 +100,7 @@ describe('Test Group Management for Pipelines', () => {
         cy.dataCy('sp-element-edit-user-save').click();
 
         // Login as first user which belongs to user group with pipeline admin role
-        cy.switchUser(user);
+        UserUtils.switchUser(user);
 
         cy.dataCy('navigation-icon', { timeout: 10000 }).should(
             'have.length',
@@ -119,7 +119,7 @@ describe('Test Group Management for Pipelines', () => {
         );
 
         // Login as user2
-        cy.switchUser(user2);
+        UserUtils.switchUser(user2);
 
         cy.dataCy('navigation-icon', { timeout: 10000 }).should(
             'have.length',
@@ -134,7 +134,7 @@ describe('Test Group Management for Pipelines', () => {
         );
 
         // Log in as admin and delete users
-        cy.switchUser(UserUtils.adminUser);
+        UserUtils.switchUser(UserUtils.adminUser);
         UserUtils.deleteUser(user);
         UserUtils.deleteUser(user2);
 

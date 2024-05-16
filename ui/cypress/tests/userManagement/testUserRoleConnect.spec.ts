@@ -37,7 +37,7 @@ describe('Test User Roles for Connect', () => {
         UserUtils.addUser(connect_admin);
 
         // Login as user and check if connect is visible to user
-        cy.switchUser(connect_admin);
+        UserUtils.switchUser(connect_admin);
 
         cy.dataCy('navigation-icon', { timeout: 10000 }).should(
             'have.length',

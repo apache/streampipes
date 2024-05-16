@@ -34,9 +34,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 
-public enum DataExplorerManagerInflux implements IDataExplorerManager {
-
-  INSTANCE;
+public class DataExplorerManagerInflux implements IDataExplorerManager {
 
   @Override
   public IDataLakeMeasurementCounter getMeasurementCounter(

@@ -82,7 +82,7 @@ For **minikube users**:
 > to a privileged port).
 
 ```bash
-kubectl port-forward svc/ui --address=0.0.0.0 80:80
+kubectl port-forward svc/ui --address=0.0.0.0 8088:8088
 ```
 
 **Deleting** the current helm chart deployment:

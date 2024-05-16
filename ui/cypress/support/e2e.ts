@@ -19,7 +19,6 @@
 import { login } from './general/login';
 import { logout } from './general/logout';
 import { dataCy } from './general/dataCy';
-import { switchUser } from './general/switchUser';
 // tslint:disable-next-line:no-implicit-dependencies
 import 'cypress-file-upload';
 import { resetStreamPipes } from './general/resetStreamPipes';
@@ -29,7 +28,6 @@ import { removeDownloadDirectory } from './general/removeDownloadDirectory';
 // General commands
 Cypress.Commands.add('login', login);
 Cypress.Commands.add('logout', logout);
-Cypress.Commands.add('switchUser', switchUser);
 Cypress.Commands.add('dataCy', dataCy);
 Cypress.Commands.add('resetStreamPipes', resetStreamPipes);
 Cypress.Commands.add('initStreamPipesTest', initStreamPipesTest);
