@@ -119,8 +119,8 @@ class VersionEndpoint(APIEndpoint):
         versions: Version
             The specified resource as an instance of the corresponding model class([Version][streampipes.model.resource.Version]).  # noqa: 501
         """
-        if identifier != "":
-            raise NotImplementedError(
+        if identifier:
+            raise ValueError(
                 "Non-empty 'identifier' is not supported by this endpoint. Please set 'identifier' to an empty string."
             )
 
