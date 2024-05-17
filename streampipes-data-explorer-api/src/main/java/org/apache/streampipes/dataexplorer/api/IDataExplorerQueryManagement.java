@@ -39,7 +39,7 @@ public interface IDataExplorerQueryManagement {
 
   boolean deleteData(String measurementID);
 
-  SpQueryResult deleteData(String measurementID, Long startDate, Long endDate);
+  boolean deleteData(String measurementName, Long startDate, Long endDate);
 
   boolean deleteAllData();
 

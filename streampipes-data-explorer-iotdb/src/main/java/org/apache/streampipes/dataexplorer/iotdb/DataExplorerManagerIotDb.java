@@ -19,8 +19,14 @@
 package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.api.*;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
+import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
+import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.iotdb.sanitize.DataLakeMeasurementSanitizerIotDb;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -36,7 +42,10 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
 
   @Override
   public IDataExplorerQueryManagement getQueryManagement(IDataExplorerSchemaManagement dataExplorerSchemaManagement) {
-    return null;
+    return new DataExplorerQueryManagementIotDb(
+        dataExplorerSchemaManagement,
+        new DataExplorerIotDbQueryExecutor(new IotDbSessionProvider().getSessionPool(Environments.getEnvironment()))
+    );
   }
 
   @Override

@@ -25,6 +25,7 @@ import org.apache.streampipes.dataexplorer.QueryResultProvider;
 import org.apache.streampipes.dataexplorer.StreamedQueryResultProvider;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
+import org.apache.streampipes.model.datalake.SpQueryStatus;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.SpQueryResult;
@@ -92,10 +93,12 @@ public class DataExplorerQueryManagementInflux implements IDataExplorerQueryMana
   }
 
   @Override
-  public SpQueryResult deleteData(String measurementID, Long startDate, Long endDate) {
+  public boolean deleteData(String measurementName, Long startDate, Long endDate) {
     DeleteQueryParams params =
-        ProvidedRestQueryParamConverter.getDeleteQueryParams(measurementID, startDate, endDate);
-    return new DataExplorerInfluxQueryExecutor().executeQuery(params);
+        ProvidedRestQueryParamConverter.getDeleteQueryParams(measurementName, startDate, endDate);
+    return new DataExplorerInfluxQueryExecutor().executeQuery(params)
+                                                .getSpQueryStatus()
+                                                .equals(SpQueryStatus.OK);
   }
 
   @Override
