@@ -19,6 +19,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,20 @@ public class PipelineElementAsset extends AbstractRestResource {
   @GetMapping(path = "/{appId}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
   public ResponseEntity<?> getDocumentationAsset(@PathVariable("appId") String appId) {
     try {
+      //If the provided appId contains "sp:spdatastream",
+      //it indicates usage by the asset-overview view where the data stream ID is supplied.
+      //In such cases, the appId of the adapter description needs retrieval for successful documentation loading.
+      if (appId.contains("sp:spdatastream")) {
+        var dataStream = StorageDispatcher.INSTANCE
+            .getNoSqlStore()
+            .getDataStreamStorage()
+            .getDataStreamByAppId(appId);
+        var adapterDescription = StorageDispatcher.INSTANCE
+            .getNoSqlStore()
+            .getAdapterInstanceStorage()
+            .getAdapter(dataStream.getCorrespondingAdapterId());
+        appId = adapterDescription.getAppId();
+      }
       return ok(AssetManager.getAssetDocumentation(appId));
     } catch (IOException e) {
       return fail();
