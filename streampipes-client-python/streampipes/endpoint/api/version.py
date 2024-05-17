@@ -111,7 +111,7 @@ class VersionEndpoint(APIEndpoint):
 
         Raises
         ------
-        NotImplementedError
+        ValueError
             Non-empty 'identifier' is not supported by this endpoint. Please set 'identifier' to an empty string.
 
         Returns
