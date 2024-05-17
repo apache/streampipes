@@ -112,7 +112,7 @@ class VersionEndpoint(APIEndpoint):
         Raises
         ------
         ValueError
-            Non-empty 'identifier' is not supported by this endpoint. Please set 'identifier' to an empty string.
+            Non-empty `identifier` is not supported by this endpoint. Please set `identifier` to an empty string or `None`.
 
         Returns
         -------
@@ -121,7 +121,7 @@ class VersionEndpoint(APIEndpoint):
         """
         if identifier:
             raise ValueError(
-                "Non-empty 'identifier' is not supported by this endpoint. Please set 'identifier' to an empty string."
+                "Non-empty 'identifier' is not supported by this endpoint. Please set 'identifier' to an empty string or 'None'."
             )
 
         return super().get(identifier="")
