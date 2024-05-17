@@ -40,7 +40,7 @@ body:
   - type: dropdown
     attributes:
       label: Where does your observation occur?
-      description: Please choose whether the issue you want to report occurs on the [website](https://streampipes.apache.org/), the [documentation](https://streampipes.apache.org/docs/user-guide-introduction/), or the [python client documentation](https://streampipes.apache.org/docs/docs/python/).
+      description: Please choose whether the issue you want to report occurs on the [website](https://streampipes.apache.org/), the [documentation](https://streampipes.apache.org/docs/user-guide-introduction/), or the [python client documentation](https://streampipes.apache.org/docs/docs/python/latest/).
       multiple: false
       options:
         - StreamPipes Documentation
