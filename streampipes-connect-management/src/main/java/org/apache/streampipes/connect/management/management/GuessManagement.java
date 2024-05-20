@@ -28,6 +28,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
+import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -54,6 +55,7 @@ public class GuessManagement {
   public GuessSchema guessSchema(AdapterDescription adapterDescription)
       throws ParseException, WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
     var workerUrl = getWorkerUrl(adapterDescription.getAppId());
+    SecretProvider.getDecryptionService().apply(adapterDescription);
     var description = objectMapper.writeValueAsString(adapterDescription);
 
     LOG.info("Guess schema at: " + workerUrl);
