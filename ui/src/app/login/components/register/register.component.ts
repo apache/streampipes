@@ -81,11 +81,7 @@ export class RegisterComponent implements OnInit {
             error => {
                 this.registrationInProcess = false;
                 this.registrationSuccess = false;
-                if (error.error.notifications) {
-                    this.registrationError = error.error.notifications[0].title;
-                } else {
-                    this.registrationError = error.error.error;
-                }
+                this.registrationError = error.error.notifications[0].title;
             },
         );
     }
