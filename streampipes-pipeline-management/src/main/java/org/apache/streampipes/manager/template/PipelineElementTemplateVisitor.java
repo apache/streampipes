@@ -39,6 +39,7 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.model.staticproperty.StaticPropertyVisitor;
 import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,8 +137,16 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
   @Override
   public void visit(SecretStaticProperty secretStaticProperty) {
     if (hasKey(secretStaticProperty)) {
+      Map<String, Object> values = getAsMap(secretStaticProperty);
+      boolean encrypted = Boolean.parseBoolean(String.valueOf(values.get("encrypted")));
+      String value = String.valueOf(values.get("value"));
+      if (encrypted) {
+        secretStaticProperty.setValue(value);
+      } else {
+        String newValue = SecretEncryptionManager.encrypt(value);
+        secretStaticProperty.setValue(newValue);
+      }
       secretStaticProperty.setEncrypted(true);
-      secretStaticProperty.setValue(getAsString(secretStaticProperty));
     }
   }
 
