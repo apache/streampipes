@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.commons.exceptions.EmailSenderException;
 import org.apache.streampipes.commons.exceptions.UserNotFoundException;
 import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
 import org.apache.streampipes.model.client.user.JwtAuthenticationResponse;
@@ -109,6 +110,10 @@ public class Authentication extends AbstractRestResource {
       throw new SpMessageException(
           HttpStatus.BAD_REQUEST,
           Notifications.error("This email address already exists. Please choose another address."));
+    } catch (EmailSenderException e) {
+      throw new SpMessageException(
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          Notifications.error("User registration failed. Please report this to your admin."));
     }
   }
 
