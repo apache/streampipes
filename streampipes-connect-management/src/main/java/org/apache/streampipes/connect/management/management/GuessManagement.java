@@ -31,6 +31,7 @@ import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
+import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -58,6 +59,7 @@ public class GuessManagement {
 
   public GuessSchema guessSchema(AdapterDescription adapterDescription)
       throws ParseException, WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
+    SecretProvider.getDecryptionService().apply(adapterDescription);
     var workerUrl = getWorkerUrl(
         adapterDescription.getAppId(),
         adapterDescription.getDeploymentConfiguration().getDesiredServiceTags()
