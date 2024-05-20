@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.mail;
 
-import org.apache.streampipes.commons.exceptions.EmailSenderException;
 import org.apache.streampipes.mail.config.MailConfigurationBuilder;
 import org.apache.streampipes.mail.utils.MailUtils;
 import org.apache.streampipes.model.configuration.EmailConfig;
@@ -70,11 +69,7 @@ public class AbstractMailer {
   protected void deliverMail(EmailConfig config, Email email) {
     EmailConfig decryptedConfig = getDecryptedEmailConfig(config);
     Mailer mailer = getMailer(decryptedConfig);
-    try {
-      mailer.sendMail(email);
-    } catch (Exception e){
-      throw new EmailSenderException(e);
-    }
+    mailer.sendMail(email);
   }
 
   protected EmailPopulatingBuilder baseEmail() {
