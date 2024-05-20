@@ -154,7 +154,7 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
     var metadata = property.getAdditionalMetadata();
     metadata.put("mode", rule.getMode());
     metadata.put("formatString", rule.getFormatString());
-    metadata.put("multiplier", rule.getMultiplier());
+    metadata.put("multiplier", String.valueOf(rule.getMultiplier()));
   }
 
   @Override
