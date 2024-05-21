@@ -109,6 +109,10 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
   public void visit(AddTimestampRuleDescription rule) {
     var timestampProperty = EpProperties.timestampProperty(rule.getRuntimeKey());
     timestampProperty.setElementId(TIMESTAMP_ID_PREFIX + UUIDGenerator.generateUuid());
+    // null check required for backwards compatibility
+    if (rule.getPropertyScope() != null) {
+      timestampProperty.setPropertyScope(rule.getPropertyScope().name());
+    }
     this.properties.add(timestampProperty);
   }
 

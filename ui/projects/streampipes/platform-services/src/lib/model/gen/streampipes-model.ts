@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-04-30 20:29:03.
+// Generated using typescript-generator version 3.2.1263 on 2024-05-21 13:45:10.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -325,6 +325,7 @@ export class ValueTransformationRuleDescription extends TransformationRuleDescri
 
 export class AddTimestampRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription';
+    'propertyScope': PropertyScope;
     'runtimeKey': string;
 
     static 'fromData'(
@@ -336,6 +337,7 @@ export class AddTimestampRuleDescription extends ValueTransformationRuleDescript
         }
         const instance = target || new AddTimestampRuleDescription();
         super.fromData(data, instance);
+        instance.propertyScope = data.propertyScope;
         instance.runtimeKey = data.runtimeKey;
         return instance;
     }

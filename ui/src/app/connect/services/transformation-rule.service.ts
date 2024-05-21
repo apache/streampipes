@@ -30,6 +30,7 @@ import {
     EventPropertyUnion,
     EventSchema,
     MoveRuleDescription,
+    PropertyScope,
     RenameRuleDescription,
     SemanticType,
     TimestampTranfsformationRuleDescription,
@@ -55,22 +56,24 @@ export class TransformationRuleService {
         if (originalSchema == null || targetSchema == null) {
             console.log('Old and new schema must be defined');
         } else {
-            const addedTimestampProperties = this.getTimestampProperty(
+            const addedTimestampProperty = this.getTimestampProperty(
                 targetSchema.eventProperties,
             );
-            if (addedTimestampProperties) {
+            if (addedTimestampProperty) {
                 // add to old event schema for the case users moved the property to a nested property
-                originalSchema.eventProperties.push(addedTimestampProperties);
+                originalSchema.eventProperties.push(addedTimestampProperty);
 
                 const timestampRuleDescription: AddTimestampRuleDescription =
                     new AddTimestampRuleDescription();
                 timestampRuleDescription['@class'] =
                     'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription';
                 timestampRuleDescription.runtimeKey =
-                    addedTimestampProperties.runtimeName;
+                    addedTimestampProperty.runtimeName;
+                timestampRuleDescription.propertyScope =
+                    addedTimestampProperty.propertyScope as PropertyScope;
                 transformationRuleDescriptions.push(timestampRuleDescription);
             }
-
+            console.log(transformationRuleDescriptions);
             const staticValueProperties = this.getStaticValueProperties(
                 targetSchema.eventProperties,
             );
@@ -84,6 +87,7 @@ export class TransformationRuleService {
                 rule.datatype = ep.runtimeType;
                 rule.label = ep.label;
                 rule.description = ep.description;
+                rule.propertyScope = ep.propertyScope as PropertyScope;
                 if (ep.domainProperties.length > 0) {
                     rule.semanticType = ep.domainProperties[0];
                 }
