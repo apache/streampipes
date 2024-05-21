@@ -248,22 +248,22 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     List<TreeInputNode> allNodes = new ArrayList<>();
     RuntimeResolvableTreeInputStaticProperty sp =
         getStaticPropertyByName(internalName, RuntimeResolvableTreeInputStaticProperty.class);
-    if (sp.getNodes().size() > 0) {
+    if (!sp.getNodes().isEmpty()) {
       sp.getNodes().forEach(node -> buildFlatTree(node, allNodes));
     }
 
-    if (allNodes.size() > 0) {
-      return allNodes
+    if (!allNodes.isEmpty()) {
+      return sp.getSelectedNodesInternalNames()
           .stream()
           .filter(node -> {
             if (!onlyDataNodes) {
               return true;
             } else {
-              return node.isDataNode();
+              var existingNode = allNodes.stream().filter(n -> n.getInternalNodeName().equals(node)).findFirst();
+              return existingNode.map(TreeInputNode::isDataNode).orElse(false);
             }
           })
-          .filter(TreeInputNode::isSelected)
-          .map(node -> typeParser.parse(node.getInternalNodeName(), targetClass))
+          .map(node -> typeParser.parse(node, targetClass))
           .collect(Collectors.toList());
     } else {
       return new ArrayList<>();

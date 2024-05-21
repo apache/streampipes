@@ -38,6 +38,6 @@ public class DeleteTransformationRule extends SupportsNestedTransformationRule {
 
   @Override
   protected void applyTransformation(Map<String, Object> event, List<String> eventKeys) {
-    event.remove(eventKeys.get(0));
+      event.remove(eventKeys.get(0));
   }
 }
