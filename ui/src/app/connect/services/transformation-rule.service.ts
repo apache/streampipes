@@ -73,7 +73,6 @@ export class TransformationRuleService {
                     addedTimestampProperty.propertyScope as PropertyScope;
                 transformationRuleDescriptions.push(timestampRuleDescription);
             }
-            console.log(transformationRuleDescriptions);
             const staticValueProperties = this.getStaticValueProperties(
                 targetSchema.eventProperties,
             );
