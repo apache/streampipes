@@ -109,11 +109,21 @@ class VersionEndpoint(APIEndpoint):
         identifier: str
             Not supported by this endpoint, is set to an empty string.
 
+        Raises
+        ------
+        ValueError
+            Non-empty `identifier` is not supported by this endpoint. Please set `identifier` to an empty string or `None`.
+
         Returns
         -------
         versions: Version
             The specified resource as an instance of the corresponding model class([Version][streampipes.model.resource.Version]).  # noqa: 501
         """
+        if identifier:
+            raise ValueError(
+                "Non-empty 'identifier' is not supported by this endpoint. "
+                "Please set 'identifier' to an empty string or 'None'."
+            )
 
         return super().get(identifier="")
 
