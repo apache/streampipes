@@ -18,26 +18,59 @@
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 import { ConnectEventSchemaUtils } from '../../../support/utils/ConnectEventSchemaUtils';
+import { AdapterBuilder } from '../../../support/builder/AdapterBuilder';
 
 describe('Connect delete rule transformation', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        FileManagementUtils.addFile('connect/deleteTransformationRule/input.csv');
     });
 
-    it('Perform Test', () => {
-        ConnectUtils.setUpPreprocessingRuleTest();
+    it('Test delete with same prefix', () => {
+        FileManagementUtils.addFile(
+            'connect/deleteTransformationRule/prefixInput.csv',
+        );
+
+        ConnectUtils.setUpPreprocessingRuleTest(false);
 
         ConnectEventSchemaUtils.deleteProperty('reserved bit');
         ConnectEventSchemaUtils.deleteProperty('reserved bit_1');
         ConnectEventSchemaUtils.deleteProperty('reserved bit_2');
 
+        cy.dataCy('schema-preview-result-event').should(
+            'have.text',
+            '{\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01715356080000}',
+        );
+    });
 
-        cy.dataCy('schema-preview-result-event')
-            .should(
-                'have.text',
-                '{\n"timestamp": 1715356080000\n}'
-            );
+    it('Test delete nested properties', () => {
+        FileManagementUtils.addFile(
+            'connect/deleteTransformationRule/nestedInput.json',
+        );
+
+        const adapterConfigurationBuilder = AdapterBuilder.create('File_Stream')
+            .setStoreInDataLake()
+            .setTimestampProperty('timestamp')
+            .addProtocolInput(
+                'radio',
+                'speed',
+                'fastest_\\(ignore_original_time\\)',
+            )
+            .addProtocolInput('radio', 'replayonce', 'yes')
+            .setName('Adapter to test rules')
+            .setFormat('json');
+
+        ConnectUtils.setUpPreprocessingRuleTest(
+            false,
+            adapterConfigurationBuilder,
+        );
+
+        // Test to delete the child property
+        ConnectEventSchemaUtils.deleteProperty('child');
+
+        // The resulting string contains non-breaking spaces character (\u00A0)
+        cy.dataCy('schema-preview-result-event').should(
+            'have.text',
+            '{\u00A0\u00A0\u00A0\u00A0"parent":\u00A0{},\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01667904471000}',
+        );
     });
 });
-

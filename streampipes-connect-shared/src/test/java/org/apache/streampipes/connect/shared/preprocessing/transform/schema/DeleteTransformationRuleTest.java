@@ -18,41 +18,39 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DeleteTransformationRuleTest {
 
   @Test
   public void transformSimple() {
-    Map<String, Object> event = new HashMap<>();
+    var event = new HashMap<String, Object>();
     event.put("key", "value");
 
-    DeleteTransformationRule deleteRule = new DeleteTransformationRule(List.of("key"));
+    var deleteRule = new DeleteTransformationRule(List.of("key"));
 
-    Map<String, Object> result = deleteRule.apply(event);
+    var result = deleteRule.apply(event);
 
-    Assertions.assertEquals(0,
-                            result.keySet().size());
+    assertEquals(0, result.keySet().size());
   }
 
   @Test
   public void transformNested() {
-    Map<String, Object> child = new HashMap<>();
+    var child = new HashMap<String, Object>();
     child.put("child", "value");
-    Map<String, Object> event = new HashMap<>();
+    var event = new HashMap<String, Object>();
     event.put("parent", child);
 
-    DeleteTransformationRule deleteRule = new DeleteTransformationRule(Arrays.asList("parent", "child"));
+    var deleteRule = new DeleteTransformationRule(Arrays.asList("parent", "child"));
 
-    Map<String, Object> result = deleteRule.apply(event);
+    var result = deleteRule.apply(event);
 
-    Assertions.assertEquals(1,
-                            result.keySet().size());
+    assertEquals(1, result.keySet().size());
   }
 }
