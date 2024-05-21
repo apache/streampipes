@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -42,15 +43,41 @@ public class DeleteTransformationRuleTest {
 
   @Test
   public void transformNested() {
-    var child = new HashMap<String, Object>();
-    child.put("child", "value");
-    var event = new HashMap<String, Object>();
-    event.put("parent", child);
+    var event = getNestedTestEvent();
+
+    var deleteRule = new DeleteTransformationRule(List.of("parent", "child"));
+
+    var result = deleteRule.apply(event);
+
+    assertEquals(2, result.keySet().size());
+  }
+
+  @Test
+  // verifying that mathod applyTransformation method works when passed a null event.
+  public void applyTransformationWithNullParameter() {
+    new DeleteTransformationRule(List.of())
+        .applyTransformation(null, List.of());
+  }
+
+  @Test
+  public void deleteNestedChildWithParentProperty() {
+
+    var event = getNestedTestEvent();
 
     var deleteRule = new DeleteTransformationRule(Arrays.asList("parent", "child"));
 
     var result = deleteRule.apply(event);
 
     assertEquals(1, result.keySet().size());
+    assertEquals("test", result.get("keepProperty"));
+  }
+
+  private Map<String, Object> getNestedTestEvent() {
+    var child = new HashMap<String, Object>();
+    child.put("child", "value");
+    var event = new HashMap<String, Object>();
+    event.put("parent", child);
+    event.put("keepProperty", "test");
+    return event;
   }
 }
