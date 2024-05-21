@@ -27,6 +27,7 @@ import { RuntimeResolvableService } from '../static-runtime-resolvable-input/run
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTree, MatTreeNestedDataSource } from '@angular/material/tree';
 import { UntypedFormControl } from '@angular/forms';
+import Tree from 'echarts/types/src/data/Tree';
 
 @Component({
     selector: 'sp-runtime-resolvable-tree-input',
@@ -42,6 +43,8 @@ export class StaticRuntimeResolvableTreeInputComponent
 
     selectedNodeMetadata: Record<string, string>;
     selectedNodeId: string;
+
+    largeView = false;
 
     @ViewChild('tree') tree: MatTree<TreeInputNode>;
 
@@ -157,6 +160,25 @@ export class StaticRuntimeResolvableTreeInputComponent
             node.internalNodeName,
         );
         this.performValidation();
+    }
+
+    addAllDirectChildren(node: TreeInputNode) {
+        node.children.forEach(child => {
+            if (child.dataNode && !this.existsSelectedNode(child)) {
+                this.staticProperty.selectedNodesInternalNames.push(
+                    child.internalNodeName,
+                );
+            }
+        });
+        this.performValidation();
+    }
+
+    existsSelectedNode(node: TreeInputNode) {
+        return (
+            this.staticProperty.selectedNodesInternalNames.find(
+                nodeName => nodeName === node.internalNodeName,
+            ) !== undefined
+        );
     }
 
     removeNode(node: TreeInputNode) {
