@@ -54,14 +54,30 @@
     <div fxLayout="row" fxLayoutGap="15px">
         <div fxFlex="30" class="tree-input-section" fxLayout="column">
             <div class="tree-input-header" fxLayoutAlign="start center">
-                <b>Browse</b>
+                <div fxLayout="row" fxFlex="100">
+                    <div fxFlex fxLayoutAlign="start center"><b>Browse</b></div>
+                    <div fxLayoutAlign="end center">
+                        <button
+                            mat-icon-button
+                            color="accent"
+                            (click)="largeView = !largeView"
+                        >
+                            <mat-icon *ngIf="!largeView">open_in_full</mat-icon>
+                            <mat-icon *ngIf="largeView"
+                                >close_fullscreen</mat-icon
+                            >
+                        </button>
+                    </div>
+                </div>
             </div>
             <mat-tree
                 [dataSource]="dataSource"
                 [treeControl]="treeControl"
                 #tree
                 class="sp-tree"
-                style="max-height: 300px; overflow-y: auto"
+                [ngClass]="
+                    largeView ? 'tree-large-height' : 'tree-normal-height'
+                "
             >
                 <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
                     <div
@@ -156,6 +172,7 @@
                                     hasDataChildren(node)
                                 "
                                 matTooltip="Add all direct children"
+                                (click)="addAllDirectChildren(node)"
                                 >add_circle</i
                             >
                             <i
