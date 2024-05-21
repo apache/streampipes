@@ -276,29 +276,33 @@ export class ConnectUtils {
 
     public static setUpPreprocessingRuleTest(
         overwriteTimestamp: boolean,
+        adapterConfigurationBuilder?: AdapterBuilder,
     ): AdapterInput {
-        const adapterConfiguration = AdapterBuilder.create('File_Stream')
-            .setStoreInDataLake()
-            .setTimestampProperty('timestamp')
-            .addProtocolInput(
-                'radio',
-                'speed',
-                'fastest_\\(ignore_original_time\\)',
-            )
-            .addProtocolInput('radio', 'replayonce', 'yes')
-            .setName('Adapter to test rules')
-            .setFormat('csv')
-            .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
-            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
+        if (!adapterConfigurationBuilder) {
+            adapterConfigurationBuilder = AdapterBuilder.create('File_Stream')
+                .setStoreInDataLake()
+                .setTimestampProperty('timestamp')
+                .addProtocolInput(
+                    'radio',
+                    'speed',
+                    'fastest_\\(ignore_original_time\\)',
+                )
+                .addProtocolInput('radio', 'replayonce', 'yes')
+                .setName('Adapter to test rules')
+                .setFormat('csv')
+                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
+        }
 
         if (overwriteTimestamp) {
-            adapterConfiguration.addProtocolInput(
+            adapterConfigurationBuilder.addProtocolInput(
                 'checkbox',
                 'replaceTimestamp',
                 'check',
             );
         }
-        adapterConfiguration = adapterConfiguration.build();
+
+        const adapterConfiguration = adapterConfigurationBuilder.build();
 
         ConnectUtils.goToConnect();
         ConnectUtils.goToNewAdapterPage();
