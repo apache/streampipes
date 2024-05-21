@@ -32,11 +32,14 @@ theme:
   favicon: https://streampipes.apache.org/img/favicon.png
   custom_dir: docs/overrides
   features:
+    - content.action.edit
+    - content.code.copy
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.instant
     - navigation.indexes
     - navigation.tracking
+    - search.suggest
   font: false
   palette:
     # Palette toggle for light mode
