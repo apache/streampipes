@@ -47,7 +47,7 @@ reformat-all:
 
 .PHONY: pre-commit
 pre-commit:
-	poetry run pre-commit run --verbose --all-files
+	poetry run pre-commit run --verbose --files $(git ls-files 'streampipes/**/*' 'tests/**/*')
 
 .PHONY: unit-tests
 unit-tests:
