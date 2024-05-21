@@ -78,11 +78,10 @@ describe('Connect delete rule transformation', () => {
 
         // Test to delete the parent property
         ConnectEventSchemaUtils.deleteProperty('parent');
-        cy.dataCy('schema-preview-result-event')
-            .should(
-                'have.text',
+        cy.dataCy('schema-preview-result-event').should(
+            'have.text',
 
-                '{\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01667904471000}',
-            );
+            '{\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01667904471000}',
+        );
     });
 });
