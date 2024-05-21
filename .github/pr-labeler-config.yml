@@ -41,6 +41,8 @@ documentation:
       - changed-files:
           - any-glob-to-any-file:
               - "**/*.md"
+              - "streampipes-client-python/docs/**/*"
+              - "streampipes-client-python/mkdocs.yml"
 
 gh-actions:
   - any:
