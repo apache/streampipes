@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -43,7 +42,12 @@ public class DeleteTransformationRuleTest {
 
   @Test
   public void transformNested() {
-    var event = getNestedTestEvent();
+    var child = new HashMap<String, Object>();
+    child.put("child", "value");
+    child.put("secondChild", "value");
+    var event = new HashMap<String, Object>();
+    event.put("parent", child);
+    event.put("keepProperty", "test");
 
     var deleteRule = new DeleteTransformationRule(List.of("parent", "child"));
 
@@ -61,8 +65,11 @@ public class DeleteTransformationRuleTest {
 
   @Test
   public void deleteNestedChildWithParentProperty() {
-
-    var event = getNestedTestEvent();
+    var child = new HashMap<String, Object>();
+    child.put("child", "value");
+    var event = new HashMap<String, Object>();
+    event.put("parent", child);
+    event.put("keepProperty", "test");
 
     var deleteRule = new DeleteTransformationRule(Arrays.asList("parent", "child"));
 
@@ -72,12 +79,4 @@ public class DeleteTransformationRuleTest {
     assertEquals("test", result.get("keepProperty"));
   }
 
-  private Map<String, Object> getNestedTestEvent() {
-    var child = new HashMap<String, Object>();
-    child.put("child", "value");
-    var event = new HashMap<String, Object>();
-    event.put("parent", child);
-    event.put("keepProperty", "test");
-    return event;
-  }
 }
