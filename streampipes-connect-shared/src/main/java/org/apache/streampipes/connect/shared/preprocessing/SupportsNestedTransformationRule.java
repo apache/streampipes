@@ -42,7 +42,10 @@ public abstract class SupportsNestedTransformationRule implements Transformation
           applyNested((Map<String, Object>) event.get(eventKey.get(0)), newKeysTmpList);
 
       event.remove(key);
-      event.put(key, newSubEvent);
+
+      if (newSubEvent != null && !newSubEvent.isEmpty()) {
+        event.put(key, newSubEvent);
+      }
     }
     return event;
   }

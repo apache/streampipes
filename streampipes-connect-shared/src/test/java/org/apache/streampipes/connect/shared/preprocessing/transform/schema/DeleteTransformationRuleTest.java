@@ -44,13 +44,39 @@ public class DeleteTransformationRuleTest {
   public void transformNested() {
     var child = new HashMap<String, Object>();
     child.put("child", "value");
+    child.put("secondChild", "value");
     var event = new HashMap<String, Object>();
     event.put("parent", child);
+    event.put("keepProperty", "test");
+
+    var deleteRule = new DeleteTransformationRule(List.of("parent", "child"));
+
+    var result = deleteRule.apply(event);
+
+    assertEquals(2, result.keySet().size());
+  }
+
+  @Test
+  // verifying that mathod applyTransformation method works when passed a null event.
+  public void applyTransformationWithNullParameter() {
+    new DeleteTransformationRule(List.of())
+        .applyTransformation(null, List.of());
+  }
+
+  @Test
+  public void deleteNestedChildWithParentProperty() {
+    var child = new HashMap<String, Object>();
+    child.put("child", "value");
+    var event = new HashMap<String, Object>();
+    event.put("parent", child);
+    event.put("keepProperty", "test");
 
     var deleteRule = new DeleteTransformationRule(Arrays.asList("parent", "child"));
 
     var result = deleteRule.apply(event);
 
     assertEquals(1, result.keySet().size());
+    assertEquals("test", result.get("keepProperty"));
   }
+
 }
