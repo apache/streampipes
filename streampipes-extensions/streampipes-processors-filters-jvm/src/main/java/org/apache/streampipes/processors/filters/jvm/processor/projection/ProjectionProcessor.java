@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -43,7 +44,7 @@ public class ProjectionProcessor extends StreamPipesDataProcessor {
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.project")
         .category(DataProcessorType.TRANSFORM)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .requiredStream(StreamRequirementsBuilder
             .create()
