@@ -20,10 +20,12 @@ package org.apache.streampipes.model.connect.rules.value;
 
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
+import org.apache.streampipes.model.schema.PropertyScope;
 
 public class AddTimestampRuleDescription extends ValueTransformationRuleDescription {
 
   private String runtimeKey;
+  private PropertyScope propertyScope;
 
   public AddTimestampRuleDescription() {
     super();
@@ -36,6 +38,7 @@ public class AddTimestampRuleDescription extends ValueTransformationRuleDescript
   public AddTimestampRuleDescription(AddTimestampRuleDescription other) {
     super(other);
     this.runtimeKey = other.getRuntimeKey();
+    this.propertyScope = other.getPropertyScope();
   }
 
   public String getRuntimeKey() {
@@ -44,6 +47,14 @@ public class AddTimestampRuleDescription extends ValueTransformationRuleDescript
 
   public void setRuntimeKey(String runtimeKey) {
     this.runtimeKey = runtimeKey;
+  }
+
+  public PropertyScope getPropertyScope() {
+    return propertyScope;
+  }
+
+  public void setPropertyScope(PropertyScope propertyScope) {
+    this.propertyScope = propertyScope;
   }
 
   @Override
