@@ -19,32 +19,32 @@
 package org.apache.streampipes.sinks.brokers.jvm.websocket;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
+import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
-
-import java.io.IOException;
 
 
-public class WebsocketServerSink extends StreamPipesDataSink {
+public class WebsocketServerSink implements IStreamPipesDataSink {
 
   private static final String PORT_KEY = "port";
-  private Integer port;
 
   private SocketServer server;
 
   @Override
-  public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.websocket", 0)
+  public IDataSinkConfiguration declareConfig() {
+    return DataSinkConfiguration.create(
+        WebsocketServerSink::new,
+        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.websocket", 0)
         .category(DataSinkType.MESSAGING)
         .withLocales(Locales.EN)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
@@ -53,12 +53,13 @@ public class WebsocketServerSink extends StreamPipesDataSink {
             .requiredProperty(EpRequirements.anyProperty())
             .build())
         .requiredIntegerParameter(Labels.withId(PORT_KEY))
-        .build();
+        .build());
   }
 
   @Override
-  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-    port = parameters.extractor().singleValueParameter(PORT_KEY, Integer.class);
+  public void onPipelineStarted(IDataSinkParameters params,
+                                EventSinkRuntimeContext runtimeContext) {
+    var port = params.extractor().singleValueParameter(PORT_KEY, Integer.class);
     server = new SocketServer(port);
     server.setReuseAddr(true);
     server.start();
@@ -70,11 +71,10 @@ public class WebsocketServerSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
     try {
-      server.stop();
-      server = null;
-    } catch (IOException | InterruptedException e) {
+      server.stop(0);
+    } catch (InterruptedException e) {
       throw new SpRuntimeException(e.getMessage());
     }
   }
