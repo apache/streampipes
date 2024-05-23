@@ -77,7 +77,7 @@
         <jakarta-validation.version>3.0.2</jakarta-validation.version>
         <jakarta-xml-bind-api.version>4.0.0</jakarta-xml-bind-api.version>
         <javax.xml.bind.version>2.4.0-b180725.0427</javax.xml.bind.version>
-        <java-websocket.version>1.5.0</java-websocket.version>
+        <java-websocket.version>1.5.6</java-websocket.version>
         <jaxb-runtime.version>2.3.2</jaxb-runtime.version>
         <javax-websocket-api.version>1.1</javax-websocket-api.version>
         <jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>

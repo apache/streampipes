@@ -24,16 +24,21 @@ import org.apache.streampipes.model.runtime.Event;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
 
 public class SocketServer extends WebSocketServer {
 
-  private JsonDataFormatDefinition dataFormatDefinition;
+  private static final Logger LOG = LoggerFactory.getLogger(SocketServer.class);
+
+  private final JsonDataFormatDefinition dataFormatDefinition;
 
   public SocketServer(int port) {
     super(new InetSocketAddress(port));
+    setReuseAddr(true);
     dataFormatDefinition = new JsonDataFormatDefinition();
   }
 
@@ -42,27 +47,27 @@ public class SocketServer extends WebSocketServer {
     conn.send("Welcome!"); //This method sends a message to the new client
     broadcast(
         "New connection: " + handshake.getResourceDescriptor()); //This method sends a message to all clients connected
-    System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected.");
+    LOG.info("{} connected.", conn.getRemoteSocketAddress().getAddress().getHostAddress());
   }
 
   @Override
   public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-    // do nothing special
+    LOG.info("{} closed.", conn.getRemoteSocketAddress().getAddress().getHostAddress());
   }
 
   @Override
   public void onMessage(WebSocket conn, String message) {
-    System.out.println(conn + ": " + message);
+    LOG.debug(" {}: {}", conn, message);
   }
 
   @Override
   public void onError(WebSocket conn, Exception ex) {
-    ex.printStackTrace();
+    LOG.error("Error in websocket connection", ex);
   }
 
   @Override
   public void onStart() {
-    System.out.println("Server started!");
+    LOG.info("Server started at port {}", getPort());
     setConnectionLostTimeout(0);
     setConnectionLostTimeout(100);
   }

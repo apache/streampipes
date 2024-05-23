@@ -81,6 +81,7 @@ public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime
   @Override
   protected void afterStop() {
     inputCollectors.forEach(is -> is.unregisterConsumer(instanceId));
+    pipelineElement.onPipelineStopped();
     postDiscard();
   }
 }
