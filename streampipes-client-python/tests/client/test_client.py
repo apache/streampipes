@@ -119,7 +119,13 @@ class TestStreamPipesClient(TestCase):
             if "streams" in kwargs["url"]:
                 return MockResponse(
                     json.dumps(
-                        [{"elementId": "test-stream", "name": "test", "eventGrounding": {"transportProtocols": []}}]
+                        [
+                            {
+                                "elementId": "test-stream",
+                                "name": "test",
+                                "eventGrounding": {"transportProtocols": []},
+                            }
+                        ]
                     )
                 )
             if "versions" in kwargs["url"]:
@@ -138,7 +144,8 @@ class TestStreamPipesClient(TestCase):
         mocked_logger.info.assert_has_calls(
             calls=[
                 call(
-                    "\nHi there!\nYou are connected to a StreamPipes instance running at https://localhost:443 with version SP-dev.\n"
+                    "\nHi there!\nYou are connected to a StreamPipes instance running at "
+                    "https://localhost:443 with version SP-dev.\n"
                     "The following StreamPipes resources are available with this client:\n"
                     "1x DataLakeMeasures\n1x DataStreams"
                 ),

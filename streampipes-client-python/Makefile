@@ -24,7 +24,7 @@ doc:
 
 .PHONY: lint
 lint:
-	poetry run flake8 streampipes --max-line-length 120
+	poetry run flake8 streampipes tests --max-line-length 120
 
 .PHONY: livedoc
 livedoc: doc
@@ -32,7 +32,7 @@ livedoc: doc
 
 .PHONY: mypy
 mypy:
-	poetry run mypy streampipes --config-file pyproject.toml
+	poetry run mypy streampipes tests --config-file pyproject.toml
 
 .PHONY: rebase
 rebase:
