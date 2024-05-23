@@ -71,6 +71,25 @@ describe('Connect delete rule transformation', () => {
         // The resulting string contains non-breaking spaces character (\u00A0)
         cy.dataCy('schema-preview-result-event').should(
             'have.text',
+            '{\u00A0\u00A0\u00A0\u00A0"parent":\u00A0{\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"child_two":\u00A0"textTwo"\u00A0\u00A0\u00A0\u00A0},\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01667904471000}',
+        );
+
+        ConnectBtns.refreshSchema().click();
+
+        // Test to delete the parent property
+        ConnectEventSchemaUtils.deleteProperty('parent');
+        cy.dataCy('schema-preview-result-event').should(
+            'have.text',
+
+            '{\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01667904471000}',
+        );
+
+        ConnectBtns.refreshSchema().click();
+        ConnectEventSchemaUtils.deleteProperty('child');
+        ConnectEventSchemaUtils.deleteProperty('child_two');
+
+        cy.dataCy('schema-preview-result-event').should(
+            'have.text',
             '{\u00A0\u00A0\u00A0\u00A0"parent":\u00A0{},\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01667904471000}',
         );
 
@@ -82,6 +101,17 @@ describe('Connect delete rule transformation', () => {
             'have.text',
 
             '{\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01667904471000}',
+        );
+
+        ConnectBtns.refreshSchema().click();
+
+        // Test to delete both child properties
+        ConnectEventSchemaUtils.deleteProperty('child');
+        ConnectEventSchemaUtils.deleteProperty('child_two');
+
+        cy.dataCy('schema-preview-result-event').should(
+            'have.text',
+            '{\u00A0\u00A0\u00A0\u00A0"parent":\u00A0{},\u00A0\u00A0\u00A0\u00A0"timestamp":\u00A01667904471000}',
         );
     });
 });

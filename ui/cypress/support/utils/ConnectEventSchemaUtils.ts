@@ -183,7 +183,14 @@ export class ConnectEventSchemaUtils {
             .click({ force: true });
         cy.dataCy('connect-schema-delete-properties-btn', {
             timeout: 10000,
-        }).click();
+        }).click({ force: true });
+
+        // The following two commands are required to fix flaky tests
+        // if another solution can be found, it can be removed
+        cy.wait(200);
+        cy.dataCy('connect-schema-update-preview-btn', {
+            timeout: 10000,
+        }).click({ force: true });
     }
 
     public static changePropertyDataType(

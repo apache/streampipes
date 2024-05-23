@@ -43,7 +43,7 @@ public abstract class SupportsNestedTransformationRule implements Transformation
 
       event.remove(key);
 
-      if (newSubEvent != null && !newSubEvent.isEmpty()) {
+      if (newSubEvent != null) {
         event.put(key, newSubEvent);
       }
     }

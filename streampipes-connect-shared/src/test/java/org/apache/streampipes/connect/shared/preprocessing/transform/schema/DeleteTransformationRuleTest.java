@@ -18,15 +18,21 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DeleteTransformationRuleTest {
+
+
+  private ObjectMapper objectMapper = new ObjectMapper();
 
   @Test
   public void transformSimple() {
@@ -37,24 +43,62 @@ public class DeleteTransformationRuleTest {
 
     var result = deleteRule.apply(event);
 
-    assertEquals(0, result.keySet().size());
+    assertEquals(0,
+                 result.keySet()
+                       .size()
+    );
   }
 
   @Test
-  public void transformNested() {
-    var child = new HashMap<String, Object>();
-    child.put("child", "value");
-    child.put("secondChild", "value");
-    var event = new HashMap<String, Object>();
-    event.put("parent", child);
-    event.put("keepProperty", "test");
+  public void transformNested() throws JsonProcessingException {
+    var jsonString = """
+                     {
+                         "parent": {
+                             "child": "value",
+                             "child2": "value2"
+                         },
+                         "keepProperty": "test"
+                     }
+                     """;
+
+    var event = getEvent(jsonString);
 
     var deleteRule = new DeleteTransformationRule(List.of("parent", "child"));
 
     var result = deleteRule.apply(event);
 
-    assertEquals(2, result.keySet().size());
+    assertEquals(2,
+                 result.keySet()
+                       .size()
+    );
+    assertEquals(1, ((Map) result.get("parent")).size());
   }
+
+  @Test
+  public void testRemoveParent() throws JsonProcessingException {
+    var jsonString = """
+                     {
+                         "parent": {
+                             "child": "value",
+                             "child2": "value2"
+                         },
+                         "keepProperty": "test"
+                     }
+                     """;
+
+    var event = getEvent(jsonString);
+
+    var deleteRule = new DeleteTransformationRule(List.of("parent"));
+
+    var result = deleteRule.apply(event);
+
+    assertEquals(1,
+                 result.keySet()
+                       .size()
+    );
+    assertEquals("test", result.get("keepProperty"));
+  }
+
 
   @Test
   // verifying that mathod applyTransformation method works when passed a null event.
@@ -64,19 +108,32 @@ public class DeleteTransformationRuleTest {
   }
 
   @Test
-  public void deleteNestedChildWithParentProperty() {
-    var child = new HashMap<String, Object>();
-    child.put("child", "value");
-    var event = new HashMap<String, Object>();
-    event.put("parent", child);
-    event.put("keepProperty", "test");
+  public void deleteNestedChildWithParentProperty() throws JsonProcessingException {
+
+    var jsonString = """
+                     {
+                         "parent": {
+                             "child": "value"
+                         },
+                         "keepProperty": "test"
+                     }
+                     """;
+
+    var event = getEvent(jsonString);
 
     var deleteRule = new DeleteTransformationRule(Arrays.asList("parent", "child"));
 
     var result = deleteRule.apply(event);
 
-    assertEquals(1, result.keySet().size());
+    assertEquals(2,
+                 result.keySet()
+                       .size()
+    );
     assertEquals("test", result.get("keepProperty"));
+  }
+
+  private Map<String, Object> getEvent(String eventJson) throws JsonProcessingException {
+    return objectMapper.readValue(eventJson, HashMap.class);
   }
 
 }
