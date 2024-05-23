@@ -47,7 +47,12 @@ reformat-all:
 
 .PHONY: pre-commit
 pre-commit:
-	git ls-files -- 'streampipes/**/*' | xargs poetry run pre-commit run --verbose --files
+	@CHANGED_FILES_PYTHON=$$(git diff --name-only HEAD~1 HEAD -- 'streampipes/**/*' 'tests/**/*'); \
+	if [ -n "$$CHANGED_FILES_PYTHON" ]; then \
+		poetry run pre-commit run --verbose --files $$CHANGED_FILES_PYTHON; \
+	else \
+		echo "No files changed in 'streampipes' or 'tests' directories."; \
+	fi
 
 .PHONY: unit-tests
 unit-tests:

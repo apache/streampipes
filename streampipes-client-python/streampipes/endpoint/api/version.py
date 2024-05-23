@@ -28,6 +28,7 @@ from typing import Tuple, Type
 from streampipes.endpoint import APIEndpoint
 from streampipes.model.container import Versions
 from streampipes.model.container.resource_container import ResourceContainer
+from streampipes.model.resource import Version
 from streampipes.model.resource.resource import Resource
 
 
@@ -74,6 +75,16 @@ class VersionEndpoint(APIEndpoint):
         return Versions
 
     @property
+    def _resource_cls(cls) -> Type[Version]:
+        """Returns the class of the resource that are bundled.
+
+        Returns
+        -------
+        [Version][streampipes.model.resource.Version]
+        """
+        return Version
+
+    @property
     def _relative_api_path(self) -> Tuple[str, ...]:
         """Defines the relative api path to the DataStream endpoint.
 
@@ -99,7 +110,7 @@ class VersionEndpoint(APIEndpoint):
         """
         raise NotImplementedError("The `all()` method is not supported by this endpoint.")
 
-    def get(self, identifier: str, **kwargs) -> Resource:
+    def get(self, identifier: str, **kwargs) -> Version:
         """Queries the resource from the API endpoint.
 
         For this endpoint only one resource is available.
@@ -125,7 +136,9 @@ class VersionEndpoint(APIEndpoint):
                 "Please set 'identifier' to an empty string or 'None'."
             )
 
-        return super().get(identifier="")
+        response = self._make_request(request_method=self._parent_client.request_session.get, url=self.build_url())
+
+        return self._resource_cls(**response.json())
 
     def post(self, resource: Resource) -> None:
         """Usually, this method allows to create via this endpoint.
