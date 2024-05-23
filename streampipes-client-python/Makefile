@@ -24,7 +24,7 @@ doc:
 
 .PHONY: lint
 lint:
-	poetry run flake8 streampipes --max-line-length 120
+	poetry run flake8 streampipes tests --max-line-length 120
 
 .PHONY: livedoc
 livedoc: doc
