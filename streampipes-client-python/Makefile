@@ -32,7 +32,7 @@ livedoc: doc
 
 .PHONY: mypy
 mypy:
-	poetry run mypy streampipes --config-file pyproject.toml
+	poetry run mypy streampipes tests --config-file pyproject.toml
 
 .PHONY: rebase
 rebase:
