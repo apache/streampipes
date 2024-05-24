@@ -16,24 +16,33 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    Output,
+    SimpleChanges,
+} from '@angular/core';
 import { TimeSeriesAppearanceConfig } from '../../../../models/dataview-dashboard.model';
 
 @Component({
     selector: 'sp-data-zoom-config',
     templateUrl: './data-zoom-config.component.html',
 })
-export class SpDataZoomConfigComponent implements OnInit {
+export class SpDataZoomConfigComponent implements OnChanges {
     @Input()
     appearanceConfig: TimeSeriesAppearanceConfig;
 
     @Output()
     configChangedEmitter: EventEmitter<void> = new EventEmitter<void>();
 
-    ngOnInit(): void {
-        this.appearanceConfig.dataZoom ??= {
-            show: true,
-            type: 'inside',
-        };
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.appearanceConfig) {
+            this.appearanceConfig.dataZoom ??= {
+                show: true,
+                type: 'inside',
+            };
+        }
     }
 }

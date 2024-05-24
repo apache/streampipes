@@ -26,6 +26,7 @@ import {
 } from '@streampipes/platform-services';
 import { ResizeService } from '../../services/resize.service';
 import { zip } from 'rxjs';
+import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
 
 @Directive()
 export abstract class AbstractWidgetViewDirective {
@@ -67,6 +68,7 @@ export abstract class AbstractWidgetViewDirective {
     constructor(
         protected resizeService: ResizeService,
         protected dataViewDataExplorerService: DataViewDataExplorerService,
+        protected widgetRegistryService: DataExplorerWidgetRegistry,
     ) {}
 
     updateAllWidgets() {
@@ -138,6 +140,9 @@ export abstract class AbstractWidgetViewDirective {
     }
 
     processWidget(widget: DataExplorerWidgetModel) {
+        widget.widgetType = this.widgetRegistryService.getWidgetType(
+            widget.widgetType,
+        );
         this.configuredWidgets.set(widget._id, widget);
         this.dataLakeMeasures.set(
             widget._id,
