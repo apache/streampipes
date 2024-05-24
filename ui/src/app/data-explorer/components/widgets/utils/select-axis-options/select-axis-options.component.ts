@@ -16,10 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DataExplorerField } from '@streampipes/platform-services';
-import { TimeSeriesChartWidgetModel } from '../../time-series-chart/model/time-series-chart-widget.model';
-import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    Output,
+    SimpleChanges,
+} from '@angular/core';
 import { AxisConfig } from '../../../../models/dataview-dashboard.model';
 
 @Component({
@@ -27,11 +31,21 @@ import { AxisConfig } from '../../../../models/dataview-dashboard.model';
     templateUrl: './select-axis-options.component.html',
     styleUrls: ['./select-axis-options.component.scss'],
 })
-export class SpSelectAxisOptionsComponent {
+export class SpSelectAxisOptionsComponent implements OnChanges {
     @Input() title: string;
     @Input() axisConfig: AxisConfig;
 
     @Output() viewRefreshEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     constructor() {}
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.axisConfig) {
+            this.axisConfig ??= {
+                autoScaleActive: true,
+                axisMax: undefined,
+                axisMin: undefined,
+            };
+        }
+    }
 }

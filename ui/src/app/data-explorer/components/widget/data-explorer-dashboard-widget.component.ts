@@ -157,11 +157,8 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     }
 
     chooseWidget(widgetTypeId: string) {
-        const widgets =
-            this.widgetRegistryService.getAvailableWidgetTemplates();
-        const widgetToDisplay = widgets.find(
-            widget => widget.id === widgetTypeId,
-        );
+        const widgetToDisplay =
+            this.widgetRegistryService.getWidgetTemplate(widgetTypeId);
         this.loadComponent(widgetToDisplay.widgetComponent);
     }
 

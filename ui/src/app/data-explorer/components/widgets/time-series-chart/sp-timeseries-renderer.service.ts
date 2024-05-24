@@ -28,7 +28,10 @@ import { TimeSeriesChartWidgetModel } from './model/time-series-chart-widget.mod
 import { DataExplorerField } from '@streampipes/platform-services';
 import { SpBaseEchartsRenderer } from '../../../echarts-renderer/base-echarts-renderer';
 import { GeneratedDataset, WidgetSize } from '../../../models/dataset.model';
-import { WidgetBaseAppearanceConfig } from '../../../models/dataview-dashboard.model';
+import {
+    AxisConfig,
+    WidgetBaseAppearanceConfig,
+} from '../../../models/dataview-dashboard.model';
 import { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager';
 import { ToolboxDataZoomFeatureOption } from 'echarts/types/src/component/toolbox/feature/DataZoom';
 import { YAXisOption } from 'echarts/types/dist/shared';
@@ -276,8 +279,11 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         uniqueAxes.forEach(axis => {
             const settings =
                 axisIndex === 0
-                    ? config.visualizationConfig.leftAxis
-                    : config.visualizationConfig.rightAxis;
+                    ? config.visualizationConfig.leftAxis ||
+                      ({ autoScaleActive: true } as AxisConfig)
+                    : config.visualizationConfig.rightAxis ||
+                      ({ autoScaleActive: true } as AxisConfig);
+
             yAxisOptions.push({
                 type: 'value',
                 position: axis as CartesianAxisPosition,

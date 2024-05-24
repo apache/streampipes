@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+} from '@angular/core';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { WidgetTypeService } from '../../../services/widget-type.service';
 import { MatSelectChange } from '@angular/material/select';
@@ -28,7 +34,9 @@ import { DataExplorerWidgetRegistry } from '../../../registry/data-explorer-widg
     templateUrl: './data-explorer-visualisation-settings.component.html',
     styleUrls: ['./data-explorer-visualisation-settings.component.scss'],
 })
-export class DataExplorerVisualisationSettingsComponent implements OnInit {
+export class DataExplorerVisualisationSettingsComponent
+    implements OnInit, OnChanges
+{
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
 
     constructor(
@@ -45,9 +53,15 @@ export class DataExplorerVisualisationSettingsComponent implements OnInit {
         this.selectWidget();
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.currentlyConfiguredWidget) {
+            this.selectWidget();
+        }
+    }
+
     selectWidget(): void {
-        this.activeWidgetType = this.availableWidgets.find(
-            w => w.id === this.currentlyConfiguredWidget.widgetType,
+        this.activeWidgetType = this.widgetRegistryService.getWidgetTemplate(
+            this.currentlyConfiguredWidget.widgetType,
         );
     }
 
