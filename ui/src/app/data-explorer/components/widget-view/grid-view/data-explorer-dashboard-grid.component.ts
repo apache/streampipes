@@ -30,6 +30,7 @@ import { IDataViewDashboardConfig } from '../../../models/dataview-dashboard.mod
 import { ResizeService } from '../../../services/resize.service';
 import { DataViewDataExplorerService } from '@streampipes/platform-services';
 import { AbstractWidgetViewDirective } from '../abstract-widget-view.directive';
+import { DataExplorerWidgetRegistry } from '../../../registry/data-explorer-widget-registry';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-grid',
@@ -49,8 +50,13 @@ export class DataExplorerDashboardGridComponent
     constructor(
         protected resizeService: ResizeService,
         protected dataViewDataExplorerService: DataViewDataExplorerService,
+        protected widgetRegistryService: DataExplorerWidgetRegistry,
     ) {
-        super(resizeService, dataViewDataExplorerService);
+        super(
+            resizeService,
+            dataViewDataExplorerService,
+            widgetRegistryService,
+        );
     }
 
     ngOnInit(): void {

@@ -184,6 +184,11 @@ export class DataExplorerWidgetRegistry {
         return this.widgetTypes.find(widget => widget.id === 'table');
     }
 
+    getWidgetType(widgetType: string) {
+        // for backwards compatibility in v0.95.0, we return either the ID or the new ID based on the alias
+        return this.getWidgetTemplate(widgetType).id;
+    }
+
     private findBackwardsCompatibleWidget(widgetId: string): IWidget<any> {
         return this.widgetTypes.find(
             widget => widget.alias !== undefined && widget.alias === widgetId,

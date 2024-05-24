@@ -96,7 +96,12 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
     }
 
     renderChartOptions(spQueryResult: SpQueryResult[]): void {
-        if (this.dataExplorerWidget.visualizationConfig.configurationValid) {
+        if (
+            this.dataExplorerWidget.visualizationConfig.configurationValid ===
+                undefined ||
+            this.dataExplorerWidget.visualizationConfig.configurationValid ===
+                true
+        ) {
             this.showInvalidConfiguration = false;
             this.option = {
                 ...this.renderer.render(
