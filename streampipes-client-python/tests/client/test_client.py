@@ -44,10 +44,8 @@ class TestStreamPipesClient(TestCase):
             "Application": "application/json",
         }
         result_headers = dict(result.request_session.headers)
-        self.assertDictContainsSubset(
-            subset=expected_headers,
-            dictionary=result_headers,
-        )
+        for key, value in expected_headers.items():
+            self.assertEqual(result_headers.get(key), value)
         self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
         self.assertEqual(result.base_api_path, "http://localhost:80/streampipes-backend/")
 
@@ -71,10 +69,8 @@ class TestStreamPipesClient(TestCase):
             "Application": "application/json",
         }
         result_headers = dict(result.request_session.headers)
-        self.assertDictContainsSubset(
-            subset=expected_headers,
-            dictionary=result_headers,
-        )
+        for key, value in expected_headers.items():
+            self.assertEqual(result_headers.get(key), value)
         self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
         self.assertEqual(result.base_api_path, "https://localhost:443/streampipes-backend/")
 
