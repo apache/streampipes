@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.all.iiot;
 
 import org.apache.streampipes.connect.iiot.IIoTAdaptersExtensionModuleExport;
+import org.apache.streampipes.connectors.ros.RosConnectorsModuleExport;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -73,6 +74,7 @@ public class AllExtensionsIIoTInit extends ExtensionsModelSubmitter {
             new PlcConnectorsModuleExport(),
             new PulsarConnectorsModuleExport(),
             new RocketMqConnectorsModuleExport(),
+            new RosConnectorsModuleExport(),
             new TubeMQConnectorsModuleExport(),
 
             new ChangeDetectionExtensionModuleExport(),

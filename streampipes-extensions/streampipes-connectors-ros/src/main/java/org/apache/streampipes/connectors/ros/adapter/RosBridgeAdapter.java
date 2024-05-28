@@ -16,10 +16,11 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.ros;
+package org.apache.streampipes.connectors.ros.adapter;
 
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.connectors.ros.config.RosConfig;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -31,11 +32,11 @@ import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOp
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,18 +57,17 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static org.apache.streampipes.connectors.ros.config.RosConfig.ROS_HOST_KEY;
+import static org.apache.streampipes.connectors.ros.config.RosConfig.ROS_PORT_KEY;
+import static org.apache.streampipes.connectors.ros.config.RosConfig.TOPIC_KEY;
+
 public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerProvidedOptions {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.ros";
 
-  public static final String ROS_HOST_KEY = "ROS_HOST_KEY";
-  public static final String ROS_PORT_KEY = "ROS_PORT_KEY";
-  public static final String TOPIC_KEY = "TOPIC_KEY";
-
   private String topic;
   private String host;
   private int port;
-
 
   private final ObjectMapper mapper = new ObjectMapper();
 
@@ -94,7 +94,7 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder.create(ID, 1, RosBridgeAdapter::new)
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withCategory(AdapterType.Manufacturing)
         .requiredTextParameter(Labels.withId(ROS_HOST_KEY))
         .requiredIntegerParameter(Labels.withId(ROS_PORT_KEY))
@@ -111,10 +111,10 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
     this.ros = new Ros(this.host, this.port);
     this.ros.connect();
 
-    String topicType = getMethodType(this.ros, this.topic);
+    String topicType = RosConfig.getMethodType(this.ros, this.topic);
 
-    Topic echoBack = new Topic(ros, this.topic, topicType);
-    echoBack.subscribe(message -> {
+    Topic rosTopic = new Topic(ros, this.topic, topicType);
+    rosTopic.subscribe(message -> {
       try {
         Map<String, Object> result = mapper.readValue(message.toString(), HashMap.class);
         collector.collect(result);
@@ -144,17 +144,17 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
       throw new AdapterException("Could not connect to ROS bridge Endpoint: " + host + " with port: " + port);
     }
 
-    String topicType = getMethodType(ros, topic);
+    String topicType = RosConfig.getMethodType(ros, topic);
 
     GetNEvents getNEvents = new GetNEvents(topic, topicType, ros);
     Thread t = new Thread(getNEvents);
     t.start();
 
-    while (getNEvents.getEvents().size() < 1) {
+    while (getNEvents.getEvents().isEmpty()) {
       try {
         TimeUnit.MILLISECONDS.sleep(100);
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        throw new AdapterException(e.getMessage(), e);
       }
     }
 
@@ -171,7 +171,7 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
     }
   }
 
-  private class GetNEvents implements Runnable {
+  private static class GetNEvents implements Runnable {
 
     private final String topic;
     private final String topicType;
@@ -188,22 +188,13 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
 
     @Override
     public void run() {
-      Topic echoBack = new Topic(ros, this.topic, topicType);
-      echoBack.subscribe(message -> events.add(message.toString()));
+      Topic rosTopic = new Topic(ros, this.topic, topicType);
+      rosTopic.subscribe(message -> events.add(message.toString()));
     }
 
     public List<String> getEvents() {
       return this.events;
     }
-  }
-
-  private String getMethodType(Ros ros, String topic) {
-    Service addTwoInts = new Service(ros, "/rosapi/topic_type", "rosapi/TopicType");
-    ServiceRequest request = new ServiceRequest("{\"topic\": \"" + topic + "\"}");
-    ServiceResponse response = addTwoInts.callServiceAndWait(request);
-
-    JsonObject ob = new JsonParser().parse(response.toString()).getAsJsonObject();
-    return ob.get("type").getAsString();
   }
 
   private void getConfigurations(IStaticPropertyExtractor extractor) {
@@ -229,6 +220,5 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
     }
 
     return result;
-
   }
 }

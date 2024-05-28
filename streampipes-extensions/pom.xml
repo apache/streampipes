@@ -63,6 +63,7 @@
         <module>streampipes-sinks-notifications-jvm</module>
         <module>streampipes-connectors-plc</module>
         <module>streampipes-extensions-iiot-minimal</module>
+        <module>streampipes-connectors-ros</module>
     </modules>
 
     <properties>

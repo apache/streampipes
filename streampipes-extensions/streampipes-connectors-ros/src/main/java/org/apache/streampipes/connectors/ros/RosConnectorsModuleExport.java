@@ -16,42 +16,35 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot;
+package org.apache.streampipes.connectors.ros;
 
-import org.apache.streampipes.connect.iiot.adapters.iolink.IfmAlMqttAdapter;
-import org.apache.streampipes.connect.iiot.adapters.oi4.Oi4Adapter;
-import org.apache.streampipes.connect.iiot.adapters.simulator.machine.MachineDataSimulatorAdapter;
-import org.apache.streampipes.connect.iiot.protocol.stream.FileReplayAdapter;
-import org.apache.streampipes.connect.iiot.protocol.stream.HttpServerProtocol;
-import org.apache.streampipes.connect.iiot.protocol.stream.HttpStreamProtocol;
+import org.apache.streampipes.connectors.ros.adapter.RosBridgeAdapter;
+import org.apache.streampipes.connectors.ros.migrations.RosBridgeAdapterMigrationV1;
+import org.apache.streampipes.connectors.ros.sink.RosBridgeSink;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 
-import java.util.Collections;
 import java.util.List;
 
-public class IIoTAdaptersExtensionModuleExport implements IExtensionModuleExport {
+public class RosConnectorsModuleExport implements IExtensionModuleExport {
   @Override
   public List<StreamPipesAdapter> adapters() {
     return List.of(
-        new MachineDataSimulatorAdapter(),
-        new FileReplayAdapter(),
-        new IfmAlMqttAdapter(),
-        new Oi4Adapter(),
-        new HttpStreamProtocol(),
-        new HttpServerProtocol()
+        new RosBridgeAdapter()
     );
   }
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return Collections.emptyList();
+    return List.of(
+        new RosBridgeSink()
+    );
   }
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return List.of();
+    return List.of(new RosBridgeAdapterMigrationV1());
   }
 }
