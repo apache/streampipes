@@ -104,4 +104,14 @@ export class RestService {
                 }),
             );
     }
+
+    // todo update to : Observable<UnitDescription[]>
+    getAllUnitDescriptions(): Observable<UnitDescription[]> {
+        return this.http.get(`${this.connectPath}/master/unit/units`).pipe(
+            map(response => {
+                const descriptions = response as UnitDescription[];
+                return descriptions;
+            }),
+        );
+    }
 }
