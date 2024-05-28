@@ -16,29 +16,29 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.migrations.config;
+package org.apache.streampipes.connectors.ros.migrations.config;
 
-import org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter;
+import org.apache.streampipes.connectors.ros.adapter.RosBridgeAdapter;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 
 import java.util.Arrays;
 
-import static org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter.ID;
-import static org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter.ROS_HOST_KEY;
-import static org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter.ROS_PORT_KEY;
-import static org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter.TOPIC_KEY;
+import static org.apache.streampipes.connectors.ros.config.RosConfig.ROS_HOST_KEY;
+import static org.apache.streampipes.connectors.ros.config.RosConfig.ROS_PORT_KEY;
+import static org.apache.streampipes.connectors.ros.config.RosConfig.TOPIC_KEY;
+
 
 public class RosBridgeAdapterVersionedConfig {
 
   public static AdapterDescription getRosBridgeAdapterDescriptionV0(){
-    return AdapterConfigurationBuilder.create(ID, 0, RosBridgeAdapter::new)
+    return AdapterConfigurationBuilder.create(RosBridgeAdapter.ID, 0, RosBridgeAdapter::new)
       .withLocales(Locales.EN)
-      .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+      .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
       .withCategory(AdapterType.Manufacturing)
       .requiredTextParameter(Labels.withId(ROS_HOST_KEY))
       .requiredTextParameter(Labels.withId(ROS_PORT_KEY))
@@ -48,9 +48,9 @@ public class RosBridgeAdapterVersionedConfig {
   }
 
   public static AdapterDescription getRosBridgeAdapterDescriptionV1(){
-    return AdapterConfigurationBuilder.create(ID, 1, RosBridgeAdapter::new)
+    return AdapterConfigurationBuilder.create(RosBridgeAdapter.ID, 1, RosBridgeAdapter::new)
       .withLocales(Locales.EN)
-      .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+      .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
       .withCategory(AdapterType.Manufacturing)
       .requiredTextParameter(Labels.withId(ROS_HOST_KEY))
       .requiredIntegerParameter(Labels.withId(ROS_PORT_KEY))

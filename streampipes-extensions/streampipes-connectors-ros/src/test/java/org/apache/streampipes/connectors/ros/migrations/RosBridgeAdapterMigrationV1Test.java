@@ -16,9 +16,9 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.migrations;
+package org.apache.streampipes.connectors.ros.migrations;
 
-import org.apache.streampipes.connect.iiot.adapters.migrations.config.RosBridgeAdapterVersionedConfig;
+import org.apache.streampipes.connectors.ros.migrations.config.RosBridgeAdapterVersionedConfig;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.vocabulary.XSD;
@@ -26,10 +26,9 @@ import org.apache.streampipes.vocabulary.XSD;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.net.URI;
-
-import static org.mockito.Mockito.mock;
 
 
 public class RosBridgeAdapterMigrationV1Test {
@@ -44,7 +43,7 @@ public class RosBridgeAdapterMigrationV1Test {
   @Test
   public void testMigrationV1(){
     var rosBridgeAdapterDescriptionV0 = RosBridgeAdapterVersionedConfig.getRosBridgeAdapterDescriptionV0();
-    var extractorMock = mock(IStaticPropertyExtractor.class);
+    var extractorMock = Mockito.mock(IStaticPropertyExtractor.class);
 
     var rosBridgeAdapterDescriptionV1 = migrationV1.migrate(rosBridgeAdapterDescriptionV0 , extractorMock);
 
