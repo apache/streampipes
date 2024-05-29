@@ -56,7 +56,8 @@ public class UnitResource extends AbstractAdapterResource<UnitMasterManagement> 
     }
   }
 
-  @GetMapping("/units")
+  @GetMapping(path = "/units",
+      produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getAllUnits(){
     String resultingJson = managementService.getAllUnits();
     return ok(resultingJson);
