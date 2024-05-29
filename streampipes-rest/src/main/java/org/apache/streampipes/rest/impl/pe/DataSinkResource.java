@@ -45,27 +45,27 @@ public class DataSinkResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/available", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.elementId, 'READ')")
+  @PostFilter("hasPermission(filterObject.elementId, '')")
   public List<DataSinkDescription> getAvailable() {
     return getDataSinkResourceManager().findAll();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.belongsTo, 'READ')")
+  @PostFilter("hasPermission(filterObject.belongsTo, '')")
   public List<DataSinkInvocation> getOwn() {
     return getDataSinkResourceManager().findAllAsInvocation();
   }
 
   @DeleteMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE + " AND hasPermission(#elementId, '')")
   public ResponseEntity<Message> removeOwn(@PathVariable("elementId") String elementId) {
     getDataSinkResourceManager().delete(elementId);
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
 
   @GetMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE + " AND hasPermission(#elementId, '')")
   public ResponseEntity<?> getElement(@PathVariable("elementId") String elementId) {
     try {
       return ok(getDataSinkResourceManager().findAsInvocation(elementId));

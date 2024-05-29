@@ -25,12 +25,14 @@ import org.apache.streampipes.connect.management.management.DescriptionManagemen
 import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +55,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   }
 
   @GetMapping(path = "/adapters", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
   public ResponseEntity<List<AdapterDescription>> getAdapters() {
     List<AdapterDescription> result = managementService.getAdapters();
 
@@ -60,6 +63,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   }
 
   @GetMapping(path = "/{id}/assets", produces = "application/zip")
+  @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
   public ResponseEntity<?> getAdapterAssets(@PathVariable("id") String id) {
     try {
       String result = null;
@@ -87,6 +91,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   }
 
   @GetMapping(path = "/{id}/assets/icon", produces = "image/png")
+  @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
   public ResponseEntity<?> getAdapterIconAsset(@PathVariable("id") String id) {
     try {
 
@@ -115,6 +120,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   }
 
   @GetMapping(path = "/{id}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
   public ResponseEntity<?> getAdapterDocumentationAsset(@PathVariable("id") String id) {
     try {
       String result = null;
@@ -142,6 +148,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   }
 
   @DeleteMapping(path = "{adapterId}")
+  @PreAuthorize(AuthConstants.HAS_DELETE_ADAPTER_PRIVILEGE)
   public ResponseEntity<?> deleteAdapter(@PathVariable("adapterId") String adapterId) {
     try {
       this.managementService.deleteAdapterDescription(adapterId);

@@ -45,7 +45,7 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_DATA_EXPLORER_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
+  @PostFilter("hasPermission(filterObject.pipelineId, '')")
   public List<DataLakeMeasure> getPersistedDataStreams() {
     return extract(new ArrayList<>(), DataLakeAppId);
   }

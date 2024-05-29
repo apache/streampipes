@@ -46,27 +46,27 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/available", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.elementId, 'READ')")
+  @PostFilter("hasPermission(filterObject.elementId, '')")
   public List<SpDataStream> getAvailable() {
     return getDataStreamResourceManager().findAll();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.elementId, 'READ')")
+  @PostFilter("hasPermission(filterObject.elementId, '')")
   public List<SpDataStream> get() {
     return getDataStreamResourceManager().findAllAsInvocation();
   }
 
   @DeleteMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE + " AND hasPermission(#elementId, '')")
   public ResponseEntity<Message> delete(@PathVariable("elementId") String elementId) {
     getDataStreamResourceManager().delete(elementId);
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
 
   @GetMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE + " AND hasPermission(#elementId, '')")
   public ResponseEntity<?> getElement(@PathVariable("elementId") String elementId) {
     try {
       return ok(getDataStreamResourceManager().findAsInvocation(elementId));
@@ -79,7 +79,7 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE + " AND hasPermission(#dataStream.elementId, '')")
   public ResponseEntity<?> addDataStream(@RequestBody SpDataStream dataStream) {
     try {
       getDataStreamResourceManager().add(dataStream, getAuthenticatedUserSid());

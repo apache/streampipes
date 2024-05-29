@@ -20,10 +20,13 @@ package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.IDashboardWidgetStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,11 +43,14 @@ import java.util.List;
 public class DashboardWidget extends AbstractRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_DASHBOARD_PRIVILEGE)
+  @PostFilter("hasPermission(filterObject.widgetId, '')")
   public ResponseEntity<List<DashboardWidgetModel>> getAllDashboardWidgets() {
     return ok(getDashboardWidgetStorage().getAllDashboardWidgets());
   }
 
   @GetMapping(path = "/{widgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_DASHBOARD_PRIVILEGE + " AND hasPermission(#widgetId, '')")
   public ResponseEntity<DashboardWidgetModel> getDashboardWidget(@PathVariable("widgetId") String widgetId) {
     return ok(getDashboardWidgetStorage().getDashboardWidget(widgetId));
   }
@@ -53,12 +59,14 @@ public class DashboardWidget extends AbstractRestResource {
       path = "/{widgetId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_DASHBOARD_PRIVILEGE + " AND hasPermission(#dashboardWidgetModel.widgetId, '')")
   public ResponseEntity<Void> modifyDashboardWidget(@RequestBody DashboardWidgetModel dashboardWidgetModel) {
     getDashboardWidgetStorage().updateDashboardWidget(dashboardWidgetModel);
     return ok();
   }
 
   @DeleteMapping(path = "/{widgetId}")
+  @PreAuthorize(AuthConstants.HAS_WRITE_DASHBOARD_PRIVILEGE + " AND hasPermission(#widgetId, '')")
   public ResponseEntity<Void> deleteDashboardWidget(@PathVariable("widgetId") String widgetId) {
     getDashboardWidgetStorage().deleteDashboardWidget(widgetId);
     return ok();
@@ -68,6 +76,7 @@ public class DashboardWidget extends AbstractRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
+  @PreAuthorize(AuthConstants.HAS_WRITE_DASHBOARD_PRIVILEGE + " AND hasPermission(#dashboardWidgetModel.widgetId, '')")
   public ResponseEntity<DashboardWidgetModel> createDashboardWidget(
       @RequestBody DashboardWidgetModel dashboardWidgetModel) {
     String widgetId = getDashboardWidgetStorage().storeDashboardWidget(dashboardWidgetModel);

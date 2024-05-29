@@ -20,9 +20,11 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
+import org.apache.streampipes.rest.security.AuthConstants;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,12 +38,14 @@ import java.util.Map;
 public class PipelineMonitoring extends AbstractMonitoringResource {
 
   @GetMapping(value = "/pipeline/{pipelineId}/logs", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE + " AND hasPermission(#pipelineId, '')")
   public ResponseEntity<Map<String, List<SpLogEntry>>> getLogInfoForPipeline(
       @PathVariable("pipelineId") String pipelineId) {
     return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForPipeline(pipelineId));
   }
 
   @GetMapping(value = "/pipeline/{pipelineId}/metrics", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE + " AND hasPermission(#pipelineId, '')")
   public ResponseEntity<Map<String, SpMetricsEntry>> getMetricsInfoForPipeline(
       @PathVariable("pipelineId") String pipelineId) {
     return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForPipeline(pipelineId));
