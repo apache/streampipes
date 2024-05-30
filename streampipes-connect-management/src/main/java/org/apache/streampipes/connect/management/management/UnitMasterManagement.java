@@ -68,7 +68,7 @@ public class UnitMasterManagement {
     return gson.toJson(unitDescriptionList);
   }
 
-  public String getAllUnits(){
+  public List<UnitDescription> getAllUnitDescriptions(){
     List<UnitDescription> unitDescriptionList = new LinkedList<>();
 
     List<Unit> units = UnitProvider.INSTANCE.getAvailableUnits();
@@ -83,7 +83,7 @@ public class UnitMasterManagement {
       }
     }
 
-    return gson.toJson(unitDescriptionList);
+    return unitDescriptionList;
   }
 
 }
