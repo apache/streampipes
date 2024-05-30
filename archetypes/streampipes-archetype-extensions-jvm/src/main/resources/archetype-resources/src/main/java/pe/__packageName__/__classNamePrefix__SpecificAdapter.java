@@ -31,6 +31,7 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeCont
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -53,7 +54,7 @@ public class ${classNamePrefix}SpecificAdapter implements StreamPipesAdapter {
         ${classNamePrefix}SpecificAdapter::new
       )
       .withCategory(AdapterType.Manufacturing)
-      .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+      .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
       .withLocales(Locales.EN)
       .requiredTextParameter(Labels.withId(EXAMPLE_KEY))
       .buildConfiguration();
