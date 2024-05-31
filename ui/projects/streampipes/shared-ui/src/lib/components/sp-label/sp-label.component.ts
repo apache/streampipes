@@ -27,6 +27,9 @@ export class SpLabelComponent implements OnInit {
     @Input()
     labelText: string;
 
+    @Input()
+    small = false;
+
     _labelBackground: string;
 
     labelTextColor = '';

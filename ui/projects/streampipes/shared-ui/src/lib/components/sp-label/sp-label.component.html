@@ -18,6 +18,7 @@
 
 <span
     class="basic-label"
+    [ngClass]="small ? 'small-label' : ''"
     [ngStyle]="{
         background: labelBackground,
         borderColor: 'color-mix(in srgb, ' + labelBackground + ' 70%, black)',
