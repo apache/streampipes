@@ -32,6 +32,7 @@ import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtracto
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -53,7 +54,7 @@ public class ${classNamePrefix}GenericAdapter implements StreamPipesAdapter {
           ${classNamePrefix}GenericAdapter::new
         )
         .withCategory(AdapterType.Manufacturing)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .withSupportedParsers(Parsers.defaultParsers())
         .requiredTextParameter(Labels.withId(EXAMPLE_KEY))
