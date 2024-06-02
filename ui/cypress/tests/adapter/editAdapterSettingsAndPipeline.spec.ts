@@ -72,6 +72,7 @@ describe('Test Edit Adapter and Pipeline', () => {
         }).should('be.visible');
         cy.dataCy('btn-update-adapter-migrate-pipelines').click();
         ConnectUtils.closeAdapterPreview();
+        cy.wait(1000);
 
         // Go to pipelines, check for warning icon and edit pipeline
         PipelineUtils.goToPipelines();
