@@ -21,6 +21,191 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+# [0.95.0]
+
+## What's Changed
+
+### Enhancement 🌟
+
+* [[#2659](https://github.com/apache/streampipes/issues/2659)]: Show adapter status light in adapter overview
+* [[#2657](https://github.com/apache/streampipes/issues/2657)]: No icon tooltips are shown in dashboard
+* [[#2511](https://github.com/apache/streampipes/pull/2511)]: feat: Create adapter for Open Industry 4.0 devices
+* [[#2379](https://github.com/apache/streampipes/issues/2379)]: Inconsistent behavior in `EditorService` API calls to Pipelines REST API
+* [[#2312](https://github.com/apache/streampipes/issues/2312)]: Extend Notification sinks by silent period
+* [[#2311](https://github.com/apache/streampipes/pull/2311)]: Extend MS Teams sink by a silent period
+* [[#2283](https://github.com/apache/streampipes/pull/2283)]: extend monitoring by adding metrics for adapters
+* [[#2269](https://github.com/apache/streampipes/issues/2269)]: Support basic auth for Prometheus monitoring endpoint
+* [[#2252](https://github.com/apache/streampipes/issues/2252)]: Enhance Data Lake Sink Schema Management Options
+* [[#2248](https://github.com/apache/streampipes/pull/2248)]: introduce sink for MS Teams
+* [[#2199](https://github.com/apache/streampipes/issues/2199)]: Nginx configuration parameters as environment variables
+* [[#2192](https://github.com/apache/streampipes/issues/2192)]: Add download button for assets in StreamPipes
+* [[#2144](https://github.com/apache/streampipes/issues/2144)]: Enhance Static Properties by UI validation
+* [[#2107](https://github.com/apache/streampipes/issues/2107)]: Display File Types in different colors
+* [[#2096](https://github.com/apache/streampipes/issues/2096)]: Assets need to be updated as well (only for adapters)
+* [[#2074](https://github.com/apache/streampipes/issues/2074)]: Add download button for files in StreamPipes
+* [[#1936](https://github.com/apache/streampipes/issues/1936)]: StreamPipes Connect: Ease deletion of adapters
+* [[#1865](https://github.com/apache/streampipes/issues/1865)]: New Processor: Datetime from String
+* [[#1119](https://github.com/apache/streampipes/issues/1119)]: Remove dependency angular-datatables and datatables.net
+* [[#782](https://github.com/apache/streampipes/issues/782)]: Migrate test setup to JUnit 5 (Jupiter)
+* [[#690](https://github.com/apache/streampipes/issues/690)]: Remove lodash dependency from ui
+* [[#686](https://github.com/apache/streampipes/issues/686)]: Enable connect adapter service development when core runs in Docker
+* [[#422](https://github.com/apache/streampipes/issues/422)]: Update Consul key value configuration for pipeline elements when reconnecting
+* [[#376](https://github.com/apache/streampipes/issues/376)]: Add adapter documentation
+* [[#232](https://github.com/apache/streampipes/issues/232)]: Required/optional static properties
+
+### Bug fixes 🧰
+
+* [[#2894](https://github.com/apache/streampipes/issues/2894)]: deleteTransformationRule.spec.ts test is flaky
+* [[#2890](https://github.com/apache/streampipes/issues/2890)]: Websocket Server stops sending message when the pipeline instantiating it is stopped and restarted even without any modification
+* [[#2886](https://github.com/apache/streampipes/issues/2886)]: Bug when deleting nested properties in Adapter
+* [[#2862](https://github.com/apache/streampipes/issues/2862)]: OPCUA Adapter "Add All Direct Children" "+" button not working
+* [[#2856](https://github.com/apache/streampipes/issues/2856)]: File Stream Adapter ignores speed up factor
+* [[#2855](https://github.com/apache/streampipes/issues/2855)]: Issue with `DeleteTransformationRule` in Adapter
+* [[#2853](https://github.com/apache/streampipes/pull/2853)]: fix timestampTranfsformationRuleDescription metadata map
+* [[#2850](https://github.com/apache/streampipes/pull/2850)]: fix ToTransformedSchemaConverter set HEADER_PROPERTY
+* [[#2848](https://github.com/apache/streampipes/pull/2848)]: fix: Add error handling to OI4 and MQTT adapters
+* [[#2842](https://github.com/apache/streampipes/pull/2842)]: fix PipelineElementTemplateVisitor SecretStaticProperty value
+* [[#2841](https://github.com/apache/streampipes/pull/2841)]: guessSchema the encrypted secretValue should be decrypted when used
+* [[#2836](https://github.com/apache/streampipes/issues/2836)]: Cannot deploy a pipeline with Trend data processor
+* [[#2830](https://github.com/apache/streampipes/issues/2830)]: Data Adapter losing Dimension selection
+* [[#2820](https://github.com/apache/streampipes/issues/2820)]: Asset Dashboard loosing picture when going to Edit mode
+* [[#2815](https://github.com/apache/streampipes/issues/2815)]: Pipeline validation in pipeline editor
+* [[#2756](https://github.com/apache/streampipes/pull/2756)]: fix: OI4 adapter can only read one sensor measurement per event
+* [[#2751](https://github.com/apache/streampipes/pull/2751)]: fix: Add MatTableModule to profile module
+* [[#2661](https://github.com/apache/streampipes/issues/2661)]: No user feedback when self registration fails
+* [[#2650](https://github.com/apache/streampipes/issues/2650)]: Registration configuration does not work
+* [[#2648](https://github.com/apache/streampipes/issues/2648)]: Email configuration view is broken
+* [[#2646](https://github.com/apache/streampipes/pull/2646)]: fix: Disable live preview subscription when closing dialog
+* [[#2597](https://github.com/apache/streampipes/issues/2597)]: Data Explorer time series chart gets broken for high-frequency data
+* [[#2591](https://github.com/apache/streampipes/issues/2591)]: Time series charts in data explorer do not work with high data frequency
+* [[#2577](https://github.com/apache/streampipes/issues/2577)]: Pipeline Element Templates do not work
+* [[#2556](https://github.com/apache/streampipes/issues/2556)]: When Extensions are used, starting multiple "service" can result in multiple identical elements in the ui
+* [[#2553](https://github.com/apache/streampipes/issues/2553)]: StreamPipes python functions error for not started adapter
+* [[#2551](https://github.com/apache/streampipes/issues/2551)]: StreamPipes function does always create a new data stream
+* [[#2550](https://github.com/apache/streampipes/issues/2550)]: Data Stream created by Python function is not entirely correct
+* [[#2549](https://github.com/apache/streampipes/issues/2549)]: Property renaming in the FileStream Adapter does not work
+* [[#2537](https://github.com/apache/streampipes/pull/2537)]: fix: restart multiple adapter instances per worker
+* [[#2520](https://github.com/apache/streampipes/issues/2520)]: Issue with File Cache Persistence in Extensions Service
+* [[#2493](https://github.com/apache/streampipes/issues/2493)]: Permission dialog doesn't read users when deselecting them
+* [[#2491](https://github.com/apache/streampipes/issues/2491)]: OPC-UA adapter resets values when editing adapter
+* [[#2473](https://github.com/apache/streampipes/issues/2473)]: Nginx configuration error during a migration from version 0.93.0 to 0.95.0.
+* [[#2468](https://github.com/apache/streampipes/issues/2468)]: Adapter are not always restarted on system restart
+* [[#2465](https://github.com/apache/streampipes/issues/2465)]: Date selection in data explorer download dialog broken
+* [[#2461](https://github.com/apache/streampipes/issues/2461)]: 400 error with using email notification
+* [[#2458](https://github.com/apache/streampipes/issues/2458)]: Add timestamp rule malfunction after adapter edit
+* [[#2396](https://github.com/apache/streampipes/issues/2396)]: Should Prevent Multiple Clicks on Tutorial Button
+* [[#2372](https://github.com/apache/streampipes/issues/2372)]: Resolve Nightly E2E Test Failures
+* [[#2361](https://github.com/apache/streampipes/issues/2361)]: Pipeline element template endpoint missing RequestBody
+* [[#2353](https://github.com/apache/streampipes/issues/2353)]: NullPointer Exception when misconfiguration resource files for processing element
+* [[#2337](https://github.com/apache/streampipes/issues/2337)]: Can't access "Connect" with User Role "Connect Admin"
+* [[#2336](https://github.com/apache/streampipes/issues/2336)]: Live dashboard widgets do not display data when option `same frequency` is used
+* [[#2335](https://github.com/apache/streampipes/pull/2335)]: fix: orchestrate adapter health check such that monitoring of adapters works as expected
+* [[#2329](https://github.com/apache/streampipes/issues/2329)]: Python client throws exception on connection
+* [[#2328](https://github.com/apache/streampipes/pull/2328)]: fix: update of metrics in AdapterHealthCheck
+* [[#2326](https://github.com/apache/streampipes/issues/2326)]: When uploading large files response status 413 is returned
+* [[#2323](https://github.com/apache/streampipes/pull/2323)]: fix: Modify schema update label
+* [[#2322](https://github.com/apache/streampipes/pull/2322)]: fix: ensure Spring uses the correct serializer in extensions service
+* [[#2292](https://github.com/apache/streampipes/issues/2292)]: User Groups broken
+* [[#2275](https://github.com/apache/streampipes/pull/2275)]: fix: filter for running adapter instances in adapter health check
+* [[#2257](https://github.com/apache/streampipes/pull/2257)]: fix: emit pipeline metrics even if no pipeline is running
+* [[#2235](https://github.com/apache/streampipes/issues/2235)]: No pipeline connections when editing a pipeline
+* [[#2221](https://github.com/apache/streampipes/issues/2221)]: FIle upload does not allow for multiple files
+* [[#2183](https://github.com/apache/streampipes/issues/2183)]: Streamline module names in installer and docs
+* [[#2106](https://github.com/apache/streampipes/issues/2106)]: Influx Sink can only handle primitive properties
+
+
+### Breaking Change 💣
+
+* [[#2548](https://github.com/apache/streampipes/pull/2548)]: fix: do not overwrite timestamp in output event of a function
+* [[#2241](https://github.com/apache/streampipes/issues/2241)]: Remove activeMQ from installer cli
+* [[#2133](https://github.com/apache/streampipes/issues/2133)]: remove Consul and all related assets
+
+
+
+### Deprecation ⚠️
+
+* [[#2261](https://github.com/apache/streampipes/pull/2261)]: refactor: remove deprecated method `fromResources`
+* [[#2205](https://github.com/apache/streampipes/pull/2205)]: refactor: remove deprecated elements from `NamedStreamPipesEntity`
+* [[#2156](https://github.com/apache/streampipes/pull/2156)]: refactor: remove deprecated methods from parameter extractor
+
+
+### Documentation & Website 📚
+
+* [[#2882](https://github.com/apache/streampipes/pull/2882)]: docs: document machine data simulator properly
+* [[#2851](https://github.com/apache/streampipes/pull/2851)]: fix: Fix client python docs site build warning
+* [[#2849](https://github.com/apache/streampipes/pull/2849)]: fix: Fix streampipes client python docs config
+* [[#2837](https://github.com/apache/streampipes/pull/2837)]: docs: fix OPC-UA sink documentation
+* [[#2687](https://github.com/apache/streampipes/pull/2687)]: docs: add python tutorial about ML with ONNX
+* [[#2511](https://github.com/apache/streampipes/pull/2511)]: feat: Create adapter for Open Industry 4.0 devices
+* [[#2343](https://github.com/apache/streampipes/pull/2343)]: Update HTTP Server adapter documentation.md
+* [[#2311](https://github.com/apache/streampipes/pull/2311)]: Extend MS Teams sink by a silent period
+* [[#2248](https://github.com/apache/streampipes/pull/2248)]: introduce sink for MS Teams
+* [[#2239](https://github.com/apache/streampipes/issues/2239)]: Remove consul references from the website and documentation
+* [[#733](https://github.com/apache/streampipes/issues/733)]: Restructure documentantion
+* [[#376](https://github.com/apache/streampipes/issues/376)]: Add adapter documentation
+
+
+### Dependency Updates 📦
+
+* [[#2733](https://github.com/apache/streampipes/pull/2733)]: chore(deps-dev): bump black from 24.3.0 to 24.4.0 in /streampipes-client-python
+* [[#2732](https://github.com/apache/streampipes/pull/2732)]: chore(deps): bump org.apache.pulsar:pulsar-client from 3.1.1 to 3.2.2
+* [[#2731](https://github.com/apache/streampipes/pull/2731)]: chore(deps): bump konva from 9.2.0 to 9.3.6 in /ui
+* [[#2726](https://github.com/apache/streampipes/pull/2726)]: chore(deps): bump pydantic from 2.6.4 to 2.7.0 in /streampipes-client-python
+* [[#2716](https://github.com/apache/streampipes/pull/2716)]: chore(deps): bump org.apache.maven.plugins:maven-plugin-plugin from 3.11.0 to 3.12.0
+* [[#2710](https://github.com/apache/streampipes/pull/2710)]: chore(deps): bump org.apache.maven.plugin-tools:maven-plugin-annotations from 3.11.0 to 3.12.0
+* [[#2691](https://github.com/apache/streampipes/pull/2691)]: feat: Support custom service tags and service selection for adapters
+* [[#2656](https://github.com/apache/streampipes/pull/2656)]: chore(deps-dev): bump @typescript-eslint/eslint-plugin from 5.57.1 to 5.62.0 in /ui
+* [[#2655](https://github.com/apache/streampipes/pull/2655)]: chore(deps): bump org.apache.inlong:tubemq-client from 1.10.0 to 1.11.0
+* [[#2643](https://github.com/apache/streampipes/pull/2643)]: chore(deps): bump jakarta.activation:jakarta.activation-api from 2.0.1 to 2.1.3
+* [[#2642](https://github.com/apache/streampipes/pull/2642)]: chore(deps): bump org.mockito:mockito-core from 5.10.0 to 5.11.0
+* [[#2640](https://github.com/apache/streampipes/pull/2640)]: chore(deps-dev): bump express from 4.18.2 to 4.19.2 in /ui
+* [[#2636](https://github.com/apache/streampipes/pull/2636)]: chore(deps): bump katex from 0.16.9 to 0.16.10 in /ui
+* [[#2621](https://github.com/apache/streampipes/pull/2621)]: chore(deps): bump org.simplejavamail:simple-java-mail from 8.5.1 to 8.8.0
+* [[#2620](https://github.com/apache/streampipes/pull/2620)]: chore(deps): bump @swimlane/ngx-charts from 20.4.1 to 20.5.0 in /ui
+* [[#2611](https://github.com/apache/streampipes/pull/2611)]: chore(deps-dev): bump webpack-dev-middleware from 5.3.3 to 5.3.4 in /ui
+* [[#2564](https://github.com/apache/streampipes/pull/2564)]: chore(deps): bump follow-redirects from 1.15.4 to 1.15.6 in /ui
+* [[#2563](https://github.com/apache/streampipes/pull/2563)]: chore(deps): bump com.google.guava:guava from 33.0.0-jre to 33.1.0-jre
+* [[#2555](https://github.com/apache/streampipes/pull/2555)]: chore(deps): bump org.codehaus.plexus:plexus-component-annotations from 2.1.1 to 2.2.0
+* [[#2543](https://github.com/apache/streampipes/pull/2543)]: chore(deps-dev): bump @types/showdown from 1.9.4 to 2.0.6 in /ui
+* [[#2533](https://github.com/apache/streampipes/pull/2533)]: chore(deps): bump org.codehaus.mojo:extra-enforcer-rules from 1.7.0 to 1.8.0
+* [[#2500](https://github.com/apache/streampipes/pull/2500)]: chore(deps-dev): bump ruff from 0.1.0 to 0.3.0 in /streampipes-client-python
+* [[#2482](https://github.com/apache/streampipes/pull/2482)]: chore(deps): bump org.springframework.security:spring-security-core from 6.2.0 to 6.2.2
+* [[#2471](https://github.com/apache/streampipes/pull/2471)]: chore(deps): bump undici from 5.27.2 to 5.28.3 in /ui
+* [[#2359](https://github.com/apache/streampipes/pull/2359)]: chore(deps-dev): bump lint-staged from 15.1.0 to 15.2.0 in /ui
+* [[#2352](https://github.com/apache/streampipes/pull/2352)]: chore(deps): bump org.apache.opennlp:opennlp-tools from 2.1.0 to 2.3.1
+* [[#2348](https://github.com/apache/streampipes/pull/2348)]: chore(deps): bump org.apache.commons:commons-pool2 from 2.11.1 to 2.12.0
+* [[#2344](https://github.com/apache/streampipes/pull/2344)]: chore(deps): bump org.influxdb:influxdb-java from 2.23 to 2.24
+* * [[#2341](https://github.com/apache/streampipes/pull/2341)]: chore(deps-dev): bump @types/node from 20.9.4 to 20.10.4 in /ui
+* [[#2340](https://github.com/apache/streampipes/pull/2340)]: chore(deps): bump org.apache.maven.plugins:maven-invoker-plugin from 3.4.0 to 3.6.0
+* [[#2332](https://github.com/apache/streampipes/pull/2332)]: chore(deps): bump org.apache.maven.plugins:maven-checkstyle-plugin from 3.2.1 to 3.3.1
+* [[#2319](https://github.com/apache/streampipes/pull/2319)]: chore(deps-dev): bump black from 23.11.0 to 23.12.0 in /streampipes-client-python
+* [[#2308](https://github.com/apache/streampipes/pull/2308)]: chore(deps): bump org.apache.commons:commons-text from 1.10.0 to 1.11.0
+* [[#2303](https://github.com/apache/streampipes/pull/2303)]: chore(deps): bump org.apache.maven.plugins:maven-plugin-plugin from 3.8.1 to 3.10.2
+* [[#2288](https://github.com/apache/streampipes/pull/2288)]: chore(deps): bump org.apache.maven.plugins:maven-clean-plugin from 3.2.0 to 3.3.2
+* [[#2287](https://github.com/apache/streampipes/pull/2287)]: chore(deps): bump commons-codec:commons-codec from 1.15 to 1.16.0
+* [[#2274](https://github.com/apache/streampipes/pull/2274)]: chore(deps): bump org.checkerframework:checker-qual from 3.39.0 to 3.41.0
+* [[#2273](https://github.com/apache/streampipes/pull/2273)]: chore(deps): bump actions/labeler from 4 to 5
+* * [[#2265](https://github.com/apache/streampipes/pull/2265)]: chore(deps): bump org.mockito:mockito-core from 5.7.0 to 5.8.0
+* [[#2258](https://github.com/apache/streampipes/pull/2258)]: chore(deps-dev): bump eslint from 8.53.0 to 8.54.0 in /ui
+* [[#2255](https://github.com/apache/streampipes/pull/2255)]: deps: update commons-compress due to CVE
+* [[#2248](https://github.com/apache/streampipes/pull/2248)]: introduce sink for MS Teams
+* [[#2236](https://github.com/apache/streampipes/pull/2236)]: chore(deps-dev): bump cryptography from 41.0.4 to 41.0.6 in /streampipes-client-python
+* [[#2220](https://github.com/apache/streampipes/pull/2220)]: chore(deps): bump com.opencsv:opencsv from 5.8 to 5.9
+* [[#2218](https://github.com/apache/streampipes/pull/2218)]: chore(deps-dev): bump @types/node from 20.8.10 to 20.9.4 in /ui
+* [[#2213](https://github.com/apache/streampipes/pull/2213)]: chore(deps): bump org.postgresql:postgresql from 42.6.0 to 42.7.0
+* [[#2211](https://github.com/apache/streampipes/pull/2211)]: chore(deps-dev): bump prettier from 3.0.3 to 3.1.0 in /ui
+* [[#2194](https://github.com/apache/streampipes/pull/2194)]: chore(deps): bump swagger-ui from 5.9.1 to 5.10.0 in /ui
+* [[#2187](https://github.com/apache/streampipes/pull/2187)]: chore(deps): bump com.fasterxml.jackson.core:jackson-databind from 2.15.0 to 2.16.0
+* [[#2186](https://github.com/apache/streampipes/pull/2186)]: chore(deps): bump jackson.version from 2.15.0 to 2.16.0
+* [[#2171](https://github.com/apache/streampipes/pull/2171)]: chore(deps-dev): bump mypy from 1.6.0 to 1.7.0 in /streampipes-client-python
+* [[#2164](https://github.com/apache/streampipes/pull/2164)]: chore(deps): remove org.eclipse.jetty:jetty-server
+* [[#2159](https://github.com/apache/streampipes/pull/2159)]: chore(deps-dev): bump black from 23.10.0 to 23.11.0 in /streampipes-client-python
+* [[#2157](https://github.com/apache/streampipes/issues/2157)]: Remove outdated dependencies from dependency management
+* [[#2150](https://github.com/apache/streampipes/pull/2150)]: chore(deps): bump swagger-ui from 4.18.0 to 5.9.1 in /ui
+* [[#2147](https://github.com/apache/streampipes/pull/2147)]: chore(deps-dev): bump @types/node from 20.4.6 to 20.8.10 in /ui
+* [[#2145](https://github.com/apache/streampipes/pull/2145)]: chore: Maven housekeeping
+
+
 
 # [0.92.0]
 
