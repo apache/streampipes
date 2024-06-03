@@ -41,7 +41,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -104,8 +104,8 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
     } else {
       teamsMessageContent = createMessageFromAdvancedContent(processedMessageContent);
     }
-
-    sendPayloadToWebhook(HttpClients.createDefault(), teamsMessageContent, webhookUrl);
+    var client = HttpClientBuilder.create().useSystemProperties().build();
+    sendPayloadToWebhook(client, teamsMessageContent, webhookUrl);
   }
 
   @Override
