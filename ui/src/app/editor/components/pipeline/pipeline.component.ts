@@ -525,10 +525,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
                             pe.payload as InvocablePipelineElementUnion
                         ).inputStreams = modification.inputStreams;
                     }
-                    if (modification.pipelineElementValid) {
-                        pe.settings.completed =
-                            PipelineElementConfigurationStatus.OK;
-                    }
                     if (modification.validationInfos.length > 0) {
                         this.pipelineStyleService.updatePeConfigurationStatus(
                             pe,
