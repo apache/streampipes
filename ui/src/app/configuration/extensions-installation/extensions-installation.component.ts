@@ -17,24 +17,27 @@
  */
 
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { AddService } from './services/add.service';
 import {
     DialogRef,
     DialogService,
     PanelType,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
-import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
-import { SpAddRoutes } from './add.routes';
 import { ExtensionItemDescription } from '@streampipes/platform-services';
 import { MatSelectChange } from '@angular/material/select';
+import { ExtensionsInstallationService } from './extensions-installation.service';
+import { SpExtensionsInstallationDialogComponent } from '../dialog/extensions-installation/extensions-installation.component';
+import { SpConfigurationRoutes } from '../configuration.routes';
+import { SpConfigurationTabs } from '../configuration-tabs';
 
 @Component({
-    selector: 'sp-add',
-    templateUrl: './add.component.html',
-    styleUrls: ['./add.component.scss'],
+    selector: 'sp-extensions-installation',
+    templateUrl: './extensions-installation.component.html',
+    styleUrls: ['./extensions-installation.component.scss'],
 })
-export class AddComponent implements OnInit {
+export class SpExtensionsInstallationComponent implements OnInit {
+    tabs = SpConfigurationTabs.getTabs();
+
     activeLink: string;
 
     results: any[];
@@ -50,7 +53,7 @@ export class AddComponent implements OnInit {
     _selectedInstallationStatus = 'all';
 
     constructor(
-        private addService: AddService,
+        private addService: ExtensionsInstallationService,
         private dialogService: DialogService,
         private changeDetectorRef: ChangeDetectorRef,
         private breadcrumbService: SpBreadcrumbService,
@@ -62,9 +65,10 @@ export class AddComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.breadcrumbService.updateBreadcrumb(
-            this.breadcrumbService.getRootLink(SpAddRoutes.BASE),
-        );
+        this.breadcrumbService.updateBreadcrumb([
+            SpConfigurationRoutes.BASE,
+            { label: SpConfigurationTabs.getTabs()[3].itemTitle },
+        ]);
         this.getEndpointItems();
         this.selectedTab = 'all';
     }
@@ -152,8 +156,8 @@ export class AddComponent implements OnInit {
     }
 
     installElements(endpointItems, install) {
-        const dialogRef: DialogRef<EndpointInstallationComponent> =
-            this.dialogService.open(EndpointInstallationComponent, {
+        const dialogRef: DialogRef<SpExtensionsInstallationDialogComponent> =
+            this.dialogService.open(SpExtensionsInstallationDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,
                 title: 'Installation',
                 width: '70vw',

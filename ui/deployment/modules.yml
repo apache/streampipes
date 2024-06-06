@@ -69,20 +69,6 @@ spPipelines:
     homeImage: '/assets/img/home/pipelines.png'
     admin: False
     pageNames: 'PageName.PIPELINE_OVERVIEW'
-spAdd:
-    componentImport: False
-    ng5_moduleName: 'AddModule'
-    ng5_component: 'AddComponent'
-    ng5_componentPath: './add/add.component'
-    path: './add/add.module'
-    link: 'add'
-    url: '/add'
-    title: 'Install Extensions'
-    description: 'The extension installation module can be used to install additional adapters, data streams, data processors, and sinks.'
-    icon: 'cloud_download'
-    homeImage: '/assets/img/home/add.png'
-    admin: True
-    pageNames: 'PageName.INSTALL_PIPELINE_ELEMENTS'
 spConfiguration:
     componentImport: False
     ng5_moduleName: 'ConfigurationModule'

@@ -26,7 +26,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class AddService {
+export class ExtensionsInstallationService {
     constructor(
         private http: HttpClient,
         private platformServicesCommons: PlatformServicesCommons,
