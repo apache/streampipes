@@ -15,22 +15,14 @@
   ~ limitations under the License.
   ~
   -->
-
-<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-    <sp-no-data-in-date-range
-        *ngIf="showNoDataInDateRange"
-        [viewDateRange]="timeSettings"
-    ></sp-no-data-in-date-range>
-
-    <sp-image-viewer
-        *ngIf="imagePaths.length > 0"
-        [imagesRoutes]="imagePaths"
-        [canvasHeight]="canvasHeight"
-        [canvasWidth]="canvasWidth"
-        [imagePreviewHeight]="imagePreviewHeight"
-        [ngStyle]="{
-            width: '100%',
-            height: '100%'
-        }"
-    ></sp-image-viewer>
+<div class="main-image" fxLayoutAlign="center center" fxFlex="100">
+    <img
+        class="main-image"
+        [src]="imagePath"
+        [style.width.px]="imageWidth"
+        [style.height.px]="imageHeight"
+        #mainImg
+        *ngIf="showImage"
+        (load)="onImageLoaded()"
+    />
 </div>
