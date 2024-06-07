@@ -18,16 +18,16 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AddService } from '../../services/add.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
-    ExtensionItemInstallationRequest,
     ExtensionInstallationService,
     ExtensionItemDescription,
+    ExtensionItemInstallationRequest,
 } from '@streampipes/platform-services';
 import { AppConstants } from '../../../services/app.constants';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
-import { PanelType, DialogService } from '@streampipes/shared-ui';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { ExtensionsInstallationService } from '../extensions-installation.service';
 
 @Component({
     selector: 'sp-endpoint-item',
@@ -61,7 +61,7 @@ export class EndpointItemComponent implements OnInit {
     constructor(
         private snackBar: MatSnackBar,
         private extensionInstallationService: ExtensionInstallationService,
-        private addService: AddService,
+        private addService: ExtensionsInstallationService,
         private sanitizer: DomSanitizer,
         public appConstants: AppConstants,
         private dialogService: DialogService,

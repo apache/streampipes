@@ -24,11 +24,11 @@ import {
 } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-endpoint-installation-dialog',
-    templateUrl: './endpoint-installation.component.html',
-    styleUrls: ['./endpoint-installation.component.scss'],
+    selector: 'sp-extensions-installation-dialog',
+    templateUrl: './extensions-installation.component.html',
+    styleUrls: ['./extensions-installation.component.scss'],
 })
-export class EndpointInstallationComponent {
+export class SpExtensionsInstallationDialogComponent {
     endpointItems: ExtensionItemDescription[];
 
     @Input()
@@ -48,7 +48,7 @@ export class EndpointInstallationComponent {
     installAsPublicElement = true;
 
     constructor(
-        private dialogRef: DialogRef<EndpointInstallationComponent>,
+        private dialogRef: DialogRef<SpExtensionsInstallationDialogComponent>,
         private extensionInstallationService: ExtensionInstallationService,
     ) {
         this.installationStatus = [];

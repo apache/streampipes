@@ -40,7 +40,7 @@ for (var i = 0; i < testedRoles.length; i++) {
             UserUtils.goToUserConfiguration();
             cy.dataCy('navigation-icon', { timeout: 10000 }).should(
                 'have.length',
-                10,
+                9,
             );
 
             cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should(
