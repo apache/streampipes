@@ -21,6 +21,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.ImagePropertyConstants;
@@ -32,15 +33,10 @@ import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Base64;
@@ -49,17 +45,21 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ImageEnrichmentProcessor extends StreamPipesDataProcessor {
+
+  public static final String ID = "org.apache.streampipes.processor.imageclassification.jvm.image-enricher";
+
   private String imageProperty;
   private String boxArray;
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processor.imageclassification.jvm.image-enricher")
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+    return ProcessingElementBuilder.create(ID)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .category(DataProcessorType.IMAGE_PROCESSING)
         .requiredStream(RequiredBoxStream.getBoxStream())
         .outputStrategy(OutputStrategies.fixed(
+            EpProperties.timestampProperty("timestamp"),
             EpProperties.stringEp(Labels.empty(), ImagePropertyConstants.IMAGE.getProperty(),
                 "https://image.com")
         ))
@@ -118,6 +118,7 @@ public class ImageEnrichmentProcessor extends StreamPipesDataProcessor {
 
       if (finalImage.isPresent()) {
         Event outEvent = new Event();
+        outEvent.addField("timestamp", System.currentTimeMillis());
         outEvent.addField(ImagePropertyConstants.IMAGE.getProperty(),
             Base64.getEncoder().encodeToString(finalImage.get()));
         out.collect(outEvent);
