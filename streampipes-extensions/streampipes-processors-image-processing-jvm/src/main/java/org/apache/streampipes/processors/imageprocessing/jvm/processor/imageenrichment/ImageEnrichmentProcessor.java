@@ -53,7 +53,7 @@ public class ImageEnrichmentProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(ID)
+    return ProcessingElementBuilder.create(ID, 1)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .category(DataProcessorType.IMAGE_PROCESSING)
