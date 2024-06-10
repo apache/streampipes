@@ -43,7 +43,9 @@ public class ImageEnrichmentProcessorMigrationv1 implements IDataProcessorMigrat
   }
 
   @Override
-  public MigrationResult<DataProcessorInvocation> migrate(DataProcessorInvocation element, IDataProcessorParameterExtractor extractor) throws RuntimeException {
+  public MigrationResult<DataProcessorInvocation> migrate(DataProcessorInvocation element,
+                                                          IDataProcessorParameterExtractor extractor)
+      throws RuntimeException {
     element.setOutputStrategies(List.of(
         OutputStrategies.fixed(
             EpProperties.timestampProperty("timestamp"),
