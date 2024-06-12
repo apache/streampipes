@@ -25,20 +25,22 @@ type ValueSpecification struct {
 }
 
 type EventProperty struct {
-	ElementID          string             `json:"elementId"`
-	Label              string             `json:"label,omitempty"`
-	Description        string             `json:"description,omitempty"`
-	RuntimeName        string             `json:"runtimeName,omitempty"`
-	Required           bool               `json:"required,omitempty"`
-	DomainProperties   []string           `json:"domainProperties,omitempty"`
-	PropertyScope      string             `json:"propertyScope,omitempty"`
-	Index              int                `json:"index"`
-	RuntimeID          string             `json:"runtimeId,omitempty"`
-	RuntimeType        string             `json:"runtimeType"`
-	MeasurementUnit    string             `json:"measurementUnit,omitempty"`
-	ValueSpecification ValueSpecification `json:"valueSpecification,omitempty"`
+	ElementID          string   `json:"elementId"`
+	Label              string   `json:"label,omitempty"`
+	Description        string   `json:"description,omitempty"`
+	RuntimeName        string   `json:"runtimeName,omitempty"`
+	Required           bool     `json:"required,omitempty"`
+	DomainProperties   []string `json:"domainProperties,omitempty"`
+	PropertyScope      string   `json:"propertyScope,omitempty"`
+	Index              int32    `json:"index"`
+	RuntimeID          string   `json:"runtimeId,omitempty"`
+	AdditionalMetadata map[string]interface{}
+	//RuntimeType        string             `json:"runtimeType"`
+	//MeasurementUnit    string             `json:"measurementUnit,omitempty"`
+	//ValueSpecification ValueSpecification `json:"valueSpecification,omitempty"`
 }
 
+// 有点问题，后续看一下
 type EventProperties struct {
 	ElementID          string            `json:"elementId"`
 	Label              string            `json:"label"`
@@ -47,7 +49,7 @@ type EventProperties struct {
 	Required           bool              `json:"required"`
 	DomainProperties   []string          `json:"domainProperties"`
 	PropertyScope      string            `json:"propertyScope"`
-	Index              int               `json:"index"`
+	Index              int32             `json:"index"`
 	RuntimeID          string            `json:"runtimeId"`
 	RuntimeType        string            `json:"runtimeType,omitempty"`
 	MeasurementUnit    string            `json:"measurementUnit,omitempty"`

@@ -24,11 +24,9 @@ import (
 
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/pipeline"
 
-
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/functions"
 
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/streampipes_user"
-
 
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/streampipes_version"
 )
@@ -101,7 +99,6 @@ func (d *StreamPipesVersionDeserializer) Unmarshal(data []byte) (interface{}, er
 	return dataSeries, nil
 }
 
-
 type ResponseMessageDeserializer struct{}
 
 func NewResponseMessageDeserializer() *ResponseMessageDeserializer {
@@ -159,7 +156,7 @@ func (d *DataLakeDashboardsDeserializer) Unmarshal(data []byte) (interface{}, er
 	if err != nil {
 		return nil, err
 	}
-  
+
 	return dashborad, nil
 }
 
@@ -236,7 +233,7 @@ func (p *FunctionDefinitionsDeserializer) Unmarshal(data []byte) (interface{}, e
 		return nil, err
 	}
 	return functionDefinitions, nil
-  
+
 }
 
 type ShortUserInfosDeserializer struct{}
@@ -267,5 +264,37 @@ func (p *UserAccountDeserializer) Unmarshal(data []byte) (interface{}, error) {
 		return nil, err
 	}
 	return userAccount, nil
+
+}
+
+type PipelineDeserializer struct{}
+
+func NewPipelineDeserializer() *PipelineDeserializer {
+	return &PipelineDeserializer{}
+}
+
+func (p *PipelineDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var pipeLine pipeline.Pipeline
+	err := json.Unmarshal(data, &pipeLine)
+	if err != nil {
+		return nil, err
+	}
+	return pipeLine, nil
+
+}
+
+type PipelinesDeserializer struct{}
+
+func NewPipelinesDeserializer() *PipelinesDeserializer {
+	return &PipelinesDeserializer{}
+}
+
+func (p *PipelinesDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var pipeLine []pipeline.Pipeline
+	err := json.Unmarshal(data, &pipeLine)
+	if err != nil {
+		return nil, err
+	}
+	return pipeLine, nil
 
 }

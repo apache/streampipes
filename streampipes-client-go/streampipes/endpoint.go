@@ -18,9 +18,11 @@
 package streampipes
 
 import (
+	"bytes"
 	"errors"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
 	headers "github.com/apache/streampipes/streampipes-client-go/streampipes/internal/http_headers"
+	"io"
 	"net/http"
 )
 
@@ -28,9 +30,12 @@ type endpoint struct {
 	config config.StreamPipesClientConfig
 }
 
-func (e *endpoint) executeRequest(method string, endPointUrl string) (*http.Response, error) {
-
-	req, err := http.NewRequest(method, endPointUrl, nil)
+func (e *endpoint) executeRequest(method string, endPointUrl string, body []byte) (*http.Response, error) {
+	var reader io.Reader
+	if body != nil {
+		reader = bytes.NewReader(body)
+	}
+	req, err := http.NewRequest(method, endPointUrl, reader)
 	if err != nil {
 		return nil, err
 	}

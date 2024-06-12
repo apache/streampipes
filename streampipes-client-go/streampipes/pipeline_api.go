@@ -39,12 +39,211 @@ func NewPipeline(clientConfig config.StreamPipesClientConfig) *Pipeline {
 	}
 }
 
+// GetSinglePipeline get a specific pipeline with the given id
+func (p *Pipeline) GetSinglePipeline(pipelineId string) (pipeline.Pipeline, error) {
+
+	endPointUrl := util.NewStreamPipesApiPath(p.config.Url, "streampipes-backend/api/v2/pipelines", []string{pipelineId})
+	log.Printf("Get data from: %s", endPointUrl)
+
+	response, err := p.executeRequest("GET", endPointUrl, nil)
+	if err != nil {
+		return pipeline.Pipeline{}, err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		err = p.handleStatusCode(response)
+		if err != nil {
+			return pipeline.Pipeline{}, err
+		}
+	}
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return pipeline.Pipeline{}, err
+	}
+
+	unmarshalData, err := serializer.NewPipelineDeserializer().Unmarshal(body)
+	if err != nil {
+		return pipeline.Pipeline{}, err
+	}
+	pipeLine := unmarshalData.(pipeline.Pipeline)
+
+	return pipeLine, nil
+}
+
+// DeleteSinglePipeline delete a pipeline with a given id
+func (p *Pipeline) DeleteSinglePipeline(pipelineId string) error {
+
+	endPointUrl := util.NewStreamPipesApiPath(p.config.Url, "streampipes-backend/api/v2/pipelines", []string{pipelineId})
+	log.Printf("Delete data from: %s", endPointUrl)
+
+	response, err := p.executeRequest("DELETE", endPointUrl, nil)
+	if err != nil {
+		return err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		err = p.handleStatusCode(response)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// UpdateSinglePipeline update an existing pipeline
+func (p *Pipeline) UpdateSinglePipeline(pp pipeline.Pipeline, pipelineId string) error {
+	endPointUrl := util.NewStreamPipesApiPath(p.config.Url, "streampipes-backend/api/v2/pipelines", []string{pipelineId})
+	body, err := serializer.NewPipelineSerializer().Marshal(pp)
+	if err != nil {
+		return err
+	}
+	response, err := p.executeRequest("PUT", endPointUrl, body)
+	if err != nil {
+		return err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		err = p.handleStatusCode(response)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// GetAllPipeline get all pipelines of the current user
+func (p *Pipeline) GetAllPipeline() ([]pipeline.Pipeline, error) {
+	endPointUrl := util.NewStreamPipesApiPath(p.config.Url, "streampipes-backend/api/v2/pipelines", nil)
+	log.Printf("Get data from: %s", endPointUrl)
+
+	response, err := p.executeRequest("GET", endPointUrl, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		err = p.handleStatusCode(response)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	unmarshalData, err := serializer.NewPipelinesDeserializer().Unmarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	pipelines := unmarshalData.([]pipeline.Pipeline)
+
+	return pipelines, nil
+}
+
+// CreatePipeline store a new pipeline
+func (p *Pipeline) CreatePipeline(pp pipeline.Pipeline) error {
+	endPointUrl := util.NewStreamPipesApiPath(p.config.Url, "streampipes-backend/api/v2/pipelines", nil)
+
+	body, err := serializer.NewPipelineSerializer().Marshal(pp)
+	if err != nil {
+		return err
+	}
+	response, err := p.executeRequest("POST", endPointUrl, body)
+	if err != nil {
+		return err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		err = p.handleStatusCode(response)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// StopSinglePipeline stop the pipeline with the given id
+// 待定，因为不知道要返回什么
+func (p *Pipeline) StopSinglePipeline(pipelineId string) error {
+	endPointUrl := util.NewStreamPipesApiPath(p.config.Url, "streampipes-backend/api/v2/pipelines", []string{pipelineId, "stop"})
+
+	response, err := p.executeRequest("GET", endPointUrl, nil)
+	if err != nil {
+		return err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		err = p.handleStatusCode(response)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// GetSinglePipelineStatus get the pipeline status of a given pipeline
+func (p *Pipeline) GetSinglePipelineStatus(pipelineId string) error {
+	endPointUrl := util.NewStreamPipesApiPath(p.config.Url, "streampipes-backend/api/v2/pipelines", []string{pipelineId, "status"})
+
+	response, err := p.executeRequest("GET", endPointUrl, nil)
+	if err != nil {
+		return err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		err = p.handleStatusCode(response)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// StartSinglePipeline start the pipeline with the given id
+func (p *Pipeline) StartSinglePipeline(pipelineId string) error {
+	endPointUrl := util.NewStreamPipesApiPath(p.config.Url, "streampipes-backend/api/v2/pipelines", []string{pipelineId, "start"})
+
+	response, err := p.executeRequest("GET", endPointUrl, nil)
+	if err != nil {
+		return err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		err = p.handleStatusCode(response)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// ContainsElementPipeline returns all pipelines that contain the element with the elementld
+func (p *Pipeline) ContainsElementPipeline(pipelineId string) error {
+	endPointUrl := util.NewStreamPipesApiPath(p.config.Url, "streampipes-backend/api/v2/pipelines/contains", []string{pipelineId})
+
+	response, err := p.executeRequest("GET", endPointUrl, nil)
+	if err != nil {
+		return err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		err = p.handleStatusCode(response)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (p *Pipeline) GetPipelineCategory() ([]pipeline.PipelineCategory, error) {
 
 	endPointUrl := util.NewStreamPipesApiPath(p.config.Url, "streampipes-backend/api/v2/pipelinecategories", nil)
 	log.Printf("Get data from: %s", endPointUrl)
 
-	response, err := p.executeRequest("GET", endPointUrl)
+	response, err := p.executeRequest("GET", endPointUrl, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +274,7 @@ func (p *Pipeline) DeletePipelineCategory(categoryId string) (model.ResponseMess
 	endPointUrl := util.NewStreamPipesApiPath(p.config.Url, "streampipes-backend/api/v2/pipelinecategories", []string{categoryId})
 	log.Printf("Delete data from: %s", endPointUrl)
 
-	response, err := p.executeRequest("DELETE", endPointUrl)
+	response, err := p.executeRequest("DELETE", endPointUrl, nil)
 	if err != nil {
 		return model.ResponseMessage{}, err
 	}
