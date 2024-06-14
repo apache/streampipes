@@ -40,7 +40,6 @@ import { RouterModule } from '@angular/router';
 import { EditorComponent } from '../editor/editor.component';
 import { SpPipelineDetailsOverviewComponent } from '../pipeline-details/components/overview/pipeline-details-overview.component';
 import { PipelineMonitoringComponent } from '../pipeline-details/components/monitoring/pipeline-monitoring.component';
-import { QuickEditComponent } from '../pipeline-details/components/edit/quickedit.component';
 import { PipelineLogsComponent } from '../pipeline-details/components/pipeline-logs/pipeline-logs.component';
 import { FunctionsOverviewComponent } from './components/functions-overview/functions-overview.component';
 import { SpFunctionsMetricsComponent } from './components/functions-overview/functions-metrics/functions-metrics.component';
@@ -104,10 +103,6 @@ import { MatIconModule } from '@angular/material/icon';
                             {
                                 path: 'logs',
                                 component: PipelineLogsComponent,
-                            },
-                            {
-                                path: 'quick-edit',
-                                component: QuickEditComponent,
                             },
                         ],
                     },
