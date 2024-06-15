@@ -166,7 +166,6 @@ func (p *Pipeline) CreatePipeline(pp pipeline.Pipeline) error {
 }
 
 // StopSinglePipeline stop the pipeline with the given id
-// 待定，因为不知道要返回什么
 func (p *Pipeline) StopSinglePipeline(pipelineId string) error {
 	endPointUrl := util.NewStreamPipesApiPath(p.config.Url, "streampipes-backend/api/v2/pipelines", []string{pipelineId, "stop"})
 
