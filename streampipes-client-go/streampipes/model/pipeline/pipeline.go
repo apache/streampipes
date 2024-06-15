@@ -53,7 +53,7 @@ type DataProcessorInvocation struct {
 	OutputStream     SpDataStream     `json:"outputStream"`
 	OutputStrategies []OutputStrategy `json:"outputStrategies"`
 	PathName         string           `json:"pathName"`
-	Category         []string         `json:"category"` // 可能需要更精确的类型
+	Category         []string         `json:"category"`
 	Rev              string           `json:"_rev"`
 }
 
@@ -69,13 +69,13 @@ type SpDataStream struct {
 	IncludesLocales        bool              `json:"includesLocales"`
 	IncludedAssets         []string          `json:"includedAssets"`
 	IncludedLocales        []string          `json:"includedLocales"`
-	InternallyManaged      bool              // 假设它是一个interface{}切片，或者你可以指定为其他类型
+	InternallyManaged      bool              `json:"internallyManaged"`
 	EventGrounding         EventGrounding    `json:"eventGrounding"`
 	EventSchema            model.EventSchema `json:"eventSchema"`
 	Category               []string          `json:"category"`
 	Index                  int32             `json:"index"`
 	CorrespondingAdapterId string            `json:"correspondingAdapterId"`
-	Rev                    string            `json:"_rev"` // 通常使用驼峰命名法，这里保持原样
+	Rev                    string            `json:"_rev"`
 }
 
 type EventGrounding struct {
@@ -87,16 +87,16 @@ type TransportProtocol struct {
 	ElementId       string          `json:"elementId"`
 	BrokerHostname  string          `json:"brokerHostname"`
 	TopicDefinition TopicDefinition `json:"topicDefinition"`
-	Class           string          `json:"@class,omitempty"` // 假设@class是JSON中的特殊字段
+	Class           string          `json:"@class,omitempty"`
 }
 
 type TopicDefinition struct {
 	ActualTopicName string `json:"actualTopicName"`
-	Class           string `json:"@class"` // 使用json标签映射到JSON中的@class字段
+	Class           string `json:"@class"`
 }
 
 type TransportFormat struct {
-	RdfType []string `json:"rdfType"` // 假设rdfType是一个URI的切片
+	RdfType []string `json:"rdfType"`
 }
 
 type StaticPropertyType string
@@ -126,7 +126,7 @@ const (
 
 type StaticProperty struct {
 	Optional           bool               `json:"optional,omitempty"`
-	StaticPropertyType StaticPropertyType `json:"staticPropertyType"` //不一定要
+	StaticPropertyType StaticPropertyType `json:"staticPropertyType"`
 	Index              int32              `json:"index"`
 	Label              string             `json:"label"`
 	Description        string             `json:"description"`
@@ -146,9 +146,7 @@ type ElementStatusInfoSettings struct {
 type OutputStrategy struct {
 	Name        string               `json:"name"`
 	RenameRules []PropertyRenameRule `json:"renameRules"`
-	// Class 字段用来模拟 @class 注解，但在Go中通常不会这样命名
-	// 如果你确实需要存储类信息，可以将其作为一个普通的字符串字段
-	Class string `json:"class,omitempty"` // omitempty 表示在序列化时如果该字段为空则忽略
+	Class       string               `json:"class,omitempty"`
 }
 
 type PropertyRenameRule struct {
@@ -181,7 +179,6 @@ type DataSinkInvocation struct {
 	Configured            bool                      `json:"configured"`
 	Uncompleted           bool                      `json:"uncompleted"`
 	SelectedEndpointUrl   string                    `json:"selectedEndpointUrl"`
-	// 去掉了一个枚举类型
-	Category []string `json:"category"`
-	Rev      string   `json:"_rev"`
+	Category              []string                  `json:"category"`
+	Rev                   string                    `json:"_rev"`
 }
