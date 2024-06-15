@@ -19,7 +19,7 @@ type Pipeline struct {
 	CreatedByUser         string                    `json:"createdByUser"`
 	PipelineCategories    []string                  `json:"pipelineCategories"`
 	PipelineNotifications []string                  `json:"pipelineNotifications"`
-	//HealthStatus          string                    `json:"healthStatus"`  //枚举类型，OK, REQUIRES_ATTENTION, FAILURE
+	//HealthStatus          string                    `json:"healthStatus"`  //OK, REQUIRES_ATTENTION, FAILURE
 	ID  string `json:"_id,omitempty"`
 	Rev string `json:"_rev,omitempty"`
 }
@@ -49,12 +49,11 @@ type DataProcessorInvocation struct {
 	Configured            bool                      `json:"configured"`
 	Uncompleted           bool                      `json:"uncompleted"`
 	SelectedEndpointUrl   string                    `json:"selectedEndpointUrl"`
-	//ServiceTagPrefix      interface{}               `json:"serviceTagPrefix"`
-	OutputStream     SpDataStream     `json:"outputStream"`
-	OutputStrategies []OutputStrategy `json:"outputStrategies"`
-	PathName         string           `json:"pathName"`
-	Category         []string         `json:"category"`
-	Rev              string           `json:"_rev"`
+	OutputStream          SpDataStream              `json:"outputStream"`
+	OutputStrategies      []OutputStrategy          `json:"outputStrategies"`
+	PathName              string                    `json:"pathName"`
+	Category              []string                  `json:"category"`
+	Rev                   string                    `json:"_rev"`
 }
 
 type SpDataStream struct {
