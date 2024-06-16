@@ -86,13 +86,13 @@ mike = { git = "https://github.com/jimporter/mike.git", rev = "872f72def32f58890
 mkdocs = "1.5.2"
 mkdocs-awesome-pages-plugin = "2.9.0"
 mkdocs-gen-files = "0.5.0"
+mkdocs-git-revision-date-localized-plugin = "1.2.6"
 mkdocs-jupyter = "0.24.0"
 mkdocs-literate-nav = "0.6.0"
 mkdocs-material = "9.3.2"
 mkdocstrings = { version = "0.25.0", extras = ["python"] }
 numpydoc = "1.7.0"
 pytkdocs = { version = "0.16.1", extras = ["numpy-style"] }
-mkdocs-git-revision-date-localized-plugin = "^1.2.6"
 
 [tool.poetry.group.stubs]
 optional = true
