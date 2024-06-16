@@ -32,9 +32,9 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.MalformedParameterizedTypeException;
 import java.lang.reflect.Type;
 
-public class JsonLdSerializer<T> implements JsonDeserializer<T>, JsonSerializer<T> {
+public class CouchDbJsonSerializer<T> implements JsonDeserializer<T>, JsonSerializer<T> {
 
-  private static final Logger LOG = LoggerFactory.getLogger(JsonLdSerializer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(CouchDbJsonSerializer.class);
 
   @Override
   public T deserialize(JsonElement json, Type typeOfT,

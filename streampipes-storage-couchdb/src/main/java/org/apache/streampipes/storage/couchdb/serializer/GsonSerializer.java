@@ -59,7 +59,7 @@ public class GsonSerializer {
     GsonBuilder builder = getGsonBuilder();
     builder.registerTypeHierarchyAdapter(AdapterDescription.class, new AdapterSerializer());
     builder.registerTypeAdapter(TransformationRuleDescription.class,
-        new JsonLdSerializer<TransformationRuleDescription>());
+        new CouchDbJsonSerializer<TransformationRuleDescription>());
 //    builder.registerTypeHierarchyAdapter(TransformationRuleDescription.class, new AdapterSerializer());
 
     return builder;
@@ -82,20 +82,20 @@ public class GsonSerializer {
 
   public static GsonBuilder getGsonBuilder() {
     GsonBuilder builder = new GsonBuilder();
-    builder.registerTypeAdapter(EventProperty.class, new JsonLdSerializer<EventProperty>());
-    builder.registerTypeAdapter(StaticProperty.class, new JsonLdSerializer<StaticProperty>());
-    builder.registerTypeAdapter(OutputStrategy.class, new JsonLdSerializer<OutputStrategy>());
-    builder.registerTypeAdapter(TransportProtocol.class, new JsonLdSerializer<TransportProtocol>());
-    builder.registerTypeAdapter(MappingProperty.class, new JsonLdSerializer<MappingProperty>());
-    builder.registerTypeAdapter(ValueSpecification.class, new JsonLdSerializer<ValueSpecification>());
+    builder.registerTypeAdapter(EventProperty.class, new CouchDbJsonSerializer<EventProperty>());
+    builder.registerTypeAdapter(StaticProperty.class, new CouchDbJsonSerializer<StaticProperty>());
+    builder.registerTypeAdapter(OutputStrategy.class, new CouchDbJsonSerializer<OutputStrategy>());
+    builder.registerTypeAdapter(TransportProtocol.class, new CouchDbJsonSerializer<TransportProtocol>());
+    builder.registerTypeAdapter(MappingProperty.class, new CouchDbJsonSerializer<MappingProperty>());
+    builder.registerTypeAdapter(ValueSpecification.class, new CouchDbJsonSerializer<ValueSpecification>());
     builder.registerTypeAdapter(DataSinkType.class, new EcTypeAdapter());
     builder.registerTypeAdapter(AdapterType.class, new AdapterTypeAdapter());
-    builder.registerTypeAdapter(Message.class, new JsonLdSerializer<Message>());
+    builder.registerTypeAdapter(Message.class, new CouchDbJsonSerializer<Message>());
     builder.registerTypeAdapter(DataProcessorType.class, new EpaTypeAdapter());
     builder.registerTypeAdapter(URI.class, new UriSerializer());
-    builder.registerTypeAdapter(TopicDefinition.class, new JsonLdSerializer<TopicDefinition>());
+    builder.registerTypeAdapter(TopicDefinition.class, new CouchDbJsonSerializer<TopicDefinition>());
     builder.registerTypeAdapter(TransformationRuleDescription.class,
-        new JsonLdSerializer<TransformationRuleDescription>());
+        new CouchDbJsonSerializer<TransformationRuleDescription>());
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
         .registerSubtype(SpDataStream.class, "org.apache.streampipes.model.SpDataStream"));
 
@@ -142,10 +142,8 @@ public class GsonSerializer {
         if (f.getName().equals("elementName")) {
           return true;
         }
-        if (f.getName().equals("elementId")) {
-          return true;
-        }
-        return false;
+        return f.getName()
+                .equals("elementId");
       }
 
       @Override
