@@ -38,11 +38,6 @@ public class ImageTransformer extends PlainImageTransformer {
     super(in);
   }
 
-  public Optional<BufferedImage> getImage(String imageProperty) {
-
-    return getImage(imageProperty);
-  }
-
   public List<Map<String, Object>> getAllBoxCoordinates(String boxArrayProperty) {
     List<Map<String, AbstractField>> allBoxes = in.getFieldBySelector(boxArrayProperty)
         .getAsList()
