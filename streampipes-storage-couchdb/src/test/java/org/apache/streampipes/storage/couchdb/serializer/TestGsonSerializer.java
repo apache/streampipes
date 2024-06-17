@@ -41,8 +41,8 @@ public class TestGsonSerializer {
   public void testPipelineElementTemplateSerialization() {
     PipelineElementTemplate template = PipelineElementTemplateHelpers.makePipelineElementTemplate();
 
-    String json = GsonSerializer.getGsonWithIds().toJson(template);
-    PipelineElementTemplate template2 = GsonSerializer.getGsonWithIds().fromJson(json, PipelineElementTemplate.class);
+    String json = GsonSerializer.getGsonBuilder().create().toJson(template);
+    PipelineElementTemplate template2 = GsonSerializer.getGsonBuilder().create().fromJson(json, PipelineElementTemplate.class);
     assertions(template2);
     Assertions.assertEquals(2.0,
                             template2.getTemplateConfigs().get("test-key-2").getValue());

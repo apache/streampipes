@@ -46,8 +46,6 @@ import org.apache.streampipes.model.schema.ValueSpecification;
 import org.apache.streampipes.model.staticproperty.MappingProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -60,7 +58,6 @@ public class GsonSerializer {
     builder.registerTypeHierarchyAdapter(AdapterDescription.class, new AdapterSerializer());
     builder.registerTypeAdapter(TransformationRuleDescription.class,
         new CouchDbJsonSerializer<TransformationRuleDescription>());
-//    builder.registerTypeHierarchyAdapter(TransformationRuleDescription.class, new AdapterSerializer());
 
     return builder;
   }
@@ -70,10 +67,6 @@ public class GsonSerializer {
     builder.registerTypeHierarchyAdapter(Principal.class, new PrincipalDeserializer());
 
     return builder;
-  }
-
-  public static Gson getAdapterGson() {
-    return getAdapterGsonBuilder().create();
   }
 
   public static Gson getGson() {
@@ -124,34 +117,4 @@ public class GsonSerializer {
     return builder;
   }
 
-  public static Gson getGson(boolean keepIds) {
-    return keepIds ? getGsonWithIds() : getGsonWithoutIds();
-  }
-
-  public static Gson getGsonWithIds() {
-    return getGsonBuilder().create();
-  }
-
-  public static Gson getGsonWithoutIds() {
-    GsonBuilder builder = getGsonBuilder();
-
-    builder.addSerializationExclusionStrategy(new ExclusionStrategy() {
-
-      @Override
-      public boolean shouldSkipField(FieldAttributes f) {
-        if (f.getName().equals("elementName")) {
-          return true;
-        }
-        return f.getName()
-                .equals("elementId");
-      }
-
-      @Override
-      public boolean shouldSkipClass(Class<?> clazz) {
-        // TODO Auto-generated method stub
-        return false;
-      }
-    });
-    return builder.create();
-  }
 }
