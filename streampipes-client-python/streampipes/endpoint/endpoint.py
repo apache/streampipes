@@ -284,7 +284,7 @@ class MessagingEndpoint(Endpoint):
         """Configures the message endpoint by setting the broker instance to be used.
 
         This configuration step is required before the endpoint can be actually used.
-        The based `broker` instance is passed to an internal property
+        The based `broker` instance is passed to an internal property.
 
         Parameters
         ----------
