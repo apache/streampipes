@@ -34,7 +34,7 @@ class StreamPipesFunction(ABC):
     Parameters
     ----------
     function_definition: FunctionDefinition
-        the definition of the function that contains metadata about the connected function
+        The definition of the function that contains metadata about the connected function
 
     Attributes
     ----------
