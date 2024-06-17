@@ -89,15 +89,6 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.setVersion(version);
   }
 
-  public AdapterDescription(String elementId, String name, String description) {
-    super(elementId, name, description);
-    this.rules = new ArrayList<>();
-    this.category = new ArrayList<>();
-    this.dataStream = new SpDataStream();
-    this.deploymentConfiguration = new ExtensionDeploymentConfiguration();
-  }
-
-
   public AdapterDescription(AdapterDescription other) {
     super(other);
     this.config = new Cloner().staticProperties(other.getConfig());

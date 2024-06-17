@@ -23,7 +23,6 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 
@@ -40,8 +39,6 @@ public abstract class InvocableStreamPipesEntity
   protected List<StaticProperty> staticProperties;
 
   private String belongsTo;
-
-  private ElementStatusInfoSettings statusInfoSettings;
 
   private EventGrounding supportedGrounding;
 
@@ -82,22 +79,6 @@ public abstract class InvocableStreamPipesEntity
     if (other.getSupportedGrounding() != null) {
       this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
     }
-  }
-
-  public InvocableStreamPipesEntity(
-          String uri,
-          String name,
-          String description,
-          String iconUrl,
-          SpServiceTagPrefix serviceTagPrefix
-  ) {
-    super(uri, name, description, iconUrl);
-    this.serviceTagPrefix = serviceTagPrefix;
-    this.configured = false;
-  }
-
-  public boolean addStaticProperty(StaticProperty staticProperty) {
-    return staticProperties.add(staticProperty);
   }
 
   public List<SpDataStream> getInputStreams() {
@@ -156,14 +137,6 @@ public abstract class InvocableStreamPipesEntity
 
   public void setConfigured(boolean configured) {
     this.configured = configured;
-  }
-
-  public ElementStatusInfoSettings getStatusInfoSettings() {
-    return statusInfoSettings;
-  }
-
-  public void setStatusInfoSettings(ElementStatusInfoSettings statusInfoSettings) {
-    this.statusInfoSettings = statusInfoSettings;
   }
 
   public String getCorrespondingUser() {

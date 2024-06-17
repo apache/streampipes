@@ -49,15 +49,6 @@ public abstract class AbstractPipelineElementBuilder<X extends AbstractPipelineE
   /**
    * @deprecated: Use {@link #withAssets(String...)} instead
    */
-  public X iconUrl(String iconUrl) {
-    elementDescription.setIconUrl(iconUrl);
-    return me();
-  }
-
-  @Deprecated
-  /**
-   * @deprecated: Use {@link #withAssets(String...)} instead
-   */
   public X providesAssets(String... assets) {
     return withAssets(assets);
   }

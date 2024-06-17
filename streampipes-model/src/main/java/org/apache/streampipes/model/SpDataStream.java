@@ -40,24 +40,10 @@ public class SpDataStream extends NamedStreamPipesEntity {
   private int index;
   private String correspondingAdapterId;
 
-  public SpDataStream(String uri, String name, String description, String iconUrl,
-                      EventGrounding eventGrounding,
-                      EventSchema eventSchema) {
-    super(uri, name, description, iconUrl);
-    this.eventGrounding = eventGrounding;
-    this.eventSchema = eventSchema;
-  }
-
-  public SpDataStream(String uri, String name, String description, EventSchema eventSchema) {
-    super(uri, name, description);
-    this.eventSchema = eventSchema;
-  }
-
   public SpDataStream() {
     super(prefix + RandomStringUtils.randomAlphabetic(6));
     this.eventSchema = new EventSchema();
   }
-
 
   public SpDataStream(SpDataStream other) {
     super(other);

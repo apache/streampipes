@@ -41,18 +41,6 @@ public class ProtocolDescription extends NamedStreamPipesEntity {
     this.config = new ArrayList<>();
   }
 
-  public ProtocolDescription(String uri, String name, String description) {
-    super(uri, name, description);
-    this.config = new ArrayList<>();
-    this.category = new ArrayList<>();
-  }
-
-  public ProtocolDescription(String uri, String name, String description, List<StaticProperty> config) {
-    super(uri, name, description);
-    this.config = config;
-    this.category = new ArrayList<>();
-  }
-
   public ProtocolDescription(ProtocolDescription other) {
     super(other);
 
