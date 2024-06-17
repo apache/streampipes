@@ -23,7 +23,7 @@ import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfigurati
 import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.config.IPipelineElementConfiguration;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
-import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.StreamPipesExtensionsServiceBase;
 import org.apache.streampipes.smp.constants.PeType;
 import org.apache.streampipes.smp.model.AssetModel;
 
@@ -49,7 +49,7 @@ public class ExtensionsFinder {
       throws MalformedURLException, DependencyResolutionRequiredException, ClassNotFoundException,
       InstantiationException, IllegalAccessException {
     var extensions = new ArrayList<AssetModel>();
-    var serviceDef = ((ExtensionsModelSubmitter) loader.loadClass(initClass).newInstance()).provideServiceDefinition();
+    var serviceDef = ((StreamPipesExtensionsServiceBase) loader.loadClass(initClass).newInstance()).provideServiceDefinition();
 
     extensions.addAll(findAdapters(serviceDef));
     extensions.addAll(findPipelineElements(serviceDef, IDataProcessorConfiguration.class, PeType.PROCESSOR));
