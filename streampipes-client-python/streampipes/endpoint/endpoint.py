@@ -18,7 +18,7 @@
 """
 General implementation for an endpoint.
 Provided classes and assets are aimed to be used for developing endpoints.
-An endpoint provides all options to communicate with ad dedicated part of StreamPipes in a handy way.
+An endpoint provides all options to communicate with a dedicated part of StreamPipes in a handy way.
 """
 
 import json
