@@ -184,7 +184,7 @@ class APIEndpoint(Endpoint):
         Returns
         -------
         container: ResourceContainer
-             container element that bundles the returned resources
+             Container element that bundles the returned resources
         """
 
         response = self._make_request(
