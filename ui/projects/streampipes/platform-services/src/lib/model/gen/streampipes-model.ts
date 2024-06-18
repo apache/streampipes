@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-05-21 13:45:10.
+// Generated using typescript-generator version 3.2.1263 on 2024-06-17 23:25:59.
 
 export class NamedStreamPipesEntity {
     '@class':
@@ -38,7 +38,6 @@ export class NamedStreamPipesEntity {
     'description': string;
     'dom': string;
     'elementId': string;
-    'iconUrl': string;
     'includedAssets': string[];
     'includedLocales': string[];
     'includesAssets': boolean;
@@ -63,7 +62,6 @@ export class NamedStreamPipesEntity {
         instance.description = data.description;
         instance.dom = data.dom;
         instance.elementId = data.elementId;
-        instance.iconUrl = data.iconUrl;
         instance.includedAssets = __getCopyArrayFn(__identity<string>())(
             data.includedAssets,
         );
@@ -694,29 +692,6 @@ export class CanvasPosition {
     }
 }
 
-export class Category {
-    _id: string;
-    _rev: string;
-    internalName: string;
-    name: string;
-    superLabel: string;
-    superLabelId: string;
-
-    static fromData(data: Category, target?: Category): Category {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new Category();
-        instance._id = data._id;
-        instance._rev = data._rev;
-        instance.internalName = data.internalName;
-        instance.name = data.name;
-        instance.superLabel = data.superLabel;
-        instance.superLabelId = data.superLabelId;
-        return instance;
-    }
-}
-
 export class ChangeDatatypeTransformationRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription';
     'originalDatatypeXsd': string;
@@ -1206,7 +1181,6 @@ export class InvocableStreamPipesEntity
     'selectedEndpointUrl': string;
     'serviceTagPrefix': SpServiceTagPrefix;
     'staticProperties': StaticPropertyUnion[];
-    'statusInfoSettings': ElementStatusInfoSettings;
     'streamRequirements': SpDataStream[];
     'supportedGrounding': EventGrounding;
     'uncompleted': boolean;
@@ -1233,9 +1207,6 @@ export class InvocableStreamPipesEntity
         instance.staticProperties = __getCopyArrayFn(
             StaticProperty.fromDataUnion,
         )(data.staticProperties);
-        instance.statusInfoSettings = ElementStatusInfoSettings.fromData(
-            data.statusInfoSettings,
-        );
         instance.streamRequirements = __getCopyArrayFn(SpDataStream.fromData)(
             data.streamRequirements,
         );
@@ -1252,7 +1223,6 @@ export class DataProcessorInvocation extends InvocableStreamPipesEntity {
     'category': string[];
     'outputStrategies': OutputStrategyUnion[];
     'outputStream': SpDataStream;
-    'pathName': string;
 
     static 'fromData'(
         data: DataProcessorInvocation,
@@ -1270,7 +1240,6 @@ export class DataProcessorInvocation extends InvocableStreamPipesEntity {
             OutputStrategy.fromDataUnion,
         )(data.outputStrategies);
         instance.outputStream = SpDataStream.fromData(data.outputStream);
-        instance.pathName = data.pathName;
         return instance;
     }
 }
@@ -1435,30 +1404,6 @@ export class ElementComposition {
         instance.streams = __getCopyArrayFn(SpDataStream.fromData)(
             data.streams,
         );
-        return instance;
-    }
-}
-
-export class ElementStatusInfoSettings {
-    elementIdentifier: string;
-    errorTopic: string;
-    kafkaHost: string;
-    kafkaPort: number;
-    statsTopic: string;
-
-    static fromData(
-        data: ElementStatusInfoSettings,
-        target?: ElementStatusInfoSettings,
-    ): ElementStatusInfoSettings {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new ElementStatusInfoSettings();
-        instance.elementIdentifier = data.elementIdentifier;
-        instance.errorTopic = data.errorTopic;
-        instance.kafkaHost = data.kafkaHost;
-        instance.kafkaPort = data.kafkaPort;
-        instance.statsTopic = data.statsTopic;
         return instance;
     }
 }
@@ -2191,29 +2136,6 @@ export class KeepOutputStrategy extends OutputStrategy {
         super.fromData(data, instance);
         instance.eventName = data.eventName;
         instance.keepBoth = data.keepBoth;
-        return instance;
-    }
-}
-
-export class Label {
-    _id: string;
-    _rev: string;
-    categoryId: string;
-    color: string;
-    internalName: string;
-    name: string;
-
-    static fromData(data: Label, target?: Label): Label {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new Label();
-        instance._id = data._id;
-        instance._rev = data._rev;
-        instance.categoryId = data.categoryId;
-        instance.color = data.color;
-        instance.internalName = data.internalName;
-        instance.name = data.name;
         return instance;
     }
 }

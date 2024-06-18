@@ -53,7 +53,6 @@ public abstract class NamedStreamPipesEntity implements Serializable {
   protected List<String> connectedTo;
   private String name;
   private String description;
-  private String iconUrl;
   private String appId;
   private boolean includesAssets;
   private boolean includesLocales;
@@ -73,26 +72,11 @@ public abstract class NamedStreamPipesEntity implements Serializable {
     this.elementId = elementId;
   }
 
-  public NamedStreamPipesEntity(String elementId, String name, String description, String iconUrl) {
-    this(elementId, name, description);
-    this.iconUrl = iconUrl;
-  }
-
-  public NamedStreamPipesEntity(String elementId, String name, String description) {
-    super();
-    this.elementId = elementId;
-    this.name = name;
-    this.description = description;
-    this.includedAssets = new ArrayList<>();
-    this.includedLocales = new ArrayList<>();
-  }
-
   public NamedStreamPipesEntity(NamedStreamPipesEntity other) {
     this.elementId = other.getElementId();
     this.rev = other.getRev();
     this.description = other.getDescription();
     this.name = other.getName();
-    this.iconUrl = other.getIconUrl();
     this.elementId = other.getElementId();
     this.dom = other.getDom();
     this.internallyManaged = other.isInternallyManaged();
@@ -122,14 +106,6 @@ public abstract class NamedStreamPipesEntity implements Serializable {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public String getIconUrl() {
-    return iconUrl;
-  }
-
-  public void setIconUrl(String iconUrl) {
-    this.iconUrl = iconUrl;
   }
 
   public String getDom() {

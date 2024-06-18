@@ -38,7 +38,8 @@ public class AdapterParameterExtractorTest {
   @Test
   public void selectedParser() throws AdapterException {
     var parserInstance = mock(IParser.class);
-    var parserDescription = new ParserDescription("", "parserName", "");
+    var parserDescription = new ParserDescription();
+    parserDescription.setName("parserName");
     when(parserInstance.declareDescription()).thenReturn(parserDescription);
     when(parserInstance.fromDescription(any())).thenReturn(parserInstance);
 

@@ -18,12 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {
-    AdapterDescription,
-    AdapterService,
-} from '@streampipes/platform-services';
-import { DialogService } from '@streampipes/shared-ui';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { AdapterDescription } from '@streampipes/platform-services';
 import { RestApi } from '../../../../services/rest-api.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
@@ -50,10 +45,8 @@ export class AdapterDescriptionComponent implements OnInit {
 
     constructor(
         private restApi: RestApi,
-        private dataMarketplaceService: AdapterService,
         private sanitizer: DomSanitizer,
         public dialog: MatDialog,
-        private _snackBar: MatSnackBar,
     ) {}
 
     ngOnInit() {
@@ -78,18 +71,6 @@ export class AdapterDescriptionComponent implements OnInit {
         className += ' adapter-box-stream';
 
         return className;
-    }
-
-    getIconUrl() {
-        // TODO Use "this.adapter.includesAssets" if boolean demoralizing is working
-        if (this.adapter.includedAssets.length > 0) {
-            return (
-                this.dataMarketplaceService.getAssetUrl(this.adapter.appId) +
-                '/icon'
-            );
-        } else {
-            return `assets/img/connect/${this.adapter.iconUrl}`;
-        }
     }
 
     makeAssetIconUrl() {
