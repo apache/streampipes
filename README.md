@@ -32,14 +32,14 @@
 
 <h1 align="center">
   <br>
-   <img src="https://streampipes.apache.org/img/sp-logo-color.png" 
+   <img src="https://streampipes.apache.org/img/sp-logo-color.png"
    alt="StreamPipes Logo" title="Apache StreamPipes Logo" width="50%"/>
   <br>
 </h1>
 <h3 align="center">Self-Service Data Analytics for the (Industrial) IoT</h3>
 <h4 align="center">StreamPipes is a self-service (Industrial) IoT toolbox to enable non-technical users to connect
 , analyze and explore IoT data streams. </h4>
-<p align="center">  
+<p align="center">
     <img src="https://raw.githubusercontent.com/apache/streampipes/dev/images/streampipes-overview.png" alt="StreamPipes Overview"/>
 </p>
 
@@ -53,7 +53,7 @@
   * [Installation](#installation)
   * [Documentation](#documentation)
   * [Building StreamPipes](#building-streampipes)
-  * [Pipeline Elements](#pipeline-elements)  
+  * [Pipeline Elements](#pipeline-elements)
   * [Extending StreamPipes](#extending-streampipes)
   * [Bugs and Feature Requests](#bugs-and-feature-requests)
   * [Get help](#get-help)
@@ -67,7 +67,7 @@
 
 Apache StreamPipes makes industrial data analytics easy!
 
-StreamPipes is an end-to-end toolbox for the industrial IoT. 
+StreamPipes is an end-to-end toolbox for the industrial IoT.
 It comes with a rich graphical user interface targeted at non-technical users and provides the following features:
 
 
@@ -77,8 +77,8 @@ It comes with a rich graphical user interface targeted at non-technical users an
 * A live dashboard to display real-time data from data sources and pipelines, e.g., for shopfloor monitoring.
 
 
-StreamPipes is highly extensible and includes a Java SDK to create new 
-pipeline elements and adapters. Python support is available in an early development stage - stay tuned!  
+StreamPipes is highly extensible and includes a Java SDK to create new
+pipeline elements and adapters. Python support is available in an early development stage - stay tuned!
 Pipeline elements are standalone microservices that can run anywhere -
 centrally on your server or close at the edge.
 You want to employ your own machine learning model on live data?
@@ -108,13 +108,13 @@ Besides that, StreamPipes includes features for production deployments:
 
 ## Installation
 
-The quickest way to run StreamPipes including the latest extensions (adapters, pipeline elements) is by using our Docker-based [installation & operation options](installer), namely: 
+The quickest way to run StreamPipes including the latest extensions (adapters, pipeline elements) is by using our Docker-based [installation & operation options](installer), namely:
 
 * **[StreamPipes Compose](installer/compose)** - The User's Choice
 * **[StreamPipes CLI](installer/cli)** - The Developer's Favorite
 * **[StreamPipes k8s](installer/k8s)** - The Operator's Dream
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > StreamPipes CLI & k8s are highly recommended for developers or operators. Standard users should stick to StreamPipes Compose.
 
 Please follow the instructions provided in the corresponding `README.md` to get started.
@@ -168,14 +168,14 @@ You can also use the installer or CLI as described in the ``Installation`` secti
 
 ## Pipeline Elements
 StreamPipes includes a repository of extensions for adapters and pipeline elements:
-* **Connect adapters** for a variety of IoT data sources as well as 
-* **Data Processors** and **Data Sinks** as ready-to-use pipeline elements. 
+* **Connect adapters** for a variety of IoT data sources as well as
+* **Data Processors** and **Data Sinks** as ready-to-use pipeline elements.
 
 The source code of all included pipeline elements and adapters can be found [here](https://github.com/apache/streampipes/tree/dev/streampipes-extensions).
 
 ## Extending StreamPipes
 
-You can easily add your own data streams, processors or sinks. A [Java-based SDK](https://streampipes.apache.org/docs/extend-tutorial-data-processors.html) can be used to integrate your existing processing logic into StreamPipes. 
+You can easily add your own data streams, processors or sinks. A [Java-based SDK](https://streampipes.apache.org/docs/extend-tutorial-data-processors.html) can be used to integrate your existing processing logic into StreamPipes.
 Pipeline elements are packaged as Docker images and can be installed at runtime, whenever your requirements change.
 
 👉 Check our [developer guide](https://streampipes.apache.org/docs/extend-setup.html).
@@ -189,10 +189,10 @@ If you've found a bug or have a feature that you'd love to see in StreamPipes, f
 
 ## Get help
 
-If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our 
+If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our
 community channels:
 
-👉 [Mailing Lists](https://streampipes.apache.org/mailinglists.html)
+👉 [Mailing Lists](https://streampipes.apache.org/community/mailing-lists/)
 
 Or directly subscribe to [users-subscribe@streampipes.apache.org](mailto:users-subscribe@streampipes.apache.org)!
 
