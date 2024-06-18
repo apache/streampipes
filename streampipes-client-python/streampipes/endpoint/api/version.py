@@ -105,7 +105,7 @@ class VersionEndpoint(APIEndpoint):
         Raises
         ------
         NotImplementedError
-            this endpoint does not return multiple entries, therefore this method is not available
+            This endpoint does not return multiple entries, therefore this method is not available.
 
         """
         raise NotImplementedError("The `all()` method is not supported by this endpoint.")
@@ -147,7 +147,7 @@ class VersionEndpoint(APIEndpoint):
         Raises
         ------
         NotImplementedError
-            this endpoint does not allow for POST requests, therefore this method is not available
+            This endpoint does not allow for POST requests, therefore this method is not available.
 
         """
         raise NotImplementedError("The `post()` method is not supported by this endpoint.")

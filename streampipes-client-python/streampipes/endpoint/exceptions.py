@@ -16,7 +16,7 @@
 #
 
 """
-Custom exceptions dedicated for the endpoints module
+Custom exceptions dedicated to the endpoints module.
 """
 
 __all__ = [

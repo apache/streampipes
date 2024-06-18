@@ -55,7 +55,7 @@ class MeasurementGetQueryConfig(BaseModel):
         If provided, the returned data only consists of the given columns.<br>
         Please be aware that the column `time` as an index is always included.
     end_date: Optional[datetime]
-        Restricts queried data to be younger than the specified time.
+        Limits the queried data to only include data that is older than the specified time. In other words, any data that occurred after the end_date will not be included in the query results.
     limit: Optional[int]
         Amount of records returned at maximum (default: `1000`) <br>
         This needs to be at least `1`
@@ -69,7 +69,7 @@ class MeasurementGetQueryConfig(BaseModel):
         Page number used for paging operation <br>
         This needs to be at least `1`
     start_date: Optional[datetime]
-        Restricts queried data to be older than the specified time
+        Limits the queried data to only include data that is newer than the specified time. In other words, any data that occurred before the start_date will not be included in the query results.
     """
 
     _regex_comma_separated_string = r"^[0-9a-zA-Z\_]+(,[0-9a-zA-Z\_]+)*$"
@@ -344,14 +344,14 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         identifier: str
             The identifier of the data lake measure to be queried.
         **kwargs: Dict[str, Any]
-            keyword arguments can be used to provide additional query parameters.
+            Keyword arguments can be used to provide additional query parameters.
             The available query parameters are defined by the
             [MeasurementGetQueryConfig][streampipes.endpoint.api.data_lake_measure.MeasurementGetQueryConfig].
 
         Returns
         -------
         measurement: DataLakeMeasures
-            the specified data lake measure
+            The specified data lake measure
 
         Examples
         --------

@@ -112,7 +112,7 @@ class StreamPipesApiKeyCredentials(CredentialProvider):
     def from_env(cls, username_env: str, api_key_env: str) -> StreamPipesApiKeyCredentials:
         """DEPRECATED - use the class constructor instead
 
-        Returns an api key provider parameterized via environment variables.
+        Returns an API key provider parameterized via environment variables.
 
         Parameters
         ----------
