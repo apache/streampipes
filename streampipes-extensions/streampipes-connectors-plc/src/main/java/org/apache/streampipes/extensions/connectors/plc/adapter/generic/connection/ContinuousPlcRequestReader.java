@@ -26,7 +26,6 @@ import org.apache.streampipes.extensions.management.connect.adapter.util.Polling
 
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.PlcConnectionManager;
-import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +39,6 @@ public class ContinuousPlcRequestReader
   private static final Logger LOG = LoggerFactory.getLogger(ContinuousPlcRequestReader.class);
 
   private final IEventCollector collector;
-  private PlcConnection plcConnection;
 
   public ContinuousPlcRequestReader(PlcConnectionManager connectionManager,
                                     Plc4xConnectionSettings settings,
@@ -52,19 +50,14 @@ public class ContinuousPlcRequestReader
 
   @Override
   public void pullData() throws RuntimeException {
-    try {
-      var connection = getConnection();
-      readPlcData(connection);
+    try (PlcConnection plcConnection = connectionManager.getConnection(settings.connectionString())) {
+      if (!plcConnection.isConnected()) {
+        plcConnection.connect();
+      }
+      readPlcData(plcConnection);
     } catch (Exception e) {
       LOG.error("Error while reading from PLC with connection string {} ", settings.connectionString(), e);
     }
-  }
-
-  private PlcConnection getConnection() throws PlcConnectionException {
-    if (plcConnection == null || !plcConnection.isConnected()) {
-      this.plcConnection = connectionManager.getConnection(settings.connectionString());
-    }
-    return this.plcConnection;
   }
 
   private void readPlcData(PlcConnection plcConnection)
@@ -78,11 +71,5 @@ public class ContinuousPlcRequestReader
   @Override
   public IPollingSettings getPollingInterval() {
     return PollingSettings.from(TimeUnit.MILLISECONDS, settings.pollingInterval());
-  }
-
-  public void closeConnection() throws Exception {
-    if (this.plcConnection != null && this.plcConnection.isConnected()) {
-      this.plcConnection.close();
-    }
   }
 }

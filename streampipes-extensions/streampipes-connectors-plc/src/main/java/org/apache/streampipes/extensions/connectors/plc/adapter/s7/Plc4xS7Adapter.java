@@ -52,9 +52,6 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 
 import org.apache.plc4x.java.api.PlcConnectionManager;
-import org.apache.plc4x.java.api.PlcDriverManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,8 +64,6 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
    * A unique id to identify the Plc4xS7Adapter
    */
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.plc4x.s7";
-
-  private static final Logger LOG = LoggerFactory.getLogger(Plc4xS7Adapter.class);
 
   private static final String S7_URL = "s7://";
 
@@ -98,23 +93,14 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
       // [1] https://plc4x.apache.org/users/protocols/s7.html
       """;
 
-  /**
-   * Values of user configuration parameters
-   */
-  private Map<String, String> nodes;
-
-  private final PlcDriverManager driverManager;
   private final PlcConnectionManager connectionManager;
 
   private PullAdapterScheduler pullAdapterScheduler;
-  private ContinuousPlcRequestReader plcRequestReader;
 
   private final PlcRequestProvider requestProvider;
 
-  public Plc4xS7Adapter(PlcDriverManager driverManager,
-                        PlcConnectionManager connectionManager) {
+  public Plc4xS7Adapter(PlcConnectionManager connectionManager) {
     this.requestProvider = new PlcRequestProvider();
-    this.driverManager = driverManager;
     this.connectionManager = connectionManager;
   }
 
@@ -126,7 +112,7 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
    */
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 1, () -> new Plc4xS7Adapter(driverManager, connectionManager))
+    return AdapterConfigurationBuilder.create(ID, 1, () -> new Plc4xS7Adapter(connectionManager))
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withCategory(AdapterType.Manufacturing)
@@ -152,7 +138,7 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) {
     var settings = getConfigurations(extractor.getStaticPropertyExtractor());
-    this.plcRequestReader = new ContinuousPlcRequestReader(connectionManager, settings, requestProvider, collector);
+    var plcRequestReader = new ContinuousPlcRequestReader(connectionManager, settings, requestProvider, collector);
     this.pullAdapterScheduler = new PullAdapterScheduler();
     this.pullAdapterScheduler.schedule(plcRequestReader, extractor.getAdapterDescription().getElementId());
   }
@@ -160,11 +146,6 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
   @Override
   public void onAdapterStopped(IAdapterParameterExtractor extractor,
                                IAdapterRuntimeContext adapterRuntimeContext) {
-    try {
-      this.plcRequestReader.closeConnection();
-    } catch (Exception e) {
-      LOG.error("Error when closing connection", e);
-    }
     this.pullAdapterScheduler.shutdown();
   }
 
@@ -203,7 +184,7 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
     var ip = extractor.singleValueParameter(PLC_IP, String.class);
     var pollingInterval = extractor.singleValueParameter(PLC_POLLING_INTERVAL, Integer.class);
 
-    Map<String, String> nodes = Map.of();
+    Map<String, String> nodes;
 
     var selectedAlternative = extractor.selectedAlternativeInternalId(PLC_NODE_INPUT_ALTERNATIVES);
 
@@ -215,7 +196,7 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
     } else {
       // Alternative Advanced
       var codePropertyInput = extractor.codeblockValue(PLC_CODE_BLOCK);
-      this.nodes = new ConfigurationParser().getNodeInformationFromCodeProperty(codePropertyInput);
+      nodes = new ConfigurationParser().getNodeInformationFromCodeProperty(codePropertyInput);
     }
 
     return new Plc4xConnectionSettings(S7_URL + ip, pollingInterval, nodes);

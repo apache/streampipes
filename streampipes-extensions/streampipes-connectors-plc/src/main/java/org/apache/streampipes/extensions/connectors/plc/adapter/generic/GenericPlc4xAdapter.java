@@ -63,7 +63,6 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
   private PullAdapterScheduler pullAdapterScheduler;
   private final PlcRequestProvider requestProvider;
   private final EventSchemaProvider schemaProvider;
-  private ContinuousPlcRequestReader plcRequestReader;
 
   private final PlcDriver driver;
   private final PlcConnectionManager connectionManager;
@@ -88,7 +87,7 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
     var settings = new Plc4xConnectionExtractor(
         extractor.getStaticPropertyExtractor(), driver.getProtocolCode()
     ).makeSettings();
-    this.plcRequestReader = new ContinuousPlcRequestReader(connectionManager, settings, requestProvider, collector);
+    var plcRequestReader = new ContinuousPlcRequestReader(connectionManager, settings, requestProvider, collector);
     this.pullAdapterScheduler = new PullAdapterScheduler();
     this.pullAdapterScheduler.schedule(plcRequestReader, extractor.getAdapterDescription().getElementId());
   }
@@ -96,11 +95,6 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
   @Override
   public void onAdapterStopped(IAdapterParameterExtractor extractor,
                                IAdapterRuntimeContext adapterRuntimeContext) {
-    try {
-      this.plcRequestReader.closeConnection();
-    } catch (Exception e) {
-      LOG.error("Error when closing connection", e);
-    }
     this.pullAdapterScheduler.shutdown();
   }
 

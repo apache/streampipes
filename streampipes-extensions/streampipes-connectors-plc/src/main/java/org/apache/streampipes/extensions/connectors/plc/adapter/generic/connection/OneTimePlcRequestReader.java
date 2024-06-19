@@ -50,6 +50,9 @@ public class OneTimePlcRequestReader {
       if (!plcConnection.getMetadata().isReadSupported()) {
         throw new AdapterException("This PLC does not support reading data");
       }
+      if (!plcConnection.isConnected()) {
+        plcConnection.connect();
+      }
       var readRequest = requestProvider.makeReadRequest(plcConnection, settings.nodes());
       var readResponse = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);
       return eventGenerator.makeEvent(readResponse);

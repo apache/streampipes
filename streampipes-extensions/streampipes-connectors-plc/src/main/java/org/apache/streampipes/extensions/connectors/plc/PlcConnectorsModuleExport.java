@@ -29,6 +29,7 @@ import org.apache.streampipes.extensions.connectors.plc.adapter.modbus.Plc4xModb
 import org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter;
 
 import org.apache.plc4x.java.api.PlcDriverManager;
+import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,12 +40,12 @@ public class PlcConnectorsModuleExport implements IExtensionModuleExport {
   @Override
   public List<StreamPipesAdapter> adapters() {
     var driverManager = PlcDriverManager.getDefault();
-    var connectionManager = driverManager.getConnectionManager();
-    var adapters = new ArrayList<StreamPipesAdapter>(List.of(
-        new Plc4xModbusAdapter(),
-        new Plc4xS7Adapter(driverManager, connectionManager)
+    var cachedConnectionManager =  CachedPlcConnectionManager.getBuilder().build();
+    var adapters = new ArrayList<>(List.of(
+        new Plc4xModbusAdapter(cachedConnectionManager),
+        new Plc4xS7Adapter(cachedConnectionManager)
     ));
-    adapters.addAll(new GenericAdapterGenerator().makeAvailableAdapters(driverManager, connectionManager));
+    adapters.addAll(new GenericAdapterGenerator().makeAvailableAdapters(driverManager, cachedConnectionManager));
     return adapters;
   }
 
