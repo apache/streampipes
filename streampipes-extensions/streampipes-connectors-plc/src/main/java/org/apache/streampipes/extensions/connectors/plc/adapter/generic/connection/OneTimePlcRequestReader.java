@@ -22,7 +22,7 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionSettings;
 
 import org.apache.plc4x.java.api.PlcConnection;
-import org.apache.plc4x.java.api.PlcConnectionManager;
+import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -33,9 +33,9 @@ public class OneTimePlcRequestReader {
   protected final PlcRequestProvider requestProvider;
   protected final PlcEventGenerator eventGenerator;
 
-  protected final PlcConnectionManager connectionManager;
+  protected final CachedPlcConnectionManager connectionManager;
 
-  public OneTimePlcRequestReader(PlcConnectionManager connectionManager,
+  public OneTimePlcRequestReader(CachedPlcConnectionManager connectionManager,
                                  Plc4xConnectionSettings settings,
                                  PlcRequestProvider requestProvider) {
     this.connectionManager = connectionManager;
@@ -49,9 +49,6 @@ public class OneTimePlcRequestReader {
     try (PlcConnection plcConnection = connectionManager.getConnection(connectionString)) {
       if (!plcConnection.getMetadata().isReadSupported()) {
         throw new AdapterException("This PLC does not support reading data");
-      }
-      if (!plcConnection.isConnected()) {
-        plcConnection.connect();
       }
       var readRequest = requestProvider.makeReadRequest(plcConnection, settings.nodes());
       var readResponse = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);

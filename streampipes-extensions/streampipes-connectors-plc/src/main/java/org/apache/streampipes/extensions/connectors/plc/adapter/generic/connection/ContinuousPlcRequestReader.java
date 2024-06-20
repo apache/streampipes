@@ -25,13 +25,11 @@ import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Pl
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 
 import org.apache.plc4x.java.api.PlcConnection;
-import org.apache.plc4x.java.api.PlcConnectionManager;
+import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class ContinuousPlcRequestReader
     extends OneTimePlcRequestReader implements IPullAdapter {
@@ -40,7 +38,7 @@ public class ContinuousPlcRequestReader
 
   private final IEventCollector collector;
 
-  public ContinuousPlcRequestReader(PlcConnectionManager connectionManager,
+  public ContinuousPlcRequestReader(CachedPlcConnectionManager connectionManager,
                                     Plc4xConnectionSettings settings,
                                     PlcRequestProvider requestProvider,
                                     IEventCollector collector) {
@@ -51,21 +49,13 @@ public class ContinuousPlcRequestReader
   @Override
   public void pullData() throws RuntimeException {
     try (PlcConnection plcConnection = connectionManager.getConnection(settings.connectionString())) {
-      if (!plcConnection.isConnected()) {
-        plcConnection.connect();
-      }
-      readPlcData(plcConnection);
+      var readRequest = requestProvider.makeReadRequest(plcConnection, settings.nodes());
+      var readResponse = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);
+      var event = eventGenerator.makeEvent(readResponse);
+      collector.collect(event);
     } catch (Exception e) {
       LOG.error("Error while reading from PLC with connection string {} ", settings.connectionString(), e);
     }
-  }
-
-  private void readPlcData(PlcConnection plcConnection)
-      throws ExecutionException, InterruptedException, TimeoutException {
-    var readRequest = requestProvider.makeReadRequest(plcConnection, settings.nodes());
-    var response = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);
-    var event = eventGenerator.makeEvent(response);
-    collector.collect(event);
   }
 
   @Override

@@ -40,7 +40,9 @@ public class PlcConnectorsModuleExport implements IExtensionModuleExport {
   @Override
   public List<StreamPipesAdapter> adapters() {
     var driverManager = PlcDriverManager.getDefault();
-    var cachedConnectionManager =  CachedPlcConnectionManager.getBuilder().build();
+    var cachedConnectionManager =  CachedPlcConnectionManager
+        .getBuilder(driverManager.getConnectionManager())
+        .build();
     var adapters = new ArrayList<>(List.of(
         new Plc4xModbusAdapter(cachedConnectionManager),
         new Plc4xS7Adapter(cachedConnectionManager)

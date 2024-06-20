@@ -51,7 +51,7 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 
-import org.apache.plc4x.java.api.PlcConnectionManager;
+import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,13 +93,13 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
       // [1] https://plc4x.apache.org/users/protocols/s7.html
       """;
 
-  private final PlcConnectionManager connectionManager;
+  private final CachedPlcConnectionManager connectionManager;
 
   private PullAdapterScheduler pullAdapterScheduler;
 
   private final PlcRequestProvider requestProvider;
 
-  public Plc4xS7Adapter(PlcConnectionManager connectionManager) {
+  public Plc4xS7Adapter(CachedPlcConnectionManager connectionManager) {
     this.requestProvider = new PlcRequestProvider();
     this.connectionManager = connectionManager;
   }
