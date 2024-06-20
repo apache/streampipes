@@ -21,7 +21,7 @@
 StreamPipes k8s is a helm chart to deploy StreamPipes on Kubernetes.
 
 <!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
-**Current version:** 0.95.0
+**Current version:** 0.95.1
 <!-- END do not edit -->
 
 We provide two helm chart templates to get you going:
@@ -119,7 +119,7 @@ rm -rf ${HOME}/streampipes-k8s
 
 | Parameter Name                                | Description                                             | Value                                   |
 |-----------------------------------------------|---------------------------------------------------------|-----------------------------------------|
-| streampipes.version                           | StreamPipes version                                     | "0.95.0"                        |
+| streampipes.version                           | StreamPipes version                                     | "0.95.1"                        |
 | streampipes.registry                          | StreamPipes registry URL                                | "apachestreampipes"                     |
 | streampipes.auth.secretName                   | The secret name for storing secrets                     | "sp-secrets"                            |
 | streampipes.auth.users.admin.user             | The initial admin user                                  | "admin@streampipes.apache.org"          |
