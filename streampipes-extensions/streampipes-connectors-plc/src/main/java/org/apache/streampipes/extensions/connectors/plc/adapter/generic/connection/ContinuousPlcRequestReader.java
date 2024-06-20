@@ -22,26 +22,23 @@ import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPollingSettings;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionSettings;
-import org.apache.streampipes.extensions.connectors.plc.adapter.s7.PlcReadResponseHandler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.PlcConnectionManager;
-import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
-import org.apache.plc4x.java.api.messages.PlcReadResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class ContinuousPlcRequestReader
-    extends OneTimePlcRequestReader implements IPullAdapter, PlcReadResponseHandler {
+    extends OneTimePlcRequestReader implements IPullAdapter {
 
   private static final Logger LOG = LoggerFactory.getLogger(ContinuousPlcRequestReader.class);
 
   private final IEventCollector collector;
-  private PlcConnection plcConnection;
 
   public ContinuousPlcRequestReader(PlcConnectionManager connectionManager,
                                     Plc4xConnectionSettings settings,
@@ -53,45 +50,26 @@ public class ContinuousPlcRequestReader
 
   @Override
   public void pullData() throws RuntimeException {
-    try {
-      var connection = getConnection();
-      readPlcData(connection, this);
+    try (PlcConnection plcConnection = connectionManager.getConnection(settings.connectionString())) {
+      if (!plcConnection.isConnected()) {
+        plcConnection.connect();
+      }
+      readPlcData(plcConnection);
     } catch (Exception e) {
       LOG.error("Error while reading from PLC with connection string {} ", settings.connectionString(), e);
     }
   }
 
-  private PlcConnection getConnection() throws PlcConnectionException {
-    if (plcConnection == null || !plcConnection.isConnected()) {
-      this.plcConnection = connectionManager.getConnection(settings.connectionString());
-    }
-    return this.plcConnection;
-  }
-
-  private void readPlcData(PlcConnection plcConnection, PlcReadResponseHandler handler) {
+  private void readPlcData(PlcConnection plcConnection)
+      throws ExecutionException, InterruptedException, TimeoutException {
     var readRequest = requestProvider.makeReadRequest(plcConnection, settings.nodes());
-    CompletableFuture<? extends PlcReadResponse> asyncResponse = readRequest.execute();
-    asyncResponse.whenComplete(handler::onReadResult);
+    var response = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);
+    var event = eventGenerator.makeEvent(response);
+    collector.collect(event);
   }
 
   @Override
   public IPollingSettings getPollingInterval() {
     return PollingSettings.from(TimeUnit.MILLISECONDS, settings.pollingInterval());
-  }
-
-  @Override
-  public void onReadResult(PlcReadResponse response, Throwable throwable) {
-    if (throwable != null) {
-      LOG.error(throwable.getMessage());
-    } else {
-      var event = eventGenerator.makeEvent(response);
-      collector.collect(event);
-    }
-  }
-
-  public void closeConnection() throws Exception {
-    if (this.plcConnection != null && this.plcConnection.isConnected()) {
-      this.plcConnection.close();
-    }
   }
 }
