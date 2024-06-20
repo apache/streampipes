@@ -21,6 +21,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+# [0.95.1]
+
+## What's Changed
+
+### Bug fixes
+
+* [#2944](https://github.com/apache/streampipes/issues/2944)]: Fix S7 PLC connection issue
+
 # [0.95.0]
 
 ## What's Changed
