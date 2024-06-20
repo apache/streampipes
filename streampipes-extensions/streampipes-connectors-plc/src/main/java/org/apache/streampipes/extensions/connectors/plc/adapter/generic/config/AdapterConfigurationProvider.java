@@ -29,8 +29,8 @@ import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
+import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.PlcDriver;
-import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 
 import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.PLC_CODE_BLOCK;
 import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.PLC_IP;
@@ -46,7 +46,7 @@ public class AdapterConfigurationProvider {
 
 
   public IAdapterConfiguration makeConfig(PlcDriver driver,
-                                          CachedPlcConnectionManager connectionManager) {
+                                          PlcConnectionManager connectionManager) {
     var driverMetadata = driver.getMetadata();
     var appId = getAdapterAppId(driver);
     var adapterBuilder = AdapterConfigurationBuilder.create(

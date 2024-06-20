@@ -21,9 +21,9 @@ package org.apache.streampipes.extensions.connectors.plc.adapter;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.GenericPlc4xAdapter;
 
+import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.PlcDriverManager;
 import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
-import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,7 @@ public class GenericAdapterGenerator {
 
 
   public List<StreamPipesAdapter> makeAvailableAdapters(PlcDriverManager driverManager,
-                                                        CachedPlcConnectionManager connectionManager) {
+                                                        PlcConnectionManager connectionManager) {
     var adapters = new ArrayList<StreamPipesAdapter>();
     var protocolCodes = getDrivers(driverManager);
     protocolCodes

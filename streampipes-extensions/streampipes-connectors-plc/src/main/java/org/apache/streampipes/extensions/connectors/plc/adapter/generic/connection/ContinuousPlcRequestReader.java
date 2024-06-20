@@ -25,6 +25,7 @@ import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Pl
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 
 import org.apache.plc4x.java.api.PlcConnection;
+import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ public class ContinuousPlcRequestReader
 
   private final IEventCollector collector;
 
-  public ContinuousPlcRequestReader(CachedPlcConnectionManager connectionManager,
+  public ContinuousPlcRequestReader(PlcConnectionManager connectionManager,
                                     Plc4xConnectionSettings settings,
                                     PlcRequestProvider requestProvider,
                                     IEventCollector collector) {

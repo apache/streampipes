@@ -41,6 +41,7 @@ import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticP
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 
+import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.PlcDriver;
 import org.apache.plc4x.java.api.metadata.Option;
 import org.apache.plc4x.java.api.metadata.OptionMetadata;
@@ -60,10 +61,10 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
   private final EventSchemaProvider schemaProvider;
 
   private final PlcDriver driver;
-  private final CachedPlcConnectionManager connectionManager;
+  private final PlcConnectionManager connectionManager;
 
   public GenericPlc4xAdapter(PlcDriver driver,
-                             CachedPlcConnectionManager connectionManager) {
+                             PlcConnectionManager connectionManager) {
     this.requestProvider = new PlcRequestProvider();
     this.schemaProvider = new EventSchemaProvider();
     this.driver = driver;
