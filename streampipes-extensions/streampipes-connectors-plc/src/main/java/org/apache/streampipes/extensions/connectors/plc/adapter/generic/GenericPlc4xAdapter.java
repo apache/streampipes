@@ -28,12 +28,12 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeCont
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
+import org.apache.streampipes.extensions.connectors.plc.adapter.generic.config.AdapterConfigurationProvider;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.config.EventSchemaProvider;
+import org.apache.streampipes.extensions.connectors.plc.adapter.generic.config.MetadataOptionGenerator;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.ContinuousPlcRequestReader;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.OneTimePlcRequestReader;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.PlcRequestProvider;
-import org.apache.streampipes.extensions.connectors.plc.adapter.generic.config.AdapterConfigurationProvider;
-import org.apache.streampipes.extensions.connectors.plc.adapter.generic.config.MetadataOptionGenerator;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionExtractor;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -45,8 +45,7 @@ import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.PlcDriver;
 import org.apache.plc4x.java.api.metadata.Option;
 import org.apache.plc4x.java.api.metadata.OptionMetadata;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 
 import java.util.List;
 import java.util.function.Function;
@@ -56,9 +55,6 @@ import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.m
 import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.SUPPORTED_TRANSPORTS;
 
 public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeConfig {
-
-  private static final Logger LOG = LoggerFactory.getLogger(GenericPlc4xAdapter.class);
-
 
   private PullAdapterScheduler pullAdapterScheduler;
   private final PlcRequestProvider requestProvider;

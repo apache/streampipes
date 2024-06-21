@@ -94,10 +94,9 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
       """;
 
   private final PlcConnectionManager connectionManager;
+  private final PlcRequestProvider requestProvider;
 
   private PullAdapterScheduler pullAdapterScheduler;
-
-  private final PlcRequestProvider requestProvider;
 
   public Plc4xS7Adapter(PlcConnectionManager connectionManager) {
     this.requestProvider = new PlcRequestProvider();
