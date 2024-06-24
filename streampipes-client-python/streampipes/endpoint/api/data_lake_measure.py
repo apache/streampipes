@@ -316,12 +316,21 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         that the resource class of the resource container is
         the return type of the get endpoint.
         Therefore, this is only a temporary implementation and will be removed soon.
+
+        Returns
+        -------
+        [QueryResult][streampipes.model.resource.QueryResult]
         """
         return QueryResult
 
     @property
     def _container_cls(self) -> Type[ResourceContainer]:
-        """Defines the model container class the endpoint refers to."""
+        """Defines the model container class the endpoint refers to.
+        
+        Returns
+        -------
+        [DataLakeMeasures][streampipes.model.container.DataLakeMeasures]
+        """
         return DataLakeMeasures
 
     @property
@@ -350,7 +359,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
         Returns
         -------
-        measurement: DataLakeMeasures
+        measurement: QueryResult
             The specified data lake measure
 
         Examples
