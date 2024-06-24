@@ -71,11 +71,11 @@ class QueryResult(Resource):
 
     total: StrictInt
     headers: List[StrictStr]
-    all_data_series: List[DataSeries] = Field(alias="allDataSeries")
+    all_data_series: List[DataSeries]
     query_status: Literal["OK", "TOO_MUCH_DATA"] = Field(alias="spQueryStatus")
-    source_index: StrictInt = Field(alias="sourceIndex")
-    for_id: Optional[str] = Field(alias="forId")
-    last_timestamp: StrictInt = Field(alias="lastTimestamp")
+    source_index: StrictInt
+    for_id: Optional[str]
+    last_timestamp: StrictInt
 
     def to_pandas(self) -> pd.DataFrame:
         """Returns the data lake series in representation of a Pandas Dataframe.
