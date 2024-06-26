@@ -160,6 +160,7 @@
                         <configuration>
                             <mainClass>org.apache.streampipes.service.core.StreamPipesCoreApplication
                             </mainClass>
+                            <attach>false</attach>
                         </configuration>
                     </execution>
                 </executions>
