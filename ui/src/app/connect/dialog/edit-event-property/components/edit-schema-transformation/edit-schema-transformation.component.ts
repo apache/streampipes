@@ -31,6 +31,7 @@ import {
     SemanticType,
     SemanticTypesRestService,
 } from '@streampipes/platform-services';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'sp-edit-schema-transformation',
@@ -52,9 +53,12 @@ export class EditSchemaTransformationComponent implements OnInit {
     domainPropertyControl = new UntypedFormControl();
     semanticTypes: Observable<string[]>;
 
+    adapterIsInEditMode: boolean;
+
     constructor(
         private semanticTypesRestService: SemanticTypesRestService,
         private shepherdService: ShepherdService,
+        private router: Router,
     ) {}
 
     ngOnInit(): void {
@@ -68,6 +72,8 @@ export class EditSchemaTransformationComponent implements OnInit {
                     : [];
             }),
         );
+
+        this.adapterIsInEditMode = this.router.url.includes('connect/edit');
     }
 
     editTimestampDomainProperty(checked: boolean) {

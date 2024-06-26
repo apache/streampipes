@@ -19,15 +19,18 @@
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
+import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
+import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
+import { DataLakeBtns } from '../../support/utils/datalake/DataLakeBtns';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {
         // To set up test add a stream adapter that can be configured
         cy.initStreamPipesTest();
-        ConnectUtils.addMachineDataSimulator('simulator');
     });
 
     it('Successfully edit adapter', () => {
+        ConnectUtils.addMachineDataSimulator('simulator');
         const newAdapterName = 'Edited Adapter';
 
         ConnectUtils.goToConnect();
@@ -67,5 +70,48 @@ describe('Test Edit Adapter', () => {
         // Validate that name of adapter and data stream
         cy.dataCy('adapter-name').contains(newAdapterName);
         cy.get('.sp-dialog-content').contains(newAdapterName);
+    });
+
+    it('Successfully edit adapter with persistence pipeline', () => {
+        ConnectUtils.addMachineDataSimulator('simulator', true);
+
+        ConnectUtils.goToConnect();
+
+        // stop adapter and edit adapter
+        ConnectBtns.stopAdapter().click();
+        ConnectBtns.editAdapter().click();
+
+        // change data type of density to integer
+        ConnectBtns.nextBtn().click();
+        ConnectEventSchemaUtils.changePropertyDataType(
+            'density',
+            'Integer',
+            true,
+        );
+
+        ConnectUtils.storeAndStartEditedAdapter();
+
+        // Validate that the data is further persisted in the database by checking if the amount of events in the data lake changes
+        DataLakeUtils.goToDatalakeConfiguration();
+
+        DataLakeUtils.waitForCountingResults();
+
+        let initialValue;
+
+        DataLakeUtils.getDatalakeNumberOfEvents().then(value => {
+            initialValue = value;
+        });
+
+        DataLakeBtns.refreshDataLakeMeasures().click();
+
+        DataLakeUtils.waitForCountingResults();
+
+        DataLakeUtils.getDatalakeNumberOfEvents().then(newValue => {
+            // IMPORTANT: Currently we implemented a workaround by showing the user a warning message when the data type is changed.
+            // In the future, we need a migration mechanism to automatically change all the StreamPipes resources that are effected
+            // by the change. Once this is implemented the following line must be changed to .not.equal.
+            // The issue is tracked here: https://github.com/apache/streampipes/issues/2954
+            expect(newValue).equal(initialValue);
+        });
     });
 });

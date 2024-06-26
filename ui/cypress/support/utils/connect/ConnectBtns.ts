@@ -40,6 +40,18 @@ export class ConnectBtns {
         return cy.dataCy('store-edit-adapter');
     }
 
+    public static changeRuntimeType() {
+        return cy.dataCy('connect-change-runtime-type', { timeout: 10000 });
+    }
+
+    public static updateAndMigratePipelines() {
+        return cy.dataCy('btn-update-adapter-migrate-pipelines');
+    }
+
+    public static nextBtn() {
+        return cy.get('button').contains('Next').parent();
+    }
+
     // =====================  Adapter settings btns  ==========================
     public static adapterSettingsStartAdapter() {
         return cy.dataCy('adapter-settings-start-adapter-btn');
