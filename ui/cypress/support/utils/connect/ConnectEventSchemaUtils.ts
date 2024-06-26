@@ -111,37 +111,15 @@ export class ConnectEventSchemaUtils {
         toUnit: string,
     ) {
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
-        cy.dataCy('connect-schema-unit-from-dropdown').type(fromUnit);
-        cy.dataCy('connect-schema-unit-transform-btn').click();
-        cy.dataCy('connect-schema-unit-to-dropdown')
-            .click()
+        ConnectBtns.schemaUnitFromDropdown().type(fromUnit);
+        ConnectBtns.schemaUnitTransformBtn().click();
+        ConnectBtns.schemaUnitToDropdown().click();
+
+        ConnectBtns.schemaUnitToDropdown()
             .get('mat-option')
             .contains(toUnit)
             .click();
-        cy.dataCy('sp-save-edit-property').click();
-
-        cy.dataCy('edit-' + propertyName.toLowerCase(), {
-            timeout: 10000,
-        }).click({ force: true });
-
-        cy.dataCy('connect-schema-unit-from-dropdown').eq(0).clear();
-        cy.dataCy('connect-schema-unit-from-dropdown').eq(0).type(fromUnit);
-        cy.dataCy('connect-schema-unit-from-dropdown', {
-            timeout: 10000,
-        }).should('have.value', fromUnit);
-        //cy.dataCy("connect-schema-unit-transform-btn").click();
-        cy.dataCy('connect-schema-unit-to-dropdown')
-            .contains(toUnit)
-            .click({ force: true });
-        cy.dataCy('connect-schema-unit-to-dropdown', {
-            timeout: 10000,
-        }).contains(toUnit);
-
-        cy.dataCy('sp-save-edit-property', { timeout: 10000 }).should(
-            'have.length',
-            1,
-        );
-        cy.dataCy('sp-save-edit-property').click({ force: true });
+        ConnectBtns.saveEditProperty().click();
     }
 
     public static addStaticProperty(

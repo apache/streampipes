@@ -71,6 +71,26 @@ export class ConnectBtns {
 
     // ========================================================================
 
+    // =====================  Event Schema buttons  ==========================
+
+    public static schemaUnitFromDropdown() {
+        return cy.dataCy('connect-schema-unit-from-dropdown');
+    }
+
+    public static schemaUnitTransformBtn() {
+        return cy.dataCy('connect-schema-unit-transform-btn');
+    }
+
+    public static schemaUnitToDropdown() {
+        return cy.dataCy('connect-schema-unit-to-dropdown');
+    }
+
+    public static saveEditProperty() {
+        return cy.dataCy('sp-save-edit-property');
+    }
+
+    // ========================================================================
+
     // =====================  Format configurations  ==========================
 
     public static csvDelimiter() {
