@@ -32,7 +32,7 @@ jobs:
       - name: GoImports check
         working-directory: ./streampipes-client-go
         run: |
-          go install golang.org/x/tools/cmd/goimports
+          go install golang.org/x/tools/cmd/goimports@latest
           goimports -l .
       - name: Run unit-tests
         working-directory: ./streampipes-client-go
