@@ -19,16 +19,15 @@ package serializer
 
 import (
 	"encoding/json"
+
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/data_lake"
 
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/pipeline"
 
-
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/functions"
 
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/streampipes_user"
-
 
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/streampipes_version"
 )
@@ -101,7 +100,6 @@ func (d *StreamPipesVersionDeserializer) Unmarshal(data []byte) (interface{}, er
 	return dataSeries, nil
 }
 
-
 type ResponseMessageDeserializer struct{}
 
 func NewResponseMessageDeserializer() *ResponseMessageDeserializer {
@@ -159,7 +157,7 @@ func (d *DataLakeDashboardsDeserializer) Unmarshal(data []byte) (interface{}, er
 	if err != nil {
 		return nil, err
 	}
-  
+
 	return dashborad, nil
 }
 
@@ -236,7 +234,7 @@ func (p *FunctionDefinitionsDeserializer) Unmarshal(data []byte) (interface{}, e
 		return nil, err
 	}
 	return functionDefinitions, nil
-  
+
 }
 
 type ShortUserInfosDeserializer struct{}

@@ -19,9 +19,10 @@ package data_lake
 
 import (
 	"fmt"
-	"github.com/apache/streampipes/streampipes-client-go/streampipes/model"
 	"log"
 	"strings"
+
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/model"
 )
 
 type DataSeries struct {
