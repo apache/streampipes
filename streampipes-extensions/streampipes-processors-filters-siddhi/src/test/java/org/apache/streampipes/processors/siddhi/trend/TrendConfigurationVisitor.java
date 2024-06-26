@@ -22,14 +22,12 @@ import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty;
-import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
 import org.apache.streampipes.model.staticproperty.FileStaticProperty;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
 import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
@@ -73,11 +71,6 @@ public class TrendConfigurationVisitor implements StaticPropertyVisitor {
 
   @Override
   public void visit(ColorPickerStaticProperty colorPickerStaticProperty) {
-
-  }
-
-  @Override
-  public void visit(DomainStaticProperty domainStaticProperty) {
 
   }
 
@@ -137,11 +130,6 @@ public class TrendConfigurationVisitor implements StaticPropertyVisitor {
 
   @Override
   public void visit(StaticPropertyGroup staticPropertyGroup) {
-
-  }
-
-  @Override
-  public void visit(RemoteOneOfStaticProperty remoteOneOfStaticProperty) {
 
   }
 
