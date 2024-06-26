@@ -70,7 +70,7 @@ describe('Test Edit Adapter and Pipeline', () => {
         cy.dataCy('sp-connect-adapter-edit-warning', {
             timeout: 60000,
         }).should('be.visible');
-        cy.dataCy('btn-update-adapter-migrate-pipelines').click();
+        ConnectBtns.updateAndMigratePipelines().click();
         ConnectUtils.closeAdapterPreview();
         cy.wait(1000);
 

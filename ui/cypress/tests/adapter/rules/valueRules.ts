@@ -18,7 +18,7 @@
 
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
-import { ConnectEventSchemaUtils } from '../../../support/utils/ConnectEventSchemaUtils';
+import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
 
 describe('Connect value rule transformations', () => {
     beforeEach('Setup Test', () => {

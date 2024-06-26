@@ -18,7 +18,7 @@
 
 import { StaticPropertyUtils } from '../StaticPropertyUtils';
 import { AdapterInput } from '../../model/AdapterInput';
-import { ConnectEventSchemaUtils } from '../ConnectEventSchemaUtils';
+import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
 import { DataLakeUtils } from '../datalake/DataLakeUtils';
 import { ConnectBtns } from './ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
@@ -206,6 +206,14 @@ export class ConnectUtils {
             'have.length',
             0,
         );
+    }
+
+    public static storeAndStartEditedAdapter() {
+        ConnectUtils.finishEventSchemaConfiguration();
+        ConnectBtns.storeEditAdapter().click();
+        ConnectBtns.updateAndMigratePipelines().click();
+        ConnectUtils.closeAdapterPreview();
+        ConnectBtns.startAdapter().click();
     }
 
     public static deleteAdapterAndAssociatedPipelines(switchUserCheck = false) {

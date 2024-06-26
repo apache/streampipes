@@ -1,20 +1,22 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
  */
+
+import { ConnectBtns } from './ConnectBtns';
 
 export class ConnectEventSchemaUtils {
     public static markPropertyAsDimension(propertyName: string) {
@@ -198,7 +200,7 @@ export class ConnectEventSchemaUtils {
         dataType: string,
     ) {
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
-        cy.dataCy('connect-change-runtime-type')
+        ConnectBtns.changeRuntimeType()
             .click()
             .get('mat-option')
             .contains(dataType)
@@ -208,7 +210,7 @@ export class ConnectEventSchemaUtils {
         cy.dataCy('edit-' + propertyName, { timeout: 10000 }).click({
             force: true,
         });
-        cy.dataCy('connect-change-runtime-type', { timeout: 10000 }).contains(
+        ConnectBtns.changeRuntimeType().contains(
             dataType,
         );
         cy.wait(1000);

@@ -17,7 +17,7 @@
  */
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
-import { ConnectEventSchemaUtils } from '../../../support/utils/ConnectEventSchemaUtils';
+import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
 import { AdapterBuilder } from '../../../support/builder/AdapterBuilder';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
 
