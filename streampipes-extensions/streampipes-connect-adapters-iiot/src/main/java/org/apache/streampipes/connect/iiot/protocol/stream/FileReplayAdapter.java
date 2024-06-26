@@ -313,7 +313,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
     try {
       return FileProtocolUtils.getFileInputStream(selectedFileName);
     } catch (IOException e) {
-      throw new AdapterException("Could not find file: " + selectedFileName);
+      throw new AdapterException("Could not find file: " + selectedFileName, e);
     }
   }
 }
