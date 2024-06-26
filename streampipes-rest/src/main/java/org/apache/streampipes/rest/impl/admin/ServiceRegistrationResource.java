@@ -29,6 +29,7 @@ import org.apache.streampipes.storage.api.CRUDStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +55,7 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<SpServiceRegistration>> getRegisteredServices() {
-    return ok(extensionsServiceStorage.getAll());
+    return ok(extensionsServiceStorage.findAll());
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

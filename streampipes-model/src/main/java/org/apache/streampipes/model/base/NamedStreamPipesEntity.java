@@ -20,12 +20,12 @@ package org.apache.streampipes.model.base;
 
 
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.api.Storable;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.util.ServiceDefinitionUtil;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.SerializedName;
 
@@ -40,13 +40,11 @@ import java.util.Objects;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @TsModel
-public abstract class NamedStreamPipesEntity implements Serializable {
+public abstract class NamedStreamPipesEntity implements Storable, Serializable {
 
   private static final long serialVersionUID = -98951691820519795L;
 
   protected @SerializedName("_id") String elementId;
-
-  @JsonProperty("_rev")
   protected @SerializedName("_rev") String rev;
 
   protected String dom;
@@ -172,18 +170,22 @@ public abstract class NamedStreamPipesEntity implements Serializable {
     this.internallyManaged = internallyManaged;
   }
 
+  @Override
   public String getRev() {
     return rev;
   }
 
+  @Override
   public void setRev(String rev) {
     this.rev = rev;
   }
 
+  @Override
   public String getElementId() {
     return elementId;
   }
 
+  @Override
   public void setElementId(String elementId) {
     this.elementId = elementId;
   }

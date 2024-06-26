@@ -22,16 +22,11 @@ import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class FileMetadataStorageImpl extends AbstractDao<FileMetadata> implements
     IFileMetadataStorage {
-
-  Logger logger = LoggerFactory.getLogger(NotificationStorageImpl.class);
 
   public FileMetadataStorageImpl() {
     super(Utils::getCouchDbFileMetadataClient, FileMetadata.class);

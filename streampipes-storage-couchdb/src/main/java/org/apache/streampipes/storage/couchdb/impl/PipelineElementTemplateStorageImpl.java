@@ -33,16 +33,6 @@ public class PipelineElementTemplateStorageImpl extends AbstractDao<PipelineElem
   }
 
   @Override
-  public List<PipelineElementTemplate> getAll() {
-    return findAll();
-  }
-
-  @Override
-  public void createElement(PipelineElementTemplate element) {
-    persist(element);
-  }
-
-  @Override
   public PipelineElementTemplate getElementById(String s) {
     return find(s).orElseThrow(RuntimeException::new);
   }
@@ -60,7 +50,7 @@ public class PipelineElementTemplateStorageImpl extends AbstractDao<PipelineElem
 
   @Override
   public List<PipelineElementTemplate> getPipelineElementTemplatesforAppId(String appId) {
-    return getAll()
+    return this.findAll()
         .stream()
         .filter(template -> template.getBasePipelineElementAppId().equals(appId))
         .collect(Collectors.toList());

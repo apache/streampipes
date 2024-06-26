@@ -74,7 +74,7 @@ public class PostStartupTask implements Runnable {
 
   private void performAdapterAssetUpdate() {
     var installedAppIds = CouchDbStorageManager.INSTANCE.getExtensionsServiceStorage()
-                                                        .getAll()
+                                                        .findAll()
                                                         .stream()
                                                         .flatMap(config -> config.getTags()
                                                                                  .stream())

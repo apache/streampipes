@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.model.dashboard;
 
+import org.apache.streampipes.model.api.Storable;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.google.gson.annotations.SerializedName;
 
@@ -28,31 +28,35 @@ import com.google.gson.annotations.SerializedName;
     @JsonSubTypes.Type(DashboardWidgetModel.class),
     @JsonSubTypes.Type(DataExplorerWidgetModel.class)
 })
-public abstract class DashboardEntity {
+public abstract class DashboardEntity implements Storable {
 
-  @JsonProperty("_id")
-  private @SerializedName("_id") String id;
+  @SerializedName("_id")
+  private String elementId;
 
-  @JsonProperty("_rev")
-  private @SerializedName("_rev") String rev;
+  @SerializedName("_rev")
+  private String rev;
 
   public DashboardEntity() {
     super();
   }
 
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
+  @Override
   public String getRev() {
     return rev;
   }
 
+  @Override
   public void setRev(String rev) {
     this.rev = rev;
+  }
+
+  @Override
+  public String getElementId() {
+    return elementId;
+  }
+
+  @Override
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
   }
 }

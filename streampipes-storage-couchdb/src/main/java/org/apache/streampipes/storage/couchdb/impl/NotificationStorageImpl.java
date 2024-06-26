@@ -27,8 +27,6 @@ import org.apache.streampipes.storage.couchdb.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.lightcouch.View;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,8 +34,6 @@ import java.util.stream.Collectors;
 
 public class NotificationStorageImpl extends AbstractDao<Notification> implements
     INotificationStorage {
-
-  Logger logger = LoggerFactory.getLogger(NotificationStorageImpl.class);
 
   public NotificationStorageImpl() {
     super(Utils::getCouchDbNotificationClient, Notification.class);
@@ -137,7 +133,7 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
             .group(true)
             .query(JsonObject.class);
 
-    if (count.size() > 0) {
+    if (!count.isEmpty()) {
       Integer countValue = count.get(0).get("value").getAsInt();
       return new NotificationCount(countValue);
     } else {

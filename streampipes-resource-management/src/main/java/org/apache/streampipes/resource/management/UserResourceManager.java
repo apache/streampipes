@@ -143,7 +143,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   private void storeActivationCode(String username,
                                    String activationCode) throws IOException {
     UserActivationToken token = UserActivationToken.create(activationCode, username);
-    getUserActivationTokenStorage().createElement(token);
+    getUserActivationTokenStorage().persist(token);
     new MailSender().sendAccountActivationMail(username, activationCode);
   }
 
@@ -179,7 +179,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
   private void storeRecoveryCode(String username,
                                  String recoveryCode) {
-    getPasswordRecoveryTokenStorage().createElement(PasswordRecoveryToken.create(recoveryCode, username));
+    getPasswordRecoveryTokenStorage().persist(PasswordRecoveryToken.create(recoveryCode, username));
   }
 
   private IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage() {

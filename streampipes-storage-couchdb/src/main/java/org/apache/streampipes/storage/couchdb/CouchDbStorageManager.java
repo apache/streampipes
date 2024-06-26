@@ -17,15 +17,15 @@
  */
 package org.apache.streampipes.storage.couchdb;
 
+import org.apache.streampipes.model.dashboard.DashboardModel;
+import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IAssetDashboardStorage;
-import org.apache.streampipes.storage.api.IDashboardStorage;
-import org.apache.streampipes.storage.api.IDashboardWidgetStorage;
-import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
-import org.apache.streampipes.storage.api.IDataLakeStorage;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.IDataSinkStorage;
 import org.apache.streampipes.storage.api.IDataStreamStorage;
@@ -51,14 +51,10 @@ import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AssetDashboardStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ConnectionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.CoreConfigurationStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.DashboardStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.DashboardWidgetStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.DataExplorerDashboardStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.DataExplorerWidgetStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.DataLakeStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataProcessorStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataSinkStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataStreamStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.DefaultCrudStorage;
 import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceConfigStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.FileMetadataStorageImpl;
@@ -75,6 +71,7 @@ import org.apache.streampipes.storage.couchdb.impl.PipelineStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserActivationTokenImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserStorage;
+import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public enum CouchDbStorageManager implements INoSqlStorage {
 
@@ -136,8 +133,11 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public IDataLakeStorage getDataLakeStorage() {
-    return new DataLakeStorageImpl();
+  public CRUDStorage<String, DataLakeMeasure> getDataLakeStorage() {
+    return new DefaultCrudStorage<>(
+        () -> Utils.getCouchDbGsonClient("data-lake"),
+        DataLakeMeasure.class
+    );
   }
 
   @Override
@@ -146,23 +146,35 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public IDashboardStorage getDashboardStorage() {
-    return new DashboardStorageImpl();
+  public CRUDStorage<String, DashboardModel> getDashboardStorage() {
+    return new DefaultCrudStorage<>(
+        () -> Utils.getCouchDbGsonClient("dashboard"),
+        DashboardModel.class
+    );
   }
 
   @Override
-  public IDashboardStorage getDataExplorerDashboardStorage() {
-    return new DataExplorerDashboardStorageImpl();
+  public CRUDStorage<String, DashboardModel> getDataExplorerDashboardStorage() {
+    return new DefaultCrudStorage<>(
+        () -> Utils.getCouchDbGsonClient("dataexplorerdashboard"),
+        DashboardModel.class
+    );
   }
 
   @Override
-  public IDashboardWidgetStorage getDashboardWidgetStorage() {
-    return new DashboardWidgetStorageImpl();
+  public CRUDStorage<String, DashboardWidgetModel> getDashboardWidgetStorage() {
+    return new DefaultCrudStorage<>(
+        () -> Utils.getCouchDbGsonClient("dashboardwidget"),
+        DashboardWidgetModel.class
+    );
   }
 
   @Override
-  public IDataExplorerWidgetStorage getDataExplorerWidgetStorage() {
-    return new DataExplorerWidgetStorageImpl();
+  public CRUDStorage<String, DataExplorerWidgetModel> getDataExplorerWidgetStorage() {
+    return new DefaultCrudStorage<>(
+        () -> Utils.getCouchDbGsonClient("dataexplorerwidget"),
+        DataExplorerWidgetModel.class
+    );
   }
 
   @Override

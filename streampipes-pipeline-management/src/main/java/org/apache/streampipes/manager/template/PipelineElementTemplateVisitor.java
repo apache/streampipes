@@ -220,7 +220,7 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
   }
 
   private boolean hasKey(StaticProperty sp) {
-    return configs.containsKey(sp.getInternalName());
+    return configs.getOrDefault(sp.getInternalName(), null) != null;
   }
 
   private String getAsString(StaticProperty sp) {
