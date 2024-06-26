@@ -17,8 +17,7 @@
  */
 
 export class DataLakeBtns {
-
     public static refreshDataLakeMeasures() {
         return cy.dataCy('refresh-data-lake-measures');
     }
- }
+}

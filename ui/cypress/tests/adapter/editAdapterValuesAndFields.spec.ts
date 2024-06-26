@@ -83,10 +83,7 @@ describe('Test Edit Adapter', () => {
             'have.value',
             'http://schema.org/Numbers',
         );
-        ConnectBtns.changeRuntimeType().should(
-            'include.text',
-            'Double',
-        );
+        ConnectBtns.changeRuntimeType().should('include.text', 'Double');
         cy.dataCy('connect-schema-correction-value').should('have.value', '2');
         cy.dataCy('connect-schema-correction-operator').should(
             'include.text',

@@ -198,8 +198,12 @@ export class ConnectEventSchemaUtils {
     public static changePropertyDataType(
         propertyName: string,
         dataType: string,
+        warningIsShown: boolean = false,
     ) {
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
+
+        this.checkIfWarningIsShown(warningIsShown);
+
         ConnectBtns.changeRuntimeType()
             .click()
             .get('mat-option')
@@ -210,11 +214,17 @@ export class ConnectEventSchemaUtils {
         cy.dataCy('edit-' + propertyName, { timeout: 10000 }).click({
             force: true,
         });
-        ConnectBtns.changeRuntimeType().contains(
-            dataType,
-        );
+        ConnectBtns.changeRuntimeType().contains(dataType);
         cy.wait(1000);
         cy.dataCy('sp-save-edit-property').click();
+    }
+
+    private static checkIfWarningIsShown(warningIsShown: boolean) {
+        if (warningIsShown) {
+            cy.dataCy('warning-change-data-type').should('be.visible');
+        } else {
+            cy.dataCy('warning-change-data-type').should('not.exist');
+        }
     }
 
     public static eventSchemaNextBtnDisabled() {

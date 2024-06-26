@@ -52,7 +52,6 @@ export class ConnectBtns {
         return cy.get('button').contains('Next').parent();
     }
 
-
     // =====================  Adapter settings btns  ==========================
     public static adapterSettingsStartAdapter() {
         return cy.dataCy('adapter-settings-start-adapter-btn');

@@ -83,7 +83,11 @@ describe('Test Edit Adapter', () => {
 
         // change data type of density to integer
         ConnectBtns.nextBtn().click();
-        ConnectEventSchemaUtils.changePropertyDataType('density', 'Integer');
+        ConnectEventSchemaUtils.changePropertyDataType(
+            'density',
+            'Integer',
+            true,
+        );
 
         ConnectUtils.storeAndStartEditedAdapter();
 
@@ -94,7 +98,7 @@ describe('Test Edit Adapter', () => {
 
         let initialValue;
 
-        DataLakeUtils.getDatalakeNumberOfEvents().then((value) => {
+        DataLakeUtils.getDatalakeNumberOfEvents().then(value => {
             initialValue = value;
         });
 
@@ -102,13 +106,12 @@ describe('Test Edit Adapter', () => {
 
         DataLakeUtils.waitForCountingResults();
 
-        DataLakeUtils.getDatalakeNumberOfEvents().then((newValue) => {
+        DataLakeUtils.getDatalakeNumberOfEvents().then(newValue => {
             // IMPORTANT: Currently we implemented a workaround by showing the user a warning message when the data type is changed.
             // In the future, we need a migration mechanism to automatically change all the StreamPipes resources that are effected
             // by the change. Once this is implemented the following line must be changed to .not.equal.
             // The issue is tracked here: https://github.com/apache/streampipes/issues/2954
             expect(newValue).equal(initialValue);
         });
-
     });
 });
