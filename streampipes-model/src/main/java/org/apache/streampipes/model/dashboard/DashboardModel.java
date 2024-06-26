@@ -21,6 +21,7 @@ package org.apache.streampipes.model.dashboard;
 import org.apache.streampipes.model.api.Storable;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
@@ -30,9 +31,11 @@ import java.util.Map;
 @TsModel
 public class DashboardModel implements Storable {
 
+  @JsonAlias("_id")
   @SerializedName("_id")
   private String elementId;
 
+  @JsonAlias("_rev")
   @SerializedName("_rev")
   private String rev;
 

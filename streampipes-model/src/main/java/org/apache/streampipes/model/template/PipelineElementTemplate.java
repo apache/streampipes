@@ -20,6 +20,7 @@ package org.apache.streampipes.model.template;
 import org.apache.streampipes.model.api.Storable;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
@@ -30,7 +31,10 @@ public class PipelineElementTemplate implements Storable {
 
   Map<String, PipelineElementTemplateConfig> templateConfigs;
 
+  @JsonAlias("_id")
   private @SerializedName("_id") String elementId;
+
+  @JsonAlias("_rev")
   private @SerializedName("_rev") String rev;
   private String templateName;
   private String templateDescription;

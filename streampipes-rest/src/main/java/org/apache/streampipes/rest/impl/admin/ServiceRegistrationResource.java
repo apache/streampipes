@@ -44,7 +44,7 @@ import java.util.List;
 @RequestMapping("/api/v2/extensions-services")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource {
-  
+
   private final CRUDStorage<String, SpServiceRegistration> extensionsServiceStorage =
       getNoSqlStorage().getExtensionsServiceStorage();
 

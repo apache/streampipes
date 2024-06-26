@@ -21,6 +21,7 @@ package org.apache.streampipes.model.dashboard;
 import org.apache.streampipes.model.api.Storable;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.google.gson.annotations.SerializedName;
 
@@ -30,9 +31,11 @@ import com.google.gson.annotations.SerializedName;
 })
 public abstract class DashboardEntity implements Storable {
 
+  @JsonAlias("_id")
   @SerializedName("_id")
   private String elementId;
 
+  @JsonAlias("_rev")
   @SerializedName("_rev")
   private String rev;
 

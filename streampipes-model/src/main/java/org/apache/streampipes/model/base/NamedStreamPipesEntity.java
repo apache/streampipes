@@ -26,6 +26,7 @@ import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.util.ServiceDefinitionUtil;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.SerializedName;
 
@@ -45,6 +46,8 @@ public abstract class NamedStreamPipesEntity implements Storable, Serializable {
   private static final long serialVersionUID = -98951691820519795L;
 
   protected @SerializedName("_id") String elementId;
+
+  @JsonAlias("_rev")
   protected @SerializedName("_rev") String rev;
 
   protected String dom;

@@ -23,6 +23,7 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsIgnore;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.SerializedName;
@@ -36,6 +37,8 @@ public class DataLakeMeasure implements Storable {
   private static final String STREAM_PREFIX_DELIMITER = "::";
 
   protected @SerializedName("_id") String elementId;
+
+  @JsonAlias("_rev")
   private @SerializedName("_rev") String rev;
 
   private String measureName;
