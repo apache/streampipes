@@ -57,23 +57,13 @@ public class CouchDbInstallationStep extends InstallationStep {
 
   private void createDatabases() {
     try {
-      // Set up couchdb internal databases
-      Utils.getCouchDbInternalUsersClient();
-      Utils.getCouchDbReplicatorClient();
-      Utils.getCouchDbGlobalChangesClient();
-
       // Set up streampipes internal databases
       Utils.getCouchDbUserClient();
-      Utils.getCouchDbMonitoringClient();
       Utils.getCouchDbPipelineClient();
       Utils.getCouchDbConnectionClient();
       Utils.getCouchDbNotificationClient();
       Utils.getCouchDbPipelineCategoriesClient();
-      Utils.getCouchDbVisualizationClient();
-      Utils.getCouchDbDashboardClient();
-      Utils.getCouchDbDashboardWidgetClient();
       Utils.getCouchDbLabelClient();
-      Utils.getCouchDbCategoryClient();
 
       logSuccess(getTitle());
     } catch (Exception e) {

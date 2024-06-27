@@ -33,16 +33,6 @@ public class DataProcessorStorageImpl extends AbstractDao<DataProcessorDescripti
   }
 
   @Override
-  public List<DataProcessorDescription> getAll() {
-    return findAll();
-  }
-
-  @Override
-  public void createElement(DataProcessorDescription element) {
-    persist(element);
-  }
-
-  @Override
   public DataProcessorDescription getElementById(String s) {
     return findWithNullIfEmpty(s);
   }
@@ -61,7 +51,7 @@ public class DataProcessorStorageImpl extends AbstractDao<DataProcessorDescripti
 
   @Override
   public DataProcessorDescription getFirstDataProcessorByAppId(String appId) {
-    return getAll()
+    return this.findAll()
         .stream()
         .filter(p -> p.getAppId().equals(appId))
         .findFirst()
@@ -70,7 +60,7 @@ public class DataProcessorStorageImpl extends AbstractDao<DataProcessorDescripti
 
   @Override
   public List<DataProcessorDescription> getDataProcessorsByAppId(String appId) {
-    return getAll()
+    return this.findAll()
             .stream()
             .filter(p -> p.getAppId().equals(appId))
             .toList();

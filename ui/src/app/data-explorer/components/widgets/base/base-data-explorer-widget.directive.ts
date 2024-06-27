@@ -155,7 +155,8 @@ export abstract class BaseDataExplorerWidgetDirective<
             this.widgetConfigurationService.configurationChangedSubject.subscribe(
                 refreshMessage => {
                     if (
-                        refreshMessage.widgetId === this.dataExplorerWidget._id
+                        refreshMessage.widgetId ===
+                        this.dataExplorerWidget.elementId
                     ) {
                         if (refreshMessage.refreshData) {
                             const newFieldsProvider =
@@ -191,7 +192,10 @@ export abstract class BaseDataExplorerWidgetDirective<
         if (!this.previewMode) {
             this.resizeSub = this.resizeService.resizeSubject.subscribe(
                 info => {
-                    if (info.gridsterItem.id === this.dataExplorerWidget._id) {
+                    if (
+                        info.gridsterItem.id ===
+                        this.dataExplorerWidget.elementId
+                    ) {
                         this.onResize(
                             this.gridsterItemComponent.width - this.widthOffset,
                             this.gridsterItemComponent.height -

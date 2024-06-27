@@ -19,28 +19,24 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
 import org.apache.streampipes.storage.api.IPasswordRecoveryTokenStorage;
-import org.apache.streampipes.storage.couchdb.dao.CrudDao;
+import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 
-public class PasswordRecoveryTokenImpl extends CrudDao implements IPasswordRecoveryTokenStorage {
+public class PasswordRecoveryTokenImpl extends AbstractDao<PasswordRecoveryToken>
+    implements IPasswordRecoveryTokenStorage {
 
   private static final String viewName = "users/password-recovery";
 
   public PasswordRecoveryTokenImpl() {
-    super(Utils::getCouchDbUserClient);
+    super(Utils::getCouchDbUserClient, PasswordRecoveryToken.class);
   }
 
 
   @Override
-  public List<PasswordRecoveryToken> getAll() {
+  public List<PasswordRecoveryToken> findAll() {
     return findAll(viewName, PasswordRecoveryToken.class);
-  }
-
-  @Override
-  public void createElement(PasswordRecoveryToken element) {
-    persist(element, PasswordRecoveryToken.class);
   }
 
   @Override

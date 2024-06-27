@@ -22,23 +22,11 @@ import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import java.util.List;
-
 public class PipelineCanvasMetadataStorageImpl extends AbstractDao<PipelineCanvasMetadata>
     implements IPipelineCanvasMetadataStorage {
 
   public PipelineCanvasMetadataStorageImpl() {
     super(Utils::getCouchDbPipelineCanvasMetadataClient, PipelineCanvasMetadata.class);
-  }
-
-  @Override
-  public List<PipelineCanvasMetadata> getAll() {
-    return findAll();
-  }
-
-  @Override
-  public void createElement(PipelineCanvasMetadata element) {
-    persist(element);
   }
 
   @Override

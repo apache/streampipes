@@ -32,16 +32,6 @@ public class DataSinkStorageImpl extends AbstractDao<DataSinkDescription> implem
   }
 
   @Override
-  public List<DataSinkDescription> getAll() {
-    return findAll();
-  }
-
-  @Override
-  public void createElement(DataSinkDescription element) {
-    persist(element);
-  }
-
-  @Override
   public DataSinkDescription getElementById(String s) {
     return findWithNullIfEmpty(s);
   }
@@ -60,7 +50,7 @@ public class DataSinkStorageImpl extends AbstractDao<DataSinkDescription> implem
 
   @Override
   public DataSinkDescription getFirstDataSinkByAppId(String appId) {
-    return getAll()
+    return this.findAll()
         .stream()
         .filter(s -> s.getAppId().equals(appId))
         .findFirst()
@@ -69,7 +59,7 @@ public class DataSinkStorageImpl extends AbstractDao<DataSinkDescription> implem
 
   @Override
   public List<DataSinkDescription> getDataSinksByAppId(String appId) {
-    return getAll()
+    return this.findAll()
             .stream()
             .filter(s -> s.getAppId().equals(appId))
             .toList();

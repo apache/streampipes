@@ -41,7 +41,7 @@ export class SharedDatalakeRestService {
         dashboard: Dashboard,
     ): Observable<Dashboard> {
         return this.http
-            .put(dashboardUrl + '/' + dashboard._id, dashboard)
+            .put(dashboardUrl + '/' + dashboard.elementId, dashboard)
             .pipe(
                 map(data => {
                     return data as Dashboard;
@@ -53,7 +53,7 @@ export class SharedDatalakeRestService {
         dashboardUrl: string,
         dashboard: Dashboard,
     ): Observable<any> {
-        return this.http.delete(dashboardUrl + '/' + dashboard._id);
+        return this.http.delete(dashboardUrl + '/' + dashboard.elementId);
     }
 
     saveDashboard(dashboardUrl: string, dashboard: Dashboard): Observable<any> {

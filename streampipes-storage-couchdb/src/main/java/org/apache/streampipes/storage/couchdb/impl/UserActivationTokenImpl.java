@@ -19,27 +19,22 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
-import org.apache.streampipes.storage.couchdb.dao.CrudDao;
+import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 
-public class UserActivationTokenImpl extends CrudDao implements IUserActivationTokenStorage {
+public class UserActivationTokenImpl extends AbstractDao<UserActivationToken> implements IUserActivationTokenStorage {
 
   private static final String viewName = "users/user-activation";
 
   public UserActivationTokenImpl() {
-    super(Utils::getCouchDbUserClient);
+    super(Utils::getCouchDbUserClient, UserActivationToken.class);
   }
 
   @Override
-  public List<UserActivationToken> getAll() {
+  public List<UserActivationToken> findAll() {
     return findAll(viewName, UserActivationToken.class);
-  }
-
-  @Override
-  public void createElement(UserActivationToken element) {
-    persist(element, UserActivationToken.class);
   }
 
   @Override

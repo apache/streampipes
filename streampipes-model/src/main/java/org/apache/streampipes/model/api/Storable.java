@@ -16,21 +16,15 @@
  *
  */
 
-package org.apache.streampipes.storage.api;
+package org.apache.streampipes.model.api;
 
-import org.apache.streampipes.model.dashboard.DashboardModel;
+public interface Storable {
 
-import java.util.List;
+  String getRev();
 
-public interface IDashboardStorage {
+  void setRev(String rev);
 
-  List<DashboardModel> getAllDashboards();
+  String getElementId();
 
-  void storeDashboard(DashboardModel dashboardModel);
-
-  void updateDashboard(DashboardModel dashboardModel);
-
-  DashboardModel getDashboard(String dashboardId);
-
-  void deleteDashboard(String dashboardId);
+  void setElementId(String elementId);
 }

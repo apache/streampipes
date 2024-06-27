@@ -50,7 +50,7 @@ public class ServiceConfigurationResource extends AbstractAuthGuardedRestResourc
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<SpServiceConfiguration>> getAllServiceConfigurations() {
-    return ok(extensionsServicesConfigStorage.getAll());
+    return ok(extensionsServicesConfigStorage.findAll());
   }
 
   @GetMapping(path = "{serviceGroup}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -67,7 +67,7 @@ public class ServiceConfigurationResource extends AbstractAuthGuardedRestResourc
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> registerServiceConfiguration(@RequestBody SpServiceConfiguration serviceConfiguration) {
     if (extensionsServicesConfigStorage.getElementById(serviceConfiguration.getServiceGroup()) == null) {
-      extensionsServicesConfigStorage.createElement(serviceConfiguration);
+      extensionsServicesConfigStorage.persist(serviceConfiguration);
       return created();
     } else {
       return ok();

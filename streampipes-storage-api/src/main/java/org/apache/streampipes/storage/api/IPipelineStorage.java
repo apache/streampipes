@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.model.VirtualSensor;
 import org.apache.streampipes.model.pipeline.Pipeline;
 
 import java.util.List;
@@ -29,8 +28,6 @@ public interface IPipelineStorage {
 
   List<Pipeline> getAllPipelines();
 
-  List<Pipeline> getSystemPipelines();
-
   void storePipeline(Pipeline pipeline);
 
   void updatePipeline(Pipeline pipeline);
@@ -40,8 +37,4 @@ public interface IPipelineStorage {
   void deletePipeline(String pipelineId);
 
   void store(Pipeline object);
-
-  void storeVirtualSensor(String username, VirtualSensor virtualSensor);
-
-  List<VirtualSensor> getVirtualSensors(String username);
 }
