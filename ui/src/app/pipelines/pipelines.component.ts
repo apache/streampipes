@@ -21,7 +21,6 @@ import {
     FunctionId,
     FunctionsService,
     Pipeline,
-    PipelineCategory,
     PipelineService,
 } from '@streampipes/platform-services';
 import {
