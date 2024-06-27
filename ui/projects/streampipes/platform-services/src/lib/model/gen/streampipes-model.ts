@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-06-26 16:51:04.
+// Generated using typescript-generator version 3.2.1263 on 2024-06-27 13:13:44.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -378,7 +378,6 @@ export class StaticProperty {
         | 'org.apache.streampipes.model.staticproperty.CodeInputStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.CollectionStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.DomainStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.FileStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.FreeTextStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.MatchingStaticProperty'
@@ -437,8 +436,6 @@ export class StaticProperty {
                 return CollectionStaticProperty.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty':
                 return ColorPickerStaticProperty.fromData(data);
-            case 'org.apache.streampipes.model.staticproperty.DomainStaticProperty':
-                return DomainStaticProperty.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.FileStaticProperty':
                 return FileStaticProperty.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.FreeTextStaticProperty':
@@ -1338,28 +1335,6 @@ export class DeleteRuleDescription extends SchemaTransformationRuleDescription {
         const instance = target || new DeleteRuleDescription();
         super.fromData(data, instance);
         instance.runtimeKey = data.runtimeKey;
-        return instance;
-    }
-}
-
-export class DomainStaticProperty extends StaticProperty {
-    '@class': 'org.apache.streampipes.model.staticproperty.DomainStaticProperty';
-    'requiredClass': string;
-    'supportedProperties': SupportedProperty[];
-
-    static 'fromData'(
-        data: DomainStaticProperty,
-        target?: DomainStaticProperty,
-    ): DomainStaticProperty {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new DomainStaticProperty();
-        super.fromData(data, instance);
-        instance.requiredClass = data.requiredClass;
-        instance.supportedProperties = __getCopyArrayFn(
-            SupportedProperty.fromData,
-        )(data.supportedProperties);
         return instance;
     }
 }
@@ -3817,26 +3792,6 @@ export class SuccessMessage extends Message {
     }
 }
 
-export class SupportedProperty {
-    propertyId: string;
-    value: string;
-    valueRequired: boolean;
-
-    static fromData(
-        data: SupportedProperty,
-        target?: SupportedProperty,
-    ): SupportedProperty {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new SupportedProperty();
-        instance.propertyId = data.propertyId;
-        instance.value = data.value;
-        instance.valueRequired = data.valueRequired;
-        return instance;
-    }
-}
-
 export class TimestampTranfsformationRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription';
     'formatString': string;
@@ -4174,7 +4129,6 @@ export type StaticPropertyUnion =
     | CodeInputStaticProperty
     | CollectionStaticProperty
     | ColorPickerStaticProperty
-    | DomainStaticProperty
     | FileStaticProperty
     | FreeTextStaticProperty
     | MappingPropertyUnary
