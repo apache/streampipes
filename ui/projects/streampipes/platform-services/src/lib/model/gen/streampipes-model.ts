@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-06-27 13:13:44.
+// Generated using typescript-generator version 3.2.1263 on 2024-06-27 15:00:50.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -2454,7 +2454,6 @@ export class Pipeline extends ElementComposition {
     createdAt: number;
     createdByUser: string;
     healthStatus: PipelineHealthStatus;
-    pipelineCategories: string[];
     pipelineNotifications: string[];
     publicElement: boolean;
     restartOnSystemReboot: boolean;
@@ -2476,9 +2475,6 @@ export class Pipeline extends ElementComposition {
         instance.createdAt = data.createdAt;
         instance.createdByUser = data.createdByUser;
         instance.healthStatus = data.healthStatus;
-        instance.pipelineCategories = __getCopyArrayFn(__identity<string>())(
-            data.pipelineCategories,
-        );
         instance.pipelineNotifications = __getCopyArrayFn(__identity<string>())(
             data.pipelineNotifications,
         );
@@ -2533,28 +2529,6 @@ export class PipelineCanvasMetadata {
             PipelineElementMetadata.fromData,
         )(data.pipelineElementMetadata);
         instance.pipelineId = data.pipelineId;
-        return instance;
-    }
-}
-
-export class PipelineCategory {
-    _id: string;
-    _rev: string;
-    categoryDescription: string;
-    categoryName: string;
-
-    static fromData(
-        data: PipelineCategory,
-        target?: PipelineCategory,
-    ): PipelineCategory {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new PipelineCategory();
-        instance._id = data._id;
-        instance._rev = data._rev;
-        instance.categoryDescription = data.categoryDescription;
-        instance.categoryName = data.categoryName;
         return instance;
     }
 }
