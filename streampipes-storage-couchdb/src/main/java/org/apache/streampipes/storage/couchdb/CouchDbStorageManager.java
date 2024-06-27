@@ -37,7 +37,6 @@ import org.apache.streampipes.storage.api.INotificationStorage;
 import org.apache.streampipes.storage.api.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
-import org.apache.streampipes.storage.api.IPipelineCategoryStorage;
 import org.apache.streampipes.storage.api.IPipelineElementConnectionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
@@ -64,7 +63,6 @@ import org.apache.streampipes.storage.couchdb.impl.NotificationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PasswordRecoveryTokenImpl;
 import org.apache.streampipes.storage.couchdb.impl.PermissionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineCanvasMetadataStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.PipelineCategoryStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineElementDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineElementTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineStorageImpl;
@@ -120,11 +118,6 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   @Override
   public INotificationStorage getNotificationStorageApi() {
     return new NotificationStorageImpl();
-  }
-
-  @Override
-  public IPipelineCategoryStorage getPipelineCategoryStorageApi() {
-    return new PipelineCategoryStorageImpl();
   }
 
   @Override

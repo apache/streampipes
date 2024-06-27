@@ -42,8 +42,6 @@ public class Pipeline extends ElementComposition {
   private boolean publicElement;
 
   private String createdByUser;
-
-  private List<String> pipelineCategories;
   private List<String> pipelineNotifications;
 
   private PipelineHealthStatus healthStatus;
@@ -60,7 +58,6 @@ public class Pipeline extends ElementComposition {
     super();
     this.actions = new ArrayList<>();
     this.pipelineNotifications = new ArrayList<>();
-    this.pipelineCategories = new ArrayList<>();
   }
 
   public List<DataSinkInvocation> getActions() {
@@ -120,14 +117,6 @@ public class Pipeline extends ElementComposition {
     this.rev = rev;
   }
 
-  public List<String> getPipelineCategories() {
-    return pipelineCategories;
-  }
-
-  public void setPipelineCategories(List<String> pipelineCategories) {
-    this.pipelineCategories = pipelineCategories;
-  }
-
   public long getCreatedAt() {
     return createdAt;
   }
@@ -176,7 +165,6 @@ public class Pipeline extends ElementComposition {
     pipeline.setStreams(streams);
     pipeline.setActions(actions);
     pipeline.setCreatedByUser(createdByUser);
-    pipeline.setPipelineCategories(pipelineCategories);
     pipeline.setCreatedAt(createdAt);
     pipeline.setPipelineId(pipelineId);
     pipeline.setHealthStatus(healthStatus);
