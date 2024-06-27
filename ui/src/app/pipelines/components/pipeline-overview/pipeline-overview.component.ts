@@ -44,9 +44,6 @@ import { CurrentUserService } from '@streampipes/shared-ui';
 })
 export class PipelineOverviewComponent implements OnInit {
     _pipelines: Pipeline[];
-    _activeCategoryId: string;
-
-    filteredPipelinesAvailable = false;
 
     @Input()
     pipelineToStart: Pipeline;
@@ -132,18 +129,6 @@ export class PipelineOverviewComponent implements OnInit {
     set pipelines(pipelines: Pipeline[]) {
         this._pipelines = pipelines;
         this.addPipelinesToTable();
-    }
-
-    get activeCategoryId(): string {
-        return this._activeCategoryId;
-    }
-
-    @Input()
-    set activeCategoryId(activeCategoryId: string) {
-        this._activeCategoryId = activeCategoryId;
-        if (this._pipelines) {
-            this.addPipelinesToTable();
-        }
     }
 
     addPipelinesToTable() {
