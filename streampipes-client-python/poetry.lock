@@ -1777,12 +1777,12 @@ files = [
 
 [[package]]
 name = "nats-py"
-version = "2.7.2"
+version = "2.8.0"
 description = "NATS client for Python"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "nats-py-2.7.2.tar.gz", hash = "sha256:0c97b4a57bed0ef1ff9ae6c19bc115ec7ca8ede5ab3e001fd00a377056a547cf"},
+    {file = "nats_py-2.8.0.tar.gz", hash = "sha256:e998dcacd711db3b90b469dcdd96c526cc56c421bad27be0f5f40e88005a7c44"},
 ]
 
 [package.extras]

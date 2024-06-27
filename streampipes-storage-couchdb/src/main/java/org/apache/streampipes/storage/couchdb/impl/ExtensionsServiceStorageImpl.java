@@ -23,8 +23,6 @@ import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import java.util.List;
-
 public class ExtensionsServiceStorageImpl extends AbstractDao<SpServiceRegistration>
     implements CRUDStorage<String, SpServiceRegistration> {
 
@@ -32,20 +30,9 @@ public class ExtensionsServiceStorageImpl extends AbstractDao<SpServiceRegistrat
     super(Utils::getCouchDbExtensionsStorage, SpServiceRegistration.class);
   }
 
-
-  @Override
-  public List<SpServiceRegistration> getAll() {
-    return findAll();
-  }
-
-  @Override
-  public void createElement(SpServiceRegistration element) {
-    persist(element);
-  }
-
   @Override
   public SpServiceRegistration getElementById(String id) {
-    return find(id).orElseThrow(IllegalArgumentException::new);
+    return findWithNullIfEmpty(id);
   }
 
   @Override

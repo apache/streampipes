@@ -46,13 +46,13 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<List<Group>> getAllUserGroups() {
-    return ok(getUserGroupStorage().getAll());
+    return ok(getUserGroupStorage().findAll());
   }
 
   @PostMapping
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> addUserGroup(@RequestBody Group group) {
-    getUserGroupStorage().createElement(group);
+    getUserGroupStorage().persist(group);
     return ok();
   }
 

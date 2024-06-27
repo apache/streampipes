@@ -24,7 +24,8 @@
             color: configuredWidget.baseAppearanceConfig.textColor,
             height: gridsterItemComponent.height - 13 + 'px',
             border:
-                editMode && currentlyConfiguredWidgetId === configuredWidget._id
+                editMode &&
+                currentlyConfiguredWidgetId === configuredWidget.elementId
                     ? '4px solid var(--color-accent)'
                     : '2px solid ' +
                       configuredWidget.baseAppearanceConfig.backgroundColor
@@ -116,12 +117,14 @@
                 <button
                     mat-icon-button
                     [class.mat-raised-button]="
-                        currentlyConfiguredWidgetId === configuredWidget._id
+                        currentlyConfiguredWidgetId ===
+                        configuredWidget.elementId
                     "
                     (click)="triggerWidgetEditMode()"
                     *ngIf="editMode"
                     [color]="
-                        currentlyConfiguredWidgetId === configuredWidget._id
+                        currentlyConfiguredWidgetId ===
+                        configuredWidget.elementId
                             ? 'accent'
                             : ''
                     "

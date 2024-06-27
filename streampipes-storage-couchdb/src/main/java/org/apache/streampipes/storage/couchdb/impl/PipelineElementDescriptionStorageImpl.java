@@ -53,13 +53,13 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
 
   @Override
   public boolean storeDataStream(SpDataStream stream) {
-    this.dataStreamStorage.createElement(stream);
+    this.dataStreamStorage.persist(stream);
     return true;
   }
 
   @Override
   public boolean storeDataProcessor(DataProcessorDescription processorDescription) {
-    this.dataProcessorStorage.createElement(processorDescription);
+    this.dataProcessorStorage.persist(processorDescription);
     return true;
   }
 
@@ -105,12 +105,12 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
 
   @Override
   public List<SpDataStream> getAllDataStreams() {
-    return this.dataStreamStorage.getAll();
+    return this.dataStreamStorage.findAll();
   }
 
   @Override
   public List<DataProcessorDescription> getAllDataProcessors() {
-    return this.dataProcessorStorage.getAll();
+    return this.dataProcessorStorage.findAll();
   }
 
   @Override
@@ -249,7 +249,7 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
 
   @Override
   public boolean storeDataSink(DataSinkDescription sec) {
-    this.dataSinkStorage.createElement(sec);
+    this.dataSinkStorage.persist(sec);
     return true;
   }
 
@@ -261,7 +261,7 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
 
   @Override
   public List<DataSinkDescription> getAllDataSinks() {
-    return this.dataSinkStorage.getAll();
+    return this.dataSinkStorage.findAll();
   }
 
   @Override

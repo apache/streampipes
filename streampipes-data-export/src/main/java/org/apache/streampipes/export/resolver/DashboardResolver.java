@@ -33,18 +33,18 @@ public class DashboardResolver extends AbstractResolver<DashboardModel> {
 
   @Override
   public DashboardModel findDocument(String resourceId) {
-    return getNoSqlStore().getDashboardStorage().getDashboard(resourceId);
+    return getNoSqlStore().getDashboardStorage().getElementById(resourceId);
   }
 
   @Override
   public DashboardModel modifyDocumentForExport(DashboardModel doc) {
-    doc.setCouchDbRev(null);
+    doc.setRev(null);
     return doc;
   }
 
   @Override
   protected boolean existsDoc(DashboardModel doc) {
-    return Objects.nonNull(doc) && doc.getCouchDbId() != null;
+    return Objects.nonNull(doc) && doc.getElementId() != null;
   }
 
   @Override
@@ -54,12 +54,12 @@ public class DashboardResolver extends AbstractResolver<DashboardModel> {
 
   @Override
   public ExportItem convert(DashboardModel document) {
-    return new ExportItem(document.getCouchDbId(), document.getName(), true);
+    return new ExportItem(document.getElementId(), document.getName(), true);
   }
 
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getDashboardStorage().storeDashboard(deserializeDocument(document));
+    getNoSqlStore().getDashboardStorage().persist(deserializeDocument(document));
   }
 
   @Override

@@ -17,6 +17,10 @@
  */
 package org.apache.streampipes.storage.api;
 
+import org.apache.streampipes.model.dashboard.DashboardModel;
+import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 
@@ -44,17 +48,17 @@ public interface INoSqlStorage {
 
   IAssetDashboardStorage getAssetDashboardStorage();
 
-  IDataLakeStorage getDataLakeStorage();
+  CRUDStorage<String, DataLakeMeasure> getDataLakeStorage();
 
   IFileMetadataStorage getFileMetadataStorage();
 
-  IDashboardStorage getDashboardStorage();
+  CRUDStorage<String, DashboardModel> getDashboardStorage();
 
-  IDashboardStorage getDataExplorerDashboardStorage();
+  CRUDStorage<String, DashboardModel> getDataExplorerDashboardStorage();
 
-  IDashboardWidgetStorage getDashboardWidgetStorage();
+  CRUDStorage<String, DashboardWidgetModel> getDashboardWidgetStorage();
 
-  IDataExplorerWidgetStorage getDataExplorerWidgetStorage();
+  CRUDStorage<String, DataExplorerWidgetModel> getDataExplorerWidgetStorage();
 
   IPipelineElementTemplateStorage getPipelineElementTemplateStorage();
 

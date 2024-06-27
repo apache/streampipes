@@ -92,7 +92,7 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   }
 
   private List<SpServiceRegistration> findServices(int retryCount) {
-    var services = serviceStorage.getAll();
+    var services = serviceStorage.findAll();
     if (services.isEmpty()) {
       if (retryCount < MAX_RETRIES) {
         try {

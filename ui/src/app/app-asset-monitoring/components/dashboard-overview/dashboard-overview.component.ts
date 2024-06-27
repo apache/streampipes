@@ -45,7 +45,6 @@ export class AssetDashboardOverviewComponent implements OnInit {
 
     getDashboards() {
         this.restService.getDashboards().subscribe(response => {
-            console.log(response);
             this.dashboardConfigs = response;
         });
     }

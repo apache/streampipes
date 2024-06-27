@@ -67,7 +67,7 @@ public class AdapterDescriptionStorageImpl extends AbstractDao<AdapterDescriptio
 
   @Override
   public AdapterDescription getFirstAdapterByAppId(String appId) {
-    return getAll()
+    return this.findAll()
             .stream()
             .filter(p -> p.getAppId().equals(appId))
             .findFirst()
@@ -76,20 +76,10 @@ public class AdapterDescriptionStorageImpl extends AbstractDao<AdapterDescriptio
 
   @Override
   public List<AdapterDescription> getAdaptersByAppId(String appId) {
-    return getAll()
+    return this.findAll()
             .stream()
             .filter(p -> p.getAppId().equals(appId))
             .toList();
-  }
-
-  @Override
-  public List<AdapterDescription> getAll() {
-    return findAll();
-  }
-
-  @Override
-  public void createElement(AdapterDescription adapter) {
-    persist(adapter);
   }
 
   @Override

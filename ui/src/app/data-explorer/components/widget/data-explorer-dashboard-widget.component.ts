@@ -138,7 +138,9 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
         this.widgetTypeChangedSubscription =
             this.widgetTypeService.widgetTypeChangeSubject.subscribe(
                 typeChange => {
-                    if (typeChange.widgetId === this.configuredWidget._id) {
+                    if (
+                        typeChange.widgetId === this.configuredWidget.elementId
+                    ) {
                         this.chooseWidget(typeChange.newWidgetTypeId);
                     }
                 },
@@ -230,7 +232,9 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     }
 
     triggerWidgetEditMode() {
-        if (this.currentlyConfiguredWidgetId === this.configuredWidget._id) {
+        if (
+            this.currentlyConfiguredWidgetId === this.configuredWidget.elementId
+        ) {
             this.configureWidgetCallback.emit();
         } else {
             this.configureWidgetCallback.emit(this.configuredWidget);

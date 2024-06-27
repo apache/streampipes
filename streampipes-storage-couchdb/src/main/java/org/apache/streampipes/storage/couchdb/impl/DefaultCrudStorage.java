@@ -18,41 +18,34 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.storage.api.IDashboardStorage;
+import org.apache.streampipes.model.api.Storable;
+import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import java.util.List;
+import org.lightcouch.CouchDbClient;
 
-public class DashboardStorageImpl extends AbstractDao<DashboardModel> implements IDashboardStorage {
+import java.util.function.Supplier;
 
-  public DashboardStorageImpl() {
-    super(Utils::getCouchDbDashboardClient, DashboardModel.class);
+public class DefaultCrudStorage<T extends Storable> extends AbstractDao<T> implements CRUDStorage<String, T> {
+
+  public DefaultCrudStorage(Supplier<CouchDbClient> couchDbClientSupplier,
+                            Class<T> clazz) {
+    super(couchDbClientSupplier, clazz);
   }
 
   @Override
-  public List<DashboardModel> getAllDashboards() {
-    return findAll();
+  public T getElementById(String id) {
+    return find(id).orElseThrow(IllegalArgumentException::new);
   }
 
   @Override
-  public void storeDashboard(DashboardModel dashboardModel) {
-    persist(dashboardModel);
+  public T updateElement(T element) {
+    update(element);
+    return findWithNullIfEmpty(element.getElementId());
   }
 
   @Override
-  public void updateDashboard(DashboardModel dashboardModel) {
-    update(dashboardModel);
-  }
-
-  @Override
-  public DashboardModel getDashboard(String dashboardId) {
-    return find(dashboardId).orElse(new DashboardModel());
-  }
-
-  @Override
-  public void deleteDashboard(String dashboardId) {
-    delete(dashboardId);
+  public void deleteElement(T element) {
+    delete(element.getElementId());
   }
 }

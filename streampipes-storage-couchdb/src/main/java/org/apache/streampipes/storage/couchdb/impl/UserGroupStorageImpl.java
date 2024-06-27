@@ -19,27 +19,22 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.client.user.Group;
 import org.apache.streampipes.storage.api.IUserGroupStorage;
-import org.apache.streampipes.storage.couchdb.dao.CrudDao;
+import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 
-public class UserGroupStorageImpl extends CrudDao implements IUserGroupStorage {
+public class UserGroupStorageImpl extends AbstractDao<Group> implements IUserGroupStorage {
 
   private static final String viewName = "users/groups";
 
   public UserGroupStorageImpl() {
-    super(Utils::getCouchDbUserClient);
+    super(Utils::getCouchDbUserClient, Group.class);
   }
 
   @Override
-  public List<Group> getAll() {
+  public List<Group> findAll() {
     return findAll(viewName, Group.class);
-  }
-
-  @Override
-  public void createElement(Group element) {
-    persist(element, Group.class);
   }
 
   @Override

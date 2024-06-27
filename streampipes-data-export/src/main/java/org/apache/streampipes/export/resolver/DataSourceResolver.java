@@ -49,7 +49,7 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
 
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getDataStreamStorage().createElement(deserializeDocument(document));
+    getNoSqlStore().getDataStreamStorage().persist(deserializeDocument(document));
   }
 
   public void writeDocument(String document,
@@ -60,7 +60,7 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
         overrideProtocol(dataStream.getEventGrounding());
       }
     }
-    getNoSqlStore().getDataStreamStorage().createElement(dataStream);
+    getNoSqlStore().getDataStreamStorage().persist(dataStream);
   }
 
   @Override

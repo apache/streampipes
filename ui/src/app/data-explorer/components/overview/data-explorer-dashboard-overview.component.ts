@@ -135,7 +135,7 @@ export class DataExplorerDashboardOverviewComponent
                 title: 'Manage permissions',
                 width: '50vw',
                 data: {
-                    objectInstanceId: dashboard._id,
+                    objectInstanceId: dashboard.elementId,
                     headerTitle:
                         'Manage permissions for dashboard ' + dashboard.name,
                 },
@@ -160,11 +160,11 @@ export class DataExplorerDashboardOverviewComponent
     }
 
     showDashboard(dashboard: Dashboard) {
-        this.router.navigate(['dataexplorer/', dashboard._id]);
+        this.router.navigate(['dataexplorer/', dashboard.elementId]);
     }
 
     editDashboard(dashboard: Dashboard) {
-        this.router.navigate(['dataexplorer/', dashboard._id], {
+        this.router.navigate(['dataexplorer/', dashboard.elementId], {
             queryParams: { action: 'edit' },
         });
     }
