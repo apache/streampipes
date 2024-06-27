@@ -22,7 +22,6 @@ import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty;
-import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
 import org.apache.streampipes.model.staticproperty.FileStaticProperty;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
@@ -33,7 +32,6 @@ import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
-import org.apache.streampipes.model.staticproperty.SupportedProperty;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.Filetypes;
@@ -69,43 +67,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
    */
   public K requiredStaticProperty(StaticProperty staticProperty) {
     this.staticProperties.add(staticProperty);
-    return me();
-  }
-
-  /**
-   * Defines the requirement for an instance that is defined in the knowledge base.
-   *
-   * @param label                     A human-readable label that describes the required static property.
-   * @param supportedOntologyProperties All RDF properties any instance in the knowledge base must provide. Use
-   *                                     {@link org.apache.streampipes.sdk.helpers.OntologyProperties}
-   *                                      to assign supported properties.
-   *
-   */
-  public K requiredOntologyConcept(Label label, SupportedProperty...
-      supportedOntologyProperties) {
-    DomainStaticProperty dsp = prepareStaticProperty(label, new DomainStaticProperty());
-    dsp.setSupportedProperties(Arrays.asList(supportedOntologyProperties));
-    this.staticProperties.add(dsp);
-
-    return me();
-  }
-
-  /**
-   * @param label                        A human-readable label that describes the required static property.
-   * @param requiredConceptUri           Limits the search for matching instance
-   *                                     in the knowledge base to an instance of this concept.
-   * @param supportedOntologyProperties  All RDF properties any instance of the provided concept must provide. Use
-   *                                     {@link org.apache.streampipes.sdk.helpers.OntologyProperties}
-   *                                     to assign supported properties.
-   *
-   */
-  public K requiredOntologyConcept(Label label, String requiredConceptUri, SupportedProperty...
-      supportedOntologyProperties) {
-    DomainStaticProperty dsp = prepareStaticProperty(label, new DomainStaticProperty());
-    dsp.setSupportedProperties(Arrays.asList(supportedOntologyProperties));
-    dsp.setRequiredClass(requiredConceptUri);
-    this.staticProperties.add(dsp);
-
     return me();
   }
 

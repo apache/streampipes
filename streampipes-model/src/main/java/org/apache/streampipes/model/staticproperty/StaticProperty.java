@@ -30,7 +30,6 @@ import java.util.Objects;
     @JsonSubTypes.Type(CodeInputStaticProperty.class),
     @JsonSubTypes.Type(CollectionStaticProperty.class),
     @JsonSubTypes.Type(ColorPickerStaticProperty.class),
-    @JsonSubTypes.Type(DomainStaticProperty.class),
     @JsonSubTypes.Type(FileStaticProperty.class),
     @JsonSubTypes.Type(FreeTextStaticProperty.class),
     @JsonSubTypes.Type(MappingPropertyUnary.class),
