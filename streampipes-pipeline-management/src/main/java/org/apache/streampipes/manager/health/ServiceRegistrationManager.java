@@ -31,9 +31,9 @@ public class ServiceRegistrationManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(ServiceRegistrationManager.class);
 
-  private final CRUDStorage<String, SpServiceRegistration> storage;
+  private final CRUDStorage<SpServiceRegistration> storage;
 
-  public ServiceRegistrationManager(CRUDStorage<String, SpServiceRegistration> storage) {
+  public ServiceRegistrationManager(CRUDStorage<SpServiceRegistration> storage) {
     this.storage = storage;
   }
 

@@ -21,8 +21,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class PasswordRecoveryToken extends AbstractMailToken {
 
+  // This field should be called $type since this is the identifier used in the CouchDB view
+  @SuppressWarnings("checkstyle:MemberName")
   @JsonIgnore
-  private String type = "password-recovery";
+  private String $type = "password-recovery";
 
   public PasswordRecoveryToken() {
 
@@ -36,11 +38,13 @@ public class PasswordRecoveryToken extends AbstractMailToken {
     return passwordRecoveryToken;
   }
 
-  public String getType() {
-    return type;
+  @SuppressWarnings("checkstyle:MethodName")
+  public String get$type() {
+    return $type;
   }
 
-  public void setType(String type) {
-    this.type = type;
+  @SuppressWarnings({"checkstyle:MethodName", "checkstyle:ParameterName"})
+  public void set$type(String $type) {
+    this.$type = $type;
   }
 }

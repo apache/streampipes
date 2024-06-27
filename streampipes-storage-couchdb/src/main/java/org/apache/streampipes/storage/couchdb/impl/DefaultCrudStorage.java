@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import org.apache.streampipes.model.api.Storable;
+import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 
@@ -26,7 +26,7 @@ import org.lightcouch.CouchDbClient;
 
 import java.util.function.Supplier;
 
-public class DefaultCrudStorage<T extends Storable> extends AbstractDao<T> implements CRUDStorage<String, T> {
+public class DefaultCrudStorage<T extends Storable> extends AbstractDao<T> implements CRUDStorage<T> {
 
   public DefaultCrudStorage(Supplier<CouchDbClient> couchDbClientSupplier,
                             Class<T> clazz) {
@@ -35,7 +35,7 @@ public class DefaultCrudStorage<T extends Storable> extends AbstractDao<T> imple
 
   @Override
   public T getElementById(String id) {
-    return find(id).orElseThrow(IllegalArgumentException::new);
+    return findWithNullIfEmpty(id);
   }
 
   @Override

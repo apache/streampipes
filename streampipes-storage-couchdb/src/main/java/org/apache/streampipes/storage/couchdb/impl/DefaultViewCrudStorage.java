@@ -15,11 +15,30 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
+package org.apache.streampipes.storage.couchdb.impl;
 
-public interface IPasswordRecoveryTokenStorage extends CRUDStorage<String, PasswordRecoveryToken> {
+import org.apache.streampipes.model.shared.api.Storable;
 
+import org.lightcouch.CouchDbClient;
+
+import java.util.List;
+import java.util.function.Supplier;
+
+public class DefaultViewCrudStorage<T extends Storable> extends DefaultCrudStorage<T> {
+
+  private final String viewName;
+
+  public DefaultViewCrudStorage(Supplier<CouchDbClient> couchDbClientSupplier,
+                                Class<T> clazz,
+                                String viewName) {
+    super(couchDbClientSupplier, clazz);
+    this.viewName = viewName;
+  }
+
+  @Override
+  public List<T> findAll() {
+    return findAll(viewName, clazz);
+  }
 
 }

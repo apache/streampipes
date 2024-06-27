@@ -19,7 +19,7 @@ package org.apache.streampipes.storage.api;
 
 import org.apache.streampipes.model.SpDataStream;
 
-public interface IDataStreamStorage extends CRUDStorage<String, SpDataStream> {
+public interface IDataStreamStorage extends CRUDStorage<SpDataStream> {
 
   SpDataStream getDataStreamByAppId(String appId);
 }

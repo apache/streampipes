@@ -46,7 +46,7 @@ public class DataExplorerSchemaManagementTest {
   public static final String NEW_PROPERTY = "newProperty";
   public static final String OLD_PROPERTY = "oldProperty";
 
-  private CRUDStorage<String, DataLakeMeasure> dataLakeStorageMock;
+  private CRUDStorage<DataLakeMeasure> dataLakeStorageMock;
 
   @BeforeEach
   public void setUp() {

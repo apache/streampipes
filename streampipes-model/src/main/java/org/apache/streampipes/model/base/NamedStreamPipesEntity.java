@@ -20,7 +20,7 @@ package org.apache.streampipes.model.base;
 
 
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.api.Storable;
+import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.shared.annotation.TsModel;

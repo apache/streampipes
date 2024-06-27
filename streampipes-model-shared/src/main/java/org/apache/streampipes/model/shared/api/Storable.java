@@ -15,23 +15,16 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.model.file.FileMetadata;
+package org.apache.streampipes.model.shared.api;
 
-import java.util.List;
+public interface Storable {
 
-public interface IFileMetadataStorage {
+  String getRev();
 
-  FileMetadata getMetadataById(String id);
+  void setRev(String rev);
 
-  List<FileMetadata> getAllFileMetadataDescriptions();
+  String getElementId();
 
-  List<FileMetadata> getFilteredFileMetadataDescriptions(String filetype);
-
-  void deleteFileMetadata(String id);
-
-  void addFileMetadata(FileMetadata fileMetadata);
-
-  void updateFileMetadata(FileMetadata fileMetadata);
+  void setElementId(String elementId);
 }

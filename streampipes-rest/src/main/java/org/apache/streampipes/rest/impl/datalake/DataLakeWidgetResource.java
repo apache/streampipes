@@ -79,7 +79,7 @@ public class DataLakeWidgetResource extends AbstractRestResource {
     return ok(getDataExplorerWidgetStorage().getElementById(elementId));
   }
 
-  private CRUDStorage<String, DataExplorerWidgetModel> getDataExplorerWidgetStorage() {
+  private CRUDStorage<DataExplorerWidgetModel> getDataExplorerWidgetStorage() {
     return getNoSqlStorage().getDataExplorerWidgetStorage();
   }
 

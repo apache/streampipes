@@ -34,9 +34,9 @@ import java.util.stream.Stream;
 
 public class DataExplorerSchemaManagement implements IDataExplorerSchemaManagement {
 
-  CRUDStorage<String, DataLakeMeasure> dataLakeStorage;
+  CRUDStorage<DataLakeMeasure> dataLakeStorage;
 
-  public DataExplorerSchemaManagement(CRUDStorage<String, DataLakeMeasure> dataLakeStorage) {
+  public DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage) {
     this.dataLakeStorage = dataLakeStorage;
   }
 

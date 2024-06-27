@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class AbstractPipelineElementResourceManager<T extends CRUDStorage<String, W>,
+public abstract class AbstractPipelineElementResourceManager<T extends CRUDStorage<W>,
     W extends NamedStreamPipesEntity, X> extends AbstractResourceManager<T> {
 
   public AbstractPipelineElementResourceManager(T db) {

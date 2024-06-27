@@ -18,6 +18,7 @@
 package org.apache.streampipes.model.client.user;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.shared.api.Storable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
@@ -26,7 +27,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @TsModel
-public class Group {
+public class Group implements Storable {
 
   protected @SerializedName("_id") String groupId;
   protected @SerializedName("_rev") String rev;
@@ -58,6 +59,16 @@ public class Group {
 
   public void setRev(String rev) {
     this.rev = rev;
+  }
+
+  @Override
+  public String getElementId() {
+    return this.groupId;
+  }
+
+  @Override
+  public void setElementId(String elementId) {
+    this.groupId = elementId;
   }
 
   public String getGroupName() {

@@ -21,8 +21,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserActivationToken extends AbstractMailToken {
 
+  // This field should be called $type since this is the identifier used in the CouchDB view
+  @SuppressWarnings("checkstyle:MemberName")
   @JsonIgnore
-  private String type = "user-activation";
+  private String $type = "user-activation";
 
   public UserActivationToken() {
   }
@@ -35,11 +37,13 @@ public class UserActivationToken extends AbstractMailToken {
     return userActivationToken;
   }
 
-  public String getType() {
-    return type;
+  @SuppressWarnings("checkstyle:MethodName")
+  public String get$type() {
+    return $type;
   }
 
-  public void setType(String type) {
-    this.type = type;
+  @SuppressWarnings({"checkstyle:MethodName", "checkstyle:ParameterName"})
+  public void set$type(String $type) {
+    this.$type = $type;
   }
 }

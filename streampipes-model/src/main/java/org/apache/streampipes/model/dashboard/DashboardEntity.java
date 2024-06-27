@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.model.dashboard;
 
-import org.apache.streampipes.model.api.Storable;
+import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 
 import com.fasterxml.jackson.annotation.JsonAlias;

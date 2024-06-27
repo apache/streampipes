@@ -77,7 +77,7 @@ public class DashboardWidget extends AbstractRestResource {
     return ok(getDashboardWidgetStorage().getElementById(elementId));
   }
 
-  private CRUDStorage<String, DashboardWidgetModel> getDashboardWidgetStorage() {
+  private CRUDStorage<DashboardWidgetModel> getDashboardWidgetStorage() {
     return getNoSqlStorage().getDashboardWidgetStorage();
   }
 }

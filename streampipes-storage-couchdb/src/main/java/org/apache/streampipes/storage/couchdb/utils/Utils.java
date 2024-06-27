@@ -66,10 +66,6 @@ public class Utils {
     return getCouchDbGsonClient("general-configuration");
   }
 
-  public static CouchDbClient getCouchDbServiceConfigStorage() {
-    return getCouchDbGsonClient("extensions-services-configurations");
-  }
-
   public static CouchDbClient getCouchDbExtensionsStorage() {
     return getCouchDbGsonClient("extensions-services");
   }
@@ -80,10 +76,6 @@ public class Utils {
 
   public static CouchDbClient getCouchDbFileMetadataClient() {
     return getCouchDbGsonClient("filemetadata");
-  }
-
-  public static CouchDbClient getCouchDbAssetDashboardClient() {
-    return getCouchDbGsonClient("assetdashboard");
   }
 
   public static CouchDbClient getCouchDbAdapterInstanceClient() {
