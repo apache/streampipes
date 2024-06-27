@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.model.extensions.svcdiscovery;
 
-import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.shared.api.Storable;
 
 import com.google.gson.annotations.SerializedName;
 
