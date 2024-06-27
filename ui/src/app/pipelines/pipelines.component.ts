@@ -50,11 +50,8 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     pipelines: Pipeline[] = [];
     starting: boolean;
     stopping: boolean;
-    pipelineCategories: PipelineCategory[];
-    activeCategoryId: string;
 
     pipelineIdToStart: string;
-
     pipelineToStart: Pipeline;
 
     pipelinesReady = false;
@@ -81,7 +78,6 @@ export class PipelinesComponent implements OnInit, OnDestroy {
         private breadcrumbService: SpBreadcrumbService,
         private shepherdService: ShepherdService,
     ) {
-        this.pipelineCategories = [];
         this.starting = false;
         this.stopping = false;
     }
@@ -108,7 +104,6 @@ export class PipelinesComponent implements OnInit, OnDestroy {
                 if (params.startTutorial) {
                     this.startPipelineTour();
                 }
-                this.getPipelineCategories();
                 this.getPipelines();
                 this.getFunctions();
             });
@@ -144,26 +139,11 @@ export class PipelinesComponent implements OnInit, OnDestroy {
         this.pipelineIdToStart = undefined;
     }
 
-    getPipelineCategories() {
-        this.pipelineService
-            .getPipelineCategories()
-            .subscribe(pipelineCategories => {
-                this.pipelineCategories = pipelineCategories;
-            });
-    }
-
     checkCurrentSelectionStatus(status) {
         let active = true;
         this.pipelines.forEach(pipeline => {
-            if (
-                !this.activeCategoryId ||
-                pipeline.pipelineCategories.some(
-                    pc => pc === this.activeCategoryId,
-                )
-            ) {
-                if (pipeline.running === status) {
-                    active = false;
-                }
+            if (pipeline.running === status) {
+                active = false;
             }
         });
         return active;
@@ -178,7 +158,6 @@ export class PipelinesComponent implements OnInit, OnDestroy {
                 data: {
                     pipelines: this.pipelines,
                     action: action,
-                    activeCategoryId: this.activeCategoryId,
                 },
             });
 

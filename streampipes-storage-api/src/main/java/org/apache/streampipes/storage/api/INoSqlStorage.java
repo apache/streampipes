@@ -44,8 +44,6 @@ public interface INoSqlStorage {
 
   INotificationStorage getNotificationStorageApi();
 
-  IPipelineCategoryStorage getPipelineCategoryStorageApi();
-
   IAssetDashboardStorage getAssetDashboardStorage();
 
   CRUDStorage<String, DataLakeMeasure> getDataLakeStorage();
