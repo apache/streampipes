@@ -50,7 +50,7 @@ import static org.mockito.Mockito.when;
 public class TestFileManager {
 
   private FileManager fileManager;
-  private CRUDStorage<String, FileMetadata> fileMetadataStorage;
+  private CRUDStorage<FileMetadata> fileMetadataStorage;
   private FileHandler fileHandler;
   private FileHasher fileHasher;
 
