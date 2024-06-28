@@ -60,6 +60,6 @@ public class AccountActiviationMailTemplate extends AbstractMailTemplate {
   }
 
   private String makeLink() {
-    return new LinkPart("/#/activate-account?activationCode=" + this.activationCode).generate();
+    return new LinkPart("/#/activate-account?activationCode=" + encodeUrlPart(this.activationCode)).generate();
   }
 }
