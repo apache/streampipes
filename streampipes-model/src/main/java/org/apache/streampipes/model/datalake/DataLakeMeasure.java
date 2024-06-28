@@ -18,10 +18,10 @@
 
 package org.apache.streampipes.model.datalake;
 
-import org.apache.streampipes.model.api.Storable;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsIgnore;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.shared.api.Storable;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;

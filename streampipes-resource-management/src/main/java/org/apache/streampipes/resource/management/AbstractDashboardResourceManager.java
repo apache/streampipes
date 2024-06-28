@@ -25,9 +25,9 @@ import org.apache.streampipes.storage.api.CRUDStorage;
 import java.util.List;
 
 public abstract class AbstractDashboardResourceManager
-    extends AbstractResourceManager<CRUDStorage<String, DashboardModel>> {
+    extends AbstractResourceManager<CRUDStorage<DashboardModel>> {
 
-  public AbstractDashboardResourceManager(CRUDStorage<String, DashboardModel> db) {
+  public AbstractDashboardResourceManager(CRUDStorage<DashboardModel> db) {
     super(db);
   }
 

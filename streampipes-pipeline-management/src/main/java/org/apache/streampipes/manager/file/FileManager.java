@@ -20,7 +20,7 @@ package org.apache.streampipes.manager.file;
 import org.apache.streampipes.commons.file.FileHasher;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.sdk.helpers.Filetypes;
-import org.apache.streampipes.storage.api.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.commons.io.input.BOMInputStream;
@@ -34,11 +34,11 @@ import java.util.stream.Collectors;
 
 public class FileManager {
 
-  private final IFileMetadataStorage fileMetadataStorage;
+  private final CRUDStorage<FileMetadata> fileMetadataStorage;
   private final FileHandler fileHandler;
   private final FileHasher fileHasher;
 
-  public FileManager(IFileMetadataStorage fileMetadataStorage,
+  public FileManager(CRUDStorage<FileMetadata> fileMetadataStorage,
                      FileHandler fileHandler,
                      FileHasher fileHasher) {
     this.fileMetadataStorage = fileMetadataStorage;
@@ -60,7 +60,7 @@ public class FileManager {
   }
 
   public List<FileMetadata> getAllFiles(String filetypes) {
-    List<FileMetadata> allFiles = fileMetadataStorage.getAllFileMetadataDescriptions();
+    List<FileMetadata> allFiles = fileMetadataStorage.findAll();
     return filetypes != null ? filterFiletypes(allFiles, filetypes) : allFiles;
   }
 
@@ -94,10 +94,10 @@ public class FileManager {
 
 
   public void deleteFile(String id) {
-    var fileMetadata = fileMetadataStorage.getMetadataById(id);
+    var fileMetadata = fileMetadataStorage.getElementById(id);
     if (fileMetadata != null) {
       fileHandler.deleteFile(fileMetadata.getFilename());
-      fileMetadataStorage.deleteFileMetadata(id);
+      fileMetadataStorage.deleteElementById(id);
     }
   }
 
@@ -168,7 +168,7 @@ public class FileManager {
   }
 
   private void storeFileMetadata(FileMetadata fileMetadata) {
-    fileMetadataStorage.addFileMetadata(fileMetadata);
+    fileMetadataStorage.persist(fileMetadata);
   }
 
 

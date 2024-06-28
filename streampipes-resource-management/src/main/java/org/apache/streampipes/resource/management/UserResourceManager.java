@@ -30,8 +30,7 @@ import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.model.client.user.UserRegistrationData;
-import org.apache.streampipes.storage.api.IPasswordRecoveryTokenStorage;
-import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
+import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -157,7 +156,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
   public void checkPasswordRecoveryCode(String recoveryCode) {
-    IPasswordRecoveryTokenStorage tokenStorage = getPasswordRecoveryTokenStorage();
+    var tokenStorage = getPasswordRecoveryTokenStorage();
     PasswordRecoveryToken token = tokenStorage.getElementById(recoveryCode);
     if (token == null) {
       throw new IllegalArgumentException("Invalid recovery code");
@@ -182,11 +181,11 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     getPasswordRecoveryTokenStorage().persist(PasswordRecoveryToken.create(recoveryCode, username));
   }
 
-  private IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage() {
+  private CRUDStorage<PasswordRecoveryToken> getPasswordRecoveryTokenStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getPasswordRecoveryTokenStorage();
   }
 
-  private IUserActivationTokenStorage getUserActivationTokenStorage() {
+  private CRUDStorage<UserActivationToken> getUserActivationTokenStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getUserActivationTokenStorage();
   }
 

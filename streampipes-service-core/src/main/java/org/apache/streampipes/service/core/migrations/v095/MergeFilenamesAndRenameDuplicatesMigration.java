@@ -21,7 +21,7 @@ package org.apache.streampipes.service.core.migrations.v095;
 import org.apache.streampipes.manager.file.FileHandler;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -46,12 +46,12 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
 
   private CouchDbClient couchDbClient;
 
-  private ObjectMapper mapper = new ObjectMapper();
+  private final ObjectMapper mapper = new ObjectMapper();
 
-  private IFileMetadataStorage fileMetadataStorage =
+  private final CRUDStorage<FileMetadata> fileMetadataStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getFileMetadataStorage();
 
-  private FileHandler fileHandler = new FileHandler();
+  private final FileHandler fileHandler = new FileHandler();
 
   Logger logger = LoggerFactory.getLogger(MergeFilenamesAndRenameDuplicatesMigration.class);
 
@@ -89,14 +89,14 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
    */
   protected void getFileMetadataToUpdate(List<Map<String, Object>> couchDbRawFileMetadata) {
     couchDbRawFileMetadata.forEach(
-        rawFileMetadata -> checkDuplicateOriginalFilename(rawFileMetadata));
+        this::checkDuplicateOriginalFilename);
   }
 
   /**
    * Fetches all fileIds stored in CouchDB
    */
-  private List<String> getAllFileIds(IFileMetadataStorage fileMetadataStorage) {
-    return fileMetadataStorage.getAllFileMetadataDescriptions().stream().map(fileMetadata -> fileMetadata.getFileId())
+  private List<String> getAllFileIds(CRUDStorage<FileMetadata> fileMetadataStorage) {
+    return fileMetadataStorage.findAll().stream().map(FileMetadata::getFileId)
         .toList();
   }
 
@@ -143,7 +143,7 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
         fileMetadata.setFileId(rawFileMetadata.get(ID).toString());
         fileMetadata.setFiletype(rawFileMetadata.get(FILETYPE).toString());
       } else {
-        fileMetadata = fileMetadataStorage.getMetadataById(rawFileMetadata.get(ID).toString());
+        fileMetadata = fileMetadataStorage.getElementById(rawFileMetadata.get(ID).toString());
       }
       fileMetadataGroupedByOriginalName.get(originalFilename).add(fileMetadata);
     }
@@ -177,7 +177,7 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
   private void updateFileMetadata(FileMetadata fileMetadata, String filename, boolean isTesting) {
     fileMetadata.setFilename(filename);
     if (!isTesting) {
-      fileMetadataStorage.updateFileMetadata(fileMetadata);
+      fileMetadataStorage.updateElement(fileMetadata);
     }
   }
 

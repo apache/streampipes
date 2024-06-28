@@ -21,7 +21,7 @@ import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.client.assetdashboard.AssetDashboardConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.storage.api.IAssetDashboardStorage;
+import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.commons.io.FileUtils;
@@ -63,7 +63,7 @@ public class AssetDashboardResource extends AbstractRestResource {
   @GetMapping(path = "/{dashboardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AssetDashboardConfig> getAssetDashboard(@PathVariable("dashboardId") String dashboardId) {
     return ok(getNoSqlStorage().getAssetDashboardStorage()
-                               .getAssetDashboard(dashboardId));
+                               .getElementById(dashboardId));
   }
 
   @PutMapping(
@@ -74,17 +74,17 @@ public class AssetDashboardResource extends AbstractRestResource {
       @PathVariable("dashboardId") String dashboardId,
       @RequestBody AssetDashboardConfig dashboardConfig
   ) {
-    AssetDashboardConfig dashboard = getAssetDashboardStorage().getAssetDashboard(dashboardId);
+    AssetDashboardConfig dashboard = getAssetDashboardStorage().getElementById(dashboardId);
     dashboardConfig.setRev(dashboard.getRev());
     getNoSqlStorage().getAssetDashboardStorage()
-                     .updateAssetDashboard(dashboardConfig);
+                     .updateElement(dashboardConfig);
     return ok();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<AssetDashboardConfig>> getAllDashboards() {
     return ok(getNoSqlStorage().getAssetDashboardStorage()
-                               .getAllAssetDashboards());
+                               .findAll());
   }
 
   @PostMapping(
@@ -92,14 +92,14 @@ public class AssetDashboardResource extends AbstractRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> storeAssetDashboard(@RequestBody AssetDashboardConfig dashboardConfig) {
     getNoSqlStorage().getAssetDashboardStorage()
-                     .storeAssetDashboard(dashboardConfig);
+                     .persist(dashboardConfig);
     return ok();
   }
 
   @DeleteMapping(path = "/{dashboardId}")
   public ResponseEntity<Void> deleteAssetDashboard(@PathVariable("dashboardId") String dashboardId) {
     getNoSqlStorage().getAssetDashboardStorage()
-                     .deleteAssetDashboard(dashboardId);
+                     .deleteElementById(dashboardId);
     return ok();
   }
 
@@ -169,7 +169,7 @@ public class AssetDashboardResource extends AbstractRestResource {
     return getTargetDirectory() + File.separator + filename;
   }
 
-  private IAssetDashboardStorage getAssetDashboardStorage() {
+  private CRUDStorage<AssetDashboardConfig> getAssetDashboardStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore()
                                      .getAssetDashboardStorage();
   }
