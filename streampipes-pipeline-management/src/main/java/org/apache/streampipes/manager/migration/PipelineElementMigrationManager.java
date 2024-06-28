@@ -69,7 +69,7 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
       LOG.info("Received {} pipeline element migrations from extension service {}.",
           migrationConfigs.size(),
           extensionsServiceConfig.getServiceUrl());
-      var availablePipelines = pipelineStorage.getAllPipelines();
+      var availablePipelines = pipelineStorage.findAll();
       if (!availablePipelines.isEmpty()) {
         LOG.info("Found {} available pipelines. Checking pipelines for applicable migrations...",
             availablePipelines.size()
@@ -122,13 +122,13 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
               .toList();
           pipeline.setActions(migratedDataSinks);
 
-          pipelineStorage.updatePipeline(pipeline);
+          pipelineStorage.updateElement(pipeline);
 
           if (failedMigrations.isEmpty()) {
             LOG.info("Migration for pipeline successfully completed.");
           } else {
             // pass most recent version of pipeline
-            handleFailedMigrations(pipelineStorage.getPipeline(pipeline.getPipelineId()), failedMigrations);
+            handleFailedMigrations(pipelineStorage.getElementById(pipeline.getPipelineId()), failedMigrations);
           }
         }
       }
@@ -166,10 +166,10 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
     ).toList());
     pipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
 
-    pipelineStorage.updatePipeline(pipeline);
+    pipelineStorage.updateElement(pipeline);
 
     // get updated version of pipeline after modification
-    pipeline = pipelineStorage.getPipeline(pipeline.getPipelineId());
+    pipeline = pipelineStorage.getElementById(pipeline.getPipelineId());
 
     stopPipeline(pipeline);
   }

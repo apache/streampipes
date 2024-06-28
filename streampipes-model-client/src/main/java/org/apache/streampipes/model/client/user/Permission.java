@@ -18,6 +18,7 @@
 package org.apache.streampipes.model.client.user;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.shared.api.Storable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TsModel
-public class Permission {
+public class Permission implements Storable {
 
   protected @SerializedName("_id") String permissionId;
   protected @SerializedName("_rev") String rev;
@@ -62,6 +63,16 @@ public class Permission {
 
   public void setRev(String rev) {
     this.rev = rev;
+  }
+
+  @Override
+  public String getElementId() {
+    return this.permissionId;
+  }
+
+  @Override
+  public void setElementId(String elementId) {
+    this.permissionId = elementId;
   }
 
   public String getObjectInstanceId() {

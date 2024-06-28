@@ -107,7 +107,7 @@ public class AvailableExtensionsProvider {
   }
 
   private List<AdapterDescription> getAllAdapters() {
-    return storage.getAdapterDescriptionStorage().getAllAdapters();
+    return storage.getAdapterDescriptionStorage().findAll();
   }
 
   private List<SpDataStream> getAllDataStreams() {

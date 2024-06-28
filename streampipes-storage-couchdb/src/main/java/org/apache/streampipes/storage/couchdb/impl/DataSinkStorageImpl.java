@@ -22,8 +22,6 @@ import org.apache.streampipes.storage.api.IDataSinkStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import java.util.List;
-
 public class DataSinkStorageImpl extends AbstractDao<DataSinkDescription> implements IDataSinkStorage {
 
 
@@ -55,14 +53,6 @@ public class DataSinkStorageImpl extends AbstractDao<DataSinkDescription> implem
         .filter(s -> s.getAppId().equals(appId))
         .findFirst()
         .orElseThrow(IllegalArgumentException::new);
-  }
-
-  @Override
-  public List<DataSinkDescription> getDataSinksByAppId(String appId) {
-    return this.findAll()
-            .stream()
-            .filter(s -> s.getAppId().equals(appId))
-            .toList();
   }
 
   private String getCurrentRev(String elementId) {

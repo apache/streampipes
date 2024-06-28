@@ -19,7 +19,6 @@
 package org.apache.streampipes.storage.api;
 
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -28,13 +27,9 @@ import java.util.List;
 
 public interface IPipelineElementDescriptionStorage {
 
-  boolean storeInvocablePipelineElement(InvocableStreamPipesEntity element);
-
   boolean storeDataStream(SpDataStream stream);
 
   boolean storeDataProcessor(DataProcessorDescription processorDescription);
-
-  SpDataStream getDataStreamByAppId(String appId);
 
   SpDataStream getDataStreamById(String rdfId);
 
@@ -48,35 +43,19 @@ public interface IPipelineElementDescriptionStorage {
 
   AdapterDescription getAdapterById(String elementId);
 
-  AdapterDescription getAdapterByAppId(String appId);
-
   List<SpDataStream> getAllDataStreams();
 
   List<DataProcessorDescription> getAllDataProcessors();
 
-  List<AdapterDescription> getAllAdapterDescriptions();
-
   boolean deleteDataStream(SpDataStream sep);
 
-  boolean deleteDataStream(String rdfId);
-
   boolean deleteDataProcessor(DataProcessorDescription processorDescription);
-
-  boolean deleteDataProcessor(String rdfId);
-
-  boolean deleteAdapterDescription(AdapterDescription adapterDescription);
-
-  boolean deleteAdapterDescription(String elementId);
 
   boolean exists(SpDataStream stream);
 
   boolean exists(AdapterDescription adapterDescription);
 
   boolean exists(DataProcessorDescription processorDescription);
-
-  boolean existsDataProcessorByAppId(String appId);
-
-  boolean existsDataSinkByAppId(String appId);
 
   boolean existsDataProcessor(String elementId);
 
@@ -97,8 +76,6 @@ public interface IPipelineElementDescriptionStorage {
   boolean update(AdapterDescription adapter);
 
   boolean deleteDataSink(DataSinkDescription sec);
-
-  boolean deleteDataSink(String rdfId);
 
   boolean storeDataSink(DataSinkDescription sec);
 

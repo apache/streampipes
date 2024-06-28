@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 
 public class DefaultViewCrudStorage<T extends Storable> extends DefaultCrudStorage<T> {
 
-  private final String viewName;
+  protected final String viewName;
 
   public DefaultViewCrudStorage(Supplier<CouchDbClient> couchDbClientSupplier,
                                 Class<T> clazz,
