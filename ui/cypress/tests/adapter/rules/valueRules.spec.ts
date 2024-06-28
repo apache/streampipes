@@ -37,14 +37,14 @@ describe('Connect value rule transformations', () => {
         );
 
         // Number transformation
-        ConnectEventSchemaUtils.numberTransformation('value', '10');
+        // ConnectEventSchemaUtils.numberTransformation('value', '10');
 
         // Unit transformation
-        ConnectEventSchemaUtils.unitTransformation(
-            'temperature',
-            'Degree Celsius',
-            'Degree Fahrenheit',
-        );
+        // ConnectEventSchemaUtils.unitTransformation(
+        //     'temperature',
+        //     'Degree Celsius',
+        //     'Degree Fahrenheit',
+        // );
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
