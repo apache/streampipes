@@ -33,9 +33,9 @@ public class Group implements Storable {
   protected @SerializedName("_rev") String rev;
 
   // This field should be called $type since this is the identifier used in the CouchDB view
-  @SuppressWarnings("checkstyle:MemberName")
+  @SerializedName("$type")
   @JsonIgnore
-  private String $type = "group";
+  private String type = "group";
 
   private String groupName;
 
@@ -87,13 +87,11 @@ public class Group implements Storable {
     this.roles = roles;
   }
 
-  @SuppressWarnings("checkstyle:MethodName")
-  public String get$type() {
-    return $type;
+  public String getType() {
+    return type;
   }
 
-  @SuppressWarnings({"checkstyle:MethodName", "checkstyle:ParameterName"})
-  public void set$type(String $type) {
-    this.$type = $type;
+  public void setType(String type) {
+    this.type = type;
   }
 }

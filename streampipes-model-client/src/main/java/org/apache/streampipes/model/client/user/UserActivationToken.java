@@ -18,13 +18,14 @@
 package org.apache.streampipes.model.client.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.SerializedName;
 
 public class UserActivationToken extends AbstractMailToken {
 
   // This field should be called $type since this is the identifier used in the CouchDB view
-  @SuppressWarnings("checkstyle:MemberName")
+  @SerializedName("$type")
   @JsonIgnore
-  private String $type = "user-activation";
+  private String type = "user-activation";
 
   public UserActivationToken() {
   }
@@ -37,13 +38,11 @@ public class UserActivationToken extends AbstractMailToken {
     return userActivationToken;
   }
 
-  @SuppressWarnings("checkstyle:MethodName")
-  public String get$type() {
-    return $type;
+  public String getType() {
+    return type;
   }
 
-  @SuppressWarnings({"checkstyle:MethodName", "checkstyle:ParameterName"})
-  public void set$type(String $type) {
-    this.$type = $type;
+  public void setType(String type) {
+    this.type = type;
   }
 }

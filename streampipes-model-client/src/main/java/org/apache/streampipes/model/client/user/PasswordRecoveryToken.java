@@ -18,13 +18,14 @@
 package org.apache.streampipes.model.client.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.SerializedName;
 
 public class PasswordRecoveryToken extends AbstractMailToken {
 
   // This field should be called $type since this is the identifier used in the CouchDB view
-  @SuppressWarnings("checkstyle:MemberName")
+  @SerializedName("$type")
   @JsonIgnore
-  private String $type = "password-recovery";
+  private String type = "password-recovery";
 
   public PasswordRecoveryToken() {
 
@@ -38,13 +39,11 @@ public class PasswordRecoveryToken extends AbstractMailToken {
     return passwordRecoveryToken;
   }
 
-  @SuppressWarnings("checkstyle:MethodName")
-  public String get$type() {
-    return $type;
+  public String getType() {
+    return type;
   }
 
-  @SuppressWarnings({"checkstyle:MethodName", "checkstyle:ParameterName"})
-  public void set$type(String $type) {
-    this.$type = $type;
+  public void setType(String type) {
+    this.type = type;
   }
 }
