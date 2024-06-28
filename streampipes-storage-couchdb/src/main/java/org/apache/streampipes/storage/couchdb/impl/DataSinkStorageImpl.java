@@ -19,10 +19,9 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.storage.api.IDataSinkStorage;
-import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public class DataSinkStorageImpl extends AbstractDao<DataSinkDescription> implements IDataSinkStorage {
+public class DataSinkStorageImpl extends DefaultCrudStorage<DataSinkDescription> implements IDataSinkStorage {
 
 
   public DataSinkStorageImpl() {
@@ -30,20 +29,10 @@ public class DataSinkStorageImpl extends AbstractDao<DataSinkDescription> implem
   }
 
   @Override
-  public DataSinkDescription getElementById(String s) {
-    return findWithNullIfEmpty(s);
-  }
-
-  @Override
   public DataSinkDescription updateElement(DataSinkDescription element) {
     element.setRev(getCurrentRev(element.getElementId()));
     update(element);
     return getElementById(element.getElementId());
-  }
-
-  @Override
-  public void deleteElement(DataSinkDescription element) {
-    delete(element.getElementId());
   }
 
   @Override

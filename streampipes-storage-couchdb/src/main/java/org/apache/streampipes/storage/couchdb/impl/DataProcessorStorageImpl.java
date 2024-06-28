@@ -19,12 +19,12 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
-import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.NoSuchElementException;
 
-public class DataProcessorStorageImpl extends AbstractDao<DataProcessorDescription> implements IDataProcessorStorage {
+public class DataProcessorStorageImpl extends DefaultCrudStorage<DataProcessorDescription>
+    implements IDataProcessorStorage {
 
 
   public DataProcessorStorageImpl() {
@@ -32,20 +32,10 @@ public class DataProcessorStorageImpl extends AbstractDao<DataProcessorDescripti
   }
 
   @Override
-  public DataProcessorDescription getElementById(String s) {
-    return findWithNullIfEmpty(s);
-  }
-
-  @Override
   public DataProcessorDescription updateElement(DataProcessorDescription element) {
     element.setRev(getCurrentRev(element.getElementId()));
     update(element);
     return getElementById(element.getElementId());
-  }
-
-  @Override
-  public void deleteElement(DataProcessorDescription element) {
-    delete(element.getElementId());
   }
 
   @Override
