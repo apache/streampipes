@@ -18,11 +18,12 @@
 package org.apache.streampipes.model.file;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.shared.api.Storable;
 
 import com.google.gson.annotations.SerializedName;
 
 @TsModel
-public class FileMetadata {
+public class FileMetadata implements Storable {
 
   private @SerializedName("_id") String fileId;
 
@@ -50,6 +51,16 @@ public class FileMetadata {
 
   public void setRev(String rev) {
     this.rev = rev;
+  }
+
+  @Override
+  public String getElementId() {
+    return this.fileId;
+  }
+
+  @Override
+  public void setElementId(String elementId) {
+    this.fileId = elementId;
   }
 
   public String getFilename() {

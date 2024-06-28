@@ -44,7 +44,7 @@ import java.util.List;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ServiceConfigurationResource extends AbstractAuthGuardedRestResource {
 
-  private final CRUDStorage<String, SpServiceConfiguration> extensionsServicesConfigStorage =
+  private final CRUDStorage<SpServiceConfiguration> extensionsServicesConfigStorage =
       getNoSqlStorage().getExtensionsServiceConfigurationStorage();
 
 

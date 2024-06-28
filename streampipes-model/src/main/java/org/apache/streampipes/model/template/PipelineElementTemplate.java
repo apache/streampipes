@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.model.template;
 
-import org.apache.streampipes.model.api.Storable;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.shared.api.Storable;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.google.gson.annotations.SerializedName;
