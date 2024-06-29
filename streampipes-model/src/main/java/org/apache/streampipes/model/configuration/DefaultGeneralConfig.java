@@ -16,8 +16,13 @@
  *
  */
 
-.license-info {
-    background: white;
-    border-radius: 0px;
-    border: 0px;
+package org.apache.streampipes.model.configuration;
+
+public class DefaultGeneralConfig {
+
+  public GeneralConfig make() {
+    var generalConfig = new GeneralConfig();
+    generalConfig.setLinkSettings(new DefaultLinkSettings().make());
+    return generalConfig;
+  }
 }

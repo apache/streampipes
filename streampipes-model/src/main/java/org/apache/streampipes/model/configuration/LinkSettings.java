@@ -16,12 +16,11 @@
  *
  */
 
-.about-container {
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
-}
+package org.apache.streampipes.model.configuration;
 
-.md-padding {
-    padding: 10px;
-}
+public record LinkSettings(String documentationUrl,
+                           String supportUrl,
+                           boolean showDocumentationLinkOnStartScreen,
+                           boolean showApiDocumentationLinkOnStartScreen,
+                           boolean showSupportUrlOnStartScreen,
+                           boolean showDocumentationLinkInProfileMenu) {}

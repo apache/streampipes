@@ -16,14 +16,18 @@
  *
  */
 
-.pageheadbar {
-    padding: 0 0 0 10px;
-    background-color: #f6f6f6;
-    font-size: 14px;
-    line-height: 24px;
-    border-bottom: 1px solid #ccc;
-}
+package org.apache.streampipes.model.configuration;
 
-.margin-top {
-    margin-top: 5px;
+public class DefaultLinkSettings {
+
+  public LinkSettings make() {
+    return new LinkSettings(
+        "https://streampipes.apache.org",
+        "",
+        true,
+        true,
+        false,
+        true
+    );
+  }
 }
