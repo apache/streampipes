@@ -22,8 +22,8 @@ import {
     Message,
     Pipeline,
     PipelineCanvasMetadata,
-    PipelineService,
     PipelineCanvasMetadataService,
+    PipelineService,
 } from '@streampipes/platform-services';
 import { EditorService } from '../../services/editor.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
@@ -42,8 +42,7 @@ import { IdGeneratorService } from '../../../core-services/id-generator/id-gener
     styleUrls: ['./save-pipeline.component.scss'],
 })
 export class SavePipelineComponent implements OnInit {
-    pipelineCategories: any;
-    startPipelineAfterStorage: any;
+    startPipelineAfterStorage: boolean;
     updateMode: any;
 
     submitPipelineForm: UntypedFormGroup = new UntypedFormGroup({});
@@ -77,12 +76,10 @@ export class SavePipelineComponent implements OnInit {
         private shepherdService: ShepherdService,
         private pipelineCanvasService: PipelineCanvasMetadataService,
     ) {
-        this.pipelineCategories = [];
         this.updateMode = 'update';
     }
 
     ngOnInit() {
-        this.getPipelineCategories();
         if (this.currentModifiedPipelineId) {
             this.currentPipelineName = this.pipeline.name;
         }
@@ -129,14 +126,6 @@ export class SavePipelineComponent implements OnInit {
         this.errorMessage = data;
     }
 
-    getPipelineCategories() {
-        this.pipelineService
-            .getPipelineCategories()
-            .subscribe(pipelineCategories => {
-                this.pipelineCategories = pipelineCategories;
-            });
-    }
-
     savePipeline(switchTab) {
         let storageRequest;
         const updateMode =
@@ -174,10 +163,9 @@ export class SavePipelineComponent implements OnInit {
 
     updateId(entity: InvocablePipelineElementUnion) {
         const lastIdIndex = entity.elementId.lastIndexOf(':');
-        const newElementId =
+        entity.elementId =
             entity.elementId.substring(0, lastIdIndex + 1) +
             this.idGeneratorService.generate(5);
-        entity.elementId = newElementId;
     }
 
     storePipelineCanvasMetadata(pipelineId: string, updateMode: boolean) {

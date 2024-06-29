@@ -20,9 +20,9 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-06-17 23:25:59.
+// Generated using typescript-generator version 3.2.1263 on 2024-06-27 15:00:50.
 
-export class NamedStreamPipesEntity {
+export class NamedStreamPipesEntity implements Storable {
     '@class':
         | 'org.apache.streampipes.model.connect.grounding.ProtocolDescription'
         | 'org.apache.streampipes.model.template.PipelineTemplateDescription'
@@ -32,7 +32,6 @@ export class NamedStreamPipesEntity {
         | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
         | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
         | 'org.apache.streampipes.model.graph.DataSinkInvocation';
-    '_rev': string;
     'appId': string;
     'connectedTo': string[];
     'description': string;
@@ -44,6 +43,7 @@ export class NamedStreamPipesEntity {
     'includesLocales': boolean;
     'internallyManaged': boolean;
     'name': string;
+    'rev': string;
 
     static 'fromData'(
         data: NamedStreamPipesEntity,
@@ -54,7 +54,6 @@ export class NamedStreamPipesEntity {
         }
         const instance = target || new NamedStreamPipesEntity();
         instance['@class'] = data['@class'];
-        instance._rev = data._rev;
         instance.appId = data.appId;
         instance.connectedTo = __getCopyArrayFn(__identity<string>())(
             data.connectedTo,
@@ -72,6 +71,7 @@ export class NamedStreamPipesEntity {
         instance.includesLocales = data.includesLocales;
         instance.internallyManaged = data.internallyManaged;
         instance.name = data.name;
+        instance.rev = data.rev;
         return instance;
     }
 }
@@ -378,7 +378,6 @@ export class StaticProperty {
         | 'org.apache.streampipes.model.staticproperty.CodeInputStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.CollectionStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty'
-        | 'org.apache.streampipes.model.staticproperty.DomainStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.FileStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.FreeTextStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.MatchingStaticProperty'
@@ -437,8 +436,6 @@ export class StaticProperty {
                 return CollectionStaticProperty.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty':
                 return ColorPickerStaticProperty.fromData(data);
-            case 'org.apache.streampipes.model.staticproperty.DomainStaticProperty':
-                return DomainStaticProperty.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.FileStaticProperty':
                 return FileStaticProperty.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.FreeTextStaticProperty':
@@ -950,9 +947,9 @@ export class CustomTransformOutputStrategy extends OutputStrategy {
     }
 }
 
-export class DashboardEntity {
-    _id: string;
-    _rev: string;
+export class DashboardEntity implements Storable {
+    elementId: string;
+    rev: string;
 
     static fromData(
         data: DashboardEntity,
@@ -962,8 +959,8 @@ export class DashboardEntity {
             return data;
         }
         const instance = target || new DashboardEntity();
-        instance._id = data._id;
-        instance._rev = data._rev;
+        instance.elementId = data.elementId;
+        instance.rev = data.rev;
         return instance;
     }
 }
@@ -1000,15 +997,16 @@ export class DashboardItem {
     }
 }
 
-export class DashboardModel {
-    _id: string;
-    _rev: string;
+export class DashboardModel implements Storable {
+    couchDbId: string;
     dashboardGeneralSettings: { [index: string]: any };
     dashboardTimeSettings: { [index: string]: any };
     description: string;
     displayHeader: boolean;
+    elementId: string;
     id: string;
     name: string;
+    rev: string;
     widgets: DashboardItem[];
 
     static fromData(
@@ -1019,8 +1017,7 @@ export class DashboardModel {
             return data;
         }
         const instance = target || new DashboardModel();
-        instance._id = data._id;
-        instance._rev = data._rev;
+        instance.couchDbId = data.couchDbId;
         instance.dashboardGeneralSettings = __getCopyObjectFn(
             __identity<any>(),
         )(data.dashboardGeneralSettings);
@@ -1029,8 +1026,10 @@ export class DashboardModel {
         );
         instance.description = data.description;
         instance.displayHeader = data.displayHeader;
+        instance.elementId = data.elementId;
         instance.id = data.id;
         instance.name = data.name;
+        instance.rev = data.rev;
         instance.widgets = __getCopyArrayFn(DashboardItem.fromData)(
             data.widgets,
         );
@@ -1128,15 +1127,15 @@ export class DataExplorerWidgetModel extends DashboardEntity {
     }
 }
 
-export class DataLakeMeasure {
+export class DataLakeMeasure implements Storable {
     '@class': 'org.apache.streampipes.model.datalake.DataLakeMeasure';
-    '_rev': string;
     'elementId': string;
     'eventSchema': EventSchema;
     'measureName': string;
     'pipelineId': string;
     'pipelineIsRunning': boolean;
     'pipelineName': string;
+    'rev': string;
     'schemaUpdateStrategy': DataLakeMeasureSchemaUpdateStrategy;
     'schemaVersion': string;
     'timestampField': string;
@@ -1150,13 +1149,13 @@ export class DataLakeMeasure {
         }
         const instance = target || new DataLakeMeasure();
         instance['@class'] = data['@class'];
-        instance._rev = data._rev;
         instance.elementId = data.elementId;
         instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.measureName = data.measureName;
         instance.pipelineId = data.pipelineId;
         instance.pipelineIsRunning = data.pipelineIsRunning;
         instance.pipelineName = data.pipelineName;
+        instance.rev = data.rev;
         instance.schemaUpdateStrategy = data.schemaUpdateStrategy;
         instance.schemaVersion = data.schemaVersion;
         instance.timestampField = data.timestampField;
@@ -1336,28 +1335,6 @@ export class DeleteRuleDescription extends SchemaTransformationRuleDescription {
         const instance = target || new DeleteRuleDescription();
         super.fromData(data, instance);
         instance.runtimeKey = data.runtimeKey;
-        return instance;
-    }
-}
-
-export class DomainStaticProperty extends StaticProperty {
-    '@class': 'org.apache.streampipes.model.staticproperty.DomainStaticProperty';
-    'requiredClass': string;
-    'supportedProperties': SupportedProperty[];
-
-    static 'fromData'(
-        data: DomainStaticProperty,
-        target?: DomainStaticProperty,
-    ): DomainStaticProperty {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new DomainStaticProperty();
-        super.fromData(data, instance);
-        instance.requiredClass = data.requiredClass;
-        instance.supportedProperties = __getCopyArrayFn(
-            SupportedProperty.fromData,
-        )(data.supportedProperties);
         return instance;
     }
 }
@@ -2477,7 +2454,6 @@ export class Pipeline extends ElementComposition {
     createdAt: number;
     createdByUser: string;
     healthStatus: PipelineHealthStatus;
-    pipelineCategories: string[];
     pipelineNotifications: string[];
     publicElement: boolean;
     restartOnSystemReboot: boolean;
@@ -2499,9 +2475,6 @@ export class Pipeline extends ElementComposition {
         instance.createdAt = data.createdAt;
         instance.createdByUser = data.createdByUser;
         instance.healthStatus = data.healthStatus;
-        instance.pipelineCategories = __getCopyArrayFn(__identity<string>())(
-            data.pipelineCategories,
-        );
         instance.pipelineNotifications = __getCopyArrayFn(__identity<string>())(
             data.pipelineNotifications,
         );
@@ -2556,28 +2529,6 @@ export class PipelineCanvasMetadata {
             PipelineElementMetadata.fromData,
         )(data.pipelineElementMetadata);
         instance.pipelineId = data.pipelineId;
-        return instance;
-    }
-}
-
-export class PipelineCategory {
-    _id: string;
-    _rev: string;
-    categoryDescription: string;
-    categoryName: string;
-
-    static fromData(
-        data: PipelineCategory,
-        target?: PipelineCategory,
-    ): PipelineCategory {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new PipelineCategory();
-        instance._id = data._id;
-        instance._rev = data._rev;
-        instance.categoryDescription = data.categoryDescription;
-        instance.categoryName = data.categoryName;
         return instance;
     }
 }
@@ -2720,10 +2671,12 @@ export class PipelineElementStatus {
     }
 }
 
-export class PipelineElementTemplate {
-    _id: string;
-    _rev: string;
+export class PipelineElementTemplate implements Storable {
     basePipelineElementAppId: string;
+    couchDbId: string;
+    couchDbRev: string;
+    elementId: string;
+    rev: string;
     templateConfigs: { [index: string]: PipelineElementTemplateConfig };
     templateDescription: string;
     templateName: string;
@@ -2736,9 +2689,11 @@ export class PipelineElementTemplate {
             return data;
         }
         const instance = target || new PipelineElementTemplate();
-        instance._id = data._id;
-        instance._rev = data._rev;
         instance.basePipelineElementAppId = data.basePipelineElementAppId;
+        instance.couchDbId = data.couchDbId;
+        instance.couchDbRev = data.couchDbRev;
+        instance.elementId = data.elementId;
+        instance.rev = data.rev;
         instance.templateConfigs = __getCopyObjectFn(
             PipelineElementTemplateConfig.fromData,
         )(data.templateConfigs);
@@ -3730,6 +3685,11 @@ export class StaticPropertyAlternatives extends StaticProperty {
     }
 }
 
+export interface Storable {
+    elementId: string;
+    rev: string;
+}
+
 export class StreamPipesApplicationPackage {
     adapters: string[];
     assets: string[];
@@ -3802,26 +3762,6 @@ export class SuccessMessage extends Message {
         }
         const instance = target || new SuccessMessage();
         super.fromData(data, instance);
-        return instance;
-    }
-}
-
-export class SupportedProperty {
-    propertyId: string;
-    value: string;
-    valueRequired: boolean;
-
-    static fromData(
-        data: SupportedProperty,
-        target?: SupportedProperty,
-    ): SupportedProperty {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new SupportedProperty();
-        instance.propertyId = data.propertyId;
-        instance.value = data.value;
-        instance.valueRequired = data.valueRequired;
         return instance;
     }
 }
@@ -4163,7 +4103,6 @@ export type StaticPropertyUnion =
     | CodeInputStaticProperty
     | CollectionStaticProperty
     | ColorPickerStaticProperty
-    | DomainStaticProperty
     | FileStaticProperty
     | FreeTextStaticProperty
     | MappingPropertyUnary

@@ -44,9 +44,6 @@ import { CurrentUserService } from '@streampipes/shared-ui';
 })
 export class PipelineOverviewComponent implements OnInit {
     _pipelines: Pipeline[];
-    _activeCategoryId: string;
-
-    filteredPipelinesAvailable = false;
 
     @Input()
     pipelineToStart: Pipeline;
@@ -134,38 +131,11 @@ export class PipelineOverviewComponent implements OnInit {
         this.addPipelinesToTable();
     }
 
-    get activeCategoryId(): string {
-        return this._activeCategoryId;
-    }
-
-    @Input()
-    set activeCategoryId(activeCategoryId: string) {
-        this._activeCategoryId = activeCategoryId;
-        if (this._pipelines) {
-            this.addPipelinesToTable();
-        }
-    }
-
     addPipelinesToTable() {
-        this.dataSource = new MatTableDataSource<Pipeline>(
-            this.filterPipelines(),
-        );
+        this.dataSource = new MatTableDataSource<Pipeline>(this._pipelines);
         setTimeout(() => {
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
         });
-    }
-
-    filterPipelines(): Pipeline[] {
-        const filteredPipelines: Pipeline[] = this._pipelines.filter(
-            pipeline =>
-                !this._activeCategoryId ||
-                (pipeline.pipelineCategories &&
-                    pipeline.pipelineCategories.some(
-                        pc => pc === this.activeCategoryId,
-                    )),
-        );
-        this.filteredPipelinesAvailable = filteredPipelines.length > 0;
-        return filteredPipelines.sort((a, b) => a.name.localeCompare(b.name));
     }
 }

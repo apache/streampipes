@@ -22,22 +22,10 @@ import org.apache.streampipes.storage.api.IDataStreamStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import java.util.List;
-
 public class DataStreamStorageImpl extends AbstractDao<SpDataStream> implements IDataStreamStorage {
 
   public DataStreamStorageImpl() {
     super(Utils::getCouchDbDataStreamDescriptionClient, SpDataStream.class);
-  }
-
-  @Override
-  public List<SpDataStream> getAll() {
-    return findAll();
-  }
-
-  @Override
-  public void createElement(SpDataStream element) {
-    persist(element);
   }
 
   @Override
@@ -59,7 +47,7 @@ public class DataStreamStorageImpl extends AbstractDao<SpDataStream> implements 
 
   @Override
   public SpDataStream getDataStreamByAppId(String appId) {
-    return getAll()
+    return this.findAll()
         .stream()
         .filter(s -> s.getAppId().equals(appId))
         .findFirst()

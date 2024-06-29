@@ -54,7 +54,7 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dashboardModel.couchDbId, 'WRITE')")
   public ResponseEntity<DashboardModel> modifyDashboard(@RequestBody DashboardModel dashboardModel) {
     getResourceManager().update(dashboardModel);
-    return ok(getResourceManager().find(dashboardModel.getCouchDbId()));
+    return ok(getResourceManager().find(dashboardModel.getElementId()));
   }
 
   @DeleteMapping(path = "/{dashboardId}")

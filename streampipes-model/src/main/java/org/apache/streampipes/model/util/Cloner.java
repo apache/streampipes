@@ -56,7 +56,6 @@ import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty;
-import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
 import org.apache.streampipes.model.staticproperty.FileStaticProperty;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
@@ -64,7 +63,6 @@ import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
@@ -120,12 +118,8 @@ public class Cloner {
       return new RuntimeResolvableAnyStaticProperty((RuntimeResolvableAnyStaticProperty) o);
     } else if (o instanceof OneOfStaticProperty) {
       return new OneOfStaticProperty((OneOfStaticProperty) o);
-    } else if (o instanceof RemoteOneOfStaticProperty) {
-      return new RemoteOneOfStaticProperty((RemoteOneOfStaticProperty) o);
     } else if (o instanceof MappingPropertyNary) {
       return new MappingPropertyNary((MappingPropertyNary) o);
-    } else if (o instanceof DomainStaticProperty) {
-      return new DomainStaticProperty((DomainStaticProperty) o);
     } else if (o instanceof AnyStaticProperty) {
       return new AnyStaticProperty((AnyStaticProperty) o);
     } else if (o instanceof CollectionStaticProperty) {

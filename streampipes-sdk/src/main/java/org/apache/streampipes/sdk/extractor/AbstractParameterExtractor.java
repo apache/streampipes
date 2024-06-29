@@ -32,7 +32,6 @@ import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty;
-import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
 import org.apache.streampipes.model.staticproperty.FileStaticProperty;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
@@ -48,7 +47,6 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.model.staticproperty.StaticPropertyType;
-import org.apache.streampipes.model.staticproperty.SupportedProperty;
 import org.apache.streampipes.model.staticproperty.TreeInputNode;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
@@ -366,22 +364,6 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     }
     // TODO exceptions
     return null;
-  }
-
-  @Override
-  public <V> V supportedOntologyPropertyValue(String domainPropertyInternalId, String
-      propertyId, Class<V> targetClass) {
-    DomainStaticProperty dsp = getStaticPropertyByName(domainPropertyInternalId,
-        DomainStaticProperty.class);
-
-    return typeParser.parse(dsp
-        .getSupportedProperties()
-        .stream()
-        .filter(sp -> sp.getPropertyId().equals(propertyId))
-        .findFirst()
-        .map(SupportedProperty::getValue)
-        .get(), targetClass);
-
   }
 
   @Override

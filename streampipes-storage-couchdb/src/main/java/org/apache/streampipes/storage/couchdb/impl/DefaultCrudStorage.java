@@ -18,32 +18,34 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import org.apache.streampipes.model.pipeline.PipelineCategory;
-import org.apache.streampipes.storage.api.IPipelineCategoryStorage;
+import org.apache.streampipes.model.shared.api.Storable;
+import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import java.util.List;
+import org.lightcouch.CouchDbClient;
 
-public class PipelineCategoryStorageImpl extends AbstractDao<PipelineCategory> implements IPipelineCategoryStorage {
+import java.util.function.Supplier;
 
-  public PipelineCategoryStorageImpl() {
-    super(Utils::getCouchDbPipelineCategoriesClient, PipelineCategory.class);
+public class DefaultCrudStorage<T extends Storable> extends AbstractDao<T> implements CRUDStorage<T> {
+
+  public DefaultCrudStorage(Supplier<CouchDbClient> couchDbClientSupplier,
+                            Class<T> clazz) {
+    super(couchDbClientSupplier, clazz);
   }
 
   @Override
-  public List<PipelineCategory> getPipelineCategories() {
-    return findAll();
+  public T getElementById(String id) {
+    return findWithNullIfEmpty(id);
   }
 
   @Override
-  public boolean addPipelineCategory(PipelineCategory pipelineCategory) {
-    return persist(pipelineCategory).k;
+  public T updateElement(T element) {
+    update(element);
+    return findWithNullIfEmpty(element.getElementId());
   }
 
   @Override
-  public boolean deletePipelineCategory(String categoryId) {
-    return delete(categoryId);
+  public void deleteElement(T element) {
+    delete(element.getElementId());
   }
-
 }

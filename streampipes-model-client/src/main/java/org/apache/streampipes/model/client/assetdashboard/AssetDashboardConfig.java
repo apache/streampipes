@@ -17,12 +17,14 @@
  */
 package org.apache.streampipes.model.client.assetdashboard;
 
+import org.apache.streampipes.model.shared.api.Storable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 import java.util.Map;
 
-public class AssetDashboardConfig {
+public class AssetDashboardConfig implements Storable {
 
   private @SerializedName("_id") String dashboardId;
   private @SerializedName("_rev") String rev;
@@ -99,5 +101,15 @@ public class AssetDashboardConfig {
 
   public void setRev(String rev) {
     this.rev = rev;
+  }
+
+  @Override
+  public String getElementId() {
+    return this.dashboardId;
+  }
+
+  @Override
+  public void setElementId(String elementId) {
+    this.dashboardId = elementId;
   }
 }

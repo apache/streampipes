@@ -40,7 +40,7 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   private static final Logger LOG = LoggerFactory.getLogger(SpServiceDiscoveryCore.class);
   private static final int MAX_RETRIES = 3;
 
-  private final CRUDStorage<String, SpServiceRegistration> serviceStorage;
+  private final CRUDStorage<SpServiceRegistration> serviceStorage;
 
   public SpServiceDiscoveryCore() {
     this.serviceStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
@@ -92,7 +92,7 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   }
 
   private List<SpServiceRegistration> findServices(int retryCount) {
-    var services = serviceStorage.getAll();
+    var services = serviceStorage.findAll();
     if (services.isEmpty()) {
       if (retryCount < MAX_RETRIES) {
         try {

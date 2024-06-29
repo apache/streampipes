@@ -21,7 +21,7 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 
 import java.util.List;
 
-public interface IDataProcessorStorage extends CRUDStorage<String, DataProcessorDescription> {
+public interface IDataProcessorStorage extends CRUDStorage<DataProcessorDescription> {
 
   DataProcessorDescription getFirstDataProcessorByAppId(String appId);
 

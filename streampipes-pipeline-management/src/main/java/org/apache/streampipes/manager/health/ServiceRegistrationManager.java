@@ -31,9 +31,9 @@ public class ServiceRegistrationManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(ServiceRegistrationManager.class);
 
-  private final CRUDStorage<String, SpServiceRegistration> storage;
+  private final CRUDStorage<SpServiceRegistration> storage;
 
-  public ServiceRegistrationManager(CRUDStorage<String, SpServiceRegistration> storage) {
+  public ServiceRegistrationManager(CRUDStorage<SpServiceRegistration> storage) {
     this.storage = storage;
   }
 
@@ -61,12 +61,12 @@ public class ServiceRegistrationManager {
   public void addService(SpServiceRegistration serviceRegistration,
                          SpServiceStatus status) {
     serviceRegistration.setStatus(status);
-    storage.createElement(serviceRegistration);
+    storage.persist(serviceRegistration);
     logService(serviceRegistration);
   }
 
   public List<SpServiceRegistration> getAllServices() {
-    return storage.getAll();
+    return storage.findAll();
   }
 
   public SpServiceRegistration getService(String serviceId) {
@@ -74,7 +74,7 @@ public class ServiceRegistrationManager {
   }
 
   public boolean isAnyServiceMigrating() {
-    return storage.getAll()
+    return storage.findAll()
         .stream()
         .anyMatch(service -> service.getStatus() == SpServiceStatus.MIGRATING);
   }

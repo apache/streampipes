@@ -16,21 +16,29 @@
  *
  */
 
-package org.apache.streampipes.storage.api;
+package org.apache.streampipes.storage.couchdb.impl;
 
-import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
+import org.apache.streampipes.model.shared.api.Storable;
+
+import org.lightcouch.CouchDbClient;
 
 import java.util.List;
+import java.util.function.Supplier;
 
-public interface IDashboardWidgetStorage {
+public class DefaultViewCrudStorage<T extends Storable> extends DefaultCrudStorage<T> {
 
-  List<DashboardWidgetModel> getAllDashboardWidgets();
+  private final String viewName;
 
-  String storeDashboardWidget(DashboardWidgetModel dashboardWidgetModel);
+  public DefaultViewCrudStorage(Supplier<CouchDbClient> couchDbClientSupplier,
+                                Class<T> clazz,
+                                String viewName) {
+    super(couchDbClientSupplier, clazz);
+    this.viewName = viewName;
+  }
 
-  void updateDashboardWidget(DashboardWidgetModel dashboardWidgetModel);
+  @Override
+  public List<T> findAll() {
+    return findAll(viewName, clazz);
+  }
 
-  DashboardWidgetModel getDashboardWidget(String dashboardWidgetId);
-
-  void deleteDashboardWidget(String dashboardWidgetId);
 }
