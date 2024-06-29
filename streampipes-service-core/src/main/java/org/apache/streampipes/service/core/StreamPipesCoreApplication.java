@@ -213,7 +213,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
     pipelinesToStop.forEach(pipeline -> {
       pipeline.setRestartOnSystemReboot(true);
-      StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
+      StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(pipeline);
     });
 
     LOG.info("Gracefully stopping all running pipelines...");
@@ -231,7 +231,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   private List<Pipeline> getAllPipelines() {
     return getPipelineStorage()
-        .getAllPipelines();
+        .findAll();
   }
 
   private IPipelineStorage getPipelineStorage() {

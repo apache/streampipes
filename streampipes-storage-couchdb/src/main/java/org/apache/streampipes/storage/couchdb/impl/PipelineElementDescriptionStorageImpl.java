@@ -18,7 +18,6 @@
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -29,7 +28,6 @@ import org.apache.streampipes.storage.api.IDataStreamStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class PipelineElementDescriptionStorageImpl implements IPipelineElementDescriptionStorage {
 
@@ -46,12 +44,6 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   }
 
   @Override
-  public boolean storeInvocablePipelineElement(InvocableStreamPipesEntity element) {
-    // TODO Check if this is needed
-    return false;
-  }
-
-  @Override
   public boolean storeDataStream(SpDataStream stream) {
     this.dataStreamStorage.persist(stream);
     return true;
@@ -61,11 +53,6 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   public boolean storeDataProcessor(DataProcessorDescription processorDescription) {
     this.dataProcessorStorage.persist(processorDescription);
     return true;
-  }
-
-  @Override
-  public SpDataStream getDataStreamByAppId(String appId) {
-    return this.dataStreamStorage.getDataStreamByAppId(appId);
   }
 
   @Override
@@ -99,11 +86,6 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   }
 
   @Override
-  public AdapterDescription getAdapterByAppId(String appId) {
-    return this.adapterStorage.getFirstAdapterByAppId(appId);
-  }
-
-  @Override
   public List<SpDataStream> getAllDataStreams() {
     return this.dataStreamStorage.findAll();
   }
@@ -114,41 +96,14 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   }
 
   @Override
-  public List<AdapterDescription> getAllAdapterDescriptions() {
-    return null;
-  }
-
-  @Override
   public boolean deleteDataStream(SpDataStream sep) {
     this.dataStreamStorage.deleteElement(sep);
     return true;
   }
 
   @Override
-  public boolean deleteDataStream(String rdfId) {
-    return deleteDataStream(getDataStreamById(rdfId));
-  }
-
-  @Override
   public boolean deleteDataProcessor(DataProcessorDescription processorDescription) {
     this.dataProcessorStorage.deleteElement(processorDescription);
-    return true;
-  }
-
-  @Override
-  public boolean deleteDataProcessor(String rdfId) {
-    return deleteDataProcessor(getDataProcessorById(rdfId));
-  }
-
-  @Override
-  public boolean deleteAdapterDescription(AdapterDescription adapterDescription) {
-    adapterStorage.deleteAdapter(adapterDescription.getElementId());
-    return true;
-  }
-
-  @Override
-  public boolean deleteAdapterDescription(String elementId) {
-    adapterStorage.deleteAdapter(elementId);
     return true;
   }
 
@@ -165,26 +120,6 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   @Override
   public boolean exists(DataProcessorDescription processorDescription) {
     return getDataProcessorById(processorDescription.getElementId()) != null;
-  }
-
-  @Override
-  public boolean existsDataProcessorByAppId(String appId) {
-    try {
-      getDataProcessorByAppId(appId);
-      return true;
-    } catch (NoSuchElementException e) {
-      return false;
-    }
-  }
-
-  @Override
-  public boolean existsDataSinkByAppId(String appId) {
-    try {
-      getDataSinkByAppId(appId);
-      return true;
-    } catch (NoSuchElementException e) {
-      return false;
-    }
   }
 
   @Override
@@ -243,11 +178,6 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   }
 
   @Override
-  public boolean deleteDataSink(String rdfId) {
-    return deleteDataSink(getDataSinkById(rdfId));
-  }
-
-  @Override
   public boolean storeDataSink(DataSinkDescription sec) {
     this.dataSinkStorage.persist(sec);
     return true;
@@ -255,7 +185,7 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
 
   @Override
   public boolean storeAdapterDescription(AdapterDescription adapterDescription) {
-    this.adapterStorage.storeAdapter(adapterDescription);
+    this.adapterStorage.persist(adapterDescription);
     return true;
   }
 

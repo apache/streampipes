@@ -63,7 +63,7 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
     pipeline.setRunning(true);
     pipeline.setStartedAt(new Date().getTime());
     try {
-      getPipelineStorageApi().updatePipeline(pipeline);
+      getPipelineStorageApi().updateElement(pipeline);
     } catch (DocumentConflictException dce) {
       LOG.error("Could not update pipeline {}", pipeline.getPipelineId(), dce);
     }
@@ -71,7 +71,7 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
 
   private void setPipelineStopped(Pipeline pipeline) {
     pipeline.setRunning(false);
-    getPipelineStorageApi().updatePipeline(pipeline);
+    getPipelineStorageApi().updateElement(pipeline);
   }
 
   private IPipelineStorage getPipelineStorageApi() {

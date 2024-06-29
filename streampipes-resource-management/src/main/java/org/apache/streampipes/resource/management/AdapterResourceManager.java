@@ -42,7 +42,7 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
   public String encryptAndCreate(AdapterDescription adapterDescription) {
     AdapterDescription encryptedAdapterDescription = cloneAndEncrypt(adapterDescription);
     encryptedAdapterDescription.setRev(null);
-    return db.storeAdapter(encryptedAdapterDescription);
+    return db.persist(encryptedAdapterDescription).v;
   }
 
   /**
@@ -51,11 +51,11 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
    * @param adapterDescription input adapter description
    */
   public void encryptAndUpdate(AdapterDescription adapterDescription) {
-    db.updateAdapter(cloneAndEncrypt(adapterDescription));
+    db.updateElement(cloneAndEncrypt(adapterDescription));
   }
 
   public void delete(String elementId) {
-    db.deleteAdapter(elementId);
+    db.deleteElementById(elementId);
   }
 
   /**

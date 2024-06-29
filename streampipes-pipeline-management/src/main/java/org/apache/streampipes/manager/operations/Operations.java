@@ -93,7 +93,7 @@ public class Operations {
   public static List<PipelineOperationStatus> stopAllPipelines(boolean forceStop) {
     List<PipelineOperationStatus> status = new ArrayList<>();
     List<Pipeline> pipelines =
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines();
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().findAll();
 
     pipelines.forEach(p -> {
       if (p.isRunning()) {

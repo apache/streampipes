@@ -19,21 +19,13 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.storage.api.IDataSinkStorage;
-import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import java.util.List;
-
-public class DataSinkStorageImpl extends AbstractDao<DataSinkDescription> implements IDataSinkStorage {
+public class DataSinkStorageImpl extends DefaultCrudStorage<DataSinkDescription> implements IDataSinkStorage {
 
 
   public DataSinkStorageImpl() {
     super(Utils::getCouchDbDataSinkDescriptionClient, DataSinkDescription.class);
-  }
-
-  @Override
-  public DataSinkDescription getElementById(String s) {
-    return findWithNullIfEmpty(s);
   }
 
   @Override
@@ -44,25 +36,12 @@ public class DataSinkStorageImpl extends AbstractDao<DataSinkDescription> implem
   }
 
   @Override
-  public void deleteElement(DataSinkDescription element) {
-    delete(element.getElementId());
-  }
-
-  @Override
   public DataSinkDescription getFirstDataSinkByAppId(String appId) {
     return this.findAll()
         .stream()
         .filter(s -> s.getAppId().equals(appId))
         .findFirst()
         .orElseThrow(IllegalArgumentException::new);
-  }
-
-  @Override
-  public List<DataSinkDescription> getDataSinksByAppId(String appId) {
-    return this.findAll()
-            .stream()
-            .filter(s -> s.getAppId().equals(appId))
-            .toList();
   }
 
   private String getCurrentRev(String elementId) {

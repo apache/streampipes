@@ -19,18 +19,12 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.storage.api.IDataStreamStorage;
-import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public class DataStreamStorageImpl extends AbstractDao<SpDataStream> implements IDataStreamStorage {
+public class DataStreamStorageImpl extends DefaultCrudStorage<SpDataStream> implements IDataStreamStorage {
 
   public DataStreamStorageImpl() {
     super(Utils::getCouchDbDataStreamDescriptionClient, SpDataStream.class);
-  }
-
-  @Override
-  public SpDataStream getElementById(String s) {
-    return findWithNullIfEmpty(s);
   }
 
   @Override
@@ -38,11 +32,6 @@ public class DataStreamStorageImpl extends AbstractDao<SpDataStream> implements 
     element.setRev(getCurrentRev(element.getElementId()));
     update(element);
     return getElementById(element.getElementId());
-  }
-
-  @Override
-  public void deleteElement(SpDataStream element) {
-    delete(element.getElementId());
   }
 
   @Override

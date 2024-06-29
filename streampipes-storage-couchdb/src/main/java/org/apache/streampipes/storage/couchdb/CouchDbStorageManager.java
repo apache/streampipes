@@ -191,7 +191,7 @@ public enum CouchDbStorageManager implements INoSqlStorage {
 
   @Override
   public IPermissionStorage getPermissionStorage() {
-    return new PermissionStorageImpl();
+    return new PermissionStorageImpl("users/permissions");
   }
 
   @Override

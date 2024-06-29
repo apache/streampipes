@@ -234,7 +234,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
   public ResponseEntity<SuccessMessage> overwritePipeline(@PathVariable("pipelineId") String pipelineId,
                                                           @RequestBody Pipeline pipeline) {
-    Pipeline storedPipeline = getPipelineStorage().getPipeline(pipelineId);
+    Pipeline storedPipeline = getPipelineStorage().getElementById(pipelineId);
     if (!storedPipeline.isRunning()) {
       storedPipeline.setStreams(pipeline.getStreams());
       storedPipeline.setSepas(pipeline.getSepas());

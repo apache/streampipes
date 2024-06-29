@@ -63,7 +63,6 @@ public class CouchDbInstallationStep extends InstallationStep {
       Utils.getCouchDbConnectionClient();
       Utils.getCouchDbNotificationClient();
       Utils.getCouchDbPipelineCategoriesClient();
-      Utils.getCouchDbLabelClient();
 
       logSuccess(getTitle());
     } catch (Exception e) {
@@ -75,7 +74,6 @@ public class CouchDbInstallationStep extends InstallationStep {
     addUserView();
     addConnectionView();
     addNotificationView();
-    addLabelView();
     addPipelineView();
   }
 
@@ -158,29 +156,6 @@ public class CouchDbInstallationStep extends InstallationStep {
     try {
       var userDocument = new UserDesignDocument().make();
       Response resp = Utils.getCouchDbUserClient().design().synchronizeWithDb(userDocument);
-
-      if (resp.getError() != null) {
-        logFailure(PREPARING_USERS_TEXT);
-      } else {
-        logSuccess(PREPARING_USERS_TEXT);
-      }
-    } catch (Exception e) {
-      logFailure(PREPARING_USERS_TEXT, e);
-    }
-  }
-
-  private void addLabelView() {
-    try {
-      DesignDocument labelDocument = prepareDocument("_design/categoryId");
-      Map<String, MapReduce> views = new HashMap<>();
-
-      MapReduce categoryIdFunction = new MapReduce();
-      categoryIdFunction.setMap("function(doc) { if(doc.categoryId) { emit(doc.categoryId, doc); } }");
-
-      views.put("categoryId", categoryIdFunction);
-
-      labelDocument.setViews(views);
-      Response resp = Utils.getCouchDbLabelClient().design().synchronizeWithDb(labelDocument);
 
       if (resp.getError() != null) {
         logFailure(PREPARING_USERS_TEXT);
