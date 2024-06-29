@@ -20,7 +20,7 @@ import { Component } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { DataExportService } from '../data-export.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { AssetExportConfiguration } from '../../../../../dist/streampipes/platform-services';
+import { AssetExportConfiguration } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-data-import-dialog',
