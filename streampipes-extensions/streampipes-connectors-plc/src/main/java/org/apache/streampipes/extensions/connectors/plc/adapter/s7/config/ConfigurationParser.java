@@ -81,8 +81,10 @@ public class ConfigurationParser {
     return switch (type) {
       case "BOOL" -> Datatypes.Boolean;
       case "BYTE", "REAL" -> Datatypes.Float;
-      case "INT" -> Datatypes.Integer;
-      case "WORD", "TIME_OF_DAY", "DATE", "DATE_AND_TIME", "STRING", "CHAR" -> Datatypes.String;
+      case "LREAL" -> Datatypes.Double;
+      case "INT", "DINT", "UDINT", "UINT", "SINT", "USINT" -> Datatypes.Integer;
+      case "LINT", "ULINT" -> Datatypes.Long;
+      case "WORD", "LWORD", "TIME_OF_DAY", "DATE", "DATE_AND_TIME", "STRING", "CHAR", "WCHAR" -> Datatypes.String;
       default -> throw new AdapterException("Datatype " + plcType + " is not supported");
     };
   }
