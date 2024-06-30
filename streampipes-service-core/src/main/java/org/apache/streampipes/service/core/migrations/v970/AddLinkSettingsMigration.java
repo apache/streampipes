@@ -27,26 +27,26 @@ import java.io.IOException;
 
 public class AddLinkSettingsMigration implements Migration {
 
-    private final ISpCoreConfigurationStorage coreConfigStore = StorageDispatcher
-            .INSTANCE
-            .getNoSqlStore()
-            .getSpCoreConfigurationStorage();
+  private final ISpCoreConfigurationStorage coreConfigStore = StorageDispatcher
+      .INSTANCE
+      .getNoSqlStore()
+      .getSpCoreConfigurationStorage();
 
-    @Override
-    public boolean shouldExecute() {
-        return coreConfigStore.get().getGeneralConfig().getLinkSettings() == null;
-    }
+  @Override
+  public boolean shouldExecute() {
+    return coreConfigStore.get().getGeneralConfig().getLinkSettings() == null;
+  }
 
-    @Override
-    public void executeMigration() throws IOException {
-        var linkSettings = new DefaultLinkSettings().make();
-        var coreConfig = coreConfigStore.get();
-        coreConfig.getGeneralConfig().setLinkSettings(linkSettings);
-        coreConfigStore.updateElement(coreConfig);
-    }
+  @Override
+  public void executeMigration() throws IOException {
+    var linkSettings = new DefaultLinkSettings().make();
+    var coreConfig = coreConfigStore.get();
+    coreConfig.getGeneralConfig().setLinkSettings(linkSettings);
+    coreConfigStore.updateElement(coreConfig);
+  }
 
-    @Override
-    public String getDescription() {
-        return "Adding link settings to general config";
-    }
+  @Override
+  public String getDescription() {
+    return "Adding link settings to general config";
+  }
 }
