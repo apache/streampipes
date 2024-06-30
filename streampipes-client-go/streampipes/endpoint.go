@@ -19,9 +19,10 @@ package streampipes
 
 import (
 	"errors"
+	"net/http"
+
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
 	headers "github.com/apache/streampipes/streampipes-client-go/streampipes/internal/http_headers"
-	"net/http"
 )
 
 type endpoint struct {

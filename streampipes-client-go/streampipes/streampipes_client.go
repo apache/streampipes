@@ -19,10 +19,11 @@ package streampipes
 
 import (
 	"errors"
-	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
-	"github.com/apache/streampipes/streampipes-client-go/streampipes/utils"
 	"net/url"
 	"strings"
+
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/utils"
 )
 
 // This is the central point of contact with StreamPipes and provides all the functionalities to interact with it.
@@ -71,7 +72,6 @@ func (s *StreamPipesClient) StreamPipesVersion() *Versions {
 
 	return NewVersions(s.config)
 }
-
 
 func (s *StreamPipesClient) Pipeline() *Pipeline {
 
