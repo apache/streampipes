@@ -16,7 +16,7 @@
   ~
   -->
 
-<sp-auth-box>
+<sp-auth-box [linkSettings]="loginSettings.linkSettings" *ngIf="configReady">
     <div fxFlex="100" fxLayout="column" fxLayoutAlign="center start">
         <h1>Register</h1>
     </div>

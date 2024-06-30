@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-06-27 15:00:50.
+// Generated using typescript-generator version 3.2.1263 on 2024-06-30 09:10:19.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -30,8 +30,8 @@ export class NamedStreamPipesEntity implements Storable {
         | 'org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity'
         | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
         | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
-        | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
-        | 'org.apache.streampipes.model.graph.DataSinkInvocation';
+        | 'org.apache.streampipes.model.graph.DataSinkInvocation'
+        | 'org.apache.streampipes.model.graph.DataProcessorInvocation';
     'appId': string;
     'connectedTo': string[];
     'description': string;
@@ -81,8 +81,8 @@ export class VersionedNamedStreamPipesEntity extends NamedStreamPipesEntity {
         | 'org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity'
         | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
         | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
-        | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
-        | 'org.apache.streampipes.model.graph.DataSinkInvocation';
+        | 'org.apache.streampipes.model.graph.DataSinkInvocation'
+        | 'org.apache.streampipes.model.graph.DataProcessorInvocation';
     'version': number;
 
     static 'fromData'(
@@ -1169,8 +1169,8 @@ export class InvocableStreamPipesEntity
 {
     '@class':
         | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
-        | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
-        | 'org.apache.streampipes.model.graph.DataSinkInvocation';
+        | 'org.apache.streampipes.model.graph.DataSinkInvocation'
+        | 'org.apache.streampipes.model.graph.DataProcessorInvocation';
     'belongsTo': string;
     'configured': boolean;
     'correspondingPipeline': string;
@@ -1355,32 +1355,6 @@ export class EdgeValidationStatus {
             data.notifications,
         );
         instance.validationStatusType = data.validationStatusType;
-        return instance;
-    }
-}
-
-export class ElementComposition {
-    description: string;
-    name: string;
-    sepas: DataProcessorInvocation[];
-    streams: SpDataStream[];
-
-    static fromData(
-        data: ElementComposition,
-        target?: ElementComposition,
-    ): ElementComposition {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new ElementComposition();
-        instance.description = data.description;
-        instance.name = data.name;
-        instance.sepas = __getCopyArrayFn(DataProcessorInvocation.fromData)(
-            data.sepas,
-        );
-        instance.streams = __getCopyArrayFn(SpDataStream.fromData)(
-            data.streams,
-        );
         return instance;
     }
 }
@@ -1817,9 +1791,10 @@ export class FieldStatusInfo {
     }
 }
 
-export class FileMetadata {
+export class FileMetadata implements Storable {
     createdAt: number;
     createdByUser: string;
+    elementId: string;
     fileId: string;
     filename: string;
     filetype: string;
@@ -1833,6 +1808,7 @@ export class FileMetadata {
         const instance = target || new FileMetadata();
         instance.createdAt = data.createdAt;
         instance.createdByUser = data.createdByUser;
+        instance.elementId = data.elementId;
         instance.fileId = data.fileId;
         instance.filename = data.filename;
         instance.filetype = data.filetype;
@@ -2113,6 +2089,32 @@ export class KeepOutputStrategy extends OutputStrategy {
         super.fromData(data, instance);
         instance.eventName = data.eventName;
         instance.keepBoth = data.keepBoth;
+        return instance;
+    }
+}
+
+export class LinkSettings {
+    documentationUrl: string;
+    showApiDocumentationLinkOnStartScreen: boolean;
+    showDocumentationLinkInProfileMenu: boolean;
+    showDocumentationLinkOnStartScreen: boolean;
+    showSupportUrlOnStartScreen: boolean;
+    supportUrl: string;
+
+    static fromData(data: LinkSettings, target?: LinkSettings): LinkSettings {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new LinkSettings();
+        instance.documentationUrl = data.documentationUrl;
+        instance.showApiDocumentationLinkOnStartScreen =
+            data.showApiDocumentationLinkOnStartScreen;
+        instance.showDocumentationLinkInProfileMenu =
+            data.showDocumentationLinkInProfileMenu;
+        instance.showDocumentationLinkOnStartScreen =
+            data.showDocumentationLinkOnStartScreen;
+        instance.showSupportUrlOnStartScreen = data.showSupportUrlOnStartScreen;
+        instance.supportUrl = data.supportUrl;
         return instance;
     }
 }
@@ -2447,18 +2449,24 @@ export class PageResult extends DataSeries {
     }
 }
 
-export class Pipeline extends ElementComposition {
+export class Pipeline implements Storable {
     _id: string;
     _rev: string;
     actions: DataSinkInvocation[];
     createdAt: number;
     createdByUser: string;
+    description: string;
+    elementId: string;
     healthStatus: PipelineHealthStatus;
+    name: string;
     pipelineNotifications: string[];
     publicElement: boolean;
     restartOnSystemReboot: boolean;
+    rev: string;
     running: boolean;
+    sepas: DataProcessorInvocation[];
     startedAt: number;
+    streams: SpDataStream[];
     valid: boolean;
 
     static fromData(data: Pipeline, target?: Pipeline): Pipeline {
@@ -2466,7 +2474,6 @@ export class Pipeline extends ElementComposition {
             return data;
         }
         const instance = target || new Pipeline();
-        super.fromData(data, instance);
         instance._id = data._id;
         instance._rev = data._rev;
         instance.actions = __getCopyArrayFn(DataSinkInvocation.fromData)(
@@ -2474,14 +2481,24 @@ export class Pipeline extends ElementComposition {
         );
         instance.createdAt = data.createdAt;
         instance.createdByUser = data.createdByUser;
+        instance.description = data.description;
+        instance.elementId = data.elementId;
         instance.healthStatus = data.healthStatus;
+        instance.name = data.name;
         instance.pipelineNotifications = __getCopyArrayFn(__identity<string>())(
             data.pipelineNotifications,
         );
         instance.publicElement = data.publicElement;
         instance.restartOnSystemReboot = data.restartOnSystemReboot;
+        instance.rev = data.rev;
         instance.running = data.running;
+        instance.sepas = __getCopyArrayFn(DataProcessorInvocation.fromData)(
+            data.sepas,
+        );
         instance.startedAt = data.startedAt;
+        instance.streams = __getCopyArrayFn(SpDataStream.fromData)(
+            data.streams,
+        );
         instance.valid = data.valid;
         return instance;
     }
@@ -3562,8 +3579,9 @@ export class SpQueryResult {
     }
 }
 
-export class SpServiceConfiguration {
+export class SpServiceConfiguration implements Storable {
     configs: ConfigItem[];
+    elementId: string;
     rev: string;
     serviceGroup: string;
     serviceName: string;
@@ -3577,6 +3595,7 @@ export class SpServiceConfiguration {
         }
         const instance = target || new SpServiceConfiguration();
         instance.configs = __getCopyArrayFn(ConfigItem.fromData)(data.configs);
+        instance.elementId = data.elementId;
         instance.rev = data.rev;
         instance.serviceGroup = data.serviceGroup;
         instance.serviceName = data.serviceName;
@@ -3584,7 +3603,8 @@ export class SpServiceConfiguration {
     }
 }
 
-export class SpServiceRegistration {
+export class SpServiceRegistration implements Storable {
+    elementId: string;
     firstTimeSeenUnhealthy: number;
     healthCheckPath: string;
     host: string;
@@ -3607,6 +3627,7 @@ export class SpServiceRegistration {
             return data;
         }
         const instance = target || new SpServiceRegistration();
+        instance.elementId = data.elementId;
         instance.firstTimeSeenUnhealthy = data.firstTimeSeenUnhealthy;
         instance.healthCheckPath = data.healthCheckPath;
         instance.host = data.host;

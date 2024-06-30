@@ -138,6 +138,7 @@ public class Authentication extends AbstractRestResource {
     Map<String, Object> response = new HashMap<>();
     response.put("allowSelfRegistration", config.isAllowSelfRegistration());
     response.put("allowPasswordRecovery", config.isAllowPasswordRecovery());
+    response.put("linkSettings", config.getLinkSettings());
 
     return ok(response);
   }

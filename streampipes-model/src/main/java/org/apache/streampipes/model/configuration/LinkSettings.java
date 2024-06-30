@@ -16,12 +16,14 @@
  *
  */
 
-.about-container {
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
-}
+package org.apache.streampipes.model.configuration;
 
-.md-padding {
-    padding: 10px;
-}
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+@TsModel
+public record LinkSettings(String documentationUrl,
+                           String supportUrl,
+                           boolean showDocumentationLinkOnStartScreen,
+                           boolean showApiDocumentationLinkOnStartScreen,
+                           boolean showSupportUrlOnStartScreen,
+                           boolean showDocumentationLinkInProfileMenu) {}

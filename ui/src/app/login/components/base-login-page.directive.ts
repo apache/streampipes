@@ -16,13 +16,24 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Directive, OnInit } from '@angular/core';
+import { LoginService } from '../services/login.service';
+import { LoginModel } from './login/login.model';
 
-@Component({
-    selector: 'sp-about',
-    templateUrl: './about.component.html',
-    styleUrls: ['./about.component.scss'],
-})
-export class AboutComponent {
-    constructor() {}
+@Directive()
+export abstract class BaseLoginPageDirective implements OnInit {
+    protected loginSettings: LoginModel;
+    protected configReady = false;
+
+    protected constructor(protected loginService: LoginService) {}
+
+    ngOnInit(): void {
+        this.loginService.fetchLoginSettings().subscribe(result => {
+            this.loginSettings = result;
+            this.configReady = true;
+            this.onSettingsAvailable();
+        });
+    }
+
+    abstract onSettingsAvailable(): void;
 }

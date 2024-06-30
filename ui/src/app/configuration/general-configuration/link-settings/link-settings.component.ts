@@ -16,13 +16,14 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
-    selector: 'sp-license',
-    templateUrl: './license.component.html',
-    styleUrls: ['./license.component.scss'],
+    selector: 'sp-configuration-link-settings',
+    templateUrl: './link-settings.component.html',
 })
-export class LicenseComponent {
-    constructor() {}
+export class SpConfigurationLinkSettingsComponent {
+    @Input()
+    parentForm: FormGroup;
 }

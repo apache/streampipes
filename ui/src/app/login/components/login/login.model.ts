@@ -16,7 +16,10 @@
  *
  */
 
+import { LinkSettings } from '@streampipes/platform-services';
+
 export interface LoginModel {
     allowSelfRegistration: boolean;
     allowPasswordRecovery: boolean;
+    linkSettings: LinkSettings;
 }
