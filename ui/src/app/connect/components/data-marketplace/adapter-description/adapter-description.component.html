@@ -31,7 +31,7 @@
                 <button
                     mat-icon-button
                     color="accent"
-                    (click)="openDocumentation()"
+                    (click)="openDocumentation($event)"
                     matTooltip="Show documentation"
                 >
                     <mat-icon>menu_book</mat-icon>
@@ -45,16 +45,6 @@
             <div class="description" fxLayoutAlign="start start">
                 <p [innerHTML]="adapter.description"></p>
             </div>
-        </div>
-        <div fxLayoutAlign="end end">
-            <button
-                mat-mini-fab
-                matTooltip="Create adapter"
-                aria-label="Create adapter"
-                (click)="createAdapterEmitter.emit(adapter.appId)"
-            >
-                <mat-icon>add</mat-icon>
-            </button>
         </div>
     </div>
 </div>

@@ -32,9 +32,6 @@ export class AdapterDescriptionComponent implements OnInit {
     @Input()
     adapter: AdapterDescription;
 
-    @Output()
-    createAdapterEmitter: EventEmitter<string> = new EventEmitter<string>();
-
     isRunningAdapter = false;
     adapterLabel: string;
     iconUrl: SafeUrl;
@@ -62,7 +59,8 @@ export class AdapterDescriptionComponent implements OnInit {
         return this.restApi.getAssetUrl(this.adapter.appId) + '/icon';
     }
 
-    openDocumentation(): void {
+    openDocumentation(event: MouseEvent): void {
+        event.stopPropagation();
         this.dialogService.open(SpAdapterDocumentationDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: 'Documentation',

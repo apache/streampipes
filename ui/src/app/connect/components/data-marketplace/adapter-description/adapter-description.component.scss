@@ -23,10 +23,12 @@
     border-bottom: 5px solid gray;
     background: var(--color-bg-dialog);
     padding: 10px;
+    cursor: pointer;
 }
 
 .adapter-description-box:hover {
     border-bottom: 5px solid var(--color-accent);
+    border-color: var(--color-accent);
 }
 
 .edit {
