@@ -16,14 +16,24 @@
  *
  */
 
-package org.apache.streampipes.model.configuration;
+import { Directive, OnInit } from '@angular/core';
+import { LoginService } from '../services/login.service';
+import { LoginModel } from './login/login.model';
 
-import org.apache.streampipes.model.shared.annotation.TsModel;
+@Directive()
+export abstract class BaseLoginPageDirective implements OnInit {
+    protected loginSettings: LoginModel;
+    protected configReady = false;
 
-@TsModel
-public record LinkSettings(String documentationUrl,
-                           String supportUrl,
-                           boolean showDocumentationLinkOnStartScreen,
-                           boolean showApiDocumentationLinkOnStartScreen,
-                           boolean showSupportUrlOnStartScreen,
-                           boolean showDocumentationLinkInProfileMenu) {}
+    protected constructor(protected loginService: LoginService) {}
+
+    ngOnInit(): void {
+        this.loginService.fetchLoginSettings().subscribe(result => {
+            this.loginSettings = result;
+            this.configReady = true;
+            this.onSettingsAvailable();
+        });
+    }
+
+    abstract onSettingsAvailable(): void;
+}

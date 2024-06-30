@@ -16,14 +16,14 @@
  *
  */
 
-package org.apache.streampipes.model.configuration;
+import { Component, Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
-import org.apache.streampipes.model.shared.annotation.TsModel;
-
-@TsModel
-public record LinkSettings(String documentationUrl,
-                           String supportUrl,
-                           boolean showDocumentationLinkOnStartScreen,
-                           boolean showApiDocumentationLinkOnStartScreen,
-                           boolean showSupportUrlOnStartScreen,
-                           boolean showDocumentationLinkInProfileMenu) {}
+@Component({
+    selector: 'sp-configuration-link-settings',
+    templateUrl: './link-settings.component.html',
+})
+export class SpConfigurationLinkSettingsComponent {
+    @Input()
+    parentForm: FormGroup;
+}

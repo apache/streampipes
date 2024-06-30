@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { PlatformServicesCommons } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';

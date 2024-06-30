@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-06-29 13:34:41.
+// Generated using typescript-generator version 3.2.1263 on 2024-06-30 09:10:19.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -2089,6 +2089,32 @@ export class KeepOutputStrategy extends OutputStrategy {
         super.fromData(data, instance);
         instance.eventName = data.eventName;
         instance.keepBoth = data.keepBoth;
+        return instance;
+    }
+}
+
+export class LinkSettings {
+    documentationUrl: string;
+    showApiDocumentationLinkOnStartScreen: boolean;
+    showDocumentationLinkInProfileMenu: boolean;
+    showDocumentationLinkOnStartScreen: boolean;
+    showSupportUrlOnStartScreen: boolean;
+    supportUrl: string;
+
+    static fromData(data: LinkSettings, target?: LinkSettings): LinkSettings {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new LinkSettings();
+        instance.documentationUrl = data.documentationUrl;
+        instance.showApiDocumentationLinkOnStartScreen =
+            data.showApiDocumentationLinkOnStartScreen;
+        instance.showDocumentationLinkInProfileMenu =
+            data.showDocumentationLinkInProfileMenu;
+        instance.showDocumentationLinkOnStartScreen =
+            data.showDocumentationLinkOnStartScreen;
+        instance.showSupportUrlOnStartScreen = data.showSupportUrlOnStartScreen;
+        instance.supportUrl = data.supportUrl;
         return instance;
     }
 }
