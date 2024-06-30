@@ -78,8 +78,7 @@
                         }}"
                         class="adapter-description"
                         fxFlex="33"
-                        (updateAdapterEmitter)="getAdapterDescriptions()"
-                        (click)="selectAdapter(adapterDescription.appId)"
+                        (createAdapterEmitter)="selectAdapter($event)"
                         *ngFor="
                             let adapterDescription of adapterDescriptions
                                 | adapterFilter: currentFilter
