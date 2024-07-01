@@ -16,22 +16,35 @@
   ~
   -->
 
-<div [className]="className" fxFlex="100" fxLayout="column">
+<div class="adapter-description-box" fxFlex="100" fxLayout="column">
     <div fxLayout="column">
         <div
-            class="type"
+            class="type mt-10"
             fxLayout="row"
             fxLayoutAlign="start start"
             fxFlex="100"
-        ></div>
-        <div class="adapter-icon large-icon">
-            <img *ngIf="iconUrl" [src]="iconUrl" class="icon" />
+        >
+            <div class="adapter-icon large-icon">
+                <img *ngIf="iconUrl" [src]="iconUrl" class="icon" />
+            </div>
+            <div class="ml-5" fxFlex fxLayoutAlign="end start">
+                <button
+                    mat-icon-button
+                    color="accent"
+                    (click)="openDocumentation($event)"
+                    matTooltip="Show documentation"
+                >
+                    <mat-icon>menu_book</mat-icon>
+                </button>
+            </div>
         </div>
-        <h3 class="ml-10">{{ adapter.name }}</h3>
     </div>
-    <div fxLayout="row">
-        <div fxFlex="70" class="ml-10 description" fxLayoutAlign="start start">
-            <p [innerHTML]="adapter.description"></p>
+    <div fxFlex fxLayout="row" class="ml-10" fxLayoutGap="20px">
+        <div fxFlex fxLayout="column">
+            <h3>{{ adapter.name }}</h3>
+            <div class="description" fxLayoutAlign="start start">
+                <p [innerHTML]="adapter.description"></p>
+            </div>
         </div>
     </div>
 </div>

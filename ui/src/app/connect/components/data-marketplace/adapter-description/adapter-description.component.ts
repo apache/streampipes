@@ -17,10 +17,11 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { AdapterDescription } from '@streampipes/platform-services';
 import { RestApi } from '../../../../services/rest-api.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { SpAdapterDocumentationDialogComponent } from '../../../dialog/adapter-documentation/adapter-documentation-dialog.component';
 
 @Component({
     selector: 'sp-adapter-description',
@@ -31,14 +32,6 @@ export class AdapterDescriptionComponent implements OnInit {
     @Input()
     adapter: AdapterDescription;
 
-    @Output()
-    updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
-
-    @Output()
-    createTemplateEmitter: EventEmitter<AdapterDescription> =
-        new EventEmitter<AdapterDescription>();
-
-    className = '';
     isRunningAdapter = false;
     adapterLabel: string;
     iconUrl: SafeUrl;
@@ -46,7 +39,7 @@ export class AdapterDescriptionComponent implements OnInit {
     constructor(
         private restApi: RestApi,
         private sanitizer: DomSanitizer,
-        public dialog: MatDialog,
+        private dialogService: DialogService,
     ) {}
 
     ngOnInit() {
@@ -57,23 +50,24 @@ export class AdapterDescriptionComponent implements OnInit {
             this.adapter.elementId !== undefined &&
             !(this.adapter as any).isTemplate;
         this.adapterLabel = this.adapter.name.split(' ').join('_');
-        this.className = this.getClassName();
         this.iconUrl = this.sanitizer.bypassSecurityTrustUrl(
             this.makeAssetIconUrl(),
         );
     }
 
-    getClassName() {
-        let className = this.isRunningAdapter
-            ? 'adapter-box'
-            : 'adapter-description-box';
-
-        className += ' adapter-box-stream';
-
-        return className;
-    }
-
     makeAssetIconUrl() {
         return this.restApi.getAssetUrl(this.adapter.appId) + '/icon';
+    }
+
+    openDocumentation(event: MouseEvent): void {
+        event.stopPropagation();
+        this.dialogService.open(SpAdapterDocumentationDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Documentation',
+            width: '50vw',
+            data: {
+                appId: this.adapter.appId,
+            },
+        });
     }
 }
