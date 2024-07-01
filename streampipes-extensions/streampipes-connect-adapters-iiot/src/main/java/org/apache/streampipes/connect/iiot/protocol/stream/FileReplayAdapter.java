@@ -431,7 +431,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
         .filter(rule -> rule instanceof TimestampTranfsformationRuleDescription)
         .map(rule -> (TimestampTranfsformationRuleDescription) rule)
         .findFirst()
-        .get();
+        .orElse(null);
 
     // remove timestamp preprocessing rule
     adapterDescription
