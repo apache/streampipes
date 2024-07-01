@@ -21,21 +21,27 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.shared.preprocessing.transform.value.TimestampTranformationRuleMode;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 class FileReplayAdapterTest {
@@ -46,15 +52,32 @@ class FileReplayAdapterTest {
   private final static long TIMESTAMP_VALUE = 1622544682000L;
   private Map<String, Object> event;
   private ArgumentCaptor<Map<String, Object>> resultEventCapture;
-
+  private IAdapterParameterExtractor extractor;
+  private AdapterDescription adapterDescription;
 
   @BeforeEach
   void setUp() {
-    collector = Mockito.mock(IEventCollector.class);
+    collector = mock(IEventCollector.class);
+    extractor = mock(IAdapterParameterExtractor.class);
+    adapterDescription = mock(AdapterDescription.class);
+    when(extractor.getAdapterDescription()).thenReturn(adapterDescription);
     fileReplayAdapter = new FileReplayAdapter();
     fileReplayAdapter.setTimestampSourceFieldName(TIMESTAMP);
     event = new HashMap<>();
     resultEventCapture = ArgumentCaptor.forClass(Map.class);
+  }
+
+
+  @Test
+  public void testThrowExceptionWhenAddTimestampRuleIsSelected_withAddTimestampRule() {
+    when(adapterDescription.getRules()).thenReturn(Arrays.asList(new AddTimestampRuleDescription()));
+
+    assertThrows(AdapterException.class, () -> FileReplayAdapter.throwExceptionWhenAddTimestampRuleIsSelected(extractor));
+  }
+
+  @Test
+  public void testThrowExceptionWhenAddTimestampRuleIsSelected_withoutAddTimestampRule() {
+    when(adapterDescription.getRules()).thenReturn(Collections.emptyList());
   }
 
   @Test

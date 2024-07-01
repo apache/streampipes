@@ -26,7 +26,9 @@ import { UserUtils } from '../UserUtils';
 import { PipelineUtils } from '../PipelineUtils';
 
 export class ConnectUtils {
-    public static testAdapter(adapterConfiguration: AdapterInput) {
+    public static testAdapter(
+        adapterConfiguration: AdapterInput,
+        adapterStartFails = false) {
         ConnectUtils.goToConnect();
 
         ConnectUtils.goToNewAdapterPage();
@@ -47,7 +49,10 @@ export class ConnectUtils {
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.startStreamAdapter(adapterConfiguration);
+        ConnectUtils.startAdapter(
+            adapterConfiguration,
+            false,
+            adapterStartFails);
     }
 
     public static addAdapter(adapterConfiguration: AdapterInput) {
@@ -100,7 +105,7 @@ export class ConnectUtils {
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.startStreamAdapter(configuration);
+        ConnectUtils.startAdapter(configuration);
     }
 
     public static goToConnect() {
@@ -148,13 +153,10 @@ export class ConnectUtils {
         cy.get('#event-schema-next-button').click();
     }
 
-    public static startStreamAdapter(adapterInput: AdapterInput) {
-        ConnectUtils.startAdapter(adapterInput);
-    }
-
     public static startAdapter(
         adapterInput: AdapterInput,
         noLiveDataView = false,
+        adapterStartFails = false,
     ) {
         // Set adapter name
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
@@ -175,14 +177,20 @@ export class ConnectUtils {
 
         ConnectBtns.adapterSettingsStartAdapter().click();
 
-        if (adapterInput.startAdapter && !noLiveDataView) {
-            cy.dataCy('sp-connect-adapter-success-live-preview', {
+        if (adapterStartFails) {
+            cy.dataCy('sp-connect-adapter-error-message', {
                 timeout: 60000,
             }).should('be.visible');
         } else {
-            cy.dataCy('sp-connect-adapter-success-added', {
-                timeout: 60000,
-            }).should('be.visible');
+            if (adapterInput.startAdapter && !noLiveDataView) {
+                cy.dataCy('sp-connect-adapter-success-live-preview', {
+                    timeout: 60000,
+                }).should('be.visible');
+            } else {
+                cy.dataCy('sp-connect-adapter-success-added', {
+                    timeout: 60000,
+                }).should('be.visible');
+            }
         }
 
         this.closeAdapterPreview();

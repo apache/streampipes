@@ -36,6 +36,7 @@ import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.StaticProperties;
@@ -135,6 +136,8 @@ public class FileReplayAdapter implements StreamPipesAdapter {
       IAdapterRuntimeContext adapterRuntimeContext
   ) throws AdapterException {
 
+    throwExceptionWhenAddTimestampRuleIsSelected(extractor);
+
     boolean replayOnce = extractUserInputsAndReturnValueOfReplayOnce(extractor);
 
     determineTimestampRuntimeName(extractor);
@@ -142,6 +145,19 @@ public class FileReplayAdapter implements StreamPipesAdapter {
     determineSourceTimestampField(extractor);
 
     startAdapterReplayThread(extractor, collector, adapterRuntimeContext, replayOnce);
+  }
+
+  protected static void throwExceptionWhenAddTimestampRuleIsSelected(IAdapterParameterExtractor extractor) throws AdapterException {
+    boolean ruleExists = extractor.getAdapterDescription()
+                                  .getRules()
+                                  .stream()
+                                  .anyMatch(rule -> rule instanceof AddTimestampRuleDescription);
+
+    if (ruleExists) {
+      throw new AdapterException("The file replay adapter requires a valid timestamp within the file. The add "
+                                     + "timestamp option in the schema editor is not supported. Please edit the "
+                                     + "adater to resolve this problem.");
+    }
   }
 
   private void startAdapterReplayThread(

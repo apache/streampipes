@@ -41,6 +41,12 @@ export class AdapterBuilder {
 
     public setTimestampProperty(timestsmpProperty: string) {
         this.adapterInput.timestampProperty = timestsmpProperty;
+        this.adapterInput.autoAddTimestamp
+        return this;
+    }
+
+    public setAutoAddTimestampPropery() {
+        this.adapterInput.autoAddTimestamp = true;
         return this;
     }
 

@@ -22,7 +22,7 @@ import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 
 describe(
-    'Test File Stream Adapter',
+    'Test File Replay Adapter',
     {
         retries: {
             runMode: 4,
@@ -32,10 +32,10 @@ describe(
     () => {
         beforeEach('Setup Test', () => {
             cy.initStreamPipesTest();
-            FileManagementUtils.addFile('fileTest/random.csv');
         });
 
-        it('Perform Test', () => {
+        it('Test successful adapter generation for file stream adapter', () => {
+            FileManagementUtils.addFile('fileTest/random.csv');
             const adapterInput = AdapterBuilder.create('File_Stream')
                 .setName('File Stream Adapter Test')
                 .setTimestampProperty('timestamp')
@@ -47,6 +47,20 @@ describe(
 
             ConnectUtils.testAdapter(adapterInput);
             ConnectUtils.deleteAdapter();
+        });
+
+        it('File stream adapter should not allow add timestamp option in schema editor', () => {
+            FileManagementUtils.addFile('connect/fileReplay/noTimestamp.csv');
+            const adapterInput = AdapterBuilder.create('File_Stream')
+                .setName('File Stream Adapter Test')
+                .setAutoAddTimestampPropery()
+                .setFormat('csv')
+                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
+                .build();
+
+
+            ConnectUtils.testAdapter(adapterInput, true);
         });
     },
 );
