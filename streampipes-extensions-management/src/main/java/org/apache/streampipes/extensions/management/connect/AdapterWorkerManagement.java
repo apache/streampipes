@@ -64,8 +64,8 @@ public class AdapterWorkerManagement {
           adapterDescription);
 
       // This method allows adapters to modify the adapter description prior to invocation.
-      // It is particularly useful for adapters like FileReplayAdapter that need to manipulate timestamp values internally,
-      // bypassing the adapter preprocessing pipeline.
+      // It is particularly useful for adapters like FileReplayAdapter that need to manipulate timestamp values
+      // internally, bypassing the adapter preprocessing pipeline.
       newAdapterInstance.preprocessAdapterDescription(adapterDescription);
 
       var registeredParsers = newAdapterInstance.declareConfig().getSupportedParsers();
