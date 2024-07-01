@@ -19,7 +19,9 @@
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.connect.shared.preprocessing.transform.value.TimestampTranformationRuleMode;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -99,6 +101,69 @@ class FileReplayAdapterTest {
     var restultEvent = resultEventCapture.getValue();
     assertEquals(restultEvent.size(), 1);
     assertNotEquals(restultEvent.get(TIMESTAMP), TIMESTAMP_VALUE);
+  }
+
+
+  @Test
+  void getTimestampFromEvent_returnsLongTimestamp() throws AdapterException {
+    event.put(TIMESTAMP, TIMESTAMP_VALUE);
+
+    long actualEventTimestamp = fileReplayAdapter.getTimestampFromEvent(event);
+
+    assertEquals(TIMESTAMP_VALUE, actualEventTimestamp);
+  }
+
+  @Test
+  void getTimestampFromEvent_forTimestampRuleInSecondsAsLong() throws AdapterException {
+    setupEventAndRule(
+        TIMESTAMP,
+        1622544682L,
+        TimestampTranformationRuleMode.TIME_UNIT,
+        1000L
+    );
+    assertEventTimestamp(TIMESTAMP_VALUE);
+  }
+
+  @Test
+  void getTimestampFromEvent_forTimestampRuleInSecondsAsInteger() throws AdapterException {
+    setupEventAndRule(
+        TIMESTAMP,
+        1622544682,
+        TimestampTranformationRuleMode.TIME_UNIT,
+        1000L
+    );
+    assertEventTimestamp(TIMESTAMP_VALUE);
+  }
+
+  @Test
+  void getTimestampFromEvent_forTimestampRuleAsString() throws AdapterException {
+    setupEventAndRule(
+        TIMESTAMP,
+        "2024-07-01T12:00:00.000Z",
+        TimestampTranformationRuleMode.FORMAT_STRING,
+        "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+    );
+    assertEventTimestamp(1719828000000L);
+  }
+
+
+  private void setupEventAndRule(
+      String key,
+      Object value,
+      TimestampTranformationRuleMode mode,
+      Object additional
+  ) {
+    event.put(key, value);
+    var rule = new TimestampTranfsformationRuleDescription();
+    rule.setRuntimeKey(key);
+    rule.setMode(mode.internalName());
+    if (additional instanceof Long) {rule.setMultiplier((Long) additional);}
+    if (additional instanceof String) {rule.setFormatString((String) additional);}
+    fileReplayAdapter.setTimestampTranfsformationRuleDescription(rule);
+  }
+
+  private void assertEventTimestamp(long expected) throws AdapterException {
+    assertEquals(expected, fileReplayAdapter.getTimestampFromEvent(event));
   }
 
 

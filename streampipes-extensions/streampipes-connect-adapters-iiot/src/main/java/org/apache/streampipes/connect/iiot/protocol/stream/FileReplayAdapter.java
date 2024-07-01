@@ -20,6 +20,7 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
+import org.apache.streampipes.connect.shared.preprocessing.generator.StatelessTransformationRuleGeneratorVisitor;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IParser;
@@ -32,8 +33,10 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.Image
 import org.apache.streampipes.extensions.management.connect.adapter.parser.JsonParsers;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.XmlParser;
 import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
@@ -78,6 +81,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
   private boolean replaceTimestamp;
   private String timestampRuntimeName;
 
+  private TimestampTranfsformationRuleDescription timestampTranfsformationRuleDescription;
 
   private String timestampSourceFieldName;
 
@@ -293,26 +297,43 @@ public class FileReplayAdapter implements StreamPipesAdapter {
     collector.collect(event);
   }
 
-  // TODO Add description that explains that the timestamp is transformed to a unix timestamp
-  private long getTimestampFromEvent(Map<String, Object> event) throws AdapterException {
+  protected long getTimestampFromEvent(Map<String, Object> event) throws AdapterException {
     long actualEventTimestamp = -1;
 
     var timestampFieldValue = event.get(timestampSourceFieldName);
+
     if (timestampFieldValue instanceof Long) {
       actualEventTimestamp = (Long) timestampFieldValue;
     } else if (timestampFieldValue instanceof Integer) {
       actualEventTimestamp = (Integer) timestampFieldValue;
-    } else if (!(timestampFieldValue == null && replaceTimestamp)) {
-      throw new AdapterException(
-          "Timestamp field is not a unix timestamp in ms, skipping event. "
-              + "Value: %s".formatted(event.get(timestampSourceFieldName)));
     }
 
-    // TODO should be replaced
+    // transform timestamp if transformation rule is present
+    actualEventTimestamp = transformTimestampIfTransformationRuleIsPresent(event, actualEventTimestamp);
+
+
     if (actualEventTimestamp == -1 && !replaceTimestamp) {
-      throw new AdapterException("TODO");
+      throw new AdapterException("Timestamp field could not be parsed, skipping event. "
+                                     + "Value: %s".formatted(event.get(timestampSourceFieldName)));
     }
 
+    return actualEventTimestamp;
+  }
+
+  private long transformTimestampIfTransformationRuleIsPresent(Map<String, Object> event, long actualEventTimestamp) {
+    if (timestampTranfsformationRuleDescription != null) {
+      var transformationRuleDescription = timestampTranfsformationRuleDescription;
+
+      var transformationRuleVisitor = new StatelessTransformationRuleGeneratorVisitor();
+      transformationRuleVisitor.visit(transformationRuleDescription);
+      var timestampTransformationRule = transformationRuleVisitor.getTransformationRules()
+                                                                 .get(0);
+
+      actualEventTimestamp = (Long) (
+          timestampTransformationRule.apply(event)
+                                     .get(timestampSourceFieldName)
+      );
+    }
     return actualEventTimestamp;
   }
 
@@ -373,5 +394,33 @@ public class FileReplayAdapter implements StreamPipesAdapter {
 
   protected void setReplaceTimestamp(boolean replaceTimestamp) {
     this.replaceTimestamp = replaceTimestamp;
+  }
+
+  protected void setTimestampTranfsformationRuleDescription(TimestampTranfsformationRuleDescription timestampTranfsformationRuleDescription) {
+    this.timestampTranfsformationRuleDescription = timestampTranfsformationRuleDescription;
+  }
+
+  /**
+   * Removes the timestamp transformation rules from the adapter description.
+   *
+   * <p>The FileReplay adapter manages timestamp transformations internally to accurately simulate the replay frequency.
+   * This is necessary as the timestamp field values are crucial for this simulation. As a result, the timestamp rule
+   * description is stored locally within the FileReplay adapter and is applied when the onAdapterStarted method is invoked.</p>
+   */
+  @Override
+  public void preprocessAdapterDescription(AdapterDescription adapterDescription) {
+
+    this.timestampTranfsformationRuleDescription = adapterDescription
+        .getRules()
+        .stream()
+        .filter(rule -> rule instanceof TimestampTranfsformationRuleDescription)
+        .map(rule -> (TimestampTranfsformationRuleDescription) rule)
+        .findFirst()
+        .get();
+
+    // remove timestamp preprocessing rule
+    adapterDescription
+        .getRules()
+        .removeIf(rule -> rule instanceof TimestampTranfsformationRuleDescription);
   }
 }
