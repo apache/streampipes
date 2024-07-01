@@ -135,8 +135,39 @@ public class FileReplayAdapter implements StreamPipesAdapter {
       IAdapterRuntimeContext adapterRuntimeContext
   ) throws AdapterException {
 
-    // extract user input
+    boolean replayOnce = extractUserInputsAndReturnValueOfReplayOnce(extractor);
+
+    determineTimestampRuntimeName(extractor);
+
+    determineSourceTimestampField(extractor);
+
+    startAdapterReplayThread(extractor, collector, adapterRuntimeContext, replayOnce);
+  }
+
+  private void startAdapterReplayThread(
+      IAdapterParameterExtractor extractor,
+      IEventCollector collector,
+      IAdapterRuntimeContext adapterRuntimeContext,
+      boolean replayOnce
+  ) {
     executor = Executors.newScheduledThreadPool(1);
+    if (replayOnce) {
+      executor.schedule(
+          () -> getFileFromEndpointAndParseFile(extractor, collector, adapterRuntimeContext),
+          0,
+          TimeUnit.SECONDS
+      );
+    } else {
+      executor.scheduleAtFixedRate(
+          () -> getFileFromEndpointAndParseFile(extractor, collector, adapterRuntimeContext),
+          0,
+          1,
+          TimeUnit.SECONDS
+      );
+    }
+  }
+
+  private boolean extractUserInputsAndReturnValueOfReplayOnce(IAdapterParameterExtractor extractor) {
     boolean replayOnce = extractor
         .getStaticPropertyExtractor()
         .selectedSingleValue(REPLAY_ONCE, String.class)
@@ -155,8 +186,10 @@ public class FileReplayAdapter implements StreamPipesAdapter {
           .singleValueParameter(SPEED_UP, Float.class);
       default -> 1.0f;
     };
+    return replayOnce;
+  }
 
-    // get timestamp field
+  private void determineTimestampRuntimeName(IAdapterParameterExtractor extractor) throws AdapterException {
     var timestampField = extractor
         .getAdapterDescription()
         .getEventSchema()
@@ -172,24 +205,6 @@ public class FileReplayAdapter implements StreamPipesAdapter {
     } else {
       timestampRuntimeName = timestampField.get()
                                            .getRuntimeName();
-    }
-
-    determineSourceTimestampField(extractor);
-
-    // start replay adapter
-    if (replayOnce) {
-      executor.schedule(
-          () -> getFileFromEndpointAndParseFile(extractor, collector, adapterRuntimeContext),
-          0,
-          TimeUnit.SECONDS
-      );
-    } else {
-      executor.scheduleAtFixedRate(
-          () -> getFileFromEndpointAndParseFile(extractor, collector, adapterRuntimeContext),
-          0,
-          1,
-          TimeUnit.SECONDS
-      );
     }
   }
 
