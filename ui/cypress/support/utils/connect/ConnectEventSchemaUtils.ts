@@ -35,7 +35,7 @@ export class ConnectEventSchemaUtils {
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
 
         // Mark as timestamp
-        cy.dataCy('sp-mark-as-timestamp').children().click();
+        ConnectBtns.markAsTimestampBtn().click();
 
         // Close
         cy.dataCy('sp-save-edit-property').click();
@@ -51,34 +51,64 @@ export class ConnectEventSchemaUtils {
         this.eventSchemaNextBtnEnabled();
     }
 
-    public static editTimestampProperty(
+    public static editTimestampPropertyWithRegex(
         propertyName: string,
         timestampRegex: string,
     ) {
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
-        cy.dataCy('sp-mark-as-timestamp').children().click();
-        cy.dataCy('connect-timestamp-converter')
-            .click()
-            .get('mat-option')
-            .contains('String')
-            .click();
-        cy.dataCy('connect-timestamp-string-regex').type(timestampRegex);
 
-        cy.dataCy('sp-save-edit-property').click();
+        ConnectBtns.markAsTimestampBtn().click();
+        ConnectBtns.setTimestampConverter('String');
 
+        ConnectBtns.timestampStringRegex().type(timestampRegex);
+
+        ConnectBtns.saveEditProperty().click();
+
+        // The following code validates that the regex is persisted by reopening the edit dialog again
         cy.dataCy('edit-' + propertyName.toLowerCase(), {
             timeout: 10000,
         }).click({ force: true });
-        cy.dataCy('connect-timestamp-string-regex', { timeout: 10000 }).should(
-            'have.value',
-            timestampRegex,
-        );
-        cy.dataCy('sp-save-edit-property', { timeout: 10000 }).should(
+        ConnectBtns.timestampStringRegex().should(
+                'have.value',
+                timestampRegex,
+            );
+
+        ConnectBtns.saveEditProperty().should(
             'have.length',
             1,
         );
-        cy.dataCy('sp-save-edit-property').click();
+        ConnectBtns.saveEditProperty().click();
     }
+
+    public static editTimestampPropertyWithNumber(
+        propertyName: string,
+        configurationValue: 'Seconds' | 'Milliseconds',
+    ) {
+        ConnectEventSchemaUtils.clickEditProperty(propertyName);
+        ConnectBtns.markAsTimestampBtn().click();
+
+        ConnectBtns.setTimestampConverter('Number');
+
+        ConnectBtns.timestampNumberDropdown()
+            .click({ force: true})
+            .get('mat-option')
+            .contains(configurationValue)
+            .click();
+
+        ConnectBtns.saveEditProperty().click();
+
+        // Check if the configuration is persisted by reopening the edit dialog
+        ConnectEventSchemaUtils.clickEditProperty(propertyName);
+
+        ConnectBtns.timestampNumberDropdown().should(
+            'contain',
+            configurationValue,
+        );
+
+        ConnectBtns.saveEditProperty().click();
+
+    }
+
 
     public static numberTransformation(propertyName: string, value: string) {
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
@@ -134,7 +164,7 @@ export class ConnectEventSchemaUtils {
         // Edit new property
         cy.dataCy('connect-add-field-name', { timeout: 10000 }).type(
             '{backspace}{backspace}{backspace}{backspace}{backspace}' +
-                propertyName,
+            propertyName,
         );
         cy.dataCy('connect-add-field-name-button').click();
 

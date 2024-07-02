@@ -62,5 +62,46 @@ describe(
 
             ConnectUtils.testAdapter(adapterInput, true);
         });
+
+
+        // it('File Stream adapter with unix timestamp in seconds', () => {
+        //     FileManagementUtils.addFile('connect/fileReplay/timestampInSeconds/input.csv');
+        //     const adapterConfiguration =
+        //         ConnectUtils.setUpPreprocessingRuleTest(false);
+        //
+        //     // Edit timestamp property
+        //     ConnectEventSchemaUtils.editTimestampPropertyWithNumber(
+        //         'timestamp',
+        //         'Seconds',
+        //     );
+        //
+        //     ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        //     ConnectUtils.tearDownPreprocessingRuleTest(
+        //         adapterConfiguration,
+        //         'cypress/fixtures/connect/fileReplay/timestampInSeconds/expected.csv',
+        //         false,
+        //         2000,
+        //     );
+        // });
+
+        // it('File Stream adapter with unix timestamp in milliseconds', () => {
+        //     FileManagementUtils.addFile('connect/fileReplay/timestampInMilliseconds/input.csv');
+        //     const adapterConfiguration =
+        //         ConnectUtils.setUpPreprocessingRuleTest(false);
+        //
+        //     // Edit timestamp property
+        //     ConnectEventSchemaUtils.editTimestampPropertyWithNumber(
+        //         'timestamp',
+        //         'Milliseconds',
+        //     );
+        //
+        //     ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        //     ConnectUtils.tearDownPreprocessingRuleTest(
+        //         adapterConfiguration,
+        //         'cypress/fixtures/connect/fileReplay/timestampInMilliseconds/expected.csv',
+        //         false,
+        //         2000,
+        //     );
+        // });
     },
 );

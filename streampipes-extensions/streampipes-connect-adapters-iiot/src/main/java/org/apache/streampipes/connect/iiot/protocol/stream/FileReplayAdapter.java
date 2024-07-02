@@ -92,41 +92,42 @@ public class FileReplayAdapter implements StreamPipesAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 0, FileReplayAdapter::new)
-                                      .withSupportedParsers(
-                                          new JsonParsers(),
-                                          new CsvParser(),
-                                          new XmlParser(),
-                                          new ImageParser()
-                                      )
-                                      .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-                                      .withLocales(Locales.EN)
-                                      .withCategory(AdapterType.Generic)
-                                      .requiredFile(
-                                          Labels.withId(FILE_PATH),
-                                          Filetypes.CSV,
-                                          Filetypes.JSON,
-                                          Filetypes.XML
-                                      )
-                                      .requiredMultiValueSelection(Labels.withId(REPLACE_TIMESTAMP), Options.from(""))
-                                      .requiredSingleValueSelection(
-                                          Labels.withId(REPLAY_ONCE),
-                                          Options.from("no", "yes")
-                                      )
-                                      .requiredAlternatives(
-                                          Labels.withId(SPEED),
-                                          Alternatives.from(Labels.withId(KEEP_ORIGINAL_TIME), true),
-                                          Alternatives.from(Labels.withId(FASTEST)),
-                                          Alternatives.from(
-                                              Labels.withId(SPEED_UP_FACTOR),
-                                              StaticProperties.group(
-                                                  Labels.withId(SPEED_UP_FACTOR_GROUP),
-                                                  StaticProperties.doubleFreeTextProperty(Labels.withId(
-                                                      SPEED_UP))
-                                              )
-                                          )
-                                      )
-                                      .buildConfiguration();
+    return AdapterConfigurationBuilder
+        .create(ID, 0, FileReplayAdapter::new)
+        .withSupportedParsers(
+            new JsonParsers(),
+            new CsvParser(),
+            new XmlParser(),
+            new ImageParser()
+        )
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+        .withLocales(Locales.EN)
+        .withCategory(AdapterType.Generic)
+        .requiredFile(
+            Labels.withId(FILE_PATH),
+            Filetypes.CSV,
+            Filetypes.JSON,
+            Filetypes.XML
+        )
+        .requiredMultiValueSelection(Labels.withId(REPLACE_TIMESTAMP), Options.from(""))
+        .requiredSingleValueSelection(
+            Labels.withId(REPLAY_ONCE),
+            Options.from("no", "yes")
+        )
+        .requiredAlternatives(
+            Labels.withId(SPEED),
+            Alternatives.from(Labels.withId(KEEP_ORIGINAL_TIME), true),
+            Alternatives.from(Labels.withId(FASTEST)),
+            Alternatives.from(
+                Labels.withId(SPEED_UP_FACTOR),
+                StaticProperties.group(
+                    Labels.withId(SPEED_UP_FACTOR_GROUP),
+                    StaticProperties.doubleFreeTextProperty(Labels.withId(
+                        SPEED_UP))
+                )
+            )
+        )
+        .buildConfiguration();
   }
 
   @Override
@@ -147,7 +148,8 @@ public class FileReplayAdapter implements StreamPipesAdapter {
     startAdapterReplayThread(extractor, collector, adapterRuntimeContext, replayOnce);
   }
 
-  protected static void throwExceptionWhenAddTimestampRuleIsSelected(IAdapterParameterExtractor extractor) throws AdapterException {
+  protected static void throwExceptionWhenAddTimestampRuleIsSelected(IAdapterParameterExtractor extractor)
+      throws AdapterException {
     boolean ruleExists = extractor.getAdapterDescription()
                                   .getRules()
                                   .stream()
@@ -178,8 +180,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
           () -> getFileFromEndpointAndParseFile(extractor, collector, adapterRuntimeContext),
           0,
           1,
-          TimeUnit.SECONDS
-      );
+          TimeUnit.SECONDS);
     }
   }
 
@@ -290,7 +291,6 @@ public class FileReplayAdapter implements StreamPipesAdapter {
           .getLogger()
           .error(e);
     }
-
   }
 
   private void parseFile(
@@ -362,8 +362,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
 
       actualEventTimestamp = (Long) (
           timestampTransformationRule.apply(event)
-                                     .get(timestampSourceFieldName)
-      );
+                                     .get(timestampSourceFieldName));
     }
     return actualEventTimestamp;
   }
@@ -427,7 +426,9 @@ public class FileReplayAdapter implements StreamPipesAdapter {
     this.replaceTimestamp = replaceTimestamp;
   }
 
-  protected void setTimestampTranfsformationRuleDescription(TimestampTranfsformationRuleDescription timestampTranfsformationRuleDescription) {
+  protected void setTimestampTranfsformationRuleDescription(
+      TimestampTranfsformationRuleDescription timestampTranfsformationRuleDescription
+  ) {
     this.timestampTranfsformationRuleDescription = timestampTranfsformationRuleDescription;
   }
 
@@ -436,7 +437,8 @@ public class FileReplayAdapter implements StreamPipesAdapter {
    *
    * <p>The FileReplay adapter manages timestamp transformations internally to accurately simulate the replay frequency.
    * This is necessary as the timestamp field values are crucial for this simulation. As a result, the timestamp rule
-   * description is stored locally within the FileReplay adapter and is applied when the onAdapterStarted method is invoked.</p>
+   * description is stored locally within the FileReplay adapter and is applied when the onAdapterStarted method is
+   * invoked.</p>
    */
   @Override
   public void preprocessAdapterDescription(AdapterDescription adapterDescription) {
