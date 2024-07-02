@@ -79,7 +79,8 @@ for (let module of config.modules) {
         icon: modules[module]['icon'],
         admin: modules[module]['admin'],
         description: modules[module]['description'],
-        homeImage: modules[module]['homeImage'],
+        showStatusBox: modules[module]['showStatusBox'],
+        statusBox: modules[module]['statusBox'],
     });
     console.log('Active Angular Module: ' + module);
 }

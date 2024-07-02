@@ -16,41 +16,33 @@
  *
  */
 
-.status-container {
-    height: 150px;
-    width: 100%;
-    color: var(--color-primary);
-    border-radius: 5px;
-    margin-bottom: 20px;
-    border: 2px solid var(--color-bg-2);
-    background: var(--color-bg-2);
-    border-bottom: 5px solid var(--color-accent);
+import { Observable } from 'rxjs';
+import { PageName } from '../../_enums/page-name.enum';
+import { UserRole } from '../../_enums/user-role.enum';
+
+export interface StatusBox {
+    link: string[];
+    createLink: string[];
+    title: string;
+    createTitle: string;
+    dataFns: Observable<any>[];
+    viewRoles: UserRole[];
+    createRoles: UserRole[];
+    icon: string;
 }
 
-.status-container-number {
-    font-size: 36pt;
-    font-weight: bold;
+export interface Link {
+    newWindow: boolean;
+    value: string;
 }
 
-.status-container:hover {
-    cursor: pointer;
-    opacity: 0.8;
-}
-
-.status-container-text {
-    font-size: 15pt;
-}
-
-.status-container-create-link {
-    font-size: 12pt;
-    color: var(--color-accent);
-}
-
-.status-container-create-link:hover {
-    font-weight: bold;
-}
-
-.status-container-icon {
-    font-size: 50pt;
-    color: var(--color-bg-3);
+export interface ServiceLink {
+    name: string;
+    description: string;
+    icon: string;
+    pageNames: PageName[];
+    link: Link;
+    showStatusBox: boolean;
+    statusBox?: StatusBox;
+    disableCreateLink?: boolean;
 }
