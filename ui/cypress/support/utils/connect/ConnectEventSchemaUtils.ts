@@ -68,15 +68,9 @@ export class ConnectEventSchemaUtils {
         cy.dataCy('edit-' + propertyName.toLowerCase(), {
             timeout: 10000,
         }).click({ force: true });
-        ConnectBtns.timestampStringRegex().should(
-                'have.value',
-                timestampRegex,
-            );
+        ConnectBtns.timestampStringRegex().should('have.value', timestampRegex);
 
-        ConnectBtns.saveEditProperty().should(
-            'have.length',
-            1,
-        );
+        ConnectBtns.saveEditProperty().should('have.length', 1);
         ConnectBtns.saveEditProperty().click();
     }
 
@@ -90,7 +84,7 @@ export class ConnectEventSchemaUtils {
         ConnectBtns.setTimestampConverter('Number');
 
         ConnectBtns.timestampNumberDropdown()
-            .click({ force: true})
+            .click({ force: true })
             .get('mat-option')
             .contains(configurationValue)
             .click();
@@ -106,9 +100,7 @@ export class ConnectEventSchemaUtils {
         );
 
         ConnectBtns.saveEditProperty().click();
-
     }
-
 
     public static numberTransformation(propertyName: string, value: string) {
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
@@ -164,7 +156,7 @@ export class ConnectEventSchemaUtils {
         // Edit new property
         cy.dataCy('connect-add-field-name', { timeout: 10000 }).type(
             '{backspace}{backspace}{backspace}{backspace}{backspace}' +
-            propertyName,
+                propertyName,
         );
         cy.dataCy('connect-add-field-name-button').click();
 

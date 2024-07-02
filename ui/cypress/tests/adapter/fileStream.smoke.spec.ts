@@ -59,10 +59,8 @@ describe(
                 .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
                 .build();
 
-
             ConnectUtils.testAdapter(adapterInput, true);
         });
-
 
         // it('File Stream adapter with unix timestamp in seconds', () => {
         //     FileManagementUtils.addFile('connect/fileReplay/timestampInSeconds/input.csv');

@@ -28,7 +28,8 @@ import { PipelineUtils } from '../PipelineUtils';
 export class ConnectUtils {
     public static testAdapter(
         adapterConfiguration: AdapterInput,
-        adapterStartFails = false) {
+        adapterStartFails = false,
+    ) {
         ConnectUtils.goToConnect();
 
         ConnectUtils.goToNewAdapterPage();
@@ -52,7 +53,8 @@ export class ConnectUtils {
         ConnectUtils.startAdapter(
             adapterConfiguration,
             false,
-            adapterStartFails);
+            adapterStartFails,
+        );
     }
 
     public static addAdapter(adapterConfiguration: AdapterInput) {

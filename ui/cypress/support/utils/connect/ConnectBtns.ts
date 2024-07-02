@@ -102,11 +102,13 @@ export class ConnectBtns {
     }
 
     public static timestampStringRegex() {
-        return cy.dataCy('connect-timestamp-string-regex', { timeout: 10000 })
+        return cy.dataCy('connect-timestamp-string-regex', { timeout: 10000 });
     }
 
     public static timestampNumberDropdown() {
-        return cy.dataCy('connect-timestamp-number-dropdown', { timeout: 10000 })
+        return cy.dataCy('connect-timestamp-number-dropdown', {
+            timeout: 10000,
+        });
     }
 
     // ========================================================================
