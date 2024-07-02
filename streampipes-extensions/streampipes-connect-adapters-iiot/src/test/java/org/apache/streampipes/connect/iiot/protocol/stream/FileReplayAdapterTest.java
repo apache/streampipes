@@ -48,8 +48,8 @@ class FileReplayAdapterTest {
 
   private FileReplayAdapter fileReplayAdapter;
   private IEventCollector collector;
-  private final static String TIMESTAMP = "timestamp";
-  private final static long TIMESTAMP_VALUE = 1622544682000L;
+  private static final String TIMESTAMP = "timestamp";
+  private static final long TIMESTAMP_VALUE = 1622544682000L;
   private Map<String, Object> event;
   private ArgumentCaptor<Map<String, Object>> resultEventCapture;
   private IAdapterParameterExtractor extractor;
@@ -72,7 +72,10 @@ class FileReplayAdapterTest {
   public void testThrowExceptionWhenAddTimestampRuleIsSelected_withAddTimestampRule() {
     when(adapterDescription.getRules()).thenReturn(Arrays.asList(new AddTimestampRuleDescription()));
 
-    assertThrows(AdapterException.class, () -> FileReplayAdapter.throwExceptionWhenAddTimestampRuleIsSelected(extractor));
+    assertThrows(
+        AdapterException.class,
+        () -> FileReplayAdapter.throwExceptionWhenAddTimestampRuleIsSelected(extractor)
+    );
   }
 
   @Test
@@ -180,8 +183,12 @@ class FileReplayAdapterTest {
     var rule = new TimestampTranfsformationRuleDescription();
     rule.setRuntimeKey(key);
     rule.setMode(mode.internalName());
-    if (additional instanceof Long) {rule.setMultiplier((Long) additional);}
-    if (additional instanceof String) {rule.setFormatString((String) additional);}
+    if (additional instanceof Long) {
+      rule.setMultiplier((Long) additional);
+    }
+    if (additional instanceof String) {
+      rule.setFormatString((String) additional);
+    }
     fileReplayAdapter.setTimestampTranfsformationRuleDescription(rule);
   }
 
