@@ -30,9 +30,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -70,7 +70,7 @@ class FileReplayAdapterTest {
 
   @Test
   public void testThrowExceptionWhenAddTimestampRuleIsSelected_withAddTimestampRule() {
-    when(adapterDescription.getRules()).thenReturn(Arrays.asList(new AddTimestampRuleDescription()));
+    when(adapterDescription.getRules()).thenReturn(List.of(new AddTimestampRuleDescription()));
 
     assertThrows(
         AdapterException.class,
@@ -109,7 +109,7 @@ class FileReplayAdapterTest {
   }
 
   @Test
-  void processEvent_shouldNotCollectEventWhenTimestampCouldNotBeProcessed() throws AdapterException {
+  void processEvent_shouldNotCollectEventWhenTimestampCouldNotBeProcessed()  {
     event.put(TIMESTAMP, -1);
 
     assertThrows(AdapterException.class, () -> fileReplayAdapter.processEvent(collector, event));
@@ -140,61 +140,102 @@ class FileReplayAdapterTest {
   }
 
   @Test
-  void getTimestampFromEvent_forTimestampRuleInSecondsAsLong() throws AdapterException {
-    setupEventAndRule(
-        TIMESTAMP,
-        1622544682L,
-        TimestampTranformationRuleMode.TIME_UNIT,
-        1000L
-    );
+  void getTimestampFromEvent_withLongInSeconds() throws AdapterException {
+    setupNumberTransformationRule(1622544682L);
     assertEventTimestamp(TIMESTAMP_VALUE);
   }
 
   @Test
-  void getTimestampFromEvent_forTimestampRuleInSecondsAsInteger() throws AdapterException {
-    setupEventAndRule(
-        TIMESTAMP,
-        1622544682,
-        TimestampTranformationRuleMode.TIME_UNIT,
-        1000L
-    );
+  void getTimestampFromEvent_withIntegerInSeconds() throws AdapterException {
+    setupNumberTransformationRule(1622544682);
     assertEventTimestamp(TIMESTAMP_VALUE);
   }
 
   @Test
-  void getTimestampFromEvent_forTimestampRuleAsString() throws AdapterException {
-    setupEventAndRule(
-        TIMESTAMP,
+  void getTimestampFromEvent_withStringFormatInUtc() throws AdapterException {
+    setupStringTransformationRule(
         "2024-07-01T12:00:00.000Z",
-        TimestampTranformationRuleMode.FORMAT_STRING,
         "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
     );
-    assertEventTimestamp(1719828000000L);
+    assertEventTimestamp(1719835200000L);
+  }
+
+  @Test
+  void getTimestampFromEvent_withStringFormatAndPositiveOffset() throws AdapterException {
+    setupStringTransformationRule(
+        "2024-07-01T12:00:00.000+03:00",
+        "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+    );
+    assertEventTimestamp(1719824400000L);
+  }
+
+  @Test
+  void getTimestampFromEvent_withStringFormatAndNegativeOffset() throws AdapterException {
+    setupStringTransformationRule(
+        "2024-07-01T05:00:00.000-10:00",
+        "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+    );
+    assertEventTimestamp(1719846000000L);
+  }
+
+  @Test
+  void getTimestampFromEvent_withStringFormatAndZeroOffset() throws AdapterException {
+    setupStringTransformationRule(
+        "2024-07-01T12:00:00.000+00:00",
+        "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+    );
+    assertEventTimestamp(1719835200000L);
+  }
+
+  @Test
+  void getTimestampFromEvent_withStringFormatWithoutTimeZone() throws AdapterException {
+    setupStringTransformationRule(
+        "01.07.2024 12:00:00",
+        "dd.MM.yyyy HH:mm:ss"
+    );
+    assertEventTimestamp(1719835200000L);
   }
 
 
-  private void setupEventAndRule(
-      String key,
-      Object value,
-      TimestampTranformationRuleMode mode,
-      Object additional
+  /**
+   * Sets up a string transformation rule for timestamp processing.
+   * This method configures a transformation rule that interprets and converts
+   * a timestamp string according to the specified format string.
+   */
+  private void setupStringTransformationRule(
+      String timestampValue,
+      String formatString
   ) {
-    event.put(key, value);
+    event.put(TIMESTAMP, timestampValue);
+
     var rule = new TimestampTranfsformationRuleDescription();
-    rule.setRuntimeKey(key);
-    rule.setMode(mode.internalName());
-    if (additional instanceof Long) {
-      rule.setMultiplier((Long) additional);
-    }
-    if (additional instanceof String) {
-      rule.setFormatString((String) additional);
-    }
+    rule.setRuntimeKey(TIMESTAMP);
+    rule.setMode(TimestampTranformationRuleMode.FORMAT_STRING.internalName());
+    rule.setFormatString(formatString);
+
+    fileReplayAdapter.setTimestampTranfsformationRuleDescription(rule);
+  }
+
+  /**
+   * Sets up a number transformation rule for timestamp processing.
+   * This method configures a transformation rule that multiplies a given timestamp value
+   * by a specified multiplier.
+   */
+  private void setupNumberTransformationRule(
+      long timestampValue
+  ) {
+    event.put(TIMESTAMP, timestampValue);
+
+    var rule = new TimestampTranfsformationRuleDescription();
+    rule.setRuntimeKey(TIMESTAMP);
+    rule.setMode(TimestampTranformationRuleMode.TIME_UNIT.internalName());
+    rule.setMultiplier(1000L);
+
     fileReplayAdapter.setTimestampTranfsformationRuleDescription(rule);
   }
 
   private void assertEventTimestamp(long expected) throws AdapterException {
     assertEquals(expected, fileReplayAdapter.getTimestampFromEvent(event));
   }
-
 
 }
