@@ -50,7 +50,7 @@ jobs:
         run: hugo --minify
 
       - name: Publish Go docs as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: streampipes-go-docs
           path: |
