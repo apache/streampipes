@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.generator;
 
-import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
+import org.apache.streampipes.extensions.api.connect.TransformationRule;
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 
 import java.util.ArrayList;

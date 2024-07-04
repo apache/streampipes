@@ -31,7 +31,7 @@ describe('Connect value rule transformations', () => {
             ConnectUtils.setUpPreprocessingRuleTest(false);
 
         // Edit timestamp property
-        ConnectEventSchemaUtils.editTimestampProperty(
+        ConnectEventSchemaUtils.editTimestampPropertyWithRegex(
             'timestamp',
             "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
         );

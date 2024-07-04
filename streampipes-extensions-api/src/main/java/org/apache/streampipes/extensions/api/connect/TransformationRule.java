@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.shared.preprocessing.transform;
+package org.apache.streampipes.extensions.api.connect;
 
 import java.util.Map;
 

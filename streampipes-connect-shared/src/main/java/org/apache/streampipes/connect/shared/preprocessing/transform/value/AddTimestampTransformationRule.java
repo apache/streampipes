@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
-import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
+import org.apache.streampipes.extensions.api.connect.TransformationRule;
 
 import java.util.Map;
 

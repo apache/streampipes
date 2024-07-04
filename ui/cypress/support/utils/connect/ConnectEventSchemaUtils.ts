@@ -35,7 +35,7 @@ export class ConnectEventSchemaUtils {
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
 
         // Mark as timestamp
-        cy.dataCy('sp-mark-as-timestamp').children().click();
+        ConnectBtns.markAsTimestampBtn().click();
 
         // Close
         cy.dataCy('sp-save-edit-property').click();
@@ -51,33 +51,55 @@ export class ConnectEventSchemaUtils {
         this.eventSchemaNextBtnEnabled();
     }
 
-    public static editTimestampProperty(
+    public static editTimestampPropertyWithRegex(
         propertyName: string,
         timestampRegex: string,
     ) {
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
-        cy.dataCy('sp-mark-as-timestamp').children().click();
-        cy.dataCy('connect-timestamp-converter')
-            .click()
-            .get('mat-option')
-            .contains('String')
-            .click();
-        cy.dataCy('connect-timestamp-string-regex').type(timestampRegex);
 
-        cy.dataCy('sp-save-edit-property').click();
+        ConnectBtns.markAsTimestampBtn().click();
+        ConnectBtns.setTimestampConverter('String');
 
+        ConnectBtns.timestampStringRegex().type(timestampRegex);
+
+        ConnectBtns.saveEditProperty().click();
+
+        // The following code validates that the regex is persisted by reopening the edit dialog again
         cy.dataCy('edit-' + propertyName.toLowerCase(), {
             timeout: 10000,
         }).click({ force: true });
-        cy.dataCy('connect-timestamp-string-regex', { timeout: 10000 }).should(
-            'have.value',
-            timestampRegex,
+        ConnectBtns.timestampStringRegex().should('have.value', timestampRegex);
+
+        ConnectBtns.saveEditProperty().should('have.length', 1);
+        ConnectBtns.saveEditProperty().click();
+    }
+
+    public static editTimestampPropertyWithNumber(
+        propertyName: string,
+        configurationValue: 'Seconds' | 'Milliseconds',
+    ) {
+        ConnectEventSchemaUtils.clickEditProperty(propertyName);
+        ConnectBtns.markAsTimestampBtn().click();
+
+        ConnectBtns.setTimestampConverter('Number');
+
+        ConnectBtns.timestampNumberDropdown()
+            .click({ force: true })
+            .get('mat-option')
+            .contains(configurationValue)
+            .click();
+
+        ConnectBtns.saveEditProperty().click();
+
+        // Check if the configuration is persisted by reopening the edit dialog
+        ConnectEventSchemaUtils.clickEditProperty(propertyName);
+
+        ConnectBtns.timestampNumberDropdown().should(
+            'contain',
+            configurationValue,
         );
-        cy.dataCy('sp-save-edit-property', { timeout: 10000 }).should(
-            'have.length',
-            1,
-        );
-        cy.dataCy('sp-save-edit-property').click();
+
+        ConnectBtns.saveEditProperty().click();
     }
 
     public static numberTransformation(propertyName: string, value: string) {
@@ -111,37 +133,15 @@ export class ConnectEventSchemaUtils {
         toUnit: string,
     ) {
         ConnectEventSchemaUtils.clickEditProperty(propertyName);
-        cy.dataCy('connect-schema-unit-from-dropdown').type(fromUnit);
-        cy.dataCy('connect-schema-unit-transform-btn').click();
-        cy.dataCy('connect-schema-unit-to-dropdown')
-            .click()
+        ConnectBtns.schemaUnitFromDropdown().type(fromUnit);
+        ConnectBtns.schemaUnitTransformBtn().click();
+        ConnectBtns.schemaUnitToDropdown().click();
+
+        ConnectBtns.schemaUnitToDropdown()
             .get('mat-option')
             .contains(toUnit)
             .click();
-        cy.dataCy('sp-save-edit-property').click();
-
-        cy.dataCy('edit-' + propertyName.toLowerCase(), {
-            timeout: 10000,
-        }).click({ force: true });
-
-        cy.dataCy('connect-schema-unit-from-dropdown').eq(0).clear();
-        cy.dataCy('connect-schema-unit-from-dropdown').eq(0).type(fromUnit);
-        cy.dataCy('connect-schema-unit-from-dropdown', {
-            timeout: 10000,
-        }).should('have.value', fromUnit);
-        //cy.dataCy("connect-schema-unit-transform-btn").click();
-        cy.dataCy('connect-schema-unit-to-dropdown')
-            .contains(toUnit)
-            .click({ force: true });
-        cy.dataCy('connect-schema-unit-to-dropdown', {
-            timeout: 10000,
-        }).contains(toUnit);
-
-        cy.dataCy('sp-save-edit-property', { timeout: 10000 }).should(
-            'have.length',
-            1,
-        );
-        cy.dataCy('sp-save-edit-property').click({ force: true });
+        ConnectBtns.saveEditProperty().click();
     }
 
     public static addStaticProperty(

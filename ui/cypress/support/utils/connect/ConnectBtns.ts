@@ -71,6 +71,48 @@ export class ConnectBtns {
 
     // ========================================================================
 
+    // =====================  Event Schema buttons  ==========================
+
+    public static schemaUnitFromDropdown() {
+        return cy.dataCy('connect-schema-unit-from-dropdown');
+    }
+
+    public static schemaUnitTransformBtn() {
+        return cy.dataCy('connect-schema-unit-transform-btn');
+    }
+
+    public static schemaUnitToDropdown() {
+        return cy.dataCy('connect-schema-unit-to-dropdown');
+    }
+
+    public static saveEditProperty() {
+        return cy.dataCy('sp-save-edit-property', { timeout: 10000 });
+    }
+
+    public static markAsTimestampBtn() {
+        return cy.dataCy('sp-mark-as-timestamp').children();
+    }
+
+    public static setTimestampConverter(option: 'Number' | 'String') {
+        cy.dataCy('connect-timestamp-converter')
+            .click()
+            .get('mat-option')
+            .contains(option)
+            .click();
+    }
+
+    public static timestampStringRegex() {
+        return cy.dataCy('connect-timestamp-string-regex', { timeout: 10000 });
+    }
+
+    public static timestampNumberDropdown() {
+        return cy.dataCy('connect-timestamp-number-dropdown', {
+            timeout: 10000,
+        });
+    }
+
+    // ========================================================================
+
     // =====================  Format configurations  ==========================
 
     public static csvDelimiter() {

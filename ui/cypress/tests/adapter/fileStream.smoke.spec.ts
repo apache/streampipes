@@ -22,7 +22,7 @@ import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 
 describe(
-    'Test File Stream Adapter',
+    'Test File Replay Adapter',
     {
         retries: {
             runMode: 4,
@@ -32,10 +32,10 @@ describe(
     () => {
         beforeEach('Setup Test', () => {
             cy.initStreamPipesTest();
-            FileManagementUtils.addFile('fileTest/random.csv');
         });
 
-        it('Perform Test', () => {
+        it('Test successful adapter generation for file stream adapter', () => {
+            FileManagementUtils.addFile('fileTest/random.csv');
             const adapterInput = AdapterBuilder.create('File_Stream')
                 .setName('File Stream Adapter Test')
                 .setTimestampProperty('timestamp')
@@ -48,5 +48,58 @@ describe(
             ConnectUtils.testAdapter(adapterInput);
             ConnectUtils.deleteAdapter();
         });
+
+        it('File stream adapter should not allow add timestamp option in schema editor', () => {
+            FileManagementUtils.addFile('connect/fileReplay/noTimestamp.csv');
+            const adapterInput = AdapterBuilder.create('File_Stream')
+                .setName('File Stream Adapter Test')
+                .setAutoAddTimestampPropery()
+                .setFormat('csv')
+                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
+                .build();
+
+            ConnectUtils.testAdapter(adapterInput, true);
+        });
+
+        // it('File Stream adapter with unix timestamp in seconds', () => {
+        //     FileManagementUtils.addFile('connect/fileReplay/timestampInSeconds/input.csv');
+        //     const adapterConfiguration =
+        //         ConnectUtils.setUpPreprocessingRuleTest(false);
+        //
+        //     // Edit timestamp property
+        //     ConnectEventSchemaUtils.editTimestampPropertyWithNumber(
+        //         'timestamp',
+        //         'Seconds',
+        //     );
+        //
+        //     ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        //     ConnectUtils.tearDownPreprocessingRuleTest(
+        //         adapterConfiguration,
+        //         'cypress/fixtures/connect/fileReplay/timestampInSeconds/expected.csv',
+        //         false,
+        //         2000,
+        //     );
+        // });
+
+        // it('File Stream adapter with unix timestamp in milliseconds', () => {
+        //     FileManagementUtils.addFile('connect/fileReplay/timestampInMilliseconds/input.csv');
+        //     const adapterConfiguration =
+        //         ConnectUtils.setUpPreprocessingRuleTest(false);
+        //
+        //     // Edit timestamp property
+        //     ConnectEventSchemaUtils.editTimestampPropertyWithNumber(
+        //         'timestamp',
+        //         'Milliseconds',
+        //     );
+        //
+        //     ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        //     ConnectUtils.tearDownPreprocessingRuleTest(
+        //         adapterConfiguration,
+        //         'cypress/fixtures/connect/fileReplay/timestampInMilliseconds/expected.csv',
+        //         false,
+        //         2000,
+        //     );
+        // });
     },
 );
