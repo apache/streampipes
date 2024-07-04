@@ -64,7 +64,9 @@ describe(
         });
 
         it('File Stream adapter with unix timestamp in seconds', () => {
-            FileManagementUtils.addFile('connect/fileReplay/timestampInSeconds/input.csv');
+            FileManagementUtils.addFile(
+                'connect/fileReplay/timestampInSeconds/input.csv',
+            );
             const adapterConfiguration =
                 ConnectUtils.setUpPreprocessingRuleTest(false);
 
