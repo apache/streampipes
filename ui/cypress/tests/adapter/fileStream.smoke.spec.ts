@@ -20,6 +20,7 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
+import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
 
 describe(
     'Test File Replay Adapter',
@@ -62,25 +63,25 @@ describe(
             ConnectUtils.testAdapter(adapterInput, true);
         });
 
-        // it('File Stream adapter with unix timestamp in seconds', () => {
-        //     FileManagementUtils.addFile('connect/fileReplay/timestampInSeconds/input.csv');
-        //     const adapterConfiguration =
-        //         ConnectUtils.setUpPreprocessingRuleTest(false);
-        //
-        //     // Edit timestamp property
-        //     ConnectEventSchemaUtils.editTimestampPropertyWithNumber(
-        //         'timestamp',
-        //         'Seconds',
-        //     );
-        //
-        //     ConnectEventSchemaUtils.finishEventSchemaConfiguration();
-        //     ConnectUtils.tearDownPreprocessingRuleTest(
-        //         adapterConfiguration,
-        //         'cypress/fixtures/connect/fileReplay/timestampInSeconds/expected.csv',
-        //         false,
-        //         2000,
-        //     );
-        // });
+        it('File Stream adapter with unix timestamp in seconds', () => {
+            FileManagementUtils.addFile('connect/fileReplay/timestampInSeconds/input.csv');
+            const adapterConfiguration =
+                ConnectUtils.setUpPreprocessingRuleTest(false);
+
+            // Edit timestamp property
+            ConnectEventSchemaUtils.editTimestampPropertyWithNumber(
+                'timestamp',
+                'Seconds',
+            );
+
+            ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+            ConnectUtils.tearDownPreprocessingRuleTest(
+                adapterConfiguration,
+                'cypress/fixtures/connect/fileReplay/timestampInSeconds/expected.csv',
+                false,
+                2000,
+            );
+        });
 
         // it('File Stream adapter with unix timestamp in milliseconds', () => {
         //     FileManagementUtils.addFile('connect/fileReplay/timestampInMilliseconds/input.csv');
