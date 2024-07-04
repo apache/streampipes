@@ -24,25 +24,25 @@
                     <div class="welcome-text">Welcome!</div>
                 </div>
                 <div fxLayout="column" fxFlex="100" class="home-margin">
-                    <div fxFlex="100" fxLayoutAlign="start center">
+                    <div
+                        fxFlex="100"
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        fxLayoutGap="10px"
+                        *ngIf="showStatus"
+                    >
                         <sp-status
-                            fxFlex="100"
-                            [availablePipelineElements]="
-                                availablePipelineElements.length
-                            "
-                            [availablePipelines]="availablePipelines.length"
-                            [runningPipelines]="runningPipelines.length"
-                            *ngIf="showStatus"
+                            [fxFlex]="100 / statusBoxes.length"
+                            [statusBox]="box"
+                            [currentUser]="currentUser"
+                            *ngFor="let box of statusBoxes"
                         ></sp-status>
                     </div>
                     <div fxFlex="100">
-                        <div
-                            class="assemblyOptions sp-blue-bg mt-0 round-border"
-                            style="padding: 5px"
+                        <sp-basic-inner-panel
+                            innerPadding="0"
+                            panelTitle="{{ appConstants.APP_NAME }} Modules"
                         >
-                            <h4>{{ appConstants.APP_NAME }} Modules</h4>
-                        </div>
-                        <div class="sp-blue-border pt-0" fxLayout="column">
                             <div fxFlex="100" fxLayout="column">
                                 <mat-list class="modules-list">
                                     <mat-list-item
@@ -75,7 +75,7 @@
                                     </mat-list-item>
                                 </mat-list>
                             </div>
-                        </div>
+                        </sp-basic-inner-panel>
                     </div>
                 </div>
             </div>
