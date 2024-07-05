@@ -69,8 +69,8 @@ deployment_notice() {
 
     If your environment contains the StreamPipes UI, open your browser and follow
     the instructions to get started:
-    
-    Local Docker for Mac/Windows, Linux:     http://localhost/   
+
+    Local Docker for Mac/Windows, Linux:     http://localhost/
     Remote Docker host:                      http://HOST_IP/
 
 EOF
@@ -110,7 +110,7 @@ get_curr_environment() {
 concatenate_compose_files() {
   no_ports=$1
   search_str="[environment:"
-  docker_compose_files="docker-compose --env-file $STREAMPIPES_WORKDIR/.env"
+  docker_compose_files="docker compose --env-file $STREAMPIPES_WORKDIR/.env"
 
   while IFS='' read -r line; do
     [[ -n "$line" && "$line" != *"$search_str"* && "$line" != [[:blank:]#]* ]] &&
