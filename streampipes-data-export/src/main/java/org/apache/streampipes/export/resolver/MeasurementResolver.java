@@ -28,7 +28,7 @@ public class MeasurementResolver extends AbstractResolver<DataLakeMeasure> {
 
   @Override
   public DataLakeMeasure findDocument(String resourceId) {
-    return getNoSqlStore().getDataLakeStorage().findOne(resourceId);
+    return getNoSqlStore().getDataLakeStorage().getElementById(resourceId);
   }
 
   @Override
@@ -49,7 +49,7 @@ public class MeasurementResolver extends AbstractResolver<DataLakeMeasure> {
 
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getDataLakeStorage().storeDataLakeMeasure(deserializeDocument(document));
+    getNoSqlStore().getDataLakeStorage().persist(deserializeDocument(document));
   }
 
   @Override

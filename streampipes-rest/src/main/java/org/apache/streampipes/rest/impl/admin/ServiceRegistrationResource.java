@@ -27,8 +27,6 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.CRUDStorage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,14 +45,12 @@ import java.util.List;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ServiceRegistrationResource.class);
-
-  private final CRUDStorage<String, SpServiceRegistration> extensionsServiceStorage =
+  private final CRUDStorage<SpServiceRegistration> extensionsServiceStorage =
       getNoSqlStorage().getExtensionsServiceStorage();
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<SpServiceRegistration>> getRegisteredServices() {
-    return ok(extensionsServiceStorage.getAll());
+    return ok(extensionsServiceStorage.findAll());
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

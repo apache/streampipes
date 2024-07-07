@@ -19,9 +19,13 @@
 .basic-label {
     border-radius: 15px;
     min-width: 50px;
-    height: 20px;
     padding: 5px 7px;
     border: 1px solid;
     display: inline-block;
     text-align: center;
+}
+
+.small-label {
+    font-size: 10pt;
+    padding: 2px 8px;
 }

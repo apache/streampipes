@@ -26,6 +26,7 @@ import {
 } from '@streampipes/platform-services';
 import { ResizeService } from '../../services/resize.service';
 import { zip } from 'rxjs';
+import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
 
 @Directive()
 export abstract class AbstractWidgetViewDirective {
@@ -67,6 +68,7 @@ export abstract class AbstractWidgetViewDirective {
     constructor(
         protected resizeService: ResizeService,
         protected dataViewDataExplorerService: DataViewDataExplorerService,
+        protected widgetRegistryService: DataExplorerWidgetRegistry,
     ) {}
 
     updateAllWidgets() {
@@ -74,7 +76,7 @@ export abstract class AbstractWidgetViewDirective {
             this.dataViewDataExplorerService
                 .updateWidget(value)
                 .subscribe(response => {
-                    value._rev = response._rev;
+                    value.rev = response._rev;
                     this.currentlyConfiguredWidgetId = undefined;
                 });
         });
@@ -82,7 +84,7 @@ export abstract class AbstractWidgetViewDirective {
 
     startEditMode(value: DataExplorerWidgetModel) {
         this.startEditModeEmitter.emit(value);
-        this.currentlyConfiguredWidgetId = value._id;
+        this.currentlyConfiguredWidgetId = value.elementId;
     }
 
     @Input() set dashboard(dashboard: Dashboard) {
@@ -138,9 +140,12 @@ export abstract class AbstractWidgetViewDirective {
     }
 
     processWidget(widget: DataExplorerWidgetModel) {
-        this.configuredWidgets.set(widget._id, widget);
+        widget.widgetType = this.widgetRegistryService.getWidgetType(
+            widget.widgetType,
+        );
+        this.configuredWidgets.set(widget.elementId, widget);
         this.dataLakeMeasures.set(
-            widget._id,
+            widget.elementId,
             widget.dataConfig.sourceConfigs[0].measure,
         );
     }
@@ -156,7 +161,7 @@ export abstract class AbstractWidgetViewDirective {
     propagateWidgetSelection(configuredWidget: DataExplorerWidgetModel) {
         this.configureWidgetCallback.emit(configuredWidget);
         if (configuredWidget) {
-            this.currentlyConfiguredWidgetId = configuredWidget._id;
+            this.currentlyConfiguredWidgetId = configuredWidget.elementId;
         } else {
             this.currentlyConfiguredWidgetId = undefined;
         }

@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
-import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
+import org.apache.streampipes.extensions.api.connect.TransformationRule;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

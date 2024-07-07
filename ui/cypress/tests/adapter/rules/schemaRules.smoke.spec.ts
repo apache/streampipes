@@ -18,7 +18,7 @@
 
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
-import { ConnectEventSchemaUtils } from '../../../support/utils/ConnectEventSchemaUtils';
+import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
 
 describe('Connect schema rule transformations', () => {
     beforeEach('Setup Test', () => {
@@ -27,7 +27,8 @@ describe('Connect schema rule transformations', () => {
     });
 
     it('Perform Test', () => {
-        const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
+        const adapterConfiguration =
+            ConnectUtils.setUpPreprocessingRuleTest(true);
 
         // Add static value to event
         ConnectEventSchemaUtils.addStaticProperty('staticPropertyName', 'id1');
@@ -42,7 +43,7 @@ describe('Connect schema rule transformations', () => {
         );
 
         // Add a timestamp property
-        ConnectEventSchemaUtils.addTimestampProperty();
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 

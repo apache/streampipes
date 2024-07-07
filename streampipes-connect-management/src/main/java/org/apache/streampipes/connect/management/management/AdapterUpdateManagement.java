@@ -91,7 +91,7 @@ public class AdapterUpdateManagement {
           modifiedPipeline.setPipelineNotifications(toNotification(updateInfo));
           modifiedPipeline.setValid(false);
         }
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(modifiedPipeline);
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(modifiedPipeline);
         if (shouldRestartPipeline && canAutoMigrate) {
           Operations.startPipeline(PipelineManager.getPipeline(p.getPipelineId()));
         }

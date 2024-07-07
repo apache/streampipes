@@ -19,7 +19,7 @@ package org.apache.streampipes.storage.api;
 
 import org.apache.streampipes.model.canvas.PipelineCanvasMetadata;
 
-public interface IPipelineCanvasMetadataStorage extends CRUDStorage<String, PipelineCanvasMetadata> {
+public interface IPipelineCanvasMetadataStorage extends CRUDStorage<PipelineCanvasMetadata> {
 
   PipelineCanvasMetadata getPipelineCanvasMetadataForPipeline(String pipelineId);
 }

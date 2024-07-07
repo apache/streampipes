@@ -96,6 +96,7 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
   @Override
   protected void afterStop() {
     disconnectInputCollectors();
+    pipelineElement.onPipelineStopped();
     outputCollector.disconnect();
   }
 

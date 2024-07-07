@@ -18,7 +18,7 @@
 
 import { StaticPropertyUtils } from '../StaticPropertyUtils';
 import { AdapterInput } from '../../model/AdapterInput';
-import { ConnectEventSchemaUtils } from '../ConnectEventSchemaUtils';
+import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
 import { DataLakeUtils } from '../datalake/DataLakeUtils';
 import { ConnectBtns } from './ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
@@ -26,7 +26,10 @@ import { UserUtils } from '../UserUtils';
 import { PipelineUtils } from '../PipelineUtils';
 
 export class ConnectUtils {
-    public static testAdapter(adapterConfiguration: AdapterInput) {
+    public static testAdapter(
+        adapterConfiguration: AdapterInput,
+        adapterStartFails = false,
+    ) {
         ConnectUtils.goToConnect();
 
         ConnectUtils.goToNewAdapterPage();
@@ -47,7 +50,11 @@ export class ConnectUtils {
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.startStreamAdapter(adapterConfiguration);
+        ConnectUtils.startAdapter(
+            adapterConfiguration,
+            false,
+            adapterStartFails,
+        );
     }
 
     public static addAdapter(adapterConfiguration: AdapterInput) {
@@ -100,7 +107,7 @@ export class ConnectUtils {
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.startStreamAdapter(configuration);
+        ConnectUtils.startAdapter(configuration);
     }
 
     public static goToConnect() {
@@ -148,13 +155,10 @@ export class ConnectUtils {
         cy.get('#event-schema-next-button').click();
     }
 
-    public static startStreamAdapter(adapterInput: AdapterInput) {
-        ConnectUtils.startAdapter(adapterInput);
-    }
-
     public static startAdapter(
         adapterInput: AdapterInput,
         noLiveDataView = false,
+        adapterStartFails = false,
     ) {
         // Set adapter name
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
@@ -175,14 +179,20 @@ export class ConnectUtils {
 
         ConnectBtns.adapterSettingsStartAdapter().click();
 
-        if (adapterInput.startAdapter && !noLiveDataView) {
-            cy.dataCy('sp-connect-adapter-success-live-preview', {
+        if (adapterStartFails) {
+            cy.dataCy('sp-connect-adapter-error-message', {
                 timeout: 60000,
             }).should('be.visible');
         } else {
-            cy.dataCy('sp-connect-adapter-success-added', {
-                timeout: 60000,
-            }).should('be.visible');
+            if (adapterInput.startAdapter && !noLiveDataView) {
+                cy.dataCy('sp-connect-adapter-success-live-preview', {
+                    timeout: 60000,
+                }).should('be.visible');
+            } else {
+                cy.dataCy('sp-connect-adapter-success-added', {
+                    timeout: 60000,
+                }).should('be.visible');
+            }
         }
 
         this.closeAdapterPreview();
@@ -208,6 +218,14 @@ export class ConnectUtils {
         );
     }
 
+    public static storeAndStartEditedAdapter() {
+        ConnectUtils.finishEventSchemaConfiguration();
+        ConnectBtns.storeEditAdapter().click();
+        ConnectBtns.updateAndMigratePipelines().click();
+        ConnectUtils.closeAdapterPreview();
+        ConnectBtns.startAdapter().click();
+    }
+
     public static deleteAdapterAndAssociatedPipelines(switchUserCheck = false) {
         // Delete adapter and associated pipelines
         this.goToConnect();
@@ -223,7 +241,9 @@ export class ConnectUtils {
             'be.visible',
         );
         if (switchUserCheck) {
-            cy.switchUser(UserUtils.adapterAndPipelineAdminUser);
+            UserUtils.switchUser(
+                UserUtils.userWithAdapterAndPipelineAdminRights,
+            );
         }
         this.checkAdapterAndAssociatedPipelinesDeleted();
     }
@@ -274,21 +294,35 @@ export class ConnectUtils {
         );
     }
 
-    public static setUpPreprocessingRuleTest(): AdapterInput {
-        const adapterConfiguration = AdapterBuilder.create('File_Stream')
-            .setStoreInDataLake()
-            .setTimestampProperty('timestamp')
-            .addProtocolInput(
-                'radio',
-                'speed',
-                'fastest_\\(ignore_original_time\\)',
-            )
-            .addProtocolInput('radio', 'replayonce', 'yes')
-            .setName('Adapter to test rules')
-            .setFormat('csv')
-            .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
-            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
-            .build();
+    public static setUpPreprocessingRuleTest(
+        overwriteTimestamp: boolean,
+        adapterConfigurationBuilder?: AdapterBuilder,
+    ): AdapterInput {
+        if (!adapterConfigurationBuilder) {
+            adapterConfigurationBuilder = AdapterBuilder.create('File_Stream')
+                .setStoreInDataLake()
+                .setTimestampProperty('timestamp')
+                .addProtocolInput(
+                    'radio',
+                    'speed',
+                    'fastest_\\(ignore_original_time\\)',
+                )
+                .addProtocolInput('radio', 'replayonce', 'yes')
+                .setName('Adapter to test rules')
+                .setFormat('csv')
+                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
+        }
+
+        if (overwriteTimestamp) {
+            adapterConfigurationBuilder.addProtocolInput(
+                'checkbox',
+                'replaceTimestamp',
+                'check',
+            );
+        }
+
+        const adapterConfiguration = adapterConfigurationBuilder.build();
 
         ConnectUtils.goToConnect();
         ConnectUtils.goToNewAdapterPage();

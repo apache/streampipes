@@ -30,6 +30,7 @@ import {
     EventPropertyUnion,
     EventSchema,
     MoveRuleDescription,
+    PropertyScope,
     RenameRuleDescription,
     SemanticType,
     TimestampTranfsformationRuleDescription,
@@ -55,22 +56,23 @@ export class TransformationRuleService {
         if (originalSchema == null || targetSchema == null) {
             console.log('Old and new schema must be defined');
         } else {
-            const addedTimestampProperties = this.getTimestampProperty(
+            const addedTimestampProperty = this.getTimestampProperty(
                 targetSchema.eventProperties,
             );
-            if (addedTimestampProperties) {
+            if (addedTimestampProperty) {
                 // add to old event schema for the case users moved the property to a nested property
-                originalSchema.eventProperties.push(addedTimestampProperties);
+                originalSchema.eventProperties.push(addedTimestampProperty);
 
                 const timestampRuleDescription: AddTimestampRuleDescription =
                     new AddTimestampRuleDescription();
                 timestampRuleDescription['@class'] =
                     'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription';
                 timestampRuleDescription.runtimeKey =
-                    addedTimestampProperties.runtimeName;
+                    addedTimestampProperty.runtimeName;
+                timestampRuleDescription.propertyScope =
+                    addedTimestampProperty.propertyScope as PropertyScope;
                 transformationRuleDescriptions.push(timestampRuleDescription);
             }
-
             const staticValueProperties = this.getStaticValueProperties(
                 targetSchema.eventProperties,
             );
@@ -84,6 +86,7 @@ export class TransformationRuleService {
                 rule.datatype = ep.runtimeType;
                 rule.label = ep.label;
                 rule.description = ep.description;
+                rule.propertyScope = ep.propertyScope as PropertyScope;
                 if (ep.domainProperties.length > 0) {
                     rule.semanticType = ep.domainProperties[0];
                 }
@@ -125,13 +128,7 @@ export class TransformationRuleService {
                         targetSchema,
                     ),
                 )
-                .concat(
-                    this.getDeleteRules(
-                        targetSchema.eventProperties,
-                        originalSchema,
-                        targetSchema,
-                    ),
-                )
+                .concat(this.getDeleteRules(originalSchema, targetSchema))
                 .concat(
                     this.getUnitTransformRules(
                         targetSchema.eventProperties,
@@ -299,11 +296,10 @@ export class TransformationRuleService {
     }
 
     public getDeleteRules(
-        newEventProperties: EventProperty[],
         oldEventSchema: EventSchema,
         newEventSchema: EventSchema,
     ): DeleteRuleDescription[] {
-        let resultKeys: string[] = [];
+        const resultKeys: string[] = [];
 
         const allNewIds: string[] = this.getAllIds(
             newEventSchema.eventProperties,
@@ -322,21 +318,6 @@ export class TransformationRuleService {
                 resultKeys.push(key);
             }
         }
-
-        const uniqEs6 = arrArg => {
-            return arrArg.filter((elem, pos, arr) => {
-                let r = true;
-                for (const a of arr) {
-                    if (elem.startsWith(a) && a !== elem) {
-                        r = false;
-                    }
-                }
-
-                return r;
-            });
-        };
-
-        resultKeys = uniqEs6(resultKeys);
 
         const resultRules: DeleteRuleDescription[] = [];
         for (const key of resultKeys) {

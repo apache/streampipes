@@ -32,7 +32,6 @@ import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty;
-import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
 import org.apache.streampipes.model.staticproperty.FileStaticProperty;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
@@ -48,7 +47,6 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.model.staticproperty.StaticPropertyType;
-import org.apache.streampipes.model.staticproperty.SupportedProperty;
 import org.apache.streampipes.model.staticproperty.TreeInputNode;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
@@ -248,22 +246,22 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     List<TreeInputNode> allNodes = new ArrayList<>();
     RuntimeResolvableTreeInputStaticProperty sp =
         getStaticPropertyByName(internalName, RuntimeResolvableTreeInputStaticProperty.class);
-    if (sp.getNodes().size() > 0) {
+    if (!sp.getNodes().isEmpty()) {
       sp.getNodes().forEach(node -> buildFlatTree(node, allNodes));
     }
 
-    if (allNodes.size() > 0) {
-      return allNodes
+    if (!allNodes.isEmpty()) {
+      return sp.getSelectedNodesInternalNames()
           .stream()
           .filter(node -> {
             if (!onlyDataNodes) {
               return true;
             } else {
-              return node.isDataNode();
+              var existingNode = allNodes.stream().filter(n -> n.getInternalNodeName().equals(node)).findFirst();
+              return existingNode.map(TreeInputNode::isDataNode).orElse(false);
             }
           })
-          .filter(TreeInputNode::isSelected)
-          .map(node -> typeParser.parse(node.getInternalNodeName(), targetClass))
+          .map(node -> typeParser.parse(node, targetClass))
           .collect(Collectors.toList());
     } else {
       return new ArrayList<>();
@@ -366,22 +364,6 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     }
     // TODO exceptions
     return null;
-  }
-
-  @Override
-  public <V> V supportedOntologyPropertyValue(String domainPropertyInternalId, String
-      propertyId, Class<V> targetClass) {
-    DomainStaticProperty dsp = getStaticPropertyByName(domainPropertyInternalId,
-        DomainStaticProperty.class);
-
-    return typeParser.parse(dsp
-        .getSupportedProperties()
-        .stream()
-        .filter(sp -> sp.getPropertyId().equals(propertyId))
-        .findFirst()
-        .map(SupportedProperty::getValue)
-        .get(), targetClass);
-
   }
 
   @Override

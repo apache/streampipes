@@ -16,67 +16,59 @@
   ~
   -->
 
-<div fxLayout="row" fxLayoutAlign="center center">
-    <div>{{ selectedIndex + 1 }} / {{ maxImages }}</div>
-</div>
-
-<div fxLayout="row" fxLayoutAlign="space-around center">
-    <button mat-icon-button (click)="goToStart()">
-        <mat-icon>skip_previous</mat-icon>
-    </button>
-    <button mat-icon-button (click)="nextImage()">
-        <mat-icon>keyboard_arrow_left</mat-icon>
-    </button>
-
-    <div fxLayout="row" fxLayoutAlign="center center" class="imageBar">
-        <div fxFlex="40" fxLayoutAlign="end center">
-            <sp-image-bar-preview
-                [imagePreviewHeight]="imagePreviewHeight"
-                [imageSrc]="_imageRoutes[selectedIndex - 2]"
-                *ngIf="selectedIndex >= 2"
-                (click)="changeImage(selectedIndex - 2)"
-            ></sp-image-bar-preview>
-            <sp-image-bar-preview
-                [imagePreviewHeight]="imagePreviewHeight"
-                [imageSrc]="_imageRoutes[selectedIndex - 1]"
-                *ngIf="selectedIndex >= 1"
-                (click)="changeImage(selectedIndex - 1)"
-            ></sp-image-bar-preview>
-        </div>
-
-        <div fxFlex="20">
-            <div fxLayout="row" fxLayoutAlign="center">
-                <sp-image-bar-preview
-                    [imagePreviewHeight]="imagePreviewHeight"
-                    [imageSrc]="_imageRoutes[selectedIndex]"
-                    [focus]="true"
-                    (click)="changeImage(selectedIndex)"
-                ></sp-image-bar-preview>
-            </div>
-        </div>
-
-        <div fxFlex="40">
-            <div fxLayout="row" fxLayoutAlign="start center">
-                <sp-image-bar-preview
-                    [imagePreviewHeight]="imagePreviewHeight"
-                    [imageSrc]="_imageRoutes[selectedIndex + 1]"
-                    *ngIf="selectedIndex < maxImages - 1"
-                    (click)="changeImage(selectedIndex + 1)"
-                ></sp-image-bar-preview>
-                <sp-image-bar-preview
-                    [imagePreviewHeight]="imagePreviewHeight"
-                    [imageSrc]="_imageRoutes[selectedIndex + 2]"
-                    *ngIf="selectedIndex < maxImages - 2"
-                    (click)="changeImage(selectedIndex + 2)"
-                ></sp-image-bar-preview>
-            </div>
-        </div>
+<div fxFlex="100" fxLayout="column">
+    <div fxLayout="row" fxLayoutAlign="center center" class="mb-10">
+        <div>{{ selectedIndex + 1 }} / {{ maxImages }}</div>
     </div>
 
-    <button mat-icon-button (click)="previousImage()">
-        <mat-icon>keyboard_arrow_right</mat-icon>
-    </button>
-    <button mat-icon-button (click)="goToEnd()">
-        <mat-icon>skip_next</mat-icon>
-    </button>
+    <div
+        fxFlex
+        fxLayout="row"
+        fxLayoutAlign="center center"
+        class="imageBar"
+        fxLayoutGap="10px"
+    >
+        <button mat-icon-button (click)="goToStart()">
+            <mat-icon>skip_previous</mat-icon>
+        </button>
+        <button mat-icon-button (click)="nextImage()">
+            <mat-icon>keyboard_arrow_left</mat-icon>
+        </button>
+        <sp-image-bar-preview
+            [imagePreviewHeight]="imagePreviewHeight"
+            [imageSrc]="_imageRoutes[selectedIndex - 2]"
+            *ngIf="selectedIndex >= 2"
+            (click)="changeImage(selectedIndex - 2)"
+        ></sp-image-bar-preview>
+        <sp-image-bar-preview
+            [imagePreviewHeight]="imagePreviewHeight"
+            [imageSrc]="_imageRoutes[selectedIndex - 1]"
+            *ngIf="selectedIndex >= 1"
+            (click)="changeImage(selectedIndex - 1)"
+        ></sp-image-bar-preview>
+        <sp-image-bar-preview
+            [imagePreviewHeight]="imagePreviewHeight"
+            [imageSrc]="_imageRoutes[selectedIndex]"
+            [focus]="true"
+            (click)="changeImage(selectedIndex)"
+        ></sp-image-bar-preview>
+        <sp-image-bar-preview
+            [imagePreviewHeight]="imagePreviewHeight"
+            [imageSrc]="_imageRoutes[selectedIndex + 1]"
+            *ngIf="selectedIndex < maxImages - 1"
+            (click)="changeImage(selectedIndex + 1)"
+        ></sp-image-bar-preview>
+        <sp-image-bar-preview
+            [imagePreviewHeight]="imagePreviewHeight"
+            [imageSrc]="_imageRoutes[selectedIndex + 2]"
+            *ngIf="selectedIndex < maxImages - 2"
+            (click)="changeImage(selectedIndex + 2)"
+        ></sp-image-bar-preview>
+        <button mat-icon-button (click)="previousImage()">
+            <mat-icon>keyboard_arrow_right</mat-icon>
+        </button>
+        <button mat-icon-button (click)="goToEnd()">
+            <mat-icon>skip_next</mat-icon>
+        </button>
+    </div>
 </div>

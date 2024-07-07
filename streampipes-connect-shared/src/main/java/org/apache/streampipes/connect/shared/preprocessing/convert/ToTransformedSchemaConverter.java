@@ -109,6 +109,10 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
   public void visit(AddTimestampRuleDescription rule) {
     var timestampProperty = EpProperties.timestampProperty(rule.getRuntimeKey());
     timestampProperty.setElementId(TIMESTAMP_ID_PREFIX + UUIDGenerator.generateUuid());
+    // null check required for backwards compatibility
+    if (rule.getPropertyScope() != null) {
+      timestampProperty.setPropertyScope(rule.getPropertyScope().name());
+    }
     this.properties.add(timestampProperty);
   }
 
@@ -154,7 +158,7 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
     var metadata = property.getAdditionalMetadata();
     metadata.put("mode", rule.getMode());
     metadata.put("formatString", rule.getFormatString());
-    metadata.put("multiplier", rule.getMultiplier());
+    metadata.put("multiplier", String.valueOf(rule.getMultiplier()));
   }
 
   @Override

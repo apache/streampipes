@@ -11,11 +11,6 @@ public class Multiplier implements Serializable{
 	private double offset;
 	private double multiplier;
 
-	public Multiplier(double offset, double multiplier) {
-		this.offset = offset;
-		this.multiplier = multiplier;
-	}
-
 	public Multiplier() {}
 
 	public double getOffset() {

@@ -21,110 +21,192 @@ package org.apache.streampipes.connect.shared.preprocessing.transform;
 import org.apache.streampipes.connect.shared.DatatypeUtils;
 import org.apache.streampipes.vocabulary.XSD;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class DatatypeUtilsTest {
 
-  @Test
   /**
-   * This test ensures that timestamps represented as strings are correctly parsed.
+   * The following tests ensure that timestamps represented as strings are correctly parsed.
    * Often they are first parsed into floating point number before transformed back to long.
    * The data type for those values should be Double and not Float, because the transformation to Float might change
    * the value
    */
-  public void convertTimestampValue() {
-    var inputValue = "1667904471000";
+  @Test
+  public void convertValue_StringToStringValue() {
+    var inputValue = "testString";
+    var actualValue = DatatypeUtils.convertValue(inputValue, XSD.STRING.toString());
 
-    var floatValue = DatatypeUtils.convertValue(inputValue, XSD.DOUBLE.toString());
-    var longValue = DatatypeUtils.convertValue(floatValue, XSD.LONG.toString());
-
-    Assertions.assertEquals(Long.parseLong(inputValue), longValue);
+    assertEquals(inputValue, actualValue);
   }
+
+  @Test
+  public void convertValue_StringToDoubleValue() {
+    var actualValue = DatatypeUtils.convertValue("1667904471000", XSD.DOUBLE.toString());
+
+    assertEquals(1.667904471E12, actualValue);
+  }
+
+  @Test
+  public void convertValue_StringToFloatValue() {
+    var actualValue = DatatypeUtils.convertValue("123.45", XSD.FLOAT.toString());
+
+    assertEquals(123.45f, actualValue);
+  }
+
+  @Test
+  public void convertValue_StringToInteger() {
+    var actualValue = DatatypeUtils.convertValue("1623871500", XSD.INTEGER.toString());
+
+    assertEquals(1623871500, actualValue);
+  }
+
+  @Test
+  public void convertValue_StringToIntegerValue() {
+    var actualValue = DatatypeUtils.convertValue("123", XSD.INTEGER.toString());
+
+    assertEquals(123, actualValue);
+  }
+
+  @Test
+  public void convertValue_StringToLongValue() {
+    var actualValue = DatatypeUtils.convertValue("1623871500000", XSD.LONG.toString());
+
+    assertEquals(1623871500000L, actualValue);
+  }
+
+  @Test
+  public void convertValue_StringToBooleanTrueValue() {
+    var actualValue = DatatypeUtils.convertValue("true", XSD.BOOLEAN.toString());
+
+    assertEquals(true, actualValue);
+  }
+
+  @Test
+  public void convertValue_StringToBooleanFalseValue() {
+    var actualValue = DatatypeUtils.convertValue("false", XSD.BOOLEAN.toString());
+
+    assertEquals(false, actualValue);
+  }
+
+  @Test
+  public void convertValue_FloatToIntegerValue_Rounding() {
+    var actualValue = DatatypeUtils.convertValue(123.45f, XSD.INTEGER.toString());
+
+    assertEquals(123, actualValue);
+  }
+
+  @Test
+  public void convertValue_DoubleToLongValue_Rounding1() {
+    var actualValue = DatatypeUtils.convertValue(1234567890.12345, XSD.LONG.toString());
+
+    assertEquals(1234567890L, actualValue);
+  }
+
+  @Test
+  public void convertValue_DoubleToLongValue() {
+    var actualValue = DatatypeUtils.convertValue(1.667904471E12, XSD.LONG.toString());
+
+    assertEquals(1667904471000L, actualValue);
+  }
+
+  @Test
+  public void convertValue_DoubleToLongValue_Rounding() {
+    var actualValue = DatatypeUtils.convertValue(1234567890.12345, XSD.LONG.toString());
+
+    assertEquals(1234567890L, actualValue);
+  }
+
 
   String booleanInputValue = "true";
+
   @Test
-  public void getTypeClassNoPrefereFloatingPointBoolean() {
+  public void getTypeClass_NoPrefereFloatingPointBoolean() {
     var result = DatatypeUtils.getTypeClass(booleanInputValue, false);
-    Assertions.assertEquals(Boolean.class, result);
+    assertEquals(Boolean.class, result);
   }
 
   @Test
-  public void getTypeClassWithPrefereFloatingPointBoolean() {
+  public void getTypeClass_WithPrefereFloatingPointBoolean() {
     var result = DatatypeUtils.getTypeClass(booleanInputValue, true);
-    Assertions.assertEquals(Boolean.class, result);
+    assertEquals(Boolean.class, result);
   }
 
   String integerInputValue = "1";
+
   @Test
-  public void getTypeClassNoPrefereFloatingPointInteger() {
+  public void getTypeClass_NoPrefereFloatingPointInteger() {
     var result = DatatypeUtils.getTypeClass(integerInputValue, false);
-    Assertions.assertEquals(Integer.class, result);
+    assertEquals(Integer.class, result);
   }
 
   @Test
-  public void getTypeClassWithPrefereFloatingPointInteger() {
+  public void getTypeClass_WithPrefereFloatingPointInteger() {
     var result = DatatypeUtils.getTypeClass(integerInputValue, true);
-    Assertions.assertEquals(Float.class, result);
+    assertEquals(Float.class, result);
   }
 
   String floatInputValue = "1.0";
+
   @Test
-  public void getTypeClassNoPrefereFloatingPointFloat() {
+  public void getTypeClass_NoPrefereFloatingPointFloat() {
     var result = DatatypeUtils.getTypeClass(floatInputValue, false);
-    Assertions.assertEquals(Float.class, result);
+    assertEquals(Float.class, result);
   }
 
   @Test
-  public void getTypeClassWithPrefereFloatingPointFloat() {
+  public void getTypeClass_WithPrefereFloatingPointFloat() {
     var result = DatatypeUtils.getTypeClass(floatInputValue, true);
-    Assertions.assertEquals(Float.class, result);
+    assertEquals(Float.class, result);
   }
 
 
   String doubleInputValue = String.format(Locale.US, "%.2f", Double.MAX_VALUE);
+
   @Test
-  public void getTypeClassNoPrefereFloatingPointDouble() {
+  public void getTypeClass_NoPrefereFloatingPointDouble() {
     var result = DatatypeUtils.getTypeClass(doubleInputValue, false);
-    Assertions.assertEquals(Double.class, result);
+    assertEquals(Double.class, result);
   }
 
   @Test
-  public void getTypeClassWithPrefereFloatingPointDouble() {
+  public void getTypeClass_WithPrefereFloatingPointDouble() {
     var result = DatatypeUtils.getTypeClass(doubleInputValue, true);
-    Assertions.assertEquals(Double.class, result);
+    assertEquals(Double.class, result);
   }
 
 
   String longInputValue = "1667904471000";
+
   @Test
-  public void getTypeClassNoPrefereFloatingPointLong() {
+  public void getTypeClass_NoPrefereFloatingPointLong() {
     var result = DatatypeUtils.getTypeClass(longInputValue, false);
-    Assertions.assertEquals(Long.class, result);
+    assertEquals(Long.class, result);
   }
 
   @Test
-  public void getTypeClassWithPrefereFloatingPointLong() {
+  public void getTypeClass_WithPrefereFloatingPointLong() {
     var result = DatatypeUtils.getTypeClass(longInputValue, true);
-    Assertions.assertEquals(Double.class, result);
+    assertEquals(Double.class, result);
   }
 
   String stringInputValue = "one";
+
   @Test
-  public void getTypeClassNoPrefereFloatingPointString() {
+  public void getTypeClass_NoPrefereFloatingPointString() {
     var result = DatatypeUtils.getTypeClass(stringInputValue, false);
 
-    Assertions.assertEquals(String.class, result);
+    assertEquals(String.class, result);
   }
 
   @Test
-  public void getTypeClassWithPrefereFloatingPointString() {
+  public void getTypeClass_WithPrefereFloatingPointString() {
     var result = DatatypeUtils.getTypeClass(stringInputValue, true);
 
-    Assertions.assertEquals(String.class, result);
+    assertEquals(String.class, result);
   }
-
 
 }

@@ -57,10 +57,6 @@
 
         <!-- External dependencies -->
         <dependency>
-            <groupId>edu.wpi.rail</groupId>
-            <artifactId>jrosbridge</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>fluent-hc</artifactId>
         </dependency>

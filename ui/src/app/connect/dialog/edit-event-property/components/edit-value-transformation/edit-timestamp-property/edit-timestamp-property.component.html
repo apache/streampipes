@@ -55,6 +55,7 @@
             <mat-select
                 placeholder="Current time unit"
                 [(value)]="selectedTimeMultiplier"
+                data-cy="connect-timestamp-number-dropdown"
             >
                 <mat-option
                     value="milliseconds"
@@ -63,7 +64,7 @@
                     Milliseconds
                 </mat-option>
                 <mat-option
-                    value="second"
+                    value="seconds"
                     (click)="
                         cachedProperty.additionalMetadata.multiplier = 1000
                     "

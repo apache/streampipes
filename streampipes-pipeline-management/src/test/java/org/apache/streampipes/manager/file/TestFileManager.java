@@ -19,7 +19,7 @@ package org.apache.streampipes.manager.file;
 
 import org.apache.streampipes.commons.file.FileHasher;
 import org.apache.streampipes.model.file.FileMetadata;
-import org.apache.streampipes.storage.api.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.CRUDStorage;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +50,7 @@ import static org.mockito.Mockito.when;
 public class TestFileManager {
 
   private FileManager fileManager;
-  private IFileMetadataStorage fileMetadataStorage;
+  private CRUDStorage<FileMetadata> fileMetadataStorage;
   private FileHandler fileHandler;
   private FileHasher fileHasher;
 
@@ -59,7 +59,7 @@ public class TestFileManager {
 
   @BeforeEach
   public void setup() {
-    fileMetadataStorage = mock(IFileMetadataStorage.class);
+    fileMetadataStorage = mock(CRUDStorage.class);
     fileHandler = mock(FileHandler.class);
     fileHasher = mock(FileHasher.class);
     fileManager = new FileManager(fileMetadataStorage, fileHandler, fileHasher);
@@ -104,7 +104,7 @@ public class TestFileManager {
 
   private List<FileMetadata> prepareFileMetadataStorageWithTwoSampleFiles() {
     List<FileMetadata> allFiles = Arrays.asList(createFileMetadata("csv"), createFileMetadata("json"));
-    when(fileMetadataStorage.getAllFileMetadataDescriptions()).thenReturn(allFiles);
+    when(fileMetadataStorage.findAll()).thenReturn(allFiles);
 
     return allFiles;
   }
@@ -152,7 +152,7 @@ public class TestFileManager {
     assertEquals(filename, fileMetadata.getFilename());
     assertEquals("csv", fileMetadata.getFiletype());
     verify(fileHandler, times(1)).storeFile(eq(filename), any(InputStream.class));
-    verify(fileMetadataStorage, times(1)).addFileMetadata(any(FileMetadata.class));
+    verify(fileMetadataStorage, times(1)).persist(any(FileMetadata.class));
   }
 
   @Test
@@ -164,7 +164,7 @@ public class TestFileManager {
 
     assertEquals(expectedSanitizedFilename, fileMetadata.getFilename());
     verify(fileHandler, times(1)).storeFile(eq(expectedSanitizedFilename), any(InputStream.class));
-    verify(fileMetadataStorage, times(1)).addFileMetadata(any(FileMetadata.class));
+    verify(fileMetadataStorage, times(1)).persist(any(FileMetadata.class));
   }
 
   /**
@@ -197,24 +197,24 @@ public class TestFileManager {
     var fileMetadata = new FileMetadata();
     fileMetadata.setFilename("existingFile.txt");
 
-    when(fileMetadataStorage.getMetadataById(id)).thenReturn(fileMetadata);
+    when(fileMetadataStorage.getElementById(id)).thenReturn(fileMetadata);
 
     fileManager.deleteFile(id);
 
     verify(fileHandler, times(1)).deleteFile(fileMetadata.getFilename());
-    verify(fileMetadataStorage, times(1)).deleteFileMetadata(id);
+    verify(fileMetadataStorage, times(1)).deleteElementById(id);
   }
 
   @Test
   public void deleteFile_doesNothingForNonExistingFile() {
     var id = "nonExistingFileId";
 
-    when(fileMetadataStorage.getMetadataById(id)).thenReturn(null);
+    when(fileMetadataStorage.getElementById(id)).thenReturn(null);
 
     fileManager.deleteFile(id);
 
     verify(fileHandler, times(0)).deleteFile(anyString());
-    verify(fileMetadataStorage, times(0)).deleteFileMetadata(id);
+    verify(fileMetadataStorage, times(0)).deleteElementById(id);
   }
 
   @Test

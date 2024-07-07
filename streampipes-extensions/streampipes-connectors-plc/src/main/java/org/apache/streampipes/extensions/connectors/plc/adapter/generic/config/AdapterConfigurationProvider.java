@@ -19,15 +19,15 @@
 package org.apache.streampipes.extensions.connectors.plc.adapter.generic.config;
 
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
-import org.apache.streampipes.extensions.connectors.plc.adapter.generic.assets.PlcAdapterAssetResolver;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.GenericPlc4xAdapter;
+import org.apache.streampipes.extensions.connectors.plc.adapter.generic.assets.PlcAdapterAssetResolver;
 import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 
 import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.PlcDriver;
@@ -55,7 +55,7 @@ public class AdapterConfigurationProvider {
             () -> new GenericPlc4xAdapter(driver, connectionManager)
         )
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withAssetResolver(
             new PlcAdapterAssetResolver("org.apache.streampipes.connect.iiot.adapters.plc4x.generic", appId, driver)
         )

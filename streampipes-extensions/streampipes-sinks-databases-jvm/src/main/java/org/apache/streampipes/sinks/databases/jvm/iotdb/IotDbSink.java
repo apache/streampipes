@@ -21,6 +21,7 @@ package org.apache.streampipes.sinks.databases.jvm.iotdb;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.AbstractField;
@@ -30,7 +31,6 @@ import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
@@ -38,7 +38,6 @@ import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
 import org.apache.iotdb.session.pool.SessionPool;
 import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
-import org.apache.iotdb.tsfile.utils.Binary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +76,7 @@ public class IotDbSink extends StreamPipesDataSink {
     return DataSinkBuilder
         .create("org.apache.streampipes.sinks.databases.jvm.iotdb", 0)
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON).
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).
         category(DataSinkType.DATABASE)
         .requiredStream(
             StreamRequirementsBuilder.create()
@@ -169,7 +168,7 @@ public class IotDbSink extends StreamPipesDataSink {
         values.add(value);
       } else {
         types.add(TSDataType.TEXT);
-        values.add(Binary.valueOf(value.toString()));
+        values.add(value);
       }
     }
 

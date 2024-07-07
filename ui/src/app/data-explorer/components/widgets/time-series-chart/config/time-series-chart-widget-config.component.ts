@@ -166,7 +166,7 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
         const fieldKeys = availableFields.map(
             f => f.fullDbName + f.sourceIndex,
         );
-        if (!config) {
+        if (!config || !(typeof config === 'object')) {
             config = {};
         } else {
             Object.keys(config).forEach(key => {

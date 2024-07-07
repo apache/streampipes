@@ -20,25 +20,20 @@ package org.apache.streampipes.units;
 
 import com.github.jqudt.Unit;
 import com.github.jqudt.onto.UnitFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public enum UnitProvider {
 
   INSTANCE;
 
-  private static final Logger LOG = LoggerFactory.getLogger(UnitCollector.class);
+  private final List<Unit> availableUnitTypes = new ArrayList<>();
+  private final List<Unit> availableUnits = new ArrayList<>();
 
-  private List<Unit> availableUnitTypes = new ArrayList<>();
-  private List<Unit> availableUnits = new ArrayList<>();
-
-  private UnitFactory factory;
+  private final UnitFactory factory;
 
   UnitProvider() {
     factory = UnitFactory.getInstance();
@@ -57,18 +52,6 @@ public enum UnitProvider {
 
   public Unit getUnit(String resourceUri) {
     return factory.getUnit(resourceUri);
-  }
-
-  public Unit getUnitByLabel(String label) {
-    try {
-      return availableUnits.stream()
-          .filter((Unit unit) -> unit.getLabel().equals(label))
-          .findFirst()
-          .get();
-    } catch (NoSuchElementException e) {
-      LOG.error("No unit with label \"" + label + "\" found");
-      return null;
-    }
   }
 
   public List<Unit> getUnitsByType(URI type) {

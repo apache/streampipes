@@ -50,7 +50,7 @@ describe('Test Edit Adapter', () => {
             .clear()
             .type('http://schema.org/Numbers');
         // Change field data type
-        cy.dataCy('connect-change-runtime-type')
+        ConnectBtns.changeRuntimeType()
             .click()
             .get('mat-option')
             .contains('Double')
@@ -83,10 +83,7 @@ describe('Test Edit Adapter', () => {
             'have.value',
             'http://schema.org/Numbers',
         );
-        cy.dataCy('connect-change-runtime-type').should(
-            'include.text',
-            'Double',
-        );
+        ConnectBtns.changeRuntimeType().should('include.text', 'Double');
         cy.dataCy('connect-schema-correction-value').should('have.value', '2');
         cy.dataCy('connect-schema-correction-operator').should(
             'include.text',
@@ -96,7 +93,7 @@ describe('Test Edit Adapter', () => {
         // Delete inserted values in edit field
         cy.dataCy('connect-edit-field-runtime-name').clear();
         cy.get('[id="domainproperty"]').clear();
-        cy.dataCy('connect-change-runtime-type')
+        ConnectBtns.changeRuntimeType()
             .click()
             .get('mat-option')
             .contains('Float')

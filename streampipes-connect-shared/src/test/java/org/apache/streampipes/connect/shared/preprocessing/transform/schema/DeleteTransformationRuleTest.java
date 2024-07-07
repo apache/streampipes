@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
-import org.junit.jupiter.api.Assertions;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -26,33 +27,113 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class DeleteTransformationRuleTest {
+
+
+  private ObjectMapper objectMapper = new ObjectMapper();
 
   @Test
   public void transformSimple() {
-    Map<String, Object> event = new HashMap<>();
+    var event = new HashMap<String, Object>();
     event.put("key", "value");
 
-    DeleteTransformationRule deleteRule = new DeleteTransformationRule(List.of("key"));
+    var deleteRule = new DeleteTransformationRule(List.of("key"));
 
-    Map<String, Object> result = deleteRule.apply(event);
+    var result = deleteRule.apply(event);
 
-    Assertions.assertEquals(0,
-                            result.keySet().size());
+    assertEquals(0,
+                 result.keySet()
+                       .size()
+    );
   }
 
   @Test
-  public void transformNested() {
-    Map<String, Object> child = new HashMap<>();
-    child.put("child", "value");
-    Map<String, Object> event = new HashMap<>();
-    event.put("parent", child);
+  public void transformNested() throws JsonProcessingException {
+    var jsonString = """
+                     {
+                         "parent": {
+                             "child": "value",
+                             "child2": "value2"
+                         },
+                         "keepProperty": "test"
+                     }
+                     """;
 
-    DeleteTransformationRule deleteRule = new DeleteTransformationRule(Arrays.asList("parent", "child"));
+    var event = getEvent(jsonString);
 
-    Map<String, Object> result = deleteRule.apply(event);
+    var deleteRule = new DeleteTransformationRule(List.of("parent", "child"));
 
-    Assertions.assertEquals(1,
-                            result.keySet().size());
+    var result = deleteRule.apply(event);
+
+    assertEquals(2,
+                 result.keySet()
+                       .size()
+    );
+    assertEquals(1, ((Map) result.get("parent")).size());
   }
+
+  @Test
+  public void testRemoveParent() throws JsonProcessingException {
+    var jsonString = """
+                     {
+                         "parent": {
+                             "child": "value",
+                             "child2": "value2"
+                         },
+                         "keepProperty": "test"
+                     }
+                     """;
+
+    var event = getEvent(jsonString);
+
+    var deleteRule = new DeleteTransformationRule(List.of("parent"));
+
+    var result = deleteRule.apply(event);
+
+    assertEquals(1,
+                 result.keySet()
+                       .size()
+    );
+    assertEquals("test", result.get("keepProperty"));
+  }
+
+
+  @Test
+  // verifying that mathod applyTransformation method works when passed a null event.
+  public void applyTransformationWithNullParameter() {
+    new DeleteTransformationRule(List.of())
+        .applyTransformation(null, List.of());
+  }
+
+  @Test
+  public void deleteNestedChildWithParentProperty() throws JsonProcessingException {
+
+    var jsonString = """
+                     {
+                         "parent": {
+                             "child": "value"
+                         },
+                         "keepProperty": "test"
+                     }
+                     """;
+
+    var event = getEvent(jsonString);
+
+    var deleteRule = new DeleteTransformationRule(Arrays.asList("parent", "child"));
+
+    var result = deleteRule.apply(event);
+
+    assertEquals(2,
+                 result.keySet()
+                       .size()
+    );
+    assertEquals("test", result.get("keepProperty"));
+  }
+
+  private Map<String, Object> getEvent(String eventJson) throws JsonProcessingException {
+    return objectMapper.readValue(eventJson, HashMap.class);
+  }
+
 }

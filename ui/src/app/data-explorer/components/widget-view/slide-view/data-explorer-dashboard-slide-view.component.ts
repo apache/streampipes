@@ -16,13 +16,7 @@
  *
  */
 
-import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    SimpleChanges,
-    ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractWidgetViewDirective } from '../abstract-widget-view.directive';
 import { ResizeService } from '../../../services/resize.service';
 import {
@@ -31,6 +25,7 @@ import {
     DataLakeMeasure,
     DataViewDataExplorerService,
 } from '@streampipes/platform-services';
+import { DataExplorerWidgetRegistry } from '../../../registry/data-explorer-widget-registry';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-slide-view',
@@ -56,8 +51,13 @@ export class DataExplorerDashboardSlideViewComponent
     constructor(
         protected resizeService: ResizeService,
         protected dataViewDataExplorerService: DataViewDataExplorerService,
+        protected widgetRegistryService: DataExplorerWidgetRegistry,
     ) {
-        super(resizeService, dataViewDataExplorerService);
+        super(
+            resizeService,
+            dataViewDataExplorerService,
+            widgetRegistryService,
+        );
     }
 
     selectWidget(index: number, widgetId: string): void {
@@ -106,7 +106,7 @@ export class DataExplorerDashboardSlideViewComponent
         return false;
     }
 
-    selectNewWidget(widgetId): void {
+    selectNewWidget(widgetId: string): void {
         this.selectWidget(this.dashboard.widgets.length - 1, widgetId);
     }
 }

@@ -16,28 +16,21 @@
   ~
   -->
 
-<div
-    fxFlex="100"
-    fxLayoutAlign="center center"
-    fxLayout="column"
-    class="main-panel"
->
+<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
     <sp-no-data-in-date-range
         *ngIf="showNoDataInDateRange"
         [viewDateRange]="timeSettings"
     ></sp-no-data-in-date-range>
 
-    <div class="widget-inner-content">
-        <sp-image-viewer
-            *ngIf="imagePaths.length > 0"
-            [imagesRoutes]="imagePaths"
-            [canvasHeight]="canvasHeight"
-            [canvasWidth]="canvasWidth"
-            [imagePreviewHeight]="imagePreviewHeight"
-            [ngStyle]="{
-                width: canvasWidth + 'px',
-                height: canvasHeight + 'px'
-            }"
-        ></sp-image-viewer>
-    </div>
+    <sp-image-viewer
+        *ngIf="imagePaths.length > 0"
+        [imagesRoutes]="imagePaths"
+        [canvasHeight]="canvasHeight"
+        [canvasWidth]="canvasWidth"
+        [imagePreviewHeight]="imagePreviewHeight"
+        [ngStyle]="{
+            width: '100%',
+            height: '100%'
+        }"
+    ></sp-image-viewer>
 </div>

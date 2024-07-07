@@ -67,16 +67,16 @@
         <httpcore.version>4.4.9</httpcore.version>
         <influxdb.version>2.24</influxdb.version>
         <inlong.version>1.12.0</inlong.version>
+        <iotdb.version>1.3.0</iotdb.version>
         <jackson.version>2.17.0</jackson.version>
         <jackson.databind.version>2.17.0</jackson.databind.version>
         <jakarta-annotation.version>3.0.0</jakarta-annotation.version>
         <jakarta-activation-api.version>2.1.3</jakarta-activation-api.version>
         <jakarta-inject-api.version>2.0.1</jakarta-inject-api.version>
         <jakarta-servlet-api.version>6.0.0</jakarta-servlet-api.version>
-        <jakarta-validation.version>3.0.2</jakarta-validation.version>
         <jakarta-xml-bind-api.version>4.0.0</jakarta-xml-bind-api.version>
         <javax.xml.bind.version>2.4.0-b180725.0427</javax.xml.bind.version>
-        <java-websocket.version>1.5.0</java-websocket.version>
+        <java-websocket.version>1.5.6</java-websocket.version>
         <jaxb-runtime.version>2.3.2</jaxb-runtime.version>
         <javax-websocket-api.version>1.1</javax-websocket-api.version>
         <jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>
@@ -95,7 +95,7 @@
         <micrometer-prometheus.version>1.12.0</micrometer-prometheus.version>
         <micrometer-observation.version>1.12.0</micrometer-observation.version>
         <mqtt-client.version>1.12</mqtt-client.version>
-        <nats.version>2.18.0</nats.version>
+        <nats.version>2.19.1</nats.version>
         <netty.version>4.1.72.Final</netty.version>
         <okhttp.version>3.13.1</okhttp.version>
         <opencsv.version>5.9</opencsv.version>
@@ -105,7 +105,7 @@
         <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
         <plexus-utils.version>4.0.0</plexus-utils.version>
         <postgresql.version>42.7.2</postgresql.version>
-        <protobuf.version>4.26.1</protobuf.version>
+        <protobuf.version>4.27.0</protobuf.version>
         <pulsar.version>3.2.2</pulsar.version>
         <quartz.version>2.3.2</quartz.version>
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
@@ -120,11 +120,11 @@
         <springdoc.version>2.3.0</springdoc.version>
         <spring.version>6.1.1</spring.version>
         <spring-boot.version>3.2.0</spring-boot.version>
-        <spring-security.version>6.2.3</spring-security.version>
+        <spring-security.version>6.3.0</spring-security.version>
         <swagger.version>2.2.19</swagger.version>
         <type-parser.version>0.8.1</type-parser.version>
         <hawtbuf.version>1.11</hawtbuf.version>
-        <woodstox.version>6.6.1</woodstox.version>
+        <woodstox.version>7.0.0</woodstox.version>
 
         <!-- Test dependencies -->
         <junit.version>5.10.1</junit.version>
@@ -133,21 +133,19 @@
         <!-- Maven settings & dependencies -->
         <apache-rat-plugin.version>0.13</apache-rat-plugin.version>
         <checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
-        <checkstyle.version>10.16.0</checkstyle.version>
+        <checkstyle.version>10.17.0</checkstyle.version>
         <extra-enforcer-rules.version>1.8.0</extra-enforcer-rules.version>
         <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
-        <maven.dependency.check.plugin.version>9.1.0</maven.dependency.check.plugin.version>
-        <maven-shade-plugin.version>3.5.1</maven-shade-plugin.version>
+        <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
         <maven.version>3.8.7</maven.version>
         <typescript-generator-maven-plugin.version>3.2.1263</typescript-generator-maven-plugin.version>
 
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
-        <owasp.check.skip>true</owasp.check.skip>
     </properties>
 
     <dependencyManagement>
@@ -330,11 +328,6 @@
                 <version>${jakarta-inject-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>jakarta.validation</groupId>
-                <artifactId>jakarta.validation-api</artifactId>
-                <version>${jakarta-validation.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>jakarta.servlet</groupId>
                 <artifactId>jakarta.servlet-api</artifactId>
                 <version>${jakarta-servlet-api.version}</version>
@@ -388,6 +381,11 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpcore</artifactId>
                 <version>${httpcore.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.iotdb</groupId>
+                <artifactId>iotdb-session</artifactId>
+                <version>${iotdb.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.kafka</groupId>
@@ -825,6 +823,7 @@
         <module>streampipes-data-explorer-api</module>
         <module>streampipes-data-explorer-export</module>
         <module>streampipes-data-explorer-influx</module>
+        <module>streampipes-data-explorer-iotdb</module>
         <module>streampipes-data-explorer-management</module>
         <module>streampipes-data-export</module>
         <module>streampipes-dataformat</module>
@@ -868,7 +867,6 @@
         <module>streampipes-storage-management</module>
         <module>streampipes-test-utils</module>
         <module>streampipes-test-utils-executors</module>
-        <module>streampipes-ts-store-iotdb</module>
         <module>streampipes-user-management</module>
         <module>streampipes-vocabulary</module>
         <module>streampipes-wrapper</module>
@@ -1026,11 +1024,6 @@
                         <logViolationsToConsole>true</logViolationsToConsole>
                         <failOnViolation>true</failOnViolation>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.owasp</groupId>
-                    <artifactId>dependency-check-maven</artifactId>
-                    <version>${maven.dependency.check.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
@@ -1280,28 +1273,6 @@
                         </manifest>
                     </archive>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <configuration>
-                    <!-- use -Dowasp.check.skip=true to skip dependency check -->
-                    <skip>${owasp.check.skip}</skip>
-                    <format>HTML</format>
-                    <bundleAuditAnalyzerEnabled>false</bundleAuditAnalyzerEnabled>
-                    <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
-                    <failOnError>false</failOnError>
-                    <suppressionFile>tools/maven/owasp-dependency-check-suppression.xml</suppressionFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <!-- generates aggregated reports in target/ -->
-                            <goal>check</goal>
-                            <goal>aggregate</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>

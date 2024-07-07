@@ -18,7 +18,7 @@
 
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
-import { ConnectEventSchemaUtils } from '../../../support/utils/ConnectEventSchemaUtils';
+import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
 
 describe('Connect aggregation rule transformations', () => {
     beforeEach('Setup Test', () => {
@@ -27,7 +27,8 @@ describe('Connect aggregation rule transformations', () => {
     });
 
     it('Perform Test', () => {
-        const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
+        const adapterConfiguration =
+            ConnectUtils.setUpPreprocessingRuleTest(false);
 
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
@@ -50,7 +51,8 @@ describe('Remove duplicates rule transformations', () => {
     });
 
     it('Perform Test', () => {
-        const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
+        const adapterConfiguration =
+            ConnectUtils.setUpPreprocessingRuleTest(false);
 
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();

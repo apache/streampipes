@@ -32,11 +32,14 @@ theme:
   favicon: https://streampipes.apache.org/img/favicon.png
   custom_dir: docs/overrides
   features:
+    - content.action.edit
+    - content.code.copy
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.instant
     - navigation.indexes
     - navigation.tracking
+    - search.suggest
   font: false
   palette:
     # Palette toggle for light mode
@@ -60,6 +63,9 @@ extra:
   homepage: https://streampipes.apache.org/
   version:
     provider: mike
+
+exclude_docs: |
+  /scripts/**
 
 # Extensions
 markdown_extensions:
@@ -103,6 +109,7 @@ plugins:
   - search:
       lang:
         - en
+  - git-revision-date-localized
 
 extra_css:
   - stylesheets/extra.css

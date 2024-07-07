@@ -28,6 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.TimeZone.getTimeZone;
+
 public class TimestampTransformationRule extends SupportsNestedTransformationRule {
 
   private final List<String> eventKey;
@@ -48,6 +50,7 @@ public class TimestampTransformationRule extends SupportsNestedTransformationRul
 
     if (mode == TimestampTranformationRuleMode.FORMAT_STRING) {
       dateFormatter = new SimpleDateFormat(formatString);
+      dateFormatter.setTimeZone(getTimeZone("UTC"));
     }
   }
 

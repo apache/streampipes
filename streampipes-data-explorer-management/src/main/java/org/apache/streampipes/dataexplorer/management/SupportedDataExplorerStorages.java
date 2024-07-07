@@ -28,4 +28,5 @@ package org.apache.streampipes.dataexplorer.management;
  */
 public class SupportedDataExplorerStorages {
   public static final String INFLUX_DB = "influxdb";
+  public static final String IOT_DB = "iotdb";
 }

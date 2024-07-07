@@ -52,7 +52,7 @@ export class SpDataExportImportComponent implements OnInit {
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
-            { label: SpConfigurationTabs.getTabs()[3].itemTitle },
+            { label: SpConfigurationTabs.getTabs()[2].itemTitle },
         ]);
         this.loadAssets();
     }

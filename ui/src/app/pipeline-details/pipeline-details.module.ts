@@ -29,7 +29,6 @@ import { PipelineActionsComponent } from './components/actions/pipeline-actions.
 import { PipelineStatusComponent } from './components/status/pipeline-status.component';
 import { PipelineElementsComponent } from './components/elements/pipeline-elements.component';
 import { PipelineElementsRowComponent } from './components/elements/pipeline-elements-row.component';
-import { QuickEditComponent } from './components/edit/quickedit.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { PipelineMonitoringComponent } from './components/monitoring/pipeline-monitoring.component';
 import { PipelineElementStatisticsComponent } from './components/monitoring/statistics/pipeline-element-statistics.component';
@@ -67,7 +66,6 @@ import { MatIconModule } from '@angular/material/icon';
         PipelineMonitoringComponent,
         PipelineStatusComponent,
         PipelinePreviewComponent,
-        QuickEditComponent,
         BarchartWidgetComponent,
         SpPipelineDetailsOverviewComponent,
     ],

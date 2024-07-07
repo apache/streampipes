@@ -125,7 +125,7 @@ export class DataViewDataExplorerService {
 
     updateWidget(widget: DataExplorerWidgetModel): Observable<any> {
         return this.http.put(
-            this.dashboardWidgetUrl + '/' + widget._id,
+            this.dashboardWidgetUrl + '/' + widget.elementId,
             widget,
         );
     }

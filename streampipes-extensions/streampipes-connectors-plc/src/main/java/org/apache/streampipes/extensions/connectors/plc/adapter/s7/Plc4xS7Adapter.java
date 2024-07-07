@@ -22,20 +22,21 @@ package org.apache.streampipes.extensions.connectors.plc.adapter.s7;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
-import org.apache.streampipes.extensions.api.connect.IPullAdapter;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.config.EventSchemaProvider;
-import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.PlcEventGenerator;
+import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.ContinuousPlcRequestReader;
+import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.OneTimePlcRequestReader;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.PlcRequestProvider;
+import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionSettings;
 import org.apache.streampipes.extensions.connectors.plc.adapter.s7.config.ConfigurationParser;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
-import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -49,30 +50,20 @@ import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sdk.utils.Assets;
 
-import org.apache.plc4x.java.api.PlcConnection;
-import org.apache.plc4x.java.api.PlcDriverManager;
-import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
-import org.apache.plc4x.java.api.messages.PlcReadResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.plc4x.java.api.PlcConnectionManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
-public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcReadResponseHandler {
+public class Plc4xS7Adapter implements StreamPipesAdapter {
 
   /**
    * A unique id to identify the Plc4xS7Adapter
    */
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.plc4x.s7";
-
-  private static final Logger LOG = LoggerFactory.getLogger(Plc4xS7Adapter.class);
 
   private static final String S7_URL = "s7://";
 
@@ -102,124 +93,14 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
       // [1] https://plc4x.apache.org/users/protocols/s7.html
       """;
 
-  /**
-   * Values of user configuration parameters
-   */
-  private String ip;
-  private int pollingInterval;
-  private Map<String, String> nodes;
-
-  private PlcDriverManager driverManager;
+  private final PlcConnectionManager connectionManager;
+  private final PlcRequestProvider requestProvider;
 
   private PullAdapterScheduler pullAdapterScheduler;
 
-  private IEventCollector collector;
-
-  private PlcEventGenerator eventGenerator;
-
-  private final PlcRequestProvider requestProvider;
-
-  public Plc4xS7Adapter() {
+  public Plc4xS7Adapter(PlcConnectionManager connectionManager) {
     this.requestProvider = new PlcRequestProvider();
-  }
-
-  /**
-   * This method is executed when the adapter is started. A connection to the PLC is initialized
-   */
-  private void before(IStaticPropertyExtractor extractor) {
-    // Extract user input
-    getConfigurations(extractor);
-
-    this.driverManager = PlcDriverManager.getDefault();
-    try (PlcConnection plcConnection = this.driverManager.getConnectionManager().getConnection(S7_URL + this.ip)) {
-      if (!plcConnection.getMetadata().isReadSupported()) {
-        LOG.error("The S7 on IP: " + this.ip + " does not support reading data");
-      }
-    } catch (PlcConnectionException e) {
-      LOG.error("Could not establish connection to S7 with ip " + this.ip, e);
-    } catch (Exception e) {
-      LOG.error("Could not close connection to S7 with ip " + this.ip, e);
-    }
-  }
-
-
-  /**
-   * pullData is called iteratively according to the polling interval defined in getPollInterval.
-   */
-  @Override
-  public void pullData() {
-    // Create PLC read request
-    try (PlcConnection plcConnection = this.driverManager.getConnectionManager().getConnection(S7_URL + this.ip)) {
-      readPlcData(plcConnection, this);
-    } catch (Exception e) {
-      LOG.error("Error while reading from PLC with IP {} ", this.ip, e);
-    }
-  }
-
-  private void readPlcData(PlcConnection plcConnection, PlcReadResponseHandler handler) {
-    var readRequest = requestProvider.makeReadRequest(plcConnection, this.nodes);
-    // Execute the request
-    CompletableFuture<? extends PlcReadResponse> asyncResponse = readRequest.execute();
-    asyncResponse.whenComplete(handler::onReadResult);
-  }
-
-  private Map<String, Object> readPlcDataSynchronized() throws Exception {
-    try (PlcConnection plcConnection = this.driverManager.getConnectionManager().getConnection(S7_URL + this.ip)) {
-      var readRequest = requestProvider.makeReadRequest(plcConnection, this.nodes);
-      // Execute the request
-      var readResponse = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);
-      return eventGenerator.makeEvent(readResponse);
-    }
-  }
-
-  /**
-   * Define the polling interval of this adapter. Default is to poll every second
-   *
-   * @return PollingSettings
-   */
-  @Override
-  public PollingSettings getPollingInterval() {
-    return PollingSettings.from(TimeUnit.MILLISECONDS, this.pollingInterval);
-  }
-
-  /**
-   * Extracts the user configuration from the SpecificAdapterStreamDescription and sets the local variales
-   *
-   * @param extractor StaticPropertyExtractor
-   */
-  private void getConfigurations(IStaticPropertyExtractor extractor) {
-
-    this.ip = extractor.singleValueParameter(PLC_IP, String.class);
-    this.pollingInterval = extractor.singleValueParameter(PLC_POLLING_INTERVAL, Integer.class);
-
-    this.nodes = new HashMap<>();
-
-    var selectedAlternative = extractor.selectedAlternativeInternalId(PLC_NODE_INPUT_ALTERNATIVES);
-
-    if (selectedAlternative.equals(PLC_NODE_INPUT_COLLECTION_ALTERNATIVE)) {
-      // Alternative Simple
-      var csp = (CollectionStaticProperty) extractor.getStaticPropertyByName(PLC_NODES);
-      this.nodes = getNodeInformationFromCollectionStaticProperty(csp);
-
-    } else {
-      // Alternative Advanced
-      var codePropertyInput = extractor.codeblockValue(PLC_CODE_BLOCK);
-      this.nodes = new ConfigurationParser().getNodeInformationFromCodeProperty(codePropertyInput);
-    }
-    this.eventGenerator = new PlcEventGenerator(this.nodes);
-  }
-
-
-  @Override
-  public void onReadResult(PlcReadResponse response, Throwable throwable) {
-    if (throwable != null) {
-      throwable.printStackTrace();
-      LOG.error(throwable.getMessage());
-    } else {
-      var event = eventGenerator.makeEvent(response);
-      // publish the final event
-      collector.collect(event);
-    }
+    this.connectionManager = connectionManager;
   }
 
   /**
@@ -230,9 +111,9 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
    */
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 1, Plc4xS7Adapter::new)
+    return AdapterConfigurationBuilder.create(ID, 1, () -> new Plc4xS7Adapter(connectionManager))
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withCategory(AdapterType.Manufacturing)
         .requiredTextParameter(Labels.withId(PLC_IP))
         .requiredIntegerParameter(Labels.withId(PLC_POLLING_INTERVAL), 1000)
@@ -255,10 +136,10 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
   public void onAdapterStarted(IAdapterParameterExtractor extractor,
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) {
-    this.before(extractor.getStaticPropertyExtractor());
-    this.collector = collector;
+    var settings = getConfigurations(extractor.getStaticPropertyExtractor());
+    var plcRequestReader = new ContinuousPlcRequestReader(connectionManager, settings, requestProvider, collector);
     this.pullAdapterScheduler = new PullAdapterScheduler();
-    this.pullAdapterScheduler.schedule(this, extractor.getAdapterDescription().getElementId());
+    this.pullAdapterScheduler.schedule(plcRequestReader, extractor.getAdapterDescription().getElementId());
   }
 
   @Override
@@ -270,19 +151,18 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
                                        IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    // Extract user input
     try {
-      getConfigurations(extractor.getStaticPropertyExtractor());
+      var settings = getConfigurations(extractor.getStaticPropertyExtractor());
 
-      if (this.pollingInterval < 10) {
-        throw new AdapterException("Polling interval must be higher than 10. Current value: " + this.pollingInterval);
+      if (settings.pollingInterval() < 10) {
+        throw new AdapterException(
+            String.format("Polling interval must be higher than 10. Current value: %s", settings.pollingInterval())
+        );
       }
 
       GuessSchemaBuilder builder = GuessSchemaBuilder.create();
-      List<EventProperty> allProperties = new EventSchemaProvider().makeSchema(this.nodes);
-
-      this.before(extractor.getStaticPropertyExtractor());
-      var event = readPlcDataSynchronized();
+      List<EventProperty> allProperties = new EventSchemaProvider().makeSchema(settings.nodes());
+      var event = new OneTimePlcRequestReader(connectionManager, settings, requestProvider).readPlcDataSynchronized();
 
       builder.properties(allProperties);
       builder.preview(event);
@@ -291,6 +171,34 @@ public class Plc4xS7Adapter implements StreamPipesAdapter, IPullAdapter, PlcRead
     } catch (Exception e) {
       throw new AdapterException(e.getMessage(), e);
     }
+  }
+
+  /**
+   * Extracts the user configuration from the SpecificAdapterStreamDescription and sets the local variales
+   *
+   * @param extractor StaticPropertyExtractor
+   */
+  private Plc4xConnectionSettings getConfigurations(IStaticPropertyExtractor extractor) {
+
+    var ip = extractor.singleValueParameter(PLC_IP, String.class);
+    var pollingInterval = extractor.singleValueParameter(PLC_POLLING_INTERVAL, Integer.class);
+
+    Map<String, String> nodes;
+
+    var selectedAlternative = extractor.selectedAlternativeInternalId(PLC_NODE_INPUT_ALTERNATIVES);
+
+    if (selectedAlternative.equals(PLC_NODE_INPUT_COLLECTION_ALTERNATIVE)) {
+      // Alternative Simple
+      var csp = (CollectionStaticProperty) extractor.getStaticPropertyByName(PLC_NODES);
+      nodes = getNodeInformationFromCollectionStaticProperty(csp);
+
+    } else {
+      // Alternative Advanced
+      var codePropertyInput = extractor.codeblockValue(PLC_CODE_BLOCK);
+      nodes = new ConfigurationParser().getNodeInformationFromCodeProperty(codePropertyInput);
+    }
+
+    return new Plc4xConnectionSettings(S7_URL + ip, pollingInterval, nodes);
   }
 
 

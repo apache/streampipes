@@ -41,12 +41,12 @@ public class PipelineStorageService {
 
   public void updatePipeline() {
     preparePipeline();
-    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
+    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(pipeline);
   }
 
   public void addPipeline() {
     preparePipeline();
-    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().store(pipeline);
+    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().persist(pipeline);
   }
 
   private void preparePipeline() {

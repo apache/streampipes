@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.shared.preprocessing;
 
-import org.apache.streampipes.connect.shared.preprocessing.transform.TransformationRule;
+import org.apache.streampipes.extensions.api.connect.TransformationRule;
 
 import java.util.List;
 import java.util.Map;
@@ -42,7 +42,10 @@ public abstract class SupportsNestedTransformationRule implements Transformation
           applyNested((Map<String, Object>) event.get(eventKey.get(0)), newKeysTmpList);
 
       event.remove(key);
-      event.put(key, newSubEvent);
+
+      if (newSubEvent != null) {
+        event.put(key, newSubEvent);
+      }
     }
     return event;
   }

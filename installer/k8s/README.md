@@ -314,7 +314,7 @@ If you have any problems during the installation or questions around StreamPipes
 community channels:
 
 - [Slack](https://slack.streampipes.org)
-- [Mailing Lists](https://streampipes.apache.org/mailinglists.html)
+- [Mailing Lists](https://streampipes.apache.org/community/mailing-lists/)
 
 And don't forget to follow us on [Twitter](https://twitter.com/streampipes)!
 

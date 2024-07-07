@@ -32,6 +32,7 @@ import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
@@ -44,11 +45,10 @@ import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import org.apache.plc4x.java.api.PlcConnection;
-import org.apache.plc4x.java.api.PlcDriverManager;
+import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
 import org.apache.plc4x.java.api.messages.PlcReadRequest;
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
@@ -101,11 +101,10 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
    * Connection to the PLC
    */
   private PlcConnection plcConnection;
+  private final PlcConnectionManager connectionManager;
 
-  /**
-   * Empty constructor and a constructor with SpecificAdapterStreamDescription are mandatory
-   */
-  public Plc4xModbusAdapter() {
+  public Plc4xModbusAdapter(PlcConnectionManager connectionManager) {
+    this.connectionManager = connectionManager;
   }
 
   /**
@@ -179,7 +178,7 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
     getConfigurations(extractor);
 
     try {
-      this.plcConnection = PlcDriverManager.getDefault().getConnectionManager().getConnection(
+      this.plcConnection = connectionManager.getConnection(
           "modbus-tcp:tcp://" + this.ip + ":" + this.port + "?unit-identifier=" + this.slaveID);
 
       if (!this.plcConnection.getMetadata().isReadSupported()) {
@@ -213,16 +212,13 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
     }
     PlcReadRequest readRequest = builder.build();
 
-
     // Execute the request
     PlcReadResponse response = null;
 
     try {
       response = readRequest.execute().get();
-    } catch (InterruptedException ie) {
+    } catch (InterruptedException | ExecutionException ie) {
       ie.printStackTrace();
-    } catch (ExecutionException ee) {
-      ee.printStackTrace();
     }
 
     // Create an event containing the value of the PLC
@@ -273,9 +269,9 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
    */
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 1, Plc4xModbusAdapter::new)
+    return AdapterConfigurationBuilder.create(ID, 1, () -> new Plc4xModbusAdapter(connectionManager))
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withCategory(AdapterType.Manufacturing)
         .requiredTextParameter(Labels.withId(PLC_IP)).requiredIntegerParameter(Labels.withId(PLC_PORT))
         .requiredTextParameter(Labels.withId(PLC_NODE_ID)).requiredCollection(Labels.withId(PLC_NODES),
@@ -298,8 +294,7 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
-      throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext) {
     this.pullAdapterScheduler.shutdown();
   }
 

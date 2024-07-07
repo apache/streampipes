@@ -24,7 +24,7 @@ This document describes how to easily set up your local dev environment to work 
 
 1) **Set up your Python environment**
 
-Create a virtual Python environment using a tool of your choice. 
+Create a virtual Python environment using a tool of your choice.
 To manage dependencies, we use [Poetry](https://python-poetry.org/), so please install poetry in your local environment, e.g. via
 ```bash
 pip install poetry
@@ -44,7 +44,7 @@ poetry install --with dev,stubs,docs  # install all optional dependencies relate
 
 The pre-commit hook is run before every commit and takes care about code style,
 linting, type hints, import sorting, etc. It will stop your commit in case the changes do not apply the expected format.
-Always check to have the recent version of the pre-commit hook installed otherwise the CI build might fail. 
+Always check to have the recent version of the pre-commit hook installed otherwise the CI build might fail.
 If you are interested, you can have a deeper look on the underlying library: [pre-commit](https://pre-commit.com/).
 
 ```bash
@@ -67,7 +67,7 @@ Please stick to the `numpy` [style](https://numpydoc.readthedocs.io/en/latest/fo
 2) **Provide tests** ✅ <br>
 We are aiming for broad test coverage for the Python package and
 have therefore set a requirement of at least 90% unit test coverage.
-Therefore, please remember to write (unit) tests already during development. 
+Therefore, please remember to write (unit) tests already during development.
 If you have problems with writing tests, don't hesitate to ask us for help directly in the PR or
 even before that via our mailing list (see above).
 
@@ -127,7 +127,7 @@ Stay tuned!
 
 ---
 ## 👨‍💻 Contributing
-*Before opening a pull request*, review the [Get Involved](https://streampipes.apache.org/getinvolved.html) page.
+*Before opening a pull request*, review the [Get Involved](https://streampipes.apache.org/community/get-involved/) page.
 It lists information that is required for contributing to StreamPipes.
 
 When you contribute code, you affirm that the contribution is your original work and that you
