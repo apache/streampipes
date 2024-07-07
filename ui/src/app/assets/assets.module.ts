@@ -47,6 +47,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
     imports: [
@@ -91,6 +92,7 @@ import { MatSelectModule } from '@angular/material/select';
         ]),
         SharedUiModule,
         MatTreeModule,
+        MatSortModule,
     ],
     declarations: [
         AssetUploadDialogComponent,

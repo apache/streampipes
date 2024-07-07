@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,13 +16,15 @@
  *
  */
 
-.mat-mdc-header-cell {
-    font-weight: bold;
+.paginator-container {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-.filetype-container {
-    background: #00aeff;
-    color: white;
-    padding: 5px 15px;
-    border-radius: 5px;
+.mat-mdc-row:hover {
+    background-color: var(--color-bg-2);
+}
+
+.mat-mdc-no-data-row {
+    height: var(--mat-table-row-item-container-height, 52px);
+    text-align: center;
 }

@@ -38,6 +38,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SplitSectionComponent } from './components/split-section/split-section.component';
 import { SpLabelComponent } from './components/sp-label/sp-label.component';
+import { SpTableComponent } from './components/sp-table/sp-table.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @NgModule({
     declarations: [
@@ -51,6 +55,7 @@ import { SpLabelComponent } from './components/sp-label/sp-label.component';
         SpExceptionMessageComponent,
         SpExceptionDetailsDialogComponent,
         SpLabelComponent,
+        SpTableComponent,
         SplitSectionComponent,
     ],
     imports: [
@@ -64,6 +69,9 @@ import { SpLabelComponent } from './components/sp-label/sp-label.component';
         PortalModule,
         OverlayModule,
         MatDialogModule,
+        MatTableModule,
+        MatPaginator,
+        MatSort,
     ],
     exports: [
         ConfirmDialogComponent,
@@ -76,6 +84,7 @@ import { SpLabelComponent } from './components/sp-label/sp-label.component';
         SpExceptionMessageComponent,
         SpExceptionDetailsDialogComponent,
         SpLabelComponent,
+        SpTableComponent,
         SplitSectionComponent,
     ],
 })

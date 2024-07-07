@@ -16,10 +16,9 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FilesService, FileMetadata } from '@streampipes/platform-services';
+import { Component, OnInit } from '@angular/core';
+import { FileMetadata, FilesService } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 import { ConfirmDialogComponent } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { saveAs } from 'file-saver';
@@ -32,11 +31,8 @@ import { saveAs } from 'file-saver';
 export class FileOverviewComponent implements OnInit {
     displayedColumns: string[] = ['filename', 'filetype', 'uploaded', 'action'];
 
-    dataSource: MatTableDataSource<FileMetadata>;
+    dataSource: MatTableDataSource<FileMetadata> = new MatTableDataSource();
     filesAvailable = false;
-
-    paginator: MatPaginator;
-    pageSize = 1;
 
     private fileTypeColors: { [key: string]: string } = {};
 
@@ -46,7 +42,6 @@ export class FileOverviewComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.dataSource = new MatTableDataSource<FileMetadata>([]);
         this.refreshFiles();
     }
 
@@ -54,9 +49,6 @@ export class FileOverviewComponent implements OnInit {
         this.filesService.getFileMetadata().subscribe(fm => {
             this.dataSource.data = fm;
             this.filesAvailable = fm && fm.length > 0;
-            setTimeout(() => {
-                this.dataSource.paginator = this.paginator;
-            });
         });
     }
 
@@ -108,9 +100,5 @@ export class FileOverviewComponent implements OnInit {
         const paddedColor = color.padStart(6, '0');
 
         return `#${paddedColor}`;
-    }
-
-    @ViewChild(MatPaginator) set content(paginator: MatPaginator) {
-        this.paginator = paginator;
     }
 }
