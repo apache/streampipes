@@ -90,7 +90,7 @@ export class GeneralConfigurationComponent implements OnInit {
                     allowPasswordRecovery: false,
                     defaultUserRoles: [UserRole.ROLE_PIPELINE_USER],
                     appName: this.appConstants.APP_NAME,
-                    linkSettings: undefined,
+                    linkSettings: configs[0].linkSettings,
                 };
             }
             this.mailConfig = configs[1];
