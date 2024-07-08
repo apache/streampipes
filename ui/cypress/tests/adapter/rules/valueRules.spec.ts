@@ -33,7 +33,7 @@ describe('Connect value rule transformations', () => {
         // Edit timestamp property
         ConnectEventSchemaUtils.editTimestampPropertyWithRegex(
             'timestamp',
-            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+            "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
         );
 
         // Number transformation
