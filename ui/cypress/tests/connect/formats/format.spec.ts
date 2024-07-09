@@ -19,8 +19,6 @@
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
-import { StaticPropertyUtils } from '../../../support/utils/StaticPropertyUtils';
-import { UserInputBuilder } from '../../../support/builder/UserInputBuilder';
 import { AdapterInput } from '../../../support/model/AdapterInput';
 import { AdapterBuilder } from '../../../support/builder/AdapterBuilder';
 
