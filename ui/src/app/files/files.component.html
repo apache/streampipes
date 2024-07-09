@@ -39,18 +39,13 @@
 
     <div fxFlex="100" fxLayout="column">
         <sp-basic-header-title-component
-            title="My Files"
+            title="Files"
         ></sp-basic-header-title-component>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-            <sp-basic-inner-panel
-                [showTitle]="false"
-                innerPadding="0"
-                outerMargin="0"
+            <sp-file-overview
                 fxFlex="90"
-                [hideToolbar]="true"
-            >
-                <sp-file-overview #fileOverviewComponent></sp-file-overview>
-            </sp-basic-inner-panel>
+                #fileOverviewComponent
+            ></sp-file-overview>
         </div>
     </div>
 </sp-basic-view>

@@ -21,18 +21,19 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnDestroy,
     OnInit,
     Output,
     ViewChild,
 } from '@angular/core';
 import { PipelineOperationsService } from '../../services/pipeline-operations.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { CurrentUserService } from '@streampipes/shared-ui';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'sp-pipeline-overview',
@@ -42,7 +43,7 @@ import { CurrentUserService } from '@streampipes/shared-ui';
         '../../../../scss/sp/status-light.scss',
     ],
 })
-export class PipelineOverviewComponent implements OnInit {
+export class PipelineOverviewComponent implements OnInit, OnDestroy {
     _pipelines: Pipeline[];
 
     @Input()
@@ -61,10 +62,6 @@ export class PipelineOverviewComponent implements OnInit {
     ];
 
     dataSource: MatTableDataSource<Pipeline>;
-
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    pageSize = 1;
-
     @ViewChild(MatSort) sort: MatSort;
 
     starting: any;
@@ -73,6 +70,8 @@ export class PipelineOverviewComponent implements OnInit {
     isAdmin = false;
     hasPipelineWritePrivileges = false;
     hasPipelineDeletePrivileges = false;
+
+    userSub: Subscription;
 
     constructor(
         public pipelineOperationsService: PipelineOperationsService,
@@ -84,7 +83,7 @@ export class PipelineOverviewComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.currentUserService.user$.subscribe(user => {
+        this.userSub = this.currentUserService.user$.subscribe(user => {
             this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
@@ -106,7 +105,7 @@ export class PipelineOverviewComponent implements OnInit {
         }
     }
 
-    toggleRunningOperation(currentOperation) {
+    toggleRunningOperation(currentOperation: string) {
         if (currentOperation === 'starting') {
             this.starting = !this.starting;
         } else {
@@ -134,8 +133,11 @@ export class PipelineOverviewComponent implements OnInit {
     addPipelinesToTable() {
         this.dataSource = new MatTableDataSource<Pipeline>(this._pipelines);
         setTimeout(() => {
-            this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
         });
+    }
+
+    ngOnDestroy() {
+        this.userSub?.unsubscribe();
     }
 }
