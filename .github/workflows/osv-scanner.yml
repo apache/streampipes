@@ -51,3 +51,4 @@ jobs:
           body: |
             Update *Vulnerablity* report
           delete-branch: true
+          reviewers: "dominikriemer,tenthe,svenO3,smlabt,grainier,RobertIndie,bossenti"
