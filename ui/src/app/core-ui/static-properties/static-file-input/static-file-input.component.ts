@@ -16,12 +16,7 @@
  *
  */
 
-import {
-    Component,
-    EventEmitter,
-    OnInit,
-    Output,
-} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import {
     FilesService,
