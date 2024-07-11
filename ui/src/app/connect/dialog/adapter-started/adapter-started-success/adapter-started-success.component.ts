@@ -19,8 +19,8 @@
 import { Component, Input } from '@angular/core';
 import {
     ErrorMessage,
-    Message,
     PipelineOperationStatus,
+    SpLogMessage,
 } from '@streampipes/platform-services';
 
 @Component({
@@ -42,5 +42,5 @@ export class SpAdapterStartedSuccessComponent {
     saveInDataLake: boolean;
 
     @Input()
-    adapterStatus: Message;
+    adapterErrorMessage: SpLogMessage;
 }
