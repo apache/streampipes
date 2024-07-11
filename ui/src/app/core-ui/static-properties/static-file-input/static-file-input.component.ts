@@ -19,7 +19,6 @@
 import {
     Component,
     EventEmitter,
-    NgModule,
     OnInit,
     Output,
 } from '@angular/core';
@@ -80,6 +79,12 @@ export class StaticFileInputComponent
         this.enableValidators();
 
         this.chooseExistingFileControl.setValue(true);
+
+        if (this.staticProperty.label) {
+            this.parentForm.controls[this.fieldName].setValue(
+                this.staticProperty.label,
+            );
+        }
     }
 
     collectValidators() {

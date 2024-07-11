@@ -106,5 +106,31 @@ describe(
                 2000,
             );
         });
+
+        it('File Stream adapter validate file is shown when editing file static property', () => {
+            // Add a sample file adapter to edit
+            FileManagementUtils.addFile('fileTest/random.csv');
+
+            const adapterInput = AdapterBuilder.create('File_Stream')
+                .setName('File Stream Adapter Test')
+                .setTimestampProperty('timestamp')
+                .addProtocolInput('checkbox', 'replaceTimestamp', 'check')
+                .setFormat('csv')
+                .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
+                .setStartAdapter(false)
+                .build();
+
+            ConnectUtils.testAdapter(adapterInput);
+
+            // click on edit adapter
+            ConnectBtns.editAdapter().click();
+
+            // validate that the file name is set as default
+            cy.dataCy('file-input-file-name').should(
+                'have.value',
+                'random.csv',
+            );
+        });
     },
 );
