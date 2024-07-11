@@ -16,6 +16,20 @@
  *
  */
 
-.p-20 {
-    padding: 20px;
+import { Component, Input } from '@angular/core';
+import { SpLogMessage } from '@streampipes/platform-services';
+
+@Component({
+    selector: 'sp-exception-details',
+    templateUrl: './exception-details.component.html',
+    styleUrl: './exception-details.component.scss',
+})
+export class SpExceptionDetailsComponent {
+    @Input()
+    message: SpLogMessage;
+
+    @Input()
+    title: string;
+
+    showDetails = false;
 }

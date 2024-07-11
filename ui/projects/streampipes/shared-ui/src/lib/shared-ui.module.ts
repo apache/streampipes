@@ -42,6 +42,7 @@ import { SpTableComponent } from './components/sp-table/sp-table.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { SpExceptionDetailsComponent } from './components/sp-exception-message/exception-details/exception-details.component';
 
 @NgModule({
     declarations: [
@@ -53,6 +54,7 @@ import { MatSort } from '@angular/material/sort';
         SpBasicViewComponent,
         SpBasicNavTabsComponent,
         SpExceptionMessageComponent,
+        SpExceptionDetailsComponent,
         SpExceptionDetailsDialogComponent,
         SpLabelComponent,
         SpTableComponent,
@@ -81,6 +83,7 @@ import { MatSort } from '@angular/material/sort';
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
         SpBasicNavTabsComponent,
+        SpExceptionDetailsComponent,
         SpExceptionMessageComponent,
         SpExceptionDetailsDialogComponent,
         SpLabelComponent,

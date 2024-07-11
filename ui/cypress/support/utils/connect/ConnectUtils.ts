@@ -118,7 +118,7 @@ export class ConnectUtils {
         cy.dataCy('connect-create-new-adapter-button').click();
     }
 
-    public static selectAdapter(name) {
+    public static selectAdapter(name: string) {
         // Select adapter
         cy.get('#' + name).click();
     }
@@ -180,7 +180,7 @@ export class ConnectUtils {
         ConnectBtns.adapterSettingsStartAdapter().click();
 
         if (adapterStartFails) {
-            cy.dataCy('sp-connect-adapter-error-message', {
+            cy.dataCy('sp-exception-details', {
                 timeout: 60000,
             }).should('be.visible');
         } else {
