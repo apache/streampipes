@@ -130,7 +130,7 @@ describe('Test Group Management for Pipelines', () => {
         PipelineUtils.goToPipelines();
         cy.get('sp-pipeline-overview', { timeout: 10000 }).should(
             'contain',
-            '(no pipelines available)',
+            'No entries available',
         );
 
         // Log in as admin and delete users
