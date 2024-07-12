@@ -45,14 +45,6 @@ public abstract class AbstractPipelineElementBuilder<X extends AbstractPipelineE
     this.elementDescription.setAppId(appId);
   }
 
-  @Deprecated
-  /**
-   * @deprecated: Use {@link #withAssets(String...)} instead
-   */
-  public X providesAssets(String... assets) {
-    return withAssets(assets);
-  }
-
   public X withAssets(String... assets) {
     this.elementDescription.setIncludesAssets(true);
     this.elementDescription.setIncludedAssets(Arrays.asList(assets));
