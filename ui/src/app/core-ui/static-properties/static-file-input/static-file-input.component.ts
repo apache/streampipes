@@ -16,13 +16,7 @@
  *
  */
 
-import {
-    Component,
-    EventEmitter,
-    NgModule,
-    OnInit,
-    Output,
-} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import {
     FilesService,
@@ -80,6 +74,12 @@ export class StaticFileInputComponent
         this.enableValidators();
 
         this.chooseExistingFileControl.setValue(true);
+
+        if (this.staticProperty.label) {
+            this.parentForm.controls[this.fieldName].setValue(
+                this.staticProperty.label,
+            );
+        }
     }
 
     collectValidators() {
