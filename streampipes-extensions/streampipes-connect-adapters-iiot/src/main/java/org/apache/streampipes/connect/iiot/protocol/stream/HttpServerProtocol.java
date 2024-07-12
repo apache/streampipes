@@ -32,6 +32,7 @@ import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventP
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
@@ -46,7 +47,6 @@ import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.io.IOException;
@@ -106,7 +106,7 @@ public class HttpServerProtocol implements StreamPipesAdapter {
         .create(ID, 0, HttpServerProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withCategory(AdapterType.Generic)
         .requiredTextParameter(Labels.withId(ENDPOINT_NAME))
         .requiredAlternatives(Labels.withId(CONFIGURE),

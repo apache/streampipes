@@ -30,7 +30,7 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
@@ -44,7 +44,7 @@ public class UrlDereferencingController extends FlinkDataProcessorDeclarer<UrlDe
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create(
             "org.apache.streampipes.processors.enricher.flink.processor.urldereferencing")
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .category(DataProcessorType.ENRICH)
         .requiredStream(StreamRequirementsBuilder

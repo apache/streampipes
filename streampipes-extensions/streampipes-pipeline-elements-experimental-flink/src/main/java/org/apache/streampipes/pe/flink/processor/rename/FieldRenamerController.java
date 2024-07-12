@@ -30,7 +30,6 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.helpers.TransformOperations;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
@@ -44,7 +43,7 @@ public class FieldRenamerController extends FlinkDataProcessorDeclarer<FieldRena
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.flink.field-renamer")
         .category(DataProcessorType.TRANSFORM)
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredStream(StreamRequirementsBuilder
             .create()
             .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
