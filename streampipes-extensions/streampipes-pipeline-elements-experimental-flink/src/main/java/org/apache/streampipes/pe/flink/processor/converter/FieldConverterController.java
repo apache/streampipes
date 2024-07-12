@@ -37,7 +37,7 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.helpers.Tuple2;
-import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.vocabulary.XSD;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
@@ -58,7 +58,7 @@ public class FieldConverterController extends
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.flink.field-converter")
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredStream(StreamRequirementsBuilder
             .create()
             .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId

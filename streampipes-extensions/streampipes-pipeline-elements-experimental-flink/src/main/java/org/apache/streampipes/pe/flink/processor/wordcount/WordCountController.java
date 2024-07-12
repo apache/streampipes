@@ -30,7 +30,6 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
@@ -44,7 +43,7 @@ public class WordCountController extends FlinkDataProcessorDeclarer<WordCountPar
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.flink.wordcount")
-        .withAssets(Assets.DOCUMENTATION)
+        .withAssets(ExtensionAssetType.DOCUMENTATION)
         .withLocales(Locales.EN)
         .category(DataProcessorType.AGGREGATE)
         .requiredStream(StreamRequirementsBuilder

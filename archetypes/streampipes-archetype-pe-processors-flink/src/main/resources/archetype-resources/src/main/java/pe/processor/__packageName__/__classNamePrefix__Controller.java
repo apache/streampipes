@@ -35,9 +35,9 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.helpers.*;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 
 public class ${classNamePrefix}Controller extends FlinkDataProcessorDeclarer<${classNamePrefix}Parameters> {
 
@@ -46,7 +46,7 @@ public class ${classNamePrefix}Controller extends FlinkDataProcessorDeclarer<${c
 	@Override
 	public DataProcessorDescription declareModel() {
 		return ProcessingElementBuilder.create("${package}.pe.processor.${packageName}")
-        		.withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        		.withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
 						.withLocales(Locales.EN)
 						.category(DataProcessorType.ENRICH)
 						.requiredStream(StreamRequirementsBuilder

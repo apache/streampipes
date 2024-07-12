@@ -34,7 +34,7 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataSinkRuntime;
 import org.apache.streampipes.sdk.helpers.*;
-import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 
 public class ${classNamePrefix}Controller extends FlinkDataSinkDeclarer<${classNamePrefix}Parameters> {
 
@@ -46,7 +46,7 @@ public class ${classNamePrefix}Controller extends FlinkDataSinkDeclarer<${classN
 	public DataSinkDescription declareModel() {
 		return DataSinkBuilder.create("${package}.pe.sink.${packageName}")
 						.category(DataSinkType.NOTIFICATION)
-						.withAssets(Assets.DOCUMENTATION, Assets.ICON)
+						.withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
 						.withLocales(Locales.EN)
 						.requiredStream(StreamRequirementsBuilder
 							.create()

@@ -31,11 +31,11 @@ import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.Geo;
 
 import com.google.gson.Gson;
@@ -105,7 +105,7 @@ public class IssAdapter implements StreamPipesAdapter, IPullAdapter {
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder.create(ID, 0, IssAdapter::new)
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withCategory(AdapterType.OpenData)
         .buildConfiguration();
   }
