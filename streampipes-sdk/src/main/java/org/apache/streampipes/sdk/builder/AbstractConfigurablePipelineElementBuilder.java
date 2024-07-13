@@ -85,23 +85,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
   }
 
   /**
-   * @deprecated use {@link #requiredTextParameter(Label)}
-   * @param internalId
-   * @param label
-   * @param description
-   * @return
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K requiredTextParameter(String internalId, String label, String description) {
-    this.staticProperties.add(prepareFreeTextStaticProperty(internalId,
-        label,
-        description,
-        XSD.STRING.toString()));
-
-    return me();
-  }
-
-  /**
    * Assigns a new secret text-based configuration parameter (e.g., a password) which is required
    * by the processing element.
    *
@@ -250,28 +233,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
   }
 
   /**
-   * @deprecated Use {@link #requiredTextParameterWithLink(Label, String)}
-   *
-   * @param internalId
-   * @param label
-   * @param description
-   * @param linkedMappingPropertyInternalName
-   * @return this
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K requiredTextParameter(String internalId, String label, String description, String
-      linkedMappingPropertyInternalName) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
-        label,
-        description,
-        XSD.STRING.toString());
-
-    fsp.setMapsTo(linkedMappingPropertyInternalName);
-    this.staticProperties.add(fsp);
-    return me();
-  }
-
-  /**
    * Defines a text-based configuration parameter provided by pipeline developers at pipeline authoring time. The
    * value range of the parameter is restricted to the value specification of a selected input event property.
    *
@@ -380,25 +341,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     return me();
   }
 
-
-  /**
-   * @deprecated Use {@link #requiredIntegerParameter(Label)} instead
-   *
-   * @param internalId
-   * @param label
-   * @param description
-   * @return
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K requiredIntegerParameter(String internalId, String label, String description) {
-    this.staticProperties.add(prepareFreeTextStaticProperty(internalId,
-        label,
-        description,
-        XSD.INTEGER.toString()));
-
-    return me();
-  }
-
   /**
    * Assigns a new number-based configuration parameter (an integer) which is required by the pipeline
    * element.
@@ -410,28 +352,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
   public K requiredIntegerParameter(Label label) {
     this.staticProperties.add(prepareFreeTextStaticProperty(label, XSD.INTEGER.toString()));
 
-    return me();
-  }
-
-  /**
-   * @deprecated use {@link #requiredIntegerParameter(Label, String)} instead
-   *
-   * @param internalId
-   * @param label
-   * @param description
-   * @param linkedMappingPropertyInternalName
-   * @return
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K requiredIntegerParameter(String internalId, String label, String description, String
-      linkedMappingPropertyInternalName) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
-        label,
-        description,
-        XSD.INTEGER.toString());
-
-    fsp.setMapsTo(linkedMappingPropertyInternalName);
-    this.staticProperties.add(fsp);
     return me();
   }
 
@@ -451,28 +371,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD.INTEGER.toString());
 
     fsp.setMapsTo(linkedMappingPropertyInternalName);
-    this.staticProperties.add(fsp);
-    return me();
-  }
-
-
-  /**
-   * @deprecated Use {@link #requiredIntegerParameter(Label, Integer)} instead
-   *
-   * @param internalId
-   * @param label
-   * @param description
-   * @param defaultValue
-   * @return
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K requiredIntegerParameter(String internalId, String label, String description,
-                                    Integer defaultValue) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
-        label,
-        description,
-        XSD.INTEGER.toString());
-    fsp.setValue(String.valueOf(defaultValue));
     this.staticProperties.add(fsp);
     return me();
   }
@@ -514,24 +412,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
   }
 
   /**
-   * @deprecated Use {@link #requiredFloatParameter(Label)} instead.
-   * @param internalId
-   * @param label
-   * @param description
-   * @return
-   *
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K requiredFloatParameter(String internalId, String label, String description) {
-    this.staticProperties.add(prepareFreeTextStaticProperty(internalId,
-        label,
-        description,
-        XSD.DOUBLE.toString()));
-
-    return me();
-  }
-
-  /**
    * Assigns a new number-based configuration parameter (a float) which is required by the pipeline
    * element.
    *
@@ -543,33 +423,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     this.staticProperties.add(prepareFreeTextStaticProperty(label,
         XSD.DOUBLE.toString()));
 
-    return me();
-  }
-
-  /**
-   * @deprecated use {@link #requiredFloatParameter(Label, String)}
-   *
-   * Defines a number-based configuration parameter of type float provided by pipeline developers at pipeline
-   * authoring time. The
-   * value range of the parameter is restricted to the value specification of a selected input event property.
-   *
-   * @param label                             The {@link org.apache.streampipes.sdk.helpers.Label}
-   *                                          that describes why this parameter is needed in a user-friendly manner.
-   * @param linkedMappingPropertyInternalName The inernalId of the
-   *                                            {@link org.apache.streampipes.model.staticproperty.MappingProperty}
-   * @return this
-   *
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K requiredFloatParameter(String internalId, String label, String description, String
-      linkedMappingPropertyInternalName) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
-        label,
-        description,
-        XSD.DOUBLE.toString());
-
-    fsp.setMapsTo(linkedMappingPropertyInternalName);
-    this.staticProperties.add(fsp);
     return me();
   }
 
@@ -594,28 +447,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
   }
 
   /**
-   * @deprecated Use {@link #requiredFloatParameter(Label, Float)} instead.
-   *
-   * @param internalId
-   * @param label
-   * @param description
-   * @param defaultValue
-   * @return this
-   *
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K requiredFloatParameter(String internalId, String label, String description, Float
-      defaultValue) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
-        label,
-        description,
-        XSD.DOUBLE.toString());
-    fsp.setValue(String.valueOf(defaultValue));
-    this.staticProperties.add(fsp);
-    return me();
-  }
-
-  /**
    * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
    * authoring time and initializes the parameter with a default value.
    *
@@ -629,33 +460,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD.DOUBLE.toString());
     fsp.setValue(String.valueOf(defaultValue));
     this.staticProperties.add(fsp);
-    return me();
-  }
-
-  /**
-   * @deprecated Use {@link #requiredFloatParameter(Label, Float, Float, Float)} instead.
-   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
-   * authoring time. In addition, an allowed value range of the expected input can be assigned.
-   *
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
-   * @param min   The minimum value of the allowed value range.
-   * @param max   The maximum value of the allowed value range.
-   * @param step  The granularity
-   * @return this
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K requiredFloatParameter(String internalId, String label, String description, Float min, Float max,
-                                  Float step) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
-        label,
-        description,
-        XSD.DOUBLE.toString());
-
-    PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
-    fsp.setValueSpecification(valueSpecification);
-    this.staticProperties.add(fsp);
-
     return me();
   }
 
@@ -702,21 +506,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
   }
 
   /**
-   * @deprecated Use {@link #requiredSingleValueSelection(Label, Option...)} instead.
-   *
-   * @param options An arbitrary number of {@link org.apache.streampipes.model.staticproperty.Option} elements. Use
-   *                {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
-   * @return this
-   *
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K requiredSingleValueSelection(String internalId, String label, String description,
-                                        Option... options) {
-    return requiredSingleValueSelection(internalId, label, description, Arrays.asList(options));
-  }
-
-
-  /**
    * Defines a configuration parameter that lets preprocessing developers
    * select from a list of pre-defined configuration options.
    * The parameter will be rendered as a RadioGroup in the StreamPipes UI.
@@ -729,29 +518,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
    */
   public K requiredSingleValueSelection(Label label,
                                         Option... options) {
-    return requiredSingleValueSelection(label.getInternalId(), label.getLabel(), label.getDescription(),
-        Arrays.asList(options));
-  }
-
-  /**
-   * @deprecated Use {@link #requiredSingleValueSelection(Label, List)} instead.
-   *
-   * @param internalId
-   * @param label
-   * @param description
-   * @param options
-   * @return
-   *
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K requiredSingleValueSelection(String internalId, String label, String description,
-                                        List<Option> options) {
-    OneOfStaticProperty osp = new OneOfStaticProperty(internalId, label, description);
-    osp.setOptions(options);
-
-    this.staticProperties.add(osp);
-    return me();
-
+    return requiredSingleValueSelection(label, Arrays.asList(options));
   }
 
   /**
@@ -798,23 +565,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     return me();
   }
 
-
-  /**
-   * @deprecated Use {@link #requiredMultiValueSelection(Label, Option...)} instead.
-   *
-   * @param internalId
-   * @param label
-   * @param description
-   * @param options
-   * @return
-   *
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K requiredMultiValueSelection(String internalId, String label, String description,
-                                       Option... options) {
-    return requiredMultiValueSelection(internalId, label, description, Arrays.asList(options));
-  }
-
   /**
    * Defines a configuration parameter that lets preprocessing developers
    * select from a list of pre-defined configuration options, but multiple selections are allowed.
@@ -828,25 +578,9 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
    */
   public K requiredMultiValueSelection(Label label,
                                        Option... options) {
-    return requiredMultiValueSelection(label.getInternalId(), label.getLabel(), label.getDescription(),
-        Arrays.asList(options));
-  }
 
-  /**
-   * @deprecated Use {@link #requiredMultiValueSelection(Label, List)} instead.
-   *
-   * @param internalId
-   * @param label
-   * @param description
-   * @param options
-   * @return
-   *
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K requiredMultiValueSelection(String internalId, String label, String description,
-                                       List<Option> options) {
-    AnyStaticProperty asp = new AnyStaticProperty(internalId, label, description);
-    asp.setOptions(options);
+    AnyStaticProperty asp = new AnyStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
+    asp.setOptions(Arrays.asList(options));
 
     this.staticProperties.add(asp);
     return me();
