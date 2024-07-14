@@ -1236,6 +1236,9 @@
                         <!-- Exclude Husky which defines its own gitignore and is not detected by rat -->
                         <exclude>ui/.husky/**</exclude>
 
+                        <!-- Exclude GO -->
+                        <exclude>**/go.sum</exclude>
+
                     </excludes>
                 </configuration>
             </plugin>

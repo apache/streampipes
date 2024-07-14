@@ -1,0 +1,203 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+baseURL: https://streampipes.apache.org/
+title: Apache StreamPipes
+
+# Language settings
+contentDir: content/en
+defaultContentLanguage: en
+defaultContentLanguageInSubdir: false
+# Useful when translating.
+enableMissingTranslationPlaceholders: true
+
+enableRobotsTXT: true
+
+# Will give values to .Lastmod etc.
+enableGitInfo: false
+
+# Comment out to enable taxonomies in Docsy
+# disableKinds: [taxonomy, taxonomyTerm]
+
+# You can add your own taxonomies
+taxonomies:
+  tag: tags
+  category: categories
+
+# Highlighting config
+pygmentsCodeFences: true
+pygmentsUseClasses: false
+# Use the new Chroma Go highlighter in Hugo.
+pygmentsUseClassic: false
+# pygmentsOptions: "linenos=table"
+# See https://help.farbox.com/pygments.html
+pygmentsStyle: tango
+
+# Configure how URLs look like per section.
+permalinks:
+  blog: /:section/:year/:month/:day/:slug/
+
+# Image processing configuration.
+imaging:
+  resampleFilter: CatmullRom
+  quality: 75
+  anchor: smart
+
+# Language configuration
+languages:
+  en:
+    languageName: English
+    title: Apache StreamPipes
+    params:
+      description: Apache StreamPipes
+
+markup:
+  goldmark:
+    parser:
+      attribute:
+        block: true
+    renderer:
+      unsafe: true
+  highlight:
+    # See a complete list of available styles at https://xyproto.github.io/splash/docs/all.html
+    style: tango
+    # Uncomment if you want your chosen highlight style used for code blocks without a specified language
+    # guessSyntax: true
+
+# Everything below this are Site Params
+
+# Comment out if you don't want the "print entire section" link enabled.
+outputs:
+  section: [HTML, print, RSS]
+
+params:
+  taxonomy:
+    # set taxonomyCloud = [] to hide taxonomy clouds
+    taxonomyCloud: [tags, categories]
+
+    # If used, must have same length as taxonomyCloud
+    taxonomyCloudTitle: [Tag Cloud, Categories]
+
+    # set taxonomyPageHeader = [] to hide taxonomies on the page headers
+    taxonomyPageHeader: [tags, categories]
+
+  privacy_policy: https://privacy.apache.org/policies/privacy-policy-public.html
+
+  # First one is picked as the Twitter card image if not set on page.
+  # images: [images/project-illustration.png]
+
+  # Menu title if your navbar has a versions selector to access old versions of your site.
+  # This menu appears only if you have at least one [params.versions] set.
+  version_menu: dev
+
+  # Flag used in the "version-banner" partial to decide whether to display a
+  # banner on every page indicating that this is an archived version of the docs.
+  # Set this flag to "true" if you want to display the banner.
+  archived_version: false
+
+  # The version number for the version of the docs represented in this doc set.
+  # Used in the "version-banner" partial to display a version number for the
+  # current doc set.
+  versions:
+    - version: dev
+      url: "https://streampipes.apache.org/"
+
+  # A link to latest version of the docs. Used in the "version-banner" partial to
+  # point people to the main doc site.
+  url_latest_version: https://streampipes.apache.org/
+
+  # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
+  github_repo: https://github.com/apache/streampipes
+
+  # Specify a value here if your content directory is not in your repo's root directory
+  github_subdir: "/streampipes-client-go/docs/"
+
+  # Uncomment this if your GitHub repo does not have "main" as the default branch,
+  # or specify a new value if you want to reference another branch in your GitHub links
+  github_branch: dev
+
+  # Google Custom Search Engine ID. Remove or comment out to disable search.
+  # gcs_engine_id: d72aa9b2712488cc3
+
+  # Enable Lunr.js offline search
+  offlineSearch: true
+
+  # Enable syntax highlighting and copy buttons on code blocks with Prism
+  prism_syntax_highlighting: true
+
+  copyright:
+    authors: Apache StreamPipes | [Apache-2.0 License](https://github.com/apache/streampipes/blob/dev/LICENSE) |
+    from_year: 2019
+
+  # User interface configuration
+  ui:
+    showLightDarkModeMenu: true
+    # Set to true to disable breadcrumb navigation.
+    breadcrumb_disable: false
+    # Set to false if you don't want to display a logo (/assets/icons/logo.svg) in the top navbar
+    navbar_logo: true
+    # Set to true if you don't want the top navbar to be translucent when over a `block/cover`, like on the homepage.
+    navbar_translucent_over_cover_disable: false
+    # Enable to show the side bar menu in its compact state.
+    sidebar_menu_compact: false
+    # Set to true to hide the sidebar search box (the top nav search box will still be displayed if search is enabled)
+    sidebar_search_disable: false
+
+    feedback:
+      enable: false
+      "yes": >-
+        Glad to hear it! Please <a href="https://github.com/apache/streampipes/discussions">tell us how we can improve</a>.
+      "no": >-
+        Sorry to hear that. Please <a href="https://github.com/apache/streampipes/discussions">tell us how we can improve</a>.
+
+    # Adds a reading time to the top of each doc.
+    # If you want this feature, but occasionally need to remove the Reading time from a single page,
+    # add "hide_readingtime: true" to the page's front matter
+    readingtime:
+      enable: true
+
+  links:
+    user:
+      - name: User mailing list
+        url: https://streampipes.apache.org/community/mailing-lists/
+        icon: fa fa-envelope
+        desc: Discussion and help from your fellow users
+      - name: Twitter
+        url: https://twitter.com/StreamPipes
+        icon: fab fa-twitter
+        desc: Follow us on Twitter to get the latest news!
+      - name: LinkedIn
+        url: https://www.linkedin.com/company/apache-streampipes/
+        icon: fab fa-linkedin
+        desc: Follow us on LinkedIn to get the latest news!
+    developer:
+      - name: GitHub
+        url: https://github.com/apache/streampipes
+        icon: fab fa-github
+        desc: Development takes place here!
+      - name: Developer mailing list
+        url: https://streampipes.apache.org/community/mailing-lists/
+        icon: fa fa-envelope
+        desc: Discuss development issues around the project
+
+module:
+  # Uncomment the next line to build and serve using local docsy clone declared in the named Hugo workspace:
+  # workspace: docsy.work
+  hugoVersion:
+    extended: true
+    min: 0.110.0
+  imports:
+    - path: github.com/google/docsy
+      disable: false
