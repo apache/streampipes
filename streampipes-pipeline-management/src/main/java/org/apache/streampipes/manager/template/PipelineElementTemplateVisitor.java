@@ -105,7 +105,10 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   @Override
   public void visit(MappingPropertyNary mappingPropertyNary) {
-    // Do nothing, not supported by pipeline element templates
+    if (hasKey(mappingPropertyNary)) {
+      var selectedProperties = getValueAsList(mappingPropertyNary);
+      mappingPropertyNary.setSelectedProperties(selectedProperties);
+    }
   }
 
   @Override
