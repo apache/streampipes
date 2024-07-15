@@ -66,6 +66,7 @@ export class DataExplorerDataViewComponent implements OnInit {
             });
         } else {
             this.createWidget();
+            this.timeSettings = this.makeDefaultTimeSettings();
             this.afterDataViewLoaded();
         }
     }
@@ -99,7 +100,6 @@ export class DataExplorerDataViewComponent implements OnInit {
         this.dataView.dataConfig.ignoreMissingValues = false;
         this.dataView.baseAppearanceConfig.backgroundColor = '#FFFFFF';
         this.dataView.baseAppearanceConfig.textColor = '#3e3e3e';
-        this.dataView.timeSettings = this.makeDefaultTimeSettings();
         this.dataView = { ...this.dataView };
     }
 

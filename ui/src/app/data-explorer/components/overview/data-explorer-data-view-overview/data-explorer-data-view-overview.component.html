@@ -72,7 +72,7 @@
                             color="accent"
                             matTooltip="Edit data view"
                             *ngIf="hasDataExplorerWritePrivileges"
-                            [attr.data-cy]="'edit-dashboard-' + element.name"
+                            [attr.data-cy]="'edit-data-view-' + element.name"
                             (click)="openDataView(element, true)"
                         >
                             <i class="material-icons">edit</i>
@@ -82,7 +82,7 @@
                             color="accent"
                             matTooltip="Delete data view"
                             *ngIf="hasDataExplorerDeletePrivileges"
-                            [attr.data-cy]="'delete-dashboard-' + element.name"
+                            [attr.data-cy]="'delete-data-view-' + element.name"
                             (click)="deleteDataView(element)"
                         >
                             <i class="material-icons">delete</i>
