@@ -18,27 +18,17 @@
 
 package org.apache.streampipes.sdk.helpers;
 
-import org.apache.streampipes.commons.resources.Resources;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.Properties;
-
 public class Labels {
 
   /**
-   * @deprecated Externalize labels by using
-   * {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
-   * to ease future support for multiple languages.
    * Creates a new label with internalId, label and description. Fully-configured labels are required by static
    * properties and are mandatory for event properties.
    *
    * @param internalId  The internal identifier of the element, e.g., "latitude-field-mapping"
    * @param label       A human-readable title
    * @param description A human-readable brief summary of the element.
-   * @return
+   * @return label object with the specified properties
    */
-  @Deprecated(since = "0.90.0", forRemoval = true)
   public static Label from(String internalId, String label, String description) {
     return new Label(internalId, label, description);
   }
@@ -49,7 +39,7 @@ public class Labels {
    *
    *
    * @param internalId The internal identifier of the element, e.g., "latitude-field-mapping"
-   * @return Label
+   * @return label object with the internal id
    */
   public static Label withId(String internalId) {
     return new Label(internalId, "", "");
@@ -59,44 +49,14 @@ public class Labels {
    * Creates a label with the string value of an enum.
    * Static properties require a fully-specified label, see {@link #from(String, String, String)}
    * @param internalId The internal identifier of the element, e.g., "LATITUDE-FIELD-MAPPING"
-   * @return
+   * @return label object with the specified properties
    */
   public static Label withId(Enum<?> internalId) {
     return new Label(internalId.name(), "", "");
   }
 
-  @Deprecated
-  /**
-   *  @deprecated Externalize labels by using
-   *  {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
-   *  to ease future support for multiple languages.
-   */
-  public static Label withTitle(String label, String description) {
-    return new Label("", label, description);
-  }
-
   public static Label empty() {
     return new Label("", "", "");
-  }
-
-  private static String findTitleLabel(String resourceIdentifier, String resourceName) throws Exception {
-    return loadProperties(resourceIdentifier).getProperty(makeResourceId(resourceName, true));
-  }
-
-  private static String findDescriptionLabel(String resourceIdentifier, String resourceName) throws Exception {
-    return loadProperties(resourceIdentifier).getProperty(makeResourceId(resourceName, false));
-  }
-
-  private static String makeResourceId(String resourceName, Boolean titleType) {
-    return resourceName + "." + (titleType ? "title" : "description");
-  }
-
-  private static Properties loadProperties(String filename) throws IOException {
-    URL url = Resources.asUrl(filename);
-    final Properties props = new Properties();
-
-    props.load(url.openStream());
-    return props;
   }
 
 }

@@ -43,13 +43,13 @@ public class TestSelectorUtils {
             .domainProperty(SO.NUMBER)
             .scope(PropertyScope.DIMENSION_PROPERTY)
             .build())
-        .property(EpProperties.stringEp(Labels.withTitle("string", "string description"), "testString",
+        .property(EpProperties.stringEp(Labels.from("", "string", "string description"), "testString",
             "http://test.de", ValueSpecifications.from("A", "B", "C")))
-        .property(EpProperties.stringEp(Labels.withTitle("string2", "string description"), "testString2",
+        .property(EpProperties.stringEp(Labels.from("", "string2", "string description"), "testString2",
             "http://test.de", ValueSpecifications.from("A", "B", "C", "D")))
-        .property(EpProperties.integerEp(Labels.withTitle("integer2", "integerDescription"), "testInteger2",
+        .property(EpProperties.integerEp(Labels.from("", "integer2", "integerDescription"), "testInteger2",
             SO.NUMBER, ValueSpecifications.from(0.0f, 1.0f, 1.f)))
-        .property(EpProperties.integerEp(Labels.withTitle("integer", "integerDescription"), "testInteger",
+        .property(EpProperties.integerEp(Labels.from("", "integer", "integerDescription"), "testInteger",
             SO.NUMBER, ValueSpecifications.from(10.0f, 100.0f, 10.0f)))
         .property(EpProperties.nestedEp(Labels.from("location", "", ""), "location",
             EpProperties.doubleEp(Labels.withId("latitude"), "latitude", Geo
