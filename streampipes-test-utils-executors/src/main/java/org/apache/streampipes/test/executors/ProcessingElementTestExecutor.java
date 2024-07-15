@@ -44,6 +44,9 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 
 public class ProcessingElementTestExecutor {
 
@@ -93,17 +96,17 @@ public class ProcessingElementTestExecutor {
       invocationConfig.accept(dataProcessorInvocation);
     }
 
-    var e = getProcessingElementParameterExtractor(dataProcessorInvocation);
-    var mockParams = Mockito.mock(IDataProcessorParameters.class);
+    var extractor = getProcessingElementParameterExtractor(dataProcessorInvocation);
+    var mockParams = mock(IDataProcessorParameters.class);
 
-    Mockito.when(mockParams.getModel()).thenReturn(dataProcessorInvocation);
-    Mockito.when(mockParams.extractor()).thenReturn(e);
+    when(mockParams.getModel()).thenReturn(dataProcessorInvocation);
+    when(mockParams.extractor()).thenReturn(extractor);
 
     // calls the onPipelineStarted method of the processor to initialize it
     processor.onPipelineStarted(mockParams, null, null);
 
     // mock the output collector to capture the output events and validate the results later
-    var mockCollector = Mockito.mock(SpOutputCollector.class);
+    var mockCollector = mock(SpOutputCollector.class);
     var spOutputCollectorCaptor = ArgumentCaptor.forClass(Event.class);
 
 

@@ -38,8 +38,7 @@ import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-import com.google.common.collect.Lists;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class StringToStateProcessor extends StreamPipesDataProcessor {
@@ -77,13 +76,13 @@ public class StringToStateProcessor extends StreamPipesDataProcessor {
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
-    List<String> states = Lists.newArrayList();
+    List<String> states = new ArrayList<>();
 
     for (String stateField : stateFields) {
       states.add(event.getFieldBySelector(stateField).getAsPrimitive().getAsString());
     }
 
-    event.addField(CURRENT_STATE, states.toArray());
+    event.addField(CURRENT_STATE, states);
     collector.collect(event);
   }
 
