@@ -22,7 +22,6 @@ import { TimeSettings } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-data-explorer-data-view-toolbar',
     templateUrl: './data-explorer-data-view-toolbar.component.html',
-    styleUrls: ['./data-explorer-data-view-toolbar.component.scss'],
 })
 export class DataExplorerDataViewToolbarComponent {
     @Input()
