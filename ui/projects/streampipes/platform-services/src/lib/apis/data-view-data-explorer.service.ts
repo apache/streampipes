@@ -21,7 +21,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Dashboard } from '../model/dashboard/dashboard.model';
 import { Injectable } from '@angular/core';
-import { DatalakeRestService } from './datalake-rest.service';
 import {
     DataExplorerWidgetModel,
     DataLakeMeasure,
@@ -34,30 +33,11 @@ import { SharedDatalakeRestService } from './shared-dashboard.service';
 export class DataViewDataExplorerService {
     constructor(
         private http: HttpClient,
-        private dataLakeRestService: DatalakeRestService,
         private sharedDatalakeRestService: SharedDatalakeRestService,
     ) {}
 
-    getVisualizableData(): Observable<DataLakeMeasure[]> {
-        return this.dataLakeRestService.getAllMeasurementSeries().pipe(
-            map(data => {
-                return (data as any[]).map(d =>
-                    DataLakeMeasure.fromData(d as DataLakeMeasure),
-                );
-            }),
-        );
-    }
-
     getDataViews(): Observable<Dashboard[]> {
         return this.sharedDatalakeRestService.getDashboards(this.dashboardUrl);
-    }
-
-    getDataView(dataViewId: string): Observable<Dashboard> {
-        return this.http.get(this.dashboardUrl + '/' + dataViewId).pipe(
-            map(data => {
-                return data as Dashboard;
-            }),
-        );
     }
 
     updateDashboard(dashboard: Dashboard): Observable<Dashboard> {
@@ -95,6 +75,12 @@ export class DataViewDataExplorerService {
 
     private get dashboardWidgetUrl() {
         return `${this.baseUrl}/api/v3/datalake/dashboard/widgets`;
+    }
+
+    getAllWidgets(): Observable<DataExplorerWidgetModel[]> {
+        return this.http
+            .get(this.dashboardWidgetUrl)
+            .pipe(map(res => res as DataExplorerWidgetModel[]));
     }
 
     getWidget(widgetId: string): Observable<DataExplorerWidgetModel> {

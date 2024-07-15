@@ -37,7 +37,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { DataExplorerDashboardGridComponent } from './components/widget-view/grid-view/data-explorer-dashboard-grid.component';
-import { DataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview.component';
+import { DataExplorerOverviewComponent } from './components/overview/data-explorer-overview.component';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
 import { TimeRangeSelectorComponent } from './components/time-selector/timeRangeSelector.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
@@ -113,6 +113,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SpImageContainerComponent } from './components/widgets/image/image-container/image-container.component';
+import { SpDataExplorerDataViewOverviewComponent } from './components/overview/data-explorer-data-view-overview/data-explorer-data-view-overview.component';
+import { SpDataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview/data-explorer-dashboard-overview.component';
+import { DataExplorerDataViewComponent } from './components/data-view/data-explorer-data-view.component';
+import { DataExplorerDataViewToolbarComponent } from './components/data-view/data-view-toolbar/data-explorer-data-view-toolbar.component';
 
 @NgModule({
     imports: [
@@ -167,15 +171,23 @@ import { SpImageContainerComponent } from './components/widgets/image/image-cont
                 children: [
                     {
                         path: '',
-                        component: DataExplorerDashboardOverviewComponent,
+                        component: DataExplorerOverviewComponent,
                     },
                     {
-                        path: ':id',
+                        path: 'data-view',
+                        component: DataExplorerDataViewComponent,
+                    },
+                    {
+                        path: 'data-view/:id',
+                        component: DataExplorerDataViewComponent,
+                    },
+                    {
+                        path: 'dashboard/:id',
                         component: DataExplorerDashboardPanelComponent,
                         canDeactivate: [DataExplorerPanelCanDeactivateGuard],
                     },
                     {
-                        path: ':id/:startTime/:endTime',
+                        path: 'dashboard/:id/:startTime/:endTime',
                         component: DataExplorerDashboardPanelComponent,
                         canDeactivate: [DataExplorerPanelCanDeactivateGuard],
                     },
@@ -186,7 +198,7 @@ import { SpImageContainerComponent } from './components/widgets/image/image-cont
     declarations: [
         AggregateConfigurationComponent,
         DataExplorerDashboardGridComponent,
-        DataExplorerDashboardOverviewComponent,
+        DataExplorerOverviewComponent,
         DataExplorerDashboardPanelComponent,
         DataExplorerDashboardSlideViewComponent,
         DataExplorerDashboardWidgetComponent,
@@ -194,6 +206,8 @@ import { SpImageContainerComponent } from './components/widgets/image/image-cont
         DataExplorerEditDataViewDialogComponent,
         DataExplorerWidgetAppearanceSettingsComponent,
         DataExplorerWidgetDataSettingsComponent,
+        DataExplorerDataViewComponent,
+        DataExplorerDataViewToolbarComponent,
         CorrelationWidgetConfigComponent,
         FieldSelectionPanelComponent,
         FieldSelectionComponent,
@@ -222,6 +236,8 @@ import { SpImageContainerComponent } from './components/widgets/image/image-cont
         DataExplorerVisualisationSettingsComponent,
         WidgetDirective,
         TooMuchDataComponent,
+        SpDataExplorerDataViewOverviewComponent,
+        SpDataExplorerDashboardOverviewComponent,
         SpEchartsWidgetComponent,
         SpValueHeatmapWidgetConfigComponent,
         SpHistogramChartWidgetConfigComponent,
