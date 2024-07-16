@@ -18,7 +18,9 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state;
 
+import org.apache.streampipes.test.executors.PrefixStrategy;
 import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
+import org.apache.streampipes.test.executors.StreamPrefix;
 import org.apache.streampipes.test.executors.TestConfiguration;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +35,14 @@ import java.util.stream.Stream;
 
 public class TestStringToStateProcessor {
 
+  private static final String KEY_1 = "key1";
+  private static final String KEY_2 = "key2";
+  private static final String VALUE_1 = "value 1";
+  private static final String VALUE_2 = "value 2";
+
+  private static final String PREFIX_KEY_1 = StreamPrefix.s0(KEY_1);
+  private static final String PREFIX_KEY_2 = StreamPrefix.s0(KEY_2);
+
   private StringToStateProcessor processor;
 
   @BeforeEach
@@ -44,18 +54,33 @@ public class TestStringToStateProcessor {
     return Stream.of(
         Arguments.of(
             Collections.emptyList(),
-            List.of(Map.of("k1", "v1")),
-            List.of(Map.of("k1", "v1", StringToStateProcessor.CURRENT_STATE, Collections.emptyList()))
+            List.of(Map.of(KEY_1, VALUE_1)),
+            List.of(Map.of(
+                KEY_1, VALUE_1,
+                StringToStateProcessor.CURRENT_STATE, Collections.emptyList()
+            ))
         ),
         Arguments.of(
-            List.of("::k1"),
-            List.of(Map.of("k1", "v1")),
-            List.of(Map.of("k1", "v1", StringToStateProcessor.CURRENT_STATE, List.of("v1")))
+            List.of(PREFIX_KEY_1),
+            List.of(Map.of(
+                KEY_1, VALUE_1
+            )),
+            List.of(Map.of(
+                KEY_1, VALUE_1,
+                StringToStateProcessor.CURRENT_STATE, List.of(VALUE_1)
+            ))
         ),
         Arguments.of(
-            List.of("::k1", "::k2"),
-            List.of(Map.of("k1", "v1", "k2", "v2")),
-            List.of(Map.of("k1", "v1", "k2", "v2", StringToStateProcessor.CURRENT_STATE, List.of("v1", "v2")))
+            List.of(PREFIX_KEY_1, PREFIX_KEY_2),
+            List.of(Map.of(
+                KEY_1, VALUE_1,
+                KEY_2, VALUE_2
+            )),
+            List.of(Map.of(
+                KEY_1, VALUE_1,
+                KEY_2, VALUE_2,
+                StringToStateProcessor.CURRENT_STATE, List.of(VALUE_1, VALUE_2)
+            ))
         )
     );
   }
@@ -71,6 +96,7 @@ public class TestStringToStateProcessor {
     var configuration = TestConfiguration
         .builder()
         .config(StringToStateProcessor.STRING_STATE_FIELD, selectedFieldNames)
+        .prefixStrategy(PrefixStrategy.SAME_PREFIX)
         .build();
 
     var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
