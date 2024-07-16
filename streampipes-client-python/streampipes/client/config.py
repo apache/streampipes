@@ -20,7 +20,7 @@ Configuration class for the StreamPipes client.
 """
 
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 __all__ = [
@@ -49,6 +49,8 @@ class StreamPipesClientConfig:
     port: Optional[int]
         Specifies the port under which the StreamPipes API is available,
         e.g., `80` (with http) or `443` (with https)
+    additional_headers: Optional[dict[str, str]]
+        Specifies additional HTTP headers that should be sent with each request, e.g., proxy headers
 
     Examples
     --------
@@ -61,3 +63,6 @@ class StreamPipesClientConfig:
     host_address: str
     https_disabled: Optional[bool] = False
     port: Optional[int] = 80
+    additional_headers: Optional[dict[str, str]] = field(default_factory=dict)
+
+
