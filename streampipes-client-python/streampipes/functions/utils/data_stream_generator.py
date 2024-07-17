@@ -104,10 +104,11 @@ def create_data_stream(
             )
         ]
 
+    sanitized_stream_id = stream_id.replace(" ", "")
+
     # Assign a default topic name incorporating the unique stream ID to each protocol.
     # This ensures the topic name remains consistent across function restarts, avoiding reliance on client-side defaults.
     for protocol in transport_protocols:
-        sanitized_stream_id = stream_id.replace(" ", "")
         protocol.topic_definition.actual_topic_name = f"org.apache.streampipes.connect.{sanitized_stream_id}"
 
     data_stream = DataStream(
@@ -116,5 +117,5 @@ def create_data_stream(
         event_grounding=EventGrounding(transport_protocols=transport_protocols)
     )
 
-    data_stream.element_id = stream_id
+    data_stream.element_id = sanitized_stream_id
     return data_stream
