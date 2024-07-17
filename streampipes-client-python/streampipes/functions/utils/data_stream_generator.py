@@ -53,7 +53,7 @@ class RuntimeType(Enum):
 def create_data_stream(
     name: str,
     attributes: Dict[str, str],
-    stream_id: Optional[str] = None,
+    stream_id: str = None,
     broker: SupportedBroker = SupportedBroker.NATS,
 ):
     """Creates a data stream
@@ -104,8 +104,15 @@ def create_data_stream(
             )
         ]
 
+    # Assign a default topic name incorporating the unique stream ID to each protocol.
+    # This ensures the topic name remains consistent across function restarts, avoiding reliance on client-side defaults.
+    for protocol in transport_protocols:
+        protocol.topic_definition.actual_topic_name = f"org.apache.streampipes.connect.{stream_id}"
+
     data_stream = DataStream(
-        name=name, event_schema=event_schema, event_grounding=EventGrounding(transport_protocols=transport_protocols)
+        name=name,
+        event_schema=event_schema,
+        event_grounding=EventGrounding(transport_protocols=transport_protocols)
     )
     if stream_id:
         data_stream.element_id = stream_id
