@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.model.client.assetdashboard.AssetDashboardConfig;
 import org.apache.streampipes.model.client.user.Group;
 import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
 import org.apache.streampipes.model.client.user.UserActivationToken;
@@ -48,8 +47,6 @@ public interface INoSqlStorage {
   IUserStorage getUserStorageAPI();
 
   INotificationStorage getNotificationStorageApi();
-
-  CRUDStorage<AssetDashboardConfig> getAssetDashboardStorage();
 
   CRUDStorage<DataLakeMeasure> getDataLakeStorage();
 
