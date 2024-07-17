@@ -149,13 +149,9 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.componentRef.destroy();
-        if (this.authSubscription) {
-            this.authSubscription.unsubscribe();
-        }
-        if (this.widgetTypeChangedSubscription) {
-            this.widgetTypeChangedSubscription.unsubscribe();
-        }
+        this.componentRef?.destroy();
+        this.authSubscription?.unsubscribe();
+        this.widgetTypeChangedSubscription?.unsubscribe();
     }
 
     chooseWidget(widgetTypeId: string) {
@@ -200,9 +196,9 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
 
         this.componentRef.onDestroy(destroy => {
             this.componentRef.instance.cleanupSubscriptions();
-            removeSub.unsubscribe();
-            timerSub.unsubscribe();
-            errorSub.unsubscribe();
+            removeSub?.unsubscribe();
+            timerSub?.unsubscribe();
+            errorSub?.unsubscribe();
         });
     }
 

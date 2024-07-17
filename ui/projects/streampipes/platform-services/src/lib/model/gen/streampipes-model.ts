@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-06-30 09:10:19.
+// Generated using typescript-generator version 3.2.1263 on 2024-07-13 11:00:10.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1097,6 +1097,7 @@ export class DataExplorerWidgetModel extends DashboardEntity {
     dataConfig: { [index: string]: any };
     measureName: string;
     pipelineId: string;
+    timeSettings: { [index: string]: any };
     visualizationConfig: { [index: string]: any };
     widgetId: string;
     widgetType: string;
@@ -1118,6 +1119,9 @@ export class DataExplorerWidgetModel extends DashboardEntity {
         );
         instance.measureName = data.measureName;
         instance.pipelineId = data.pipelineId;
+        instance.timeSettings = __getCopyObjectFn(__identity<any>())(
+            data.timeSettings,
+        );
         instance.visualizationConfig = __getCopyObjectFn(__identity<any>())(
             data.visualizationConfig,
         );
