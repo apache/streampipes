@@ -23,8 +23,8 @@ import {
     SelectedFilter,
     SourceConfig,
 } from '@streampipes/platform-services';
-import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
-import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
+import { WidgetConfigurationService } from '../../../../../services/widget-configuration.service';
+import { DataExplorerFieldProviderService } from '../../../../../services/data-explorer-field-provider-service';
 
 @Component({
     selector: 'sp-filter-selection-panel',

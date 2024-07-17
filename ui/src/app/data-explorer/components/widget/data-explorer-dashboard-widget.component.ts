@@ -74,9 +74,6 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     gridsterItemComponent: GridsterItemComponent;
 
     @Input()
-    currentlyConfiguredWidgetId: string;
-
-    @Input()
     previewMode = false;
 
     @Input()
@@ -90,17 +87,11 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
 
     @Output() deleteCallback: EventEmitter<DataExplorerWidgetModel> =
         new EventEmitter<DataExplorerWidgetModel>();
-    @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> =
-        new EventEmitter<DataExplorerWidgetModel>();
-    @Output() configureWidgetCallback: EventEmitter<DataExplorerWidgetModel> =
-        new EventEmitter<DataExplorerWidgetModel>();
     @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> =
         new EventEmitter<DataExplorerWidgetModel>();
 
     title = '';
     widgetLoaded = false;
-
-    msCounter = interval(10);
     timerActive = false;
     loadingTime = 0;
 
@@ -225,16 +216,6 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
 
     startEditMode() {
         this.startEditModeEmitter.emit(this.configuredWidget);
-    }
-
-    triggerWidgetEditMode() {
-        if (
-            this.currentlyConfiguredWidgetId === this.configuredWidget.elementId
-        ) {
-            this.configureWidgetCallback.emit();
-        } else {
-            this.configureWidgetCallback.emit(this.configuredWidget);
-        }
     }
 
     startLoadingTimer() {

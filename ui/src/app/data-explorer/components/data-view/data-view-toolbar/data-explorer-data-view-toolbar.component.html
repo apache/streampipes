@@ -33,7 +33,17 @@
             data-cy="save-data-explorer-widget-btn"
         >
             <mat-icon>save</mat-icon>
-            Save data view
+            Save
+        </button>
+        <button
+            mat-raised-button
+            matTooltip="Discard"
+            class="mat-basic mr-10 edit-menu-btn"
+            (click)="discardDataViewEmitter.emit()"
+            data-cy="discard-data-explorer-widget-btn"
+        >
+            <i class="material-icons">undo</i>
+            <span>&nbsp;Discard</span>
         </button>
         <span fxFlex></span>
         <div

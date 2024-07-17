@@ -16,18 +16,17 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { DataExplorerDashboardPanelComponent } from './components/dashboard/data-explorer-dashboard-panel.component';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Component, EventEmitter, Output } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
-export class DataExplorerPanelCanDeactivateGuard {
-    canDeactivate(
-        component: DataExplorerDashboardPanelComponent,
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Observable<boolean> | boolean {
-        return component.confirmLeaveDashboard(route, state);
-    }
+@Component({
+    selector: 'sp-data-explorer-dashboard-widget-selection-panel',
+    templateUrl: './dashboard-widget-selection-panel.component.html',
+    styleUrls: [
+        './dashboard-widget-selection-panel.component.scss',
+        '../../data-view/data-view-designer-panel/data-explorer-designer-panel.component.scss',
+    ],
+})
+export class DataExplorerDashboardWidgetSelectionPanelComponent {
+    @Output()
+    addDataViewEmitter: EventEmitter<string> = new EventEmitter<string>();
 }

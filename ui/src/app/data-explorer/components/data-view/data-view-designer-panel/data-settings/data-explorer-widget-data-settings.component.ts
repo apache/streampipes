@@ -32,9 +32,9 @@ import {
     DataViewDataExplorerService,
     SourceConfig,
 } from '@streampipes/platform-services';
-import { Tuple2 } from '../../../../core-model/base/Tuple2';
+import { Tuple2 } from '../../../../../core-model/base/Tuple2';
 import { zip } from 'rxjs';
-import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
+import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 import { FieldSelectionPanelComponent } from './field-selection-panel/field-selection-panel.component';
 import { GroupSelectionPanelComponent } from './group-selection-panel/group-selection-panel.component';
 

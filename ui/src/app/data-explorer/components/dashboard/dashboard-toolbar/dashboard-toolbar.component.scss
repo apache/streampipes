@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,18 +16,11 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { DataExplorerDashboardPanelComponent } from './components/dashboard/data-explorer-dashboard-panel.component';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
+.data-explorer-options {
+    padding: 0;
+}
 
-@Injectable({ providedIn: 'root' })
-export class DataExplorerPanelCanDeactivateGuard {
-    canDeactivate(
-        component: DataExplorerDashboardPanelComponent,
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Observable<boolean> | boolean {
-        return component.confirmLeaveDashboard(route, state);
-    }
+.data-explorer-options-item {
+    display: inline;
+    margin-right: 10px;
 }

@@ -16,18 +16,40 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { DataExplorerDashboardPanelComponent } from './components/dashboard/data-explorer-dashboard-panel.component';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
+@import '../../../../../scss/sp/sp-dialog.scss';
 
-@Injectable({ providedIn: 'root' })
-export class DataExplorerPanelCanDeactivateGuard {
-    canDeactivate(
-        component: DataExplorerDashboardPanelComponent,
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Observable<boolean> | boolean {
-        return component.confirmLeaveDashboard(route, state);
-    }
+.designer-panel-content {
+    padding: 0;
+    height: 100%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.designer-panel-config {
+    padding: 0;
+}
+
+.designer-panel-title {
+    margin-left: 20px;
+    font-size: 12pt;
+    font-weight: bold;
+    height: 40px;
+}
+
+.designer-panel-header {
+    border-bottom: 1px solid var(--color-tab-border);
+}
+
+.scroll-tab-content {
+    overflow-y: auto;
+    height: calc(100%);
+}
+
+.no-overflow {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.new-widget-section {
+    border-top: 1px solid var(--color-bg-3);
 }
