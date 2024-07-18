@@ -51,7 +51,7 @@ import static org.mockito.Mockito.when;
 public class ProcessingElementTestExecutor {
 
   private final IStreamPipesDataProcessor processor;
-  private TestConfiguration testConfiguration;
+  private final TestConfiguration testConfiguration;
   private Iterator<String> selectorPrefixes;
   private Consumer<DataProcessorInvocation> invocationConfig;
 
@@ -129,21 +129,30 @@ public class ProcessingElementTestExecutor {
     processor.onPipelineStopped();
   }
 
-   /**
+  /**
    * Asserts the equality of expected and actual event.
    * Iterates through each key-value pair in the expected map and compares the value
    * with the corresponding value in the actual map.
    *
    * @param expected The expected event
-   * @param actual The actual event
+   * @param actual   The actual event
    */
   private void assertEventEquality(Map<String, Object> expected, Map<String, Object> actual) {
     expected.forEach((key, value) -> {
-      assertEquals(
-          value,
-          actual.get(key),
-          () -> getAssertionErrorMessage(key, expected, actual)
-      );
+      if (value instanceof Approx roundValue) {
+        assertEquals(
+            roundValue.value(),
+            (Double) actual.get(key),
+            roundValue.epsilon(),
+            () -> getAssertionErrorMessage(key, expected, actual));
+      } else {
+        assertEquals(
+            value,
+            actual.get(key),
+            () -> getAssertionErrorMessage(key, expected, actual)
+        );
+      }
+
     });
   }
 

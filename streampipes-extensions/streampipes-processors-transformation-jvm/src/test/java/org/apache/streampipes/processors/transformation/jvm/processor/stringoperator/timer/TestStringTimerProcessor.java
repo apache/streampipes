@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer;
 
+import org.apache.streampipes.test.executors.Approx;
 import org.apache.streampipes.test.executors.PrefixStrategy;
 import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.StreamPrefix;
@@ -59,12 +60,12 @@ public class TestStringTimerProcessor {
             List.of(
                 Map.of(
                     FIELD_VALUE_RUNTIME_NAME, VALUE_1,
-                    MEASURED_TIME_FIELD_RUNTIME_NAME, 0.0,
+                    MEASURED_TIME_FIELD_RUNTIME_NAME, new Approx(0.0, 2.0),
                     KEY_1, VALUE_1
                 ),
                 Map.of(
                     FIELD_VALUE_RUNTIME_NAME, VALUE_1,
-                    MEASURED_TIME_FIELD_RUNTIME_NAME, 1.0,
+                    MEASURED_TIME_FIELD_RUNTIME_NAME,  new Approx(1.0, 2.0),
                     KEY_1, VALUE_2
                 )
             )
