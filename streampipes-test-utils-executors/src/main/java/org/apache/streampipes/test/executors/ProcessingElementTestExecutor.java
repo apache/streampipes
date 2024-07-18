@@ -32,7 +32,6 @@ import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 
-import org.junit.jupiter.api.Assertions;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -44,6 +43,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -68,14 +68,6 @@ public class ProcessingElementTestExecutor {
     this.testConfiguration = testConfiguration;
     this.selectorPrefixes = testConfiguration.getPrefixes().iterator();
   }
-
-  public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor,
-                                       Consumer<DataProcessorInvocation> invocationConfig) {
-    this.processor = processor;
-    this.invocationConfig = invocationConfig;
-    this.selectorPrefixes = List.of("").iterator();
-  }
-
 
   /**
    * This method is used to run a data processor with a given configuration and a list of input events.
@@ -120,7 +112,7 @@ public class ProcessingElementTestExecutor {
         Mockito.times(expectedOutputEvents.size())).collect(spOutputCollectorCaptor.capture());
     var resultingEvents = spOutputCollectorCaptor.getAllValues();
     IntStream.range(0, expectedOutputEvents.size())
-             .forEach(i -> Assertions.assertEquals(
+             .forEach(i -> assertEquals(
                  expectedOutputEvents.get(i),
                  resultingEvents.get(i)
                                 .getRaw()
