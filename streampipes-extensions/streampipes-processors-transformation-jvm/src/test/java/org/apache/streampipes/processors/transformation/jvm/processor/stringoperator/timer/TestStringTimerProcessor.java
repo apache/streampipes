@@ -42,6 +42,8 @@ import static org.apache.streampipes.processors.transformation.jvm.processor.str
 
 public class TestStringTimerProcessor {
   private static final String KEY_1 = "key1";
+  private static final String VALUE_1 = "v1";
+  private static final String VALUE_2 = "v2";
 
   private StringTimerProcessor processor;
 
@@ -53,17 +55,17 @@ public class TestStringTimerProcessor {
   static Stream<Arguments> arguments() {
     return Stream.of(
         Arguments.of(
-            List.of(Map.of(KEY_1, "v1"), Map.of(KEY_1, "v1"), Map.of(KEY_1, "v2")),
+            List.of(Map.of(KEY_1, VALUE_1), Map.of(KEY_1, VALUE_1), Map.of(KEY_1, VALUE_2)),
             List.of(
                 Map.of(
-                    FIELD_VALUE_RUNTIME_NAME, "v1",
+                    FIELD_VALUE_RUNTIME_NAME, VALUE_1,
                     MEASURED_TIME_FIELD_RUNTIME_NAME, 0.0,
-                    KEY_1, "v1"
+                    KEY_1, VALUE_1
                 ),
                 Map.of(
-                    FIELD_VALUE_RUNTIME_NAME, "v1",
+                    FIELD_VALUE_RUNTIME_NAME, VALUE_1,
                     MEASURED_TIME_FIELD_RUNTIME_NAME, 1.0,
-                    KEY_1, "v2"
+                    KEY_1, VALUE_2
                 )
             )
         )
