@@ -98,7 +98,7 @@ public class WhereClauseParams implements IQueryStatement {
   }
 
   private Object returnCondition(String inputCondition) {
-    if (NumberUtils.isCreatable(inputCondition)) {
+    if (NumberUtils.isParsable(inputCondition)) {
       return Double.parseDouble(inputCondition);
     } else if (isBoolean(inputCondition)) {
       return Boolean.parseBoolean(inputCondition);

@@ -50,6 +50,14 @@ public class WhereStatementParamsTest {
     assertWhereCondition(result, expected);
   }
 
+  @Test
+  public void filterString2() {
+    WhereClauseParams result = WhereClauseParams.from("[fieldName;=;3312476503F]");
+    FilterCondition expected = new FilterCondition("fieldName", "=", "3312476503F");
+
+    assertWhereCondition(result, expected);
+  }
+
   private void assertWhereCondition(WhereClauseParams result, FilterCondition expected) {
     assertEquals(1, result.getWhereConditions().size());
     FilterCondition resultingFilterCondition = result.getWhereConditions().get(0);
