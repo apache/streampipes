@@ -20,12 +20,18 @@
     <div fxFlex fxLayout="column">
         <h5>{{ dataView.baseAppearanceConfig.widgetTitle }}</h5>
         <div fxLayout="row" fxLayoutGap="15px" class="data-view-preview-info">
-            <span fxLayoutAlign="start center">Visualization</span>
-            <span fxFlex fxLayoutAlign="end center">{{ widgetTypeLabel }}</span>
+            <span fxLayoutAlign="start center"
+                ><i class="material-icons color-primary">insert_chart</i></span
+            >
+            <span fxFlex fxLayoutAlign="start center">{{
+                widgetTypeLabel
+            }}</span>
         </div>
         <div fxLayout="row" fxLayoutGap="15px" class="data-view-preview-info">
-            <span fxLayoutAlign="start center">Data</span>
-            <span fxFlex fxLayoutAlign="end center">{{
+            <span fxLayoutAlign="start center"
+                ><i class="material-icons">folder</i></span
+            >
+            <span fxFlex fxLayoutAlign="start center">{{
                 dataView.dataConfig.sourceConfigs[0].measureName
             }}</span>
         </div>

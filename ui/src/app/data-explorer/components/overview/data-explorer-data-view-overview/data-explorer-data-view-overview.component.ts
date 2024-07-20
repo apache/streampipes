@@ -25,8 +25,8 @@ import {
     DataViewDataExplorerService,
 } from '@streampipes/platform-services';
 import { CurrentUserService, DialogService } from '@streampipes/shared-ui';
-import { Router } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
+import { DataExplorerRoutingService } from '../../../services/data-explorer-routing.service';
 
 @Component({
     selector: 'sp-data-explorer-data-view-overview',
@@ -43,9 +43,9 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
         public dialogService: DialogService,
         authService: AuthService,
         currentUserService: CurrentUserService,
-        router: Router,
+        routingService: DataExplorerRoutingService,
     ) {
-        super(dialogService, authService, currentUserService, router);
+        super(dialogService, authService, currentUserService, routingService);
     }
 
     afterInit(): void {
@@ -65,10 +65,7 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
     }
 
     openDataView(dataView: DataExplorerWidgetModel, editMode: boolean): void {
-        this.router.navigate(
-            ['dataexplorer', 'data-view', dataView.elementId],
-            { queryParams: { editMode } },
-        );
+        this.routingService.navigateToDataView(editMode, dataView.elementId);
     }
 
     deleteDataView(dataView: DataExplorerWidgetModel) {

@@ -34,7 +34,6 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import {
     ActivatedRoute,
     ActivatedRouteSnapshot,
-    Router,
     RouterStateSnapshot,
 } from '@angular/router';
 import { DataExplorerDashboardSlideViewComponent } from '../widget-view/slide-view/data-explorer-dashboard-slide-view.component';
@@ -46,6 +45,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { map } from 'rxjs/operators';
 import { SpDataExplorerRoutes } from '../../data-explorer.routes';
+import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-panel',
@@ -98,7 +98,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
         private dashboardService: DataViewDataExplorerService,
         private route: ActivatedRoute,
         private dataViewService: DataViewDataExplorerService,
-        private router: Router,
+        private routingService: DataExplorerRoutingService,
         private breadcrumbService: SpBreadcrumbService,
     ) {}
 
@@ -178,8 +178,11 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     }
 
     startEditMode(widgetModel: DataExplorerWidgetModel) {
-        this.editMode = true;
-        this.showEditingHelpInfo = false;
+        this.routingService.navigateToDataView(
+            true,
+            widgetModel.elementId,
+            true,
+        );
     }
 
     removeAndQueueItemForDeletion(widget: DataExplorerWidgetModel) {
@@ -246,7 +249,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     }
 
     goBackToOverview() {
-        this.router.navigate(['dataexplorer']);
+        this.routingService.navigateToOverview();
     }
 
     confirmLeaveDashboard(

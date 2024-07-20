@@ -23,8 +23,9 @@ import {
     DataViewDataExplorerService,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { TimeSelectionService } from '../../services/time-selection.service';
+import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
 
 @Component({
     selector: 'sp-data-explorer-data-view',
@@ -44,7 +45,7 @@ export class DataExplorerDataViewComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
+        private routingService: DataExplorerRoutingService,
         private dataViewService: DataViewDataExplorerService,
         private timeSelectionService: TimeSelectionService,
     ) {}
@@ -81,6 +82,10 @@ export class DataExplorerDataViewComponent implements OnInit {
         });
     }
 
+    editDataView(): void {
+        this.routingService.navigateToDataView(true, this.dataView.elementId);
+    }
+
     makeDefaultTimeSettings(): TimeSettings {
         return {
             dynamicSelection: 1440,
@@ -109,7 +114,7 @@ export class DataExplorerDataViewComponent implements OnInit {
             ? this.dataViewService.updateWidget(this.dataView)
             : this.dataViewService.saveWidget(this.dataView);
         observable.subscribe(() => {
-            this.router.navigate(['dataexplorer']);
+            this.routingService.navigateToOverview();
         });
     }
 
