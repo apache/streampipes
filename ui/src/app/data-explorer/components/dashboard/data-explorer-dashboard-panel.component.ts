@@ -19,7 +19,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, of, Subscription } from 'rxjs';
 import { DataExplorerDashboardGridComponent } from '../widget-view/grid-view/data-explorer-dashboard-grid.component';
-import { MatDrawer } from '@angular/material/sidenav';
 import {
     ClientDashboardItem,
     Dashboard,
@@ -71,22 +70,13 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     @ViewChild('dashboardSlide')
     dashboardSlide: DataExplorerDashboardSlideViewComponent;
 
-    @ViewChild('designerDrawer')
-    designerDrawer: MatDrawer;
-
     hasDataExplorerWritePrivileges = false;
     hasDataExplorerDeletePrivileges = false;
 
     public items: Dashboard[];
 
-    widgetIdsToRemove: string[] = [];
-
-    currentlyConfiguredWidget: DataExplorerWidgetModel;
-    currentlyConfiguredWidgetId: string;
     dataLakeMeasure: DataLakeMeasure;
-
     showEditingHelpInfo = false;
-
     authSubscription: Subscription;
 
     constructor(
@@ -118,10 +108,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
             this.hasDataExplorerDeletePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW,
             );
-            if (
-                queryParams.action === 'edit' &&
-                this.hasDataExplorerWritePrivileges
-            ) {
+            if (queryParams.editMode && this.hasDataExplorerWritePrivileges) {
                 this.editMode = true;
             }
         });
@@ -151,30 +138,8 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
         this.dataViewDataExplorerService
             .updateDashboard(this.dashboard)
             .subscribe(result => {
-                this.dashboard.rev = result.rev;
-                if (this.widgetIdsToRemove.length > 0) {
-                    this.widgetIdsToRemove.forEach(id => {
-                        if (this.viewMode === 'grid') {
-                            this.dashboardGrid.configuredWidgets.delete(id);
-                        } else {
-                            this.dashboardSlide.configuredWidgets.delete(id);
-                        }
-                    });
-                    this.afterDashboardChange();
-                } else {
-                    this.afterDashboardChange();
-                }
+                this.routingService.navigateToOverview(true);
             });
-
-        this.editMode = false;
-    }
-
-    afterDashboardChange() {
-        if (this.viewMode === 'grid') {
-            this.dashboardGrid.updateAllWidgets();
-        } else {
-            this.dashboardSlide.updateAllWidgets();
-        }
     }
 
     startEditMode(widgetModel: DataExplorerWidgetModel) {
@@ -185,15 +150,11 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
         );
     }
 
-    removeAndQueueItemForDeletion(widget: DataExplorerWidgetModel) {
+    removeDataViewFromDashboard(widget: DataExplorerWidgetModel) {
         const index = this.dashboard.widgets.findIndex(
             item => item.id === widget.elementId,
         );
         this.dashboard.widgets.splice(index, 1);
-        this.widgetIdsToRemove.push(widget.elementId);
-        if (this.currentlyConfiguredWidget.elementId === widget.elementId) {
-            this.currentlyConfiguredWidget = undefined;
-        }
     }
 
     updateDateRange(timeSettings: TimeSettings) {

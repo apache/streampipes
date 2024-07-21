@@ -65,7 +65,7 @@
                     [matMenuTriggerFor]="menu"
                     aria-label="More options"
                     matTooltip="More options"
-                    *ngIf="!editMode"
+                    *ngIf="!editMode && !dataViewMode"
                     [attr.data-cy]="
                         'more-options-' +
                         configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(

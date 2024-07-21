@@ -40,4 +40,7 @@ export class DataExplorerDataViewToolbarComponent {
 
     @Output()
     updateDateRangeEmitter: EventEmitter<TimeSettings> = new EventEmitter();
+
+    @Output()
+    downloadFileEmitter: EventEmitter<void> = new EventEmitter();
 }

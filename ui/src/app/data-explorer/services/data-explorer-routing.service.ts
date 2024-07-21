@@ -26,8 +26,8 @@ export class DataExplorerRoutingService {
 
     constructor(private router: Router) {}
 
-    navigateToOverview(): void {
-        this.router.navigate(['dataexplorer']);
+    navigateToOverview(omitConfirm: boolean = false): void {
+        this.router.navigate(['dataexplorer'], { state: { omitConfirm } });
     }
 
     navigateToDataView(

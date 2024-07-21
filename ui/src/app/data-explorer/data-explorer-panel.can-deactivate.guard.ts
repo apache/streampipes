@@ -28,6 +28,10 @@ export class DataExplorerPanelCanDeactivateGuard {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,
     ): Observable<boolean> | boolean {
-        return component.confirmLeaveDashboard(route, state);
+        if (!state.root.queryParams.omitConfirm === undefined) {
+            return component.confirmLeaveDashboard(route, state);
+        } else {
+            return true;
+        }
     }
 }

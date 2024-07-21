@@ -30,14 +30,11 @@ import {
 import { GridsterItemComponent } from 'angular-gridster2';
 import {
     DashboardItem,
-    DataExplorerDataConfig,
     DataExplorerWidgetModel,
     DataLakeMeasure,
-    DateRange,
     SpLogMessage,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { DataDownloadDialogComponent } from '../../../core-ui/data-download-dialog/data-download-dialog.component';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
@@ -45,12 +42,9 @@ import { WidgetDirective } from './widget.directive';
 import { WidgetTypeService } from '../../services/widget-type.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
-import {
-    CurrentUserService,
-    DialogService,
-    PanelType,
-} from '@streampipes/shared-ui';
+import { CurrentUserService } from '@streampipes/shared-ui';
 import { BaseWidgetData } from '../../models/dataview-dashboard.model';
+import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-widget',
@@ -69,6 +63,9 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
 
     @Input()
     editMode: boolean;
+
+    @Input()
+    dataViewMode = false;
 
     @Input()
     gridsterItemComponent: GridsterItemComponent;
@@ -109,7 +106,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
 
     constructor(
         private widgetRegistryService: DataExplorerWidgetRegistry,
-        private dialogService: DialogService,
+        private dashboardService: DataExplorerDashboardService,
         private componentFactoryResolver: ComponentFactoryResolver,
         private widgetTypeService: WidgetTypeService,
         private authService: AuthService,
@@ -197,23 +194,6 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
         this.deleteCallback.emit(this.configuredWidget);
     }
 
-    downloadDataAsFile() {
-        this.dialogService.open(DataDownloadDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Download data',
-            width: '50vw',
-            data: {
-                dataDownloadDialogModel: {
-                    dataExplorerDateRange: DateRange.fromTimeSettings(
-                        this.timeSettings,
-                    ),
-                    dataExplorerDataConfig: this.configuredWidget
-                        .dataConfig as DataExplorerDataConfig,
-                },
-            },
-        });
-    }
-
     startEditMode() {
         this.startEditModeEmitter.emit(this.configuredWidget);
     }
@@ -234,5 +214,12 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
 
     handleTimer(start: boolean) {
         start ? this.startLoadingTimer() : this.stopLoadingTimer();
+    }
+
+    downloadDataAsFile(): void {
+        this.dashboardService.downloadDataAsFile(
+            this.timeSettings,
+            this.configuredWidget,
+        );
     }
 }

@@ -43,7 +43,6 @@
             class="designer-panel-container h-100 dashboard-grid"
         >
             <mat-drawer
-                #designerDrawer
                 [opened]="editMode"
                 mode="side"
                 position="end"
@@ -51,7 +50,6 @@
             >
                 <div fxLayout="column" fxFlex="100">
                     <sp-data-explorer-dashboard-widget-selection-panel
-                        #designerPanel
                         (addDataViewEmitter)="addDataViewToDashboard($event)"
                         fxFlex="100"
                     >
@@ -85,8 +83,7 @@
                     [editMode]="editMode"
                     [dashboard]="dashboard"
                     [timeSettings]="timeSettings"
-                    [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
-                    (deleteCallback)="removeAndQueueItemForDeletion($event)"
+                    (deleteCallback)="removeDataViewFromDashboard($event)"
                     (startEditModeEmitter)="startEditMode($event)"
                     class="h-100 dashboard-grid"
                 >
@@ -97,8 +94,7 @@
                     [editMode]="editMode"
                     [dashboard]="dashboard"
                     [timeSettings]="timeSettings"
-                    [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
-                    (deleteCallback)="removeAndQueueItemForDeletion($event)"
+                    (deleteCallback)="removeDataViewFromDashboard($event)"
                     (startEditModeEmitter)="startEditMode($event)"
                     *ngIf="!showEditingHelpInfo && viewMode === 'slide'"
                 >

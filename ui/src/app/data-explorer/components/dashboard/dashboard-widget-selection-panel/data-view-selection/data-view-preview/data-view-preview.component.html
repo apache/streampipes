@@ -40,6 +40,10 @@
         <button
             mat-icon-button
             color="accent"
+            [attr.data-cy]="
+                'add-data-view-btn-' +
+                dataView.baseAppearanceConfig.widgetTitle.replaceAll(' ', '')
+            "
             (click)="addDataViewEmitter.emit(dataView.elementId)"
         >
             <i class="material-icons">add</i>

@@ -17,9 +17,16 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Dashboard } from '@streampipes/platform-services';
+import {
+    Dashboard,
+    DataExplorerDataConfig,
+    DataExplorerWidgetModel,
+    DateRange,
+    TimeSettings,
+} from '@streampipes/platform-services';
 import { DataExplorerEditDataViewDialogComponent } from '../dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { DataDownloadDialogComponent } from '../../core-ui/data-download-dialog/data-download-dialog.component';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerDashboardService {
@@ -38,5 +45,24 @@ export class DataExplorerDashboardService {
                 },
             },
         );
+    }
+
+    downloadDataAsFile(
+        timeSettings: TimeSettings,
+        dataView: DataExplorerWidgetModel,
+    ) {
+        this.dialogService.open(DataDownloadDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Download data',
+            width: '50vw',
+            data: {
+                dataDownloadDialogModel: {
+                    dataExplorerDateRange:
+                        DateRange.fromTimeSettings(timeSettings),
+                    dataExplorerDataConfig:
+                        dataView.dataConfig as DataExplorerDataConfig,
+                },
+            },
+        });
     }
 }
