@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.storage.couchdb;
 
-import org.apache.streampipes.model.client.assetdashboard.AssetDashboardConfig;
 import org.apache.streampipes.model.client.user.Group;
 import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
 import org.apache.streampipes.model.client.user.UserActivationToken;
@@ -116,14 +115,6 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   @Override
   public INotificationStorage getNotificationStorageApi() {
     return new NotificationStorageImpl();
-  }
-
-  @Override
-  public CRUDStorage<AssetDashboardConfig> getAssetDashboardStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("assetdashboard"),
-        AssetDashboardConfig.class
-    );
   }
 
   @Override
