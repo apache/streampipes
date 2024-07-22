@@ -63,6 +63,12 @@
             <artifactId>junit-jupiter-params</artifactId>
             <scope>test</scope>
         </dependency>
+      <dependency>
+        <groupId>org.apache.streampipes</groupId>
+        <artifactId>streampipes-test-utils-executors</artifactId>
+        <version>0.97.0-SNAPSHOT</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
 
     <build>

@@ -16,8 +16,13 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog.scss';
+package org.apache.streampipes.test.executors;
 
-.mr-10 {
-    margin-right: 10px;
+/**
+ * This record can be used to define a double property that consides an epsilon for the assertion
+ *
+ * @param value   The numeric value of the event property.
+ * @param epsilon The tolerance level for the rounding operation, determining its precision for the assertion
+ */
+public record Approx(Double value, Double epsilon) {
 }

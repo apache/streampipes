@@ -49,7 +49,7 @@
             (matSortChange)="sortData($event)"
             class="table-widget"
         >
-            <ng-container [cdkColumnDef]="'time'">
+            <ng-container [matColumnDef]="'time'">
                 <div>
                     <th
                         mat-header-cell
@@ -81,7 +81,7 @@
                     let element of dataExplorerWidget.visualizationConfig
                         .selectedColumns
                 "
-                [cdkColumnDef]="element.fullDbName"
+                [matColumnDef]="element.fullDbName"
             >
                 <div *ngIf="!(element.fullDbName === 'time')">
                     <th
@@ -111,6 +111,32 @@
                         {{ row[element.fullDbName] }}
                     </td>
                 </div>
+            </ng-container>
+            <ng-container
+                *ngFor="let element of groupByColumnNames"
+                [matColumnDef]="element"
+            >
+                <th
+                    mat-header-cell
+                    mat-sort-header
+                    *matHeaderCellDef
+                    [ngStyle]="{
+                        background:
+                            dataExplorerWidget.baseAppearanceConfig
+                                .backgroundColor,
+                        color: dataExplorerWidget.baseAppearanceConfig.textColor
+                    }"
+                >
+                    <label class="column-header">{{ element }}</label>
+                </th>
+                <td
+                    mat-cell
+                    *matCellDef="let row"
+                    [attr.data-cy]="'data-explorer-table-row-' + element"
+                    style="text-align: left"
+                >
+                    {{ row[element] }}
+                </td>
             </ng-container>
 
             <tr

@@ -24,7 +24,6 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
-import { AppAssetMonitoringModule } from '../app-asset-monitoring/app-asset-monitoring.module';
 import { AppOverviewComponent } from './app-overview.component';
 import { RouterModule } from '@angular/router';
 import { AvailableAppsService } from './apps';
@@ -34,7 +33,6 @@ import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
     imports: [
-        AppAssetMonitoringModule,
         CommonModule,
         FlexLayoutModule,
         FormsModule,
