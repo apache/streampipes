@@ -47,13 +47,13 @@ public class StringTimerProcessor extends StreamPipesDataProcessor {
   public static final String FIELD_VALUE_ID = "fieldValue";
 
   public static final String OUTPUT_UNIT_ID = "outputUnit";
-  private static final String MILLISECONDS = "Milliseconds";
-  private static final String SECONDS = "Seconds";
-  private static final String MINUTES = "Minutes";
+  public static final String MILLISECONDS = "Milliseconds";
+  public static final String SECONDS = "Seconds";
+  public static final String MINUTES = "Minutes";
 
   public static final String OUTPUT_FREQUENCY = "outputFrequency";
-  private static final String ON_INPUT_EVENT = "On Input Event";
-  private static final String ON_STRING_VALUE_CHANGE = "When String Value Changes";
+  public static final String ON_INPUT_EVENT = "On Input Event";
+  public static final String ON_STRING_VALUE_CHANGE = "When String Value Changes";
 
   public static final String MEASURED_TIME_FIELD_RUNTIME_NAME = "measured_time";
   public static final String FIELD_VALUE_RUNTIME_NAME = "field_value";
