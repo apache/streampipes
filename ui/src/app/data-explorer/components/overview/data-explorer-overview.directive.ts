@@ -22,7 +22,7 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { CurrentUserService, DialogService } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
-import { Router } from '@angular/router';
+import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
 
 @Directive()
 export abstract class SpDataExplorerOverviewDirective
@@ -39,7 +39,7 @@ export abstract class SpDataExplorerOverviewDirective
         public dialogService: DialogService,
         protected authService: AuthService,
         protected currentUserService: CurrentUserService,
-        protected router: Router,
+        protected routingService: DataExplorerRoutingService,
     ) {}
 
     ngOnInit() {

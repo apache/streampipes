@@ -29,9 +29,9 @@ import {
     PanelType,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../../services/auth.service';
-import { Router } from '@angular/router';
 import { SpDataExplorerOverviewDirective } from '../data-explorer-overview.directive';
 import { DataExplorerDashboardService } from '../../../services/data-explorer-dashboard.service';
+import { DataExplorerRoutingService } from '../../../services/data-explorer-routing.service';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-overview',
@@ -48,11 +48,11 @@ export class SpDataExplorerDashboardOverviewComponent extends SpDataExplorerOver
         private dashboardService: DataViewDataExplorerService,
         private dataExplorerDashboardService: DataExplorerDashboardService,
         public dialogService: DialogService,
-        router: Router,
+        routingService: DataExplorerRoutingService,
         authService: AuthService,
         currentUserService: CurrentUserService,
     ) {
-        super(dialogService, authService, currentUserService, router);
+        super(dialogService, authService, currentUserService, routingService);
     }
 
     afterInit(): void {
@@ -101,20 +101,11 @@ export class SpDataExplorerDashboardOverviewComponent extends SpDataExplorerOver
     }
 
     showDashboard(dashboard: Dashboard) {
-        this.router.navigate([
-            'dataexplorer',
-            'dashboard',
-            dashboard.elementId,
-        ]);
+        this.routingService.navigateToDashboard(false, dashboard.elementId);
     }
 
     editDashboard(dashboard: Dashboard) {
-        this.router.navigate(
-            ['dataexplorer', 'dashboard', dashboard.elementId],
-            {
-                queryParams: { action: 'edit' },
-            },
-        );
+        this.routingService.navigateToDashboard(true, dashboard.elementId);
     }
 
     getDashboards() {

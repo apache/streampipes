@@ -72,7 +72,13 @@
                             color="accent"
                             matTooltip="Edit data view"
                             *ngIf="hasDataExplorerWritePrivileges"
-                            [attr.data-cy]="'edit-data-view-' + element.name"
+                            [attr.data-cy]="
+                                'edit-data-view-' +
+                                element.baseAppearanceConfig.widgetTitle.replaceAll(
+                                    ' ',
+                                    ''
+                                )
+                            "
                             (click)="openDataView(element, true)"
                         >
                             <i class="material-icons">edit</i>
@@ -82,7 +88,10 @@
                             color="accent"
                             matTooltip="Delete data view"
                             *ngIf="hasDataExplorerDeletePrivileges"
-                            [attr.data-cy]="'delete-data-view-' + element.name"
+                            [attr.data-cy]="
+                                'delete-data-view-' +
+                                element.baseAppearanceConfig.widgetTitle
+                            "
                             (click)="deleteDataView(element)"
                         >
                             <i class="material-icons">delete</i>

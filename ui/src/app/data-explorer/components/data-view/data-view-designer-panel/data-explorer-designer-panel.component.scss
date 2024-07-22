@@ -16,31 +16,40 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TimeSettings } from '@streampipes/platform-services';
+@import '../../../../../scss/sp/sp-dialog.scss';
 
-@Component({
-    selector: 'sp-data-explorer-data-view-toolbar',
-    templateUrl: './data-explorer-data-view-toolbar.component.html',
-})
-export class DataExplorerDataViewToolbarComponent {
-    @Input()
-    editMode = true;
+.designer-panel-content {
+    padding: 0;
+    height: 100%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
 
-    @Input()
-    timeSettings: TimeSettings;
+.designer-panel-config {
+    padding: 0;
+}
 
-    timeRangeVisible = true;
+.designer-panel-title {
+    margin-left: 20px;
+    font-size: 12pt;
+    font-weight: bold;
+    height: 40px;
+}
 
-    @Output()
-    saveDataViewEmitter: EventEmitter<void> = new EventEmitter();
+.designer-panel-header {
+    border-bottom: 1px solid var(--color-tab-border);
+}
 
-    @Output()
-    discardDataViewEmitter: EventEmitter<void> = new EventEmitter();
+.scroll-tab-content {
+    overflow-y: auto;
+    height: calc(100%);
+}
 
-    @Output()
-    updateDateRangeEmitter: EventEmitter<TimeSettings> = new EventEmitter();
+.no-overflow {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
 
-    @Output()
-    downloadFileEmitter: EventEmitter<void> = new EventEmitter();
+.new-widget-section {
+    border-top: 1px solid var(--color-bg-3);
 }

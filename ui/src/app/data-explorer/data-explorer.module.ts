@@ -38,7 +38,7 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { DataExplorerDashboardGridComponent } from './components/widget-view/grid-view/data-explorer-dashboard-grid.component';
 import { DataExplorerOverviewComponent } from './components/overview/data-explorer-overview.component';
-import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
+import { DataExplorerDashboardPanelComponent } from './components/dashboard/data-explorer-dashboard-panel.component';
 import { TimeRangeSelectorComponent } from './components/time-selector/timeRangeSelector.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
 import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
@@ -51,22 +51,22 @@ import { SelectColorPropertiesComponent } from './components/widgets/utils/selec
 import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
 import { GroupConfigurationComponent } from './components/widgets/utils/group-configuration/group-configuration.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { DataExplorerDesignerPanelComponent } from './components/designer-panel/data-explorer-designer-panel.component';
+import { DataExplorerDesignerPanelComponent } from './components/data-view/data-view-designer-panel/data-explorer-designer-panel.component';
 import { TableWidgetConfigComponent } from './components/widgets/table/config/table-widget-config.component';
 import { MapWidgetComponent } from './components/widgets/map/map-widget.component';
 import { MapWidgetConfigComponent } from './components/widgets/map/config/map-widget-config.component';
 import { HeatmapWidgetConfigComponent } from './components/widgets/heatmap/config/heatmap-widget-config.component';
-import { DataExplorerWidgetAppearanceSettingsComponent } from './components/designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component';
-import { DataExplorerWidgetDataSettingsComponent } from './components/designer-panel/data-settings/data-explorer-widget-data-settings.component';
+import { DataExplorerWidgetAppearanceSettingsComponent } from './components/data-view/data-view-designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component';
+import { DataExplorerWidgetDataSettingsComponent } from './components/data-view/data-view-designer-panel/data-settings/data-explorer-widget-data-settings.component';
 import { TimeSeriesChartWidgetConfigComponent } from './components/widgets/time-series-chart/config/time-series-chart-widget-config.component';
 import { ImageWidgetConfigComponent } from './components/widgets/image/config/image-widget-config.component';
 import { IndicatorWidgetConfigComponent } from './components/widgets/indicator/config/indicator-chart-widget-config.component';
-import { FieldSelectionPanelComponent } from './components/designer-panel/data-settings/field-selection-panel/field-selection-panel.component';
-import { FieldSelectionComponent } from './components/designer-panel/data-settings/field-selection/field-selection.component';
-import { FilterSelectionPanelComponent } from './components/designer-panel/data-settings/filter-selection-panel/filter-selection-panel.component';
+import { FieldSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/field-selection-panel/field-selection-panel.component';
+import { FieldSelectionComponent } from './components/data-view/data-view-designer-panel/data-settings/field-selection/field-selection.component';
+import { FilterSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel.component';
 import { SelectPropertyComponent } from './components/widgets/utils/select-property/select-property.component';
-import { DataExplorerVisualisationSettingsComponent } from './components/designer-panel/visualisation-settings/data-explorer-visualisation-settings.component';
-import { GroupSelectionPanelComponent } from './components/designer-panel/data-settings/group-selection-panel/group-selection-panel.component';
+import { DataExplorerVisualisationSettingsComponent } from './components/data-view/data-view-designer-panel/visualisation-settings/data-explorer-visualisation-settings.component';
+import { GroupSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/group-selection-panel/group-selection-panel.component';
 import { WidgetDirective } from './components/widget/widget.directive';
 import { CorrelationWidgetConfigComponent } from './components/widgets/correlation-chart/config/correlation-chart-widget-config.component';
 import { TooMuchDataComponent } from './components/widgets/utils/too-much-data/too-much-data.component';
@@ -117,6 +117,10 @@ import { SpDataExplorerDataViewOverviewComponent } from './components/overview/d
 import { SpDataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview/data-explorer-dashboard-overview.component';
 import { DataExplorerDataViewComponent } from './components/data-view/data-explorer-data-view.component';
 import { DataExplorerDataViewToolbarComponent } from './components/data-view/data-view-toolbar/data-explorer-data-view-toolbar.component';
+import { DataExplorerDataViewSelectionComponent } from './components/dashboard/dashboard-widget-selection-panel/data-view-selection/data-view-selection.component';
+import { DataExplorerDashboardWidgetSelectionPanelComponent } from './components/dashboard/dashboard-widget-selection-panel/dashboard-widget-selection-panel.component';
+import { DataExplorerDataViewPreviewComponent } from './components/dashboard/dashboard-widget-selection-panel/data-view-selection/data-view-preview/data-view-preview.component';
+import { DataExplorerDashboardToolbarComponent } from './components/dashboard/dashboard-toolbar/dashboard-toolbar.component';
 
 @NgModule({
     imports: [
@@ -201,7 +205,11 @@ import { DataExplorerDataViewToolbarComponent } from './components/data-view/dat
         DataExplorerOverviewComponent,
         DataExplorerDashboardPanelComponent,
         DataExplorerDashboardSlideViewComponent,
+        DataExplorerDashboardToolbarComponent,
         DataExplorerDashboardWidgetComponent,
+        DataExplorerDashboardWidgetSelectionPanelComponent,
+        DataExplorerDataViewPreviewComponent,
+        DataExplorerDataViewSelectionComponent,
         DataExplorerDesignerPanelComponent,
         DataExplorerEditDataViewDialogComponent,
         DataExplorerWidgetAppearanceSettingsComponent,

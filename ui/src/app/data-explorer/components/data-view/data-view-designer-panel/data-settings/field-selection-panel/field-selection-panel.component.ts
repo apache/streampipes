@@ -22,8 +22,8 @@ import {
     FieldConfig,
     SourceConfig,
 } from '@streampipes/platform-services';
-import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
-import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
+import { DataExplorerFieldProviderService } from '../../../../../services/data-explorer-field-provider-service';
+import { WidgetConfigurationService } from '../../../../../services/widget-configuration.service';
 
 @Component({
     selector: 'sp-field-selection-panel',

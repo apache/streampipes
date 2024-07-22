@@ -99,9 +99,12 @@ export class DataLakeUtils {
         // DataLakeUtils.addNewWidget();
         DataLakeUtils.selectDataSet(dataSet);
         DataLakeUtils.dataConfigSelectAllFields();
+
+        DataLakeUtils.selectAppearanceConfig();
+        DataLakeUtils.selectDataViewName(dataViewName);
+
         DataLakeUtils.openVisualizationConfig();
         DataLakeUtils.selectVisualizationType(widgetType);
-        DataLakeUtils.clickCreateButton();
 
         cy.wait(1000);
     }
@@ -132,29 +135,52 @@ export class DataLakeUtils {
         PrepareTestDataUtils.loadDataIntoDataLake('fileTest/random.csv');
     }
 
-    public static createAndEditDataView(name: string) {
+    public static createAndEditDashboard(name: string) {
         // Create new data view
-        cy.dataCy('open-new-data-view-dialog').click();
+        cy.dataCy('open-new-dashboard-dialog').click();
 
         // Configure data view
         cy.dataCy('data-view-name').type(name);
         cy.dataCy('save-data-view').click();
 
-        this.editDataView(name);
+        this.editDashboard(name);
     }
 
-    public static removeWidget(widgetName: string) {
-        cy.dataCy('remove-' + widgetName).click();
+    public static addDataViewToDashboard(dataViewName: string) {
+        this.selectTimeRange(
+            new Date(2020, 10, 20, 22, 44),
+            this.getFutureDate(),
+        );
+        cy.dataCy('add-data-view-btn-' + dataViewName).click();
+    }
+
+    public static createAndEditDataView(name: string) {
+        // Create new data view
+        cy.dataCy('open-new-data-view').click();
+    }
+
+    public static removeWidget(dataViewName: string) {
+        cy.dataCy('remove-' + dataViewName).click();
+    }
+
+    public static editDashboard(dashboardName: string) {
+        // Click edit button
+        // following only works if single view is available
+        cy.dataCy('edit-dashboard-' + dashboardName).click();
     }
 
     public static editDataView(dataViewName: string) {
         // Click edit button
         // following only works if single view is available
-        cy.dataCy('edit-dashboard-' + dataViewName).click();
+        cy.dataCy('edit-data-view-' + dataViewName).click();
     }
 
-    public static saveDataExplorerWidgetConfiguration() {
-        cy.dataCy('save-data-explorer-widget-btn', { timeout: 10000 }).click();
+    public static saveDataViewConfiguration() {
+        cy.dataCy('save-data-view-btn', { timeout: 10000 }).click();
+    }
+
+    public static saveDashboardConfiguration() {
+        cy.dataCy('save-dashboard-btn', { timeout: 10000 }).click();
     }
 
     public static editWidget(widgetName: string) {
@@ -167,10 +193,15 @@ export class DataLakeUtils {
     }
 
     public static saveAndReEditWidget(dataViewName: string) {
-        // Save configuration
-        DataLakeUtils.saveDataExplorerWidgetConfiguration();
-        DataLakeUtils.goBackToOverview();
+        // Save data view configuration
+        DataLakeUtils.saveDataViewConfiguration();
         DataLakeUtils.editDataView(dataViewName);
+    }
+
+    public static saveAndReEditDashboard(dashboardName: string) {
+        // Save dashboard configuration
+        DataLakeUtils.saveDashboardConfiguration();
+        DataLakeUtils.editDashboard(dashboardName);
     }
 
     public static clickTab(tabName: string) {
@@ -275,6 +306,10 @@ export class DataLakeUtils {
 
     public static selectAppearanceConfig() {
         cy.get('.mdc-tab__text-label').contains('Appearance').parent().click();
+    }
+
+    public static selectDataViewName(dataViewName: string) {
+        cy.dataCy('appearance-config-widget-title').clear().type(dataViewName);
     }
 
     public static clickCreateButton() {
