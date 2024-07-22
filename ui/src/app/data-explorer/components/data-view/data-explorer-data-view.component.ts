@@ -23,8 +23,11 @@ import {
     DataViewDataExplorerService,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { TimeSelectionService } from '../../services/time-selection.service';
+import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
+import { DialogService } from '@streampipes/shared-ui';
+import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
 
 @Component({
     selector: 'sp-data-explorer-data-view',
@@ -43,8 +46,10 @@ export class DataExplorerDataViewComponent implements OnInit {
     @ViewChild('panel', { static: false }) outerPanel: ElementRef;
 
     constructor(
+        private dialogService: DialogService,
+        private dashboardService: DataExplorerDashboardService,
         private route: ActivatedRoute,
-        private router: Router,
+        private routingService: DataExplorerRoutingService,
         private dataViewService: DataViewDataExplorerService,
         private timeSelectionService: TimeSelectionService,
     ) {}
@@ -54,21 +59,25 @@ export class DataExplorerDataViewComponent implements OnInit {
         this.editMode = this.route.snapshot.queryParams.editMode;
 
         if (dataViewId) {
-            this.dataViewService.getWidget(dataViewId).subscribe(res => {
-                this.dataView = res;
-                if (!this.dataView.timeSettings?.startTime) {
-                    this.timeSettings = this.makeDefaultTimeSettings();
-                } else {
-                    this.timeSettings = this.dataView
-                        .timeSettings as TimeSettings;
-                }
-                this.afterDataViewLoaded();
-            });
+            this.loadDataView(dataViewId);
         } else {
             this.createWidget();
             this.timeSettings = this.makeDefaultTimeSettings();
             this.afterDataViewLoaded();
         }
+    }
+
+    loadDataView(dataViewId: string): void {
+        this.dataViewLoaded = false;
+        this.dataViewService.getWidget(dataViewId).subscribe(res => {
+            this.dataView = res;
+            if (!this.dataView.timeSettings?.startTime) {
+                this.timeSettings = this.makeDefaultTimeSettings();
+            } else {
+                this.timeSettings = this.dataView.timeSettings as TimeSettings;
+            }
+            this.afterDataViewLoaded();
+        });
     }
 
     afterDataViewLoaded(): void {
@@ -79,6 +88,10 @@ export class DataExplorerDataViewComponent implements OnInit {
             this.gridsterItemComponent = { width, height };
             this.timeSelectionService.notify(this.timeSettings);
         });
+    }
+
+    editDataView(): void {
+        this.routingService.navigateToDataView(true, this.dataView.elementId);
     }
 
     makeDefaultTimeSettings(): TimeSettings {
@@ -105,16 +118,24 @@ export class DataExplorerDataViewComponent implements OnInit {
 
     saveDataView(): void {
         this.dataView.timeSettings = this.timeSettings;
-        const observable = this.editMode
-            ? this.dataViewService.updateWidget(this.dataView)
-            : this.dataViewService.saveWidget(this.dataView);
+        const observable =
+            this.dataView.elementId !== undefined
+                ? this.dataViewService.updateWidget(this.dataView)
+                : this.dataViewService.saveWidget(this.dataView);
         observable.subscribe(() => {
-            this.router.navigate(['dataexplorer']);
+            this.routingService.navigateToOverview();
         });
     }
 
     updateDateRange(timeSettings: TimeSettings) {
         this.timeSettings = timeSettings;
         this.timeSelectionService.notify(timeSettings);
+    }
+
+    downloadDataAsFile() {
+        this.dashboardService.downloadDataAsFile(
+            this.timeSettings,
+            this.dataView,
+        );
     }
 }

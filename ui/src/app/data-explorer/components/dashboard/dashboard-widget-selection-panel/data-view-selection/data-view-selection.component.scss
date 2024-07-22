@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,39 +16,6 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog.scss';
-
-.designer-panel-content {
-    padding: 0;
-    height: 100%;
-    overflow-y: hidden;
-    overflow-x: hidden;
-}
-
-.designer-panel-config {
-    padding: 0;
-}
-
-.designer-panel-title {
-    margin-left: 20px;
-    font-size: 12pt;
-    font-weight: bold;
-}
-
-.designer-panel-header {
-    border-bottom: 1px solid var(--color-tab-border);
-}
-
-.scroll-tab-content {
-    overflow-y: auto;
-    height: calc(100%);
-}
-
-.no-overflow {
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.new-widget-section {
-    border-top: 1px solid var(--color-bg-3);
+.m-10 {
+    margin: 10px;
 }

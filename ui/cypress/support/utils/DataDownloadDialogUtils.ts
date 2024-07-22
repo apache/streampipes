@@ -34,7 +34,7 @@ export class DataDownloadDialogUtils {
         DataLakeUtils.editDataView(dataViewName);
 
         // select download button
-        cy.dataCy('download-prepared_data-table').click();
+        cy.dataCy('data-view-data-download-btn').click();
 
         // download-customInterval, download-all, download-visible
         cy.dataCy(

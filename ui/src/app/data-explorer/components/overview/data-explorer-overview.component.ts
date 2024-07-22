@@ -28,7 +28,7 @@ import { SpDataExplorerRoutes } from '../../data-explorer.routes';
 import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
 import { SpDataExplorerDashboardOverviewComponent } from './data-explorer-dashboard-overview/data-explorer-dashboard-overview.component';
 import { SpDataExplorerOverviewDirective } from './data-explorer-overview.directive';
-import { Router } from '@angular/router';
+import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
 
 @Component({
     selector: 'sp-data-explorer-overview',
@@ -45,9 +45,9 @@ export class DataExplorerOverviewComponent extends SpDataExplorerOverviewDirecti
         private dataExplorerDashboardService: DataExplorerDashboardService,
         authService: AuthService,
         currentUserService: CurrentUserService,
-        router: Router,
+        routingService: DataExplorerRoutingService,
     ) {
-        super(dialogService, authService, currentUserService, router);
+        super(dialogService, authService, currentUserService, routingService);
     }
 
     afterInit(): void {
@@ -66,9 +66,7 @@ export class DataExplorerOverviewComponent extends SpDataExplorerOverviewDirecti
     }
 
     createNewDataView(): void {
-        this.router.navigate(['dataexplorer', 'data-view'], {
-            queryParams: { editMode: true },
-        });
+        this.routingService.navigateToDataView(true);
     }
 
     openDataViewModificationDialog(createMode: boolean, dashboard: Dashboard) {

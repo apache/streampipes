@@ -30,6 +30,7 @@
     >
         <sp-data-explorer-data-view-toolbar
             [timeSettings]="timeSettings"
+            (downloadFileEmitter)="downloadDataAsFile()"
             (updateDateRangeEmitter)="updateDateRange($event)"
             (saveDataViewEmitter)="saveDataView()"
             fxFlex="100"
@@ -59,12 +60,14 @@
                 <div #panel fxFlex="100" fxLayout="column">
                     <sp-data-explorer-dashboard-widget
                         *ngIf="dataView && gridsterItemComponent"
+                        [dataViewMode]="true"
                         [configuredWidget]="dataView"
                         [gridsterItemComponent]="gridsterItemComponent"
                         [timeSettings]="timeSettings"
                         [dataLakeMeasure]="
                             dataView.dataConfig.sourceConfigs[0].measure
                         "
+                        (startEditModeEmitter)="editDataView()"
                     >
                     </sp-data-explorer-dashboard-widget>
                 </div>

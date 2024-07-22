@@ -16,31 +16,17 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TimeSettings } from '@streampipes/platform-services';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
-    selector: 'sp-data-explorer-data-view-toolbar',
-    templateUrl: './data-explorer-data-view-toolbar.component.html',
+    selector: 'sp-data-explorer-dashboard-widget-selection-panel',
+    templateUrl: './dashboard-widget-selection-panel.component.html',
+    styleUrls: [
+        './dashboard-widget-selection-panel.component.scss',
+        '../../data-view/data-view-designer-panel/data-explorer-designer-panel.component.scss',
+    ],
 })
-export class DataExplorerDataViewToolbarComponent {
-    @Input()
-    editMode = true;
-
-    @Input()
-    timeSettings: TimeSettings;
-
-    timeRangeVisible = true;
-
+export class DataExplorerDashboardWidgetSelectionPanelComponent {
     @Output()
-    saveDataViewEmitter: EventEmitter<void> = new EventEmitter();
-
-    @Output()
-    discardDataViewEmitter: EventEmitter<void> = new EventEmitter();
-
-    @Output()
-    updateDateRangeEmitter: EventEmitter<TimeSettings> = new EventEmitter();
-
-    @Output()
-    downloadFileEmitter: EventEmitter<void> = new EventEmitter();
+    addDataViewEmitter: EventEmitter<string> = new EventEmitter<string>();
 }

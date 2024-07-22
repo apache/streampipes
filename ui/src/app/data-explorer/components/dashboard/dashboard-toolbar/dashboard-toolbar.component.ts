@@ -20,27 +20,44 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TimeSettings } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-data-explorer-data-view-toolbar',
-    templateUrl: './data-explorer-data-view-toolbar.component.html',
+    selector: 'sp-data-explorer-dashboard-toolbar',
+    templateUrl: './dashboard-toolbar.component.html',
+    styleUrls: ['./dashboard-toolbar.component.scss'],
 })
-export class DataExplorerDataViewToolbarComponent {
+export class DataExplorerDashboardToolbarComponent {
     @Input()
-    editMode = true;
+    editMode: boolean;
+
+    @Input()
+    viewMode: string;
+
+    @Input()
+    timeRangeVisible: boolean;
+
+    @Input()
+    hasDataExplorerWritePrivileges: boolean;
+
+    @Input()
+    hasDataExplorerDeletePrivileges: boolean;
 
     @Input()
     timeSettings: TimeSettings;
 
-    timeRangeVisible = true;
+    @Output()
+    viewModeChange: EventEmitter<string> = new EventEmitter<string>();
 
     @Output()
-    saveDataViewEmitter: EventEmitter<void> = new EventEmitter();
+    saveDashboardEmitter: EventEmitter<void> = new EventEmitter();
 
     @Output()
-    discardDataViewEmitter: EventEmitter<void> = new EventEmitter();
+    discardDashboardEmitter: EventEmitter<void> = new EventEmitter();
+
+    @Output()
+    deleteDashboardEmitter: EventEmitter<void> = new EventEmitter();
+
+    @Output()
+    triggerEditModeEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     @Output()
     updateDateRangeEmitter: EventEmitter<TimeSettings> = new EventEmitter();
-
-    @Output()
-    downloadFileEmitter: EventEmitter<void> = new EventEmitter();
 }

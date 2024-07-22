@@ -27,7 +27,7 @@ import {
     DataExplorerWidgetModel,
     DataLakeMeasure,
 } from '@streampipes/platform-services';
-import { Tuple2 } from '../../../core-model/base/Tuple2';
+import { Tuple2 } from '../../../../core-model/base/Tuple2';
 import { DataExplorerWidgetDataSettingsComponent } from './data-settings/data-explorer-widget-data-settings.component';
 
 @Component({

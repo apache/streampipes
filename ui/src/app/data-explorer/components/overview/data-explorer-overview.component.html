@@ -28,7 +28,7 @@
             mat-button
             mat-raised-button
             color="accent"
-            data-cy="open-new-data-view-dialog"
+            data-cy="open-new-dashboard-dialog"
             (click)="openNewDashboardDialog()"
             class="mr-10"
             *ngIf="hasDataExplorerWritePrivileges"
@@ -40,6 +40,7 @@
             mat-button
             mat-raised-button
             color="accent"
+            data-cy="open-new-data-view"
             (click)="createNewDataView()"
             class="mr-10"
             *ngIf="hasDataExplorerWritePrivileges"
