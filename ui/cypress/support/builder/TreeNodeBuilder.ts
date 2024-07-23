@@ -32,7 +32,10 @@ export class TreeNodeBuilder {
         return this;
     }
 
-    static create(name: string, ...children: TreeNodeBuilder[]): TreeNodeBuilder {
+    static create(
+        name: string,
+        ...children: TreeNodeBuilder[]
+    ): TreeNodeBuilder {
         const builder = new TreeNodeBuilder(name);
         if (children.length > 0) {
             builder.addChildren(...children);

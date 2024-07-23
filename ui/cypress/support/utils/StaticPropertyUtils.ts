@@ -45,7 +45,7 @@ export class StaticPropertyUtils {
             } else if (config.type === 'slider') {
                 cy.dataCy(config.selector).type(config.value);
             } else if (config.type === 'tree') {
-               this.handleTreeNode(config.treeNode);
+                this.handleTreeNode(config.treeNode);
             } else {
                 cy.dataCy(config.selector).type(config.value);
             }

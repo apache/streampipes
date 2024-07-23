@@ -63,16 +63,18 @@ const getAdapterBuilder = (pullMode: boolean) => {
         );
 
     builder.addTreeNode(
-        TreeNodeBuilder.create('Objects',
-            TreeNodeBuilder.create('OpcPlc',
-                TreeNodeBuilder.create('Telemetry',
-                    TreeNodeBuilder.create('Basic')
-                        .addChildren(
-                            TreeNodeBuilder.create('AlternatingBoolean'),
-                            TreeNodeBuilder.create('StepUp'),
-                            TreeNodeBuilder.create('RandomSignedInt32'),
-                            TreeNodeBuilder.create('RandomUnsignedInt32'),
-                        ),
+        TreeNodeBuilder.create(
+            'Objects',
+            TreeNodeBuilder.create(
+                'OpcPlc',
+                TreeNodeBuilder.create(
+                    'Telemetry',
+                    TreeNodeBuilder.create('Basic').addChildren(
+                        TreeNodeBuilder.create('AlternatingBoolean'),
+                        TreeNodeBuilder.create('StepUp'),
+                        TreeNodeBuilder.create('RandomSignedInt32'),
+                        TreeNodeBuilder.create('RandomUnsignedInt32'),
+                    ),
                     // TreeNodeBuilder.create('Anomaly')
                     //     .addChildren(
                     //         TreeNodeBuilder.create('DipData'),
@@ -80,9 +82,10 @@ const getAdapterBuilder = (pullMode: boolean) => {
                     //         TreeNodeBuilder.create('PositiveTrendData'),
                     //         TreeNodeBuilder.create('SpikeData'),
                     //     ),
-                )
+                ),
             ),
-        ));
+        ),
+    );
 
     builder.setAutoAddTimestampPropery();
 
