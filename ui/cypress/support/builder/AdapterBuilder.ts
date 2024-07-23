@@ -92,7 +92,7 @@ export class AdapterBuilder {
     }
 
     public setFormat(
-        format: 'csv' | 'json' | 'json_array' | 'json_object' | 'xml',
+        format: 'csv' | 'json' | 'json_array' | 'xml',
     ) {
         this.adapterInput.format = format;
         return this;

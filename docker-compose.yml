@@ -135,6 +135,12 @@ services:
     networks:
       spnet:
 
+  mosquitto:
+    image: eclipse-mosquitto:1.5.4
+    logging: *default-logging
+    networks:
+      spnet:
+
 volumes:
   kafka:
   files:
