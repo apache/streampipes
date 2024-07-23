@@ -23,7 +23,7 @@
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "lint-staged": "lint-staged",
-    "test-cypress-open": "cypress open",
+    "test-cypress-open": "cypress open --env DEVELOPMENT=true",
     "test-cypress-smoke": "npx cypress run --spec 'cypress/tests/**/*.smoke.spec.ts'",
     "test-cypress-all": "npx cypress run --spec 'cypress/tests/**/*.spec.ts'",
     "prepare": "cd ../ && husky install ./ui/.husky"

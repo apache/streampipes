@@ -135,6 +135,12 @@ services:
     networks:
       spnet:
 
+  opcua:
+    image: mcr.microsoft.com/iotedge/opc-plc
+    logging: *default-logging
+    networks:
+      spnet:
+
 volumes:
   kafka:
   files:
