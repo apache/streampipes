@@ -16,10 +16,10 @@
  *
  */
 
-import { GenericAdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { ThirdPartyIntegrationUtils } from '../../support/utils/ThirdPartyIntegrationUtils';
 import { PipelineElementInput } from '../../support/model/PipelineElementInput';
+import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ParameterUtils } from '../../support/utils/ParameterUtils';
 
 describe('Test MQTT Integration', () => {
@@ -29,22 +29,24 @@ describe('Test MQTT Integration', () => {
 
     it('Perform Test', () => {
         const topicName = 'cypresstopic';
-        const host: string = ParameterUtils.get('localhost', 'activemq');
+        const host: string = ParameterUtils.get('localhost', 'mosquitto');
+        const port: string = ParameterUtils.get('1884', '1883');
 
         const sink: PipelineElementInput = PipelineElementBuilder.create(
             'mqtt_publisher',
         )
             .addInput('input', 'host', host)
             .addInput('input', 'topic', topicName)
+            .addInput('input', 'port', port)
             .build();
 
-        const adapter = GenericAdapterBuilder.create('MQTT')
+        const adapter = AdapterBuilder.create('MQTT')
             .setName('Adapter Mqtt')
             .setTimestampProperty('timestamp')
-            .addProtocolInput('select', 'access-mode-unauthenticated', 'check')
-            .addProtocolInput('input', 'broker_url', 'tcp://' + host + ':1883')
+            .addProtocolInput('radio', 'access-mode-unauthenticated', '')
+            .addProtocolInput('input', 'broker_url', `tcp://${host}:${port}`)
             .addProtocolInput('input', 'topic', topicName)
-            .setFormat('json_object')
+            .setFormat('json')
             .build();
 
         ThirdPartyIntegrationUtils.runTest(sink, adapter);

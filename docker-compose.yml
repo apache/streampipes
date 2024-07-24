@@ -135,10 +135,18 @@ services:
     networks:
       spnet:
 
+
+  mosquitto:
+    image: eclipse-mosquitto:1.5.4
+    logging: *default-logging
+    networks:
+      spnet:
+
   opcua:
     image: mcr.microsoft.com/iotedge/opc-plc
     logging: *default-logging
     command: --ut=true
+    logging: *default-logging
     networks:
       spnet:
 
