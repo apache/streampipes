@@ -19,6 +19,7 @@
 import { UserInput } from '../model/UserInput';
 import { UserInputType } from '../model/UserInputType';
 import { AdapterInput } from '../model/AdapterInput';
+import { TreeNodeBuilder } from './TreeNodeBuilder';
 
 export class AdapterBuilder {
     adapterInput: AdapterInput;
@@ -41,7 +42,6 @@ export class AdapterBuilder {
 
     public setTimestampProperty(timestsmpProperty: string) {
         this.adapterInput.timestampProperty = timestsmpProperty;
-        this.adapterInput.autoAddTimestamp;
         return this;
     }
 
@@ -65,6 +65,16 @@ export class AdapterBuilder {
         userInput.type = type;
         userInput.selector = selector;
         userInput.value = value;
+
+        this.adapterInput.adapterConfiguration.push(userInput);
+
+        return this;
+    }
+
+    public addTreeNode(treeNode: TreeNodeBuilder) {
+        const userInput = new UserInput();
+        userInput.type = 'tree';
+        userInput.treeNode = treeNode.build();
 
         this.adapterInput.adapterConfiguration.push(userInput);
 
