@@ -67,17 +67,6 @@ export abstract class AbstractWidgetViewDirective {
         protected widgetRegistryService: DataExplorerWidgetRegistry,
     ) {}
 
-    updateAllWidgets() {
-        this.configuredWidgets.forEach((value, key) => {
-            this.dataViewDataExplorerService
-                .updateWidget(value)
-                .subscribe(response => {
-                    value.rev = response._rev;
-                    this.currentlyConfiguredWidgetId = undefined;
-                });
-        });
-    }
-
     startEditMode(value: DataExplorerWidgetModel) {
         this.startEditModeEmitter.emit(value);
         this.currentlyConfiguredWidgetId = value.elementId;
@@ -142,8 +131,6 @@ export abstract class AbstractWidgetViewDirective {
     propagateItemRemoval(widget: DataExplorerWidgetModel) {
         this.deleteCallback.emit(widget);
     }
-
-    propagateItemUpdate(dashboardWidget: DataExplorerWidgetModel) {}
 
     propagateWidgetSelection(configuredWidget: DataExplorerWidgetModel) {
         if (configuredWidget) {

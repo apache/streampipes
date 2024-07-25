@@ -19,7 +19,8 @@
 export interface TimeSettings {
     startTime: number;
     endTime: number;
-    dynamicSelection: 15 | 60 | 1440 | 10080 | 43800 | 525600 | -1;
+    // deprecated
+    dynamicSelection?: 15 | 60 | 1440 | 10080 | 43800 | 525600 | -1;
     timeSelectionId?: TimeSelectionId;
 }
 

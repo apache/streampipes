@@ -137,16 +137,27 @@ export class TimeSelectionService {
         };
     }
 
+    public updateTimeSettings(timeSettings: TimeSettings, now: Date): void {
+        if (timeSettings.timeSelectionId !== TimeSelectionId.CUSTOM) {
+            const updatedTimeSettings = this.getTimeSettings(
+                timeSettings.timeSelectionId,
+                now,
+            );
+            timeSettings.startTime = updatedTimeSettings.startTime;
+            timeSettings.endTime = updatedTimeSettings.endTime;
+        }
+    }
+
     public getTimeSelection(timeSelectionId: TimeSelectionId) {
         return this.quickTimeSelections.find(
             s => s.timeSelectionId === timeSelectionId,
         );
     }
 
-    public timeSelectionChangeSubject: Subject<TimeSettings> =
-        new Subject<TimeSettings>();
+    public timeSelectionChangeSubject: Subject<TimeSettings | undefined> =
+        new Subject<TimeSettings | undefined>();
 
-    public notify(timeSettings: TimeSettings): void {
+    public notify(timeSettings?: TimeSettings): void {
         this.timeSelectionChangeSubject.next(timeSettings);
     }
 }

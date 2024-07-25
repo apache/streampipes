@@ -208,7 +208,14 @@ export abstract class BaseDataExplorerWidgetDirective<
         this.timeSelectionSub =
             this.timeSelectionService.timeSelectionChangeSubject.subscribe(
                 ts => {
-                    this.timeSettings = ts;
+                    if (ts) {
+                        this.timeSettings = ts;
+                    } else {
+                        this.timeSelectionService.updateTimeSettings(
+                            this.timeSettings,
+                            new Date(),
+                        );
+                    }
                     this.updateData();
                 },
             );
@@ -226,10 +233,6 @@ export abstract class BaseDataExplorerWidgetDirective<
         }
         this.timeSelectionSub.unsubscribe();
         this.requestQueue$.unsubscribe();
-    }
-
-    public removeWidget() {
-        this.removeWidgetCallback.emit(true);
     }
 
     public setShownComponents(

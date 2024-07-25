@@ -47,8 +47,7 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
 
     ngOnInit(): void {
         this.initializeDateRange();
-        this.updateTimeStrings();
-        this.updateDateStrings();
+        this.triggerDisplayUpdate();
         this.dateSelectionComplete = true;
     }
 
@@ -57,6 +56,11 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
             new Date(this.timeSettings.startTime),
             new Date(this.timeSettings.endTime),
         );
+    }
+
+    triggerDisplayUpdate() {
+        this.updateDateStrings();
+        this.updateTimeStrings();
     }
 
     updateTimeStrings(): void {

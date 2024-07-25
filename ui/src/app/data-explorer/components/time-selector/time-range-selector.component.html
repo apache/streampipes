@@ -16,50 +16,64 @@
   ~
   -->
 
-<div fxFlex fxLayoutAlign="center center">
-    <button mat-icon-button color="accent" (click)="applyPreviousInterval()">
-        <i class="material-icons">navigate_before</i>
-    </button>
-    <button
-        mat-button
-        color="accent"
-        [matMenuTriggerFor]="menu"
-        #menuTrigger="matMenuTrigger"
-        matTooltip="Modify time"
-        data-cy="time-selector-menu"
-        (menuClosed)="menuTrigger.closeMenu()"
-    >
-        <div *ngIf="timeStringMode === 'advanced'">
-            <div class="formatted-datetime">
-                <span class="formatted-date">{{ timeString.startDate }}</span
-                >&nbsp;
-                <span class="formatted-time">{{ timeString.startTime }}</span>
-            </div>
-            -
-            <div class="formatted-datetime">
-                <span class="formatted-date">{{ timeString.endDate }}</span
-                >&nbsp;
-                <span class="formatted-time">{{ timeString.endTime }}</span>
-            </div>
-        </div>
-        <div class="formatted-datetime" *ngIf="timeStringMode === 'simple'">
-            {{ simpleTimeString }}
-        </div>
-    </button>
-    <button mat-icon-button color="accent" (click)="applyNextInterval()">
-        <i class="material-icons">navigate_next</i>
-    </button>
-
-    <mat-menu #menu="matMenu" fxFlex="100" class="large-menu">
-        <sp-time-selector-menu
-            [timeSettings]="timeSettings"
-            (timeSettingsEmitter)="applyCurrentDateRange($event)"
-            class="w-100"
+<div fxLayout="row">
+    <div fxFlex fxLayoutAlign="center center" *ngIf="showTimeSelector">
+        <button
+            mat-icon-button
+            color="accent"
+            (click)="applyPreviousInterval()"
         >
-        </sp-time-selector-menu>
-    </mat-menu>
+            <i class="material-icons">navigate_before</i>
+        </button>
+        <button
+            mat-button
+            color="accent"
+            [matMenuTriggerFor]="menu"
+            #menuTrigger="matMenuTrigger"
+            matTooltip="Modify time"
+            data-cy="time-selector-menu"
+            (menuClosed)="menuTrigger.closeMenu()"
+        >
+            <div *ngIf="timeStringMode === 'advanced'">
+                <div class="formatted-datetime">
+                    <span class="formatted-date">{{
+                        timeString.startDate
+                    }}</span
+                    >&nbsp;
+                    <span class="formatted-time">{{
+                        timeString.startTime
+                    }}</span>
+                </div>
+                -
+                <div class="formatted-datetime">
+                    <span class="formatted-date">{{ timeString.endDate }}</span
+                    >&nbsp;
+                    <span class="formatted-time">{{ timeString.endTime }}</span>
+                </div>
+            </div>
+            <div class="formatted-datetime" *ngIf="timeStringMode === 'simple'">
+                {{ simpleTimeString }}
+            </div>
+        </button>
+        <button mat-icon-button color="accent" (click)="applyNextInterval()">
+            <i class="material-icons">navigate_next</i>
+        </button>
 
-    <button mat-icon-button color="accent" (click)="refreshData()">
+        <mat-menu #menu="matMenu" fxFlex="100" class="large-menu">
+            <sp-time-selector-menu
+                #timeSelectorMenu
+                [timeSettings]="timeSettings"
+                (timeSettingsEmitter)="applyCurrentDateRange($event)"
+                class="w-100"
+            >
+            </sp-time-selector-menu>
+        </mat-menu>
+    </div>
+    <button
+        mat-icon-button
+        color="accent"
+        (click)="updateTimeSettingsAndReload()"
+    >
         <i class="material-icons">autorenew</i>
     </button>
 </div>

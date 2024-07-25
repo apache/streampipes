@@ -34,6 +34,7 @@ import {
 } from '@streampipes/platform-services';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { TimeSelectionService } from '../../services/time-selection.service';
+import { TimeRangeSelectorMenuComponent } from './time-selector-menu/time-selector-menu.component';
 
 @Component({
     selector: 'sp-time-range-selector',
@@ -43,11 +44,16 @@ import { TimeSelectionService } from '../../services/time-selection.service';
 })
 export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
+    @ViewChild('timeSelectorMenu')
+    timeSelectorMenu: TimeRangeSelectorMenuComponent;
 
     @Output() dateRangeEmitter = new EventEmitter<TimeSettings>();
 
     @Input()
     timeSettings: TimeSettings;
+
+    @Input()
+    showTimeSelector = true;
 
     simpleTimeString: string = '';
     timeString: TimeString;
@@ -87,22 +93,18 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
         this.dateRangeEmitter.emit(this.timeSettings);
     }
 
-    refreshData() {
-        const difference =
-            this.timeSettings.endTime - this.timeSettings.startTime;
-
-        const current = new Date().getTime();
-        this.timeSettings = {
-            startTime: current - difference,
-            endTime: current,
-            dynamicSelection: this.timeSettings.dynamicSelection,
-            timeSelectionId: this.timeSettings.timeSelectionId,
-        };
-
+    updateTimeSettingsAndReload() {
+        this.timeSelectionService.updateTimeSettings(
+            this.timeSettings,
+            new Date(),
+        );
+        if (this.showTimeSelector) {
+            this.timeSelectorMenu.triggerDisplayUpdate();
+        }
         this.reloadData();
     }
 
-    private changeTimeByInterval(func) {
+    private changeTimeByInterval(func: (a: number, b: number) => number) {
         const difference =
             this.timeSettings.endTime - this.timeSettings.startTime;
         const newStartTime = func(this.timeSettings.startTime, difference);
@@ -111,7 +113,7 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
         this.timeSettings.startTime = newStartTime;
         this.timeSettings.endTime = newEndTime;
         this.timeSettings.timeSelectionId = TimeSelectionId.CUSTOM;
-        this.createDateString();
+        this.timeSelectorMenu.triggerDisplayUpdate();
         this.reloadData();
     }
 

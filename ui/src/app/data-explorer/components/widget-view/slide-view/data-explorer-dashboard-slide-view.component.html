@@ -53,6 +53,9 @@
                         height: gridsterItemComponent.height - 15 + 'px'
                     }"
                     [timeSettings]="timeSettings"
+                    [globalTimeEnabled]="
+                        dashboard.dashboardGeneralSettings.globalTimeEnabled
+                    "
                     (deleteCallback)="propagateItemRemoval($event)"
                     (startEditModeEmitter)="startEditMode($event)"
                     [dashboardItem]="currentDashboardItem"

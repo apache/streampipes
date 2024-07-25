@@ -62,8 +62,12 @@ export class TimeRangeSelectorMenuComponent implements OnInit {
         this.timeSettings.startTime = selectedDateRange.startDate.getTime();
         this.timeSettings.endTime = selectedDateRange.endDate.getTime();
         this.timeRangeSelection.initializeDateRange();
-        this.timeRangeSelection.updateTimeStrings();
-        this.timeRangeSelection.updateDateStrings();
+        this.triggerDisplayUpdate();
         this.timeSettingsEmitter.emit(this.timeSettings);
+    }
+
+    triggerDisplayUpdate(): void {
+        this.timeRangeSelection.initializeDateRange();
+        this.timeRangeSelection.triggerDisplayUpdate();
     }
 }

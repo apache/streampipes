@@ -30,6 +30,9 @@
             <sp-data-explorer-dashboard-widget
                 [ngStyle]="{ height: gridsterItemComponent.height - 13 + 'px' }"
                 [timeSettings]="timeSettings"
+                [globalTimeEnabled]="
+                    dashboard.dashboardGeneralSettings.globalTimeEnabled
+                "
                 (deleteCallback)="propagateItemRemoval($event)"
                 (startEditModeEmitter)="startEditMode($event)"
                 [dashboardItem]="item"
