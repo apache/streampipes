@@ -26,7 +26,6 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { TimeSelectionService } from '../../services/time-selection.service';
 import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
-import { DialogService } from '@streampipes/shared-ui';
 import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
 
 @Component({
@@ -46,7 +45,6 @@ export class DataExplorerDataViewComponent implements OnInit {
     @ViewChild('panel', { static: false }) outerPanel: ElementRef;
 
     constructor(
-        private dialogService: DialogService,
         private dashboardService: DataExplorerDashboardService,
         private route: ActivatedRoute,
         private routingService: DataExplorerRoutingService,
@@ -95,11 +93,7 @@ export class DataExplorerDataViewComponent implements OnInit {
     }
 
     makeDefaultTimeSettings(): TimeSettings {
-        return {
-            dynamicSelection: 1440,
-            endTime: new Date().getTime(),
-            startTime: new Date().getTime() - 1000 * 24 * 60 * 60,
-        };
+        return this.timeSelectionService.getDefaultTimeSettings();
     }
 
     createWidget() {

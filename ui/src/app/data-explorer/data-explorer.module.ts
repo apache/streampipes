@@ -23,7 +23,11 @@ import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+    DefaultMatCalendarRangeStrategy,
+    MatDatepickerModule,
+    MatRangeDateSelectionModel,
+} from '@angular/material/datepicker';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSliderModule } from '@angular/material/slider';
@@ -39,7 +43,7 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { DataExplorerDashboardGridComponent } from './components/widget-view/grid-view/data-explorer-dashboard-grid.component';
 import { DataExplorerOverviewComponent } from './components/overview/data-explorer-overview.component';
 import { DataExplorerDashboardPanelComponent } from './components/dashboard/data-explorer-dashboard-panel.component';
-import { TimeRangeSelectorComponent } from './components/time-selector/timeRangeSelector.component';
+import { TimeRangeSelectorComponent } from './components/time-selector/time-range-selector.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
 import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
@@ -48,7 +52,7 @@ import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-s
 import { NoDataInDateRangeComponent } from './components/widgets/utils/no-data/no-data-in-date-range.component';
 import { SelectPropertiesComponent } from './components/widgets/utils/select-properties/select-properties.component';
 import { SelectColorPropertiesComponent } from './components/widgets/utils/select-color-properties/select-color-properties.component';
-import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
+import { DataExplorerEditDashboardDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-dashboard-dialog.component';
 import { GroupConfigurationComponent } from './components/widgets/utils/group-configuration/group-configuration.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DataExplorerDesignerPanelComponent } from './components/data-view/data-view-designer-panel/data-explorer-designer-panel.component';
@@ -121,6 +125,8 @@ import { DataExplorerDataViewSelectionComponent } from './components/dashboard/d
 import { DataExplorerDashboardWidgetSelectionPanelComponent } from './components/dashboard/dashboard-widget-selection-panel/dashboard-widget-selection-panel.component';
 import { DataExplorerDataViewPreviewComponent } from './components/dashboard/dashboard-widget-selection-panel/data-view-selection/data-view-preview/data-view-preview.component';
 import { DataExplorerDashboardToolbarComponent } from './components/dashboard/dashboard-toolbar/dashboard-toolbar.component';
+import { TimeRangeSelectorMenuComponent } from './components/time-selector/time-selector-menu/time-selector-menu.component';
+import { CustomTimeRangeSelectionComponent } from './components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
 
 @NgModule({
     imports: [
@@ -201,6 +207,7 @@ import { DataExplorerDashboardToolbarComponent } from './components/dashboard/da
     ],
     declarations: [
         AggregateConfigurationComponent,
+        CustomTimeRangeSelectionComponent,
         DataExplorerDashboardGridComponent,
         DataExplorerOverviewComponent,
         DataExplorerDashboardPanelComponent,
@@ -211,7 +218,7 @@ import { DataExplorerDashboardToolbarComponent } from './components/dashboard/da
         DataExplorerDataViewPreviewComponent,
         DataExplorerDataViewSelectionComponent,
         DataExplorerDesignerPanelComponent,
-        DataExplorerEditDataViewDialogComponent,
+        DataExplorerEditDashboardDialogComponent,
         DataExplorerWidgetAppearanceSettingsComponent,
         DataExplorerWidgetDataSettingsComponent,
         DataExplorerDataViewComponent,
@@ -239,6 +246,7 @@ import { DataExplorerDashboardToolbarComponent } from './components/dashboard/da
         HeatmapWidgetConfigComponent,
         ImageViewerComponent,
         TimeRangeSelectorComponent,
+        TimeRangeSelectorMenuComponent,
         DataExplorerVisualisationSettingsComponent,
         GroupSelectionPanelComponent,
         DataExplorerVisualisationSettingsComponent,
@@ -260,7 +268,7 @@ import { DataExplorerDashboardToolbarComponent } from './components/dashboard/da
         SpTimeSeriesAppearanceConfigComponent,
         SpDataZoomConfigComponent,
     ],
-    providers: [],
+    providers: [DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel],
     exports: [],
 })
 export class DataExplorerModule {

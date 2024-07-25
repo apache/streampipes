@@ -82,9 +82,9 @@ export class SpDataExplorerDashboardOverviewComponent extends SpDataExplorerOver
         });
     }
 
-    openEditDataViewDialog(dashboard: Dashboard) {
+    openEditDashboardDialog(dashboard: Dashboard) {
         const dialogRef =
-            this.dataExplorerDashboardService.openDataViewModificationDialog(
+            this.dataExplorerDashboardService.openDashboardModificationDialog(
                 false,
                 dashboard,
             );

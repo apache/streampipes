@@ -23,6 +23,9 @@
 >
     <div nav fxFlex="100" class="ml-10">
         <sp-data-explorer-dashboard-toolbar
+            [globalTimeEnabled]="
+                dashboard.dashboardGeneralSettings.globalTimeEnabled
+            "
             [editMode]="editMode"
             [(viewMode)]="viewMode"
             [hasDataExplorerDeletePrivileges]="hasDataExplorerDeletePrivileges"

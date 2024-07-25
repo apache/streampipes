@@ -78,9 +78,9 @@
     fxLayout="row"
 >
     <sp-time-range-selector
-        *ngIf="editMode || timeRangeVisible"
+        *ngIf="(editMode || timeRangeVisible) && globalTimeEnabled"
         (dateRangeEmitter)="updateDateRangeEmitter.emit($event)"
-        [dateRange]="timeSettings"
+        [timeSettings]="timeSettings"
     >
     </sp-time-range-selector>
 

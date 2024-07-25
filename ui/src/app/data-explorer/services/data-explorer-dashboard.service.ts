@@ -24,7 +24,7 @@ import {
     DateRange,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { DataExplorerEditDataViewDialogComponent } from '../dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
+import { DataExplorerEditDashboardDialogComponent } from '../dialogs/edit-dashboard/data-explorer-edit-dashboard-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { DataDownloadDialogComponent } from '../../core-ui/data-download-dialog/data-download-dialog.component';
 
@@ -32,13 +32,13 @@ import { DataDownloadDialogComponent } from '../../core-ui/data-download-dialog/
 export class DataExplorerDashboardService {
     constructor(private dialogService: DialogService) {}
 
-    openDataViewModificationDialog(createMode: boolean, dashboard: Dashboard) {
+    openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
         return this.dialogService.open(
-            DataExplorerEditDataViewDialogComponent,
+            DataExplorerEditDashboardDialogComponent,
             {
-                panelType: PanelType.STANDARD_PANEL,
-                title: createMode ? 'New Data View' : 'Edit Data View',
-                width: '70vw',
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: createMode ? 'New Dashboard' : 'Edit Dashboard',
+                width: '60vw',
                 data: {
                     createMode: createMode,
                     dashboard: dashboard,

@@ -51,7 +51,9 @@ export class TableWidgetComponent
     }
 
     regenerateColumnNames(): void {
-        this.groupByColumnNames = this.makeGroupByColumns();
+        this.groupByColumnNames = this.makeGroupByColumns(
+            this.dataExplorerWidget.visualizationConfig.selectedColumns,
+        );
         this.columnNames = ['time'].concat(
             this.dataExplorerWidget.visualizationConfig.selectedColumns.map(
                 c => c.fullDbName,
@@ -60,10 +62,16 @@ export class TableWidgetComponent
         );
     }
 
-    makeGroupByColumns(): string[] {
+    makeGroupByColumns(selectedColumns: DataExplorerField[]): string[] {
         return this.dataExplorerWidget.dataConfig.sourceConfigs.flatMap(sc => {
             return sc.queryConfig.groupBy
                 .filter(g => g.selected)
+                .filter(
+                    g =>
+                        selectedColumns.find(
+                            column => column.runtimeName === g.runtimeName,
+                        ) === undefined,
+                )
                 .map(g => g.runtimeName);
         });
     }

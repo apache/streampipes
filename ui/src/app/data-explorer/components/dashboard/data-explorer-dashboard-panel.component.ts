@@ -179,10 +179,8 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     }
 
     getDashboard(dashboardId: string, startTime: number, endTime: number) {
-        this.dataViewService.getDataViews().subscribe(data => {
-            this.dashboard = data.filter(
-                dashboard => dashboard.elementId === dashboardId,
-            )[0];
+        this.dataViewService.getDashboard(dashboardId).subscribe(dashboard => {
+            this.dashboard = dashboard;
             this.breadcrumbService.updateBreadcrumb(
                 this.breadcrumbService.makeRoute(
                     [SpDataExplorerRoutes.BASE],
@@ -192,6 +190,13 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
             this.viewMode =
                 this.dashboard.dashboardGeneralSettings.defaultViewMode ||
                 'grid';
+            if (
+                this.dashboard.dashboardGeneralSettings.globalTimeEnabled ===
+                undefined
+            ) {
+                this.dashboard.dashboardGeneralSettings.globalTimeEnabled =
+                    true;
+            }
             this.timeSettings =
                 startTime && endTime
                     ? this.overrideTime(+startTime, +endTime)

@@ -18,28 +18,34 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import {
-    DataViewDataExplorerService,
     Dashboard,
+    DataViewDataExplorerService,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
-    selector: 'sp-data-explorer-edit-data-view-dialog-component',
-    templateUrl: './data-explorer-edit-data-view-dialog.component.html',
-    styleUrls: ['./data-explorer-edit-data-view-dialog.component.scss'],
+    selector: 'sp-data-explorer-edit-dashboard-dialog-component',
+    templateUrl: './data-explorer-edit-dashboard-dialog.component.html',
+    styleUrls: ['./data-explorer-edit-dashboard-dialog.component.scss'],
 })
-export class DataExplorerEditDataViewDialogComponent implements OnInit {
+export class DataExplorerEditDashboardDialogComponent implements OnInit {
     @Input() createMode: boolean;
     @Input() dashboard: Dashboard;
 
     constructor(
-        private dialogRef: DialogRef<DataExplorerEditDataViewDialogComponent>,
+        private dialogRef: DialogRef<DataExplorerEditDashboardDialogComponent>,
         private dashboardService: DataViewDataExplorerService,
     ) {}
 
     ngOnInit() {
         if (!this.dashboard.dashboardGeneralSettings.defaultViewMode) {
             this.dashboard.dashboardGeneralSettings.defaultViewMode = 'grid';
+        }
+        if (
+            this.dashboard.dashboardGeneralSettings.globalTimeEnabled ===
+            undefined
+        ) {
+            this.dashboard.dashboardGeneralSettings.globalTimeEnabled = true;
         }
     }
 
