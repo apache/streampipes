@@ -65,7 +65,7 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
     }
 
     formatTime(date: Date): string {
-        return date.toLocaleTimeString(); //.slice(0, 5);
+        return date.toTimeString().slice(0, 8);
     }
 
     updateDateStrings(): void {

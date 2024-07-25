@@ -119,7 +119,7 @@ function getLocalizedDateString(date: Date) {
 }
 
 function getLocalizedTimeString(date: Date) {
-    return date.toLocaleTimeString();
+    return date.toLocaleTimeString().slice(0, 8);
 }
 
 function parseTimeStringToSeconds(timeString: string) {
