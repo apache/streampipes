@@ -93,6 +93,7 @@
                             class="material-icons pr-5 icon-button"
                             *ngIf="node.dataNode && !isNodeSelected(node)"
                             (click)="addNode(node)"
+                            [attr.data-cy]="'select-' + node.nodeName"
                             matTooltip="Add node"
                             >add_circle</i
                         >
@@ -133,7 +134,7 @@
                         <button
                             mat-icon-button
                             matTreeNodeToggle
-                            [attr.data-cy]="'button-' + node.nodeName"
+                            [attr.data-cy]="'expand-' + node.nodeName"
                             [attr.aria-label]="'Toggle ' + node.nodeName"
                             (click)="
                                 loadChildren(node, treeControl.isExpanded(node))

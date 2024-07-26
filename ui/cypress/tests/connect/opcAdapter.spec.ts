@@ -19,25 +19,20 @@
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ParameterUtils } from '../../support/utils/ParameterUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
+import { TreeNodeBuilder } from '../../support/builder/TreeNodeBuilder';
 
 describe('Test OPC-UA Adapter Pull Mode', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
     });
 
-    it('Perform Test', () => {
+    it('Test OPC-UA Adapter Pull Mode', () => {
         const adapterInput = getAdapterBuilder(true);
 
         ConnectUtils.testAdapter(adapterInput);
     });
-});
 
-describe('Test OPC-UA Adapter Subscription Mode', () => {
-    beforeEach('Setup Test', () => {
-        cy.initStreamPipesTest();
-    });
-
-    it('Perform Test', () => {
+    it('Test OPC-UA Adapter Subscription Mode', () => {
         const adapterInput = getAdapterBuilder(false);
 
         ConnectUtils.testAdapter(adapterInput);
@@ -52,26 +47,47 @@ const getAdapterBuilder = (pullMode: boolean) => {
     );
 
     if (pullMode) {
-        builder.addInput('select', 'adapter_type-pull_mode', 'check');
+        builder.addInput('radio', 'adapter_type-pull_mode', '');
         builder.addInput('input', 'undefined-PULLING_INTERVAL-0', '1000');
     } else {
-        builder.addInput('select', 'adapter_type-subscription_mode', 'check');
+        builder.addInput('radio', 'adapter_type-subscription_mode', '');
     }
+
     builder
-        .addInput('select', 'access_mode-none', 'check')
-        .addInput('select', 'opc_host_or_url-url', 'check')
+        .addInput('radio', 'access_mode-none', '')
+        .addInput('radio', 'opc_host_or_url-url', '')
         .addInput(
             'input',
             'undefined-OPC_SERVER_URL-0',
             'opc.tcp://' + host + ':50000',
-        )
-        .addInput('input', 'NAMESPACE_INDEX', '2')
-        .addInput('input', 'NODE_ID', 'Telemetry')
+        );
 
-        .addInput('button', 'button-Telemetry')
-        .addInput('button', 'button-Anomaly')
-        .addInput('checkbox', 'DipData', 'check')
-        .addInput('checkbox', 'NegativeTrendData', 'check');
+    builder.addTreeNode(
+        TreeNodeBuilder.create(
+            'Objects',
+            TreeNodeBuilder.create(
+                'OpcPlc',
+                TreeNodeBuilder.create(
+                    'Telemetry',
+                    TreeNodeBuilder.create('Basic').addChildren(
+                        TreeNodeBuilder.create('AlternatingBoolean'),
+                        TreeNodeBuilder.create('StepUp'),
+                        TreeNodeBuilder.create('RandomSignedInt32'),
+                        TreeNodeBuilder.create('RandomUnsignedInt32'),
+                    ),
+                    // TreeNodeBuilder.create('Anomaly')
+                    //     .addChildren(
+                    //         TreeNodeBuilder.create('DipData'),
+                    //         TreeNodeBuilder.create('NegativeTrendData'),
+                    //         TreeNodeBuilder.create('PositiveTrendData'),
+                    //         TreeNodeBuilder.create('SpikeData'),
+                    //     ),
+                ),
+            ),
+        ),
+    );
+
+    builder.setAutoAddTimestampPropery();
 
     return builder.build();
 };

@@ -17,7 +17,7 @@
  */
 
 import { UserInput } from '../model/UserInput';
-import { userInfo } from 'os';
+import { TreeNode } from '../model/TreeNode';
 
 export class StaticPropertyUtils {
     public static input(configs: UserInput[]) {
@@ -44,6 +44,8 @@ export class StaticPropertyUtils {
                 cy.dataCy(config.selector).clear().type(config.value).blur();
             } else if (config.type === 'slider') {
                 cy.dataCy(config.selector).type(config.value);
+            } else if (config.type === 'tree') {
+                this.handleTreeNode(config.treeNode);
             } else {
                 cy.dataCy(config.selector).type(config.value);
             }
@@ -67,5 +69,16 @@ export class StaticPropertyUtils {
         cy.dataCy(selector).within(() => {
             cy.get(cssClassName).click();
         });
+    }
+
+    private static handleTreeNode(treeNode: TreeNode) {
+        if (treeNode.children && treeNode.children.length > 0) {
+            cy.dataCy('expand-' + treeNode.name).click();
+            treeNode.children.forEach(child => {
+                this.handleTreeNode(child);
+            });
+        } else {
+            cy.dataCy('select-' + treeNode.name).click();
+        }
     }
 }
