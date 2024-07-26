@@ -30,6 +30,7 @@
     >
         <sp-data-explorer-data-view-toolbar
             [timeSettings]="timeSettings"
+            [editMode]="editMode"
             (downloadFileEmitter)="downloadDataAsFile()"
             (updateDateRangeEmitter)="updateDateRange($event)"
             (saveDataViewEmitter)="saveDataView()"

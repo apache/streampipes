@@ -65,7 +65,7 @@
             <sp-time-range-selector
                 *ngIf="editMode || timeRangeVisible"
                 (dateRangeEmitter)="updateDateRangeEmitter.emit($event)"
-                [dateRange]="timeSettings"
+                [timeSettings]="timeSettings"
             >
             </sp-time-range-selector>
         </div>

@@ -40,6 +40,10 @@ export class DataViewDataExplorerService {
         return this.sharedDatalakeRestService.getDashboards(this.dashboardUrl);
     }
 
+    getDashboard(dashboardId: string): Observable<Dashboard> {
+        return this.http.get(`${this.dashboardUrl}/${dashboardId}`);
+    }
+
     updateDashboard(dashboard: Dashboard): Observable<Dashboard> {
         return this.sharedDatalakeRestService.updateDashboard(
             this.dashboardUrl,

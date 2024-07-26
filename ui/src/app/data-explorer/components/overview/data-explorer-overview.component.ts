@@ -62,16 +62,16 @@ export class DataExplorerOverviewComponent extends SpDataExplorerOverviewDirecti
         dataViewDashboard.widgets = [];
         dataViewDashboard.name = '';
 
-        this.openDataViewModificationDialog(true, dataViewDashboard);
+        this.openDashboardModificationDialog(true, dataViewDashboard);
     }
 
     createNewDataView(): void {
         this.routingService.navigateToDataView(true);
     }
 
-    openDataViewModificationDialog(createMode: boolean, dashboard: Dashboard) {
+    openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
         const dialogRef =
-            this.dataExplorerDashboardService.openDataViewModificationDialog(
+            this.dataExplorerDashboardService.openDashboardModificationDialog(
                 createMode,
                 dashboard,
             );

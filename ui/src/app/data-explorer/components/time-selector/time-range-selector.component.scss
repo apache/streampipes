@@ -55,3 +55,18 @@
 .mr--5 {
     margin-right: -5px;
 }
+
+.formatted-date {
+    font-weight: bolder;
+}
+
+.formatted-time {
+    font-weight: lighter;
+}
+
+.formatted-datetime {
+    display: inline;
+    background: var(--color-bg-2);
+    border-radius: 5px;
+    padding: 5px;
+}

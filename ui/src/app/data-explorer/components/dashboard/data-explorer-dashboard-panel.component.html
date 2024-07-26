@@ -23,6 +23,9 @@
 >
     <div nav fxFlex="100" class="ml-10">
         <sp-data-explorer-dashboard-toolbar
+            [globalTimeEnabled]="
+                dashboard.dashboardGeneralSettings.globalTimeEnabled
+            "
             [editMode]="editMode"
             [(viewMode)]="viewMode"
             [hasDataExplorerDeletePrivileges]="hasDataExplorerDeletePrivileges"
@@ -58,7 +61,7 @@
             </mat-drawer>
             <mat-drawer-content class="h-100 dashboard-grid">
                 <div
-                    *ngIf="showEditingHelpInfo"
+                    *ngIf="dashboard.widgets.length === 0"
                     fxFlex="100"
                     fxLayout="column"
                     fxLayoutAlign="center center"
@@ -66,20 +69,10 @@
                     <h4>
                         This data view is empty and doesn't contain any widgets.
                     </h4>
-                    <button
-                        mat-button
-                        mat-raised-button
-                        color="accent"
-                        *ngIf="hasDataExplorerWritePrivileges"
-                        (click)="triggerEditMode()"
-                    >
-                        <mat-icon>add</mat-icon>
-                        Add widget
-                    </button>
                 </div>
                 <sp-data-explorer-dashboard-grid
                     #dashboardGrid
-                    *ngIf="!showEditingHelpInfo && viewMode === 'grid'"
+                    *ngIf="dashboard.widgets.length > 0 && viewMode === 'grid'"
                     [editMode]="editMode"
                     [dashboard]="dashboard"
                     [timeSettings]="timeSettings"
@@ -96,7 +89,7 @@
                     [timeSettings]="timeSettings"
                     (deleteCallback)="removeDataViewFromDashboard($event)"
                     (startEditModeEmitter)="startEditMode($event)"
-                    *ngIf="!showEditingHelpInfo && viewMode === 'slide'"
+                    *ngIf="dashboard.widgets.length > 0 && viewMode === 'slide'"
                 >
                 </sp-data-explorer-dashboard-slide-view>
             </mat-drawer-content>

@@ -25,6 +25,7 @@ import {
     DataExplorerWidgetModel,
     DataLakeMeasure,
     DataViewDataExplorerService,
+    TimeSelectionId,
     TimeSettings,
 } from '@streampipes/platform-services';
 import { TimeSelectionService } from '../../services/time-selection.service';
@@ -76,7 +77,6 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     public items: Dashboard[];
 
     dataLakeMeasure: DataLakeMeasure;
-    showEditingHelpInfo = false;
     authSubscription: Subscription;
 
     constructor(
@@ -158,9 +158,13 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     }
 
     updateDateRange(timeSettings: TimeSettings) {
-        this.timeSettings = timeSettings;
-        this.dashboard.dashboardTimeSettings = timeSettings;
-        this.timeSelectionService.notify(timeSettings);
+        let ts = undefined;
+        if (this.dashboard.dashboardGeneralSettings.globalTimeEnabled) {
+            this.timeSettings = timeSettings;
+            this.dashboard.dashboardTimeSettings = timeSettings;
+            ts = timeSettings;
+        }
+        this.timeSelectionService.notify(ts);
     }
 
     discardChanges() {
@@ -168,7 +172,6 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     }
 
     triggerEditMode() {
-        this.showEditingHelpInfo = false;
         this.editMode = true;
     }
 
@@ -179,10 +182,8 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     }
 
     getDashboard(dashboardId: string, startTime: number, endTime: number) {
-        this.dataViewService.getDataViews().subscribe(data => {
-            this.dashboard = data.filter(
-                dashboard => dashboard.elementId === dashboardId,
-            )[0];
+        this.dataViewService.getDashboard(dashboardId).subscribe(dashboard => {
+            this.dashboard = dashboard;
             this.breadcrumbService.updateBreadcrumb(
                 this.breadcrumbService.makeRoute(
                     [SpDataExplorerRoutes.BASE],
@@ -192,21 +193,37 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
             this.viewMode =
                 this.dashboard.dashboardGeneralSettings.defaultViewMode ||
                 'grid';
+            if (
+                this.dashboard.dashboardGeneralSettings.globalTimeEnabled ===
+                undefined
+            ) {
+                this.dashboard.dashboardGeneralSettings.globalTimeEnabled =
+                    true;
+            }
+            if (!this.dashboard.dashboardTimeSettings.startTime) {
+                this.dashboard.dashboardTimeSettings =
+                    this.timeSelectionService.getDefaultTimeSettings();
+            } else {
+                this.timeSelectionService.updateTimeSettings(
+                    this.dashboard.dashboardTimeSettings,
+                    new Date(),
+                );
+            }
             this.timeSettings =
                 startTime && endTime
                     ? this.overrideTime(+startTime, +endTime)
                     : this.dashboard.dashboardTimeSettings;
-            if (this.dashboard.widgets.length === 0 && this.editMode) {
-                this.triggerEditMode();
-            } else if (this.dashboard.widgets.length === 0 && !this.editMode) {
-                this.showEditingHelpInfo = true;
-            }
             this.dashboardLoaded = true;
         });
     }
 
     overrideTime(startTime: number, endTime: number): TimeSettings {
-        return { startTime, endTime, dynamicSelection: -1 };
+        return {
+            startTime,
+            endTime,
+            dynamicSelection: -1,
+            timeSelectionId: TimeSelectionId.CUSTOM,
+        };
     }
 
     goBackToOverview() {

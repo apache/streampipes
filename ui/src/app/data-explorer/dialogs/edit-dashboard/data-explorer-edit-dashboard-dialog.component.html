@@ -40,25 +40,36 @@
                     <mat-label>Description</mat-label>
                     <input matInput [(ngModel)]="dashboard.description" />
                 </mat-form-field>
-                <label>Default view mode</label>
-                <mat-radio-group
-                    [(ngModel)]="
-                        dashboard.dashboardGeneralSettings.defaultViewMode
-                    "
-                >
-                    <mat-radio-button
-                        class="view-radio-button"
-                        [value]="'grid'"
+                <div class="mt-10" fxLayout="column">
+                    <label>Default view mode</label>
+                    <mat-radio-group
+                        [(ngModel)]="
+                            dashboard.dashboardGeneralSettings.defaultViewMode
+                        "
                     >
-                        Grid View
-                    </mat-radio-button>
-                    <mat-radio-button
-                        class="view-radio-button"
-                        [value]="'slide'"
-                    >
-                        Slide View
-                    </mat-radio-button>
-                </mat-radio-group>
+                        <mat-radio-button
+                            class="view-radio-button"
+                            [value]="'grid'"
+                        >
+                            Grid View
+                        </mat-radio-button>
+                        <mat-radio-button
+                            class="view-radio-button"
+                            [value]="'slide'"
+                        >
+                            Slide View
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div class="mt-10" fxLayout="column">
+                    <label>Time Settings</label>
+                    <mat-checkbox
+                        [(ngModel)]="
+                            dashboard.dashboardGeneralSettings.globalTimeEnabled
+                        "
+                        >Use global time instead of widget time settings
+                    </mat-checkbox>
+                </div>
                 <!--<mat-checkbox [(ngModel)]="dashboard.displayHeader">Show name and description in dashboard</mat-checkbox>-->
             </div>
         </div>

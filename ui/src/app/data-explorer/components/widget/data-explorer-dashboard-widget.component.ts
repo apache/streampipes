@@ -82,6 +82,9 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     @Input()
     timeSettings: TimeSettings;
 
+    @Input()
+    globalTimeEnabled = true;
+
     @Output() deleteCallback: EventEmitter<DataExplorerWidgetModel> =
         new EventEmitter<DataExplorerWidgetModel>();
     @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> =
@@ -162,7 +165,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
                 componentFactory,
             );
         this.componentRef.instance.dataExplorerWidget = this.configuredWidget;
-        this.componentRef.instance.timeSettings = this.timeSettings;
+        this.componentRef.instance.timeSettings = this.getTimeSettings();
         this.componentRef.instance.gridsterItem = this.dashboardItem;
         this.componentRef.instance.gridsterItemComponent =
             this.gridsterItemComponent;
@@ -188,6 +191,12 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
             timerSub?.unsubscribe();
             errorSub?.unsubscribe();
         });
+    }
+
+    getTimeSettings(): TimeSettings {
+        return this.globalTimeEnabled
+            ? this.timeSettings
+            : (this.configuredWidget.timeSettings as TimeSettings);
     }
 
     removeWidget() {

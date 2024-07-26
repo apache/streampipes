@@ -43,6 +43,9 @@ export class DataExplorerDashboardToolbarComponent {
     @Input()
     timeSettings: TimeSettings;
 
+    @Input()
+    globalTimeEnabled = true;
+
     @Output()
     viewModeChange: EventEmitter<string> = new EventEmitter<string>();
 

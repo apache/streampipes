@@ -24,6 +24,7 @@ import { FileManagementUtils } from '../FileManagementUtils';
 import { ConnectUtils } from '../connect/ConnectUtils';
 import { ConnectBtns } from '../connect/ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
+import { differenceInMonths } from 'date-fns';
 
 export class DataLakeUtils {
     public static goToDatalake() {
@@ -349,8 +350,41 @@ export class DataLakeUtils {
     }
 
     public static selectTimeRange(from: Date, to: Date) {
-        DataLakeUtils.setTimeInput('time-range-from', from);
-        DataLakeUtils.setTimeInput('time-range-to', to);
+        DataLakeUtils.openTimeSelectorMenu();
+        const monthsBack = Math.abs(differenceInMonths(from, new Date()));
+        DataLakeUtils.navigateCalendar('previous', monthsBack);
+        DataLakeUtils.selectDay(from.getDay());
+
+        const monthsForward = Math.abs(differenceInMonths(from, to));
+        DataLakeUtils.navigateCalendar('next', monthsForward);
+
+        DataLakeUtils.selectDay(to.getDay());
+
+        DataLakeUtils.setTimeInput('time-selector-start-time', from);
+        DataLakeUtils.setTimeInput('time-selector-end-time', to);
+        DataLakeUtils.applyCustomTimeSelection();
+    }
+
+    public static navigateCalendar(direction: string, numberOfMonths: number) {
+        for (let i = 0; i < numberOfMonths; i++) {
+            cy.get(`button.mat-calendar-${direction}-button`).click();
+        }
+    }
+
+    public static selectDay(day: number) {
+        cy.get(
+            `button:has(span.mat-calendar-body-cell-content:contains("${day}"))`,
+        )
+            .first()
+            .click();
+    }
+
+    public static openTimeSelectorMenu() {
+        cy.dataCy('time-selector-menu').click();
+    }
+
+    public static applyCustomTimeSelection() {
+        cy.dataCy('apply-custom-time').click();
     }
 
     public static setTimeInput(field: string, date: Date) {
@@ -358,7 +392,7 @@ export class DataLakeUtils {
     }
 
     public static makeTimeString(date: Date) {
-        return date.toISOString().slice(0, 16);
+        return date.toTimeString().slice(0, 5);
     }
 
     public static getFutureDate() {

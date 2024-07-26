@@ -74,25 +74,6 @@ export class DataExplorerDesignerPanelComponent {
         });
     }
 
-    modifyWidgetMode(widget: DataExplorerWidgetModel, newWidgetMode: boolean) {
-        this.currentlyConfiguredWidget = widget;
-        this.newWidgetMode = newWidgetMode;
-        if (this.dataSettingsPanel) {
-            setTimeout(() => {
-                this.dataSettingsPanel.checkSourceTypes();
-            });
-        }
-    }
-
-    closeDesignerPanel() {
-        this.closeDesignerPanelEmitter.emit();
-    }
-
-    resetIndex() {
-        this.selectedIndex = 0;
-        this.newWidgetMode = true;
-    }
-
     @ViewChild('dataSettingsPanel')
     public set content(
         dataSettingsPanel: DataExplorerWidgetDataSettingsComponent,
