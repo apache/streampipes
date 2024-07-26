@@ -127,6 +127,7 @@ import { DataExplorerDataViewPreviewComponent } from './components/dashboard/das
 import { DataExplorerDashboardToolbarComponent } from './components/dashboard/dashboard-toolbar/dashboard-toolbar.component';
 import { TimeRangeSelectorMenuComponent } from './components/time-selector/time-selector-menu/time-selector-menu.component';
 import { CustomTimeRangeSelectionComponent } from './components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
+import { DataExplorerRefreshIntervalSettingsComponent } from './components/dashboard/dashboard-toolbar/refresh-interval-settings/refresh-interval-settings.component';
 
 @NgModule({
     imports: [
@@ -219,6 +220,7 @@ import { CustomTimeRangeSelectionComponent } from './components/time-selector/ti
         DataExplorerDataViewSelectionComponent,
         DataExplorerDesignerPanelComponent,
         DataExplorerEditDashboardDialogComponent,
+        DataExplorerRefreshIntervalSettingsComponent,
         DataExplorerWidgetAppearanceSettingsComponent,
         DataExplorerWidgetDataSettingsComponent,
         DataExplorerDataViewComponent,

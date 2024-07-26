@@ -41,7 +41,9 @@ export class DataViewDataExplorerService {
     }
 
     getDashboard(dashboardId: string): Observable<Dashboard> {
-        return this.http.get(`${this.dashboardUrl}/${dashboardId}`);
+        return this.http
+            .get(`${this.dashboardUrl}/${dashboardId}`)
+            .pipe(map(data => data as Dashboard));
     }
 
     updateDashboard(dashboard: Dashboard): Observable<Dashboard> {

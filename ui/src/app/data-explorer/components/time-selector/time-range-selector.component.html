@@ -69,11 +69,14 @@
             </sp-time-selector-menu>
         </mat-menu>
     </div>
-    <button
-        mat-icon-button
-        color="accent"
-        (click)="updateTimeSettingsAndReload()"
-    >
-        <i class="material-icons">autorenew</i>
-    </button>
+    <div fxLayoutAlign="end center">
+        <button
+            mat-button
+            color="accent"
+            (click)="updateTimeSettingsAndReload()"
+        >
+            <mat-icon>refresh</mat-icon>
+            Refresh
+        </button>
+    </div>
 </div>

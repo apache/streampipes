@@ -78,11 +78,20 @@
     fxLayout="row"
 >
     <sp-time-range-selector
-        [showTimeSelector]="(editMode || timeRangeVisible) && globalTimeEnabled"
+        [showTimeSelector]="
+            (editMode || timeRangeVisible) &&
+            dashboard.dashboardGeneralSettings.globalTimeEnabled
+        "
         (dateRangeEmitter)="updateDateRangeEmitter.emit($event)"
         [timeSettings]="timeSettings"
     >
     </sp-time-range-selector>
+
+    <sp-data-explorer-refresh-interval-settings-component
+        [dashboard]="dashboard"
+        (intervalSettingsChangedEmitter)="intervalSettingsChangedEmitter.emit()"
+    >
+    </sp-data-explorer-refresh-interval-settings-component>
 
     <button
         mat-icon-button

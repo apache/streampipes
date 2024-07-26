@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TimeSettings } from '@streampipes/platform-services';
+import { Dashboard, TimeSettings } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-toolbar',
@@ -25,6 +25,9 @@ import { TimeSettings } from '@streampipes/platform-services';
     styleUrls: ['./dashboard-toolbar.component.scss'],
 })
 export class DataExplorerDashboardToolbarComponent {
+    @Input()
+    dashboard: Dashboard;
+
     @Input()
     editMode: boolean;
 
@@ -43,9 +46,6 @@ export class DataExplorerDashboardToolbarComponent {
     @Input()
     timeSettings: TimeSettings;
 
-    @Input()
-    globalTimeEnabled = true;
-
     @Output()
     viewModeChange: EventEmitter<string> = new EventEmitter<string>();
 
@@ -63,4 +63,8 @@ export class DataExplorerDashboardToolbarComponent {
 
     @Output()
     updateDateRangeEmitter: EventEmitter<TimeSettings> = new EventEmitter();
+
+    @Output()
+    intervalSettingsChangedEmitter: EventEmitter<void> =
+        new EventEmitter<void>();
 }
