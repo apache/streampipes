@@ -114,6 +114,7 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
         this.timeSettings.endTime = newEndTime;
         this.timeSettings.timeSelectionId = TimeSelectionId.CUSTOM;
         this.timeSelectorMenu.triggerDisplayUpdate();
+        this.createDateString();
         this.reloadData();
     }
 

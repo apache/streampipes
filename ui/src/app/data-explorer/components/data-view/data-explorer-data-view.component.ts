@@ -72,6 +72,10 @@ export class DataExplorerDataViewComponent implements OnInit {
             if (!this.dataView.timeSettings?.startTime) {
                 this.timeSettings = this.makeDefaultTimeSettings();
             } else {
+                this.timeSelectionService.updateTimeSettings(
+                    this.dataView.timeSettings as TimeSettings,
+                    new Date(),
+                );
                 this.timeSettings = this.dataView.timeSettings as TimeSettings;
             }
             this.afterDataViewLoaded();

@@ -203,6 +203,11 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
             if (!this.dashboard.dashboardTimeSettings.startTime) {
                 this.dashboard.dashboardTimeSettings =
                     this.timeSelectionService.getDefaultTimeSettings();
+            } else {
+                this.timeSelectionService.updateTimeSettings(
+                    this.dashboard.dashboardTimeSettings,
+                    new Date(),
+                );
             }
             this.timeSettings =
                 startTime && endTime
