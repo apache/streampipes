@@ -108,7 +108,7 @@
     "csv-string": "^4.1.1",
     "cypress": "^13.6.2",
     "cypress-file-upload": "^5.0.8",
-    "eslint": "8.57.0",
+    "eslint": "9.8.0",
     "eslint-config-prettier": "^9.0.0",
     "husky": "^8.0.2",
     "jasmine-core": "^5.1.1",
