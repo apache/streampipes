@@ -106,7 +106,7 @@ export class DialogService {
         if (!config.disableClose) {
             overlayRef.backdropClick().subscribe(() => {
                 panelDialogComponentRef.instance.close();
-                overlayRef.dispose()
+                overlayRef.dispose();
             });
         }
     }
