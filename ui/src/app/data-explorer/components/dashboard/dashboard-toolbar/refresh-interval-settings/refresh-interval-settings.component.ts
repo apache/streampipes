@@ -25,7 +25,6 @@ import {
 @Component({
     selector: 'sp-data-explorer-refresh-interval-settings-component',
     templateUrl: './refresh-interval-settings.component.html',
-    styleUrls: ['./refresh-interval-settings.component.scss'],
 })
 export class DataExplorerRefreshIntervalSettingsComponent implements OnInit {
     @Input()
