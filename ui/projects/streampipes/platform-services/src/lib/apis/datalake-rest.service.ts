@@ -46,11 +46,11 @@ export class DatalakeRestService {
     }
 
     getMeasurementEntryCounts(
-        measurementNameFilter: string[],
+        measurementNames: string[],
     ): Observable<Record<string, number>> {
         return this.http
-            .get(`${this.dataLakeMeasureUrl}`, {
-                params: { filter: measurementNameFilter },
+            .get(`${this.dataLakeMeasureUrl}/count`, {
+                params: { measurementNames: measurementNames },
             })
             .pipe(map(r => r as Record<string, number>));
     }
