@@ -20,7 +20,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
-    PipelineMonitoringInfo,
     SpLogEntry,
     SpMetricsEntry,
 } from '../model/gen/streampipes-model';
