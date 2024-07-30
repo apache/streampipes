@@ -28,12 +28,14 @@ import org.apache.streampipes.service.core.oauth2.HttpCookieOAuth2AuthorizationR
 import org.apache.streampipes.service.core.oauth2.OAuth2AccessTokenResponseConverterWithDefaults;
 import org.apache.streampipes.service.core.oauth2.OAuth2AuthenticationFailureHandler;
 import org.apache.streampipes.service.core.oauth2.OAuth2AuthenticationSuccessHandler;
+import org.apache.streampipes.service.core.oauth2.OAuthEnabledCondition;
 import org.apache.streampipes.user.management.service.SpUserDetailsService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -174,14 +176,15 @@ public class WebSecurityConfig {
   }
 
   @Bean
+  @Conditional(OAuthEnabledCondition.class)
   public HttpCookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository() {
     return new HttpCookieOAuth2AuthorizationRequestRepository();
   }
 
   @Bean
+  @Conditional(OAuthEnabledCondition.class)
   public ClientRegistrationRepository clientRegistrationRepository() {
     var registrations = getRegistrations();
-
     return new InMemoryClientRegistrationRepository(registrations);
   }
 
