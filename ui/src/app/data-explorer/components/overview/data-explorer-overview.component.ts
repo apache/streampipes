@@ -57,10 +57,16 @@ export class DataExplorerOverviewComponent extends SpDataExplorerOverviewDirecti
     }
 
     openNewDashboardDialog() {
-        const dataViewDashboard: Dashboard = {};
-        dataViewDashboard.dashboardGeneralSettings = {};
-        dataViewDashboard.widgets = [];
-        dataViewDashboard.name = '';
+        const dataViewDashboard: Dashboard = {
+            dashboardGeneralSettings: {},
+            widgets: [],
+            name: '',
+            dashboardLiveSettings: {
+                refreshModeActive: false,
+                refreshIntervalInSeconds: 10,
+                label: 'Off',
+            },
+        };
 
         this.openDashboardModificationDialog(true, dataViewDashboard);
     }

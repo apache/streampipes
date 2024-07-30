@@ -17,7 +17,7 @@
  */
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of, Subscription, timer } from 'rxjs';
 import { DataExplorerDashboardGridComponent } from '../widget-view/grid-view/data-explorer-dashboard-grid.component';
 import {
     ClientDashboardItem,
@@ -43,7 +43,7 @@ import {
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { SpDataExplorerRoutes } from '../../data-explorer.routes';
 import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
 
@@ -78,6 +78,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
 
     dataLakeMeasure: DataLakeMeasure;
     authSubscription: Subscription;
+    refreshSubscription: Subscription;
 
     constructor(
         private dataViewDataExplorerService: DataViewDataExplorerService,
@@ -116,6 +117,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.authSubscription?.unsubscribe();
+        this.refreshSubscription?.unsubscribe();
     }
 
     addDataViewToDashboard(dataViewElementId: string) {
@@ -257,5 +259,31 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
         } else {
             return of(true);
         }
+    }
+
+    modifyRefreshInterval(): void {
+        this.refreshSubscription?.unsubscribe();
+        if (this.dashboard.dashboardLiveSettings.refreshModeActive) {
+            this.createQuerySubscription();
+        }
+    }
+
+    createQuerySubscription() {
+        this.refreshSubscription = timer(
+            0,
+            this.dashboard.dashboardLiveSettings.refreshIntervalInSeconds *
+                1000,
+        )
+            .pipe(
+                switchMap(() => {
+                    this.timeSelectionService.updateTimeSettings(
+                        this.timeSettings,
+                        new Date(),
+                    );
+                    this.updateDateRange(this.timeSettings);
+                    return of(null);
+                }),
+            )
+            .subscribe();
     }
 }
