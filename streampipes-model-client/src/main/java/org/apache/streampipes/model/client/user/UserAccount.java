@@ -27,6 +27,8 @@ import java.util.Set;
 @TsModel
 public class UserAccount extends Principal {
 
+  public static final String LOCAL = "local";
+
   protected String fullName;
   protected String password;
 
@@ -39,6 +41,8 @@ public class UserAccount extends Principal {
   protected boolean hideTutorial;
   protected boolean darkMode = false;
 
+  protected String provider;
+
   public UserAccount() {
     super(PrincipalType.USER_ACCOUNT);
     this.hideTutorial = false;
@@ -46,6 +50,7 @@ public class UserAccount extends Principal {
     this.preferredDataProcessors = new ArrayList<>();
     this.preferredDataSinks = new ArrayList<>();
     this.preferredDataStreams = new ArrayList<>();
+    this.provider = UserAccount.LOCAL;
   }
 
   public static UserAccount from(String username,
@@ -155,5 +160,13 @@ public class UserAccount extends Principal {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public String getProvider() {
+    return provider;
+  }
+
+  public void setProvider(String provider) {
+    this.provider = provider;
   }
 }
