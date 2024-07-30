@@ -42,7 +42,7 @@ import { ActivateAccountComponent } from './login/components/activate-account/ac
 
 {{#modulesActive}}
 {{#componentImport}}
-import { {{{ng5_component}}} } from '{{{ng5_componentPath}}}';
+import { {{{component}}} } from '{{{componentPath}}}';
 {{/componentImport}}
 {{/modulesActive}}
 
@@ -60,10 +60,10 @@ const routes: Routes = [
       { path: '', component: HomeComponent, canActivate: [ConfiguredCanActivateGuard] },
       {{#modulesActive}}
       {{#componentImport}}
-      { path: '{{{link}}}', component: {{{ng5_component}}}, data: { authPageNames: [{{{pageNames}}}]}},
+      { path: '{{{link}}}', component: {{{component}}}, data: { authPageNames: [{{{pageNames}}}]}},
       {{/componentImport}}
       {{^componentImport}}
-      { path: '{{{link}}}', data: { authPageNames: [{{{pageNames}}}]}, loadChildren: () => import('{{{path}}}').then(m => m.{{{ng5_moduleName}}})},
+      { path: '{{{link}}}', data: { authPageNames: [{{{pageNames}}}]}, loadChildren: () => import('{{{path}}}').then(m => m.{{{moduleName}}})},
       {{/componentImport}}
       {{/modulesActive}}
 
