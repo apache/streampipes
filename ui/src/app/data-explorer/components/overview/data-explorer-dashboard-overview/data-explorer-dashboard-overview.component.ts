@@ -61,19 +61,11 @@ export class SpDataExplorerDashboardOverviewComponent extends SpDataExplorerOver
     }
 
     showPermissionsDialog(dashboard: Dashboard) {
-        const dialogRef = this.dialogService.open(
-            ObjectPermissionDialogComponent,
-            {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: 'Manage permissions',
-                width: '50vw',
-                data: {
-                    objectInstanceId: dashboard.elementId,
-                    headerTitle:
-                        'Manage permissions for dashboard ' + dashboard.name,
-                },
-            },
-        );
+        const dialogRef =
+            this.dataExplorerDashboardService.openPermissionsDialog(
+                dashboard.elementId,
+                `Manage permissions for dashboard ${dashboard.name}`,
+            );
 
         dialogRef.afterClosed().subscribe(refresh => {
             if (refresh) {

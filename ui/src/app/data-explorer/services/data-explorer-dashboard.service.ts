@@ -27,6 +27,7 @@ import {
 import { DataExplorerEditDashboardDialogComponent } from '../dialogs/edit-dashboard/data-explorer-edit-dashboard-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { DataDownloadDialogComponent } from '../../core-ui/data-download-dialog/data-download-dialog.component';
+import { ObjectPermissionDialogComponent } from '../../core-ui/object-permission-dialog/object-permission-dialog.component';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerDashboardService {
@@ -45,6 +46,18 @@ export class DataExplorerDashboardService {
                 },
             },
         );
+    }
+
+    openPermissionsDialog(elementId: string, headerTitle: string) {
+        return this.dialogService.open(ObjectPermissionDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Manage permissions',
+            width: '50vw',
+            data: {
+                objectInstanceId: elementId,
+                headerTitle,
+            },
+        });
     }
 
     downloadDataAsFile(

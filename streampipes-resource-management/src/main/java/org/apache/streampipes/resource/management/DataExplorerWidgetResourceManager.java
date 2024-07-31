@@ -15,14 +15,15 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.resource.management;
 
-import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.storage.api.CRUDStorage;
 
-public class DataExplorerResourceManager extends AbstractCRUDResourceManager<DashboardModel> {
+public class DataExplorerWidgetResourceManager extends AbstractCRUDResourceManager<DataExplorerWidgetModel> {
 
-  public DataExplorerResourceManager() {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage(), DashboardModel.class);
+  public DataExplorerWidgetResourceManager(CRUDStorage<DataExplorerWidgetModel> db) {
+    super(db, DataExplorerWidgetModel.class);
   }
 }

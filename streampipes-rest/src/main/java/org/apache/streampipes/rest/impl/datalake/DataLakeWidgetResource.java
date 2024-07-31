@@ -18,11 +18,10 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
-import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.model.util.ElementIdGenerator;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.resource.management.DataExplorerWidgetResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,16 +38,24 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v3/datalake/dashboard/widgets")
-public class DataLakeWidgetResource extends AbstractRestResource {
+public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
+
+  private final DataExplorerWidgetResourceManager resourceManager;
+
+  public DataLakeWidgetResource() {
+    this.resourceManager = new SpResourceManager().manageDataExplorerWidget(
+        getNoSqlStorage().getDataExplorerWidgetStorage()
+    );
+  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<DataExplorerWidgetModel>> getAllDataExplorerWidgets() {
-    return ok(getDataExplorerWidgetStorage().findAll());
+    return ok(resourceManager.findAll());
   }
 
   @GetMapping(path = "/{widgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<DataExplorerWidgetModel> getDataExplorerWidget(@PathVariable("widgetId") String widgetId) {
-    return ok(getDataExplorerWidgetStorage().getElementById(widgetId));
+    return ok(resourceManager.find(widgetId));
   }
 
   @PutMapping(
@@ -57,13 +64,13 @@ public class DataLakeWidgetResource extends AbstractRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<DataExplorerWidgetModel> modifyDataExplorerWidget(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
-    getDataExplorerWidgetStorage().updateElement(dataExplorerWidgetModel);
-    return ok(getDataExplorerWidgetStorage().getElementById(dataExplorerWidgetModel.getElementId()));
+    resourceManager.update(dataExplorerWidgetModel);
+    return ok(resourceManager.find(dataExplorerWidgetModel.getElementId()));
   }
 
   @DeleteMapping(path = "/{widgetId}")
   public ResponseEntity<Void> deleteDataExplorerWidget(@PathVariable("widgetId") String widgetId) {
-    getDataExplorerWidgetStorage().deleteElementById(widgetId);
+    resourceManager.delete(widgetId);
     return ok();
   }
 
@@ -73,14 +80,6 @@ public class DataLakeWidgetResource extends AbstractRestResource {
   )
   public ResponseEntity<DataExplorerWidgetModel> createDataExplorerWidget(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
-    String elementId = ElementIdGenerator.makeElementId(DashboardWidgetModel.class);
-    dataExplorerWidgetModel.setElementId(elementId);
-    getDataExplorerWidgetStorage().persist(dataExplorerWidgetModel);
-    return ok(getDataExplorerWidgetStorage().getElementById(elementId));
+    return ok(resourceManager.create(dataExplorerWidgetModel, getAuthenticatedUserSid()));
   }
-
-  private CRUDStorage<DataExplorerWidgetModel> getDataExplorerWidgetStorage() {
-    return getNoSqlStorage().getDataExplorerWidgetStorage();
-  }
-
 }
