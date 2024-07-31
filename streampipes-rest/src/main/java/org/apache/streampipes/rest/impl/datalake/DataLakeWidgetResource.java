@@ -18,13 +18,17 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
+import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.resource.management.DataExplorerWidgetResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,19 +53,23 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<DataExplorerWidgetModel>> getAllDataExplorerWidgets() {
-    return ok(resourceManager.findAll());
+  @PreAuthorize(AuthConstants.HAS_READ_DATA_EXPLORER_PRIVILEGE)
+  @PostFilter("hasPermission(filterObject.elementId, 'READ')")
+  public List<DataExplorerWidgetModel> getAllDataExplorerWidgets() {
+    return resourceManager.findAll();
   }
 
   @GetMapping(path = "/{widgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<DataExplorerWidgetModel> getDataExplorerWidget(@PathVariable("widgetId") String widgetId) {
-    return ok(resourceManager.find(widgetId));
+  @PreAuthorize("this.hasReadAuthority() and hasPermission(#elementId, 'READ')")
+  public ResponseEntity<DataExplorerWidgetModel> getDataExplorerWidget(@PathVariable("widgetId") String elementId) {
+    return ok(resourceManager.find(elementId));
   }
 
   @PutMapping(
       path = "/{widgetId}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dataExplorerWidgetModel.elementId, 'WRITE')")
   public ResponseEntity<DataExplorerWidgetModel> modifyDataExplorerWidget(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     resourceManager.update(dataExplorerWidgetModel);
@@ -69,8 +77,9 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
   }
 
   @DeleteMapping(path = "/{widgetId}")
-  public ResponseEntity<Void> deleteDataExplorerWidget(@PathVariable("widgetId") String widgetId) {
-    resourceManager.delete(widgetId);
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#elementId, 'WRITE')")
+  public ResponseEntity<Void> deleteDataExplorerWidget(@PathVariable("widgetId") String elementId) {
+    resourceManager.delete(elementId);
     return ok();
   }
 
@@ -78,8 +87,24 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dataExplorerWidgetModel.elementId, 'WRITE')")
   public ResponseEntity<DataExplorerWidgetModel> createDataExplorerWidget(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     return ok(resourceManager.create(dataExplorerWidgetModel, getAuthenticatedUserSid()));
   }
+
+  /**
+   * required by Spring expression
+   */
+  public boolean hasReadAuthority() {
+    return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE);
+  }
+
+  /**
+   * required by Spring expression
+   */
+  public boolean hasWriteAuthority() {
+    return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE);
+  }
+
 }
