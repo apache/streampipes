@@ -40,6 +40,15 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class TimeSelectionService {
+    legacyMappings: Record<number, TimeSelectionId> = {
+        15: TimeSelectionId.LAST_15_MINUTES,
+        60: TimeSelectionId.LAST_HOUR,
+        1440: TimeSelectionId.LAST_DAY,
+        10080: TimeSelectionId.LAST_WEEK,
+        43200: TimeSelectionId.LAST_MONTH,
+        525600: TimeSelectionId.LAST_YEAR,
+    };
+
     quickTimeSelections: QuickTimeSelection[] = [
         {
             label: 'Last 15 min',
@@ -138,6 +147,11 @@ export class TimeSelectionService {
     }
 
     public updateTimeSettings(timeSettings: TimeSettings, now: Date): void {
+        // for backwards compatibility
+        if (timeSettings.timeSelectionId === undefined) {
+            timeSettings.timeSelectionId =
+                this.findLegacyTimeSelectionId(timeSettings);
+        }
         if (timeSettings.timeSelectionId !== TimeSelectionId.CUSTOM) {
             const updatedTimeSettings = this.getTimeSettings(
                 timeSettings.timeSelectionId,
@@ -152,6 +166,16 @@ export class TimeSelectionService {
         return this.quickTimeSelections.find(
             s => s.timeSelectionId === timeSelectionId,
         );
+    }
+
+    private findLegacyTimeSelectionId(
+        timeSettings: TimeSettings,
+    ): TimeSelectionId {
+        if (timeSettings.dynamicSelection in this.legacyMappings) {
+            return this.legacyMappings[timeSettings.dynamicSelection];
+        } else {
+            return TimeSelectionId.CUSTOM;
+        }
     }
 
     public timeSelectionChangeSubject: Subject<TimeSettings | undefined> =

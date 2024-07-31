@@ -18,48 +18,54 @@
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.client.user.Permission;
-import org.apache.streampipes.model.dashboard.DashboardModel;
+import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.storage.api.CRUDStorage;
 
 import java.util.List;
 
-public abstract class AbstractDashboardResourceManager
-    extends AbstractResourceManager<CRUDStorage<DashboardModel>> {
+public abstract class AbstractCRUDResourceManager<T extends Storable>
+    extends AbstractResourceManager<CRUDStorage<T>> {
 
-  public AbstractDashboardResourceManager(CRUDStorage<DashboardModel> db) {
+  private final Class<T> elementClass;
+
+  public AbstractCRUDResourceManager(CRUDStorage<T> db,
+                                     Class<T> elementClass) {
     super(db);
+    this.elementClass = elementClass;
   }
 
-  public List<DashboardModel> findAll() {
+  public List<T> findAll() {
     return db.findAll();
   }
 
-  public DashboardModel find(String dashboardId) {
-    return db.getElementById(dashboardId);
+  public T find(String elementId) {
+    return db.getElementById(elementId);
   }
 
-  public void delete(String dashboardId) {
-    db.deleteElementById(dashboardId);
-    deletePermissions(dashboardId);
+  public void delete(String elementId) {
+    db.deleteElementById(elementId);
+    deletePermissions(elementId);
   }
 
-  public void create(DashboardModel dashboardModel, String principalSid) {
-    if (dashboardModel.getElementId() == null) {
-      dashboardModel.setElementId(ElementIdGenerator.makeElementId(DashboardModel.class));
+  public T create(T element,
+                     String principalSid) {
+    if (element.getElementId() == null) {
+      element.setElementId(ElementIdGenerator.makeElementId(elementClass));
     }
-    db.persist(dashboardModel);
-    new PermissionResourceManager().createDefault(dashboardModel.getElementId(), DashboardModel.class, principalSid,
+    db.persist(element);
+    new PermissionResourceManager().createDefault(element.getElementId(), elementClass, principalSid,
         false);
+    return find(element.getElementId());
   }
 
-  public void update(DashboardModel dashboardModel) {
-    db.updateElement(dashboardModel);
+  public void update(T element) {
+    db.updateElement(element);
   }
 
-  private void deletePermissions(String dashboardId) {
+  private void deletePermissions(String elementId) {
     PermissionResourceManager manager = new PermissionResourceManager();
-    List<Permission> permissions = manager.findForObjectId(dashboardId);
+    List<Permission> permissions = manager.findForObjectId(elementId);
     permissions.forEach(manager::delete);
   }
 }

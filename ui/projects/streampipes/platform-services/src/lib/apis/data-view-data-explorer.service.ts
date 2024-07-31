@@ -112,7 +112,7 @@ export class DataViewDataExplorerService {
     }
 
     deleteWidget(widgetId: string): Observable<any> {
-        return this.http.delete(this.dashboardWidgetUrl + '/' + widgetId);
+        return this.http.delete(`${this.dashboardWidgetUrl}/${widgetId}`);
     }
 
     updateWidget(widget: DataExplorerWidgetModel): Observable<any> {

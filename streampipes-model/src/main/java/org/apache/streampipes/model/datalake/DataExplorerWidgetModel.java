@@ -115,4 +115,8 @@ public class DataExplorerWidgetModel extends DashboardEntity {
     return this.timeSettings;
   }
 
+  public void setTimeSettings(Map<String, Object> timeSettings) {
+    this.timeSettings = timeSettings;
+  }
+
 }

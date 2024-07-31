@@ -86,6 +86,15 @@
                         <button
                             mat-icon-button
                             color="accent"
+                            matTooltip="Manage permissions"
+                            *ngIf="isAdmin"
+                            (click)="showPermissionsDialog(element)"
+                        >
+                            <i class="material-icons">share</i>
+                        </button>
+                        <button
+                            mat-icon-button
+                            color="accent"
                             matTooltip="Delete data view"
                             *ngIf="hasDataExplorerDeletePrivileges"
                             [attr.data-cy]="

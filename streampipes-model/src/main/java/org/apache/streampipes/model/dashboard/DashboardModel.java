@@ -139,4 +139,8 @@ public class DashboardModel implements Storable {
   public Map<String, Object> getDashboardLiveSettings() {
     return dashboardLiveSettings;
   }
+
+  public void setDashboardLiveSettings(Map<String, Object> dashboardLiveSettings) {
+    this.dashboardLiveSettings = dashboardLiveSettings;
+  }
 }

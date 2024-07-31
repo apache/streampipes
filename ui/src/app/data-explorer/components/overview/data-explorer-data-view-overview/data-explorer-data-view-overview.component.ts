@@ -27,6 +27,7 @@ import {
 import { CurrentUserService, DialogService } from '@streampipes/shared-ui';
 import { AuthService } from '../../../../services/auth.service';
 import { DataExplorerRoutingService } from '../../../services/data-explorer-routing.service';
+import { DataExplorerDashboardService } from '../../../services/data-explorer-dashboard.service';
 
 @Component({
     selector: 'sp-data-explorer-data-view-overview',
@@ -40,6 +41,7 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
 
     constructor(
         private dataViewService: DataViewDataExplorerService,
+        private dataExplorerDashboardService: DataExplorerDashboardService,
         public dialogService: DialogService,
         authService: AuthService,
         currentUserService: CurrentUserService,
@@ -50,10 +52,10 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
 
     afterInit(): void {
         this.displayedColumns = ['name', 'actions'];
-        this.getCharts();
+        this.getDataViews();
     }
 
-    getCharts(): void {
+    getDataViews(): void {
         this.dataViewService.getAllWidgets().subscribe(widgets => {
             widgets = widgets.sort((a, b) =>
                 a.baseAppearanceConfig.widgetTitle.localeCompare(
@@ -68,7 +70,23 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
         this.routingService.navigateToDataView(editMode, dataView.elementId);
     }
 
+    showPermissionsDialog(dashboard: Dashboard) {
+        const dialogRef =
+            this.dataExplorerDashboardService.openPermissionsDialog(
+                dashboard.elementId,
+                `Manage permissions for dashboard ${dashboard.name}`,
+            );
+
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh) {
+                this.getDataViews();
+            }
+        });
+    }
+
     deleteDataView(dataView: DataExplorerWidgetModel) {
-        this.dataViewService.deleteWidget(dataView.elementId);
+        this.dataViewService
+            .deleteWidget(dataView.elementId)
+            .subscribe(() => this.getDataViews());
     }
 }
