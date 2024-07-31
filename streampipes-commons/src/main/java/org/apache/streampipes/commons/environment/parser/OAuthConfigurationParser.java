@@ -20,6 +20,9 @@ package org.apache.streampipes.commons.environment.parser;
 
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -46,6 +49,9 @@ import java.util.Map;
  * The parser then groups these settings into a {@link OAuthConfiguration} object for "github".</p>
  */
 public class OAuthConfigurationParser {
+
+  private static final Logger LOG = LoggerFactory.getLogger(OAuthConfigurationParser.class);
+
 
   private static final String OAUTH_PREFIX = "SP_OAUTH_PROVIDER";
 
@@ -90,7 +96,14 @@ public class OAuthConfigurationParser {
         case "EMAIL_ATTRIBUTE_NAME" -> oAuthConfiguration.setEmailAttributeName(value);
         case "USER_ID_ATTRIBUTE_NAME" -> oAuthConfiguration.setUserIdAttributeName(value);
         case "NAME" -> oAuthConfiguration.setRegistrationName(value);
+        default -> LOG.warn(
+            "Unknown setting {} for oauth configuration in environment variable {}",
+            settingName,
+            key
+        );
       }
+    } else {
+      LOG.warn("Invalid environment variable for oauth configuration: {}", key);
     }
   }
 
