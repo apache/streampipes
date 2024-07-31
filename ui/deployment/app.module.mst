@@ -38,7 +38,7 @@ import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
 
 {{#modulesActive}}
-import { {{{ng5_moduleName}}} } from '{{{path}}}';
+import { {{{moduleName}}} } from '{{{path}}}';
 {{/modulesActive}}
 
 import { NotificationModule } from './notifications/notifications.module';
