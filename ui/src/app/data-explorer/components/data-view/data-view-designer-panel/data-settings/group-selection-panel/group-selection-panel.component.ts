@@ -28,11 +28,9 @@ import {
 @Component({
     selector: 'sp-group-selection-panel',
     templateUrl: './group-selection-panel.component.html',
-    styleUrls: ['./group-selection-panel.component.scss'],
 })
 export class GroupSelectionPanelComponent implements OnInit {
     @Input() sourceConfig: SourceConfig;
-    @Input() widgetId: string;
 
     constructor(
         private fieldProvider: DataExplorerFieldProviderService,
@@ -75,7 +73,6 @@ export class GroupSelectionPanelComponent implements OnInit {
             field => (field.selected = selected),
         );
         this.widgetConfigService.notify({
-            widgetId: this.widgetId,
             refreshData: true,
             refreshView: true,
         });
@@ -92,7 +89,6 @@ export class GroupSelectionPanelComponent implements OnInit {
 
     triggerConfigurationUpdate() {
         this.widgetConfigService.notify({
-            widgetId: this.widgetId,
             refreshData: true,
             refreshView: true,
         });

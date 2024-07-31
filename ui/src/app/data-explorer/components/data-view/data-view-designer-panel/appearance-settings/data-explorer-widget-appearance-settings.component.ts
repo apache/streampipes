@@ -32,7 +32,6 @@ export class DataExplorerWidgetAppearanceSettingsComponent
     implements OnInit, OnDestroy
 {
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
-    @Input() widgetId: string;
 
     presetColors: string[] = [
         '#39B54A',
@@ -81,7 +80,6 @@ export class DataExplorerWidgetAppearanceSettingsComponent
 
     triggerViewUpdate() {
         this.widgetConfigurationService.notify({
-            widgetId: this.widgetId,
             refreshView: true,
             refreshData: false,
         });

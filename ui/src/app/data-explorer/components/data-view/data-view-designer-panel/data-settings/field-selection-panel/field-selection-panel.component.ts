@@ -34,7 +34,6 @@ export class FieldSelectionPanelComponent implements OnInit {
     MAX_INITIAL_FIELDS = 3;
 
     @Input() sourceConfig: SourceConfig;
-    @Input() widgetId: string;
 
     expandFields = false;
 
@@ -97,7 +96,6 @@ export class FieldSelectionPanelComponent implements OnInit {
             field => (field.selected = selected),
         );
         this.widgetConfigService.notify({
-            widgetId: this.widgetId,
             refreshData: true,
             refreshView: true,
         });

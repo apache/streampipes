@@ -32,7 +32,6 @@ import { WidgetConfigurationService } from '../../../../../services/widget-confi
 export class FieldSelectionComponent implements OnInit {
     @Input() field: FieldConfig;
     @Input() sourceConfig: SourceConfig;
-    @Input() widgetId: string;
 
     @Output() addFieldEmitter: EventEmitter<EventPropertyUnion> =
         new EventEmitter<EventPropertyUnion>();
@@ -47,7 +46,6 @@ export class FieldSelectionComponent implements OnInit {
 
     triggerConfigurationUpdate() {
         this.widgetConfigService.notify({
-            widgetId: this.widgetId,
             refreshData: true,
             refreshView: true,
         });

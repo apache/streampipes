@@ -29,11 +29,9 @@ import { DataExplorerFieldProviderService } from '../../../../../services/data-e
 @Component({
     selector: 'sp-filter-selection-panel',
     templateUrl: './filter-selection-panel.component.html',
-    styleUrls: ['./filter-selection-panel.component.scss'],
 })
 export class FilterSelectionPanelComponent implements OnInit {
     @Input() sourceConfig: SourceConfig;
-    @Input() widgetId: string;
 
     tagValues: Map<string, string[]> = new Map<string, string[]>();
 
@@ -84,7 +82,6 @@ export class FilterSelectionPanelComponent implements OnInit {
         };
         this.sourceConfig.queryConfig.selectedFilters.push(newFilter);
         this.widgetConfigService.notify({
-            widgetId: this.widgetId,
             refreshData: true,
             refreshView: true,
         });
@@ -95,7 +92,6 @@ export class FilterSelectionPanelComponent implements OnInit {
         sourceConfig.queryConfig.selectedFilters.splice(index, 1);
 
         this.widgetConfigService.notify({
-            widgetId: this.widgetId,
             refreshData: true,
             refreshView: true,
         });
@@ -112,7 +108,6 @@ export class FilterSelectionPanelComponent implements OnInit {
 
         if (update) {
             this.widgetConfigService.notify({
-                widgetId: this.widgetId,
                 refreshData: true,
                 refreshView: true,
             });

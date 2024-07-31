@@ -226,19 +226,19 @@
                     <sp-field-selection-panel
                         #fieldSelectionPanel
                         [sourceConfig]="sourceConfig"
-                        [widgetId]="widgetId"
                     ></sp-field-selection-panel>
 
                     <sp-filter-selection-panel
                         [sourceConfig]="sourceConfig"
-                        [widgetId]="widgetId"
                     ></sp-filter-selection-panel>
 
                     <sp-group-selection-panel
                         #groupSelectionPanel
                         [sourceConfig]="sourceConfig"
-                        [widgetId]="widgetId"
                     ></sp-group-selection-panel>
+
+                    <sp-order-selection-panel [sourceConfig]="sourceConfig">
+                    </sp-order-selection-panel>
                 </div>
             </div>
         </mat-expansion-panel>

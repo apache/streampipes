@@ -128,6 +128,7 @@ import { DataExplorerDashboardToolbarComponent } from './components/dashboard/da
 import { TimeRangeSelectorMenuComponent } from './components/time-selector/time-selector-menu/time-selector-menu.component';
 import { CustomTimeRangeSelectionComponent } from './components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
 import { DataExplorerRefreshIntervalSettingsComponent } from './components/dashboard/dashboard-toolbar/refresh-interval-settings/refresh-interval-settings.component';
+import { OrderSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/order-selection-panel/order-selection-panel.component';
 
 @NgModule({
     imports: [
@@ -254,6 +255,7 @@ import { DataExplorerRefreshIntervalSettingsComponent } from './components/dashb
         DataExplorerVisualisationSettingsComponent,
         WidgetDirective,
         TooMuchDataComponent,
+        OrderSelectionPanelComponent,
         SpDataExplorerDataViewOverviewComponent,
         SpDataExplorerDashboardOverviewComponent,
         SpEchartsWidgetComponent,
