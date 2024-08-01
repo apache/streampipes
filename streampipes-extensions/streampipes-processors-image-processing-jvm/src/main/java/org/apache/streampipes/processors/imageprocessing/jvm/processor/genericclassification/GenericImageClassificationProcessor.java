@@ -64,8 +64,8 @@ public class GenericImageClassificationProcessor extends StreamPipesDataProcesso
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(
-            "org.apache.streampipes.processor.imageclassification.jvm.generic-image-classification")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processor.imageclassification.jvm.generic-image-classification", 0)
         .category(DataProcessorType.IMAGE_PROCESSING)
         .withAssets(ExtensionAssetType.DOCUMENTATION)
         .withLocales(Locales.EN)

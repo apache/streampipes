@@ -56,7 +56,7 @@ public class LatLngToJtsPointProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtojtspoint")
+        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtojtspoint", 0)
         .category(DataProcessorType.GEO)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

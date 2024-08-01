@@ -61,7 +61,8 @@ public class TopologyValidationProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.jts.processor.validation.complex")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.validation.complex", 0)
         .category(DataProcessorType.GEO)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
