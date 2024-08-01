@@ -58,28 +58,29 @@ public class SizeMeasureProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.sizemeasure")
-                                   .category(DataProcessorType.STRUCTURE_ANALYTICS)
-                                   .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-                                   .withLocales(Locales.EN)
-                                   .requiredStream(StreamRequirementsBuilder
-                                                       .create()
-                                                       .requiredProperty(EpRequirements.anyProperty())
-                                                       .build())
-                                   .requiredSingleValueSelection(
-                                       Labels.withId(SIZE_UNIT),
-                                       Options.from(
-                                           new Tuple2<>(BYTES_OPTION, BYTE_SIZE),
-                                           new Tuple2<>(KILO_BYTES_OPTION, KILOBYTE_SIZE),
-                                           new Tuple2<>(MEGA_BYTES_OPTION, MEGABYTE_SIZE)
-                                       )
-                                   )
-                                   .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(
-                                       Labels.withId(EVENT_SIZE),
-                                       EVENT_SIZE,
-                                       "http://schema.org/contentSize"
-                                   )))
-                                   .build();
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.enricher.jvm.sizemeasure", 0)
+        .category(DataProcessorType.STRUCTURE_ANALYTICS)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+                            .create()
+                            .requiredProperty(EpRequirements.anyProperty())
+                            .build())
+        .requiredSingleValueSelection(
+            Labels.withId(SIZE_UNIT),
+            Options.from(
+                new Tuple2<>(BYTES_OPTION, BYTE_SIZE),
+                new Tuple2<>(KILO_BYTES_OPTION, KILOBYTE_SIZE),
+                new Tuple2<>(MEGA_BYTES_OPTION, MEGABYTE_SIZE)
+            )
+        )
+        .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(
+            Labels.withId(EVENT_SIZE),
+            EVENT_SIZE,
+            "http://schema.org/contentSize"
+        )))
+        .build();
   }
 
   @Override

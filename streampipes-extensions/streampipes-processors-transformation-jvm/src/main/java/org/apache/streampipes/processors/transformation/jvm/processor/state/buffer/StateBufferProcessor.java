@@ -62,8 +62,8 @@ public class StateBufferProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(
-            "org.apache.streampipes.processors.transformation.jvm.processor.state.buffer")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.processor.state.buffer", 0)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredStream(StreamRequirementsBuilder.create()

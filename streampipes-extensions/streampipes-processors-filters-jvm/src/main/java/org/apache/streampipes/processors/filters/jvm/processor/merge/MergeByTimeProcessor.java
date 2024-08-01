@@ -56,7 +56,8 @@ public class MergeByTimeProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.merge")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.filters.jvm.merge", 0)
         .category(DataProcessorType.TRANSFORM)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON, "merge_description.png")
         .withLocales(Locales.EN)

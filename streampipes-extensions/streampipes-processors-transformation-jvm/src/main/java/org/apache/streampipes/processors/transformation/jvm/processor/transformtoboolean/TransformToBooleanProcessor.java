@@ -62,7 +62,8 @@ public class TransformToBooleanProcessor
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.transform-to-boolean")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.transform-to-boolean", 0)
         .category(DataProcessorType.BOOLEAN_OPERATOR)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)

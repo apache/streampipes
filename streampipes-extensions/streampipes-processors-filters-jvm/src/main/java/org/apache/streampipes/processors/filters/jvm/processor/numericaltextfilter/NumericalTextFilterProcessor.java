@@ -58,7 +58,8 @@ public class NumericalTextFilterProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.numericaltextfilter")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.filters.jvm.numericaltextfilter", 0)
         .category(DataProcessorType.FILTER, DataProcessorType.STRING_OPERATOR)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

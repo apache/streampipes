@@ -68,7 +68,8 @@ public class StringTimerProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.stringoperator.timer")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.stringoperator.timer", 0)
         .category(DataProcessorType.STRING_OPERATOR, DataProcessorType.TIME)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)

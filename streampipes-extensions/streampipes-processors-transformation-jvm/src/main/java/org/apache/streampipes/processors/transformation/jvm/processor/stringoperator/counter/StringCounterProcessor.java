@@ -57,8 +57,8 @@ public class StringCounterProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(
-            "org.apache.streampipes.processors.transformation.jvm.stringoperator.counter")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.stringoperator.counter", 0)
         .category(DataProcessorType.STRING_OPERATOR, DataProcessorType.COUNT_OPERATOR)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)

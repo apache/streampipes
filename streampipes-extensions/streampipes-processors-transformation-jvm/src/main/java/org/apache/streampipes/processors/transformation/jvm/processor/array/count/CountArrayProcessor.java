@@ -49,7 +49,8 @@ public class CountArrayProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.count-array")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.count-array", 0)
         .category(DataProcessorType.COUNT_OPERATOR)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
