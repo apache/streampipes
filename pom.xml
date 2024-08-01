@@ -82,7 +82,7 @@
         <jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>
         <javassist.version>3.30.1-GA</javassist.version>
         <jboss-logging.version>3.5.2.Final</jboss-logging.version>
-        <jedis.version>4.4.3</jedis.version>
+        <jedis.version>5.1.4</jedis.version>
         <jersey.version>3.1.3</jersey.version>
         <jgrapht.version>1.5.1</jgrapht.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
