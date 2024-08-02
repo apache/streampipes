@@ -50,7 +50,8 @@ public class TrigonometryProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.processor.trigonometry")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.enricher.jvm.processor.trigonometry", 0)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .category(DataProcessorType.ALGORITHM)

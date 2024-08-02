@@ -51,7 +51,8 @@ public class ValueChangeProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.valuechange")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.enricher.jvm.valuechange", 0)
         .category(DataProcessorType.VALUE_OBSERVER)
         .withAssets(ExtensionAssetType.DOCUMENTATION)
         .withLocales(Locales.EN)

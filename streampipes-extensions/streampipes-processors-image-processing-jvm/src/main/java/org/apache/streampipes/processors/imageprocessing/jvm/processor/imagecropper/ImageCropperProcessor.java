@@ -51,7 +51,8 @@ public class ImageCropperProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processor.imageclassification.jvm.image-cropper")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processor.imageclassification.jvm.image-cropper", 0)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .category(DataProcessorType.IMAGE_PROCESSING)

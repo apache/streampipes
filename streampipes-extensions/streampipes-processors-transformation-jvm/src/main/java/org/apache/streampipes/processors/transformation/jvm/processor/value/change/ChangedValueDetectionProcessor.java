@@ -60,7 +60,8 @@ public class ChangedValueDetectionProcessor
   //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.changed-value")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.changed-value", 0)
         .category(DataProcessorType.VALUE_OBSERVER)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION)

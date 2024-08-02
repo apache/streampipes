@@ -68,8 +68,8 @@ public class BooleanToStateProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(
-            "org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state", 0)
         .category(DataProcessorType.BOOLEAN_OPERATOR)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)

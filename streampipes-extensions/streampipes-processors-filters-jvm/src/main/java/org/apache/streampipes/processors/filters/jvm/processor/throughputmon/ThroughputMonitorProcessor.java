@@ -56,7 +56,8 @@ public class ThroughputMonitorProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.throughputmon")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.filters.jvm.throughputmon", 0)
         .category(DataProcessorType.STRUCTURE_ANALYTICS)
         .withAssets(ExtensionAssetType.DOCUMENTATION)
         .withLocales(Locales.EN)

@@ -59,7 +59,8 @@ public class MovingAverageProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.movingaverage")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.filters.jvm.movingaverage", 0)
         .category(DataProcessorType.FILTER)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION)

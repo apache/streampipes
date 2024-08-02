@@ -48,7 +48,8 @@ public class TextFilterProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.textfilter")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.filters.jvm.textfilter", 0)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .category(DataProcessorType.FILTER, DataProcessorType.STRING_OPERATOR)

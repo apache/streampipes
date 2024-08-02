@@ -56,7 +56,7 @@ public class HaversineDistanceCalculatorProcessor extends StreamPipesDataProcess
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create(
-            "org.apache.streampipes.processors.geo.jvm.latlong.processor.distancecalculator.haversine")
+            "org.apache.streampipes.processors.geo.jvm.latlong.processor.distancecalculator.haversine", 0)
         .category(DataProcessorType.GEO)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

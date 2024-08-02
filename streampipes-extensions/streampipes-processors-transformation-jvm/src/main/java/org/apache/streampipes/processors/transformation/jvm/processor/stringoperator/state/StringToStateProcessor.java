@@ -51,8 +51,8 @@ public class StringToStateProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(
-            "org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state", 0)
         .category(DataProcessorType.STRING_OPERATOR)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
