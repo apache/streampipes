@@ -59,6 +59,15 @@ export class AuthService {
         this.currentUserService.user$.next(decodedToken.user);
     }
 
+    public oauthLogin(token: string) {
+        const jwtHelper: JwtHelperService = new JwtHelperService({});
+        const decodedToken = jwtHelper.decodeToken(token);
+        this.tokenStorage.saveToken(token);
+        this.tokenStorage.saveUser(decodedToken.user);
+        this.currentUserService.authToken$.next(token);
+        this.currentUserService.user$.next(decodedToken.user);
+    }
+
     public logout() {
         this.tokenStorage.clearTokens();
         this.currentUserService.authToken$.next(undefined);

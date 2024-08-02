@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-06-30 09:10:19.
+// Generated using typescript-generator version 3.2.1263 on 2024-07-29 21:03:44.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':

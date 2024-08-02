@@ -19,6 +19,9 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content">
         <div fxFlex="100" fxLayout="column" class="p-15">
+            <sp-warning-box *ngIf="isUserAccount && isExternalProvider">
+                Some settings of externally-managed users cannot be changed.
+            </sp-warning-box>
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                 <div class="general-options-panel" fxLayout="column">
                     <span class="general-options-header">Basics</span>
@@ -41,7 +44,6 @@
                             fxFlex
                             type="email"
                             matInput
-                            required
                             data-cy="new-user-email"
                         />
                         <mat-error>Must be a valid email address.</mat-error>
@@ -56,7 +58,6 @@
                             formControlName="fullName"
                             fxFlex
                             matInput
-                            required
                             data-cy="new-user-full-name"
                         />
                     </mat-form-field>

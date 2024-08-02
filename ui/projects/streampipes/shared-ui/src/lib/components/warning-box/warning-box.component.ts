@@ -16,37 +16,14 @@
  *
  */
 
-.login-error {
-    background: #ffa2a2;
-    padding: 8px;
-    color: #3e3e3e;
-    border-radius: 5px;
-}
+import { Component, Input } from '@angular/core';
 
-.info-box {
-    padding: 8px;
-    border-radius: 5px;
-}
-
-.register-error {
-    background: #ffa2a2;
-    color: #3e3e3e;
-}
-
-.register-success {
-    background: #a2ffa2;
-    color: #3e3e3e;
-}
-
-.separator {
-    width: 100%;
-    text-align: center;
-    border-bottom: 1px solid var(--color-bg-3);
-    line-height: 0.1em;
-    margin: 20px 0 20px;
-}
-
-.separator span {
-    background: #fff;
-    padding: 0 10px;
+@Component({
+    selector: 'sp-warning-box',
+    templateUrl: './warning-box.component.html',
+    styleUrls: ['./warning-box.component.scss'],
+})
+export class SpWarningBoxComponent {
+    @Input()
+    color = '';
 }

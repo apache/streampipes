@@ -16,37 +16,26 @@
  *
  */
 
-.login-error {
-    background: #ffa2a2;
-    padding: 8px;
-    color: #3e3e3e;
-    border-radius: 5px;
-}
+package org.apache.streampipes.service.core.oauth2;
 
-.info-box {
-    padding: 8px;
-    border-radius: 5px;
-}
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 
-.register-error {
-    background: #ffa2a2;
-    color: #3e3e3e;
-}
+import org.springframework.context.annotation.Condition;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.core.type.AnnotatedTypeMetadata;
 
-.register-success {
-    background: #a2ffa2;
-    color: #3e3e3e;
-}
+public class OAuthEnabledCondition implements Condition {
 
-.separator {
-    width: 100%;
-    text-align: center;
-    border-bottom: 1px solid var(--color-bg-3);
-    line-height: 0.1em;
-    margin: 20px 0 20px;
-}
+  private final Environment env;
 
-.separator span {
-    background: #fff;
-    padding: 0 10px;
+  public OAuthEnabledCondition() {
+    this.env = Environments.getEnvironment();
+  }
+
+  @Override
+  public boolean matches(ConditionContext context,
+                         AnnotatedTypeMetadata metadata) {
+    return env.getOAuthEnabled().getValueOrDefault();
+  }
 }
