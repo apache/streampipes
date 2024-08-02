@@ -28,42 +28,49 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class OAuthConfigurationParserTest {
 
-  private final Map<String, String> env = new HashMap<>() {{
-    put("SP_OAUTH_PROVIDER_A_AUTHORIZATION_URI", "authorizationUriA");
-    put("SP_OAUTH_PROVIDER_A_CLIENT_NAME", "clientNameA");
-    put("SP_OAUTH_PROVIDER_A_CLIENT_ID", "clientIdA");
-    put("SP_OAUTH_PROVIDER_A_CLIENT_SECRET", "clientSecretA");
-    put("SP_OAUTH_PROVIDER_A_FULL_NAME_ATTRIBUTE_NAME", "fullNameA");
-    put("SP_OAUTH_PROVIDER_A_ISSUER_URI", "issuerUriA");
-    put("SP_OAUTH_PROVIDER_A_JWK_SET_URI", "jwkSetUriA");
-    put("SP_OAUTH_PROVIDER_A_SCOPES", "scope1,scope2");
-    put("SP_OAUTH_PROVIDER_A_TOKEN_URI", "tokenUriA");
-    put("SP_OAUTH_PROVIDER_A_USER_INFO_URI", "userInfoUriA");
-    put("SP_OAUTH_PROVIDER_A_USER_ID_ATTRIBUTE_NAME", "userNameA");
-    put("SP_OAUTH_PROVIDER_BA_AUTHORIZATION_URI", "authorizationUriB");
-  }};
+  private final Map<String, String> env = new HashMap<>() {
+    {
+      put("SP_OAUTH_PROVIDER_AZURE_AUTHORIZATION_URI", "authorizationUriA");
+      put("SP_OAUTH_PROVIDER_AZURE_CLIENT_NAME", "clientNameA");
+      put("SP_OAUTH_PROVIDER_AZURE_CLIENT_ID", "clientIdA");
+      put("SP_OAUTH_PROVIDER_AZURE_CLIENT_SECRET", "clientSecretA");
+      put("SP_OAUTH_PROVIDER_AZURE_FULL_NAME_ATTRIBUTE_NAME", "fullNameA");
+      put("SP_OAUTH_PROVIDER_AZURE_ISSUER_URI", "issuerUriA");
+      put("SP_OAUTH_PROVIDER_AZURE_JWK_SET_URI", "jwkSetUriA");
+      put("SP_OAUTH_PROVIDER_AZURE_SCOPES", "scope1,scope2");
+      put("SP_OAUTH_PROVIDER_AZURE_TOKEN_URI", "tokenUriA");
+      put("SP_OAUTH_PROVIDER_AZURE_USER_INFO_URI", "userInfoUriA");
+      put("SP_OAUTH_PROVIDER_AZURE_USER_ID_ATTRIBUTE_NAME", "userNameA");
+      put("SP_OAUTH_PROVIDER_GITHUB_AUTHORIZATION_URI", "authorizationUriB");
+    }
+  };
 
   @Test
   public void testParser() {
     var config = new OAuthConfigurationParser().parse(env);
 
     assertEquals(2, config.size());
-    assertEquals("a", config.get(0).getRegistrationId());
-    assertEquals("ba", config.get(1).getRegistrationId());
-    assertEquals("authorizationUriA", config.get(0).getAuthorizationUri());
-    assertEquals("authorizationUriB", config.get(1).getAuthorizationUri());
-    assertEquals("clientNameA", config.get(0).getClientName());
-    assertEquals("clientIdA", config.get(0).getClientId());
-    assertEquals("clientSecretA", config.get(0).getClientSecret());
-    assertEquals("fullNameA", config.get(0).getFullNameAttributeName());
-    assertEquals("issuerUriA", config.get(0).getIssuerUri());
-    assertEquals("jwkSetUriA", config.get(0).getJwkSetUri());
-    assertEquals(2, config.get(0).getScopes().length);
-    assertEquals("scope1", config.get(0).getScopes()[0]);
-    assertEquals("scope2", config.get(0).getScopes()[1]);
-    assertEquals("tokenUriA", config.get(0).getTokenUri());
-    assertEquals("userInfoUriA", config.get(0).getUserInfoUri());
-    assertEquals("userNameA", config.get(0).getUserIdAttributeName());
-    assertNull(config.get(1).getTokenUri());
+
+    var azureConfig = config.get(1);
+    assertEquals("azure", azureConfig.getRegistrationId());
+    assertEquals("authorizationUriA", azureConfig.getAuthorizationUri());
+    assertEquals("clientNameA", azureConfig.getClientName());
+    assertEquals("clientIdA", azureConfig.getClientId());
+    assertEquals("clientSecretA", azureConfig.getClientSecret());
+    assertEquals("fullNameA", azureConfig.getFullNameAttributeName());
+    assertEquals("issuerUriA", azureConfig.getIssuerUri());
+    assertEquals("jwkSetUriA", azureConfig.getJwkSetUri());
+    assertEquals(2, azureConfig.getScopes().length);
+    assertEquals("scope1", azureConfig.getScopes()[0]);
+    assertEquals("tokenUriA", azureConfig.getTokenUri());
+    assertEquals("userInfoUriA", azureConfig.getUserInfoUri());
+    assertEquals("userNameA", azureConfig.getUserIdAttributeName());
+
+    var gitHubConfig = config.get(0);
+    assertEquals("github", gitHubConfig.getRegistrationId());
+    assertEquals("authorizationUriB", gitHubConfig.getAuthorizationUri());
+    assertNull(gitHubConfig.getTokenUri());
+
+
   }
 }
