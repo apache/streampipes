@@ -41,6 +41,9 @@ public class UserAccount extends Principal {
   protected boolean hideTutorial;
   protected boolean darkMode = false;
 
+  /**
+   * The authentication provider (LOCAL or one of the configured OAuth providers
+   */
   protected String provider;
 
   public UserAccount() {

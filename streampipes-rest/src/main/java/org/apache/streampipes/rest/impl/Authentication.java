@@ -171,6 +171,12 @@ public class Authentication extends AbstractRestResource {
     );
   }
 
+  /**
+   * Record which contains information on the configured OAuth providers required by the login page
+   * @param enabled indicates if an OAuth provider is configured
+   * @param redirectUri the redirect URI
+   * @param supportedProviders A list of configured OAuth providers
+   */
   private record UiOAuthSettings(boolean enabled,
                                  String redirectUri,
                                  List<OAuthProvider> supportedProviders) {
