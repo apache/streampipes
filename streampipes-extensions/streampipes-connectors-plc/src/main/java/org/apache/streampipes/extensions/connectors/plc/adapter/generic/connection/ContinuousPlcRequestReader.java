@@ -55,6 +55,10 @@ public class ContinuousPlcRequestReader
       var event = eventGenerator.makeEvent(readResponse);
       collector.collect(event);
     } catch (Exception e) {
+      // ensure that the cached connection manager removes the broken connection
+      if (connectionManager instanceof CachedPlcConnectionManager) {
+        ((CachedPlcConnectionManager) connectionManager).removeCachedConnection(settings.connectionString());
+      }
       LOG.error("Error while reading from PLC with connection string {} ", settings.connectionString(), e);
     }
   }

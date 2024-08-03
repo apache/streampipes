@@ -33,27 +33,39 @@ import java.util.concurrent.TimeoutException;
 
 public class PullAdapterScheduler {
 
-  protected static final Logger LOGGER = LoggerFactory.getLogger(PullAdapterScheduler.class);
+  protected static final Logger LOG = LoggerFactory.getLogger(PullAdapterScheduler.class);
 
   private ScheduledExecutorService scheduler;
 
   public void schedule(IPullAdapter pullAdapter,
                        String adapterElementId) {
-    final Runnable task = () -> {
-      try {
-        pullAdapter.pullData();
-      } catch (ExecutionException | InterruptedException e) {
-        SpMonitoringManager.INSTANCE.addErrorMessage(
-            adapterElementId,
-            SpLogEntry.from(System.currentTimeMillis(), SpLogMessage.from(e)));
-      } catch (TimeoutException e) {
-        LOGGER.warn("Timeout occurred", e);
+    scheduler = Executors.newSingleThreadScheduledExecutor();
+    final Runnable task = new Runnable() {
+      @Override
+      public void run() {
+        try {
+          pullAdapter.pullData();
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+          LOG.error("Error while pulling data", e);
+          SpMonitoringManager.INSTANCE.addErrorMessage(
+              adapterElementId,
+              SpLogEntry.from(System.currentTimeMillis(), SpLogMessage.from(e))
+          );
+        } finally {
+          scheduler.schedule(
+              this,
+              pullAdapter.getPollingInterval().value(),
+              pullAdapter.getPollingInterval().timeUnit()
+          );
+        }
       }
     };
 
-    scheduler = Executors.newScheduledThreadPool(1);
-    scheduler.scheduleAtFixedRate(task, 1,
-        pullAdapter.getPollingInterval().value(), pullAdapter.getPollingInterval().timeUnit());
+    scheduler.schedule(
+        task,
+        pullAdapter.getPollingInterval().value(),
+        pullAdapter.getPollingInterval().timeUnit()
+    );
   }
 
   public void shutdown() {
