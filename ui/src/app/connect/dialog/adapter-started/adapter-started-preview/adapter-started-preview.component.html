@@ -18,6 +18,7 @@
 
 <div fxFlex="100" fxLayout="column">
     <sp-pipeline-element-runtime-info
+        *ngIf="streamDescription"
         [streamDescription]="streamDescription"
     ></sp-pipeline-element-runtime-info>
 </div>
