@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient, HttpContext, HttpEvent } from '@angular/common/http';
 
-import { Observable, share } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UnitDescription } from '../model/UnitDescription';
 import {

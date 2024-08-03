@@ -65,25 +65,7 @@ export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
                         this.runtimeData = JSON.parse(
                             chunks[chunks.length - 2],
                         );
-                        // this.runtimeDataError = !json;
-                        // this.runtimeData = Object.entries(json).map(
-                        //   ([runtimeName, value]) => ({ runtimeName, value }),
-                        // );
-                        console.log(this.runtimeData);
                     }
-                    // this.runtimeDataError = false;
-                    // if (
-                    //     !(
-                    //         Object.keys(data).length === 0 &&
-                    //         data.constructor === Object
-                    //     )
-                    // ) {
-                    //     this.runtimeData = data;
-                    // }
-                    //
-                    // this.timer = setTimeout(() => {
-                    //     this.getLatestRuntimeInfo();
-                    // }, 1000);
                 } else {
                     this.runtimeDataError = true;
                 }
