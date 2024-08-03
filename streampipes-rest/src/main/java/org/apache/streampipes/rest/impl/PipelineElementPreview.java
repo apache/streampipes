@@ -53,8 +53,9 @@ public class PipelineElementPreview extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "{previewId}/{pipelineElementDomId}",
       produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-  public StreamingResponseBody getPipelinePreviewResult(@PathVariable("previewId") String previewId,
-                                                        @PathVariable("pipelineElementDomId") String pipelineElementDomId) {
+  public StreamingResponseBody getPipelinePreviewResult(
+      @PathVariable("previewId") String previewId,
+      @PathVariable("pipelineElementDomId") String pipelineElementDomId) {
     try {
       var spDataStream = new PipelinePreview().getPipelineElementPreviewStream(previewId, pipelineElementDomId);
       var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(spDataStream);
