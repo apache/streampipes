@@ -57,8 +57,8 @@ public class TimestampExtractorProcessor extends StreamPipesDataProcessor
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(
-            "org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor", 0)
         .category(DataProcessorType.TIME)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION)

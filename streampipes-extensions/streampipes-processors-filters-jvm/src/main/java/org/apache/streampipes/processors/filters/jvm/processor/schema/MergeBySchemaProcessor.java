@@ -39,7 +39,8 @@ public class MergeBySchemaProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.schema")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.filters.jvm.schema", 0)
         .category(DataProcessorType.TRANSFORM)
         .withAssets(ExtensionAssetType.DOCUMENTATION)
         .withLocales(Locales.EN)

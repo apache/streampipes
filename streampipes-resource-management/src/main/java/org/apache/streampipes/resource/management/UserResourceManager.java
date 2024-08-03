@@ -90,19 +90,19 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   public void registerUser(UserRegistrationData data) throws UsernameAlreadyTakenException {
     try {
       validateAndRegisterNewUser(data);
-      createTokenAndSendActivationMail(data.username());
+      createTokenAndSendActivationMail(data.getUsername());
     } catch (IOException e) {
       LOG.error("Registration of user could not be completed: {}", e.getMessage());
     }
   }
 
   private synchronized void validateAndRegisterNewUser(UserRegistrationData data) {
-    if (db.checkUserExists(data.username())) {
+    if (db.checkUserExists(data.getUsername())) {
       throw new UsernameAlreadyTakenException("Username already taken");
     }
     String encryptedPassword;
     try {
-      encryptedPassword = PasswordUtil.encryptPassword(data.password());
+      encryptedPassword = PasswordUtil.encryptPassword(data.getPassword());
     } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
       throw new SpException("Error during password encryption: %s".formatted(e.getMessage()));
     }
@@ -112,9 +112,9 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
   private synchronized void createNewUser(UserRegistrationData data, String encryptedPassword) {
 
-    List<Role> roles = data.roles().stream().map(Role::valueOf).toList();
-    UserAccount user = UserAccount.from(data.username(), encryptedPassword, new HashSet<>(roles));
-    user.setUsername(data.username());
+    List<Role> roles = data.getRoles().stream().map(Role::valueOf).toList();
+    UserAccount user = UserAccount.from(data.getUsername(), encryptedPassword, new HashSet<>(roles));
+    user.setUsername(data.getUsername());
     user.setPassword(encryptedPassword);
     user.setAccountEnabled(false);
     db.storeUser(user);
@@ -169,7 +169,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     PasswordRecoveryToken token = getPasswordRecoveryTokenStorage().getElementById(recoveryCode);
     Principal user = db.getUser(token.getUsername());
     if (user instanceof UserAccount) {
-      String encryptedPassword = PasswordUtil.encryptPassword(data.password());
+      String encryptedPassword = PasswordUtil.encryptPassword(data.getPassword());
       ((UserAccount) user).setPassword(encryptedPassword);
       db.updateUser(user);
       getPasswordRecoveryTokenStorage().deleteElement(token);
@@ -194,4 +194,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
 
+  public void registerOauthUser(UserAccount userAccount) {
+    db.storeUser(userAccount);
+  }
 }

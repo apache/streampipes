@@ -36,7 +36,7 @@ public class AdapterWorkerManagementTest {
   @Test
   public void invokeAdapterNotPresent() throws AdapterException {
     var adapterDescription = AdapterConfigurationBuilder
-        .create("id", null)
+        .create("id", 0,  null)
         .build();
 
     var declarerSingleton = mock(IDeclarersSingleton.class);

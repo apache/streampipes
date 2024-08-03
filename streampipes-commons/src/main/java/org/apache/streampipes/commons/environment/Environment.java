@@ -18,9 +18,12 @@
 
 package org.apache.streampipes.commons.environment;
 
+import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
 import org.apache.streampipes.commons.environment.variable.BooleanEnvironmentVariable;
 import org.apache.streampipes.commons.environment.variable.IntEnvironmentVariable;
 import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
+
+import java.util.List;
 
 public interface Environment {
 
@@ -90,6 +93,12 @@ public interface Environment {
   StringEnvironmentVariable getExtensionsAuthMode();
 
   StringEnvironmentVariable getEncryptionPasscode();
+
+  BooleanEnvironmentVariable getOAuthEnabled();
+
+  StringEnvironmentVariable getOAuthRedirectUri();
+
+  List<OAuthConfiguration> getOAuthConfigurations();
 
   // Messaging
   StringEnvironmentVariable getKafkaRetentionTimeMs();

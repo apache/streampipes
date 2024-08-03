@@ -59,7 +59,7 @@ public class SpeedCalculatorProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.speedcalculator")
+        .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.speedcalculator", 0)
         .category(DataProcessorType.GEO)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

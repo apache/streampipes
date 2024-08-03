@@ -66,8 +66,8 @@ public class BooleanTimekeepingProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(
-            "org.apache.streampipes.processors.transformation.jvm.booloperator.timekeeping")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.booloperator.timekeeping", 0)
         .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.TIME)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON, "time_measure_example.png")

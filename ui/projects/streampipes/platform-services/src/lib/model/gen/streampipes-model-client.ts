@@ -16,12 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-04-22 14:35:38.
+// Generated using typescript-generator version 3.2.1263 on 2024-07-29 21:20:28.
 
-export class Group {
+import { Storable } from './streampipes-model';
+
+export class Group implements Storable {
+    elementId: string;
     groupId: string;
     groupName: string;
     rev: string;
@@ -32,6 +36,7 @@ export class Group {
             return data;
         }
         const instance = target || new Group();
+        instance.elementId = data.elementId;
         instance.groupId = data.groupId;
         instance.groupName = data.groupName;
         instance.rev = data.rev;
@@ -66,7 +71,8 @@ export class MatchingResultMessage {
     }
 }
 
-export class Permission {
+export class Permission implements Storable {
+    elementId: string;
     grantedAuthorities: PermissionEntry[];
     objectClassName: string;
     objectInstanceId: string;
@@ -80,6 +86,7 @@ export class Permission {
             return data;
         }
         const instance = target || new Permission();
+        instance.elementId = data.elementId;
         instance.grantedAuthorities = __getCopyArrayFn(
             PermissionEntry.fromData,
         )(data.grantedAuthorities);
@@ -193,6 +200,7 @@ export class UserAccount extends Principal {
     preferredDataProcessors: string[];
     preferredDataSinks: string[];
     preferredDataStreams: string[];
+    provider: string;
     userApiTokens: UserApiToken[];
 
     static fromData(data: UserAccount, target?: UserAccount): UserAccount {
@@ -214,6 +222,7 @@ export class UserAccount extends Principal {
         instance.preferredDataStreams = __getCopyArrayFn(__identity<string>())(
             data.preferredDataStreams,
         );
+        instance.provider = data.provider;
         instance.userApiTokens = __getCopyArrayFn(UserApiToken.fromData)(
             data.userApiTokens,
         );

@@ -41,7 +41,8 @@ public class SequenceSiddhiProcessor extends StreamPipesSiddhiProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.sequence")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.siddhi.sequence", 0)
         .category(DataProcessorType.FILTER)
         .withAssets(ExtensionAssetType.DOCUMENTATION)
         .withLocales(Locales.EN)

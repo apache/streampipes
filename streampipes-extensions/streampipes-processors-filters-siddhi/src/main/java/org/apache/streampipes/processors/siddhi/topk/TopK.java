@@ -70,7 +70,8 @@ public class TopK extends StreamPipesSiddhiProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.topk")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.siddhi.topk", 0)
         .withLocales(Locales.EN)
         .category(DataProcessorType.TRANSFORM)
         .withAssets(ExtensionAssetType.DOCUMENTATION)

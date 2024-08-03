@@ -57,7 +57,8 @@ public class PartOfSpeechProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.partofspeech")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.textmining.jvm.partofspeech", 0)
         .category(DataProcessorType.ENRICH_TEXT)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

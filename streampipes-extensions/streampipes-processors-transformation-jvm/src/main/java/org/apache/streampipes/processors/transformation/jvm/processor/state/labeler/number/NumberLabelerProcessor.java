@@ -67,8 +67,8 @@ public class NumberLabelerProcessor extends StreamPipesDataProcessor
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(
-            "org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number", 0)
         .category(DataProcessorType.ENRICH)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)

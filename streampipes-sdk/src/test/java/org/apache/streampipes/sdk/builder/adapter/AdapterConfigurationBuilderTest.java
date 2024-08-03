@@ -37,12 +37,14 @@ public class AdapterConfigurationBuilderTest {
   @Test
   public void create() {
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id, null)
+        .create(id, 0, null)
         .buildConfiguration();
 
     Assertions.assertNotNull(adapterConfiguration);
-    Assertions.assertEquals(id,
-                            adapterConfiguration.getAdapterDescription().getAppId()
+    Assertions.assertEquals(
+        id,
+        adapterConfiguration.getAdapterDescription()
+                            .getAppId()
     );
 
     var expected = new AdapterDescription();
@@ -54,7 +56,7 @@ public class AdapterConfigurationBuilderTest {
   public void withOneParser() {
     var expected = mock(IParser.class);
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id, null)
+        .create(id, 0, null)
         .withSupportedParsers(expected)
         .buildConfiguration();
 
@@ -66,7 +68,7 @@ public class AdapterConfigurationBuilderTest {
     var parser1 = mock(IParser.class);
     var parser2 = mock(IParser.class);
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id, null)
+        .create(id, 0, null)
         .withSupportedParsers(parser1, parser2)
         .buildConfiguration();
 
@@ -78,7 +80,7 @@ public class AdapterConfigurationBuilderTest {
     var parser1 = mock(IParser.class);
     var parser2 = mock(IParser.class);
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id, null)
+        .create(id, 0, null)
         .withSupportedParsers(parser1)
         .withSupportedParsers(parser2)
         .buildConfiguration();
@@ -89,11 +91,12 @@ public class AdapterConfigurationBuilderTest {
   @Test
   public void withCategory() {
     var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id, null)
+        .create(id, 0, null)
         .withCategory(AdapterType.Manufacturing)
         .buildConfiguration();
 
-    var actual = adapterConfiguration.getAdapterDescription().getCategory();
+    var actual = adapterConfiguration.getAdapterDescription()
+                                     .getCategory();
 
     Assertions.assertEquals(1, actual.size());
     Assertions.assertEquals(AdapterType.Manufacturing.getCode(), actual.get(0));

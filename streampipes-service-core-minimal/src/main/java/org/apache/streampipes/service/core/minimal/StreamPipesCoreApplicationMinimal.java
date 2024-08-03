@@ -45,7 +45,10 @@ import java.util.List;
     WebSecurityConfig.class,
     WelcomePageController.class
 })
-@ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.ps"})
+@ComponentScan({
+    "org.apache.streampipes.rest.*",
+    "org.apache.streampipes.ps",
+    "org.apache.streampipes.service.core.oauth2"})
 public class StreamPipesCoreApplicationMinimal extends StreamPipesCoreApplication {
 
   public static void main(String[] args) {

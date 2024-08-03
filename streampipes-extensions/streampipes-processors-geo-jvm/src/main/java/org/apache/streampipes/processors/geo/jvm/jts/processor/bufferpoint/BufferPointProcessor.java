@@ -66,7 +66,8 @@ public class BufferPointProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.jts.processor.bufferpoint")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.bufferpoint", 0)
         .category(DataProcessorType.GEO)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON, "output.png")
         .withLocales(Locales.EN)
