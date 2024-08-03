@@ -18,9 +18,9 @@
 
 import { Injectable } from '@angular/core';
 
-import { HttpClient, HttpContext } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpEvent } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, share } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UnitDescription } from '../model/UnitDescription';
 import {
@@ -78,11 +78,16 @@ export class RestService {
             );
     }
 
-    getRuntimeInfo(sourceDescription): Observable<Record<string, any>> {
+    getRuntimeInfo(
+        sourceDescription: SpDataStream,
+    ): Observable<HttpEvent<string>> {
         return this.http.post(
             `${this.platformServicesCommons.apiBasePath}/pipeline-element/runtime`,
             sourceDescription,
             {
+                responseType: 'text',
+                observe: 'events',
+                reportProgress: true,
                 context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
             },
         );

@@ -24,6 +24,7 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     Component,
     EventEmitter,
+    HostListener,
     Input,
     NgZone,
     OnDestroy,
@@ -168,6 +169,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.deletePipelineElementPreview(false);
         this.jsplumbFactoryService.destroy(this.preview);
+    }
+
+    @HostListener('window:beforeunload')
+    onWindowClose() {
+        this.ngOnDestroy();
     }
 
     updateMouseover(elementId: string) {

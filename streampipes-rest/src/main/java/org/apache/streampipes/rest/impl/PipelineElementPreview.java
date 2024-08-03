@@ -18,9 +18,12 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.preview.PipelinePreview;
+import org.apache.streampipes.manager.runtime.DataStreamRuntimeInfoProvider;
+import org.apache.streampipes.manager.runtime.RateLimitedRuntimeInfoProvider;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.preview.PipelinePreviewModel;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.shared.exception.BadRequestException;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +34,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 @RestController
 @RequestMapping("/api/v2/pipeline-element-preview")
@@ -48,14 +52,16 @@ public class PipelineElementPreview extends AbstractAuthGuardedRestResource {
   }
 
   @GetMapping(path = "{previewId}/{pipelineElementDomId}",
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getPipelinePreviewResult(@PathVariable("previewId") String previewId,
-                                           @PathVariable("pipelineElementDomId") String pipelineElementDomId) {
+      produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+  public StreamingResponseBody getPipelinePreviewResult(@PathVariable("previewId") String previewId,
+                                                        @PathVariable("pipelineElementDomId") String pipelineElementDomId) {
     try {
-      String runtimeInfo = new PipelinePreview().getPipelineElementPreview(previewId, pipelineElementDomId);
-      return ok(runtimeInfo);
+      var spDataStream = new PipelinePreview().getPipelineElementPreviewStream(previewId, pipelineElementDomId);
+      var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(spDataStream);
+      var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(runtimeInfoFetcher);
+      return runtimeInfoProvider::streamOutput;
     } catch (IllegalArgumentException e) {
-      return badRequest();
+      throw new BadRequestException("Could not generate preview", e);
     }
   }
 

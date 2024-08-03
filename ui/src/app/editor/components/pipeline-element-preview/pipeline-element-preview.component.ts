@@ -16,25 +16,29 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EditorService } from '../../services/editor.service';
+import { Subscription } from 'rxjs';
+import { HttpDownloadProgressEvent, HttpEventType } from '@angular/common/http';
+import { KeyValue } from '@angular/common';
 
 @Component({
     selector: 'sp-pipeline-element-preview',
     templateUrl: './pipeline-element-preview.component.html',
     styleUrls: ['./pipeline-element-preview.component.scss'],
 })
-export class PipelineElementPreviewComponent implements OnInit {
+export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
     @Input()
     previewId: string;
 
     @Input()
     pipelineElementDomId: string;
 
-    runtimeData: ReadonlyMap<string, unknown>;
+    runtimeData: Record<string, any>;
 
     runtimeDataError = false;
     timer: any;
+    previewSub: Subscription;
 
     constructor(private editorService: EditorService) {}
 
@@ -42,27 +46,51 @@ export class PipelineElementPreviewComponent implements OnInit {
         this.getLatestRuntimeInfo();
     }
 
-    getLatestRuntimeInfo() {
-        this.editorService
-            .getPipelinePreviewResult(this.previewId, this.pipelineElementDomId)
-            .subscribe(data => {
-                if (data) {
-                    this.runtimeDataError = false;
-                    if (
-                        !(
-                            Object.keys(data).length === 0 &&
-                            data.constructor === Object
-                        )
-                    ) {
-                        this.runtimeData = data;
-                    }
+    keyValueCompareFn = (
+        a: KeyValue<string, any>,
+        b: KeyValue<string, any>,
+    ): number => {
+        return a.key.localeCompare(b.key);
+    };
 
-                    this.timer = setTimeout(() => {
-                        this.getLatestRuntimeInfo();
-                    }, 1000);
+    getLatestRuntimeInfo() {
+        this.previewSub = this.editorService
+            .getPipelinePreviewResult(this.previewId, this.pipelineElementDomId)
+            .subscribe(event => {
+                if (event) {
+                    if (event.type === HttpEventType.DownloadProgress) {
+                        const chunks = (
+                            event as HttpDownloadProgressEvent
+                        ).partialText.split('\n');
+                        this.runtimeData = JSON.parse(
+                            chunks[chunks.length - 2],
+                        );
+                        // this.runtimeDataError = !json;
+                        // this.runtimeData = Object.entries(json).map(
+                        //   ([runtimeName, value]) => ({ runtimeName, value }),
+                        // );
+                        console.log(this.runtimeData);
+                    }
+                    // this.runtimeDataError = false;
+                    // if (
+                    //     !(
+                    //         Object.keys(data).length === 0 &&
+                    //         data.constructor === Object
+                    //     )
+                    // ) {
+                    //     this.runtimeData = data;
+                    // }
+                    //
+                    // this.timer = setTimeout(() => {
+                    //     this.getLatestRuntimeInfo();
+                    // }, 1000);
                 } else {
                     this.runtimeDataError = true;
                 }
             });
+    }
+
+    ngOnDestroy() {
+        this.previewSub?.unsubscribe();
     }
 }

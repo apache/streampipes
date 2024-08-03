@@ -23,13 +23,15 @@ import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpoi
 import org.apache.streampipes.manager.execution.http.DetachHttpRequest;
 import org.apache.streampipes.manager.execution.http.InvokeHttpRequest;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
-import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.preview.PipelinePreviewModel;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,16 +41,20 @@ import java.util.stream.Collectors;
 
 public class PipelinePreview {
 
+  private static final Logger LOG = LoggerFactory.getLogger(PipelinePreview.class);
+
   public PipelinePreviewModel initiatePreview(Pipeline pipeline) {
     String previewId = generatePreviewId();
     pipeline.setActions(new ArrayList<>());
-    List<NamedStreamPipesEntity> pipelineElements = new PipelineVerificationHandlerV2(pipeline)
+    List<NamedStreamPipesEntity> pipelineElements = new ArrayList<>(
+        new PipelineVerificationHandlerV2(pipeline)
         .verifyAndBuildGraphs(true)
-        .stream()
-        .collect(Collectors.toList());
+    );
 
     invokeGraphs(filter(pipelineElements));
     storeGraphs(previewId, pipelineElements);
+
+    LOG.info("Preview pipeline {} started", previewId);
 
     return makePreviewModel(previewId, pipelineElements);
   }
@@ -57,9 +63,10 @@ public class PipelinePreview {
     List<NamedStreamPipesEntity> graphs = ActivePipelinePreviews.INSTANCE.getInvocationGraphs(previewId);
     detachGraphs(filter(graphs));
     deleteGraphs(previewId);
+    LOG.info("Preview pipeline {} stopped", previewId);
   }
 
-  public String getPipelineElementPreview(String previewId,
+  public SpDataStream getPipelineElementPreviewStream(String previewId,
                                           String pipelineElementDomId) throws IllegalArgumentException {
     Optional<NamedStreamPipesEntity> graphOpt = ActivePipelinePreviews
         .INSTANCE
@@ -68,9 +75,9 @@ public class PipelinePreview {
     if (graphOpt.isPresent()) {
       NamedStreamPipesEntity graph = graphOpt.get();
       if (graph instanceof DataProcessorInvocation) {
-        return Operations.getRuntimeInfo(((DataProcessorInvocation) graph).getOutputStream());
+        return ((DataProcessorInvocation) graph).getOutputStream();
       } else if (graph instanceof SpDataStream) {
-        return Operations.getRuntimeInfo((SpDataStream) graph);
+        return ((SpDataStream) graph);
       } else {
         throw new IllegalArgumentException("Requested pipeline element is not a data processor");
       }
@@ -93,7 +100,7 @@ public class PipelinePreview {
         g.setSelectedEndpointUrl(findSelectedEndpoint(g));
         new InvokeHttpRequest().execute(g, g.getSelectedEndpointUrl(), null);
       } catch (NoServiceEndpointsAvailableException e) {
-        e.printStackTrace();
+        LOG.warn("No endpoint found for pipeline element {}", g.getAppId());
       }
     });
   }

@@ -19,6 +19,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { SpDataStream } from '@streampipes/platform-services';
 import { RestService } from '../../connect/services/rest.service';
+import { Subscription } from 'rxjs';
+import { HttpDownloadProgressEvent, HttpEventType } from '@angular/common/http';
 
 @Component({
     selector: 'sp-pipeline-element-runtime-info',
@@ -29,55 +31,35 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     @Input()
     streamDescription: SpDataStream;
 
-    _pollingActive: boolean;
-
     runtimeData: { runtimeName: string; value: any }[];
     timer: any;
     runtimeDataError = false;
+    runtimeSub: Subscription;
 
     constructor(private restService: RestService) {}
 
     ngOnInit(): void {
-        this.checkPollingStart();
-    }
-
-    checkPollingStart() {
-        if (this._pollingActive) {
-            this.getLatestRuntimeInfo();
-        }
+        this.getLatestRuntimeInfo();
     }
 
     getLatestRuntimeInfo() {
-        this.restService
+        this.runtimeSub = this.restService
             .getRuntimeInfo(this.streamDescription)
-            .subscribe(data => {
-                this.runtimeDataError = !data;
-
-                this.runtimeData = Object.entries(data).map(
-                    ([runtimeName, value]) => ({ runtimeName, value }),
-                );
-
-                if (this._pollingActive) {
-                    this.timer = setTimeout(
-                        () => this.getLatestRuntimeInfo(),
-                        1000,
+            .subscribe(event => {
+                if (event.type === HttpEventType.DownloadProgress) {
+                    const chunks = (
+                        event as HttpDownloadProgressEvent
+                    ).partialText.split('\n');
+                    const json = JSON.parse(chunks[chunks.length - 2]);
+                    this.runtimeDataError = !json;
+                    this.runtimeData = Object.entries(json).map(
+                        ([runtimeName, value]) => ({ runtimeName, value }),
                     );
                 }
             });
     }
 
-    @Input()
-    set pollingActive(pollingActive: boolean) {
-        this._pollingActive = pollingActive;
-        this.checkPollingStart();
-    }
-
-    get pollingActive(): boolean {
-        return this._pollingActive;
-    }
-
     ngOnDestroy(): void {
-        this.pollingActive = false;
-        clearTimeout(this.timer);
+        this.runtimeSub?.unsubscribe();
     }
 }

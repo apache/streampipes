@@ -31,25 +31,26 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
-public enum PipelineElementRuntimeInfoFetcher {
-  INSTANCE;
+public class DataStreamRuntimeInfoProvider {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PipelineElementRuntimeInfoFetcher.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DataStreamRuntimeInfoProvider.class);
 
-  private static final int FETCH_INTERVAL_MS = 300;
   private final Map<String, SpDataFormatConverter> converterMap;
   private final Environment env;
+  private final SpDataStream dataStream;
+  private EventConsumer consumer;
+  private String latestEvent;
 
-  PipelineElementRuntimeInfoFetcher() {
+  public DataStreamRuntimeInfoProvider(SpDataStream dataStream) {
+    this.dataStream = dataStream;
     this.converterMap = new HashMap<>();
     this.env = Environments.getEnvironment();
   }
 
-  public String getCurrentData(SpDataStream spDataStream) throws SpRuntimeException {
-    var topic = getOutputTopic(spDataStream);
-    var protocol = spDataStream.getEventGrounding().getTransportProtocol();
+  public void startConsuming() throws SpRuntimeException {
+    var topic = getOutputTopic(dataStream);
+    var protocol = dataStream.getEventGrounding().getTransportProtocol();
     if (env.getSpDebug().getValueOrDefault()) {
       protocol.setBrokerHostname("localhost");
       if (protocol instanceof KafkaTransportProtocol) {
@@ -59,19 +60,18 @@ public enum PipelineElementRuntimeInfoFetcher {
 
     if (!converterMap.containsKey(topic)) {
       this.converterMap.put(topic,
-          new SpDataFormatConverterGenerator(getTransportFormat(spDataStream)).makeConverter());
+          new SpDataFormatConverterGenerator(getTransportFormat(dataStream)).makeConverter());
     }
 
     var converter = converterMap.get(topic);
 
     var protocolDefinitionOpt = SpProtocolManager
         .INSTANCE
-        .findDefinition(spDataStream.getEventGrounding().getTransportProtocol());
+        .findDefinition(dataStream.getEventGrounding().getTransportProtocol());
 
     if (protocolDefinitionOpt.isPresent()) {
-      var consumer = protocolDefinitionOpt.get().getConsumer(protocol);
-      return getLatestEvent(consumer, converter);
-
+      consumer = protocolDefinitionOpt.get().getConsumer(protocol);
+      consumer.connect(event -> this.latestEvent = converter.convert(event));
     } else {
       LOG.error("Error while fetching data for preview - protocol {} not found - did you register the protocol? ",
           protocol.getClass().getCanonicalName());
@@ -91,28 +91,11 @@ public enum PipelineElementRuntimeInfoFetcher {
         .getActualTopicName();
   }
 
-  private void waitForEvent(String[] result) {
-    long timeout = 0;
-    while (result[0] == null && timeout < 6000) {
-      try {
-        TimeUnit.MILLISECONDS.sleep(FETCH_INTERVAL_MS);
-        timeout = timeout + 300;
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
+  public String getLatestEvent() {
+    return latestEvent;
   }
 
-  private String getLatestEvent(EventConsumer consumer,
-                                SpDataFormatConverter converter) {
-    final String[] result = {null};
-    consumer.connect(event -> {
-      result[0] = converter.convert(event);
-      consumer.disconnect();
-    });
-
-    waitForEvent(result);
-
-    return result[0];
+  public void close() {
+    consumer.disconnect();
   }
 }
