@@ -57,21 +57,21 @@ func (e *endpoint) handleStatusCode(resp *http.Response) error {
 
 	switch resp.StatusCode {
 	case http.StatusUnauthorized:
-		return errors.New("The streamPipes Backend returned an unauthorized error.\nplease check your ApiUser and/or Apikey to be correct.")
+		return errors.New("401," + "The streamPipes Backend returned an unauthorized error.\nplease check your ApiUser and/or Apikey to be correct.")
 	case http.StatusForbidden:
-		return errors.New("There seems to be an issue with the access rights of the given user and the resource you queried.\n" +
+		return errors.New("403," + "There seems to be an issue with the access rights of the given user and the resource you queried.\n" +
 			"Apparently, this user is not allowed to query the resource.\n" +
 			"Please check the user's permissions or contact your StreamPipes admin.")
 	case http.StatusNotFound:
-		return errors.New("There seems to be an issue with the Go Client calling the API inappropriately.\n" +
+		return errors.New("404," + "There seems to be an issue with the Go Client calling the API inappropriately.\n" +
 			"This should not happen, but unfortunately did.\n" +
 			"If you don't mind, it would be awesome to let us know by creating an issue at https://github.com/apache/streampipes.\n")
 	case http.StatusMethodNotAllowed:
-		return errors.New("There seems to be an issue with the Go Client calling the API inappropriately.\n" +
+		return errors.New("405," + "There seems to be an issue with the Go Client calling the API inappropriately.\n" +
 			"This should not happen, but unfortunately did.\n" +
 			"If you don't mind, it would be awesome to let us know by creating an issue at https://github.com/apache/streampipes.\n")
 	case http.StatusInternalServerError:
-		return errors.New("streamPipes internal error")
+		return errors.New("500," + "streamPipes internal error")
 	default:
 		return errors.New(resp.Status)
 	}

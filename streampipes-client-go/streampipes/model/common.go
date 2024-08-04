@@ -35,12 +35,11 @@ type EventProperty struct {
 	Index              int32    `json:"index"`
 	RuntimeID          string   `json:"runtimeId,omitempty"`
 	AdditionalMetadata map[string]interface{}
-	//RuntimeType        string             `json:"runtimeType"`
-	//MeasurementUnit    string             `json:"measurementUnit,omitempty"`
-	//ValueSpecification ValueSpecification `json:"valueSpecification,omitempty"`
+	RuntimeType        string             `json:"runtimeType"`
+	MeasurementUnit    string             `json:"measurementUnit,omitempty"`
+	ValueSpecification ValueSpecification `json:"valueSpecification,omitempty"`
 }
 
-// 有点问题，后续看一下
 type EventProperties struct {
 	ElementID          string            `json:"elementId"`
 	Label              string            `json:"label"`
@@ -71,12 +70,12 @@ type DataSeries struct {
 
 type ResponseMessage struct {
 	Success       bool           `json:"success"`
-	ElementName   interface{}    `json:"elementName"`
+	ElementName   string         `json:"elementName"`
 	Notifications []Notification `json:"notifications"`
 }
 
 type Notification struct {
-	Title                 string `json:"title"`
-	Description           string `json:"description"`
-	AdditionalInformation string `json:"additionalInformation"`
+	Title                 string      `json:"title"`
+	Description           interface{} `json:"description"`
+	AdditionalInformation string      `json:"additionalInformation"`
 }

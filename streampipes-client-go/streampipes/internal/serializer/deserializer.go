@@ -298,3 +298,33 @@ func (p *PipelinesDeserializer) Unmarshal(data []byte) (interface{}, error) {
 	return pipeLine, nil
 
 }
+
+type PipelineStatusMessagesDeserializer struct{}
+
+func NewPipelineStatusMessagesDeserializer() *PipelineStatusMessagesDeserializer {
+	return &PipelineStatusMessagesDeserializer{}
+}
+
+func (p *PipelineStatusMessagesDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var pipeLine []pipeline.PipelineStatusMessage
+	err := json.Unmarshal(data, &pipeLine)
+	if err != nil {
+		return nil, err
+	}
+	return pipeLine, nil
+}
+
+type PipelineOperationStatusDeserializer struct{}
+
+func NewPipelineOperationStatusDeserializer() *PipelineOperationStatusDeserializer {
+	return &PipelineOperationStatusDeserializer{}
+}
+
+func (p *PipelineOperationStatusDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var pipeLine pipeline.PipelineOperationStatus
+	err := json.Unmarshal(data, &pipeLine)
+	if err != nil {
+		return nil, err
+	}
+	return pipeLine, nil
+}
