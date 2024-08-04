@@ -20,8 +20,6 @@ package streampipes
 import (
 	"bytes"
 	"errors"
-	"net/http"
-
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
 	headers "github.com/apache/streampipes/streampipes-client-go/streampipes/internal/http_headers"
 	"io"
@@ -33,6 +31,7 @@ type endpoint struct {
 }
 
 func (e *endpoint) executeRequest(method string, endPointUrl string, body []byte) (*http.Response, error) {
+
 	var reader io.Reader
 	if body != nil {
 		reader = bytes.NewReader(body)
