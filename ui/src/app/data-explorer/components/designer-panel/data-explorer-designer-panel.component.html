@@ -57,7 +57,7 @@
                             [(dataLakeMeasure)]="dataLakeMeasure"
                             [dataConfig]="currentlyConfiguredWidget.dataConfig"
                             [newWidgetMode]="newWidgetMode"
-                            [widgetId]="currentlyConfiguredWidget._id"
+                            [widgetId]="currentlyConfiguredWidget.elementId"
                             (createWidgetEmitter)="createNewWidget()"
                         >
                         </sp-data-explorer-widget-data-settings>
@@ -91,7 +91,7 @@
                         <sp-data-explorer-widget-appearance-settings
                             fxFlex="100"
                             fxLayout="column"
-                            [widgetId]="currentlyConfiguredWidget._id"
+                            [widgetId]="currentlyConfiguredWidget.elementId"
                             [currentlyConfiguredWidget]="
                                 currentlyConfiguredWidget
                             "

@@ -29,10 +29,10 @@ import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.rest.extensions.html.model.Description;
-import org.apache.streampipes.sdk.utils.Assets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,9 +100,9 @@ public class WelcomePageGenerator {
     desc.setAppId(entity.getAppId());
     desc.setEditable(!(entity.isInternallyManaged()));
     desc.setIncludesDocs(entity.isIncludesAssets()
-        && entity.getIncludedAssets().contains(Assets.DOCUMENTATION));
+        && entity.getIncludedAssets().contains(ExtensionAssetType.DOCUMENTATION));
     desc.setIncludesIcon(entity.isIncludesAssets()
-        && entity.getIncludedAssets().contains(Assets.ICON));
+        && entity.getIncludedAssets().contains(ExtensionAssetType.ICON));
     String uri = baseUri + pathPrefix;
     desc.setDescriptionUrl(uri + entity.getAppId());
     return desc;

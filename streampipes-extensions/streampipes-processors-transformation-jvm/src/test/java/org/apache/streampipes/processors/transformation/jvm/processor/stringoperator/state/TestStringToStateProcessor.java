@@ -18,159 +18,90 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state;
 
-//@RunWith(Parameterized.class)
+import org.apache.streampipes.test.executors.PrefixStrategy;
+import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
+import org.apache.streampipes.test.executors.StreamPrefix;
+import org.apache.streampipes.test.executors.TestConfiguration;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
 public class TestStringToStateProcessor {
-//
-//  private static final Logger LOG = LoggerFactory.getLogger(TestStringToStateProcessor.class);
-//
-//  @org.junit.runners.Parameterized.Parameters
-//  public static Iterable<Object[]> data() {
-//    return Arrays.asList(new Object[][] {
-//        {
-//            List.of(),
-//            List.of("c1", "c2", "c3"),
-//            List.of(Arrays.asList("t1", "t2", "t3")),
-//            List.of()
-//        },
-//        {
-//            List.of("c1"),
-//            List.of("c1", "c2", "c3"),
-//            List.of(Arrays.asList("t1", "t2", "t3")),
-//            List.of("t1")
-//        },
-//        {
-//            List.of("c1", "c2"),
-//            List.of("c1", "c2", "c3"),
-//            List.of(Arrays.asList("t1", "t2", "t3")),
-//            Arrays.asList("t1", "t2")
-//        },
-//        {
-//            List.of("c1", "c2"),
-//            List.of("c1", "c2", "c3"),
-//            Arrays.asList(
-//                Arrays.asList("t1-1", "t2-1", "t3-1"),
-//                Arrays.asList("t1-2", "t2-2", "t3-2")
-//            ),
-//            Arrays.asList("t1-2", "t2-2")
-//        },
-//        {
-//            List.of("c1", "c2", "c3"),
-//            List.of("c1", "c2", "c3"),
-//            Arrays.asList(
-//                Arrays.asList("t1-1", "t2-1", "t3-1"),
-//                Arrays.asList("t1-2", "t2-2", "t3-2"),
-//                Arrays.asList("t1-3", "t2-3", "t3-3")
-//            ),
-//            Arrays.asList("t1-3", "t2-3", "t3-3")
-//        }
-//    });
-//  }
-//
-//  @org.junit.runners.Parameterized.Parameter
-//  public List<String> selectedFieldNames;
-//
-//  @org.junit.runners.Parameterized.Parameter(1)
-//  public List<String> fieldNames;
-//
-//  @org.junit.runners.Parameterized.Parameter(2)
-//  public List<List<String>> eventStrings;
-//
-//  @org.junit.runners.Parameterized.Parameter(3)
-//  public List<String> expectedValue;
-//
-//  private static final String DEFAULT_STREAM_NAME = "stream1";
-//
-//  @Test
-//  public void testStringToState() {
-//    StringToStateProcessor stringToStateProcessor = new StringToStateProcessor();
-//    DataProcessorDescription originalGraph = stringToStateProcessor.declareModel();
-//    originalGraph.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
-//
-//    DataProcessorInvocation graph = InvocationGraphGenerator.makeEmptyInvocation(originalGraph);
-//    graph.setInputStreams(Collections
-//        .singletonList(EventStreamGenerator
-//            .makeStreamWithProperties(Collections.singletonList("stream-in"))));
-//    graph.setOutputStream(EventStreamGenerator.makeStreamWithProperties(Collections.singletonList("stream-out")));
-//    graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition()
-//        .setActualTopicName("output-topic");
-//
-//    MappingPropertyNary mappingPropertyNary = graph.getStaticProperties().stream()
-//        .filter(p -> p instanceof MappingPropertyNary)
-//        .map(p -> (MappingPropertyNary) p)
-//        .filter(p -> p.getInternalName().equals(StringToStateProcessor.STRING_STATE_FIELD))
-//        .findFirst().orElse(null);
-//
-//    assert mappingPropertyNary != null;
-//    mappingPropertyNary.setSelectedProperties(
-//        selectedFieldNames.stream().map(field -> DEFAULT_STREAM_NAME + "::" + field).toList());
-//
-//    ProcessorParams params = new ProcessorParams(graph);
-//
-//    SpOutputCollector spOutputCollector = new SpOutputCollector() {
-//      @Override
-//      public void registerConsumer(String routeId, InternalEventProcessor<Map<String, Object>> consumer) {
-//      }
-//
-//      @Override
-//      public void unregisterConsumer(String routeId) {
-//      }
-//
-//      @Override
-//      public void connect() throws SpRuntimeException {
-//      }
-//
-//      @Override
-//      public void disconnect() throws SpRuntimeException {
-//      }
-//
-//      @Override
-//      public void collect(Event event) {
-//      }
-//    };
-//
-//    stringToStateProcessor.onInvocation(params, spOutputCollector, null);
-//    Object[] states = sendEvents(stringToStateProcessor, spOutputCollector);
-//    LOG.info("Expected states is {}.", expectedValue);
-//    LOG.info("Actual states is {}.", Arrays.toString(states));
-//    assertArrayEquals(expectedValue.toArray(), states);
-//  }
-//
-//  private Object[] sendEvents(StringToStateProcessor stateProcessor, SpOutputCollector spOut) {
-//    List<Event> events = makeEvents();
-//    Object[] states = null;
-//    for (Event event : events) {
-//      stateProcessor.onEvent(event, spOut);
-//      try {
-//        TimeUnit.MILLISECONDS.sleep(100);
-//      } catch (InterruptedException e) {
-//        throw new RuntimeException(e);
-//      }
-//      try {
-//        states = (Object[]) event.getFieldBySelector(StringToStateProcessor.CURRENT_STATE)
-//            .getAsPrimitive().getRawValue();
-//        LOG.info("Current states: " + Arrays.toString(states));
-//      } catch (IllegalArgumentException e) {
-//
-//      }
-//    }
-//    return states;
-//  }
-//
-//  private List<Event> makeEvents() {
-//    List<Event> events = Lists.newArrayList();
-//    for (List<String> eventSetting : eventStrings) {
-//      events.add(makeEvent(eventSetting));
-//    }
-//    return events;
-//  }
-//
-//  private Event makeEvent(List<String> value) {
-//    Map<String, Object> map = Maps.newHashMap();
-//    for (int i = 0; i < selectedFieldNames.size(); i++) {
-//      map.put(selectedFieldNames.get(i), value.get(i));
-//    }
-//    return EventFactory.fromMap(map,
-//        new SourceInfo("test-topic", DEFAULT_STREAM_NAME),
-//        new SchemaInfo(null, Lists.newArrayList()));
-//  }
+
+  private static final String KEY_1 = "key1";
+  private static final String KEY_2 = "key2";
+  private static final String VALUE_1 = "value 1";
+  private static final String VALUE_2 = "value 2";
+
+  private static final String PREFIX_KEY_1 = StreamPrefix.s0(KEY_1);
+  private static final String PREFIX_KEY_2 = StreamPrefix.s0(KEY_2);
+
+  private StringToStateProcessor processor;
+
+  @BeforeEach
+  public void setup() {
+    processor = new StringToStateProcessor();
+  }
+
+  static Stream<Arguments> arguments() {
+    return Stream.of(
+        Arguments.of(
+            Collections.emptyList(),
+            List.of(Map.of(KEY_1, VALUE_1)),
+            List.of(Map.of(
+                KEY_1, VALUE_1,
+                StringToStateProcessor.CURRENT_STATE, Collections.emptyList()
+            ))
+        ),
+        Arguments.of(
+            List.of(PREFIX_KEY_1),
+            List.of(Map.of(
+                KEY_1, VALUE_1
+            )),
+            List.of(Map.of(
+                KEY_1, VALUE_1,
+                StringToStateProcessor.CURRENT_STATE, List.of(VALUE_1)
+            ))
+        ),
+        Arguments.of(
+            List.of(PREFIX_KEY_1, PREFIX_KEY_2),
+            List.of(Map.of(
+                KEY_1, VALUE_1,
+                KEY_2, VALUE_2
+            )),
+            List.of(Map.of(
+                KEY_1, VALUE_1,
+                KEY_2, VALUE_2,
+                StringToStateProcessor.CURRENT_STATE, List.of(VALUE_1, VALUE_2)
+            ))
+        )
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("arguments")
+  public void testStringToState(
+      List<String> selectedFieldNames,
+      List<Map<String, Object>> intpuEvents,
+      List<Map<String, Object>> outputEvents
+  ) {
+
+    var configuration = TestConfiguration
+        .builder()
+        .config(StringToStateProcessor.STRING_STATE_FIELD, selectedFieldNames)
+        .prefixStrategy(PrefixStrategy.SAME_PREFIX)
+        .build();
+
+    var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+
+    testExecutor.run(intpuEvents, outputEvents);
+  }
+
 }

@@ -74,7 +74,7 @@ public class PostStartupTask implements Runnable {
 
   private void performAdapterAssetUpdate() {
     var installedAppIds = CouchDbStorageManager.INSTANCE.getExtensionsServiceStorage()
-                                                        .getAll()
+                                                        .findAll()
                                                         .stream()
                                                         .flatMap(config -> config.getTags()
                                                                                  .stream())
@@ -88,7 +88,7 @@ public class PostStartupTask implements Runnable {
   }
 
   private void startAllPreviouslyStoppedPipelines() {
-    var allPipelines = pipelineStorage.getAllPipelines();
+    var allPipelines = pipelineStorage.findAll();
     LOG.info("Checking for orphaned pipelines...");
     List<Pipeline> orphanedPipelines = allPipelines
         .stream()
@@ -123,9 +123,9 @@ public class PostStartupTask implements Runnable {
     PipelineOperationStatus status = Operations.startPipeline(pipeline);
     if (status.isSuccess()) {
       LOG.info("Pipeline {} successfully restarted", status.getPipelineName());
-      Pipeline storedPipeline = getPipelineStorage().getPipeline(pipeline.getPipelineId());
+      Pipeline storedPipeline = getPipelineStorage().getElementById(pipeline.getPipelineId());
       storedPipeline.setRestartOnSystemReboot(restartOnReboot);
-      getPipelineStorage().updatePipeline(storedPipeline);
+      getPipelineStorage().updateElement(storedPipeline);
     } else {
       storeFailedRestartAttempt(pipeline);
       int failedAttemptCount = failedPipelines.get(pipeline.getPipelineId());

@@ -39,7 +39,7 @@ public class AdapterMasterManagementTest {
   public void getAdapterFailNull() {
     AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
-    when(adapterStorage.getAllAdapters()).thenReturn(null);
+    when(adapterStorage.findAll()).thenReturn(null);
 
     AdapterMasterManagement adapterMasterManagement =
         new AdapterMasterManagement(
@@ -57,7 +57,7 @@ public class AdapterMasterManagementTest {
     List<AdapterDescription> adapterDescriptions = List.of(new AdapterDescription());
     AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
-    when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
+    when(adapterStorage.findAll()).thenReturn(adapterDescriptions);
 
     AdapterMasterManagement adapterMasterManagement =
         new AdapterMasterManagement(
@@ -75,7 +75,7 @@ public class AdapterMasterManagementTest {
     List<AdapterDescription> adapterDescriptions = List.of(new AdapterDescription());
     AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
-    when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
+    when(adapterStorage.findAll()).thenReturn(adapterDescriptions);
 
     AdapterMasterManagement adapterMasterManagement =
         new AdapterMasterManagement(
@@ -94,7 +94,7 @@ public class AdapterMasterManagementTest {
   public void getAllAdaptersFail() {
     AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
-    when(adapterStorage.getAllAdapters()).thenReturn(null);
+    when(adapterStorage.findAll()).thenReturn(null);
 
     AdapterMasterManagement adapterMasterManagement =
         new AdapterMasterManagement(

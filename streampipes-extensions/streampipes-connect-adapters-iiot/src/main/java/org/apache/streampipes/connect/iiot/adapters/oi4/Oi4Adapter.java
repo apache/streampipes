@@ -149,7 +149,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
             InputStream in = convertByte(mqttEvent);
             var networkMessage = mapper.readValue(in, NetworkMessage.class);
             var payload = extractPayload(networkMessage);
-            collector.collect(payload);
+            payload.forEach(collector::collect);
           } catch (ParseException e) {
             LOG.debug("Message parsing failed - this might be caused by messages from a different sensor type");
           } catch (IOException e) {
@@ -253,7 +253,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
       var networkMessage = mapper.readValue(sampleMessage, NetworkMessage.class);
       var payload = extractPayload(networkMessage);
 
-      String plainPayload = mapper.writeValueAsString(payload);
+      String plainPayload = mapper.writeValueAsString(payload.get(0));
       return new JsonParsers(new JsonObjectParser())
           .getGuessSchema(convertByte(plainPayload.getBytes(StandardCharsets.UTF_8)));
     } catch (IOException e) {
@@ -321,9 +321,10 @@ public class Oi4Adapter implements StreamPipesAdapter {
     return new MqttConsumer(this.mqttConfig, eventProcessor);
   }
 
-  private Map<String, Object> extractPayload(NetworkMessage message) throws ParseException {
+  private List<Map<String, Object>> extractPayload(NetworkMessage message) throws ParseException {
 
     var dataMessages = findProcessDataInputMessage(message);
+    var result = new ArrayList<Map<String, Object>>();
 
     if (!dataMessages.isEmpty()) {
 
@@ -338,12 +339,16 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
           // an empty list of selected sensors means that we want to collect data from all sensors available
           if (selectedSensors.isEmpty() || selectedSensors.contains(sensorId)) {
-            return extractAndEnrichMessagePayload(dataMessage, sensorId);
+            result.add(extractAndEnrichMessagePayload(dataMessage, sensorId));
           }
         }
       }
     }
-    throw new ParseException(String.format("No sensor of type %s found in message", givenSensorType));
+    if (!result.isEmpty()) {
+      return result;
+    } else {
+      throw new ParseException(String.format("No sensor of type %s found in message", givenSensorType));
+    }
   }
 
   private List<DataSetMessage> findProcessDataInputMessage(NetworkMessage message) {

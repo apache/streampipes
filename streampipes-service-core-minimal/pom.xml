@@ -27,6 +27,10 @@
 
     <artifactId>streampipes-service-core-minimal</artifactId>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.streampipes</groupId>

@@ -52,20 +52,6 @@ public class AdapterConfigurationBuilder extends
 
   /**
    * Creates a new adapter configuration using the builder pattern.
-   * @deprecated
-   * This method is no longer recommend since we rely on a version for migration purposes.
-   * <p> Please adopt {@link #create(String, int, Supplier)} instead.
-   * @param appId     A unique identifier of the new adapter, e.g., com.mycompany.processor.mynewdataprocessor
-   * @param supplier  instance of the adapter to be described
-   */
-  @Deprecated(since = "0.93.0", forRemoval = true)
-  public static AdapterConfigurationBuilder create(String appId,
-                                                   Supplier<StreamPipesAdapter> supplier) {
-    return new AdapterConfigurationBuilder(appId, 0, supplier);
-  }
-
-  /**
-   * Creates a new adapter configuration using the builder pattern.
    * @param appId     A unique identifier of the new adapter, e.g., com.mycompany.processor.mynewdataprocessor
    * @param supplier  instance of the adapter to be described
    * @param version   version of the processing element for migration purposes. Should be 0 in standard cases.

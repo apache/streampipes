@@ -28,12 +28,12 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchema
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 
 import static org.apache.streampipes.sdk.helpers.EpProperties.imageProperty;
 import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
@@ -48,7 +48,7 @@ public class ImageStreamAdapter implements StreamPipesAdapter {
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder.create(ID, 0, ImageStreamAdapter::new)
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredIntegerParameter(Labels.withId(ImageZipUtils.INTERVAL_KEY))
         .requiredFile(Labels.withId(ImageZipUtils.ZIP_FILE_KEY), Filetypes.ZIP)
         .buildConfiguration();

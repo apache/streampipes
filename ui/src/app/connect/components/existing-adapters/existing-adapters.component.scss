@@ -16,15 +16,8 @@
  *
  */
 
-.mat-mdc-paginator {
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.mat-mdc-row:nth-child(even) {
-    background-color: var(--color-bg-1);
-}
-.mat-mdc-row:nth-child(odd) {
-    background-color: var(--color-bg-2);
+.mat-mdc-header-cell {
+    font-weight: bold;
 }
 
 .adapter-icon {

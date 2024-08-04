@@ -82,14 +82,14 @@ class BasicModel(BaseModel):
 
 
 class BaseElement(BasicModel):
-    """Structure of a basic element in the StreamPipes backend"""
+    """Structure of a basic element in the StreamPipes Backend."""
 
     element_id: Optional[StrictStr]
 
 
 class ValueSpecification(BasicModel):
     """
-    Data model of an `ValueSpecification` in compliance to the StreamPipes Backend.
+    Data model of an `ValueSpecification` in compliance with the StreamPipes Backend.
     """
 
     class_name: Optional[StrictStr] = Field(alias="@class")
@@ -101,7 +101,7 @@ class ValueSpecification(BasicModel):
 
 class EventProperty(BasicModel):
     """
-    Data model of an `EventProperty` in compliance to the StreamPipes Backend.
+    Data model of an `EventProperty` in compliance with the StreamPipes Backend.
     """
 
     class_name: StrictStr = Field(alias="@class", default="org.apache.streampipes.model.schema.EventPropertyPrimitive")
@@ -121,7 +121,7 @@ class EventProperty(BasicModel):
 
 class EventSchema(BasicModel):
     """
-    Data model of an `EventSchema` in compliance to the StreamPipes Backend.
+    Data model of an `EventSchema` in compliance with the StreamPipes Backend.
     """
 
     event_properties: List[EventProperty]
@@ -129,7 +129,7 @@ class EventSchema(BasicModel):
 
 class ApplicationLink(BasicModel):
     """
-    Data model of an `ApplicationLink` in compliance to the StreamPipes Backend.
+    Data model of an `ApplicationLink` in compliance with the StreamPipes Backend.
     """
 
     class_name: Optional[StrictStr] = Field(alias="@class")
@@ -143,7 +143,7 @@ class ApplicationLink(BasicModel):
 
 class TopicDefinition(BasicModel):
     """
-    Data model of a `TopicDefinition` in compliance to the StreamPipes Backend.
+    Data model of a `TopicDefinition` in compliance with the StreamPipes Backend.
     """
 
     class_name: Optional[StrictStr] = Field(
@@ -154,7 +154,7 @@ class TopicDefinition(BasicModel):
 
 class TransportProtocol(BasicModel):
     """
-    Data model of a `TransportProtocol` in compliance to the StreamPipes Backend.
+    Data model of a `TransportProtocol` in compliance with the StreamPipes Backend.
     """
 
     class_name: StrictStr = Field(
@@ -168,7 +168,7 @@ class TransportProtocol(BasicModel):
 
 class TransportFormat(BasicModel):
     """
-    Data model of a `TransportFormat` in compliance to the StreamPipes Backend.
+    Data model of a `TransportFormat` in compliance with the StreamPipes Backend.
     """
 
     rdf_type: List[StrictStr] = Field(default=["http://sepa.event-processing.org/sepa#json"])
@@ -176,7 +176,7 @@ class TransportFormat(BasicModel):
 
 class EventGrounding(BasicModel):
     """
-    Data model of an `EventGrounding` in compliance to the StreamPipes Backend.
+    Data model of an `EventGrounding` in compliance to with StreamPipes Backend.
     """
 
     transport_protocols: List[TransportProtocol] = Field(default_factory=lambda: [TransportProtocol()])
@@ -185,7 +185,7 @@ class EventGrounding(BasicModel):
 
 class MeasurementCapability(BasicModel):
     """
-    Data model of a `MeasurementCapability` in compliance to the StreamPipes Backend.
+    Data model of a `MeasurementCapability` in compliance with the StreamPipes Backend.
     """
 
     capability: Optional[StrictStr]
@@ -194,7 +194,7 @@ class MeasurementCapability(BasicModel):
 
 class MeasurementObject(BasicModel):
     """
-    Data model of a `MeasurementObject` in compliance to the StreamPipes Backend.
+    Data model of a `MeasurementObject` in compliance with the StreamPipes Backend.
     """
 
     element_id: Optional[StrictStr]

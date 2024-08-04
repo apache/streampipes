@@ -20,19 +20,16 @@
 # provided on https://streampipes.apache.org/download
 #
 
-
 version: "3.8"
 
 # global logging
-x-logging:
-  &default-logging
+x-logging: &default-logging
   options:
-    max-size: '12m'
-    max-file: '5'
+    max-size: "12m"
+    max-file: "5"
   driver: json-file
 
 services:
-
   #### apache/streampipes
   backend:
     build:
@@ -132,6 +129,19 @@ services:
       - influxdb:/var/lib/influxdb
       - influxdb2:/var/lib/influxdb2
     logging: *default-logging
+    networks:
+      spnet:
+
+  mosquitto:
+    image: eclipse-mosquitto:1.5.4
+    logging: *default-logging
+    networks:
+      spnet:
+
+  opcua:
+    image: mcr.microsoft.com/iotedge/opc-plc
+    logging: *default-logging
+    command: --ut=true
     networks:
       spnet:
 

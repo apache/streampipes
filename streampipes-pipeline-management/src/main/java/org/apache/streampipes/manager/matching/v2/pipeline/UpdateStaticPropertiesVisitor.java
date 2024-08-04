@@ -26,7 +26,6 @@ import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty;
 import org.apache.streampipes.model.staticproperty.DefaultStaticPropertyVisitor;
-import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
 import org.apache.streampipes.model.staticproperty.FileStaticProperty;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.MappingProperty;
@@ -34,7 +33,6 @@ import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
 import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
@@ -64,11 +62,6 @@ public class UpdateStaticPropertiesVisitor extends DefaultStaticPropertyVisitor 
 
   @Override
   public void visit(ColorPickerStaticProperty colorPickerStaticProperty) {
-    // Do nothing
-  }
-
-  @Override
-  public void visit(DomainStaticProperty domainStaticProperty) {
     // Do nothing
   }
 
@@ -105,11 +98,6 @@ public class UpdateStaticPropertiesVisitor extends DefaultStaticPropertyVisitor 
   @Override
   public void visit(SecretStaticProperty secretStaticProperty) {
     // do nothing
-  }
-
-  @Override
-  public void visit(RemoteOneOfStaticProperty remoteOneOfStaticProperty) {
-
   }
 
   @Override

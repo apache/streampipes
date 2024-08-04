@@ -20,6 +20,7 @@ package org.apache.streampipes.processors.siddhi.listcollector;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
 import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -35,7 +36,6 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfigBuilder;
@@ -59,10 +59,11 @@ public class ListCollector extends StreamPipesSiddhiProcessor
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.listcollector")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.siddhi.listcollector", 0)
         .withLocales(Locales.EN)
         .category(DataProcessorType.TRANSFORM)
-        .withAssets(Assets.DOCUMENTATION)
+        .withAssets(ExtensionAssetType.DOCUMENTATION)
         .requiredStream(StreamRequirementsBuilder.create()
             .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
                 (LIST_KEY), PropertyScope.MEASUREMENT_PROPERTY)

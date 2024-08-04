@@ -18,23 +18,80 @@
 
 package org.apache.streampipes.sdk.helpers;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 public class LabelsTest {
+
+  private static final String ID = "testId";
+  private static final String LABEL = "TestLabel";
+  private static final String INTERNAL_ID = "internalId";
+  private static final String DESCRIPTION = "TestDescription";
+
   private enum TestEnum {
-    TEST;
+    TEST
   }
 
   @Test
-  public void withEnumId() {
+  public void from_CreatesLabelWithAllFields() {
+    var result = Labels.from(ID, LABEL, DESCRIPTION);
+
+    assertEquals(ID, result.getInternalId());
+    assertEquals(LABEL, result.getLabel());
+    assertEquals(DESCRIPTION, result.getDescription());
+  }
+
+  @Test
+  public void from_HandlesEmptyLabelAndDescription() {
+    var result = Labels.from(ID, "", "");
+
+    assertEquals(ID, result.getInternalId());
+    assertEquals("", result.getLabel());
+    assertEquals("", result.getDescription());
+  }
+
+  @Test
+  public void from_HandlesNullLabelAndDescription() {
+    var result = Labels.from(ID, null, null);
+
+    assertEquals("testId", result.getInternalId());
+    assertNull(result.getLabel());
+    assertNull(result.getDescription());
+  }
+
+  @Test
+  public void withId_CreatesLabelWithInternalIdOnly() {
+    var result = Labels.withId(INTERNAL_ID);
+
+    assertEquals(INTERNAL_ID, result.getInternalId());
+    assertEquals("", result.getLabel());
+    assertEquals("", result.getDescription());
+  }
+
+  @Test
+  public void withId_HandlesEmptyStringInternalId() {
+    var result = Labels.withId("");
+
+    assertEquals("", result.getInternalId());
+    assertEquals("", result.getLabel());
+    assertEquals("", result.getDescription());
+  }
+
+  @Test
+  public void withId_CreatesLabelFromEnumWithCorrectInternalId() {
     var result = Labels.withId(TestEnum.TEST);
-    Assertions.assertEquals(TestEnum.TEST.name(), result.getInternalId());
+    assertEquals(TestEnum.TEST.name(), result.getInternalId());
   }
 
   @Test
-  public void withStringId() {
-    var result = Labels.withId("test");
-    Assertions.assertEquals("test", result.getInternalId());
+  public void empty_CreatesLabelWithEmptyFields() {
+    var result = Labels.empty();
+
+    assertEquals("", result.getInternalId());
+    assertEquals("", result.getLabel());
+    assertEquals("", result.getDescription());
   }
+
 }

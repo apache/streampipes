@@ -32,6 +32,7 @@ import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslSSLConfi
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityUnauthenticatedPlainConfig;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityUnauthenticatedSSLConfig;
 import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -39,7 +40,6 @@ import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 
 import java.util.List;
 import java.util.Map;
@@ -62,7 +62,7 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
         DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.kafka", 0)
             .category(DataSinkType.MESSAGING)
             .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
             .requiredStream(StreamRequirementsBuilder
                 .create()
                 .requiredProperty(EpRequirements.anyProperty())

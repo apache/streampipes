@@ -16,9 +16,8 @@
  *
  */
 
-table {
-    width: 100%;
-    background: transparent;
+.mat-mdc-header-cell {
+    font-weight: bold;
 }
 
 .m-20 {
@@ -35,11 +34,4 @@ table {
 .options-bar-item {
     display: inline;
     margin-right: 10px;
-}
-
-.mat-mdc-row:nth-child(even) {
-    background-color: var(--color-bg-1);
-}
-.mat-mdc-row:nth-child(odd) {
-    background-color: var(--color-bg-2);
 }

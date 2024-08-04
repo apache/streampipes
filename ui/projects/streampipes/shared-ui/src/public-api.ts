@@ -33,7 +33,10 @@ export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
 export * from './lib/components/split-section/split-section.component';
 export * from './lib/components/sp-exception-message/sp-exception-message.component';
 export * from './lib/components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';
+export * from './lib/components/sp-exception-message/exception-details/exception-details.component';
 export * from './lib/components/sp-label/sp-label.component';
+export * from './lib/components/sp-table/sp-table.component';
+export * from './lib/components/warning-box/warning-box.component';
 
 export * from './lib/models/sp-navigation.model';
 

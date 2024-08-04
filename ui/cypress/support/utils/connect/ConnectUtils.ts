@@ -18,7 +18,7 @@
 
 import { StaticPropertyUtils } from '../StaticPropertyUtils';
 import { AdapterInput } from '../../model/AdapterInput';
-import { ConnectEventSchemaUtils } from '../ConnectEventSchemaUtils';
+import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
 import { DataLakeUtils } from '../datalake/DataLakeUtils';
 import { ConnectBtns } from './ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
@@ -26,7 +26,10 @@ import { UserUtils } from '../UserUtils';
 import { PipelineUtils } from '../PipelineUtils';
 
 export class ConnectUtils {
-    public static testAdapter(adapterConfiguration: AdapterInput) {
+    public static testAdapter(
+        adapterConfiguration: AdapterInput,
+        adapterStartFails = false,
+    ) {
         ConnectUtils.goToConnect();
 
         ConnectUtils.goToNewAdapterPage();
@@ -47,7 +50,11 @@ export class ConnectUtils {
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.startStreamAdapter(adapterConfiguration);
+        ConnectUtils.startAdapter(
+            adapterConfiguration,
+            false,
+            adapterStartFails,
+        );
     }
 
     public static addAdapter(adapterConfiguration: AdapterInput) {
@@ -100,7 +107,7 @@ export class ConnectUtils {
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.startStreamAdapter(configuration);
+        ConnectUtils.startAdapter(configuration);
     }
 
     public static goToConnect() {
@@ -111,7 +118,7 @@ export class ConnectUtils {
         cy.dataCy('connect-create-new-adapter-button').click();
     }
 
-    public static selectAdapter(name) {
+    public static selectAdapter(name: string) {
         // Select adapter
         cy.get('#' + name).click();
     }
@@ -148,13 +155,10 @@ export class ConnectUtils {
         cy.get('#event-schema-next-button').click();
     }
 
-    public static startStreamAdapter(adapterInput: AdapterInput) {
-        ConnectUtils.startAdapter(adapterInput);
-    }
-
     public static startAdapter(
         adapterInput: AdapterInput,
         noLiveDataView = false,
+        adapterStartFails = false,
     ) {
         // Set adapter name
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
@@ -175,14 +179,20 @@ export class ConnectUtils {
 
         ConnectBtns.adapterSettingsStartAdapter().click();
 
-        if (adapterInput.startAdapter && !noLiveDataView) {
-            cy.dataCy('sp-connect-adapter-success-live-preview', {
+        if (adapterStartFails) {
+            cy.dataCy('sp-exception-details', {
                 timeout: 60000,
             }).should('be.visible');
         } else {
-            cy.dataCy('sp-connect-adapter-success-added', {
-                timeout: 60000,
-            }).should('be.visible');
+            if (adapterInput.startAdapter && !noLiveDataView) {
+                cy.dataCy('sp-connect-adapter-success-live-preview', {
+                    timeout: 60000,
+                }).should('be.visible');
+            } else {
+                cy.dataCy('sp-connect-adapter-success-added', {
+                    timeout: 60000,
+                }).should('be.visible');
+            }
         }
 
         this.closeAdapterPreview();
@@ -206,6 +216,14 @@ export class ConnectUtils {
             'have.length',
             0,
         );
+    }
+
+    public static storeAndStartEditedAdapter() {
+        ConnectUtils.finishEventSchemaConfiguration();
+        ConnectBtns.storeEditAdapter().click();
+        ConnectBtns.updateAndMigratePipelines().click();
+        ConnectUtils.closeAdapterPreview();
+        ConnectBtns.startAdapter().click();
     }
 
     public static deleteAdapterAndAssociatedPipelines(switchUserCheck = false) {

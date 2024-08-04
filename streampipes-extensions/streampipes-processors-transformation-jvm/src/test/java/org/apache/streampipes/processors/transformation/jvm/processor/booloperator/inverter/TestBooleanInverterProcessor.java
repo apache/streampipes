@@ -18,112 +18,65 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter;
 
-//@RunWith(Parameterized.class)
+import org.apache.streampipes.test.executors.PrefixStrategy;
+import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
+import org.apache.streampipes.test.executors.StreamPrefix;
+import org.apache.streampipes.test.executors.TestConfiguration;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterProcessor.INVERT_FIELD_ID;
+
 public class TestBooleanInverterProcessor {
-//
-//  private static final Logger LOG = LoggerFactory.getLogger(TestBooleanInverterProcessor.class);
-//
-//  @org.junit.runners.Parameterized.Parameters
-//  public static Iterable<Object[]> data() {
-//    return Arrays.asList(new Object[][]{
-//        {"Test", Arrays.asList(false, true), false},
-//        {"Test", Arrays.asList(false, true, false), true},
-//        {"Test", Arrays.asList(false), true},
-//        {"Test", Arrays.asList(false, true, false, false, true), false},
-//        {"Test", Arrays.asList(true, false), true},
-//        {"Test", Arrays.asList(true), false},
-//    });
-//  }
-//
-//  @org.junit.runners.Parameterized.Parameter
-//  public String invertFieldName;
-//
-//  @org.junit.runners.Parameterized.Parameter(1)
-//  public List<Boolean> eventBooleans;
-//
-//  @org.junit.runners.Parameterized.Parameter(2)
-//  public Boolean expectedBooleanCount;
-//
-//  @Test
-//  public void testBoolenInverter() {
-//    BooleanInverterProcessor bip = new BooleanInverterProcessor();
-//    DataProcessorDescription originalGraph =  bip.declareModel();
-//    originalGraph.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
-//
-//    DataProcessorInvocation graph =
-//        InvocationGraphGenerator.makeEmptyInvocation(originalGraph);
-//
-//    graph.setInputStreams(Collections
-//        .singletonList(EventStreamGenerator
-//            .makeStreamWithProperties(Collections.singletonList(invertFieldName))));
-//
-//    graph.setOutputStream(EventStreamGenerator.makeStreamWithProperties(Collections.singletonList(invertFieldName)));
-//
-//    graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition()
-//        .setActualTopicName("output-topic");
-//
-//    graph.getStaticProperties().stream()
-//        .filter(p -> p instanceof MappingPropertyUnary)
-//        .map((p -> (MappingPropertyUnary) p))
-//        .filter(p -> p.getInternalName().equals(BooleanInverterProcessor.INVERT_FIELD_ID))
-//        .findFirst().get().setSelectedProperty("s0::" + invertFieldName);
-//    ProcessorParams params = new ProcessorParams(graph);
-//    SpOutputCollector spOut = new SpOutputCollector() {
-//        @Override
-//        public void collect(Event event) {}
-//
-//        @Override
-//        public void registerConsumer(String routeId, InternalEventProcessor<Map<String, Object>> consumer) {}
-//
-//        @Override
-//        public void unregisterConsumer(String routeId) {}
-//
-//        @Override
-//        public void connect() throws SpRuntimeException {}
-//
-//        @Override
-//        public void disconnect() throws SpRuntimeException {}
-//    };
-//
-//    bip.onInvocation(params, spOut, null);
-//
-//    boolean result = sendEvents(bip, spOut);
-//
-//    LOG.info("Expected boolean is {}", expectedBooleanCount);
-//    LOG.info("Actual boolean is {}", result);
-//    assertEquals(expectedBooleanCount, result);
-//  }
-//
-//  private boolean sendEvents(BooleanInverterProcessor trend, SpOutputCollector spOut) {
-//    boolean result = false;
-//    List<Event> events = makeEvents();
-//    for (Event event : events) {
-//      LOG.info("Sending event with value "
-//          + event.getFieldBySelector("s0::" + invertFieldName).getAsPrimitive().getAsBoolean());
-//      trend.onEvent(event, spOut);
-//      try {
-//        Thread.sleep(100);
-//      } catch (InterruptedException e) {
-//        e.printStackTrace();
-//      }
-//      result = event.getFieldBySelector("s0::" + invertFieldName).getAsPrimitive().getAsBoolean();
-//    }
-//
-//    return result;
-//  }
-//
-//  private List<Event> makeEvents() {
-//    List<Event> events = new ArrayList<>();
-//    for (Boolean eventSetting : eventBooleans) {
-//      events.add(makeEvent(eventSetting));
-//    }
-//    return events;
-//  }
-//
-//  private Event makeEvent(Boolean value) {
-//    Map<String, Object> map = new HashMap<>();
-//    map.put(invertFieldName, value);
-//    return EventFactory.fromMap(map, new SourceInfo("test" + "-topic", "s0"),
-//            new SchemaInfo(null, new ArrayList<>()));
-//  }
+  private static final String KEY_1 = "key1";
+
+  private BooleanInverterProcessor processor;
+
+  @BeforeEach
+  public void setup() {
+    processor = new BooleanInverterProcessor();
+  }
+
+  static Stream<Arguments> arguments() {
+    return Stream.of(
+        Arguments.of(
+            List.of(Map.of(KEY_1, true)),
+            List.of(Map.of(KEY_1, false))
+        ),
+        Arguments.of(
+            List.of(Map.of(KEY_1, false)),
+            List.of(Map.of(KEY_1, true))
+        ),
+        Arguments.of(
+            List.of(Map.of(KEY_1, true), Map.of(KEY_1, false), Map.of(KEY_1, true)),
+            List.of(Map.of(KEY_1, false), Map.of(KEY_1, true), Map.of(KEY_1, false))
+        )
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("arguments")
+  public void testStringToState(
+      List<Map<String, Object>> intpuEvents,
+      List<Map<String, Object>> outputEvents
+  ) {
+
+    var configuration = TestConfiguration
+        .builder()
+        .config(INVERT_FIELD_ID, StreamPrefix.s0(KEY_1))
+        .prefixStrategy(PrefixStrategy.SAME_PREFIX)
+        .build();
+
+    var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+
+    testExecutor.run(intpuEvents, outputEvents);
+  }
+
 }

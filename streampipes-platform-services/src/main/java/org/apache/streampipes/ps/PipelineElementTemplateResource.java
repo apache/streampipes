@@ -65,7 +65,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
       @RequestParam("appId") String appId
   ) {
     if (appId == null) {
-      return ok(getPipelineElementTemplateStorage().getAll());
+      return ok(getPipelineElementTemplateStorage().findAll());
     } else {
       return ok(getPipelineElementTemplateStorage().getPipelineElementTemplatesforAppId(appId));
     }
@@ -104,7 +104,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
                    content = @Content(schema = @Schema(implementation = PipelineElementTemplate.class)))
       @org.springframework.web.bind.annotation.RequestBody PipelineElementTemplate entity
   ) {
-    getPipelineElementTemplateStorage().createElement(entity);
+    getPipelineElementTemplateStorage().persist(entity);
     return ok();
   }
 

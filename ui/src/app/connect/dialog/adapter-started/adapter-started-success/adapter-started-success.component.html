@@ -18,7 +18,7 @@
 
 <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100" class="w-100">
     <div
-        *ngIf="adapterStatus.success"
+        *ngIf="!adapterErrorMessage"
         fxFlex="100"
         fxLayout="column"
         class="w-100"
@@ -65,24 +65,10 @@
         </sp-pipeline-started-status>
         <mat-divider fxFlex="100"></mat-divider>
     </div>
-    <div *ngIf="!adapterStatus.success">
-        <div
-            class="info-message warning-message"
-            fxFlex="100"
-            fxLayoutAlign="center center"
-            fxLayout="column"
-        >
-            <div fxLayout="row">
-                <i class="material-icons">error</i>
-                <h4>Something went wrong during the adapter installation.</h4>
-            </div>
-            <h5>
-                {{
-                    adapterStatus.notifications.length > 0
-                        ? adapterStatus.notifications[0].title
-                        : 'Unknown Error'
-                }}
-            </h5>
-        </div>
-    </div>
+    <sp-exception-details
+        *ngIf="adapterErrorMessage"
+        [message]="adapterErrorMessage"
+        [title]="'Could not start adapter'"
+    >
+    </sp-exception-details>
 </div>

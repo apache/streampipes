@@ -30,6 +30,7 @@ import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfi
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil;
 import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -39,7 +40,6 @@ import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.MAPPING_PROPERY;
 
@@ -51,7 +51,7 @@ public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
   public IDataSinkConfiguration declareConfig() {
     var builder = DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.opcua", 0)
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .category(DataSinkType.FORWARD)
         .requiredStream(StreamRequirementsBuilder
             .create()

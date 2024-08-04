@@ -270,8 +270,8 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
                         this.dialogRef.close(response);
                     });
             } else {
-                configuredWidget._id = this.widget._id;
-                configuredWidget._rev = this.widget._rev;
+                configuredWidget.elementId = this.widget.elementId;
+                configuredWidget.rev = this.widget.rev;
                 configuredWidget.widgetId = this.widget.widgetId;
                 this.dialogRef.close(configuredWidget);
             }

@@ -67,7 +67,7 @@ export class DataExplorerVisualisationSettingsComponent
 
     triggerWidgetTypeChange(ev: MatSelectChange) {
         this.widgetTypeService.notify({
-            widgetId: this.currentlyConfiguredWidget._id,
+            widgetId: this.currentlyConfiguredWidget.elementId,
             newWidgetTypeId: ev.value,
         });
         this.selectWidget();

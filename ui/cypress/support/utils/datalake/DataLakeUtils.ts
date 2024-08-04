@@ -332,4 +332,21 @@ export class DataLakeUtils {
 
         return currentDate;
     }
+
+    public static waitForCountingResults() {
+        cy.dataCy('datalake-number-of-events-spinner', {
+            timeout: 10000,
+        }).should('exist');
+        cy.dataCy('datalake-number-of-events-spinner', {
+            timeout: 10000,
+        }).should('not.exist');
+    }
+
+    public static getDatalakeNumberOfEvents(): Cypress.Chainable<string> {
+        return cy
+            .dataCy('datalake-number-of-events', { timeout: 10000 })
+            .should('be.visible')
+            .invoke('text')
+            .then(text => text.trim());
+    }
 }

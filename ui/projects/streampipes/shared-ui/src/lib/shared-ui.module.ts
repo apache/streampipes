@@ -38,6 +38,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SplitSectionComponent } from './components/split-section/split-section.component';
 import { SpLabelComponent } from './components/sp-label/sp-label.component';
+import { SpTableComponent } from './components/sp-table/sp-table.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { SpExceptionDetailsComponent } from './components/sp-exception-message/exception-details/exception-details.component';
+import { SpWarningBoxComponent } from './components/warning-box/warning-box.component';
 
 @NgModule({
     declarations: [
@@ -49,9 +55,12 @@ import { SpLabelComponent } from './components/sp-label/sp-label.component';
         SpBasicViewComponent,
         SpBasicNavTabsComponent,
         SpExceptionMessageComponent,
+        SpExceptionDetailsComponent,
         SpExceptionDetailsDialogComponent,
         SpLabelComponent,
+        SpTableComponent,
         SplitSectionComponent,
+        SpWarningBoxComponent,
     ],
     imports: [
         CommonModule,
@@ -64,6 +73,9 @@ import { SpLabelComponent } from './components/sp-label/sp-label.component';
         PortalModule,
         OverlayModule,
         MatDialogModule,
+        MatTableModule,
+        MatPaginator,
+        MatSort,
     ],
     exports: [
         ConfirmDialogComponent,
@@ -73,10 +85,13 @@ import { SpLabelComponent } from './components/sp-label/sp-label.component';
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
         SpBasicNavTabsComponent,
+        SpExceptionDetailsComponent,
         SpExceptionMessageComponent,
         SpExceptionDetailsDialogComponent,
         SpLabelComponent,
+        SpTableComponent,
         SplitSectionComponent,
+        SpWarningBoxComponent,
     ],
 })
 export class SharedUiModule {}

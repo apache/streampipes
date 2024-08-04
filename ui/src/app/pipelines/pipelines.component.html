@@ -41,7 +41,8 @@
             [disabled]="checkCurrentSelectionStatus(false)"
             *ngIf="hasPipelineWritePrivileges"
         >
-            <mat-icon>play_arrow</mat-icon><span>Start all pipelines</span>
+            <mat-icon>play_arrow</mat-icon>
+            <span>Start all pipelines</span>
         </button>
         <button
             mat-button
@@ -79,44 +80,27 @@
                 title="Pipelines"
             ></sp-basic-header-title-component>
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-                <sp-basic-inner-panel
-                    [showTitle]="false"
-                    innerPadding="0"
-                    outerMargin="0"
-                    fxFlex="90"
-                    [hideToolbar]="true"
-                >
-                    <div fxFlex="100">
-                        <sp-pipeline-overview
-                            [activeCategoryId]="activeCategoryId"
-                            [pipelines]="pipelines"
-                            [pipelineToStart]="pipelineToStart"
-                            (refreshPipelinesEmitter)="refreshPipelines()"
-                            *ngIf="pipelinesReady"
-                        ></sp-pipeline-overview>
-                    </div>
-                </sp-basic-inner-panel>
+                <div fxFlex="90">
+                    <sp-pipeline-overview
+                        [pipelines]="pipelines"
+                        [pipelineToStart]="pipelineToStart"
+                        (refreshPipelinesEmitter)="refreshPipelines()"
+                        *ngIf="pipelinesReady"
+                    ></sp-pipeline-overview>
+                </div>
             </div>
             <div fxFlex="100" fxLayout="column" style="margin-top: 20px">
                 <sp-basic-header-title-component
                     title="Functions"
                 ></sp-basic-header-title-component>
                 <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-                    <sp-basic-inner-panel
-                        [showTitle]="false"
-                        innerPadding="0"
-                        outerMargin="0"
-                        fxFlex="90"
-                        [hideToolbar]="true"
-                    >
-                        <div fxFlex="100">
-                            <sp-functions-overview
-                                [functions]="functions"
-                                *ngIf="functionsReady"
-                            >
-                            </sp-functions-overview>
-                        </div>
-                    </sp-basic-inner-panel>
+                    <div fxFlex="90">
+                        <sp-functions-overview
+                            [functions]="functions"
+                            *ngIf="functionsReady"
+                        >
+                        </sp-functions-overview>
+                    </div>
                 </div>
             </div>
         </div>

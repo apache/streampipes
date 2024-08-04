@@ -90,6 +90,7 @@ export class GeneralConfigurationComponent implements OnInit {
                     allowPasswordRecovery: false,
                     defaultUserRoles: [UserRole.ROLE_PIPELINE_USER],
                     appName: this.appConstants.APP_NAME,
+                    linkSettings: configs[0].linkSettings,
                 };
             }
             this.mailConfig = configs[1];
@@ -141,6 +142,44 @@ export class GeneralConfigurationComponent implements OnInit {
                     Validators.required,
                 ),
             );
+
+            this.parentForm.addControl(
+                'documentationUrl',
+                new UntypedFormControl(
+                    this.generalConfig.linkSettings.documentationUrl,
+                ),
+            );
+            this.parentForm.addControl(
+                'showDocumentationLinkOnStartScreen',
+                new UntypedFormControl(
+                    this.generalConfig.linkSettings.showDocumentationLinkOnStartScreen,
+                ),
+            );
+            this.parentForm.addControl(
+                'showDocumentationLinkInProfileMenu',
+                new UntypedFormControl(
+                    this.generalConfig.linkSettings.showDocumentationLinkInProfileMenu,
+                ),
+            );
+            this.parentForm.addControl(
+                'supportUrl',
+                new UntypedFormControl(
+                    this.generalConfig.linkSettings.supportUrl,
+                ),
+            );
+            this.parentForm.addControl(
+                'showSupportUrlOnStartScreen',
+                new UntypedFormControl(
+                    this.generalConfig.linkSettings.showSupportUrlOnStartScreen,
+                ),
+            );
+            this.parentForm.addControl(
+                'showApiDocumentationLinkOnStartScreen',
+                new UntypedFormControl(
+                    this.generalConfig.linkSettings.showApiDocumentationLinkOnStartScreen,
+                ),
+            );
+
             this.parentForm.valueChanges.subscribe(v => {
                 this.generalConfig.appName = v.appName;
                 this.generalConfig.protocol = v.protocol;
@@ -153,6 +192,17 @@ export class GeneralConfigurationComponent implements OnInit {
                 this.generalConfig.defaultUserRoles = v.defaultUserRoles.map(
                     r => UserRole[r],
                 );
+                this.generalConfig.linkSettings.documentationUrl =
+                    v.documentationUrl;
+                this.generalConfig.linkSettings.supportUrl = v.supportUrl;
+                this.generalConfig.linkSettings.showApiDocumentationLinkOnStartScreen =
+                    v.showApiDocumentationLinkOnStartScreen;
+                this.generalConfig.linkSettings.showSupportUrlOnStartScreen =
+                    v.showSupportUrlOnStartScreen;
+                this.generalConfig.linkSettings.showDocumentationLinkInProfileMenu =
+                    v.showDocumentationLinkInProfileMenu;
+                this.generalConfig.linkSettings.showDocumentationLinkOnStartScreen =
+                    v.showDocumentationLinkOnStartScreen;
             });
 
             this.formReady = true;

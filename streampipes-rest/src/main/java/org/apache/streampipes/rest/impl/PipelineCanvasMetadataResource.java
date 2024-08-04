@@ -65,7 +65,7 @@ public class PipelineCanvasMetadataResource extends AbstractRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> storePipelineCanvasMetadata(@RequestBody PipelineCanvasMetadata pipelineCanvasMetadata) {
-    getPipelineCanvasMetadataStorage().createElement(pipelineCanvasMetadata);
+    getPipelineCanvasMetadataStorage().persist(pipelineCanvasMetadata);
     return ok();
   }
 
@@ -97,7 +97,7 @@ public class PipelineCanvasMetadataResource extends AbstractRestResource {
     try {
       getPipelineCanvasMetadataStorage().updateElement(pipelineCanvasMetadata);
     } catch (IllegalArgumentException e) {
-      getPipelineCanvasMetadataStorage().createElement(pipelineCanvasMetadata);
+      getPipelineCanvasMetadataStorage().persist(pipelineCanvasMetadata);
     }
     return ok();
   }

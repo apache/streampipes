@@ -176,7 +176,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
       }
     } else if (!deleteAssociatedPipelines) {
       List<String> namesOfPipelinesUsingAdapter =
-          pipelinesUsingAdapter.stream().map(pipelineId -> pipelineStorageAPI.getPipeline(pipelineId).getName())
+          pipelinesUsingAdapter.stream().map(pipelineId -> pipelineStorageAPI.getElementById(pipelineId).getName())
               .collect(
                   Collectors.toList());
       return ResponseEntity.status(HttpStatus.SC_CONFLICT).body(String.join(", ", namesOfPipelinesUsingAdapter));
@@ -187,7 +187,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
               !permissionResourceManager.findForObjectId(pipelineId).stream().findFirst().map(Permission::getOwnerSid)
                   // if a pipeline has no owner, pretend the owner is the user so the user can delete it
                   .orElse(this.getAuthenticatedUserSid()).equals(this.getAuthenticatedUserSid()))
-          .map(pipelineId -> pipelineStorageAPI.getPipeline(pipelineId).getName()).collect(Collectors.toList());
+          .map(pipelineId -> pipelineStorageAPI.getElementById(pipelineId).getName()).collect(Collectors.toList());
       boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
           .anyMatch(r -> r.getAuthority().equals(
               Role.ROLE_ADMIN.name()));

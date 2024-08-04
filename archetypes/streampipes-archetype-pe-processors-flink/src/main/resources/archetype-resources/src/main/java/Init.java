@@ -36,9 +36,9 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
-import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.StreamPipesExtensionsServiceBase;
 
-public class Init extends ExtensionsModelSubmitter {
+public class Init extends StreamPipesExtensionsServiceBase {
 
   public static void main(String[] args) throws Exception {
 	  new Init().init();

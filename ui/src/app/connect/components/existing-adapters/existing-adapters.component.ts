@@ -36,7 +36,6 @@ import {
 } from '@streampipes/shared-ui';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-adapter-actions-dialog.component';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { UserRole } from '../../../_enums/user-role.enum';
@@ -63,9 +62,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     currentFilter: AdapterFilterSettingsModel;
 
-    @ViewChild(MatPaginator)
-    paginator: MatPaginator;
-    pageSize = 1;
     @ViewChild(MatSort)
     sort: MatSort;
 
@@ -80,7 +76,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         'action',
     ];
 
-    dataSource: MatTableDataSource<AdapterDescription>;
+    dataSource: MatTableDataSource<AdapterDescription> =
+        new MatTableDataSource();
     isAdmin = false;
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
@@ -288,10 +285,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                 this.existingAdapters,
                 this.currentFilter,
             );
-            this.dataSource = new MatTableDataSource(this.filteredAdapters);
+            this.dataSource.data = this.filteredAdapters;
             this.getMonitoringInfos(adapters);
             setTimeout(() => {
-                this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
             });
         });

@@ -33,9 +33,6 @@ import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.UserResourceManager;
-import org.apache.streampipes.storage.api.IDashboardStorage;
-import org.apache.streampipes.storage.api.IDashboardWidgetStorage;
-import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -153,34 +150,34 @@ public class ResetManagement {
   }
 
   private static void removeAllDataViewWidgets() {
-    IDataExplorerWidgetStorage widgetStorage =
+    var widgetStorage =
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getDataExplorerWidgetStorage();
-    widgetStorage.getAllDataExplorerWidgets()
-                 .forEach(widget -> widgetStorage.deleteDataExplorerWidget(widget.getId()));
+    widgetStorage.findAll()
+                 .forEach(widget -> widgetStorage.deleteElementById(widget.getElementId()));
   }
 
   private static void removeAllDataViews() {
-    IDashboardStorage dataLakeDashboardStorage =
+    var dataLakeDashboardStorage =
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getDataExplorerDashboardStorage();
-    dataLakeDashboardStorage.getAllDashboards()
-                            .forEach(dashboard -> dataLakeDashboardStorage.deleteDashboard(dashboard.getCouchDbId()));
+    dataLakeDashboardStorage.findAll()
+                            .forEach(dashboard -> dataLakeDashboardStorage.deleteElementById(dashboard.getElementId()));
   }
 
   private static void removeAllDashboardWidgets() {
-    IDashboardWidgetStorage dashobardWidgetStorage =
+    var dashboardWidgetStorage =
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getDashboardWidgetStorage();
-    dashobardWidgetStorage.getAllDashboardWidgets()
-                          .forEach(widget -> dashobardWidgetStorage.deleteDashboardWidget(widget.getId()));
+    dashboardWidgetStorage.findAll()
+                          .forEach(widget -> dashboardWidgetStorage.deleteElementById(widget.getElementId()));
   }
 
   private static void removeAllDashboards() {
-    IDashboardStorage dashboardStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
+    var dashboardStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
                                                                    .getDashboardStorage();
-    dashboardStorage.getAllDashboards()
-                    .forEach(dashboard -> dashboardStorage.deleteDashboard(dashboard.getCouchDbId()));
+    dashboardStorage.findAll()
+                    .forEach(dashboard -> dashboardStorage.deleteElementById(dashboard.getElementId()));
   }
 
   private static void removeAllAssets(String username) {
@@ -202,7 +199,7 @@ public class ResetManagement {
         .getPipelineElementTemplateStorage();
 
     pipelineElementTemplateStorage
-        .getAll()
+        .findAll()
         .forEach(pipelineElementTemplateStorage::deleteElement);
 
   }

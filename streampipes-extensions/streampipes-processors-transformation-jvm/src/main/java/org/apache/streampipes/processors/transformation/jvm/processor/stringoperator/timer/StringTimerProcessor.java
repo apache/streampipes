@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -34,7 +35,6 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
@@ -47,13 +47,13 @@ public class StringTimerProcessor extends StreamPipesDataProcessor {
   public static final String FIELD_VALUE_ID = "fieldValue";
 
   public static final String OUTPUT_UNIT_ID = "outputUnit";
-  private static final String MILLISECONDS = "Milliseconds";
-  private static final String SECONDS = "Seconds";
-  private static final String MINUTES = "Minutes";
+  public static final String MILLISECONDS = "Milliseconds";
+  public static final String SECONDS = "Seconds";
+  public static final String MINUTES = "Minutes";
 
   public static final String OUTPUT_FREQUENCY = "outputFrequency";
-  private static final String ON_INPUT_EVENT = "On Input Event";
-  private static final String ON_STRING_VALUE_CHANGE = "When String Value Changes";
+  public static final String ON_INPUT_EVENT = "On Input Event";
+  public static final String ON_STRING_VALUE_CHANGE = "When String Value Changes";
 
   public static final String MEASURED_TIME_FIELD_RUNTIME_NAME = "measured_time";
   public static final String FIELD_VALUE_RUNTIME_NAME = "field_value";
@@ -68,10 +68,11 @@ public class StringTimerProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.stringoperator.timer")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.stringoperator.timer", 0)
         .category(DataProcessorType.STRING_OPERATOR, DataProcessorType.TIME)
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredStream(StreamRequirementsBuilder.create()
             .requiredPropertyWithUnaryMapping(
                 EpRequirements.stringReq(),

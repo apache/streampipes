@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class AbstractPipelineElementResourceManager<T extends CRUDStorage<String, W>,
+public abstract class AbstractPipelineElementResourceManager<T extends CRUDStorage<W>,
     W extends NamedStreamPipesEntity, X> extends AbstractResourceManager<T> {
 
   public AbstractPipelineElementResourceManager(T db) {
@@ -34,11 +34,11 @@ public abstract class AbstractPipelineElementResourceManager<T extends CRUDStora
   }
 
   public List<W> findAll() {
-    return db.getAll();
+    return db.findAll();
   }
 
   public List<String> findAllIdsOnly() {
-    return db.getAll().stream().map(NamedStreamPipesEntity::getAppId).collect(Collectors.toList());
+    return db.findAll().stream().map(NamedStreamPipesEntity::getAppId).collect(Collectors.toList());
   }
 
   public List<X> findAllAsInvocation() {
@@ -73,7 +73,7 @@ public abstract class AbstractPipelineElementResourceManager<T extends CRUDStora
   public void add(W pipelineElement, String principalSid) throws IllegalArgumentException {
     W existing = find(pipelineElement.getElementId());
     if (existing == null) {
-      this.db.createElement(pipelineElement);
+      this.db.persist(pipelineElement);
       new PermissionResourceManager()
           .createDefault(pipelineElement.getElementId(), SpDataStream.class, principalSid, false);
     } else {

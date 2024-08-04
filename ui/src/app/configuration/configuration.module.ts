@@ -78,6 +78,7 @@ import { SpExtensionsInstallationDialogComponent } from './dialog/extensions-ins
 import { EndpointItemComponent } from './extensions-installation/endpoint-item/endpoint-item.component';
 import { SpExtensionsInstallationComponent } from './extensions-installation/extensions-installation.component';
 import { MatMenuModule } from '@angular/material/menu';
+import { SpConfigurationLinkSettingsComponent } from './general-configuration/link-settings/link-settings.component';
 
 @NgModule({
     imports: [
@@ -173,6 +174,7 @@ import { MatMenuModule } from '@angular/material/menu';
         SecurityServiceConfigComponent,
         MessagingConfigurationComponent,
         DatalakeConfigurationComponent,
+        SpConfigurationLinkSettingsComponent,
         SpDataExportImportComponent,
         SpDataExportDialogComponent,
         SpDataExportItemComponent,

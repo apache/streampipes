@@ -20,40 +20,41 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.util.ElementIdGenerator;
-import org.apache.streampipes.storage.api.IDashboardStorage;
+import org.apache.streampipes.storage.api.CRUDStorage;
 
 import java.util.List;
 
-public abstract class AbstractDashboardResourceManager extends AbstractResourceManager<IDashboardStorage> {
+public abstract class AbstractDashboardResourceManager
+    extends AbstractResourceManager<CRUDStorage<DashboardModel>> {
 
-  public AbstractDashboardResourceManager(IDashboardStorage db) {
+  public AbstractDashboardResourceManager(CRUDStorage<DashboardModel> db) {
     super(db);
   }
 
   public List<DashboardModel> findAll() {
-    return db.getAllDashboards();
+    return db.findAll();
   }
 
   public DashboardModel find(String dashboardId) {
-    return db.getDashboard(dashboardId);
+    return db.getElementById(dashboardId);
   }
 
   public void delete(String dashboardId) {
-    db.deleteDashboard(dashboardId);
+    db.deleteElementById(dashboardId);
     deletePermissions(dashboardId);
   }
 
   public void create(DashboardModel dashboardModel, String principalSid) {
-    if (dashboardModel.getCouchDbId() == null) {
-      dashboardModel.setCouchDbId(ElementIdGenerator.makeElementId(DashboardModel.class));
+    if (dashboardModel.getElementId() == null) {
+      dashboardModel.setElementId(ElementIdGenerator.makeElementId(DashboardModel.class));
     }
-    db.storeDashboard(dashboardModel);
-    new PermissionResourceManager().createDefault(dashboardModel.getCouchDbId(), DashboardModel.class, principalSid,
+    db.persist(dashboardModel);
+    new PermissionResourceManager().createDefault(dashboardModel.getElementId(), DashboardModel.class, principalSid,
         false);
   }
 
   public void update(DashboardModel dashboardModel) {
-    db.updateDashboard(dashboardModel);
+    db.updateElement(dashboardModel);
   }
 
   private void deletePermissions(String dashboardId) {

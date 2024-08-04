@@ -25,6 +25,7 @@ import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeCon
 import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -35,7 +36,6 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.utils.Assets;
 
 public class NumericalFilterProcessor implements IStreamPipesDataProcessor {
 
@@ -51,9 +51,10 @@ public class NumericalFilterProcessor implements IStreamPipesDataProcessor {
   public IDataProcessorConfiguration declareConfig() {
     return DataProcessorConfiguration.create(
         NumericalFilterProcessor::new,
-        ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.numericalfilter")
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.filters.jvm.numericalfilter", 0)
             .category(DataProcessorType.FILTER)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                 .create()

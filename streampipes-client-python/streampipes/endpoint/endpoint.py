@@ -18,7 +18,7 @@
 """
 General implementation for an endpoint.
 Provided classes and assets are aimed to be used for developing endpoints.
-An endpoint provides all options to communicate with ad dedicated part of StreamPipes in a handy way.
+An endpoint provides all options to communicate with a dedicated part of StreamPipes in a handy way.
 """
 
 import json
@@ -184,7 +184,7 @@ class APIEndpoint(Endpoint):
         Returns
         -------
         container: ResourceContainer
-             container element that bundles the returned resources
+             Container element that bundles the returned resources
         """
 
         response = self._make_request(
@@ -284,7 +284,7 @@ class MessagingEndpoint(Endpoint):
         """Configures the message endpoint by setting the broker instance to be used.
 
         This configuration step is required before the endpoint can be actually used.
-        The based `broker` instance is passed to an internal property
+        The based `broker` instance is passed to an internal property.
 
         Parameters
         ----------

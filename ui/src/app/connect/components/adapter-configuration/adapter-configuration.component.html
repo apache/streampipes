@@ -18,7 +18,20 @@
 
 <sp-basic-view [padding]="true" [showBackLink]="false">
     <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-        <button mat-icon-button (click)="removeSelection()" matTooltip="Cancel">
+        <button
+            mat-icon-button
+            color="accent"
+            (click)="openDocumentation()"
+            matTooltip="Show documentation"
+        >
+            <i class="material-icons">menu_book</i>
+        </button>
+        <button
+            mat-icon-button
+            color="accent"
+            (click)="removeSelection()"
+            matTooltip="Cancel"
+        >
             <i class="material-icons">close</i>
         </button>
     </div>

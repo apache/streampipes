@@ -19,6 +19,7 @@
 import { Injectable } from '@angular/core';
 import {
     DataExplorerWidgetModel,
+    DataSeries,
     SpQueryResult,
 } from '@streampipes/platform-services';
 import {
@@ -82,9 +83,15 @@ export class EchartsDatasetGeneratorService<T extends DataExplorerWidgetModel> {
             index: number,
         ) => DataTransformOption[],
     ): PreparedDataset {
-        const data = [
+        const headers = this.makeHeaders(
             queryResult.headers,
-            ...queryResult.allDataSeries.flatMap(series => series.rows),
+            queryResult.allDataSeries,
+        );
+        const data = [
+            headers,
+            ...queryResult.allDataSeries.flatMap(series => {
+                return this.makeRows(series.rows, series.tags);
+            }),
         ];
         const initialTransforms = getInitialTransforms(widgetConfig, index).map(
             transform => ({
@@ -112,13 +119,34 @@ export class EchartsDatasetGeneratorService<T extends DataExplorerWidgetModel> {
             sourceIndex: index,
             tagValues: tags,
             groupedDatasets: groupTransforms,
-            rawDataset: { source: data, dimensions: queryResult.headers },
+            rawDataset: { source: data, dimensions: headers },
             initialTransformDatasets: initialTransforms,
             meta: {
                 preparedDataStartIndex,
                 preparedDataLength,
             },
         };
+    }
+
+    private makeRows(rows: any[][], tags: Record<string, any>): any[][] {
+        const tagValues = tags !== null ? Object.values(tags) : [];
+        return rows.map(row => {
+            return [...row, ...tagValues];
+        });
+    }
+
+    private makeHeaders(
+        headers: string[],
+        allDataSeries: DataSeries[],
+    ): string[] {
+        let tagHeaders = [];
+        if (allDataSeries.length > 0) {
+            const tags = allDataSeries[0].tags;
+            if (tags !== null) {
+                tagHeaders = Object.keys(tags);
+            }
+        }
+        return [...headers, ...tagHeaders];
     }
 
     increaseDatasetIndex(

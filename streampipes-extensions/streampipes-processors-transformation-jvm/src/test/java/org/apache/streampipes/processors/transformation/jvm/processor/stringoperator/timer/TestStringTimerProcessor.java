@@ -18,163 +18,79 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer;
 
-//@RunWith(Parameterized.class)
+import org.apache.streampipes.test.executors.Approx;
+import org.apache.streampipes.test.executors.PrefixStrategy;
+import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
+import org.apache.streampipes.test.executors.StreamPrefix;
+import org.apache.streampipes.test.executors.TestConfiguration;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor.FIELD_ID;
+import static org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor.FIELD_VALUE_RUNTIME_NAME;
+import static org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor.MEASURED_TIME_FIELD_RUNTIME_NAME;
+import static org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor.MILLISECONDS;
+import static org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor.ON_INPUT_EVENT;
+import static org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor.OUTPUT_FREQUENCY;
+import static org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor.OUTPUT_UNIT_ID;
+
 public class TestStringTimerProcessor {
-//
-//  private static final Logger LOG = LoggerFactory.getLogger(TestStringTimerProcessor.class);
-//
-//  @org.junit.runners.Parameterized.Parameters
-//  public static Iterable<Object[]> data() {
-//    return Arrays.asList(new Object[][] {
-//        {"select_field", "On Input Event", "Milliseconds", List.of(""), ""},
-//        {"select_field", "On Input Event", "Milliseconds", List.of("t1"), ""},
-//        {"select_field", "On Input Event", "Milliseconds", List.of("t1", "t1"), "t1"},
-//        {"select_field", "On Input Event", "Seconds", List.of("t1", "t1", "t2"), "t1"},
-//        {"select_field", "On Input Event", "Minutes", List.of("t1", "t2", "t3"), "t2"},
-//        {"select_field", "When String Value Changes", "Milliseconds", List.of(""), ""},
-//        {"select_field", "When String Value Changes", "Milliseconds", List.of("t1"), ""},
-//        {"select_field", "When String Value Changes", "Milliseconds", List.of("t1", "t2"), "t1"},
-//        {"select_field", "When String Value Changes", "Seconds", List.of("t1", "t1", "t2"), "t1"},
-//        {"select_field", "When String Value Changes", "Minutes", List.of("t1", "t2", "t3"), "t2"}
-//    });
-//  }
-//
-//  @org.junit.runners.Parameterized.Parameter
-//  public String selectedFieldName;
-//
-//  @org.junit.runners.Parameterized.Parameter(1)
-//  public String outputFrequency;
-//
-//  @org.junit.runners.Parameterized.Parameter(2)
-//  public String outputUnit;
-//
-//  @org.junit.runners.Parameterized.Parameter(3)
-//  public List<String> eventStrings;
-//
-//  @org.junit.runners.Parameterized.Parameter(4)
-//  public String expectedValue;
-//
-//  public static final String DEFAULT_STREAM_PREFIX = "stream";
-//
-//  @Test
-//  public void testStringTimer() {
-//    StringTimerProcessor stringTimer = new StringTimerProcessor();
-//    DataProcessorDescription originalGraph = stringTimer.declareModel();
-//    originalGraph.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
-//
-//    DataProcessorInvocation graph = InvocationGraphGenerator.makeEmptyInvocation(originalGraph);
-//    graph.setInputStreams(Collections.singletonList(
-//        EventStreamGenerator.makeStreamWithProperties(Collections.singletonList("in-stream"))));
-//    graph.setOutputStream(
-//        EventStreamGenerator.makeStreamWithProperties(Collections.singletonList("out-stream")));
-//    graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition()
-//        .setActualTopicName("output-topic");
-//
-//    MappingPropertyUnary mappingPropertyUnary = graph.getStaticProperties().stream()
-//        .filter(p -> p instanceof MappingPropertyUnary)
-//        .map(p -> (MappingPropertyUnary) p)
-//        .filter(p -> (StringTimerProcessor.FIELD_ID).equals(p.getInternalName()))
-//        .findFirst().orElse(null);
-//
-//    assert mappingPropertyUnary != null;
-//    mappingPropertyUnary.setSelectedProperty(DEFAULT_STREAM_PREFIX + "::" + selectedFieldName);
-//
-//    OneOfStaticProperty outputFrequencyStaticProperty = graph.getStaticProperties().stream()
-//        .filter(p -> p instanceof OneOfStaticProperty)
-//        .map(p -> (OneOfStaticProperty) p)
-//        .filter(p -> (StringTimerProcessor.OUTPUT_FREQUENCY.equals(p.getInternalName())))
-//        .findFirst().orElse(null);
-//    assert outputFrequencyStaticProperty != null;
-//    Option outputFrequencyOption = outputFrequencyStaticProperty.getOptions().stream()
-//        .filter(item -> item.getName().equals(outputFrequency))
-//        .findFirst().orElse(null);
-//    assert  outputFrequencyOption != null;
-//    outputFrequencyOption.setSelected(true);
-//
-//    OneOfStaticProperty outputUnitStaticProperty = graph.getStaticProperties().stream()
-//        .filter(p -> p instanceof OneOfStaticProperty)
-//        .map(p -> (OneOfStaticProperty) p)
-//        .filter(p -> (StringTimerProcessor.OUTPUT_UNIT_ID.equals(p.getInternalName())))
-//        .findFirst().orElse(null);
-//    assert  outputUnitStaticProperty != null;
-//    Option outputUnitOption = outputUnitStaticProperty.getOptions().stream()
-//        .filter(item -> item.getName().equals(outputUnit))
-//        .findFirst().orElse(null);
-//    assert outputUnitOption != null;
-//    outputUnitOption.setSelected(true);
-//
-//    ProcessorParams params = new ProcessorParams(graph);
-//
-//    SpOutputCollector spOut = new SpOutputCollector() {
-//      @Override
-//      public void registerConsumer(String routeId, InternalEventProcessor<Map<String, Object>> consumer) {
-//      }
-//
-//      @Override
-//      public void unregisterConsumer(String routeId) {
-//      }
-//
-//      @Override
-//      public void connect() throws SpRuntimeException {
-//      }
-//
-//      @Override
-//      public void disconnect() throws SpRuntimeException {
-//      }
-//
-//      @Override
-//      public void collect(Event event) {
-//      }
-//    };
-//    stringTimer.onInvocation(params, spOut, null);
-//    Tuple2<String, Double> res = sendEvents(stringTimer, spOut);
-//    LOG.info("Expected value is {}.", expectedValue);
-//    LOG.info("Actual value is {}.", res.k);
-//    assertEquals(expectedValue, res.k);
-//  }
-//
-//  private Tuple2<String, Double> sendEvents(StringTimerProcessor stringTimer, SpOutputCollector spOut) {
-//    String field = "";
-//    double timeDiff = 0.0;
-//    List<Event> events = makeEvents();
-//    for (Event event : events) {
-//      LOG.info("Sending event with value "
-//          + event.getFieldBySelector(DEFAULT_STREAM_PREFIX + "::"
-//          + selectedFieldName).getAsPrimitive().getAsString());
-//      stringTimer.onEvent(event, spOut);
-//      try {
-//        TimeUnit.MILLISECONDS.sleep(100);
-//      } catch (InterruptedException e) {
-//        throw new RuntimeException(e);
-//      }
-//      try {
-//        field = event.getFieldBySelector(StringTimerProcessor.FIELD_VALUE_RUNTIME_NAME)
-//            .getAsPrimitive()
-//            .getAsString();
-//        timeDiff = event.getFieldBySelector(StringTimerProcessor.MEASURED_TIME_FIELD_RUNTIME_NAME)
-//            .getAsPrimitive()
-//                .getAsDouble();
-//        LOG.info(field + " time: " + timeDiff);
-//      } catch (IllegalArgumentException e) {
-//
-//      }
-//    }
-//    return new Tuple2<>(field, timeDiff);
-//  }
-//
-//  private List<Event> makeEvents() {
-//    List<Event> events = Lists.newArrayList();
-//    for (String eventString : eventStrings) {
-//      events.add(makeEvent(eventString));
-//    }
-//    return events;
-//  }
-//  private Event makeEvent(String value) {
-//    Map<String, Object> map = Maps.newHashMap();
-//    map.put(selectedFieldName, value);
-//    return EventFactory.fromMap(map,
-//        new SourceInfo("test-topic", DEFAULT_STREAM_PREFIX),
-//        new SchemaInfo(null, Lists.newArrayList())
-//    );
-//  }
+  private static final String KEY_1 = "key1";
+  private static final String VALUE_1 = "v1";
+  private static final String VALUE_2 = "v2";
+
+  private StringTimerProcessor processor;
+
+  @BeforeEach
+  public void setup() {
+    processor = new StringTimerProcessor();
+  }
+
+  static Stream<Arguments> arguments() {
+    return Stream.of(
+        Arguments.of(
+            List.of(Map.of(KEY_1, VALUE_1), Map.of(KEY_1, VALUE_1), Map.of(KEY_1, VALUE_2)),
+            List.of(
+                Map.of(
+                    FIELD_VALUE_RUNTIME_NAME, VALUE_1,
+                    MEASURED_TIME_FIELD_RUNTIME_NAME, new Approx(0.0, 2.0),
+                    KEY_1, VALUE_1
+                ),
+                Map.of(
+                    FIELD_VALUE_RUNTIME_NAME, VALUE_1,
+                    MEASURED_TIME_FIELD_RUNTIME_NAME,  new Approx(1.0, 2.0),
+                    KEY_1, VALUE_2
+                )
+            )
+        )
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("arguments")
+  public void testStringToState(
+      List<Map<String, Object>> intpuEvents,
+      List<Map<String, Object>> outputEvents
+  ) {
+
+    var configuration = TestConfiguration
+        .builder()
+        .config(OUTPUT_FREQUENCY, ON_INPUT_EVENT)
+        .config(OUTPUT_UNIT_ID, MILLISECONDS)
+        .config(FIELD_ID, StreamPrefix.s0(KEY_1))
+        .prefixStrategy(PrefixStrategy.SAME_PREFIX)
+        .build();
+
+    var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+
+    testExecutor.run(intpuEvents, outputEvents);
+  }
+
 }

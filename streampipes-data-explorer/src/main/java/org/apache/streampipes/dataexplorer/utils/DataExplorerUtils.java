@@ -28,6 +28,6 @@ public class DataExplorerUtils {
     return StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getDataLakeStorage()
-        .getAllDataLakeMeasures();
+        .findAll();
   }
 }

@@ -31,6 +31,7 @@ public class GeneralConfig {
   private boolean allowPasswordRecovery;
 
   private List<String> defaultUserRoles;
+  private LinkSettings linkSettings;
 
   public GeneralConfig() {
   }
@@ -103,5 +104,13 @@ public class GeneralConfig {
 
   public void setAppName(String appName) {
     this.appName = appName;
+  }
+
+  public LinkSettings getLinkSettings() {
+    return linkSettings;
+  }
+
+  public void setLinkSettings(LinkSettings linkSettings) {
+    this.linkSettings = linkSettings;
   }
 }

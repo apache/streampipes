@@ -16,17 +16,16 @@
 name: OSV Scanner
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '0 0 1 * *'
+    - cron: "0 0 1 * *"
 
 jobs:
   run-osv-scanner:
-
     name: Run OSV Scanner
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -35,21 +34,21 @@ jobs:
 
       - name: Scan for vulnerabilities
         run: |
-          echo '<!--\n  ~ Licensed to the Apache Software Foundation (ASF) under one or more\n  ~ contributor license agreements.  See the NOTICE file distributed with\n  ~ this work for additional information regarding copyright ownership.\n  ~ The ASF licenses this file to You under the Apache License, Version 2.0\n  ~ (the "License"); you may not use this file except in compliance with\n  ~ the License.  You may obtain a copy of the License at\n  ~\n  ~    http://www.apache.org/licenses/LICENSE-2.0\n  ~\n  ~ Unless required by applicable law or agreed to in writing, software\n  ~ distributed under the License is distributed on an "AS IS" BASIS,\n  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n  ~ See the License for the specific language governing permissions and\n  ~ limitations under the License.\n  ~\n  -->' > VULNERABILITY.md
+          echo -e '<!--\n  ~ Licensed to the Apache Software Foundation (ASF) under one or more\n  ~ contributor license agreements.  See the NOTICE file distributed with\n  ~ this work for additional information regarding copyright ownership.\n  ~ The ASF licenses this file to You under the Apache License, Version 2.0\n  ~ (the "License"); you may not use this file except in compliance with\n  ~ the License.  You may obtain a copy of the License at\n  ~\n  ~    http://www.apache.org/licenses/LICENSE-2.0\n  ~\n  ~ Unless required by applicable law or agreed to in writing, software\n  ~ distributed under the License is distributed on an "AS IS" BASIS,\n  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n  ~ See the License for the specific language governing permissions and\n  ~ limitations under the License.\n  ~\n  -->' > VULNERABILITY.md
           docker run --rm -v $PWD:/repo -w /repo ghcr.io/google/osv-scanner --format markdown -r . 2>&1 | grep -vE '^((Scanning|Scanned|Failed).*)$' >> VULNERABILITY.md
         continue-on-error: true
 
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          committer: ${{ github.actor }} <noreply@gmail.com>
-          author: ${{ github.actor }} <${{ github.actor }}@github.com>
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
           signoff: true
           title: Monthly update of vulnerability report
           commit-message: monthly update of vulnerability report
           body: |
             Update *Vulnerablity* report
           delete-branch: true
-          reviewers: 'dominikriemer,tenthe,svenO3,smlabt,grainier,RobertIndie,bossenti'
+          reviewers: "dominikriemer,tenthe,svenO3,smlabt,grainier,RobertIndie,bossenti"

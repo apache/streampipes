@@ -32,7 +32,6 @@ import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 
-import org.junit.jupiter.api.Assertions;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -44,35 +43,35 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 
 public class ProcessingElementTestExecutor {
 
   private final IStreamPipesDataProcessor processor;
-  private TestConfiguration testConfiguration;
+  private final TestConfiguration testConfiguration;
   private Iterator<String> selectorPrefixes;
   private Consumer<DataProcessorInvocation> invocationConfig;
 
-  public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor, TestConfiguration testConfiguration,
-                                       Consumer<DataProcessorInvocation> invocationConfig) {
+  public ProcessingElementTestExecutor(
+      IStreamPipesDataProcessor processor, TestConfiguration testConfiguration,
+      Consumer<DataProcessorInvocation> invocationConfig
+  ) {
     this.processor = processor;
     this.testConfiguration = testConfiguration;
-    this.selectorPrefixes = testConfiguration.getPrefixes().iterator();
+    this.selectorPrefixes = testConfiguration.getPrefixes()
+                                             .iterator();
     this.invocationConfig = invocationConfig;
   }
 
   public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor, TestConfiguration testConfiguration) {
     this.processor = processor;
     this.testConfiguration = testConfiguration;
-    this.selectorPrefixes = testConfiguration.getPrefixes().iterator();
+    this.selectorPrefixes = testConfiguration.getPrefixes()
+                                             .iterator();
   }
-
-  public ProcessingElementTestExecutor(IStreamPipesDataProcessor processor,
-                                       Consumer<DataProcessorInvocation> invocationConfig) {
-    this.processor = processor;
-    this.invocationConfig = invocationConfig;
-    this.selectorPrefixes = List.of("").iterator();
-  }
-
 
   /**
    * This method is used to run a data processor with a given configuration and a list of input events.
@@ -89,21 +88,21 @@ public class ProcessingElementTestExecutor {
 
     // initialize the extractor with the provided configuration of the user input
     var dataProcessorInvocation = getProcessorInvocation();
-    if (invocationConfig != null){
+    if (invocationConfig != null) {
       invocationConfig.accept(dataProcessorInvocation);
     }
 
-    var e = getProcessingElementParameterExtractor(dataProcessorInvocation);
-    var mockParams = Mockito.mock(IDataProcessorParameters.class);
+    var extractor = getProcessingElementParameterExtractor(dataProcessorInvocation);
+    var mockParams = mock(IDataProcessorParameters.class);
 
-    Mockito.when(mockParams.getModel()).thenReturn(dataProcessorInvocation);
-    Mockito.when(mockParams.extractor()).thenReturn(e);
+    when(mockParams.getModel()).thenReturn(dataProcessorInvocation);
+    when(mockParams.extractor()).thenReturn(extractor);
 
     // calls the onPipelineStarted method of the processor to initialize it
     processor.onPipelineStarted(mockParams, null, null);
 
     // mock the output collector to capture the output events and validate the results later
-    var mockCollector = Mockito.mock(SpOutputCollector.class);
+    var mockCollector = mock(SpOutputCollector.class);
     var spOutputCollectorCaptor = ArgumentCaptor.forClass(Event.class);
 
 
@@ -113,11 +112,14 @@ public class ProcessingElementTestExecutor {
     }
 
     // Validate the output of the processor
-    Mockito.verify(mockCollector,
-        Mockito.times(expectedOutputEvents.size())).collect(spOutputCollectorCaptor.capture());
+    Mockito.verify(
+               mockCollector,
+               Mockito.times(expectedOutputEvents.size())
+           )
+           .collect(spOutputCollectorCaptor.capture());
     var resultingEvents = spOutputCollectorCaptor.getAllValues();
     IntStream.range(0, expectedOutputEvents.size())
-             .forEach(i -> Assertions.assertEquals(
+             .forEach(i -> assertEventEquality(
                  expectedOutputEvents.get(i),
                  resultingEvents.get(i)
                                 .getRaw()
@@ -125,6 +127,37 @@ public class ProcessingElementTestExecutor {
 
     // validate that the processor is stopped correctly
     processor.onPipelineStopped();
+  }
+
+  /**
+   * Asserts the equality of expected and actual event.
+   * Iterates through each key-value pair in the expected map and compares the value
+   * with the corresponding value in the actual map.
+   *
+   * @param expected The expected event
+   * @param actual   The actual event
+   */
+  private void assertEventEquality(Map<String, Object> expected, Map<String, Object> actual) {
+    expected.forEach((key, value) -> {
+      if (value instanceof Approx roundValue) {
+        assertEquals(
+            roundValue.value(),
+            (Double) actual.get(key),
+            roundValue.epsilon(),
+            () -> getAssertionErrorMessage(key, expected, actual));
+      } else {
+        assertEquals(
+            value,
+            actual.get(key),
+            () -> getAssertionErrorMessage(key, expected, actual)
+        );
+      }
+
+    });
+  }
+
+  private String getAssertionErrorMessage(String key, Map<String, Object> expected, Map<String, Object> actual) {
+    return "Assertion failed for key: %s. Expected: %s, Actual: %s".formatted(key, expected, actual);
   }
 
   private static ProcessingElementParameterExtractor getProcessingElementParameterExtractor(
@@ -163,7 +196,8 @@ public class ProcessingElementTestExecutor {
     var configs = new HashMap<String, PipelineElementTemplateConfig>();
 
     staticProperties.forEach(staticProperty -> {
-      var value = testConfiguration.getFieldConfiguration().get(staticProperty.getInternalName());
+      var value = testConfiguration.getFieldConfiguration()
+                                   .get(staticProperty.getInternalName());
       configs.put(
           staticProperty.getInternalName(),
           new PipelineElementTemplateConfig(true, true, value)
@@ -175,8 +209,9 @@ public class ProcessingElementTestExecutor {
 
   private Event getEvent(Map<String, Object> rawEvent) {
 
-    if (!selectorPrefixes.hasNext()){
-      selectorPrefixes = testConfiguration.getPrefixes().iterator();
+    if (!selectorPrefixes.hasNext()) {
+      selectorPrefixes = testConfiguration.getPrefixes()
+                                          .iterator();
     }
 
     String selectorPrefix = selectorPrefixes.next();

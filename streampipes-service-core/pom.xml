@@ -37,6 +37,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
         <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
@@ -160,6 +165,7 @@
                         <configuration>
                             <mainClass>org.apache.streampipes.service.core.StreamPipesCoreApplication
                             </mainClass>
+                            <attach>false</attach>
                         </configuration>
                     </execution>
                 </executions>

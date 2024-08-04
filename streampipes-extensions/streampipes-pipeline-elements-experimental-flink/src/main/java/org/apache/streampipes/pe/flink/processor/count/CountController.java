@@ -32,7 +32,7 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.helpers.Tuple2;
-import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
 
@@ -51,7 +51,7 @@ public class CountController extends FlinkDataProcessorDeclarer<CountParameters>
 
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.aggregation.flink.count")
         .category(DataProcessorType.AGGREGATE)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .requiredStream(StreamRequirementsBuilder
             .create()

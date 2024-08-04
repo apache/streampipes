@@ -31,7 +31,6 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.Statistics;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorProgram;
@@ -52,7 +51,7 @@ public class StatisticsSummaryControllerWindow extends
     return ProcessingElementBuilder.create(
             "org.apache.streampipes.processors.statistics.flink.statistics-summary-window")
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredStream(StreamRequirementsBuilder
             .create()
             .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),

@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeCon
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
 import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.runtime.Event;
@@ -40,7 +41,6 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
@@ -67,11 +67,11 @@ public class NumberLabelerProcessor extends StreamPipesDataProcessor
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(
-            "org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number", 0)
         .category(DataProcessorType.ENRICH)
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredStream(StreamRequirementsBuilder.create()
             .requiredPropertyWithUnaryMapping(
                 EpRequirements.numberReq(),
