@@ -164,7 +164,10 @@ export class ConnectUtils {
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
 
         if (adapterInput.storeInDataLake) {
-            cy.dataCy('sp-store-in-datalake').children().click();
+            cy.dataCy('sp-store-in-datalake')
+                .should('be.visible')
+                .children()
+                .click();
             cy.dataCy('sp-store-in-datalake-timestamp')
                 .click()
                 .get('mat-option')
