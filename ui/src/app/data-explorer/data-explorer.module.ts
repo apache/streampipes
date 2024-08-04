@@ -237,7 +237,7 @@ import { SpImageContainerComponent } from './components/widgets/image/image-cont
         SpDataZoomConfigComponent,
     ],
     providers: [],
-    exports: [LoadDataSpinnerComponent],
+    exports: [],
 })
 export class DataExplorerModule {
     constructor() {}
