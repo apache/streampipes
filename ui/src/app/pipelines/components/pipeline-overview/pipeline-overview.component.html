@@ -170,7 +170,6 @@
                     mat-icon-button
                     matTooltip="Modify pipeline"
                     matTooltipPosition="above"
-                    [disabled]="pipeline.running"
                     *ngIf="hasPipelineWritePrivileges"
                     (click)="
                         pipelineOperationsService.modifyPipeline(pipeline._id)

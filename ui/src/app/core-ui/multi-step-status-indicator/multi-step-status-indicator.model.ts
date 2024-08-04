@@ -16,22 +16,13 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog.scss';
-
-.customize-section {
-    display: flex;
-    flex: 1 1 auto;
-    padding: 20px;
+export enum Status {
+    PROGRESS,
+    SUCCESS,
+    FAILURE,
 }
 
-.padding-20 {
-    padding: 20px;
-}
-
-.mb-10 {
-    margin-bottom: 10px;
-}
-
-::ng-deep .pipeline-radio-group .mat-radio-label {
-    padding: 0;
+export interface StatusIndicator {
+    message: string;
+    status: Status;
 }

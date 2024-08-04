@@ -54,6 +54,7 @@
     display: flex;
     justify-content: flex-end;
     padding: 0 0.75rem 0.75rem;
+    background: white;
 }
 
 .shepherd-footer .shepherd-button:last-child {
@@ -114,6 +115,7 @@
     font-size: 1rem;
     line-height: 1.3em;
     padding: 0.75em;
+    background: white;
 }
 
 .shepherd-text p {
@@ -168,11 +170,10 @@
     height: 16px;
     position: absolute;
     width: 16px;
-    z-index: -1;
 }
 
 .shepherd-arrow:before {
-    background: #fafafa;
+    background: lightblue;
     content: '';
     transform: rotate(45deg);
 }

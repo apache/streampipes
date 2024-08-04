@@ -91,7 +91,6 @@ export class EditSchemaTransformationComponent implements OnInit {
     }
 
     triggerTutorialStep(): void {
-        console.log('lu');
         if (this.cachedProperty.runtimeName === 'temp') {
             this.shepherdService.trigger('adapter-runtime-name-changed');
         }

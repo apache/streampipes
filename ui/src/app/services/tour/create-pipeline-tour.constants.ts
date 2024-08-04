@@ -136,7 +136,7 @@ export default {
             {
                 stepId: 'step-15',
                 title: 'Save Pipeline Dialog',
-                text: '<p>Click on <b>Save and go to pipeline view</b> to start the pipeline.</p>',
+                text: '<p>Click on <b>Apply</b> to start the pipeline.</p>',
                 attachToElement: '[data-cy="sp-editor-save"]',
                 attachPosition: 'top',
                 buttons: ['cancel'],

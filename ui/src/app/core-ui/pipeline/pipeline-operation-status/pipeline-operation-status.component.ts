@@ -16,22 +16,15 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog.scss';
+import { Component, Input } from '@angular/core';
+import { PipelineOperationStatus } from '@streampipes/platform-services';
 
-.customize-section {
-    display: flex;
-    flex: 1 1 auto;
-    padding: 20px;
-}
-
-.padding-20 {
-    padding: 20px;
-}
-
-.mb-10 {
-    margin-bottom: 10px;
-}
-
-::ng-deep .pipeline-radio-group .mat-radio-label {
-    padding: 0;
+@Component({
+    selector: 'sp-pipeline-operation-status',
+    templateUrl: './pipeline-operation-status.component.html',
+    styleUrls: ['./pipeline-operation-status.component.scss'],
+})
+export class PipelineOperationStatusComponent {
+    @Input()
+    pipelineOperationStatus: PipelineOperationStatus;
 }

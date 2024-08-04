@@ -16,22 +16,20 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog.scss';
+import { Component, Input } from '@angular/core';
 
-.customize-section {
-    display: flex;
-    flex: 1 1 auto;
-    padding: 20px;
-}
+@Component({
+    selector: 'sp-status-indicator',
+    templateUrl: './status-indicator.component.html',
+    styleUrls: ['./status-indicator.component.scss'],
+})
+export class StatusIndicatorComponent {
+    @Input()
+    message = 'Loading';
 
-.padding-20 {
-    padding: 20px;
-}
+    @Input()
+    additionalDescription = '';
 
-.mb-10 {
-    margin-bottom: 10px;
-}
-
-::ng-deep .pipeline-radio-group .mat-radio-label {
-    padding: 0;
+    @Input()
+    icon: string;
 }

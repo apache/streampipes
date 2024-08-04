@@ -16,22 +16,6 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog.scss';
-
-.customize-section {
-    display: flex;
-    flex: 1 1 auto;
-    padding: 20px;
-}
-
-.padding-20 {
-    padding: 20px;
-}
-
-.mb-10 {
-    margin-bottom: 10px;
-}
-
-::ng-deep .pipeline-radio-group .mat-radio-label {
-    padding: 0;
+.status-outer {
+    border: 1px solid var(--color-bg-3);
 }

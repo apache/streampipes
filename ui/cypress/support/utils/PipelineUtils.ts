@@ -103,12 +103,14 @@ export class PipelineUtils {
         // Save and start pipeline
         cy.dataCy('sp-editor-save-pipeline').click();
         cy.dataCy('sp-editor-pipeline-name').type(pipelineInput.pipelineName);
-        cy.dataCy('sp-editor-checkbox-start-immediately').children().click();
-        cy.dataCy('sp-editor-save').click();
-        cy.dataCy('sp-pipeline-started-dialog', { timeout: 15000 }).should(
+        cy.dataCy('sp-editor-checkbox-navigate-to-overview').children().click();
+        cy.dataCy('sp-editor-apply').click();
+        cy.dataCy('sp-pipeline-started-success', { timeout: 15000 }).should(
             'be.visible',
         );
-        cy.dataCy('sp-pipeline-dialog-close', { timeout: 15000 }).click();
+        cy.dataCy('sp-navigate-to-pipeline-overview', {
+            timeout: 15000,
+        }).click();
     }
 
     public static checkAmountOfPipelinesPipeline(amount: number) {
