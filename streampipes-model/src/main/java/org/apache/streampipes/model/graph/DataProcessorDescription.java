@@ -18,10 +18,8 @@
 
 package org.apache.streampipes.model.graph;
 
-import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.output.OutputStrategy;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 
 import java.util.ArrayList;
@@ -33,14 +31,11 @@ public class DataProcessorDescription extends ConsumableStreamPipesEntity {
 
   private List<OutputStrategy> outputStrategies;
 
-  private String pathName;
-
   private List<String> category;
 
   public DataProcessorDescription(DataProcessorDescription other) {
     super(other);
     this.outputStrategies = new Cloner().strategies(other.getOutputStrategies());
-    this.pathName = other.getPathName();
     this.category = new Cloner().epaTypes(other.getCategory());
   }
 
@@ -50,45 +45,12 @@ public class DataProcessorDescription extends ConsumableStreamPipesEntity {
     this.category = new ArrayList<>();
   }
 
-  public DataProcessorDescription(String uri, String name, String description, String iconUrl,
-                                  List<SpDataStream> spDataStreams, List<StaticProperty> staticProperties,
-                                  List<OutputStrategy> outputStrategies) {
-    super(uri, name, description, iconUrl);
-    this.pathName = uri;
-    this.spDataStreams = spDataStreams;
-    this.staticProperties = staticProperties;
-    this.outputStrategies = outputStrategies;
-  }
-
-  public DataProcessorDescription(String pathName, String name, String description, String iconUrl) {
-    super(pathName, name, description, iconUrl);
-    this.pathName = pathName;
-    spDataStreams = new ArrayList<>();
-    staticProperties = new ArrayList<>();
-  }
-
-  public DataProcessorDescription(String pathName, String name, String description) {
-    super(pathName, name, description, "");
-    this.pathName = pathName;
-    spDataStreams = new ArrayList<>();
-    staticProperties = new ArrayList<>();
-  }
-
-
   public List<String> getCategory() {
     return category;
   }
 
   public void setCategory(List<String> category) {
     this.category = category;
-  }
-
-  public String getPathName() {
-    return pathName;
-  }
-
-  public void setPathName(String pathName) {
-    this.pathName = pathName;
   }
 
   public List<OutputStrategy> getOutputStrategies() {

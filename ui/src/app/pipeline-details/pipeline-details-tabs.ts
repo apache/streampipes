@@ -36,11 +36,6 @@ export class SpPipelineDetailsTabs {
                 itemTitle: 'Logs',
                 itemLink: ['pipelines', 'details', pipelineId, 'logs'],
             },
-            {
-                itemId: 'quick-edit',
-                itemTitle: 'Quick Edit',
-                itemLink: ['pipelines', 'details', pipelineId, 'quick-edit'],
-            },
         ];
     }
 }

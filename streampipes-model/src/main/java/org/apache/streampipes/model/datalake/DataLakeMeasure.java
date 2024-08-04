@@ -21,24 +21,24 @@ package org.apache.streampipes.model.datalake;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsIgnore;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.shared.api.Storable;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.SerializedName;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @TsModel
-public class DataLakeMeasure {
+public class DataLakeMeasure implements Storable {
 
   public static final String CURRENT_SCHEMA_VERSION = "1.1";
   public static final String ASSERTION_ERROR_MESSAGE = "timestamp field requires a stream prefix (e.g. s0::timestamp)";
   private static final String STREAM_PREFIX_DELIMITER = "::";
 
-  @JsonProperty("elementId")
   protected @SerializedName("_id") String elementId;
 
-  @JsonProperty("_rev")
+  @JsonAlias("_rev")
   private @SerializedName("_rev") String rev;
 
   private String measureName;
@@ -150,18 +150,22 @@ public class DataLakeMeasure {
     return timestampField.split(STREAM_PREFIX_DELIMITER)[1];
   }
 
+  @Override
   public String getRev() {
     return rev;
   }
 
+  @Override
   public void setRev(String rev) {
     this.rev = rev;
   }
 
+  @Override
   public String getElementId() {
     return elementId;
   }
 
+  @Override
   public void setElementId(String elementId) {
     this.elementId = elementId;
   }

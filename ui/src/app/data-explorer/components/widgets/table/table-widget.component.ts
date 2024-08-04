@@ -41,31 +41,56 @@ export class TableWidgetComponent
 
     dataSource = new MatTableDataSource();
     columnNames: string[];
+    groupByColumnNames: string[];
 
     ngOnInit(): void {
         super.ngOnInit();
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
+        this.regenerateColumnNames();
+    }
+
+    regenerateColumnNames(): void {
+        this.groupByColumnNames = this.makeGroupByColumns();
         this.columnNames = ['time'].concat(
             this.dataExplorerWidget.visualizationConfig.selectedColumns.map(
                 c => c.fullDbName,
             ),
+            ...this.groupByColumnNames,
         );
+    }
+
+    makeGroupByColumns(): string[] {
+        return this.dataExplorerWidget.dataConfig.sourceConfigs.flatMap(sc => {
+            return sc.queryConfig.groupBy
+                .filter(g => g.selected)
+                .map(g => g.runtimeName);
+        });
     }
 
     transformData(spQueryResult: SpQueryResult) {
         return spQueryResult.allDataSeries.flatMap(series =>
             series.rows.map(row =>
-                this.createTableObject(spQueryResult.headers, row),
+                this.createTableObject(spQueryResult.headers, row, series.tags),
             ),
         );
     }
 
-    createTableObject(keys, values) {
-        return keys.reduce((object, key, index) => {
+    createTableObject(
+        keys: string[],
+        values: any[],
+        tags: Record<string, string>,
+    ) {
+        const row = keys.reduce((object, key, index) => {
             object[key] = values[index];
             return object;
         }, {});
+        if (tags !== null) {
+            Object.keys(tags).forEach(key => {
+                row[key] = tags[key];
+            });
+        }
+        return row;
     }
 
     ngOnDestroy(): void {
@@ -116,11 +141,7 @@ export class TableWidgetComponent
     }
 
     onDataReceived(spQueryResults: SpQueryResult[]) {
-        this.columnNames = ['time'].concat(
-            this.dataExplorerWidget.visualizationConfig.selectedColumns.map(
-                c => c.fullDbName,
-            ),
-        );
+        this.regenerateColumnNames();
         const transformedData = spQueryResults
             .map(spQueryResult => this.transformData(spQueryResult))
             .flat();
@@ -148,10 +169,6 @@ export class TableWidgetComponent
     refreshColumns(): void {
         this.dataSource.filter =
             this.dataExplorerWidget.visualizationConfig.searchValue;
-        this.columnNames = ['time'].concat(
-            this.dataExplorerWidget.visualizationConfig.selectedColumns.map(
-                c => c.fullDbName,
-            ),
-        );
+        this.regenerateColumnNames();
     }
 }

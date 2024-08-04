@@ -31,14 +31,6 @@ public abstract class VersionedNamedStreamPipesEntity extends NamedStreamPipesEn
     this.version = other.version;
   }
 
-  public VersionedNamedStreamPipesEntity(String elementId, String name, String description){
-    super(elementId, name, description);
-  }
-
-  public VersionedNamedStreamPipesEntity(String elementId, String name, String description, String iconUrl) {
-    super(elementId, name, description, iconUrl);
-  }
-
   public int getVersion(){
     return version;
   }

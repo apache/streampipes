@@ -59,9 +59,9 @@ public class PipelineTemplateInvocationHandler {
     replaceStaticProperties(pipeline);
     Operations.storePipeline(pipeline);
     Permission permission = new PermissionManager().makePermission(pipeline, username);
-    StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage().addPermission(permission);
+    StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage().persist(permission);
     Pipeline storedPipeline =
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(pipeline.getPipelineId());
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getElementById(pipeline.getPipelineId());
     return Operations.startPipeline(storedPipeline);
   }
 

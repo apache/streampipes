@@ -27,8 +27,6 @@ public interface StaticPropertyVisitor {
 
   void visit(ColorPickerStaticProperty colorPickerStaticProperty);
 
-  void visit(DomainStaticProperty domainStaticProperty);
-
   void visit(FileStaticProperty fileStaticProperty);
 
   void visit(FreeTextStaticProperty freeTextStaticProperty);
@@ -48,8 +46,6 @@ public interface StaticPropertyVisitor {
   void visit(StaticPropertyAlternatives staticPropertyAlternatives);
 
   void visit(StaticPropertyGroup staticPropertyGroup);
-
-  void visit(RemoteOneOfStaticProperty remoteOneOfStaticProperty);
 
   void visit(SlideToggleStaticProperty slideToggleStaticProperty);
 

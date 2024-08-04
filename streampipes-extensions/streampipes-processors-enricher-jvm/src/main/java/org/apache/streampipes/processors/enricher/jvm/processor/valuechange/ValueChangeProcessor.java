@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -32,7 +33,6 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
@@ -51,9 +51,10 @@ public class ValueChangeProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.valuechange")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.enricher.jvm.valuechange", 0)
         .category(DataProcessorType.VALUE_OBSERVER)
-        .withAssets(Assets.DOCUMENTATION)
+        .withAssets(ExtensionAssetType.DOCUMENTATION)
         .withLocales(Locales.EN)
         .requiredFloatParameter(Labels.withId(FROM_PROPERTY_VALUE_ID))
         .requiredFloatParameter(Labels.withId(TO_PROPERTY_VALUE_ID))

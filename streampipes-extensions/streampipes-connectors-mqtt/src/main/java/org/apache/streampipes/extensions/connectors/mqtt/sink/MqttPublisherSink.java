@@ -24,6 +24,7 @@ import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.extensions.connectors.mqtt.sink.common.MqttClient;
 import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.StaticProperties;
@@ -33,7 +34,6 @@ import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 
 import java.util.Arrays;
 
@@ -77,7 +77,7 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
         DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.mqtt", 0)
             .category(DataSinkType.MESSAGING)
             .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
             .requiredStream(StreamRequirementsBuilder.any())
             .requiredTextParameter(Labels.withId(TOPIC))
             .requiredTextParameter(Labels.withId(HOST))

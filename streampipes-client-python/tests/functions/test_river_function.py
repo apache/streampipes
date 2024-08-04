@@ -56,7 +56,9 @@ class TestSupervisedModel:
 class TestRiverFunction(TestCase):
     def setUp(self) -> None:
         self.data_stream = create_data_stream(
-            "test", attributes={"number": RuntimeType.FLOAT.value, "bool": RuntimeType.BOOLEAN.value}
+            "test",
+            attributes={"number": RuntimeType.FLOAT.value, "bool": RuntimeType.BOOLEAN.value},
+            stream_id="sample-stream"
         ).to_dict()
 
         self.test_stream_data = [

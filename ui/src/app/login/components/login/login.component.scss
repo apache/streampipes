@@ -37,3 +37,16 @@
     background: #a2ffa2;
     color: #3e3e3e;
 }
+
+.separator {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid var(--color-bg-3);
+    line-height: 0.1em;
+    margin: 20px 0 20px;
+}
+
+.separator span {
+    background: #fff;
+    padding: 0 10px;
+}

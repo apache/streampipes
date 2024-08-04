@@ -91,7 +91,7 @@ public class WorkerAdministrationManagement {
   }
 
   public void performAdapterMigrations(List<SpServiceTag> tags) {
-    var installedAdapters = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage().getAllAdapters();
+    var installedAdapters = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage().findAll();
     var adminSid = new SpResourceManager().manageUsers().getAdminUser().getPrincipalId();
     installedAdapters.stream()
         .filter(adapter -> tags.stream().anyMatch(tag -> tag.getValue().equals(adapter.getAppId())))

@@ -18,6 +18,7 @@
 package org.apache.streampipes.processors.siddhi.count;
 
 import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -29,7 +30,6 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.helpers.Tuple2;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfigBuilder;
 import org.apache.streampipes.wrapper.siddhi.SiddhiQueryBuilder;
@@ -55,9 +55,10 @@ public class CountAggregation extends StreamPipesSiddhiProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.count")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.siddhi.count", 0)
         .category(DataProcessorType.COUNT_OPERATOR)
-        .withAssets(Assets.DOCUMENTATION)
+        .withAssets(ExtensionAssetType.DOCUMENTATION)
         .withLocales(Locales.EN)
         .requiredStream(StreamRequirementsBuilder
             .create()

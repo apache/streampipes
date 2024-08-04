@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.storage.api.IDashboardWidgetStorage;
+import org.apache.streampipes.storage.api.CRUDStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v2/dashboard/widgets")
@@ -41,12 +42,12 @@ public class DashboardWidget extends AbstractRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<DashboardWidgetModel>> getAllDashboardWidgets() {
-    return ok(getDashboardWidgetStorage().getAllDashboardWidgets());
+    return ok(getDashboardWidgetStorage().findAll());
   }
 
   @GetMapping(path = "/{widgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<DashboardWidgetModel> getDashboardWidget(@PathVariable("widgetId") String widgetId) {
-    return ok(getDashboardWidgetStorage().getDashboardWidget(widgetId));
+    return ok(getDashboardWidgetStorage().getElementById(widgetId));
   }
 
   @PutMapping(
@@ -54,13 +55,13 @@ public class DashboardWidget extends AbstractRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> modifyDashboardWidget(@RequestBody DashboardWidgetModel dashboardWidgetModel) {
-    getDashboardWidgetStorage().updateDashboardWidget(dashboardWidgetModel);
+    getDashboardWidgetStorage().updateElement(dashboardWidgetModel);
     return ok();
   }
 
   @DeleteMapping(path = "/{widgetId}")
   public ResponseEntity<Void> deleteDashboardWidget(@PathVariable("widgetId") String widgetId) {
-    getDashboardWidgetStorage().deleteDashboardWidget(widgetId);
+    getDashboardWidgetStorage().deleteElementById(widgetId);
     return ok();
   }
 
@@ -70,11 +71,13 @@ public class DashboardWidget extends AbstractRestResource {
   )
   public ResponseEntity<DashboardWidgetModel> createDashboardWidget(
       @RequestBody DashboardWidgetModel dashboardWidgetModel) {
-    String widgetId = getDashboardWidgetStorage().storeDashboardWidget(dashboardWidgetModel);
-    return ok(getDashboardWidgetStorage().getDashboardWidget(widgetId));
+    String elementId = UUID.randomUUID().toString();
+    dashboardWidgetModel.setElementId(elementId);
+    getDashboardWidgetStorage().persist(dashboardWidgetModel);
+    return ok(getDashboardWidgetStorage().getElementById(elementId));
   }
 
-  private IDashboardWidgetStorage getDashboardWidgetStorage() {
+  private CRUDStorage<DashboardWidgetModel> getDashboardWidgetStorage() {
     return getNoSqlStorage().getDashboardWidgetStorage();
   }
 }

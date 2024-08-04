@@ -149,6 +149,7 @@
                         Info
                     </button>
                     <button
+                        *ngIf="documentationLinkActive"
                         mat-menu-item
                         (click)="openDocumentation()"
                         style="min-width: 0px"

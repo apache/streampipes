@@ -61,7 +61,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(MigrationResource.class);
 
-  private final CRUDStorage<String, SpServiceRegistration> extensionsServiceStorage =
+  private final CRUDStorage<SpServiceRegistration> extensionsServiceStorage =
       getNoSqlStorage().getExtensionsServiceStorage();
   private final IAdapterStorage adapterStorage = getNoSqlStorage().getAdapterInstanceStorage();
 

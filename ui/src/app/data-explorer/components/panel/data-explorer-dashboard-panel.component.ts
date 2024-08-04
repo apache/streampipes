@@ -162,16 +162,16 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     addWidgetToDashboard(widget: DataExplorerWidgetModel) {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const dashboardItem = {} as ClientDashboardItem;
-        dashboardItem.id = widget._id;
+        dashboardItem.id = widget.elementId;
         dashboardItem.cols = 3;
         dashboardItem.rows = 4;
         dashboardItem.x = 0;
         dashboardItem.y = 0;
         this.dashboard.widgets.push(dashboardItem);
         if (this.viewMode === 'grid') {
-            this.dashboardGrid.loadWidgetConfig(widget._id, true);
+            this.dashboardGrid.loadWidgetConfig(widget.elementId, true);
         } else {
-            this.dashboardSlide.loadWidgetConfig(widget._id, true);
+            this.dashboardSlide.loadWidgetConfig(widget.elementId, true);
         }
     }
 
@@ -179,7 +179,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
         this.dataViewDataExplorerService
             .updateDashboard(this.dashboard)
             .subscribe(result => {
-                this.dashboard._rev = result._rev;
+                this.dashboard.rev = result.rev;
                 if (this.widgetIdsToRemove.length > 0) {
                     const observables = this.deleteWidgets();
                     zip(...observables).subscribe(() => {
@@ -220,17 +220,17 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
 
     removeAndQueueItemForDeletion(widget: DataExplorerWidgetModel) {
         const index = this.dashboard.widgets.findIndex(
-            item => item.id === widget._id,
+            item => item.id === widget.elementId,
         );
         this.dashboard.widgets.splice(index, 1);
-        this.widgetIdsToRemove.push(widget._id);
-        if (this.currentlyConfiguredWidget._id === widget._id) {
+        this.widgetIdsToRemove.push(widget.elementId);
+        if (this.currentlyConfiguredWidget.elementId === widget.elementId) {
             this.currentlyConfiguredWidget = undefined;
         }
     }
 
     updateAndQueueItemForDeletion(widget: DataExplorerWidgetModel) {
-        this.widgetsToUpdate.set(widget._id, widget);
+        this.widgetsToUpdate.set(widget.elementId, widget);
     }
 
     deleteWidgets(): Observable<any>[] {
@@ -247,9 +247,9 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
 
     updateCurrentlyConfiguredWidget(currentWidget: DataExplorerWidgetModel) {
         if (currentWidget) {
-            this.widgetsToUpdate.set(currentWidget._id, currentWidget);
+            this.widgetsToUpdate.set(currentWidget.elementId, currentWidget);
             this.currentlyConfiguredWidget = currentWidget;
-            this.currentlyConfiguredWidgetId = currentWidget._id;
+            this.currentlyConfiguredWidgetId = currentWidget.elementId;
             this.designerPanel.modifyWidgetMode(currentWidget, false);
             this.showDesignerPanel = true;
         } else {
@@ -316,7 +316,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     getDashboard(dashboardId: string, startTime: number, endTime: number) {
         this.dataViewService.getDataViews().subscribe(data => {
             this.dashboard = data.filter(
-                dashboard => dashboard._id === dashboardId,
+                dashboard => dashboard.elementId === dashboardId,
             )[0];
             this.breadcrumbService.updateBreadcrumb(
                 this.breadcrumbService.makeRoute(

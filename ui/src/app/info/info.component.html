@@ -16,23 +16,6 @@
   ~
   -->
 
-<div class="page-container page-container-padding">
-    <div class="page-container-nav">
-        <mat-tab-group (selectedTabChange)="tabChanged($event)" color="accent">
-            <mat-tab label="About"> </mat-tab>
-            <mat-tab label="System Info"> </mat-tab>
-            <mat-tab label="License"> </mat-tab>
-        </mat-tab-group>
-    </div>
-    <div class="container-fluid margin-top">
-        <div *ngIf="currentTabIndex === 0">
-            <sp-about></sp-about>
-        </div>
-        <div *ngIf="currentTabIndex === 1">
-            <sp-versions></sp-versions>
-        </div>
-        <div *ngIf="currentTabIndex === 2">
-            <sp-license></sp-license>
-        </div>
-    </div>
-</div>
+<sp-basic-view [showBackLink]="false" [padding]="true">
+    <sp-versions></sp-versions>
+</sp-basic-view>

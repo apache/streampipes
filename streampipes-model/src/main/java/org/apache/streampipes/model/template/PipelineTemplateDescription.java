@@ -35,16 +35,6 @@ public class PipelineTemplateDescription extends NamedStreamPipesEntity {
     this.boundTo = new ArrayList<>();
   }
 
-  public PipelineTemplateDescription(String uri, String name, String description) {
-    super(uri, name, description);
-    this.boundTo = new ArrayList<>();
-  }
-
-  public PipelineTemplateDescription(SpDataStream requiredStream, List<BoundPipelineElement> connectedTo) {
-    super();
-    this.boundTo = connectedTo == null ? new ArrayList<>() : connectedTo;
-  }
-
   public PipelineTemplateDescription(PipelineTemplateDescription other) {
     super(other);
     // TODO use cloner

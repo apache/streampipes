@@ -28,7 +28,7 @@ public class DataViewWidgetResolver extends AbstractResolver<DataExplorerWidgetM
 
   @Override
   public DataExplorerWidgetModel findDocument(String resourceId) {
-    return getNoSqlStore().getDataExplorerWidgetStorage().getDataExplorerWidget(resourceId);
+    return getNoSqlStore().getDataExplorerWidgetStorage().getElementById(resourceId);
   }
 
   @Override
@@ -44,12 +44,12 @@ public class DataViewWidgetResolver extends AbstractResolver<DataExplorerWidgetM
 
   @Override
   public ExportItem convert(DataExplorerWidgetModel document) {
-    return new ExportItem(document.getId(), document.getWidgetId(), true);
+    return new ExportItem(document.getElementId(), document.getWidgetId(), true);
   }
 
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getDataExplorerWidgetStorage().storeDataExplorerWidget(deserializeDocument(document));
+    getNoSqlStore().getDataExplorerWidgetStorage().persist(deserializeDocument(document));
   }
 
   @Override

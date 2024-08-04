@@ -44,7 +44,7 @@ public class PipelineManager {
    * @return all pipelines
    */
   public static List<Pipeline> getAllPipelines() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().findAll();
   }
 
   /**
@@ -54,7 +54,7 @@ public class PipelineManager {
    * @return pipeline resulting pipeline with given id
    */
   public static Pipeline getPipeline(String pipelineId) {
-    return getPipelineStorage().getPipeline(pipelineId);
+    return getPipelineStorage().getElementById(pipelineId);
   }
 
   /**
@@ -74,7 +74,7 @@ public class PipelineManager {
     Operations.storePipeline(pipeline);
 
     Permission permission = new PermissionManager().makePermission(pipeline, principalSid);
-    getPermissionStorage().addPermission(permission);
+    getPermissionStorage().persist(permission);
 
     return pipelineId;
   }
@@ -114,7 +114,7 @@ public class PipelineManager {
   public static void deletePipeline(String pipelineId) {
     var pipeline = getPipeline(pipelineId);
     if (Objects.nonNull(pipeline)) {
-      getPipelineStorage().deletePipeline(pipelineId);
+      getPipelineStorage().deleteElementById(pipelineId);
       new NotificationsResourceManager().deleteNotificationsForPipeline(pipeline);
     }
   }

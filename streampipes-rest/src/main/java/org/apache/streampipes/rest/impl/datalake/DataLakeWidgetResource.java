@@ -18,9 +18,11 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
+import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.CRUDStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,12 +43,12 @@ public class DataLakeWidgetResource extends AbstractRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<DataExplorerWidgetModel>> getAllDataExplorerWidgets() {
-    return ok(getDataExplorerWidgetStorage().getAllDataExplorerWidgets());
+    return ok(getDataExplorerWidgetStorage().findAll());
   }
 
   @GetMapping(path = "/{widgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<DataExplorerWidgetModel> getDataExplorerWidget(@PathVariable("widgetId") String widgetId) {
-    return ok(getDataExplorerWidgetStorage().getDataExplorerWidget(widgetId));
+    return ok(getDataExplorerWidgetStorage().getElementById(widgetId));
   }
 
   @PutMapping(
@@ -55,13 +57,13 @@ public class DataLakeWidgetResource extends AbstractRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<DataExplorerWidgetModel> modifyDataExplorerWidget(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
-    getDataExplorerWidgetStorage().updateDataExplorerWidget(dataExplorerWidgetModel);
-    return ok(getDataExplorerWidgetStorage().getDataExplorerWidget(dataExplorerWidgetModel.getId()));
+    getDataExplorerWidgetStorage().updateElement(dataExplorerWidgetModel);
+    return ok(getDataExplorerWidgetStorage().getElementById(dataExplorerWidgetModel.getElementId()));
   }
 
   @DeleteMapping(path = "/{widgetId}")
   public ResponseEntity<Void> deleteDataExplorerWidget(@PathVariable("widgetId") String widgetId) {
-    getDataExplorerWidgetStorage().deleteDataExplorerWidget(widgetId);
+    getDataExplorerWidgetStorage().deleteElementById(widgetId);
     return ok();
   }
 
@@ -71,11 +73,13 @@ public class DataLakeWidgetResource extends AbstractRestResource {
   )
   public ResponseEntity<DataExplorerWidgetModel> createDataExplorerWidget(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
-    String widgetId = getDataExplorerWidgetStorage().storeDataExplorerWidget(dataExplorerWidgetModel);
-    return ok(getDataExplorerWidgetStorage().getDataExplorerWidget(widgetId));
+    String elementId = ElementIdGenerator.makeElementId(DashboardWidgetModel.class);
+    dataExplorerWidgetModel.setElementId(elementId);
+    getDataExplorerWidgetStorage().persist(dataExplorerWidgetModel);
+    return ok(getDataExplorerWidgetStorage().getElementById(elementId));
   }
 
-  private IDataExplorerWidgetStorage getDataExplorerWidgetStorage() {
+  private CRUDStorage<DataExplorerWidgetModel> getDataExplorerWidgetStorage() {
     return getNoSqlStorage().getDataExplorerWidgetStorage();
   }
 

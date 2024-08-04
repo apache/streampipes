@@ -74,7 +74,11 @@ import java.util.concurrent.TimeUnit;
     WebSecurityConfig.class,
     WelcomePageController.class
 })
-@ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.ps"})
+@ComponentScan({
+    "org.apache.streampipes.rest.*",
+    "org.apache.streampipes.ps",
+    "org.apache.streampipes.service.core.oauth2"
+})
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesCoreApplication.class.getCanonicalName());
@@ -147,7 +151,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
                 StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
                 new AdapterMasterManagement(
                     StorageDispatcher.INSTANCE.getNoSqlStore()
-                                              .getAdapterInstanceStorage(),
+                        .getAdapterInstanceStorage(),
                     new SpResourceManager().manageAdapters(),
                     new SpResourceManager().manageDataStreams(),
                     AdapterMetricsManager.INSTANCE.getAdapterMetrics()
@@ -213,7 +217,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
     pipelinesToStop.forEach(pipeline -> {
       pipeline.setRestartOnSystemReboot(true);
-      StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
+      StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(pipeline);
     });
 
     LOG.info("Gracefully stopping all running pipelines...");
@@ -231,7 +235,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   private List<Pipeline> getAllPipelines() {
     return getPipelineStorage()
-        .getAllPipelines();
+        .findAll();
   }
 
   private IPipelineStorage getPipelineStorage() {

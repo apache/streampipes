@@ -92,7 +92,7 @@ public class AdapterMasterManagement {
 
 
   public AdapterDescription getAdapter(String elementId) throws AdapterException {
-    List<AdapterDescription> allAdapters = adapterInstanceStorage.getAllAdapters();
+    List<AdapterDescription> allAdapters = adapterInstanceStorage.findAll();
 
     if (allAdapters != null && elementId != null) {
       for (AdapterDescription ad : allAdapters) {
@@ -120,7 +120,7 @@ public class AdapterMasterManagement {
       LOG.info("Could not stop adapter: " + elementId, e);
     }
 
-    AdapterDescription adapter = adapterInstanceStorage.getAdapter(elementId);
+    AdapterDescription adapter = adapterInstanceStorage.getElementById(elementId);
     // Delete adapter
     adapterResourceManager.delete(elementId);
     ExtensionsLogProvider.INSTANCE.remove(elementId);
@@ -133,7 +133,7 @@ public class AdapterMasterManagement {
 
   public List<AdapterDescription> getAllAdapterInstances() throws AdapterException {
 
-    List<AdapterDescription> allAdapters = adapterInstanceStorage.getAllAdapters();
+    List<AdapterDescription> allAdapters = adapterInstanceStorage.findAll();
 
     if (allAdapters == null) {
       throw new AdapterException("Could not get all adapters");
@@ -143,7 +143,7 @@ public class AdapterMasterManagement {
   }
 
   public void stopStreamAdapter(String elementId) throws AdapterException {
-    AdapterDescription ad = adapterInstanceStorage.getAdapter(elementId);
+    AdapterDescription ad = adapterInstanceStorage.getElementById(elementId);
 
     WorkerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), ad);
     ExtensionsLogProvider.INSTANCE.reset(elementId);
@@ -159,7 +159,7 @@ public class AdapterMasterManagement {
 
   public void startStreamAdapter(String elementId) throws AdapterException {
 
-    var ad = adapterInstanceStorage.getAdapter(elementId);
+    var ad = adapterInstanceStorage.getElementById(elementId);
 
     try {
       // Find endpoint to start adapter on
@@ -171,7 +171,7 @@ public class AdapterMasterManagement {
 
       // Update selected endpoint URL of adapter
       ad.setSelectedEndpointUrl(baseUrl);
-      adapterInstanceStorage.updateAdapter(ad);
+      adapterInstanceStorage.updateElement(ad);
 
       // Invoke adapter instance
       WorkerRestClient.invokeStreamAdapter(baseUrl, elementId);

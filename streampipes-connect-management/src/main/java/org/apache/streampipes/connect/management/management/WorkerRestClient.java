@@ -199,7 +199,7 @@ public class WorkerRestClient {
 
   private static AdapterDescription getAdapterDescriptionById(AdapterInstanceStorageImpl adapterStorage, String id) {
     AdapterDescription adapterDescription = null;
-    List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
+    List<AdapterDescription> allAdapters = adapterStorage.findAll();
     for (AdapterDescription a : allAdapters) {
       if (a.getElementId().endsWith(id)) {
         adapterDescription = a;
@@ -219,11 +219,11 @@ public class WorkerRestClient {
   private static void encryptAndUpdateAdapter(AdapterDescription adapter) {
     AdapterDescription encryptedDescription = new Cloner().adapterDescription(adapter);
     SecretProvider.getEncryptionService().apply(encryptedDescription);
-    getAdapterStorage().updateAdapter(encryptedDescription);
+    getAdapterStorage().updateElement(encryptedDescription);
   }
 
   private static AdapterDescription getAndDecryptAdapter(String adapterId) {
-    AdapterDescription adapter = getAdapterStorage().getAdapter(adapterId);
+    AdapterDescription adapter = getAdapterStorage().getElementById(adapterId);
     SecretProvider.getDecryptionService().apply(adapter);
     return adapter;
   }

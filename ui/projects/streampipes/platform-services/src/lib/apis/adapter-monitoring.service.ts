@@ -19,11 +19,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {
-    PipelineMonitoringInfo,
-    SpLogEntry,
-    SpMetricsEntry,
-} from '../model/gen/streampipes-model';
+import { SpLogEntry, SpMetricsEntry } from '../model/gen/streampipes-model';
 import { PlatformServicesCommons } from './commons.service';
 import { map } from 'rxjs/operators';
 import { AbstractMonitoringService } from './abstract-monitoring.service';

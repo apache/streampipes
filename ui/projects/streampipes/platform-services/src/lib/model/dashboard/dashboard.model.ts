@@ -36,6 +36,6 @@ export interface Dashboard {
     widgets?: ClientDashboardItem[];
     dashboardTimeSettings?: TimeSettings;
     dashboardGeneralSettings?: any;
-    _id?: string;
-    _rev?: string;
+    elementId?: string;
+    rev?: string;
 }

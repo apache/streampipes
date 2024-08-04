@@ -102,6 +102,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AdapterStatusLightComponent } from './components/existing-adapters/adapter-status-light/adapter-status-light.component';
 import { SpAdapterDeploymentSettingsComponent } from './components/adapter-configuration/adapter-settings/adapter-deployment-settings/adapter-deployment-settings.component';
+import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-documentation/adapter-documentation-dialog.component';
 
 @NgModule({
     imports: [
@@ -210,6 +211,7 @@ import { SpAdapterDeploymentSettingsComponent } from './components/adapter-confi
         SpAdapterDeploymentSettingsComponent,
         SpAdapterDetailsLogsComponent,
         SpAdapterDetailsMetricsComponent,
+        SpAdapterDocumentationDialogComponent,
         SpAdapterOptionsPanelComponent,
         SpAdapterStartedPreviewComponent,
         SpAdapterStartedLoadingComponent,

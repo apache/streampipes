@@ -18,7 +18,7 @@ name: "build-python-docs-and-share-as-artifact"
 on:
   workflow_dispatch:
   schedule:
-    - cron:  "0 2 * * 6"  # runs every saturday at 00:00:00
+    - cron: "0 2 * * 6" # runs every saturday at 00:00:00
 
 jobs:
   python-docs-artifact-building:
@@ -26,6 +26,8 @@ jobs:
     steps:
       - name: clone
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: create working branch & set GitHub config
         run: |
@@ -64,7 +66,7 @@ jobs:
           git reset --hard  # undo local changes that delete generated doc files
 
       - name: Publish Python docs as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: streampipes-python-docs
           path: |

@@ -22,7 +22,6 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.output.OutputStrategy;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 
@@ -38,15 +37,12 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
 
   private List<OutputStrategy> outputStrategies;
 
-  private String pathName;
-
   private List<String> category;
 
   public DataProcessorInvocation(DataProcessorDescription other) {
     super();
     this.setName(other.getName());
     this.setDescription(other.getDescription());
-    this.setIconUrl(other.getIconUrl());
     this.setInputStreams(other.getSpDataStreams());
     this.setSupportedGrounding(other.getSupportedGrounding());
     this.setStaticProperties(other.getStaticProperties());
@@ -69,14 +65,7 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     if (other.getOutputStream() != null) {
       this.outputStream = new Cloner().stream(other.getOutputStream());
     }
-    this.pathName = other.getPathName();
     this.category = new Cloner().epaTypes(other.getCategory());
-    this.serviceTagPrefix = SpServiceTagPrefix.DATA_PROCESSOR;
-  }
-
-  public DataProcessorInvocation(DataProcessorDescription sepa, String domId) {
-    this(sepa);
-    this.dom = domId;
     this.serviceTagPrefix = SpServiceTagPrefix.DATA_PROCESSOR;
   }
 
@@ -84,34 +73,6 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     super();
     inputStreams = new ArrayList<>();
     this.serviceTagPrefix = SpServiceTagPrefix.DATA_PROCESSOR;
-  }
-
-  public DataProcessorInvocation(String uri, String name, String description, String iconUrl, String pathName,
-                                 List<SpDataStream> spDataStreams, List<StaticProperty> staticProperties) {
-    super(uri, name, description, iconUrl, SpServiceTagPrefix.DATA_PROCESSOR);
-    this.pathName = pathName;
-    this.inputStreams = spDataStreams;
-    this.staticProperties = staticProperties;
-  }
-
-  public DataProcessorInvocation(String uri, String name, String description, String iconUrl, String pathName) {
-    super(uri, name, description, iconUrl, SpServiceTagPrefix.DATA_PROCESSOR);
-    this.pathName = pathName;
-    inputStreams = new ArrayList<>();
-    staticProperties = new ArrayList<>();
-  }
-
-  public boolean addInputStream(SpDataStream spDataStream) {
-    return inputStreams.add(spDataStream);
-  }
-
-
-  public String getPathName() {
-    return pathName;
-  }
-
-  public void setPathName(String pathName) {
-    this.pathName = pathName;
   }
 
   public SpDataStream getOutputStream() {

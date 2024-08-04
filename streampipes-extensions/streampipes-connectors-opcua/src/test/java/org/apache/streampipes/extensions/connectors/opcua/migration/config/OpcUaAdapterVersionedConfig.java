@@ -21,12 +21,12 @@ package org.apache.streampipes.extensions.connectors.opcua.migration.config;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class OpcUaAdapterVersionedConfig {
 
   public static AdapterDescription getOpcUaAdapterDescriptionV1(){
     var builder = AdapterConfigurationBuilder.create(ID, 1, OpcUaAdapter::new)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
         .requiredAlternatives(Labels.withId(ADAPTER_TYPE),

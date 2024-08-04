@@ -45,8 +45,8 @@ public class TestConfigurationBuilder{
 
   public TestConfigurationBuilder prefixStrategy(PrefixStrategy strategy){
     this.eventPrefixes = switch (strategy){
-      case SAME_PREFIX -> List.of("s0");
-      case ALTERNATE -> List.of("s0", "s1");
+      case SAME_PREFIX -> List.of(StreamPrefix.S0);
+      case ALTERNATE -> List.of(StreamPrefix.S0, StreamPrefix.S1);
     };
     return this;
   }

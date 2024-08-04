@@ -44,7 +44,7 @@ public class AdapterHealthCheckTest {
 
   @Test
   public void getAllRunningInstancesAdapterDescriptionsEmpty() {
-    when(adapterInstanceStorageMock.getAllAdapters()).thenReturn(List.of());
+    when(adapterInstanceStorageMock.findAll()).thenReturn(List.of());
 
     var healthCheck = new AdapterHealthCheck(
         adapterInstanceStorageMock,
@@ -74,7 +74,7 @@ public class AdapterHealthCheckTest {
     runningAdapter.setElementId(nameRunningAdapter);
     runningAdapter.setRunning(true);
 
-    when(adapterInstanceStorageMock.getAllAdapters()).thenReturn(List.of(stoppedAdapter, runningAdapter));
+    when(adapterInstanceStorageMock.findAll()).thenReturn(List.of(stoppedAdapter, runningAdapter));
 
     var healthCheck = new AdapterHealthCheck(
         adapterInstanceStorageMock,

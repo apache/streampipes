@@ -19,6 +19,7 @@ package org.apache.streampipes.processors.siddhi.listfilter;
 
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
 import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.schema.EventPropertyList;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
@@ -29,7 +30,6 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfigBuilder;
 import org.apache.streampipes.wrapper.siddhi.SiddhiQueryBuilder;
@@ -48,10 +48,11 @@ public class ListFilter extends StreamPipesSiddhiProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.listfilter")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.siddhi.listfilter", 0)
         .withLocales(Locales.EN)
         .category(DataProcessorType.FILTER)
-        .withAssets(Assets.DOCUMENTATION)
+        .withAssets(ExtensionAssetType.DOCUMENTATION)
         .requiredStream(StreamRequirementsBuilder.create()
             .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(), Labels.withId
                 (LIST_KEY), PropertyScope.MEASUREMENT_PROPERTY)

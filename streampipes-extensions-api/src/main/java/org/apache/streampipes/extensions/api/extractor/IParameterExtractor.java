@@ -77,9 +77,6 @@ public interface IParameterExtractor {
 
   String propertyDatatype(String runtimeName);
 
-  <V> V supportedOntologyPropertyValue(String domainPropertyInternalId, String
-      propertyId, Class<V> targetClass);
-
   List<EventProperty> getEventPropertiesBySelector(List<String> selectors) throws
       SpRuntimeException;
 

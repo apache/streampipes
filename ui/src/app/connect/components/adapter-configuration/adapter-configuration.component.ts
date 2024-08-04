@@ -19,14 +19,13 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
-import {
-    AdapterDescription,
-    EventSchema,
-} from '@streampipes/platform-services';
+import { AdapterDescription } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
 import { TransformationRuleService } from '../../services/transformation-rule.service';
 import { Router } from '@angular/router';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { SpAdapterDocumentationDialogComponent } from '../../dialog/adapter-documentation/adapter-documentation-dialog.component';
 
 @Component({
     selector: 'sp-adapter-configuration',
@@ -47,6 +46,7 @@ export class AdapterConfigurationComponent implements OnInit {
     private eventSchemaComponent: EventSchemaComponent;
 
     constructor(
+        private dialogService: DialogService,
         private transformationRuleService: TransformationRuleService,
         private shepherdService: ShepherdService,
         private _formBuilder: UntypedFormBuilder,
@@ -106,5 +106,16 @@ export class AdapterConfigurationComponent implements OnInit {
 
     @ViewChild('stepper') set stepperComponent(stepperComponent: MatStepper) {
         this.myStepper = stepperComponent;
+    }
+
+    openDocumentation() {
+        this.dialogService.open(SpAdapterDocumentationDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Documentation',
+            width: '50vw',
+            data: {
+                appId: this.adapter.appId,
+            },
+        });
     }
 }

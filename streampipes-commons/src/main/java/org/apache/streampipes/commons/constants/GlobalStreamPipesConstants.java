@@ -22,8 +22,6 @@ public class GlobalStreamPipesConstants {
   public static final String STD_ICON_NAME = "icon.png";
   public static final String STD_DOCUMENTATION_NAME = "documentation.md";
 
-  public static final String CONNECT_MASTER_SOURCES_ENDPOINT = "/streampipes-backend/api/v2/connect/master/sources";
-
   public static final String INTERNAL_TOPIC_PREFIX = "org-apache-streampipes-internal-";
 
 }

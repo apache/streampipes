@@ -27,24 +27,48 @@ public class TestGsonSerializer {
   public static void assertions(PipelineElementTemplate template) {
     Assertions.assertEquals("name", template.getTemplateName());
     Assertions.assertEquals("description", template.getTemplateDescription());
-    Assertions.assertEquals(2,
-                            template.getTemplateConfigs().size());
-    Assertions.assertEquals("test-string",
-                            template.getTemplateConfigs().get("test-key").getValue());
-    Assertions.assertTrue(template.getTemplateConfigs().get("test-key").isEditable());
-    Assertions.assertTrue(template.getTemplateConfigs().get("test-key").isDisplayed());
-    Assertions.assertTrue(template.getTemplateConfigs().get("test-key-2").isEditable());
-    Assertions.assertFalse(template.getTemplateConfigs().get("test-key-2").isDisplayed());
+    Assertions.assertEquals(
+        2,
+        template.getTemplateConfigs()
+                .size()
+    );
+    Assertions.assertEquals(
+        "test-string",
+        template.getTemplateConfigs()
+                .get("test-key")
+                .getValue()
+    );
+    Assertions.assertTrue(template.getTemplateConfigs()
+                                  .get("test-key")
+                                  .isEditable());
+    Assertions.assertTrue(template.getTemplateConfigs()
+                                  .get("test-key")
+                                  .isDisplayed());
+    Assertions.assertTrue(template.getTemplateConfigs()
+                                  .get("test-key-2")
+                                  .isEditable());
+    Assertions.assertFalse(template.getTemplateConfigs()
+                                   .get("test-key-2")
+                                   .isDisplayed());
   }
 
   @Test
   public void testPipelineElementTemplateSerialization() {
     PipelineElementTemplate template = PipelineElementTemplateHelpers.makePipelineElementTemplate();
 
-    String json = GsonSerializer.getGsonWithIds().toJson(template);
-    PipelineElementTemplate template2 = GsonSerializer.getGsonWithIds().fromJson(json, PipelineElementTemplate.class);
+    String json = GsonSerializer.getGsonBuilder()
+                                .create()
+                                .toJson(template);
+    PipelineElementTemplate template2 = GsonSerializer
+        .getGsonBuilder()
+        .create()
+        .fromJson(json, PipelineElementTemplate.class);
     assertions(template2);
-    Assertions.assertEquals(2.0,
-                            template2.getTemplateConfigs().get("test-key-2").getValue());
+    Assertions.assertEquals(
+        2.0,
+        template2.getTemplateConfigs()
+                 .get("test-key-2")
+                 .getValue()
+    );
   }
 }

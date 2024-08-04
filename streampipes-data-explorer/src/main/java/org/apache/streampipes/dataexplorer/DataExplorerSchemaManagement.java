@@ -23,7 +23,7 @@ import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.storage.api.IDataLakeStorage;
+import org.apache.streampipes.storage.api.CRUDStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +34,9 @@ import java.util.stream.Stream;
 
 public class DataExplorerSchemaManagement implements IDataExplorerSchemaManagement {
 
-  IDataLakeStorage dataLakeStorage;
+  CRUDStorage<DataLakeMeasure> dataLakeStorage;
 
-  public DataExplorerSchemaManagement(IDataLakeStorage dataLakeStorage) {
+  public DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage) {
     this.dataLakeStorage = dataLakeStorage;
   }
 
@@ -47,7 +47,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   @Override
   public DataLakeMeasure getById(String elementId) {
-    return dataLakeStorage.findOne(elementId);
+    return dataLakeStorage.getElementById(elementId);
   }
 
   /**
@@ -92,7 +92,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    * Returns the existing measure that has the provided measure name
    */
   private Optional<DataLakeMeasure> getExistingMeasureByName(String measureName) {
-    return dataLakeStorage.getAllDataLakeMeasures()
+    return dataLakeStorage.findAll()
                           .stream()
                           .filter(m -> m.getMeasureName()
                                         .equals(measureName))
@@ -107,8 +107,8 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   @Override
   public void deleteMeasurement(String elementId) {
-    if (dataLakeStorage.findOne(elementId) != null) {
-      dataLakeStorage.deleteDataLakeMeasure(elementId);
+    if (dataLakeStorage.getElementById(elementId) != null) {
+      dataLakeStorage.deleteElementById(elementId);
     } else {
       throw new IllegalArgumentException("Could not find measure with this ID");
     }
@@ -116,14 +116,14 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   @Override
   public boolean deleteMeasurementByName(String measureName) {
-    var measureToDeleteOpt = dataLakeStorage.getAllDataLakeMeasures()
+    var measureToDeleteOpt = dataLakeStorage.findAll()
                                             .stream()
                                             .filter(measurement -> measurement.getMeasureName()
                                                                                .equals(measureName))
                                             .findFirst();
 
     return measureToDeleteOpt.map(measure -> {
-      dataLakeStorage.deleteDataLakeMeasure(measure.getElementId());
+      dataLakeStorage.deleteElementById(measure.getElementId());
       return true;
     }
     ).orElse(false);
@@ -131,18 +131,18 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   @Override
   public void updateMeasurement(DataLakeMeasure measure) {
-    var existingMeasure = dataLakeStorage.findOne(measure.getElementId());
+    var existingMeasure = dataLakeStorage.getElementById(measure.getElementId());
     if (existingMeasure != null) {
       measure.setRev(existingMeasure.getRev());
-      dataLakeStorage.updateDataLakeMeasure(measure);
+      dataLakeStorage.updateElement(measure);
     } else {
-      dataLakeStorage.storeDataLakeMeasure(measure);
+      dataLakeStorage.persist(measure);
     }
   }
 
   private void setSchemaVersionAndStoreMeasurement(DataLakeMeasure measure) {
     measure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
-    dataLakeStorage.storeDataLakeMeasure(measure);
+    dataLakeStorage.persist(measure);
   }
 
   /**

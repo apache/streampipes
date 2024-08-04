@@ -22,10 +22,10 @@ import {
     AdapterDescription,
     AdapterService,
     ErrorMessage,
-    Message,
     PipelineOperationStatus,
     PipelineTemplateService,
     PipelineUpdateInfo,
+    SpLogMessage,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
@@ -37,11 +37,8 @@ import { PipelineInvocationBuilder } from '../../../core-services/template/Pipel
 })
 export class AdapterStartedDialog implements OnInit {
     adapterInstalled = false;
-    public adapterStatus: Message;
     pollingActive = false;
     public pipelineOperationStatus: PipelineOperationStatus;
-
-    adapterSuccessfullyEdited = false;
 
     /**
      * AdapterDescription that should be persisted and started
@@ -76,6 +73,7 @@ export class AdapterStartedDialog implements OnInit {
     showPreview = false;
     adapterInstallationSuccessMessage = '';
     adapterElementId = '';
+    adapterErrorMessage: SpLogMessage;
 
     constructor(
         public dialogRef: DialogRef<AdapterStartedDialog>,
@@ -113,13 +111,12 @@ export class AdapterStartedDialog implements OnInit {
         this.loading = true;
         this.adapterService.updateAdapter(this.adapter).subscribe(
             res => {
-                this.adapterStatus = res;
                 this.onAdapterReady(
                     `Adapter ${this.adapter.name} was successfully updated and is available in the pipeline editor.`,
                 );
             },
             error => {
-                this.onAdapterFailure(error.error.title);
+                this.onAdapterFailure(error.error);
             },
         );
     }
@@ -129,7 +126,6 @@ export class AdapterStartedDialog implements OnInit {
         this.loading = true;
         this.adapterService.addAdapter(this.adapter).subscribe(
             status => {
-                this.adapterStatus = status;
                 if (status.success) {
                     const adapterElementId = status.notifications[0].title;
                     if (this.saveInDataLake) {
@@ -138,15 +134,22 @@ export class AdapterStartedDialog implements OnInit {
                         this.startAdapter(adapterElementId, true);
                     }
                 } else {
-                    const errorMsg =
-                        status.notifications.length > 0
-                            ? status.notifications[0].title
-                            : 'Unknown Error';
+                    const errorMsg: SpLogMessage = {
+                        cause:
+                            status.notifications.length > 0
+                                ? status.notifications[0].title
+                                : 'Unknown Error',
+                        detail: '',
+                        fullStackTrace: '',
+                        level: 'ERROR',
+                        title: 'Unknown Error',
+                    };
+
                     this.onAdapterFailure(errorMsg);
                 }
             },
             error => {
-                this.onAdapterFailure(error.error.title);
+                this.onAdapterFailure(error.error);
             },
         );
     }
@@ -164,7 +167,7 @@ export class AdapterStartedDialog implements OnInit {
                         this.onAdapterReady(successMessage, showPreview);
                     },
                     error => {
-                        this.onAdapterFailure(error.error.title);
+                        this.onAdapterFailure(error.error);
                     },
                 );
         } else {
@@ -172,19 +175,11 @@ export class AdapterStartedDialog implements OnInit {
         }
     }
 
-    onAdapterFailure(errorMessageText: string) {
+    onAdapterFailure(adapterErrorMessage: SpLogMessage) {
         this.adapterInstalled = true;
-        this.adapterStatus = {
-            success: false,
-            elementName: this.adapter.name,
-            notifications: [
-                {
-                    title: errorMessageText,
-                    description: '',
-                    additionalInformation: '',
-                },
-            ],
-        };
+
+        this.adapterErrorMessage = adapterErrorMessage;
+
         this.loading = false;
     }
 
@@ -248,7 +243,7 @@ export class AdapterStartedDialog implements OnInit {
                                     this.startAdapter(adapterElementId, true);
                                 },
                                 error => {
-                                    this.onAdapterFailure(error.error.title);
+                                    this.onAdapterFailure(error.error);
                                 },
                             );
                     },

@@ -21,14 +21,12 @@ import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty;
-import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
 import org.apache.streampipes.model.staticproperty.FileStaticProperty;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
 import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.apache.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
@@ -92,11 +90,6 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
   }
 
   @Override
-  public void visit(DomainStaticProperty domainStaticProperty) {
-    // TODO - not used anywhere anymore
-  }
-
-  @Override
   public void visit(FileStaticProperty fileStaticProperty) {
     if (hasKey(fileStaticProperty)) {
       fileStaticProperty.setLocationPath(getAsString(fileStaticProperty));
@@ -112,7 +105,10 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   @Override
   public void visit(MappingPropertyNary mappingPropertyNary) {
-    // Do nothing, not supported by pipeline element templates
+    if (hasKey(mappingPropertyNary)) {
+      var selectedProperties = getValueAsList(mappingPropertyNary);
+      mappingPropertyNary.setSelectedProperties(selectedProperties);
+    }
   }
 
   @Override
@@ -190,11 +186,6 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
   }
 
   @Override
-  public void visit(RemoteOneOfStaticProperty remoteOneOfStaticProperty) {
-
-  }
-
-  @Override
   public void visit(SlideToggleStaticProperty slideToggleStaticProperty) {
     if (hasKey(slideToggleStaticProperty)) {
       slideToggleStaticProperty.setSelected(getAsBoolean(slideToggleStaticProperty));
@@ -220,7 +211,7 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
   }
 
   private boolean hasKey(StaticProperty sp) {
-    return configs.containsKey(sp.getInternalName());
+    return configs.getOrDefault(sp.getInternalName(), null) != null;
   }
 
   private String getAsString(StaticProperty sp) {

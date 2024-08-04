@@ -29,3 +29,11 @@
 .full-width {
     width: 100%;
 }
+
+.warning-message {
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 1px solid var(--color-warn);
+    background: var(--color-bg-1);
+    font-size: 14px;
+}

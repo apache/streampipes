@@ -83,7 +83,7 @@ public class AdapterMigrationManager extends AbstractMigrationManager implements
                 "Migration was performed by extensions service '{}'",
                 extensionsServiceConfig.getServiceUrl());
 
-            adapterStorage.updateAdapter(migrationResult.element());
+            adapterStorage.updateElement(migrationResult.element());
             LOG.info("Adapter description is updated - Migration successfully completed at Core.");
           } else {
             LOG.error("Migration failed with the following reason: {}", migrationResult.message());

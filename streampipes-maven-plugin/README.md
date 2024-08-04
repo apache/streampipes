@@ -31,7 +31,7 @@ The streampipes-maven-plugin can either be started from the command line or embe
 
 ### Prerequisites
 
-The plugin must be started from a module which contains an `Init` class which inherits `ExtensionsModelSubmitter`.
+The plugin must be started from a module which contains an `Init` class which inherits `StreamPipesExtensionsServiceBase`.
 By default, the goal runs in the `package` phase.
 
 ### Command line

@@ -19,13 +19,14 @@
 package org.apache.streampipes.model.extensions.configuration;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.shared.api.Storable;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 @TsModel
-public class SpServiceConfiguration {
+public class SpServiceConfiguration implements Storable {
 
   protected @SerializedName("_rev") String rev;
   private @SerializedName("_id") String serviceGroup;
@@ -74,5 +75,15 @@ public class SpServiceConfiguration {
 
   public void setRev(String rev) {
     this.rev = rev;
+  }
+
+  @Override
+  public String getElementId() {
+    return this.serviceGroup;
+  }
+
+  @Override
+  public void setElementId(String elementId) {
+    this.serviceGroup = elementId;
   }
 }

@@ -32,7 +32,7 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
-import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.StreamPipesExtensionsServiceBase;
 import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
 
 import ${package}.pe.${packageName}.${classNamePrefix}DataProcessor;
@@ -40,7 +40,7 @@ import ${package}.pe.${packageName}.${classNamePrefix}DataSink;
 import ${package}.pe.${packageName}.${classNamePrefix}GenericAdapter;
 import ${package}.pe.${packageName}.${classNamePrefix}SpecificAdapter;
 
-public class Init extends ExtensionsModelSubmitter {
+public class Init extends StreamPipesExtensionsServiceBase {
 
   public static void main(String[] args) {
     new Init().init();

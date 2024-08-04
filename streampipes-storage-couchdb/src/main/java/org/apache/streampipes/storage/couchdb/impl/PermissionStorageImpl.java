@@ -19,44 +19,16 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.storage.api.IPermissionStorage;
-import org.apache.streampipes.storage.couchdb.dao.CrudDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class PermissionStorageImpl extends CrudDao implements IPermissionStorage {
+public class PermissionStorageImpl extends DefaultViewCrudStorage<Permission> implements IPermissionStorage {
 
-  private String viewName = "users/permissions";
-
-  public PermissionStorageImpl() {
-    super(Utils::getCouchDbUserClient);
-  }
-
-  @Override
-  public List<Permission> getAllPermissions() {
-    return findAll(viewName, Permission.class);
-  }
-
-  @Override
-  public Permission getPermissionById(String permissionId) {
-    return findWithNullIfEmpty(permissionId, Permission.class);
-  }
-
-  @Override
-  public void addPermission(Permission permission) {
-    persist(permission, Permission.class);
-  }
-
-  @Override
-  public void updatePermission(Permission permission) {
-    update(permission, Permission.class);
-  }
-
-  @Override
-  public void deletePermission(String permissionId) {
-    delete(permissionId, Permission.class);
+  public PermissionStorageImpl(String viewName) {
+    super(Utils::getCouchDbUserClient, Permission.class, viewName);
   }
 
   public Set<String> getObjectPermissions(List<String> principalSids) {

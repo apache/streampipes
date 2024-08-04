@@ -216,7 +216,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
             if (this.cachedPipelineElement instanceof DataProcessorInvocation) {
                 this.pipelineElementTemplateService
                     .getConfiguredDataProcessorForTemplate(
-                        event.value._id,
+                        event.value.elementId,
                         this.cachedPipelineElement,
                     )
                     .subscribe(pe => {
@@ -226,7 +226,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
             } else {
                 this.pipelineElementTemplateService
                     .getConfiguredDataSinkForTemplate(
-                        event.value._id,
+                        event.value.elementId,
                         this.cachedPipelineElement as DataSinkInvocation,
                     )
                     .subscribe(pe => {

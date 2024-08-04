@@ -47,11 +47,11 @@ import org.apache.streampipes.pe.flink.processor.timestamp.TimestampController;
 import org.apache.streampipes.pe.flink.processor.urldereferencing.UrlDereferencingController;
 import org.apache.streampipes.pe.flink.processor.wordcount.WordCountController;
 import org.apache.streampipes.pe.flink.sink.elasticsearch.ElasticSearchController;
-import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.StreamPipesExtensionsServiceBase;
 import org.apache.streampipes.wrapper.flink.FlinkRuntimeProvider;
 
 
-public class AllFlinkPipelineElementsInit extends ExtensionsModelSubmitter {
+public class AllFlinkPipelineElementsInit extends StreamPipesExtensionsServiceBase {
 
   public static void main(String[] args) {
     new AllFlinkPipelineElementsInit().init();

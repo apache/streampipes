@@ -107,7 +107,7 @@ streampipes up -d
 ```
 Now you're good to go to write your new pipeline element :tada: :tada: :tada:
 
-> **HINT for extensions**: Use our [Maven archetypes](https://streampipes.apache.org/docs/docs/dev-guide-archetype/) to setup a project skeleton and use your IDE of choice for development. However, we do recommend using IntelliJ.
+> **HINT for extensions**: Use our [Maven archetypes](https://streampipes.apache.org/docs/extend-archetypes/) to setup a project skeleton and use your IDE of choice for development. However, we do recommend using IntelliJ.
 
 > **HINT for core**: To work on `backend` or `ui` features you need to set the template to `backend` and clone the core repository [streampipes](https://github.com/apache/streampipes) - check the prerequisites there for more information.
 
@@ -163,7 +163,7 @@ streampipes start extensions-all-jvm
 **Restart** existing services
 ```bash
 # restart backend couchdb container
-streampipes restart backend couchdb 
+streampipes restart backend couchdb
 # restart existing services by removing and recreating container instance
 streampipes restart --force-create extensions-all-jvm
 ```
@@ -263,7 +263,7 @@ If you've found a bug or have a feature that you'd love to see in StreamPipes, f
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our community channels:
 
 - [Slack](https://slack.streampipes.org)
-- [Mailing Lists](https://streampipes.apache.org/mailinglists.html)
+- [Mailing Lists](https://streampipes.apache.org/community/mailing-lists/)
 
 And don't forget to follow us on [Twitter](https://twitter.com/streampipes)!
 

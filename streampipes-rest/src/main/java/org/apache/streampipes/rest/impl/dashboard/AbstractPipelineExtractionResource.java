@@ -46,7 +46,7 @@ public abstract class AbstractPipelineExtractionResource<T> extends AbstractRest
 
   protected List<T> extract(List<T> target, String appId) {
     getPipelineStorage()
-        .getAllPipelines()
+        .findAll()
         .forEach(pipeline -> {
           List<DataSinkInvocation> sinks = extractSink(pipeline, appId);
           sinks.forEach(sink -> target.add(convert(pipeline, sink)));

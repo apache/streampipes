@@ -34,7 +34,7 @@ class StreamPipesFunction(ABC):
     Parameters
     ----------
     function_definition: FunctionDefinition
-        the definition of the function that contains metadata about the connected function
+        The definition of the function that contains metadata about the connected function
 
     Attributes
     ----------
@@ -50,7 +50,7 @@ class StreamPipesFunction(ABC):
         }
 
     def add_output(self, stream_id: str, event: Dict[str, Any]):
-        """Send an event via an output data stream to StreamPipes
+        """Send an event via an output data stream to StreamPipes.
 
         Parameters
         ----------
@@ -78,7 +78,7 @@ class StreamPipesFunction(ABC):
         return self.function_definition.function_id
 
     def stop(self) -> None:
-        """Stops the function and disconnects from the output streams"""
+        """Stops the function and disconnects from the output streams."""
 
         for collector in self.output_collectors.values():
             collector.disconnect()
@@ -96,12 +96,12 @@ class StreamPipesFunction(ABC):
 
     @abstractmethod
     def onServiceStarted(self, context: FunctionContext) -> None:
-        """Is called when the function gets started.
+        """Is called when the function is started.
 
         Parameters
         ----------
         context: FunctionContext
-            The context in which the function gets started.
+            The context in which the function is started.
 
         Returns
         -------
@@ -128,7 +128,7 @@ class StreamPipesFunction(ABC):
 
     @abstractmethod
     def onServiceStopped(self) -> None:
-        """Is called when the function gets stopped.
+        """Is called when the function is stopped.
 
         Returns
         -------

@@ -42,12 +42,6 @@ public abstract class ConsumableStreamPipesEntity extends VersionedNamedStreamPi
     this.staticProperties = new ArrayList<>();
   }
 
-  public ConsumableStreamPipesEntity(String elementId, String name, String description, String iconUrl) {
-    super(elementId, name, description, iconUrl);
-    this.spDataStreams = new ArrayList<>();
-    this.staticProperties = new ArrayList<>();
-  }
-
   public ConsumableStreamPipesEntity(ConsumableStreamPipesEntity other) {
     super(other);
     if (other.getSpDataStreams() != null) {
@@ -73,10 +67,6 @@ public abstract class ConsumableStreamPipesEntity extends VersionedNamedStreamPi
 
   public void setStaticProperties(List<StaticProperty> staticProperties) {
     this.staticProperties = staticProperties;
-  }
-
-  public boolean addEventStream(SpDataStream spDataStream) {
-    return spDataStreams.add(spDataStream);
   }
 
   public EventGrounding getSupportedGrounding() {

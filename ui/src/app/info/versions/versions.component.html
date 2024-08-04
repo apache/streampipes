@@ -16,91 +16,81 @@
   ~
   -->
 
-<div
-    fxLayout="row wrap"
-    fxFlex="90"
-    fxLayoutAlign="center center"
-    class="about-container"
->
-    <div
-        fxFlex="100"
-        fxLayout="row wrap"
-        fxLayoutAlign="center center"
-        style="margin-top: 20px"
+<div fxLayout="column" fxLayoutGap="10px">
+    <sp-basic-header-title-component
+        title="Info"
+    ></sp-basic-header-title-component>
+    <sp-basic-inner-panel panelTitle="Versions" fxFlex="90">
+        <div *ngIf="versionInfo">
+            <ul>
+                <li>
+                    <div fxFlex="30">Backend Version</div>
+                    <div fxFlex="70">{{ versionInfo.backendVersion }}</div>
+                </li>
+            </ul>
+        </div>
+    </sp-basic-inner-panel>
+    <sp-basic-inner-panel
+        panelTitle="System Info"
+        innerPadding="0"
+        outerMargin="0"
+        fxFlex="90"
     >
-        <div fxFlex="100">
-            <div class="assemblyOptions sp-blue-bg" style="padding: 5px">
-                <h4>Versions</h4>
-            </div>
-            <div class="sp-blue-border md-padding" *ngIf="versionInfo">
-                <ul>
-                    <li>
-                        <div fxFlex="30">Backend Version</div>
-                        <div fxFlex="70">{{ versionInfo.backendVersion }}</div>
-                    </li>
-                </ul>
-            </div>
+        <div *ngIf="systemInfo">
+            <ul>
+                <li>
+                    <div fxFlex="30">Java VM Vendor</div>
+                    <div fxFlex="70">{{ systemInfo.javaVmVendor }}</div>
+                </li>
+                <li>
+                    <div fxFlex="30">Java VM Name</div>
+                    <div fxFlex="70">{{ systemInfo.javaVmName }}</div>
+                </li>
+                <li>
+                    <div fxFlex="30">Java VM Version</div>
+                    <div fxFlex="70">{{ systemInfo.javaVmVersion }}</div>
+                </li>
+                <li>
+                    <div fxFlex="30">Java Runtime Name</div>
+                    <div fxFlex="70">{{ systemInfo.javaRuntimeName }}</div>
+                </li>
+                <li>
+                    <div fxFlex="30">Java Runtime Version</div>
+                    <div fxFlex="70">
+                        {{ systemInfo.javaRuntimeVersion }}
+                    </div>
+                </li>
+                <li>
+                    <div fxFlex="30">CPU</div>
+                    <div fxFlex="70">{{ systemInfo.cpu }}</div>
+                </li>
+                <li>
+                    <div fxFlex="30">OS Name</div>
+                    <div fxFlex="70">{{ systemInfo.osName }}</div>
+                </li>
+                <li>
+                    <div fxFlex="30">OS Version</div>
+                    <div fxFlex="70">{{ systemInfo.osVersion }}</div>
+                </li>
+                <li>
+                    <div fxFlex="30">Total Memory</div>
+                    <div fxFlex="70">
+                        {{ systemInfo.totalMemory }} ({{
+                            systemInfo.totalMemoryKB
+                        }}
+                        KB)
+                    </div>
+                </li>
+                <li>
+                    <div fxFlex="30">Free Memory</div>
+                    <div fxFlex="70">
+                        {{ systemInfo.freeMemory }} ({{
+                            systemInfo.freeMemoryKB
+                        }}
+                        KB)
+                    </div>
+                </li>
+            </ul>
         </div>
-        <div fxFlex="100" style="margin-top: 10px">
-            <div class="assemblyOptions sp-blue-bg" style="padding: 5px">
-                <h4>System Info</h4>
-            </div>
-            <div class="sp-blue-border md-padding" *ngIf="systemInfo">
-                <ul>
-                    <li>
-                        <div fxFlex="30">Java VM Vendor</div>
-                        <div fxFlex="70">{{ systemInfo.javaVmVendor }}</div>
-                    </li>
-                    <li>
-                        <div fxFlex="30">Java VM Name</div>
-                        <div fxFlex="70">{{ systemInfo.javaVmName }}</div>
-                    </li>
-                    <li>
-                        <div fxFlex="30">Java VM Version</div>
-                        <div fxFlex="70">{{ systemInfo.javaVmVersion }}</div>
-                    </li>
-                    <li>
-                        <div fxFlex="30">Java Runtime Name</div>
-                        <div fxFlex="70">{{ systemInfo.javaRuntimeName }}</div>
-                    </li>
-                    <li>
-                        <div fxFlex="30">Java Runtime Version</div>
-                        <div fxFlex="70">
-                            {{ systemInfo.javaRuntimeVersion }}
-                        </div>
-                    </li>
-                    <li>
-                        <div fxFlex="30">CPU</div>
-                        <div fxFlex="70">{{ systemInfo.cpu }}</div>
-                    </li>
-                    <li>
-                        <div fxFlex="30">OS Name</div>
-                        <div fxFlex="70">{{ systemInfo.osName }}</div>
-                    </li>
-                    <li>
-                        <div fxFlex="30">OS Version</div>
-                        <div fxFlex="70">{{ systemInfo.osVersion }}</div>
-                    </li>
-                    <li>
-                        <div fxFlex="30">Total Memory</div>
-                        <div fxFlex="70">
-                            {{ systemInfo.totalMemory }} ({{
-                                systemInfo.totalMemoryKB
-                            }}
-                            KB)
-                        </div>
-                    </li>
-                    <li>
-                        <div fxFlex="30">Free Memory</div>
-                        <div fxFlex="70">
-                            {{ systemInfo.freeMemory }} ({{
-                                systemInfo.freeMemoryKB
-                            }}
-                            KB)
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    </sp-basic-inner-panel>
 </div>

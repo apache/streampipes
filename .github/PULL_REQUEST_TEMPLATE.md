@@ -15,16 +15,16 @@
   ~ limitations under the License.
   ~
   -->
-  
+
   <!--
 Thanks for contributing! Here are some tips you can follow to help us incorporate your contribution quickly and easily:
 1. If this is your first time, please read our contributor guidelines:
-    - https://streampipes.apache.org/getinvolved.html
+    - https://streampipes.apache.org/community/get-involved/
     - https://cwiki.apache.org/confluence/display/STREAMPIPES/Getting+Started
 2. Make sure the PR title is formatted like: `[#<GitHub issue id>] PR title ...`
 3. If the PR is unfinished, add '[WIP]' in your PR title, e.g., `[WIP][#<GitHub issue id>] PR title ...`.
 4. Please write your PR title to summarize what this PR proposes/fixes.
-5. Link the PR to the corresponding GitHub issue (if present) in the `Development` section in the right menu bar. 
+5. Link the PR to the corresponding GitHub issue (if present) in the `Development` section in the right menu bar.
 6. Be sure to keep the PR description updated to reflect all changes.
 7. If possible, provide a concise example to reproduce the issue for a faster review.
 8. Make sure tests pass via `mvn clean install`.

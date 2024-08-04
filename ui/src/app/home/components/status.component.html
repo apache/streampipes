@@ -16,53 +16,44 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="row">
-    <div
-        fxFlex="25"
-        class="status-container pipelines mr-20"
-        (click)="navigate('pipelines')"
-    >
-        <div fxFill="100" fxLayout="column" fxLayoutAlign="center center">
-            <div class="status-container-number" fxLayoutAlign="start center">
-                {{ availablePipelines }}
+<div
+    fxFlex="100"
+    class="status-container p-10"
+    (click)="navigate(statusBox.link)"
+>
+    <div fxLayout="row" fxFlex="100">
+        <div fxFlex fxLayout="column" fxLayoutAlign="start start">
+            <div fxFlex fxLayout="column">
+                <div class="status-container-number">
+                    <span>{{ resourceCount }}</span>
+                </div>
+                <div
+                    class="status-container-text"
+                    fxFlex
+                    fxLayoutAlign="end end"
+                >
+                    <span>{{ statusBox.title }}</span>
+                </div>
             </div>
-            <div class="status-container-text">pipelines created</div>
+            <div fxFlex="100" fxLayoutAlign="end end" class="w-100">
+                <div
+                    fxFlex="100"
+                    fxLayoutAlign="start center"
+                    *ngIf="showCreateLink"
+                >
+                    <a
+                        (click)="navigate(statusBox.createLink)"
+                        fxLayoutAlign="start center"
+                        class="status-container-create-link"
+                    >
+                        <i class="material-icons">add_circle</i>
+                        <span>&nbsp;{{ statusBox.createTitle }}</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-    <div
-        fxFlex="25"
-        class="status-container pipelines-running mr-20"
-        (click)="navigate('pipelines')"
-    >
-        <div fxFill="100" fxLayout="column" fxLayoutAlign="center center">
-            <div class="status-container-number" fxLayoutAlign="start center">
-                {{ runningPipelines }}
-            </div>
-            <div class="status-container-text">pipelines running</div>
-        </div>
-    </div>
-    <div
-        fxFlex="25"
-        class="status-container notifications mr-20"
-        (click)="navigate('notifications')"
-    >
-        <div fxFill="100" fxLayout="column" fxLayoutAlign="center center">
-            <div class="status-container-number" fxLayoutAlign="start center">
-                {{ unreadNotificationCount }}
-            </div>
-            <div class="status-container-text">unread notifications</div>
-        </div>
-    </div>
-    <div
-        fxFlex="25"
-        class="status-container pipeline-elements-installed"
-        (click)="navigate('add')"
-    >
-        <div fxFill="100" fxLayout="column" fxLayoutAlign="center center">
-            <div class="status-container-number" fxLayoutAlign="start center">
-                {{ availablePipelineElements }}
-            </div>
-            <div class="status-container-text">installed pipeline elements</div>
-        </div>
+    <div fxLayoutAlign="start start">
+        <i class="material-icons status-container-icon">{{ statusBox.icon }}</i>
     </div>
 </div>

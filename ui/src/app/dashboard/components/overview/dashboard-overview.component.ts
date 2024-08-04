@@ -129,17 +129,20 @@ export class DashboardOverviewComponent implements OnInit {
     }
 
     showDashboard(dashboard: Dashboard): void {
-        this.router.navigate(['dashboard', dashboard._id]);
+        this.router.navigate(['dashboard', dashboard.elementId]);
     }
 
     editDashboard(dashboard: Dashboard): void {
-        this.router.navigate(['dashboard', dashboard._id], {
+        this.router.navigate(['dashboard', dashboard.elementId], {
             queryParams: { action: 'edit' },
         });
     }
 
     openExternalDashboard(dashboard: Dashboard) {
-        const href = this.router.createUrlTree(['standalone', dashboard._id]);
+        const href = this.router.createUrlTree([
+            'standalone',
+            dashboard.elementId,
+        ]);
         // TODO fixes bug that hashing strategy is ignored by createUrlTree
         window.open('#' + href.toString(), '_blank');
     }
@@ -152,7 +155,7 @@ export class DashboardOverviewComponent implements OnInit {
                 title: 'Manage permissions',
                 width: '50vw',
                 data: {
-                    objectInstanceId: dashboard._id,
+                    objectInstanceId: dashboard.elementId,
                     headerTitle:
                         'Manage permissions for dashboard ' + dashboard.name,
                 },

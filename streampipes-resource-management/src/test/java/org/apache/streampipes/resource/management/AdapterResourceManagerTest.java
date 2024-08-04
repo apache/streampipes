@@ -37,6 +37,6 @@ public class AdapterResourceManagerTest {
     AdapterResourceManager adapterResourceManager = new AdapterResourceManager(storage);
     adapterResourceManager.encryptAndUpdate(new AdapterDescription());
 
-    verify(storage, times(1)).updateAdapter(any());
+    verify(storage, times(1)).updateElement(any());
   }
 }
