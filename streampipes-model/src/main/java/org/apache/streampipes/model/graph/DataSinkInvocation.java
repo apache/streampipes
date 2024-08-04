@@ -53,6 +53,7 @@ public class DataSinkInvocation extends InvocableStreamPipesEntity {
     this.setElementId(ElementIdGenerator.makeElementId(this));
     this.setIncludedAssets(other.getIncludedAssets());
     this.setIncludedLocales(other.getIncludedLocales());
+    this.setVersion(other.getVersion());
     this.serviceTagPrefix = SpServiceTagPrefix.DATA_SINK;
   }
 
