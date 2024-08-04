@@ -28,10 +28,18 @@
             color="accent"
             class="pipeline-radio-group"
         >
-            <mat-radio-button [value]="'update'" style="padding-left: 0">
+            <mat-radio-button
+                [value]="'update'"
+                style="padding-left: 0"
+                data-cy="pipeline-update-mode-update"
+            >
                 Update pipeline <b>{{ currentPipelineName }}</b>
             </mat-radio-button>
-            <mat-radio-button [value]="'clone'" class="mb-10">
+            <mat-radio-button
+                [value]="'clone'"
+                class="mb-10"
+                data-cy="pipeline-update-mode-clone"
+            >
                 Create new pipeline
             </mat-radio-button>
         </mat-radio-group>
