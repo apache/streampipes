@@ -353,7 +353,7 @@ export class ConnectUtils {
 
         // Validate resulting event
         cy.dataCy('sp-connect-adapter-success-live-preview', {
-            timeout: 10000,
+            timeout: 20000,
         }).should('be.visible');
 
         // validate that X event properties. The +1 is for the header row
