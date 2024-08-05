@@ -164,7 +164,9 @@ export class ConnectUtils {
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
 
         if (adapterInput.storeInDataLake) {
-            cy.dataCy('sp-store-in-datalake')
+            cy.dataCy('sp-store-in-datalake', {
+                timeout: 5000,
+            })
                 .should('be.visible')
                 .children()
                 .click();
