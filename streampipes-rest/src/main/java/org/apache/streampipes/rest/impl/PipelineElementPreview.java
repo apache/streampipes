@@ -51,14 +51,13 @@ public class PipelineElementPreview extends AbstractAuthGuardedRestResource {
     return ok(previewModel);
   }
 
-  @GetMapping(path = "{previewId}/{pipelineElementDomId}",
+  @GetMapping(path = "{previewId}",
       produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
   public StreamingResponseBody getPipelinePreviewResult(
-      @PathVariable("previewId") String previewId,
-      @PathVariable("pipelineElementDomId") String pipelineElementDomId) {
+      @PathVariable("previewId") String previewId) {
     try {
-      var spDataStream = new PipelinePreview().getPipelineElementPreviewStream(previewId, pipelineElementDomId);
-      var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(spDataStream);
+      var spDataStreams = new PipelinePreview().getPipelineElementPreviewStreams(previewId);
+      var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(spDataStreams);
       var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(runtimeInfoFetcher);
       return runtimeInfoProvider::streamOutput;
     } catch (IllegalArgumentException e) {

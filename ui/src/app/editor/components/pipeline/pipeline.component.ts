@@ -59,7 +59,7 @@ import {
 import { EditorService } from '../../services/editor.service';
 import { MatchingErrorComponent } from '../../dialog/matching-error/matching-error.component';
 import { MatDialog } from '@angular/material/dialog';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 import { PipelinePositioningService } from '../../services/pipeline-positioning.service';
 import {
@@ -71,6 +71,8 @@ import {
 } from '@jsplumb/browser-ui';
 import { PipelineStyleService } from '../../services/pipeline-style.service';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
+import { LivePreviewService } from '../../../services/live-preview.service';
+import { HttpDownloadProgressEvent } from '@angular/common/http';
 
 @Component({
     selector: 'sp-pipeline',
@@ -118,6 +120,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     previewModeActive = false;
     pipelinePreview: PipelinePreviewModel;
+    pipelinePreviewSub: Subscription;
 
     shouldOpenCustomizeSettings = false;
 
@@ -135,6 +138,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         private dialogService: DialogService,
         private dialog: MatDialog,
         private ngZone: NgZone,
+        private livePreviewService: LivePreviewService,
     ) {
         this.currentMouseOverElement = '';
         this.currentPipelineModel = new Pipeline();
@@ -662,6 +666,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
                 .subscribe(response => {
                     this.pipelinePreview = response;
                     this.previewModeActive = true;
+                    this.pipelinePreviewSub = this.editorService
+                        .getPipelinePreviewResult(response.previewId)
+                        .subscribe(res => {
+                            const data = this.livePreviewService.convert(
+                                res as HttpDownloadProgressEvent,
+                            );
+                            this.livePreviewService.eventSub.next(data);
+                        });
                 });
         } else {
             this.deletePipelineElementPreview(false);
@@ -670,6 +682,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     deletePipelineElementPreview(resume: boolean) {
         if (this.previewModeActive) {
+            this.pipelinePreviewSub?.unsubscribe();
             this.editorService
                 .deletePipelinePreviewRequest(this.pipelinePreview.previewId)
                 .subscribe(() => {

@@ -15,22 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.runtime;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataformat.SpDataFormatDefinition;
+import { Injectable } from '@angular/core';
+import { HttpDownloadProgressEvent } from '@angular/common/http';
+import { Subject } from 'rxjs';
 
-import java.util.Map;
+@Injectable({ providedIn: 'root' })
+export class LivePreviewService {
+    public eventSub: Subject<Record<string, any>> = new Subject<
+        Record<string, any>
+    >();
 
-public class SpDataFormatConverter {
-
-  private final SpDataFormatDefinition spDataFormatDefinition;
-
-  public SpDataFormatConverter(SpDataFormatDefinition spDataFormatDefinition) {
-    this.spDataFormatDefinition = spDataFormatDefinition;
-  }
-
-  public Map<String, Object> convert(byte[] message) throws SpRuntimeException {
-    return spDataFormatDefinition.toMap(message);
-  }
+    convert(event: HttpDownloadProgressEvent) {
+        const { partialText } = event;
+        const chunks = partialText.split('\n');
+        return JSON.parse(chunks[chunks.length - 2]);
+    }
 }

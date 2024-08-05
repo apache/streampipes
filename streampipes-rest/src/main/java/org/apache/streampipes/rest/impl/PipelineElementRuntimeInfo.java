@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v2/pipeline-element/runtime")
 public class PipelineElementRuntimeInfo extends AbstractRestResource {
@@ -38,7 +40,7 @@ public class PipelineElementRuntimeInfo extends AbstractRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
   public StreamingResponseBody getRuntimeInfo(@RequestBody SpDataStream spDataStream) {
-    var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(spDataStream);
+    var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(Map.of("adapter", spDataStream));
     var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(runtimeInfoFetcher);
     return runtimeInfoProvider::streamOutput;
   }

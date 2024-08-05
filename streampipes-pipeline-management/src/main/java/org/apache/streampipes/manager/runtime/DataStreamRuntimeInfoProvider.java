@@ -29,73 +29,66 @@ import org.apache.streampipes.model.grounding.TransportFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DataStreamRuntimeInfoProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataStreamRuntimeInfoProvider.class);
 
-  private final Map<String, SpDataFormatConverter> converterMap;
   private final Environment env;
-  private final SpDataStream dataStream;
-  private EventConsumer consumer;
-  private String latestEvent;
+  private final Map<String, SpDataStream> dataStreams;
+  private final List<EventConsumer> consumers;
+  private final Map<String, Map<String, Object>> latestEvents;
 
-  public DataStreamRuntimeInfoProvider(SpDataStream dataStream) {
-    this.dataStream = dataStream;
-    this.converterMap = new HashMap<>();
+  public DataStreamRuntimeInfoProvider(Map<String, SpDataStream> dataStreams) {
+    this.dataStreams = dataStreams;
+    this.consumers = new ArrayList<>();
     this.env = Environments.getEnvironment();
+    this.latestEvents = new HashMap<>();
   }
 
   public void startConsuming() throws SpRuntimeException {
-    var topic = getOutputTopic(dataStream);
-    var protocol = dataStream.getEventGrounding().getTransportProtocol();
-    if (env.getSpDebug().getValueOrDefault()) {
-      protocol.setBrokerHostname("localhost");
-      if (protocol instanceof KafkaTransportProtocol) {
-        ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
+    dataStreams.forEach((id, dataStream) -> {
+      var protocol = dataStream.getEventGrounding().getTransportProtocol();
+      if (env.getSpDebug().getValueOrDefault()) {
+        protocol.setBrokerHostname("localhost");
+        if (protocol instanceof KafkaTransportProtocol) {
+          ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
+        }
       }
-    }
 
-    if (!converterMap.containsKey(topic)) {
-      this.converterMap.put(topic,
-          new SpDataFormatConverterGenerator(getTransportFormat(dataStream)).makeConverter());
-    }
+      var converter = new SpDataFormatConverterGenerator(getTransportFormat(dataStream)).makeConverter();
+      var protocolDefinitionOpt = SpProtocolManager
+          .INSTANCE
+          .findDefinition(dataStream.getEventGrounding().getTransportProtocol());
 
-    var converter = converterMap.get(topic);
-
-    var protocolDefinitionOpt = SpProtocolManager
-        .INSTANCE
-        .findDefinition(dataStream.getEventGrounding().getTransportProtocol());
-
-    if (protocolDefinitionOpt.isPresent()) {
-      consumer = protocolDefinitionOpt.get().getConsumer(protocol);
-      consumer.connect(event -> this.latestEvent = converter.convert(event));
-    } else {
-      LOG.error("Error while fetching data for preview - protocol {} not found - did you register the protocol? ",
-          protocol.getClass().getCanonicalName());
-      throw new SpRuntimeException("Protocol not found");
-    }
+      if (protocolDefinitionOpt.isPresent()) {
+        var consumer = protocolDefinitionOpt.get().getConsumer(protocol);
+        consumer.connect(event -> {
+          var deserializedEvent = converter.convert(event);
+          this.latestEvents.put(id, deserializedEvent);
+        });
+        consumers.add(consumer);
+      } else {
+        LOG.error("Error while fetching data for preview - protocol {} not found - did you register the protocol? ",
+            protocol.getClass().getCanonicalName());
+        throw new SpRuntimeException("Protocol not found");
+      }
+    });
   }
 
   private TransportFormat getTransportFormat(SpDataStream spDataStream) {
     return spDataStream.getEventGrounding().getTransportFormats().get(0);
   }
 
-  private String getOutputTopic(SpDataStream spDataStream) {
-    return spDataStream
-        .getEventGrounding()
-        .getTransportProtocol()
-        .getTopicDefinition()
-        .getActualTopicName();
-  }
-
-  public String getLatestEvent() {
-    return latestEvent;
+  public Map<String, Map<String, Object>> getLatestEvents() {
+    return latestEvents;
   }
 
   public void close() {
-    consumer.disconnect();
+    consumers.forEach(EventConsumer::disconnect);
   }
 }

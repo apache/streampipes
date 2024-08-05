@@ -189,19 +189,13 @@ export class EditorService {
         return this.http.delete(this.pipelinePreviewBasePath + '/' + previewId);
     }
 
-    getPipelinePreviewResult(
-        previewId: string,
-        pipelineElementDomId: string,
-    ): Observable<HttpEvent<string>> {
-        return this.http.get(
-            `${this.pipelinePreviewBasePath}/${previewId}/${pipelineElementDomId}`,
-            {
-                responseType: 'text',
-                observe: 'events',
-                reportProgress: true,
-                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
-            },
-        );
+    getPipelinePreviewResult(previewId: string): Observable<HttpEvent<string>> {
+        return this.http.get(`${this.pipelinePreviewBasePath}/${previewId}`, {
+            responseType: 'text',
+            observe: 'events',
+            reportProgress: true,
+            context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+        });
     }
 
     get pipelinePreviewBasePath() {

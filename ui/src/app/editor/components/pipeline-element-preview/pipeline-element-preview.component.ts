@@ -17,10 +17,9 @@
  */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { EditorService } from '../../services/editor.service';
 import { Subscription } from 'rxjs';
-import { HttpDownloadProgressEvent, HttpEventType } from '@angular/common/http';
 import { KeyValue } from '@angular/common';
+import { LivePreviewService } from '../../../services/live-preview.service';
 
 @Component({
     selector: 'sp-pipeline-element-preview',
@@ -32,15 +31,13 @@ export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
     previewId: string;
 
     @Input()
-    pipelineElementDomId: string;
+    elementId: string;
 
     runtimeData: Record<string, any>;
-
     runtimeDataError = false;
-    timer: any;
     previewSub: Subscription;
 
-    constructor(private editorService: EditorService) {}
+    constructor(private livePreviewService: LivePreviewService) {}
 
     ngOnInit(): void {
         this.getLatestRuntimeInfo();
@@ -54,22 +51,13 @@ export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
     };
 
     getLatestRuntimeInfo() {
-        this.previewSub = this.editorService
-            .getPipelinePreviewResult(this.previewId, this.pipelineElementDomId)
-            .subscribe(event => {
-                if (event) {
-                    if (event.type === HttpEventType.DownloadProgress) {
-                        const chunks = (
-                            event as HttpDownloadProgressEvent
-                        ).partialText.split('\n');
-                        this.runtimeData = JSON.parse(
-                            chunks[chunks.length - 2],
-                        );
-                    }
-                } else {
-                    this.runtimeDataError = true;
-                }
-            });
+        this.previewSub = this.livePreviewService.eventSub.subscribe(event => {
+            if (event) {
+                this.runtimeData = event[this.elementId];
+            } else {
+                this.runtimeDataError = true;
+            }
+        });
     }
 
     ngOnDestroy() {

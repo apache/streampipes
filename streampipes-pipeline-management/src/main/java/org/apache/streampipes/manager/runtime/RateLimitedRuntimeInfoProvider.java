@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.manager.runtime;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
@@ -28,19 +30,21 @@ public class RateLimitedRuntimeInfoProvider {
   private static final int MAX_FREQUENCY = 500;
 
   private final DataStreamRuntimeInfoProvider runtimeInfoProvider;
+  private final ObjectMapper objectMapper;
 
   public RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider) {
     this.runtimeInfoProvider = runtimeInfoProvider;
+    this.objectMapper = new ObjectMapper();
   }
 
   public void streamOutput(OutputStream outputStream) {
     runtimeInfoProvider.startConsuming();
     try {
       for (int i = 0; i < MAX_PREVIEW_TIME_CYCLES; i++) {
-        String message = runtimeInfoProvider.getLatestEvent();
-        if (message != null) {
+        var messages = runtimeInfoProvider.getLatestEvents();
+        if (!messages.isEmpty()) {
           try {
-            outputStream.write((message + "\n").getBytes());
+            outputStream.write((objectMapper.writeValueAsString(messages) + "\n").getBytes());
             outputStream.flush();
           } catch (IOException ignored) {
           }

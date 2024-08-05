@@ -21,6 +21,7 @@ import { SpDataStream } from '@streampipes/platform-services';
 import { RestService } from '../../connect/services/rest.service';
 import { Subscription } from 'rxjs';
 import { HttpDownloadProgressEvent, HttpEventType } from '@angular/common/http';
+import { LivePreviewService } from '../../services/live-preview.service';
 
 @Component({
     selector: 'sp-pipeline-element-runtime-info',
@@ -36,7 +37,10 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     runtimeDataError = false;
     runtimeSub: Subscription;
 
-    constructor(private restService: RestService) {}
+    constructor(
+        private restService: RestService,
+        private livePreviewService: LivePreviewService,
+    ) {}
 
     ngOnInit(): void {
         this.getLatestRuntimeInfo();
@@ -47,14 +51,20 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
             .getRuntimeInfo(this.streamDescription)
             .subscribe(event => {
                 if (event.type === HttpEventType.DownloadProgress) {
-                    const chunks = (
-                        event as HttpDownloadProgressEvent
-                    ).partialText.split('\n');
-                    const json = JSON.parse(chunks[chunks.length - 2]);
-                    this.runtimeDataError = !json;
-                    this.runtimeData = Object.entries(json).map(
-                        ([runtimeName, value]) => ({ runtimeName, value }),
-                    );
+                    try {
+                        const responseJson = this.livePreviewService.convert(
+                            event as HttpDownloadProgressEvent,
+                        );
+                        const [firstKey] = Object.keys(responseJson);
+                        const json = responseJson[firstKey];
+                        this.runtimeDataError = !json;
+                        this.runtimeData = Object.entries(json).map(
+                            ([runtimeName, value]) => ({ runtimeName, value }),
+                        );
+                    } catch (error) {
+                        this.runtimeDataError = true;
+                        this.runtimeData = [];
+                    }
                 }
             });
     }
