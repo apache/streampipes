@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.Map;
 
 @RestController
@@ -39,7 +41,10 @@ public class PipelineElementRuntimeInfo extends AbstractRestResource {
       produces = MediaType.APPLICATION_OCTET_STREAM_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
-  public StreamingResponseBody getRuntimeInfo(@RequestBody SpDataStream spDataStream) {
+  public StreamingResponseBody getRuntimeInfo(HttpServletResponse response,
+                                              @RequestBody SpDataStream spDataStream) {
+    // deactivate nginx proxy buffering for better performance of streaming output
+    response.addHeader("X-Accel-Buffering", "no");
     var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(Map.of("adapter", spDataStream));
     var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(runtimeInfoFetcher);
     return runtimeInfoProvider::streamOutput;

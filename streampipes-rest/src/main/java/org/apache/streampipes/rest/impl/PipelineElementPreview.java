@@ -36,6 +36,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("/api/v2/pipeline-element-preview")
 public class PipelineElementPreview extends AbstractAuthGuardedRestResource {
@@ -54,8 +56,11 @@ public class PipelineElementPreview extends AbstractAuthGuardedRestResource {
   @GetMapping(path = "{previewId}",
       produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
   public StreamingResponseBody getPipelinePreviewResult(
+      HttpServletResponse response,
       @PathVariable("previewId") String previewId) {
     try {
+      // deactivate nginx proxy buffering for better performance of streaming output
+      response.addHeader("X-Accel-Buffering", "no");
       var spDataStreams = new PipelinePreview().getPipelineElementPreviewStreams(previewId);
       var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(spDataStreams);
       var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(runtimeInfoFetcher);
