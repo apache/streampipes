@@ -47,6 +47,19 @@
                     <h4 style="margin-bottom: 0px">{{ account.username }}</h4>
                 </td>
             </ng-container>
+            <ng-container matColumnDef="provider">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Type</th>
+                <td
+                    mat-cell
+                    *matCellDef="let account"
+                    data-cy="user-provider-table-row"
+                >
+                    <sp-label
+                        [small]="true"
+                        [labelText]="account.provider"
+                    ></sp-label>
+                </td>
+            </ng-container>
 
             <ng-container matColumnDef="fullName">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>

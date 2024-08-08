@@ -54,7 +54,7 @@ public class WelfordChangeDetection extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.changedetection.jvm.welford")
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.changedetection.jvm.welford", 0)
         .category(DataProcessorType.VALUE_OBSERVER)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

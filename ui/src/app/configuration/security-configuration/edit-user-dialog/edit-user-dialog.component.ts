@@ -57,6 +57,7 @@ export class EditUserDialogComponent implements OnInit {
     editMode: boolean;
 
     isUserAccount: boolean;
+    isExternalProvider: boolean = false;
     parentForm: UntypedFormGroup;
     clonedUser: UserAccount | ServiceAccount;
 
@@ -102,20 +103,24 @@ export class EditUserDialogComponent implements OnInit {
                 ? UserAccount.fromData(this.user, new UserAccount())
                 : ServiceAccount.fromData(this.user, new ServiceAccount());
         this.isUserAccount = this.user instanceof UserAccount;
+        this.isExternalProvider =
+            this.user instanceof UserAccount && this.user.provider !== 'local';
         this.parentForm = this.fb.group({});
+        let usernameValidators = [];
+        if (this.isUserAccount) {
+            if ((this.clonedUser as UserAccount).provider === 'local') {
+                usernameValidators = [Validators.required, Validators.email];
+            } else {
+                usernameValidators = [Validators.email];
+            }
+        } else {
+            usernameValidators = [Validators.required];
+        }
         this.parentForm.addControl(
             'username',
-            new UntypedFormControl(
-                this.clonedUser.username,
-                Validators.required,
-            ),
+            new UntypedFormControl(this.clonedUser.username),
         );
-        if (this.isUserAccount) {
-            this.parentForm.controls['username'].setValidators([
-                Validators.required,
-                Validators.email,
-            ]);
-        }
+        this.parentForm.controls['username'].setValidators(usernameValidators);
         this.parentForm.addControl(
             'accountEnabled',
             new UntypedFormControl(this.clonedUser.accountEnabled),
@@ -156,6 +161,11 @@ export class EditUserDialogComponent implements OnInit {
                 new UntypedFormControl(this.sendPasswordToUser),
             );
             this.parentForm.setValidators(this.checkPasswords);
+        }
+
+        if (this.isExternalProvider) {
+            this.parentForm.controls['username'].disable();
+            this.parentForm.controls['fullName'].disable();
         }
 
         this.parentForm.valueChanges.subscribe(v => {

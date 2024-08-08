@@ -16,41 +16,23 @@
  *
  */
 
-package org.apache.streampipes.model.datalake;
+package org.apache.streampipes.dataexplorer.query;
 
-import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
-@TsModel
-@Deprecated(forRemoval = true, since = "0.92.0")
-public class PageResult extends DataSeries {
-
-  private int page;
-
-  private int pageSum;
-
-  public PageResult(int total, List<String> headers, List<List<Object>> rows, int page, int pageSum,
-                    Map<String, String> tags) {
-    super(total, rows, headers, tags);
-    this.page = page;
-    this.pageSum = pageSum;
+public class DataLakeMeasurementCounterTestImpl extends DataLakeMeasurementCounter {
+  public DataLakeMeasurementCounterTestImpl(
+      List<DataLakeMeasure> allMeasurements, List<String> measurementNames
+  ) {
+    super(allMeasurements, measurementNames);
   }
 
-  public int getPage() {
-    return page;
-  }
-
-  public void setPage(int page) {
-    this.page = page;
-  }
-
-  public int getPageSum() {
-    return pageSum;
-  }
-
-  public void setPageSum(int pageSum) {
-    this.pageSum = pageSum;
+  @Override
+  protected CompletableFuture<Integer> createQueryAsAsyncFuture(DataLakeMeasure measure) {
+    // Mock implementation for testing
+    return CompletableFuture.completedFuture(1);
   }
 }

@@ -41,7 +41,8 @@ public class BooleanInverterProcessor extends StreamPipesDataProcessor {
   private String invertFieldName;
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.inverter")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.booloperator.inverter", 0)
         .category(DataProcessorType.BOOLEAN_OPERATOR)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)

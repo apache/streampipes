@@ -19,17 +19,5 @@
 import { App } from './apps.model';
 
 export class AvailableAppsService {
-    public static apps: App[] = [
-        {
-            appName: 'Asset Dashboards',
-            appDescription:
-                'Monitor measurements of your assets by placing visualizations on an image of your asset.',
-            appId: 'asset-monitoring',
-            appLink: 'asset-monitoring',
-            appModuleLink: () =>
-                import(
-                    '../app-asset-monitoring/app-asset-monitoring.module'
-                ).then(m => m.AppAssetMonitoringModule),
-        },
-    ];
+    public static apps: App[] = [];
 }

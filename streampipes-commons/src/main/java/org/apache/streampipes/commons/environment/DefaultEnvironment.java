@@ -19,9 +19,13 @@
 package org.apache.streampipes.commons.environment;
 
 import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
+import org.apache.streampipes.commons.environment.parser.OAuthConfigurationParser;
 import org.apache.streampipes.commons.environment.variable.BooleanEnvironmentVariable;
 import org.apache.streampipes.commons.environment.variable.IntEnvironmentVariable;
 import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
+
+import java.util.List;
 
 public class DefaultEnvironment implements Environment {
 
@@ -172,6 +176,21 @@ public class DefaultEnvironment implements Environment {
   @Override
   public StringEnvironmentVariable getEncryptionPasscode() {
     return new StringEnvironmentVariable(Envs.SP_ENCRYPTION_PASSCODE);
+  }
+
+  @Override
+  public BooleanEnvironmentVariable getOAuthEnabled() {
+    return new BooleanEnvironmentVariable(Envs.SP_OAUTH_ENABLED);
+  }
+
+  @Override
+  public StringEnvironmentVariable getOAuthRedirectUri() {
+    return new StringEnvironmentVariable(Envs.SP_OAUTH_REDIRECT_URI);
+  }
+
+  @Override
+  public List<OAuthConfiguration> getOAuthConfigurations() {
+    return new OAuthConfigurationParser().parse(System.getenv());
   }
 
   @Override

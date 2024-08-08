@@ -53,7 +53,8 @@ public class ThresholdDetectionProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.threshold")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.filters.jvm.threshold", 0)
         .category(DataProcessorType.FILTER)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

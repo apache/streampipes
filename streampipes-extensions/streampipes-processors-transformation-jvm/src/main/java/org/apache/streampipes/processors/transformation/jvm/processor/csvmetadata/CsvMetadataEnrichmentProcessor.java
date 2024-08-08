@@ -89,8 +89,8 @@ public class CsvMetadataEnrichmentProcessor
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm"
-            + ".csvmetadata")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.csvmetadata", 0)
         .category(DataProcessorType.ENRICH)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)

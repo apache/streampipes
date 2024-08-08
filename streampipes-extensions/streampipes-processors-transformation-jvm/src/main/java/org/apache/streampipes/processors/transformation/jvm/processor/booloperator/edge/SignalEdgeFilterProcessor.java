@@ -65,8 +65,8 @@ public class SignalEdgeFilterProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(
-            "org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge", 0)
         .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.FILTER)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)

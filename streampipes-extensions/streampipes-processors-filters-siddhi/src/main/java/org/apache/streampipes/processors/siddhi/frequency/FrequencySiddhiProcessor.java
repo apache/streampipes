@@ -43,7 +43,8 @@ public class FrequencySiddhiProcessor extends StreamPipesSiddhiProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.frequency")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.siddhi.frequency", 0)
         .category(DataProcessorType.FILTER)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION)

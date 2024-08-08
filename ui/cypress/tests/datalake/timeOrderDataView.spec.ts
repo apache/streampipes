@@ -17,6 +17,7 @@
  */
 
 import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
+import { DataLakeBtns } from '../../support/utils/datalake/DataLakeBtns';
 
 describe('Test Time Order in Data Explorer', () => {
     beforeEach('Setup Test', () => {
@@ -37,7 +38,7 @@ describe('Test Time Order in Data Explorer', () => {
         DataLakeUtils.selectTimeRange(startDate, endDate);
         cy.wait(1000);
 
-        cy.get('table.mat-mdc-table tbody tr td').then($cells => {
+        cy.dataCy('data-explorer-table').then($cells => {
             const strings = $cells.map((index, cell) => cell.innerText).get();
 
             // Check for date strings if order is descending
@@ -50,15 +51,15 @@ describe('Test Time Order in Data Explorer', () => {
         });
 
         // Save and leave view, edit view again and check ascending order
-        cy.dataCy('save-data-view-btn').click();
-        cy.dataCy('edit-data-view-NewWidget').click();
+        DataLakeBtns.saveDataViewButton();
+        DataLakeBtns.editDataViewButton('NewWidget');
         DataLakeUtils.clickOrderBy('ascending');
         DataLakeUtils.openVisualizationConfig();
         DataLakeUtils.selectVisualizationType('Table');
         DataLakeUtils.selectTimeRange(startDate, endDate);
         cy.wait(1000);
 
-        cy.get('table.mat-mdc-table tbody tr td').then($cells => {
+        cy.dataCy('data-explorer-table').then($cells => {
             const strings = $cells.map((index, cell) => cell.innerText).get();
 
             // Check for date strings if order is ascending

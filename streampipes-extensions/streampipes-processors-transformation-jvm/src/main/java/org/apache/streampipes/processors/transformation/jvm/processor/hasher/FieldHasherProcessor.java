@@ -47,7 +47,8 @@ public class FieldHasherProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.fieldhasher")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.fieldhasher", 0)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredStream(StreamRequirementsBuilder

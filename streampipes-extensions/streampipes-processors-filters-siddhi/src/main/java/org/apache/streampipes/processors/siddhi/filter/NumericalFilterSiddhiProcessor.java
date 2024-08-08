@@ -50,7 +50,8 @@ public class NumericalFilterSiddhiProcessor extends StreamPipesSiddhiProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.numericalfilter")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.siddhi.numericalfilter", 0)
         .category(DataProcessorType.FILTER)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION)

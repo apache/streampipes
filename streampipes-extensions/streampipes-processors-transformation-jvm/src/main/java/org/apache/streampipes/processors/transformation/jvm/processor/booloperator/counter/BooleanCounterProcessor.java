@@ -62,7 +62,8 @@ public class BooleanCounterProcessor implements IStreamPipesDataProcessor {
   public IDataProcessorConfiguration declareConfig() {
     return DataProcessorConfiguration.create(
         BooleanCounterProcessor::new,
-        ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.counter")
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.transformation.jvm.booloperator.counter", 0)
             .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.COUNT_OPERATOR)
             .withLocales(Locales.EN)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
