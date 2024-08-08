@@ -48,6 +48,7 @@ import {
     PipelineModificationMessage,
     PipelinePreviewModel,
     SpDataStream,
+    SpMetricsEntry,
 } from '@streampipes/platform-services';
 import { ObjectProvider } from '../../services/object-provider.service';
 import { CustomizeComponent } from '../../dialog/customize/customize.component';
@@ -106,6 +107,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     @Input()
     pipelineCanvasMetadata: PipelineCanvasMetadata;
+
+    @Input()
+    metricsInfo: Record<string, SpMetricsEntry>;
 
     @Output()
     pipelineCacheRunningChanged: EventEmitter<boolean> =
@@ -192,8 +196,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
     getElementCss(currentPipelineElementSettings) {
         return (
             'position:absolute;' +
-            (this.preview ? 'width:75px;' : 'width:90px;') +
-            (this.preview ? 'height:75px;' : 'height:90px;') +
+            (this.preview ? 'width:90px;' : 'width:90px;') +
+            (this.preview ? 'height:90px;' : 'height:90px;') +
             'left: ' +
             currentPipelineElementSettings.position.x +
             'px; ' +
@@ -227,17 +231,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
         );
     }
 
-    showMixedStreamAlert() {
-        this.dialog.open(ConfirmDialogComponent, {
-            width: '500px',
-            data: {
-                title: 'Currently, it is not possible to mix data streams and data sets in a single pipeline.',
-                confirmAndCancel: false,
-                okTitle: 'Ok',
-            },
-        });
-    }
-
     findPipelineElementByElementId(elementId: string) {
         return this.allElements.find(a => a.elementId === elementId);
     }
@@ -266,42 +259,34 @@ export class PipelineComponent implements OnInit, OnDestroy {
                             false,
                             newElementId,
                         );
-                    if (
-                        (this.isStreamInPipeline() &&
-                            pipelineElementConfig.type === 'set') ||
-                        (this.isSetInPipeline() &&
-                            pipelineElementConfig.type === 'stream')
-                    ) {
-                        this.showMixedStreamAlert();
-                    } else {
-                        this.rawPipelineModel.push(pipelineElementConfig);
 
-                        if (pipelineElementConfig.type === 'stream') {
-                            this.checkTopicModel(pipelineElementConfig);
-                        } else if (pipelineElementConfig.type === 'sepa') {
-                            setTimeout(() => {
-                                this.jsplumbService.dataProcessorDropped(
-                                    pipelineElementConfig.payload.dom,
-                                    pipelineElementConfig.payload as DataProcessorInvocation,
-                                    true,
-                                    false,
-                                );
-                            }, 10);
-                        } else if (pipelineElementConfig.type === 'action') {
-                            setTimeout(() => {
-                                this.jsplumbService.dataSinkDropped(
-                                    pipelineElementConfig.payload.dom,
-                                    pipelineElementConfig.payload as DataSinkInvocation,
-                                    true,
-                                    false,
-                                );
-                            }, 10);
-                        }
-                        if (this.shepherdService.isTourActive()) {
-                            this.shepherdService.trigger(
-                                'drop-' + pipelineElementConfig.type,
+                    this.rawPipelineModel.push(pipelineElementConfig);
+
+                    if (pipelineElementConfig.type === 'stream') {
+                        this.checkTopicModel(pipelineElementConfig);
+                    } else if (pipelineElementConfig.type === 'sepa') {
+                        setTimeout(() => {
+                            this.jsplumbService.dataProcessorDropped(
+                                pipelineElementConfig.payload.dom,
+                                pipelineElementConfig.payload as DataProcessorInvocation,
+                                true,
+                                false,
                             );
-                        }
+                        }, 10);
+                    } else if (pipelineElementConfig.type === 'action') {
+                        setTimeout(() => {
+                            this.jsplumbService.dataSinkDropped(
+                                pipelineElementConfig.payload.dom,
+                                pipelineElementConfig.payload as DataSinkInvocation,
+                                true,
+                                false,
+                            );
+                        }, 10);
+                    }
+                    if (this.shepherdService.isTourActive()) {
+                        this.shepherdService.trigger(
+                            'drop-' + pipelineElementConfig.type,
+                        );
                     }
                 }
                 this.JsplumbBridge.repaintEverything();

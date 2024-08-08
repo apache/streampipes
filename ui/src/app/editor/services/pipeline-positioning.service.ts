@@ -87,9 +87,7 @@ export class PipelinePositioningService {
         const jsPlumbBridge =
             this.jsplumbFactoryService.getJsplumbBridge(previewConfig);
 
-        const jsplumbConfig = previewConfig
-            ? this.jsplumbConfigService.getPreviewConfig()
-            : this.jsplumbConfigService.getEditorConfig();
+        const jsplumbConfig = this.jsplumbConfigService.getEditorConfig();
 
         rawPipelineModel.forEach(currentPe => {
             if (!currentPe.settings.disabled) {
@@ -123,14 +121,13 @@ export class PipelinePositioningService {
         this.connectPipelineElements(
             rawPipelineModel,
             previewConfig,
-            jsplumbConfig,
             jsPlumbBridge,
         );
         if (autoLayout) {
             this.layoutGraph(
                 targetCanvas,
                 "div[id^='jsplumb']",
-                previewConfig ? 75 : 110,
+                110,
                 previewConfig,
             );
         } else if (pipelineCanvasMetadata) {
@@ -148,7 +145,7 @@ export class PipelinePositioningService {
         const jsPlumbBridge =
             this.jsplumbFactoryService.getJsplumbBridge(previewConfig);
         const g = new dagre.graphlib.Graph();
-        g.setGraph({ rankdir: 'LR', ranksep: previewConfig ? '50' : '100' });
+        g.setGraph({ rankdir: 'LR', ranksep: '100' });
         g.setDefaultEdgeLabel(() => {
             return {};
         });
@@ -191,18 +188,13 @@ export class PipelinePositioningService {
     connectPipelineElements(
         rawPipelineModel: PipelineElementConfig[],
         previewConfig: boolean,
-        jsplumbConfig: any,
         jsPlumbBridge: JsplumbBridge,
     ) {
-        let source;
-        let target;
         jsPlumbBridge.setSuspendDrawing(true);
         rawPipelineModel.forEach(pe => {
             if (pe.type === 'sepa' || pe.type === 'action') {
                 if (!pe.settings.disabled && pe.payload.connectedTo) {
                     pe.payload.connectedTo.forEach((connection, index) => {
-                        source = connection;
-                        target = pe.payload.dom;
                         const sourceEndpointId = 'out-' + connection;
                         const inTargetEndpointId =
                             'in-' + index + '-' + pe.payload.dom;

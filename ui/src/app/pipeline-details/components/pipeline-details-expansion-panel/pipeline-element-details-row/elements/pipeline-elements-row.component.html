@@ -16,10 +16,23 @@
   ~
   -->
 
-<img [src]="image" *ngIf="showImage" style="{{ iconSizeCss() }}" />
-<span
-    *ngIf="!showImage"
-    [ngClass]="iconStandSize ? 'text-small' : 'element-text-icon'"
->
-    {{ iconText }}
-</span>
+<div fxFlex="100" fxLayout="column">
+    <div fxLayout="row" fxFlex="100">
+        <div fxFlex="50px">
+            <div class="draggable-icon-editor tt" [ngClass]="elementType">
+                <span class="pe-container">
+                    <sp-pipeline-element
+                        style="margin-left: -3%"
+                        [iconStandSize]="true"
+                        [pipelineElement]="pipelineElement"
+                    ></sp-pipeline-element>
+                </span>
+            </div>
+        </div>
+        <div fxFlex fxLayoutAlign="start start" fxLayout="column">
+            <div class="element-name" fxLayoutAlign="start start">
+                {{ pipelineElement.name }}
+            </div>
+        </div>
+    </div>
+</div>

@@ -16,15 +16,12 @@
  *
  */
 
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
-    Component,
-    EventEmitter,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output,
-} from '@angular/core';
-import { Pipeline } from '@streampipes/platform-services';
+    Pipeline,
+    PipelineCanvasMetadata,
+    SpMetricsEntry,
+} from '@streampipes/platform-services';
 import {
     PipelineElementConfig,
     PipelineElementUnion,
@@ -43,10 +40,16 @@ export class PipelinePreviewComponent implements OnInit {
     @Input()
     jspcanvas: string;
 
+    @Input()
+    metricsInfo: Record<string, SpMetricsEntry>;
+
     rawPipelineModel: PipelineElementConfig[];
 
     @Input()
     pipeline: Pipeline;
+
+    @Input()
+    pipelineCanvasMetadata: PipelineCanvasMetadata;
 
     @Output()
     selectedElementEmitter: EventEmitter<PipelineElementUnion> =
@@ -61,7 +64,7 @@ export class PipelinePreviewComponent implements OnInit {
 
     ngOnInit() {
         setTimeout(() => {
-            const elid = '#' + this.jspcanvas;
+            const canvasElementId = '#' + this.jspcanvas;
             this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
                 this.pipeline,
                 true,
@@ -69,9 +72,10 @@ export class PipelinePreviewComponent implements OnInit {
             setTimeout(() => {
                 this.pipelinePositioningService.displayPipeline(
                     this.rawPipelineModel,
-                    elid,
+                    canvasElementId,
                     true,
-                    true,
+                    this.pipelineCanvasMetadata === undefined,
+                    this.pipelineCanvasMetadata,
                 );
                 const existingEndpointIds = [];
                 setTimeout(() => {

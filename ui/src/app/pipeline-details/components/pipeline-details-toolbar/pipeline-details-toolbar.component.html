@@ -16,10 +16,24 @@
   ~
   -->
 
-<img [src]="image" *ngIf="showImage" style="{{ iconSizeCss() }}" />
-<span
-    *ngIf="!showImage"
-    [ngClass]="iconStandSize ? 'text-small' : 'element-text-icon'"
->
-    {{ iconText }}
-</span>
+<div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+    <div fxFlex></div>
+    <div fxLayoutAlign="end center">
+        <button
+            mat-button
+            color="accent"
+            class="mr-10"
+            matTooltip="Refresh"
+            (click)="reloadMetricsEmitter.emit()"
+        >
+            <i class="material-icons">refresh</i>
+            &nbsp;Refresh metrics
+        </button>
+        <mat-slide-toggle
+            [(ngModel)]="autoRefresh"
+            (ngModelChange)="autoRefreshChange.emit($event)"
+            color="accent"
+            >Auto refresh
+        </mat-slide-toggle>
+    </div>
+</div>

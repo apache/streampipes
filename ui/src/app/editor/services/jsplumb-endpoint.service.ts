@@ -23,39 +23,33 @@ import { JsplumbConfigService } from './jsplumb-config.service';
 export class JsplumbEndpointService {
     constructor(private jsplumbConfigService: JsplumbConfigService) {}
 
-    getJsplumbConfig(preview): any {
-        return preview
-            ? this.jsplumbConfigService.getPreviewConfig()
-            : this.jsplumbConfigService.getEditorConfig();
+    getJsplumbConfig(): any {
+        return this.jsplumbConfigService.getEditorConfig();
     }
 
-    getStreamEndpoint(preview: boolean, pipelineElementDomId: string) {
-        const jsplumbConfig = this.getJsplumbConfig(preview);
+    getStreamEndpoint(pipelineElementDomId: string) {
+        const jsplumbConfig = this.getJsplumbConfig();
         const config = jsplumbConfig.streamEndpointOptions;
         config.uuid = 'out-' + pipelineElementDomId;
         return config;
     }
 
-    getInputEndpoint(preview, pipelineElementDomId, index): any {
-        const jsplumbConfig = this.getJsplumbConfig(preview);
+    getInputEndpoint(pipelineElementDomId: string, index): any {
+        const jsplumbConfig = this.getJsplumbConfig();
         const inConfig = jsplumbConfig.leftTargetPointOptions;
         inConfig.uuid = 'in-' + index + '-' + pipelineElementDomId;
         return inConfig;
     }
 
-    getOutputEndpoint(preview, pipelineElementDomId): any {
-        const jsplumbConfig = this.getJsplumbConfig(preview);
+    getOutputEndpoint(pipelineElementDomId: string): any {
+        const jsplumbConfig = this.getJsplumbConfig();
         const outConfig = jsplumbConfig.sepaEndpointOptions;
         outConfig.uuid = 'out-' + pipelineElementDomId;
         return outConfig;
     }
 
-    getNewTargetPoint(preview, x, y, pipelineElementDomId, index): any {
-        const inConfig = this.getInputEndpoint(
-            preview,
-            pipelineElementDomId,
-            index,
-        );
+    getNewTargetPoint(x, y, pipelineElementDomId: string, index): any {
+        const inConfig = this.getInputEndpoint(pipelineElementDomId, index);
         inConfig.type = 'empty';
         inConfig.anchor = [x, y, -1, 0];
         inConfig.isTarget = true;

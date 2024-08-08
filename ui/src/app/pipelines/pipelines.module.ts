@@ -38,9 +38,8 @@ import { EditorModule } from '../editor/editor.module';
 import { PipelineDetailsModule } from '../pipeline-details/pipeline-details.module';
 import { RouterModule } from '@angular/router';
 import { EditorComponent } from '../editor/editor.component';
-import { SpPipelineDetailsOverviewComponent } from '../pipeline-details/components/overview/pipeline-details-overview.component';
-import { PipelineMonitoringComponent } from '../pipeline-details/components/monitoring/pipeline-monitoring.component';
-import { PipelineLogsComponent } from '../pipeline-details/components/pipeline-logs/pipeline-logs.component';
+import { SpPipelineDetailsComponent } from '../pipeline-details/pipeline-details.component';
+import { PipelineLogsDialogComponent } from '../pipeline-details/dialogs/pipeline-logs/pipeline-logs-dialog.component';
 import { FunctionsOverviewComponent } from './components/functions-overview/functions-overview.component';
 import { SpFunctionsMetricsComponent } from './components/functions-overview/functions-metrics/functions-metrics.component';
 import { SpFunctionsLogsComponent } from './components/functions-overview/functions-logs/functions-logs.component';
@@ -94,15 +93,11 @@ import { MatIconModule } from '@angular/material/icon';
                             },
                             {
                                 path: 'overview',
-                                component: SpPipelineDetailsOverviewComponent,
-                            },
-                            {
-                                path: 'metrics',
-                                component: PipelineMonitoringComponent,
+                                component: SpPipelineDetailsComponent,
                             },
                             {
                                 path: 'logs',
-                                component: PipelineLogsComponent,
+                                component: PipelineLogsDialogComponent,
                             },
                         ],
                     },

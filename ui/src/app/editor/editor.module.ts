@@ -74,6 +74,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
+import { PipelineElementStatisticsComponent } from './components/pipeline-element-statistics/pipeline-element-statistics.component';
+import { PipelineElementStatisticsBadgeComponent } from './components/pipeline-element-statistics/pipeline-element-statistics-badge/pipeline-element-statistics-badge.component';
 import { SavePipelineSettingsComponent } from './dialog/save-pipeline/save-pipeline-settings/save-pipeline-settings.component';
 
 @NgModule({
@@ -135,6 +137,8 @@ import { SavePipelineSettingsComponent } from './dialog/save-pipeline/save-pipel
         PipelineElementOptionsComponent,
         PipelineElementPreviewComponent,
         PipelineElementRecommendationComponent,
+        PipelineElementStatisticsComponent,
+        PipelineElementStatisticsBadgeComponent,
         PipelineElementTypeFilterPipe,
         PipelineComponent,
         PropertySelectionComponent,

@@ -16,10 +16,20 @@
   ~
   -->
 
-<img [src]="image" *ngIf="showImage" style="{{ iconSizeCss() }}" />
-<span
-    *ngIf="!showImage"
-    [ngClass]="iconStandSize ? 'text-small' : 'element-text-icon'"
->
-    {{ iconText }}
-</span>
+<div fxLayout="row" fxFlex="100">
+    <div fxFlex>
+        <sp-pipeline-elements-row [pipelineElement]="pipelineElement">
+        </sp-pipeline-elements-row>
+    </div>
+    <div fxLayoutAlign="end center">
+        <button
+            (click)="openLogsDialog()"
+            mat-icon-button
+            color="accent"
+            matTooltip="Logs"
+            [disabled]="!pipelineRunning"
+        >
+            <mat-icon>topic</mat-icon>
+        </button>
+    </div>
+</div>
