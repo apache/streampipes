@@ -17,6 +17,9 @@
  */
 package org.apache.streampipes.resource.management;
 
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.storage.api.CRUDStorage;
+
 public class SpResourceManager {
 
   public AdapterResourceManager manageAdapters() {
@@ -33,6 +36,10 @@ public class SpResourceManager {
 
   public DataExplorerResourceManager manageDataExplorer() {
     return new DataExplorerResourceManager();
+  }
+
+  public DataExplorerWidgetResourceManager manageDataExplorerWidget(CRUDStorage<DataExplorerWidgetModel> db) {
+    return new DataExplorerWidgetResourceManager(db);
   }
 
   public DataProcessorResourceManager manageDataProcessors() {

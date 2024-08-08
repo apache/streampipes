@@ -46,12 +46,14 @@ public class DashboardModel implements Storable {
 
   private Map<String, Object> dashboardTimeSettings;
   private Map<String, Object> dashboardGeneralSettings;
+  private Map<String, Object> dashboardLiveSettings;
 
   private List<DashboardItem> widgets;
 
   public DashboardModel() {
     this.dashboardTimeSettings = new HashMap<>();
     this.dashboardGeneralSettings = new HashMap<>();
+    this.dashboardLiveSettings = new HashMap<>();
   }
 
   public String getId() {
@@ -132,5 +134,13 @@ public class DashboardModel implements Storable {
 
   public String getCouchDbId() {
     return this.elementId;
+  }
+
+  public Map<String, Object> getDashboardLiveSettings() {
+    return dashboardLiveSettings;
+  }
+
+  public void setDashboardLiveSettings(Map<String, Object> dashboardLiveSettings) {
+    this.dashboardLiveSettings = dashboardLiveSettings;
   }
 }

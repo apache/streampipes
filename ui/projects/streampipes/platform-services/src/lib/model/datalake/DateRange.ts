@@ -19,7 +19,39 @@
 export interface TimeSettings {
     startTime: number;
     endTime: number;
-    dynamicSelection: 15 | 60 | 1440 | 10080 | 43800 | 525600 | -1;
+    // deprecated
+    dynamicSelection?: 15 | 60 | 1440 | 10080 | 43800 | 525600 | -1;
+    timeSelectionId?: TimeSelectionId;
+}
+
+export interface TimeString {
+    startDate: string;
+    startTime: string;
+    endDate: string;
+    endTime: string;
+}
+
+export enum TimeSelectionId {
+    CUSTOM,
+    LAST_15_MINUTES,
+    LAST_HOUR,
+    CURRENT_HOUR,
+    LAST_DAY,
+    CURRENT_DAY,
+    LAST_WEEK,
+    CURRENT_WEEK,
+    LAST_MONTH,
+    CURRENT_MONTH,
+    LAST_YEAR,
+    CURRENT_YEAR,
+}
+
+export interface QuickTimeSelection {
+    label: string;
+    timeSelectionId: TimeSelectionId;
+    startTime: (now: Date) => Date;
+    endTime: (now: Date) => Date;
+    addDividerAfter?: boolean;
 }
 
 export class DateRange {

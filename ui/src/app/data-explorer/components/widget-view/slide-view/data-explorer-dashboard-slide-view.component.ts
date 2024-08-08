@@ -70,12 +70,6 @@ export class DataExplorerDashboardSlideViewComponent
                 index
             ] as unknown as DashboardItem;
             this.currentlyConfiguredWidgetId = widgetId;
-
-            // Opens the design panel for the current widget when in edit mode
-            if (this.editMode) {
-                this.startEditModeEmitter.emit(this.currentWidget);
-            }
-
             this.displayWidget = true;
         });
     }

@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.resource.management.AbstractDashboardResourceManager;
+import org.apache.streampipes.resource.management.AbstractCRUDResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import org.springframework.http.MediaType;
@@ -71,7 +71,7 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
     return ok();
   }
 
-  protected abstract AbstractDashboardResourceManager getResourceManager();
+  protected abstract AbstractCRUDResourceManager<DashboardModel> getResourceManager();
 
   /**
    * Do not delete these abstract methods below - required by Spring SPEL (see above)

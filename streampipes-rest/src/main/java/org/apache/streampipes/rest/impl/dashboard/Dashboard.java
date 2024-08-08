@@ -19,7 +19,8 @@
 package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.client.user.Privilege;
-import org.apache.streampipes.resource.management.AbstractDashboardResourceManager;
+import org.apache.streampipes.model.dashboard.DashboardModel;
+import org.apache.streampipes.resource.management.AbstractCRUDResourceManager;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Dashboard extends AbstractDashboardResource {
 
   @Override
-  protected AbstractDashboardResourceManager getResourceManager() {
+  protected AbstractCRUDResourceManager<DashboardModel> getResourceManager() {
     return getSpResourceManager().manageDashboards();
   }
 

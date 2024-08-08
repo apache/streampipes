@@ -20,4 +20,12 @@ export class DataLakeBtns {
     public static refreshDataLakeMeasures() {
         return cy.dataCy('refresh-data-lake-measures');
     }
+
+    public static saveDataViewButton() {
+        return cy.dataCy('save-data-view-btn').click();
+    }
+
+    public static editDataViewButton(widgetName: string) {
+        return cy.dataCy('edit-data-view-' + widgetName).click();
+    }
 }

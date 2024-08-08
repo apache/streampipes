@@ -20,7 +20,8 @@ package org.apache.streampipes.rest.impl.datalake;
 
 
 import org.apache.streampipes.model.client.user.Privilege;
-import org.apache.streampipes.resource.management.AbstractDashboardResourceManager;
+import org.apache.streampipes.model.dashboard.DashboardModel;
+import org.apache.streampipes.resource.management.AbstractCRUDResourceManager;
 import org.apache.streampipes.rest.impl.dashboard.AbstractDashboardResource;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DataLakeDashboardResource extends AbstractDashboardResource {
 
   @Override
-  protected AbstractDashboardResourceManager getResourceManager() {
+  protected AbstractCRUDResourceManager<DashboardModel> getResourceManager() {
     return getSpResourceManager().manageDataExplorer();
   }
 
