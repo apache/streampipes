@@ -25,7 +25,6 @@ import { PipelineLogsDialogComponent } from '../../../dialogs/pipeline-logs/pipe
 @Component({
     selector: 'sp-pipeline-element-details-row',
     templateUrl: './pipeline-element-details-row.component.html',
-    styleUrls: ['./pipeline-element-details-row.component.scss'],
 })
 export class PipelineElementDetailsRowComponent {
     @Input()
