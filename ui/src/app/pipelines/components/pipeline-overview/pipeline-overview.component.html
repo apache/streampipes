@@ -135,9 +135,9 @@
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
         <td mat-cell *matCellDef="let pipeline">
             <h4 style="margin-bottom: 0">{{ pipeline.name }}</h4>
-            <h5>
+            <span>
                 {{ pipeline.description !== '' ? pipeline.description : '-' }}
-            </h5>
+            </span>
         </td>
     </ng-container>
 
@@ -170,7 +170,6 @@
                     mat-icon-button
                     matTooltip="Modify pipeline"
                     matTooltipPosition="above"
-                    [disabled]="pipeline.running"
                     *ngIf="hasPipelineWritePrivileges"
                     (click)="
                         pipelineOperationsService.modifyPipeline(pipeline._id)

@@ -18,8 +18,20 @@
 
 import { LinkSettings } from '@streampipes/platform-services';
 
+export interface OAuthProvider {
+    name: string;
+    registrationId: string;
+}
+
+export interface OAuthSettings {
+    enabled: boolean;
+    redirectUri: string;
+    supportedProviders: OAuthProvider[];
+}
+
 export interface LoginModel {
     allowSelfRegistration: boolean;
     allowPasswordRecovery: boolean;
     linkSettings: LinkSettings;
+    oAuthSettings: OAuthSettings;
 }

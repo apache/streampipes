@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -53,6 +54,7 @@ public abstract class DataLakeMeasurementCounter implements IDataLakeMeasurement
     // create async futures so that count queries can be executed parallel
     Map<String, CompletableFuture<Integer>> countQueriesFutures = measurementNames.stream()
         .map(this::getMeasure)
+        .filter(Objects::nonNull)
         .collect(Collectors.toMap(
             DataLakeMeasure::getMeasureName,
             this::createQueryAsAsyncFuture)
@@ -95,10 +97,6 @@ public abstract class DataLakeMeasurementCounter implements IDataLakeMeasurement
     });
 
     return resultPerMeasure;
-  }
-
-  private Integer getQueryResult(Map<String, CompletableFuture<Integer>> queryFuture) {
-    return null;
   }
 
   /**

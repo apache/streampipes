@@ -104,7 +104,6 @@ public class SpKafkaConsumer implements EventConsumer, Runnable,
       ConsumerRecords<byte[], byte[]> records = consumer.poll(duration);
       records.forEach(record -> eventProcessor.onEvent(record.value()));
     }
-    LOG.info("Closing Kafka Consumer.");
     consumer.close();
   }
 

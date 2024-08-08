@@ -20,11 +20,10 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-07-26 10:14:34.
+// Generated using typescript-generator version 3.2.1263 on 2024-08-08 15:23:02.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
-        | 'org.apache.streampipes.model.connect.grounding.ProtocolDescription'
         | 'org.apache.streampipes.model.template.PipelineTemplateDescription'
         | 'org.apache.streampipes.model.SpDataStream'
         | 'org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity'
@@ -2438,25 +2437,6 @@ export class Option {
     }
 }
 
-/**
- * @deprecated since 0.92.0, for removal
- */
-export class PageResult extends DataSeries {
-    page: number;
-    pageSum: number;
-
-    static fromData(data: PageResult, target?: PageResult): PageResult {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new PageResult();
-        super.fromData(data, instance);
-        instance.page = data.page;
-        instance.pageSum = data.pageSum;
-        return instance;
-    }
-}
-
 export class Pipeline implements Storable {
     _id: string;
     _rev: string;
@@ -3058,35 +3038,6 @@ export class PropertyValueSpecification {
         instance.maxValue = data.maxValue;
         instance.minValue = data.minValue;
         instance.step = data.step;
-        return instance;
-    }
-}
-
-/**
- * @deprecated since 0.93.0, for removal
- */
-export class ProtocolDescription extends NamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.connect.grounding.ProtocolDescription';
-    'category': string[];
-    'config': StaticPropertyUnion[];
-    'sourceType': string;
-
-    static 'fromData'(
-        data: ProtocolDescription,
-        target?: ProtocolDescription,
-    ): ProtocolDescription {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new ProtocolDescription();
-        super.fromData(data, instance);
-        instance.category = __getCopyArrayFn(__identity<string>())(
-            data.category,
-        );
-        instance.config = __getCopyArrayFn(StaticProperty.fromDataUnion)(
-            data.config,
-        );
-        instance.sourceType = data.sourceType;
         return instance;
     }
 }

@@ -74,6 +74,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
+import { SavePipelineSettingsComponent } from './dialog/save-pipeline/save-pipeline-settings/save-pipeline-settings.component';
 
 @NgModule({
     imports: [
@@ -138,6 +139,7 @@ import { MatSliderModule } from '@angular/material/slider';
         PipelineComponent,
         PropertySelectionComponent,
         SavePipelineComponent,
+        SavePipelineSettingsComponent,
         SafeCss,
     ],
     providers: [SafeCss],

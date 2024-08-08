@@ -15,9 +15,9 @@
 
 spAssets:
     componentImport: False
-    ng5_moduleName: 'AssetsModule'
-    ng5_component: 'EditorComponent'
-    ng5_componentPath: './editor/editor.component'
+    moduleName: 'AssetsModule'
+    component: 'EditorComponent'
+    componentPath: './editor/editor.component'
     path: './assets/assets.module'
     link: 'assets'
     url: '/editor/:pipeline'
@@ -29,9 +29,9 @@ spAssets:
     showStatusBox: false
 spConnect:
     componentImport: False
-    ng5_moduleName: 'ConnectModule'
-    ng5_component: 'ConnectComponent'
-    ng5_componentPath: './connect/connect.component'
+    moduleName: 'ConnectModule'
+    component: 'ConnectComponent'
+    componentPath: './connect/connect.component'
     path: './connect/connect.module'
     link: 'connect'
     url: '/connect'
@@ -51,9 +51,9 @@ spConnect:
         createRoles: '[UserRole.ROLE_CONNECT_ADMIN]'
 spPipelines:
     componentImport: False
-    ng5_moduleName: 'PipelinesModule'
-    ng5_component: 'PipelinesComponent'
-    ng5_componentPath: './pipelines/pipelines.component'
+    moduleName: 'PipelinesModule'
+    component: 'PipelinesComponent'
+    componentPath: './pipelines/pipelines.component'
     path: './pipelines/pipelines.module'
     link: 'pipelines'
     url: '/pipelines/:pipeline'
@@ -73,9 +73,9 @@ spPipelines:
         createRoles: '[UserRole.ROLE_PIPELINE_ADMIN]'
 spConfiguration:
     componentImport: False
-    ng5_moduleName: 'ConfigurationModule'
-    ng5_component: 'GeneralConfigurationComponent'
-    ng5_componentPath: './configuration/general-configuration/general-configuration.component'
+    moduleName: 'ConfigurationModule'
+    component: 'GeneralConfigurationComponent'
+    componentPath: './configuration/general-configuration/general-configuration.component'
     path: './configuration/configuration.module'
     link: 'configuration'
     url: '/configuration'
@@ -87,9 +87,9 @@ spConfiguration:
     showStatusBox: false
 spAppOverview:
     componentImport: False
-    ng5_moduleName: 'AppOverviewModule'
-    ng5_component: 'AppOverviewComponent'
-    ng5_componentPath: './app-overview/app-overview.component'
+    moduleName: 'AppOverviewModule'
+    component: 'AppOverviewComponent'
+    componentPath: './app-overview/app-overview.component'
     path: './app-overview/app-overview.module'
     link: 'apps'
     url: '/apps'
@@ -101,9 +101,9 @@ spAppOverview:
     showStatusBox: false
 spDashboard:
     componentImport: False
-    ng5_moduleName: 'DashboardModule'
-    ng5_component: 'DashboardComponent'
-    ng5_componentPath: './dashboard/dashboard.component'
+    moduleName: 'DashboardModule'
+    component: 'DashboardComponent'
+    componentPath: './dashboard/dashboard.component'
     path: './dashboard/dashboard.module'
     link: 'dashboard'
     url: '/dashboard'
@@ -123,9 +123,9 @@ spDashboard:
         createRoles: '[UserRole.ROLE_DASHBOARD_ADMIN]'
 spDataExplorer:
     componentImport: False
-    ng5_moduleName: 'DataExplorerModule'
-    ng5_component: 'DataExplorerComponent'
-    ng5_componentPath: './data-explorer/data-explorer.component'
+    moduleName: 'DataExplorerModule'
+    component: 'DataExplorerComponent'
+    componentPath: './data-explorer/data-explorer.component'
     path: './data-explorer/data-explorer.module'
     link: 'dataexplorer'
     url: '/dataexplorer'
@@ -145,9 +145,9 @@ spDataExplorer:
         createRoles: '[UserRole.ROLE_DATA_EXPLORER_ADMIN]'
 spFiles:
     componentImport: False
-    ng5_moduleName: 'FilesModule'
-    ng5_component: 'FilesComponent'
-    ng5_componentPath: './files/files.component'
+    moduleName: 'FilesModule'
+    component: 'FilesComponent'
+    componentPath: './files/files.component'
     path: './files/files.module'
     link: 'files'
     url: '/files'

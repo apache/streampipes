@@ -46,9 +46,6 @@ import { Subscription } from 'rxjs';
 export class PipelineOverviewComponent implements OnInit, OnDestroy {
     _pipelines: Pipeline[];
 
-    @Input()
-    pipelineToStart: Pipeline;
-
     @Output()
     refreshPipelinesEmitter: EventEmitter<boolean> =
         new EventEmitter<boolean>();
@@ -93,16 +90,6 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
             );
         });
         this.toggleRunningOperation = this.toggleRunningOperation.bind(this);
-
-        if (this.pipelineToStart) {
-            if (!this.pipelineToStart.running) {
-                this.pipelineOperationsService.startPipeline(
-                    this.pipelineToStart._id,
-                    this.refreshPipelinesEmitter,
-                    this.toggleRunningOperation,
-                );
-            }
-        }
     }
 
     toggleRunningOperation(currentOperation: string) {

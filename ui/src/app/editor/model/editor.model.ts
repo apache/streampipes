@@ -21,10 +21,12 @@ import {
     DataSinkInvocation,
     SpDataStream,
 } from '@streampipes/platform-services';
-import { InjectionToken } from '@angular/core';
 
-export interface PipelineElementHolder {
-    [key: string]: PipelineElementUnion[];
+export interface PipelineStorageOptions {
+    startPipelineAfterStorage: boolean;
+    navigateToPipelineOverview: boolean;
+    updateModeActive: boolean;
+    updateMode: 'update' | 'clone';
 }
 
 export interface PipelineElementPosition {
@@ -55,23 +57,10 @@ export interface PipelineElementConfig {
     payload: PipelineElementUnion;
 }
 
-export interface PipelineElementRecommendationLayout {
-    skewStyle: any;
-    unskewStyle: any;
-    unskewStyleLabel: any;
-    type: string;
-}
-
 export enum PipelineElementType {
     DataStream,
     DataProcessor,
     DataSink,
-}
-
-export interface TabsModel {
-    title: string;
-    type: PipelineElementIdentifier;
-    shorthand: string;
 }
 
 export type PipelineElementUnion =
@@ -82,8 +71,6 @@ export type PipelineElementUnion =
 export type InvocablePipelineElementUnion =
     | DataProcessorInvocation
     | DataSinkInvocation;
-
-export const PIPELINE_ELEMENT_TOKEN = new InjectionToken<{}>('pipelineElement');
 
 export type PipelineElementIdentifier =
     | 'org.apache.streampipes.model.SpDataStream'

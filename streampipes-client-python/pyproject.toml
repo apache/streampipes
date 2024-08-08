@@ -66,7 +66,7 @@ optional = true
 
 [tool.poetry.group.dev.dependencies]
 autoflake = "2.3.0"
-black = "24.4.0"
+black = "24.8.0"
 blacken-docs = "1.18.0"
 flake8 = "7.1.0"
 interrogate = { version = "1.7.0", extras = ["png"] }

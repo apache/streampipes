@@ -59,8 +59,8 @@ public class TaskDurationProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm"
-            + ".taskduration")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.taskduration", 0)
         .category(DataProcessorType.TIME)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)

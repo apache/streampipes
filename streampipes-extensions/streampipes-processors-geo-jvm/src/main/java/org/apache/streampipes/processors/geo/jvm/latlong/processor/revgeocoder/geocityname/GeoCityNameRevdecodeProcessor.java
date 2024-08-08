@@ -59,7 +59,7 @@ public class GeoCityNameRevdecodeProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.revgeocoder.geocityname")
+        .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.revgeocoder.geocityname", 0)
         .category(DataProcessorType.GEO)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

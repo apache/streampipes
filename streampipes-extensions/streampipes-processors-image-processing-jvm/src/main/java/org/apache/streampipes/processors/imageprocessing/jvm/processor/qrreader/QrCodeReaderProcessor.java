@@ -63,7 +63,8 @@ public class QrCodeReaderProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processor.imageclassification.qrcode")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processor.imageclassification.qrcode", 0)
         .category(DataProcessorType.IMAGE_PROCESSING)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

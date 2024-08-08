@@ -83,7 +83,6 @@
                 <div fxFlex="90">
                     <sp-pipeline-overview
                         [pipelines]="pipelines"
-                        [pipelineToStart]="pipelineToStart"
                         (refreshPipelinesEmitter)="refreshPipelines()"
                         *ngIf="pipelinesReady"
                     ></sp-pipeline-overview>

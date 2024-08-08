@@ -52,7 +52,8 @@ public class SentenceDetectionProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.sentencedetection")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.textmining.jvm.sentencedetection", 0)
         .category(DataProcessorType.ENRICH_TEXT)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

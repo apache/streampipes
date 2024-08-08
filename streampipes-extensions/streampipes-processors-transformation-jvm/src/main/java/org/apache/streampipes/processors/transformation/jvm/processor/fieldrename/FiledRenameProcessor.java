@@ -46,7 +46,8 @@ public class FiledRenameProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.fieldrename")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.fieldrename", 0)
         .category(DataProcessorType.TRANSFORM)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION)

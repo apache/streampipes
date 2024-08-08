@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.UserNotFoundException;
 import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
 import org.apache.streampipes.model.client.user.JwtAuthenticationResponse;
@@ -50,6 +51,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -98,8 +100,8 @@ public class Authentication extends AbstractRestResource {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
     var enrichedUserRegistrationData = new UserRegistrationData(
-        userRegistrationData.username(),
-        userRegistrationData.password(),
+        userRegistrationData.getUsername(),
+        userRegistrationData.getPassword(),
         config.getDefaultUserRoles()
     );
     try {
@@ -139,6 +141,7 @@ public class Authentication extends AbstractRestResource {
     response.put("allowSelfRegistration", config.isAllowSelfRegistration());
     response.put("allowPasswordRecovery", config.isAllowPasswordRecovery());
     response.put("linkSettings", config.getLinkSettings());
+    response.put("oAuthSettings", makeOAuthSettings());
 
     return ok(response);
   }
@@ -156,5 +159,29 @@ public class Authentication extends AbstractRestResource {
   private JwtAuthenticationResponse makeJwtResponse(org.springframework.security.core.Authentication auth) {
     String jwt = new JwtTokenProvider().createToken(auth);
     return new JwtAuthenticationResponse(jwt);
+  }
+
+  private UiOAuthSettings makeOAuthSettings() {
+    var env = Environments.getEnvironment();
+    var oAuthConfigs = env.getOAuthConfigurations();
+    return new UiOAuthSettings(
+        env.getOAuthEnabled().getValueOrDefault(),
+        env.getOAuthRedirectUri().getValueOrDefault(),
+        oAuthConfigs.stream().map(c -> new OAuthProvider(c.getRegistrationName(), c.getRegistrationId())).toList()
+    );
+  }
+
+  /**
+   * Record which contains information on the configured OAuth providers required by the login page
+   * @param enabled indicates if an OAuth provider is configured
+   * @param redirectUri the redirect URI
+   * @param supportedProviders A list of configured OAuth providers
+   */
+  private record UiOAuthSettings(boolean enabled,
+                                 String redirectUri,
+                                 List<OAuthProvider> supportedProviders) {
+  }
+
+  private record OAuthProvider(String name, String registrationId) {
   }
 }

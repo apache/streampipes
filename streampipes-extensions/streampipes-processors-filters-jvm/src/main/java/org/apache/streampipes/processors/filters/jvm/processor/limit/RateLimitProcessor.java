@@ -72,7 +72,7 @@ public class RateLimitProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.limit")
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.limit", 0)
         .category(DataProcessorType.FILTER, DataProcessorType.STRUCTURE_ANALYTICS)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

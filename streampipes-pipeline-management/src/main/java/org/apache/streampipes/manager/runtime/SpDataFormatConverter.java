@@ -19,27 +19,18 @@ package org.apache.streampipes.manager.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
-import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 
 import java.util.Map;
 
 public class SpDataFormatConverter {
 
-  private SpDataFormatDefinition spDataFormatDefinition;
-  private JsonDataFormatDefinition jsonDataFormatDefinition;
+  private final SpDataFormatDefinition spDataFormatDefinition;
 
   public SpDataFormatConverter(SpDataFormatDefinition spDataFormatDefinition) {
     this.spDataFormatDefinition = spDataFormatDefinition;
-    this.jsonDataFormatDefinition = new JsonDataFormatDefinition();
   }
 
-  public String convert(byte[] message) throws SpRuntimeException {
-    Map<String, Object> event = spDataFormatDefinition.toMap(message);
-    return toJson(event);
+  public Map<String, Object> convert(byte[] message) throws SpRuntimeException {
+    return spDataFormatDefinition.toMap(message);
   }
-
-  private String toJson(Map<String, Object> message) throws SpRuntimeException {
-    return new String(jsonDataFormatDefinition.fromMap(message));
-  }
-
 }

@@ -43,7 +43,8 @@ public class StreamStopSiddhiProcessor extends StreamPipesSiddhiProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.stop")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.siddhi.stop", 0)
         .withLocales(Locales.EN)
         .category(DataProcessorType.FILTER)
         .withAssets(ExtensionAssetType.DOCUMENTATION)

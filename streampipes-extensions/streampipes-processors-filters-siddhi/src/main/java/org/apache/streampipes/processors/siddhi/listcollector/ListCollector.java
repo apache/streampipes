@@ -59,7 +59,8 @@ public class ListCollector extends StreamPipesSiddhiProcessor
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.listcollector")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.siddhi.listcollector", 0)
         .withLocales(Locales.EN)
         .category(DataProcessorType.TRANSFORM)
         .withAssets(ExtensionAssetType.DOCUMENTATION)
