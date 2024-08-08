@@ -21,7 +21,6 @@ import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import {
     DataLakeMeasure,
-    PageResult,
     SpQueryResult,
 } from '../model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
@@ -101,32 +100,6 @@ export class DatalakeRestService {
                 headers,
             });
         }
-    }
-
-    getPagedData(
-        index: string,
-        itemsPerPage: number,
-        page: number,
-        columns?: string,
-        order?: string,
-    ): Observable<PageResult> {
-        const url = this.dataLakeUrl + '/measurements/' + index;
-
-        const queryParams: DatalakeQueryParameters = this.getQueryParameters(
-            columns,
-            undefined,
-            undefined,
-            page,
-            itemsPerPage,
-            undefined,
-            undefined,
-            order,
-            undefined,
-            undefined,
-        );
-
-        // @ts-ignore
-        return this.http.get<PageResult>(url, { params: queryParams });
     }
 
     getTagValues(
