@@ -25,15 +25,16 @@ type ValueSpecification struct {
 }
 
 type EventProperty struct {
-	ElementID          string             `json:"elementId"`
-	Label              string             `json:"label,omitempty"`
-	Description        string             `json:"description,omitempty"`
-	RuntimeName        string             `json:"runtimeName,omitempty"`
-	Required           bool               `json:"required,omitempty"`
-	DomainProperties   []string           `json:"domainProperties,omitempty"`
-	PropertyScope      string             `json:"propertyScope,omitempty"`
-	Index              int                `json:"index"`
-	RuntimeID          string             `json:"runtimeId,omitempty"`
+	ElementID          string   `json:"elementId"`
+	Label              string   `json:"label,omitempty"`
+	Description        string   `json:"description,omitempty"`
+	RuntimeName        string   `json:"runtimeName,omitempty"`
+	Required           bool     `json:"required,omitempty"`
+	DomainProperties   []string `json:"domainProperties,omitempty"`
+	PropertyScope      string   `json:"propertyScope,omitempty"`
+	Index              int32    `json:"index"`
+	RuntimeID          string   `json:"runtimeId,omitempty"`
+	AdditionalMetadata map[string]interface{}
 	RuntimeType        string             `json:"runtimeType"`
 	MeasurementUnit    string             `json:"measurementUnit,omitempty"`
 	ValueSpecification ValueSpecification `json:"valueSpecification,omitempty"`
@@ -47,7 +48,7 @@ type EventProperties struct {
 	Required           bool              `json:"required"`
 	DomainProperties   []string          `json:"domainProperties"`
 	PropertyScope      string            `json:"propertyScope"`
-	Index              int               `json:"index"`
+	Index              int32             `json:"index"`
 	RuntimeID          string            `json:"runtimeId"`
 	RuntimeType        string            `json:"runtimeType,omitempty"`
 	MeasurementUnit    string            `json:"measurementUnit,omitempty"`
@@ -69,12 +70,12 @@ type DataSeries struct {
 
 type ResponseMessage struct {
 	Success       bool           `json:"success"`
-	ElementName   interface{}    `json:"elementName"`
+	ElementName   string         `json:"elementName"`
 	Notifications []Notification `json:"notifications"`
 }
 
 type Notification struct {
-	Title                 string `json:"title"`
-	Description           string `json:"description"`
-	AdditionalInformation string `json:"additionalInformation"`
+	Title                 string      `json:"title"`
+	Description           interface{} `json:"description"`
+	AdditionalInformation string      `json:"additionalInformation"`
 }

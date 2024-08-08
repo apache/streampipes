@@ -45,7 +45,7 @@ func (d *Versions) GetStreamPipesVersion() (streampipes_version.Versions, error)
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v2/info/versions", nil)
 	log.Printf("Get data from: %s", endPointUrl)
 
-	response, err := d.executeRequest("GET", endPointUrl)
+	response, err := d.executeRequest("GET", endPointUrl, nil)
 	if err != nil {
 		return streampipes_version.Versions{}, err
 	}
