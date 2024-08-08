@@ -28,11 +28,11 @@ describe('Test if widget configuration is updated correctly', () => {
 
         // Create first test data view with one time series widget
         DataLakeUtils.addDataViewAndTimeSeriesWidget(testView1, dataSet);
-        DataLakeUtils.saveDataExplorerWidgetConfiguration();
+        DataLakeUtils.saveDataViewConfiguration();
 
         // Create second test data view with one time series widget
         DataLakeUtils.addDataViewAndTimeSeriesWidget(testView2, dataSet);
-        DataLakeUtils.saveDataExplorerWidgetConfiguration();
+        DataLakeUtils.saveDataViewConfiguration();
     });
 
     // This test case has two different options. The first one selects the edit button of the data explorer on the top right
