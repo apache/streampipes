@@ -19,10 +19,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import {
-    DataLakeMeasure,
-    SpQueryResult,
-} from '../model/gen/streampipes-model';
+import { DataLakeMeasure, SpQueryResult } from '../model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
 
@@ -210,6 +207,7 @@ export class DatalakeRestService {
         if (endDate) {
             queryParams.endDate = endDate;
         }
+
         if (page) {
             queryParams.page = page;
         }
