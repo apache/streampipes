@@ -30,7 +30,6 @@ export class SecurityAuthenticationConfigurationComponent {
 
     generateKeyPair() {
         this.configurationService.generateKeyPair().subscribe(result => {
-            console.log(result);
             this.saveKeyfile('public.key', result[0]);
             this.saveKeyfile('private.pem', result[1]);
         });

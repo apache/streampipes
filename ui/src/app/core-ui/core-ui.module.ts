@@ -105,6 +105,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { StaticRuntimeResolvableGroupComponent } from './static-properties/static-runtime-resolvable-group/static-runtime-resolvable-group.component';
+import { LoadingIndicatorComponent } from './loading-indicator/loading-indicator.component';
+import { StatusIndicatorComponent } from './status-indicator/status-indicator.component';
+import { MultiStepStatusIndicatorComponent } from './multi-step-status-indicator/multi-step-status-indicator.component';
+import { PipelineOperationStatusComponent } from './pipeline/pipeline-operation-status/pipeline-operation-status.component';
 
 @NgModule({
     imports: [
@@ -198,6 +202,10 @@ import { StaticRuntimeResolvableGroupComponent } from './static-properties/stati
         LivePreviewLoadingComponent,
         LivePreviewTableComponent,
         LivePreviewErrorComponent,
+        LoadingIndicatorComponent,
+        StatusIndicatorComponent,
+        MultiStepStatusIndicatorComponent,
+        PipelineOperationStatusComponent,
     ],
     providers: [MatDatepickerModule, DisplayRecommendedPipe],
     exports: [
@@ -228,6 +236,10 @@ import { StaticRuntimeResolvableGroupComponent } from './static-properties/stati
         SpSimpleLogsComponent,
         SpSimpleMetricsComponent,
         StatusWidgetComponent,
+        LoadingIndicatorComponent,
+        StatusIndicatorComponent,
+        MultiStepStatusIndicatorComponent,
+        PipelineOperationStatusComponent,
     ],
 })
 export class CoreUiModule {}

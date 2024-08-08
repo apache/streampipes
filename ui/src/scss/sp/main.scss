@@ -861,10 +861,10 @@ label {
 .error-message {
     background-color: black;
     font:
-        0.8rem Inconsolata,
+        0.7rem Inconsolata,
         monospace;
     text-shadow: 0 0 5px #c8c8c8;
     color: white;
-    padding: 10px;
     width: 100%;
+    max-width: 100%;
 }

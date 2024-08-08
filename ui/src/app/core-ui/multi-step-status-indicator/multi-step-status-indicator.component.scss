@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,22 +16,11 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog.scss';
-
-.customize-section {
-    display: flex;
-    flex: 1 1 auto;
-    padding: 20px;
+.status-icon {
+    font-size: 22pt;
+    color: var(--color-accent);
 }
 
-.padding-20 {
-    padding: 20px;
-}
-
-.mb-10 {
-    margin-bottom: 10px;
-}
-
-::ng-deep .pipeline-radio-group .mat-radio-label {
-    padding: 0;
+.message-text {
+    font-size: 12pt;
 }

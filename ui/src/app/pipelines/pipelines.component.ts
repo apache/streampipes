@@ -31,7 +31,7 @@ import {
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { StartAllPipelinesDialogComponent } from './dialog/start-all-pipelines/start-all-pipelines-dialog.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
 import { SpPipelineRoutes } from './pipelines.routes';
@@ -50,9 +50,6 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     starting: boolean;
     stopping: boolean;
 
-    pipelineIdToStart: string;
-    pipelineToStart: Pipeline;
-
     pipelinesReady = false;
     hasPipelineWritePrivileges = false;
 
@@ -61,15 +58,12 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     isAdminRole = false;
 
     tutorialActive = false;
-
-    activatedRouteSubscription: Subscription;
     tutorialActiveSubscription: Subscription;
     userSubscription: Subscription;
 
     constructor(
         private pipelineService: PipelineService,
         private dialogService: DialogService,
-        private activatedRoute: ActivatedRoute,
         private authService: AuthService,
         private currentUserService: CurrentUserService,
         private router: Router,
@@ -95,17 +89,11 @@ export class PipelinesComponent implements OnInit, OnDestroy {
                 );
             },
         );
-        this.activatedRouteSubscription =
-            this.activatedRoute.queryParams.subscribe(params => {
-                if (params['pipeline']) {
-                    this.pipelineIdToStart = params['pipeline'];
-                }
-                if (params.startTutorial) {
-                    this.startPipelineTour();
-                }
-                this.getPipelines();
-                this.getFunctions();
-            });
+        if (this.shepherdService.isTourActive()) {
+            this.shepherdService.trigger('pipeline-started');
+        }
+        this.getPipelines();
+        this.getFunctions();
         this.tutorialActiveSubscription =
             this.shepherdService.tutorialActive$.subscribe(tutorialActive => {
                 this.tutorialActive = tutorialActive;
@@ -123,19 +111,8 @@ export class PipelinesComponent implements OnInit, OnDestroy {
         this.pipelines = [];
         this.pipelineService.getPipelines().subscribe(pipelines => {
             this.pipelines = pipelines;
-            this.checkForImmediateStart(pipelines);
             this.pipelinesReady = true;
         });
-    }
-
-    checkForImmediateStart(pipelines: Pipeline[]) {
-        this.pipelineToStart = undefined;
-        pipelines.forEach(pipeline => {
-            if (pipeline._id === this.pipelineIdToStart) {
-                this.pipelineToStart = pipeline;
-            }
-        });
-        this.pipelineIdToStart = undefined;
     }
 
     checkCurrentSelectionStatus(status) {
@@ -184,7 +161,6 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.activatedRouteSubscription?.unsubscribe();
         this.userSubscription?.unsubscribe();
         this.tutorialActiveSubscription?.unsubscribe();
     }
