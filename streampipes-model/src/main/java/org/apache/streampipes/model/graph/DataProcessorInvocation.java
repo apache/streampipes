@@ -56,6 +56,7 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     this.setIncludedAssets(other.getIncludedAssets());
     this.setIncludedLocales(other.getIncludedLocales());
     this.setElementId(ElementIdGenerator.makeElementId(this));
+    this.setVersion(other.getVersion());
     this.serviceTagPrefix = SpServiceTagPrefix.DATA_PROCESSOR;
   }
 

@@ -20,12 +20,10 @@ package org.apache.streampipes.manager.operations;
 
 import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.recommender.ElementRecommender;
 import org.apache.streampipes.manager.remote.ContainerProvidedOptionsHandler;
-import org.apache.streampipes.manager.runtime.PipelineElementRuntimeInfoFetcher;
 import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.manager.template.PipelineTemplateGenerator;
 import org.apache.streampipes.manager.template.PipelineTemplateInvocationGenerator;
@@ -114,10 +112,6 @@ public class Operations {
 
   public static RuntimeOptionsResponse fetchRemoteOptions(RuntimeOptionsRequest request) {
     return new ContainerProvidedOptionsHandler().fetchRemoteOptions(request);
-  }
-
-  public static String getRuntimeInfo(SpDataStream spDataStream) throws SpRuntimeException {
-    return PipelineElementRuntimeInfoFetcher.INSTANCE.getCurrentData(spDataStream);
   }
 
   public static List<PipelineTemplateDescription> getAllPipelineTemplates() {

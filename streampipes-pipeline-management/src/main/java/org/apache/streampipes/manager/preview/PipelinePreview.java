@@ -23,7 +23,6 @@ import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpoi
 import org.apache.streampipes.manager.execution.http.DetachHttpRequest;
 import org.apache.streampipes.manager.execution.http.InvokeHttpRequest;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
-import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -31,24 +30,31 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.preview.PipelinePreviewModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class PipelinePreview {
 
+  private static final Logger LOG = LoggerFactory.getLogger(PipelinePreview.class);
+
   public PipelinePreviewModel initiatePreview(Pipeline pipeline) {
     String previewId = generatePreviewId();
     pipeline.setActions(new ArrayList<>());
-    List<NamedStreamPipesEntity> pipelineElements = new PipelineVerificationHandlerV2(pipeline)
-        .verifyAndBuildGraphs(true)
-        .stream()
-        .collect(Collectors.toList());
+    List<NamedStreamPipesEntity> pipelineElements = new ArrayList<>(
+        new PipelineVerificationHandlerV2(pipeline)
+            .verifyAndBuildGraphs(true)
+    );
 
     invokeGraphs(filter(pipelineElements));
     storeGraphs(previewId, pipelineElements);
+
+    LOG.info("Preview pipeline {} started", previewId);
 
     return makePreviewModel(previewId, pipelineElements);
   }
@@ -57,26 +63,25 @@ public class PipelinePreview {
     List<NamedStreamPipesEntity> graphs = ActivePipelinePreviews.INSTANCE.getInvocationGraphs(previewId);
     detachGraphs(filter(graphs));
     deleteGraphs(previewId);
+    LOG.info("Preview pipeline {} stopped", previewId);
   }
 
-  public String getPipelineElementPreview(String previewId,
-                                          String pipelineElementDomId) throws IllegalArgumentException {
-    Optional<NamedStreamPipesEntity> graphOpt = ActivePipelinePreviews
+  public Map<String, SpDataStream> getPipelineElementPreviewStreams(String previewId) throws IllegalArgumentException {
+    return ActivePipelinePreviews
         .INSTANCE
-        .getInvocationGraphForPipelineELement(previewId, pipelineElementDomId);
-
-    if (graphOpt.isPresent()) {
-      NamedStreamPipesEntity graph = graphOpt.get();
-      if (graph instanceof DataProcessorInvocation) {
-        return Operations.getRuntimeInfo(((DataProcessorInvocation) graph).getOutputStream());
-      } else if (graph instanceof SpDataStream) {
-        return Operations.getRuntimeInfo((SpDataStream) graph);
-      } else {
-        throw new IllegalArgumentException("Requested pipeline element is not a data processor");
-      }
-    } else {
-      throw new IllegalArgumentException("Could not find pipeline element");
-    }
+        .getInvocationGraphs(previewId)
+        .stream()
+        .filter(graph -> graph instanceof DataProcessorInvocation || graph instanceof SpDataStream)
+        .collect(Collectors.toMap(
+            NamedStreamPipesEntity::getElementId,
+            graph -> {
+              if (graph instanceof DataProcessorInvocation) {
+                return ((DataProcessorInvocation) graph).getOutputStream();
+              } else {
+                return (SpDataStream) graph;
+              }
+            }
+        ));
   }
 
   private String findSelectedEndpoint(InvocableStreamPipesEntity g) throws NoServiceEndpointsAvailableException {
@@ -93,7 +98,7 @@ public class PipelinePreview {
         g.setSelectedEndpointUrl(findSelectedEndpoint(g));
         new InvokeHttpRequest().execute(g, g.getSelectedEndpointUrl(), null);
       } catch (NoServiceEndpointsAvailableException e) {
-        e.printStackTrace();
+        LOG.warn("No endpoint found for pipeline element {}", g.getAppId());
       }
     });
   }
@@ -122,15 +127,15 @@ public class PipelinePreview {
                                                 List<NamedStreamPipesEntity> graphs) {
     PipelinePreviewModel previewModel = new PipelinePreviewModel();
     previewModel.setPreviewId(previewId);
-    previewModel.setSupportedPipelineElementDomIds(collectDomIds(graphs));
+    previewModel.setSupportedPipelineElementDomIds(collectElementIds(graphs));
 
     return previewModel;
   }
 
-  private List<String> collectDomIds(List<NamedStreamPipesEntity> graphs) {
+  private List<String> collectElementIds(List<NamedStreamPipesEntity> graphs) {
     return graphs
         .stream()
-        .map(NamedStreamPipesEntity::getDom)
+        .map(NamedStreamPipesEntity::getElementId)
         .collect(Collectors.toList());
   }
 

@@ -18,7 +18,7 @@
 
 .data-preview {
     position: relative;
-    left: 0px;
+    left: 0;
     top: 120px;
     width: 250px;
     height: 120px;
@@ -29,12 +29,12 @@
     z-index: 50;
 }
 
-.preview-table {
-    font-size: 9pt;
+.data-preview:hover {
+    z-index: 1000;
 }
 
-.mt-10 {
-    margin-top: 10px;
+.preview-table {
+    font-size: 9pt;
 }
 
 .preview-row,
