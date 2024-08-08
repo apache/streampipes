@@ -225,7 +225,6 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
 
     triggerDataRefresh() {
         this.widgetConfigService.notify({
-            widgetId: this.widgetId,
             refreshData: true,
             refreshView: true,
         });

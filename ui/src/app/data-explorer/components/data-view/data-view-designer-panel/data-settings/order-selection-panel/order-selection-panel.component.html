@@ -16,13 +16,23 @@
   ~
   -->
 
-<div fxLayout="column">
-    <sp-echarts-widget-appearance-config [appearanceConfig]="appearanceConfig">
-    </sp-echarts-widget-appearance-config>
-
-    <sp-data-zoom-config
-        [appearanceConfig]="appearanceConfig"
-        (configChangedEmitter)="triggerViewUpdate()"
+<sp-configuration-box title="Order" marginTop="5px">
+    <mat-radio-group
+        class="selection-radio-group"
+        (change)="triggerConfigurationUpdate()"
+        [(ngModel)]="sourceConfig.queryConfig.order"
     >
-    </sp-data-zoom-config>
-</div>
+        <mat-radio-button
+            class="selection-radio-button"
+            [value]="'DESC'"
+            data-cy="descending-radio-button"
+            >Newest (descending)
+        </mat-radio-button>
+        <mat-radio-button
+            class="selection-radio-button"
+            [value]="'ASC'"
+            data-cy="ascending-radio-button"
+            >Oldest (ascending)
+        </mat-radio-button>
+    </mat-radio-group>
+</sp-configuration-box>

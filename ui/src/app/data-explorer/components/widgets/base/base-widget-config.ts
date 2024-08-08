@@ -53,14 +53,9 @@ export abstract class BaseWidgetConfig<
         this.configChangedSubject =
             this.widgetConfigurationService.configurationChangedSubject.subscribe(
                 res => {
-                    if (
-                        res.widgetId ===
-                        this.currentlyConfiguredWidget.elementId
-                    ) {
-                        if (res.refreshData) {
-                            this.makeFields();
-                            this.checkAndInitialize();
-                        }
+                    if (res.refreshData) {
+                        this.makeFields();
+                        this.checkAndInitialize();
                     }
                 },
             );
@@ -93,7 +88,6 @@ export abstract class BaseWidgetConfig<
 
     triggerDataRefresh() {
         this.widgetConfigurationService.notify({
-            widgetId: this.currentlyConfiguredWidget.elementId,
             refreshData: true,
             refreshView: true,
         });
@@ -101,7 +95,6 @@ export abstract class BaseWidgetConfig<
 
     triggerViewRefresh() {
         this.widgetConfigurationService.notify({
-            widgetId: this.currentlyConfiguredWidget.elementId,
             refreshData: false,
             refreshView: true,
         });

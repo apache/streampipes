@@ -282,6 +282,14 @@ export class DataLakeUtils {
             .click();
     }
 
+    public static clickOrderBy(order: String) {
+        if (order == 'ascending') {
+            cy.dataCy('ascending-radio-button').click();
+        } else {
+            cy.dataCy('descending-radio-button').click();
+        }
+    }
+
     /**
      * Select visualization type
      */
@@ -351,14 +359,14 @@ export class DataLakeUtils {
 
     public static selectTimeRange(from: Date, to: Date) {
         DataLakeUtils.openTimeSelectorMenu();
-        const monthsBack = Math.abs(differenceInMonths(from, new Date()));
+        const monthsBack = Math.abs(differenceInMonths(from, new Date())) + 1;
         DataLakeUtils.navigateCalendar('previous', monthsBack);
-        DataLakeUtils.selectDay(from.getDay());
+        DataLakeUtils.selectDay(from.getDate());
 
         const monthsForward = Math.abs(differenceInMonths(from, to));
         DataLakeUtils.navigateCalendar('next', monthsForward);
 
-        DataLakeUtils.selectDay(to.getDay());
+        DataLakeUtils.selectDay(to.getDate());
 
         DataLakeUtils.setTimeInput('time-selector-start-time', from);
         DataLakeUtils.setTimeInput('time-selector-end-time', to);

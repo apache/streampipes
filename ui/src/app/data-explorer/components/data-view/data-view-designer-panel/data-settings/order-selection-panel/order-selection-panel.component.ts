@@ -16,26 +16,28 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
-import { TimeSeriesAppearanceConfig } from '../../../../models/dataview-dashboard.model';
-import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { SourceConfig } from '@streampipes/platform-services';
+import { WidgetConfigurationService } from '../../../../../services/widget-configuration.service';
 
 @Component({
-    selector: 'sp-time-series-appearance-config',
-    templateUrl: './time-series-appearance-config.component.html',
+    selector: 'sp-order-selection-panel',
+    templateUrl: './order-selection-panel.component.html',
+    styleUrls: ['./order-selection-panel.component.scss'],
 })
-export class SpTimeSeriesAppearanceConfigComponent {
-    @Input()
-    appearanceConfig: TimeSeriesAppearanceConfig;
+export class OrderSelectionPanelComponent implements OnInit {
+    @Input() sourceConfig: SourceConfig;
 
-    constructor(
-        private widgetConfigurationService: WidgetConfigurationService,
-    ) {}
+    constructor(private widgetConfigService: WidgetConfigurationService) {}
 
-    triggerViewUpdate() {
-        this.widgetConfigurationService.notify({
+    ngOnInit(): void {
+        this.sourceConfig.queryConfig.order ??= 'ASC';
+    }
+
+    triggerConfigurationUpdate() {
+        this.widgetConfigService.notify({
+            refreshData: true,
             refreshView: true,
-            refreshData: false,
         });
     }
 }
