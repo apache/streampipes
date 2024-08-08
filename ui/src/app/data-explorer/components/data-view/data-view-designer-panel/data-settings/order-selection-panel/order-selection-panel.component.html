@@ -22,10 +22,16 @@
         (change)="triggerConfigurationUpdate()"
         [(ngModel)]="sourceConfig.queryConfig.order"
     >
-        <mat-radio-button class="selection-radio-button" [value]="'DESC'"
+        <mat-radio-button
+            class="selection-radio-button"
+            [value]="'DESC'"
+            data-cy="descending-radio-button"
             >Newest (descending)
         </mat-radio-button>
-        <mat-radio-button class="selection-radio-button" [value]="'ASC'"
+        <mat-radio-button
+            class="selection-radio-button"
+            [value]="'ASC'"
+            data-cy="ascending-radio-button"
             >Oldest (ascending)
         </mat-radio-button>
     </mat-radio-group>
