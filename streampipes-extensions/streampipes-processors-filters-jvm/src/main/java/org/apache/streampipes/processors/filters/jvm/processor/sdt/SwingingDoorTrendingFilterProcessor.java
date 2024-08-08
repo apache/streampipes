@@ -54,7 +54,8 @@ public class SwingingDoorTrendingFilterProcessor extends StreamPipesDataProcesso
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.sdt")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.filters.jvm.sdt", 0)
         .category(DataProcessorType.FILTER)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

@@ -51,7 +51,8 @@ public class NumericalFilterProcessor implements IStreamPipesDataProcessor {
   public IDataProcessorConfiguration declareConfig() {
     return DataProcessorConfiguration.create(
         NumericalFilterProcessor::new,
-        ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.numericalfilter")
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.filters.jvm.numericalfilter", 0)
             .category(DataProcessorType.FILTER)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
             .withLocales(Locales.EN)

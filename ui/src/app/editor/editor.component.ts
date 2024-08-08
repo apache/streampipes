@@ -47,16 +47,15 @@ export class EditorComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.activatedRoute.params.subscribe(params => {
-            if (params.pipelineId) {
-                this.currentModifiedPipelineId = params.pipelineId;
-            } else {
-                this.breadcrumbService.updateBreadcrumb([
-                    SpPipelineRoutes.BASE,
-                    { label: 'New Pipeline' },
-                ]);
-            }
-        });
+        const pipelineId = this.activatedRoute.snapshot.params.pipelineId;
+        if (pipelineId) {
+            this.currentModifiedPipelineId = pipelineId;
+        } else {
+            this.breadcrumbService.updateBreadcrumb([
+                SpPipelineRoutes.BASE,
+                { label: 'New Pipeline' },
+            ]);
+        }
         zip(
             this.pipelineElementService.getDataStreams(),
             this.pipelineElementService.getDataProcessors(),

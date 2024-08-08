@@ -33,10 +33,10 @@ if (programArgs.length <= 2) {
     console.log('Build config specified. Using config for ' + branchName);
 }
 
-// Check if Confgit stig-File for current Branch exists, otherwise use "def"
-if (!fs.existsSync('deployment/' + branchName + '/config.yml')) {
+// Check if Config-File for current Branch exists, otherwise use "def"
+if (!fs.existsSync(`deployment/${branchName}/config.yml`)) {
     console.log(
-        'Could not find config for ' + branchName + '. Using config for dev.',
+        `Could not find config for ${branchName}. Using config for dev.`,
     );
     branchName = 'dev';
 }
@@ -45,7 +45,7 @@ if (!fs.existsSync('deployment/' + branchName + '/config.yml')) {
 let config = {};
 try {
     config = yaml.load(
-        fs.readFileSync('deployment/' + branchName + '/config.yml', 'utf8'),
+        fs.readFileSync(`deployment/${branchName}/config.yml`, 'utf8'),
     );
 } catch (error) {
     console.log('Invalid Config-File. Pre-Build failed.');
@@ -67,10 +67,9 @@ for (let module of config.modules) {
     modulesActive['modulesActive'].push({
         module: module,
         componentImport: modules[module]['componentImport'],
-        ng1_templateUrl: modules[module]['ng1_templateUrl'],
-        ng5_moduleName: modules[module]['ng5_moduleName'],
-        ng5_component: modules[module]['ng5_component'],
-        ng5_componentPath: modules[module]['ng5_componentPath'],
+        moduleName: modules[module]['moduleName'],
+        component: modules[module]['component'],
+        componentPath: modules[module]['componentPath'],
         path: modules[module]['path'],
         link: modules[module]['link'],
         pageNames: modules[module]['pageNames'],
@@ -87,9 +86,9 @@ for (let module of config.modules) {
 
 // Create necessary JavaScript-Files from Template and move to respective Directory
 fs.writeFileSync(
-    'src/app/appng5.module.ts',
+    'src/app/app.module.ts',
     mustache.render(
-        fs.readFileSync('deployment/appng5.module.mst', 'utf8').toString(),
+        fs.readFileSync('deployment/app.module.mst', 'utf8').toString(),
         modulesActive,
     ),
 );
@@ -157,7 +156,7 @@ fs.writeFileSync(
 console.log('Moved: webpack dev config');
 
 if (process.env.THEME_LOC !== undefined) {
-    console.log('Using custom-provided theme ' + process.env.THEME_LOC);
+    console.log(`Using custom-provided theme ${process.env.THEME_LOC}`);
     fs.writeFileSync(
         'src/scss/_variables.scss',
         fs.readFileSync(process.env.THEME_LOC, 'utf8'),
@@ -166,7 +165,7 @@ if (process.env.THEME_LOC !== undefined) {
 
 if (process.env.LOGO_HEADER_LOC !== undefined) {
     console.log(
-        'Using custom-provided header logo ' + process.env.LOGO_HEADER_LOC,
+        `Using custom-provided header logo ${process.env.LOGO_HEADER_LOC}`,
     );
     fs.writeFileSync(
         'src/assets/img/sp/logo.png',
@@ -176,7 +175,7 @@ if (process.env.LOGO_HEADER_LOC !== undefined) {
 
 if (process.env.LOGO_NAV_LOC !== undefined) {
     console.log(
-        'Using custom-provided navbar logo ' + process.env.LOGO_NAV_LOC,
+        `Using custom-provided navbar logo ${process.env.LOGO_NAV_LOC}`,
     );
     fs.writeFileSync(
         'src/assets/img/sp/logo-navigation.png',
@@ -185,7 +184,7 @@ if (process.env.LOGO_NAV_LOC !== undefined) {
 }
 
 if (process.env.FAVICON_LOC !== undefined) {
-    console.log('Using custom-provided favicon ' + process.env.FAVICON_LOC);
+    console.log(`Using custom-provided favicon ${process.env.FAVICON_LOC}`);
     fs.writeFileSync(
         'src/assets/img/favicon/favicon-96x96.png',
         fs.readFileSync(process.env.FAVICON_LOC),
@@ -194,7 +193,7 @@ if (process.env.FAVICON_LOC !== undefined) {
 
 if (process.env.CONSTANTS_FILE !== undefined) {
     console.log(
-        'Using custom-provided constants file ' + process.env.CONSTANTS_FILE,
+        `Using custom-provided constants file ${process.env.CONSTANTS_FILE}`,
     );
     fs.writeFileSync(
         'src/app/services/app.constants.ts',

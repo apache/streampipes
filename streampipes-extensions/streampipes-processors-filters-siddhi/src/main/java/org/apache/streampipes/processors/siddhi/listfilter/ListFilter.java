@@ -48,7 +48,8 @@ public class ListFilter extends StreamPipesSiddhiProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.listfilter")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.siddhi.listfilter", 0)
         .withLocales(Locales.EN)
         .category(DataProcessorType.FILTER)
         .withAssets(ExtensionAssetType.DOCUMENTATION)

@@ -206,14 +206,6 @@ export class ShepherdService {
         this.startTour(this.tourProviderService.getTourById('adapter'));
     }
 
-    setTimeWaitMillis(value) {
-        this.tourProviderService.setTime(value);
-    }
-
-    getTimeWaitMillis() {
-        return this.tourProviderService.getTime();
-    }
-
     changeTutorialStatus(tutorialActive: boolean): void {
         this.tutorialActive = tutorialActive;
         this.tutorialActive$.next(tutorialActive);

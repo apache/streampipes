@@ -68,7 +68,8 @@ public class TrendProcessor extends StreamPipesSiddhiProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.increase")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.siddhi.increase", 0)
         .withLocales(Locales.EN)
         .category(DataProcessorType.PATTERN_DETECT)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)

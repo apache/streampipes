@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpContext } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpEvent } from '@angular/common/http';
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
@@ -189,18 +189,13 @@ export class EditorService {
         return this.http.delete(this.pipelinePreviewBasePath + '/' + previewId);
     }
 
-    getPipelinePreviewResult(
-        previewId: string,
-        pipelineElementDomId: string,
-    ): Observable<any> {
-        return this.http.get(
-            this.pipelinePreviewBasePath +
-                '/' +
-                previewId +
-                '/' +
-                pipelineElementDomId,
-            { context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true) },
-        );
+    getPipelinePreviewResult(previewId: string): Observable<HttpEvent<string>> {
+        return this.http.get(`${this.pipelinePreviewBasePath}/${previewId}`, {
+            responseType: 'text',
+            observe: 'events',
+            reportProgress: true,
+            context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+        });
     }
 
     get pipelinePreviewBasePath() {

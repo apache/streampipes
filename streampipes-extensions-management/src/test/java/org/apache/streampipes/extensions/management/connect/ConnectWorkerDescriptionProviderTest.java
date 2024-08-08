@@ -44,7 +44,7 @@ public class ConnectWorkerDescriptionProviderTest {
     var testAdapter = mock(StreamPipesAdapter.class);
     doAnswer(invocation ->
         AdapterConfigurationBuilder
-            .create(adapterId, null)
+            .create(adapterId, 0, null)
             .buildConfiguration())
         .when(testAdapter)
         .declareConfig();

@@ -54,7 +54,7 @@ export class LoginComponent extends BaseLoginPageDirective {
         this.credentials = {};
     }
 
-    logIn() {
+    doLogin() {
         this.authenticationFailed = false;
         this.loading = true;
         this.loginService.login(this.credentials).subscribe(
@@ -73,6 +73,12 @@ export class LoginComponent extends BaseLoginPageDirective {
     }
 
     onSettingsAvailable(): void {
+        const token = this.route.snapshot.queryParamMap.get('token');
+        if (token) {
+            this.authService.oauthLogin(token);
+            this.loading = false;
+            this.router.navigate(['']);
+        }
         this.parentForm = this.fb.group({});
         this.parentForm.addControl(
             'username',
@@ -88,5 +94,9 @@ export class LoginComponent extends BaseLoginPageDirective {
             this.credentials.password = v.password;
         });
         this.returnUrl = this.route.snapshot.queryParams.returnUrl || '';
+    }
+
+    doOAuthLogin(provider: string): void {
+        window.location.href = `/streampipes-backend/oauth2/authorization/${provider}?redirect_uri=${this.loginSettings.oAuthSettings.redirectUri}/%23/login`;
     }
 }

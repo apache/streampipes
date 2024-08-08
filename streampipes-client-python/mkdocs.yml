@@ -126,4 +126,5 @@ nav:
       - Exploring Live Data from a StreamPipes Data Stream: tutorials/3-getting-live-data-from-the-streampipes-data-stream.ipynb
       - Using Online Machine Learning on a StreamPipes Data Stream: tutorials/4-using-online-machine-learning-on-a-streampipes-data-stream.ipynb
       - Applying Interoperable Machine Learning in StreamPipes: tutorials/5-applying-interoperable-machine-learning-in-streampipes.ipynb
+      - Creating Output Streams with StreamPipes Functions: tutorials/6-streampipes-function-output-stream.ipynb
   - 📚 Reference: reference/*

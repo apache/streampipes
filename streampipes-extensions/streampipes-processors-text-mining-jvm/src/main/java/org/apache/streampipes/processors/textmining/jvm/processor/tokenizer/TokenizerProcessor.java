@@ -53,10 +53,10 @@ public class TokenizerProcessor extends StreamPipesDataProcessor {
   private TokenizerME tokenizer;
 
 
-  //TODO: Maybe change outputStrategy to an array instead of tons of different strings
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.tokenizer")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.textmining.jvm.tokenizer", 0)
         .category(DataProcessorType.ENRICH_TEXT)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

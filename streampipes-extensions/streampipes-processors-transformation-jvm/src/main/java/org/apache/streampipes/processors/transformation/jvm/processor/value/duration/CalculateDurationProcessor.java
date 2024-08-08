@@ -58,7 +58,8 @@ public class CalculateDurationProcessor extends StreamPipesDataProcessor {
   //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.duration-value")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.duration-value", 0)
         .category(DataProcessorType.TIME)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)

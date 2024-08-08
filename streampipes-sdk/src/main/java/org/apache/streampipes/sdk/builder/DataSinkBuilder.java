@@ -47,36 +47,6 @@ public class DataSinkBuilder extends AbstractProcessingElementBuilder<DataSinkBu
 
   /**
    * Creates a new data sink using the builder pattern.
-   * @deprecated
-   * This method is no longer recommend since we rely on a version for migration purposes.
-   * <p> Please adopt {@link #create(String, int)} instead.
-   * @param id          A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
-   * @param label       A human-readable name of the element.
-   *                    Will later be shown as the element name in the StreamPipes UI.
-   * @param description A human-readable description of the element.
-   */
-  @Deprecated(since = "0.93.0", forRemoval = true)
-  public static DataSinkBuilder create(String id, String label, String description) {
-    return new DataSinkBuilder(id, label, description, 0);
-  }
-
-  /**
-   * Creates a new data sink using the builder pattern.
-   * {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
-   * must be called, to provide a label and description.
-   * @deprecated
-   * This method is no longer recommend since we rely on a version for migration purposes.
-   * <p> Please adopt {@link #create(String, int)} instead.
-   *
-   * @param id A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
-   */
-  @Deprecated(since = "0.93.0", forRemoval = true)
-  public static DataSinkBuilder create(String id) {
-    return new DataSinkBuilder(id, 0);
-  }
-
-  /**
-   * Creates a new data sink using the builder pattern.
    * {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
    * must be called, to provide a label and description.
    *

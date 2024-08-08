@@ -43,6 +43,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { SpExceptionDetailsComponent } from './components/sp-exception-message/exception-details/exception-details.component';
+import { SpWarningBoxComponent } from './components/warning-box/warning-box.component';
 
 @NgModule({
     declarations: [
@@ -59,6 +60,7 @@ import { SpExceptionDetailsComponent } from './components/sp-exception-message/e
         SpLabelComponent,
         SpTableComponent,
         SplitSectionComponent,
+        SpWarningBoxComponent,
     ],
     imports: [
         CommonModule,
@@ -89,6 +91,7 @@ import { SpExceptionDetailsComponent } from './components/sp-exception-message/e
         SpLabelComponent,
         SpTableComponent,
         SplitSectionComponent,
+        SpWarningBoxComponent,
     ],
 })
 export class SharedUiModule {}

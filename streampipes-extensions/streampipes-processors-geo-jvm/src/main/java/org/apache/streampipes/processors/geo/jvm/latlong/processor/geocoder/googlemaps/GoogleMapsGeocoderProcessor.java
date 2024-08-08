@@ -55,7 +55,7 @@ public class GoogleMapsGeocoderProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemaps")
+        .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemaps", 0)
         .category(DataProcessorType.GEO)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

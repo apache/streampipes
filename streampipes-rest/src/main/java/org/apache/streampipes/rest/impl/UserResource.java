@@ -294,6 +294,12 @@ public class UserResource extends AbstractAuthGuardedRestResource {
                           boolean adminPrivileges,
                           String property) {
     user.setPassword(property);
+    user.setProvider(existingUser.getProvider());
+    if (!existingUser.getProvider().equals(UserAccount.LOCAL)) {
+      // These settings are managed externally
+      user.setUsername(existingUser.getUsername());
+      user.setFullName(existingUser.getFullName());
+    }
     if (!adminPrivileges) {
       replacePermissions(user, existingUser);
     }

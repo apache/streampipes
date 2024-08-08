@@ -50,7 +50,8 @@ public class JSEvalProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.jseval")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.enricher.jvm.jseval", 0)
         .category(DataProcessorType.SCRIPTING)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

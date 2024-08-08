@@ -28,7 +28,10 @@
     </div>
     <table class="row-border hover preview-table" *ngIf="runtimeData">
         <tbody id="preview-data-rows-id">
-            <tr *ngFor="let item of runtimeData | keyvalue" class="preview-row">
+            <tr
+                *ngFor="let item of runtimeData | keyvalue: keyValueCompareFn"
+                class="preview-row"
+            >
                 <td>
                     <b>{{ item.key }}</b>
                 </td>

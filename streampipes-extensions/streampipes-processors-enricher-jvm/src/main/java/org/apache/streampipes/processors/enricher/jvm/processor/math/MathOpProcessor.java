@@ -58,7 +58,8 @@ public class MathOpProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.processor.math.mathop")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.enricher.jvm.processor.math.mathop", 0)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .category(DataProcessorType.ALGORITHM)
