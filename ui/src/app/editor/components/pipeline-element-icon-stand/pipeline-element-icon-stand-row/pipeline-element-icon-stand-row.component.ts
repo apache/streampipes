@@ -20,9 +20,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import {
     PipelineElementType,
     PipelineElementUnion,
-} from '../../model/editor.model';
-import { PipelineElementTypeUtils } from '../../utils/editor.utils';
-import { EditorService } from '../../services/editor.service';
+} from '../../../model/editor.model';
+import { PipelineElementTypeUtils } from '../../../utils/editor.utils';
+import { EditorService } from '../../../services/editor.service';
 
 @Component({
     selector: 'sp-pe-icon-stand-row',
