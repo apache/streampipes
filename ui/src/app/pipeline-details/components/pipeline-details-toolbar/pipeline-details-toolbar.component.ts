@@ -26,9 +26,15 @@ export class PipelineDetailsToolbarComponent {
     @Input()
     autoRefresh: boolean;
 
+    @Input()
+    previewModeActive: boolean;
+
     @Output()
     autoRefreshChange = new EventEmitter<boolean>();
 
     @Output()
     reloadMetricsEmitter: EventEmitter<void> = new EventEmitter();
+
+    @Output()
+    togglePreviewEmitter: EventEmitter<void> = new EventEmitter();
 }

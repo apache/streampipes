@@ -62,6 +62,9 @@
         [pipelineElement]="pipelineElementConfig.payload"
     ></sp-pipeline-element>
 </div>
+<div class="editor-pe-info" [ngClass]="'pe-info-' + pipelineElementConfig.type">
+    {{ pipelineElementConfig.payload.name }}
+</div>
 <sp-pipeline-element-statistics
     *ngIf="metricsInfo"
     [pipelineElement]="pipelineElementConfig.payload"

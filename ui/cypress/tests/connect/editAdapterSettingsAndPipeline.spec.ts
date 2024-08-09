@@ -72,7 +72,7 @@ describe('Test Edit Adapter and Pipeline', () => {
         }).should('be.visible');
         ConnectBtns.updateAndMigratePipelines().click();
         ConnectUtils.closeAdapterPreview();
-        cy.wait(1000);
+        cy.wait(2000);
 
         // Go to pipelines, check for warning icon and edit pipeline
         PipelineUtils.goToPipelines();
@@ -90,9 +90,9 @@ describe('Test Edit Adapter and Pipeline', () => {
         cy.dataCy('number-mapping').contains('pressure').click({ force: true });
         cy.dataCy('sp-element-configuration-save').click({ force: true });
         cy.dataCy('sp-editor-save-pipeline').click();
-        cy.dataCy('sp-editor-save').click();
-        cy.dataCy('start-pipeline-button').click();
-        cy.dataCy('sp-pipeline-dialog-close').click();
+        cy.dataCy('sp-editor-checkbox-navigate-to-overview').children().click();
+        cy.dataCy('sp-editor-apply').click();
+        cy.dataCy('sp-navigate-to-pipeline-overview').click();
 
         // Visit dashboard
         cy.wait(1000);
