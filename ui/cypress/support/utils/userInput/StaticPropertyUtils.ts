@@ -1,22 +1,4 @@
 /*
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
-
-/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -35,7 +17,7 @@
  */
 
 import { UserInput } from '../../model/UserInput';
-import { TreeNode } from '../../model/TreeNode';
+import { TreeStaticPropertyUtils } from './TreeStaticPropertyUtils';
 
 export class StaticPropertyUtils {
     public static input(configs: UserInput[]) {
@@ -63,7 +45,7 @@ export class StaticPropertyUtils {
             } else if (config.type === 'slider') {
                 cy.dataCy(config.selector).type(config.value);
             } else if (config.type === 'tree') {
-                this.handleTreeNode(config.treeNode);
+                TreeStaticPropertyUtils.selectTreeNode(config.treeNode);
             } else {
                 cy.dataCy(config.selector).type(config.value);
             }
@@ -89,14 +71,4 @@ export class StaticPropertyUtils {
         });
     }
 
-    private static handleTreeNode(treeNode: TreeNode) {
-        if (treeNode.children && treeNode.children.length > 0) {
-            cy.dataCy('expand-' + treeNode.name).click();
-            treeNode.children.forEach(child => {
-                this.handleTreeNode(child);
-            });
-        } else {
-            cy.dataCy('select-' + treeNode.name).click();
-        }
-    }
 }
