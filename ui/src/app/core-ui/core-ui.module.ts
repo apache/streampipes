@@ -109,6 +109,7 @@ import { LoadingIndicatorComponent } from './loading-indicator/loading-indicator
 import { StatusIndicatorComponent } from './status-indicator/status-indicator.component';
 import { MultiStepStatusIndicatorComponent } from './multi-step-status-indicator/multi-step-status-indicator.component';
 import { PipelineOperationStatusComponent } from './pipeline/pipeline-operation-status/pipeline-operation-status.component';
+import { StaticTreeInputButtonMenuComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-button-menu/static-tree-input-button-menu.component';
 
 @NgModule({
     imports: [
@@ -183,6 +184,7 @@ import { PipelineOperationStatusComponent } from './pipeline/pipeline-operation-
         StaticCodeInputComponent,
         StaticOneOfInputComponent,
         StaticRuntimeResolvableAnyInputComponent,
+        StaticTreeInputButtonMenuComponent,
         StaticRuntimeResolvableGroupComponent,
         StaticRuntimeResolvableOneOfInputComponent,
         StaticRuntimeResolvableTreeInputComponent,
