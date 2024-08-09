@@ -88,7 +88,7 @@
                                 : 'node'
                         "
                         fxLayoutAlign="start center"
-                    >
+                        [attr.data-cy]="'tree-node-' + node.nodeName"                    >
                         <i class="material-icons color-primary pr-5">wifi</i>
                         <i
                             class="material-icons pr-5 icon-button"
@@ -239,12 +239,14 @@
                     class="selected-node"
                     fxLayout="row"
                     fxLayoutAlign="start center"
+                    [attr.data-cy]="'selected-node-' + selectedNode"
                 >
                     <span fxFlex>{{ selectedNode }}</span>
                     <div fxLayoutAlign="end center">
                         <button
                             mat-icon-button
                             color="accent"
+                            [attr.data-cy]="'remove-' + selectedNode"
                             (click)="removeSelectedNode(selectedNode)"
                         >
                             <i class="material-icons">remove</i>
