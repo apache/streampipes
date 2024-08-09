@@ -24,7 +24,7 @@ import { PipelineElementTypeUtils } from '../../../../../editor/utils/editor.uti
     selector: 'sp-pipeline-elements-row',
     templateUrl: './pipeline-elements-row.component.html',
     styleUrls: [
-        '../../../../../editor/components/pipeline-element-icon-stand-row/pipeline-element-icon-stand-row.component.scss',
+        '../../../../../editor/components/pipeline-element-icon-stand/pipeline-element-icon-stand-row/pipeline-element-icon-stand-row.component.scss',
     ],
 })
 export class PipelineElementsRowComponent implements OnInit {

@@ -17,7 +17,6 @@
  */
 
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
-import { RestApi } from '../../../services/rest-api.service';
 import {
     PeCategory,
     PipelineElementType,
@@ -72,7 +71,6 @@ export class PipelineElementIconStandComponent
     };
 
     constructor(
-        private restApi: RestApi,
         private editorService: EditorService,
         private router: Router,
     ) {}

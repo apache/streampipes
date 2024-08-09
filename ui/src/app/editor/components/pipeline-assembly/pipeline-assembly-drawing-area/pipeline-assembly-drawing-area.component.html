@@ -15,30 +15,40 @@
   ~ limitations under the License.
   ~
   -->
-<div
-    [attr.data-jtk-managed]="pipelineElementConfig.payload.dom"
-    id="{{ pipelineElementConfig.payload.dom }}"
-    class="sp-no-pan"
-    [ngStyle]="getCssStyle(pipelineElementConfig)"
-    (click)="updateOptionsClick(pipelineElementConfig.payload.dom)"
-    (mouseenter)="updateMouseover(pipelineElementConfig.payload.dom)"
-    (mouseleave)="updateMouseover('')"
-    *ngFor="
-        let pipelineElementConfig of rawPipelineModel | enabledPipelineElement
-    "
+
+<div class="pipeline-validation-hint">
+    <sp-error-hint
+        *ngIf="!readonly"
+        [displayMessages]="!isPipelineAssemblyEmpty()"
+        [errorMessages]="pipelineValidationService.errorMessages"
+        [validationString]="'Pipeline'"
+    >
+    </sp-error-hint>
+</div>
+
+<sp-pipeline-assembly-drawing-area-pan-zoom
+    #zoomComponent
+    [pipelineCanvas]="pipelineCanvas"
+    [jsplumbBridge]="jsplumbBridge"
 >
-    <sp-dropped-pipeline-element
-        [allElements]="allElements"
-        [currentMouseOverElement]="currentMouseOverElement"
-        [metricsInfo]="metricsInfo"
-        [pipelineElementConfig]="pipelineElementConfig"
-        [previewModeActive]="previewModeActive"
-        [pipelinePreview]="pipelinePreview"
+</sp-pipeline-assembly-drawing-area-pan-zoom>
+
+<div class="pipeline-canvas-outer" #outerCanvas>
+    <sp-pipeline
+        class="canvas jtk-surface"
+        id="assembly"
+        #pipelineComponent
         [pipelineValid]="pipelineValid"
         [rawPipelineModel]="rawPipelineModel"
+        [allElements]="allElements"
         [readonly]="readonly"
-        (showCustomizeEmitter)="showCustomizeDialog($event)"
-        (deleteEmitter)="handleDeleteOption($event)"
+        [metricsInfo]="metricsInfo"
+        [previewModeActive]="previewModeActive"
+        [pipelinePreview]="pipelinePreview"
+        (triggerPipelineCacheUpdateEmitter)="
+            triggerPipelineCacheUpdateEmitter.emit()
+        "
+        style="position: absolute"
     >
-    </sp-dropped-pipeline-element>
+    </sp-pipeline>
 </div>

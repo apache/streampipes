@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,29 +16,36 @@
  *
  */
 
-@import '../../../../scss/_variables.scss';
-
-.mat-spinner-color::ng-deep svg circle {
-    stroke: var(--color-accent) !important;
+.pipeline-validation-hint {
+    position: absolute;
+    right: 10px;
+    top: 20px;
+    z-index: 10;
+    background: var(--color-bg-1);
+    box-shadow: 0.175em 0.175em 0 0 rgba(15, 28, 63, 0.125);
 }
 
-.pipeline-assembly-options {
-    padding-left: 5px;
-    border: 1px solid var(--color-bg-3);
+.jtk-surface-nopan {
+    overflow: scroll !important;
+    cursor: default;
 }
 
-.outerAssembly {
+.pipeline-canvas-outer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.canvas {
+    position: relative;
     left: 0;
     top: 0;
-    display: flex;
-    flex: 1 1 0;
-    overflow: hidden;
-}
+    height: 3000px;
+    width: 4000px;
+    z-index: 0;
+    margin: -1px;
 
-.assembly-border {
-    border: 1px solid var(--color-bg-3);
-}
-
-.color-warn {
-    color: var(--color-warn);
+    background-color: var(--color-bg-1);
+    background-image: var(--canvas-color);
+    background-size: 15px 15px;
 }

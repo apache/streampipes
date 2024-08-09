@@ -1,0 +1,91 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+.zoom-control {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 40px;
+    height: 80px;
+    z-index: 10;
+    background: var(--color-bg-1);
+    box-shadow: 0.175em 0.175em 0 0 rgba(15, 28, 63, 0.125);
+    border-radius: 10px;
+}
+
+.pan-control {
+    position: absolute;
+    right: 60px;
+    bottom: 10px;
+    width: 80px;
+    height: 80px;
+    background: var(--color-bg-1);
+    box-shadow: 0.175em 0.175em 0 0 rgba(15, 28, 63, 0.125);
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.pan-zoom-button {
+    position: absolute;
+    cursor: pointer;
+    color: var(--color-accent);
+}
+
+.pan-zoom-control-buttons {
+    position: relative;
+}
+
+.zoom-divider {
+    top: 40px;
+    position: relative;
+}
+
+.zoom-in {
+    top: 8px;
+    left: 8px;
+}
+
+.zoom-out {
+    top: 48px;
+    left: 8px;
+}
+
+.pan-up {
+    left: 28px;
+    top: 2px;
+}
+
+.pan-down {
+    left: 28px;
+    top: 58px;
+}
+
+.pan-left {
+    left: -3px;
+    top: 30px;
+}
+
+.pan-right {
+    left: 55px;
+    top: 30px;
+}
+
+.pan-home {
+    left: 28px;
+    top: 30px;
+}
