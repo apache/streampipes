@@ -40,7 +40,7 @@
             <div
                 id="shepherd-test"
                 style="
-                    padding: 0px;
+                    padding: 0;
                     border-bottom: 1px solid #ffffff;
                     margin-right: 5px;
                 "
@@ -55,9 +55,12 @@
         <sp-pipeline-assembly
             fxFlex="100"
             style="margin-left: 10px"
+            *ngIf="allElementsLoaded && allMetadataLoaded"
             [rawPipelineModel]="rawPipelineModel"
             [allElements]="allElements"
-            [currentModifiedPipelineId]="currentModifiedPipelineId"
+            [originalPipeline]="originalPipeline"
+            [pipelineCanvasMetadata]="pipelineCanvasMetadata"
+            [pipelineCanvasMetadataAvailable]="pipelineCanvasMetadataAvailable"
         >
         </sp-pipeline-assembly>
     </div>

@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import {
     Pipeline,
     PipelineCanvasMetadata,
@@ -26,20 +33,15 @@ import {
     PipelineElementConfig,
     PipelineElementUnion,
 } from '../../../editor/model/editor.model';
-import { PipelinePositioningService } from '../../../editor/services/pipeline-positioning.service';
 import { JsplumbService } from '../../../editor/services/jsplumb.service';
-import { ObjectProvider } from '../../../editor/services/object-provider.service';
-import { JsplumbFactoryService } from '../../../editor/services/jsplumb-factory.service';
+import { JsplumbBridge } from '../../../editor/services/jsplumb-bridge.service';
 
 @Component({
     selector: 'sp-pipeline-preview',
     templateUrl: './pipeline-preview.component.html',
     styleUrls: ['./pipeline-preview.component.scss'],
 })
-export class PipelinePreviewComponent implements OnInit {
-    @Input()
-    jspcanvas: string;
-
+export class PipelinePreviewComponent implements OnInit, AfterViewInit {
     @Input()
     metricsInfo: Record<string, SpMetricsEntry>;
 
@@ -55,52 +57,18 @@ export class PipelinePreviewComponent implements OnInit {
     selectedElementEmitter: EventEmitter<PipelineElementUnion> =
         new EventEmitter<PipelineElementUnion>();
 
-    constructor(
-        private pipelinePositioningService: PipelinePositioningService,
-        private jsplumbService: JsplumbService,
-        private jsplumbFactoryService: JsplumbFactoryService,
-        private objectProvider: ObjectProvider,
-    ) {}
+    jsPlumbBridge: JsplumbBridge;
+
+    constructor(private jsplumbService: JsplumbService) {}
+
+    ngAfterViewInit() {
+        this.jsPlumbBridge = this.jsplumbService.getBridge(true);
+    }
 
     ngOnInit() {
-        setTimeout(() => {
-            const canvasElementId = '#' + this.jspcanvas;
-            this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
-                this.pipeline,
-                true,
-            );
-            setTimeout(() => {
-                this.pipelinePositioningService.displayPipeline(
-                    this.rawPipelineModel,
-                    canvasElementId,
-                    true,
-                    this.pipelineCanvasMetadata === undefined,
-                    this.pipelineCanvasMetadata,
-                );
-                const existingEndpointIds = [];
-                setTimeout(() => {
-                    this.jsplumbFactoryService
-                        .getJsplumbBridge(true)
-                        .selectEndpoints()
-                        .each(endpoint => {
-                            if (
-                                existingEndpointIds.indexOf(
-                                    endpoint.element.id,
-                                ) === -1
-                            ) {
-                                $(endpoint.element).click(() => {
-                                    const payload =
-                                        this.objectProvider.findElement(
-                                            endpoint.element.id,
-                                            this.rawPipelineModel,
-                                        ).payload;
-                                    this.selectedElementEmitter.emit(payload);
-                                });
-                                existingEndpointIds.push(endpoint.element.id);
-                            }
-                        });
-                });
-            });
-        });
+        this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
+            this.pipeline,
+            true,
+        );
     }
 }

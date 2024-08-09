@@ -18,7 +18,6 @@
 
 import * as dagre from 'dagre';
 import { JsplumbBridge } from './jsplumb-bridge.service';
-import { JsplumbConfigService } from './jsplumb-config.service';
 import { JsplumbService } from './jsplumb.service';
 import { Injectable } from '@angular/core';
 import { PipelineElementConfig } from '../model/editor.model';
@@ -37,7 +36,6 @@ import { Connection } from '@jsplumb/browser-ui';
 export class PipelinePositioningService {
     constructor(
         private jsplumbService: JsplumbService,
-        private jsplumbConfigService: JsplumbConfigService,
         private jsplumbFactoryService: JsplumbFactoryService,
         private objectProvider: ObjectProvider,
     ) {}
@@ -86,8 +84,6 @@ export class PipelinePositioningService {
     ) {
         const jsPlumbBridge =
             this.jsplumbFactoryService.getJsplumbBridge(previewConfig);
-
-        const jsplumbConfig = this.jsplumbConfigService.getEditorConfig();
 
         rawPipelineModel.forEach(currentPe => {
             if (!currentPe.settings.disabled) {
