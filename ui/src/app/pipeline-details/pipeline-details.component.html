@@ -25,6 +25,8 @@
         <sp-pipeline-details-toolbar
             fxFlex="100"
             [autoRefresh]="autoRefresh"
+            [previewModeActive]="previewModeActive"
+            (togglePreviewEmitter)="toggleLivePreview()"
             (autoRefreshChange)="autoRefresh = $event"
             (reloadMetricsEmitter)="triggerReload()"
         >
@@ -32,6 +34,7 @@
     </div>
     <div fxFlex="100" fxLayout="column">
         <sp-pipeline-preview
+            #pipelinePreviewComponent
             [metricsInfo]="metricsInfo"
             [pipeline]="pipeline"
             [pipelineCanvasMetadata]="pipelineCanvasMetadata"

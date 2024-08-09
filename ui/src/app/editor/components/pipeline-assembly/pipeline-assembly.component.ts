@@ -147,7 +147,7 @@ export class PipelineAssemblyComponent implements AfterViewInit {
 
     togglePreview(): void {
         this.previewModeActive = !this.previewModeActive;
-        this.drawingAreaComponent.initiatePipelineElementPreview();
+        this.drawingAreaComponent.togglePipelineElementLivePreview();
     }
 
     triggerCacheUpdate(): void {
