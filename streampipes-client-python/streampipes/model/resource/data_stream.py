@@ -102,7 +102,6 @@ class DataStream(Resource):
     event_schema: Optional[EventSchema]
     measurement_capability: Optional[List[MeasurementCapability]]
     measurement_object: Optional[List[MeasurementObject]]
-    index: StrictInt = Field(default=0)
     corresponding_adapter_id: Optional[StrictStr]
     category: Optional[List[StrictStr]]
     uri: Optional[StrictStr]

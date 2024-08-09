@@ -87,7 +87,6 @@ def create_data_stream(
             EventProperty(  # type: ignore
                 label=attribute_name,
                 runtime_name=attribute_name,
-                index=i,
                 runtime_type=f"http://www.w3.org/2001/XMLSchema#{attribute_type}",
             )
             for i, (attribute_name, attribute_type) in enumerate(attributes.items(), start=1)
