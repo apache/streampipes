@@ -29,10 +29,8 @@ type EventProperty struct {
 	Label              string             `json:"label,omitempty"`
 	Description        string             `json:"description,omitempty"`
 	RuntimeName        string             `json:"runtimeName,omitempty"`
-	Required           bool               `json:"required,omitempty"`
 	DomainProperties   []string           `json:"domainProperties,omitempty"`
 	PropertyScope      string             `json:"propertyScope,omitempty"`
-	Index              int                `json:"index"`
 	RuntimeID          string             `json:"runtimeId,omitempty"`
 	RuntimeType        string             `json:"runtimeType"`
 	MeasurementUnit    string             `json:"measurementUnit,omitempty"`
@@ -44,10 +42,8 @@ type EventProperties struct {
 	Label              string            `json:"label"`
 	Description        string            `json:"description"`
 	RuntimeName        string            `json:"runtimeName"`
-	Required           bool              `json:"required"`
 	DomainProperties   []string          `json:"domainProperties"`
 	PropertyScope      string            `json:"propertyScope"`
-	Index              int               `json:"index"`
 	RuntimeID          string            `json:"runtimeId"`
 	RuntimeType        string            `json:"runtimeType,omitempty"`
 	MeasurementUnit    string            `json:"measurementUnit,omitempty"`

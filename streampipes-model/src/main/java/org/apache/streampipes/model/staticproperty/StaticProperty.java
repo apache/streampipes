@@ -52,7 +52,6 @@ public abstract class StaticProperty {
 
   protected boolean optional;
   protected StaticPropertyType staticPropertyType;
-  private int index;
   private String label;
   private String description;
   private String internalName;
@@ -70,13 +69,11 @@ public abstract class StaticProperty {
   }
 
   public StaticProperty(StaticProperty other) {
-    this.index = other.getIndex();
     this.description = other.getDescription();
     this.internalName = other.getInternalName();
     this.optional = other.isOptional();
     this.staticPropertyType = other.getStaticPropertyType();
     this.label = other.getLabel();
-    this.predefined = other.isPredefined();
   }
 
   public StaticProperty(StaticPropertyType type, String internalName, String label,
@@ -129,22 +126,6 @@ public abstract class StaticProperty {
     this.staticPropertyType = staticPropertyType;
   }
 
-  public boolean isPredefined() {
-    return predefined;
-  }
-
-  public void setPredefined(boolean predefined) {
-    this.predefined = predefined;
-  }
-
-  public int getIndex() {
-    return index;
-  }
-
-  public void setIndex(int index) {
-    this.index = index;
-  }
-
   public <T extends StaticProperty> T as(Class<T> targetClass) {
     return targetClass.cast(this);
   }
@@ -161,9 +142,6 @@ public abstract class StaticProperty {
     }
 
     if (optional != that.optional) {
-      return false;
-    }
-    if (index != that.index) {
       return false;
     }
     if (predefined != that.predefined) {
@@ -185,7 +163,6 @@ public abstract class StaticProperty {
   public int hashCode() {
     int result = (optional ? 1 : 0);
     result = 31 * result + (staticPropertyType != null ? staticPropertyType.hashCode() : 0);
-    result = 31 * result + index;
     result = 31 * result + (label != null ? label.hashCode() : 0);
     result = 31 * result + (description != null ? description.hashCode() : 0);
     result = 31 * result + (internalName != null ? internalName.hashCode() : 0);

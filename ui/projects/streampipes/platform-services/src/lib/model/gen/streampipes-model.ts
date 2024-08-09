@@ -1,30 +1,10 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-07-29 21:03:44.
+// Generated using typescript-generator version 3.2.1263 on 2024-08-09 21:34:47.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
-        | 'org.apache.streampipes.model.connect.grounding.ProtocolDescription'
         | 'org.apache.streampipes.model.template.PipelineTemplateDescription'
         | 'org.apache.streampipes.model.SpDataStream'
         | 'org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity'
@@ -397,11 +377,9 @@ export class StaticProperty {
         | 'org.apache.streampipes.model.staticproperty.MappingPropertyUnary'
         | 'org.apache.streampipes.model.staticproperty.MappingPropertyNary';
     'description': string;
-    'index': number;
     'internalName': string;
     'label': string;
     'optional': boolean;
-    'predefined': boolean;
     'staticPropertyType': StaticPropertyType;
 
     static 'fromData'(
@@ -414,11 +392,9 @@ export class StaticProperty {
         const instance = target || new StaticProperty();
         instance['@class'] = data['@class'];
         instance.description = data.description;
-        instance.index = data.index;
         instance.internalName = data.internalName;
         instance.label = data.label;
         instance.optional = data.optional;
-        instance.predefined = data.predefined;
         instance.staticPropertyType = data.staticPropertyType;
         return instance;
     }
@@ -1480,10 +1456,8 @@ export class EventProperty {
     'description': string;
     'domainProperties': string[];
     'elementId': string;
-    'index': number;
     'label': string;
     'propertyScope': string;
-    'required': boolean;
     'runtimeId': string;
     'runtimeName': string;
 
@@ -1504,10 +1478,8 @@ export class EventProperty {
             data.domainProperties,
         );
         instance.elementId = data.elementId;
-        instance.index = data.index;
         instance.label = data.label;
         instance.propertyScope = data.propertyScope;
-        instance.required = data.required;
         instance.runtimeId = data.runtimeId;
         instance.runtimeName = data.runtimeName;
         return instance;
@@ -2430,25 +2402,6 @@ export class Option {
     }
 }
 
-/**
- * @deprecated since 0.92.0, for removal
- */
-export class PageResult extends DataSeries {
-    page: number;
-    pageSum: number;
-
-    static fromData(data: PageResult, target?: PageResult): PageResult {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new PageResult();
-        super.fromData(data, instance);
-        instance.page = data.page;
-        instance.pageSum = data.pageSum;
-        return instance;
-    }
-}
-
 export class Pipeline implements Storable {
     _id: string;
     _rev: string;
@@ -3050,35 +3003,6 @@ export class PropertyValueSpecification {
         instance.maxValue = data.maxValue;
         instance.minValue = data.minValue;
         instance.step = data.step;
-        return instance;
-    }
-}
-
-/**
- * @deprecated since 0.93.0, for removal
- */
-export class ProtocolDescription extends NamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.connect.grounding.ProtocolDescription';
-    'category': string[];
-    'config': StaticPropertyUnion[];
-    'sourceType': string;
-
-    static 'fromData'(
-        data: ProtocolDescription,
-        target?: ProtocolDescription,
-    ): ProtocolDescription {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new ProtocolDescription();
-        super.fromData(data, instance);
-        instance.category = __getCopyArrayFn(__identity<string>())(
-            data.category,
-        );
-        instance.config = __getCopyArrayFn(StaticProperty.fromDataUnion)(
-            data.config,
-        );
-        instance.sourceType = data.sourceType;
         return instance;
     }
 }
