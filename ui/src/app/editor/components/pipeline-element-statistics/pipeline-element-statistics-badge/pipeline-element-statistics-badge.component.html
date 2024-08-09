@@ -16,10 +16,7 @@
   ~
   -->
 
-<img [src]="image" *ngIf="showImage" style="{{ iconSizeCss() }}" />
-<span
-    *ngIf="!showImage"
-    [ngClass]="iconStandSize ? 'text-small' : 'element-text-icon'"
->
-    {{ iconText }}
-</span>
+<div class="badge-outer">
+    <span class="badge badge-key">{{ key }}</span>
+    <span class="badge badge-value">{{ value }}</span>
+</div>

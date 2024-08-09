@@ -43,7 +43,6 @@ export enum PipelineElementConfigurationStatus {
 export interface PipelineElementConfig {
     type: string;
     settings: {
-        preview: boolean;
         displaySettings: string;
         connectable: string;
         disabled: boolean;

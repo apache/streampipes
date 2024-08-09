@@ -68,9 +68,14 @@
         </div>
         <sp-pipeline-element
             [pipelineElement]="pipelineElement.payload"
-            [preview]="preview"
         ></sp-pipeline-element>
     </div>
+    <sp-pipeline-element-statistics
+        *ngIf="metricsInfo"
+        [pipelineElement]="pipelineElement.payload"
+        [metricsInfo]="metricsInfo[pipelineElement.payload.elementId]"
+    >
+    </sp-pipeline-element-statistics>
     <sp-pipeline-element-options
         *ngIf="!preview"
         (delete)="handleDeleteOption($event)"

@@ -16,10 +16,26 @@
   ~
   -->
 
-<img [src]="image" *ngIf="showImage" style="{{ iconSizeCss() }}" />
-<span
-    *ngIf="!showImage"
-    [ngClass]="iconStandSize ? 'text-small' : 'element-text-icon'"
->
-    {{ iconText }}
-</span>
+<div class="statistics" *ngIf="metricsInfo">
+    <div fxLayout="row" fxLayoutGap="5px">
+        <div fxLayout="column" fxLayoutAlign="start center">
+            <sp-pipeline-element-statistics-badge
+                *ngFor="let info of metricsInfo.messagesIn | keyvalue"
+                key="in"
+                [value]="info.value.counter"
+            >
+            </sp-pipeline-element-statistics-badge>
+        </div>
+        <div
+            fxLayout="column"
+            *ngIf="type !== PipelineElementType.DataSink"
+            fxLayoutAlign="end center"
+        >
+            <sp-pipeline-element-statistics-badge
+                key="out"
+                [value]="metricsInfo.messagesOut.counter"
+            >
+            </sp-pipeline-element-statistics-badge>
+        </div>
+    </div>
+</div>
