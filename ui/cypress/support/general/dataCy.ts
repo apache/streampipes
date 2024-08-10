@@ -19,7 +19,7 @@
 declare global {
     namespace Cypress {
         interface Chainable {
-            dataCy: typeof dataCy
+            dataCy: typeof dataCy;
         }
     }
 }
@@ -35,7 +35,8 @@ declare global {
 export const dataCy = (
     value: string,
     config: any = {},
-    startsWith: boolean = false) => {
+    startsWith: boolean = false,
+) => {
     const selector = startsWith ? `[data-cy^=${value}]` : `[data-cy=${value}]`;
     return cy.get(selector, config);
 };

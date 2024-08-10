@@ -15,41 +15,15 @@
   ~ limitations under the License.
   ~
   -->
-
 <div [formGroup]="parentForm" id="formWrapper" fxFlex="100" fxLayout="column">
-    <sp-static-tree-input-button-menu></sp-static-tree-input-button-menu>
-    <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-        <div>
-            <button
-                mat-raised-button
-                color="accent"
-                class="small-button"
-                (click)="resetOptionsAndReload()"
-                style="margin-right: 10px"
-                [disabled]="!showOptions"
-                data-cy='clear-tree-node-selection'
-            >
-                <span>Clear selection & reload</span>
-            </button>
-            <button
-                mat-raised-button
-                color="accent"
-                class="small-button"
-                (click)="reload()"
-                style="margin-right: 10px"
-                [disabled]="!showOptions"
-            >
-                <span>Reload</span>
-            </button>
-        </div>
-        <div fxLayout="column" *ngIf="loading" class="mt-10">
-            <mat-spinner
-                color="accent"
-                [mode]="'indeterminate'"
-                [diameter]="20"
-            ></mat-spinner>
-        </div>
-    </div>
+    <sp-static-tree-input-button-menu
+        [showOptions]="showOptions"
+        [loading]="loading"
+        (resetOptionsAndReload)="resetOptionsAndReload()"
+        (reload)="reload()"
+    >
+    </sp-static-tree-input-button-menu>
+
     <div fxLayout="column" *ngIf="error" class="mt-10">
         <sp-exception-message [message]="errorMessage"></sp-exception-message>
     </div>
@@ -66,8 +40,8 @@
                         >
                             <mat-icon *ngIf="!largeView">open_in_full</mat-icon>
                             <mat-icon *ngIf="largeView"
-                                >close_fullscreen</mat-icon
-                            >
+                                >close_fullscreen
+                            </mat-icon>
                         </button>
                     </div>
                 </div>
@@ -89,7 +63,8 @@
                                 : 'node'
                         "
                         fxLayoutAlign="start center"
-                        [attr.data-cy]="'tree-node-' + node.nodeName"                    >
+                        [attr.data-cy]="'tree-node-' + node.nodeName"
+                    >
                         <i class="material-icons color-primary pr-5">wifi</i>
                         <i
                             class="material-icons pr-5 icon-button"

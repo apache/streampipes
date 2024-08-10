@@ -24,7 +24,6 @@ import { StaticPropertyUtils } from '../../support/utils/userInput/StaticPropert
 import { TreeStaticPropertyUtils } from '../../support/utils/userInput/TreeStaticPropertyUtils';
 
 describe('Test OPC-UA Adapter Pull Mode', () => {
-
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
     });
@@ -40,26 +39,27 @@ describe('Test OPC-UA Adapter Pull Mode', () => {
 
         TreeStaticPropertyUtils.validateAmountOfSelectedNodes(2);
 
-        TreeStaticPropertyUtils.checkThatNodeIsSelectedInTree('AlternatingBoolean');
+        TreeStaticPropertyUtils.checkThatNodeIsSelectedInTree(
+            'AlternatingBoolean',
+        );
 
         // Test if delete node works
-        TreeStaticPropertyUtils.removeSelectedNode('ns=3\\;s=AlternatingBoolean');
+        TreeStaticPropertyUtils.removeSelectedNode(
+            'ns=3\\;s=AlternatingBoolean',
+        );
         TreeStaticPropertyUtils.validateAmountOfSelectedNodes(1);
 
         // Test clear selection and reload button
         TreeStaticPropertyUtils.clickClearAndReloadButton();
         TreeStaticPropertyUtils.validateAmountOfSelectedNodes(0);
-
     });
-
 });
 
 const getAdapterBuilder = () => {
     const host: string = ParameterUtils.get('localhost', 'opcua');
 
-    const builder = AdapterBuilder.create('OPC_UA').setName(
-        'OPC UA Configuration Test',
-    )
+    const builder = AdapterBuilder.create('OPC_UA')
+        .setName('OPC UA Configuration Test')
         .addInput('radio', 'adapter_type-pull_mode', '')
         .addInput('input', 'undefined-PULLING_INTERVAL-0', '1000')
         .addInput('radio', 'access_mode-none', '')
@@ -83,8 +83,8 @@ const getAdapterBuilder = () => {
                     ),
                 ),
             ),
-        ).setAutoAddTimestampPropery();
+        )
+        .setAutoAddTimestampPropery();
 
     return builder.build();
 };
-

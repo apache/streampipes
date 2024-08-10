@@ -15,11 +15,28 @@
  * limitations under the License.
  *
  */
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'sp-static-tree-input-button-menu',
     templateUrl: './static-tree-input-button-menu.component.html',
-    styleUrl: './static-tree-input-button-menu.component.scss',
 })
-export class StaticTreeInputButtonMenuComponent {}
+export class StaticTreeInputButtonMenuComponent {
+    @Input()
+    showOptions: boolean;
+    @Input()
+    loading: boolean;
+
+    @Output()
+    resetOptionsAndReload = new EventEmitter<void>();
+    @Output()
+    reload = new EventEmitter<void>();
+
+    onResetOptionsAndReload() {
+        this.resetOptionsAndReload.emit();
+    }
+
+    onReload() {
+        this.reload.emit();
+    }
+}

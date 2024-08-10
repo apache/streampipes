@@ -16,11 +16,9 @@
  *
  */
 
-
 import { TreeNode } from '../../model/TreeNode';
 
 export class TreeStaticPropertyUtils {
-
     /**
      * Selects the @param treeNode in the tree view. If the tree node has
      * children, it will expand the tree node and recursivly navigate through
@@ -51,10 +49,11 @@ export class TreeStaticPropertyUtils {
      * to @param expectedAmount.
      */
     public static validateAmountOfSelectedNodes(expectedAmount: number) {
-        cy.dataCy('selected-node-', {}, true)
-            .should('have.length', expectedAmount);
-    };
-
+        cy.dataCy('selected-node-', {}, true).should(
+            'have.length',
+            expectedAmount,
+        );
+    }
 
     /**
      * Validates that the @param nodeName is marked as selected in the
@@ -66,13 +65,9 @@ export class TreeStaticPropertyUtils {
                 .contains('remove_circle')
                 .should('exist');
         });
-    };
-
+    }
 
     public static clickClearAndReloadButton() {
         cy.dataCy('clear-tree-node-selection').click();
     }
-
 }
-
-

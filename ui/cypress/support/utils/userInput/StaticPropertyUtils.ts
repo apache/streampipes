@@ -70,5 +70,4 @@ export class StaticPropertyUtils {
             cy.get(cssClassName).click();
         });
     }
-
 }

@@ -15,4 +15,35 @@
   ~ limitations under the License.
   ~
   -->
-<p>static-tree-input-button-menu works!</p>
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+    <div>
+        <button
+            mat-raised-button
+            color="accent"
+            class="small-button"
+            (click)="onResetOptionsAndReload()"
+            style="margin-right: 10px"
+            [disabled]="!showOptions"
+            data-cy="clear-tree-node-selection"
+        >
+            <span>Clear selection & reload</span>
+        </button>
+        <button
+            mat-raised-button
+            color="accent"
+            class="small-button"
+            (click)="onReload()"
+            style="margin-right: 10px"
+            [disabled]="!showOptions"
+        >
+            <span>Reload</span>
+        </button>
+    </div>
+    <div fxLayout="column" *ngIf="loading" class="mt-10">
+        <mat-spinner
+            color="accent"
+            [mode]="'indeterminate'"
+            [diameter]="20"
+        ></mat-spinner>
+    </div>
+</div>
