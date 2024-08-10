@@ -39,7 +39,7 @@ public class InfluxClientProvider {
   /**
    * Create a new InfluxDB client from Environment and ensures database is available
    * @param environment Environment
-   * @return
+   * @return InfluxDB
    */
   public InfluxDB getSetUpInfluxDBClient(Environment environment){
     return getSetUpInfluxDBClient(InfluxConnectionSettings.from(environment));
@@ -48,7 +48,7 @@ public class InfluxClientProvider {
   /**
    * Create a new InfluxDB client from Connection Settings and ensures database is available
    * @param settings Connection Settings
-   * @return
+   * @return InfluxDB
    */
   public InfluxDB getSetUpInfluxDBClient(InfluxConnectionSettings settings){
     var influxDb = getInitializedInfluxDBClient(settings);
