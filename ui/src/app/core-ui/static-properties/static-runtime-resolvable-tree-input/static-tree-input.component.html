@@ -202,34 +202,13 @@
                 <div fxFlex="70">{{ metadata.value }}</div>
             </div>
         </div>
-        <div fxFlex="30" class="tree-input-section" fxLayout="column">
-            <div class="tree-input-header" fxLayoutAlign="start center">
-                <b>Selected Nodes</b>
-            </div>
-            <div
-                *ngFor="
-                    let selectedNode of staticProperty.selectedNodesInternalNames
-                "
-            >
-                <div
-                    class="selected-node"
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
-                    [attr.data-cy]="'selected-node-' + selectedNode"
-                >
-                    <span fxFlex>{{ selectedNode }}</span>
-                    <div fxLayoutAlign="end center">
-                        <button
-                            mat-icon-button
-                            color="accent"
-                            [attr.data-cy]="'remove-' + selectedNode"
-                            (click)="removeSelectedNode(selectedNode)"
-                        >
-                            <i class="material-icons">remove</i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+        <sp-static-tree-input-selected-nodes
+            [selectedNodesInternalNames]="
+                staticProperty.selectedNodesInternalNames
+            "
+            (removeSelectedNode)="removeSelectedNode($event)"
+        >
+        </sp-static-tree-input-selected-nodes>
     </div>
 </div>
