@@ -45,7 +45,7 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
       InfluxClientProvider influxClientProvider
   ) throws SpRuntimeException {
     super(measure);
-    influxDb = influxClientProvider.getInitializedInfluxDBClient(environment);
+    this.influxDb = influxClientProvider.getSetUpInfluxDBClient(environment);
     propertyHandler = new PropertyHandler();
   }
 

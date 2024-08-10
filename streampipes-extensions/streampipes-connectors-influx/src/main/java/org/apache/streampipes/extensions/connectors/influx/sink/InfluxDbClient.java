@@ -24,7 +24,6 @@ import org.apache.streampipes.dataexplorer.influx.client.InfluxConnectionSetting
 import org.apache.streampipes.extensions.connectors.influx.shared.SharedInfluxClient;
 import org.apache.streampipes.model.runtime.Event;
 
-import org.influxdb.BatchOptions;
 import org.influxdb.dto.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,17 +65,8 @@ public class InfluxDbClient extends SharedInfluxClient {
    */
   private void connect() throws SpRuntimeException {
     super.initClient();
-    var databaseName = connectionSettings.getDatabaseName();
-
-    // Checking whether the database exists
-    if (!influxClientProvider.databaseExists(influxDb, databaseName)) {
-      LOG.info("Database '" + databaseName + "' not found. Gets created ...");
-      influxClientProvider.createDatabase(influxDb, databaseName);
-    }
-
-    // setting up the database
-    influxDb.setDatabase(databaseName);
-    influxDb.enableBatch(BatchOptions.DEFAULTS.actions(batchSize).flushDuration(flushDuration));
+    influxClientProvider.setupDatabaseAndBatching(
+        influxDb, connectionSettings.getDatabaseName(), batchSize, flushDuration);
   }
 
   /**
@@ -106,12 +96,5 @@ public class InfluxDbClient extends SharedInfluxClient {
     }
 
     influxDb.write(p.build());
-  }
-
-  /**
-   * Shuts down the connection to the InfluxDB server
-   */
-  void stop() {
-    influxDb.close();
   }
 }

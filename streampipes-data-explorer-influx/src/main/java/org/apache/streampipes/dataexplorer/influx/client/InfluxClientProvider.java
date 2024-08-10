@@ -36,6 +36,34 @@ public class InfluxClientProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(InfluxClientProvider.class);
 
+  public InfluxDB getSetUpInfluxDBClient(Environment environment){
+    return getSetUpInfluxDBClient(InfluxConnectionSettings.from(environment));
+  }
+  public InfluxDB getSetUpInfluxDBClient(InfluxConnectionSettings settings){
+    var influxDb = getInitializedInfluxDBClient(settings);
+    this.setupDatabaseAndBatching(influxDb, settings.getDatabaseName());
+
+    return influxDb;
+  }
+
+  /**
+   * Create a new InfluxDB client from provided settings and verify it's available
+   * @param settings Connection settings
+   * @return InfluxDB
+   */
+  public InfluxDB getInitializedInfluxDBClient(InfluxConnectionSettings settings){
+    var influxDb = InfluxClientProvider.getInfluxDBClient(settings);
+
+    // Checking, if server is available
+    var response = influxDb.ping();
+    if (response.getVersion()
+        .equalsIgnoreCase("unknown")) {
+      throw new SpRuntimeException("Could not connect to InfluxDb Server: " + settings.getConnectionUrl());
+    }
+
+    return influxDb;
+  }
+
   /**
    * Create a new InfluxDB client from environment variables
    *
@@ -68,20 +96,12 @@ public class InfluxClientProvider {
     }
   }
 
+  public void setupDatabaseAndBatching(InfluxDB influxDb, String databaseName) {
+    this.setupDatabaseAndBatching(influxDb, databaseName, 2000, 500);
+  }
 
-  public InfluxDB getInitializedInfluxDBClient(Environment environment) {
 
-    var settings = InfluxConnectionSettings.from(environment);
-    var influxDb = InfluxClientProvider.getInfluxDBClient(settings);
-    var databaseName = settings.getDatabaseName();
-
-    // Checking, if server is available
-    var response = influxDb.ping();
-    if (response.getVersion()
-                .equalsIgnoreCase("unknown")) {
-      throw new SpRuntimeException("Could not connect to InfluxDb Server: " + settings.getConnectionUrl());
-    }
-
+  public void setupDatabaseAndBatching(InfluxDB influxDb, String databaseName, int batchSize, int flushDuration) {
     // Checking whether the database exists
     if (!databaseExists(influxDb, databaseName)) {
       LOG.info("Database '" + databaseName + "' not found. Gets created ...");
@@ -90,11 +110,7 @@ public class InfluxClientProvider {
 
     // setting up the database
     influxDb.setDatabase(databaseName);
-    var batchSize = 2000;
-    var flushDuration = 500;
     influxDb.enableBatch(batchSize, flushDuration, TimeUnit.MILLISECONDS);
-
-    return influxDb;
   }
 
   /**
