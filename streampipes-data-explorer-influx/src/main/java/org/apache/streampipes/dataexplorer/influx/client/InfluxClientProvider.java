@@ -36,9 +36,20 @@ public class InfluxClientProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(InfluxClientProvider.class);
 
+  /**
+   * Create a new InfluxDB client from Environment and ensures database is available
+   * @param environment Environment
+   * @return
+   */
   public InfluxDB getSetUpInfluxDBClient(Environment environment){
     return getSetUpInfluxDBClient(InfluxConnectionSettings.from(environment));
   }
+
+  /**
+   * Create a new InfluxDB client from Connection Settings and ensures database is available
+   * @param settings Connection Settings
+   * @return
+   */
   public InfluxDB getSetUpInfluxDBClient(InfluxConnectionSettings settings){
     var influxDb = getInitializedInfluxDBClient(settings);
     this.setupDatabaseAndBatching(influxDb, settings.getDatabaseName());
@@ -96,11 +107,22 @@ public class InfluxClientProvider {
     }
   }
 
+  /**
+   * Creates the specified database in the influxDb instance if it does not exists. Enables batching with default values
+   * @param influxDb The InfluxDB client instance
+   * @param databaseName The name of the database
+   */
   public void setupDatabaseAndBatching(InfluxDB influxDb, String databaseName) {
     this.setupDatabaseAndBatching(influxDb, databaseName, 2000, 500);
   }
 
-
+  /**
+   * Creates the specified database in the influxDb instance if it does not exists. Enables batching
+   * @param influxDb The InfluxDB client instance
+   * @param databaseName The name of the database
+   * @param batchSize Batch Size
+   * @param flushDuration Flush Duration
+   */
   public void setupDatabaseAndBatching(InfluxDB influxDb, String databaseName, int batchSize, int flushDuration) {
     // Checking whether the database exists
     if (!databaseExists(influxDb, databaseName)) {

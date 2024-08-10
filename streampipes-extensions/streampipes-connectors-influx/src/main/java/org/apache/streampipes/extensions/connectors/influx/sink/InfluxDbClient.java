@@ -33,7 +33,6 @@ import java.util.concurrent.TimeUnit;
 
 public class InfluxDbClient extends SharedInfluxClient {
 
-  private static final Logger LOG = LoggerFactory.getLogger(InfluxDbClient.class);
 
   private final String timestampField;
   private final Integer batchSize;
