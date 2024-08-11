@@ -185,22 +185,12 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     getMonitoringInfos(adapters: AdapterDescription[]) {
-        const observables = adapters
-            .map(adapter => adapter.elementId)
-            .map(elementId =>
-                this.adapterMonitoringService.getMetricsInfoForAdapter(
-                    elementId,
-                ),
-            );
+        const filteredElementIds = adapters.map(adapter => adapter.elementId);
 
         this.adapterMonitoringService
-            .triggerMonitoringUpdate()
-            .subscribe(() => {
-                zip(...observables).subscribe(metrics => {
-                    adapters.forEach((adapter, index) => {
-                        this.adapterMetrics[adapter.elementId] = metrics[index];
-                    });
-                });
+            .getMetricsInfoForAdapters(filteredElementIds)
+            .subscribe(metrics => {
+                this.adapterMetrics = metrics;
             });
     }
 
