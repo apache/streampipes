@@ -34,9 +34,6 @@ export class PipelineElementComponent {
     pipelineElement_: PipelineElementUnion;
 
     @Input()
-    preview: any;
-
-    @Input()
     iconSize: any;
 
     @Input()
@@ -72,8 +69,6 @@ export class PipelineElementComponent {
     iconSizeCss() {
         if (this.iconSize) {
             return 'width:35px;height:35px;';
-        } else if (this.preview) {
-            return 'width:50px;height:50px;';
         } else if (this.iconStandSize) {
             return 'width:30px;height:30px;';
         } else {

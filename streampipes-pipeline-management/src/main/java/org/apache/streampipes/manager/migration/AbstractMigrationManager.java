@@ -20,7 +20,7 @@ package org.apache.streampipes.manager.migration;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
-import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
 import org.apache.streampipes.model.message.Notification;
@@ -139,7 +139,7 @@ public abstract class AbstractMigrationManager {
           .execute()
           .returnContent()
           .asString();
-      var updateResult = Operations.verifyAndUpdateElement(entityPayload);
+      var updateResult = new TypeExtractor(entityPayload).getTypeVerifier().verifyAndUpdate();
       if (!updateResult.isSuccess()) {
         LOG.error(
             "Updating the pipeline element description failed: {}",

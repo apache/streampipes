@@ -18,6 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
+import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 
@@ -26,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -43,7 +45,11 @@ public class PipelineMonitoring extends AbstractMonitoringResource {
 
   @GetMapping(value = "/pipeline/{pipelineId}/metrics", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, SpMetricsEntry>> getMetricsInfoForPipeline(
-      @PathVariable("pipelineId") String pipelineId) {
+      @PathVariable("pipelineId") String pipelineId,
+      @RequestParam(value = "forceUpdate", required = false, defaultValue = "false") boolean forceUpdate) {
+    if (forceUpdate) {
+      new ExtensionsServiceLogExecutor().triggerUpdate();
+    }
     return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForPipeline(pipelineId));
   }
 

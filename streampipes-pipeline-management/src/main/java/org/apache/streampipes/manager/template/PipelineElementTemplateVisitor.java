@@ -202,10 +202,6 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
     // TODO not yet supported
   }
 
-  private Object getValue(StaticProperty sp) {
-    return ((Map<String, Object>) configs.get(sp.getInternalName())).get("value");
-  }
-
   private List<String> getValueAsList(StaticProperty sp) {
     return (List<String>) configs.get(sp.getInternalName());
   }
