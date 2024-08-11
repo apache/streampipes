@@ -93,7 +93,7 @@ public class AdapterUpdateManagement {
         }
         StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(modifiedPipeline);
         if (shouldRestartPipeline && canAutoMigrate) {
-          new PipelineExecutor(PipelineManager.getPipeline(pipeline.getPipelineId())).startPipeline();
+          new PipelineExecutor(PipelineManager.getPipeline(p.getPipelineId())).startPipeline();
         }
       } catch (Exception e) {
         LOG.error("Could not update pipeline {}", pipeline.getName(), e);
