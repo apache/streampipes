@@ -18,16 +18,12 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.commons.exceptions.NoMatchingFormatException;
-import org.apache.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
-import org.apache.streampipes.commons.exceptions.NoMatchingProtocolException;
-import org.apache.streampipes.commons.exceptions.NoMatchingSchemaException;
 import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
-import org.apache.streampipes.commons.exceptions.RemoteServerNotAccessibleException;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
-import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
-import org.apache.streampipes.model.client.exception.InvalidConnectionException;
+import org.apache.streampipes.manager.recommender.ElementRecommender;
+import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
@@ -52,6 +48,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -178,7 +175,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   public PipelineElementRecommendationMessage recommend(@RequestBody Pipeline pipeline,
                                                         @PathVariable("recId") String baseRecElement) {
     try {
-      return Operations.findRecommendedElements(pipeline, baseRecElement);
+      return new ElementRecommender(pipeline, baseRecElement).findRecommendedElements();
     } catch (JsonSyntaxException e) {
       throw new SpNotificationException(
           HttpStatus.BAD_REQUEST,
@@ -207,19 +204,9 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
   public ResponseEntity<?> validatePipeline(@RequestBody Pipeline pipeline) {
     try {
-      return ok(Operations.validatePipeline(pipeline));
+      return ok(new PipelineVerificationHandlerV2(pipeline).verifyPipeline());
     } catch (JsonSyntaxException e) {
       return badRequest(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage()));
-    } catch (NoMatchingSchemaException e) {
-      return badRequest(new Notification(NotificationType.NO_VALID_CONNECTION, e.getMessage()));
-    } catch (NoMatchingFormatException e) {
-      return badRequest(new Notification(NotificationType.NO_MATCHING_FORMAT_CONNECTION, e.getMessage()));
-    } catch (NoMatchingProtocolException e) {
-      return badRequest(new Notification(NotificationType.NO_MATCHING_PROTOCOL_CONNECTION, e.getMessage()));
-    } catch (RemoteServerNotAccessibleException | NoMatchingJsonSchemaException e) {
-      return serverError(new Notification(NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE, e.getMessage()));
-    } catch (InvalidConnectionException e) {
-      return badRequest(e.getErrorLog());
     } catch (Exception e) {
       LOG.error(e.getMessage());
       return serverError(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage()));
@@ -244,7 +231,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     storedPipeline.setHealthStatus(pipeline.getHealthStatus());
     storedPipeline.setPipelineNotifications(pipeline.getPipelineNotifications());
     storedPipeline.setValid(pipeline.isValid());
-    Operations.updatePipeline(storedPipeline);
+    new PipelineStorageService(pipeline).updatePipeline();
     SuccessMessage message = Notifications.success("Pipeline modified");
     message.addNotification(new Notification("id", pipelineId));
     return ok(message);

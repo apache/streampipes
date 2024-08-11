@@ -18,15 +18,9 @@
 package org.apache.streampipes.manager.template;
 
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
-import org.apache.streampipes.manager.matching.v2.ElementVerification;
 import org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate;
 import org.apache.streampipes.manager.template.instances.PipelineTemplate;
-import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -43,7 +37,7 @@ public class PipelineTemplateGenerator {
 
   Logger logger = LoggerFactory.getLogger(PipelineTemplateGenerator.class);
 
-  private List<PipelineTemplateDescription> availableDescriptions = new ArrayList<>();
+  private final List<PipelineTemplateDescription> availableDescriptions = new ArrayList<>();
 
   public List<PipelineTemplateDescription> getAllPipelineTemplates() {
 
@@ -63,62 +57,6 @@ public class PipelineTemplateGenerator {
     }
 
     return availableDescriptions;
-  }
-
-  public List<PipelineTemplateDescription> getCompatibleTemplates(String streamId) {
-    List<PipelineTemplateDescription> compatibleTemplates = new ArrayList<>();
-    ElementVerification verifier = new ElementVerification();
-    SpDataStream streamOffer = null;
-
-    try {
-      streamOffer = getStream(streamId);
-      streamOffer = new SpDataStream(streamOffer);
-      if (streamOffer != null) {
-        for (PipelineTemplateDescription pipelineTemplateDescription : getAllPipelineTemplates()) {
-          // TODO make this work for 2+ input streams
-          InvocableStreamPipesEntity entity =
-              cloneInvocation(pipelineTemplateDescription.getBoundTo().get(0).getPipelineElementTemplate());
-          if (verifier.verify(streamOffer, entity)) {
-            compatibleTemplates.add(pipelineTemplateDescription);
-          }
-        }
-      }
-
-    } catch (ElementNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    return compatibleTemplates;
-  }
-
-  private InvocableStreamPipesEntity cloneInvocation(InvocableStreamPipesEntity pipelineElementTemplate) {
-    if (pipelineElementTemplate instanceof DataProcessorInvocation) {
-      return new DataProcessorInvocation((DataProcessorInvocation) pipelineElementTemplate);
-    } else {
-      return new DataSinkInvocation((DataSinkInvocation) pipelineElementTemplate);
-    }
-  }
-
-  protected SpDataStream getStream(String streamId) throws ElementNotFoundException {
-    SpDataStream result = getStorage()
-        .getEventStreamById(streamId);
-
-    if (result == null) {
-      throw new ElementNotFoundException("Data stream " + streamId + " is not installed!");
-    }
-
-    return result;
-  }
-
-  protected DataProcessorDescription getProcessor(String id) throws ElementNotFoundException {
-    DataProcessorDescription result = getStorage()
-        .getDataProcessorByAppId(id);
-
-    if (result == null) {
-      throw new ElementNotFoundException("Data processor " + id + " is not installed!");
-    }
-
-    return result;
   }
 
   protected DataSinkDescription getSink(String id) throws ElementNotFoundException {
