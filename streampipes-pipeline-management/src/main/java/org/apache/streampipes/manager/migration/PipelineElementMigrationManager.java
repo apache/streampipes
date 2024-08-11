@@ -176,8 +176,8 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
 
 
   public void stopPipeline(Pipeline pipeline) {
-    var pipelineExecutor = new PipelineExecutor(pipeline, true);
-    var pipelineStopResult = pipelineExecutor.stopPipeline();
+    var pipelineExecutor = new PipelineExecutor(pipeline);
+    var pipelineStopResult = pipelineExecutor.stopPipeline(true);
 
     if (pipelineStopResult.isSuccess()) {
       LOG.info("Pipeline successfully stopped.");
