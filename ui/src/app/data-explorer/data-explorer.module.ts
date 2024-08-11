@@ -129,6 +129,7 @@ import { TimeRangeSelectorMenuComponent } from './components/time-selector/time-
 import { CustomTimeRangeSelectionComponent } from './components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
 import { DataExplorerRefreshIntervalSettingsComponent } from './components/dashboard/dashboard-toolbar/refresh-interval-settings/refresh-interval-settings.component';
 import { OrderSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/order-selection-panel/order-selection-panel.component';
+import { GaugeWidgetConfigComponent } from './components/widgets/gauge/config/gauge-widget-config.component';
 
 @NgModule({
     imports: [
@@ -230,6 +231,7 @@ import { OrderSelectionPanelComponent } from './components/data-view/data-view-d
         FieldSelectionPanelComponent,
         FieldSelectionComponent,
         FilterSelectionPanelComponent,
+        GaugeWidgetConfigComponent,
         GroupConfigurationComponent,
         ImageWidgetComponent,
         ImageBarComponent,

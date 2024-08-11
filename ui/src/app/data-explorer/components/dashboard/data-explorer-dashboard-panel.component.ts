@@ -216,6 +216,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
                     ? this.overrideTime(+startTime, +endTime)
                     : this.dashboard.dashboardTimeSettings;
             this.dashboardLoaded = true;
+            this.modifyRefreshInterval();
         });
     }
 

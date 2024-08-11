@@ -147,7 +147,6 @@ export abstract class BaseDataExplorerWidgetDirective<
                 this.timerCallback.emit(false);
                 setTimeout(() => {
                     this.validateReceivedData(results);
-                    this.refreshView();
                 });
             });
 
@@ -234,7 +233,6 @@ export abstract class BaseDataExplorerWidgetDirective<
 
     public updateData(includeTooMuchEventsParameter: boolean = true) {
         this.beforeDataFetched();
-
         this.loadData(includeTooMuchEventsParameter);
     }
 
