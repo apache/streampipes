@@ -1,0 +1,48 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="pan-control">
+    <div class="pan-zoom-control-buttons">
+        <div class="pan-zoom-button pan-left" (click)="panLeft()">
+            <i class="material-icons">keyboard_arrow_left</i>
+        </div>
+        <div class="pan-zoom-button pan-right" (click)="panRight()">
+            <i class="material-icons">keyboard_arrow_right</i>
+        </div>
+        <div class="pan-zoom-button pan-home" (click)="panHome()">
+            <i class="material-icons">home</i>
+        </div>
+        <div class="pan-zoom-button pan-up" (click)="panUp()">
+            <i class="material-icons">keyboard_arrow_up</i>
+        </div>
+        <div class="pan-zoom-button pan-down" (click)="panDown()">
+            <i class="material-icons">keyboard_arrow_down</i>
+        </div>
+    </div>
+</div>
+<div class="zoom-control">
+    <div class="pan-zoom-control-buttons">
+        <div class="pan-zoom-button zoom-in" (click)="zoomIn()">
+            <i class="material-icons">zoom_in</i>
+        </div>
+        <mat-divider class="zoom-divider"></mat-divider>
+        <div class="pan-zoom-button zoom-out" (click)="zoomOut()">
+            <i class="material-icons">zoom_out</i>
+        </div>
+    </div>
+</div>

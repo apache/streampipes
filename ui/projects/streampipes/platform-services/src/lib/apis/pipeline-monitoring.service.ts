@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
     PipelineMonitoringInfo,
@@ -27,6 +27,7 @@ import {
 import { PlatformServicesCommons } from './commons.service';
 import { map } from 'rxjs/operators';
 import { AbstractMonitoringService } from './abstract-monitoring.service';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({
     providedIn: 'root',
@@ -49,9 +50,13 @@ export class PipelineMonitoringService extends AbstractMonitoringService {
 
     getMetricsInfoForPipeline(
         pipelineId: string,
+        forceUpdate = false,
     ): Observable<Record<string, SpMetricsEntry>> {
         return this.http
-            .get(this.metricsUrl(pipelineId))
+            .get(this.metricsUrl(pipelineId), {
+                params: { forceUpdate },
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+            })
             .pipe(map(response => response as Record<string, SpMetricsEntry>));
     }
 

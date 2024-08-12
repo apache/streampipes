@@ -20,7 +20,7 @@ package org.apache.streampipes.manager.extensions;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.api.extensions.IExtensionsResourceUrlProvider;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
-import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
 import org.apache.streampipes.model.message.Message;
 
@@ -38,13 +38,13 @@ public class ExtensionItemInstaller {
                                   String principalSid) throws IOException, SepaParseException {
     var descriptionUrl = getDescriptionUrl(req);
     var description = fetchDescription(descriptionUrl);
-    return Operations.verifyAndAddElement(description, principalSid, req.publicElement());
+    return new TypeExtractor(description).getTypeVerifier().verifyAndAdd(principalSid, req.publicElement());
   }
 
   public Message updateExtension(ExtensionItemInstallationRequest req) throws IOException, SepaParseException {
     var descriptionUrl = getDescriptionUrl(req);
     var description = fetchDescription(descriptionUrl);
-    return Operations.verifyAndUpdateElement(description);
+    return new TypeExtractor(description).getTypeVerifier().verifyAndUpdate();
   }
 
   private String getDescriptionUrl(ExtensionItemInstallationRequest req) {

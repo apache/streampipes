@@ -142,7 +142,7 @@
     </ng-container>
 
     <ng-container matColumnDef="lastModified">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>Created</th>
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Last modified</th>
         <td mat-cell *matCellDef="let pipeline">
             <h5>{{ pipeline.createdAt | date: 'dd.MM.yyyy HH:mm' }}</h5>
         </td>

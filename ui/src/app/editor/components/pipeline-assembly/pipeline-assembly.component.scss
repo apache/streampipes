@@ -22,152 +22,21 @@
     stroke: var(--color-accent) !important;
 }
 
-.pipeline-cache-progress {
-    display: inline-block;
-}
-
-.pipeline-cache-block {
-    height: 100%;
-    margin-left: 15px;
+.pipeline-assembly-options {
+    padding-left: 5px;
+    border: 1px solid var(--color-bg-3);
 }
 
 .outerAssembly {
-    //position: relative;
-    left: 0px;
-    top: 0px;
-    //overflow: visible;
-    //box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12);
-    //padding: 5px;
+    left: 0;
+    top: 0;
     display: flex;
     flex: 1 1 0;
     overflow: hidden;
 }
 
-.pipeline-canvas-outer {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.canvas {
-    //overflow: scroll;
-    position: relative;
-    left: 0px;
-    top: 0px;
-    height: 3000px;
-    width: 4000px;
-    z-index: 0;
-    margin: -1px;
-
-    background-color: var(--color-bg-1);
-    background-image: var(--canvas-color);
-    background-size: 15px 15px;
-}
-
-.pipeline-assembly-options {
-    padding-left: 5px;
-    border: 1px solid var(--color-bg-3);
-    //background: #f6f6f6;
-}
-
 .assembly-border {
     border: 1px solid var(--color-bg-3);
-}
-
-.jtk-surface-nopan {
-    overflow: scroll !important;
-    cursor: default;
-}
-
-.zoom-control {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    width: 40px;
-    height: 80px;
-    z-index: 10;
-    background: var(--color-bg-1);
-    box-shadow: 0.175em 0.175em 0 0 rgba(15, 28, 63, 0.125);
-    border-radius: 10px;
-}
-
-.pipeline-validation-hint {
-    position: absolute;
-    right: 10px;
-    top: 20px;
-    z-index: 10;
-    background: var(--color-bg-1);
-    box-shadow: 0.175em 0.175em 0 0 rgba(15, 28, 63, 0.125);
-}
-
-.pan-control {
-    position: absolute;
-    right: 60px;
-    bottom: 10px;
-    width: 80px;
-    height: 80px;
-    background: var(--color-bg-1);
-    box-shadow: 0.175em 0.175em 0 0 rgba(15, 28, 63, 0.125);
-    border-radius: 50%;
-    z-index: 10;
-}
-
-.pan-zoom-button {
-    position: absolute;
-    cursor: pointer;
-    color: var(--color-accent);
-}
-
-.pan-zoom-control-buttons {
-    position: relative;
-}
-
-.zoom-divider {
-    top: 40px;
-    position: relative;
-}
-
-.zoom-in {
-    top: 8px;
-    left: 8px;
-}
-
-.zoom-out {
-    top: 48px;
-    left: 8px;
-}
-
-.pan-up {
-    left: 28px;
-    top: 2px;
-}
-
-.pan-down {
-    left: 28px;
-    top: 58px;
-}
-
-.pan-left {
-    left: -3px;
-    top: 30px;
-}
-
-.pan-right {
-    left: 55px;
-    top: 30px;
-}
-
-.pan-home {
-    left: 28px;
-    top: 30px;
-}
-
-.assembly-options-divider {
-    width: 1px;
-    height: 70%;
-    margin-left: 10px;
-    margin-right: 10px;
-    background: var(--color-bg-3);
 }
 
 .color-warn {
