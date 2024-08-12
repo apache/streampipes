@@ -1,0 +1,12 @@
+<div class="tree-input-header" fxLayoutAlign="start center">
+    <b>Node Details</b>
+</div>
+<div
+    class="node-metadata"
+    *ngFor="let metadata of nodeMetadata | keyvalue"
+    fxLayout="row"
+    [attr.data-cy]="'node-details-metadata-row-' + metadata.key"
+>
+    <div fxFlex="30">{{ metadata.key }}</div>
+    <div fxFlex="70">{{ metadata.value }}</div>
+</div>

@@ -40,29 +40,20 @@
             </sp-static-tree-input-browse-nodes>
         </div>
         <div fxFlex="40" class="tree-input-section" fxLayout="column">
-            <div class="tree-input-header" fxLayoutAlign="start center">
-                <b>Node Details</b>
-            </div>
-            <div
-                class="node-metadata"
-                *ngFor="let metadata of nodeDetails?.nodeMetadata | keyvalue"
-                fxLayout="row"
-                [attr.data-cy]="'node-details-metadata-row-' + metadata.key"
+            <sp-static-tree-input-node-details
+                [nodeMetadata]="nodeDetails?.nodeMetadata"
             >
-                <div fxFlex="30">{{ metadata.key }}</div>
-                <div fxFlex="70">{{ metadata.value }}</div>
-            </div>
+            </sp-static-tree-input-node-details>
         </div>
 
-        <sp-static-tree-input-selected-nodes
-            class="tree-input-section"
-            fxLayout="column"
-            fxFlex="30"
-            [selectedNodesInternalNames]="
-                staticProperty.selectedNodesInternalNames
-            "
-            (removeSelectedNode)="removeSelectedNode($event)"
-        >
-        </sp-static-tree-input-selected-nodes>
+        <div class="tree-input-section" fxLayout="column" fxFlex="30">
+            <sp-static-tree-input-selected-nodes
+                [selectedNodesInternalNames]="
+                    staticProperty.selectedNodesInternalNames
+                "
+                (removeSelectedNode)="removeSelectedNode($event)"
+            >
+            </sp-static-tree-input-selected-nodes>
+        </div>
     </div>
 </div>
