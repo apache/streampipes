@@ -111,6 +111,7 @@ import { MultiStepStatusIndicatorComponent } from './multi-step-status-indicator
 import { PipelineOperationStatusComponent } from './pipeline/pipeline-operation-status/pipeline-operation-status.component';
 import { StaticTreeInputButtonMenuComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-button-menu/static-tree-input-button-menu.component';
 import { StaticTreeInputSelectedNodesComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-selected-nodes/static-tree-input-selected-nodes.component';
+import { StaticTreeInputBrowseNodesComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-browse-nodes/static-tree-input-browse-nodes.component';
 
 @NgModule({
     imports: [
@@ -190,6 +191,7 @@ import { StaticTreeInputSelectedNodesComponent } from './static-properties/stati
         StaticRuntimeResolvableGroupComponent,
         StaticRuntimeResolvableOneOfInputComponent,
         StaticRuntimeResolvableTreeInputComponent,
+        StaticTreeInputBrowseNodesComponent,
         StaticSlideToggleComponent,
         ErrorHintComponent,
         AddToCollectionComponent,

@@ -24,9 +24,9 @@ import {
     TreeInputNode,
 } from '@streampipes/platform-services';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
-import { NestedTreeControl } from '@angular/cdk/tree';
-import { MatTree, MatTreeNestedDataSource } from '@angular/material/tree';
 import { UntypedFormControl } from '@angular/forms';
+import { StaticTreeInputServiceService } from './static-tree-input-service.service';
+import { StaticTreeInputBrowseNodesComponent } from './static-tree-input-browse-nodes/static-tree-input-browse-nodes.component';
 
 @Component({
     selector: 'sp-static-runtime-resolvable-tree-input',
@@ -37,28 +37,19 @@ export class StaticRuntimeResolvableTreeInputComponent
     extends BaseRuntimeResolvableInput<RuntimeResolvableTreeInputStaticProperty>
     implements OnInit
 {
-    treeControl = new NestedTreeControl<TreeInputNode>(node => node.children);
-    dataSource = new MatTreeNestedDataSource<TreeInputNode>();
-
     selectedNodeMetadata: Record<string, string>;
-    selectedNodeId: string;
 
-    largeView = false;
+    @ViewChild('staticTreeInputBrowseNodesComponent')
+    staticTreeInputBrowseNodesComponent: StaticTreeInputBrowseNodesComponent;
 
-    @ViewChild('tree') tree: MatTree<TreeInputNode>;
-
-    constructor(runtimeResolvableService: RuntimeResolvableService) {
+    constructor(
+        runtimeResolvableService: RuntimeResolvableService,
+        private staticTreeInputServiceService: StaticTreeInputServiceService,
+    ) {
         super(runtimeResolvableService);
     }
 
-    hasChild = (_: number, node: TreeInputNode) => !node.dataNode;
-
     ngOnInit(): void {
-        this.treeControl = new NestedTreeControl<TreeInputNode>(
-            node => node.children,
-        );
-        this.dataSource = new MatTreeNestedDataSource<TreeInputNode>();
-
         if (
             this.staticProperty.nodes.length === 0 &&
             (!this.staticProperty.dependsOn ||
@@ -66,7 +57,9 @@ export class StaticRuntimeResolvableTreeInputComponent
         ) {
             this.loadOptionsFromRestApi();
         } else if (this.staticProperty.nodes.length > 0) {
-            this.dataSource.data = this.staticProperty.nodes;
+            this.staticTreeInputBrowseNodesComponent.updateNodes(
+                this.staticProperty.nodes,
+            );
             this.showOptions = true;
         }
         super.onInit();
@@ -97,12 +90,12 @@ export class StaticRuntimeResolvableTreeInputComponent
             }
         } else {
             this.staticProperty.nodes = staticProperty.nodes;
-            this.dataSource.data = this.staticProperty.nodes;
+            this.staticTreeInputBrowseNodesComponent.updateNodes(
+                this.staticProperty.nodes,
+            );
         }
-        const data = this.dataSource.data.slice();
-        this.dataSource.data = null;
-        this.dataSource = new MatTreeNestedDataSource<TreeInputNode>();
-        this.dataSource.data = [...data];
+        this.staticTreeInputBrowseNodesComponent.refreshTree();
+
         this.performValidation();
     }
 
@@ -130,7 +123,7 @@ export class StaticRuntimeResolvableTreeInputComponent
 
     afterErrorReceived() {
         this.staticProperty.nodes = [];
-        this.dataSource.data = [];
+        this.staticTreeInputBrowseNodesComponent.updateNodes([]);
         this.performValidation();
     }
 
@@ -138,7 +131,7 @@ export class StaticRuntimeResolvableTreeInputComponent
         this.staticProperty.nextBaseNodeToResolve = undefined;
         this.staticProperty.selectedNodesInternalNames = [];
         this.staticProperty.latestFetchedNodes = [];
-        this.dataSource.data = [];
+        this.staticTreeInputBrowseNodesComponent.updateNodes([]);
         this.loadOptionsFromRestApi();
     }
 
@@ -146,66 +139,11 @@ export class StaticRuntimeResolvableTreeInputComponent
         this.loadOptionsFromRestApi();
     }
 
-    loadChildren(node: TreeInputNode, expanded: boolean): void {
-        this.staticProperty.nextBaseNodeToResolve = node.internalNodeName;
-        if (expanded) {
-            this.loadOptionsFromRestApi(node);
-        }
-    }
-
-    addNode(node: TreeInputNode) {
-        node.selected = true;
-        this.staticProperty.selectedNodesInternalNames.push(
-            node.internalNodeName,
-        );
-        this.performValidation();
-    }
-
-    addAllDirectChildren(node: TreeInputNode) {
-        node.children.forEach(child => {
-            if (child.dataNode && !this.existsSelectedNode(child)) {
-                this.staticProperty.selectedNodesInternalNames.push(
-                    child.internalNodeName,
-                );
-            }
-        });
-        this.performValidation();
-    }
-
-    existsSelectedNode(node: TreeInputNode) {
-        return (
-            this.staticProperty.selectedNodesInternalNames.find(
-                nodeName => nodeName === node.internalNodeName,
-            ) !== undefined
-        );
-    }
-
     removeSelectedNode(selectedNodeInternalId: string): void {
-        const index = this.getSelectedNodeIndex(selectedNodeInternalId);
-        this.staticProperty.selectedNodesInternalNames.splice(index, 1);
-    }
-
-    removeNode(node: TreeInputNode) {
-        node.selected = false;
-        const index = this.getSelectedNodeIndex(node.internalNodeName);
-        this.staticProperty.selectedNodesInternalNames.splice(index, 1);
-        this.performValidation();
-    }
-
-    isNodeSelected(node: TreeInputNode) {
-        return this.getSelectedNodeIndex(node.internalNodeName) > -1;
-    }
-
-    getSelectedNodeIndex(internalNodeName: string) {
-        return this.staticProperty.selectedNodesInternalNames.indexOf(
-            internalNodeName,
+        const index = this.staticTreeInputServiceService.getSelectedNodeIndex(
+            this.staticProperty,
+            selectedNodeInternalId,
         );
-    }
-
-    hasDataChildren(node: TreeInputNode) {
-        return (
-            node.children.length > 0 &&
-            node.children.find(c => c.dataNode) !== undefined
-        );
+        this.staticProperty.selectedNodesInternalNames.splice(index, 1);
     }
 }
