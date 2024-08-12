@@ -231,7 +231,7 @@
                 (updateEmitter)="emitUpdate($event)"
             >
             </sp-static-slide-toggle>
-            <sp-runtime-resolvable-tree-input
+            <sp-static-runtime-resolvable-tree-input
                 *ngIf="isTreeInputStaticProperty(staticProperty)"
                 [deploymentConfiguration]="deploymentConfiguration"
                 [adapterId]="adapterId"
@@ -246,7 +246,7 @@
                 class="test fullWidth"
                 (updateEmitter)="emitUpdate($event)"
             >
-            </sp-runtime-resolvable-tree-input>
+            </sp-static-runtime-resolvable-tree-input>
         </div>
     </div>
     <mat-divider></mat-divider>
