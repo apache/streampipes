@@ -26,11 +26,15 @@ export class StaticTreeInputButtonMenuComponent {
     showOptions: boolean;
     @Input()
     loading: boolean;
+    @Input()
+    editorMode: 'tree' | 'text';
 
     @Output()
     resetOptionsAndReload = new EventEmitter<void>();
     @Output()
     reload = new EventEmitter<void>();
+    @Output()
+    selectedEditorModeEmitter = new EventEmitter<'tree' | 'text'>();
 
     onResetOptionsAndReload() {
         this.resetOptionsAndReload.emit();
@@ -38,5 +42,9 @@ export class StaticTreeInputButtonMenuComponent {
 
     onReload() {
         this.reload.emit();
+    }
+
+    onChangeEditor(mode:'tree' | 'text') {
+        this.selectedEditorModeEmitter.emit(mode);
     }
 }

@@ -39,6 +39,8 @@ export class StaticRuntimeResolvableTreeInputComponent
 {
     nodeDetails: TreeInputNode;
 
+    editorMode: 'tree' | 'text' = 'tree';
+
     @ViewChild('staticTreeInputBrowseNodesComponent')
     staticTreeInputBrowseNodesComponent: StaticTreeInputBrowseNodesComponent;
 
@@ -149,5 +151,9 @@ export class StaticRuntimeResolvableTreeInputComponent
             selectedNodeInternalId,
         );
         this.staticProperty.selectedNodesInternalNames.splice(index, 1);
+    }
+
+    changeEditorMode(mode: 'tree' | 'text') {
+        this.editorMode = mode;
     }
 }

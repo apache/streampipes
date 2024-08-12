@@ -19,6 +19,21 @@
 import { TreeNode } from '../../model/TreeNode';
 
 export class TreeStaticPropertyUtils {
+
+    /**
+     * Returns the tree editor
+     */
+    public static treeEditor() {
+        return cy.dataCy('opc-ua-tree-editor');
+    }
+
+    /**
+     * Return the text editor
+     */
+    public static textEditor() {
+        return cy.dataCy('opc-ua-text-editor');
+    }
+
     /**
      * Selects the @param treeNode in the tree view. If the tree node has
      * children, it will expand the tree node and recursivly navigate through

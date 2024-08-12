@@ -15,7 +15,7 @@
   ~ limitations under the License.
   ~
   -->
-<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between center">
     <div>
         <button
             mat-raised-button
@@ -45,5 +45,21 @@
             [mode]="'indeterminate'"
             [diameter]="20"
         ></mat-spinner>
+    </div>
+
+    <div fxFlexAlign="end">
+        <mat-button-toggle-group
+            aria-label="Font Style"
+            class="small-button"
+            [(value)]="editorMode"
+            (change)="onChangeEditor($event.value)"
+        >
+            <mat-button-toggle data-cy="opc-ua-editor-mode-tree" value="tree"
+                >Tree</mat-button-toggle
+            >
+            <mat-button-toggle data-cy="opc-ua-editor-mode-text" value="text"
+                >Text</mat-button-toggle
+            >
+        </mat-button-toggle-group>
     </div>
 </div>
