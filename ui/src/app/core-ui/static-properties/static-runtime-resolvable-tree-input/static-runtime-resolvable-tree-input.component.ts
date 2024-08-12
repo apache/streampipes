@@ -29,9 +29,9 @@ import { MatTree, MatTreeNestedDataSource } from '@angular/material/tree';
 import { UntypedFormControl } from '@angular/forms';
 
 @Component({
-    selector: 'sp-runtime-resolvable-tree-input',
-    templateUrl: './static-tree-input.component.html',
-    styleUrls: ['./static-tree-input.component.scss'],
+    selector: 'sp-static-runtime-resolvable-tree-input',
+    templateUrl: './static-runtime-resolvable-tree-input.component.html',
+    styleUrls: ['./static-runtime-resolvable-tree-input.component.scss'],
 })
 export class StaticRuntimeResolvableTreeInputComponent
     extends BaseRuntimeResolvableInput<RuntimeResolvableTreeInputStaticProperty>

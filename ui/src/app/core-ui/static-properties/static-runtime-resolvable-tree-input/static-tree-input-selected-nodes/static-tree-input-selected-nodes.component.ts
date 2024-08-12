@@ -21,7 +21,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
     selector: 'sp-static-tree-input-selected-nodes',
     templateUrl: './static-tree-input-selected-nodes.component.html',
-    styleUrl: '../static-tree-input.component.scss',
+    styleUrl: '../static-runtime-resolvable-tree-input.component.scss',
 })
 export class StaticTreeInputSelectedNodesComponent {
     @Input()
