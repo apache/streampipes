@@ -54,16 +54,16 @@
     min-height: 30px;
 }
 
+.tree-input-section {
+    border: 1px solid var(--color-bg-3);
+    margin-top: 10px;
+}
+
 .tree-input-header {
     background: var(--color-bg-2);
     height: 40px;
     padding: 5px;
     border-bottom: 1px solid var(--color-bg-3);
-}
-
-.tree-input-section {
-    border: 1px solid var(--color-bg-3);
-    margin-top: 10px;
 }
 
 .color-primary {
@@ -83,22 +83,4 @@
 
 .node-name {
     font-weight: bold;
-}
-
-.selected-node {
-    padding: 10px;
-    border-bottom: 1px solid var(--color-bg-3);
-}
-
-.selected-node:nth-child(odd) {
-    background: var(--color-bg-1);
-}
-
-.selected-node:nth-child(even) {
-    background: var(--color-bg-2);
-}
-
-.selected-node {
-    padding: 5px;
-    border: 1px solid var(--color-bg-3);
 }

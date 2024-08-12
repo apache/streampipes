@@ -16,8 +16,8 @@
  *
  */
 
-import { UserInput } from '../model/UserInput';
-import { TreeNode } from '../model/TreeNode';
+import { UserInput } from '../../model/UserInput';
+import { TreeStaticPropertyUtils } from './TreeStaticPropertyUtils';
 
 export class StaticPropertyUtils {
     public static input(configs: UserInput[]) {
@@ -45,7 +45,7 @@ export class StaticPropertyUtils {
             } else if (config.type === 'slider') {
                 cy.dataCy(config.selector).type(config.value);
             } else if (config.type === 'tree') {
-                this.handleTreeNode(config.treeNode);
+                TreeStaticPropertyUtils.selectTreeNode(config.treeNode);
             } else {
                 cy.dataCy(config.selector).type(config.value);
             }
@@ -69,16 +69,5 @@ export class StaticPropertyUtils {
         cy.dataCy(selector).within(() => {
             cy.get(cssClassName).click();
         });
-    }
-
-    private static handleTreeNode(treeNode: TreeNode) {
-        if (treeNode.children && treeNode.children.length > 0) {
-            cy.dataCy('expand-' + treeNode.name).click();
-            treeNode.children.forEach(child => {
-                this.handleTreeNode(child);
-            });
-        } else {
-            cy.dataCy('select-' + treeNode.name).click();
-        }
     }
 }

@@ -16,27 +16,21 @@
  *
  */
 
-declare global {
-    namespace Cypress {
-        interface Chainable {
-            dataCy: typeof dataCy;
-        }
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+@Component({
+    selector: 'sp-static-tree-input-selected-nodes',
+    templateUrl: './static-tree-input-selected-nodes.component.html',
+    styleUrl: '../static-runtime-resolvable-tree-input.component.scss',
+})
+export class StaticTreeInputSelectedNodesComponent {
+    @Input()
+    selectedNodesInternalNames: string[];
+
+    @Output()
+    removeSelectedNode = new EventEmitter<string>();
+
+    onRemoveSelectedNode(selectedNodeName: string) {
+        this.removeSelectedNode.emit(selectedNodeName);
     }
 }
-
-/**
- * Selects elements based on the `data-cy` attribute.
- *
- * @param {string} value - The value of the `data-cy` attribute to match.
- * @param {object} [config={}] - Optional configuration object for the Cypress `get` command.
- * @param {boolean} [startsWith=false] - If true, selects elements whose `data-cy` attribute starts with the given value.
- * @returns {Cypress.Chainable<JQuery<HTMLElement>>} - A chainable Cypress object containing the matched elements.
- */
-export const dataCy = (
-    value: string,
-    config: any = {},
-    startsWith: boolean = false,
-) => {
-    const selector = startsWith ? `[data-cy^=${value}]` : `[data-cy=${value}]`;
-    return cy.get(selector, config);
-};

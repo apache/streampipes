@@ -16,7 +16,7 @@
  *
  */
 
-import { StaticPropertyUtils } from '../StaticPropertyUtils';
+import { StaticPropertyUtils } from '../userInput/StaticPropertyUtils';
 import { AdapterInput } from '../../model/AdapterInput';
 import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
 import { DataLakeUtils } from '../datalake/DataLakeUtils';
