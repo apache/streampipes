@@ -95,4 +95,6 @@ public interface IParameterExtractor {
   List<String> getEventPropertiesSelectorByScope(PropertyScope scope);
 
   List<EventProperty> getEventPropertiesByScope(PropertyScope scope);
+
+  List<EventProperty> getInputEventProperties(int streamIndex);
 }

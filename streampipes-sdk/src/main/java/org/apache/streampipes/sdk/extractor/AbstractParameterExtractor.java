@@ -570,4 +570,10 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             ep.getPropertyScope() != null && ep.getPropertyScope().equals(scope.name()))
         .collect(Collectors.toList());
   }
+
+  @Override
+  public List<EventProperty> getInputEventProperties(int streamIndex) {
+    return !sepaElement.getInputStreams().isEmpty()
+        ? sepaElement.getInputStreams().get(0).getEventSchema().getEventProperties() : List.of();
+  }
 }

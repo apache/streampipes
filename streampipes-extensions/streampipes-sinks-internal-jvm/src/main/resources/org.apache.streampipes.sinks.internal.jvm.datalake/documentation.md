@@ -41,6 +41,16 @@ This sink requires an event that provides a timestamp value (a field that is mar
 
 ## Configuration
 
+### Dimensions
+
+The fields which will be stored as dimensional values in the time series storage. Dimensions are typically identifiers 
+such as the ID of a sensor.
+Dimensions support grouping in the data explorer, but will be converted to a text-based field and provide less advanced 
+filtering capabilities.
+
+Be careful when modifying dimensions of existing pipelines! This might have impact on how you are able to view data in 
+the data explorer due to schema incompatibilities.
+
 ### Identifier
 
 The name of the measurement (table) where the events are stored.
