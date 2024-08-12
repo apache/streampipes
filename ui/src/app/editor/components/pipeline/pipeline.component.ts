@@ -274,9 +274,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     handleDeleteOption(pipelineElement: PipelineElementConfig) {
         this.JsplumbBridge.removeAllEndpoints(pipelineElement.payload.dom);
-        this.rawPipelineModel = this.rawPipelineModel.filter(
-            pe => !(pe.payload.dom === pipelineElement.payload.dom),
+        const index = this.rawPipelineModel.findIndex(
+            pe => pe.payload.dom === pipelineElement.payload.dom,
         );
+        this.rawPipelineModel.splice(index, 1);
         if (this.rawPipelineModel.every(pe => pe.settings.disabled)) {
             this.editorService.makePipelineAssemblyEmpty(true);
         }
