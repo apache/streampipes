@@ -37,7 +37,8 @@ export class StaticRuntimeResolvableTreeInputComponent
     extends BaseRuntimeResolvableInput<RuntimeResolvableTreeInputStaticProperty>
     implements OnInit
 {
-    selectedNodeMetadata: Record<string, string>;
+    // selectedNodeMetadata: Record<string, string>;
+    nodeDetails: TreeInputNode;
 
     @ViewChild('staticTreeInputBrowseNodesComponent')
     staticTreeInputBrowseNodesComponent: StaticTreeInputBrowseNodesComponent;
@@ -125,6 +126,10 @@ export class StaticRuntimeResolvableTreeInputComponent
         this.staticProperty.nodes = [];
         this.staticTreeInputBrowseNodesComponent.updateNodes([]);
         this.performValidation();
+    }
+
+    showNodeDetails(node: TreeInputNode) {
+        this.nodeDetails = node;
     }
 
     resetOptionsAndReload(): void {

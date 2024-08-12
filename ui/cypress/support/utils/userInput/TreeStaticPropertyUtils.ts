@@ -56,6 +56,32 @@ export class TreeStaticPropertyUtils {
     }
 
     /**
+     * Validates the number of node details metadata rows displayed.
+     */
+    public static validateAmountOfShownNodeDetailsMetaDataRows(
+        expectedAmount: number,
+    ) {
+        cy.dataCy('node-details-metadata-row-', {}, true).should(
+            'have.length',
+            expectedAmount,
+        );
+    }
+
+    /**
+     * Select node to be shown in node details
+     */
+    public static showNodeDetails(nodeName: string) {
+        cy.dataCy(`show-node-details-${nodeName}`).click();
+    }
+
+    /**
+     * Unselect the node to be removed from node details view
+     */
+    public static hideNodeDetails(nodeName: string) {
+        cy.dataCy('hide-node-details-' + nodeName).click();
+    }
+
+    /**
      * Validates that the @param nodeName is marked as selected in the
      * tree view.
      */

@@ -43,6 +43,15 @@ describe('Test OPC-UA Adapter Pull Mode', () => {
             'AlternatingBoolean',
         );
 
+        // Test if node details view works
+        TreeStaticPropertyUtils.validateAmountOfShownNodeDetailsMetaDataRows(0);
+        TreeStaticPropertyUtils.showNodeDetails('StepUp');
+        TreeStaticPropertyUtils.validateAmountOfShownNodeDetailsMetaDataRows(
+            10,
+        );
+        TreeStaticPropertyUtils.hideNodeDetails('StepUp');
+        TreeStaticPropertyUtils.validateAmountOfShownNodeDetailsMetaDataRows(0);
+
         // Test if delete node works
         TreeStaticPropertyUtils.removeSelectedNode(
             'ns=3\\;s=AlternatingBoolean',

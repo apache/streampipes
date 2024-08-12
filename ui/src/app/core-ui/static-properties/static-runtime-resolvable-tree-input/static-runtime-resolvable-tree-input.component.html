@@ -32,8 +32,8 @@
         <div fxFlex="30" class="tree-input-section" fxLayout="column">
             <sp-static-tree-input-browse-nodes
                 #staticTreeInputBrowseNodesComponent
-                [selectedNodeMetadata]="selectedNodeMetadata"
                 [staticProperty]="staticProperty"
+                (showNodeDetailsEmitter)="showNodeDetails($event)"
                 (loadOptionsFromRestApiEmitter)="loadOptionsFromRestApi($event)"
                 (performValidationEmitter)="performValidation()"
             >
@@ -45,8 +45,9 @@
             </div>
             <div
                 class="node-metadata"
-                *ngFor="let metadata of selectedNodeMetadata | keyvalue"
+                *ngFor="let metadata of nodeDetails?.nodeMetadata | keyvalue"
                 fxLayout="row"
+                [attr.data-cy]="'node-details-metadata-row-' + metadata.key"
             >
                 <div fxFlex="30">{{ metadata.key }}</div>
                 <div fxFlex="70">{{ metadata.value }}</div>

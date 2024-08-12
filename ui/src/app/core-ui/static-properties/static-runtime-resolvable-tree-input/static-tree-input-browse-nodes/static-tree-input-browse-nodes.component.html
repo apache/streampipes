@@ -41,11 +41,6 @@
 >
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
         <div
-            [ngClass]="
-                selectedNodeId === node.internalNodeName
-                    ? 'selected-node'
-                    : 'node'
-            "
             fxLayoutAlign="start center"
             [attr.data-cy]="'tree-node-' + node.nodeName"
         >
@@ -68,19 +63,16 @@
             <i
                 class="material-icons pr-5 icon-button"
                 *ngIf="selectedNodeId !== node.internalNodeName"
-                (click)="
-                    selectedNodeMetadata = node.nodeMetadata;
-                    selectedNodeId = node.internalNodeName
-                "
+                [attr.data-cy]="'show-node-details-' + node.nodeName"
+                (click)="showNodeDetails(node)"
                 matTooltip="Show details"
                 >visibility</i
             >
             <i
                 class="material-icons pr-5 icon-button"
                 *ngIf="selectedNodeId === node.internalNodeName"
-                (click)="
-                    selectedNodeMetadata = undefined; selectedNodeId = undefined
-                "
+                [attr.data-cy]="'hide-node-details-' + node.nodeName"
+                (click)="hideNodeDetails()"
                 matTooltip="Show details"
                 >visibility_off</i
             >
@@ -127,20 +119,16 @@
                 <i
                     class="material-icons pr-5 icon-button"
                     *ngIf="selectedNodeId !== node.internalNodeName"
-                    (click)="
-                        selectedNodeMetadata = node.nodeMetadata;
-                        selectedNodeId = node.internalNodeName
-                    "
+                    [attr.data-cy]="'show-node-details-' + node.nodeName"
+                    (click)="showNodeDetails(node)"
                     matTooltip="Show details"
                     >visibility</i
                 >
                 <i
                     class="material-icons pr-5 icon-button"
                     *ngIf="selectedNodeId === node.internalNodeName"
-                    (click)="
-                        selectedNodeMetadata = undefined;
-                        selectedNodeId = undefined
-                    "
+                    [attr.data-cy]="'hide-node-details-' + node.nodeName"
+                    (click)="hideNodeDetails()"
                     matTooltip="Show details"
                     >visibility_off</i
                 >

@@ -41,10 +41,11 @@ import { StaticTreeInputServiceService } from '../static-tree-input-service.serv
 })
 export class StaticTreeInputBrowseNodesComponent implements OnInit {
     @Input()
-    selectedNodeMetadata: Record<string, string>;
-
-    @Input()
     staticProperty: RuntimeResolvableTreeInputStaticProperty;
+
+    @Output()
+    showNodeDetailsEmitter: EventEmitter<TreeInputNode> =
+        new EventEmitter<TreeInputNode>();
 
     @Output()
     performValidationEmitter: EventEmitter<void> = new EventEmitter<void>();
@@ -130,6 +131,16 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
                 node.internalNodeName,
             ) > -1
         );
+    }
+
+    showNodeDetails(node: TreeInputNode) {
+        this.selectedNodeId = node.internalNodeName;
+        this.showNodeDetailsEmitter.emit(node);
+    }
+
+    hideNodeDetails() {
+        this.selectedNodeId = undefined;
+        this.showNodeDetailsEmitter.emit(undefined);
     }
 
     hasDataChildren(node: TreeInputNode) {
