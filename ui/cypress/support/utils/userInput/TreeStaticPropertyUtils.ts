@@ -37,14 +37,14 @@ export class TreeStaticPropertyUtils {
      * Opens the text editor
      */
     public static switchToTextEditor() {
-        cy.dataCy('opc-ua-editor-mode-text').click();
+        cy.dataCy('editor-mode-text').click();
     }
 
     /**
      * Opens the tree editor
      */
     public static switchToTreeEditor() {
-        cy.dataCy('opc-ua-editor-mode-tree').click();
+        cy.dataCy('editor-mode-tree').click();
     }
 
     /**
