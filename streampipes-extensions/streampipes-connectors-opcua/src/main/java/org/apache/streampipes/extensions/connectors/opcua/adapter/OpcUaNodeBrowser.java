@@ -86,7 +86,13 @@ public class OpcUaNodeBrowser {
   private OpcNode toOpcNode(String nodeName) throws UaException {
     AddressSpace addressSpace = getAddressSpace();
     NodeId nodeId = NodeId.parse(nodeName);
-    UaNode node = addressSpace.getNode(nodeId);
+
+    UaNode node;
+    try {
+      node = addressSpace.getNode(nodeId);
+    } catch (UaException e) {
+      throw new UaException(StatusCode.BAD.getValue(), "Node with ID " + nodeId + " is not present in the OPC UA server.", e);
+    }
 
     LOG.info("Using node of type {}", node.getNodeClass().toString());
 

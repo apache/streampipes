@@ -22,6 +22,7 @@ import { AdapterBuilder } from '../../../support/builder/AdapterBuilder';
 import { TreeNodeUserInputBuilder } from '../../../support/builder/TreeNodeUserInputBuilder';
 import { StaticPropertyUtils } from '../../../support/utils/userInput/StaticPropertyUtils';
 import { TreeStaticPropertyUtils } from '../../../support/utils/userInput/TreeStaticPropertyUtils';
+import { ErrorMessageUtils } from '../../../support/utils/ErrorMessageUtils';
 
 describe('Test OPC-UA Adapter Configuration', () => {
     beforeEach('Setup Test', () => {
@@ -82,7 +83,7 @@ describe('Test OPC-UA Adapter Configuration', () => {
         TreeStaticPropertyUtils.validateAmountOfSelectedNodes(0);
     });
 
-    it('Test OPC-UA Code Editor', () => {
+    it('Test OPC-UA Text Editor', () => {
         const adapterConfiguration = getAdapterBuilder().build();
 
         // Set up initial configuration
@@ -122,6 +123,25 @@ describe('Test OPC-UA Adapter Configuration', () => {
             'equal',
             'ns=3;s=StepUp' + 'ns=3;s=AlternatingBoolean',
         );
+    });
+
+    it('Test OPC-UA Node does not exist', () => {
+        const adapterConfiguration = getAdapterBuilder().build();
+
+        // Set up initial configuration
+        ConnectUtils.goToConnect();
+        ConnectUtils.goToNewAdapterPage();
+        ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
+        StaticPropertyUtils.input(adapterConfiguration.adapterConfiguration);
+
+        // Switch to text editor
+        TreeStaticPropertyUtils.switchToTextEditor();
+        TreeStaticPropertyUtils.typeInTextEditor('ns=3;s=NodeDoesNotExist');
+
+        ConnectUtils.finishAdapterSettings();
+
+        // validate that an error is shown with node id
+        ErrorMessageUtils.containsMessage('NodeDoesNotExist');
     });
 });
 

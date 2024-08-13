@@ -129,6 +129,13 @@ export class ConnectUtils {
 
         this.configureFormat(adapterInput);
 
+        ConnectUtils.finishAdapterSettings();
+    }
+
+    /**
+     * Clicks next on the adapter settings page
+     */
+    public static finishAdapterSettings() {
         // Next Button should not be disabled
         cy.get('button').contains('Next').parent().should('not.be.disabled');
 
