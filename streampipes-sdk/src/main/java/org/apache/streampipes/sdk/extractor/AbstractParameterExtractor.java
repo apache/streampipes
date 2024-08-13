@@ -131,8 +131,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   public String secretValue(String internalName) {
     return (
         getStaticPropertyByName(internalName, SecretStaticProperty.class)
-            .getValue()
-    );
+            .getValue());
   }
 
   @Override
@@ -267,9 +266,9 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     );
 
     return runtimeResolvableTreeInputStaticProperty.getSelectedNodesInternalNames()
-                   .stream()
-                   .map(node -> typeParser.parse(node, targetClass))
-                   .toList();
+                                                   .stream()
+                                                   .map(node -> typeParser.parse(node, targetClass))
+                                                   .toList();
   }
 
   @Override
