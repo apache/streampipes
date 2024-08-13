@@ -30,7 +30,7 @@ import { AssetConstants } from '../../../../constants/asset.constants';
 
 @Component({
     selector: 'sp-asset-details-links-component',
-    templateUrl: './asset-details-links.component.html'
+    templateUrl: './asset-details-links.component.html',
 })
 export class AssetDetailsLinksComponent implements OnInit {
     @Input()
