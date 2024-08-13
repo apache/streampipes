@@ -16,18 +16,35 @@
  *
  */
 
-.asset-details-panel {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 100%;
-}
+import { Injectable } from '@angular/core';
+import { Isa95Type, Isa95TypeDesc } from '@streampipes/platform-services';
 
-.asset-details-container {
-    width: 100%;
-    height: 100%;
-    background: var(--color-bg-0);
-}
+@Injectable({ providedIn: 'root' })
+export class Isa95TypeService {
+    isa95Types: Isa95Type[] = [
+        'PROCESS_CELL',
+        'PRODUCTION_UNIT',
+        'PRODUCTION_LINE',
+        'STORAGE_ZONE',
+        'UNIT',
+        'WORK_CELL',
+        'STORAGE_UNIT',
+        'OTHER',
+    ];
 
-.asset-tree-panel {
-    width: 400px;
+    getTypeDescriptions(): Isa95TypeDesc[] {
+        return this.isa95Types.map(type => {
+            return {
+                type,
+                label: this.toLabel(type),
+            };
+        });
+    }
+
+    toLabel(type: Isa95Type): string {
+        return type
+            .toLocaleLowerCase()
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, char => char.toUpperCase());
+    }
 }

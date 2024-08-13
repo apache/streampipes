@@ -16,18 +16,20 @@
  *
  */
 
-.asset-details-panel {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 100%;
-}
+import { Component, Input, OnInit } from '@angular/core';
 
-.asset-details-container {
-    width: 100%;
-    height: 100%;
-    background: var(--color-bg-0);
-}
+@Component({
+    selector: 'sp-basic-field-description',
+    templateUrl: './basic-field-description.component.html',
+    styleUrls: ['./basic-field-description.component.scss'],
+})
+export class SpBasicFieldDescriptionComponent {
+    @Input()
+    label: string;
 
-.asset-tree-panel {
-    width: 400px;
+    @Input()
+    description: string;
+
+    @Input()
+    descriptionPanelWidth: string = '30';
 }

@@ -17,34 +17,36 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { SpColorizationService } from '../../services/colorization.service';
+import {
+    Isa95TypeDesc,
+    Isa95TypeService,
+    SpAsset,
+} from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-label',
-    templateUrl: './sp-label.component.html',
-    styleUrls: ['./sp-label.component.scss'],
+    selector: 'sp-asset-details-basics-component',
+    templateUrl: './asset-details-basics.component.html',
+    styleUrls: ['./asset-details-basics.component.scss'],
 })
-export class SpLabelComponent {
+export class AssetDetailsBasicsComponent implements OnInit {
     @Input()
-    labelText: string;
-
-    @Input()
-    small = false;
-
-    _labelBackground: string;
-
-    labelTextColor = '';
-
-    constructor(private colorizationService: SpColorizationService) {}
+    asset: SpAsset;
 
     @Input()
-    set labelBackground(labelBackground: string) {
-        this._labelBackground = labelBackground;
-        this.labelTextColor =
-            this.colorizationService.generateContrastColor(labelBackground);
-    }
+    editMode: boolean;
 
-    get labelBackground(): string {
-        return this._labelBackground;
+    isa95Types: Isa95TypeDesc[] = [];
+
+    constructor(private isa95TypeService: Isa95TypeService) {}
+
+    ngOnInit() {
+        this.asset.assetType ??= {
+            assetIcon: undefined,
+            assetIconColor: undefined,
+            assetTypeCategory: undefined,
+            assetTypeLabel: undefined,
+            isa95AssetType: 'OTHER',
+        };
+        this.isa95Types = this.isa95TypeService.getTypeDescriptions();
     }
 }

@@ -16,18 +16,16 @@
  *
  */
 
-.asset-details-panel {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 100%;
-}
+import { Injectable } from '@angular/core';
 
-.asset-details-container {
-    width: 100%;
-    height: 100%;
-    background: var(--color-bg-0);
-}
-
-.asset-tree-panel {
-    width: 400px;
+@Injectable({ providedIn: 'root' })
+export class SpColorizationService {
+    generateContrastColor(bgColor: string) {
+        const color =
+            bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
+        const r = parseInt(color.substring(0, 2), 16);
+        const g = parseInt(color.substring(2, 4), 16);
+        const b = parseInt(color.substring(4, 6), 16);
+        return r * 0.299 + g * 0.587 + b * 0.114 > 186 ? '#000' : '#FFF';
+    }
 }

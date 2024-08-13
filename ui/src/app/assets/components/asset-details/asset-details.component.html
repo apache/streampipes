@@ -42,14 +42,13 @@
     </div>
     <div fxFlex="100" fxLayout="column" *ngIf="asset">
         <mat-drawer-container
-            class="designer-panel-container h-100 dashboard-grid"
+            class="asset-details-container h-100 asset-details-panel"
         >
             <mat-drawer
-                #designerDrawer
                 [opened]="true"
                 mode="side"
                 position="start"
-                class="designer-panel"
+                class="asset-tree-panel"
             >
                 <div fxLayout="column" fxFlex="100">
                     <sp-asset-selection-panel-component
@@ -61,7 +60,7 @@
                     </sp-asset-selection-panel-component>
                 </div>
             </mat-drawer>
-            <mat-drawer-content class="h-100 dashboard-grid">
+            <mat-drawer-content class="h-100 asset-details-panel">
                 <sp-asset-details-panel-component
                     *ngIf="selectedAsset"
                     [asset]="selectedAsset"

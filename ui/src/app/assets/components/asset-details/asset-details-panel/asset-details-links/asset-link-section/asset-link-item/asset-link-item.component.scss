@@ -16,18 +16,21 @@
  *
  */
 
-.asset-details-panel {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 100%;
+.link-type {
+    background: var(--color-primary);
+    padding: 5px;
+    border-radius: 5px;
 }
 
-.asset-details-container {
-    width: 100%;
-    height: 100%;
-    background: var(--color-bg-0);
+.link-label {
+    margin-right: 15px;
 }
 
-.asset-tree-panel {
-    width: 400px;
+.link-icon {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    padding: 5px;
+    color: var(--color-bg-1);
+    background: var(--color-bg-3);
 }

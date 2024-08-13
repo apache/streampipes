@@ -16,22 +16,25 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" *ngIf="asset">
-    <mat-tab-group color="accent" [mat-stretch-tabs]="false">
-        <mat-tab label="Basics" data-cy="asset-tab-basic">
-            <sp-asset-details-basics-component
-                [asset]="asset"
-                [editMode]="editMode"
-            >
-            </sp-asset-details-basics-component>
-        </mat-tab>
-        <mat-tab label="Asset Links" data-cy="asset-tab-asset-links">
-            <sp-asset-details-links-component
-                [asset]="asset"
-                [editMode]="editMode"
-                (updateAssetEmitter)="updateAssetEmitter.emit($event)"
-            >
-            </sp-asset-details-links-component>
-        </mat-tab>
-    </mat-tab-group>
+<div class="asset-section">
+    <div class="section-header">{{ assetLinkType.linkLabel }}</div>
+    <div
+        fxLayout="column"
+        class="asset-section-entry"
+        data-cy="linked-resources-list"
+        *ngFor="
+            let link of asset.assetLinks
+                | assetTypeFilter: assetLinkType.linkType
+        "
+    >
+        <sp-asset-link-item-component
+            [assetLink]="link"
+            [assetLinkType]="assetLinkType"
+            [editMode]="editMode"
+            (openEditAssetLinkEmitter)="openEditAssetLinkEmitter.emit($event)"
+            (deleteAssetLinkEmitter)="deleteAssetLink($event)"
+            class="asset-link-item"
+        >
+        </sp-asset-link-item-component>
+    </div>
 </div>
