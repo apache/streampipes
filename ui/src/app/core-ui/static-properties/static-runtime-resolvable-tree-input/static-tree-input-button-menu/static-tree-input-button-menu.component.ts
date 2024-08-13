@@ -44,7 +44,7 @@ export class StaticTreeInputButtonMenuComponent {
         this.reload.emit();
     }
 
-    onChangeEditor(mode:'tree' | 'text') {
+    onChangeEditor(mode: 'tree' | 'text') {
         this.selectedEditorModeEmitter.emit(mode);
     }
 }

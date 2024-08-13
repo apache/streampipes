@@ -39,7 +39,11 @@
             <span>Reload</span>
         </button>
     </div>
-    <div fxLayout="column" *ngIf="loading" class="mt-10">
+    <div
+        fxLayout="column"
+        *ngIf="loading && editorMode === 'tree'"
+        class="mt-10"
+    >
         <mat-spinner
             color="accent"
             [mode]="'indeterminate'"

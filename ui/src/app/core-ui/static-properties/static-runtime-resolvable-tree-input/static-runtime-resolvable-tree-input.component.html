@@ -19,8 +19,8 @@
     <sp-static-tree-input-button-menu
         [showOptions]="showOptions"
         [loading]="loading"
-        [editorMode]='editorMode'
-        (selectedEditorModeEmitter)='changeEditorMode($event)'
+        [editorMode]="editorMode"
+        (selectedEditorModeEmitter)="changeEditorMode($event)"
         (resetOptionsAndReload)="resetOptionsAndReload()"
         (reload)="reload()"
     >
@@ -30,10 +30,12 @@
         <sp-exception-message [message]="errorMessage"></sp-exception-message>
     </div>
 
-    <div fxLayout="row"
-         fxLayoutGap="15px"
-         data-cy='opc-ua-tree-editor'
-         *ngIf='editorMode === "tree"'>
+    <div
+        fxLayout="row"
+        fxLayoutGap="15px"
+        data-cy="tree-editor"
+        *ngIf="editorMode === 'tree'"
+    >
         <div fxFlex="30" class="tree-input-section" fxLayout="column">
             <sp-static-tree-input-browse-nodes
                 #staticTreeInputBrowseNodesComponent
@@ -62,10 +64,17 @@
         </div>
     </div>
 
-
-    <div fxLayout="row"
-         data-cy='opc-ua-text-editor'
-         *ngIf='editorMode === "text"'>
-        <h1 >Text Editor</h1>
+    <div
+        fxLayout="row"
+        fxFlex="100"
+        data-cy="text-editor"
+        *ngIf="editorMode === 'text'"
+    >
+        <sp-static-tree-input-text-editor
+            fxFlex="100"
+            [staticProperty]="staticProperty"
+            (performValidationEmitter)="performValidation()"
+        >
+        </sp-static-tree-input-text-editor>
     </div>
 </div>

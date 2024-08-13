@@ -1,27 +1,27 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
  */
 
-import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { ParameterUtils } from '../../support/utils/ParameterUtils';
-import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
-import { TreeNodeBuilder } from '../../support/builder/TreeNodeBuilder';
-import { StaticPropertyUtils } from '../../support/utils/userInput/StaticPropertyUtils';
-import { TreeStaticPropertyUtils } from '../../support/utils/userInput/TreeStaticPropertyUtils';
+import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
+import { ParameterUtils } from '../../../support/utils/ParameterUtils';
+import { AdapterBuilder } from '../../../support/builder/AdapterBuilder';
+import { TreeNodeUserInputBuilder } from '../../../support/builder/TreeNodeUserInputBuilder';
+import { StaticPropertyUtils } from '../../../support/utils/userInput/StaticPropertyUtils';
+import { TreeStaticPropertyUtils } from '../../../support/utils/userInput/TreeStaticPropertyUtils';
 
 describe('Test OPC-UA Adapter Configuration', () => {
     beforeEach('Setup Test', () => {
@@ -31,15 +31,17 @@ describe('Test OPC-UA Adapter Configuration', () => {
     it('Test OPC-UA Tree Node Configuration', () => {
         const adapterBuilder = getAdapterBuilder();
         adapterBuilder.addTreeNode(
-            TreeNodeBuilder.create(
+            TreeNodeUserInputBuilder.create(
                 'Objects',
-                TreeNodeBuilder.create(
+                TreeNodeUserInputBuilder.create(
                     'OpcPlc',
-                    TreeNodeBuilder.create(
+                    TreeNodeUserInputBuilder.create(
                         'Telemetry',
-                        TreeNodeBuilder.create('Basic').addChildren(
-                            TreeNodeBuilder.create('AlternatingBoolean'),
-                            TreeNodeBuilder.create('StepUp'),
+                        TreeNodeUserInputBuilder.create('Basic').addChildren(
+                            TreeNodeUserInputBuilder.create(
+                                'AlternatingBoolean',
+                            ),
+                            TreeNodeUserInputBuilder.create('StepUp'),
                         ),
                     ),
                 ),
@@ -89,7 +91,6 @@ describe('Test OPC-UA Adapter Configuration', () => {
         ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
         StaticPropertyUtils.input(adapterConfiguration.adapterConfiguration);
 
-
         TreeStaticPropertyUtils.treeEditor().should('be.visible');
         TreeStaticPropertyUtils.textEditor().should('not.exist');
 
@@ -101,7 +102,6 @@ describe('Test OPC-UA Adapter Configuration', () => {
         TreeStaticPropertyUtils.textEditor().should('be.visible');
 
         TreeStaticPropertyUtils.typeInTextEditor('ns=3;s=StepUp');
-
     });
 });
 

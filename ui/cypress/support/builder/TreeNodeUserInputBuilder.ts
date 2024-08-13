@@ -16,39 +16,41 @@
  *
  */
 
-import { TreeNode } from '../model/TreeNode';
+import { TreeNodeUserInput } from '../model/TreeNodeUserInput';
 
-export class TreeNodeBuilder {
-    private readonly node: TreeNode;
+export class TreeNodeUserInputBuilder {
+    private readonly node: TreeNodeUserInput;
 
     constructor(name: string) {
-        this.node = { name, children: [] , isTextConfig: false};
+        this.node = { name, children: [], isTextConfig: false };
     }
 
-    addChildren(...childrenBuilders: TreeNodeBuilder[]): TreeNodeBuilder {
+    addChildren(
+        ...childrenBuilders: TreeNodeUserInputBuilder[]
+    ): TreeNodeUserInputBuilder {
         for (const childBuilder of childrenBuilders) {
             this.node.children!.push(childBuilder.build());
         }
         return this;
     }
 
-    isTextConfig(): TreeNodeBuilder {
+    isTextConfig(): TreeNodeUserInputBuilder {
         this.node.isTextConfig = true;
-        return this
+        return this;
     }
 
     static create(
         name: string,
-        ...children: TreeNodeBuilder[]
-    ): TreeNodeBuilder {
-        const builder = new TreeNodeBuilder(name);
+        ...children: TreeNodeUserInputBuilder[]
+    ): TreeNodeUserInputBuilder {
+        const builder = new TreeNodeUserInputBuilder(name);
         if (children.length > 0) {
             builder.addChildren(...children);
         }
         return builder;
     }
 
-    build(): TreeNode {
+    build(): TreeNodeUserInput {
         return this.node;
     }
 }

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  */
-export class TreeNode {
+export class TreeNodeUserInput {
     name: string;
-    children?: TreeNode[];
+    children?: TreeNodeUserInput[];
     isTextConfig?: boolean = false;
 }

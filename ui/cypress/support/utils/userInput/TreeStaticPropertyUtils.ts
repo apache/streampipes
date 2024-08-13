@@ -16,22 +16,35 @@
  *
  */
 
-import { TreeNode } from '../../model/TreeNode';
+import { TreeNodeUserInput } from '../../model/TreeNodeUserInput';
 
 export class TreeStaticPropertyUtils {
-
     /**
      * Returns the tree editor
      */
     public static treeEditor() {
-        return cy.dataCy('opc-ua-tree-editor');
+        return cy.dataCy('tree-editor');
     }
 
     /**
      * Return the text editor
      */
     public static textEditor() {
-        return cy.dataCy('opc-ua-text-editor');
+        return cy.dataCy('text-editor');
+    }
+
+    /**
+     * Opens the text editor
+     */
+    public static switchToTextEditor() {
+        cy.dataCy('opc-ua-editor-mode-text').click();
+    }
+
+    /**
+     * Appends the @param text to the text editor
+     */
+    public static typeInTextEditor(text: string) {
+        cy.dataCy('static-tree-input-text-editor').type(text);
     }
 
     /**
@@ -39,14 +52,20 @@ export class TreeStaticPropertyUtils {
      * children, it will expand the tree node and recursivly navigate through
      * the selected node.
      */
-    public static selectTreeNode(treeNode: TreeNode) {
-        if (treeNode.children && treeNode.children.length > 0) {
-            cy.dataCy('expand-' + treeNode.name).click();
-            treeNode.children.forEach(child => {
-                this.selectTreeNode(child);
-            });
+    public static selectTreeNode(treeNode: TreeNodeUserInput) {
+        if (!treeNode.isTextConfig) {
+            // configure tree node
+            if (treeNode.children && treeNode.children.length > 0) {
+                cy.dataCy('expand-' + treeNode.name).click();
+                treeNode.children.forEach(child => {
+                    this.selectTreeNode(child);
+                });
+            } else {
+                cy.dataCy('select-' + treeNode.name).click();
+            }
         } else {
-            cy.dataCy('select-' + treeNode.name).click();
+            TreeStaticPropertyUtils.switchToTextEditor();
+            TreeStaticPropertyUtils.typeInTextEditor(treeNode.name);
         }
     }
 

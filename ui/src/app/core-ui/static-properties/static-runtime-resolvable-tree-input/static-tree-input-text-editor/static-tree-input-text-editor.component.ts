@@ -26,7 +26,6 @@ import { RuntimeResolvableTreeInputStaticProperty } from '@streampipes/platform-
     templateUrl: './static-tree-input-text-editor.component.html',
 })
 export class StaticTreeInputTextEditorComponent {
-
     @Input()
     staticProperty: RuntimeResolvableTreeInputStaticProperty;
 
@@ -50,9 +49,7 @@ export class StaticTreeInputTextEditorComponent {
     private textChangeSubject: Subject<string> = new Subject<string>();
 
     constructor() {
-        this.textChangeSubject.pipe(
-            debounceTime(500),
-        ).subscribe(value => {
+        this.textChangeSubject.pipe(debounceTime(500)).subscribe(value => {
             this.onTextChange(value);
         });
     }
@@ -66,5 +63,4 @@ export class StaticTreeInputTextEditorComponent {
         this.staticProperty.selectedNodesInternalNames = lines;
         this.performValidationEmitter.emit();
     }
-
 }
