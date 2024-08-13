@@ -24,10 +24,15 @@ import {
     DataExplorerWidgetModel,
     DataViewDataExplorerService,
 } from '@streampipes/platform-services';
-import { CurrentUserService, DialogService } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    DialogService,
+    ConfirmDialogComponent,
+} from '@streampipes/shared-ui';
 import { AuthService } from '../../../../services/auth.service';
 import { DataExplorerRoutingService } from '../../../services/data-explorer-routing.service';
 import { DataExplorerDashboardService } from '../../../services/data-explorer-dashboard.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'sp-data-explorer-data-view-overview',
@@ -46,6 +51,7 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
         authService: AuthService,
         currentUserService: CurrentUserService,
         routingService: DataExplorerRoutingService,
+        private dialog: MatDialog,
     ) {
         super(dialogService, authService, currentUserService, routingService);
     }
@@ -85,8 +91,24 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
     }
 
     deleteDataView(dataView: DataExplorerWidgetModel) {
-        this.dataViewService
-            .deleteWidget(dataView.elementId)
-            .subscribe(() => this.getDataViews());
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            width: '600px',
+            data: {
+                title: 'Are you sure you want to delete this data view?',
+                subtitle: 'This action cannot be reversed!',
+                cancelTitle: 'Cancel',
+                okTitle: 'Delete Data View',
+                confirmAndCancel: true,
+            },
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.dataViewService
+                    .deleteWidget(dataView.elementId)
+                    .subscribe(() => {
+                        this.getDataViews();
+                    });
+            }
+        });
     }
 }

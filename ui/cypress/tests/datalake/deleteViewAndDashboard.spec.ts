@@ -17,50 +17,42 @@
  */
 import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
 
-describe('Test Table View in Data Explorer', () => {
+describe('Test Deletion of Data View and Dashboard', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv', false);
     });
 
     it('Perform Test', () => {
-        /**
-         * Prepare tests
-         */
+        DataLakeUtils.goToDatalake();
+
         DataLakeUtils.addDataViewAndTableWidget('TestView', 'Persist');
+
         DataLakeUtils.saveDataViewConfiguration();
+
         DataLakeUtils.createAndEditDashboard('TestDashboard');
-        DataLakeUtils.addDataViewToDashboard('TestView');
 
-        // Check that widget is visible
-        cy.dataCy('widget-TestView', { timeout: 10000 }).should('be.visible');
+        DataLakeUtils.saveDashboardConfiguration();
 
-        // Activate edit mode
-        DataLakeUtils.saveAndReEditDashboard('TestDashboard');
-
-        // Delete widget
-        DataLakeUtils.removeWidget('TestView');
-
-        // Go back to dashboard
-        DataLakeUtils.saveAndReEditDashboard('TestDashboard');
-
-        // Check that widget is gone
-        cy.dataCy('widget-datalake_configuration', { timeout: 10000 }).should(
-            'not.exist',
-        );
-
-        DataLakeUtils.goBackToOverview();
-
-        cy.dataCy('delete-dashboard-TestDashboard', { timeout: 10000 }).should(
+        cy.dataCy('dashboard-table-overview', { timeout: 10000 }).should(
             'have.length',
             1,
         );
 
-        // Delete dashboard
-        DataLakeUtils.deleteDashboard('TestDashboard');
+        cy.dataCy('data-views-table-overview', { timeout: 10000 }).should(
+            'have.length',
+            1,
+        );
 
-        // Check that dashboard is gone
-        cy.dataCy('delete-dashboard-TestDashboard', { timeout: 10000 }).should(
+        DataLakeUtils.deleteDashboard('TestDashboard');
+        DataLakeUtils.deleteDataView('TestView');
+
+        cy.dataCy('dashboard-table-overview', { timeout: 10000 }).should(
+            'have.length',
+            0,
+        );
+
+        cy.dataCy('data-views-table-overview', { timeout: 10000 }).should(
             'have.length',
             0,
         );

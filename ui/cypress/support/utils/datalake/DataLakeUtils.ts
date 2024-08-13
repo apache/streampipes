@@ -184,6 +184,20 @@ export class DataLakeUtils {
         cy.dataCy('save-dashboard-btn', { timeout: 10000 }).click();
     }
 
+    public static deleteDashboard(dashboardName: string) {
+        cy.dataCy('delete-dashboard-' + dashboardName, {
+            timeout: 10000,
+        }).click();
+        cy.dataCy('confirm-delete', { timeout: 10000 }).click();
+    }
+
+    public static deleteDataView(dataViewName: string) {
+        cy.dataCy('delete-data-view-' + dataViewName, {
+            timeout: 10000,
+        }).click();
+        cy.dataCy('confirm-delete', { timeout: 10000 }).click();
+    }
+
     public static editWidget(widgetName: string) {
         cy.dataCy('edit-' + widgetName).click();
     }
