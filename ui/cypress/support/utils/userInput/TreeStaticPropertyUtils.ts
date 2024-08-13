@@ -41,10 +41,27 @@ export class TreeStaticPropertyUtils {
     }
 
     /**
+     * Opens the tree editor
+     */
+    public static switchToTreeEditor() {
+        cy.dataCy('opc-ua-editor-mode-tree').click();
+    }
+
+    /**
      * Appends the @param text to the text editor
      */
     public static typeInTextEditor(text: string) {
         cy.dataCy('static-tree-input-text-editor').type(text);
+    }
+
+    /**
+     * Returns the content of the text editor
+     */
+    public static getTextInTextEditor() {
+        return cy
+            .dataCy('static-tree-input-text-editor')
+            .find('.CodeMirror-line')
+            .invoke('text');
     }
 
     /**
@@ -56,17 +73,31 @@ export class TreeStaticPropertyUtils {
         if (!treeNode.isTextConfig) {
             // configure tree node
             if (treeNode.children && treeNode.children.length > 0) {
-                cy.dataCy('expand-' + treeNode.name).click();
+                TreeStaticPropertyUtils.expandNode(treeNode.name);
                 treeNode.children.forEach(child => {
                     this.selectTreeNode(child);
                 });
             } else {
-                cy.dataCy('select-' + treeNode.name).click();
+                TreeStaticPropertyUtils.selectNode(treeNode.name);
             }
         } else {
             TreeStaticPropertyUtils.switchToTextEditor();
             TreeStaticPropertyUtils.typeInTextEditor(treeNode.name);
         }
+    }
+
+    /**
+     * Expand the node with @param treeNodeName in the tree view
+     */
+    public static expandNode(treeNodeName: string) {
+        cy.dataCy('expand-' + treeNodeName).click();
+    }
+
+    /**
+     * Select the node with @param treeNodeName in the tree view
+     */
+    public static selectNode(treeNodeName: string) {
+        cy.dataCy('select-' + treeNodeName).click();
     }
 
     /**
@@ -87,6 +118,14 @@ export class TreeStaticPropertyUtils {
             'have.length',
             expectedAmount,
         );
+    }
+
+    /**
+     * Validates that the amount of nodes shown in the browse tab are equal
+     * to @param expectedAmount.
+     */
+    public static validateAmountOfShownBrowseNodes(expectedAmount: number) {
+        cy.dataCy('expand-', {}, true).should('have.length', expectedAmount);
     }
 
     /**

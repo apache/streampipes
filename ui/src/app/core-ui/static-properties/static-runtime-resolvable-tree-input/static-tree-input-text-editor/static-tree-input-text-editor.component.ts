@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { RuntimeResolvableTreeInputStaticProperty } from '@streampipes/platform-services';
@@ -25,7 +25,7 @@ import { RuntimeResolvableTreeInputStaticProperty } from '@streampipes/platform-
     selector: 'sp-static-tree-input-text-editor',
     templateUrl: './static-tree-input-text-editor.component.html',
 })
-export class StaticTreeInputTextEditorComponent {
+export class StaticTreeInputTextEditorComponent implements OnInit {
     @Input()
     staticProperty: RuntimeResolvableTreeInputStaticProperty;
 
@@ -52,6 +52,11 @@ export class StaticTreeInputTextEditorComponent {
         this.textChangeSubject.pipe(debounceTime(500)).subscribe(value => {
             this.onTextChange(value);
         });
+    }
+
+    ngOnInit() {
+        this.textEditor =
+            this.staticProperty.selectedNodesInternalNames.join('\n');
     }
 
     onTextEditorChange(value: string): void {

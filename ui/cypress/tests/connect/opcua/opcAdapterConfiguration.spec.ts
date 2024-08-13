@@ -102,6 +102,26 @@ describe('Test OPC-UA Adapter Configuration', () => {
         TreeStaticPropertyUtils.textEditor().should('be.visible');
 
         TreeStaticPropertyUtils.typeInTextEditor('ns=3;s=StepUp');
+
+        // Go back to tree editor and validate nodes are selected and browse editor works
+        TreeStaticPropertyUtils.switchToTreeEditor();
+        TreeStaticPropertyUtils.validateAmountOfSelectedNodes(1);
+        TreeStaticPropertyUtils.validateAmountOfShownBrowseNodes(3);
+
+        // Check if node is selected
+        TreeStaticPropertyUtils.expandNode('Objects');
+        TreeStaticPropertyUtils.expandNode('OpcPlc');
+        TreeStaticPropertyUtils.expandNode('Telemetry');
+        TreeStaticPropertyUtils.expandNode('Basic');
+        TreeStaticPropertyUtils.checkThatNodeIsSelectedInTree('StepUp');
+        TreeStaticPropertyUtils.selectNode('AlternatingBoolean');
+
+        // Go back tree view and validate that the node is still selected
+        TreeStaticPropertyUtils.switchToTextEditor();
+        TreeStaticPropertyUtils.getTextInTextEditor().should(
+            'equal',
+            'ns=3;s=StepUp' + 'ns=3;s=AlternatingBoolean',
+        );
     });
 });
 

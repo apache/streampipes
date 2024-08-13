@@ -23,6 +23,7 @@
             class="small-button"
             (click)="onResetOptionsAndReload()"
             style="margin-right: 10px"
+            *ngIf="editorMode === 'tree'"
             [disabled]="!showOptions"
             data-cy="clear-tree-node-selection"
         >
@@ -34,6 +35,7 @@
             class="small-button"
             (click)="onReload()"
             style="margin-right: 10px"
+            *ngIf="editorMode === 'tree'"
             [disabled]="!showOptions"
         >
             <span>Reload</span>

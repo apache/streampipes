@@ -155,5 +155,9 @@ export class StaticRuntimeResolvableTreeInputComponent
 
     changeEditorMode(mode: 'tree' | 'text') {
         this.editorMode = mode;
+
+        if (mode === 'tree') {
+            this.reload();
+        }
     }
 }
