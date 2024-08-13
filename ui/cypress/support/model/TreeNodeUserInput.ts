@@ -15,35 +15,8 @@
  *  limitations under the License.
  *
  */
-
-import { TreeNode } from '../model/TreeNode';
-
-export class TreeNodeBuilder {
-    private readonly node: TreeNode;
-
-    constructor(name: string) {
-        this.node = { name, children: [] };
-    }
-
-    addChildren(...childrenBuilders: TreeNodeBuilder[]): TreeNodeBuilder {
-        for (const childBuilder of childrenBuilders) {
-            this.node.children!.push(childBuilder.build());
-        }
-        return this;
-    }
-
-    static create(
-        name: string,
-        ...children: TreeNodeBuilder[]
-    ): TreeNodeBuilder {
-        const builder = new TreeNodeBuilder(name);
-        if (children.length > 0) {
-            builder.addChildren(...children);
-        }
-        return builder;
-    }
-
-    build(): TreeNode {
-        return this.node;
-    }
+export class TreeNode {
+    name: string;
+    children?: TreeNode[];
+    isTextConfig?: boolean = false;
 }

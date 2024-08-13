@@ -27,19 +27,63 @@ describe('Test OPC-UA Adapter Pull Mode', () => {
     });
 
     it('Test OPC-UA Adapter Pull Mode', () => {
-        const adapterInput = getAdapterBuilder(true);
+        const adapterInput = getAdapterBuilderWithTreeNodes(true);
 
         ConnectUtils.testAdapter(adapterInput);
     });
 
     it('Test OPC-UA Adapter Subscription Mode', () => {
-        const adapterInput = getAdapterBuilder(false);
+        const adapterInput = getAdapterBuilderWithTreeNodes(false);
+
+        ConnectUtils.testAdapter(adapterInput);
+    });
+
+    it('Test OPC-UA Adapter Text Editor Configuration', () => {
+        const adapterInput = getAdapterBuilderWithTextNodes(false);
 
         ConnectUtils.testAdapter(adapterInput);
     });
 });
 
-const getAdapterBuilder = (pullMode: boolean) => {
+const getAdapterBuilderWithTreeNodes = (pullMode: boolean) => {
+
+    const builder = getBaseAdapterConfigBuilder(pullMode);
+    builder.addTreeNode(
+        TreeNodeBuilder.create(
+            'Objects',
+            TreeNodeBuilder.create(
+                'OpcPlc',
+                TreeNodeBuilder.create(
+                    'Telemetry',
+                    TreeNodeBuilder.create('Basic').addChildren(
+                        TreeNodeBuilder.create('AlternatingBoolean'),
+                        TreeNodeBuilder.create('StepUp'),
+                        TreeNodeBuilder.create('RandomSignedInt32'),
+                        TreeNodeBuilder.create('RandomUnsignedInt32'),
+                    ),
+                ),
+            ),
+        ),
+    );
+
+
+    return builder.build();
+};
+
+const getAdapterBuilderWithTextNodes = (pullMode: boolean) => {
+    const builder = getBaseAdapterConfigBuilder(pullMode);
+    builder.addTreeNode(
+        TreeNodeBuilder.create('ns=3;s=StepUp')
+            .isTextConfig()
+    );
+
+    return builder.build();
+};
+
+
+
+
+const getBaseAdapterConfigBuilder = (pullMode: boolean) : AdapterBuilder => {
     const host: string = ParameterUtils.get('localhost', 'opcua');
 
     const builder = AdapterBuilder.create('OPC_UA').setName(
@@ -62,32 +106,7 @@ const getAdapterBuilder = (pullMode: boolean) => {
             'opc.tcp://' + host + ':50000',
         );
 
-    builder.addTreeNode(
-        TreeNodeBuilder.create(
-            'Objects',
-            TreeNodeBuilder.create(
-                'OpcPlc',
-                TreeNodeBuilder.create(
-                    'Telemetry',
-                    TreeNodeBuilder.create('Basic').addChildren(
-                        TreeNodeBuilder.create('AlternatingBoolean'),
-                        TreeNodeBuilder.create('StepUp'),
-                        TreeNodeBuilder.create('RandomSignedInt32'),
-                        TreeNodeBuilder.create('RandomUnsignedInt32'),
-                    ),
-                    // TreeNodeBuilder.create('Anomaly')
-                    //     .addChildren(
-                    //         TreeNodeBuilder.create('DipData'),
-                    //         TreeNodeBuilder.create('NegativeTrendData'),
-                    //         TreeNodeBuilder.create('PositiveTrendData'),
-                    //         TreeNodeBuilder.create('SpikeData'),
-                    //     ),
-                ),
-            ),
-        ),
-    );
-
     builder.setAutoAddTimestampPropery();
 
-    return builder.build();
+    return builder;
 };

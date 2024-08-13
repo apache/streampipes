@@ -23,13 +23,30 @@ import { TreeNodeBuilder } from '../../support/builder/TreeNodeBuilder';
 import { StaticPropertyUtils } from '../../support/utils/userInput/StaticPropertyUtils';
 import { TreeStaticPropertyUtils } from '../../support/utils/userInput/TreeStaticPropertyUtils';
 
-describe('Test OPC-UA Adapter Pull Mode', () => {
+describe('Test OPC-UA Adapter Configuration', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
     });
 
-    it('Test OPC-UA Adapter Pull Mode', () => {
-        const adapterConfiguration = getAdapterBuilder();
+    it('Test OPC-UA Tree Node Configuration', () => {
+        const adapterBuilder = getAdapterBuilder();
+        adapterBuilder.addTreeNode(
+            TreeNodeBuilder.create(
+                'Objects',
+                TreeNodeBuilder.create(
+                    'OpcPlc',
+                    TreeNodeBuilder.create(
+                        'Telemetry',
+                        TreeNodeBuilder.create('Basic').addChildren(
+                            TreeNodeBuilder.create('AlternatingBoolean'),
+                            TreeNodeBuilder.create('StepUp'),
+                        ),
+                    ),
+                ),
+            ),
+        );
+
+        const adapterConfiguration = adapterBuilder.build();
 
         // Set up initial configuration
         ConnectUtils.goToConnect();
@@ -62,6 +79,30 @@ describe('Test OPC-UA Adapter Pull Mode', () => {
         TreeStaticPropertyUtils.clickClearAndReloadButton();
         TreeStaticPropertyUtils.validateAmountOfSelectedNodes(0);
     });
+
+    it('Test OPC-UA Code Editor', () => {
+        const adapterConfiguration = getAdapterBuilder().build();
+
+        // Set up initial configuration
+        ConnectUtils.goToConnect();
+        ConnectUtils.goToNewAdapterPage();
+        ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
+        StaticPropertyUtils.input(adapterConfiguration.adapterConfiguration);
+
+
+        TreeStaticPropertyUtils.treeEditor().should('be.visible');
+        TreeStaticPropertyUtils.textEditor().should('not.exist');
+
+        // Switch to text editor
+        TreeStaticPropertyUtils.switchToTextEditor();
+
+        // Validate that text editor is shown
+        TreeStaticPropertyUtils.treeEditor().should('not.exist');
+        TreeStaticPropertyUtils.textEditor().should('be.visible');
+
+        TreeStaticPropertyUtils.typeInTextEditor('ns=3;s=StepUp');
+
+    });
 });
 
 const getAdapterBuilder = () => {
@@ -78,22 +119,8 @@ const getAdapterBuilder = () => {
             'undefined-OPC_SERVER_URL-0',
             'opc.tcp://' + host + ':50000',
         )
-        .addTreeNode(
-            TreeNodeBuilder.create(
-                'Objects',
-                TreeNodeBuilder.create(
-                    'OpcPlc',
-                    TreeNodeBuilder.create(
-                        'Telemetry',
-                        TreeNodeBuilder.create('Basic').addChildren(
-                            TreeNodeBuilder.create('AlternatingBoolean'),
-                            TreeNodeBuilder.create('StepUp'),
-                        ),
-                    ),
-                ),
-            ),
-        )
+
         .setAutoAddTimestampPropery();
 
-    return builder.build();
+    return builder;
 };
