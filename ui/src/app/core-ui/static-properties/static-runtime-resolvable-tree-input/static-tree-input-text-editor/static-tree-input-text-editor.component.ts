@@ -44,6 +44,9 @@ export class StaticTreeInputTextEditorComponent implements OnInit {
         },
     };
 
+    headerText =
+        '# Provide OPC UA Node IDs below, one per line.\n' +
+        '# Format: ns=<namespace>;s=<node_id> (e.g., ns=3;s=SampleNodeId)\n';
     textEditor: string = '';
 
     private textChangeSubject: Subject<string> = new Subject<string>();
@@ -56,6 +59,7 @@ export class StaticTreeInputTextEditorComponent implements OnInit {
 
     ngOnInit() {
         this.textEditor =
+            this.headerText +
             this.staticProperty.selectedNodesInternalNames.join('\n');
     }
 

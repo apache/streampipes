@@ -121,7 +121,9 @@ describe('Test OPC-UA Adapter Configuration', () => {
         TreeStaticPropertyUtils.switchToTextEditor();
         TreeStaticPropertyUtils.getTextInTextEditor().should(
             'equal',
-            'ns=3;s=StepUp' + 'ns=3;s=AlternatingBoolean',
+            '# Provide OPC UA Node IDs below, one per line.# Format: ' +
+            'ns=<namespace>;s=<node_id> (e.g., ns=3;s=SampleNodeId)' +
+            'ns=3;s=StepUpns=3;s=AlternatingBoolean',
         );
     });
 
