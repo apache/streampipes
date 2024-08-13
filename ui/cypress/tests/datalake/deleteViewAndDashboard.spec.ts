@@ -44,6 +44,27 @@ describe('Test Deletion of Data View and Dashboard', () => {
             1,
         );
 
+        // Click "Delete" but cancel action and check if dashboard and view are still displayed
+        cy.dataCy('delete-dashboard-TestDashboard', {
+            timeout: 10000,
+        }).click();
+        cy.dataCy('cancel-delete', { timeout: 10000 }).click();
+
+        cy.dataCy('dashboard-table-overview', { timeout: 10000 }).should(
+            'have.length',
+            1,
+        );
+
+        cy.dataCy('data-views-table-overview', { timeout: 10000 }).should(
+            'have.length',
+            1,
+        );
+
+        cy.dataCy('delete-data-view-TestView', {
+            timeout: 10000,
+        }).click();
+        cy.dataCy('cancel-delete', { timeout: 10000 }).click();
+
         DataLakeUtils.deleteDashboard('TestDashboard');
         DataLakeUtils.deleteDataView('TestView');
 

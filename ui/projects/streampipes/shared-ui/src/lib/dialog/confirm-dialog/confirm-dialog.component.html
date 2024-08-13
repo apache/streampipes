@@ -29,6 +29,7 @@
                 mat-button
                 (click)="onCancel()"
                 *ngIf="data.confirmAndCancel"
+                data-cy="cancel-delete"
             >
                 {{ data.cancelTitle }}
             </button>
