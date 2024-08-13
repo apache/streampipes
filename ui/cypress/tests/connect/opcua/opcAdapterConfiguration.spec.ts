@@ -23,6 +23,7 @@ import { TreeNodeUserInputBuilder } from '../../../support/builder/TreeNodeUserI
 import { StaticPropertyUtils } from '../../../support/utils/userInput/StaticPropertyUtils';
 import { TreeStaticPropertyUtils } from '../../../support/utils/userInput/TreeStaticPropertyUtils';
 import { ErrorMessageUtils } from '../../../support/utils/ErrorMessageUtils';
+import { AdapterInput } from '../../../support/model/AdapterInput';
 
 describe('Test OPC-UA Adapter Configuration', () => {
     beforeEach('Setup Test', () => {
@@ -49,13 +50,8 @@ describe('Test OPC-UA Adapter Configuration', () => {
             ),
         );
 
-        const adapterConfiguration = adapterBuilder.build();
-
-        // Set up initial configuration
-        ConnectUtils.goToConnect();
-        ConnectUtils.goToNewAdapterPage();
-        ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
-        StaticPropertyUtils.input(adapterConfiguration.adapterConfiguration);
+        const adapterInput = adapterBuilder.build();
+        setUpInitialConfiguration(adapterInput);
 
         TreeStaticPropertyUtils.validateAmountOfSelectedNodes(2);
 
@@ -84,13 +80,8 @@ describe('Test OPC-UA Adapter Configuration', () => {
     });
 
     it('Test OPC-UA Text Editor', () => {
-        const adapterConfiguration = getAdapterBuilder().build();
-
-        // Set up initial configuration
-        ConnectUtils.goToConnect();
-        ConnectUtils.goToNewAdapterPage();
-        ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
-        StaticPropertyUtils.input(adapterConfiguration.adapterConfiguration);
+        const adapterInput = getAdapterBuilder().build();
+        setUpInitialConfiguration(adapterInput);
 
         TreeStaticPropertyUtils.treeEditor().should('be.visible');
         TreeStaticPropertyUtils.textEditor().should('not.exist');
@@ -122,19 +113,17 @@ describe('Test OPC-UA Adapter Configuration', () => {
         TreeStaticPropertyUtils.getTextInTextEditor().should(
             'equal',
             '# Provide OPC UA Node IDs below, one per line.# Format: ' +
-            'ns=<namespace>;s=<node_id> (e.g., ns=3;s=SampleNodeId)' +
-            'ns=3;s=StepUpns=3;s=AlternatingBoolean',
+                'ns=<namespace>;s=<node_id> (e.g., ns=3;s=SampleNodeId)' +
+                'ns=3;s=StepUpns=3;s=AlternatingBoolean',
         );
+
+        TreeStaticPropertyUtils.switchToTreeEditor();
+        TreeStaticPropertyUtils.validateAmountOfShownBrowseNodes(3);
     });
 
     it('Test OPC-UA Node does not exist', () => {
-        const adapterConfiguration = getAdapterBuilder().build();
-
-        // Set up initial configuration
-        ConnectUtils.goToConnect();
-        ConnectUtils.goToNewAdapterPage();
-        ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
-        StaticPropertyUtils.input(adapterConfiguration.adapterConfiguration);
+        const adapterInput = getAdapterBuilder().build();
+        setUpInitialConfiguration(adapterInput);
 
         // Switch to text editor
         TreeStaticPropertyUtils.switchToTextEditor();
@@ -144,6 +133,20 @@ describe('Test OPC-UA Adapter Configuration', () => {
 
         // validate that an error is shown with node id
         ErrorMessageUtils.containsMessage('NodeDoesNotExist');
+    });
+
+    it('Test OPC-UA Wrong Node Id Format', () => {
+        const adapterInput = getAdapterBuilder().build();
+        setUpInitialConfiguration(adapterInput);
+
+        // Switch to text editor
+        TreeStaticPropertyUtils.switchToTextEditor();
+        TreeStaticPropertyUtils.typeInTextEditor('NoValidNodeId');
+
+        ConnectUtils.finishAdapterSettings();
+
+        // validate that an error is shown with node id
+        ErrorMessageUtils.containsMessage('NoValidNodeId');
     });
 });
 
@@ -165,4 +168,11 @@ const getAdapterBuilder = () => {
         .setAutoAddTimestampPropery();
 
     return builder;
+};
+
+const setUpInitialConfiguration = (adapterInput: AdapterInput) => {
+    ConnectUtils.goToConnect();
+    ConnectUtils.goToNewAdapterPage();
+    ConnectUtils.selectAdapter(adapterInput.adapterType);
+    StaticPropertyUtils.input(adapterInput.adapterConfiguration);
 };
