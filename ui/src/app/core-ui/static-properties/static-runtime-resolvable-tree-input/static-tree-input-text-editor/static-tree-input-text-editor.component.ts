@@ -68,8 +68,10 @@ export class StaticTreeInputTextEditorComponent implements OnInit {
     }
 
     onTextChange(value: string): void {
-        const lines = value.split('\n').filter(line => !line.startsWith('#'));
-        this.staticProperty.selectedNodesInternalNames = lines;
+        this.staticProperty.selectedNodesInternalNames = value
+            .split('\n')
+            // remove empty lines and comments starting with #
+            .filter(line => line.trim() !== '' && !line.startsWith('#'));
         this.performValidationEmitter.emit();
     }
 }
