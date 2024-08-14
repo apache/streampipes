@@ -18,12 +18,10 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {
-    LocationConfig,
-    PlatformServicesCommons,
-} from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { PlatformServicesCommons } from './commons.service';
+import { LocationConfig } from '../model/gen/streampipes-model';
 
 @Injectable({
     providedIn: 'root',
