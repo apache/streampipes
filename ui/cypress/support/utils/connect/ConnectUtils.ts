@@ -354,6 +354,10 @@ export class ConnectUtils {
 
         ConnectBtns.startAdapter().click();
 
+        ConnectUtils.validateEventsInPreview(amountOfProperties);
+    }
+
+    public static validateEventsInPreview(amountOfProperties: number) {
         // View data
         ConnectBtns.infoAdapter().click();
         cy.get('div').contains('Values').parent().click();

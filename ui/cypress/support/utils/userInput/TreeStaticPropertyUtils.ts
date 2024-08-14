@@ -51,7 +51,7 @@ export class TreeStaticPropertyUtils {
      * Appends the @param text to the text editor
      */
     public static typeInTextEditor(text: string) {
-        cy.dataCy('static-tree-input-text-editor').type(text);
+        cy.dataCy('static-tree-input-text-editor').type(text + '{enter}');
     }
 
     /**
