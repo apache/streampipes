@@ -47,8 +47,6 @@ describe('Creates a new adapter, add to assets and export assets', () => {
             'be.enabled',
         );
         cy.dataCy('assets-manage-links-button').click();
-
-        // Added twice, because cypress wouldn't accept single click
         cy.dataCy('manage-assets-select-adapters-checkbox').click();
         cy.dataCy('manage-assets-select-data-sources-checkbox').click();
         cy.dataCy('assets-update-links-button').click();
