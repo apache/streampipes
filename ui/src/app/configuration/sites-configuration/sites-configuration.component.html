@@ -16,24 +16,8 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" *ngIf="asset">
-    <mat-tab-group color="accent" [mat-stretch-tabs]="false">
-        <mat-tab label="Basics" data-cy="asset-tab-basic">
-            <sp-asset-details-basics-component
-                [asset]="asset"
-                [locations]="locations"
-                [rootNode]="rootNode"
-                [editMode]="editMode"
-            >
-            </sp-asset-details-basics-component>
-        </mat-tab>
-        <mat-tab label="Asset Links" data-cy="asset-tab-asset-links">
-            <sp-asset-details-links-component
-                [asset]="asset"
-                [editMode]="editMode"
-                (updateAssetEmitter)="updateAssetEmitter.emit($event)"
-            >
-            </sp-asset-details-links-component>
-        </mat-tab>
-    </mat-tab-group>
-</div>
+<sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'sites'">
+    <sp-location-features-configuration> </sp-location-features-configuration>
+
+    <sp-site-area-configuration> </sp-site-area-configuration>
+</sp-basic-nav-tabs>

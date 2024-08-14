@@ -16,8 +16,10 @@
  *
  */
 
-import { SpBreadcrumbItem } from '@streampipes/shared-ui';
+package org.apache.streampipes.model.configuration;
 
-export class SpConfigurationRoutes {
-    static BASE: SpBreadcrumbItem = { label: 'Configuration' };
-}
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+@TsModel
+public record LocationConfig(boolean locationEnabled,
+                             String tileServerUrl) {}

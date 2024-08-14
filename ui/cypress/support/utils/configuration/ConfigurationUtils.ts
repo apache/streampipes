@@ -16,8 +16,16 @@
  *
  */
 
-import { SpBreadcrumbItem } from '@streampipes/shared-ui';
+export class ConfigurationUtils {
+    public static goToConfigurationExport() {
+        cy.visit('#/configuration/export');
+    }
 
-export class SpConfigurationRoutes {
-    static BASE: SpBreadcrumbItem = { label: 'Configuration' };
+    public static goToSitesConfiguration() {
+        cy.visit('#/configuration/sites');
+    }
+
+    public static goToGeneralConfiguration() {
+        cy.visit('#/configuration/general');
+    }
 }

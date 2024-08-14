@@ -79,6 +79,13 @@ import { EndpointItemComponent } from './extensions-installation/endpoint-item/e
 import { SpExtensionsInstallationComponent } from './extensions-installation/extensions-installation.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { SpConfigurationLinkSettingsComponent } from './general-configuration/link-settings/link-settings.component';
+import { SitesConfigurationComponent } from './sites-configuration/sites-configuration.component';
+import { LocationFeaturesConfigurationComponent } from './sites-configuration/location-features-configuration/location-features-configuration.component';
+import { SiteAreaConfigurationComponent } from './sites-configuration/site-area-configuration/site-area-configuration.component';
+import { MatSort } from '@angular/material/sort';
+import { ManageSiteDialogComponent } from './dialog/manage-site/manage-site-dialog.component';
+import { EditAssetLocationComponent } from './dialog/manage-site/edit-location/edit-location.component';
+import { EditAssetLocationAreaComponent } from './dialog/manage-site/edit-location/edit-location-area/edit-location-area.component';
 
 @NgModule({
     imports: [
@@ -148,12 +155,17 @@ import { SpConfigurationLinkSettingsComponent } from './general-configuration/li
                         path: 'security',
                         component: SecurityConfigurationComponent,
                     },
+                    {
+                        path: 'sites',
+                        component: SitesConfigurationComponent,
+                    },
                 ],
             },
         ]),
         SharedUiModule,
         ColorPickerModule,
         CodemirrorModule,
+        MatSort,
     ],
     declarations: [
         ServiceConfigsComponent,
@@ -162,16 +174,22 @@ import { SpConfigurationLinkSettingsComponent } from './general-configuration/li
         ServiceConfigsBooleanComponent,
         ServiceConfigsNumberComponent,
         DeleteDatalakeIndexComponent,
+        EditAssetLocationComponent,
+        EditAssetLocationAreaComponent,
         EditUserDialogComponent,
         EditGroupDialogComponent,
         EmailConfigurationComponent,
         GeneralConfigurationComponent,
         ExtensionsServiceManagementComponent,
+        LocationFeaturesConfigurationComponent,
+        ManageSiteDialogComponent,
+        SitesConfigurationComponent,
         SecurityAuthenticationConfigurationComponent,
         SecurityConfigurationComponent,
         SecurityUserConfigComponent,
         SecurityUserGroupConfigComponent,
         SecurityServiceConfigComponent,
+        SiteAreaConfigurationComponent,
         MessagingConfigurationComponent,
         DatalakeConfigurationComponent,
         SpConfigurationLinkSettingsComponent,

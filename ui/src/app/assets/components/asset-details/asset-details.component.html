@@ -55,7 +55,7 @@
                         [editMode]="editMode"
                         [assetModel]="asset"
                         [selectedAsset]="selectedAsset"
-                        (selectedAssetEmitter)="selectedAsset = $event"
+                        (selectedAssetEmitter)="applySelectedAsset($event)"
                     >
                     </sp-asset-selection-panel-component>
                 </div>
@@ -64,6 +64,8 @@
                 <sp-asset-details-panel-component
                     *ngIf="selectedAsset"
                     [asset]="selectedAsset"
+                    [locations]="locations"
+                    [rootNode]="rootNode"
                     [editMode]="editMode"
                     (updateAssetEmitter)="updateAsset()"
                     fxFlex="100"

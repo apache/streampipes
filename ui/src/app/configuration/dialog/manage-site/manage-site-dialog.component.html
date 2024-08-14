@@ -1,0 +1,31 @@
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15">
+        <div *ngIf="clonedSite !== undefined">
+            <sp-edit-asset-location-component [site]="clonedSite">
+            </sp-edit-asset-location-component>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions">
+        <button
+            mat-button
+            mat-raised-button
+            data-cy="sites-dialog-save-button"
+            color="accent"
+            (click)="store()"
+            style="margin-right: 10px"
+        >
+            Save changes
+        </button>
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            data-cy="sites-dialog-cancel-button"
+            (click)="close()"
+            style="margin-right: 10px"
+        >
+            Cancel
+        </button>
+    </div>
+</div>

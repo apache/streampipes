@@ -16,8 +16,25 @@
  *
  */
 
-import { SpBreadcrumbItem } from '@streampipes/shared-ui';
+import { Component, Input } from '@angular/core';
+import { AssetSiteDesc } from '@streampipes/platform-services';
 
-export class SpConfigurationRoutes {
-    static BASE: SpBreadcrumbItem = { label: 'Configuration' };
+@Component({
+    selector: 'sp-edit-asset-location-area-component',
+    templateUrl: './edit-location-area.component.html',
+    styleUrls: ['./edit-location-area.component.scss'],
+})
+export class EditAssetLocationAreaComponent {
+    @Input()
+    site: AssetSiteDesc;
+
+    newArea: string = '';
+
+    addNewArea(): void {
+        this.site.areas.push(this.newArea);
+    }
+
+    removeArea(area: string): void {
+        this.site.areas.splice(this.site.areas.indexOf(area), 1);
+    }
 }

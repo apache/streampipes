@@ -16,8 +16,14 @@
  *
  */
 
-import { SpBreadcrumbItem } from '@streampipes/shared-ui';
+import { Component } from '@angular/core';
+import { SpConfigurationTabs } from '../configuration-tabs';
 
-export class SpConfigurationRoutes {
-    static BASE: SpBreadcrumbItem = { label: 'Configuration' };
+@Component({
+    selector: 'sp-sites-configuration',
+    templateUrl: './sites-configuration.component.html',
+    styleUrls: ['./sites-configuration.component.scss'],
+})
+export class SitesConfigurationComponent {
+    tabs = SpConfigurationTabs.getTabs();
 }

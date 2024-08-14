@@ -48,15 +48,35 @@ export interface Isa95TypeDesc {
     type: Isa95Type;
 }
 
+export interface AssetSiteDesc {
+    _id: string;
+    _rev?: string;
+    appDocType: string;
+    label: string;
+    location: LatLng;
+    areas: string[];
+}
+
+export interface LatLng {
+    latitude: number;
+    longitude: number;
+}
+
+export interface AssetLocation {
+    siteId: string;
+    area: string;
+    exactLocation?: LatLng;
+    zoom?: number;
+}
+
 export interface SpAsset {
     assetId: string;
     assetName: string;
     assetDescription: string;
-
     assetType: AssetType;
     labelIds?: string[];
     assetLinks: AssetLink[];
-
+    assetLocation?: AssetLocation;
     assets: SpAsset[];
 }
 

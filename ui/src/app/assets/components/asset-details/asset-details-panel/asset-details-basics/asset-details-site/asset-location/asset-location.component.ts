@@ -16,8 +16,10 @@
  *
  */
 
-import { SpBreadcrumbItem } from '@streampipes/shared-ui';
+import { Component } from '@angular/core';
 
-export class SpConfigurationRoutes {
-    static BASE: SpBreadcrumbItem = { label: 'Configuration' };
-}
+@Component({
+    selector: 'sp-asset-location-component',
+    templateUrl: './asset-location.component.html',
+})
+export class AssetLocationComponent {}

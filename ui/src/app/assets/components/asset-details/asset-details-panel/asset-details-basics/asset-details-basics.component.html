@@ -107,6 +107,21 @@
                 >
                 </sp-asset-details-labels-component>
             </sp-basic-field-description>
+            <sp-basic-field-description
+                *ngIf="rootNode"
+                fxFlex="100"
+                descriptionPanelWidth="30"
+                label="Sites"
+                description="Assign a location (site and area) to this asset"
+            >
+                <sp-asset-details-site-component
+                    class="w-100"
+                    [asset]="asset"
+                    [locations]="locations"
+                    [editMode]="editMode"
+                >
+                </sp-asset-details-site-component>
+            </sp-basic-field-description>
         </div>
     </div>
 </div>

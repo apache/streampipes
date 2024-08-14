@@ -16,8 +16,15 @@
  *
  */
 
-import { SpBreadcrumbItem } from '@streampipes/shared-ui';
+import { Component, Input } from '@angular/core';
+import { AssetSiteDesc } from '@streampipes/platform-services';
 
-export class SpConfigurationRoutes {
-    static BASE: SpBreadcrumbItem = { label: 'Configuration' };
+@Component({
+    selector: 'sp-edit-asset-location-component',
+    templateUrl: './edit-location.component.html',
+    styleUrls: ['./edit-location.component.scss'],
+})
+export class EditAssetLocationComponent {
+    @Input()
+    site: AssetSiteDesc;
 }

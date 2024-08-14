@@ -16,8 +16,26 @@
  *
  */
 
-import { SpBreadcrumbItem } from '@streampipes/shared-ui';
+import { SiteUtils } from '../../../support/utils/configuration/SiteUtils';
+import { ConfigurationUtils } from '../../../support/utils/configuration/ConfigurationUtils';
 
-export class SpConfigurationRoutes {
-    static BASE: SpBreadcrumbItem = { label: 'Configuration' };
-}
+describe('Test geo features settings', () => {
+    beforeEach('Setup Test', () => {
+        cy.initStreamPipesTest();
+    });
+
+    it('Perform Test', () => {
+        // enable geo features
+        ConfigurationUtils.goToSitesConfiguration();
+        SiteUtils.enableGeoFeatures('url');
+
+        ConfigurationUtils.goToGeneralConfiguration();
+        ConfigurationUtils.goToSitesConfiguration();
+
+        cy.dataCy(SiteUtils.CHECKBOX_ENABLE_LOCATION_FEATURES)
+            .find('input')
+            .should('be.checked');
+
+        cy.dataCy(SiteUtils.INPUT_TILE_SERVER_URL).should('have.value', 'url');
+    });
+});

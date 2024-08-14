@@ -16,24 +16,24 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" *ngIf="asset">
-    <mat-tab-group color="accent" [mat-stretch-tabs]="false">
-        <mat-tab label="Basics" data-cy="asset-tab-basic">
-            <sp-asset-details-basics-component
-                [asset]="asset"
-                [locations]="locations"
-                [rootNode]="rootNode"
-                [editMode]="editMode"
-            >
-            </sp-asset-details-basics-component>
-        </mat-tab>
-        <mat-tab label="Asset Links" data-cy="asset-tab-asset-links">
-            <sp-asset-details-links-component
-                [asset]="asset"
-                [editMode]="editMode"
-                (updateAssetEmitter)="updateAssetEmitter.emit($event)"
-            >
-            </sp-asset-details-links-component>
-        </mat-tab>
-    </mat-tab-group>
+<div fxLayout="column">
+    <mat-form-field color="accent" class="w-100">
+        <mat-label>Site</mat-label>
+        <mat-select
+            [(ngModel)]="asset.assetLocation.siteId"
+            (selectionChange)="handleLocationChange($event)"
+        >
+            <mat-option *ngFor="let site of allSites" [value]="site._id">
+                {{ site.label }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field color="accent" class="w-100" *ngIf="currentSite">
+        <mat-label>Area</mat-label>
+        <mat-select [(ngModel)]="asset.assetLocation.area">
+            <mat-option *ngFor="let area of currentSite.areas" [value]="area">
+                {{ area }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
 </div>
