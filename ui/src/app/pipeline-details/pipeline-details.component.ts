@@ -38,6 +38,8 @@ import { UserPrivilege } from '../_enums/user-privilege.enum';
 import { forkJoin, interval, Observable, of, Subscription } from 'rxjs';
 import { catchError, filter, switchMap } from 'rxjs/operators';
 import { PipelinePreviewComponent } from './components/preview/pipeline-preview.component';
+import { HttpContext } from '@angular/common/http';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Component({
     selector: 'sp-pipeline-details-overview-component',
@@ -162,12 +164,14 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
         return this.pipelineMonitoringService.getMetricsInfoForPipeline(
             this.currentPipelineId,
             forceUpdate,
+            new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
         );
     }
 
     getLogsObservable(): Observable<Record<string, SpLogEntry[]>> {
         return this.pipelineMonitoringService.getLogInfoForPipeline(
             this.currentPipelineId,
+            new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
         );
     }
 
