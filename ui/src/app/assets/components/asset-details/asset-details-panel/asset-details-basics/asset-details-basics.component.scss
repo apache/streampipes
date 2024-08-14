@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,22 +16,12 @@
  *
  */
 
-.link-type {
-    background: var(--color-primary);
-    padding: 5px;
-    border-radius: 5px;
+.mat-button-toggle-group {
+    flex-wrap: wrap;
+    border: none;
 }
 
-.link-label {
-    margin-right: 15px;
-    font-weight: 500;
-}
-
-.link-icon {
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    padding: 5px;
-    color: var(--color-bg-1);
-    background: var(--color-bg-3);
+.mat-button-toggle {
+    border: 1px solid var(--mat-standard-button-toggle-divider-color);
+    margin-bottom: 5px;
 }

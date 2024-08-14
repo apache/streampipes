@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,18 +16,14 @@
  *
  */
 
-.asset-details-panel {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 100%;
+.field-description-label {
+    font-weight: bold;
 }
 
-.asset-details-container {
-    width: 100%;
-    height: 100%;
-    background: var(--color-bg-0);
+.field-description {
+    font-size: smaller;
 }
 
-.asset-tree-panel {
-    width: 400px;
+.field-description-outer {
+    margin-bottom: 10px;
 }

@@ -31,6 +31,7 @@ export interface AssetType {
     assetIconColor: string;
     assetTypeCategory: string;
     assetTypeLabel: string;
+    isa95AssetType?: Isa95Type;
 }
 
 export interface AssetLink {
@@ -42,12 +43,18 @@ export interface AssetLink {
     navigationActive: boolean;
 }
 
+export interface Isa95TypeDesc {
+    label: string;
+    type: Isa95Type;
+}
+
 export interface SpAsset {
     assetId: string;
     assetName: string;
     assetDescription: string;
 
     assetType: AssetType;
+    labelIds?: string[];
     assetLinks: AssetLink[];
 
     assets: SpAsset[];
@@ -61,3 +68,13 @@ export interface SpAssetModel extends SpAsset {
 
     removable: boolean;
 }
+
+export type Isa95Type =
+    | 'PROCESS_CELL'
+    | 'PRODUCTION_UNIT'
+    | 'PRODUCTION_LINE'
+    | 'STORAGE_ZONE'
+    | 'UNIT'
+    | 'WORK_CELL'
+    | 'STORAGE_UNIT'
+    | 'OTHER';

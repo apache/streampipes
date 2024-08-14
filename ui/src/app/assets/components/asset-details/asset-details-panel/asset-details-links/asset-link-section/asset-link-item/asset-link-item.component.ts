@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
 
@@ -25,53 +25,38 @@ import { Router } from '@angular/router';
     templateUrl: './asset-link-item.component.html',
     styleUrls: ['./asset-link-item.component.scss'],
 })
-export class SpAssetLinkItemComponent implements OnInit {
+export class SpAssetLinkItemComponent {
     @Input()
     assetLink: AssetLink;
 
     @Input()
-    assetLinkIndex: number;
-
-    @Input()
-    assetLinkTypes: AssetLinkType[];
+    assetLinkType: AssetLinkType;
 
     @Input()
     editMode: boolean;
 
     @Output()
-    openEditAssetLinkEmitter: EventEmitter<{
-        assetLink: AssetLink;
-        index: number;
-    }> = new EventEmitter<{ assetLink: AssetLink; index: number }>();
+    openEditAssetLinkEmitter: EventEmitter<AssetLink> =
+        new EventEmitter<AssetLink>();
 
     @Output()
-    deleteAssetLinkEmitter: EventEmitter<number> = new EventEmitter<number>();
-
-    currentAssetLinkType: AssetLinkType;
+    deleteAssetLinkEmitter: EventEmitter<AssetLink> =
+        new EventEmitter<AssetLink>();
 
     constructor(private router: Router) {}
 
-    ngOnInit(): void {
-        this.currentAssetLinkType = this.assetLinkTypes.find(
-            t => t.linkType === this.assetLink.linkType,
-        );
-    }
-
     openLink(): void {
         this.router.navigate([
-            ...this.currentAssetLinkType.navPaths,
+            ...this.assetLinkType.navPaths,
             this.assetLink.resourceId,
         ]);
     }
 
     editLink(): void {
-        this.openEditAssetLinkEmitter.emit({
-            assetLink: this.assetLink,
-            index: this.assetLinkIndex,
-        });
+        this.openEditAssetLinkEmitter.emit(this.assetLink);
     }
 
     deleteLink(): void {
-        this.deleteAssetLinkEmitter.emit(this.assetLinkIndex);
+        this.deleteAssetLinkEmitter.emit(this.assetLink);
     }
 }

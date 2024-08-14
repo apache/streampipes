@@ -16,35 +16,35 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
-import { SpColorizationService } from '../../services/colorization.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    AssetLink,
+    AssetLinkType,
+    SpAsset,
+} from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-label',
-    templateUrl: './sp-label.component.html',
-    styleUrls: ['./sp-label.component.scss'],
+    selector: 'sp-asset-link-section-component',
+    templateUrl: './asset-link-section.component.html',
+    styleUrls: ['./asset-link-section.component.scss'],
 })
-export class SpLabelComponent {
+export class AssetLinkSectionComponent {
     @Input()
-    labelText: string;
-
-    @Input()
-    small = false;
-
-    _labelBackground: string;
-
-    labelTextColor = '';
-
-    constructor(private colorizationService: SpColorizationService) {}
+    assetLinkType: AssetLinkType;
 
     @Input()
-    set labelBackground(labelBackground: string) {
-        this._labelBackground = labelBackground;
-        this.labelTextColor =
-            this.colorizationService.generateContrastColor(labelBackground);
-    }
+    asset: SpAsset;
 
-    get labelBackground(): string {
-        return this._labelBackground;
+    @Input()
+    editMode: boolean;
+
+    @Output()
+    openEditAssetLinkEmitter: EventEmitter<AssetLink> =
+        new EventEmitter<AssetLink>();
+
+    deleteAssetLink(assetLink: AssetLink): void {
+        const index = this.asset.assetLinks.indexOf(assetLink);
+        this.asset.assetLinks.splice(index, 1);
+        this.asset.assetLinks = [...this.asset.assetLinks];
     }
 }

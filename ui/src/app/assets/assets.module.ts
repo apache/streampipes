@@ -39,7 +39,7 @@ import { SpAssetDetailsComponent } from './components/asset-details/asset-detail
 import { SpAssetSelectionPanelComponent } from './components/asset-details/asset-selection-panel/asset-selection-panel.component';
 import { SpAssetDetailsPanelComponent } from './components/asset-details/asset-details-panel/asset-details-panel.component';
 import { MatTreeModule } from '@angular/material/tree';
-import { SpAssetLinkItemComponent } from './components/asset-details/asset-details-panel/asset-link-item/asset-link-item.component';
+import { SpAssetLinkItemComponent } from './components/asset-details/asset-details-panel/asset-details-links/asset-link-section/asset-link-item/asset-link-item.component';
 import { EditAssetLinkDialogComponent } from './dialog/edit-asset-link/edit-asset-link-dialog.component';
 import { SpCreateAssetDialogComponent } from './dialog/create-asset/create-asset-dialog.component';
 import { SpManageAssetLinksDialogComponent } from './dialog/manage-asset-links/manage-asset-links-dialog.component';
@@ -48,13 +48,26 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
+import { AssetDetailsLinksComponent } from './components/asset-details/asset-details-panel/asset-details-links/asset-details-links.component';
+import { AssetDetailsBasicsComponent } from './components/asset-details/asset-details-panel/asset-details-basics/asset-details-basics.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { AssetLinkSectionComponent } from './components/asset-details/asset-details-panel/asset-details-links/asset-link-section/asset-link-section.component';
+import { AssetTypeFilterPipe } from './pipes/asset-type-filter.pipe';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { AssetDetailsLabelsComponent } from './components/asset-details/asset-details-panel/asset-details-basics/asset-details-labels/asset-details-labels.component';
+import { MatChipGrid, MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
     imports: [
         CommonModule,
         FlexLayoutModule,
         MatGridListModule,
+        MatAutocompleteModule,
         MatButtonModule,
+        MatButtonToggleModule,
+        MatChipsModule,
+        MatChipGrid,
         MatProgressSpinnerModule,
         MatIconModule,
         MatInputModule,
@@ -64,6 +77,7 @@ import { MatSortModule } from '@angular/material/sort';
         MatDividerModule,
         MatSidenavModule,
         MatSelectModule,
+        MatTabsModule,
         MatTooltipModule,
         FormsModule,
         DragDropModule,
@@ -95,6 +109,10 @@ import { MatSortModule } from '@angular/material/sort';
         MatSortModule,
     ],
     declarations: [
+        AssetDetailsBasicsComponent,
+        AssetDetailsLabelsComponent,
+        AssetDetailsLinksComponent,
+        AssetLinkSectionComponent,
         AssetUploadDialogComponent,
         EditAssetLinkDialogComponent,
         SpAssetDetailsComponent,
@@ -104,6 +122,7 @@ import { MatSortModule } from '@angular/material/sort';
         SpAssetSelectionPanelComponent,
         SpCreateAssetDialogComponent,
         SpManageAssetLinksDialogComponent,
+        AssetTypeFilterPipe,
     ],
     providers: [],
 })

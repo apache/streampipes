@@ -16,18 +16,17 @@
  *
  */
 
-.asset-details-panel {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 100%;
-}
+import { Injectable, Pipe, PipeTransform } from '@angular/core';
+import { AssetLink } from '@streampipes/platform-services';
 
-.asset-details-container {
-    width: 100%;
-    height: 100%;
-    background: var(--color-bg-0);
-}
-
-.asset-tree-panel {
-    width: 400px;
+@Pipe({
+    name: 'assetTypeFilter',
+})
+@Injectable({ providedIn: 'root' })
+export class AssetTypeFilterPipe implements PipeTransform {
+    transform(assetLinks: AssetLink[], assetLinkType: string): AssetLink[] {
+        return assetLinks.filter(
+            assetLink => assetLink.linkType === assetLinkType,
+        );
+    }
 }
