@@ -20,6 +20,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
     selector: 'sp-static-tree-input-button-menu',
     templateUrl: './static-tree-input-button-menu.component.html',
+    styleUrl: './static-tree-input-button-menu.component.scss',
 })
 export class StaticTreeInputButtonMenuComponent {
     @Input()
