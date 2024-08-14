@@ -22,7 +22,6 @@ import { SpConfigurationTabs } from '../configuration-tabs';
 @Component({
     selector: 'sp-sites-configuration',
     templateUrl: './sites-configuration.component.html',
-    styleUrls: ['./sites-configuration.component.scss'],
 })
 export class SitesConfigurationComponent {
     tabs = SpConfigurationTabs.getTabs();

@@ -22,7 +22,6 @@ import { AssetSiteDesc } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-edit-asset-location-component',
     templateUrl: './edit-location.component.html',
-    styleUrls: ['./edit-location.component.scss'],
 })
 export class EditAssetLocationComponent {
     @Input()
