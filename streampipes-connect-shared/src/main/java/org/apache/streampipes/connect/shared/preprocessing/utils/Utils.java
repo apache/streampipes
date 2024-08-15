@@ -26,7 +26,7 @@ import java.util.List;
 
 public class Utils {
 
-  private static final String DELIMITER = "<-=>";
+  public static final String DELIMITER = "<-=>";
 
   public static String getLastKey(String s) {
     String[] list = s.split(DELIMITER);

@@ -70,7 +70,7 @@ public class ToOriginalSchemaConverter implements ITransformationRuleVisitor, Pr
 
   @Override
   public void visit(MoveRuleDescription rule) {
-    var targetRuntimeKey = rule.getNewRuntimeKey() + "." + rule.getOldRuntimeKey();
+    var targetRuntimeKey = rule.getNewRuntimeKey() + Utils.DELIMITER + rule.getOldRuntimeKey();
     var existing = new Cloner().property(findProperty(properties, targetRuntimeKey));
     var existingHierarchy = findPropertyHierarchy(this.properties, targetRuntimeKey);
     existingHierarchy.removeIf(property -> property.getRuntimeName().equals(existing.getRuntimeName()));
