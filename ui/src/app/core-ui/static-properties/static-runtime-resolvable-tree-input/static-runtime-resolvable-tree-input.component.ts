@@ -39,8 +39,10 @@ export class StaticRuntimeResolvableTreeInputComponent
 {
     nodeDetails: TreeInputNode;
 
+    editorMode: 'tree' | 'text' = 'tree';
+
     @ViewChild('staticTreeInputBrowseNodesComponent')
-    staticTreeInputBrowseNodesComponent: StaticTreeInputBrowseNodesComponent;
+    private staticTreeInputBrowseNodesComponent: StaticTreeInputBrowseNodesComponent;
 
     constructor(
         runtimeResolvableService: RuntimeResolvableService,
@@ -50,6 +52,7 @@ export class StaticRuntimeResolvableTreeInputComponent
     }
 
     ngOnInit(): void {
+        this.resetStaticPropertyStateAndReload();
         if (
             this.staticProperty.nodes.length === 0 &&
             (!this.staticProperty.dependsOn ||
@@ -57,7 +60,7 @@ export class StaticRuntimeResolvableTreeInputComponent
         ) {
             this.loadOptionsFromRestApi();
         } else if (this.staticProperty.nodes.length > 0) {
-            this.staticTreeInputBrowseNodesComponent.updateNodes(
+            this.staticTreeInputBrowseNodesComponent?.updateNodes(
                 this.staticProperty.nodes,
             );
             this.showOptions = true;
@@ -90,11 +93,11 @@ export class StaticRuntimeResolvableTreeInputComponent
             }
         } else {
             this.staticProperty.nodes = staticProperty.nodes;
-            this.staticTreeInputBrowseNodesComponent.updateNodes(
+            this.staticTreeInputBrowseNodesComponent?.updateNodes(
                 this.staticProperty.nodes,
             );
         }
-        this.staticTreeInputBrowseNodesComponent.refreshTree();
+        this.staticTreeInputBrowseNodesComponent?.refreshTree();
 
         this.performValidation();
     }
@@ -123,7 +126,7 @@ export class StaticRuntimeResolvableTreeInputComponent
 
     afterErrorReceived() {
         this.staticProperty.nodes = [];
-        this.staticTreeInputBrowseNodesComponent.updateNodes([]);
+        this.staticTreeInputBrowseNodesComponent?.updateNodes([]);
         this.performValidation();
     }
 
@@ -135,7 +138,7 @@ export class StaticRuntimeResolvableTreeInputComponent
         this.staticProperty.nextBaseNodeToResolve = undefined;
         this.staticProperty.selectedNodesInternalNames = [];
         this.staticProperty.latestFetchedNodes = [];
-        this.staticTreeInputBrowseNodesComponent.updateNodes([]);
+        this.staticTreeInputBrowseNodesComponent?.updateNodes([]);
         this.loadOptionsFromRestApi();
     }
 
@@ -149,5 +152,24 @@ export class StaticRuntimeResolvableTreeInputComponent
             selectedNodeInternalId,
         );
         this.staticProperty.selectedNodesInternalNames.splice(index, 1);
+    }
+
+    changeEditorMode(mode: 'tree' | 'text') {
+        this.editorMode = mode;
+
+        if (mode === 'tree') {
+            this.resetStaticPropertyStateAndReload();
+        }
+    }
+
+    /**
+     * The static property keeps the state of the last fetched nodes to be able
+     * to set the subtree to the right node. When a user switches the editor
+     * this state should be reset
+     */
+    private resetStaticPropertyStateAndReload() {
+        this.staticProperty.latestFetchedNodes = [];
+        this.staticProperty.nextBaseNodeToResolve = undefined;
+        this.reload();
     }
 }

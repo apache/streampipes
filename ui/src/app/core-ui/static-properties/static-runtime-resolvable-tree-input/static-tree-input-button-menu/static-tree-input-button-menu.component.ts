@@ -20,17 +20,22 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
     selector: 'sp-static-tree-input-button-menu',
     templateUrl: './static-tree-input-button-menu.component.html',
+    styleUrl: './static-tree-input-button-menu.component.scss',
 })
 export class StaticTreeInputButtonMenuComponent {
     @Input()
     showOptions: boolean;
     @Input()
     loading: boolean;
+    @Input()
+    editorMode: 'tree' | 'text';
 
     @Output()
     resetOptionsAndReload = new EventEmitter<void>();
     @Output()
     reload = new EventEmitter<void>();
+    @Output()
+    selectedEditorModeEmitter = new EventEmitter<'tree' | 'text'>();
 
     onResetOptionsAndReload() {
         this.resetOptionsAndReload.emit();
@@ -38,5 +43,9 @@ export class StaticTreeInputButtonMenuComponent {
 
     onReload() {
         this.reload.emit();
+    }
+
+    onChangeEditor(mode: 'tree' | 'text') {
+        this.selectedEditorModeEmitter.emit(mode);
     }
 }
