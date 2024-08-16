@@ -16,37 +16,55 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
 import {
+    Component,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+} from '@angular/core';
+import {
+    AssetSiteDesc,
     Isa95TypeDesc,
     Isa95TypeService,
     SpAsset,
 } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-asset-details-basics-component',
+    selector: 'sp-asset-details-basics',
     templateUrl: './asset-details-basics.component.html',
     styleUrls: ['./asset-details-basics.component.scss'],
 })
-export class AssetDetailsBasicsComponent implements OnInit {
+export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
     @Input()
     asset: SpAsset;
 
     @Input()
     editMode: boolean;
 
+    @Input()
+    rootNode: boolean;
+
+    @Input()
+    sites: AssetSiteDesc[];
+
     isa95Types: Isa95TypeDesc[] = [];
 
     constructor(private isa95TypeService: Isa95TypeService) {}
 
     ngOnInit() {
-        this.asset.assetType ??= {
-            assetIcon: undefined,
-            assetIconColor: undefined,
-            assetTypeCategory: undefined,
-            assetTypeLabel: undefined,
-            isa95AssetType: 'OTHER',
-        };
         this.isa95Types = this.isa95TypeService.getTypeDescriptions();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['asset']) {
+            this.asset.assetType ??= {
+                assetIcon: undefined,
+                assetIconColor: undefined,
+                assetTypeCategory: undefined,
+                assetTypeLabel: undefined,
+                isa95AssetType: 'OTHER',
+            };
+        }
     }
 }

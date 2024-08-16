@@ -113,6 +113,8 @@ import { StaticTreeInputButtonMenuComponent } from './static-properties/static-r
 import { StaticTreeInputSelectedNodesComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-selected-nodes/static-tree-input-selected-nodes.component';
 import { StaticTreeInputBrowseNodesComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-browse-nodes/static-tree-input-browse-nodes.component';
 import { StaticTreeInputNodeDetailsComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-node-details/static-tree-input-node-details.component';
+import { SingleMarkerMapComponent } from './single-marker-map/single-marker-map.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { StaticTreeInputTextEditorComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-text-editor/static-tree-input-text-editor.component';
 
 @NgModule({
@@ -163,6 +165,7 @@ import { StaticTreeInputTextEditorComponent } from './static-properties/static-r
         QuillModule.forRoot(),
         MatTreeModule,
         MarkdownModule.forRoot(),
+        LeafletModule,
     ],
     declarations: [
         DataDownloadDialogComponent,
@@ -197,6 +200,7 @@ import { StaticTreeInputTextEditorComponent } from './static-properties/static-r
         StaticTreeInputNodeDetailsComponent,
         StaticTreeInputTextEditorComponent,
         StaticSlideToggleComponent,
+        SingleMarkerMapComponent,
         ErrorHintComponent,
         AddToCollectionComponent,
         PipelineStartedStatusComponent,
@@ -250,6 +254,7 @@ import { StaticTreeInputTextEditorComponent } from './static-properties/static-r
         StatusIndicatorComponent,
         MultiStepStatusIndicatorComponent,
         PipelineOperationStatusComponent,
+        SingleMarkerMapComponent,
     ],
 })
 export class CoreUiModule {}

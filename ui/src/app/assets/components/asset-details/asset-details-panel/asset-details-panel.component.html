@@ -19,19 +19,21 @@
 <div fxFlex="100" fxLayout="column" *ngIf="asset">
     <mat-tab-group color="accent" [mat-stretch-tabs]="false">
         <mat-tab label="Basics" data-cy="asset-tab-basic">
-            <sp-asset-details-basics-component
+            <sp-asset-details-basics
                 [asset]="asset"
+                [sites]="sites"
+                [rootNode]="rootNode"
                 [editMode]="editMode"
             >
-            </sp-asset-details-basics-component>
+            </sp-asset-details-basics>
         </mat-tab>
         <mat-tab label="Asset Links" data-cy="asset-tab-asset-links">
-            <sp-asset-details-links-component
+            <sp-asset-details-links
                 [asset]="asset"
                 [editMode]="editMode"
                 (updateAssetEmitter)="updateAssetEmitter.emit($event)"
             >
-            </sp-asset-details-links-component>
+            </sp-asset-details-links>
         </mat-tab>
     </mat-tab-group>
 </div>

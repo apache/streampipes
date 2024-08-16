@@ -21,21 +21,25 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { ActivatedRoute } from '@angular/router';
 import { AssetConstants } from '../../constants/asset.constants';
 import {
+    AssetSiteDesc,
     GenericStorageService,
     SpAsset,
     SpAssetModel,
 } from '@streampipes/platform-services';
 import { SpAssetRoutes } from '../../assets.routes';
+import { zip } from 'rxjs';
 
 @Component({
-    selector: 'sp-asset-details-component',
+    selector: 'sp-asset-details',
     templateUrl: './asset-details.component.html',
     styleUrls: ['./asset-details.component.scss'],
 })
 export class SpAssetDetailsComponent implements OnInit {
     asset: SpAssetModel;
+    sites: AssetSiteDesc[] = [];
 
     selectedAsset: SpAsset;
+    rootNode = true;
 
     editMode: boolean;
 
@@ -50,22 +54,33 @@ export class SpAssetDetailsComponent implements OnInit {
     ngOnInit(): void {
         this.assetModelId = this.route.snapshot.params.assetId;
         this.editMode = this.route.snapshot.queryParams.editMode;
-        this.loadAsset();
+        this.loadResources();
     }
 
-    loadAsset(): void {
-        this.genericStorageService
-            .getDocument(AssetConstants.ASSET_APP_DOC_NAME, this.assetModelId)
-            .subscribe(asset => {
-                this.asset = asset;
-                if (!this.selectedAsset) {
-                    this.selectedAsset = this.asset;
-                }
-                this.breadcrumbService.updateBreadcrumb([
-                    SpAssetRoutes.BASE,
-                    { label: this.asset.assetName },
-                ]);
-            });
+    loadResources(): void {
+        const assetReq = this.genericStorageService.getDocument(
+            AssetConstants.ASSET_APP_DOC_NAME,
+            this.assetModelId,
+        );
+        const locationsReq = this.genericStorageService.getAllDocuments(
+            AssetConstants.ASSET_SITES_APP_DOC_NAME,
+        );
+        zip([assetReq, locationsReq]).subscribe(res => {
+            this.asset = res[0];
+            this.sites = res[1];
+            if (!this.selectedAsset) {
+                this.selectedAsset = this.asset;
+            }
+            this.breadcrumbService.updateBreadcrumb([
+                SpAssetRoutes.BASE,
+                { label: this.asset.assetName },
+            ]);
+        });
+    }
+
+    applySelectedAsset(event: { asset: SpAsset; rootNode: boolean }): void {
+        this.selectedAsset = event.asset;
+        this.rootNode = event.rootNode;
     }
 
     updateAsset() {
@@ -76,7 +91,7 @@ export class SpAssetDetailsComponent implements OnInit {
         this.genericStorageService
             .updateDocument(AssetConstants.ASSET_APP_DOC_NAME, this.asset)
             .subscribe(res => {
-                this.loadAsset();
+                this.loadResources();
                 this.editMode = false;
             });
     }

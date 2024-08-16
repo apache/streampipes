@@ -18,5 +18,6 @@
 
 export class AssetConstants {
     public static ASSET_APP_DOC_NAME = 'asset-management';
+    public static ASSET_SITES_APP_DOC_NAME = 'asset-sites';
     public static ASSET_LINK_TYPES_DOC_NAME = 'asset-link-type';
 }

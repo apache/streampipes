@@ -38,7 +38,7 @@ import { saveAs } from 'file-saver';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 
 @Component({
-    selector: 'sp-asset-overview-component',
+    selector: 'sp-asset-overview',
     templateUrl: './asset-overview.component.html',
     styleUrls: ['./asset-overview.component.scss'],
 })

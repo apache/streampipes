@@ -20,7 +20,7 @@ import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
-import { ConfigurationUtils } from '../../support/utils/configuration/ConfigutationUtils';
+import { ConfigurationUtils } from '../../support/utils/configuration/ConfigurationUtils';
 
 describe('Creates a new adapter, add to assets and export assets', () => {
     beforeEach('Setup Test', () => {
