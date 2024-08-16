@@ -17,7 +17,9 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict
+from typing import Dict, Optional
+
+from typing_extensions import deprecated
 
 from streampipes.functions.broker import SupportedBroker
 from streampipes.model.common import (
@@ -64,11 +66,9 @@ class SemanticType(Enum):
 @dataclass
 class AttributeInfo:
     runtime_type: str
-    semantic_type: str  
+    semantic_type: Optional[str] = None
 
-
-# TODO Use an more general approach to create a data stream
-def create_data_stream(
+def compose_data_stream(
     name: str,
     attributes: Dict[str, AttributeInfo],
     stream_id: str = None,
@@ -80,7 +80,7 @@ def create_data_stream(
     ----------
     name: str
         Name of the data stream to be shown at the UI.
-    attributes: Dict[str, str]
+    attributes: Dict[str, AttributeInfo]
         Name and types of the attributes.
     stream_id: str
         The id of this data stream.
@@ -105,7 +105,7 @@ def create_data_stream(
             EventProperty(  # type: ignore
                 label=attribute_name,
                 runtime_name=attribute_name,
-                domain_properties=[attribute_info.semantic_type],
+                domain_properties=[] if attribute_info.semantic_type is None else [attribute_info.semantic_type],
                 index=i,
                 runtime_type=f"http://www.w3.org/2001/XMLSchema#{attribute_info.runtime_type}",
             )
@@ -136,3 +136,35 @@ def create_data_stream(
 
     data_stream.element_id = sanitized_stream_id
     return data_stream
+
+# TODO Use an more general approach to create a data stream
+@deprecated('deprecated; please use "compose_data_stream" instead.')
+def create_data_stream(
+    name: str,
+    attributes: Dict[str, str],
+    stream_id: str = None,
+    broker: SupportedBroker = SupportedBroker.NATS,
+):
+    """Creates a data stream
+
+    Parameters
+    ----------
+    name: str
+        Name of the data stream to be shown at the UI.
+    attributes: Dict[str, str]
+        Name and types of the attributes.
+    stream_id: str
+        The id of this data stream.
+
+    Returns
+    -------
+    data_stream: DataStream
+        The created data stream
+    """
+
+    attributes = {
+    key: AttributeInfo(runtime_type=value)
+    for key, value in attributes.items()
+    }
+        
+    return compose_data_stream(name=name, attributes=attributes, stream_id=stream_id, broker=broker)
