@@ -15,6 +15,7 @@
 # limitations under the License.
 #
 
+from dataclasses import dataclass
 from enum import Enum
 from typing import Dict
 
@@ -48,11 +49,28 @@ class RuntimeType(Enum):
     INTEGER = "integer"
     LONG = "long"
 
+class SemanticType(Enum):
+    """Semantic type names for the attributes of a data stream.
+
+    Attributes
+    ----------
+    IMAGE
+    TIMESTAMP
+    """
+
+    IMAGE = "https://image.com"
+    TIMESTAMP = "http://schema.org/DateTime"
+
+@dataclass
+class AttributeInfo:
+    runtime_type: str
+    semantic_type: str  
+
 
 # TODO Use an more general approach to create a data stream
 def create_data_stream(
     name: str,
-    attributes: Dict[str, str],
+    attributes: Dict[str, AttributeInfo],
     stream_id: str = None,
     broker: SupportedBroker = SupportedBroker.NATS,
 ):
@@ -87,10 +105,11 @@ def create_data_stream(
             EventProperty(  # type: ignore
                 label=attribute_name,
                 runtime_name=attribute_name,
+                domain_properties=[attribute_info.semantic_type],
                 index=i,
-                runtime_type=f"http://www.w3.org/2001/XMLSchema#{attribute_type}",
+                runtime_type=f"http://www.w3.org/2001/XMLSchema#{attribute_info.runtime_type}",
             )
-            for i, (attribute_name, attribute_type) in enumerate(attributes.items(), start=1)
+            for i, (attribute_name, attribute_info) in enumerate(attributes.items(), start=1)
         ]
     )
 
