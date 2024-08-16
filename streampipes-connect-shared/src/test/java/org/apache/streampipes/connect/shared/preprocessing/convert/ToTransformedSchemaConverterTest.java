@@ -105,7 +105,7 @@ public class ToTransformedSchemaConverterTest {
 
     var rules = new ArrayList<TransformationRuleDescription>();
 
-    rules.add(makeUnitTransformationRule("nested.stringProp"));
+    rules.add(makeUnitTransformationRule("nested<-=>stringProp"));
 
     var resultProperties = executeAndReturnResult(properties, rules);
     var nestedResultProperty = ((EventPropertyNested) resultProperties.get(1)).getEventProperties().get(0);

@@ -111,6 +111,12 @@ export class ConnectBtns {
         });
     }
 
+    public static runtimeNameInput() {
+        return cy.dataCy('connect-edit-field-runtime-name', {
+            timeout: 10000,
+        });
+    }
+
     // ========================================================================
 
     // =====================  Format configurations  ==========================

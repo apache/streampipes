@@ -1,2 +1,2 @@
-count;staticPropertyName;temperature
-122.0;id1;11.0
+count;dot;staticPropertyName;temperature
+122.0;special_char_in_column_name;id1;11.0

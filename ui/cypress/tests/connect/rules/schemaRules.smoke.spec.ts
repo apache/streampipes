@@ -23,10 +23,10 @@ import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectE
 describe('Connect schema rule transformations', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        FileManagementUtils.addFile('connect/schemaRules/input.csv');
     });
 
-    it('Perform Test', () => {
+    it('Test several schema rules', () => {
+        FileManagementUtils.addFile('connect/schemaRules/input.csv');
         const adapterConfiguration =
             ConnectUtils.setUpPreprocessingRuleTest(true);
 
@@ -36,7 +36,10 @@ describe('Connect schema rule transformations', () => {
         // Delete one property
         ConnectEventSchemaUtils.deleteProperty('density');
 
-        // Set data type to float
+        // Rename property with special char
+        ConnectEventSchemaUtils.renameProperty('contains.dot', 'dot');
+
+        // Set data type to integer
         ConnectEventSchemaUtils.changePropertyDataType(
             'temperature',
             'Integer',
