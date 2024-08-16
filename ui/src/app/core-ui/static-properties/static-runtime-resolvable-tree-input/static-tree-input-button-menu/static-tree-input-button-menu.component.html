@@ -16,13 +16,14 @@
   ~
   -->
 <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-    <div>
+    <div fxLayoutAlign="start center">
         <button
             mat-raised-button
             color="accent"
             class="small-button"
             (click)="onResetOptionsAndReload()"
             style="margin-right: 10px"
+            *ngIf="editorMode === 'tree'"
             [disabled]="!showOptions"
             data-cy="clear-tree-node-selection"
         >
@@ -34,16 +35,38 @@
             class="small-button"
             (click)="onReload()"
             style="margin-right: 10px"
+            *ngIf="editorMode === 'tree'"
             [disabled]="!showOptions"
         >
             <span>Reload</span>
         </button>
     </div>
-    <div fxLayout="column" *ngIf="loading" class="mt-10">
+    <div
+        fxLayout="row"
+        *ngIf="loading && editorMode === 'tree'"
+        fxLayoutAlign="start center"
+    >
         <mat-spinner
             color="accent"
             [mode]="'indeterminate'"
-            [diameter]="20"
+            [diameter]="15"
         ></mat-spinner>
+        <span class="reloading-nodes-label">&nbsp;Reloading nodes</span>
+    </div>
+
+    <div fxFlex fxLayoutAlign="end center">
+        <mat-button-toggle-group
+            aria-label="Font Style"
+            class="small-button"
+            [(value)]="editorMode"
+            (change)="onChangeEditor($event.value)"
+        >
+            <mat-button-toggle data-cy="editor-mode-tree" value="tree"
+                >Tree</mat-button-toggle
+            >
+            <mat-button-toggle data-cy="editor-mode-text" value="text"
+                >Text</mat-button-toggle
+            >
+        </mat-button-toggle-group>
     </div>
 </div>

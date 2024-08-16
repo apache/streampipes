@@ -129,6 +129,13 @@ export class ConnectUtils {
 
         this.configureFormat(adapterInput);
 
+        ConnectUtils.finishAdapterSettings();
+    }
+
+    /**
+     * Clicks next on the adapter settings page
+     */
+    public static finishAdapterSettings() {
         // Next Button should not be disabled
         cy.get('button').contains('Next').parent().should('not.be.disabled');
 
@@ -347,6 +354,10 @@ export class ConnectUtils {
 
         ConnectBtns.startAdapter().click();
 
+        ConnectUtils.validateEventsInPreview(amountOfProperties);
+    }
+
+    public static validateEventsInPreview(amountOfProperties: number) {
         // View data
         ConnectBtns.infoAdapter().click();
         cy.get('div').contains('Values').parent().click();

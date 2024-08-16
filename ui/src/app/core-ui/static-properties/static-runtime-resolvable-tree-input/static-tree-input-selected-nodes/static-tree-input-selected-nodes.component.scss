@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,24 +16,8 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-
-@Component({
-    selector: 'sp-static-tree-input-selected-nodes',
-    templateUrl: './static-tree-input-selected-nodes.component.html',
-    styleUrls: [
-        '../static-runtime-resolvable-tree-input.component.scss',
-        './static-tree-input-selected-nodes.component.scss',
-    ],
-})
-export class StaticTreeInputSelectedNodesComponent {
-    @Input()
-    selectedNodesInternalNames: string[];
-
-    @Output()
-    removeSelectedNode = new EventEmitter<string>();
-
-    onRemoveSelectedNode(selectedNodeName: string) {
-        this.removeSelectedNode.emit(selectedNodeName);
-    }
+.selected-node {
+    background: var(--color-bg-1);
+    padding: 5px;
+    border: 1px solid var(--color-bg-3);
 }

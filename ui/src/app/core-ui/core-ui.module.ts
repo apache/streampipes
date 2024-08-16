@@ -115,6 +115,7 @@ import { StaticTreeInputBrowseNodesComponent } from './static-properties/static-
 import { StaticTreeInputNodeDetailsComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-node-details/static-tree-input-node-details.component';
 import { SingleMarkerMapComponent } from './single-marker-map/single-marker-map.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { StaticTreeInputTextEditorComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-text-editor/static-tree-input-text-editor.component';
 
 @NgModule({
     imports: [
@@ -197,6 +198,7 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
         StaticRuntimeResolvableTreeInputComponent,
         StaticTreeInputBrowseNodesComponent,
         StaticTreeInputNodeDetailsComponent,
+        StaticTreeInputTextEditorComponent,
         StaticSlideToggleComponent,
         SingleMarkerMapComponent,
         ErrorHintComponent,
