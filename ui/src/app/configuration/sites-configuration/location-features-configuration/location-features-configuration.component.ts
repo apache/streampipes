@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
     UntypedFormBuilder,
     UntypedFormControl,
@@ -37,11 +37,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class LocationFeaturesConfigurationComponent
     implements OnInit, OnDestroy
 {
+    @Input()
     locationConfig: LocationConfig;
 
-    parentForm: UntypedFormGroup;
+    locationForm: UntypedFormGroup;
     formSubscription: Subscription;
-    showTileUrlInput = false;
+    showLocationDetails = false;
 
     constructor(
         private fb: UntypedFormBuilder,
@@ -50,45 +51,46 @@ export class LocationFeaturesConfigurationComponent
     ) {}
 
     ngOnInit(): void {
-        this.parentForm = this.fb.group({});
-        this.locationConfigService.getLocationConfig().subscribe(res => {
-            this.locationConfig = res;
-            this.showTileUrlInput = res.locationEnabled;
-            this.parentForm.addControl(
-                'locationFeaturesEnabled',
-                new UntypedFormControl(this.locationConfig.locationEnabled),
-            );
-            this.parentForm.addControl(
-                'tileServerUrl',
-                new UntypedFormControl(
-                    this.locationConfig.tileServerUrl,
-                    this.showTileUrlInput ? Validators.required : [],
-                ),
-            );
-            this.formSubscription = this.parentForm
-                .get('locationFeaturesEnabled')
-                .valueChanges.subscribe(checked => {
-                    this.showTileUrlInput = checked;
-                    if (checked) {
-                        this.parentForm.controls.tileServerUrl.setValidators(
-                            Validators.required,
-                        );
-                    } else {
-                        this.parentForm.controls.tileServerUrl.setValidators(
-                            [],
-                        );
-                    }
-                });
-        });
+        this.locationForm = this.fb.group({});
+        this.showLocationDetails = this.locationConfig.locationEnabled;
+        this.locationForm.addControl(
+            'locationFeaturesEnabled',
+            new UntypedFormControl(this.locationConfig.locationEnabled),
+        );
+        this.locationForm.addControl(
+            'tileServerUrl',
+            new UntypedFormControl(
+                this.locationConfig.tileServerUrl,
+                this.showLocationDetails ? Validators.required : [],
+            ),
+        );
+        this.locationForm.addControl(
+            'attributionText',
+            new UntypedFormControl(this.locationConfig.attributionText || ''),
+        );
+        this.formSubscription = this.locationForm
+            .get('locationFeaturesEnabled')
+            .valueChanges.subscribe(checked => {
+                this.showLocationDetails = checked;
+                if (checked) {
+                    this.locationForm.controls.tileServerUrl.setValidators(
+                        Validators.required,
+                    );
+                } else {
+                    this.locationForm.controls.tileServerUrl.setValidators([]);
+                }
+            });
     }
 
     save(): void {
-        this.locationConfig.locationEnabled = this.parentForm.get(
+        this.locationConfig.locationEnabled = this.locationForm.get(
             'locationFeaturesEnabled',
         ).value;
         if (this.locationConfig.locationEnabled) {
             this.locationConfig.tileServerUrl =
-                this.parentForm.get('tileServerUrl').value;
+                this.locationForm.get('tileServerUrl').value;
+            this.locationConfig.attributionText =
+                this.locationForm.get('attributionText').value;
         }
         this.locationConfigService
             .updateLocationConfig(this.locationConfig)

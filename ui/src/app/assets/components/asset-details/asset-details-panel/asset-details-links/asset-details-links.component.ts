@@ -29,7 +29,7 @@ import { EditAssetLinkDialogComponent } from '../../../../dialog/edit-asset-link
 import { AssetConstants } from '../../../../constants/asset.constants';
 
 @Component({
-    selector: 'sp-asset-details-links-component',
+    selector: 'sp-asset-details-links',
     templateUrl: './asset-details-links.component.html',
 })
 export class AssetDetailsLinksComponent implements OnInit {

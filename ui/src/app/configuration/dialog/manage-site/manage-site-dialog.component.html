@@ -19,7 +19,10 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div *ngIf="clonedSite !== undefined">
-            <sp-edit-asset-location-component [site]="clonedSite">
+            <sp-edit-asset-location-component
+                [site]="clonedSite"
+                [locationConfig]="locationConfig"
+            >
             </sp-edit-asset-location-component>
         </div>
     </div>

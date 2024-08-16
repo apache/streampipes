@@ -39,7 +39,7 @@ import { map, startWith } from 'rxjs/operators';
 import { SpColorizationService } from '@streampipes/shared-ui';
 
 @Component({
-    selector: 'sp-asset-details-labels-component',
+    selector: 'sp-asset-details-labels',
     templateUrl: './asset-details-labels.component.html',
 })
 export class AssetDetailsLabelsComponent implements OnInit, OnChanges {

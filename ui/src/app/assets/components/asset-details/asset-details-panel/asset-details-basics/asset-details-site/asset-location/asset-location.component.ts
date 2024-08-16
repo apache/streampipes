@@ -16,10 +16,38 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import {
+    LocationConfig,
+    LocationConfigService,
+    SpAsset,
+} from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-asset-location-component',
+    selector: 'sp-asset-location',
     templateUrl: './asset-location.component.html',
 })
-export class AssetLocationComponent {}
+export class AssetLocationComponent implements OnInit {
+    @Input()
+    asset: SpAsset;
+
+    @Input()
+    editMode: boolean;
+
+    locationConfig: LocationConfig;
+
+    constructor(private locationConfigService: LocationConfigService) {}
+
+    ngOnInit() {
+        this.asset.assetSite.location ??= {
+            coordinates: {
+                latitude: 0,
+                longitude: 0,
+            },
+            zoom: 1,
+        };
+        this.locationConfigService
+            .getLocationConfig()
+            .subscribe(res => (this.locationConfig = res));
+    }
+}

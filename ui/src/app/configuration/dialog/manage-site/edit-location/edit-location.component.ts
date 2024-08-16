@@ -17,7 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { AssetSiteDesc } from '@streampipes/platform-services';
+import { AssetSiteDesc, LocationConfig } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-edit-asset-location-component',
@@ -26,4 +26,7 @@ import { AssetSiteDesc } from '@streampipes/platform-services';
 export class EditAssetLocationComponent {
     @Input()
     site: AssetSiteDesc;
+
+    @Input()
+    locationConfig: LocationConfig;
 }

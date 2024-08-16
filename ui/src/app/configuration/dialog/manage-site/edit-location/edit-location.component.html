@@ -41,4 +41,19 @@
         <sp-edit-asset-location-area-component [site]="site" fxFlex="100">
         </sp-edit-asset-location-area-component>
     </sp-basic-field-description>
+    <sp-basic-field-description
+        *ngIf="locationConfig.locationEnabled"
+        fxFlex="100"
+        descriptionPanelWidth="30"
+        class="mt-10"
+        label="Location"
+        description="Exact location of the site"
+    >
+        <sp-single-marker-map
+            fxFlex="100"
+            [locationConfig]="locationConfig"
+            [assetLocation]="site.location"
+        >
+        </sp-single-marker-map>
+    </sp-basic-field-description>
 </div>

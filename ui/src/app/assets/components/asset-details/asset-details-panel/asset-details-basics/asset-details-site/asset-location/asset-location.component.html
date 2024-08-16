@@ -15,3 +15,20 @@
   ~ limitations under the License.
   ~
   -->
+
+<div fxFlex="100" *ngIf="locationConfig && locationConfig.locationEnabled">
+    <mat-checkbox
+        [disabled]="!editMode"
+        [(ngModel)]="asset.assetSite.hasExactLocation"
+    >
+        Add exact location
+    </mat-checkbox>
+    <div *ngIf="asset.assetSite.hasExactLocation">
+        <sp-single-marker-map
+            [readonly]="!editMode"
+            [assetLocation]="asset.assetSite.location"
+            [locationConfig]="locationConfig"
+        >
+        </sp-single-marker-map>
+    </div>
+</div>

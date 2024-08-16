@@ -17,7 +17,11 @@
   -->
 
 <sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'sites'">
-    <sp-location-features-configuration> </sp-location-features-configuration>
+    <div fxLayout="column" *ngIf="locationConfig">
+        <sp-location-features-configuration [locationConfig]="locationConfig">
+        </sp-location-features-configuration>
 
-    <sp-site-area-configuration> </sp-site-area-configuration>
+        <sp-site-area-configuration [locationConfig]="locationConfig">
+        </sp-site-area-configuration>
+    </div>
 </sp-basic-nav-tabs>

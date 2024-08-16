@@ -100,12 +100,12 @@
                 label="Labels"
                 description="Assign additional labels to better discover your assets"
             >
-                <sp-asset-details-labels-component
+                <sp-asset-details-labels
                     [asset]="asset"
                     [editMode]="editMode"
                     class="w-100"
                 >
-                </sp-asset-details-labels-component>
+                </sp-asset-details-labels>
             </sp-basic-field-description>
             <sp-basic-field-description
                 *ngIf="rootNode"
@@ -114,13 +114,13 @@
                 label="Sites"
                 description="Assign a location (site and area) to this asset"
             >
-                <sp-asset-details-site-component
+                <sp-asset-details-site
                     class="w-100"
                     [asset]="asset"
-                    [locations]="locations"
+                    [sites]="sites"
                     [editMode]="editMode"
                 >
-                </sp-asset-details-site-component>
+                </sp-asset-details-site>
             </sp-basic-field-description>
         </div>
     </div>

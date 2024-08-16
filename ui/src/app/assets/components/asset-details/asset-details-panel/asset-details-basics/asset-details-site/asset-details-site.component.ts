@@ -21,7 +21,7 @@ import { AssetSiteDesc, SpAsset } from '@streampipes/platform-services';
 import { MatSelectChange } from '@angular/material/select';
 
 @Component({
-    selector: 'sp-asset-details-site-component',
+    selector: 'sp-asset-details-site',
     templateUrl: './asset-details-site.component.html',
 })
 export class AssetDetailsSiteComponent implements OnChanges {
@@ -32,7 +32,7 @@ export class AssetDetailsSiteComponent implements OnChanges {
     editMode: boolean;
 
     @Input()
-    allSites: AssetSiteDesc[];
+    sites: AssetSiteDesc[];
 
     currentSite: AssetSiteDesc;
 
@@ -40,13 +40,14 @@ export class AssetDetailsSiteComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes['asset']) {
-            this.asset.assetLocation ??= {
+            this.asset.assetSite ??= {
                 area: undefined,
                 siteId: undefined,
+                hasExactLocation: false,
             };
-            if (this.allSites.length > 0) {
-                if (this.asset.assetLocation.siteId !== undefined) {
-                    this.selectCurrentSite(this.asset.assetLocation.siteId);
+            if (this.sites.length > 0) {
+                if (this.asset.assetSite.siteId !== undefined) {
+                    this.selectCurrentSite(this.asset.assetSite.siteId);
                 }
             }
         }
@@ -57,6 +58,6 @@ export class AssetDetailsSiteComponent implements OnChanges {
     }
 
     selectCurrentSite(siteId: string): void {
-        this.currentSite = this.allSites.find(loc => loc._id === siteId);
+        this.currentSite = this.sites.find(loc => loc._id === siteId);
     }
 }

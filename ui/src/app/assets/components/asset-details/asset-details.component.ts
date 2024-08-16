@@ -30,13 +30,13 @@ import { SpAssetRoutes } from '../../assets.routes';
 import { zip } from 'rxjs';
 
 @Component({
-    selector: 'sp-asset-details-component',
+    selector: 'sp-asset-details',
     templateUrl: './asset-details.component.html',
     styleUrls: ['./asset-details.component.scss'],
 })
 export class SpAssetDetailsComponent implements OnInit {
     asset: SpAssetModel;
-    locations: AssetSiteDesc[] = [];
+    sites: AssetSiteDesc[] = [];
 
     selectedAsset: SpAsset;
     rootNode = true;
@@ -67,7 +67,7 @@ export class SpAssetDetailsComponent implements OnInit {
         );
         zip([assetReq, locationsReq]).subscribe(res => {
             this.asset = res[0];
-            this.locations = res[1];
+            this.sites = res[1];
             if (!this.selectedAsset) {
                 this.selectedAsset = this.asset;
             }

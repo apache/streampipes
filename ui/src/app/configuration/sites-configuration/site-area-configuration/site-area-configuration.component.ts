@@ -16,10 +16,11 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
     AssetSiteDesc,
     GenericStorageService,
+    LocationConfig,
 } from '@streampipes/platform-services';
 import { AssetConstants } from '../../../assets/constants/asset.constants';
 import { MatTableDataSource } from '@angular/material/table';
@@ -31,6 +32,9 @@ import { DialogService, PanelType } from '@streampipes/shared-ui';
     templateUrl: './site-area-configuration.component.html',
 })
 export class SiteAreaConfigurationComponent implements OnInit {
+    @Input()
+    locationConfig: LocationConfig;
+
     allSites: AssetSiteDesc[] = [];
     dataSource: MatTableDataSource<AssetSiteDesc> =
         new MatTableDataSource<AssetSiteDesc>();
@@ -71,6 +75,7 @@ export class SiteAreaConfigurationComponent implements OnInit {
             width: '50vw',
             data: {
                 site,
+                locationConfig: this.locationConfig,
             },
         });
 

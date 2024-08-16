@@ -20,20 +20,27 @@
     <mat-form-field color="accent" class="w-100">
         <mat-label>Site</mat-label>
         <mat-select
-            [(ngModel)]="asset.assetLocation.siteId"
+            [disabled]="!editMode"
+            [(ngModel)]="asset.assetSite.siteId"
             (selectionChange)="handleLocationChange($event)"
         >
-            <mat-option *ngFor="let site of allSites" [value]="site._id">
+            <mat-option *ngFor="let site of sites" [value]="site._id">
                 {{ site.label }}
             </mat-option>
         </mat-select>
     </mat-form-field>
     <mat-form-field color="accent" class="w-100" *ngIf="currentSite">
         <mat-label>Area</mat-label>
-        <mat-select [(ngModel)]="asset.assetLocation.area">
+        <mat-select [disabled]="!editMode" [(ngModel)]="asset.assetSite.area">
             <mat-option *ngFor="let area of currentSite.areas" [value]="area">
                 {{ area }}
             </mat-option>
         </mat-select>
     </mat-form-field>
+    <sp-asset-location
+        [asset]="asset"
+        [editMode]="editMode"
+        *ngIf="asset.assetSite?.siteId"
+    >
+    </sp-asset-location>
 </div>

@@ -48,12 +48,17 @@ export interface Isa95TypeDesc {
     type: Isa95Type;
 }
 
+export interface AssetLocation {
+    coordinates: LatLng;
+    zoom?: number;
+}
+
 export interface AssetSiteDesc {
     _id: string;
     _rev?: string;
     appDocType: string;
     label: string;
-    location: LatLng;
+    location?: AssetLocation;
     areas: string[];
 }
 
@@ -62,11 +67,11 @@ export interface LatLng {
     longitude: number;
 }
 
-export interface AssetLocation {
+export interface AssetSite {
     siteId: string;
     area: string;
-    exactLocation?: LatLng;
-    zoom?: number;
+    hasExactLocation: boolean;
+    location?: AssetLocation;
 }
 
 export interface SpAsset {
@@ -76,7 +81,7 @@ export interface SpAsset {
     assetType: AssetType;
     labelIds?: string[];
     assetLinks: AssetLink[];
-    assetLocation?: AssetLocation;
+    assetSite?: AssetSite;
     assets: SpAsset[];
 }
 

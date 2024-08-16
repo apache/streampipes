@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-08-14 12:45:11.
+// Generated using typescript-generator version 3.2.1263 on 2024-08-15 17:36:05.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -2137,6 +2137,7 @@ export class ListOutputStrategy extends OutputStrategy {
 }
 
 export class LocationConfig {
+    attributionText: string;
     locationEnabled: boolean;
     tileServerUrl: string;
 
@@ -2148,6 +2149,7 @@ export class LocationConfig {
             return data;
         }
         const instance = target || new LocationConfig();
+        instance.attributionText = data.attributionText;
         instance.locationEnabled = data.locationEnabled;
         instance.tileServerUrl = data.tileServerUrl;
         return instance;

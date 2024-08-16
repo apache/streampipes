@@ -41,7 +41,7 @@ public class SpCoreConfiguration {
   private String filesDir;
 
   public SpCoreConfiguration() {
-    this.locationConfig = new LocationConfig(false, "");
+    this.locationConfig = new LocationConfig(false, "", "");
   }
 
   public String getRev() {

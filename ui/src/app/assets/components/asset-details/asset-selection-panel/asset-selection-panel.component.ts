@@ -29,7 +29,7 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 
 @Component({
-    selector: 'sp-asset-selection-panel-component',
+    selector: 'sp-asset-selection-panel',
     templateUrl: './asset-selection-panel.component.html',
     styleUrls: ['./asset-selection-panel.component.scss'],
 })

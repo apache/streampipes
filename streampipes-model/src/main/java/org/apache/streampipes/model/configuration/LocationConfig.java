@@ -22,4 +22,5 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
 public record LocationConfig(boolean locationEnabled,
-                             String tileServerUrl) {}
+                             String tileServerUrl,
+                             String attributionText) {}

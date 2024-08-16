@@ -21,6 +21,7 @@ import { DialogRef } from '@streampipes/shared-ui';
 import {
     AssetSiteDesc,
     GenericStorageService,
+    LocationConfig,
 } from '@streampipes/platform-services';
 import { AssetConstants } from '../../../assets/constants/asset.constants';
 
@@ -32,6 +33,9 @@ import { AssetConstants } from '../../../assets/constants/asset.constants';
 export class ManageSiteDialogComponent implements OnInit {
     @Input()
     site: AssetSiteDesc;
+
+    @Input()
+    locationConfig: LocationConfig;
 
     clonedSite: AssetSiteDesc;
     createMode = false;
@@ -58,14 +62,13 @@ export class ManageSiteDialogComponent implements OnInit {
             appDocType: AssetConstants.ASSET_SITES_APP_DOC_NAME,
             _id: undefined,
             label: 'New site',
-            location: { latitude: 0, longitude: 0 },
+            location: { coordinates: { latitude: 0, longitude: 0 } },
             areas: [],
         };
         this.createMode = true;
     }
 
     store(): void {
-        console.log(this.clonedSite);
         const observable = this.createMode
             ? this.genericStorageService.createDocument(
                   AssetConstants.ASSET_SITES_APP_DOC_NAME,

@@ -27,7 +27,7 @@
                 | assetTypeFilter: assetLinkType.linkType
         "
     >
-        <sp-asset-link-item-component
+        <sp-asset-link-item
             [assetLink]="link"
             [assetLinkType]="assetLinkType"
             [editMode]="editMode"
@@ -35,6 +35,6 @@
             (deleteAssetLinkEmitter)="deleteAssetLink($event)"
             class="asset-link-item"
         >
-        </sp-asset-link-item-component>
+        </sp-asset-link-item>
     </div>
 </div>

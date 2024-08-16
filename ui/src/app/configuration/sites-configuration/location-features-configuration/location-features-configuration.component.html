@@ -18,7 +18,7 @@
 
 <div fxLayout="column">
     <form
-        [formGroup]="parentForm"
+        [formGroup]="locationForm"
         fxFlex="100"
         fxLayout="column"
         *ngIf="locationConfig"
@@ -32,9 +32,10 @@
                 data-cy="sites-enable-location-features-checkbox"
                 >Enable geo features
             </mat-checkbox>
-            <div *ngIf="showTileUrlInput" class="mt-10">
+            <div *ngIf="showLocationDetails" class="mt-10">
                 <div class="subsection-title">
-                    Tile server URL (use placeholders for x, y
+                    Tile server URL (use placeholders for x, y and z
+                    coordinates)
                 </div>
                 <mat-form-field
                     color="accent"
@@ -48,6 +49,21 @@
                         data-cy="sites-location-config-tile-server"
                     />
                 </mat-form-field>
+                <div class="subsection-title mt-10">
+                    Attribution text if required by the tile server
+                </div>
+                <mat-form-field
+                    color="accent"
+                    class="w-100"
+                    subscriptSizing="dynamic"
+                >
+                    <input
+                        formControlName="attributionText"
+                        fxFlex
+                        matInput
+                        data-cy="sites-location-config-attribution-text"
+                    />
+                </mat-form-field>
             </div>
         </sp-split-section>
         <sp-split-section>
@@ -56,7 +72,7 @@
                     mat-raised-button
                     color="accent"
                     data-cy="sites-location-features-button"
-                    [disabled]="!parentForm.valid"
+                    [disabled]="!locationForm.valid"
                     (click)="save()"
                 >
                     Save

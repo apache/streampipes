@@ -16,13 +16,27 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SpConfigurationTabs } from '../configuration-tabs';
+import {
+    LocationConfig,
+    LocationConfigService,
+} from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-sites-configuration',
     templateUrl: './sites-configuration.component.html',
 })
-export class SitesConfigurationComponent {
+export class SitesConfigurationComponent implements OnInit {
     tabs = SpConfigurationTabs.getTabs();
+
+    locationConfig: LocationConfig;
+
+    constructor(private locationConfigService: LocationConfigService) {}
+
+    ngOnInit() {
+        this.locationConfigService.getLocationConfig().subscribe(res => {
+            this.locationConfig = res;
+        });
+    }
 }

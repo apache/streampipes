@@ -31,7 +31,7 @@ import {
 } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-asset-details-basics-component',
+    selector: 'sp-asset-details-basics',
     templateUrl: './asset-details-basics.component.html',
     styleUrls: ['./asset-details-basics.component.scss'],
 })
@@ -46,7 +46,7 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
     rootNode: boolean;
 
     @Input()
-    locations: AssetSiteDesc[];
+    sites: AssetSiteDesc[];
 
     isa95Types: Isa95TypeDesc[] = [];
 
