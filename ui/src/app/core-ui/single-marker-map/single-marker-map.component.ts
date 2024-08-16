@@ -35,7 +35,7 @@ import {
 
 @Component({
     selector: 'sp-single-marker-map',
-    templateUrl: './single-marker-map.component.html'
+    templateUrl: './single-marker-map.component.html',
 })
 export class SingleMarkerMapComponent implements OnInit {
     @Input()
