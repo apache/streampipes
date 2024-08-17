@@ -34,6 +34,9 @@ import java.util.concurrent.TimeUnit;
 
 public class InfluxClientProvider {
 
+  private static final int DEFAULT_BATCH_SIZE = 2000;
+  private static final int DEFAULT_FLUSH_DURATION = 500;
+
   private static final Logger LOG = LoggerFactory.getLogger(InfluxClientProvider.class);
 
   /**
@@ -108,16 +111,16 @@ public class InfluxClientProvider {
   }
 
   /**
-   * Creates the specified database in the influxDb instance if it does not exists. Enables batching with default values
+   * Creates the specified database in the influxDb instance if it does not exist. Enables batching with default values
    * @param influxDb The InfluxDB client instance
    * @param databaseName The name of the database
    */
   public void setupDatabaseAndBatching(InfluxDB influxDb, String databaseName) {
-    this.setupDatabaseAndBatching(influxDb, databaseName, 2000, 500);
+    this.setupDatabaseAndBatching(influxDb, databaseName, DEFAULT_BATCH_SIZE, DEFAULT_FLUSH_DURATION);
   }
 
   /**
-   * Creates the specified database in the influxDb instance if it does not exists. Enables batching
+   * Creates the specified database in the influxDb instance if it does not exist. Enables batching
    * @param influxDb The InfluxDB client instance
    * @param databaseName The name of the database
    * @param batchSize Batch Size
