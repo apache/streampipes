@@ -19,6 +19,10 @@
 <div
     fxLayout="row"
     class="data-view-preview-outer"
+    [attr.data-cy]="
+        'add-data-view-btn-' +
+        dataView.baseAppearanceConfig.widgetTitle.replaceAll(' ', '')
+    "
     (click)="addDataViewEmitter.emit(dataView.elementId)"
 >
     <div fxFlex fxLayout="column">

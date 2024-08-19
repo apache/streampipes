@@ -45,24 +45,16 @@ describe('Test Table View in Data Explorer', () => {
         DataLakeUtils.saveAndReEditDashboard('TestDashboard');
 
         // Check that widget is gone
-        cy.dataCy('widget-datalake_configuration', { timeout: 10000 }).should(
-            'not.exist',
-        );
+        cy.dataCy('widget-TestView', { timeout: 10000 }).should('not.exist');
 
         DataLakeUtils.goBackToOverview();
 
-        cy.dataCy('delete-dashboard-TestDashboard', { timeout: 10000 }).should(
-            'have.length',
-            1,
-        );
+        DataLakeUtils.checkRowsDashboardTable(1);
 
         // Delete dashboard
         DataLakeUtils.deleteDashboard('TestDashboard');
 
         // Check that dashboard is gone
-        cy.dataCy('delete-dashboard-TestDashboard', { timeout: 10000 }).should(
-            'have.length',
-            0,
-        );
+        DataLakeUtils.checkRowsDashboardTable(0);
     });
 });
