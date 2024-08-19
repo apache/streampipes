@@ -16,92 +16,102 @@
   ~
   -->
 
-<sp-basic-view [showBackLink]="false" [padding]="true">
-    <div
-        nav
-        fxFlex="100"
-        fxLayoutAlign="start center"
-        fxLayout="row"
-        class="pl-10"
-    >
-        <button
-            mat-button
-            mat-raised-button
-            color="accent"
-            (click)="navigateToPipelineEditor()"
-            data-cy="pipelines-navigate-to-editor"
+<sp-asset-browser
+    filteredAssetLinkType="pipeline"
+    [resourceCount]="pipelines.length"
+    (filterIdsEmitter)="applyPipelineFilters($event)"
+>
+    <sp-basic-view [showBackLink]="false" [padding]="true">
+        <div
+            nav
+            fxFlex="100"
+            fxLayoutAlign="start center"
+            fxLayout="row"
+            class="pl-10"
         >
-            <i class="material-icons">add</i>&nbsp;New pipeline
-        </button>
-        <button
-            class="mr-10"
-            mat-button
-            color="accent"
-            (click)="startAllPipelines(true)"
-            [disabled]="checkCurrentSelectionStatus(false)"
-            *ngIf="hasPipelineWritePrivileges"
-        >
-            <mat-icon>play_arrow</mat-icon>
-            <span>Start all pipelines</span>
-        </button>
-        <button
-            mat-button
-            color="accent"
-            (click)="startAllPipelines(false)"
-            [disabled]="checkCurrentSelectionStatus(true)"
-            *ngIf="hasPipelineWritePrivileges"
-        >
-            <mat-icon>stop</mat-icon>
-            <span>Stop all pipelines</span>
-        </button>
-        <span fxFlex></span>
-        <button
-            mat-icon-button
-            color="accent"
-            (click)="startPipelineTour()"
-            [matTooltip]="'Tutorial'"
-            [disabled]="tutorialActive"
-        >
-            <i class="material-icons"> school </i>
-        </button>
-        <button
-            mat-icon-button
-            color="accent"
-            matTooltip="Refresh pipelines"
-            matTooltipPosition="above"
-            (click)="refreshPipelines()"
-        >
-            <i class="material-icons"> refresh </i>
-        </button>
-    </div>
-    <div fxFlex="100" fxLayout="column">
-        <div fxLayout="column">
-            <sp-basic-header-title-component
-                title="Pipelines"
-            ></sp-basic-header-title-component>
-            <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-                <div fxFlex="90">
-                    <sp-pipeline-overview
-                        [pipelines]="pipelines"
-                        (refreshPipelinesEmitter)="refreshPipelines()"
-                        *ngIf="pipelinesReady"
-                    ></sp-pipeline-overview>
-                </div>
-            </div>
-            <div fxFlex="100" fxLayout="column" style="margin-top: 20px">
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="navigateToPipelineEditor()"
+                data-cy="pipelines-navigate-to-editor"
+            >
+                <i class="material-icons">add</i>&nbsp;New pipeline
+            </button>
+            <button
+                class="mr-10"
+                mat-button
+                color="accent"
+                (click)="startAllPipelines(true)"
+                [disabled]="checkCurrentSelectionStatus(false)"
+                *ngIf="hasPipelineWritePrivileges"
+            >
+                <mat-icon>play_arrow</mat-icon>
+                <span>Start all pipelines</span>
+            </button>
+            <button
+                mat-button
+                color="accent"
+                (click)="startAllPipelines(false)"
+                [disabled]="checkCurrentSelectionStatus(true)"
+                *ngIf="hasPipelineWritePrivileges"
+            >
+                <mat-icon>stop</mat-icon>
+                <span>Stop all pipelines</span>
+            </button>
+            <span fxFlex></span>
+            <button
+                mat-icon-button
+                color="accent"
+                (click)="startPipelineTour()"
+                [matTooltip]="'Tutorial'"
+                [disabled]="tutorialActive"
+            >
+                <i class="material-icons"> school </i>
+            </button>
+            <button
+                mat-icon-button
+                color="accent"
+                matTooltip="Refresh pipelines"
+                matTooltipPosition="above"
+                (click)="getPipelines()"
+            >
+                <i class="material-icons"> refresh </i>
+            </button>
+        </div>
+        <div fxFlex="100" fxLayout="column">
+            <div fxLayout="column">
                 <sp-basic-header-title-component
-                    title="Functions"
+                    title="Pipelines"
                 ></sp-basic-header-title-component>
                 <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
                     <div fxFlex="90">
-                        <sp-functions-overview
-                            [functions]="functions"
-                            *ngIf="functionsReady"
-                        >
-                        </sp-functions-overview>
+                        <sp-pipeline-overview
+                            [pipelines]="filteredPipelines"
+                            (refreshPipelinesEmitter)="getPipelines()"
+                            *ngIf="pipelinesReady"
+                        ></sp-pipeline-overview>
+                    </div>
+                </div>
+                <div fxFlex="100" fxLayout="column" style="margin-top: 20px">
+                    <sp-basic-header-title-component
+                        title="Functions"
+                    ></sp-basic-header-title-component>
+                    <div
+                        fxFlex="100"
+                        fxLayout="row"
+                        fxLayoutAlign="center start"
+                    >
+                        <div fxFlex="90">
+                            <sp-functions-overview
+                                [functions]="functions"
+                                *ngIf="functionsReady"
+                            >
+                            </sp-functions-overview>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</sp-basic-view>
+    </sp-basic-view>
+</sp-asset-browser>

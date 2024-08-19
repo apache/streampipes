@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,16 +16,23 @@
  *
  */
 
-.basic-label {
-    border-radius: 15px;
-    min-width: 50px;
-    padding: 5px 7px;
-    border: 1px solid;
-    display: inline-block;
-    text-align: center;
+import {
+    AssetLink,
+    AssetSiteDesc,
+    Isa95TypeDesc,
+    SpAsset,
+    SpLabel,
+} from '@streampipes/platform-services';
+
+export interface AssetBrowserData {
+    assets: SpAsset[];
+    assetLinks: AssetLink[];
+    sites: AssetSiteDesc[];
+    labels: SpLabel[];
 }
 
-.small-label {
-    font-size: 9pt;
-    padding: 0 8px;
+export interface AssetFilter {
+    selectedSites: AssetSiteDesc[];
+    selectedTypes: Isa95TypeDesc[];
+    selectedLabels: SpLabel[];
 }

@@ -271,16 +271,25 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.adapterService.getAdapters().subscribe(adapters => {
             this.existingAdapters = adapters;
             this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
-            this.filteredAdapters = this.adapterFilter.transform(
-                this.existingAdapters,
-                this.currentFilter,
-            );
-            this.dataSource.data = this.filteredAdapters;
+            this.applyAdapterFilters();
             this.getMonitoringInfos(adapters);
             setTimeout(() => {
                 this.dataSource.sort = this.sort;
             });
         });
+    }
+
+    applyAdapterFilters(elementIds: Set<string> = new Set<string>()): void {
+        this.filteredAdapters = this.adapterFilter
+            .transform(this.existingAdapters, this.currentFilter)
+            .filter(a => {
+                if (elementIds.size === 0) {
+                    return true;
+                } else {
+                    return elementIds.has(a.elementId);
+                }
+            });
+        this.dataSource.data = this.filteredAdapters;
     }
 
     startAdapterTutorial() {
@@ -296,10 +305,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     applyFilter(filter: AdapterFilterSettingsModel) {
         this.currentFilter = filter;
         if (this.dataSource) {
-            this.dataSource.data = this.adapterFilter.transform(
-                this.filteredAdapters,
-                this.currentFilter,
-            );
+            this.applyAdapterFilters();
         }
     }
 

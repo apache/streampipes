@@ -16,16 +16,46 @@
  *
  */
 
-.basic-label {
-    border-radius: 15px;
-    min-width: 50px;
-    padding: 5px 7px;
-    border: 1px solid;
-    display: inline-block;
-    text-align: center;
+.menu-content {
+    padding: 10px;
+    min-width: 550px;
 }
 
-.small-label {
-    font-size: 9pt;
-    padding: 0 8px;
+.filter-header {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.filter-section {
+    padding: 5px 10px 5px 5px;
+    border: 1px solid var(--color-bg-3);
+    background: var(--color-bg-1);
+}
+
+.smaller-font-size {
+    font-size: smaller;
+}
+
+.filter-selection {
+    min-width: 300px;
+    margin-bottom: -10px;
+}
+
+.fs-icon {
+    font-size: 16px;
+}
+
+.active-filters {
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-accent);
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    font-weight: bold;
+}
+
+.empty {
+    background: var(--color-bg-2);
+    color: var(--color-bg-3);
 }

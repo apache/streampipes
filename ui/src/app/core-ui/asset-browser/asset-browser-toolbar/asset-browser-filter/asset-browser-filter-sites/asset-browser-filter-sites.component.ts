@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,16 +16,31 @@
  *
  */
 
-.basic-label {
-    border-radius: 15px;
-    min-width: 50px;
-    padding: 5px 7px;
-    border: 1px solid;
-    display: inline-block;
-    text-align: center;
-}
+import { Component, Input } from '@angular/core';
+import { AssetSiteDesc } from '@streampipes/platform-services';
+import { AssetFilter } from '../../../asset-browser.model';
 
-.small-label {
-    font-size: 9pt;
-    padding: 0 8px;
+@Component({
+    selector: 'sp-asset-browser-filter-sites',
+    templateUrl: 'asset-browser-filter-sites.component.html',
+    styleUrls: ['../asset-browser-filter.component.scss'],
+})
+export class AssetBrowserFilterSitesComponent {
+    @Input()
+    sites: AssetSiteDesc[] = [];
+
+    @Input()
+    activeFilters: AssetFilter;
+
+    selectAll(): void {
+        this.activeFilters.selectedSites = [...this.sites];
+    }
+
+    selectNone(): void {
+        this.activeFilters.selectedSites = [];
+    }
+
+    compare(o1: AssetSiteDesc, o2: AssetSiteDesc): boolean {
+        return o1._id === o2._id;
+    }
 }

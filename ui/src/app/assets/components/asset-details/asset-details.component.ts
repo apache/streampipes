@@ -28,6 +28,7 @@ import {
 } from '@streampipes/platform-services';
 import { SpAssetRoutes } from '../../assets.routes';
 import { zip } from 'rxjs';
+import { SpAssetBrowserService } from '../../../core-ui/asset-browser/asset-browser.service';
 
 @Component({
     selector: 'sp-asset-details',
@@ -48,6 +49,7 @@ export class SpAssetDetailsComponent implements OnInit {
     constructor(
         private breadcrumbService: SpBreadcrumbService,
         private genericStorageService: GenericStorageService,
+        private assetBrowserService: SpAssetBrowserService,
         private route: ActivatedRoute,
     ) {}
 
@@ -91,6 +93,7 @@ export class SpAssetDetailsComponent implements OnInit {
         this.genericStorageService
             .updateDocument(AssetConstants.ASSET_APP_DOC_NAME, this.asset)
             .subscribe(res => {
+                this.assetBrowserService.loadAssetData();
                 this.loadResources();
                 this.editMode = false;
             });

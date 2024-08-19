@@ -16,16 +16,13 @@
  *
  */
 
-.basic-label {
-    border-radius: 15px;
-    min-width: 50px;
-    padding: 5px 7px;
-    border: 1px solid;
-    display: inline-block;
-    text-align: center;
-}
-
-.small-label {
-    font-size: 9pt;
-    padding: 0 8px;
+.node-info-outer {
+    background: var(--color-bg-0);
+    min-width: 150px;
+    height: 100%;
+    border: 1px solid var(--color-bg-2);
+    padding: 10px;
+    box-shadow:
+        rgba(50, 50, 93, 0.25) 0 2px 5px -1px,
+        rgba(0, 0, 0, 0.3) 0 1px 3px -1px;
 }

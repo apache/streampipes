@@ -16,16 +16,21 @@
  *
  */
 
-.basic-label {
-    border-radius: 15px;
-    min-width: 50px;
-    padding: 5px 7px;
-    border: 1px solid;
-    display: inline-block;
+.asset-hierarchy {
+    height: calc(100vh - 145px);
+    max-height: calc(100vh - 145px);
+    overflow-y: auto;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+.asset-browser-text {
+    text-orientation: mixed;
+    writing-mode: tb-rl;
     text-align: center;
 }
 
-.small-label {
-    font-size: 9pt;
-    padding: 0 8px;
+.asset-creation-hint {
+    font-size: 10pt;
+    text-align: center;
 }

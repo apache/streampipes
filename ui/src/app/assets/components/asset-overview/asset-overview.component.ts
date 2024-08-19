@@ -36,6 +36,7 @@ import { DataExportService } from '../../../configuration/export/data-export.ser
 import { mergeMap } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
+import { SpAssetBrowserService } from '../../../core-ui/asset-browser/asset-browser.service';
 
 @Component({
     selector: 'sp-asset-overview',
@@ -57,6 +58,7 @@ export class SpAssetOverviewComponent implements OnInit {
         private router: Router,
         private dataExportService: DataExportService,
         private idGeneratorService: IdGeneratorService,
+        private assetBrowserService: SpAssetBrowserService,
     ) {}
 
     ngOnInit(): void {
@@ -105,6 +107,7 @@ export class SpAssetOverviewComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(() => {
             this.loadAssets();
+            this.assetBrowserService.loadAssetData();
         });
     }
 
@@ -118,6 +121,7 @@ export class SpAssetOverviewComponent implements OnInit {
         dialogRef.afterClosed().subscribe(reload => {
             if (reload) {
                 this.loadAssets();
+                this.assetBrowserService.loadAssetData();
             }
         });
     }
@@ -141,6 +145,7 @@ export class SpAssetOverviewComponent implements OnInit {
             )
             .subscribe(result => {
                 this.loadAssets();
+                this.assetBrowserService.loadAssetData();
             });
     }
 

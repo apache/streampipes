@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,16 +16,23 @@
  *
  */
 
-.basic-label {
-    border-radius: 15px;
-    min-width: 50px;
-    padding: 5px 7px;
-    border: 1px solid;
-    display: inline-block;
-    text-align: center;
-}
+import { Component, Input } from '@angular/core';
+import { SpLabel } from '@streampipes/platform-services';
+import { AssetFilter } from '../../../asset-browser.model';
 
-.small-label {
-    font-size: 9pt;
-    padding: 0 8px;
+@Component({
+    selector: 'sp-asset-browser-filter-labels',
+    templateUrl: 'asset-browser-filter-labels.component.html',
+    styleUrls: ['../asset-browser-filter.component.scss'],
+})
+export class AssetBrowserFilterLabelsComponent {
+    @Input()
+    labels: SpLabel[] = [];
+
+    @Input()
+    activeFilters: AssetFilter;
+
+    compare(o1: SpLabel, o2: SpLabel): boolean {
+        return o1._id === o2._id;
+    }
 }

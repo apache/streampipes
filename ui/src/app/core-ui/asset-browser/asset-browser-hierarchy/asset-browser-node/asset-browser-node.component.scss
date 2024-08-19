@@ -16,16 +16,41 @@
  *
  */
 
-.basic-label {
-    border-radius: 15px;
-    min-width: 50px;
-    padding: 5px 7px;
-    border: 1px solid;
-    display: inline-block;
-    text-align: center;
+.asset-node {
+    font-weight: normal;
+    cursor: pointer;
+    width: 100%;
 }
 
-.small-label {
-    font-size: 9pt;
-    padding: 0 8px;
+.asset-node-disabled {
+    color: var(--color-bg-3);
+    cursor: default;
+}
+
+.selected-node {
+    font-family: 'Roboto-Bold', serif;
+    font-weight: bolder;
+}
+
+.resource-count {
+    margin-right: 8px;
+    min-width: 20px;
+    text-align: center;
+    font-size: smaller;
+    font-weight: bolder;
+    font-family: 'Roboto-Bold', serif;
+    padding: 3px;
+    border-radius: 3px;
+    background: var(--color-bg-3);
+    color: var(--color-default-text);
+}
+
+.resource-count-disabled {
+    background: var(--color-bg-2);
+    color: var(--color-bg-3);
+}
+
+.info-icon {
+    color: var(--color-accent);
+    font-size: 12pt;
 }

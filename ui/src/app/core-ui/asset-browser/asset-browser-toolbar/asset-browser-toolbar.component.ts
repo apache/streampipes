@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,16 +16,33 @@
  *
  */
 
-.basic-label {
-    border-radius: 15px;
-    min-width: 50px;
-    padding: 5px 7px;
-    border: 1px solid;
-    display: inline-block;
-    text-align: center;
-}
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ViewChild,
+} from '@angular/core';
+import { AssetBrowserData } from '../asset-browser.model';
+import { MatMenuTrigger } from '@angular/material/menu';
 
-.small-label {
-    font-size: 9pt;
-    padding: 0 8px;
+@Component({
+    selector: 'sp-asset-browser-toolbar',
+    templateUrl: 'asset-browser-toolbar.component.html',
+})
+export class AssetBrowserToolbarComponent {
+    @Input()
+    expanded: boolean;
+
+    @Output()
+    toggleExpanded = new EventEmitter<boolean>();
+
+    @Input()
+    assetBrowserData: AssetBrowserData;
+
+    @ViewChild('menuTrigger') menu: MatMenuTrigger;
+
+    closeMenu(): void {
+        this.menu.closeMenu();
+    }
 }
