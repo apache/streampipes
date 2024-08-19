@@ -17,44 +17,42 @@
  */
 import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
 
-describe('Test Table View in Data Explorer', () => {
+describe('Test Deletion of Data View and Dashboard', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv', false);
     });
 
     it('Perform Test', () => {
-        /**
-         * Prepare tests
-         */
+        DataLakeUtils.goToDatalake();
+
         DataLakeUtils.addDataViewAndTableWidget('TestView', 'Persist');
+
         DataLakeUtils.saveDataViewConfiguration();
+
         DataLakeUtils.createAndEditDashboard('TestDashboard');
-        DataLakeUtils.addDataViewToDashboard('TestView');
 
-        // Check that widget is visible
-        cy.dataCy('widget-TestView', { timeout: 10000 }).should('be.visible');
-
-        // Activate edit mode
-        DataLakeUtils.saveAndReEditDashboard('TestDashboard');
-
-        // Delete widget
-        DataLakeUtils.removeWidget('TestView');
-
-        // Go back to dashboard
-        DataLakeUtils.saveAndReEditDashboard('TestDashboard');
-
-        // Check that widget is gone
-        cy.dataCy('widget-TestView', { timeout: 10000 }).should('not.exist');
-
-        DataLakeUtils.goBackToOverview();
+        DataLakeUtils.saveDashboardConfiguration();
 
         DataLakeUtils.checkRowsDashboardTable(1);
 
-        // Delete dashboard
+        DataLakeUtils.checkRowsViewsTable(1);
+
+        // Click "Delete" but cancel action and check if dashboard and view are still displayed
+        DataLakeUtils.cancelDeleteDashboard('TestDashboard');
+
+        DataLakeUtils.checkRowsDashboardTable(1);
+
+        DataLakeUtils.cancelDeleteDataView('TestView');
+
+        DataLakeUtils.checkRowsViewsTable(1);
+
         DataLakeUtils.deleteDashboard('TestDashboard');
 
-        // Check that dashboard is gone
+        DataLakeUtils.deleteDataView('TestView');
+
         DataLakeUtils.checkRowsDashboardTable(0);
+
+        DataLakeUtils.checkRowsViewsTable(0);
     });
 });

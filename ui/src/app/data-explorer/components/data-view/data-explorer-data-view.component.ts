@@ -125,6 +125,10 @@ export class DataExplorerDataViewComponent implements OnInit {
         });
     }
 
+    discardChanges() {
+        this.routingService.navigateToOverview();
+    }
+
     updateDateRange(timeSettings: TimeSettings) {
         this.timeSettings = timeSettings;
         this.timeSelectionService.notify(timeSettings);

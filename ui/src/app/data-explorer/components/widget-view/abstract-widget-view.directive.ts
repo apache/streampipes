@@ -56,8 +56,7 @@ export abstract class AbstractWidgetViewDirective {
     @Input()
     timeSettings: TimeSettings;
 
-    @Output() deleteCallback: EventEmitter<DataExplorerWidgetModel> =
-        new EventEmitter<DataExplorerWidgetModel>();
+    @Output() deleteCallback: EventEmitter<number> = new EventEmitter<number>();
     @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> =
         new EventEmitter<DataExplorerWidgetModel>();
 
@@ -128,8 +127,8 @@ export abstract class AbstractWidgetViewDirective {
         );
     }
 
-    propagateItemRemoval(widget: DataExplorerWidgetModel) {
-        this.deleteCallback.emit(widget);
+    propagateItemRemoval(widgetIndex: number) {
+        this.deleteCallback.emit(widgetIndex);
     }
 
     propagateWidgetSelection(configuredWidget: DataExplorerWidgetModel) {

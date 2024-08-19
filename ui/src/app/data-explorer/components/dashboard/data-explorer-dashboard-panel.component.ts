@@ -137,6 +137,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     }
 
     persistDashboardChanges() {
+        this.dashboard.dashboardGeneralSettings.defaultViewMode = this.viewMode;
         this.dataViewDataExplorerService
             .updateDashboard(this.dashboard)
             .subscribe(result => {
@@ -152,11 +153,8 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
         );
     }
 
-    removeDataViewFromDashboard(widget: DataExplorerWidgetModel) {
-        const index = this.dashboard.widgets.findIndex(
-            item => item.id === widget.elementId,
-        );
-        this.dashboard.widgets.splice(index, 1);
+    removeDataViewFromDashboard(widgetIndex: number) {
+        this.dashboard.widgets.splice(widgetIndex, 1);
     }
 
     updateDateRange(timeSettings: TimeSettings) {
@@ -170,7 +168,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     }
 
     discardChanges() {
-        this.editMode = false;
+        this.routingService.navigateToOverview();
     }
 
     triggerEditMode() {

@@ -25,13 +25,14 @@ import {
 import { ObjectPermissionDialogComponent } from '../../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import {
     CurrentUserService,
+    ConfirmDialogComponent,
     DialogService,
-    PanelType,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../../services/auth.service';
 import { SpDataExplorerOverviewDirective } from '../data-explorer-overview.directive';
 import { DataExplorerDashboardService } from '../../../services/data-explorer-dashboard.service';
 import { DataExplorerRoutingService } from '../../../services/data-explorer-routing.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-overview',
@@ -51,6 +52,7 @@ export class SpDataExplorerDashboardOverviewComponent extends SpDataExplorerOver
         routingService: DataExplorerRoutingService,
         authService: AuthService,
         currentUserService: CurrentUserService,
+        private dialog: MatDialog,
     ) {
         super(dialogService, authService, currentUserService, routingService);
     }
@@ -87,8 +89,24 @@ export class SpDataExplorerDashboardOverviewComponent extends SpDataExplorerOver
     }
 
     openDeleteDashboardDialog(dashboard: Dashboard) {
-        this.dashboardService.deleteDashboard(dashboard).subscribe(() => {
-            this.getDashboards();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            width: '600px',
+            data: {
+                title: 'Are you sure you want to delete this dashboard?',
+                subtitle: 'This action cannot be reversed!',
+                cancelTitle: 'Cancel',
+                okTitle: 'Delete Dashboard',
+                confirmAndCancel: true,
+            },
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.dashboardService
+                    .deleteDashboard(dashboard)
+                    .subscribe(() => {
+                        this.getDashboards();
+                    });
+            }
         });
     }
 

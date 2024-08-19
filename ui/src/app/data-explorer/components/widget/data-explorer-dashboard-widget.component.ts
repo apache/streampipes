@@ -76,6 +76,9 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     @Input()
     gridMode = true;
 
+    @Input()
+    widgetIndex: number;
+
     /**
      * This is the date range (start, end) to view the data and is set in data-explorer.ts
      */
@@ -85,8 +88,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     @Input()
     globalTimeEnabled = true;
 
-    @Output() deleteCallback: EventEmitter<DataExplorerWidgetModel> =
-        new EventEmitter<DataExplorerWidgetModel>();
+    @Output() deleteCallback: EventEmitter<number> = new EventEmitter<number>();
     @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> =
         new EventEmitter<DataExplorerWidgetModel>();
 
@@ -200,7 +202,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     }
 
     removeWidget() {
-        this.deleteCallback.emit(this.configuredWidget);
+        this.deleteCallback.emit(this.widgetIndex);
     }
 
     startEditMode() {

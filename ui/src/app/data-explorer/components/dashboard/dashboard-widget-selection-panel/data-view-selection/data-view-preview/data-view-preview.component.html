@@ -16,7 +16,15 @@
   ~
   -->
 
-<div fxLayout="row" class="data-view-preview-outer">
+<div
+    fxLayout="row"
+    class="data-view-preview-outer"
+    [attr.data-cy]="
+        'add-data-view-btn-' +
+        dataView.baseAppearanceConfig.widgetTitle.replaceAll(' ', '')
+    "
+    (click)="addDataViewEmitter.emit(dataView.elementId)"
+>
     <div fxFlex fxLayout="column">
         <h5>{{ dataView.baseAppearanceConfig.widgetTitle }}</h5>
         <div fxLayout="row" fxLayoutGap="15px" class="data-view-preview-info">
@@ -37,16 +45,6 @@
         </div>
     </div>
     <div fxLayoutAlign="end center">
-        <button
-            mat-icon-button
-            color="accent"
-            [attr.data-cy]="
-                'add-data-view-btn-' +
-                dataView.baseAppearanceConfig.widgetTitle.replaceAll(' ', '')
-            "
-            (click)="addDataViewEmitter.emit(dataView.elementId)"
-        >
-            <i class="material-icons">add</i>
-        </button>
+        <i class="material-icons">add</i>
     </div>
 </div>
