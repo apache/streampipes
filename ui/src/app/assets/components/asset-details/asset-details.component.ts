@@ -17,10 +17,13 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
-import { ActivatedRoute } from '@angular/router';
-import { AssetConstants } from '../../constants/asset.constants';
 import {
+    SpAssetBrowserService,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
+import { ActivatedRoute } from '@angular/router';
+import {
+    AssetConstants,
     AssetSiteDesc,
     GenericStorageService,
     SpAsset,
@@ -28,7 +31,6 @@ import {
 } from '@streampipes/platform-services';
 import { SpAssetRoutes } from '../../assets.routes';
 import { zip } from 'rxjs';
-import { SpAssetBrowserService } from '../../../core-ui/asset-browser/asset-browser.service';
 
 @Component({
     selector: 'sp-asset-details',

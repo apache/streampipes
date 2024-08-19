@@ -116,16 +116,6 @@ import { StaticTreeInputNodeDetailsComponent } from './static-properties/static-
 import { SingleMarkerMapComponent } from './single-marker-map/single-marker-map.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { StaticTreeInputTextEditorComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-text-editor/static-tree-input-text-editor.component';
-import { AssetBrowserComponent } from './asset-browser/asset-browser.component';
-import { AssetBrowserToolbarComponent } from './asset-browser/asset-browser-toolbar/asset-browser-toolbar.component';
-import { AssetBrowserHierarchyComponent } from './asset-browser/asset-browser-hierarchy/asset-browser-hierarchy.component';
-import { AssetBrowserNodeComponent } from './asset-browser/asset-browser-hierarchy/asset-browser-node/asset-browser-node.component';
-import { AssetBrowserFilterComponent } from './asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter.component';
-import { AssetBrowserFilterLabelsComponent } from './asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter-labels/asset-browser-filter-labels.component';
-import { AssetBrowserFilterSitesComponent } from './asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter-sites/asset-browser-filter-sites.component';
-import { AssetBrowserFilterTypeComponent } from './asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter-type/asset-browser-filter-type.component';
-import { AssetBrowserFilterOuterComponent } from './asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter-outer/asset-browser-filter-outer.component';
-import { AssetBrowserNodeInfoComponent } from './asset-browser/asset-browser-hierarchy/asset-browser-node/asset-browser-node-info/asset-browser-node-info.component';
 
 @NgModule({
     imports: [
@@ -178,16 +168,6 @@ import { AssetBrowserNodeInfoComponent } from './asset-browser/asset-browser-hie
         LeafletModule,
     ],
     declarations: [
-        AssetBrowserComponent,
-        AssetBrowserFilterComponent,
-        AssetBrowserFilterLabelsComponent,
-        AssetBrowserFilterOuterComponent,
-        AssetBrowserFilterSitesComponent,
-        AssetBrowserFilterTypeComponent,
-        AssetBrowserHierarchyComponent,
-        AssetBrowserNodeComponent,
-        AssetBrowserNodeInfoComponent,
-        AssetBrowserToolbarComponent,
         DataDownloadDialogComponent,
         DateInputComponent,
         DisplayRecommendedPipe,
@@ -243,7 +223,6 @@ import { AssetBrowserNodeInfoComponent } from './asset-browser/asset-browser-hie
     ],
     providers: [MatDatepickerModule, DisplayRecommendedPipe],
     exports: [
-        AssetBrowserComponent,
         DataDownloadDialogComponent,
         DateInputComponent,
         PipelineElementTemplateConfigComponent,

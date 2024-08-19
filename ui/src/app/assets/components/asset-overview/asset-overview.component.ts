@@ -19,13 +19,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {
+    AssetConstants,
     GenericStorageService,
     SpAssetModel,
 } from '@streampipes/platform-services';
-import { AssetConstants } from '../../constants/asset.constants';
 import {
     DialogService,
     PanelType,
+    SpAssetBrowserService,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { SpAssetRoutes } from '../../assets.routes';
@@ -36,7 +37,6 @@ import { DataExportService } from '../../../configuration/export/data-export.ser
 import { mergeMap } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
-import { SpAssetBrowserService } from '../../../core-ui/asset-browser/asset-browser.service';
 
 @Component({
     selector: 'sp-asset-overview',

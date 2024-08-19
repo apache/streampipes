@@ -23,7 +23,7 @@ import {
     GenericStorageService,
     LocationConfig,
 } from '@streampipes/platform-services';
-import { AssetConstants } from '../../../assets/constants/asset.constants';
+import { AssetConstants } from '../../../../../projects/streampipes/platform-services/src/lib/model/assets/asset.constants';
 
 @Component({
     selector: 'sp-manage-site-dialog-component',

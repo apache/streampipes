@@ -19,6 +19,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, zip } from 'rxjs';
 import {
+    AssetConstants,
     AssetSiteDesc,
     GenericStorageService,
     Isa95TypeDesc,
@@ -26,7 +27,6 @@ import {
     SpAsset,
     SpLabel,
 } from '@streampipes/platform-services';
-import { AssetConstants } from '../../assets/constants/asset.constants';
 import { AssetBrowserData, AssetFilter } from './asset-browser.model';
 
 @Injectable({ providedIn: 'root' })
