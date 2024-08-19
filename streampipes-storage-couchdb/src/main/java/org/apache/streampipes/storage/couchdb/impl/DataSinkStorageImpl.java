@@ -21,6 +21,8 @@ import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.storage.api.IDataSinkStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import java.util.List;
+
 public class DataSinkStorageImpl extends DefaultCrudStorage<DataSinkDescription> implements IDataSinkStorage {
 
 
@@ -37,11 +39,18 @@ public class DataSinkStorageImpl extends DefaultCrudStorage<DataSinkDescription>
 
   @Override
   public DataSinkDescription getFirstDataSinkByAppId(String appId) {
-    return this.findAll()
+    return getDataSinksByAppId(appId)
         .stream()
-        .filter(s -> s.getAppId().equals(appId))
         .findFirst()
         .orElseThrow(IllegalArgumentException::new);
+  }
+
+  @Override
+  public List<DataSinkDescription> getDataSinksByAppId(String appId) {
+    return findAll()
+      .stream()
+      .filter(s -> s.getAppId().equals(appId))
+      .toList();
   }
 
   private String getCurrentRev(String elementId) {

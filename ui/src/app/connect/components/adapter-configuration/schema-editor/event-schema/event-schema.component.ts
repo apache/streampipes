@@ -186,24 +186,6 @@ export class EventSchemaComponent implements OnChanges {
         }
     }
 
-    public addNestedProperty(eventProperty?: EventPropertyNested): void {
-        const uuid: string = this.idGeneratorService.generate(25);
-        const nested: EventPropertyNested = new EventPropertyNested();
-        nested['@class'] =
-            'org.apache.streampipes.model.schema.EventPropertyNested';
-        nested.elementId = uuid;
-        nested.eventProperties = [];
-        nested.domainProperties = [];
-        nested.runtimeName = 'nested';
-        nested.additionalMetadata = {};
-        if (!eventProperty) {
-            this.targetSchema.eventProperties.push(nested);
-        } else {
-            eventProperty.eventProperties.push(nested);
-        }
-        this.refreshTree();
-    }
-
     public removeSelectedProperties(eventProperties?: any): void {
         eventProperties = eventProperties || this.targetSchema.eventProperties;
         for (let i = eventProperties.length - 1; i >= 0; --i) {

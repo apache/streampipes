@@ -51,7 +51,7 @@
                         fxFlex
                         (selectionChange)="
                             changeLabel(
-                                $event.value._id,
+                                $event.value.elementId,
                                 $event.value.name,
                                 $event.value
                             )
@@ -103,7 +103,7 @@
                     <mat-select
                         (selectionChange)="
                             changeLabel(
-                                $event.value._id,
+                                $event.value.elementId,
                                 $event.value.name,
                                 $event.value
                             )
@@ -130,7 +130,7 @@
                     <mat-select
                         (selectionChange)="
                             changeLabel(
-                                $event.value._id,
+                                $event.value.elementId,
                                 $event.value.name,
                                 $event.value
                             )
@@ -221,7 +221,7 @@
                         required
                     >
                         <mat-option *ngFor="let file of files" [value]="file">{{
-                            file.originalFilename
+                            file.filename
                         }}</mat-option>
                     </mat-select>
                 </mat-form-field>

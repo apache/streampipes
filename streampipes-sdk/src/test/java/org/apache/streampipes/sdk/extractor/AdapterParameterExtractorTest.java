@@ -24,11 +24,11 @@ import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -64,6 +64,7 @@ public class AdapterParameterExtractorTest {
         List.of(parserInstance)
     );
 
-    Assertions.assertEquals(parserInstance, adapterParameterExtractor.selectedParser());
+    assertEquals(parserInstance, adapterParameterExtractor.selectedParser());
   }
+
 }

@@ -58,7 +58,7 @@ class TestRiverFunction(TestCase):
         self.data_stream = create_data_stream(
             "test",
             attributes={"number": RuntimeType.FLOAT.value, "bool": RuntimeType.BOOLEAN.value},
-            stream_id="sample-stream"
+            stream_id="sample-stream",
         ).to_dict()
 
         self.test_stream_data = [

@@ -16,7 +16,7 @@
 #
 
 from enum import Enum
-from typing import Dict, Optional
+from typing import Dict
 
 from streampipes.functions.broker import SupportedBroker
 from streampipes.model.common import (
@@ -112,9 +112,7 @@ def create_data_stream(
         protocol.topic_definition.actual_topic_name = f"org.apache.streampipes.connect.{sanitized_stream_id}"
 
     data_stream = DataStream(
-        name=name,
-        event_schema=event_schema,
-        event_grounding=EventGrounding(transport_protocols=transport_protocols)
+        name=name, event_schema=event_schema, event_grounding=EventGrounding(transport_protocols=transport_protocols)
     )
 
     data_stream.element_id = sanitized_stream_id
