@@ -40,6 +40,7 @@
                 [dataLakeMeasure]="dataLakeMeasures.get(item.id)"
                 [editMode]="editMode"
                 [gridMode]="true"
+                [widgetIndex]="i"
                 [gridsterItemComponent]="gridsterItemComponent"
                 *ngIf="widgetsAvailable && configuredWidgets.has(item.id)"
             ></sp-data-explorer-dashboard-widget>
