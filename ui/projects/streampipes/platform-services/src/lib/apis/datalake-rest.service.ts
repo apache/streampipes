@@ -207,6 +207,7 @@ export class DatalakeRestService {
         if (endDate) {
             queryParams.endDate = endDate;
         }
+
         if (page) {
             queryParams.page = page;
         }

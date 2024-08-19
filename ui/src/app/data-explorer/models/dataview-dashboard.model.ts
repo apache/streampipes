@@ -111,7 +111,6 @@ export interface WidgetTypeChangeMessage {
 }
 
 export interface RefreshMessage {
-    widgetId: string;
     refreshData: boolean;
     refreshView: boolean;
 }

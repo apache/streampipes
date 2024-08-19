@@ -30,7 +30,7 @@ describe('Test Table View in Data Explorer', () => {
         /**
          * Prepare tests
          */
-        DataLakeUtils.addDataViewAndTableWidget('TestView', 'Persist');
+        DataLakeUtils.addDataViewAndTableWidget('NewWidget', 'Persist');
 
         // Validate that X lines are available
         DataLakeWidgetTableUtils.checkRows(10);
@@ -72,7 +72,7 @@ describe('Test Table View in Data Explorer', () => {
         DataLakeUtils.dataConfigAddFilter(filterConfig);
         DataLakeUtils.checkIfFilterIsSet(1);
         DataLakeWidgetTableUtils.checkRows(4);
-        DataLakeUtils.saveAndReEditWidget('TestView');
+        DataLakeUtils.saveAndReEditWidget('NewWidget');
         DataLakeUtils.checkIfFilterIsSet(1);
         DataLakeWidgetTableUtils.checkRows(4);
         DataLakeUtils.dataConfigRemoveFilter();
@@ -90,7 +90,7 @@ describe('Test Table View in Data Explorer', () => {
             .last({ timeout: 10000 })
             .contains('c', { timeout: 10000 });
         DataLakeWidgetTableUtils.checkRows(10);
-        DataLakeUtils.saveAndReEditWidget('TestView');
+        DataLakeUtils.saveAndReEditWidget('NewWidget');
         cy.dataCy('data-explorer-group-by-randomtext')
             .find('input')
             .should('be.checked');

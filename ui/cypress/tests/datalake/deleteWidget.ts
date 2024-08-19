@@ -28,39 +28,33 @@ describe('Test Table View in Data Explorer', () => {
          * Prepare tests
          */
         DataLakeUtils.addDataViewAndTableWidget('TestView', 'Persist');
+        DataLakeUtils.saveDataViewConfiguration();
+        DataLakeUtils.createAndEditDashboard('TestDashboard');
+        DataLakeUtils.addDataViewToDashboard('TestView');
 
         // Check that widget is visible
-        cy.dataCy('widget-datalake_configuration', { timeout: 10000 }).should(
-            'be.visible',
-        );
+        cy.dataCy('widget-TestView', { timeout: 10000 }).should('be.visible');
 
         // Activate edit mode
-        DataLakeUtils.saveAndReEditWidget('TestView');
+        DataLakeUtils.saveAndReEditDashboard('TestDashboard');
 
         // Delete widget
-        DataLakeUtils.removeWidget('datalake_configuration');
+        DataLakeUtils.removeWidget('TestView');
 
-        // Save dashboard
-        DataLakeUtils.saveDataExplorerWidgetConfiguration();
+        // Go back to dashboard
+        DataLakeUtils.saveAndReEditDashboard('TestDashboard');
 
         // Check that widget is gone
-        cy.dataCy('widget-datalake_configuration', { timeout: 10000 }).should(
-            'not.exist',
-        );
+        cy.dataCy('widget-TestView', { timeout: 10000 }).should('not.exist');
 
-        // Delete Dashboard
-        // DataLakeUtils.clickStartTab();
+        DataLakeUtils.goBackToOverview();
+
+        DataLakeUtils.checkRowsDashboardTable(1);
+
+        // Delete dashboard
+        DataLakeUtils.deleteDashboard('TestDashboard');
 
         // Check that dashboard is gone
-
-        cy.dataCy('delete-dashboard-TestView', { timeout: 10000 }).should(
-            'have.length',
-            1,
-        );
-        cy.dataCy('delete-dashboard-TestView', { timeout: 10000 }).click();
-        cy.dataCy('delete-dashboard-TestView', { timeout: 10000 }).should(
-            'have.length',
-            0,
-        );
+        DataLakeUtils.checkRowsDashboardTable(0);
     });
 });

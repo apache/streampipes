@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-08-15 17:36:05.
+// Generated using typescript-generator version 3.2.1263 on 2024-08-19 20:20:18.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -882,6 +882,9 @@ export class SchemaTransformationRuleDescription extends TransformationRuleDescr
     }
 }
 
+/**
+ * @deprecated since 0.97.0, for removal
+ */
 export class CreateNestedRuleDescription extends SchemaTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription';
     'runtimeKey': string;
@@ -999,6 +1002,7 @@ export class DashboardItem {
 export class DashboardModel implements Storable {
     couchDbId: string;
     dashboardGeneralSettings: { [index: string]: any };
+    dashboardLiveSettings: { [index: string]: any };
     dashboardTimeSettings: { [index: string]: any };
     description: string;
     displayHeader: boolean;
@@ -1020,6 +1024,9 @@ export class DashboardModel implements Storable {
         instance.dashboardGeneralSettings = __getCopyObjectFn(
             __identity<any>(),
         )(data.dashboardGeneralSettings);
+        instance.dashboardLiveSettings = __getCopyObjectFn(__identity<any>())(
+            data.dashboardLiveSettings,
+        );
         instance.dashboardTimeSettings = __getCopyObjectFn(__identity<any>())(
             data.dashboardTimeSettings,
         );
@@ -1096,6 +1103,7 @@ export class DataExplorerWidgetModel extends DashboardEntity {
     dataConfig: { [index: string]: any };
     measureName: string;
     pipelineId: string;
+    timeSettings: { [index: string]: any };
     visualizationConfig: { [index: string]: any };
     widgetId: string;
     widgetType: string;
@@ -1117,6 +1125,9 @@ export class DataExplorerWidgetModel extends DashboardEntity {
         );
         instance.measureName = data.measureName;
         instance.pipelineId = data.pipelineId;
+        instance.timeSettings = __getCopyObjectFn(__identity<any>())(
+            data.timeSettings,
+        );
         instance.visualizationConfig = __getCopyObjectFn(__identity<any>())(
             data.visualizationConfig,
         );
