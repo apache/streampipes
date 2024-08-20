@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-08-19 20:20:18.
+// Generated using typescript-generator version 3.2.1263 on 2024-08-20 13:02:30.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -396,11 +396,9 @@ export class StaticProperty {
         | 'org.apache.streampipes.model.staticproperty.MappingPropertyUnary'
         | 'org.apache.streampipes.model.staticproperty.MappingPropertyNary';
     'description': string;
-    'index': number;
     'internalName': string;
     'label': string;
     'optional': boolean;
-    'predefined': boolean;
     'staticPropertyType': StaticPropertyType;
 
     static 'fromData'(
@@ -413,11 +411,9 @@ export class StaticProperty {
         const instance = target || new StaticProperty();
         instance['@class'] = data['@class'];
         instance.description = data.description;
-        instance.index = data.index;
         instance.internalName = data.internalName;
         instance.label = data.label;
         instance.optional = data.optional;
-        instance.predefined = data.predefined;
         instance.staticPropertyType = data.staticPropertyType;
         return instance;
     }
@@ -1490,10 +1486,8 @@ export class EventProperty {
     'description': string;
     'domainProperties': string[];
     'elementId': string;
-    'index': number;
     'label': string;
     'propertyScope': string;
-    'required': boolean;
     'runtimeId': string;
     'runtimeName': string;
 
@@ -1514,10 +1508,8 @@ export class EventProperty {
             data.domainProperties,
         );
         instance.elementId = data.elementId;
-        instance.index = data.index;
         instance.label = data.label;
         instance.propertyScope = data.propertyScope;
-        instance.required = data.required;
         instance.runtimeId = data.runtimeId;
         instance.runtimeName = data.runtimeName;
         return instance;
