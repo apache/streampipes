@@ -23,6 +23,7 @@ import org.apache.streampipes.model.shared.api.Storable;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -50,6 +51,7 @@ public class PipelineElementTemplate implements Storable {
 
   public PipelineElementTemplate() {
     this.elementId = UUID.randomUUID().toString();
+    this.templateConfigs = new HashMap<>();
   }
 
   public String getTemplateName() {
