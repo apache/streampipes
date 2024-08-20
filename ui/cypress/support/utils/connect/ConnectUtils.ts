@@ -124,7 +124,6 @@ export class ConnectUtils {
     }
 
     public static configureAdapter(adapterInput: AdapterInput) {
-        cy.wait(2000);
         StaticPropertyUtils.input(adapterInput.adapterConfiguration);
 
         this.configureFormat(adapterInput);
