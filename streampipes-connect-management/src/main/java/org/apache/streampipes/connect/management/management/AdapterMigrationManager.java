@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.manager.migration.AbstractMigrationManager;
 import org.apache.streampipes.manager.migration.IMigrationHandler;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 
@@ -36,9 +37,12 @@ public class AdapterMigrationManager extends AbstractMigrationManager implements
   private static final Logger LOG = LoggerFactory.getLogger(AdapterMigrationManager.class);
 
   private final IAdapterStorage adapterStorage;
+  private final IAdapterStorage adapterDescriptionStorage;
 
-  public AdapterMigrationManager(IAdapterStorage adapterStorage) {
+  public AdapterMigrationManager(IAdapterStorage adapterStorage,
+                                 IAdapterStorage adapterDescriptionStorage) {
     this.adapterStorage = adapterStorage;
+    this.adapterDescriptionStorage = adapterDescriptionStorage;
   }
 
   @Override
@@ -109,5 +113,10 @@ public class AdapterMigrationManager extends AbstractMigrationManager implements
         }
       }
     }
+  }
+
+  @Override
+  protected boolean isInstalled(SpServiceTagPrefix modelType, String appId) {
+    return !adapterDescriptionStorage.getAdaptersByAppId(appId).isEmpty();
   }
 }

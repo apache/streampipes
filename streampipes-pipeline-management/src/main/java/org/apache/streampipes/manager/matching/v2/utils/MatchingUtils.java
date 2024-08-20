@@ -21,7 +21,7 @@ package org.apache.streampipes.manager.matching.v2.utils;
 public class MatchingUtils {
 
   public static boolean nullCheck(Object offer, Object requirement) {
-    return ((offer == null) && (requirement == null)) || (requirement == null);
+    return (requirement == null);
   }
 
   public static boolean nullCheckRightNullDisallowed(Object offer, Object requirement) {

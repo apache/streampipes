@@ -1,0 +1,68 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div *ngIf="editMode">
+    <mat-form-field class="w-100" *ngIf="labelsAvailable" color="accent">
+        <mat-chip-grid #chipGrid aria-label="Labels">
+            <mat-chip-row
+                (removed)="remove(label)"
+                *ngFor="let label of labels"
+                [ngStyle]="{ background: label.color }"
+            >
+                <span [ngStyle]="{ color: labelTextColors[label._id] }">{{
+                    label.label
+                }}</span>
+                <button
+                    matChipRemove
+                    [ngStyle]="{ color: labelTextColors[label._id] }"
+                >
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </mat-chip-row>
+        </mat-chip-grid>
+        <input
+            placeholder="Click to add label"
+            #labelInput
+            [formControl]="labelCtrl"
+            [matChipInputFor]="chipGrid"
+            [matAutocomplete]="auto"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event)"
+        />
+        <mat-autocomplete
+            #auto="matAutocomplete"
+            (optionSelected)="selected($event)"
+        >
+            @for (label of filteredLabels | async; track label) {
+                <mat-option [value]="label">{{ label }}</mat-option>
+            }
+        </mat-autocomplete>
+    </mat-form-field>
+</div>
+<div
+    *ngIf="!editMode && labelsAvailable"
+    fxLayout="row wrap"
+    fxLayoutGap="10px"
+>
+    <sp-label
+        *ngFor="let label of labels"
+        [labelText]="label.label"
+        [small]="true"
+        [labelBackground]="label.color"
+    ></sp-label>
+</div>

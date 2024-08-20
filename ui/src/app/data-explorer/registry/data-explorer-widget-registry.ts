@@ -49,12 +49,16 @@ import { TimeSeriesChartWidgetModel } from '../components/widgets/time-series-ch
 import { SpTimeseriesRendererService } from '../components/widgets/time-series-chart/sp-timeseries-renderer.service';
 import { SpEchartsWidgetAppearanceConfigComponent } from '../components/widgets/utils/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
 import { SpTimeSeriesAppearanceConfigComponent } from '../components/widgets/time-series-chart/appearance-config/time-series-appearance-config.component';
+import { SpGaugeRendererService } from '../components/widgets/gauge/gauge-renderer.service';
+import { GaugeWidgetConfigComponent } from '../components/widgets/gauge/config/gauge-widget-config.component';
+import { GaugeWidgetModel } from '../components/widgets/gauge/model/gauge-widget.model';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerWidgetRegistry {
     widgetTypes: IWidget<any>[] = [];
 
     constructor(
+        private gaugeRenderer: SpGaugeRendererService,
         private heatmapRenderer: SpHeatmapRendererService,
         private histogramRenderer: SpHistogramRendererService,
         private pieRenderer: SpPieRendererService,
@@ -65,6 +69,15 @@ export class DataExplorerWidgetRegistry {
         private timeseriesRenderer: SpTimeseriesRendererService,
     ) {
         this.widgetTypes = [
+            {
+                id: 'gauge',
+                label: 'Gauge',
+                widgetAppearanceConfigurationComponent:
+                    SpEchartsWidgetAppearanceConfigComponent,
+                widgetConfigurationComponent: GaugeWidgetConfigComponent,
+                widgetComponent: SpEchartsWidgetComponent<GaugeWidgetModel>,
+                chartRenderer: this.gaugeRenderer,
+            },
             {
                 id: 'table',
                 label: 'Table',

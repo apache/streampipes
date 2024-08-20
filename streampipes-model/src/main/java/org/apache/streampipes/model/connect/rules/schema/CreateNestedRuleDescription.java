@@ -21,6 +21,11 @@ package org.apache.streampipes.model.connect.rules.schema;
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 
+/**
+ * @deprecated The functionlality to add nested rules was removed in version 0.97.0 form the UI
+ * For the next release we can also remove the functionality from the backend
+ */
+@Deprecated(since = "0.97.0", forRemoval = true)
 public class CreateNestedRuleDescription extends SchemaTransformationRuleDescription {
 
   private String runtimeKey;

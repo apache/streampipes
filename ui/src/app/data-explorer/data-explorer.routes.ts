@@ -20,7 +20,7 @@ import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 
 export class SpDataExplorerRoutes {
     static BASE: SpBreadcrumbItem = {
-        label: 'Data Views',
+        label: 'Data Explorer',
         link: ['dataexplorer'],
     };
 }

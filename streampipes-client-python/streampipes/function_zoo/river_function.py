@@ -178,7 +178,7 @@ class OnlineML:
             name="prediction",
             attributes=attributes,
             broker=get_broker_description(client.dataStreamApi.get(stream_ids[0])),  # type: ignore
-            stream_id=stream_ids[0]
+            stream_id=stream_ids[0],
         )
         function_definition = FunctionDefinition(consumed_streams=stream_ids).add_output_data_stream(output_stream)
         self.sp_function = RiverFunction(

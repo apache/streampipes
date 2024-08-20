@@ -23,6 +23,7 @@ import {
     Input,
     OnInit,
     Output,
+    ViewChild,
 } from '@angular/core';
 import {
     Pipeline,
@@ -35,6 +36,7 @@ import {
 } from '../../../editor/model/editor.model';
 import { JsplumbService } from '../../../editor/services/jsplumb.service';
 import { JsplumbBridge } from '../../../editor/services/jsplumb-bridge.service';
+import { PipelineAssemblyDrawingAreaComponent } from '../../../editor/components/pipeline-assembly/pipeline-assembly-drawing-area/pipeline-assembly-drawing-area.component';
 
 @Component({
     selector: 'sp-pipeline-preview',
@@ -57,6 +59,9 @@ export class PipelinePreviewComponent implements OnInit, AfterViewInit {
     selectedElementEmitter: EventEmitter<PipelineElementUnion> =
         new EventEmitter<PipelineElementUnion>();
 
+    @ViewChild('pipelineDrawingAreaComponent')
+    pipelineDrawingAreaComponent: PipelineAssemblyDrawingAreaComponent;
+
     jsPlumbBridge: JsplumbBridge;
 
     constructor(private jsplumbService: JsplumbService) {}
@@ -70,5 +75,9 @@ export class PipelinePreviewComponent implements OnInit, AfterViewInit {
             this.pipeline,
             true,
         );
+    }
+
+    toggleLivePreview(): void {
+        this.pipelineDrawingAreaComponent?.togglePipelineElementLivePreview();
     }
 }

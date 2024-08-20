@@ -1,0 +1,87 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="column" fxFlex="100" class="w-100">
+    <div fxLayout="column" fxFlex="100" class="mt-10">
+        <mat-card style="width: 100%">
+            <mat-calendar
+                [(selected)]="currentDateRange"
+                (selectedChange)="onDateChange($event)"
+            >
+            </mat-calendar>
+        </mat-card>
+
+        <div fxLayout="column" class="mt-10 mr-5">
+            <div fxLayout="row" fxLayoutGap="10px">
+                <div fxFlex="30">
+                    <span
+                        class="time-selector"
+                        data-cy="time-selector-start-date"
+                        >{{ currentStartDate }}</span
+                    >
+                </div>
+                <div fxFlex>
+                    <input
+                        matNativeControl
+                        data-cy="time-selector-start-time"
+                        class="w-100 time-selector"
+                        type="time"
+                        step="1"
+                        [(ngModel)]="currentStartTime"
+                        (ngModelChange)="
+                            updateDateTime(currentDateRange.start, $event)
+                        "
+                    />
+                </div>
+            </div>
+            <div fxLayout="row" fxLayoutGap="10px" class="mt-10">
+                <div fxFlex="30">
+                    <span
+                        class="time-selector"
+                        data-cy="time-selector-end-date"
+                        >{{ currentEndDate }}</span
+                    >
+                </div>
+                <div fxFlex>
+                    <input
+                        matNativeControl
+                        data-cy="time-selector-end-time"
+                        class="w-100 time-selector"
+                        type="time"
+                        step="1"
+                        [(ngModel)]="currentEndTime"
+                        (ngModelChange)="
+                            updateDateTime(currentDateRange.end, $event)
+                        "
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end center" class="mt-10">
+        <button
+            mat-raised-button
+            color="accent"
+            data-cy="apply-custom-time"
+            (click)="saveSelection()"
+            [disabled]="!dateSelectionComplete"
+        >
+            Apply
+        </button>
+    </div>
+</div>

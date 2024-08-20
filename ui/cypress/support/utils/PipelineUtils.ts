@@ -17,7 +17,7 @@
  */
 
 import { PipelineInput } from '../model/PipelineInput';
-import { StaticPropertyUtils } from './StaticPropertyUtils';
+import { StaticPropertyUtils } from './userInput/StaticPropertyUtils';
 import { OutputStrategyUtils } from './OutputStrategyUtils';
 import { PipelineElementInput } from '../model/PipelineElementInput';
 

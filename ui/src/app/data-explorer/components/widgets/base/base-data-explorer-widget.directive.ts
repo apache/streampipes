@@ -147,45 +147,31 @@ export abstract class BaseDataExplorerWidgetDirective<
                 this.timerCallback.emit(false);
                 setTimeout(() => {
                     this.validateReceivedData(results);
-                    this.refreshView();
                 });
             });
 
         this.widgetConfigurationSub =
             this.widgetConfigurationService.configurationChangedSubject.subscribe(
                 refreshMessage => {
-                    if (
-                        refreshMessage.widgetId ===
-                        this.dataExplorerWidget.elementId
-                    ) {
-                        if (refreshMessage.refreshData) {
-                            const newFieldsProvider =
-                                this.fieldService.generateFieldLists(
-                                    sourceConfigs,
-                                );
-                            const addedFields =
-                                this.fieldService.getAddedFields(
-                                    this.fieldProvider.allFields,
-                                    newFieldsProvider.allFields,
-                                );
-                            const removedFields =
-                                this.fieldService.getRemovedFields(
-                                    this.fieldProvider.allFields,
-                                    newFieldsProvider.allFields,
-                                );
-                            this.fieldProvider =
-                                this.fieldService.generateFieldLists(
-                                    sourceConfigs,
-                                );
-                            this.handleUpdatedFields(
-                                addedFields,
-                                removedFields,
+                    if (refreshMessage.refreshData) {
+                        const newFieldsProvider =
+                            this.fieldService.generateFieldLists(sourceConfigs);
+                        const addedFields = this.fieldService.getAddedFields(
+                            this.fieldProvider.allFields,
+                            newFieldsProvider.allFields,
+                        );
+                        const removedFields =
+                            this.fieldService.getRemovedFields(
+                                this.fieldProvider.allFields,
+                                newFieldsProvider.allFields,
                             );
-                            this.updateData();
-                        }
-                        if (refreshMessage.refreshView) {
-                            this.refreshView();
-                        }
+                        this.fieldProvider =
+                            this.fieldService.generateFieldLists(sourceConfigs);
+                        this.handleUpdatedFields(addedFields, removedFields);
+                        this.updateData();
+                    }
+                    if (refreshMessage.refreshView) {
+                        this.refreshView();
                     }
                 },
             );
@@ -208,7 +194,14 @@ export abstract class BaseDataExplorerWidgetDirective<
         this.timeSelectionSub =
             this.timeSelectionService.timeSelectionChangeSubject.subscribe(
                 ts => {
-                    this.timeSettings = ts;
+                    if (ts) {
+                        this.timeSettings = ts;
+                    } else {
+                        this.timeSelectionService.updateTimeSettings(
+                            this.timeSettings,
+                            new Date(),
+                        );
+                    }
                     this.updateData();
                 },
             );
@@ -220,16 +213,10 @@ export abstract class BaseDataExplorerWidgetDirective<
     }
 
     public cleanupSubscriptions(): void {
-        this.widgetConfigurationSub.unsubscribe();
-        if (this.resizeSub) {
-            this.resizeSub.unsubscribe();
-        }
-        this.timeSelectionSub.unsubscribe();
-        this.requestQueue$.unsubscribe();
-    }
-
-    public removeWidget() {
-        this.removeWidgetCallback.emit(true);
+        this.widgetConfigurationSub?.unsubscribe();
+        this.resizeSub?.unsubscribe();
+        this.timeSelectionSub?.unsubscribe();
+        this.requestQueue$?.unsubscribe();
     }
 
     public setShownComponents(
@@ -246,7 +233,6 @@ export abstract class BaseDataExplorerWidgetDirective<
 
     public updateData(includeTooMuchEventsParameter: boolean = true) {
         this.beforeDataFetched();
-
         this.loadData(includeTooMuchEventsParameter);
     }
 

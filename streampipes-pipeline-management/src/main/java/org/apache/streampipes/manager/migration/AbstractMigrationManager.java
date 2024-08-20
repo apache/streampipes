@@ -20,9 +20,10 @@ package org.apache.streampipes.manager.migration;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
-import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
@@ -119,13 +120,15 @@ public abstract class AbstractMigrationManager {
             )
         )
         .values()
-        .stream()
-        .peek(config -> {
-          var requestUrl = getRequestUrl(config.modelType(), config.targetAppId(), serviceUrl);
-          performUpdate(requestUrl);
-        })
-        .toList();
+        .forEach(config -> {
+          if (isInstalled(config.modelType(), config.targetAppId())) {
+            var requestUrl = getRequestUrl(config.modelType(), config.targetAppId(), serviceUrl);
+            performUpdate(requestUrl);
+          }
+        });
   }
+
+  protected abstract boolean isInstalled(SpServiceTagPrefix modelType, String appId);
 
   /**
    * Perform the update of the description based on the given requestUrl
@@ -139,7 +142,7 @@ public abstract class AbstractMigrationManager {
           .execute()
           .returnContent()
           .asString();
-      var updateResult = Operations.verifyAndUpdateElement(entityPayload);
+      var updateResult = new TypeExtractor(entityPayload).getTypeVerifier().verifyAndUpdate();
       if (!updateResult.isSuccess()) {
         LOG.error(
             "Updating the pipeline element description failed: {}",

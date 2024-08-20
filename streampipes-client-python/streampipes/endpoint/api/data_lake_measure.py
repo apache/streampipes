@@ -326,7 +326,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     @property
     def _container_cls(self) -> Type[ResourceContainer]:
         """Defines the model container class the endpoint refers to.
-        
+
         Returns
         -------
         [DataLakeMeasures][streampipes.model.container.DataLakeMeasures]

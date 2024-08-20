@@ -29,6 +29,7 @@ import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.UaException;
+import org.eclipse.milo.opcua.stack.core.UaRuntimeException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
@@ -49,8 +50,10 @@ public class OpcUaNodeBrowser {
 
   private static final Logger LOG = LoggerFactory.getLogger(OpcUaNodeBrowser.class);
 
-  public OpcUaNodeBrowser(OpcUaClient client,
-                          OpcUaConfig spOpcUaClientConfig) {
+  public OpcUaNodeBrowser(
+      OpcUaClient client,
+      OpcUaConfig spOpcUaClientConfig
+  ) {
     this.client = client;
     this.spOpcConfig = spOpcUaClientConfig;
   }
@@ -85,14 +88,37 @@ public class OpcUaNodeBrowser {
 
   private OpcNode toOpcNode(String nodeName) throws UaException {
     AddressSpace addressSpace = getAddressSpace();
-    NodeId nodeId = NodeId.parse(nodeName);
-    UaNode node = addressSpace.getNode(nodeId);
 
-    LOG.info("Using node of type {}", node.getNodeClass().toString());
+    NodeId nodeId;
+    try {
+      nodeId = NodeId.parse(nodeName);
+    } catch (UaRuntimeException e) {
+      throw new UaException(
+          StatusCode.BAD.getValue(), "Node ID " + nodeName + " is not in the correct format. "
+          + "The correct format is `ns=<namespaceIndex>;<identifierType>=<identifier>`.", e);
+    }
+
+    UaNode node;
+    try {
+      node = addressSpace.getNode(nodeId);
+    } catch (UaException e) {
+      throw new UaException(
+          StatusCode.BAD.getValue(),
+          "Node with ID " + nodeId + " is not present in the OPC UA server.", e
+      );
+    }
+
+    LOG.info(
+        "Using node of type {}",
+        node.getNodeClass()
+            .toString()
+    );
 
     if (node instanceof UaVariableNode) {
-      UInteger value = (UInteger) ((UaVariableNode) node).getDataType().getIdentifier();
-      return new OpcNode(node.getDisplayName().getText(), OpcUaTypes.getType(value), node.getNodeId());
+      UInteger value = (UInteger) ((UaVariableNode) node).getDataType()
+                                                         .getIdentifier();
+      return new OpcNode(node.getDisplayName()
+                             .getText(), OpcUaTypes.getType(value), node.getNodeId());
     }
 
     LOG.warn("Node {} not of type UaVariableNode", node.getDisplayName());
@@ -100,16 +126,20 @@ public class OpcUaNodeBrowser {
     throw new UaException(StatusCode.BAD, "Node is not of type BaseDataVariableTypeNode");
   }
 
-  private List<TreeInputNode> findChildren(OpcUaClient client,
-                                           NodeId nodeId) throws UaException {
+  private List<TreeInputNode> findChildren(
+      OpcUaClient client,
+      NodeId nodeId
+  ) throws UaException {
     return client
         .getAddressSpace()
         .browseNodes(nodeId)
         .stream()
         .map(node -> {
           TreeInputNode childNode = new TreeInputNode();
-          childNode.setNodeName(node.getDisplayName().getText());
-          childNode.setInternalNodeName(node.getNodeId().toParseableString());
+          childNode.setNodeName(node.getDisplayName()
+                                    .getText());
+          childNode.setInternalNodeName(node.getNodeId()
+                                            .toParseableString());
           childNode.setDataNode(isDataNode(node));
           childNode.setNodeMetadata(new OpcUaNodeMetadataExtractor(client, node).extract());
           return childNode;
@@ -118,13 +148,18 @@ public class OpcUaNodeBrowser {
   }
 
 
-
   private AddressSpace getAddressSpace() {
     return client.getAddressSpace();
   }
 
   private boolean isDataNode(UaNode node) {
-    return (node.getNodeClass().equals(NodeClass.Variable) || (node.getNodeClass().equals(NodeClass.VariableType)))
+    return (
+        node.getNodeClass()
+            .equals(NodeClass.Variable) || (
+            node.getNodeClass()
+                .equals(NodeClass.VariableType)
+        )
+    )
         && node instanceof UaVariableNode;
   }
 

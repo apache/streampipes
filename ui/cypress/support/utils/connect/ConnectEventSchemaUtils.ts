@@ -127,6 +127,26 @@ export class ConnectEventSchemaUtils {
         cy.dataCy('sp-save-edit-property').click();
     }
 
+    public static renameProperty(
+        fromRuntimeName: string,
+        toRuntimeName: string,
+    ) {
+        ConnectEventSchemaUtils.clickEditProperty(fromRuntimeName);
+        ConnectEventSchemaUtils.setRuntimeName(toRuntimeName);
+        ConnectBtns.saveEditProperty().click();
+    }
+
+    public static setRuntimeName(newRuntimeName: string) {
+        ConnectBtns.runtimeNameInput().clear().type(newRuntimeName);
+    }
+
+    public static validateRuntimeName(expectedRuntimeName: string) {
+        ConnectBtns.runtimeNameInput().should(
+            'have.value',
+            expectedRuntimeName,
+        );
+    }
+
     public static unitTransformation(
         propertyName: string,
         fromUnit: string,
@@ -244,13 +264,20 @@ export class ConnectEventSchemaUtils {
     }
 
     public static clickEditProperty(propertyName: string) {
-        cy.dataCy('edit-' + propertyName.toLowerCase(), {
+        cy.dataCy(`edit-${ConnectEventSchemaUtils.escape(propertyName)}`, {
             timeout: 10000,
         }).click();
-        cy.dataCy('connect-edit-field-runtime-name').should(
-            'have.value',
-            propertyName,
-            { timeout: 10000 },
-        );
+        ConnectEventSchemaUtils.validateRuntimeName(propertyName);
+    }
+
+    //
+    /**
+     * Function to escape special characters in a string for use in Cypress
+     * selectors
+     */
+    public static escape(selector: string): string {
+        return selector
+            .replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1')
+            .toLowerCase();
     }
 }

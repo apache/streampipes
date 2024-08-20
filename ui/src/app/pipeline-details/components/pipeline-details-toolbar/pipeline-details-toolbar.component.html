@@ -17,6 +17,19 @@
   -->
 
 <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+    <button
+        mat-button
+        color="accent"
+        matTooltip="Data Preview"
+        [matTooltipPosition]="'above'"
+        (click)="togglePreviewEmitter.emit()"
+    >
+        <div fxLayoutAlign="start center" fxLayout="row">
+            <i class="material-icons">visibility</i>
+            <span *ngIf="!previewModeActive">&nbsp;Enable live preview</span>
+            <span *ngIf="previewModeActive">&nbsp;Disable live preview</span>
+        </div>
+    </button>
     <div fxFlex></div>
     <div fxLayoutAlign="end center">
         <button

@@ -144,7 +144,7 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit {
         });
     }
 
-    initiatePipelineElementPreview() {
+    togglePipelineElementLivePreview() {
         if (!this.previewModeActive) {
             const pipeline = this.objectProvider.makePipeline(
                 this.rawPipelineModel,
@@ -176,7 +176,7 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit {
                 .subscribe(() => {
                     this.previewModeActive = false;
                     if (resume) {
-                        this.initiatePipelineElementPreview();
+                        this.togglePipelineElementLivePreview();
                     }
                 });
         }

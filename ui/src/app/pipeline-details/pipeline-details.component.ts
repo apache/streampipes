@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import {
@@ -35,8 +35,11 @@ import {
 } from '@streampipes/shared-ui';
 import { SpPipelineRoutes } from '../pipelines/pipelines.routes';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
-import { forkJoin, interval, Observable, Subscription } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { forkJoin, interval, Observable, of, Subscription } from 'rxjs';
+import { catchError, filter, switchMap } from 'rxjs/operators';
+import { PipelinePreviewComponent } from './components/preview/pipeline-preview.component';
+import { HttpContext } from '@angular/common/http';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Component({
     selector: 'sp-pipeline-details-overview-component',
@@ -57,9 +60,13 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     autoRefresh = false;
     metricsInfo: Record<string, SpMetricsEntry> = {};
     logInfo: Record<string, SpLogEntry[]> = {};
+    previewModeActive = false;
 
     currentUserSub: Subscription;
     autoRefreshSub: Subscription;
+
+    @ViewChild('pipelinePreviewComponent')
+    pipelinePreviewComponent: PipelinePreviewComponent;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -90,9 +97,13 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     loadPipeline(): void {
         forkJoin([
             this.pipelineService.getPipelineById(this.currentPipelineId),
-            this.pipelineCanvasService.getPipelineCanvasMetadata(
-                this.currentPipelineId,
-            ),
+            this.pipelineCanvasService
+                .getPipelineCanvasMetadata(this.currentPipelineId)
+                .pipe(
+                    catchError(() => {
+                        return of(new PipelineCanvasMetadata());
+                    }),
+                ),
         ]).subscribe(res => {
             this.pipeline = res[0];
             this.pipelineCanvasMetadata = res[1];
@@ -119,14 +130,14 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
         this.autoRefreshSub = interval(5000)
             .pipe(
                 filter(() => this.autoRefresh),
-                switchMap(() => this.getMonitoringObservables()),
+                switchMap(() => this.getMonitoringObservables(true)),
             )
             .subscribe(res => this.onMonitoringResultAvailable(res));
     }
 
-    getMonitoringObservables(): Observable<any> {
+    getMonitoringObservables(forceUpdate: boolean): Observable<any> {
         return forkJoin([
-            this.getMetricsObservable(),
+            this.getMetricsObservable(forceUpdate),
             this.getLogsObservable(),
         ]);
     }
@@ -147,16 +158,26 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
         this.logInfo = res[1];
     }
 
-    getMetricsObservable(): Observable<Record<string, SpMetricsEntry>> {
+    getMetricsObservable(
+        forceUpdate = false,
+    ): Observable<Record<string, SpMetricsEntry>> {
         return this.pipelineMonitoringService.getMetricsInfoForPipeline(
             this.currentPipelineId,
+            forceUpdate,
+            new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
         );
     }
 
     getLogsObservable(): Observable<Record<string, SpLogEntry[]>> {
         return this.pipelineMonitoringService.getLogInfoForPipeline(
             this.currentPipelineId,
+            new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
         );
+    }
+
+    toggleLivePreview(): void {
+        this.previewModeActive = !this.previewModeActive;
+        this.pipelinePreviewComponent?.toggleLivePreview();
     }
 
     ngOnDestroy() {

@@ -30,7 +30,7 @@
                     <h5 *ngIf="messageTimestamp" class="mr-15">
                         {{ messageTimestamp | date: 'short' }}
                     </h5>
-                    <h5 fxFlex>
+                    <h5 data-cy="exception-message-title" kfxFlex>
                         {{ message.title || 'Error' }}
                     </h5>
                 </div>
