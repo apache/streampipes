@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -83,6 +84,20 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<?> addDataStream(@RequestBody SpDataStream dataStream) {
     try {
       getDataStreamResourceManager().add(dataStream, getAuthenticatedUserSid());
+      return ok();
+    } catch (IllegalArgumentException e) {
+      return badRequest(e.getMessage());
+    }
+  }
+
+  @PutMapping(
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
+  public ResponseEntity<?> updateDataStream(@RequestBody SpDataStream dataStream) {
+    try {
+      getDataStreamResourceManager().update(dataStream);
       return ok();
     } catch (IllegalArgumentException e) {
       return badRequest(e.getMessage());
