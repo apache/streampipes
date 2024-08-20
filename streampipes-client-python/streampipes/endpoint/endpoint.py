@@ -236,6 +236,26 @@ class APIEndpoint(Endpoint):
             headers={"Content-type": "application/json"},
         )
 
+    def put(self, resource: Resource) -> None:
+        """Allows to put a resource to the StreamPipes API.
+
+        Parameters
+        ----------
+        resource: Resource
+            The resource to be updated.
+
+        Returns
+        -------
+        None
+        """
+
+        self._make_request(
+            request_method=self._parent_client.request_session.put,
+            url=f"{self.build_url()}",
+            data=json.dumps(resource.to_dict(use_source_names=True)),
+            headers={"Content-type": "application/json"},
+        )
+
 
 class MessagingEndpoint(Endpoint):
     """Abstract implementation of a StreamPipes messaging endpoint.

@@ -243,6 +243,29 @@ class TestStreamPipesEndpoints(TestCase):
 
     @patch("streampipes.client.client.Session", autospec=True)
     @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_endpoint_put(self, server_version: MagicMock, http_session: MagicMock):
+        http_session_mock = MagicMock()
+        http_session.return_value = http_session_mock
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+
+        client.dataStreamApi.put(DataStream(**self.data_stream_get))
+
+        http_session_mock.put.assert_called_with(
+            url="https://localhost:80/streampipes-backend/api/v2/streams",
+            data=json.dumps(self.data_stream_get),
+            headers={"Content-type": "application/json"},
+        )
+
+    @patch("streampipes.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
     def test_endpoint_data_stream_happy_path(self, server_version: MagicMock, http_session: MagicMock):
 
         server_version.return_value = {"backendVersion": "0.x.y"}
