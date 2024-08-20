@@ -23,7 +23,6 @@ import org.apache.streampipes.extensions.api.pe.routing.RawDataProcessor;
 import org.apache.streampipes.extensions.api.pe.routing.SpInputCollector;
 import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
-import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 
@@ -36,9 +35,8 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
   private final EventConsumer consumer;
 
   public StandaloneSpInputCollector(T protocol,
-                                    TransportFormat format,
                                     Boolean singletonEngine) throws SpRuntimeException {
-    super(protocol, format);
+    super(protocol);
     this.consumer = protocolDefinition.getConsumer(protocol);
     this.singletonEngine = singletonEngine;
   }
@@ -66,7 +64,7 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
   @Override
   public void disconnect() throws SpRuntimeException {
     if (consumer.isConnected()) {
-      if (consumers.size() == 0) {
+      if (consumers.isEmpty()) {
         consumer.disconnect();
         ProtocolManager.removeInputCollector(transportProtocol);
       }

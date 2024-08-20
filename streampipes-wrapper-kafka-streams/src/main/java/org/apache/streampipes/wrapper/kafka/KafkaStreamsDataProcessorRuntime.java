@@ -103,10 +103,7 @@ public class KafkaStreamsDataProcessorRuntime extends KafkaStreamsRuntime<
   }
 
   private SpDataFormatDefinition getDataFormatConverter() {
-    return SpDataFormatManager
-        .INSTANCE
-        .findDefinition(pipelineElementInvocation.getOutputStream().getEventGrounding().getTransportFormats().get(0))
-        .orElseThrow();
+    return SpDataFormatManager.getFormatDefinition();
   }
 
   private SpProtocolDefinition<KafkaTransportProtocol> getOutputProtocol() {

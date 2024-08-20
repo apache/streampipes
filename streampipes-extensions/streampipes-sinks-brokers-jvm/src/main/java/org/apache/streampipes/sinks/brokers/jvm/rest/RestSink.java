@@ -20,7 +20,7 @@ package org.apache.streampipes.sinks.brokers.jvm.rest;
 
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
+import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;

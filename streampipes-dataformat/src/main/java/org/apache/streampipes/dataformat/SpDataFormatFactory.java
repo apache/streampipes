@@ -18,15 +18,6 @@
 
 package org.apache.streampipes.dataformat;
 
-import org.apache.streampipes.model.grounding.TransportFormat;
-
 public abstract class SpDataFormatFactory {
 
-  public TransportFormat getTransportFormat() {
-    return new TransportFormat(getTransportFormatRdfUri());
-  }
-
-  public abstract String getTransportFormatRdfUri();
-
-  public abstract SpDataFormatDefinition createInstance();
 }

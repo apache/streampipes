@@ -20,13 +20,11 @@ package org.apache.streampipes.sdk.builder;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStreamBuilder, SpDataStream> {
@@ -105,19 +103,6 @@ public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStream
    */
   public DataStreamBuilder protocol(TransportProtocol protocol) {
     this.eventGrounding.setTransportProtocol(protocol);
-    return this;
-  }
-
-  /**
-   * Assigns a new {@link org.apache.streampipes.model.grounding.TransportFormat} to the stream definition.
-   *
-   * @param format The transport format of the stream at runtime (e.g., JSON or Thrift).
-   *               Use {@link org.apache.streampipes.sdk.helpers.Formats} to use some pre-defined formats
-   *               (or create a new format as described in the developer guide).
-   * @return this
-   */
-  public DataStreamBuilder format(TransportFormat format) {
-    this.eventGrounding.setTransportFormats(Collections.singletonList(format));
     return this;
   }
 

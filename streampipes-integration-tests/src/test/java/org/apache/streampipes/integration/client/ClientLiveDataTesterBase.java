@@ -25,9 +25,7 @@ import org.apache.streampipes.client.credentials.StreamPipesApiKeyCredentials;
 import org.apache.streampipes.integration.utils.Utils;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.vocabulary.MessageFormat;
 
 import org.testcontainers.shaded.com.google.common.collect.Maps;
 
@@ -89,7 +87,6 @@ public abstract class ClientLiveDataTesterBase<T extends TransportProtocol> impl
   private EventGrounding makeEventGrounding() {
     var grounding = new EventGrounding();
     grounding.setTransportProtocol(makeProtocol());
-    grounding.setTransportFormats(List.of(new TransportFormat(MessageFormat.JSON)));
 
     return grounding;
   }

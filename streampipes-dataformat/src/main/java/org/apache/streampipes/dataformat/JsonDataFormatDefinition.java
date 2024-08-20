@@ -15,30 +15,41 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataformat.fst;
+
+package org.apache.streampipes.dataformat;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 
-import org.nustaq.serialization.FSTConfiguration;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
-public class FstDataFormatDefinition implements SpDataFormatDefinition {
+public class JsonDataFormatDefinition implements SpDataFormatDefinition {
 
-  private static FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
+  private final ObjectMapper objectMapper;
 
-  public FstDataFormatDefinition() {
-
+  public JsonDataFormatDefinition() {
+    this.objectMapper = new ObjectMapper();
   }
 
   @Override
   public Map<String, Object> toMap(byte[] event) throws SpRuntimeException {
-    return (Map<String, Object>) conf.asObject(event);
+    try {
+      return objectMapper.readValue(event, HashMap.class);
+    } catch (IOException e) {
+      throw new SpRuntimeException("Could not convert event to map data structure");
+    }
   }
 
   @Override
   public byte[] fromMap(Map<String, Object> event) throws SpRuntimeException {
-    return conf.asByteArray(event);
+    try {
+      return objectMapper.writeValueAsBytes(event);
+    } catch (JsonProcessingException e) {
+      throw new SpRuntimeException("Could not convert map data structure to JSON string");
+    }
   }
 }

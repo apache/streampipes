@@ -30,7 +30,6 @@ public class MessagingSettings {
   private Integer lingerMs;
   private Integer acks;
 
-  private List<SpDataFormat> prioritizedFormats;
   private List<SpProtocol> prioritizedProtocols;
 
   private String jmsHost;
@@ -56,13 +55,11 @@ public class MessagingSettings {
                            Integer messageMaxBytes,
                            Integer lingerMs,
                            Integer acks,
-                           List<SpDataFormat> prioritizedFormats,
                            List<SpProtocol> prioritizedProtocols) {
     this.batchSize = batchSize;
     this.messageMaxBytes = messageMaxBytes;
     this.lingerMs = lingerMs;
     this.acks = acks;
-    this.prioritizedFormats = prioritizedFormats;
     this.prioritizedProtocols = prioritizedProtocols;
     this.supportedProtocols = new ArrayList<>();
   }
@@ -101,14 +98,6 @@ public class MessagingSettings {
 
   public void setAcks(Integer acks) {
     this.acks = acks;
-  }
-
-  public List<SpDataFormat> getPrioritizedFormats() {
-    return prioritizedFormats;
-  }
-
-  public void setPrioritizedFormats(List<SpDataFormat> prioritizedFormats) {
-    this.prioritizedFormats = prioritizedFormats;
   }
 
   public List<SpProtocol> getPrioritizedProtocols() {

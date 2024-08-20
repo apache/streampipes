@@ -61,14 +61,6 @@ export class MessagingConfigurationComponent implements OnInit {
             .subscribe(response => this.getMessagingSettings());
     }
 
-    drop(event: CdkDragDrop<string[]>) {
-        moveItemInArray(
-            this.messagingSettings.prioritizedFormats,
-            event.previousIndex,
-            event.currentIndex,
-        );
-    }
-
     dropProtocol(event: CdkDragDrop<string[]>) {
         moveItemInArray(
             this.messagingSettings.prioritizedProtocols,

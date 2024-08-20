@@ -19,8 +19,6 @@ package org.apache.streampipes.client.model;
 
 import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.api.config.IStreamPipesClientConfig;
-import org.apache.streampipes.dataformat.SpDataFormatFactory;
-import org.apache.streampipes.dataformat.SpDataFormatManager;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
@@ -40,11 +38,6 @@ public class StreamPipesClientConfig implements IStreamPipesClientConfig {
   @Override
   public ObjectMapper getSerializer() {
     return serializer;
-  }
-
-  @Override
-  public void addDataFormat(SpDataFormatFactory spDataFormatFactory) {
-    SpDataFormatManager.INSTANCE.register(spDataFormatFactory);
   }
 
   @Override

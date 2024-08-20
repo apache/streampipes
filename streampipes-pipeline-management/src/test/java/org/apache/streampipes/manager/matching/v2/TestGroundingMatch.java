@@ -20,7 +20,6 @@ package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import org.junit.jupiter.api.Assertions;
@@ -37,11 +36,8 @@ public class TestGroundingMatch {
     TransportProtocol offerProtocol = TestUtils.kafkaProtocol();
     TransportProtocol requirementProtocol = TestUtils.kafkaProtocol();
 
-    TransportFormat offerFormat = TestUtils.jsonFormat();
-    TransportFormat requirementFormat = TestUtils.jsonFormat();
-
-    EventGrounding offeredGrounding = new EventGrounding(offerProtocol, offerFormat);
-    EventGrounding requiredGrounding = new EventGrounding(requirementProtocol, requirementFormat);
+    EventGrounding offeredGrounding = new EventGrounding(offerProtocol);
+    EventGrounding requiredGrounding = new EventGrounding(requirementProtocol);
 
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
@@ -55,29 +51,8 @@ public class TestGroundingMatch {
     TransportProtocol offerProtocol = TestUtils.kafkaProtocol();
     TransportProtocol requirementProtocol = TestUtils.jmsProtocol();
 
-    TransportFormat offerFormat = TestUtils.jsonFormat();
-    TransportFormat requirementFormat = TestUtils.jsonFormat();
-
-    EventGrounding offeredGrounding = new EventGrounding(offerProtocol, offerFormat);
-    EventGrounding requiredGrounding = new EventGrounding(requirementProtocol, requirementFormat);
-
-    List<MatchingResultMessage> errorLog = new ArrayList<>();
-
-    boolean matches = new GroundingMatch().match(offeredGrounding, requiredGrounding, errorLog);
-    Assertions.assertFalse(matches);
-  }
-
-  @Test
-  public void testNegativeGroundingMatchFormat() {
-
-    TransportProtocol offerProtocol = TestUtils.kafkaProtocol();
-    TransportProtocol requirementProtocol = TestUtils.kafkaProtocol();
-
-    TransportFormat offerFormat = TestUtils.jsonFormat();
-    TransportFormat requirementFormat = TestUtils.thriftFormat();
-
-    EventGrounding offeredGrounding = new EventGrounding(offerProtocol, offerFormat);
-    EventGrounding requiredGrounding = new EventGrounding(requirementProtocol, requirementFormat);
+    EventGrounding offeredGrounding = new EventGrounding(offerProtocol);
+    EventGrounding requiredGrounding = new EventGrounding(requirementProtocol);
 
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
@@ -91,11 +66,8 @@ public class TestGroundingMatch {
     TransportProtocol offerProtocol = TestUtils.kafkaProtocol();
     TransportProtocol requirementProtocol = TestUtils.jmsProtocol();
 
-    TransportFormat offerFormat = TestUtils.jsonFormat();
-    TransportFormat requirementFormat = TestUtils.thriftFormat();
-
-    EventGrounding offeredGrounding = new EventGrounding(offerProtocol, offerFormat);
-    EventGrounding requiredGrounding = new EventGrounding(requirementProtocol, requirementFormat);
+    EventGrounding offeredGrounding = new EventGrounding(offerProtocol);
+    EventGrounding requiredGrounding = new EventGrounding(requirementProtocol);
 
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
