@@ -18,6 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
+    AssetConstants,
     AssetLink,
     AssetLinkType,
     GenericStorageService,
@@ -26,7 +27,6 @@ import {
 import { SpManageAssetLinksDialogComponent } from '../../../../dialog/manage-asset-links/manage-asset-links-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { EditAssetLinkDialogComponent } from '../../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
-import { AssetConstants } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/assets/asset.constants';
 
 @Component({
     selector: 'sp-asset-details-links',

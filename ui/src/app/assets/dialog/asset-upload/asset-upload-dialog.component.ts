@@ -18,8 +18,10 @@
 
 import { Component } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
-import { GenericStorageService } from '@streampipes/platform-services';
-import { AssetConstants } from '../../../../../projects/streampipes/platform-services/src/lib/model/assets/asset.constants';
+import {
+    AssetConstants,
+    GenericStorageService,
+} from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-file-upload-dialog-component',
