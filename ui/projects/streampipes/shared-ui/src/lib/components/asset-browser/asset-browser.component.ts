@@ -40,6 +40,9 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     showResources = false;
 
     @Input()
+    allResourcesAlias = 'Resources';
+
+    @Input()
     browserWidth = 20;
 
     @Input()

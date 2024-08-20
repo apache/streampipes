@@ -91,7 +91,7 @@ export class AssetBrowserNodeComponent implements OnInit, OnChanges {
     }
 
     emitSelectedNode(node: SpAsset): void {
-        if (this.nodeResourceCount > 0) {
+        if (this.nodeResourceCount > 0 || this.assetSelectionMode) {
             this.selectedNodeEmitter.emit(node);
         }
     }

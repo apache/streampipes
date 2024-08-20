@@ -32,6 +32,7 @@
             </div>
             @if (assetBrowserData?.assets?.length > 0 && expanded) {
                 <sp-asset-browser-hierarchy
+                    [allResourcesAlias]="allResourcesAlias"
                     [assetBrowserData]="assetBrowserData"
                     [assetSelectionMode]="assetSelectionMode"
                     [resourceCount]="resourceCount"

@@ -40,6 +40,9 @@ export class AssetBrowserHierarchyComponent implements OnChanges {
     assetBrowserData: AssetBrowserData;
 
     @Input()
+    allResourcesAlias = 'Resources';
+
+    @Input()
     assetSelectionMode = false;
 
     @Input()
@@ -88,7 +91,7 @@ export class AssetBrowserHierarchyComponent implements OnChanges {
     makeRootNode(): SpAsset {
         return {
             assetId: '_root',
-            assetName: 'All Resources',
+            assetName: `All ${this.allResourcesAlias}`,
             assetDescription: '',
             assetLinks: [],
             assets: this.assetBrowserData.assets,

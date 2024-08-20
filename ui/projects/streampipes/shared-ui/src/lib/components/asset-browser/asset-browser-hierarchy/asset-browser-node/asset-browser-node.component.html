@@ -26,7 +26,14 @@
     fxFlex="100"
     (click)="emitSelectedNode(node)"
 >
-    <div fxFlex [ngClass]="nodeResourceCount > 0 ? '' : 'asset-node-disabled'">
+    <div
+        fxFlex
+        [ngClass]="
+            nodeResourceCount > 0 || assetSelectionMode
+                ? ''
+                : 'asset-node-disabled'
+        "
+    >
         <span fxLayoutAlign="start center">{{ node.assetName }} </span>
     </div>
     <div fxLayoutAlign="end center">

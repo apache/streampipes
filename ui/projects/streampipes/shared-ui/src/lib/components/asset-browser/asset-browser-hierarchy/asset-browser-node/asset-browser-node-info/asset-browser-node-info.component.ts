@@ -36,7 +36,6 @@ export class AssetBrowserNodeInfoComponent implements OnInit {
 
     @Input()
     assetBrowserData: AssetBrowserData;
-    s;
 
     labels: SpLabel[] = [];
     assetType: string;
