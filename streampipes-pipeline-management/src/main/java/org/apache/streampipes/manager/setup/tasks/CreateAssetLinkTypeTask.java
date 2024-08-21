@@ -31,11 +31,26 @@ import java.util.List;
 public class CreateAssetLinkTypeTask implements InstallationTask {
 
   private final List<AssetLinkType> defaultLinkTypes = Arrays.asList(
-      new AssetLinkType("data-view", "Data View", "var(--color-data-view)", "search", "data-view",
-          List.of("dataexplorer", "dashboard"), true),
+      new AssetLinkType(
+          "data-view",
+          "Data View",
+          "var(--color-data-view)",
+          "search",
+          "data-view",
+          List.of("dataexplorer", "dashboard"),
+          true
+      ),
       new AssetLinkType("dashboard", "Dashboard", "var(--color-dashboard)", "insert_chart", "dashboard",
           List.of("dashboard"), true),
-      new AssetLinkType("adapter", "Adapter", "var(--color-adapter)", "power", "adapter", List.of("connect", "details"), true),
+      new AssetLinkType(
+          "adapter",
+          "Adapter",
+          "var(--color-adapter)",
+          "power",
+          "adapter",
+          List.of("connect", "details"),
+          true
+      ),
       new AssetLinkType("data-source", "Data Source", "var(--color-data-source)", "dataset", "data-source", List.of(),
           false),
       new AssetLinkType("pipeline", "Pipeline", "var(--color-pipeline)", "play_arrow", "pipeline",
