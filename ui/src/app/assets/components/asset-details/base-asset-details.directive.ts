@@ -16,12 +16,8 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-import {
-    SpAssetBrowserService,
-    SpBreadcrumbService,
-} from '@streampipes/shared-ui';
-import { ActivatedRoute } from '@angular/router';
+import { Directive, OnInit } from '@angular/core';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import {
     AssetConstants,
     AssetSiteDesc,
@@ -29,35 +25,28 @@ import {
     SpAsset,
     SpAssetModel,
 } from '@streampipes/platform-services';
-import { SpAssetRoutes } from '../../assets.routes';
+import { ActivatedRoute } from '@angular/router';
 import { zip } from 'rxjs';
+import { SpAssetRoutes } from '../../assets.routes';
 
-@Component({
-    selector: 'sp-asset-details',
-    templateUrl: './asset-details.component.html',
-    styleUrls: ['./asset-details.component.scss'],
-})
-export class SpAssetDetailsComponent implements OnInit {
+@Directive()
+export abstract class BaseAssetDetailsDirective implements OnInit {
     asset: SpAssetModel;
     sites: AssetSiteDesc[] = [];
 
     selectedAsset: SpAsset;
     rootNode = true;
 
-    editMode: boolean;
-
     assetModelId: string;
 
     constructor(
         private breadcrumbService: SpBreadcrumbService,
-        private genericStorageService: GenericStorageService,
-        private assetBrowserService: SpAssetBrowserService,
-        private route: ActivatedRoute,
+        protected genericStorageService: GenericStorageService,
+        protected route: ActivatedRoute,
     ) {}
 
     ngOnInit(): void {
         this.assetModelId = this.route.snapshot.params.assetId;
-        this.editMode = this.route.snapshot.queryParams.editMode;
         this.loadResources();
     }
 
@@ -79,26 +68,13 @@ export class SpAssetDetailsComponent implements OnInit {
                 SpAssetRoutes.BASE,
                 { label: this.asset.assetName },
             ]);
+            this.onAssetAvailable();
         });
     }
 
     applySelectedAsset(event: { asset: SpAsset; rootNode: boolean }): void {
         this.selectedAsset = event.asset;
         this.rootNode = event.rootNode;
-    }
-
-    updateAsset() {
-        this.updateSelected();
-    }
-
-    saveAsset() {
-        this.genericStorageService
-            .updateDocument(AssetConstants.ASSET_APP_DOC_NAME, this.asset)
-            .subscribe(res => {
-                this.assetBrowserService.loadAssetData();
-                this.loadResources();
-                this.editMode = false;
-            });
     }
 
     updateSelected() {
@@ -122,4 +98,6 @@ export class SpAssetDetailsComponent implements OnInit {
             }
         }
     }
+
+    abstract onAssetAvailable(): void;
 }

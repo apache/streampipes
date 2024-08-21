@@ -18,14 +18,14 @@
 
 <div fxLayout="column" class="node-info-outer" fxLayoutGap="10px">
     <div *ngIf="assetType">
-        <sp-label [small]="true" [labelText]="assetType"> </sp-label>
+        <sp-label size="small" [labelText]="assetType"> </sp-label>
     </div>
     <div *ngIf="assetSite">
-        <sp-label [small]="true" [labelText]="assetSite"> </sp-label>
+        <sp-label size="small" [labelText]="assetSite"> </sp-label>
     </div>
     <div *ngFor="let label of labels" fxLayout="row wrap">
         <sp-label
-            [small]="true"
+            size="small"
             [labelBackground]="label.color"
             [labelText]="label.label"
         ></sp-label>

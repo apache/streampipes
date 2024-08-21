@@ -16,14 +16,19 @@
   ~
   -->
 
-<span
-    class="basic-label"
-    [ngClass]="cssClass"
-    [ngStyle]="{
-        background: labelBackground,
-        borderColor: 'color-mix(in srgb, ' + labelBackground + ' 70%, black)',
-        color: labelTextColor
-    }"
->
-    {{ labelText }}
-</span>
+<div fxLayout="column" fxLayoutAlign="start end">
+    <div
+        fxLayout="row"
+        fxLayoutGap="10px"
+        fxLayoutAlign="end center"
+        fxFlex="100"
+    >
+        @for (label of assignedLabels; track label) {
+            <sp-label
+                [labelText]="label.label"
+                [labelBackground]="label.color"
+                [size]="size"
+            ></sp-label>
+        }
+    </div>
+</div>

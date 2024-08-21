@@ -127,13 +127,8 @@ export class SpAssetOverviewComponent implements OnInit {
     }
 
     goToDetailsView(asset: SpAssetModel, editMode = false) {
-        if (!editMode) {
-            this.router.navigate(['assets', 'details', asset._id]);
-        } else {
-            this.router.navigate(['assets', 'details', asset._id], {
-                queryParams: { editMode: editMode },
-            });
-        }
+        const mode = editMode ? 'edit' : 'view';
+        this.router.navigate(['assets', 'details', asset._id, mode]);
     }
 
     deleteAsset(asset: SpAssetModel) {

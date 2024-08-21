@@ -45,7 +45,7 @@ export class SingleMarkerMapComponent implements OnInit {
     assetLocation: AssetLocation;
 
     @Input()
-    mapHeight: number = 400;
+    mapHeight: string = '400px';
 
     @Input()
     readonly = false;

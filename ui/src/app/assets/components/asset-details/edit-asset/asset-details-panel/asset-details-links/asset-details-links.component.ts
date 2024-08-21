@@ -24,9 +24,9 @@ import {
     GenericStorageService,
     SpAsset,
 } from '@streampipes/platform-services';
-import { SpManageAssetLinksDialogComponent } from '../../../../dialog/manage-asset-links/manage-asset-links-dialog.component';
+import { SpManageAssetLinksDialogComponent } from '../../../../../dialog/manage-asset-links/manage-asset-links-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { EditAssetLinkDialogComponent } from '../../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
+import { EditAssetLinkDialogComponent } from '../../../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
 
 @Component({
     selector: 'sp-asset-details-links',

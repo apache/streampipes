@@ -16,14 +16,19 @@
   ~
   -->
 
-<span
-    class="basic-label"
-    [ngClass]="cssClass"
-    [ngStyle]="{
-        background: labelBackground,
-        borderColor: 'color-mix(in srgb, ' + labelBackground + ' 70%, black)',
-        color: labelTextColor
-    }"
->
-    {{ labelText }}
-</span>
+<div fxLayout="column">
+    <div class="link-title">Resources</div>
+    @if (assetLinkTypes.length > 0) {
+        <div fxLayout="row wrap" class="mt-20" fxLayoutGap="20px">
+            @for (link of selectedAsset.assetLinks; track link) {
+                @if (link.navigationActive) {
+                    <sp-asset-link-card
+                        [assetLink]="link"
+                        [assetLinkTypes]="assetLinkTypes"
+                    >
+                    </sp-asset-link-card>
+                }
+            }
+        </div>
+    }
+</div>

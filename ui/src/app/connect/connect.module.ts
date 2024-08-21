@@ -164,12 +164,22 @@ import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-document
                         component: EditAdapterComponent,
                     },
                     {
-                        path: 'details/:elementId/metrics',
-                        component: SpAdapterDetailsMetricsComponent,
-                    },
-                    {
-                        path: 'details/:elementId/logs',
-                        component: SpAdapterDetailsLogsComponent,
+                        path: 'details/:elementId',
+                        children: [
+                            {
+                                path: '',
+                                pathMatch: 'full',
+                                redirectTo: 'metrics',
+                            },
+                            {
+                                path: 'metrics',
+                                component: SpAdapterDetailsMetricsComponent,
+                            },
+                            {
+                                path: 'logs',
+                                component: SpAdapterDetailsLogsComponent,
+                            },
+                        ],
                     },
                 ],
             },

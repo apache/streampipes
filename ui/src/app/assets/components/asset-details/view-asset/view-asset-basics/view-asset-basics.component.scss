@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,18 +16,33 @@
  *
  */
 
-.asset-details-panel {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 100%;
+.asset-title {
+    font-size: 16pt;
+    font-weight: bold;
+    font-family: 'Roboto-Bold', sans-serif;
 }
 
-.asset-details-container {
-    width: 100%;
-    height: 100%;
-    background: var(--color-bg-0);
+.asset-description {
+    font-size: 12pt;
 }
 
-.asset-tree-panel {
-    width: 400px;
+.asset-metadata {
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.selected-asset-title {
+    font-size: 14pt;
+    font-weight: bold;
+    font-family: 'Roboto-Bold', sans-serif;
+}
+
+.selected-asset-description {
+    font-size: 11pt;
+}
+
+.selected-asset-metadata {
+    margin-top: 30px;
 }

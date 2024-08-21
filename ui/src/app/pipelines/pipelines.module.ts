@@ -85,21 +85,7 @@ import { MatIconModule } from '@angular/material/icon';
                     },
                     {
                         path: 'details/:pipelineId',
-                        children: [
-                            {
-                                path: '',
-                                redirectTo: 'overview',
-                                pathMatch: 'full',
-                            },
-                            {
-                                path: 'overview',
-                                component: SpPipelineDetailsComponent,
-                            },
-                            {
-                                path: 'logs',
-                                component: PipelineLogsDialogComponent,
-                            },
-                        ],
+                        component: SpPipelineDetailsComponent,
                     },
                     {
                         path: 'create',

@@ -16,21 +16,23 @@
  *
  */
 
-.basic-label {
-    border-radius: 15px;
-    min-width: 50px;
-    padding: 5px 7px;
-    border: 1px solid;
-    display: inline-block;
-    text-align: center;
+.box {
+    width: 340px;
+    height: 140px;
+    margin-bottom: 20px;
 }
 
-.medium-label {
-    font-size: 11pt;
-    padding: 4px 12px;
+.box-content {
+    padding: 10px;
 }
 
-.small-label {
-    font-size: 10pt;
-    padding: 2px 10px;
+.box-action {
+}
+
+.link-label {
+    font-weight: normal;
+}
+
+.icon-size {
+    font-size: 22pt;
 }

@@ -17,7 +17,10 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
+import {
+    AssetLink,
+    AssetLinkType,
+} from '../../../../../../../../../../projects/streampipes/platform-services/src/public-api';
 import { Router } from '@angular/router';
 
 @Component({
