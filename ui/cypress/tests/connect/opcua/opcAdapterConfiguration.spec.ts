@@ -153,7 +153,7 @@ describe('Test OPC-UA Adapter Configuration', () => {
 const getAdapterBuilder = () => {
     const host: string = ParameterUtils.get('localhost', 'opcua');
 
-    const builder = AdapterBuilder.create('OPC_UA')
+    return AdapterBuilder.create('OPC_UA')
         .setName('OPC UA Configuration Test')
         .addInput('radio', 'adapter_type-pull_mode', '')
         .addInput('input', 'undefined-PULLING_INTERVAL-0', '1000')
@@ -164,15 +164,21 @@ const getAdapterBuilder = () => {
             'undefined-OPC_SERVER_URL-0',
             'opc.tcp://' + host + ':50000',
         )
-
         .setAutoAddTimestampPropery();
-
-    return builder;
 };
 
 const setUpInitialConfiguration = (adapterInput: AdapterInput) => {
     ConnectUtils.goToConnect();
     ConnectUtils.goToNewAdapterPage();
     ConnectUtils.selectAdapter(adapterInput.adapterType);
+
+    // Wait for the first static property to be rendered
+    cy.dataCy(adapterInput.adapterConfiguration[0].selector).should(
+        'be.visible',
+    );
+    // Validate that no error is not shown when nothing is configured
+    cy.dataCy('reloading-nodes', { timeout: 3000 }).should('not.exist');
+    ErrorMessageUtils.getExceptionComponent().should('not.exist');
+
     StaticPropertyUtils.input(adapterInput.adapterConfiguration);
 };
