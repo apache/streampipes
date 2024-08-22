@@ -16,12 +16,26 @@
  *
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { SpDataStream } from '@streampipes/platform-services';
+import {
+    Component,
+    HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+} from '@angular/core';
+import {
+    DataType,
+    EventPropertyList,
+    EventPropertyPrimitive,
+    EventPropertyUnion,
+    SemanticType,
+    SpDataStream,
+} from '@streampipes/platform-services';
 import { RestService } from '../../connect/services/rest.service';
 import { Subscription } from 'rxjs';
 import { HttpDownloadProgressEvent, HttpEventType } from '@angular/common/http';
 import { LivePreviewService } from '../../services/live-preview.service';
+import { RuntimeInfo } from './pipeline-element-runtime-info.model';
 
 @Component({
     selector: 'sp-pipeline-element-runtime-info',
@@ -32,7 +46,11 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     @Input()
     streamDescription: SpDataStream;
 
+    @Input()
+    showTitle = true;
+
     runtimeData: { runtimeName: string; value: any }[];
+    runtimeInfo: RuntimeInfo[];
     timer: any;
     runtimeDataError = false;
     runtimeSub: Subscription;
@@ -43,7 +61,54 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
+        this.runtimeInfo = this.makeRuntimeInfo();
         this.getLatestRuntimeInfo();
+    }
+
+    makeRuntimeInfo(): RuntimeInfo[] {
+        return this.streamDescription.eventSchema.eventProperties
+            .map(ep => {
+                return {
+                    label: ep.label || 'n/a',
+                    description: ep.description || 'n/a',
+                    runtimeType: this.getFriendlyRuntimeType(ep),
+                    runtimeName: ep.runtimeName,
+                    value: undefined,
+                    isTimestamp: this.isTimestamp(ep),
+                    isImage: this.isImage(ep),
+                    hasNoDomainProperty: this.hasNoDomainProperty(ep),
+                    valueChanged: false,
+                };
+            })
+            .sort((a, b) => a.runtimeName.localeCompare(b.runtimeName));
+    }
+
+    getFriendlyRuntimeType(ep: EventPropertyUnion) {
+        if (ep instanceof EventPropertyPrimitive) {
+            if (DataType.isNumberType(ep.runtimeType)) {
+                return 'Number';
+            } else if (DataType.isBooleanType(ep.runtimeType)) {
+                return 'Boolean';
+            } else {
+                return 'Text';
+            }
+        } else if (ep instanceof EventPropertyList) {
+            return 'List';
+        } else {
+            return 'Nested';
+        }
+    }
+
+    private isImage(ep: EventPropertyUnion) {
+        return SemanticType.isImage(ep);
+    }
+
+    private isTimestamp(ep: EventPropertyUnion) {
+        return SemanticType.isTimestamp(ep);
+    }
+
+    private hasNoDomainProperty(ep: EventPropertyUnion) {
+        return !(this.isTimestamp(ep) || this.isImage(ep));
     }
 
     getLatestRuntimeInfo() {
@@ -58,9 +123,11 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
                         const [firstKey] = Object.keys(responseJson);
                         const json = responseJson[firstKey];
                         this.runtimeDataError = !json;
-                        this.runtimeData = Object.entries(json).map(
-                            ([runtimeName, value]) => ({ runtimeName, value }),
-                        );
+                        this.runtimeInfo.forEach(r => {
+                            const previousValue = r.value;
+                            r.value = json[r.runtimeName];
+                            r.valueChanged = r.value !== previousValue;
+                        });
                     } catch (error) {
                         this.runtimeDataError = true;
                         this.runtimeData = [];
@@ -70,6 +137,11 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.runtimeSub?.unsubscribe();
+    }
+
+    @HostListener('window:beforeunload')
+    closeSubscription() {
         this.runtimeSub?.unsubscribe();
     }
 }

@@ -21,7 +21,6 @@ import {
     AdapterDescription,
     AdapterMonitoringService,
     AdapterService,
-    PipelineElementService,
     SpLogMessage,
     SpMetricsEntry,
 } from '@streampipes/platform-services';
@@ -46,7 +45,6 @@ import { SpConnectRoutes } from '../../connect.routes';
 import { Subscription, zip } from 'rxjs';
 import { RestApi } from '../../../services/rest-api.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { HelpComponent } from '../../../core-ui/help/help.component';
 
 @Component({
     selector: 'sp-existing-adapters',
@@ -90,7 +88,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         private adapterService: AdapterService,
         private dialogService: DialogService,
         private currentUserService: CurrentUserService,
-        private pipelineElementService: PipelineElementService,
         private router: Router,
         private restApi: RestApi,
         private adapterFilter: AdapterFilterPipe,
@@ -248,25 +245,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         });
     }
 
-    openHelpDialog(adapter: AdapterDescription) {
-        const streamId = adapter.correspondingDataStreamElementId;
-
-        this.pipelineElementService
-            .getDataStreamByElementId(streamId)
-            .subscribe(stream => {
-                if (stream) {
-                    this.dialogService.open(HelpComponent, {
-                        panelType: PanelType.STANDARD_PANEL,
-                        title: stream.name,
-                        width: '70vw',
-                        data: {
-                            pipelineElement: stream,
-                        },
-                    });
-                }
-            });
-    }
-
     getAdaptersRunning(): void {
         this.adapterService.getAdapters().subscribe(adapters => {
             this.existingAdapters = adapters;
@@ -310,12 +288,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     navigateToDetailsOverviewPage(adapter: AdapterDescription): void {
-        this.router.navigate([
-            'connect',
-            'details',
-            adapter.elementId,
-            'metrics',
-        ]);
+        this.router.navigate(['connect', 'details', adapter.elementId]);
     }
 
     ngOnDestroy() {

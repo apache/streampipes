@@ -103,6 +103,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AdapterStatusLightComponent } from './components/existing-adapters/adapter-status-light/adapter-status-light.component';
 import { SpAdapterDeploymentSettingsComponent } from './components/adapter-configuration/adapter-settings/adapter-deployment-settings/adapter-deployment-settings.component';
 import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-documentation/adapter-documentation-dialog.component';
+import { AdapterDetailsDataComponent } from './components/adapter-details/adapter-details-data/adapter-details-data.component';
 
 @NgModule({
     imports: [
@@ -169,7 +170,11 @@ import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-document
                             {
                                 path: '',
                                 pathMatch: 'full',
-                                redirectTo: 'metrics',
+                                redirectTo: 'data',
+                            },
+                            {
+                                path: 'data',
+                                component: AdapterDetailsDataComponent,
                             },
                             {
                                 path: 'metrics',
@@ -191,6 +196,7 @@ import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-document
         AdapterConfigurationHeaderComponent,
         AdapterConfigurationComponent,
         AdapterDescriptionComponent,
+        AdapterDetailsDataComponent,
         AdapterStartedDialog,
         AdapterStatusLightComponent,
         AdapterSettingsComponent,

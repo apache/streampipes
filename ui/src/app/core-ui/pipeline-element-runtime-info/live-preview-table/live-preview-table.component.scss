@@ -15,3 +15,29 @@
  * limitations under the License.
  *
  */
+
+.runtime-name {
+    font-weight: bold;
+    border-radius: 3px;
+    padding: 3px 5px;
+    background: var(--color-bg-3);
+}
+
+.mat-mdc-row:nth-child(even) {
+    background: var(--color-bg-1);
+}
+
+.value {
+    border-radius: 3px;
+    padding: 3px 5px;
+}
+
+.value-changed {
+    background-color: #cdecff;
+    transition: background-color 0.5s ease-in-out;
+}
+
+.no-data {
+    text-align: center;
+    background: #ffe7ad;
+}
