@@ -323,7 +323,7 @@ export class DataLakeUtils {
      */
     public static selectVisualizationType(type: string | 'Table') {
         // Select visualization type
-        cy.dataCy('data-explorer-select-visualization-type')
+        cy.dataCy('data-explorer-select-visualization-type', { timeout: 10000 })
             .click()
             .get('mat-option')
             .contains(type)
