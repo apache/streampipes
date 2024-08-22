@@ -35,16 +35,13 @@ public class Alternatives {
   }
 
   public static StaticPropertyAlternative from(Label label) {
-    StaticPropertyAlternative alternative = new StaticPropertyAlternative(label.getInternalId(),
+    return new StaticPropertyAlternative(label.getInternalId(),
         label.getLabel(), label.getInternalId());
-    alternative.setIndex(0);
-    return alternative;
   }
 
   public static StaticPropertyAlternative from(Label label, boolean selected) {
     StaticPropertyAlternative alternative = new StaticPropertyAlternative(label.getInternalId(),
         label.getLabel(), label.getInternalId());
-    alternative.setIndex(0);
     alternative.setSelected(selected);
     return alternative;
   }

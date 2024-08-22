@@ -271,9 +271,6 @@ export class WidgetConfigBuilder {
     }
 
     build(): DashboardWidgetSettings {
-        for (let i = 0; i < this.widget.config.length; i++) {
-            this.widget.config[i].index = i;
-        }
         return this.widget;
     }
 }
