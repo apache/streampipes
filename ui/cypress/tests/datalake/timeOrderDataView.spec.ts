@@ -70,5 +70,9 @@ describe('Test Time Order in Data Explorer', () => {
                 expect(timestamps[i]).to.be.at.most(timestamps[i + 1]);
             }
         });
+
+        // Check if dialog window is showing after applying changes to time settings
+        DataLakeUtils.goToDatalake();
+        DataLakeUtils.checkIfConfirmationDialogIsShowing();
     });
 });

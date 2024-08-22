@@ -46,14 +46,19 @@ import { MatDialog } from '@angular/material/dialog';
 import { map, switchMap } from 'rxjs/operators';
 import { SpDataExplorerRoutes } from '../../data-explorer.routes';
 import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
+import { DataExplorerDetectChangesService } from '../../services/data-explorer-detect-changes.service';
+import { SupportsUnsavedChangeDialog } from '../../models/dataview-dashboard.model';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-panel',
     templateUrl: './data-explorer-dashboard-panel.component.html',
     styleUrls: ['./data-explorer-dashboard-panel.component.scss'],
 })
-export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
+export class DataExplorerDashboardPanelComponent
+    implements OnInit, OnDestroy, SupportsUnsavedChangeDialog
+{
     dashboardLoaded = false;
+    originalDashboard: Dashboard;
     dashboard: Dashboard;
 
     /**
@@ -82,6 +87,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
 
     constructor(
         private dataViewDataExplorerService: DataViewDataExplorerService,
+        private detectChangesService: DataExplorerDetectChangesService,
         private dialog: MatDialog,
         private timeSelectionService: TimeSelectionService,
         private authService: AuthService,
@@ -136,6 +142,22 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
         }
     }
 
+    setShouldShowConfirm(): boolean {
+        const originalTimeSettings = this.originalDashboard
+            .dashboardTimeSettings as TimeSettings;
+        const currentTimeSettings = this.dashboard
+            .dashboardTimeSettings as TimeSettings;
+        return this.detectChangesService.shouldShowConfirm(
+            this.originalDashboard,
+            this.dashboard,
+            originalTimeSettings,
+            currentTimeSettings,
+            model => {
+                model.dashboardTimeSettings = undefined;
+            },
+        );
+    }
+
     persistDashboardChanges() {
         this.dashboard.dashboardGeneralSettings.defaultViewMode = this.viewMode;
         this.dataViewDataExplorerService
@@ -184,6 +206,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     getDashboard(dashboardId: string, startTime: number, endTime: number) {
         this.dataViewService.getDashboard(dashboardId).subscribe(dashboard => {
             this.dashboard = dashboard;
+            this.originalDashboard = JSON.parse(JSON.stringify(dashboard));
             this.breadcrumbService.updateBreadcrumb(
                 this.breadcrumbService.makeRoute(
                     [SpDataExplorerRoutes.BASE],
@@ -231,11 +254,11 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
         this.routingService.navigateToOverview();
     }
 
-    confirmLeaveDashboard(
+    confirmLeaveDialog(
         _route: ActivatedRouteSnapshot,
         _state: RouterStateSnapshot,
     ): Observable<boolean> {
-        if (this.editMode) {
+        if (this.editMode && this.setShouldShowConfirm()) {
             const dialogRef = this.dialog.open(ConfirmDialogComponent, {
                 width: '500px',
                 data: {
@@ -250,7 +273,13 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
             return dialogRef.afterClosed().pipe(
                 map(shouldUpdate => {
                     if (shouldUpdate) {
-                        this.persistDashboardChanges();
+                        this.dashboard.dashboardGeneralSettings.defaultViewMode =
+                            this.viewMode;
+                        this.dataViewDataExplorerService
+                            .updateDashboard(this.dashboard)
+                            .subscribe(result => {
+                                return true;
+                            });
                     }
                     return true;
                 }),

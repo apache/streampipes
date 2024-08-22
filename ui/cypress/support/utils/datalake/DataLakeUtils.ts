@@ -466,4 +466,8 @@ export class DataLakeUtils {
             timeout: 10000,
         }).should('have.length', amount);
     }
+
+    public static checkIfConfirmationDialogIsShowing(): void {
+        cy.get('confirmation-dialog').should('be.visible');
+    }
 }
