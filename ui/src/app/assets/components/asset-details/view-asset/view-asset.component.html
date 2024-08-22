@@ -41,10 +41,12 @@
                                 fxFlex="100"
                             ></sp-view-asset-basics>
 
-                            <sp-view-asset-labels
-                                [asset]="asset"
-                                fxFlex
-                            ></sp-view-asset-labels>
+                            @if (asset.labelIds?.length > 0) {
+                                <sp-view-asset-labels
+                                    [asset]="asset"
+                                    fxFlex
+                                ></sp-view-asset-labels>
+                            }
                         </div>
                         <sp-view-asset-links
                             [selectedAsset]="selectedAsset"
@@ -54,7 +56,7 @@
                     </div>
                 </div>
                 <div fxFlex="33">
-                    @if (locationConfig) {
+                    @if (locationConfig && asset.assetSite?.location) {
                         <sp-single-marker-map
                             [mapHeight]="'100%'"
                             [locationConfig]="locationConfig"

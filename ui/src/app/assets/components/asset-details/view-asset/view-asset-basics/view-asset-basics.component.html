@@ -27,12 +27,12 @@
         </div>
         <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
             <mat-icon color="primary">location_on</mat-icon>
-            <div class="asset-description">{{ assetSite.label }}</div>
+            <div class="asset-description">{{ assetSite?.label || '-' }}</div>
         </div>
         <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
             <mat-icon color="primary">factory</mat-icon>
             <div class="asset-description">
-                {{ rootAsset.assetSite.area || '-' }}
+                {{ rootAsset.assetSite?.area || '-' }}
             </div>
         </div>
     </div>
