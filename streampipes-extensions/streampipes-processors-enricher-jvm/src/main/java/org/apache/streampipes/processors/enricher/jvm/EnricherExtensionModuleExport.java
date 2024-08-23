@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.processors.enricher.jvm.processor.jseval.JSEvalProcessor;
+import org.apache.streampipes.processors.enricher.jvm.processor.limitsalert.SensorLimitAlertProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.limitsenrichment.QualityControlLimitsEnrichmentProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.math.MathOpProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.math.staticmathop.StaticMathOpProcessor;
@@ -43,6 +44,7 @@ public class EnricherExtensionModuleExport implements IExtensionModuleExport {
     return List.of(
         new JSEvalProcessor(),
         new QualityControlLimitsEnrichmentProcessor(),
+        new SensorLimitAlertProcessor(),
         new MathOpProcessor(),
         new StaticMathOpProcessor(),
         new TrigonometryProcessor(),

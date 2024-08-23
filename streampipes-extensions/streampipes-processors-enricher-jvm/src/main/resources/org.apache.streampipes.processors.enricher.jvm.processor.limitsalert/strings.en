@@ -1,0 +1,40 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+org.apache.streampipes.processors.enricher.jvm.processor.limitsalert.title=Sensor Limit Alert
+org.apache.streampipes.processors.enricher.jvm.processor.limitsalert.description=Monitors sensor values and triggers alerts when they exceed defined control or warning limits.
+
+sensorValue.title=Sensor Value
+sensorValue.description=Select the sensor value to be monitored.
+
+upperControlLimit.title=Upper Control Limit
+upperControlLimit.description=Set the upper control limit for the sensor value.
+
+upperWarningLimit.title=Upper Warning Limit
+upperWarningLimit.description=Set the upper warning limit for the sensor value.
+
+lowerWarningLimit.title=Lower Warning Limit
+lowerWarningLimit.description=Set the lower warning limit for the sensor value.
+
+lowerControlLimit.title=Lower Control Limit
+lowerControlLimit.description=Set the lower control limit for the sensor value.
+
+alertStatus.title=Alert Status
+alertStatus.description=Indicates whether the sensor value has breached a warning or control limit.
+
+limitBreached.title=Limit Breached
+limitBreached.description=Specifies which limit (e.g., Upper Control Limit, Lower Warning Limit) was breached by the sensor value.
