@@ -18,13 +18,19 @@
 
 package org.apache.streampipes.rest.impl.pe;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
+import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
+import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.rest.impl.connect.AbstractAdapterResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +49,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/streams")
-public class DataStreamResource extends AbstractAuthGuardedRestResource {
+public class DataStreamResource extends AbstractAdapterResource<AdapterMasterManagement> {
+
+  public DataStreamResource() {
+    super(() -> new AdapterMasterManagement(
+        StorageDispatcher.INSTANCE.getNoSqlStore()
+            .getAdapterInstanceStorage(),
+        new SpResourceManager().manageAdapters(),
+        new SpResourceManager().manageDataStreams(),
+        AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+    ));
+  }
 
   @GetMapping(path = "/available", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
@@ -98,8 +114,12 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<?> updateDataStream(@RequestBody SpDataStream dataStream) {
     try {
       getDataStreamResourceManager().update(dataStream);
+      var updateManager = new AdapterUpdateManagement(managementService);
+
+      updateManager.updateDataStream(dataStream);
+
       return ok();
-    } catch (IllegalArgumentException e) {
+    } catch (AdapterException e) {
       return badRequest(e.getMessage());
     }
   }

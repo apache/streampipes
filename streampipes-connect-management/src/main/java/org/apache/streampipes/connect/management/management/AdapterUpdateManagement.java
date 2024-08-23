@@ -105,6 +105,14 @@ public class AdapterUpdateManagement {
     }
   }
 
+  public void updateDataStream(SpDataStream dataStream) throws AdapterException {
+    var correspondingAdapter = adapterMasterManagement.getAdapter(dataStream.getCorrespondingAdapterId());
+    dataStreamResourceManager.update(dataStream);
+
+    correspondingAdapter.setDataStream(dataStream);
+    updateAdapter(correspondingAdapter);
+  }
+
   public List<PipelineUpdateInfo> checkPipelineMigrations(AdapterDescription adapterDescription) {
     var affectedPipelines = PipelineManager
         .getPipelinesContainingElements(adapterDescription.getCorrespondingDataStreamElementId());
