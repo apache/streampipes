@@ -31,7 +31,7 @@ const (
 
 type Pipeline struct {
 	Sepas                 []DataProcessorInvocation //`json:"sepas"`
-	Streams               []SpDataStream            //`json:"streams"`
+	Streams               []model.SpDataStream      //`json:"streams"`
 	Name                  string                    //`json:"name"`
 	Description           string                    //`json:"description,omitempty"`
 	Actions               []DataSinkInvocation      //`json:"actions"`
@@ -63,101 +63,22 @@ type DataProcessorInvocation struct {
 	IncludedLocales       []string                  `json:"includedLocales"`
 	InternallyManaged     bool                      `json:"internallyManaged"`
 	Version               int32                     `json:"version"`
-	InputStreams          []SpDataStream            `json:"inputStreams"`
-	StaticProperties      []StaticProperty          `json:"staticProperties"`
+	InputStreams          []model.SpDataStream      `json:"inputStreams"`
+	StaticProperties      []model.StaticProperty    `json:"staticProperties"`
 	BelongsTo             string                    `json:"belongsTo"`
 	StatusInfoSettings    ElementStatusInfoSettings `json:"statusInfoSettings"`
-	SupportedGrounding    EventGrounding            `json:"supportedGrounding"`
+	SupportedGrounding    model.EventGrounding      `json:"supportedGrounding"`
 	CorrespondingPipeline string                    `json:"correspondingPipeline"`
 	CorresponddingUser    string                    `json:"correspondingUser"`
-	StreamRequirements    []SpDataStream            `json:"streamRequirements"`
+	StreamRequirements    []model.SpDataStream      `json:"streamRequirements"`
 	Configured            bool                      `json:"configured"`
 	Uncompleted           bool                      `json:"uncompleted"`
 	SelectedEndpointUrl   string                    `json:"selectedEndpointUrl"`
-	OutputStream          SpDataStream              `json:"outputStream"`
+	OutputStream          model.SpDataStream        `json:"outputStream"`
 	OutputStrategies      []OutputStrategy          `json:"outputStrategies"`
 	PathName              string                    `json:"pathName"`
 	Category              []string                  `json:"category"`
 	Rev                   string                    `json:"_rev"`
-}
-
-type SpDataStream struct {
-	ElementId              string            `json:"elementId"`
-	Dom                    string            `json:"dom"`
-	ConnectedTo            []string          `json:"connectedTo"`
-	Name                   string            `json:"name"`
-	Description            string            `json:"description"`
-	IconUrl                string            `json:"iconUrl"`
-	AppId                  string            `json:"appId"`
-	IncludesAssets         bool              `json:"includesAssets"`
-	IncludesLocales        bool              `json:"includesLocales"`
-	IncludedAssets         []string          `json:"includedAssets"`
-	IncludedLocales        []string          `json:"includedLocales"`
-	InternallyManaged      bool              `json:"internallyManaged"`
-	EventGrounding         EventGrounding    `json:"eventGrounding"`
-	EventSchema            model.EventSchema `json:"eventSchema"`
-	Category               []string          `json:"category"`
-	Index                  int32             `json:"index"`
-	CorrespondingAdapterId string            `json:"correspondingAdapterId"`
-	Rev                    string            `json:"_rev"`
-}
-
-type EventGrounding struct {
-	TransportProtocols []TransportProtocol `json:"transportProtocols"`
-	TransportFormats   []TransportFormat   `json:"transportFormats"`
-}
-
-type TransportProtocol struct {
-	ElementId       string          `json:"elementId"`
-	BrokerHostname  string          `json:"brokerHostname"`
-	TopicDefinition TopicDefinition `json:"topicDefinition"`
-	Class           string          `json:"@class,omitempty"`
-	Port            int             `json:"port"`
-}
-
-type TopicDefinition struct {
-	ActualTopicName string `json:"actualTopicName"`
-	Class           string `json:"@class"`
-}
-
-type TransportFormat struct {
-	RdfType []string `json:"rdfType"`
-}
-
-type StaticPropertyType string
-
-const (
-	AnyStaticProperty                        StaticPropertyType = "AnyStaticProperty"
-	CodeInputStaticProperty                  StaticPropertyType = "CodeInputStaticProperty"
-	CollectionStaticProperty                 StaticPropertyType = "CollectionStaticProperty"
-	ColorPickerStaticProperty                StaticPropertyType = "ColorPickerStaticProperty"
-	DomainStaticProperty                     StaticPropertyType = "DomainStaticProperty"
-	FreeTextStaticProperty                   StaticPropertyType = "FreeTextStaticProperty"
-	FileStaticProperty                       StaticPropertyType = "FileStaticProperty"
-	MappingPropertyUnary                     StaticPropertyType = "MappingPropertyUnary"
-	MappingPropertyNary                      StaticPropertyType = "MappingPropertyNary"
-	MatchingStaticProperty                   StaticPropertyType = "MatchingStaticProperty"
-	OneOfStaticProperty                      StaticPropertyType = "OneOfStaticProperty"
-	RuntimeResolvableAnyStaticProperty       StaticPropertyType = "RuntimeResolvableAnyStaticProperty"
-	RuntimeResolvableGroupStaticProperty     StaticPropertyType = "RuntimeResolvableGroupStaticProperty"
-	RuntimeResolvableOneOfStaticProperty     StaticPropertyType = "RuntimeResolvableOneOfStaticProperty"
-	RuntimeResolvableTreeInputStaticProperty StaticPropertyType = "RuntimeResolvableTreeInputStaticProperty"
-	StaticPropertyGroup                      StaticPropertyType = "StaticPropertyGroup"
-	StaticPropertyAlternatives               StaticPropertyType = "StaticPropertyAlternatives"
-	StaticPropertyAlternative                StaticPropertyType = "StaticPropertyAlternative"
-	SecretStaticProperty                     StaticPropertyType = "SecretStaticProperty"
-	SlideToggleStaticProperty                StaticPropertyType = "SlideToggleStaticProperty"
-)
-
-type StaticProperty struct {
-	Optional           bool               `json:"optional,omitempty"`
-	StaticPropertyType StaticPropertyType `json:"staticPropertyType"`
-	Index              int32              `json:"index"`
-	Label              string             `json:"label"`
-	Description        string             `json:"description"`
-	InternalName       string             `json:"internalName"`
-	Predefined         bool               `json:"predefined"`
-	Class              string             `json:"@class"`
 }
 
 type ElementStatusInfoSettings struct {
@@ -193,14 +114,14 @@ type DataSinkInvocation struct {
 	IncludedLocales       []string                  `json:"includedLocales"`
 	InternallyManaged     bool                      `json:"internallyManaged"`
 	Version               int32                     `json:"version"`
-	InputStreams          []SpDataStream            `json:"inputStreams"`
-	StaticProperties      []StaticProperty          `json:"staticProperties"`
+	InputStreams          []model.SpDataStream      `json:"inputStreams"`
+	StaticProperties      []model.StaticProperty    `json:"staticProperties"`
 	BelongsTo             string                    `json:"belongsTo"`
 	StatusInfoSettings    ElementStatusInfoSettings `json:"statusInfoSettings"`
-	SupportedGrounding    EventGrounding            `json:"supportedGrounding"`
+	SupportedGrounding    model.EventGrounding      `json:"supportedGrounding"`
 	CorrespondingPipeline string                    `json:"correspondingPipeline"`
 	CorrespondingUser     string                    `json:"correspondingUser"`
-	StreamRequirements    []SpDataStream            `json:"streamRequirements"`
+	StreamRequirements    []model.SpDataStream      `json:"streamRequirements"`
 	Configured            bool                      `json:"configured"`
 	Uncompleted           bool                      `json:"uncompleted"`
 	SelectedEndpointUrl   string                    `json:"selectedEndpointUrl"`

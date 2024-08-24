@@ -79,3 +79,82 @@ type Notification struct {
 	Description           interface{} `json:"description"`
 	AdditionalInformation string      `json:"additionalInformation"`
 }
+
+type StaticPropertyType string
+
+const (
+	AnyStaticProperty                        StaticPropertyType = "AnyStaticProperty"
+	CodeInputStaticProperty                  StaticPropertyType = "CodeInputStaticProperty"
+	CollectionStaticProperty                 StaticPropertyType = "CollectionStaticProperty"
+	ColorPickerStaticProperty                StaticPropertyType = "ColorPickerStaticProperty"
+	DomainStaticProperty                     StaticPropertyType = "DomainStaticProperty"
+	FreeTextStaticProperty                   StaticPropertyType = "FreeTextStaticProperty"
+	FileStaticProperty                       StaticPropertyType = "FileStaticProperty"
+	MappingPropertyUnary                     StaticPropertyType = "MappingPropertyUnary"
+	MappingPropertyNary                      StaticPropertyType = "MappingPropertyNary"
+	MatchingStaticProperty                   StaticPropertyType = "MatchingStaticProperty"
+	OneOfStaticProperty                      StaticPropertyType = "OneOfStaticProperty"
+	RuntimeResolvableAnyStaticProperty       StaticPropertyType = "RuntimeResolvableAnyStaticProperty"
+	RuntimeResolvableGroupStaticProperty     StaticPropertyType = "RuntimeResolvableGroupStaticProperty"
+	RuntimeResolvableOneOfStaticProperty     StaticPropertyType = "RuntimeResolvableOneOfStaticProperty"
+	RuntimeResolvableTreeInputStaticProperty StaticPropertyType = "RuntimeResolvableTreeInputStaticProperty"
+	StaticPropertyGroup                      StaticPropertyType = "StaticPropertyGroup"
+	StaticPropertyAlternatives               StaticPropertyType = "StaticPropertyAlternatives"
+	StaticPropertyAlternative                StaticPropertyType = "StaticPropertyAlternative"
+	SecretStaticProperty                     StaticPropertyType = "SecretStaticProperty"
+	SlideToggleStaticProperty                StaticPropertyType = "SlideToggleStaticProperty"
+)
+
+type StaticProperty struct {
+	Optional           bool               `json:"optional,omitempty"`
+	StaticPropertyType StaticPropertyType `json:"staticPropertyType"`
+	Index              int32              `json:"index"`
+	Label              string             `json:"label"`
+	Description        string             `json:"description"`
+	InternalName       string             `json:"internalName"`
+	Predefined         bool               `json:"predefined"`
+	Class              string             `json:"@class"`
+}
+
+type SpDataStream struct {
+	ElementId              string         `json:"elementId"`
+	Dom                    string         `json:"dom"`
+	ConnectedTo            []string       `json:"connectedTo"`
+	Name                   string         `json:"name"`
+	Description            string         `json:"description"`
+	IconUrl                string         `json:"iconUrl"`
+	AppId                  string         `json:"appId"`
+	IncludesAssets         bool           `json:"includesAssets"`
+	IncludesLocales        bool           `json:"includesLocales"`
+	IncludedAssets         []string       `json:"includedAssets"`
+	IncludedLocales        []string       `json:"includedLocales"`
+	InternallyManaged      bool           `json:"internallyManaged"`
+	EventGrounding         EventGrounding `json:"eventGrounding"`
+	EventSchema            EventSchema    `json:"eventSchema"`
+	Category               []string       `json:"category"`
+	Index                  int32          `json:"index"`
+	CorrespondingAdapterId string         `json:"correspondingAdapterId"`
+	Rev                    string         `json:"_rev"`
+}
+
+type EventGrounding struct {
+	TransportProtocols []TransportProtocol `json:"transportProtocols"`
+	TransportFormats   []TransportFormat   `json:"transportFormats"`
+}
+
+type TransportProtocol struct {
+	ElementId       string          `json:"elementId"`
+	BrokerHostname  string          `json:"brokerHostname"`
+	TopicDefinition TopicDefinition `json:"topicDefinition"`
+	Class           string          `json:"@class,omitempty"`
+	Port            int             `json:"port"`
+}
+
+type TopicDefinition struct {
+	ActualTopicName string `json:"actualTopicName"`
+	Class           string `json:"@class"`
+}
+
+type TransportFormat struct {
+	RdfType []string `json:"rdfType"`
+}

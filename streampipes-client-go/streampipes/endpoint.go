@@ -19,7 +19,7 @@ package streampipes
 
 import (
 	"bytes"
-	"errors"
+	"fmt"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
 	headers "github.com/apache/streampipes/streampipes-client-go/streampipes/internal/http_headers"
 	"io"
@@ -58,23 +58,23 @@ func (e *endpoint) handleStatusCode(resp *http.Response) error {
 
 	switch resp.StatusCode {
 	case http.StatusUnauthorized:
-		return errors.New("401," + "The streamPipes Backend returned an unauthorized error.\nplease check your ApiUser and/or Apikey to be correct.")
+		return fmt.Errorf("response code %d:"+"The streamPipes Backend returned an unauthorized error.\nplease check your ApiUser and/or Apikey to be correct.", resp.StatusCode)
 	case http.StatusForbidden:
-		return errors.New("403," + "There seems to be an issue with the access rights of the given user and the resource you queried.\n" +
-			"Apparently, this user is not allowed to query the resource.\n" +
-			"Please check the user's permissions or contact your StreamPipes admin.")
+		return fmt.Errorf("response code %d:"+"There seems to be an issue with the access rights of the given user and the resource you queried.\n"+
+			"Apparently, this user is not allowed to query the resource.\n"+
+			"Please check the user's permissions or contact your StreamPipes admin.", resp.StatusCode)
 	case http.StatusNotFound:
-		return errors.New("404," + "There seems to be an issue with the Go Client calling the API inappropriately.\n" +
-			"This should not happen, but unfortunately did.\n" +
-			"If you don't mind, it would be awesome to let us know by creating an issue at https://github.com/apache/streampipes.\n")
+		return fmt.Errorf("response code %d:"+"There seems to be an issue with the Go Client calling the API inappropriately.\n"+
+			"This should not happen, but unfortunately did.\n"+
+			"If you don't mind, it would be awesome to let us know by creating an issue at https://github.com/apache/streampipes.\n", resp.StatusCode)
 	case http.StatusMethodNotAllowed:
-		return errors.New("405," + "There seems to be an issue with the Go Client calling the API inappropriately.\n" +
-			"This should not happen, but unfortunately did.\n" +
-			"If you don't mind, it would be awesome to let us know by creating an issue at https://github.com/apache/streampipes.\n")
+		return fmt.Errorf("response code %d:"+"There seems to be an issue with the Go Client calling the API inappropriately.\n"+
+			"This should not happen, but unfortunately did.\n"+
+			"If you don't mind, it would be awesome to let us know by creating an issue at https://github.com/apache/streampipes.\n", resp.StatusCode)
 	case http.StatusInternalServerError:
-		return errors.New("500," + "streamPipes internal error")
+		return fmt.Errorf("response code %d:"+"streamPipes internal error", resp.StatusCode)
 	default:
-		return errors.New(resp.Status)
+		return fmt.Errorf(resp.Status)
 	}
 
 }
