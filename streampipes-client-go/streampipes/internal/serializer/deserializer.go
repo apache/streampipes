@@ -291,12 +291,12 @@ func NewPipelinesDeserializer() *PipelinesDeserializer {
 }
 
 func (p *PipelinesDeserializer) Unmarshal(data []byte) (interface{}, error) {
-	var pipeLine []pipeline.Pipeline
-	err := json.Unmarshal(data, &pipeLine)
+	var pipelineData []pipeline.Pipeline
+	err := json.Unmarshal(data, &pipelineData)
 	if err != nil {
 		return nil, err
 	}
-	return pipeLine, nil
+	return pipelineData, nil
 
 }
 
@@ -307,12 +307,12 @@ func NewPipelineStatusMessagesDeserializer() *PipelineStatusMessagesDeserializer
 }
 
 func (p *PipelineStatusMessagesDeserializer) Unmarshal(data []byte) (interface{}, error) {
-	var pipeLine []pipeline.PipelineStatusMessage
-	err := json.Unmarshal(data, &pipeLine)
+	var pipelines []pipeline.PipelineStatusMessage
+	err := json.Unmarshal(data, &pipelines)
 	if err != nil {
 		return nil, err
 	}
-	return pipeLine, nil
+	return pipelines, nil
 }
 
 type PipelineOperationStatusDeserializer struct{}
