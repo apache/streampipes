@@ -17,7 +17,7 @@
  */
 
 import { PipelineInput } from '../model/PipelineInput';
-import { StaticPropertyUtils } from './StaticPropertyUtils';
+import { StaticPropertyUtils } from './userInput/StaticPropertyUtils';
 import { OutputStrategyUtils } from './OutputStrategyUtils';
 import { PipelineElementInput } from '../model/PipelineElementInput';
 
@@ -30,6 +30,10 @@ export class PipelineUtils {
         PipelineUtils.configurePipeline(pipelineInput);
 
         PipelineUtils.startPipeline(pipelineInput);
+    }
+
+    public static editPipeline() {
+        cy.dataCy('modify-pipeline-btn').first().click();
     }
 
     public static goToPipelines() {
@@ -99,16 +103,31 @@ export class PipelineUtils {
         cy.dataCy('sp-element-configuration-save').click();
     }
 
-    private static startPipeline(pipelineInput: PipelineInput) {
+    public static startPipeline(pipelineInput?: PipelineInput) {
         // Save and start pipeline
         cy.dataCy('sp-editor-save-pipeline').click();
-        cy.dataCy('sp-editor-pipeline-name').type(pipelineInput.pipelineName);
-        cy.dataCy('sp-editor-checkbox-start-immediately').children().click();
-        cy.dataCy('sp-editor-save').click();
-        cy.dataCy('sp-pipeline-started-dialog', { timeout: 15000 }).should(
+        if (pipelineInput) {
+            cy.dataCy('sp-editor-pipeline-name').type(
+                pipelineInput.pipelineName,
+            );
+        }
+        PipelineUtils.finalizePipelineStart();
+    }
+
+    public static clonePipeline(newPipelineName: string) {
+        cy.dataCy('pipeline-update-mode-clone').children().click();
+        cy.dataCy('sp-editor-pipeline-name').type(newPipelineName);
+    }
+
+    public static finalizePipelineStart() {
+        cy.dataCy('sp-editor-checkbox-navigate-to-overview').children().click();
+        cy.dataCy('sp-editor-apply').click();
+        cy.dataCy('sp-pipeline-started-success', { timeout: 15000 }).should(
             'be.visible',
         );
-        cy.dataCy('sp-pipeline-dialog-close', { timeout: 15000 }).click();
+        cy.dataCy('sp-navigate-to-pipeline-overview', {
+            timeout: 15000,
+        }).click();
     }
 
     public static checkAmountOfPipelinesPipeline(amount: number) {

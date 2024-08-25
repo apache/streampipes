@@ -58,7 +58,7 @@ import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-stat
 import { ObjectPermissionDialogComponent } from './object-permission-dialog/object-permission-dialog.component';
 import { StaticSlideToggleComponent } from './static-properties/static-slide-toggle/static-slide-toggle.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { StaticRuntimeResolvableTreeInputComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input.component';
+import { StaticRuntimeResolvableTreeInputComponent } from './static-properties/static-runtime-resolvable-tree-input/static-runtime-resolvable-tree-input.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { SharedUiModule } from '@streampipes/shared-ui';
@@ -105,6 +105,17 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { StaticRuntimeResolvableGroupComponent } from './static-properties/static-runtime-resolvable-group/static-runtime-resolvable-group.component';
+import { LoadingIndicatorComponent } from './loading-indicator/loading-indicator.component';
+import { StatusIndicatorComponent } from './status-indicator/status-indicator.component';
+import { MultiStepStatusIndicatorComponent } from './multi-step-status-indicator/multi-step-status-indicator.component';
+import { PipelineOperationStatusComponent } from './pipeline/pipeline-operation-status/pipeline-operation-status.component';
+import { StaticTreeInputButtonMenuComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-button-menu/static-tree-input-button-menu.component';
+import { StaticTreeInputSelectedNodesComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-selected-nodes/static-tree-input-selected-nodes.component';
+import { StaticTreeInputBrowseNodesComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-browse-nodes/static-tree-input-browse-nodes.component';
+import { StaticTreeInputNodeDetailsComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-node-details/static-tree-input-node-details.component';
+import { SingleMarkerMapComponent } from './single-marker-map/single-marker-map.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { StaticTreeInputTextEditorComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-text-editor/static-tree-input-text-editor.component';
 
 @NgModule({
     imports: [
@@ -154,6 +165,7 @@ import { StaticRuntimeResolvableGroupComponent } from './static-properties/stati
         QuillModule.forRoot(),
         MatTreeModule,
         MarkdownModule.forRoot(),
+        LeafletModule,
     ],
     declarations: [
         DataDownloadDialogComponent,
@@ -179,10 +191,16 @@ import { StaticRuntimeResolvableGroupComponent } from './static-properties/stati
         StaticCodeInputComponent,
         StaticOneOfInputComponent,
         StaticRuntimeResolvableAnyInputComponent,
+        StaticTreeInputButtonMenuComponent,
+        StaticTreeInputSelectedNodesComponent,
         StaticRuntimeResolvableGroupComponent,
         StaticRuntimeResolvableOneOfInputComponent,
         StaticRuntimeResolvableTreeInputComponent,
+        StaticTreeInputBrowseNodesComponent,
+        StaticTreeInputNodeDetailsComponent,
+        StaticTreeInputTextEditorComponent,
         StaticSlideToggleComponent,
+        SingleMarkerMapComponent,
         ErrorHintComponent,
         AddToCollectionComponent,
         PipelineStartedStatusComponent,
@@ -198,6 +216,10 @@ import { StaticRuntimeResolvableGroupComponent } from './static-properties/stati
         LivePreviewLoadingComponent,
         LivePreviewTableComponent,
         LivePreviewErrorComponent,
+        LoadingIndicatorComponent,
+        StatusIndicatorComponent,
+        MultiStepStatusIndicatorComponent,
+        PipelineOperationStatusComponent,
     ],
     providers: [MatDatepickerModule, DisplayRecommendedPipe],
     exports: [
@@ -228,6 +250,11 @@ import { StaticRuntimeResolvableGroupComponent } from './static-properties/stati
         SpSimpleLogsComponent,
         SpSimpleMetricsComponent,
         StatusWidgetComponent,
+        LoadingIndicatorComponent,
+        StatusIndicatorComponent,
+        MultiStepStatusIndicatorComponent,
+        PipelineOperationStatusComponent,
+        SingleMarkerMapComponent,
     ],
 })
 export class CoreUiModule {}

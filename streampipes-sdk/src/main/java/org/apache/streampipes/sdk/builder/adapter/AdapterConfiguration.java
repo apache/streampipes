@@ -101,10 +101,6 @@ public class AdapterConfiguration extends NamedStreamPipesEntity implements IAda
     var alternativesContainer =
         new StaticPropertyAlternatives("format", "Format", "Select the format that is used to parse the events");
 
-    for (int i = 0; i < alternatives.size(); i++) {
-      alternatives.get(i).setIndex(i);
-    }
-
     alternativesContainer.setAlternatives(alternatives);
 
     return alternativesContainer;

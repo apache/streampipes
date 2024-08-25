@@ -17,7 +17,6 @@
  */
 
 import {
-    AfterViewInit,
     Component,
     EventEmitter,
     Input,
@@ -30,7 +29,7 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 
 @Component({
-    selector: 'sp-asset-selection-panel-component',
+    selector: 'sp-asset-selection-panel',
     templateUrl: './asset-selection-panel.component.html',
     styleUrls: ['./asset-selection-panel.component.scss'],
 })
@@ -45,7 +44,8 @@ export class SpAssetSelectionPanelComponent implements OnInit {
     editMode: boolean;
 
     @Output()
-    selectedAssetEmitter: EventEmitter<SpAsset> = new EventEmitter<SpAsset>();
+    selectedAssetEmitter: EventEmitter<{ asset: SpAsset; rootNode: boolean }> =
+        new EventEmitter<{ asset: SpAsset; rootNode: boolean }>();
 
     treeControl = new NestedTreeControl<SpAsset>(node => node.assets);
     dataSource = new MatTreeNestedDataSource<SpAsset>();
@@ -63,8 +63,8 @@ export class SpAssetSelectionPanelComponent implements OnInit {
         this.treeControl.expandAll();
     }
 
-    selectNode(asset: SpAsset) {
-        this.selectedAssetEmitter.emit(asset);
+    selectNode(asset: SpAsset, rootNode: boolean) {
+        this.selectedAssetEmitter.emit({ asset, rootNode });
     }
 
     addAsset(node: SpAsset) {

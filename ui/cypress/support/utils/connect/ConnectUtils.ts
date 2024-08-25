@@ -16,7 +16,7 @@
  *
  */
 
-import { StaticPropertyUtils } from '../StaticPropertyUtils';
+import { StaticPropertyUtils } from '../userInput/StaticPropertyUtils';
 import { AdapterInput } from '../../model/AdapterInput';
 import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
 import { DataLakeUtils } from '../datalake/DataLakeUtils';
@@ -124,11 +124,17 @@ export class ConnectUtils {
     }
 
     public static configureAdapter(adapterInput: AdapterInput) {
-        cy.wait(2000);
         StaticPropertyUtils.input(adapterInput.adapterConfiguration);
 
         this.configureFormat(adapterInput);
 
+        ConnectUtils.finishAdapterSettings();
+    }
+
+    /**
+     * Clicks next on the adapter settings page
+     */
+    public static finishAdapterSettings() {
         // Next Button should not be disabled
         cy.get('button').contains('Next').parent().should('not.be.disabled');
 
@@ -164,7 +170,12 @@ export class ConnectUtils {
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
 
         if (adapterInput.storeInDataLake) {
-            cy.dataCy('sp-store-in-datalake').children().click();
+            cy.dataCy('sp-store-in-datalake', {
+                timeout: 5000,
+            })
+                .should('be.visible')
+                .children()
+                .click();
             cy.dataCy('sp-store-in-datalake-timestamp')
                 .click()
                 .get('mat-option')
@@ -342,13 +353,17 @@ export class ConnectUtils {
 
         ConnectBtns.startAdapter().click();
 
+        ConnectUtils.validateEventsInPreview(amountOfProperties);
+    }
+
+    public static validateEventsInPreview(amountOfProperties: number) {
         // View data
         ConnectBtns.infoAdapter().click();
         cy.get('div').contains('Values').parent().click();
 
         // Validate resulting event
         cy.dataCy('sp-connect-adapter-success-live-preview', {
-            timeout: 10000,
+            timeout: 20000,
         }).should('be.visible');
 
         // validate that X event properties. The +1 is for the header row

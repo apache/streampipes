@@ -21,6 +21,7 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class DataProcessorStorageImpl extends DefaultCrudStorage<DataProcessorDescription>
@@ -40,11 +41,18 @@ public class DataProcessorStorageImpl extends DefaultCrudStorage<DataProcessorDe
 
   @Override
   public DataProcessorDescription getFirstDataProcessorByAppId(String appId) {
-    return this.findAll()
+    return getDataProcessorsByAppId(appId)
         .stream()
-        .filter(p -> p.getAppId().equals(appId))
         .findFirst()
         .orElseThrow(NoSuchElementException::new);
+  }
+
+  @Override
+  public List<DataProcessorDescription> getDataProcessorsByAppId(String appId) {
+    return this.findAll()
+      .stream()
+      .filter(p -> p.getAppId().equals(appId))
+      .toList();
   }
 
   private String getCurrentRev(String elementId) {

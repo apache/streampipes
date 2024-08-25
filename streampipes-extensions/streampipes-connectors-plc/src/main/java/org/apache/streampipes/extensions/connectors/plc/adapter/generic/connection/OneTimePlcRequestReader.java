@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Pl
 
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.PlcConnectionManager;
+import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +54,10 @@ public class OneTimePlcRequestReader {
       var readRequest = requestProvider.makeReadRequest(plcConnection, settings.nodes());
       var readResponse = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);
       return eventGenerator.makeEvent(readResponse);
+    } finally {
+      if (connectionManager instanceof CachedPlcConnectionManager) {
+        ((CachedPlcConnectionManager) connectionManager).removeCachedConnection(settings.connectionString());
+      }
     }
   }
 }

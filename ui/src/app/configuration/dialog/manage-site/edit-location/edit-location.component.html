@@ -1,0 +1,59 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="column">
+    <sp-basic-field-description
+        fxFlex="100"
+        descriptionPanelWidth="30"
+        label="Label"
+        description="A label which describes the location"
+    >
+        <mat-form-field color="accent" class="w-100" subscriptSizing="dynamic">
+            <input
+                data-cy="sites-dialog-site-input"
+                matInput
+                [(ngModel)]="site.label"
+            />
+        </mat-form-field>
+    </sp-basic-field-description>
+    <sp-basic-field-description
+        fxFlex="100"
+        descriptionPanelWidth="30"
+        class="mt-10"
+        label="Areas"
+        description="Available areas within the location"
+    >
+        <sp-edit-asset-location-area-component [site]="site" fxFlex="100">
+        </sp-edit-asset-location-area-component>
+    </sp-basic-field-description>
+    <sp-basic-field-description
+        *ngIf="locationConfig.locationEnabled"
+        fxFlex="100"
+        descriptionPanelWidth="30"
+        class="mt-10"
+        label="Location"
+        description="Exact location of the site"
+    >
+        <sp-single-marker-map
+            fxFlex="100"
+            [locationConfig]="locationConfig"
+            [assetLocation]="site.location"
+        >
+        </sp-single-marker-map>
+    </sp-basic-field-description>
+</div>

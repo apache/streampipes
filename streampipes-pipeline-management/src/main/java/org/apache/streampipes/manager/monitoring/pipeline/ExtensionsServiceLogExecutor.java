@@ -22,12 +22,10 @@ package org.apache.streampipes.manager.monitoring.pipeline;
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.commons.prometheus.pipelines.PipelineFlowStats;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
-import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
-import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
@@ -95,10 +93,6 @@ public class ExtensionsServiceLogExecutor implements Runnable {
 
   private Request makeRequest(String serviceEndpointUrl) {
     return ExtensionServiceExecutions.extServiceGetRequest(makeLogUrl(serviceEndpointUrl));
-  }
-
-  private Principal getServiceAdmin() {
-    return new SpResourceManager().manageUsers().getServiceAdmin();
   }
 
   private List<String> getActiveExtensionsEndpoints() {

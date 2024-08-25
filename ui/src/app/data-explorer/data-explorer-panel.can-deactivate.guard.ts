@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
+import { DataExplorerDashboardPanelComponent } from './components/dashboard/data-explorer-dashboard-panel.component';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -28,6 +28,10 @@ export class DataExplorerPanelCanDeactivateGuard {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,
     ): Observable<boolean> | boolean {
-        return component.confirmLeaveDashboard(route, state);
+        if (!state.root.queryParams.omitConfirm === undefined) {
+            return component.confirmLeaveDashboard(route, state);
+        } else {
+            return true;
+        }
     }
 }

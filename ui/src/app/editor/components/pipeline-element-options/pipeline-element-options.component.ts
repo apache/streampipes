@@ -56,7 +56,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     possibleElements: PipelineElementUnion[];
     recommendedElements: PipelineElementUnion[];
     recommendationsShown: any = false;
-    pipelineElementCssType: string;
     isDataSource: boolean;
 
     @Input()
@@ -124,7 +123,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
                     }
                 },
             );
-        this.pipelineElementCssType = this.pipelineElement.type;
 
         this.isDataSource = this.pipelineElement.type === 'stream';
 
@@ -191,7 +189,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
             },
         });
 
-        dialogRef.afterClosed().subscribe(c => {});
+        dialogRef.afterClosed().subscribe(() => {});
     }
 
     showRecommendations(e) {
@@ -208,6 +206,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.pipelineElementConfiguredObservable.unsubscribe();
+        this.pipelineElementConfiguredObservable?.unsubscribe();
     }
 }

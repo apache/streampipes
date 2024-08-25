@@ -46,7 +46,7 @@ import { EnabledPipelineElementFilter } from './filter/enabled-pipeline-element.
 import { PipelineElementPreviewComponent } from './components/pipeline-element-preview/pipeline-element-preview.component';
 import { PipelineElementDiscoveryComponent } from './dialog/pipeline-element-discovery/pipeline-element-discovery.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
-import { PipelineElementIconStandRowComponent } from './components/pipeline-element-icon-stand-row/pipeline-element-icon-stand-row.component';
+import { PipelineElementIconStandRowComponent } from './components/pipeline-element-icon-stand/pipeline-element-icon-stand-row/pipeline-element-icon-stand-row.component';
 import { PipelineElementTypeFilterPipe } from './services/pipeline-element-type-filter.pipe';
 import { PipelineElementNameFilterPipe } from './services/pipeline-element-name-filter.pipe';
 import { PipelineElementGroupFilterPipe } from './services/pipeline-element-group-filter.pipe';
@@ -74,6 +74,14 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
+import { PipelineElementStatisticsComponent } from './components/pipeline-element-statistics/pipeline-element-statistics.component';
+import { PipelineElementStatisticsBadgeComponent } from './components/pipeline-element-statistics/pipeline-element-statistics-badge/pipeline-element-statistics-badge.component';
+import { SavePipelineSettingsComponent } from './dialog/save-pipeline/save-pipeline-settings/save-pipeline-settings.component';
+import { PipelineAssemblyOptionsComponent } from './components/pipeline-assembly/pipeline-assembly-options/pipeline-assembly-options.component';
+import { PipelineAssemblyOptionsPipelineCacheComponent } from './components/pipeline-assembly/pipeline-assembly-options/pipeline-assembly-options-pipeline-cache/pipeline-assembly-options-pipeline-cache.component';
+import { PipelineAssemblyDrawingAreaPanZoomComponent } from './components/pipeline-assembly/pipeline-assembly-drawing-area/pipeline-assembly-drawing-area-pan-zoom/pipeline-assembly-drawing-area-pan-zoom.component';
+import { PipelineAssemblyDrawingAreaComponent } from './components/pipeline-assembly/pipeline-assembly-drawing-area/pipeline-assembly-drawing-area.component';
+import { DroppedPipelineElementComponent } from './components/pipeline/dropped-pipeline-element/dropped-pipeline-element.component';
 
 @NgModule({
     imports: [
@@ -118,6 +126,7 @@ import { MatSliderModule } from '@angular/material/slider';
         CompatibleElementsComponent,
         CustomizeComponent,
         CustomOutputStrategyComponent,
+        DroppedPipelineElementComponent,
         EditorComponent,
         EnabledPipelineElementFilter,
         MatchingErrorComponent,
@@ -125,6 +134,10 @@ import { MatSliderModule } from '@angular/material/slider';
         OutputStrategyComponent,
         UserDefinedOutputStrategyComponent,
         PipelineAssemblyComponent,
+        PipelineAssemblyDrawingAreaComponent,
+        PipelineAssemblyDrawingAreaPanZoomComponent,
+        PipelineAssemblyOptionsComponent,
+        PipelineAssemblyOptionsPipelineCacheComponent,
         PipelineElementComponent,
         PipelineElementDiscoveryComponent,
         PipelineElementIconStandComponent,
@@ -134,14 +147,22 @@ import { MatSliderModule } from '@angular/material/slider';
         PipelineElementOptionsComponent,
         PipelineElementPreviewComponent,
         PipelineElementRecommendationComponent,
+        PipelineElementStatisticsComponent,
+        PipelineElementStatisticsBadgeComponent,
         PipelineElementTypeFilterPipe,
         PipelineComponent,
         PropertySelectionComponent,
         SavePipelineComponent,
+        SavePipelineSettingsComponent,
         SafeCss,
     ],
     providers: [SafeCss],
-    exports: [EditorComponent, PipelineComponent, PipelineElementComponent],
+    exports: [
+        EditorComponent,
+        PipelineComponent,
+        PipelineElementComponent,
+        PipelineAssemblyDrawingAreaComponent,
+    ],
 })
 export class EditorModule {
     constructor() {}

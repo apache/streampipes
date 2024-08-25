@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.remote.ContainerProvidedOptionsHandler;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
@@ -38,6 +38,6 @@ public class ContainerProvidedOptions extends AbstractRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
   public ResponseEntity<RuntimeOptionsResponse> fetchRemoteOptions(@RequestBody RuntimeOptionsRequest request) {
-    return ok(Operations.fetchRemoteOptions(request));
+    return ok(new ContainerProvidedOptionsHandler().fetchRemoteOptions(request));
   }
 }

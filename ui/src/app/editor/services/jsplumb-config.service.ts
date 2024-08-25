@@ -32,10 +32,6 @@ export class JsplumbConfigService {
         return this.makeConfig(this.makeSettings(12, 5, 30, 30, 2, 80));
     }
 
-    getPreviewConfig() {
-        return this.makeConfig(this.makeSettings(6, 2, 15, 15, 1, 40));
-    }
-
     getEndpointTypeConfig(): Record<string, EndpointTypeDescriptor> {
         return {
             empty: {

@@ -18,29 +18,29 @@
 
 <div fxLayout="column" class="page-container">
     <div
-        class="fixed-height"
+        fxFlex="100"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        *ngIf="!allElementsLoaded"
+    >
+        <mat-spinner
+            [diameter]="30"
+            color="accent"
+            mode="indeterminate"
+        ></mat-spinner>
+        <p>Preparing pipeline editor...</p>
+    </div>
+    <div
+        *ngIf="allElementsLoaded"
+        class="fixed-height editor-container-inner"
         fxLayout="row"
         fxFlex="100"
-        class="editor-container-inner"
     >
         <div fxFlex="250px">
             <div
-                fxFlex="100"
-                fxLayout="column"
-                fxLayoutAlign="center center"
-                *ngIf="!allElementsLoaded"
-            >
-                <mat-spinner
-                    [diameter]="30"
-                    color="accent"
-                    mode="indeterminate"
-                ></mat-spinner>
-                <p>Loading pipeline elements...</p>
-            </div>
-            <div
                 id="shepherd-test"
                 style="
-                    padding: 0px;
+                    padding: 0;
                     border-bottom: 1px solid #ffffff;
                     margin-right: 5px;
                 "
@@ -55,9 +55,12 @@
         <sp-pipeline-assembly
             fxFlex="100"
             style="margin-left: 10px"
+            *ngIf="allElementsLoaded && allMetadataLoaded"
             [rawPipelineModel]="rawPipelineModel"
             [allElements]="allElements"
-            [currentModifiedPipelineId]="currentModifiedPipelineId"
+            [originalPipeline]="originalPipeline"
+            [pipelineCanvasMetadata]="pipelineCanvasMetadata"
+            [pipelineCanvasMetadataAvailable]="pipelineCanvasMetadataAvailable"
         >
         </sp-pipeline-assembly>
     </div>

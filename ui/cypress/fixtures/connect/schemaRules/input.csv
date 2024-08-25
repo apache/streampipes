@@ -1,2 +1,2 @@
-timestamp;count;density;temperature
-1720018277000;122.0;62.0;11
+timestamp;count;density;temperature;contains.dot
+1720018277000;122.0;62.0;11;special_char_in_column_name

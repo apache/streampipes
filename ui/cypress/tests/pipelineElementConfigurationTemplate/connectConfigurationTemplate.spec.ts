@@ -17,7 +17,7 @@
  */
 
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { StaticPropertyUtils } from '../../support/utils/StaticPropertyUtils';
+import { StaticPropertyUtils } from '../../support/utils/userInput/StaticPropertyUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { PipelineElementTemplateUtils } from '../../support/utils/PipelineElementTemplateUtils';
 

@@ -46,6 +46,8 @@ export class TransformationRuleService {
         private staticValueTransformService: StaticValueTransformService,
     ) {}
 
+    private delimiter = '<-=>';
+
     public getTransformationRuleDescriptions(
         originalSchema: EventSchema,
         targetSchema: EventSchema,
@@ -183,22 +185,22 @@ export class TransformationRuleService {
                 if (keyOld && keyNew) {
                     const keyOldPrefix = keyOld.substr(
                         0,
-                        keyOld.lastIndexOf('.'),
+                        keyOld.lastIndexOf(this.delimiter),
                     );
                     const keyNewPrefix = keyNew.substr(
                         0,
-                        keyNew.lastIndexOf('.'),
+                        keyNew.lastIndexOf(this.delimiter),
                     );
 
                     if (keyOldPrefix !== keyNewPrefix) {
                         let keyOfOldValue = '';
                         if (keyOldPrefix === '') {
                             keyOfOldValue = keyNew.substr(
-                                keyNew.lastIndexOf('.') + 1,
+                                keyNew.lastIndexOf(this.delimiter) + 1,
                             );
                         } else {
                             keyOfOldValue = `${keyOldPrefix}.${keyNew.substr(
-                                keyNew.lastIndexOf('.') + 1,
+                                keyNew.lastIndexOf(this.delimiter) + 1,
                             )}`;
                         }
 
@@ -393,7 +395,10 @@ export class TransformationRuleService {
                         id,
                     );
                     if (methodResult != null) {
-                        result = eventProperty.runtimeName + '.' + methodResult;
+                        result =
+                            eventProperty.runtimeName +
+                            this.delimiter +
+                            methodResult;
                     }
                 }
             }
@@ -408,7 +413,7 @@ export class TransformationRuleService {
 
     public getRuntimeNameKey(completeKey: string): string {
         if (completeKey) {
-            const keyElements = completeKey.split('.');
+            const keyElements = completeKey.split(this.delimiter);
 
             if (keyElements.length === 0) {
                 return completeKey;

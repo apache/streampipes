@@ -16,92 +16,24 @@
   ~
   -->
 
-<div
-    fxFlex="100"
-    fxLayout="column"
-    class="page-container-padding-inner"
-    *ngIf="asset"
->
-    <sp-basic-header-title-component
-        [title]="asset.assetName"
-    ></sp-basic-header-title-component>
-
-    <sp-basic-inner-panel panelTitle="Basics" outerMargin="20px 0px">
-        <div fxLayout="column" fxFlex="100">
-            <mat-form-field color="accent">
-                <mat-label>Name</mat-label>
-                <input
-                    matInput
-                    [(ngModel)]="asset.assetName"
-                    [disabled]="!editMode"
-                />
-            </mat-form-field>
-            <mat-form-field color="accent">
-                <mat-label>Description</mat-label>
-                <input
-                    matInput
-                    [(ngModel)]="asset.assetDescription"
-                    [disabled]="!editMode"
-                />
-            </mat-form-field>
-            <mat-form-field color="accent">
-                <mat-label>ID</mat-label>
-                <input
-                    matInput
-                    [(ngModel)]="asset.assetId"
-                    [disabled]="!editMode"
-                />
-            </mat-form-field>
-        </div>
-    </sp-basic-inner-panel>
-
-    <sp-basic-inner-panel panelTitle="Linked Resources" outerMargin="0px 0px">
-        <div header fxLayoutAlign="end center" fxLayout="row" fxFlex="100">
-            <button
-                mat-button
-                color="accent"
-                *ngIf="editMode"
-                (click)="openManageAssetLinksDialog()"
-                data-cy="assets-manage-links-button"
+<div fxFlex="100" fxLayout="column" *ngIf="asset">
+    <mat-tab-group color="accent" [mat-stretch-tabs]="false">
+        <mat-tab label="Basics" data-cy="asset-tab-basic">
+            <sp-asset-details-basics
+                [asset]="asset"
+                [sites]="sites"
+                [rootNode]="rootNode"
+                [editMode]="editMode"
             >
-                <i class="material-icons">add</i><span>&nbsp;Manage links</span>
-            </button>
-            <button
-                mat-button
-                color="accent"
-                *ngIf="editMode"
-                (click)="openCreateAssetLinkDialog()"
+            </sp-asset-details-basics>
+        </mat-tab>
+        <mat-tab label="Asset Links" data-cy="asset-tab-asset-links">
+            <sp-asset-details-links
+                [asset]="asset"
+                [editMode]="editMode"
+                (updateAssetEmitter)="updateAssetEmitter.emit($event)"
             >
-                <i class="material-icons">add</i><span>&nbsp;Add link</span>
-            </button>
-        </div>
-        <div
-            fxLayout="column"
-            fxFlex="100"
-            *ngIf="assetLinkTypes"
-            data-cy="linked-resources-list"
-        >
-            <div
-                fxLayout="column"
-                *ngFor="let link of asset.assetLinks; let i = index"
-            >
-                <sp-asset-link-item-component
-                    [assetLink]="link"
-                    [assetLinkIndex]="i"
-                    [assetLinkTypes]="assetLinkTypes"
-                    [editMode]="editMode"
-                    (openEditAssetLinkEmitter)="
-                        openEditAssetLinkDialog(
-                            $event.assetLink,
-                            $event.index,
-                            false
-                        )
-                    "
-                    (deleteAssetLinkEmitter)="deleteAssetLink($event)"
-                    class="asset-link-item"
-                >
-                </sp-asset-link-item-component>
-            </div>
-        </div>
-    </sp-basic-inner-panel>
+            </sp-asset-details-links>
+        </mat-tab>
+    </mat-tab-group>
 </div>

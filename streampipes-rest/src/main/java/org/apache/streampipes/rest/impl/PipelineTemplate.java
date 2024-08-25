@@ -17,7 +17,9 @@
  */
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.template.PipelineTemplateGenerator;
+import org.apache.streampipes.manager.template.PipelineTemplateInvocationGenerator;
+import org.apache.streampipes.manager.template.PipelineTemplateInvocationHandler;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.SpDataStreamContainer;
 import org.apache.streampipes.model.message.Notifications;
@@ -67,7 +69,10 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
     var pipelineTemplateDescriptionOpt = getPipelineTemplateDescription(pipelineTemplateId);
     if (pipelineTemplateDescriptionOpt.isPresent()) {
       PipelineTemplateInvocation invocation =
-          Operations.getPipelineInvocationTemplate(dataStream, pipelineTemplateDescriptionOpt.get());
+          new PipelineTemplateInvocationGenerator(
+              dataStream,
+              pipelineTemplateDescriptionOpt.get()
+          ).generateInvocation();
       PipelineTemplateInvocation clonedInvocation = new PipelineTemplateInvocation(invocation);
       return ok(new PipelineTemplateInvocation(clonedInvocation));
     } else {
@@ -85,14 +90,15 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
   public ResponseEntity<PipelineOperationStatus> generatePipeline(
       @RequestBody PipelineTemplateInvocation pipelineTemplateInvocation) {
 
-    PipelineOperationStatus status = Operations
-        .handlePipelineTemplateInvocation(getAuthenticatedUserSid(), pipelineTemplateInvocation);
-
+    PipelineOperationStatus status = new PipelineTemplateInvocationHandler(
+        getAuthenticatedUserSid(),
+        pipelineTemplateInvocation
+    ).handlePipelineInvocation();
     return ok(status);
   }
 
   private Optional<PipelineTemplateDescription> getPipelineTemplateDescription(String pipelineTemplateId) {
-    return Operations
+    return new PipelineTemplateGenerator()
         .getAllPipelineTemplates()
         .stream()
         .filter(pt -> pt.getAppId().equals(pipelineTemplateId))

@@ -16,91 +16,29 @@
   ~
   -->
 <div
-    [attr.data-jtk-managed]="pipelineElement.payload.dom"
-    id="{{ pipelineElement.payload.dom }}"
-    style="{{ getElementCss(pipelineElement.settings) }}"
-    (click)="updateOptionsClick(pipelineElement.payload.dom)"
-    (mouseenter)="updateMouseover(pipelineElement.payload.dom)"
-    (mouseleave)="updateMouseover('')"
-    *ngFor="let pipelineElement of rawPipelineModel | enabledPipelineElement"
+    [attr.data-jtk-managed]="pipelineElementConfig.payload.dom"
+    id="{{ pipelineElementConfig.payload.dom }}"
     class="sp-no-pan"
+    [ngStyle]="getCssStyle(pipelineElementConfig)"
+    (click)="updateOptionsClick(pipelineElementConfig.payload.dom)"
+    (mouseenter)="updateMouseover(pipelineElementConfig.payload.dom)"
+    (mouseleave)="updateMouseover('')"
+    *ngFor="
+        let pipelineElementConfig of rawPipelineModel | enabledPipelineElement
+    "
 >
-    <div style="z-index: 5" [ngClass]="getElementCssClasses(pipelineElement)">
-        <div
-            class="pipeline-element-progress-container sp-fade"
-            *ngIf="pipelineElement.settings.loadingStatus"
-        >
-            <mat-spinner
-                [mode]="'indeterminate'"
-                class="pipeline-element-progress"
-                [diameter]="40"
-                color="accent"
-            ></mat-spinner>
-        </div>
-        <div
-            class="pipeline-element-loading-container sp-fade-opacity"
-            *ngIf="pipelineElement.settings.loadingStatus"
-        ></div>
-        <div
-            class="pipeline-element-configuration-status {{
-                pipelineElement.type === 'stream' ? 'pi-stream' : 'pi-processor'
-            }}"
-            *ngIf="!preview"
-        >
-            <i
-                class="material-icons pipeline-element-configuration-invalid-icon"
-                *ngIf="pipelineElement.settings.completed === 3"
-            >
-                warning
-            </i>
-            <i
-                class="material-icons pipeline-element-configuration-modified-icon"
-                *ngIf="pipelineElement.settings.completed === 2"
-            >
-                warning
-            </i>
-            <i
-                class="material-icons pipeline-element-configuration-ok-icon"
-                *ngIf="pipelineElement.settings.completed === 1"
-            >
-                check_circle
-            </i>
-        </div>
-        <sp-pipeline-element
-            [pipelineElement]="pipelineElement.payload"
-            [preview]="preview"
-        ></sp-pipeline-element>
-    </div>
-    <sp-pipeline-element-options
-        *ngIf="!preview"
-        (delete)="handleDeleteOption($event)"
-        (customize)="showCustomizeDialog($event)"
-        [currentMouseOverElement]="currentMouseOverElement"
-        [pipelineValid]="pipelineValid"
+    <sp-dropped-pipeline-element
         [allElements]="allElements"
-        [pipelineElement]="pipelineElement"
+        [currentMouseOverElement]="currentMouseOverElement"
+        [metricsInfo]="metricsInfo"
+        [pipelineElementConfig]="pipelineElementConfig"
+        [previewModeActive]="previewModeActive"
+        [pipelinePreview]="pipelinePreview"
+        [pipelineValid]="pipelineValid"
         [rawPipelineModel]="rawPipelineModel"
-        [pipelineElementId]="
-            pipelineElement.type === 'stream' || pipelineElement.type === 'set'
-                ? pipelineElement.payload.elementId
-                : pipelineElement.payload.belongsTo
-        "
-        [internalId]="pipelineElement.payload.dom"
-        [attr.data-cy]="
-            'sp-pe-menu-' +
-            pipelineElement.payload.name.toLowerCase().replaceAll(' ', '_')
-        "
+        [readonly]="readonly"
+        (showCustomizeEmitter)="showCustomizeDialog($event)"
+        (deleteEmitter)="handleDeleteOption($event)"
     >
-    </sp-pipeline-element-options>
-    <sp-pipeline-element-preview
-        *ngIf="
-            previewModeActive &&
-            pipelinePreview.supportedPipelineElementDomIds.indexOf(
-                pipelineElement.payload.dom
-            ) > -1
-        "
-        [previewId]="pipelinePreview.previewId"
-        [pipelineElementDomId]="pipelineElement.payload.dom"
-    >
-    </sp-pipeline-element-preview>
+    </sp-dropped-pipeline-element>
 </div>
