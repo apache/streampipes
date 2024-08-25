@@ -44,7 +44,7 @@ func (s *StreamPipesUserInfo) GetSingleStreamPipesUserAccountInfo(principalId st
 	endPointUrl := util.NewStreamPipesApiPath(s.config.Url, "streampipes-backend/api/v2/users", []string{principalId})
 	log.Printf("Get data from: %s", endPointUrl)
 
-	response, err := s.executeRequest("GET", endPointUrl)
+	response, err := s.executeRequest("GET", endPointUrl, nil)
 	if err != nil {
 		return streampipes_user.UserAccount{}, err
 	}
@@ -75,7 +75,7 @@ func (s *StreamPipesUserInfo) GetAllStreamPipesShortUserInfo() ([]streampipes_us
 	endPointUrl := util.NewStreamPipesApiPath(s.config.Url, "streampipes-backend/api/v2/users", nil)
 	log.Printf("Get data from: %s", endPointUrl)
 
-	response, err := s.executeRequest("GET", endPointUrl)
+	response, err := s.executeRequest("GET", endPointUrl, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +105,7 @@ func (s *StreamPipesUserInfo) DeleteSingleStreamPipesShortUserInfo(principalId s
 	endPointUrl := util.NewStreamPipesApiPath(s.config.Url, "streampipes-backend/api/v2/users", []string{principalId})
 	log.Printf("Delete data from: %s", endPointUrl)
 
-	response, err := s.executeRequest("DELETE", endPointUrl)
+	response, err := s.executeRequest("DELETE", endPointUrl, nil)
 	if err != nil {
 		return err
 	}
