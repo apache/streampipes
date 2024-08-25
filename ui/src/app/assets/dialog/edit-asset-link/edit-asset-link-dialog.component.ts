@@ -124,9 +124,7 @@ export class EditAssetLinkDialogComponent
     afterResourcesLoaded(): void {
         if (!this.createMode) {
             this.currentResource = this.allResources.find(
-                r =>
-                    r._id === this.clonedAssetLink.resourceId ||
-                    r.elementId === this.clonedAssetLink.resourceId,
+                r => r.elementId === this.clonedAssetLink.resourceId,
             );
         }
     }

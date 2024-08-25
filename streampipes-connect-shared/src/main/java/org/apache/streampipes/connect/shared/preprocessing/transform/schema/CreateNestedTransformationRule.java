@@ -24,6 +24,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @deprecated The functionlality to add nested rules was removed in version 0.97.0 form the UI
+ * For the next release we can also remove the functionality from the backend
+ */
+@Deprecated(since = "0.97.0", forRemoval = true)
 public class CreateNestedTransformationRule extends SupportsNestedTransformationRule {
 
   private final List<String> key;

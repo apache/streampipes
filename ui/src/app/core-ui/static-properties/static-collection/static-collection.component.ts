@@ -42,18 +42,10 @@ export class StaticCollectionComponent extends AbstractValidatedStaticPropertyRe
             this.staticProperty.members = [];
         }
         this.staticProperty.members.push(property);
-        this.updateIndex();
     }
 
     remove(i) {
         this.staticProperty.members.splice(i, 1).slice(0);
-        this.updateIndex();
-    }
-
-    updateIndex() {
-        this.staticProperty.members.forEach((property, index) => {
-            property.index = index;
-        });
     }
 
     onStatusChange(status: any) {}

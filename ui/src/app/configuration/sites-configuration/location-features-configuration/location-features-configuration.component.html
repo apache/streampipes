@@ -1,0 +1,83 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="column">
+    <form
+        [formGroup]="locationForm"
+        fxFlex="100"
+        fxLayout="column"
+        *ngIf="locationConfig"
+    >
+        <sp-split-section
+            title="Geo features"
+            subtitle="Geo features are used to better organize assets."
+        >
+            <mat-checkbox
+                formControlName="locationFeaturesEnabled"
+                data-cy="sites-enable-location-features-checkbox"
+                >Enable geo features
+            </mat-checkbox>
+            <div *ngIf="showLocationDetails" class="mt-10">
+                <div class="subsection-title">
+                    Tile server URL (use placeholders for x, y and z
+                    coordinates)
+                </div>
+                <mat-form-field
+                    color="accent"
+                    class="w-100"
+                    subscriptSizing="dynamic"
+                >
+                    <input
+                        formControlName="tileServerUrl"
+                        fxFlex
+                        matInput
+                        data-cy="sites-location-config-tile-server"
+                    />
+                </mat-form-field>
+                <div class="subsection-title mt-10">
+                    Attribution text if required by the tile server
+                </div>
+                <mat-form-field
+                    color="accent"
+                    class="w-100"
+                    subscriptSizing="dynamic"
+                >
+                    <input
+                        formControlName="attributionText"
+                        fxFlex
+                        matInput
+                        data-cy="sites-location-config-attribution-text"
+                    />
+                </mat-form-field>
+            </div>
+        </sp-split-section>
+        <sp-split-section>
+            <div>
+                <button
+                    mat-raised-button
+                    color="accent"
+                    data-cy="sites-location-features-button"
+                    [disabled]="!locationForm.valid"
+                    (click)="save()"
+                >
+                    Save
+                </button>
+            </div>
+        </sp-split-section>
+    </form>
+</div>

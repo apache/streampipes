@@ -17,86 +17,67 @@
  */
 
 import {
+    AfterViewInit,
     Component,
     EventEmitter,
     Input,
-    OnDestroy,
     OnInit,
     Output,
+    ViewChild,
 } from '@angular/core';
-import { Pipeline } from '@streampipes/platform-services';
+import {
+    Pipeline,
+    PipelineCanvasMetadata,
+    SpMetricsEntry,
+} from '@streampipes/platform-services';
 import {
     PipelineElementConfig,
     PipelineElementUnion,
 } from '../../../editor/model/editor.model';
-import { PipelinePositioningService } from '../../../editor/services/pipeline-positioning.service';
 import { JsplumbService } from '../../../editor/services/jsplumb.service';
-import { ObjectProvider } from '../../../editor/services/object-provider.service';
-import { JsplumbFactoryService } from '../../../editor/services/jsplumb-factory.service';
+import { JsplumbBridge } from '../../../editor/services/jsplumb-bridge.service';
+import { PipelineAssemblyDrawingAreaComponent } from '../../../editor/components/pipeline-assembly/pipeline-assembly-drawing-area/pipeline-assembly-drawing-area.component';
 
 @Component({
     selector: 'sp-pipeline-preview',
     templateUrl: './pipeline-preview.component.html',
     styleUrls: ['./pipeline-preview.component.scss'],
 })
-export class PipelinePreviewComponent implements OnInit {
+export class PipelinePreviewComponent implements OnInit, AfterViewInit {
     @Input()
-    jspcanvas: string;
+    metricsInfo: Record<string, SpMetricsEntry>;
 
     rawPipelineModel: PipelineElementConfig[];
 
     @Input()
     pipeline: Pipeline;
 
+    @Input()
+    pipelineCanvasMetadata: PipelineCanvasMetadata;
+
     @Output()
     selectedElementEmitter: EventEmitter<PipelineElementUnion> =
         new EventEmitter<PipelineElementUnion>();
 
-    constructor(
-        private pipelinePositioningService: PipelinePositioningService,
-        private jsplumbService: JsplumbService,
-        private jsplumbFactoryService: JsplumbFactoryService,
-        private objectProvider: ObjectProvider,
-    ) {}
+    @ViewChild('pipelineDrawingAreaComponent')
+    pipelineDrawingAreaComponent: PipelineAssemblyDrawingAreaComponent;
+
+    jsPlumbBridge: JsplumbBridge;
+
+    constructor(private jsplumbService: JsplumbService) {}
+
+    ngAfterViewInit() {
+        this.jsPlumbBridge = this.jsplumbService.getBridge(true);
+    }
 
     ngOnInit() {
-        setTimeout(() => {
-            const elid = '#' + this.jspcanvas;
-            this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
-                this.pipeline,
-                true,
-            );
-            setTimeout(() => {
-                this.pipelinePositioningService.displayPipeline(
-                    this.rawPipelineModel,
-                    elid,
-                    true,
-                    true,
-                );
-                const existingEndpointIds = [];
-                setTimeout(() => {
-                    this.jsplumbFactoryService
-                        .getJsplumbBridge(true)
-                        .selectEndpoints()
-                        .each(endpoint => {
-                            if (
-                                existingEndpointIds.indexOf(
-                                    endpoint.element.id,
-                                ) === -1
-                            ) {
-                                $(endpoint.element).click(() => {
-                                    const payload =
-                                        this.objectProvider.findElement(
-                                            endpoint.element.id,
-                                            this.rawPipelineModel,
-                                        ).payload;
-                                    this.selectedElementEmitter.emit(payload);
-                                });
-                                existingEndpointIds.push(endpoint.element.id);
-                            }
-                        });
-                });
-            });
-        });
+        this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
+            this.pipeline,
+            true,
+        );
+    }
+
+    toggleLivePreview(): void {
+        this.pipelineDrawingAreaComponent?.togglePipelineElementLivePreview();
     }
 }

@@ -17,8 +17,9 @@
  */
 package org.apache.streampipes.manager.template;
 
-import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.permission.PermissionManager;
+import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -33,9 +34,9 @@ import java.util.List;
 
 public class PipelineTemplateInvocationHandler {
 
-  private PipelineTemplateInvocation pipelineTemplateInvocation;
-  private PipelineTemplateDescription pipelineTemplateDescription;
-  private String username;
+  private final PipelineTemplateInvocation pipelineTemplateInvocation;
+  private final PipelineTemplateDescription pipelineTemplateDescription;
+  private final String username;
 
   public PipelineTemplateInvocationHandler(String username, PipelineTemplateInvocation pipelineTemplateInvocation) {
     this.username = username;
@@ -43,26 +44,18 @@ public class PipelineTemplateInvocationHandler {
     this.pipelineTemplateDescription = getTemplateById(pipelineTemplateInvocation.getPipelineTemplateId());
   }
 
-  public PipelineTemplateInvocationHandler(String username, PipelineTemplateInvocation pipelineTemplateInvocation,
-                                           PipelineTemplateDescription pipelineTemplateDescription) {
-    this.username = username;
-    this.pipelineTemplateInvocation = pipelineTemplateInvocation;
-    this.pipelineTemplateDescription = pipelineTemplateDescription;
-  }
-
-
   public PipelineOperationStatus handlePipelineInvocation() {
     Pipeline pipeline = new PipelineGenerator(pipelineTemplateInvocation.getDataStreamId(), pipelineTemplateDescription,
         pipelineTemplateInvocation.getKviName()).makePipeline();
     pipeline.setCreatedByUser(username);
     pipeline.setCreatedAt(System.currentTimeMillis());
     replaceStaticProperties(pipeline);
-    Operations.storePipeline(pipeline);
+    new PipelineStorageService(pipeline).addPipeline();
     Permission permission = new PermissionManager().makePermission(pipeline, username);
     StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage().persist(permission);
     Pipeline storedPipeline =
         StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getElementById(pipeline.getPipelineId());
-    return Operations.startPipeline(storedPipeline);
+    return new PipelineExecutor(storedPipeline).startPipeline();
   }
 
   private void replaceStaticProperties(Pipeline pipeline) {

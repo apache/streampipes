@@ -16,19 +16,22 @@
   ~
   -->
 
-<sp-basic-inner-panel
-    [panelTitle]="'Preview: ' + pipeline.name"
-    innerPadding="0"
->
-    <div class="outer-assembly-preview">
-        <div class="canvas-preview-inner">
-            <div id="{{ jspcanvas }}" class="canvas-preview">
-                <sp-pipeline
-                    [canvasId]="jspcanvas"
-                    [rawPipelineModel]="rawPipelineModel"
-                    [preview]="true"
-                ></sp-pipeline>
-            </div>
-        </div>
+<div class="outer-assembly-preview" fxFlex="100">
+    <div class="outerAssembly" fxFlex="100">
+        <sp-pipeline-assembly-drawing-area
+            #pipelineDrawingAreaComponent
+            *ngIf="rawPipelineModel"
+            fxFlex="100"
+            style="position: relative"
+            [jsplumbBridge]="jsPlumbBridge"
+            [metricsInfo]="metricsInfo"
+            [rawPipelineModel]="rawPipelineModel"
+            [pipelineCanvasMetadata]="pipelineCanvasMetadata"
+            [pipelineCanvasMetadataAvailable]="
+                pipelineCanvasMetadata?.pipelineElementMetadata !== undefined
+            "
+            [readonly]="true"
+        ></sp-pipeline-assembly-drawing-area>
     </div>
-</sp-basic-inner-panel>
+    <ng-content></ng-content>
+</div>

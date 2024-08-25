@@ -47,6 +47,16 @@ export class AdapterMonitoringService extends AbstractMonitoringService {
             .pipe(map(response => response as SpMetricsEntry));
     }
 
+    getMetricsInfoForAdapters(
+        elementIds: string[],
+    ): Observable<Record<string, SpMetricsEntry>> {
+        return this.http
+            .get(`${this.monitoringBasePath}/metrics`, {
+                params: { filter: elementIds.toString() },
+            })
+            .pipe(map(response => response as Record<string, SpMetricsEntry>));
+    }
+
     protected get monitoringBasePath(): string {
         return `${this.platformServicesCommons.apiBasePath}/adapter-monitoring`;
     }

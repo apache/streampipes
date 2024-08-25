@@ -25,12 +25,11 @@ import org.apache.streampipes.model.template.PipelineTemplateInvocation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PipelineTemplateInvocationGenerator {
 
-  private SpDataStream spDataStream;
-  private PipelineTemplateDescription pipelineTemplateDescription;
+  private final SpDataStream spDataStream;
+  private final PipelineTemplateDescription pipelineTemplateDescription;
 
   public PipelineTemplateInvocationGenerator(SpDataStream dataStream,
                                              PipelineTemplateDescription pipelineTemplateDescription) {
@@ -46,7 +45,6 @@ public class PipelineTemplateInvocationGenerator {
     PipelineTemplateInvocation pipelineTemplateInvocation = new PipelineTemplateInvocation();
     pipelineTemplateInvocation.setStaticProperties(collectStaticProperties(pipeline));
     pipelineTemplateInvocation.setDataStreamId(spDataStream.getElementId());
-    //pipelineTemplateInvocation.setPipelineTemplateDescription(pipelineTemplateDescription);
     pipelineTemplateInvocation.setPipelineTemplateId(pipelineTemplateDescription.getPipelineTemplateId());
     return pipelineTemplateInvocation;
   }
@@ -64,14 +62,5 @@ public class PipelineTemplateInvocationGenerator {
     });
 
     return staticProperties;
-  }
-
-  private List<StaticProperty> filter(List<StaticProperty> staticProperties) {
-    return staticProperties
-        .stream()
-        // TODO fix (predefined is always true
-        //.filter(sp -> !(sp instanceof MappingProperty))
-        .filter(sp -> !(sp.isPredefined()))
-        .collect(Collectors.toList());
   }
 }

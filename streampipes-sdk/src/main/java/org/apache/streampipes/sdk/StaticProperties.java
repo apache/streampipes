@@ -59,10 +59,6 @@ public class StaticProperties {
     StaticPropertyAlternatives alternativesContainer =
         new StaticPropertyAlternatives(label.getInternalId(), label.getLabel(), label.getDescription());
 
-    for (int i = 0; i < alternatives.size(); i++) {
-      alternatives.get(i).setIndex(i);
-    }
-
     alternativesContainer.setAlternatives(alternatives);
 
     return alternativesContainer;
@@ -219,9 +215,6 @@ public class StaticProperties {
 
   public static StaticPropertyGroup group(Label label, StaticProperty... sp) {
     List<StaticProperty> staticProperties = Arrays.asList(sp);
-    for (int i = 0; i < staticProperties.size(); i++) {
-      staticProperties.get(i).setIndex(i);
-    }
     return new StaticPropertyGroup(label.getInternalId(), label.getLabel(),
         label.getDescription(), staticProperties);
   }

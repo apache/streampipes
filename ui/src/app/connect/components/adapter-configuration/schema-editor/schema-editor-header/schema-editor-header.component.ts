@@ -34,7 +34,6 @@ export class SchemaEditorHeaderComponent {
     @Input() countSelected: number;
     @Input() timestampPresent = false;
 
-    @Output() addNestedPropertyEmitter = new EventEmitter();
     @Output() addStaticValuePropertyEmitter = new EventEmitter<string>();
     @Output() addTimestampPropertyEmitter = new EventEmitter();
     @Output() guessSchemaEmitter = new EventEmitter();
@@ -45,10 +44,6 @@ export class SchemaEditorHeaderComponent {
     staticValueKey = '';
 
     constructor() {}
-
-    public addNestedProperty() {
-        this.addNestedPropertyEmitter.emit();
-    }
 
     public addStaticValueProperty() {
         this.addStaticValuePropertyEmitter.emit(this.staticValueKey);

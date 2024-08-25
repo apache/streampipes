@@ -20,7 +20,7 @@ import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
-import { ConfigurationUtils } from '../../support/utils/configuration/ConfigutationUtils';
+import { ConfigurationUtils } from '../../support/utils/configuration/ConfigurationUtils';
 
 describe('Creates a new adapter, add to assets and export assets', () => {
     beforeEach('Setup Test', () => {
@@ -42,20 +42,13 @@ describe('Creates a new adapter, add to assets and export assets', () => {
         cy.dataCy('asset-name').type('Test asset');
         cy.dataCy('save-data-view').click();
         cy.dataCy('edit-asset-button').click();
+        cy.get('.mdc-tab__text-label').contains('Asset Links').parent().click();
+        cy.dataCy('assets-manage-links-button', { timeout: 5000 }).should(
+            'be.enabled',
+        );
         cy.dataCy('assets-manage-links-button').click();
-
-        // Added twice, because cypress wouldn't accept single click
-        cy.wait(1000).dataCy('manage-assets-select-adapters-checkbox').click();
-        cy.wait(1000)
-            .dataCy('manage-assets-select-data-sources-checkbox')
-            .click();
-        cy.dataCy('assets-update-links-button').click();
-
-        cy.dataCy('assets-manage-links-button').click();
-        cy.wait(1000).dataCy('manage-assets-select-adapters-checkbox').click();
-        cy.wait(1000)
-            .dataCy('manage-assets-select-data-sources-checkbox')
-            .click();
+        cy.dataCy('manage-assets-select-adapters-checkbox').click();
+        cy.dataCy('manage-assets-select-data-sources-checkbox').click();
         cy.dataCy('assets-update-links-button').click();
 
         cy.dataCy('linked-resources-list').children().should('have.length', 2);

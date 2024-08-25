@@ -40,6 +40,8 @@ import static org.apache.streampipes.connect.shared.preprocessing.convert.Helper
 
 public class ToOriginalSchemaConverterTest {
 
+  private static final String NESTED_DELIMITER = "<-=>";
+
   @Test
   public void testSimpleUnitConversion() {
     List<EventProperty> properties = makeSimpleProperties(true);
@@ -60,10 +62,11 @@ public class ToOriginalSchemaConverterTest {
 
     var rules = new ArrayList<TransformationRuleDescription>();
 
-    rules.add(makeUnitTransformationRule("nested.stringProp"));
+    rules.add(makeUnitTransformationRule("nested" + NESTED_DELIMITER + "stringProp"));
 
     var resultProperties = executeAndReturnResult(properties, rules);
-    var nestedResultProperty = ((EventPropertyNested) resultProperties.get(1)).getEventProperties().get(0);
+    var nestedResultProperty = ((EventPropertyNested) resultProperties.get(1)).getEventProperties()
+                                                                              .get(0);
 
     Assertions.assertEquals(2, resultProperties.size());
     Assertions.assertEquals("originalUnit", getUnit(nestedResultProperty));
@@ -73,7 +76,8 @@ public class ToOriginalSchemaConverterTest {
   public void testSimpleMoveConversion() {
     List<EventProperty> properties = makeNestedProperties();
     var nestedProperty = ((EventPropertyNested) properties.get(1));
-    nestedProperty.getEventProperties().add(EpProperties.stringEp(Labels.empty(), "epToBeMoved", ""));
+    nestedProperty.getEventProperties()
+                  .add(EpProperties.stringEp(Labels.empty(), "epToBeMoved", ""));
 
     var rules = new ArrayList<TransformationRuleDescription>();
 
@@ -81,10 +85,16 @@ public class ToOriginalSchemaConverterTest {
 
     var result = executeAndReturnResult(properties, rules);
     Assertions.assertEquals(3, result.size());
-    Assertions.assertEquals("timestamp",
-                            result.get(0).getRuntimeName());
-    Assertions.assertEquals(2,
-                            ((EventPropertyNested) result.get(1)).getEventProperties().size());
+    Assertions.assertEquals(
+        "timestamp",
+        result.get(0)
+              .getRuntimeName()
+    );
+    Assertions.assertEquals(
+        2,
+        ((EventPropertyNested) result.get(1)).getEventProperties()
+                                             .size()
+    );
   }
 
   @Test
@@ -95,12 +105,17 @@ public class ToOriginalSchemaConverterTest {
     rules.add(makeDeleteTransformationRule("epToBeRestored"));
     var result = executeAndReturnResult(properties, rules);
     Assertions.assertEquals(4, result.size());
-    Assertions.assertEquals("epToBeRestored",
-                            result.get(3).getRuntimeName());
+    Assertions.assertEquals(
+        "epToBeRestored",
+        result.get(3)
+              .getRuntimeName()
+    );
   }
 
-  private List<EventProperty> executeAndReturnResult(List<EventProperty> properties,
-                                                     List<TransformationRuleDescription> rules) {
+  private List<EventProperty> executeAndReturnResult(
+      List<EventProperty> properties,
+      List<TransformationRuleDescription> rules
+  ) {
     var result = new SchemaConverter().toOriginalSchema(new EventSchema(properties), rules);
     return result.getEventProperties();
   }

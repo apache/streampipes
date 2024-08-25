@@ -1,0 +1,127 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="page-container-padding-inner">
+    <sp-basic-header-title-component
+        title="{{ 'Basics: ' + asset.assetName }}"
+    ></sp-basic-header-title-component>
+    <div class="p-10">
+        <div fxLayout="column" fxFlex="100">
+            <sp-basic-field-description
+                fxFlex="100"
+                descriptionPanelWidth="30"
+                label="Name"
+                description="A short name of the asset"
+            >
+                <mat-form-field
+                    color="accent"
+                    class="w-100"
+                    subscriptSizing="dynamic"
+                >
+                    <input
+                        matInput
+                        [(ngModel)]="asset.assetName"
+                        [disabled]="!editMode"
+                    />
+                </mat-form-field>
+            </sp-basic-field-description>
+            <sp-basic-field-description
+                fxFlex="100"
+                descriptionPanelWidth="30"
+                label="Description"
+                description="A longer description of this asset"
+            >
+                <mat-form-field
+                    color="accent"
+                    class="w-100"
+                    subscriptSizing="dynamic"
+                >
+                    <input
+                        matInput
+                        [(ngModel)]="asset.assetDescription"
+                        [disabled]="!editMode"
+                    />
+                </mat-form-field>
+            </sp-basic-field-description>
+            <sp-basic-field-description
+                fxFlex="100"
+                descriptionPanelWidth="30"
+                label="Asset ID"
+                description="A unique id for this asset in one word"
+            >
+                <mat-form-field
+                    color="accent"
+                    class="w-100"
+                    subscriptSizing="dynamic"
+                >
+                    <input
+                        matInput
+                        [(ngModel)]="asset.assetId"
+                        [disabled]="!editMode"
+                    />
+                </mat-form-field>
+            </sp-basic-field-description>
+            <sp-basic-field-description
+                fxFlex="100"
+                descriptionPanelWidth="30"
+                label="Asset Type"
+                description="The ISA95 type of this asset"
+            >
+                <mat-button-toggle-group
+                    [disabled]="!editMode"
+                    [(ngModel)]="asset.assetType.isa95AssetType"
+                    aria-label="Asset Type"
+                >
+                    <mat-button-toggle
+                        *ngFor="let isaType of isa95Types"
+                        [value]="isaType.type"
+                        >{{ isaType.label }}
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+            </sp-basic-field-description>
+            <sp-basic-field-description
+                fxFlex="100"
+                descriptionPanelWidth="30"
+                label="Labels"
+                description="Assign additional labels to better discover your assets"
+            >
+                <sp-asset-details-labels
+                    [asset]="asset"
+                    [editMode]="editMode"
+                    class="w-100"
+                >
+                </sp-asset-details-labels>
+            </sp-basic-field-description>
+            <sp-basic-field-description
+                *ngIf="rootNode"
+                fxFlex="100"
+                descriptionPanelWidth="30"
+                label="Sites"
+                description="Assign a location (site and area) to this asset"
+            >
+                <sp-asset-details-site
+                    class="w-100"
+                    [asset]="asset"
+                    [sites]="sites"
+                    [editMode]="editMode"
+                >
+                </sp-asset-details-site>
+            </sp-basic-field-description>
+        </div>
+    </div>
+</div>

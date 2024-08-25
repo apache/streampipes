@@ -44,12 +44,14 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { SpExceptionDetailsComponent } from './components/sp-exception-message/exception-details/exception-details.component';
 import { SpWarningBoxComponent } from './components/warning-box/warning-box.component';
+import { SpBasicFieldDescriptionComponent } from './components/basic-field-description/basic-field-description.component';
 
 @NgModule({
     declarations: [
         ConfirmDialogComponent,
         PanelDialogComponent,
         StandardDialogComponent,
+        SpBasicFieldDescriptionComponent,
         SpBasicInnerPanelComponent,
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
@@ -81,6 +83,7 @@ import { SpWarningBoxComponent } from './components/warning-box/warning-box.comp
         ConfirmDialogComponent,
         PanelDialogComponent,
         StandardDialogComponent,
+        SpBasicFieldDescriptionComponent,
         SpBasicInnerPanelComponent,
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,

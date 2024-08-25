@@ -749,9 +749,6 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
   }
 
   private List<StaticProperty> sortStaticProperties(List<StaticProperty> staticProperties) {
-    for (int i = 0; i < staticProperties.size(); i++) {
-      staticProperties.get(i).setIndex(i);
-    }
     return staticProperties;
   }
 

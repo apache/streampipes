@@ -38,7 +38,7 @@ import { saveAs } from 'file-saver';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 
 @Component({
-    selector: 'sp-asset-overview-component',
+    selector: 'sp-asset-overview',
     templateUrl: './asset-overview.component.html',
     styleUrls: ['./asset-overview.component.scss'],
 })
@@ -47,7 +47,8 @@ export class SpAssetOverviewComponent implements OnInit {
 
     displayedColumns: string[] = ['name', 'action'];
 
-    dataSource: MatTableDataSource<SpAssetModel>;
+    dataSource: MatTableDataSource<SpAssetModel> =
+        new MatTableDataSource<SpAssetModel>();
 
     constructor(
         private genericStorageService: GenericStorageService,
@@ -70,9 +71,7 @@ export class SpAssetOverviewComponent implements OnInit {
             .getAllDocuments(AssetConstants.ASSET_APP_DOC_NAME)
             .subscribe(result => {
                 this.existingAssets = result as SpAssetModel[];
-                this.dataSource = new MatTableDataSource<SpAssetModel>(
-                    this.existingAssets,
-                );
+                this.dataSource.data = this.existingAssets;
             });
     }
 

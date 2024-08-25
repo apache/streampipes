@@ -1,0 +1,51 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+.pipeline-validation-hint {
+    position: absolute;
+    right: 10px;
+    top: 20px;
+    z-index: 10;
+    background: var(--color-bg-1);
+    box-shadow: 0.175em 0.175em 0 0 rgba(15, 28, 63, 0.125);
+}
+
+.jtk-surface-nopan {
+    overflow: scroll !important;
+    cursor: default;
+}
+
+.pipeline-canvas-outer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.canvas {
+    position: relative;
+    left: 0;
+    top: 0;
+    height: 3000px;
+    width: 4000px;
+    z-index: 0;
+    margin: -1px;
+
+    background-color: var(--color-bg-1);
+    background-image: var(--canvas-color);
+    background-size: 15px 15px;
+}

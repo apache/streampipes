@@ -24,10 +24,19 @@ declare global {
     }
 }
 
-export const dataCy = (value: string, config?: any) => {
-    if (config) {
-        return cy.get(`[data-cy=${value}]`, config);
-    } else {
-        return cy.get(`[data-cy=${value}]`);
-    }
+/**
+ * Selects elements based on the `data-cy` attribute.
+ *
+ * @param {string} value - The value of the `data-cy` attribute to match.
+ * @param {object} [config={}] - Optional configuration object for the Cypress `get` command.
+ * @param {boolean} [startsWith=false] - If true, selects elements whose `data-cy` attribute starts with the given value.
+ * @returns {Cypress.Chainable<JQuery<HTMLElement>>} - A chainable Cypress object containing the matched elements.
+ */
+export const dataCy = (
+    value: string,
+    config: any = {},
+    startsWith: boolean = false,
+) => {
+    const selector = startsWith ? `[data-cy^=${value}]` : `[data-cy=${value}]`;
+    return cy.get(selector, config);
 };

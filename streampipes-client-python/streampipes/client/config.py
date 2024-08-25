@@ -64,5 +64,3 @@ class StreamPipesClientConfig:
     https_disabled: Optional[bool] = False
     port: Optional[int] = 80
     additional_headers: Optional[Dict[str, str]] = field(default_factory=dict)
-
-

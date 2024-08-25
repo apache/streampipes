@@ -16,7 +16,12 @@
   ~
   -->
 
-<div fxLayout="column" fxFlex="100" class="error-panel error">
+<div
+    fxLayout="column"
+    fxFlex="100"
+    class="error-panel error"
+    data-cy="display-exception"
+>
     <div fxLayout="row">
         <div fxFlex="100" fxLayoutAlign="start center">
             <div
@@ -30,7 +35,7 @@
                     <h5 *ngIf="messageTimestamp" class="mr-15">
                         {{ messageTimestamp | date: 'short' }}
                     </h5>
-                    <h5 fxFlex>
+                    <h5 data-cy="exception-message-title" kfxFlex>
                         {{ message.title || 'Error' }}
                     </h5>
                 </div>

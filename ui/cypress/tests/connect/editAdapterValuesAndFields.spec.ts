@@ -19,6 +19,7 @@
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
+import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -42,9 +43,7 @@ describe('Test Edit Adapter', () => {
         cy.dataCy('connect-add-field-name-button').click();
         cy.dataCy('edit-density').click();
         // Change runtime name
-        cy.dataCy('connect-edit-field-runtime-name')
-            .clear()
-            .type('test-density');
+        ConnectBtns.runtimeNameInput().clear().type('test-density');
         // Change field semantic type
         cy.get('[id="domainproperty"]')
             .clear()
@@ -75,10 +74,8 @@ describe('Test Edit Adapter', () => {
         ConnectBtns.editAdapter().click();
         cy.contains('Next').click();
         cy.dataCy('edit-density').click();
-        cy.dataCy('connect-edit-field-runtime-name').should(
-            'have.value',
-            'test-density',
-        );
+        ConnectEventSchemaUtils.validateRuntimeName('test-density');
+
         cy.get('[id="domainproperty"]').should(
             'have.value',
             'http://schema.org/Numbers',
@@ -91,7 +88,7 @@ describe('Test Edit Adapter', () => {
         );
 
         // Delete inserted values in edit field
-        cy.dataCy('connect-edit-field-runtime-name').clear();
+        ConnectBtns.runtimeNameInput().clear();
         cy.get('[id="domainproperty"]').clear();
         ConnectBtns.changeRuntimeType()
             .click()

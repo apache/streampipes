@@ -22,8 +22,6 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.model.staticproperty.SelectionStaticProperty;
 import org.apache.streampipes.model.template.BoundPipelineElement;
 
 import java.util.ArrayList;
@@ -57,53 +55,9 @@ public class BoundPipelineElementBuilder {
     return this;
   }
 
-  public BoundPipelineElementBuilder withPredefinedFreeTextValue(String internalStaticPropertyId, String value) {
-    this.streamPipesEntity.getStaticProperties().stream().filter(sp -> sp instanceof FreeTextStaticProperty)
-        .forEach(sp -> {
-          if (sp.getInternalName().equals(internalStaticPropertyId)) {
-            sp.setPredefined(true);
-            ((FreeTextStaticProperty) sp).setValue(value);
-          }
-        });
-
-    return this;
-  }
-
-  public BoundPipelineElementBuilder withPredefinedSelection(String internalStaticPropertyId,
-                                                             List<String> selectedOptions) {
-    this.streamPipesEntity.getStaticProperties().stream().filter(sp -> sp instanceof SelectionStaticProperty)
-        .forEach(sp -> {
-          if (sp.getInternalName().equals(internalStaticPropertyId)) {
-            sp.setPredefined(true);
-            ((SelectionStaticProperty) sp).getOptions().forEach(o -> {
-              if (selectedOptions.stream().anyMatch(so -> so.equals(o.getName()))) {
-                o.setSelected(true);
-              }
-            });
-          }
-        });
-    return this;
-  }
-
-  public BoundPipelineElementBuilder withOverwrittenLabel(String internalStaticPropertyId, String newLabel) {
-    this.streamPipesEntity.getStaticProperties().forEach(sp -> {
-      sp.setPredefined(true);
-      if (sp.getInternalName().equals(internalStaticPropertyId)) {
-        sp.setLabel(newLabel);
-      }
-    });
-    return this;
-  }
-
   public BoundPipelineElement build() {
     this.boundPipelineElement.setPipelineElementTemplate(streamPipesEntity);
     this.boundPipelineElement.setConnectedTo(connectedTo);
     return boundPipelineElement;
   }
-
-  public BoundPipelineElement buildWithStandardSinks() {
-    // TODO implement
-    return this.build();
-  }
-
 }

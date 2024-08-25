@@ -45,7 +45,7 @@
                         "
                         fxLayout="row"
                         fxFlex="100"
-                        (click)="selectNode(node)"
+                        (click)="selectNode(node, false)"
                     >
                         <span fxLayoutAlign="end center">{{
                             node.assetName
@@ -94,7 +94,7 @@
                             "
                             fxLayout="row"
                             fxFlex="100"
-                            (click)="selectNode(node)"
+                            (click)="selectNode(node, true)"
                         >
                             <span fxLayoutAlign="start center">{{
                                 node.assetName

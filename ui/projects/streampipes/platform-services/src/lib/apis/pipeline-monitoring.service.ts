@@ -17,13 +17,9 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {
-    PipelineMonitoringInfo,
-    SpLogEntry,
-    SpMetricsEntry,
-} from '../model/gen/streampipes-model';
+import { SpLogEntry, SpMetricsEntry } from '../model/gen/streampipes-model';
 import { PlatformServicesCommons } from './commons.service';
 import { map } from 'rxjs/operators';
 import { AbstractMonitoringService } from './abstract-monitoring.service';
@@ -41,17 +37,23 @@ export class PipelineMonitoringService extends AbstractMonitoringService {
 
     getLogInfoForPipeline(
         pipelineId: string,
+        context?: HttpContext,
     ): Observable<Record<string, SpLogEntry[]>> {
         return this.http
-            .get(this.logUrl(pipelineId))
+            .get(this.logUrl(pipelineId), { context })
             .pipe(map(response => response as Record<string, SpLogEntry[]>));
     }
 
     getMetricsInfoForPipeline(
         pipelineId: string,
+        forceUpdate = false,
+        context?: HttpContext,
     ): Observable<Record<string, SpMetricsEntry>> {
         return this.http
-            .get(this.metricsUrl(pipelineId))
+            .get(this.metricsUrl(pipelineId), {
+                params: { forceUpdate },
+                context,
+            })
             .pipe(map(response => response as Record<string, SpMetricsEntry>));
     }
 

@@ -63,6 +63,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
 
   private final CRUDStorage<SpServiceRegistration> extensionsServiceStorage =
       getNoSqlStorage().getExtensionsServiceStorage();
+  private final IAdapterStorage adapterDescriptionStorage = getNoSqlStorage().getAdapterDescriptionStorage();
   private final IAdapterStorage adapterStorage = getNoSqlStorage().getAdapterInstanceStorage();
 
   private final IDataProcessorStorage dataProcessorStorage = getNoSqlStorage().getDataProcessorStorage();
@@ -119,7 +120,8 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
                 List.of(SpServiceTagPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_SINK)
             );
 
-            new AdapterMigrationManager(adapterStorage).handleMigrations(extensionsServiceConfig, adapterMigrations);
+            new AdapterMigrationManager(adapterStorage, adapterDescriptionStorage)
+              .handleMigrations(extensionsServiceConfig, adapterMigrations);
             new PipelineElementMigrationManager(
                 pipelineStorage,
                 dataProcessorStorage,

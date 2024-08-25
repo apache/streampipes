@@ -17,15 +17,24 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { PipelineElementService } from '@streampipes/platform-services';
+import {
+    Pipeline,
+    PipelineCanvasMetadata,
+    PipelineCanvasMetadataService,
+    PipelineElementService,
+    PipelineService,
+} from '@streampipes/platform-services';
 import {
     PipelineElementConfig,
     PipelineElementUnion,
 } from './model/editor.model';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { ActivatedRoute } from '@angular/router';
-import { zip } from 'rxjs';
+import { forkJoin, of, zip } from 'rxjs';
 import { SpPipelineRoutes } from '../pipelines/pipelines.routes';
+import { catchError } from 'rxjs/operators';
+import { EditorService } from './services/editor.service';
+import { JsplumbService } from './services/jsplumb.service';
 
 @Component({
     selector: 'sp-editor',
@@ -36,27 +45,34 @@ export class EditorComponent implements OnInit {
     allElements: PipelineElementUnion[] = [];
 
     rawPipelineModel: PipelineElementConfig[] = [];
-    currentModifiedPipelineId: string;
+    originalPipeline: Pipeline;
 
     allElementsLoaded = false;
+    allMetadataLoaded = false;
+    pipelineCanvasMetadata: PipelineCanvasMetadata;
+    pipelineCanvasMetadataAvailable: boolean;
 
     constructor(
         private pipelineElementService: PipelineElementService,
         private activatedRoute: ActivatedRoute,
         private breadcrumbService: SpBreadcrumbService,
+        private editorService: EditorService,
+        private pipelineService: PipelineService,
+        private jsplumbService: JsplumbService,
+        private pipelineCanvasMetadataService: PipelineCanvasMetadataService,
     ) {}
 
     ngOnInit() {
-        this.activatedRoute.params.subscribe(params => {
-            if (params.pipelineId) {
-                this.currentModifiedPipelineId = params.pipelineId;
-            } else {
-                this.breadcrumbService.updateBreadcrumb([
-                    SpPipelineRoutes.BASE,
-                    { label: 'New Pipeline' },
-                ]);
-            }
-        });
+        const pipelineId = this.activatedRoute.snapshot.params.pipelineId;
+        if (pipelineId) {
+            this.loadPipelineToModify(pipelineId);
+        } else {
+            this.loadCachedPipeline();
+            this.breadcrumbService.updateBreadcrumb([
+                SpPipelineRoutes.BASE,
+                { label: 'New Pipeline' },
+            ]);
+        }
         zip(
             this.pipelineElementService.getDataStreams(),
             this.pipelineElementService.getDataProcessors(),
@@ -71,5 +87,62 @@ export class EditorComponent implements OnInit {
                 });
             this.allElementsLoaded = true;
         });
+    }
+
+    loadCachedPipeline() {
+        const cachedPipeline = this.editorService.getCachedPipeline();
+        const cachedCanvasMetadata =
+            this.editorService.getCachedPipelineCanvasMetadata();
+        forkJoin([cachedPipeline, cachedCanvasMetadata]).subscribe(results => {
+            if (results[0] && results[0].length > 0) {
+                this.rawPipelineModel = results[0] as PipelineElementConfig[];
+                this.handleCanvasMetadataResponse(results[1]);
+            } else {
+                this.pipelineCanvasMetadata = new PipelineCanvasMetadata();
+                this.pipelineCanvasMetadataAvailable = false;
+            }
+            this.allMetadataLoaded = true;
+        });
+    }
+
+    loadPipelineToModify(pipelineId: string) {
+        const pipelineReq = this.pipelineService.getPipelineById(pipelineId);
+        const canvasMetadataReq = this.pipelineCanvasMetadataService
+            .getPipelineCanvasMetadata(pipelineId)
+            .pipe(
+                catchError(() => {
+                    this.handleCanvasMetadataResponse(undefined);
+                    return of(undefined);
+                }),
+            );
+
+        forkJoin([pipelineReq, canvasMetadataReq]).subscribe(
+            ([pipelineResp, canvasResp]) => {
+                if (pipelineResp) {
+                    this.originalPipeline = pipelineResp;
+                    this.breadcrumbService.updateBreadcrumb([
+                        SpPipelineRoutes.BASE,
+                        { label: this.originalPipeline.name },
+                        { label: 'Modify' },
+                    ]);
+                    this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
+                        this.originalPipeline,
+                        false,
+                    );
+                }
+                this.handleCanvasMetadataResponse(canvasResp);
+                this.allMetadataLoaded = true;
+            },
+        );
+    }
+
+    handleCanvasMetadataResponse(canvasMetadata: PipelineCanvasMetadata) {
+        if (canvasMetadata !== undefined) {
+            this.pipelineCanvasMetadata = canvasMetadata;
+            this.pipelineCanvasMetadataAvailable = true;
+        } else {
+            this.pipelineCanvasMetadataAvailable = false;
+            this.pipelineCanvasMetadata = new PipelineCanvasMetadata();
+        }
     }
 }

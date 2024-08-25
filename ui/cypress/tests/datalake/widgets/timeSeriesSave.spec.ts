@@ -28,34 +28,22 @@ describe('Test if widget configuration is updated correctly', () => {
 
         // Create first test data view with one time series widget
         DataLakeUtils.addDataViewAndTimeSeriesWidget(testView1, dataSet);
-        DataLakeUtils.saveDataExplorerWidgetConfiguration();
+        DataLakeUtils.saveDataViewConfiguration();
 
+        cy.wait(1000);
         // Create second test data view with one time series widget
         DataLakeUtils.addDataViewAndTimeSeriesWidget(testView2, dataSet);
-        DataLakeUtils.saveDataExplorerWidgetConfiguration();
-    });
-
-    // This test case has two different options. The first one selects the edit button of the data explorer on the top right
-    // and the second one uses the edit button of the widget
-    it('Perform Test', () => {
-        runTestCase(false);
+        DataLakeUtils.saveDataViewConfiguration();
     });
 
     it('Perform Test', () => {
-        runTestCase(true);
+        runTestCase();
     });
 });
 
-const runTestCase = (editOption: boolean) => {
+const runTestCase = () => {
     // Visit settings of widget
-    const widgetName = 'prepared_data-time-series-chart';
-
-    if (editOption) {
-        DataLakeUtils.startEditWidget(widgetName);
-    } else {
-        cy.dataCy('options-data-explorer').click();
-        cy.dataCy('options-edit-dashboard').click();
-    }
+    DataLakeUtils.editDataView(testView1);
 
     // Change first field from line plot to scatter plot
     DataLakeUtils.openVisualizationConfig();
