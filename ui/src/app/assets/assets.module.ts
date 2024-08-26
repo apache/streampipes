@@ -57,6 +57,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AssetDetailsLabelsComponent } from './components/asset-details/asset-details-panel/asset-details-basics/asset-details-labels/asset-details-labels.component';
 import { MatChipGrid, MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AssetDetailsSiteComponent } from './components/asset-details/asset-details-panel/asset-details-basics/asset-details-site/asset-details-site.component';
+import { AssetLocationComponent } from './components/asset-details/asset-details-panel/asset-details-basics/asset-details-site/asset-location/asset-location.component';
 
 @NgModule({
     imports: [
@@ -112,7 +114,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
         AssetDetailsBasicsComponent,
         AssetDetailsLabelsComponent,
         AssetDetailsLinksComponent,
+        AssetDetailsSiteComponent,
         AssetLinkSectionComponent,
+        AssetLocationComponent,
         AssetUploadDialogComponent,
         EditAssetLinkDialogComponent,
         SpAssetDetailsComponent,

@@ -267,3 +267,65 @@ func (p *UserAccountDeserializer) Unmarshal(data []byte) (interface{}, error) {
 	return userAccount, nil
 
 }
+
+type PipelineDeserializer struct{}
+
+func NewPipelineDeserializer() *PipelineDeserializer {
+	return &PipelineDeserializer{}
+}
+
+func (p *PipelineDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var pipeLine pipeline.Pipeline
+	err := json.Unmarshal(data, &pipeLine)
+	if err != nil {
+		return nil, err
+	}
+	return pipeLine, nil
+
+}
+
+type PipelinesDeserializer struct{}
+
+func NewPipelinesDeserializer() *PipelinesDeserializer {
+	return &PipelinesDeserializer{}
+}
+
+func (p *PipelinesDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var pipelines []pipeline.Pipeline
+	err := json.Unmarshal(data, &pipelines)
+	if err != nil {
+		return nil, err
+	}
+	return pipelines, nil
+
+}
+
+type PipelineStatusMessagesDeserializer struct{}
+
+func NewPipelineStatusMessagesDeserializer() *PipelineStatusMessagesDeserializer {
+	return &PipelineStatusMessagesDeserializer{}
+}
+
+func (p *PipelineStatusMessagesDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var pipelineStatusMessage []pipeline.PipelineStatusMessage
+	err := json.Unmarshal(data, &pipelineStatusMessage)
+	if err != nil {
+		return nil, err
+	}
+	return pipelineStatusMessage, nil
+}
+
+type PipelineOperationStatusDeserializer struct{}
+
+func NewPipelineOperationStatusDeserializer() *PipelineOperationStatusDeserializer {
+	return &PipelineOperationStatusDeserializer{}
+}
+
+func (p *PipelineOperationStatusDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var pipelineOperationStatus pipeline.PipelineOperationStatus
+	err := json.Unmarshal(data, &pipelineOperationStatus)
+	if err != nil {
+		return nil, err
+	}
+	return pipelineOperationStatus, nil
+}

@@ -26,12 +26,8 @@ import java.util.Objects;
 
 public class EventPropertyPrimitive extends EventProperty {
 
-  private static final long serialVersionUID = 665989638281665875L;
-
   private String runtimeType;
-
   private URI measurementUnit;
-
   private ValueSpecification valueSpecification;
 
   public EventPropertyPrimitive() {

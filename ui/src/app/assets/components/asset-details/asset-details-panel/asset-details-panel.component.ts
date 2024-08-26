@@ -17,10 +17,10 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { SpAsset } from '@streampipes/platform-services';
+import { AssetSiteDesc, SpAsset } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-asset-details-panel-component',
+    selector: 'sp-asset-details-panel',
     templateUrl: './asset-details-panel.component.html',
     styleUrls: ['./asset-details-panel.component.scss'],
 })
@@ -30,6 +30,12 @@ export class SpAssetDetailsPanelComponent {
 
     @Input()
     editMode: boolean;
+
+    @Input()
+    rootNode: boolean;
+
+    @Input()
+    sites: AssetSiteDesc[];
 
     @Output()
     updateAssetEmitter: EventEmitter<SpAsset> = new EventEmitter<SpAsset>();

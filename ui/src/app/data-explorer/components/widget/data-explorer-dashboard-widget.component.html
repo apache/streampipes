@@ -24,11 +24,8 @@
             color: configuredWidget.baseAppearanceConfig.textColor,
             height: gridsterItemComponent.height - 13 + 'px',
             border:
-                editMode &&
-                currentlyConfiguredWidgetId === configuredWidget.elementId
-                    ? '4px solid var(--color-accent)'
-                    : '2px solid ' +
-                      configuredWidget.baseAppearanceConfig.backgroundColor
+                '2px solid ' +
+                configuredWidget.baseAppearanceConfig.backgroundColor
         }"
         [attr.data-cy]="
             'widget-' + configuredWidget.baseAppearanceConfig.widgetTitle
@@ -68,7 +65,7 @@
                     [matMenuTriggerFor]="menu"
                     aria-label="More options"
                     matTooltip="More options"
-                    *ngIf="!editMode"
+                    *ngIf="!editMode && !dataViewMode"
                     [attr.data-cy]="
                         'more-options-' +
                         configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
@@ -113,28 +110,6 @@
                     "
                 >
                     <mat-icon>get_app</mat-icon>
-                </button>
-                <button
-                    mat-icon-button
-                    [class.mat-raised-button]="
-                        currentlyConfiguredWidgetId ===
-                        configuredWidget.elementId
-                    "
-                    (click)="triggerWidgetEditMode()"
-                    *ngIf="editMode"
-                    [color]="
-                        currentlyConfiguredWidgetId ===
-                        configuredWidget.elementId
-                            ? 'accent'
-                            : ''
-                    "
-                    matTooltip="Edit widget"
-                    [attr.data-cy]="
-                        'edit-' +
-                        configuredWidget.baseAppearanceConfig.widgetTitle
-                    "
-                >
-                    <mat-icon>edit</mat-icon>
                 </button>
                 <button
                     mat-icon-button

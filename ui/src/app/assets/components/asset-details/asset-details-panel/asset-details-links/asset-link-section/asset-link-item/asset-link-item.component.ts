@@ -21,7 +21,7 @@ import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'sp-asset-link-item-component',
+    selector: 'sp-asset-link-item',
     templateUrl: './asset-link-item.component.html',
     styleUrls: ['./asset-link-item.component.scss'],
 })

@@ -20,11 +20,10 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-07-29 21:03:44.
+// Generated using typescript-generator version 3.2.1263 on 2024-08-20 13:02:30.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
-        | 'org.apache.streampipes.model.connect.grounding.ProtocolDescription'
         | 'org.apache.streampipes.model.template.PipelineTemplateDescription'
         | 'org.apache.streampipes.model.SpDataStream'
         | 'org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity'
@@ -397,11 +396,9 @@ export class StaticProperty {
         | 'org.apache.streampipes.model.staticproperty.MappingPropertyUnary'
         | 'org.apache.streampipes.model.staticproperty.MappingPropertyNary';
     'description': string;
-    'index': number;
     'internalName': string;
     'label': string;
     'optional': boolean;
-    'predefined': boolean;
     'staticPropertyType': StaticPropertyType;
 
     static 'fromData'(
@@ -414,11 +411,9 @@ export class StaticProperty {
         const instance = target || new StaticProperty();
         instance['@class'] = data['@class'];
         instance.description = data.description;
-        instance.index = data.index;
         instance.internalName = data.internalName;
         instance.label = data.label;
         instance.optional = data.optional;
-        instance.predefined = data.predefined;
         instance.staticPropertyType = data.staticPropertyType;
         return instance;
     }
@@ -883,6 +878,9 @@ export class SchemaTransformationRuleDescription extends TransformationRuleDescr
     }
 }
 
+/**
+ * @deprecated since 0.97.0, for removal
+ */
 export class CreateNestedRuleDescription extends SchemaTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription';
     'runtimeKey': string;
@@ -1000,6 +998,7 @@ export class DashboardItem {
 export class DashboardModel implements Storable {
     couchDbId: string;
     dashboardGeneralSettings: { [index: string]: any };
+    dashboardLiveSettings: { [index: string]: any };
     dashboardTimeSettings: { [index: string]: any };
     description: string;
     displayHeader: boolean;
@@ -1021,6 +1020,9 @@ export class DashboardModel implements Storable {
         instance.dashboardGeneralSettings = __getCopyObjectFn(
             __identity<any>(),
         )(data.dashboardGeneralSettings);
+        instance.dashboardLiveSettings = __getCopyObjectFn(__identity<any>())(
+            data.dashboardLiveSettings,
+        );
         instance.dashboardTimeSettings = __getCopyObjectFn(__identity<any>())(
             data.dashboardTimeSettings,
         );
@@ -1097,6 +1099,7 @@ export class DataExplorerWidgetModel extends DashboardEntity {
     dataConfig: { [index: string]: any };
     measureName: string;
     pipelineId: string;
+    timeSettings: { [index: string]: any };
     visualizationConfig: { [index: string]: any };
     widgetId: string;
     widgetType: string;
@@ -1118,6 +1121,9 @@ export class DataExplorerWidgetModel extends DashboardEntity {
         );
         instance.measureName = data.measureName;
         instance.pipelineId = data.pipelineId;
+        instance.timeSettings = __getCopyObjectFn(__identity<any>())(
+            data.timeSettings,
+        );
         instance.visualizationConfig = __getCopyObjectFn(__identity<any>())(
             data.visualizationConfig,
         );
@@ -1480,10 +1486,8 @@ export class EventProperty {
     'description': string;
     'domainProperties': string[];
     'elementId': string;
-    'index': number;
     'label': string;
     'propertyScope': string;
-    'required': boolean;
     'runtimeId': string;
     'runtimeName': string;
 
@@ -1504,10 +1508,8 @@ export class EventProperty {
             data.domainProperties,
         );
         instance.elementId = data.elementId;
-        instance.index = data.index;
         instance.label = data.label;
         instance.propertyScope = data.propertyScope;
-        instance.required = data.required;
         instance.runtimeId = data.runtimeId;
         instance.runtimeName = data.runtimeName;
         return instance;
@@ -2137,6 +2139,26 @@ export class ListOutputStrategy extends OutputStrategy {
     }
 }
 
+export class LocationConfig {
+    attributionText: string;
+    locationEnabled: boolean;
+    tileServerUrl: string;
+
+    static fromData(
+        data: LocationConfig,
+        target?: LocationConfig,
+    ): LocationConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new LocationConfig();
+        instance.attributionText = data.attributionText;
+        instance.locationEnabled = data.locationEnabled;
+        instance.tileServerUrl = data.tileServerUrl;
+        return instance;
+    }
+}
+
 export class MappingProperty extends StaticProperty {
     '@class':
         | 'org.apache.streampipes.model.staticproperty.MappingProperty'
@@ -2426,25 +2448,6 @@ export class Option {
         instance.internalName = data.internalName;
         instance.name = data.name;
         instance.selected = data.selected;
-        return instance;
-    }
-}
-
-/**
- * @deprecated since 0.92.0, for removal
- */
-export class PageResult extends DataSeries {
-    page: number;
-    pageSum: number;
-
-    static fromData(data: PageResult, target?: PageResult): PageResult {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new PageResult();
-        super.fromData(data, instance);
-        instance.page = data.page;
-        instance.pageSum = data.pageSum;
         return instance;
     }
 }
@@ -3050,35 +3053,6 @@ export class PropertyValueSpecification {
         instance.maxValue = data.maxValue;
         instance.minValue = data.minValue;
         instance.step = data.step;
-        return instance;
-    }
-}
-
-/**
- * @deprecated since 0.93.0, for removal
- */
-export class ProtocolDescription extends NamedStreamPipesEntity {
-    '@class': 'org.apache.streampipes.model.connect.grounding.ProtocolDescription';
-    'category': string[];
-    'config': StaticPropertyUnion[];
-    'sourceType': string;
-
-    static 'fromData'(
-        data: ProtocolDescription,
-        target?: ProtocolDescription,
-    ): ProtocolDescription {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new ProtocolDescription();
-        super.fromData(data, instance);
-        instance.category = __getCopyArrayFn(__identity<string>())(
-            data.category,
-        );
-        instance.config = __getCopyArrayFn(StaticProperty.fromDataUnion)(
-            data.config,
-        );
-        instance.sourceType = data.sourceType;
         return instance;
     }
 }

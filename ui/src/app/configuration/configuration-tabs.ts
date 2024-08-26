@@ -66,6 +66,11 @@ export class SpConfigurationTabs {
                 itemTitle: 'Security',
                 itemLink: ['configuration', 'security'],
             },
+            {
+                itemId: 'sites',
+                itemTitle: 'Sites',
+                itemLink: ['configuration', 'sites'],
+            },
         ];
     }
 }

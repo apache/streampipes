@@ -24,7 +24,7 @@ import {
 } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-asset-link-section-component',
+    selector: 'sp-asset-link-section',
     templateUrl: './asset-link-section.component.html',
     styleUrls: ['./asset-link-section.component.scss'],
 })

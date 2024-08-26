@@ -52,7 +52,8 @@ export class StaticRuntimeResolvableTreeInputComponent
     }
 
     ngOnInit(): void {
-        this.resetStaticPropertyStateAndReload();
+        this.resetStaticPropertyState();
+
         if (
             this.staticProperty.nodes.length === 0 &&
             (!this.staticProperty.dependsOn ||
@@ -168,8 +169,12 @@ export class StaticRuntimeResolvableTreeInputComponent
      * this state should be reset
      */
     private resetStaticPropertyStateAndReload() {
+        this.resetStaticPropertyState();
+        this.reload();
+    }
+
+    private resetStaticPropertyState(): void {
         this.staticProperty.latestFetchedNodes = [];
         this.staticProperty.nextBaseNodeToResolve = undefined;
-        this.reload();
     }
 }

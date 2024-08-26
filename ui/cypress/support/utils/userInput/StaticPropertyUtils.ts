@@ -26,9 +26,9 @@ export class StaticPropertyUtils {
             if (config.type === 'checkbox') {
                 this.clickCheckbox(config);
             } else if (config.type === 'button') {
-                cy.dataCy(config.selector).click();
+                cy.dataCy(config.selector, { timeout: 2000 }).click();
             } else if (config.type === 'drop-down') {
-                cy.dataCy(config.selector)
+                cy.dataCy(config.selector, { timeout: 2000 })
                     .click()
                     .get('mat-option')
                     .contains(config.value)
@@ -36,18 +36,31 @@ export class StaticPropertyUtils {
             } else if (config.type === 'radio') {
                 this.clickRadio(config);
             } else if (config.type === 'click') {
-                cy.dataCy(config.selector).click({ force: true });
+                cy.dataCy(config.selector, { timeout: 2000 }).click({
+                    force: true,
+                });
             } else if (config.type === 'code-input') {
-                cy.dataCy('reset-code-' + config.selector).click();
-                cy.dataCy('code-editor-' + config.selector).type(config.value);
+                cy.dataCy('reset-code-' + config.selector, {
+                    timeout: 2000,
+                }).click();
+                cy.dataCy('code-editor-' + config.selector, {
+                    timeout: 2000,
+                }).type(config.value);
             } else if (config.type === 'input') {
-                cy.dataCy(config.selector).clear().type(config.value).blur();
+                cy.dataCy(config.selector, { timeout: 2000 })
+                    .clear()
+                    .type(config.value)
+                    .blur();
             } else if (config.type === 'slider') {
-                cy.dataCy(config.selector).type(config.value);
+                cy.dataCy(config.selector, { timeout: 2000 }).type(
+                    config.value,
+                );
             } else if (config.type === 'tree') {
                 TreeStaticPropertyUtils.selectTreeNode(config.treeNode);
             } else {
-                cy.dataCy(config.selector).type(config.value);
+                cy.dataCy(config.selector, { timeout: 2000 }).type(
+                    config.value,
+                );
             }
         });
     }
@@ -66,7 +79,7 @@ export class StaticPropertyUtils {
     }
 
     private static clickSelectionInput(selector: string, cssClassName: string) {
-        cy.dataCy(selector).within(() => {
+        cy.dataCy(selector, { timeout: 2000 }).within(() => {
             cy.get(cssClassName).click();
         });
     }

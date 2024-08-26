@@ -51,25 +51,27 @@
                 class="asset-tree-panel"
             >
                 <div fxLayout="column" fxFlex="100">
-                    <sp-asset-selection-panel-component
+                    <sp-asset-selection-panel
                         [editMode]="editMode"
                         [assetModel]="asset"
                         [selectedAsset]="selectedAsset"
-                        (selectedAssetEmitter)="selectedAsset = $event"
+                        (selectedAssetEmitter)="applySelectedAsset($event)"
                     >
-                    </sp-asset-selection-panel-component>
+                    </sp-asset-selection-panel>
                 </div>
             </mat-drawer>
             <mat-drawer-content class="h-100 asset-details-panel">
-                <sp-asset-details-panel-component
+                <sp-asset-details-panel
                     *ngIf="selectedAsset"
                     [asset]="selectedAsset"
+                    [sites]="sites"
+                    [rootNode]="rootNode"
                     [editMode]="editMode"
                     (updateAssetEmitter)="updateAsset()"
                     fxFlex="100"
                     fxLayout="row"
                 >
-                </sp-asset-details-panel-component>
+                </sp-asset-details-panel>
             </mat-drawer-content>
         </mat-drawer-container>
     </div>

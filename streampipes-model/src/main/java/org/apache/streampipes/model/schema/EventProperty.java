@@ -40,25 +40,14 @@ import java.util.Objects;
 public abstract class EventProperty {
 
   protected static final String PREFIX = "urn:streampipes.org:spi:";
-  private static final long serialVersionUID = 7079045979946059387L;
 
   private String elementId;
   private String label;
-
   private String description;
-
   private String runtimeName;
-
-  private boolean required;
-
   private List<URI> domainProperties;
-
   private String propertyScope;
-
-  private int index = 0;
-
   private String runtimeId;
-
   private Map<String, Object> additionalMetadata;
 
 
@@ -72,12 +61,10 @@ public abstract class EventProperty {
     this.elementId = other.getElementId();
     this.label = other.getLabel();
     this.description = other.getDescription();
-    this.required = other.isRequired();
     this.runtimeName = other.getRuntimeName();
     this.domainProperties = other.getDomainProperties();
     this.propertyScope = other.getPropertyScope();
     this.runtimeId = other.getRuntimeId();
-    this.index = other.getIndex();
     this.additionalMetadata = other.getAdditionalMetadata();
   }
 
@@ -108,14 +95,6 @@ public abstract class EventProperty {
 
   public void setRuntimeName(String propertyName) {
     this.runtimeName = propertyName;
-  }
-
-  public boolean isRequired() {
-    return required;
-  }
-
-  public void setRequired(boolean required) {
-    this.required = required;
   }
 
   public List<URI> getDomainProperties() {
@@ -158,14 +137,6 @@ public abstract class EventProperty {
     this.runtimeId = runtimeId;
   }
 
-  public int getIndex() {
-    return index;
-  }
-
-  public void setIndex(int index) {
-    this.index = index;
-  }
-
   public String getElementId() {
     return elementId;
   }
@@ -184,7 +155,7 @@ public abstract class EventProperty {
 
   @Override
   public int hashCode() {
-    return Objects.hash(elementId, label, description, runtimeName, required, domainProperties, propertyScope, index,
+    return Objects.hash(elementId, label, description, runtimeName, domainProperties, propertyScope,
         runtimeId);
   }
 
@@ -198,9 +169,7 @@ public abstract class EventProperty {
     }
     EventProperty that = (EventProperty) o;
 
-    return required == that.required
-           && index == that.index
-           && Objects.equals(label, that.label)
+    return Objects.equals(label, that.label)
            && Objects.equals(description, that.description)
            && Objects.equals(runtimeName, that.runtimeName)
            && Objects.equals(propertyScope, that.propertyScope)
@@ -215,10 +184,8 @@ public abstract class EventProperty {
            + ", label='" + label + '\''
            + ", description='" + description + '\''
            + ", runtimeName='" + runtimeName + '\''
-           + ", required=" + required
            + ", domainProperties=" + domainProperties
            + ", propertyScope='" + propertyScope + '\''
-           + ", index=" + index
            + ", runtimeId='" + runtimeId + '\''
            + '}';
   }

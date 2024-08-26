@@ -17,11 +17,12 @@
  */
 package org.apache.streampipes.resource.management;
 
+import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-public class DashboardResourceManager extends AbstractDashboardResourceManager {
+public class DashboardResourceManager extends AbstractCRUDResourceManager<DashboardModel> {
 
   public DashboardResourceManager() {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDashboardStorage());
+    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDashboardStorage(), DashboardModel.class);
   }
 }
