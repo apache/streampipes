@@ -34,7 +34,49 @@ import java.util.concurrent.TimeUnit;
 
 public class InfluxClientProvider {
 
+  private static final int DEFAULT_BATCH_SIZE = 2000;
+  private static final int DEFAULT_FLUSH_DURATION = 500;
+
   private static final Logger LOG = LoggerFactory.getLogger(InfluxClientProvider.class);
+
+  /**
+   * Create a new InfluxDB client from Environment and ensures database is available
+   * @param environment Environment
+   * @return InfluxDB
+   */
+  public InfluxDB getSetUpInfluxDBClient(Environment environment){
+    return getSetUpInfluxDBClient(InfluxConnectionSettings.from(environment));
+  }
+
+  /**
+   * Create a new InfluxDB client from Connection Settings and ensures database is available
+   * @param settings Connection Settings
+   * @return InfluxDB
+   */
+  public InfluxDB getSetUpInfluxDBClient(InfluxConnectionSettings settings){
+    var influxDb = getInitializedInfluxDBClient(settings);
+    this.setupDatabaseAndBatching(influxDb, settings.getDatabaseName());
+
+    return influxDb;
+  }
+
+  /**
+   * Create a new InfluxDB client from provided settings and verify it's available
+   * @param settings Connection settings
+   * @return InfluxDB
+   */
+  public InfluxDB getInitializedInfluxDBClient(InfluxConnectionSettings settings){
+    var influxDb = InfluxClientProvider.getInfluxDBClient(settings);
+
+    // Checking, if server is available
+    var response = influxDb.ping();
+    if (response.getVersion()
+        .equalsIgnoreCase("unknown")) {
+      throw new SpRuntimeException("Could not connect to InfluxDb Server: " + settings.getConnectionUrl());
+    }
+
+    return influxDb;
+  }
 
   /**
    * Create a new InfluxDB client from environment variables
@@ -68,20 +110,23 @@ public class InfluxClientProvider {
     }
   }
 
+  /**
+   * Creates the specified database in the influxDb instance if it does not exist. Enables batching with default values
+   * @param influxDb The InfluxDB client instance
+   * @param databaseName The name of the database
+   */
+  public void setupDatabaseAndBatching(InfluxDB influxDb, String databaseName) {
+    this.setupDatabaseAndBatching(influxDb, databaseName, DEFAULT_BATCH_SIZE, DEFAULT_FLUSH_DURATION);
+  }
 
-  public InfluxDB getInitializedInfluxDBClient(Environment environment) {
-
-    var settings = InfluxConnectionSettings.from(environment);
-    var influxDb = InfluxClientProvider.getInfluxDBClient(settings);
-    var databaseName = settings.getDatabaseName();
-
-    // Checking, if server is available
-    var response = influxDb.ping();
-    if (response.getVersion()
-                .equalsIgnoreCase("unknown")) {
-      throw new SpRuntimeException("Could not connect to InfluxDb Server: " + settings.getConnectionUrl());
-    }
-
+  /**
+   * Creates the specified database in the influxDb instance if it does not exist. Enables batching
+   * @param influxDb The InfluxDB client instance
+   * @param databaseName The name of the database
+   * @param batchSize Batch Size
+   * @param flushDuration Flush Duration
+   */
+  public void setupDatabaseAndBatching(InfluxDB influxDb, String databaseName, int batchSize, int flushDuration) {
     // Checking whether the database exists
     if (!databaseExists(influxDb, databaseName)) {
       LOG.info("Database '" + databaseName + "' not found. Gets created ...");
@@ -90,11 +135,7 @@ public class InfluxClientProvider {
 
     // setting up the database
     influxDb.setDatabase(databaseName);
-    var batchSize = 2000;
-    var flushDuration = 500;
     influxDb.enableBatch(batchSize, flushDuration, TimeUnit.MILLISECONDS);
-
-    return influxDb;
   }
 
   /**
