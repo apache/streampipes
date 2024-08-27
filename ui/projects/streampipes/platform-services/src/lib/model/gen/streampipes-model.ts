@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-08-20 17:42:10.
+// Generated using typescript-generator version 3.2.1263 on 2024-08-20 13:02:30.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -396,11 +396,9 @@ export class StaticProperty {
         | 'org.apache.streampipes.model.staticproperty.MappingPropertyUnary'
         | 'org.apache.streampipes.model.staticproperty.MappingPropertyNary';
     'description': string;
-    'index': number;
     'internalName': string;
     'label': string;
     'optional': boolean;
-    'predefined': boolean;
     'staticPropertyType': StaticPropertyType;
 
     static 'fromData'(
@@ -413,11 +411,9 @@ export class StaticProperty {
         const instance = target || new StaticProperty();
         instance['@class'] = data['@class'];
         instance.description = data.description;
-        instance.index = data.index;
         instance.internalName = data.internalName;
         instance.label = data.label;
         instance.optional = data.optional;
-        instance.predefined = data.predefined;
         instance.staticPropertyType = data.staticPropertyType;
         return instance;
     }
@@ -1460,6 +1456,7 @@ export class ErrorMessage extends Message {
 }
 
 export class EventGrounding {
+    transportFormats: TransportFormat[];
     transportProtocols: TransportProtocolUnion[];
 
     static fromData(
@@ -1470,6 +1467,9 @@ export class EventGrounding {
             return data;
         }
         const instance = target || new EventGrounding();
+        instance.transportFormats = __getCopyArrayFn(TransportFormat.fromData)(
+            data.transportFormats,
+        );
         instance.transportProtocols = __getCopyArrayFn(
             TransportProtocol.fromDataUnion,
         )(data.transportProtocols);
@@ -1486,10 +1486,8 @@ export class EventProperty {
     'description': string;
     'domainProperties': string[];
     'elementId': string;
-    'index': number;
     'label': string;
     'propertyScope': string;
-    'required': boolean;
     'runtimeId': string;
     'runtimeName': string;
 
@@ -1510,10 +1508,8 @@ export class EventProperty {
             data.domainProperties,
         );
         instance.elementId = data.elementId;
-        instance.index = data.index;
         instance.label = data.label;
         instance.propertyScope = data.propertyScope;
-        instance.required = data.required;
         instance.runtimeId = data.runtimeId;
         instance.runtimeName = data.runtimeName;
         return instance;
@@ -2291,6 +2287,7 @@ export class MessagingSettings {
     mqttPort: number;
     natsHost: string;
     natsPort: number;
+    prioritizedFormats: SpDataFormat[];
     prioritizedProtocols: SpProtocol[];
     pulsarUrl: string;
     supportedProtocols: string[];
@@ -2317,6 +2314,9 @@ export class MessagingSettings {
         instance.mqttPort = data.mqttPort;
         instance.natsHost = data.natsHost;
         instance.natsPort = data.natsPort;
+        instance.prioritizedFormats = __getCopyArrayFn(
+            __identity<SpDataFormat>(),
+        )(data.prioritizedFormats);
         instance.prioritizedProtocols = __getCopyArrayFn(
             __identity<SpProtocol>(),
         )(data.prioritizedProtocols);
@@ -3828,6 +3828,22 @@ export class TransformOutputStrategy extends OutputStrategy {
     }
 }
 
+export class TransportFormat {
+    rdfType: string[];
+
+    static fromData(
+        data: TransportFormat,
+        target?: TransportFormat,
+    ): TransportFormat {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new TransportFormat();
+        instance.rdfType = __getCopyArrayFn(__identity<string>())(data.rdfType);
+        return instance;
+    }
+}
+
 export class TreeInputNode {
     children: TreeInputNode[];
     dataNode: boolean;
@@ -4032,6 +4048,8 @@ export type PropertyScope =
 export type SelectionStaticPropertyUnion =
     | AnyStaticProperty
     | OneOfStaticProperty;
+
+export type SpDataFormat = 'CBOR' | 'JSON' | 'FST' | 'SMILE';
 
 export type SpLogLevel = 'INFO' | 'WARN' | 'ERROR';
 

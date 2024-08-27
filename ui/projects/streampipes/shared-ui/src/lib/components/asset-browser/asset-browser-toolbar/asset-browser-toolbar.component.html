@@ -1,0 +1,52 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxFlex fxLayoutAlign="start center" *ngIf="expanded">
+    <h4 class="ml-5">Browse assets</h4>
+</div>
+<div fxLayoutAlign="end center">
+    <button
+        mat-icon-button
+        *ngIf="expanded"
+        color="accent"
+        [matMenuTriggerFor]="menu"
+        #menuTrigger="matMenuTrigger"
+        matTooltip="Filter assets"
+        (menuClosed)="menuTrigger.closeMenu()"
+    >
+        <mat-icon>filter_alt</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" fxFlex="100" class="large-menu">
+        <sp-asset-browser-filter
+            (closeMenu)="closeMenu()"
+            [assetBrowserData]="assetBrowserData"
+        >
+        </sp-asset-browser-filter>
+    </mat-menu>
+    <button
+        mat-icon-button
+        color="accent"
+        (click)="toggleExpanded.emit(!expanded)"
+    >
+        <mat-icon>{{
+            expanded
+                ? 'keyboard_double_arrow_left'
+                : 'keyboard_double_arrow_right'
+        }}</mat-icon>
+    </button>
+</div>

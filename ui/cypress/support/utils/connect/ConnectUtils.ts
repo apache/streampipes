@@ -124,7 +124,6 @@ export class ConnectUtils {
     }
 
     public static configureAdapter(adapterInput: AdapterInput) {
-        cy.wait(2000);
         StaticPropertyUtils.input(adapterInput.adapterConfiguration);
 
         this.configureFormat(adapterInput);
@@ -359,18 +358,16 @@ export class ConnectUtils {
 
     public static validateEventsInPreview(amountOfProperties: number) {
         // View data
-        ConnectBtns.infoAdapter().click();
-        cy.get('div').contains('Values').parent().click();
+        ConnectBtns.detailsAdapter().click();
 
         // Validate resulting event
         cy.dataCy('sp-connect-adapter-success-live-preview', {
             timeout: 20000,
         }).should('be.visible');
 
-        // validate that X event properties. The +1 is for the header row
         cy.get('tr.mat-mdc-row', { timeout: 10000 }).should(
             'have.length',
-            amountOfProperties + 1,
+            amountOfProperties,
         );
     }
 

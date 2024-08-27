@@ -17,6 +17,10 @@
  */
 
 export class ErrorMessageUtils {
+    public static getExceptionComponent() {
+        return cy.dataCy('display-exception');
+    }
+
     /**
      * Validates that an error message is displayed and that this message contains the @param message
      */

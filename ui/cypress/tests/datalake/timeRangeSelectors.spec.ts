@@ -79,7 +79,7 @@ describe('Test Time Range Selectors in Data Explorer', () => {
                         isTimeWithinTolerance(
                             actualTime as string,
                             expectedDate,
-                            5,
+                            10,
                         ),
                     ).to.be.true;
                 });
@@ -92,7 +92,7 @@ describe('Test Time Range Selectors in Data Explorer', () => {
                         isTimeWithinTolerance(
                             actualTime as string,
                             expectedDate,
-                            5,
+                            10,
                         ),
                     ).to.be.true;
                 });

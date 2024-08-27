@@ -28,6 +28,7 @@ import org.apache.streampipes.service.core.migrations.v093.StoreEmailTemplatesMi
 import org.apache.streampipes.service.core.migrations.v095.MergeFilenamesAndRenameDuplicatesMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddLinkSettingsMigration;
 import org.apache.streampipes.service.core.migrations.v970.DataExplorerDataViewMigration;
+import org.apache.streampipes.service.core.migrations.v970.ModifyAssetLinkTypeMigration;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +45,8 @@ public class AvailableMigrations {
         new StoreEmailTemplatesMigration(),
         new MergeFilenamesAndRenameDuplicatesMigration(),
         new AddLinkSettingsMigration(),
-        new DataExplorerDataViewMigration()
+        new DataExplorerDataViewMigration(),
+        new ModifyAssetLinkTypeMigration()
     );
   }
 }
