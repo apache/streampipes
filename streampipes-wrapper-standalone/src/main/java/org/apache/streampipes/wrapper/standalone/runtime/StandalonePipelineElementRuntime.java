@@ -93,7 +93,7 @@ public abstract class StandalonePipelineElementRuntime<
     List<SpInputCollector> inputCollectors = new ArrayList<>();
     for (SpDataStream is : inputStreams) {
       inputCollectors.add(ProtocolManager.findInputCollector(is.getEventGrounding()
-              .getTransportProtocol(), is.getEventGrounding().getTransportFormats().get(0),
+              .getTransportProtocol(),
           false));
     }
     return inputCollectors;

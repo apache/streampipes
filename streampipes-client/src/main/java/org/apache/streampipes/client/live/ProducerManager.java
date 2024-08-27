@@ -19,7 +19,6 @@
 package org.apache.streampipes.client.live;
 
 import org.apache.streampipes.client.api.live.IConfiguredEventProducer;
-import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
 import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.SpProtocolManager;
@@ -39,7 +38,7 @@ public class ProducerManager {
 
     return new ConfiguredEventProducer(
         producer,
-        findFormatDefinition()
+        SpDataFormatManager.getFormatDefinition()
     );
   }
 
@@ -50,13 +49,5 @@ public class ProducerManager {
         .findDefinition(protocol)
         .orElseThrow()
         .getProducer(protocol);
-  }
-
-  private SpDataFormatDefinition findFormatDefinition() {
-    var format = grounding.getTransportFormats().get(0);
-    return SpDataFormatManager
-        .INSTANCE
-        .findDefinition(format)
-        .orElseThrow();
   }
 }

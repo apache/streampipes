@@ -57,40 +57,31 @@ public class SubscriptionManager {
   }
 
   public ISubscription subscribe() {
-    var formatDefinitionOpt = SpDataFormatManager
-        .INSTANCE
-        .findDefinition(this.grounding.getTransportFormats().get(0));
 
     try {
       SpProtocolDefinition<TransportProtocol> protocolDefinition = findProtocol(getTransportProtocol());
+      final SpDataFormatDefinition converter = SpDataFormatManager.getFormatDefinition();
 
-      if (formatDefinitionOpt.isPresent()) {
-        final SpDataFormatDefinition converter = formatDefinitionOpt.get();
-
-        var protocol = getTransportProtocol();
-        if (overrideSettings) {
-          if (protocol instanceof KafkaTransportProtocol) {
-            brokerConfigOverride.overrideKafkaHostname((KafkaTransportProtocol) protocol);
-          }
-          brokerConfigOverride.overrideHostname(protocol);
-          brokerConfigOverride.overridePort(protocol);
+      var protocol = getTransportProtocol();
+      if (overrideSettings) {
+        if (protocol instanceof KafkaTransportProtocol) {
+          brokerConfigOverride.overrideKafkaHostname((KafkaTransportProtocol) protocol);
         }
-
-        EventConsumer consumer = protocolDefinition.getConsumer(protocol);
-        consumer.connect(event -> {
-          try {
-            Event spEvent = EventFactory.fromMap(converter.toMap(event));
-            callback.onEvent(spEvent);
-          } catch (SpRuntimeException e) {
-            e.printStackTrace();
-          }
-        });
-
-        return new Subscription(consumer);
-      } else {
-        throw new SpRuntimeException(
-            "No converter found for data format - did you add a format factory (client.registerDataFormat)?");
+        brokerConfigOverride.overrideHostname(protocol);
+        brokerConfigOverride.overridePort(protocol);
       }
+
+      EventConsumer consumer = protocolDefinition.getConsumer(protocol);
+      consumer.connect(event -> {
+        try {
+          Event spEvent = EventFactory.fromMap(converter.toMap(event));
+          callback.onEvent(spEvent);
+        } catch (SpRuntimeException e) {
+          e.printStackTrace();
+        }
+      });
+
+      return new Subscription(consumer);
     } catch (NoSuchElementException e) {
       throw new SpRuntimeException(
           "Could not find an implementation for messaging protocol "

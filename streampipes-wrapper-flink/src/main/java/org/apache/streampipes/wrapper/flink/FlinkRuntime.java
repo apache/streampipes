@@ -34,7 +34,6 @@ import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
-import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.distributed.runtime.DistributedRuntime;
@@ -136,8 +135,7 @@ public abstract class FlinkRuntime<
       SpDataStream stream = runtimeParameters.getModel().getInputStreams().get(i);
       if (stream != null) {
         TransportProtocol protocol = stream.getEventGrounding().getTransportProtocol();
-        TransportFormat format = stream.getEventGrounding().getTransportFormats().get(0);
-        SpDataFormatDefinition dataFormatDefinition = getDataFormatDefinition(format);
+        SpDataFormatDefinition dataFormatDefinition = getDataFormatDefinition();
         if (protocol instanceof KafkaTransportProtocol) {
           return getKafkaConsumer((KafkaTransportProtocol) protocol, dataFormatDefinition);
         } else if (protocol instanceof JmsTransportProtocol) {

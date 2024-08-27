@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-08-20 13:02:30.
+// Generated using typescript-generator version 3.2.1263 on 2024-08-27 18:35:51.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1456,7 +1456,6 @@ export class ErrorMessage extends Message {
 }
 
 export class EventGrounding {
-    transportFormats: TransportFormat[];
     transportProtocols: TransportProtocolUnion[];
 
     static fromData(
@@ -1467,9 +1466,6 @@ export class EventGrounding {
             return data;
         }
         const instance = target || new EventGrounding();
-        instance.transportFormats = __getCopyArrayFn(TransportFormat.fromData)(
-            data.transportFormats,
-        );
         instance.transportProtocols = __getCopyArrayFn(
             TransportProtocol.fromDataUnion,
         )(data.transportProtocols);
@@ -2287,7 +2283,6 @@ export class MessagingSettings {
     mqttPort: number;
     natsHost: string;
     natsPort: number;
-    prioritizedFormats: SpDataFormat[];
     prioritizedProtocols: SpProtocol[];
     pulsarUrl: string;
     supportedProtocols: string[];
@@ -2314,9 +2309,6 @@ export class MessagingSettings {
         instance.mqttPort = data.mqttPort;
         instance.natsHost = data.natsHost;
         instance.natsPort = data.natsPort;
-        instance.prioritizedFormats = __getCopyArrayFn(
-            __identity<SpDataFormat>(),
-        )(data.prioritizedFormats);
         instance.prioritizedProtocols = __getCopyArrayFn(
             __identity<SpProtocol>(),
         )(data.prioritizedProtocols);
@@ -3828,22 +3820,6 @@ export class TransformOutputStrategy extends OutputStrategy {
     }
 }
 
-export class TransportFormat {
-    rdfType: string[];
-
-    static fromData(
-        data: TransportFormat,
-        target?: TransportFormat,
-    ): TransportFormat {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new TransportFormat();
-        instance.rdfType = __getCopyArrayFn(__identity<string>())(data.rdfType);
-        return instance;
-    }
-}
-
 export class TreeInputNode {
     children: TreeInputNode[];
     dataNode: boolean;
@@ -4048,8 +4024,6 @@ export type PropertyScope =
 export type SelectionStaticPropertyUnion =
     | AnyStaticProperty
     | OneOfStaticProperty;
-
-export type SpDataFormat = 'CBOR' | 'JSON' | 'FST' | 'SMILE';
 
 export type SpLogLevel = 'INFO' | 'WARN' | 'ERROR';
 

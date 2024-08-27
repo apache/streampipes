@@ -23,7 +23,6 @@ import org.apache.streampipes.model.util.Cloner;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,24 +32,18 @@ public class EventGrounding {
 
   private List<TransportProtocol> transportProtocols;
 
-  private List<TransportFormat> transportFormats;
-
   public EventGrounding() {
     super();
-    this.transportFormats = new ArrayList<>();
     this.transportProtocols = new ArrayList<>();
   }
 
-  public EventGrounding(TransportProtocol transportProtocol, TransportFormat transportFormat) {
+  public EventGrounding(TransportProtocol transportProtocol) {
     this();
-    this.transportFormats = new ArrayList<>();
-    this.transportFormats.add(transportFormat);
-    this.transportProtocols = Arrays.asList(transportProtocol);
+    this.transportProtocols = Collections.singletonList(transportProtocol);
   }
 
   public EventGrounding(EventGrounding other) {
     this.transportProtocols = new Cloner().protocols(other.getTransportProtocols());
-    this.transportFormats = new Cloner().transportFormats(other.getTransportFormats());
   }
 
   public List<TransportProtocol> getTransportProtocols() {
@@ -63,7 +56,7 @@ public class EventGrounding {
 
   @JsonIgnore
   public TransportProtocol getTransportProtocol() {
-    if (transportProtocols.size() == 0) {
+    if (transportProtocols.isEmpty()) {
       return null;
     } else {
       return transportProtocols.get(0);
@@ -73,13 +66,4 @@ public class EventGrounding {
   public void setTransportProtocol(TransportProtocol transportProtocol) {
     this.transportProtocols = Collections.singletonList(transportProtocol);
   }
-
-  public List<TransportFormat> getTransportFormats() {
-    return transportFormats;
-  }
-
-  public void setTransportFormats(List<TransportFormat> transportFormats) {
-    this.transportFormats = transportFormats;
-  }
-
 }

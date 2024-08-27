@@ -57,7 +57,6 @@
         <file-management.version>3.1.0</file-management.version>
         <flink.version>1.13.5</flink.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
-        <fst.version>2.57</fst.version>
         <geojson-jackson.version>1.14</geojson-jackson.version>
         <google-maps-services.version>2.2.0</google-maps-services.version>
         <graalvm.js.version>23.0.0</graalvm.js.version>
@@ -189,16 +188,6 @@
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-cbor</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-smile</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-xml</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
@@ -241,11 +230,6 @@
                 <groupId>de.grundid.opendatalab</groupId>
                 <artifactId>geojson-jackson</artifactId>
                 <version>${geojson-jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.ruedigermoeller</groupId>
-                <artifactId>fst</artifactId>
-                <version>${fst.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.fogsy</groupId>
@@ -827,10 +811,6 @@
         <module>streampipes-data-explorer-management</module>
         <module>streampipes-data-export</module>
         <module>streampipes-dataformat</module>
-        <module>streampipes-dataformat-cbor</module>
-        <module>streampipes-dataformat-fst</module>
-        <module>streampipes-dataformat-json</module>
-        <module>streampipes-dataformat-smile</module>
         <module>streampipes-extensions</module>
         <module>streampipes-integration-tests</module>
         <module>streampipes-mail</module>
