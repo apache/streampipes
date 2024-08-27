@@ -93,7 +93,7 @@ export class SpDataExplorerDashboardOverviewComponent extends SpDataExplorerOver
             width: '600px',
             data: {
                 title: 'Are you sure you want to delete this dashboard?',
-                subtitle: 'This action cannot be reversed!',
+                subtitle: 'This action cannot be undone!',
                 cancelTitle: 'Cancel',
                 okTitle: 'Delete Dashboard',
                 confirmAndCancel: true,

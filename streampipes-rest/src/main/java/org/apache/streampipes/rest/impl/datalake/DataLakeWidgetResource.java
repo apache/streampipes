@@ -20,10 +20,12 @@ package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.resource.management.DataExplorerResourceManager;
 import org.apache.streampipes.resource.management.DataExplorerWidgetResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.BadRequestException;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +50,7 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
 
   public DataLakeWidgetResource() {
     this.resourceManager = new SpResourceManager().manageDataExplorerWidget(
+        new DataExplorerResourceManager(),
         getNoSqlStorage().getDataExplorerWidgetStorage()
     );
   }
@@ -62,7 +65,12 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
   @GetMapping(path = "/{widgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority() and hasPermission(#elementId, 'READ')")
   public ResponseEntity<DataExplorerWidgetModel> getDataExplorerWidget(@PathVariable("widgetId") String elementId) {
-    return ok(resourceManager.find(elementId));
+    var widget = resourceManager.find(elementId);
+    if (widget != null) {
+      return ok(widget);
+    } else {
+      throw new BadRequestException("Could not find widget");
+    }
   }
 
   @PutMapping(

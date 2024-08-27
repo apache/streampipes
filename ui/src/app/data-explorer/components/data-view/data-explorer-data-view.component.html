@@ -61,7 +61,11 @@
             <mat-drawer-content class="h-100 dashboard-grid">
                 <div #panel fxFlex="100" fxLayout="column">
                     <sp-data-explorer-dashboard-widget
-                        *ngIf="dataView && gridsterItemComponent"
+                        *ngIf="
+                            dataView &&
+                            gridsterItemComponent &&
+                            dataView.dataConfig?.sourceConfigs?.length > 0
+                        "
                         [dataViewMode]="true"
                         [configuredWidget]="dataView"
                         [gridsterItemComponent]="gridsterItemComponent"
