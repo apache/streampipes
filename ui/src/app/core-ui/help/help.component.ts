@@ -27,30 +27,26 @@ import { PipelineElementUnion } from '../../editor/model/editor.model';
     styleUrls: ['./help.component.scss'],
 })
 export class HelpComponent implements OnInit {
-    pollingActive: boolean;
     selectedTabIndex = 0;
 
-    availableTabs = ['Fields', 'Values', 'Documentation'];
+    availableTabs = ['Values', 'Documentation'];
     tabs: string[] = [];
 
     @Input()
     pipelineElement: PipelineElementUnion;
 
-    constructor(private dialogRef: DialogRef<HelpComponent>) {
-        this.pollingActive = true;
-    }
+    constructor(private dialogRef: DialogRef<HelpComponent>) {}
 
     ngOnInit() {
         if (this.pipelineElement instanceof SpDataStream) {
             this.tabs = this.availableTabs;
         } else {
-            this.tabs.push(this.availableTabs[2]);
-            this.selectedTabIndex = 2;
+            this.tabs.push(this.availableTabs[1]);
+            this.selectedTabIndex = 1;
         }
     }
 
     close() {
-        this.pollingActive = false;
         setTimeout(() => {
             this.dialogRef.close();
         });

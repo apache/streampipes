@@ -22,6 +22,11 @@ export class SpAdapterDetailsTabs {
     public getTabs(elementId: string): SpNavigationItem[] {
         return [
             {
+                itemId: 'data',
+                itemTitle: 'Data',
+                itemLink: ['connect', 'details', elementId, 'data'],
+            },
+            {
                 itemId: 'metrics',
                 itemTitle: 'Metrics',
                 itemLink: ['connect', 'details', elementId, 'metrics'],

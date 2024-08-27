@@ -16,8 +16,8 @@
  *
  */
 export class ConnectBtns {
-    public static infoAdapter() {
-        return cy.dataCy('info-adapter');
+    public static detailsAdapter() {
+        return cy.dataCy('details-adapter');
     }
 
     public static editAdapter() {

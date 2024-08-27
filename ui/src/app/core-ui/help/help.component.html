@@ -31,17 +31,13 @@
             <mat-tab *ngFor="let tab of tabs" label="{{ tab }}"> </mat-tab>
         </mat-tab-group>
 
-        <sp-field-names-table
-            *ngIf="selectedTabIndex === 0"
-            [eventSchema]="pipelineElement.eventSchema"
-        ></sp-field-names-table>
         <sp-pipeline-element-runtime-info
-            *ngIf="selectedTabIndex === 1"
+            *ngIf="selectedTabIndex === 0"
+            [showTitle]="false"
             [streamDescription]="pipelineElement"
-            [pollingActive]="pollingActive"
         ></sp-pipeline-element-runtime-info>
         <sp-pipeline-element-documentation
-            *ngIf="selectedTabIndex === 2"
+            *ngIf="selectedTabIndex === 1"
             [useStyling]="false"
             [appId]="pipelineElement.appId"
         ></sp-pipeline-element-documentation>

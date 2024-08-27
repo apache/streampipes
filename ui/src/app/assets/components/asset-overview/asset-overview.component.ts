@@ -19,13 +19,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {
+    AssetConstants,
     GenericStorageService,
     SpAssetModel,
 } from '@streampipes/platform-services';
-import { AssetConstants } from '../../constants/asset.constants';
 import {
     DialogService,
     PanelType,
+    SpAssetBrowserService,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { SpAssetRoutes } from '../../assets.routes';
@@ -57,6 +58,7 @@ export class SpAssetOverviewComponent implements OnInit {
         private router: Router,
         private dataExportService: DataExportService,
         private idGeneratorService: IdGeneratorService,
+        private assetBrowserService: SpAssetBrowserService,
     ) {}
 
     ngOnInit(): void {
@@ -105,6 +107,7 @@ export class SpAssetOverviewComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(() => {
             this.loadAssets();
+            this.assetBrowserService.loadAssetData();
         });
     }
 
@@ -118,18 +121,14 @@ export class SpAssetOverviewComponent implements OnInit {
         dialogRef.afterClosed().subscribe(reload => {
             if (reload) {
                 this.loadAssets();
+                this.assetBrowserService.loadAssetData();
             }
         });
     }
 
     goToDetailsView(asset: SpAssetModel, editMode = false) {
-        if (!editMode) {
-            this.router.navigate(['assets', 'details', asset._id]);
-        } else {
-            this.router.navigate(['assets', 'details', asset._id], {
-                queryParams: { editMode: editMode },
-            });
-        }
+        const mode = editMode ? 'edit' : 'view';
+        this.router.navigate(['assets', 'details', asset._id, mode]);
     }
 
     deleteAsset(asset: SpAssetModel) {
@@ -141,6 +140,7 @@ export class SpAssetOverviewComponent implements OnInit {
             )
             .subscribe(result => {
                 this.loadAssets();
+                this.assetBrowserService.loadAssetData();
             });
     }
 
