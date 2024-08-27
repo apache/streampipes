@@ -66,10 +66,10 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.closeAdapterPreview();
 
         ConnectUtils.startAndValidateAdapter(3);
+        ConnectUtils.goToConnect();
 
         // Validate that name of adapter and data stream
         cy.dataCy('adapter-name').contains(newAdapterName);
-        cy.get('.sp-dialog-content').contains(newAdapterName);
     });
 
     it('Successfully edit adapter with persistence pipeline', () => {

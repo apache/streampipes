@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,34 +16,15 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
-import { DataType, EventSchema } from '@streampipes/platform-services';
+.status-running {
+    background: #80ff95;
+}
 
-@Component({
-    selector: 'sp-field-names-table',
-    templateUrl: './field-names-table.component.html',
-    styleUrls: ['./field-names-table.component.scss'],
-})
-export class FieldNamesTableComponent {
-    @Input()
-    eventSchema: EventSchema;
+.status-stopped {
+    background: var(--color-bg-3);
+}
 
-    displayedColumns: string[] = [
-        'label',
-        'description',
-        'runtimeName',
-        'runtimeType',
-    ];
-
-    constructor() {}
-
-    getFriendlyRuntimeType(runtimeType: string) {
-        if (DataType.isNumberType(runtimeType)) {
-            return 'Number';
-        } else if (DataType.isBooleanType(runtimeType)) {
-            return 'Boolean';
-        } else {
-            return 'Text';
-        }
-    }
+.adapter-status {
+    padding: 5px 10px;
+    border-radius: 3px;
 }

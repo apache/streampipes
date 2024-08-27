@@ -15,3 +15,15 @@
  * limitations under the License.
  *
  */
+
+export interface RuntimeInfo {
+    label: string;
+    description: string;
+    runtimeType: string;
+    runtimeName: string;
+    value: any;
+    isImage: boolean;
+    isTimestamp: boolean;
+    hasNoDomainProperty: boolean;
+    valueChanged: boolean;
+}
