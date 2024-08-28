@@ -190,7 +190,7 @@ export class DataExplorerDashboardPanelComponent
     }
 
     discardChanges() {
-        this.routingService.navigateToOverview();
+        this.routingService.navigateToOverview(true);
     }
 
     triggerEditMode() {

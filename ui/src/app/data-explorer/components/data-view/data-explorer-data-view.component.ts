@@ -153,7 +153,7 @@ export class DataExplorerDataViewComponent
                 ? this.dataViewService.updateWidget(this.dataView)
                 : this.dataViewService.saveWidget(this.dataView);
         observable.subscribe(() => {
-            this.routingService.navigateToOverview();
+            this.routingService.navigateToOverview(true);
         });
     }
 
@@ -198,7 +198,7 @@ export class DataExplorerDataViewComponent
     }
 
     discardChanges() {
-        this.routingService.navigateToOverview();
+        this.routingService.navigateToOverview(true);
     }
 
     updateDateRange(timeSettings: TimeSettings) {
