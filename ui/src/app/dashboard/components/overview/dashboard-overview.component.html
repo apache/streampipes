@@ -59,12 +59,17 @@
                     </th>
                     <td
                         fxFlex="60"
-                        fxLayoutAlign="start center"
+                        fxLayoutAlign="center start"
+                        fxLayout="column"
                         mat-cell
                         *matCellDef="let element"
                     >
-                        {{ element.name }}<br />
-                        {{ element.description }}
+                        <div>
+                            <b>{{ element.name }}</b>
+                        </div>
+                        <div>
+                            <small> {{ element.description }}</small>
+                        </div>
                     </td>
                 </ng-container>
 

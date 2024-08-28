@@ -34,7 +34,6 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { SpAssetOverviewComponent } from './components/asset-overview/asset-overview.component';
-import { AssetUploadDialogComponent } from './dialog/asset-upload/asset-upload-dialog.component';
 import { SpAssetDetailsComponent } from './components/asset-details/edit-asset/asset-details.component';
 import { SpAssetSelectionPanelComponent } from './components/asset-details/edit-asset/asset-selection-panel/asset-selection-panel.component';
 import { MatTreeModule } from '@angular/material/tree';
@@ -125,7 +124,6 @@ import { AssetLinkCardComponent } from './components/asset-details/view-asset/vi
         AssetDetailsSiteComponent,
         AssetLinkSectionComponent,
         AssetLocationComponent,
-        AssetUploadDialogComponent,
         EditAssetLinkDialogComponent,
         SpAssetDetailsComponent,
         SpAssetLinkItemComponent,

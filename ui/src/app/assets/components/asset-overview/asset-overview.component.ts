@@ -30,12 +30,8 @@ import {
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { SpAssetRoutes } from '../../assets.routes';
-import { AssetUploadDialogComponent } from '../../dialog/asset-upload/asset-upload-dialog.component';
 import { Router } from '@angular/router';
 import { SpCreateAssetDialogComponent } from '../../dialog/create-asset/create-asset-dialog.component';
-import { DataExportService } from '../../../configuration/export/data-export.service';
-import { mergeMap } from 'rxjs/operators';
-import { saveAs } from 'file-saver';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 
 @Component({
@@ -56,7 +52,6 @@ export class SpAssetOverviewComponent implements OnInit {
         private breadcrumbService: SpBreadcrumbService,
         private dialogService: DialogService,
         private router: Router,
-        private dataExportService: DataExportService,
         private idGeneratorService: IdGeneratorService,
         private assetBrowserService: SpAssetBrowserService,
     ) {}
@@ -95,9 +90,9 @@ export class SpAssetOverviewComponent implements OnInit {
         const dialogRef = this.dialogService.open(
             SpCreateAssetDialogComponent,
             {
-                panelType: PanelType.STANDARD_PANEL,
+                panelType: PanelType.SLIDE_IN_PANEL,
                 title: 'Create asset',
-                width: '40vw',
+                width: '50vw',
                 data: {
                     createMode: true,
                     assetModel: assetModel,
@@ -106,23 +101,7 @@ export class SpAssetOverviewComponent implements OnInit {
         );
 
         dialogRef.afterClosed().subscribe(() => {
-            this.loadAssets();
-            this.assetBrowserService.loadAssetData();
-        });
-    }
-
-    uploadAsset() {
-        const dialogRef = this.dialogService.open(AssetUploadDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Upload asset model',
-            width: '40vw',
-        });
-
-        dialogRef.afterClosed().subscribe(reload => {
-            if (reload) {
-                this.loadAssets();
-                this.assetBrowserService.loadAssetData();
-            }
+            this.goToDetailsView(assetModel, true);
         });
     }
 
@@ -141,20 +120,6 @@ export class SpAssetOverviewComponent implements OnInit {
             .subscribe(result => {
                 this.loadAssets();
                 this.assetBrowserService.loadAssetData();
-            });
-    }
-
-    downloadAsset(asset: SpAssetModel) {
-        this.dataExportService
-            .getExportPreview([asset._id])
-            .pipe(
-                mergeMap(preview =>
-                    this.dataExportService.triggerExport(preview),
-                ),
-            )
-            .subscribe((data: Blob) => {
-                const blob = new Blob([data], { type: 'application/zip' });
-                saveAs(blob, 'assetExport');
             });
     }
 }
