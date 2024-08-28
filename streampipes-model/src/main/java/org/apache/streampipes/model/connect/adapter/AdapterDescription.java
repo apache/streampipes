@@ -68,6 +68,19 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
    */
   private String correspondingDataStreamElementId;
 
+
+  /**
+   * Used to show errors in case of adapter failures
+   */
+  private AdapterHealthStatus healthStatus;
+
+  /**
+   * This is used to show notifications about the adapter status
+   */
+  private List<String> adapterNotifications;
+
+
+
   public AdapterDescription() {
     super();
     this.rules = new ArrayList<>();
@@ -76,6 +89,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.category = new ArrayList<>();
     this.dataStream = new SpDataStream();
     this.deploymentConfiguration = new ExtensionDeploymentConfiguration();
+    this.adapterNotifications = new ArrayList<>();
   }
 
   public AdapterDescription(int version) {
@@ -107,6 +121,8 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     }
     this.running = other.isRunning();
     this.deploymentConfiguration = other.getDeploymentConfiguration();
+    this.healthStatus = other.getHealthStatus();
+    this.adapterNotifications = other.getAdapterNotifications();
   }
 
   public String getRev() {
@@ -264,5 +280,21 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   public void setDeploymentConfiguration(ExtensionDeploymentConfiguration deploymentConfiguration) {
     this.deploymentConfiguration = deploymentConfiguration;
+  }
+
+  public AdapterHealthStatus getHealthStatus() {
+    return healthStatus;
+  }
+
+  public void setHealthStatus(AdapterHealthStatus healthStatus) {
+    this.healthStatus = healthStatus;
+  }
+
+  public List<String> getAdapterNotifications() {
+    return adapterNotifications;
+  }
+
+  public void setAdapterNotifications(List<String> adapterNotifications) {
+    this.adapterNotifications = adapterNotifications;
   }
 }

@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.management.management;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.manager.migration.AbstractMigrationManager;
 import org.apache.streampipes.manager.migration.IMigrationHandler;
+import org.apache.streampipes.model.connect.adapter.AdapterHealthStatus;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
@@ -101,7 +102,29 @@ public class AdapterMigrationManager extends AbstractMigrationManager implements
               LOG.error("Stopping adapter failed: {}", StringUtils.join(e.getStackTrace(), "\n"));
             }
             LOG.info("Adapter successfully stopped.");
+            adapterDescription.setHealthStatus(AdapterHealthStatus.REQUIRES_ATTENTION);
+            adapterDescription.getAdapterNotifications().add("Adapter migration failed for the following reason: "
+                + migrationResult.message());
+            adapterStorage.updateElement(adapterDescription);
           }
+        } else if (adapterVersion < migrationConfig.fromVersion()) {
+          LOG.info(
+              "Migration is not applicable for adapter '{}' because of a version mismatch - "
+                  + "adapter version: '{}',  migration starts at: '{}'",
+              adapterDescription.getElementId(),
+              adapterVersion,
+              migrationConfig.fromVersion()
+          );
+          try {
+            WorkerRestClient.stopStreamAdapter(extensionsServiceConfig.getServiceUrl(), adapterDescription);
+          } catch (AdapterException e) {
+            LOG.error("Stopping adapter failed: {}", StringUtils.join(e.getStackTrace(), "\n"));
+          }
+          LOG.info("Adapter successfully stopped.");
+          adapterDescription.setHealthStatus(AdapterHealthStatus.FAILURE);
+          adapterDescription.getAdapterNotifications().add("Adapter version it too old. "
+              + "Please delete and create a new adapter or contact administrator.");
+          adapterStorage.updateElement(adapterDescription);
         } else {
           LOG.info(
               "Migration is not applicable for adapter '{}' because of a version mismatch - "

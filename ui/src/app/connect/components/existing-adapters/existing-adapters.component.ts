@@ -314,8 +314,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     openAdapterNotificationsDialog(adapter: AdapterDescription) {
-        console.log('open notifications dialog');
-
         const dialogRef: DialogRef<AdapterNotificationsDialogComponent> =
             this.dialogService.open(AdapterNotificationsDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,

@@ -24,6 +24,7 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterHealthStatus;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.util.Cloner;
@@ -58,7 +59,7 @@ public class WorkerRestClient {
     var url = baseUrl + WorkerPaths.getStreamInvokePath();
 
     startAdapter(url, adapterStreamDescription);
-    updateStreamAdapterStatus(adapterStreamDescription.getElementId(), true);
+    updateStreamAdapterRunningAndHealthStatus(adapterStreamDescription.getElementId(), true, AdapterHealthStatus.OK);
   }
 
   public static void stopStreamAdapter(String baseUrl,
@@ -213,6 +214,14 @@ public class WorkerRestClient {
                                                 boolean running) {
     var adapter = getAndDecryptAdapter(adapterId);
     adapter.setRunning(running);
+    encryptAndUpdateAdapter(adapter);
+  }
+  private static void updateStreamAdapterRunningAndHealthStatus(String adapterId,
+                                                                boolean running,
+                                                                AdapterHealthStatus healthStatus) {
+    var adapter = getAndDecryptAdapter(adapterId);
+    adapter.setRunning(running);
+    adapter.setHealthStatus(healthStatus);
     encryptAndUpdateAdapter(adapter);
   }
 
