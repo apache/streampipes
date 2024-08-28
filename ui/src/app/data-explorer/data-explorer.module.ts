@@ -193,6 +193,7 @@ import { GaugeWidgetConfigComponent } from './components/widgets/gauge/config/ga
                     {
                         path: 'data-view/:id',
                         component: DataExplorerDataViewComponent,
+                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
                     },
                     {
                         path: 'dashboard/:id',

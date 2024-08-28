@@ -17,19 +17,24 @@
  */
 
 import { Injectable } from '@angular/core';
-import { DataExplorerDashboardPanelComponent } from './components/dashboard/data-explorer-dashboard-panel.component';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import {
+    ActivatedRouteSnapshot,
+    Router,
+    RouterStateSnapshot,
+} from '@angular/router';
 import { Observable } from 'rxjs';
+import { SupportsUnsavedChangeDialog } from './models/dataview-dashboard.model';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerPanelCanDeactivateGuard {
+    constructor(private router: Router) {}
     canDeactivate(
-        component: DataExplorerDashboardPanelComponent,
+        component: SupportsUnsavedChangeDialog,
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,
     ): Observable<boolean> | boolean {
-        if (!state.root.queryParams.omitConfirm === undefined) {
-            return component.confirmLeaveDashboard(route, state);
+        if (!this.router.getCurrentNavigation().extras?.state?.omitConfirm) {
+            return component.confirmLeaveDialog(route, state);
         } else {
             return true;
         }

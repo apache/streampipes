@@ -21,24 +21,38 @@ import {
     DataExplorerWidgetModel,
     DataLakeMeasure,
     DataViewDataExplorerService,
+    TimeSelectionId,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { ActivatedRoute } from '@angular/router';
+import {
+    ActivatedRoute,
+    ActivatedRouteSnapshot,
+    RouterStateSnapshot,
+} from '@angular/router';
+import { ConfirmDialogComponent } from '@streampipes/shared-ui';
 import { TimeSelectionService } from '../../services/time-selection.service';
 import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
 import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
+import { DataExplorerDetectChangesService } from '../../services/data-explorer-detect-changes.service';
+import { SupportsUnsavedChangeDialog } from '../../models/dataview-dashboard.model';
+import { Observable, of } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'sp-data-explorer-data-view',
     templateUrl: './data-explorer-data-view.component.html',
     styleUrls: ['./data-explorer-data-view.component.scss'],
 })
-export class DataExplorerDataViewComponent implements OnInit {
+export class DataExplorerDataViewComponent
+    implements OnInit, SupportsUnsavedChangeDialog
+{
     dataViewLoaded = false;
     timeSettings: TimeSettings;
 
     editMode = true;
     dataView: DataExplorerWidgetModel;
+    originalDataView: DataExplorerWidgetModel;
     dataLakeMeasure: DataLakeMeasure;
     gridsterItemComponent: any;
 
@@ -46,7 +60,9 @@ export class DataExplorerDataViewComponent implements OnInit {
 
     constructor(
         private dashboardService: DataExplorerDashboardService,
+        private detectChangesService: DataExplorerDetectChangesService,
         private route: ActivatedRoute,
+        private dialog: MatDialog,
         private routingService: DataExplorerRoutingService,
         private dataViewService: DataViewDataExplorerService,
         private timeSelectionService: TimeSelectionService,
@@ -69,6 +85,7 @@ export class DataExplorerDataViewComponent implements OnInit {
         this.dataViewLoaded = false;
         this.dataViewService.getWidget(dataViewId).subscribe(res => {
             this.dataView = res;
+            this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
             if (!this.dataView.timeSettings?.startTime) {
                 this.timeSettings = this.makeDefaultTimeSettings();
             } else {
@@ -100,6 +117,21 @@ export class DataExplorerDataViewComponent implements OnInit {
         return this.timeSelectionService.getDefaultTimeSettings();
     }
 
+    setShouldShowConfirm(): boolean {
+        const originalTimeSettings = this.originalDataView
+            .timeSettings as TimeSettings;
+        const currentTimeSettings = this.dataView.timeSettings as TimeSettings;
+        return this.detectChangesService.shouldShowConfirm(
+            this.originalDataView,
+            this.dataView,
+            originalTimeSettings,
+            currentTimeSettings,
+            model => {
+                model.timeSettings = undefined;
+            },
+        );
+    }
+
     createWidget() {
         this.dataLakeMeasure = new DataLakeMeasure();
         this.dataView = new DataExplorerWidgetModel();
@@ -121,12 +153,52 @@ export class DataExplorerDataViewComponent implements OnInit {
                 ? this.dataViewService.updateWidget(this.dataView)
                 : this.dataViewService.saveWidget(this.dataView);
         observable.subscribe(() => {
-            this.routingService.navigateToOverview();
+            this.routingService.navigateToOverview(true);
         });
     }
 
+    confirmLeaveDialog(
+        _route: ActivatedRouteSnapshot,
+        _state: RouterStateSnapshot,
+    ): Observable<boolean> {
+        if (this.editMode && this.setShouldShowConfirm()) {
+            const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+                width: '500px',
+                data: {
+                    title: 'Save changes?',
+                    subtitle:
+                        'Update all changes to data view or discard current changes.',
+                    cancelTitle: 'Discard changes',
+                    okTitle: 'Update',
+                    confirmAndCancel: true,
+                },
+            });
+            return dialogRef.afterClosed().pipe(
+                map(shouldUpdate => {
+                    if (shouldUpdate) {
+                        this.dataView.timeSettings = this.timeSettings;
+                        const observable =
+                            this.dataView.elementId !== undefined
+                                ? this.dataViewService.updateWidget(
+                                      this.dataView,
+                                  )
+                                : this.dataViewService.saveWidget(
+                                      this.dataView,
+                                  );
+                        observable.subscribe(() => {
+                            return true;
+                        });
+                    }
+                    return true;
+                }),
+            );
+        } else {
+            return of(true);
+        }
+    }
+
     discardChanges() {
-        this.routingService.navigateToOverview();
+        this.routingService.navigateToOverview(true);
     }
 
     updateDateRange(timeSettings: TimeSettings) {
