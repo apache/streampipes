@@ -42,15 +42,6 @@
             >
                 <i class="material-icons"> refresh </i>
             </button>
-            <button
-                mat-icon-button
-                matTooltip="Upload assets"
-                matTooltipPosition="below"
-                color="accent"
-                (click)="uploadAsset()"
-            >
-                <i class="material-icons"> cloud_upload </i>
-            </button>
         </div>
     </div>
     <div fxFlex="100" fxLayout="column">
@@ -75,26 +66,18 @@
                             data-cy="assets-table"
                         >
                             <div fxLayout="row" fxLayoutAlign="start center">
-                                <div fxLayoutAlign="start center">
-                                    <i class="material-icons"
-                                        >precision_manufacturing</i
-                                    >
-                                </div>
                                 <div
                                     fxLayoutAlign="center start"
                                     fxLayout="column"
-                                    class="ml-10"
                                 >
-                                    <h4 style="margin-bottom: 0">
-                                        {{ asset.assetName }}
-                                    </h4>
-                                    <h5>
-                                        {{
-                                            asset.assetDescription !== ''
-                                                ? asset.assetDescription
-                                                : '-'
-                                        }}
-                                    </h5>
+                                    <div>
+                                        <b>{{ asset.assetName }}</b>
+                                    </div>
+                                    <div>
+                                        <small>
+                                            {{ asset.assetDescription }}</small
+                                        >
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -127,16 +110,6 @@
                                     <i class="material-icons">edit</i>
                                 </button>
 
-                                <button
-                                    color="accent"
-                                    mat-icon-button
-                                    matTooltip="Download asset"
-                                    data-cy="download"
-                                    matTooltipPosition="above"
-                                    (click)="downloadAsset(asset)"
-                                >
-                                    <i class="material-icons">download</i>
-                                </button>
                                 <button
                                     color="accent"
                                     mat-icon-button

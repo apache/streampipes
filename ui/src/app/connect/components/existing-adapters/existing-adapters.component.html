@@ -154,17 +154,11 @@
                         </th>
                         <td mat-cell *matCellDef="let adapter">
                             <div>
-                                <b
-                                    style="margin-bottom: 0"
-                                    data-cy="adapter-name"
-                                    >{{ adapter.name }}</b
-                                >
+                                <b data-cy="adapter-name">{{ adapter.name }}</b>
                             </div>
-                            <span>{{
-                                adapter.description !== ''
-                                    ? adapter.description
-                                    : '-'
-                            }}</span>
+                            <div>
+                                <small> {{ adapter.description }}</small>
+                            </div>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="adapterBase">
