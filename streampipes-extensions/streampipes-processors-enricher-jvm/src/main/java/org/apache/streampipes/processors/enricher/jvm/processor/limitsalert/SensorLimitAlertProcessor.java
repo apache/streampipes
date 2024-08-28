@@ -18,26 +18,26 @@
 
 package org.apache.streampipes.processors.enricher.jvm.processor.limitsalert;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class SensorLimitAlertProcessor extends StreamPipesDataProcessor {
+public class SensorLimitAlertProcessor implements IStreamPipesDataProcessor {
 
   protected static final String SENSOR_VALUE_LABEL = "sensorValue";
   protected static final String UPPER_CONTROL_LIMIT_LABEL = "upperControlLimit";
@@ -60,67 +60,66 @@ public class SensorLimitAlertProcessor extends StreamPipesDataProcessor {
   private String lowerWarningLimitField;
   private String lowerControlLimitField;
 
+
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.enricher.jvm.processor.limitsalert", 0)
-        .category(DataProcessorType.ENRICH)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-                            .create()
-                            .requiredPropertyWithUnaryMapping(
-                                EpRequirements.numberReq(),
-                                Labels.withId(SENSOR_VALUE_LABEL),
-                                PropertyScope.MEASUREMENT_PROPERTY
-                            )
-                            .requiredPropertyWithUnaryMapping(
-                                EpRequirements.numberReq(),
-                                Labels.withId(UPPER_CONTROL_LIMIT_LABEL),
-                                PropertyScope.MEASUREMENT_PROPERTY
-                            )
-                            .requiredPropertyWithUnaryMapping(
-                                EpRequirements.numberReq(),
-                                Labels.withId(UPPER_WARNING_LIMIT_LABEL),
-                                PropertyScope.MEASUREMENT_PROPERTY
-                            )
-                            .requiredPropertyWithUnaryMapping(
-                                EpRequirements.numberReq(),
-                                Labels.withId(LOWER_WARNING_LIMIT_LABEL),
-                                PropertyScope.MEASUREMENT_PROPERTY
-                            )
-                            .requiredPropertyWithUnaryMapping(
-                                EpRequirements.numberReq(),
-                                Labels.withId(LOWER_CONTROL_LIMIT_LABEL),
-                                PropertyScope.MEASUREMENT_PROPERTY
-                            )
-                            .build())
-        .outputStrategy(
-            OutputStrategies.append(
-                EpProperties.stringEp(Labels.empty(), ALERT_STATUS, SO.TEXT),
-                EpProperties.stringEp(Labels.empty(), LIMIT_BREACHED, SO.TEXT)
-            ))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        SensorLimitAlertProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.enricher.jvm.processor.limitsalert", 0)
+            .category(DataProcessorType.ENRICH)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                                .create()
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.numberReq(),
+                                    Labels.withId(SENSOR_VALUE_LABEL),
+                                    PropertyScope.MEASUREMENT_PROPERTY
+                                )
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.numberReq(),
+                                    Labels.withId(UPPER_CONTROL_LIMIT_LABEL),
+                                    PropertyScope.MEASUREMENT_PROPERTY
+                                )
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.numberReq(),
+                                    Labels.withId(UPPER_WARNING_LIMIT_LABEL),
+                                    PropertyScope.MEASUREMENT_PROPERTY
+                                )
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.numberReq(),
+                                    Labels.withId(LOWER_WARNING_LIMIT_LABEL),
+                                    PropertyScope.MEASUREMENT_PROPERTY
+                                )
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.numberReq(),
+                                    Labels.withId(LOWER_CONTROL_LIMIT_LABEL),
+                                    PropertyScope.MEASUREMENT_PROPERTY
+                                )
+                                .build())
+            .outputStrategy(
+                OutputStrategies.append(
+                    EpProperties.stringEp(Labels.empty(), ALERT_STATUS, SO.TEXT),
+                    EpProperties.stringEp(Labels.empty(), LIMIT_BREACHED, SO.TEXT)
+                ))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(
-      ProcessorParams parameters,
-      SpOutputCollector spOutputCollector,
+  public void onPipelineStarted(
+      IDataProcessorParameters params,
+      SpOutputCollector collector,
       EventProcessorRuntimeContext runtimeContext
-  ) throws SpRuntimeException {
-    var extractor = parameters.extractor();
+  ) {
+    var extractor = params.extractor();
 
     sensorField = extractor.mappingPropertyValue(SENSOR_VALUE_LABEL);
     upperControlLimitField = extractor.mappingPropertyValue(UPPER_CONTROL_LIMIT_LABEL);
     upperWarningLimitField = extractor.mappingPropertyValue(UPPER_WARNING_LIMIT_LABEL);
     lowerWarningLimitField = extractor.mappingPropertyValue(LOWER_WARNING_LIMIT_LABEL);
     lowerControlLimitField = extractor.mappingPropertyValue(LOWER_CONTROL_LIMIT_LABEL);
-  }
-
-  @Override
-  public void onDetach() {
-
   }
 
   @Override
@@ -165,4 +164,10 @@ public class SensorLimitAlertProcessor extends StreamPipesDataProcessor {
     }
 
   }
+
+  @Override
+  public void onPipelineStopped() {
+
+  }
+
 }
