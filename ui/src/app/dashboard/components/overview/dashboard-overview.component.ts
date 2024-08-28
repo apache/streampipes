@@ -42,6 +42,7 @@ import { zip } from 'rxjs';
 })
 export class DashboardOverviewComponent implements OnInit {
     dashboards: Dashboard[] = [];
+    filteredDashboards: Dashboard[] = [];
 
     dataSource = new MatTableDataSource<Dashboard>();
     displayedColumns: string[] = [];
@@ -80,7 +81,7 @@ export class DashboardOverviewComponent implements OnInit {
     getDashboards() {
         this.dashboardService.getDashboards().subscribe(data => {
             this.dashboards = data.sort((a, b) => a.name.localeCompare(b.name));
-            this.dataSource.data = this.dashboards;
+            this.applyDashboardFilters();
         });
     }
 
@@ -167,5 +168,16 @@ export class DashboardOverviewComponent implements OnInit {
                 this.getDashboards();
             }
         });
+    }
+
+    applyDashboardFilters(elementIds: Set<string> = new Set<string>()): void {
+        this.filteredDashboards = this.dashboards.filter(a => {
+            if (elementIds.size === 0) {
+                return true;
+            } else {
+                return elementIds.has(a.elementId);
+            }
+        });
+        this.dataSource.data = this.filteredDashboards;
     }
 }

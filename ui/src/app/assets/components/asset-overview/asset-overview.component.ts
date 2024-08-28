@@ -72,21 +72,19 @@ export class SpAssetOverviewComponent implements OnInit {
             });
     }
 
-    createNewAsset(assetModel?: SpAssetModel) {
-        if (!assetModel) {
-            assetModel = {
-                assetName: 'New Asset',
-                assetDescription: '',
-                assetLinks: [],
-                assetId: this.idGeneratorService.generate(6),
-                _id: this.idGeneratorService.generate(24),
-                appDocType: 'asset-management',
-                removable: true,
-                _rev: undefined,
-                assets: [],
-                assetType: undefined,
-            };
-        }
+    createNewAsset() {
+        const assetModel = {
+            assetName: 'New Asset',
+            assetDescription: '',
+            assetLinks: [],
+            assetId: this.idGeneratorService.generate(6),
+            _id: this.idGeneratorService.generate(24),
+            appDocType: 'asset-management',
+            removable: true,
+            _rev: undefined,
+            assets: [],
+            assetType: undefined,
+        };
         const dialogRef = this.dialogService.open(
             SpCreateAssetDialogComponent,
             {
@@ -94,14 +92,15 @@ export class SpAssetOverviewComponent implements OnInit {
                 title: 'Create asset',
                 width: '50vw',
                 data: {
-                    createMode: true,
                     assetModel: assetModel,
                 },
             },
         );
 
-        dialogRef.afterClosed().subscribe(() => {
-            this.goToDetailsView(assetModel, true);
+        dialogRef.afterClosed().subscribe(ev => {
+            if (ev) {
+                this.goToDetailsView(assetModel, true);
+            }
         });
     }
 
@@ -117,7 +116,7 @@ export class SpAssetOverviewComponent implements OnInit {
                 asset._id,
                 asset._rev,
             )
-            .subscribe(result => {
+            .subscribe(() => {
                 this.loadAssets();
                 this.assetBrowserService.loadAssetData();
             });
