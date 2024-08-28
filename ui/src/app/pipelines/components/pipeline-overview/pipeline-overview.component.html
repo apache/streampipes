@@ -199,7 +199,7 @@
                     mat-icon-button
                     matTooltip="Delete pipeline"
                     matTooltipPosition="above"
-                    *ngIf="hasPipelineDeletePrivileges"
+                    *ngIf="hasPipelineWritePrivileges"
                     (click)="
                         pipelineOperationsService.showDeleteDialog(
                             pipeline,

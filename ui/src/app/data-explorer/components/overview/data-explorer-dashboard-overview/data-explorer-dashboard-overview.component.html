@@ -101,7 +101,7 @@
                             mat-icon-button
                             color="accent"
                             matTooltip="Delete data view"
-                            *ngIf="hasDataExplorerDeletePrivileges"
+                            *ngIf="hasDataExplorerWritePrivileges"
                             [attr.data-cy]="'delete-dashboard-' + element.name"
                             (click)="openDeleteDashboardDialog(element)"
                         >

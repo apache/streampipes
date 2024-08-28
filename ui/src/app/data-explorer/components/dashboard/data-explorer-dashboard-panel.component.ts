@@ -72,7 +72,6 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     dashboardSlide: DataExplorerDashboardSlideViewComponent;
 
     hasDataExplorerWritePrivileges = false;
-    hasDataExplorerDeletePrivileges = false;
 
     public items: Dashboard[];
 
@@ -105,9 +104,6 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
         this.authSubscription = this.currentUserService.user$.subscribe(_ => {
             this.hasDataExplorerWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
-            );
-            this.hasDataExplorerDeletePrivileges = this.authService.hasRole(
-                UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW,
             );
             if (queryParams.editMode && this.hasDataExplorerWritePrivileges) {
                 this.editMode = true;

@@ -59,7 +59,7 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
   }
 
   @DeleteMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
   public ResponseEntity<Message> delete(@PathVariable("elementId") String elementId) {
     getDataStreamResourceManager().delete(elementId);
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
