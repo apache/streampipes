@@ -103,6 +103,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AdapterStatusLightComponent } from './components/existing-adapters/adapter-status-light/adapter-status-light.component';
 import { SpAdapterDeploymentSettingsComponent } from './components/adapter-configuration/adapter-settings/adapter-deployment-settings/adapter-deployment-settings.component';
 import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-documentation/adapter-documentation-dialog.component';
+import { AdapterNotificationsDialogComponent } from './dialog/adapter-notifications/adapter-notifications-dialog.component';
 
 @NgModule({
     imports: [
@@ -224,6 +225,7 @@ import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-document
         EventSchemaErrorHintsComponent,
         CanNotEditAdapterDialog,
         AllAdapterActionsComponent,
+        AdapterNotificationsDialogComponent,
     ],
     providers: [TimestampPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

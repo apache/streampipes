@@ -36,6 +36,7 @@ import {
 } from '@streampipes/shared-ui';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-adapter-actions-dialog.component';
+import { AdapterNotificationsDialogComponent } from '../../dialog/adapter-notifications/adapter-notifications-dialog.component';
 import { MatSort } from '@angular/material/sort';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { UserRole } from '../../../_enums/user-role.enum';
@@ -310,6 +311,26 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             adapter.elementId,
             'metrics',
         ]);
+    }
+
+    openAdapterNotificationsDialog(adapter: AdapterDescription) {
+        console.log('open notifications dialog');
+
+        const dialogRef: DialogRef<AdapterNotificationsDialogComponent> =
+            this.dialogService.open(AdapterNotificationsDialogComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: 'Adapter Notifications',
+                width: '70vw',
+                data: {
+                    adapter: adapter,
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                this.getAdaptersRunning();
+            }
+        });
     }
 
     ngOnDestroy() {

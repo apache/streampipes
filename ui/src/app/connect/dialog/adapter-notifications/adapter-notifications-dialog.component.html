@@ -15,22 +15,29 @@
   ~ limitations under the License.
   ~
   -->
-<div fxLayout="row" fxLayoutAlign="start center">
-    <div *ngIf="adapterRunning" class="light light-green"></div>
-    <div
-        *ngIf="!healthStatus && !adapterRunning"
-        class="light light-neutral"
-    ></div>
-    <div
-        *ngIf="!adapterRunning && healthStatus === 'OK'"
-        class="light light-neutral"
-    ></div>
-    <div
-        *ngIf="!adapterRunning && healthStatus === 'REQUIRES_ATTENTION'"
-        class="light light-yellow"
-    ></div>
-    <div
-        *ngIf="!adapterRunning && healthStatus === 'FAILURE'"
-        class="light light-red"
-    ></div>
+
+<div class="sp-dialog-container" fxLayout="column">
+    <div class="sp-dialog-content p-15" fxFlex="100" fxLayout="column">
+        <div class="info-message">
+            Adapter health monitoring discovered the following issues:
+        </div>
+        <div class="log-message" fxFlex="100" fxLayout="column">
+            <span
+                *ngFor="let notification of this.adapter.adapterNotifications"
+            >
+                <p>{{ notification }}</p>
+            </span>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions actions-align-right">
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            (click)="acknowledgeAndClose()"
+        >
+            Acknowledge
+        </button>
+    </div>
 </div>

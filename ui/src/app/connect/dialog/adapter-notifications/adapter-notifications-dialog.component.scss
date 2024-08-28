@@ -16,39 +16,22 @@
  *
  */
 
-.mat-mdc-header-cell {
-    font-weight: bold;
+@import '../../../../scss/sp/colors';
+@import '../../../../scss/sp/sp-dialog.scss';
+
+.log-message {
+    background-color: black;
+    font:
+        11pt Inconsolata,
+        monospace;
+    text-shadow: 0 0 5px #c8c8c8;
+    color: white;
+    padding: 10px;
+    max-width: 100%;
 }
 
-.adapter-icon {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    max-height: 40px;
-}
-
-.real-time {
-    cursor: pointer;
-    color: #ffeb3b;
-}
-
-.filter-bar-margin {
-    margin-left: 10px;
-    padding-left: 10px;
-}
-
-.monitoring-info {
-    color: var(--color-default-text);
-    border: 1px solid var(--color-default-text);
-    background: var(--color-bg-0);
-    border-radius: 5px;
-    padding: 5px;
-    text-align: center;
-}
-
-.icon {
-    max-width: 60px;
-}
-
-.adapter-notification {
-    color: #dede00;
+.info-message {
+    font-size: 12pt;
+    margin-top: 10px;
+    margin-bottom: 5px;
 }

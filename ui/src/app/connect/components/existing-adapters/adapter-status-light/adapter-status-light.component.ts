@@ -17,6 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
+import { AdapterHealthStatus } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-adapter-status-light',
@@ -26,4 +27,6 @@ import { Component, Input } from '@angular/core';
 export class AdapterStatusLightComponent {
     @Input()
     adapterRunning: boolean;
+    @Input()
+    healthStatus: AdapterHealthStatus;
 }

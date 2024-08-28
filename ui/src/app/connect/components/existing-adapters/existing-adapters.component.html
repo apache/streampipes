@@ -102,10 +102,38 @@
                         Status
                     </th>
                     <td mat-cell *matCellDef="let adapter">
-                        <sp-adapter-status-light
-                            [adapterRunning]="adapter.running"
-                        >
-                        </sp-adapter-status-light>
+                        <div fxLayout="row" fxLayoutAlign="start center">
+                            <sp-adapter-status-light
+                                [adapterRunning]="adapter.running"
+                                [healthStatus]="adapter.healthStatus"
+                            >
+                            </sp-adapter-status-light>
+                            <div class="notification-icon">
+                                <button
+                                    class="ml-10"
+                                    mat-icon-button
+                                    (click)="
+                                        openAdapterNotificationsDialog(adapter)
+                                    "
+                                    *ngIf="
+                                        adapter.adapterNotifications.length > 0
+                                    "
+                                    matTooltip="{{
+                                        adapter.adapterNotifications.length
+                                    }} notification{{
+                                        adapter.adapterNotifications.length > 1
+                                            ? 's'
+                                            : ''
+                                    }}"
+                                    data-cy="adapter-warning-icon"
+                                >
+                                    <i
+                                        class="material-icons adapter-notification"
+                                        >warning</i
+                                    >
+                                </button>
+                            </div>
+                        </div>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="start">

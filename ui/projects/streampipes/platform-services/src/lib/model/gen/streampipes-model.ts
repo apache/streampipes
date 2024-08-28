@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-08-19 20:20:18.
+// Generated using typescript-generator version 3.2.1263 on 2024-08-27 20:41:44.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -100,6 +100,7 @@ export class VersionedNamedStreamPipesEntity extends NamedStreamPipesEntity {
 
 export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     '@class': 'org.apache.streampipes.model.connect.adapter.AdapterDescription';
+    'adapterNotifications': string[];
     'category': string[];
     'config': StaticPropertyUnion[];
     'correspondingDataStreamElementId': string;
@@ -112,6 +113,7 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     'deploymentConfiguration': ExtensionDeploymentConfiguration;
     'eventGrounding': EventGrounding;
     'eventSchema': EventSchema;
+    'healthStatus': AdapterHealthStatus;
     'icon': string;
     'rules': TransformationRuleDescriptionUnion[];
     'running': boolean;
@@ -129,6 +131,9 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
         }
         const instance = target || new AdapterDescription();
         super.fromData(data, instance);
+        instance.adapterNotifications = __getCopyArrayFn(__identity<string>())(
+            data.adapterNotifications,
+        );
         instance.category = __getCopyArrayFn(__identity<string>())(
             data.category,
         );
@@ -146,6 +151,7 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
             );
         instance.eventGrounding = EventGrounding.fromData(data.eventGrounding);
         instance.eventSchema = EventSchema.fromData(data.eventSchema);
+        instance.healthStatus = data.healthStatus;
         instance.icon = data.icon;
         instance.rules = __getCopyArrayFn(
             TransformationRuleDescription.fromDataUnion,
@@ -4012,6 +4018,8 @@ export class WildcardTopicMapping {
         return instance;
     }
 }
+
+export type AdapterHealthStatus = 'OK' | 'REQUIRES_ATTENTION' | 'FAILURE';
 
 export type ConfigurationScope =
     | 'CONTAINER_STARTUP_CONFIG'
