@@ -16,13 +16,12 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {
     Dashboard,
     DataViewDataExplorerService,
 } from '@streampipes/platform-services';
-import { ObjectPermissionDialogComponent } from '../../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import {
     CurrentUserService,
     ConfirmDialogComponent,
@@ -43,6 +42,10 @@ export class SpDataExplorerDashboardOverviewComponent extends SpDataExplorerOver
     dataSource = new MatTableDataSource<Dashboard>();
     displayedColumns: string[] = [];
     dashboards: Dashboard[] = [];
+    filteredDashboards: Dashboard[] = [];
+
+    @Output()
+    resourceCountEmitter: EventEmitter<number> = new EventEmitter();
 
     constructor(
         private dataViewService: DataViewDataExplorerService,
@@ -121,7 +124,19 @@ export class SpDataExplorerDashboardOverviewComponent extends SpDataExplorerOver
     getDashboards() {
         this.dataViewService.getDataViews().subscribe(data => {
             this.dashboards = data.sort((a, b) => a.name.localeCompare(b.name));
-            this.dataSource.data = this.dashboards;
+            this.resourceCountEmitter.emit(this.dashboards.length);
+            this.applyDashboardFilters();
         });
+    }
+
+    applyDashboardFilters(elementIds: Set<string> = new Set<string>()): void {
+        this.filteredDashboards = this.dashboards.filter(a => {
+            if (elementIds.size === 0) {
+                return true;
+            } else {
+                return elementIds.has(a.elementId);
+            }
+        });
+        this.dataSource.data = this.filteredDashboards;
     }
 }

@@ -30,7 +30,6 @@ import { DialogRef } from '@streampipes/shared-ui';
     styleUrls: ['./create-asset-dialog.component.scss'],
 })
 export class SpCreateAssetDialogComponent {
-    @Input() createMode: boolean;
     @Input() assetModel: SpAssetModel;
 
     constructor(
@@ -43,18 +42,10 @@ export class SpCreateAssetDialogComponent {
     }
 
     onSave(): void {
-        if (this.createMode) {
-            this.assetManagementService
-                .createAsset(this.assetModel)
-                .subscribe(() => {
-                    this.dialogRef.close();
-                });
-        } else {
-            this.assetManagementService
-                .updateAsset(this.assetModel)
-                .subscribe(() => {
-                    this.dialogRef.close();
-                });
-        }
+        this.assetManagementService
+            .createAsset(this.assetModel)
+            .subscribe(() => {
+                this.dialogRef.close(true);
+            });
     }
 }
