@@ -24,7 +24,6 @@ describe('Test Deletion of Data View and Dashboard', () => {
     });
 
     it('Perform Test', () => {
-
         const dashboard = 'TestDashboard';
         const dataView = 'TestView';
 
@@ -67,6 +66,5 @@ describe('Test Deletion of Data View and Dashboard', () => {
         DataLakeUtils.deleteDashboard(dashboard);
 
         DataLakeUtils.checkRowsDashboardTable(0);
-
     });
 });

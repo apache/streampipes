@@ -147,8 +147,10 @@ export class DataLakeUtils {
         this.editDashboard(name);
     }
 
-    public static addDataViewToDashboard(dataViewName: string,
-                                         ignoreTimeRange = false) {
+    public static addDataViewToDashboard(
+        dataViewName: string,
+        ignoreTimeRange = false,
+    ) {
         if (!ignoreTimeRange) {
             this.selectTimeRange(
                 new Date(2020, 10, 20, 22, 44),
