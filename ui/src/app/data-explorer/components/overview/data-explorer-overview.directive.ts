@@ -31,7 +31,6 @@ export abstract class SpDataExplorerOverviewDirective
     isAdmin = false;
 
     public hasDataExplorerWritePrivileges = false;
-    public hasDataExplorerDeletePrivileges = false;
 
     authSubscription: Subscription;
 
@@ -47,9 +46,6 @@ export abstract class SpDataExplorerOverviewDirective
             user => {
                 this.hasDataExplorerWritePrivileges = this.authService.hasRole(
                     UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
-                );
-                this.hasDataExplorerDeletePrivileges = this.authService.hasRole(
-                    UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW,
                 );
                 this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
                 this.afterInit();

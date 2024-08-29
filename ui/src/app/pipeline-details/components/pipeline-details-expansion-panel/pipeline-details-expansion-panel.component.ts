@@ -35,9 +35,6 @@ export class PipelineDetailsExpansionPanelComponent implements OnInit {
     logInfo: Record<string, SpLogEntry[]>;
 
     @Input()
-    hasDeletePipelinePrivileges: boolean;
-
-    @Input()
     hasWritePipelinePrivileges: boolean;
 
     @Output()

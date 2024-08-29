@@ -103,7 +103,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       path = "/{pipelineId}",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Delete a pipeline with a given id", tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
   public Message removeOwn(@PathVariable("pipelineId") String pipelineId) {
     PipelineManager.deletePipeline(pipelineId);
     return Notifications.success("Pipeline deleted");

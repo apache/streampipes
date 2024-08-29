@@ -49,7 +49,6 @@ export class DashboardOverviewComponent implements OnInit {
 
     isAdmin = false;
     hasDashboardWritePrivileges = false;
-    hasDashboardDeletePrivileges = false;
 
     constructor(
         private dashboardService: DashboardService,
@@ -69,9 +68,6 @@ export class DashboardOverviewComponent implements OnInit {
             this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
             this.hasDashboardWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
-            );
-            this.hasDashboardDeletePrivileges = this.authService.hasRole(
-                UserPrivilege.PRIVILEGE_DELETE_DASHBOARD,
             );
             this.displayedColumns = ['name', 'actions'];
         });

@@ -45,9 +45,4 @@ public class DataLakeDashboardResource extends AbstractDashboardResource {
   public boolean hasWriteAuthority() {
     return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE);
   }
-
-  @Override
-  public boolean hasDeleteAuthority() {
-    return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW_VALUE);
-  }
 }

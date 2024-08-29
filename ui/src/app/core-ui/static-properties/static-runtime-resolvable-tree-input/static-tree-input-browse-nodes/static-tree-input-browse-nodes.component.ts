@@ -78,7 +78,6 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
     }
 
     updateNodes(nodes: TreeInputNode[]) {
-        console.log(nodes);
         this.dataSource.data = nodes;
     }
 
