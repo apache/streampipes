@@ -159,7 +159,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   }
 
   @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_DELETE_ADAPTER_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public ResponseEntity<?> deleteAdapter(@PathVariable("id") String elementId,
                                          @RequestParam(value = "deleteAssociatedPipelines", defaultValue = "false")
                                          boolean deleteAssociatedPipelines) {

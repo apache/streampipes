@@ -33,9 +33,6 @@ export class PipelineActionsComponent implements OnInit {
     pipeline: Pipeline;
 
     @Input()
-    hasDeletePipelinePrivileges: boolean;
-
-    @Input()
     hasWritePipelinePrivileges: boolean;
 
     @Output()

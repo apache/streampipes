@@ -48,7 +48,6 @@ import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 })
 export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     hasPipelineWritePrivileges = false;
-    hasPipelineDeletePrivileges = false;
 
     currentPipelineId: string;
 
@@ -82,9 +81,6 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
         this.currentUserSub = this.currentUserService.user$.subscribe(user => {
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
-            );
-            this.hasPipelineDeletePrivileges = this.authService.hasRole(
-                UserPrivilege.PRIVILEGE_DELETE_PIPELINE,
             );
             const pipelineId = this.activatedRoute.snapshot.params.pipelineId;
             if (pipelineId) {
