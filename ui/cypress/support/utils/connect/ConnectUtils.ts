@@ -369,6 +369,12 @@ export class ConnectUtils {
             'have.length',
             amountOfProperties,
         );
+
+        cy.wait(1000);
+
+        cy.dataCy('live-preview-table-value')
+            .invoke('text')
+            .then(text => expect(text).not.to.include('no data'));
     }
 
     public static tearDownPreprocessingRuleTest(
