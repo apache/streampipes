@@ -36,7 +36,7 @@ import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class QualityControlLimitsEnrichment extends StreamPipesDataProcessor {
+public class QualityControlLimitsEnrichmentProcessor extends StreamPipesDataProcessor {
 
 
   protected static final String UPPER_CONTROL_LIMIT_LABEL = "upperControlLimitInput";
