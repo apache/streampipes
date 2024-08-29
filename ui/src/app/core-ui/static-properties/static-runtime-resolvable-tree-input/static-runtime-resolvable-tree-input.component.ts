@@ -41,6 +41,12 @@ export class StaticRuntimeResolvableTreeInputComponent
 
     editorMode: 'tree' | 'text' = 'tree';
 
+    // The following two arrays store the fetched nodes from the backend to
+    // present them to the user in the UI. For performance reasons, the nodes
+    // should not be stored in the static property object
+    latestFetchedNodes = [];
+    nodes = [];
+
     @ViewChild('staticTreeInputBrowseNodesComponent')
     private staticTreeInputBrowseNodesComponent: StaticTreeInputBrowseNodesComponent;
 
@@ -87,16 +93,13 @@ export class StaticRuntimeResolvableTreeInputComponent
             staticProperty.latestFetchedNodes &&
             staticProperty.latestFetchedNodes.length > 0
         ) {
-            this.staticProperty.latestFetchedNodes =
-                staticProperty.latestFetchedNodes;
+            this.latestFetchedNodes = staticProperty.latestFetchedNodes;
             if (node) {
                 node.children = staticProperty.latestFetchedNodes;
             }
         } else {
-            this.staticProperty.nodes = staticProperty.nodes;
-            this.staticTreeInputBrowseNodesComponent?.updateNodes(
-                this.staticProperty.nodes,
-            );
+            this.nodes = staticProperty.nodes;
+            this.staticTreeInputBrowseNodesComponent?.updateNodes(this.nodes);
         }
         this.staticTreeInputBrowseNodesComponent?.refreshTree();
 
@@ -175,6 +178,7 @@ export class StaticRuntimeResolvableTreeInputComponent
 
     private resetStaticPropertyState(): void {
         this.staticProperty.latestFetchedNodes = [];
+        this.latestFetchedNodes = [];
         this.staticProperty.nextBaseNodeToResolve = undefined;
     }
 }
