@@ -24,7 +24,7 @@ describe('Test Time Order in Data Explorer', () => {
         cy.initStreamPipesTest();
         DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv', false);
         DataLakeUtils.goToDatalake();
-        DataLakeUtils.createAndEditDataView('TestView');
+        DataLakeUtils.createAndEditDataView();
     });
 
     it('Perform Test with ascending and descending order', () => {

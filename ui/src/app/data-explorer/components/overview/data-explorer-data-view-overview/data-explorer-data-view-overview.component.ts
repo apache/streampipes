@@ -95,7 +95,8 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
             width: '600px',
             data: {
                 title: 'Are you sure you want to delete this data view?',
-                subtitle: 'This action cannot be reversed!',
+                subtitle:
+                    'The data view will be removed from all dashboards as well. This action cannot be undone!',
                 cancelTitle: 'Cancel',
                 okTitle: 'Delete Data View',
                 confirmAndCancel: true,

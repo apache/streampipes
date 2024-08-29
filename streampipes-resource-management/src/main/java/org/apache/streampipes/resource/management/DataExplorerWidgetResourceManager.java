@@ -23,7 +23,23 @@ import org.apache.streampipes.storage.api.CRUDStorage;
 
 public class DataExplorerWidgetResourceManager extends AbstractCRUDResourceManager<DataExplorerWidgetModel> {
 
-  public DataExplorerWidgetResourceManager(CRUDStorage<DataExplorerWidgetModel> db) {
+  private final DataExplorerResourceManager dashboardManager;
+
+  public DataExplorerWidgetResourceManager(DataExplorerResourceManager dashboardManager,
+                                           CRUDStorage<DataExplorerWidgetModel> db) {
     super(db, DataExplorerWidgetModel.class);
+    this.dashboardManager = dashboardManager;
+  }
+
+  @Override
+  public void delete(String elementId) {
+    deleteDataViewsFromDashboard(elementId);
+    super.delete(elementId);
+  }
+
+  private void deleteDataViewsFromDashboard(String widgetElementId) {
+    dashboardManager.findAll().stream()
+        .filter(dashboard -> dashboard.getWidgets().removeIf(w -> w.getId().equals(widgetElementId)))
+        .forEach(dashboardManager::update);
   }
 }

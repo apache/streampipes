@@ -133,7 +133,6 @@ export class DataExplorerDataViewComponent
     }
 
     createWidget() {
-        this.dataLakeMeasure = new DataLakeMeasure();
         this.dataView = new DataExplorerWidgetModel();
         this.dataView['@class'] =
             'org.apache.streampipes.model.datalake.DataExplorerWidgetModel';

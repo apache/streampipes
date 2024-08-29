@@ -16,8 +16,8 @@
  *
  */
 
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Dashboard } from '../model/dashboard/dashboard.model';
 import { Injectable } from '@angular/core';
@@ -91,6 +91,9 @@ export class DataViewDataExplorerService {
 
     getWidget(widgetId: string): Observable<DataExplorerWidgetModel> {
         return this.http.get(this.dashboardWidgetUrl + '/' + widgetId).pipe(
+            catchError(() => {
+                return throwError(() => new Error('Failed to get widget data'));
+            }),
             map(response => {
                 return DataExplorerWidgetModel.fromData(
                     response as DataExplorerWidgetModel,

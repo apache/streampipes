@@ -38,8 +38,9 @@ public class SpResourceManager {
     return new DataExplorerResourceManager();
   }
 
-  public DataExplorerWidgetResourceManager manageDataExplorerWidget(CRUDStorage<DataExplorerWidgetModel> db) {
-    return new DataExplorerWidgetResourceManager(db);
+  public DataExplorerWidgetResourceManager manageDataExplorerWidget(DataExplorerResourceManager dashboardManager,
+                                                                    CRUDStorage<DataExplorerWidgetModel> db) {
+    return new DataExplorerWidgetResourceManager(dashboardManager, db);
   }
 
   public DataProcessorResourceManager manageDataProcessors() {
