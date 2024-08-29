@@ -24,13 +24,19 @@ describe('Test Deletion of Data View and Dashboard', () => {
     });
 
     it('Perform Test', () => {
+
+        const dashboard = 'TestDashboard';
+        const dataView = 'TestView';
+
         DataLakeUtils.goToDatalake();
 
-        DataLakeUtils.addDataViewAndTableWidget('TestView', 'Persist');
+        DataLakeUtils.addDataViewAndTableWidget(dataView, 'Persist');
 
         DataLakeUtils.saveDataViewConfiguration();
 
-        DataLakeUtils.createAndEditDashboard('TestDashboard');
+        DataLakeUtils.createAndEditDashboard(dashboard);
+
+        DataLakeUtils.addDataViewToDashboard(dataView, true);
 
         DataLakeUtils.saveDashboardConfiguration();
 
@@ -39,20 +45,28 @@ describe('Test Deletion of Data View and Dashboard', () => {
         DataLakeUtils.checkRowsViewsTable(1);
 
         // Click "Delete" but cancel action and check if dashboard and view are still displayed
-        DataLakeUtils.cancelDeleteDashboard('TestDashboard');
+        DataLakeUtils.cancelDeleteDashboard(dashboard);
 
         DataLakeUtils.checkRowsDashboardTable(1);
 
-        DataLakeUtils.cancelDeleteDataView('TestView');
+        DataLakeUtils.cancelDeleteDataView(dataView);
 
         DataLakeUtils.checkRowsViewsTable(1);
 
-        DataLakeUtils.deleteDashboard('TestDashboard');
+        DataLakeUtils.deleteDataView(dataView);
 
-        DataLakeUtils.deleteDataView('TestView');
+        DataLakeUtils.checkRowsViewsTable(0);
+
+        DataLakeUtils.editDashboard(dashboard);
+
+        // Validate that data view is removed from dashboard
+        DataLakeUtils.getEmptyDashboardInformation().should('be.visible');
+
+        DataLakeUtils.saveDashboardConfiguration();
+
+        DataLakeUtils.deleteDashboard(dashboard);
 
         DataLakeUtils.checkRowsDashboardTable(0);
 
-        DataLakeUtils.checkRowsViewsTable(0);
     });
 });
