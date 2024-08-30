@@ -16,7 +16,7 @@
  *
  */
 
-import { DataType } from '@streampipes/platform-services';
+import { DataType, SemanticType } from '@streampipes/platform-services';
 
 export class DatatypeMatch {
     match(datatypeRequirement: string, datatypeOffer: string) {
@@ -31,7 +31,7 @@ export class DatatypeMatch {
     }
 
     subClassOf(offer: string, requirement: string): boolean {
-        if (!(requirement === DataType.NUMBER)) {
+        if (!(requirement === SemanticType.SO_NUMBER)) {
             return false;
         } else {
             if (

@@ -16,6 +16,8 @@
  *
  */
 
+import { SemanticType } from './semantic-type';
+
 export class DataType {
     public static readonly XSD: string = 'http://www.w3.org/2001/XMLSchema#';
 
@@ -25,7 +27,6 @@ export class DataType {
     public static readonly BOOLEAN = this.XSD + 'boolean';
     public static readonly STRING = this.XSD + 'string';
     public static readonly DOUBLE = this.XSD + 'double';
-    public static readonly NUMBER = this.XSD + 'number';
 
     public static isNumberType(datatype: string): boolean {
         return (
@@ -33,7 +34,7 @@ export class DataType {
             datatype === DataType.INTEGER ||
             datatype === DataType.LONG ||
             datatype === DataType.FLOAT ||
-            datatype === DataType.NUMBER
+            datatype === SemanticType.SO_NUMBER
         );
     }
 
