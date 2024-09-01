@@ -86,8 +86,8 @@ repos:
         verbose: true
 
       - id: flake8
-        name: flake8 --max-line-length 120
+        name: flake8
         language: python
         types: [ python ]
-        entry: flake8
+        entry: flake8 --max-line-length 120
         verbose: true
