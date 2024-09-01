@@ -75,40 +75,15 @@ type Notification struct {
 	AdditionalInformation string      `json:"additionalInformation"`
 }
 
-type StaticPropertyType string
-
-const (
-	AnyStaticProperty                        StaticPropertyType = "AnyStaticProperty"
-	CodeInputStaticProperty                  StaticPropertyType = "CodeInputStaticProperty"
-	CollectionStaticProperty                 StaticPropertyType = "CollectionStaticProperty"
-	ColorPickerStaticProperty                StaticPropertyType = "ColorPickerStaticProperty"
-	DomainStaticProperty                     StaticPropertyType = "DomainStaticProperty"
-	FreeTextStaticProperty                   StaticPropertyType = "FreeTextStaticProperty"
-	FileStaticProperty                       StaticPropertyType = "FileStaticProperty"
-	MappingPropertyUnary                     StaticPropertyType = "MappingPropertyUnary"
-	MappingPropertyNary                      StaticPropertyType = "MappingPropertyNary"
-	MatchingStaticProperty                   StaticPropertyType = "MatchingStaticProperty"
-	OneOfStaticProperty                      StaticPropertyType = "OneOfStaticProperty"
-	RuntimeResolvableAnyStaticProperty       StaticPropertyType = "RuntimeResolvableAnyStaticProperty"
-	RuntimeResolvableGroupStaticProperty     StaticPropertyType = "RuntimeResolvableGroupStaticProperty"
-	RuntimeResolvableOneOfStaticProperty     StaticPropertyType = "RuntimeResolvableOneOfStaticProperty"
-	RuntimeResolvableTreeInputStaticProperty StaticPropertyType = "RuntimeResolvableTreeInputStaticProperty"
-	StaticPropertyGroup                      StaticPropertyType = "StaticPropertyGroup"
-	StaticPropertyAlternatives               StaticPropertyType = "StaticPropertyAlternatives"
-	StaticPropertyAlternative                StaticPropertyType = "StaticPropertyAlternative"
-	SecretStaticProperty                     StaticPropertyType = "SecretStaticProperty"
-	SlideToggleStaticProperty                StaticPropertyType = "SlideToggleStaticProperty"
-)
-
 type StaticProperty struct {
-	Optional           bool               `json:"optional,omitempty"`
-	StaticPropertyType StaticPropertyType `json:"staticPropertyType"`
-	Index              int32              `json:"index"`
-	Label              string             `json:"label"`
-	Description        string             `json:"description"`
-	InternalName       string             `json:"internalName"`
-	Predefined         bool               `json:"predefined"`
-	Class              string             `json:"@class"`
+	Optional           bool   `json:"optional,omitempty"`
+	StaticPropertyType string `json:"staticPropertyType"`
+	Index              int32  `json:"index"`
+	Label              string `json:"label"`
+	Description        string `json:"description"`
+	InternalName       string `json:"internalName"`
+	Predefined         bool   `json:"predefined"`
+	Class              string `json:"@class"`
 }
 
 type SpDataStream struct {
@@ -152,4 +127,18 @@ type TopicDefinition struct {
 
 type TransportFormat struct {
 	RdfType []string `json:"rdfType"`
+}
+
+type TransformationRuleDescription struct {
+	RulePriority int32
+}
+
+type SpServiceTag struct {
+	Prefix string `json:"prefix"`
+	Value  string `json:"value"`
+}
+
+type ExtensionDeploymentConfiguration struct {
+	DesiredServiceTags  []SpServiceTag `json:"desiredServiceTags"`
+	SelectedEndpointUrl string         `json:"selectedEndpointUrl"`
 }
