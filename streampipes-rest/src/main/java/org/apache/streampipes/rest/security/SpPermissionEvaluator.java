@@ -51,7 +51,6 @@ public class SpPermissionEvaluator implements PermissionEvaluator {
 
   private boolean filterRecommendation(Authentication auth, PipelineElementRecommendationMessage message) {
     Predicate<PipelineElementRecommendation> isForbidden = r -> !hasPermission(auth, r.getElementId());
-    message.getRecommendedElements().removeIf(isForbidden);
     message.getPossibleElements().removeIf(isForbidden);
 
     return true;

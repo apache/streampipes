@@ -86,10 +86,6 @@ public class Utils {
     return getCouchDbGsonClient("pipeline");
   }
 
-  public static CouchDbClient getCouchDbConnectionClient() {
-    return getCouchDbStandardSerializerClient("connection");
-  }
-
   public static CouchDbClient getCouchDbUserClient() {
     return getCouchDbPrincipalClient(USER_DB_NAME);
   }

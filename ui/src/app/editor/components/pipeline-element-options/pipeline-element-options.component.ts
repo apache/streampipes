@@ -54,8 +54,6 @@ import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     recommendationsAvailable: any = false;
     possibleElements: PipelineElementUnion[];
-    recommendedElements: PipelineElementUnion[];
-    recommendationsShown: any = false;
     isDataSource: boolean;
 
     @Input()
@@ -101,8 +99,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     ) {
         this.recommendationsAvailable = false;
         this.possibleElements = [];
-        this.recommendedElements = [];
-        this.recommendationsShown = false;
         this.jsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(false);
     }
 
@@ -167,12 +163,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
                             result.possibleElements,
                         ),
                     );
-                    this.recommendedElements = cloneDeep(
-                        this.pipelineElementRecommendationService.populateRecommendedList(
-                            this.allElements,
-                            result.recommendedElements,
-                        ),
-                    );
                     this.recommendationsAvailable = true;
                 }
             });
@@ -190,11 +180,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
         });
 
         dialogRef.afterClosed().subscribe(() => {});
-    }
-
-    showRecommendations(e) {
-        this.recommendationsShown = !this.recommendationsShown;
-        e.stopPropagation();
     }
 
     isWildcardTopic() {

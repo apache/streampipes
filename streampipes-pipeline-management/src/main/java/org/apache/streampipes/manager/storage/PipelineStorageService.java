@@ -20,7 +20,6 @@ package org.apache.streampipes.manager.storage;
 
 import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphBuilder;
-import org.apache.streampipes.manager.matching.ConnectionStorageHandler;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class PipelineStorageService {
 
-  private Pipeline pipeline;
+  private final Pipeline pipeline;
 
   public PipelineStorageService(Pipeline pipeline) {
     this.pipeline = pipeline;
@@ -63,8 +62,6 @@ public class PipelineStorageService {
 
     pipeline.setSepas(sepas);
     pipeline.setActions(secs);
-
-    new ConnectionStorageHandler(pipeline).storeConnections();
   }
 
   private void encryptSecrets(List<InvocableStreamPipesEntity> graphs) {

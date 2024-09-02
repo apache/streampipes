@@ -32,7 +32,6 @@ import { CustomizeComponent } from './dialog/customize/customize.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { SavePipelineComponent } from './dialog/save-pipeline/save-pipeline.component';
-import { PipelineElementRecommendationComponent } from './components/pipeline-element-recommendation/pipeline-element-recommendation.component';
 import { CompatibleElementsComponent } from './dialog/compatible-elements/compatible-elements.component';
 import { MatListModule } from '@angular/material/list';
 import { SafeCss } from './utils/style-sanitizer';
@@ -146,7 +145,6 @@ import { DroppedPipelineElementComponent } from './components/pipeline/dropped-p
         PipelineElementNameFilterPipe,
         PipelineElementOptionsComponent,
         PipelineElementPreviewComponent,
-        PipelineElementRecommendationComponent,
         PipelineElementStatisticsComponent,
         PipelineElementStatisticsBadgeComponent,
         PipelineElementTypeFilterPipe,
