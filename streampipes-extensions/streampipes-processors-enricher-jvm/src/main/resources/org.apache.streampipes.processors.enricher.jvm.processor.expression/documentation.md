@@ -16,20 +16,40 @@
   ~
   -->
 
-<div fxLayout="row" fxFlex="100">
-    <div fxFlex>
-        <sp-pipeline-elements-row [pipelineElement]="pipelineElement">
-        </sp-pipeline-elements-row>
-    </div>
-    <div fxLayoutAlign="end center">
-        <button
-            (click)="openLogsDialog()"
-            mat-icon-button
-            color="accent"
-            matTooltip="Logs"
-            [disabled]="!pipelineRunning || logInfo.length === 0"
-        >
-            <mat-icon>topic</mat-icon>
-        </button>
-    </div>
-</div>
+## Math Expression Evaluator
+
+<p align="center"> 
+    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
+</p>
+
+***
+
+## Description
+A pipeline element that evaluates Math expressions using the Apache Commons JEXL library.
+
+***
+
+## Required input
+This processor works with any input stream that contains numerical values.
+
+***
+
+## Configuration
+A math expression can be defined using the JEXL syntax (see https://commons.apache.org/proper/commons-jexl/index.html).
+
+Example:
+
+```
+flow_rate*2
+```
+
+It is also possible to use methods from `java.lang.Math`:
+
+```
+Math.pow(flow_rate^2)
+```
+
+All fields from th einput stream are available as variables.
+
+## Output
+For each expression, an additional field is created in the output stream. Field names are user-defined.
