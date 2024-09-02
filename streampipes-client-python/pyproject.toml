@@ -83,7 +83,7 @@ optional = true
 
 [tool.poetry.group.docs.dependencies]
 mike = { git = "https://github.com/jimporter/mike.git", rev = "872f72def32f588908f8251fe512189e0c41f4e2" }
-mkdocs = "1.5.2"
+mkdocs = "1.6.1"
 mkdocs-awesome-pages-plugin = "2.9.0"
 mkdocs-gen-files = "0.5.0"
 mkdocs-git-revision-date-localized-plugin = "1.2.6"
