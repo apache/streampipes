@@ -30,10 +30,13 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.preview.PipelinePreviewModel;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -45,18 +48,20 @@ public class PipelinePreview {
 
   public PipelinePreviewModel initiatePreview(Pipeline pipeline) {
     String previewId = generatePreviewId();
+    var elementIdMappings = new HashMap<String, String>();
     pipeline.setActions(new ArrayList<>());
     List<NamedStreamPipesEntity> pipelineElements = new ArrayList<>(
         new PipelineVerificationHandlerV2(pipeline)
             .verifyAndBuildGraphs(true)
     );
 
+    rewriteElementIds(pipelineElements, elementIdMappings);
     invokeGraphs(filter(pipelineElements));
     storeGraphs(previewId, pipelineElements);
 
     LOG.info("Preview pipeline {} started", previewId);
 
-    return makePreviewModel(previewId, pipelineElements);
+    return makePreviewModel(previewId, elementIdMappings);
   }
 
   public void deletePreview(String previewId) {
@@ -82,6 +87,24 @@ public class PipelinePreview {
               }
             }
         ));
+  }
+
+  private void rewriteElementIds(List<NamedStreamPipesEntity> pipelineElements,
+                                 Map<String, String> elementIdMappings) {
+    pipelineElements
+        .forEach(pe -> {
+          if (pe instanceof DataProcessorInvocation) {
+            var originalElementId = pe.getElementId();
+            var newElementId = (String.format(
+                "%s:%s",
+                StringUtils.substringBeforeLast(pe.getElementId(), ":"),
+                RandomStringUtils.randomAlphanumeric(5)));
+            pe.setElementId(newElementId);
+            elementIdMappings.put(originalElementId, newElementId);
+          } else {
+            elementIdMappings.put(pe.getElementId(), pe.getElementId());
+          }
+        });
   }
 
   private String findSelectedEndpoint(InvocableStreamPipesEntity g) throws NoServiceEndpointsAvailableException {
@@ -124,10 +147,10 @@ public class PipelinePreview {
   }
 
   private PipelinePreviewModel makePreviewModel(String previewId,
-                                                List<NamedStreamPipesEntity> graphs) {
+                                                Map<String, String> elementIdMappings) {
     PipelinePreviewModel previewModel = new PipelinePreviewModel();
     previewModel.setPreviewId(previewId);
-    previewModel.setSupportedPipelineElementDomIds(collectElementIds(graphs));
+    previewModel.setElementIdMappings(elementIdMappings);
 
     return previewModel;
   }

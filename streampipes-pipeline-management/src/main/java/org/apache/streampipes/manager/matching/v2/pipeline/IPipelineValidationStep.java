@@ -15,37 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.preview;
 
-import org.apache.streampipes.model.shared.annotation.TsModel;
+package org.apache.streampipes.manager.matching.v2.pipeline;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 
-@TsModel
-public class PipelinePreviewModel {
+import java.util.List;
+import java.util.Set;
 
-  private String previewId;
+public interface IPipelineValidationStep {
 
-  private Map<String, String> elementIdMappings;
-
-  public PipelinePreviewModel() {
-    this.elementIdMappings = new HashMap<>();
-  }
-
-  public String getPreviewId() {
-    return previewId;
-  }
-
-  public void setPreviewId(String previewId) {
-    this.previewId = previewId;
-  }
-
-  public Map<String, String> getElementIdMappings() {
-    return elementIdMappings;
-  }
-
-  public void setElementIdMappings(Map<String, String> elementIdMappings) {
-    this.elementIdMappings = elementIdMappings;
-  }
+  void apply(NamedStreamPipesEntity source,
+             InvocableStreamPipesEntity target,
+             Set<InvocableStreamPipesEntity> allTargets,
+             List<PipelineElementValidationInfo> validationInfos) throws SpValidationException;
 }
