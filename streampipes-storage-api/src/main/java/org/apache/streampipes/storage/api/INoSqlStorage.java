@@ -42,8 +42,6 @@ public interface INoSqlStorage {
 
   IPipelineStorage getPipelineStorageAPI();
 
-  IPipelineElementConnectionStorage getConnectionStorageApi();
-
   IUserStorage getUserStorageAPI();
 
   INotificationStorage getNotificationStorageApi();

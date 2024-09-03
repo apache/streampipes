@@ -60,7 +60,6 @@ public class CouchDbInstallationStep extends InstallationStep {
       // Set up streampipes internal databases
       Utils.getCouchDbUserClient();
       Utils.getCouchDbPipelineClient();
-      Utils.getCouchDbConnectionClient();
       Utils.getCouchDbNotificationClient();
       Utils.getCouchDbPipelineCategoriesClient();
 
@@ -72,7 +71,6 @@ public class CouchDbInstallationStep extends InstallationStep {
 
   private void createViews() {
     addUserView();
-    addConnectionView();
     addNotificationView();
     addPipelineView();
   }
@@ -166,30 +164,4 @@ public class CouchDbInstallationStep extends InstallationStep {
       logFailure(PREPARING_USERS_TEXT, e);
     }
   }
-
-  private void addConnectionView() {
-    try {
-      DesignDocument connectionDocument = prepareDocument("_design/connection");
-      Map<String, MapReduce> views = new HashMap<>();
-
-      MapReduce frequentFunction = new MapReduce();
-      frequentFunction.setMap("function(doc) { if(doc.from && doc.to) { emit([doc.from, doc.to] , 1 ); } }");
-      frequentFunction.setReduce("function (key, values) { return sum(values); }");
-
-      views.put("frequent", frequentFunction);
-
-      connectionDocument.setViews(views);
-      Response resp = Utils.getCouchDbConnectionClient().design().synchronizeWithDb(connectionDocument);
-
-      if (resp.getError() != null) {
-        logFailure("Preparing database 'connection'...");
-      } else {
-        logSuccess("Preparing database 'connection'...");
-      }
-    } catch (Exception e) {
-      logFailure("Preparing database 'connection'...", e);
-    }
-  }
-
-
 }
