@@ -160,7 +160,9 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit {
                             const data = this.livePreviewService.convert(
                                 res as HttpDownloadProgressEvent,
                             );
-                            this.livePreviewService.eventSub.next(data);
+                            if (data) {
+                                this.livePreviewService.eventSub.next(data);
+                            }
                         });
                 });
         } else {
