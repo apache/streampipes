@@ -20,6 +20,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { KeyValue } from '@angular/common';
 import { LivePreviewService } from '../../../services/live-preview.service';
+import { PipelinePreviewModel } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-pipeline-element-preview',
@@ -28,7 +29,7 @@ import { LivePreviewService } from '../../../services/live-preview.service';
 })
 export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
     @Input()
-    previewId: string;
+    pipelinePreview: PipelinePreviewModel;
 
     @Input()
     elementId: string;
@@ -53,7 +54,10 @@ export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
     getLatestRuntimeInfo() {
         this.previewSub = this.livePreviewService.eventSub.subscribe(event => {
             if (event) {
-                this.runtimeData = event[this.elementId];
+                this.runtimeData =
+                    event[
+                        this.pipelinePreview.elementIdMappings[this.elementId]
+                    ];
             } else {
                 this.runtimeDataError = true;
             }

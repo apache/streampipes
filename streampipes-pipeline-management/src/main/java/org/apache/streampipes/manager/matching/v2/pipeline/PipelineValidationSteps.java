@@ -23,7 +23,7 @@ import java.util.List;
 
 public class PipelineValidationSteps {
 
-  public List<AbstractPipelineValidationStep> collect() {
+  public List<IPipelineValidationStep> collect() {
     return Arrays.asList(
         new PrepareStep(),
         new ApplyGroundingStep(),
