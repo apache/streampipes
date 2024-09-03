@@ -19,6 +19,7 @@ package org.apache.streampipes.manager.matching;
 
 import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphBuilder;
+import org.apache.streampipes.manager.matching.v2.pipeline.PipelineValidationSteps;
 import org.apache.streampipes.manager.recommender.AllElementsProvider;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -44,7 +45,8 @@ public class PipelineVerificationHandlerV2 {
 
   public PipelineModificationMessage verifyPipeline() {
     PipelineGraph graph = new PipelineGraphBuilder(pipeline).buildGraph();
-    return new PipelineModificationGenerator(graph).buildPipelineModificationMessage();
+    var steps = new PipelineValidationSteps().collect();
+    return new PipelineModificationGenerator(graph, steps).buildPipelineModificationMessage();
   }
 
   public Pipeline makeModifiedPipeline() {

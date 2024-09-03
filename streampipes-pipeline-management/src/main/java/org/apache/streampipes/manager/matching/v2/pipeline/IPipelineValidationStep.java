@@ -15,3 +15,20 @@
  * limitations under the License.
  *
  */
+
+package org.apache.streampipes.manager.matching.v2.pipeline;
+
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
+
+import java.util.List;
+import java.util.Set;
+
+public interface IPipelineValidationStep {
+
+  void apply(NamedStreamPipesEntity source,
+             InvocableStreamPipesEntity target,
+             Set<InvocableStreamPipesEntity> allTargets,
+             List<PipelineElementValidationInfo> validationInfos) throws SpValidationException;
+}

@@ -23,7 +23,6 @@ import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.matching.v2.StreamMatch;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -33,7 +32,6 @@ import org.apache.streampipes.model.pipeline.PipelineElementRecommendation;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.model.pipeline.PipelineModification;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -62,81 +60,13 @@ public class ElementRecommender {
 
   public PipelineElementRecommendationMessage findRecommendedElements() throws NoSuitableSepasAvailableException {
     AllElementsProvider elementsProvider = new AllElementsProvider(this.pipeline);
-
-    String rootNodeId;
     try {
-      rootNodeId = getRootNodeId(elementsProvider);
       Optional<SpDataStream> outputStream = getOutputStream(elementsProvider);
       outputStream.ifPresent(spDataStream -> validate(spDataStream, getAll()));
     } catch (Exception e) {
       LOG.warn("Could not find root node or output stream of provided pipeline");
-      return recommendationMessage;
     }
-
-    if (recommendationMessage.getPossibleElements().isEmpty()) {
-      throw new NoSuitableSepasAvailableException();
-    } else {
-      recommendationMessage
-          .setRecommendedElements(calculateWeights(
-              filterOldElements(getNoSqlStorage()
-                  .getConnectionStorageApi()
-                  .getRecommendedElements(rootNodeId))));
-      return recommendationMessage;
-    }
-  }
-
-  private String getRootNodeId(AllElementsProvider elementsProvider) {
-    NamedStreamPipesEntity pe = elementsProvider.findElement(this.baseRecDomId);
-    return pe instanceof InvocableStreamPipesEntity ? ((InvocableStreamPipesEntity) pe).getBelongsTo() :
-        pe.getElementId();
-  }
-
-  private List<PipelineElementRecommendation> filterOldElements(
-      List<PipelineElementRecommendation> recommendedElements) {
-    return recommendedElements
-        .stream()
-        .filter(r -> getAll()
-            .stream()
-            .anyMatch(a -> a.getElementId().equals(r.getElementId())))
-        .collect(Collectors.toList());
-  }
-
-  private List<PipelineElementRecommendation> calculateWeights(
-      List<PipelineElementRecommendation> recommendedElements) {
-    int allConnectionsCount = recommendedElements
-        .stream()
-        .mapToInt(PipelineElementRecommendation::getCount)
-        .sum();
-
-    recommendedElements
-        .forEach(r -> {
-          r.setWeight(getWeight(r.getCount(), allConnectionsCount));
-          r.setName(getName(r.getElementId()));
-          r.setDescription(getDescription(r.getElementId()));
-        });
-
-    return recommendedElements;
-  }
-
-  private String getName(String elementId) {
-    return filter(elementId).getName();
-  }
-
-  private String getDescription(String elementId) {
-    return filter(elementId).getDescription();
-  }
-
-  private NamedStreamPipesEntity filter(String elementId) {
-    List<ConsumableStreamPipesEntity> allElements = getAll();
-    return allElements
-        .stream()
-        .filter(a -> a.getElementId().equals(elementId))
-        .findFirst()
-        .get();
-  }
-
-  private Float getWeight(Integer count, Integer allConnectionsCount) {
-    return ((float) (count)) / allConnectionsCount;
+    return recommendationMessage;
   }
 
   private void validate(SpDataStream offer, List<ConsumableStreamPipesEntity> entities) {
@@ -157,7 +87,7 @@ public class ElementRecommender {
 
   private List<ConsumableStreamPipesEntity> getAllDataProcessors() {
     List<String> userObjects = new SpResourceManager().manageDataProcessors().findAllIdsOnly();
-    return getTripleStore()
+    return getNoSqlStore()
         .getAllDataProcessors()
         .stream()
         .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getAppId())))
@@ -168,7 +98,7 @@ public class ElementRecommender {
 
   private List<ConsumableStreamPipesEntity> getAllDataSinks() {
     List<String> userObjects = new SpResourceManager().manageDataSinks().findAllIdsOnly();
-    return getTripleStore()
+    return getNoSqlStore()
         .getAllDataSinks()
         .stream()
         .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getAppId())))
@@ -183,12 +113,8 @@ public class ElementRecommender {
     return allElements;
   }
 
-  private IPipelineElementDescriptionStorage getTripleStore() {
+  private IPipelineElementDescriptionStorage getNoSqlStore() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage();
-  }
-
-  private INoSqlStorage getNoSqlStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore();
   }
 
   private Optional<SpDataStream> getOutputStream(AllElementsProvider elementsProvider) {
