@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-09-03 16:16:50.
+// Generated using typescript-generator version 3.2.1263 on 2024-09-03 17:38:51.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -2614,11 +2614,9 @@ export class PipelineElementMonitoringInfo {
 }
 
 export class PipelineElementRecommendation {
-    count: number;
     description: string;
     elementId: string;
     name: string;
-    weight: number;
 
     static fromData(
         data: PipelineElementRecommendation,
@@ -2628,18 +2626,15 @@ export class PipelineElementRecommendation {
             return data;
         }
         const instance = target || new PipelineElementRecommendation();
-        instance.count = data.count;
         instance.description = data.description;
         instance.elementId = data.elementId;
         instance.name = data.name;
-        instance.weight = data.weight;
         return instance;
     }
 }
 
 export class PipelineElementRecommendationMessage {
     possibleElements: PipelineElementRecommendation[];
-    recommendedElements: PipelineElementRecommendation[];
     success: boolean;
 
     static fromData(
@@ -2653,9 +2648,6 @@ export class PipelineElementRecommendationMessage {
         instance.possibleElements = __getCopyArrayFn(
             PipelineElementRecommendation.fromData,
         )(data.possibleElements);
-        instance.recommendedElements = __getCopyArrayFn(
-            PipelineElementRecommendation.fromData,
-        )(data.recommendedElements);
         instance.success = data.success;
         return instance;
     }
