@@ -26,4 +26,4 @@ field-name.title=Field name
 field-name.description=Field description
 
 expression.title=Expression
-expression.description=The Math expression to apply
+expression.description=The Math expression to apply. All numerical input fields can be used as variables.
