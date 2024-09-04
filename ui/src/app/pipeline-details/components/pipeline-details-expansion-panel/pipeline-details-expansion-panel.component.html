@@ -28,7 +28,7 @@
             >
                 <sp-pipeline-element-details-row
                     [pipelineElement]="element"
-                    [logInfo]="logInfo[element.elementId]"
+                    [logInfo]="logInfo[element.elementId] || []"
                     [pipelineRunning]="pipeline.running"
                 >
                 </sp-pipeline-element-details-row>

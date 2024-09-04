@@ -296,7 +296,7 @@ export class SavePipelineComponent implements OnInit {
         if (this.shepherdService.isTourActive()) {
             this.shepherdService.hideCurrentStep();
         }
-        if (this.storageOptions.navigateToPipelineOverview) {
+        if (this.storageOptions.navigateToPipelineOverview && status?.success) {
             this.navigateToPipelineOverview();
         }
     }
