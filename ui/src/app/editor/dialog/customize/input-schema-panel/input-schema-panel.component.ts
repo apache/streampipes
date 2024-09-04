@@ -27,11 +27,7 @@ import {
     templateUrl: './input-schema-panel.component.html',
     styleUrls: ['./input-schema-panel.component.scss'],
 })
-export class InputSchemaPanelComponent implements OnInit {
+export class InputSchemaPanelComponent {
     @Input()
     pipelineElement: DataProcessorInvocation | DataSinkInvocation;
-
-    ngOnInit(): void {
-        console.log(this.pipelineElement);
-    }
 }
