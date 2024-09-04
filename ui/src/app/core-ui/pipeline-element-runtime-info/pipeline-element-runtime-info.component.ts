@@ -36,6 +36,7 @@ import { Subscription } from 'rxjs';
 import { HttpDownloadProgressEvent, HttpEventType } from '@angular/common/http';
 import { LivePreviewService } from '../../services/live-preview.service';
 import { RuntimeInfo } from './pipeline-element-runtime-info.model';
+import { PipelineElementSchemaService } from './pipeline-element-schema.service';
 
 @Component({
     selector: 'sp-pipeline-element-runtime-info',
@@ -58,6 +59,7 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     constructor(
         private restService: RestService,
         private livePreviewService: LivePreviewService,
+        private pipelineELementSchemaService: PipelineElementSchemaService,
     ) {}
 
     ngOnInit(): void {
@@ -71,44 +73,23 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
                 return {
                     label: ep.label || 'n/a',
                     description: ep.description || 'n/a',
-                    runtimeType: this.getFriendlyRuntimeType(ep),
+                    runtimeType:
+                        this.pipelineELementSchemaService.getFriendlyRuntimeType(
+                            ep,
+                        ),
                     runtimeName: ep.runtimeName,
                     value: undefined,
-                    isTimestamp: this.isTimestamp(ep),
-                    isImage: this.isImage(ep),
-                    hasNoDomainProperty: this.hasNoDomainProperty(ep),
+                    isTimestamp:
+                        this.pipelineELementSchemaService.isTimestamp(ep),
+                    isImage: this.pipelineELementSchemaService.isImage(ep),
+                    hasNoDomainProperty:
+                        this.pipelineELementSchemaService.hasNoDomainProperty(
+                            ep,
+                        ),
                     valueChanged: false,
                 };
             })
             .sort((a, b) => a.runtimeName.localeCompare(b.runtimeName));
-    }
-
-    getFriendlyRuntimeType(ep: EventPropertyUnion) {
-        if (ep instanceof EventPropertyPrimitive) {
-            if (DataType.isNumberType(ep.runtimeType)) {
-                return 'Number';
-            } else if (DataType.isBooleanType(ep.runtimeType)) {
-                return 'Boolean';
-            } else {
-                return 'Text';
-            }
-        } else if (ep instanceof EventPropertyList) {
-            return 'List';
-        } else {
-            return 'Nested';
-        }
-    }
-
-    private isImage(ep: EventPropertyUnion) {
-        return SemanticType.isImage(ep);
-    }
-
-    private isTimestamp(ep: EventPropertyUnion) {
-        return SemanticType.isTimestamp(ep);
-    }
-
-    private hasNoDomainProperty(ep: EventPropertyUnion) {
-        return !(this.isTimestamp(ep) || this.isImage(ep));
     }
 
     getLatestRuntimeInfo() {
