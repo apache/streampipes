@@ -22,8 +22,37 @@
         fxLayoutAlign="start center"
         fxLayout="row"
         fxFlex="100"
-        *ngIf="editMode"
     >
+        <div
+            fxFlex="15"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            class="widget-header-text mr-10"
+        >
+            <div
+                fxFlex="100"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                class="mt-5 form-field-small widget-title-container"
+                *ngIf="editMode"
+            >
+                <span class="widget-title-text">Data View Name</span>
+                <mat-form-field
+                    appearance="outline"
+                    color="accent"
+                    fxFlex="100"
+                >
+                    <input
+                        data-cy="appearance-config-widget-title"
+                        matInput
+                        [(ngModel)]="
+                            configuredWidget.baseAppearanceConfig.widgetTitle
+                        "
+                    />
+                </mat-form-field>
+            </div>
+        </div>
+
         <button
             mat-raised-button
             color="accent"
@@ -31,6 +60,7 @@
             class="edit-menu-btn"
             (click)="saveDataViewEmitter.emit()"
             data-cy="save-data-view-btn"
+            *ngIf="editMode"
         >
             <mat-icon>save</mat-icon>
             Save
@@ -41,6 +71,7 @@
             class="mat-basic mr-10 edit-menu-btn"
             (click)="discardDataViewEmitter.emit()"
             data-cy="discard-data-explorer-widget-btn"
+            *ngIf="editMode"
         >
             <i class="material-icons">undo</i>
             <span>&nbsp;Discard</span>
@@ -51,6 +82,7 @@
             matTooltip="Download data"
             (click)="downloadFileEmitter.emit()"
             data-cy="data-view-data-download-btn"
+            *ngIf="editMode"
         >
             <mat-icon>get_app</mat-icon>
         </button>

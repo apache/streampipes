@@ -17,11 +17,15 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TimeSettings } from '@streampipes/platform-services';
+import {
+    DataExplorerWidgetModel,
+    TimeSettings,
+} from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-data-explorer-data-view-toolbar',
     templateUrl: './data-explorer-data-view-toolbar.component.html',
+    styleUrls: ['../data-explorer-data-view.component.scss'],
 })
 export class DataExplorerDataViewToolbarComponent {
     @Input()
@@ -29,6 +33,9 @@ export class DataExplorerDataViewToolbarComponent {
 
     @Input()
     timeSettings: TimeSettings;
+
+    @Input()
+    configuredWidget: DataExplorerWidgetModel;
 
     timeRangeVisible = true;
 
