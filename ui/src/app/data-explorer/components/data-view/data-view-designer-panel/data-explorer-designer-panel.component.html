@@ -23,16 +23,6 @@
         class="designer-panel-content"
         *ngIf="currentlyConfiguredWidget"
     >
-        <div fxLayout="row" class="sp-tab-bg designer-panel-header">
-            <div fxLayoutAlign="start center" class="designer-panel-title">
-                <span>
-                    {{
-                        currentlyConfiguredWidget.baseAppearanceConfig
-                            .widgetTitle
-                    }}
-                </span>
-            </div>
-        </div>
         <div fxFlex="100" fxLayout="column" class="no-overflow">
             <mat-tab-group
                 [selectedIndex]="selectedIndex"
