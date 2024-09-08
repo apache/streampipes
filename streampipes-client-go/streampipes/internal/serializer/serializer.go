@@ -19,6 +19,7 @@ package serializer
 
 import (
 	"encoding/json"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/adapter"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/pipeline"
 )
 
@@ -30,6 +31,20 @@ func NewPipelineSerializer() PipelineSerializer {
 
 func (p PipelineSerializer) Marshal(pp pipeline.Pipeline) ([]byte, error) {
 	data, err := json.Marshal(pp)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+type AdapterSerializer struct{}
+
+func NewAdapterSerializer() AdapterSerializer {
+	return AdapterSerializer{}
+}
+
+func (a AdapterSerializer) Marshal(adapters adapter.AdapterDescription) ([]byte, error) {
+	data, err := json.Marshal(adapters)
 	if err != nil {
 		return nil, err
 	}
