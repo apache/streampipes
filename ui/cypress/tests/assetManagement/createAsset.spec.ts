@@ -40,8 +40,7 @@ describe('Creates a new adapter, add to assets and export assets', () => {
         cy.dataCy('create-new-asset-button').click();
         cy.dataCy('asset-name').clear();
         cy.dataCy('asset-name').type('Test asset');
-        cy.dataCy('save-data-view').click();
-        cy.dataCy('edit-asset-button').click();
+        cy.dataCy('save-asset').click();
         cy.get('.mdc-tab__text-label').contains('Asset Links').parent().click();
         cy.dataCy('assets-manage-links-button', { timeout: 5000 }).should(
             'be.enabled',
@@ -57,64 +56,6 @@ describe('Creates a new adapter, add to assets and export assets', () => {
 
         // Leave and navigate back to Assets
         DashboardUtils.goToDashboard();
-        AssetUtils.goToAssets();
-        cy.dataCy('assets-table').should('have.length', 1);
-
-        // Export Asset
-        ConfigurationUtils.goToConfigurationExport();
-        cy.get('[type="checkbox"]').check();
-        cy.dataCy('export-asset-button').click();
-        cy.dataCy('download-export-button').click();
-
-        // Delete Adapter and Asset
-        ConnectUtils.goToConnect();
-        cy.dataCy('delete-adapter').click();
-        cy.dataCy('delete-adapter-confirmation').click();
-
-        AssetUtils.goToAssets();
-        cy.dataCy('delete').click();
-
-        // Import downloaded Asset
-        ConfigurationUtils.goToConfigurationExport();
-        cy.dataCy('import-application-data-button').click();
-        cy.get('input[type="file"]').selectFile(
-            'cypress/downloads/data_export.zip',
-            { force: true },
-        );
-        cy.dataCy('next-import-button').click();
-        cy.dataCy('import-button').click();
-
-        // Check if import was successful
-        ConnectUtils.goToConnect();
-        cy.dataCy('adapters-table').children().should('have.length', 1);
-        AssetUtils.goToAssets();
-        cy.dataCy('assets-table').should('have.length', 1);
-
-        // Export Asset via Assets page
-        cy.dataCy('download').click();
-
-        // Delete Adapter and Asset
-        ConnectUtils.goToConnect();
-        cy.dataCy('delete-adapter').click();
-        cy.dataCy('delete-adapter-confirmation').click();
-
-        AssetUtils.goToAssets();
-        cy.dataCy('delete').click();
-
-        // Import downloaded Asset
-        ConfigurationUtils.goToConfigurationExport();
-        cy.dataCy('import-application-data-button').click();
-        cy.get('input[type="file"]').selectFile(
-            'cypress/downloads/assetExport.zip',
-            { force: true },
-        );
-        cy.dataCy('next-import-button').click();
-        cy.dataCy('import-button').click();
-
-        // Check if import was successful
-        ConnectUtils.goToConnect();
-        cy.dataCy('adapters-table').children().should('have.length', 1);
-
         AssetUtils.goToAssets();
         cy.dataCy('assets-table').should('have.length', 1);
     });

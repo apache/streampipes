@@ -17,32 +17,72 @@
   -->
 
 <div data-cy="sp-connect-adapter-success-live-preview">
-    <p>Here is a preview of your data:</p>
-    <table mat-table [dataSource]="runtimeData">
+    <p *ngIf="showTitle">Here is a preview of your data:</p>
+    <table mat-table [dataSource]="runtimeInfo">
         <ng-container matColumnDef="runtimeName">
             <th mat-header-cell *matHeaderCellDef>
                 <strong>Runtime Name</strong>
             </th>
             <td mat-cell *matCellDef="let element">
-                {{ element.runtimeName }}
+                <div class="runtime-name">{{ element.runtimeName }}</div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="label">
+            <th mat-header-cell *matHeaderCellDef>
+                <strong>Field Name</strong>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                {{ element.label }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>
+                <strong>Description</strong>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                {{ element.description }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="runtimeType">
+            <th mat-header-cell *matHeaderCellDef><strong>Type</strong></th>
+            <td mat-cell *matCellDef="let element">
+                {{ element.runtimeType }}
             </td>
         </ng-container>
 
         <ng-container matColumnDef="value">
             <th mat-header-cell *matHeaderCellDef><strong>Value</strong></th>
-            <td mat-cell *matCellDef="let element">
-                <ng-container *ngIf="isImage(element.runtimeName)">
-                    <img
-                        src="data:image/png;base64,{{ element.value }}"
-                        style="max-width: 150px"
-                    />
-                </ng-container>
-                <ng-container *ngIf="isTimestamp(element.runtimeName)">
-                    {{ element.value | date: 'yyyy-MM-dd HH:mm:ss ' }}
-                </ng-container>
-                <ng-container *ngIf="hasNoDomainProperty(element.runtimeName)">
-                    {{ element.value }}
-                </ng-container>
+            <td mat-cell *matCellDef="let element" style="width: 200px">
+                @if (element.value === undefined) {
+                    <div class="value no-data">no data</div>
+                } @else {
+                    <ng-container *ngIf="element.isImage">
+                        <img
+                            src="data:image/png;base64,{{ element.value }}"
+                            style="max-width: 150px"
+                        />
+                    </ng-container>
+                    <ng-container *ngIf="element.isTimestamp">
+                        <div
+                            class="value"
+                            [class.value-changed]="element.valueChanged"
+                        >
+                            {{ element.value | date: 'yyyy-MM-dd HH:mm:ss ' }}
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="element.hasNoDomainProperty">
+                        <div
+                            data-cy="live-preview-table-value"
+                            class="value"
+                            [class.value-changed]="element.valueChanged"
+                        >
+                            {{ element.value }}
+                        </div>
+                    </ng-container>
+                }
             </td>
         </ng-container>
 

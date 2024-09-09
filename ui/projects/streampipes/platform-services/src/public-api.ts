@@ -70,6 +70,8 @@ export * from './lib/model/user/user.model';
 export * from './lib/model/assets/asset.model';
 export * from './lib/model/labels/labels.model';
 
+export * from './lib/model/assets/asset.constants';
+
 export * from './lib/model/types/data-type';
 export * from './lib/model/types/semantic-type';
 

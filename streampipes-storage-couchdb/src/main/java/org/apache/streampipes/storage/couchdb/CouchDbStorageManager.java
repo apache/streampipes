@@ -38,7 +38,6 @@ import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.api.INotificationStorage;
 import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
-import org.apache.streampipes.storage.api.IPipelineElementConnectionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
@@ -46,7 +45,6 @@ import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.ConnectionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.CoreConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataProcessorStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataSinkStorageImpl;
@@ -100,11 +98,6 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IPipelineStorage getPipelineStorageAPI() {
     return new PipelineStorageImpl();
-  }
-
-  @Override
-  public IPipelineElementConnectionStorage getConnectionStorageApi() {
-    return new ConnectionStorageImpl();
   }
 
   @Override

@@ -32,7 +32,6 @@ import { CustomizeComponent } from './dialog/customize/customize.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { SavePipelineComponent } from './dialog/save-pipeline/save-pipeline.component';
-import { PipelineElementRecommendationComponent } from './components/pipeline-element-recommendation/pipeline-element-recommendation.component';
 import { CompatibleElementsComponent } from './dialog/compatible-elements/compatible-elements.component';
 import { MatListModule } from '@angular/material/list';
 import { SafeCss } from './utils/style-sanitizer';
@@ -82,6 +81,9 @@ import { PipelineAssemblyOptionsPipelineCacheComponent } from './components/pipe
 import { PipelineAssemblyDrawingAreaPanZoomComponent } from './components/pipeline-assembly/pipeline-assembly-drawing-area/pipeline-assembly-drawing-area-pan-zoom/pipeline-assembly-drawing-area-pan-zoom.component';
 import { PipelineAssemblyDrawingAreaComponent } from './components/pipeline-assembly/pipeline-assembly-drawing-area/pipeline-assembly-drawing-area.component';
 import { DroppedPipelineElementComponent } from './components/pipeline/dropped-pipeline-element/dropped-pipeline-element.component';
+import { InputSchemaPanelComponent } from './dialog/customize/input-schema-panel/input-schema-panel.component';
+import { InputSchemaPropertyComponent } from './dialog/customize/input-schema-panel/input-schema-property/input-schema-property.component';
+import { SortByRuntimeNamePipe } from './pipes/sort-by-runtime-name.pipe';
 
 @NgModule({
     imports: [
@@ -129,6 +131,8 @@ import { DroppedPipelineElementComponent } from './components/pipeline/dropped-p
         DroppedPipelineElementComponent,
         EditorComponent,
         EnabledPipelineElementFilter,
+        InputSchemaPanelComponent,
+        InputSchemaPropertyComponent,
         MatchingErrorComponent,
         MissingElementsForTutorialComponent,
         OutputStrategyComponent,
@@ -146,7 +150,6 @@ import { DroppedPipelineElementComponent } from './components/pipeline/dropped-p
         PipelineElementNameFilterPipe,
         PipelineElementOptionsComponent,
         PipelineElementPreviewComponent,
-        PipelineElementRecommendationComponent,
         PipelineElementStatisticsComponent,
         PipelineElementStatisticsBadgeComponent,
         PipelineElementTypeFilterPipe,
@@ -154,9 +157,10 @@ import { DroppedPipelineElementComponent } from './components/pipeline/dropped-p
         PropertySelectionComponent,
         SavePipelineComponent,
         SavePipelineSettingsComponent,
+        SortByRuntimeNamePipe,
         SafeCss,
     ],
-    providers: [SafeCss],
+    providers: [SafeCss, SortByRuntimeNamePipe],
     exports: [
         EditorComponent,
         PipelineComponent,

@@ -17,10 +17,6 @@
  */
 package org.apache.streampipes.pe.flink;
 
-import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
-import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
-import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
-import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
@@ -83,11 +79,6 @@ public class AllFlinkPipelineElementsInit extends StreamPipesExtensionsServiceBa
             new BoilerplateController(),
             new ElasticSearchController())
         .registerRuntimeProvider(new FlinkRuntimeProvider())
-        .registerMessagingFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory())
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),

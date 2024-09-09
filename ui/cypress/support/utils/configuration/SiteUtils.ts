@@ -38,8 +38,12 @@ export class SiteUtils {
     public static LABEL_TABLE_AREA = 'site-table-row-areas';
 
     public static enableGeoFeatures(tileServerUrl: string): void {
-        cy.dataCy(SiteUtils.CHECKBOX_ENABLE_LOCATION_FEATURES).click();
-        cy.dataCy(SiteUtils.INPUT_TILE_SERVER_URL).clear().type(tileServerUrl);
+        cy.dataCy(SiteUtils.CHECKBOX_ENABLE_LOCATION_FEATURES)
+            .children()
+            .click();
+        cy.dataCy(SiteUtils.INPUT_TILE_SERVER_URL, { timeout: 1000 })
+            .clear()
+            .type(tileServerUrl);
         cy.dataCy('sites-location-features-button').click();
     }
 

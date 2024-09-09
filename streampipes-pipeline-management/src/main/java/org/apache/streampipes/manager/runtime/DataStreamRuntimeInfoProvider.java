@@ -20,11 +20,11 @@ package org.apache.streampipes.manager.runtime;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataformat.SpDataFormatManager;
 import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.TransportFormat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +60,7 @@ public class DataStreamRuntimeInfoProvider {
         }
       }
 
-      var converter = new SpDataFormatConverterGenerator(getTransportFormat(dataStream)).makeConverter();
+      var converter = new SpDataFormatConverter(SpDataFormatManager.getFormatDefinition());
       var protocolDefinitionOpt = SpProtocolManager
           .INSTANCE
           .findDefinition(dataStream.getEventGrounding().getTransportProtocol());
@@ -78,10 +78,6 @@ public class DataStreamRuntimeInfoProvider {
         throw new SpRuntimeException("Protocol not found");
       }
     });
-  }
-
-  private TransportFormat getTransportFormat(SpDataStream spDataStream) {
-    return spDataStream.getEventGrounding().getTransportFormats().get(0);
   }
 
   public Map<String, Map<String, Object>> getLatestEvents() {

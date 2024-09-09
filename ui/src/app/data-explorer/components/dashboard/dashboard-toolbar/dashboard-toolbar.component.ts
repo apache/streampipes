@@ -41,9 +41,6 @@ export class DataExplorerDashboardToolbarComponent {
     hasDataExplorerWritePrivileges: boolean;
 
     @Input()
-    hasDataExplorerDeletePrivileges: boolean;
-
-    @Input()
     timeSettings: TimeSettings;
 
     @Output()

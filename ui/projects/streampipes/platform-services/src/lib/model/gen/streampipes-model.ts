@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-08-20 13:02:30.
+// Generated using typescript-generator version 3.2.1263 on 2024-09-03 17:38:51.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1456,7 +1456,6 @@ export class ErrorMessage extends Message {
 }
 
 export class EventGrounding {
-    transportFormats: TransportFormat[];
     transportProtocols: TransportProtocolUnion[];
 
     static fromData(
@@ -1467,9 +1466,6 @@ export class EventGrounding {
             return data;
         }
         const instance = target || new EventGrounding();
-        instance.transportFormats = __getCopyArrayFn(TransportFormat.fromData)(
-            data.transportFormats,
-        );
         instance.transportProtocols = __getCopyArrayFn(
             TransportProtocol.fromDataUnion,
         )(data.transportProtocols);
@@ -2287,7 +2283,6 @@ export class MessagingSettings {
     mqttPort: number;
     natsHost: string;
     natsPort: number;
-    prioritizedFormats: SpDataFormat[];
     prioritizedProtocols: SpProtocol[];
     pulsarUrl: string;
     supportedProtocols: string[];
@@ -2314,9 +2309,6 @@ export class MessagingSettings {
         instance.mqttPort = data.mqttPort;
         instance.natsHost = data.natsHost;
         instance.natsPort = data.natsPort;
-        instance.prioritizedFormats = __getCopyArrayFn(
-            __identity<SpDataFormat>(),
-        )(data.prioritizedFormats);
         instance.prioritizedProtocols = __getCopyArrayFn(
             __identity<SpProtocol>(),
         )(data.prioritizedProtocols);
@@ -2622,11 +2614,9 @@ export class PipelineElementMonitoringInfo {
 }
 
 export class PipelineElementRecommendation {
-    count: number;
     description: string;
     elementId: string;
     name: string;
-    weight: number;
 
     static fromData(
         data: PipelineElementRecommendation,
@@ -2636,18 +2626,15 @@ export class PipelineElementRecommendation {
             return data;
         }
         const instance = target || new PipelineElementRecommendation();
-        instance.count = data.count;
         instance.description = data.description;
         instance.elementId = data.elementId;
         instance.name = data.name;
-        instance.weight = data.weight;
         return instance;
     }
 }
 
 export class PipelineElementRecommendationMessage {
     possibleElements: PipelineElementRecommendation[];
-    recommendedElements: PipelineElementRecommendation[];
     success: boolean;
 
     static fromData(
@@ -2661,9 +2648,6 @@ export class PipelineElementRecommendationMessage {
         instance.possibleElements = __getCopyArrayFn(
             PipelineElementRecommendation.fromData,
         )(data.possibleElements);
-        instance.recommendedElements = __getCopyArrayFn(
-            PipelineElementRecommendation.fromData,
-        )(data.recommendedElements);
         instance.success = data.success;
         return instance;
     }
@@ -2875,8 +2859,8 @@ export class PipelineOperationStatus {
 }
 
 export class PipelinePreviewModel {
+    elementIdMappings: { [index: string]: string };
     previewId: string;
-    supportedPipelineElementDomIds: string[];
 
     static fromData(
         data: PipelinePreviewModel,
@@ -2886,10 +2870,10 @@ export class PipelinePreviewModel {
             return data;
         }
         const instance = target || new PipelinePreviewModel();
+        instance.elementIdMappings = __getCopyObjectFn(__identity<string>())(
+            data.elementIdMappings,
+        );
         instance.previewId = data.previewId;
-        instance.supportedPipelineElementDomIds = __getCopyArrayFn(
-            __identity<string>(),
-        )(data.supportedPipelineElementDomIds);
         return instance;
     }
 }
@@ -3828,22 +3812,6 @@ export class TransformOutputStrategy extends OutputStrategy {
     }
 }
 
-export class TransportFormat {
-    rdfType: string[];
-
-    static fromData(
-        data: TransportFormat,
-        target?: TransportFormat,
-    ): TransportFormat {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new TransportFormat();
-        instance.rdfType = __getCopyArrayFn(__identity<string>())(data.rdfType);
-        return instance;
-    }
-}
-
 export class TreeInputNode {
     children: TreeInputNode[];
     dataNode: boolean;
@@ -4048,8 +4016,6 @@ export type PropertyScope =
 export type SelectionStaticPropertyUnion =
     | AnyStaticProperty
     | OneOfStaticProperty;
-
-export type SpDataFormat = 'CBOR' | 'JSON' | 'FST' | 'SMILE';
 
 export type SpLogLevel = 'INFO' | 'WARN' | 'ERROR';
 

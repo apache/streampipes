@@ -18,11 +18,11 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import {
+    AssetConstants,
     AssetSiteDesc,
     GenericStorageService,
     LocationConfig,
 } from '@streampipes/platform-services';
-import { AssetConstants } from '../../../assets/constants/asset.constants';
 import { MatTableDataSource } from '@angular/material/table';
 import { ManageSiteDialogComponent } from '../../dialog/manage-site/manage-site-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';

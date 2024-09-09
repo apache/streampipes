@@ -25,8 +25,9 @@ import {
     TimeSettings,
 } from '@streampipes/platform-services';
 import { ResizeService } from '../../services/resize.service';
-import { zip } from 'rxjs';
+import { of, zip } from 'rxjs';
 import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
+import { catchError } from 'rxjs/operators';
 
 @Directive()
 export abstract class AbstractWidgetViewDirective {
@@ -82,7 +83,9 @@ export abstract class AbstractWidgetViewDirective {
 
     loadWidgetConfigs() {
         const observables = this.dashboard.widgets.map(w =>
-            this.dataViewDataExplorerService.getWidget(w.id),
+            this.dataViewDataExplorerService
+                .getWidget(w.id)
+                .pipe(catchError(() => of(undefined))),
         );
         zip(...observables).subscribe(results => {
             results.forEach(r => {
@@ -117,14 +120,16 @@ export abstract class AbstractWidgetViewDirective {
     }
 
     processWidget(widget: DataExplorerWidgetModel) {
-        widget.widgetType = this.widgetRegistryService.getWidgetType(
-            widget.widgetType,
-        );
-        this.configuredWidgets.set(widget.elementId, widget);
-        this.dataLakeMeasures.set(
-            widget.elementId,
-            widget.dataConfig.sourceConfigs[0].measure,
-        );
+        if (widget !== undefined) {
+            widget.widgetType = this.widgetRegistryService.getWidgetType(
+                widget.widgetType,
+            );
+            this.configuredWidgets.set(widget.elementId, widget);
+            this.dataLakeMeasures.set(
+                widget.elementId,
+                widget.dataConfig.sourceConfigs[0].measure,
+            );
+        }
     }
 
     propagateItemRemoval(widgetIndex: number) {

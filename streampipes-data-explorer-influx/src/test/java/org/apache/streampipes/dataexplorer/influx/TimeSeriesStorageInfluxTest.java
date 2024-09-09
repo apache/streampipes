@@ -19,6 +19,7 @@
 package org.apache.streampipes.dataexplorer.influx;
 
 
+import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
@@ -383,7 +384,7 @@ public class TimeSeriesStorageInfluxTest {
     );
 
     var influxClientProviderMock = Mockito.mock(InfluxClientProvider.class);
-    Mockito.when(influxClientProviderMock.getInitializedInfluxDBClient(ArgumentMatchers.any()))
+    Mockito.when(influxClientProviderMock.getSetUpInfluxDBClient((Environment) ArgumentMatchers.any()))
            .thenReturn(influxDBMock);
 
     return new TimeSeriesStorageInflux(measure, null, influxClientProviderMock);

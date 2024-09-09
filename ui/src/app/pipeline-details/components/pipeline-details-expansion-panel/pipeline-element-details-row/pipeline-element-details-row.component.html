@@ -27,7 +27,7 @@
             mat-icon-button
             color="accent"
             matTooltip="Logs"
-            [disabled]="!pipelineRunning"
+            [disabled]="!pipelineRunning || logInfo.length === 0"
         >
             <mat-icon>topic</mat-icon>
         </button>

@@ -103,6 +103,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AdapterStatusLightComponent } from './components/existing-adapters/adapter-status-light/adapter-status-light.component';
 import { SpAdapterDeploymentSettingsComponent } from './components/adapter-configuration/adapter-settings/adapter-deployment-settings/adapter-deployment-settings.component';
 import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-documentation/adapter-documentation-dialog.component';
+import { AdapterDetailsDataComponent } from './components/adapter-details/adapter-details-data/adapter-details-data.component';
 
 @NgModule({
     imports: [
@@ -164,12 +165,26 @@ import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-document
                         component: EditAdapterComponent,
                     },
                     {
-                        path: 'details/:elementId/metrics',
-                        component: SpAdapterDetailsMetricsComponent,
-                    },
-                    {
-                        path: 'details/:elementId/logs',
-                        component: SpAdapterDetailsLogsComponent,
+                        path: 'details/:elementId',
+                        children: [
+                            {
+                                path: '',
+                                pathMatch: 'full',
+                                redirectTo: 'data',
+                            },
+                            {
+                                path: 'data',
+                                component: AdapterDetailsDataComponent,
+                            },
+                            {
+                                path: 'metrics',
+                                component: SpAdapterDetailsMetricsComponent,
+                            },
+                            {
+                                path: 'logs',
+                                component: SpAdapterDetailsLogsComponent,
+                            },
+                        ],
                     },
                 ],
             },
@@ -181,6 +196,7 @@ import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-document
         AdapterConfigurationHeaderComponent,
         AdapterConfigurationComponent,
         AdapterDescriptionComponent,
+        AdapterDetailsDataComponent,
         AdapterStartedDialog,
         AdapterStatusLightComponent,
         AdapterSettingsComponent,

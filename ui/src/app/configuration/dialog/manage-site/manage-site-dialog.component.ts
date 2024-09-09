@@ -19,11 +19,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
+    AssetConstants,
     AssetSiteDesc,
     GenericStorageService,
     LocationConfig,
 } from '@streampipes/platform-services';
-import { AssetConstants } from '../../../assets/constants/asset.constants';
 
 @Component({
     selector: 'sp-manage-site-dialog-component',

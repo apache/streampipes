@@ -152,7 +152,6 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
           uniqueStreamId,
           ProtocolManager.makeOutputCollector(
               value.getEventGrounding().getTransportProtocol(),
-              value.getEventGrounding().getTransportFormats().get(0),
               uniqueStreamId));
     });
 
@@ -169,7 +168,7 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
         GroundingDebugUtils.modifyGrounding(is.getEventGrounding());
       }
       inputCollectors.put(uniqueStreamId, ProtocolManager.findInputCollector(is.getEventGrounding()
-          .getTransportProtocol(), is.getEventGrounding().getTransportFormats().get(0), false));
+          .getTransportProtocol(), false));
     }
     return inputCollectors;
   }

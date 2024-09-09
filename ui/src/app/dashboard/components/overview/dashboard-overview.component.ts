@@ -42,13 +42,13 @@ import { zip } from 'rxjs';
 })
 export class DashboardOverviewComponent implements OnInit {
     dashboards: Dashboard[] = [];
+    filteredDashboards: Dashboard[] = [];
 
     dataSource = new MatTableDataSource<Dashboard>();
     displayedColumns: string[] = [];
 
     isAdmin = false;
     hasDashboardWritePrivileges = false;
-    hasDashboardDeletePrivileges = false;
 
     constructor(
         private dashboardService: DashboardService,
@@ -69,9 +69,6 @@ export class DashboardOverviewComponent implements OnInit {
             this.hasDashboardWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
             );
-            this.hasDashboardDeletePrivileges = this.authService.hasRole(
-                UserPrivilege.PRIVILEGE_DELETE_DASHBOARD,
-            );
             this.displayedColumns = ['name', 'actions'];
         });
         this.getDashboards();
@@ -80,7 +77,7 @@ export class DashboardOverviewComponent implements OnInit {
     getDashboards() {
         this.dashboardService.getDashboards().subscribe(data => {
             this.dashboards = data.sort((a, b) => a.name.localeCompare(b.name));
-            this.dataSource.data = this.dashboards;
+            this.applyDashboardFilters();
         });
     }
 
@@ -167,5 +164,16 @@ export class DashboardOverviewComponent implements OnInit {
                 this.getDashboards();
             }
         });
+    }
+
+    applyDashboardFilters(elementIds: Set<string> = new Set<string>()): void {
+        this.filteredDashboards = this.dashboards.filter(a => {
+            if (elementIds.size === 0) {
+                return true;
+            } else {
+                return elementIds.has(a.elementId);
+            }
+        });
+        this.dataSource.data = this.filteredDashboards;
     }
 }

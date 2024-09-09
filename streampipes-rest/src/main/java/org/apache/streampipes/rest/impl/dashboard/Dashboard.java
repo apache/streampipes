@@ -43,9 +43,4 @@ public class Dashboard extends AbstractDashboardResource {
   public boolean hasWriteAuthority() {
     return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE);
   }
-
-  @Override
-  public boolean hasDeleteAuthority() {
-    return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_DELETE_DASHBOARD_VALUE);
-  }
 }

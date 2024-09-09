@@ -19,22 +19,19 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {
+    AssetConstants,
     GenericStorageService,
     SpAssetModel,
 } from '@streampipes/platform-services';
-import { AssetConstants } from '../../constants/asset.constants';
 import {
     DialogService,
     PanelType,
+    SpAssetBrowserService,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { SpAssetRoutes } from '../../assets.routes';
-import { AssetUploadDialogComponent } from '../../dialog/asset-upload/asset-upload-dialog.component';
 import { Router } from '@angular/router';
 import { SpCreateAssetDialogComponent } from '../../dialog/create-asset/create-asset-dialog.component';
-import { DataExportService } from '../../../configuration/export/data-export.service';
-import { mergeMap } from 'rxjs/operators';
-import { saveAs } from 'file-saver';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 
 @Component({
@@ -55,8 +52,8 @@ export class SpAssetOverviewComponent implements OnInit {
         private breadcrumbService: SpBreadcrumbService,
         private dialogService: DialogService,
         private router: Router,
-        private dataExportService: DataExportService,
         private idGeneratorService: IdGeneratorService,
+        private assetBrowserService: SpAssetBrowserService,
     ) {}
 
     ngOnInit(): void {
@@ -75,61 +72,41 @@ export class SpAssetOverviewComponent implements OnInit {
             });
     }
 
-    createNewAsset(assetModel?: SpAssetModel) {
-        if (!assetModel) {
-            assetModel = {
-                assetName: 'New Asset',
-                assetDescription: '',
-                assetLinks: [],
-                assetId: this.idGeneratorService.generate(6),
-                _id: this.idGeneratorService.generate(24),
-                appDocType: 'asset-management',
-                removable: true,
-                _rev: undefined,
-                assets: [],
-                assetType: undefined,
-            };
-        }
+    createNewAsset() {
+        const assetModel = {
+            assetName: 'New Asset',
+            assetDescription: '',
+            assetLinks: [],
+            assetId: this.idGeneratorService.generate(6),
+            _id: this.idGeneratorService.generate(24),
+            appDocType: 'asset-management',
+            removable: true,
+            _rev: undefined,
+            assets: [],
+            assetType: undefined,
+        };
         const dialogRef = this.dialogService.open(
             SpCreateAssetDialogComponent,
             {
-                panelType: PanelType.STANDARD_PANEL,
+                panelType: PanelType.SLIDE_IN_PANEL,
                 title: 'Create asset',
-                width: '40vw',
+                width: '50vw',
                 data: {
-                    createMode: true,
                     assetModel: assetModel,
                 },
             },
         );
 
-        dialogRef.afterClosed().subscribe(() => {
-            this.loadAssets();
-        });
-    }
-
-    uploadAsset() {
-        const dialogRef = this.dialogService.open(AssetUploadDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Upload asset model',
-            width: '40vw',
-        });
-
-        dialogRef.afterClosed().subscribe(reload => {
-            if (reload) {
-                this.loadAssets();
+        dialogRef.afterClosed().subscribe(ev => {
+            if (ev) {
+                this.goToDetailsView(assetModel, true);
             }
         });
     }
 
     goToDetailsView(asset: SpAssetModel, editMode = false) {
-        if (!editMode) {
-            this.router.navigate(['assets', 'details', asset._id]);
-        } else {
-            this.router.navigate(['assets', 'details', asset._id], {
-                queryParams: { editMode: editMode },
-            });
-        }
+        const mode = editMode ? 'edit' : 'view';
+        this.router.navigate(['assets', 'details', asset._id, mode]);
     }
 
     deleteAsset(asset: SpAssetModel) {
@@ -139,22 +116,9 @@ export class SpAssetOverviewComponent implements OnInit {
                 asset._id,
                 asset._rev,
             )
-            .subscribe(result => {
+            .subscribe(() => {
                 this.loadAssets();
-            });
-    }
-
-    downloadAsset(asset: SpAssetModel) {
-        this.dataExportService
-            .getExportPreview([asset._id])
-            .pipe(
-                mergeMap(preview =>
-                    this.dataExportService.triggerExport(preview),
-                ),
-            )
-            .subscribe((data: Blob) => {
-                const blob = new Blob([data], { type: 'application/zip' });
-                saveAs(blob, 'assetExport');
+                this.assetBrowserService.loadAssetData();
             });
     }
 }

@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.sinks.brokers.jvm.websocket;
 
-import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
+import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
 import org.apache.streampipes.model.runtime.Event;
 
 import org.java_websocket.WebSocket;

@@ -147,15 +147,20 @@ export class DataLakeUtils {
         this.editDashboard(name);
     }
 
-    public static addDataViewToDashboard(dataViewName: string) {
-        this.selectTimeRange(
-            new Date(2020, 10, 20, 22, 44),
-            this.getFutureDate(),
-        );
+    public static addDataViewToDashboard(
+        dataViewName: string,
+        ignoreTimeRange = false,
+    ) {
+        if (!ignoreTimeRange) {
+            this.selectTimeRange(
+                new Date(2020, 10, 20, 22, 44),
+                this.getFutureDate(),
+            );
+        }
         cy.dataCy('add-data-view-btn-' + dataViewName).click();
     }
 
-    public static createAndEditDataView(name: string) {
+    public static createAndEditDataView() {
         // Create new data view
         cy.dataCy('open-new-data-view').click();
     }
@@ -182,6 +187,10 @@ export class DataLakeUtils {
 
     public static saveDashboardConfiguration() {
         cy.dataCy('save-dashboard-btn', { timeout: 10000 }).click();
+    }
+
+    public static getEmptyDashboardInformation() {
+        return cy.dataCy('empty-dashboard');
     }
 
     public static deleteDashboard(dashboardName: string) {
@@ -465,5 +474,9 @@ export class DataLakeUtils {
         cy.dataCy('data-views-table-overview', {
             timeout: 10000,
         }).should('have.length', amount);
+    }
+
+    public static checkIfConfirmationDialogIsShowing(): void {
+        cy.get('confirmation-dialog').should('be.visible');
     }
 }

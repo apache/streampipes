@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { SpColorizationService } from '../../services/colorization.service';
 
 @Component({
@@ -24,18 +24,30 @@ import { SpColorizationService } from '../../services/colorization.service';
     templateUrl: './sp-label.component.html',
     styleUrls: ['./sp-label.component.scss'],
 })
-export class SpLabelComponent {
+export class SpLabelComponent implements OnInit {
     @Input()
     labelText: string;
 
     @Input()
     small = false;
 
+    @Input()
+    size: 'small' | 'medium' | 'large' = 'large';
+
     _labelBackground: string;
 
     labelTextColor = '';
+    cssClass = '';
 
     constructor(private colorizationService: SpColorizationService) {}
+
+    ngOnInit() {
+        if (this.size === 'medium') {
+            this.cssClass = 'medium-label';
+        } else if (this.size === 'small') {
+            this.cssClass = 'small-label';
+        }
+    }
 
     @Input()
     set labelBackground(labelBackground: string) {

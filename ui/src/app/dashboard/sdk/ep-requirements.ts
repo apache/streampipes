@@ -67,7 +67,7 @@ export class EpRequirements {
     }
 
     static numberReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(DataType.NUMBER);
+        return EpRequirements.datatypeReq(SemanticType.SO_NUMBER);
     }
 
     static stringReq(): EventPropertyUnion {

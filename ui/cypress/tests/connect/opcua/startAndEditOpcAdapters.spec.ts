@@ -17,13 +17,12 @@
  */
 
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
-import { ParameterUtils } from '../../../support/utils/ParameterUtils';
-import { AdapterBuilder } from '../../../support/builder/AdapterBuilder';
 import { TreeNodeUserInputBuilder } from '../../../support/builder/TreeNodeUserInputBuilder';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
 import { TreeStaticPropertyUtils } from '../../../support/utils/userInput/TreeStaticPropertyUtils';
 import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
 import { AdapterInput } from '../../../support/model/AdapterInput';
+import { OpcUaUtils } from '../../../support/utils/connect/OpcUaUtils';
 
 describe('Test starting and editing OPC-UA Adapters in different configurations', () => {
     beforeEach('Setup Test', () => {
@@ -31,12 +30,12 @@ describe('Test starting and editing OPC-UA Adapters in different configurations'
     });
 
     it('Create OPC-UA Adapter Tree Editor Pull Mode', () => {
-        const adapterInput = getAdapterBuilderWithTreeNodes(true);
+        const adapterInput = OpcUaUtils.getAdapterBuilderWithTreeNodes(true);
         startAdapterTest(adapterInput);
     });
 
     it('Create OPC-UA Adapter Tree Editor Subscription Mode', () => {
-        const adapterInput = getAdapterBuilderWithTreeNodes(false);
+        const adapterInput = OpcUaUtils.getAdapterBuilderWithTreeNodes(false);
         startAdapterTest(adapterInput);
     });
 
@@ -51,7 +50,7 @@ describe('Test starting and editing OPC-UA Adapters in different configurations'
     });
 
     it('Edit OPC-UA Adapter created with Tree editor', () => {
-        const adapterInput = getAdapterBuilderWithTreeNodes(true);
+        const adapterInput = OpcUaUtils.getAdapterBuilderWithTreeNodes(true);
 
         editAdapterTest(adapterInput);
     });
@@ -62,29 +61,6 @@ describe('Test starting and editing OPC-UA Adapters in different configurations'
         editAdapterTest(adapterInput);
     });
 });
-
-const getAdapterBuilderWithTreeNodes = (pullMode: boolean) => {
-    const builder = getBaseAdapterConfigBuilder(pullMode);
-    builder.addTreeNode(
-        TreeNodeUserInputBuilder.create(
-            'Objects',
-            TreeNodeUserInputBuilder.create(
-                'OpcPlc',
-                TreeNodeUserInputBuilder.create(
-                    'Telemetry',
-                    TreeNodeUserInputBuilder.create('Basic').addChildren(
-                        TreeNodeUserInputBuilder.create('AlternatingBoolean'),
-                        TreeNodeUserInputBuilder.create('StepUp'),
-                        TreeNodeUserInputBuilder.create('RandomSignedInt32'),
-                        TreeNodeUserInputBuilder.create('RandomUnsignedInt32'),
-                    ),
-                ),
-            ),
-        ),
-    );
-
-    return builder.build();
-};
 
 /**
  * The start adapter test expects an adapter input with the same schema
@@ -117,7 +93,7 @@ const editAdapterTest = (adapterInput: AdapterInput) => {
 };
 
 const getAdapterBuilderWithTextNodes = (pullMode: boolean) => {
-    const builder = getBaseAdapterConfigBuilder(pullMode);
+    const builder = OpcUaUtils.getBaseAdapterConfigBuilder(pullMode);
     builder.addTreeNode(
         TreeNodeUserInputBuilder.create(
             'ns=3;s=AlternatingBoolean',
@@ -138,30 +114,4 @@ const getAdapterBuilderWithTextNodes = (pullMode: boolean) => {
     );
 
     return builder.build();
-};
-
-const getBaseAdapterConfigBuilder = (pullMode: boolean): AdapterBuilder => {
-    const host: string = ParameterUtils.get('localhost', 'opcua');
-
-    const builder = AdapterBuilder.create('OPC_UA').setName('OPC UA Test');
-
-    if (pullMode) {
-        builder.addInput('radio', 'adapter_type-pull_mode', '');
-        builder.addInput('input', 'undefined-PULLING_INTERVAL-0', '1000');
-    } else {
-        builder.addInput('radio', 'adapter_type-subscription_mode', '');
-    }
-
-    builder
-        .addInput('radio', 'access_mode-none', '')
-        .addInput('radio', 'opc_host_or_url-url', '')
-        .addInput(
-            'input',
-            'undefined-OPC_SERVER_URL-0',
-            'opc.tcp://' + host + ':50000',
-        );
-
-    builder.setAutoAddTimestampPropery();
-
-    return builder;
 };

@@ -28,7 +28,11 @@ export class LivePreviewService {
 
     convert(event: HttpDownloadProgressEvent) {
         const { partialText } = event;
-        const chunks = partialText.split('\n');
-        return JSON.parse(chunks[chunks.length - 2]);
+        if (partialText) {
+            const chunks = partialText.split('\n');
+            return JSON.parse(chunks[chunks.length - 2]);
+        } else {
+            return undefined;
+        }
     }
 }

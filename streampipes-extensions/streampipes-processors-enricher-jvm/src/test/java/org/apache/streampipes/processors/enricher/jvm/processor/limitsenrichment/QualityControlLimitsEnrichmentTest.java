@@ -32,7 +32,7 @@ class QualityControlLimitsEnrichmentTest {
   @Test
   void onEvent() {
 
-    var processor = new QualityControlLimitsEnrichment();
+    var processor = new QualityControlLimitsEnrichmentProcessor();
 
     List<Map<String, Object>> inputEvents = List.of(Map.of(
         "temperature", 10.1
@@ -40,18 +40,18 @@ class QualityControlLimitsEnrichmentTest {
 
     List<Map<String, Object>> outputEvents = List.of(Map.of(
         "temperature", 10.1,
-        QualityControlLimitsEnrichment.UPPER_CONTROL_LIMIT, 80.0,
-        QualityControlLimitsEnrichment.UPPER_WARNING_LIMIT, 70.0,
-        QualityControlLimitsEnrichment.LOWER_CONTROL_LIMIT, 30.0,
-        QualityControlLimitsEnrichment.LOWER_WARNING_LIMIT, 20.0
+        QualityControlLimitsEnrichmentProcessor.UPPER_CONTROL_LIMIT, 80.0,
+        QualityControlLimitsEnrichmentProcessor.UPPER_WARNING_LIMIT, 70.0,
+        QualityControlLimitsEnrichmentProcessor.LOWER_CONTROL_LIMIT, 30.0,
+        QualityControlLimitsEnrichmentProcessor.LOWER_WARNING_LIMIT, 20.0
     ));
 
     var configuration = TestConfiguration
         .builder()
-        .config(QualityControlLimitsEnrichment.UPPER_CONTROL_LIMIT_LABEL, 80.0)
-        .config(QualityControlLimitsEnrichment.UPPER_WARNING_LIMIT_LABEL, 70.0)
-        .config(QualityControlLimitsEnrichment.LOWER_CONTROL_LIMIT_LABEL, 30.0)
-        .config(QualityControlLimitsEnrichment.LOWER_WARNING_LIMIT_LABEL, 20.0)
+        .config(QualityControlLimitsEnrichmentProcessor.UPPER_CONTROL_LIMIT_LABEL, 80.0)
+        .config(QualityControlLimitsEnrichmentProcessor.UPPER_WARNING_LIMIT_LABEL, 70.0)
+        .config(QualityControlLimitsEnrichmentProcessor.LOWER_CONTROL_LIMIT_LABEL, 30.0)
+        .config(QualityControlLimitsEnrichmentProcessor.LOWER_WARNING_LIMIT_LABEL, 20.0)
         .prefixStrategy(PrefixStrategy.SAME_PREFIX)
         .build();
 

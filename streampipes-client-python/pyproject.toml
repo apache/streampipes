@@ -112,6 +112,16 @@ twine = "5.1.0"
 name = "PyPI"
 priority = "primary"
 
+[tool.autoflake]
+remove-all-unused-imports = true
+expand-star-imports = true
+in-place = true
+remove-unused-variables = true
+remove-duplicate-keys = true
+
+[tool.black]
+line-length = 120
+
 [tool.interrogate]
 ignore-init-method = true
 ignore-magic = true

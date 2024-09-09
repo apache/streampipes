@@ -58,7 +58,7 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
   }
 
   @DeleteMapping(path = "/{dashboardId}")
-  @PreAuthorize("this.hasDeleteAuthority() and hasPermission(#dashboardId, 'DELETE')")
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dashboardId, 'WRITE')")
   public ResponseEntity<Void> deleteDashboard(@PathVariable("dashboardId") String dashboardId) {
     getResourceManager().delete(dashboardId);
     return ok();
@@ -80,7 +80,5 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
   public abstract boolean hasReadAuthority();
 
   public abstract boolean hasWriteAuthority();
-
-  public abstract boolean hasDeleteAuthority();
 
 }

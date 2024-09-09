@@ -17,9 +17,6 @@
  */
 package org.apache.streampipes.rest.security;
 
-import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_DELETE_ADAPTER_VALUE;
-import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_DELETE_PIPELINE_ELEMENT_VALUE;
-import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_DELETE_PIPELINE_VALUE;
 import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_READ_ADAPTER_VALUE;
 import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_READ_ASSETS_VALUE;
 import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE;
@@ -65,23 +62,17 @@ public class AuthConstants {
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_PIPELINE_VALUE + Q + BE2;
   public static final String HAS_WRITE_PIPELINE_PRIVILEGE =
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_PIPELINE_VALUE + Q + BE2;
-  public static final String HAS_DELETE_PIPELINE_PRIVILEGE =
-      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_DELETE_PIPELINE_VALUE + Q + BE2;
 
   public static final String HAS_READ_PIPELINE_ELEMENT_PRIVILEGE =
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_PIPELINE_ELEMENT_VALUE + Q + BE2;
 
   public static final String HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE =
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_PIPELINE_ELEMENT_VALUE + Q + BE2;
-  public static final String HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE =
-      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_DELETE_PIPELINE_ELEMENT_VALUE + Q + BE2;
 
   public static final String HAS_WRITE_ADAPTER_PRIVILEGE =
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_ADAPTER_VALUE + Q + BE2;
   public static final String HAS_READ_ADAPTER_PRIVILEGE =
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_ADAPTER_VALUE + Q + BE2;
-  public static final String HAS_DELETE_ADAPTER_PRIVILEGE =
-      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_DELETE_ADAPTER_VALUE + Q + BE2;
 
   public static final String HAS_WRITE_DATA_EXPLORER_PRIVILEGE =
       BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE + Q + BE2;

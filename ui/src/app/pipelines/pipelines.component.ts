@@ -47,6 +47,7 @@ import { Subscription } from 'rxjs';
 export class PipelinesComponent implements OnInit, OnDestroy {
     pipeline: Pipeline;
     pipelines: Pipeline[] = [];
+    filteredPipelines: Pipeline[] = [];
     starting: boolean;
     stopping: boolean;
 
@@ -111,13 +112,24 @@ export class PipelinesComponent implements OnInit, OnDestroy {
         this.pipelines = [];
         this.pipelineService.getPipelines().subscribe(pipelines => {
             this.pipelines = pipelines;
-            this.pipelinesReady = true;
+            this.applyPipelineFilters(new Set<string>());
         });
+    }
+
+    applyPipelineFilters(elementIds: Set<string>) {
+        if (elementIds.size == 0) {
+            this.filteredPipelines = this.pipelines;
+        } else {
+            this.filteredPipelines = this.pipelines.filter(p =>
+                elementIds.has(p.elementId),
+            );
+        }
+        this.pipelinesReady = true;
     }
 
     checkCurrentSelectionStatus(status) {
         let active = true;
-        this.pipelines.forEach(pipeline => {
+        this.filteredPipelines.forEach(pipeline => {
             if (pipeline.running === status) {
                 active = false;
             }
@@ -132,20 +144,16 @@ export class PipelinesComponent implements OnInit, OnDestroy {
                 title: (action ? 'Start' : 'Stop') + ' all pipelines',
                 width: '70vw',
                 data: {
-                    pipelines: this.pipelines,
+                    pipelines: this.filteredPipelines,
                     action: action,
                 },
             });
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-                this.refreshPipelines();
+                this.getPipelines();
             }
         });
-    }
-
-    refreshPipelines() {
-        this.getPipelines();
     }
 
     startPipelineTour(): void {

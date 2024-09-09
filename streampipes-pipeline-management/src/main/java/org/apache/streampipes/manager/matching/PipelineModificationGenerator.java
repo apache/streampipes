@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.matching;
 
 import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphHelpers;
+import org.apache.streampipes.manager.matching.v2.pipeline.IPipelineValidationStep;
 import org.apache.streampipes.manager.matching.v2.pipeline.PipelineValidator;
 import org.apache.streampipes.manager.matching.v2.pipeline.SpValidationException;
 import org.apache.streampipes.model.SpDataStream;
@@ -49,10 +50,11 @@ public class PipelineModificationGenerator {
   private final Map<String, PipelineEdgeValidation> edgeValidations;
   private final PipelineValidator pipelineValidator;
 
-  public PipelineModificationGenerator(PipelineGraph pipelineGraph) {
+  public PipelineModificationGenerator(PipelineGraph pipelineGraph,
+                                       List<IPipelineValidationStep> steps) {
     this.pipelineGraph = pipelineGraph;
     this.pipelineModifications = new HashMap<>();
-    this.pipelineValidator = new PipelineValidator();
+    this.pipelineValidator = new PipelineValidator(steps);
     this.edgeValidations = new HashMap<>();
   }
 
@@ -147,6 +149,6 @@ public class PipelineModificationGenerator {
     return matchingResultMessages
         .stream()
         .map(m -> new Notification(m.getTitle(), m.toString()))
-        .collect(Collectors.toList());
+        .toList();
   }
 }

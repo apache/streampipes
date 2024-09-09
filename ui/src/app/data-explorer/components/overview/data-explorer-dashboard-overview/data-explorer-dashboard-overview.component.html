@@ -37,13 +37,18 @@
                 </th>
                 <td
                     fxFlex="60"
-                    fxLayoutAlign="start center"
+                    fxLayoutAlign="center start"
                     mat-cell
                     data-cy="dashboard-table-overview"
                     *matCellDef="let element"
+                    fxLayout="column"
                 >
-                    {{ element.name }}<br />
-                    {{ element.description }}
+                    <div>
+                        <b>{{ element.name }}</b>
+                    </div>
+                    <div>
+                        <small> {{ element.description }}</small>
+                    </div>
                 </td>
             </ng-container>
 
@@ -101,7 +106,7 @@
                             mat-icon-button
                             color="accent"
                             matTooltip="Delete data view"
-                            *ngIf="hasDataExplorerDeletePrivileges"
+                            *ngIf="hasDataExplorerWritePrivileges"
                             [attr.data-cy]="'delete-dashboard-' + element.name"
                             (click)="openDeleteDashboardDialog(element)"
                         >

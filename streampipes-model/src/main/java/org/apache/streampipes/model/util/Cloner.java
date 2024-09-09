@@ -30,7 +30,6 @@ import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TopicDefinition;
-import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
 import org.apache.streampipes.model.grounding.WildcardTopicMapping;
@@ -220,11 +219,6 @@ public class Cloner {
     } else {
       return new ArrayList<>();
     }
-  }
-
-  public List<TransportFormat> transportFormats(
-      List<TransportFormat> transportFormats) {
-    return transportFormats.stream().map(t -> new TransportFormat(t)).collect(Collectors.toList());
   }
 
   public List<EventProperty> properties(List<EventProperty> eventProperties) {

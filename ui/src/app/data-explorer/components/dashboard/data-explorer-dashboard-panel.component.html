@@ -26,7 +26,6 @@
             [dashboard]="dashboard"
             [editMode]="editMode"
             [(viewMode)]="viewMode"
-            [hasDataExplorerDeletePrivileges]="hasDataExplorerDeletePrivileges"
             [hasDataExplorerWritePrivileges]="hasDataExplorerWritePrivileges"
             [timeRangeVisible]="timeRangeVisible"
             [timeSettings]="timeSettings"
@@ -64,9 +63,10 @@
                     fxFlex="100"
                     fxLayout="column"
                     fxLayoutAlign="center center"
+                    data-cy="empty-dashboard"
                 >
                     <h4>
-                        This data view is empty and doesn't contain any widgets.
+                        This dashboard is empty and doesn't contain any widgets.
                     </h4>
                 </div>
                 <sp-data-explorer-dashboard-grid

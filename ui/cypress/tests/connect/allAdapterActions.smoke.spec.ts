@@ -21,7 +21,7 @@ import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 
 describe('Testing Start/Stop All Adapters', () => {
     beforeEach('Setup Test', () => {
-        // To set up test, we are adding 2 stream adapters that can be futher configured
+        // To set up test, we are adding 2 stream adapters that can be further configured
         cy.initStreamPipesTest();
         ConnectUtils.addMachineDataSimulator('simulator-1');
         ConnectUtils.addMachineDataSimulator('simulator-2');

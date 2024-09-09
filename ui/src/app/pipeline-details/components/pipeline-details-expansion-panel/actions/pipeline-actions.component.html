@@ -67,7 +67,7 @@
             color="accent"
             matTooltip="Delete Pipeline"
             matTooltipPosition="above"
-            [disabled]="!hasDeletePipelinePrivileges"
+            [disabled]="!hasWritePipelinePrivileges"
             (click)="
                 pipelineOperationsService.showDeleteDialog(
                     pipeline,

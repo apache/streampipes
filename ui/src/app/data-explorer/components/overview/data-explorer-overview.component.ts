@@ -39,6 +39,8 @@ export class DataExplorerOverviewComponent extends SpDataExplorerOverviewDirecti
     @ViewChild(SpDataExplorerDashboardOverviewComponent)
     dashboardOverview: SpDataExplorerDashboardOverviewComponent;
 
+    resourceCount = 0;
+
     constructor(
         public dialogService: DialogService,
         private breadcrumbService: SpBreadcrumbService,
@@ -85,5 +87,9 @@ export class DataExplorerOverviewComponent extends SpDataExplorerOverviewDirecti
         dialogRef.afterClosed().subscribe(() => {
             this.dashboardOverview.getDashboards();
         });
+    }
+
+    applyDashboardFilters(elementIds: Set<string> = new Set<string>()): void {
+        this.dashboardOverview.applyDashboardFilters(elementIds);
     }
 }

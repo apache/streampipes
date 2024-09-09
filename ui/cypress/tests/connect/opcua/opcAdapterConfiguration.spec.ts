@@ -20,10 +20,9 @@ import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { ParameterUtils } from '../../../support/utils/ParameterUtils';
 import { AdapterBuilder } from '../../../support/builder/AdapterBuilder';
 import { TreeNodeUserInputBuilder } from '../../../support/builder/TreeNodeUserInputBuilder';
-import { StaticPropertyUtils } from '../../../support/utils/userInput/StaticPropertyUtils';
 import { TreeStaticPropertyUtils } from '../../../support/utils/userInput/TreeStaticPropertyUtils';
 import { ErrorMessageUtils } from '../../../support/utils/ErrorMessageUtils';
-import { AdapterInput } from '../../../support/model/AdapterInput';
+import { OpcUaUtils } from '../../../support/utils/connect/OpcUaUtils';
 
 describe('Test OPC-UA Adapter Configuration', () => {
     beforeEach('Setup Test', () => {
@@ -51,7 +50,7 @@ describe('Test OPC-UA Adapter Configuration', () => {
         );
 
         const adapterInput = adapterBuilder.build();
-        setUpInitialConfiguration(adapterInput);
+        OpcUaUtils.setUpInitialConfiguration(adapterInput);
 
         TreeStaticPropertyUtils.validateAmountOfSelectedNodes(2);
 
@@ -81,7 +80,7 @@ describe('Test OPC-UA Adapter Configuration', () => {
 
     it('Test OPC-UA Text Editor', () => {
         const adapterInput = getAdapterBuilder().build();
-        setUpInitialConfiguration(adapterInput);
+        OpcUaUtils.setUpInitialConfiguration(adapterInput);
 
         TreeStaticPropertyUtils.treeEditor().should('be.visible');
         TreeStaticPropertyUtils.textEditor().should('not.exist');
@@ -123,7 +122,7 @@ describe('Test OPC-UA Adapter Configuration', () => {
 
     it('Test OPC-UA Node does not exist', () => {
         const adapterInput = getAdapterBuilder().build();
-        setUpInitialConfiguration(adapterInput);
+        OpcUaUtils.setUpInitialConfiguration(adapterInput);
 
         // Switch to text editor
         TreeStaticPropertyUtils.switchToTextEditor();
@@ -137,7 +136,7 @@ describe('Test OPC-UA Adapter Configuration', () => {
 
     it('Test OPC-UA Wrong Node Id Format', () => {
         const adapterInput = getAdapterBuilder().build();
-        setUpInitialConfiguration(adapterInput);
+        OpcUaUtils.setUpInitialConfiguration(adapterInput);
 
         // Switch to text editor
         TreeStaticPropertyUtils.switchToTextEditor();
@@ -165,20 +164,4 @@ const getAdapterBuilder = () => {
             'opc.tcp://' + host + ':50000',
         )
         .setAutoAddTimestampPropery();
-};
-
-const setUpInitialConfiguration = (adapterInput: AdapterInput) => {
-    ConnectUtils.goToConnect();
-    ConnectUtils.goToNewAdapterPage();
-    ConnectUtils.selectAdapter(adapterInput.adapterType);
-
-    // Wait for the first static property to be rendered
-    cy.dataCy(adapterInput.adapterConfiguration[0].selector).should(
-        'be.visible',
-    );
-    // Validate that no error is not shown when nothing is configured
-    cy.dataCy('reloading-nodes', { timeout: 3000 }).should('not.exist');
-    ErrorMessageUtils.getExceptionComponent().should('not.exist');
-
-    StaticPropertyUtils.input(adapterInput.adapterConfiguration);
 };

@@ -87,48 +87,6 @@
         <mat-divider></mat-divider>
 
         <sp-split-section
-            title="Message Formats"
-            subtitle="Manage the priority of message formats used"
-        >
-            <div
-                fxFlex="100"
-                fxLayout="column"
-                fxLayoutAlign="start start"
-                class="page-container-padding-inner"
-            >
-                <div
-                    cdkDropList
-                    class="data-format-list"
-                    (cdkDropListDropped)="drop($event)"
-                    *ngIf="loadingCompleted"
-                >
-                    <div
-                        class="data-format-box"
-                        *ngFor="
-                            let format of messagingSettings.prioritizedFormats
-                        "
-                        cdkDrag
-                    >
-                        {{ format }}
-                    </div>
-                </div>
-                <div fxLayoutAlign="start center" class="mt-10">
-                    <button
-                        mat-raised-button
-                        color="accent"
-                        type="submit"
-                        class="md-raised md-primary submit-button"
-                        (click)="updateMessagingSettings()"
-                    >
-                        Update
-                    </button>
-                </div>
-            </div>
-        </sp-split-section>
-
-        <mat-divider></mat-divider>
-
-        <sp-split-section
             title="Protocols"
             subtitle="Manage the priority of protocols used"
         >

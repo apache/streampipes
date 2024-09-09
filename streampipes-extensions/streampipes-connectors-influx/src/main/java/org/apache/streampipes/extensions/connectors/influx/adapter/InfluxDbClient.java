@@ -109,7 +109,7 @@ public class InfluxDbClient extends SharedInfluxClient {
 
   public void disconnect() {
     if (connected) {
-      influxDb.close();
+      super.disconnect();
       connected = false;
     }
   }
