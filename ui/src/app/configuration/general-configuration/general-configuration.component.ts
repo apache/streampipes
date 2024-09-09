@@ -28,15 +28,16 @@ import {
     GeneralConfigModel,
     GeneralConfigService,
     MailConfigService,
+    Role,
 } from '@streampipes/platform-services';
-import { zip } from 'rxjs';
+import { Observable, zip } from 'rxjs';
 import { AvailableRolesService } from '../../services/available-roles.service';
-import { RoleDescription } from '../../_models/auth.model';
 import { UserRole } from '../../_enums/user-role.enum';
 import { AppConstants } from '../../services/app.constants';
-import { SpConfigurationTabs } from '../configuration-tabs';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpConfigurationTabsService } from '../configuration-tabs.service';
+import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.routes';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'sp-general-configuration',
@@ -44,7 +45,7 @@ import { SpConfigurationRoutes } from '../configuration.routes';
     styleUrls: ['./general-configuration.component.scss'],
 })
 export class GeneralConfigurationComponent implements OnInit {
-    tabs = SpConfigurationTabs.getTabs();
+    tabs: SpNavigationItem[] = [];
 
     parentForm: UntypedFormGroup;
     formReady = false;
@@ -52,7 +53,7 @@ export class GeneralConfigurationComponent implements OnInit {
     generalConfig: GeneralConfigModel;
     mailConfig: EmailConfig;
 
-    availableRoles: RoleDescription[];
+    availableRoles$: Observable<Role[]>;
 
     constructor(
         private fb: UntypedFormBuilder,
@@ -61,15 +62,19 @@ export class GeneralConfigurationComponent implements OnInit {
         private availableRolesService: AvailableRolesService,
         private appConstants: AppConstants,
         private breadcrumbService: SpBreadcrumbService,
+        private tabService: SpConfigurationTabsService,
     ) {}
 
     ngOnInit(): void {
+        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
-            { label: SpConfigurationTabs.getTabs()[0].itemTitle },
+            { label: this.tabService.getTabTitle('general') },
         ]);
-        this.availableRoles = this.availableRolesService.availableRoles.filter(
-            role => role.role !== UserRole.ROLE_ADMIN,
+        this.availableRoles$ = this.availableRolesService.availableRoles$.pipe(
+            map(roles =>
+                roles.filter(role => role.elementId !== UserRole.ROLE_ADMIN),
+            ),
         );
         zip(
             this.generalConfigService.getGeneralConfig(),

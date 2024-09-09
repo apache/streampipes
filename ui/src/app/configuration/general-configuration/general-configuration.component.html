@@ -118,9 +118,11 @@
                                     [multiple]="true"
                                 >
                                     <mat-option
-                                        *ngFor="let role of availableRoles"
-                                        [value]="role.role"
-                                        >{{ role.roleTitle }}
+                                        *ngFor="
+                                            let role of availableRoles$ | async
+                                        "
+                                        [value]="role.elementId"
+                                        >{{ role.label }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -130,11 +132,7 @@
                         </mat-checkbox>
                     </div>
                 </sp-split-section>
-                <sp-configuration-link-settings
-                    [parentForm]="parentForm"
-                    [linkSettings]="generalConfig.linkSettings"
-                    (updateConfigEmitter)="updateConfig()"
-                >
+                <sp-configuration-link-settings [parentForm]="parentForm">
                 </sp-configuration-link-settings>
                 <sp-split-section>
                     <div class="mt-10">

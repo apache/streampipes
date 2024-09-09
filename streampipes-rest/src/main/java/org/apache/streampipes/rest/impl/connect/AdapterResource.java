@@ -23,8 +23,8 @@ import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
+import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Permission;
-import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
 import org.apache.streampipes.model.message.Message;
@@ -190,7 +190,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
           .map(pipelineId -> pipelineStorageAPI.getElementById(pipelineId).getName()).collect(Collectors.toList());
       boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
           .anyMatch(r -> r.getAuthority().equals(
-              Role.ROLE_ADMIN.name()));
+              DefaultRole.ROLE_ADMIN.name()));
       // if the user is admin or owns all pipelines using this adapter,
       // the user can delete all associated pipelines and this adapter
       if (isAdmin || namesOfPipelinesNotOwnedByUser.isEmpty()) {

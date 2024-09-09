@@ -24,7 +24,6 @@ import { filter, map, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../login/services/login.service';
 import { PageName } from '../_enums/page-name.enum';
-import { RoleModel } from '../_models/auth.model';
 import {
     JwtTokenStorageService,
     CurrentUserService,
@@ -153,17 +152,17 @@ export class AuthService {
         return this.currentUserService.getCurrentUser().roles;
     }
 
-    public hasRole(role: RoleModel): boolean {
+    public hasRole(role: string): boolean {
         return (
             this.getUserRoles().includes('ROLE_ADMIN') ||
             this.getUserRoles().includes(role)
         );
     }
 
-    public hasAnyRole(roles: RoleModel[]): boolean {
+    public hasAnyRole(roles: string[]): boolean {
         if (Array.isArray(roles)) {
             return roles.reduce(
-                (aggregator: false, role: RoleModel) =>
+                (aggregator: false, role: string) =>
                     aggregator || this.hasRole(role),
                 false,
             );
@@ -224,9 +223,17 @@ export class AuthService {
             case PageName.NOTIFICATIONS:
                 return this.hasAnyRole(['ROLE_PIPELINE_ADMIN']);
             case PageName.ASSETS:
-                return this.hasAnyRole(['ROLE_ADMIN']);
+                return this.hasAnyRole([
+                    'ROLE_ADMIN',
+                    'PRIVILEGE_READ_ASSETS',
+                    'PRIVILEGE_WRITE_ASSETS',
+                ]);
             case PageName.SETTINGS:
-                return this.hasAnyRole(['ROLE_ADMIN']);
+                return this.hasAnyRole([
+                    'ROLE_ADMIN',
+                    'PRIVILEGE_WRITE_ASSETS',
+                    'PRIVILEGE_WRITE_LABELS',
+                ]);
             default:
                 return true;
         }

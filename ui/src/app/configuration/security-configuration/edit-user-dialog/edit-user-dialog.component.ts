@@ -38,10 +38,11 @@ import {
 } from '@angular/forms';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { RoleDescription } from '../../../_models/auth.model';
 import { AvailableRolesService } from '../../../services/available-roles.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'sp-edit-user-dialog',
@@ -61,7 +62,7 @@ export class EditUserDialogComponent implements OnInit {
     parentForm: UntypedFormGroup;
     clonedUser: UserAccount | ServiceAccount;
 
-    availableRoles: RoleDescription[];
+    availableRoles$: Observable<Role[]>;
     availableGroups: Group[] = [];
 
     registrationError: string;
@@ -87,9 +88,15 @@ export class EditUserDialogComponent implements OnInit {
             this.user instanceof UserAccount
                 ? UserRole.ROLE_SERVICE_ADMIN
                 : UserRole.ROLE_ADMIN;
-        this.availableRoles = this.availableRolesService.availableRoles.filter(
-            role => role.role !== filterObject,
-        );
+        this.availableRoles$ = this.availableRolesService
+            .getAvailableRoles()
+            .pipe(
+                map(roles =>
+                    roles
+                        .filter(role => role.elementId !== filterObject)
+                        .sort((a, b) => a.label.localeCompare(b.label)),
+                ),
+            );
         this.mailConfigService
             .getMailConfig()
             .subscribe(
@@ -301,7 +308,7 @@ export class EditUserDialogComponent implements OnInit {
     }
 
     changeRoleAssignment(event: MatCheckboxChange) {
-        if (this.clonedUser.roles.indexOf(event.source.value as Role) > -1) {
+        if (this.clonedUser.roles.indexOf(event.source.value) > -1) {
             this.removeRole(event.source.value);
         } else {
             this.addRole(event.source.value);
@@ -309,13 +316,10 @@ export class EditUserDialogComponent implements OnInit {
     }
 
     removeRole(role: string) {
-        this.clonedUser.roles.splice(
-            this.clonedUser.roles.indexOf(role as Role),
-            1,
-        );
+        this.clonedUser.roles.splice(this.clonedUser.roles.indexOf(role), 1);
     }
 
     addRole(role: string) {
-        this.clonedUser.roles.push(role as Role);
+        this.clonedUser.roles.push(role);
     }
 }

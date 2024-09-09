@@ -18,16 +18,16 @@
 package org.apache.streampipes.user.management.util;
 
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.user.management.authorization.RoleManager;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class GrantedAuthoritiesBuilder {
 
-  private Set<String> allAuthorities;
-  private Principal principal;
+  private final Set<String> allAuthorities;
+  private final Principal principal;
 
   public GrantedAuthoritiesBuilder(Principal principal) {
     this.allAuthorities = new HashSet<>();
@@ -48,7 +48,7 @@ public class GrantedAuthoritiesBuilder {
   private Set<String> buildAllGroupRoles() {
     Set<String> allRoles = new HashSet<>();
     principal.getGroups().forEach(groupId -> {
-      Set<Role> groupRoles =
+      Set<String> groupRoles =
           StorageDispatcher.INSTANCE.getNoSqlStore().getUserGroupStorage().getElementById(groupId).getRoles();
       allRoles.addAll(buildAllRoles(groupRoles));
     });
@@ -56,14 +56,11 @@ public class GrantedAuthoritiesBuilder {
     return allRoles;
   }
 
-  private Set<String> buildAllRoles(Set<Role> originalRoles) {
+  private Set<String> buildAllRoles(Set<String> originalRoles) {
     Set<String> roles = new HashSet<>();
     originalRoles.forEach(role -> {
-      roles.add(role.name());
-      role.getPrivileges().forEach(p -> roles.add(p.name()));
+      roles.addAll(new RoleManager().getPrivileges(role));
     });
-
     return roles;
   }
-
 }

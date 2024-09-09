@@ -27,6 +27,7 @@ import org.apache.streampipes.service.core.migrations.v093.AdapterMigration;
 import org.apache.streampipes.service.core.migrations.v093.StoreEmailTemplatesMigration;
 import org.apache.streampipes.service.core.migrations.v095.MergeFilenamesAndRenameDuplicatesMigration;
 import org.apache.streampipes.service.core.migrations.v970.AddLinkSettingsMigration;
+import org.apache.streampipes.service.core.migrations.v970.AddRolesToUserDbMigration;
 import org.apache.streampipes.service.core.migrations.v970.DataExplorerDataViewMigration;
 import org.apache.streampipes.service.core.migrations.v970.ModifyAssetLinkTypeMigration;
 import org.apache.streampipes.service.core.migrations.v970.RemoveNodesFromOpcUaAdaptersMigration;
@@ -48,7 +49,8 @@ public class AvailableMigrations {
         new AddLinkSettingsMigration(),
         new DataExplorerDataViewMigration(),
         new ModifyAssetLinkTypeMigration(),
-        new RemoveNodesFromOpcUaAdaptersMigration()
+        new RemoveNodesFromOpcUaAdaptersMigration(),
+        new AddRolesToUserDbMigration()
     );
   }
 }
