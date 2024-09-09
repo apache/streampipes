@@ -18,12 +18,9 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {
-    PlatformServicesCommons,
-    Privilege,
-    Role,
-} from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
+import { PlatformServicesCommons } from './commons.service';
+import { Role } from '../model/gen/streampipes-model-client';
 
 @Injectable({
     providedIn: 'root',

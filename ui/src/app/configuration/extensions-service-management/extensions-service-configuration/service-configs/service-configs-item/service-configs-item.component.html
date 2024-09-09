@@ -16,30 +16,30 @@
   ~
   -->
 
-<div
-    fxLayout="row"
+<sp-service-configs-password
     fxFlex="100"
-    style="border-top: 1px solid lightgray; padding: 10px; margin-bottom: 5px"
+    *ngIf="isPassword"
+    [configuration]="configuration"
 >
-    <form (ngSubmit)="updateConfiguration()" fxFlex="100" fxLayout="column">
-        <div
-            fxLayout="column"
-            *ngFor="let configuration of serviceConfiguration.configs"
-        >
-            <h5>{{ configuration.key }}</h5>
-            <sp-service-configs-item
-                [configuration]="configuration"
-            ></sp-service-configs-item>
-        </div>
-        <div fxLayoutAlign="end center">
-            <button
-                mat-raised-button
-                color="accent"
-                type="submit"
-                class="submit-button"
-            >
-                Update
-            </button>
-        </div>
-    </form>
-</div>
+</sp-service-configs-password>
+
+<sp-service-configs-text
+    fxFlex="100"
+    *ngIf="isString && !isPassword"
+    [configuration]="configuration"
+>
+</sp-service-configs-text>
+
+<sp-service-configs-number
+    fxFlex="100"
+    *ngIf="isNumber"
+    [configuration]="configuration"
+>
+</sp-service-configs-number>
+
+<sp-service-configs-boolean
+    fxFlex="100"
+    *ngIf="isBoolean"
+    [configuration]="configuration"
+>
+</sp-service-configs-boolean>

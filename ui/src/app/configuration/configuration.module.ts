@@ -90,6 +90,7 @@ import { SecurityRoleConfigComponent } from './security-configuration/role-confi
 import { EditRoleDialogComponent } from './security-configuration/edit-role-dialog/edit-role-dialog.component';
 import { MatListModule } from '@angular/material/list';
 import { configurationRouteGuard } from './configuration-route.guard';
+import { ServiceConfigsItemComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs-item/service-configs-item.component';
 
 @NgModule({
     imports: [
@@ -187,6 +188,7 @@ import { configurationRouteGuard } from './configuration-route.guard';
         ServiceConfigsTextComponent,
         ServiceConfigsPasswordComponent,
         ServiceConfigsBooleanComponent,
+        ServiceConfigsItemComponent,
         ServiceConfigsNumberComponent,
         DeleteDatalakeIndexComponent,
         EditAssetLocationComponent,
