@@ -70,7 +70,7 @@ for (var i = 0; i < testedRoles.length; i++) {
             if (testRole == UserRole.ROLE_PIPELINE_ADMIN) {
                 cy.dataCy('navigation-icon', { timeout: 10000 }).should(
                     'have.length',
-                    3,
+                    4,
                 );
             } else if (testRole == UserRole.ROLE_DASHBOARD_ADMIN) {
                 cy.dataCy('navigation-icon', { timeout: 10000 }).should(
