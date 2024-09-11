@@ -46,6 +46,8 @@ import { DataExplorerDashboardPanelComponent } from './components/dashboard/data
 import { TimeRangeSelectorComponent } from './components/time-selector/time-range-selector.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
 import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
+import { TrafficLightWidgetComponent } from './components/widgets/traffic-light/traffic-light-widget.component';
+import { TrafficLightWidgetConfigComponent } from './components/widgets/traffic-light/config/traffic-light-widget-config.component';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { AggregateConfigurationComponent } from './components/widgets/utils/aggregate-configuration/aggregate-configuration.component';
 import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
@@ -247,6 +249,8 @@ import { GaugeWidgetConfigComponent } from './components/widgets/gauge/config/ga
         SelectPropertyComponent,
         TableWidgetComponent,
         TableWidgetConfigComponent,
+        TrafficLightWidgetComponent,
+        TrafficLightWidgetConfigComponent,
         MapWidgetConfigComponent,
         MapWidgetComponent,
         HeatmapWidgetConfigComponent,
