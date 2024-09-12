@@ -34,11 +34,19 @@
  *
  */
 
-package org.apache.streampipes.model.connect.adapter.simple;
+package org.apache.streampipes.model.connect.adapter.compact;
 
-public record SimpleAdapter(
+import java.util.List;
+import java.util.Map;
+
+public record CompactAdapter(
+    String id,
     String name,
     String description,
     String appId,
-    SimpleConfiguration configuration
+    List<Map<String, Object>> configuration,
+    Map<String, CompactEventProperty> schema,
+    EnrichmentConfig enrich,
+    TransformationConfig transform,
+    CreateOptions createOptions
 ) {}

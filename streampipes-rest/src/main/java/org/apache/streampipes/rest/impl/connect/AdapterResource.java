@@ -18,18 +18,15 @@
 
 package org.apache.streampipes.rest.impl.connect;
 
-import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
-import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
-import org.apache.streampipes.model.connect.adapter.simple.SimpleAdapter;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
@@ -56,7 +53,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,38 +78,18 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     var principalSid = getAuthenticatedUserSid();
     var username = getAuthenticatedUsername();
     String adapterId;
-    LOG.info("User: " + username + " starts adapter " + adapterDescription.getElementId());
+    LOG.info("User: {} starts adapter {}", username, adapterDescription.getElementId());
 
     try {
       adapterId = managementService.addAdapter(adapterDescription, principalSid);
     } catch (AdapterException e) {
-      LOG.error("Error while starting adapter with id " + adapterDescription.getAppId(), e);
+      LOG.error("Error while starting adapter with id {}", adapterDescription.getAppId(), e);
       return ok(Notifications.error(e.getMessage()));
     }
 
     LOG.info("Stream adapter with id " + adapterId + " successfully added");
     return ok(Notifications.success(adapterId));
   }
-
-  @PostMapping(
-      path = "simpleAdapter",
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
-  @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
-  public ResponseEntity<? extends Message> addSimpleAdapter(
-      @RequestBody SimpleAdapter simpleAdapter
-  ) throws WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
-
-    var adapterDescription = new SimpleAdapterManagement().convertToAdapterDescription(simpleAdapter);
-
-    // Add adapter
-    this.addAdapter(adapterDescription);
-
-    System.out.println("Name: " + simpleAdapter.name());
-
-    return ok(Notifications.success("It works, yeah"));
-  }
-
 
   @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
@@ -122,7 +98,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     try {
       updateManager.updateAdapter(adapterDescription);
     } catch (AdapterException e) {
-      LOG.error("Error while updating adapter with id " + adapterDescription.getElementId(), e);
+      LOG.error("Error while updating adapter with id {}", adapterDescription.getElementId(), e);
       return ok(Notifications.error(e.getMessage()));
     }
 
@@ -141,7 +117,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     return ok(migrations);
   }
 
-  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, "application/yaml" })
   @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
   public ResponseEntity<?> getAdapter(@PathVariable("id") String adapterId) {
 
@@ -150,7 +126,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
 
       return ok(adapterDescription);
     } catch (AdapterException e) {
-      LOG.error("Error while getting adapter with id " + adapterId, e);
+      LOG.error("Error while getting adapter with id {}", adapterId, e);
       return fail();
     }
   }
@@ -162,7 +138,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
       managementService.stopStreamAdapter(adapterId);
       return ok(Notifications.success("Adapter started"));
     } catch (AdapterException e) {
-      LOG.error("Could not stop adapter with id " + adapterId, e);
+      LOG.error("Could not stop adapter with id {}", adapterId, e);
       return serverError(SpLogMessage.from(e));
     }
   }
@@ -174,7 +150,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
       managementService.startStreamAdapter(adapterId);
       return ok(Notifications.success("Adapter stopped"));
     } catch (AdapterException e) {
-      LOG.error("Could not start adapter with id " + adapterId, e);
+      LOG.error("Could not start adapter with id {}", adapterId, e);
       return serverError(SpLogMessage.from(e));
     }
   }
@@ -193,7 +169,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         managementService.deleteAdapter(elementId);
         return ok(Notifications.success("Adapter with id: " + elementId + " is deleted."));
       } catch (AdapterException e) {
-        LOG.error("Error while deleting adapter with id " + elementId, e);
+        LOG.error("Error while deleting adapter with id {}", elementId, e);
         return ok(Notifications.error(e.getMessage()));
       }
     } else if (!deleteAssociatedPipelines) {

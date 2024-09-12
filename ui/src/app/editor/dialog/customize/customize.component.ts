@@ -36,7 +36,6 @@ import {
     DataSinkInvocation,
     EventSchema,
     PipelineElementTemplate,
-    PipelineElementTemplateConfig,
     PipelineElementTemplateService,
 } from '@streampipes/platform-services';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
@@ -82,7 +81,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
     selectedTemplate: any = false;
     templateMode = false;
     template: PipelineElementTemplate;
-    templateConfigs: Map<string, any> = new Map();
+    templateConfigs: Map<string, any>[] = [];
 
     constructor(
         private dialogRef: DialogRef<CustomizeComponent>,
@@ -190,15 +189,14 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
             });
     }
 
-    convert(templateConfigs: Map<string, any>): any {
-        const configs: { [index: string]: PipelineElementTemplateConfig } = {};
-        templateConfigs.forEach((value, key) => {
-            configs[key] = new PipelineElementTemplateConfig();
-            configs[key].editable = value.editable;
-            configs[key].displayed = value.displayed;
-            configs[key].value = value.value;
+    convert(templateConfigs: Map<string, any>[]): Record<string, any>[] {
+        return templateConfigs.map(map => {
+            const obj: Record<string, any> = {};
+            map.forEach((value, key) => {
+                obj[key] = value;
+            });
+            return obj;
         });
-        return configs;
     }
 
     cancelTemplateMode() {

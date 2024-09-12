@@ -16,11 +16,10 @@
  *
  */
 
-package org.apache.streampipes.model.connect.adapter.simple;
+package org.apache.streampipes.model.connect.adapter.compact;
 
-import java.util.List;
+import java.util.Map;
 
-public record SimpleEventSchema(
-    List<SimpleEventProperty> properties
-) {
+public record TransformationConfig(Map<String, String> rename,
+                                   Map<String, String> measurementUnit) {
 }

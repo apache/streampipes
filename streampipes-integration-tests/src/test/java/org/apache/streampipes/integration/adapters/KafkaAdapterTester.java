@@ -32,14 +32,12 @@ import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
-import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -70,13 +68,10 @@ public class KafkaAdapterTester extends AdapterTesterBase {
             .getConfig()
             .get(4))
             .setOptions(list);
-    Map<String, PipelineElementTemplateConfig> configs = new HashMap<>();
-    configs.put(KafkaConnectUtils.HOST_KEY,
-      new PipelineElementTemplateConfig(true, false, kafkaContainer.getBrokerHost()));
-    configs.put(KafkaConnectUtils.PORT_KEY,
-      new PipelineElementTemplateConfig(true, false, kafkaContainer.getBrokerPort()));
-    configs.put(KafkaConnectUtils.TOPIC_KEY,
-      new PipelineElementTemplateConfig(true, true, TOPIC));
+    List<Map<String, Object>> configs = new ArrayList<>();
+    configs.add(Map.of(KafkaConnectUtils.HOST_KEY, kafkaContainer.getBrokerHost()));
+    configs.add(Map.of(KafkaConnectUtils.PORT_KEY, kafkaContainer.getBrokerPort()));
+    configs.add(Map.of(KafkaConnectUtils.TOPIC_KEY, TOPIC));
     var template = new PipelineElementTemplate("name", "description", configs);
 
 

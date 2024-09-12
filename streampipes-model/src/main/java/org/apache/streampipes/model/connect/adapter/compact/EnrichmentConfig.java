@@ -16,8 +16,6 @@
  *
  */
 
-package org.apache.streampipes.model.connect.adapter.simple;
+package org.apache.streampipes.model.connect.adapter.compact;
 
-import java.util.Map;
-
-public record SimpleConfiguration(Map<String, String> values) {}
+public record EnrichmentConfig(String timestamp) {}

@@ -53,19 +53,16 @@ public class MathExpressionProcessorTest {
         "result2", 20.2
     ));
 
-    var config = Map.of("members", List.of(Map.of(
-            MathExpressionProcessor.ENRICHED_FIELDS,
-            Map.of("staticProperties", Map.of(
+    var config =
+        List.of(Map.of(
                 MathExpressionProcessor.FIELD_NAME, "result1",
                 MathExpressionProcessor.EXPRESSION, "temperature+12"
-            ))),
-        Map.of(
-            MathExpressionProcessor.ENRICHED_FIELDS,
-            Map.of("staticProperties", Map.of(
+            ),
+            Map.of(
                 MathExpressionProcessor.FIELD_NAME, "result2",
                 MathExpressionProcessor.EXPRESSION, "temperature*flowrate"
-            )))
-    ));
+            )
+        );
 
     var configuration = TestConfiguration
         .builder()

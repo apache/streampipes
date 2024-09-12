@@ -71,7 +71,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
     }
   }
 
-  @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "{id}", produces = { MediaType.APPLICATION_JSON_VALUE, "application/yaml" })
   @Operation(summary = "Get a single pipeline element template by a given id",
              tags = {"Pipeline Element Templates"},
              responses = {

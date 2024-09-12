@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-09-03 17:38:51.
+// Generated using typescript-generator version 3.2.1263 on 2024-09-10 17:11:03.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -2681,7 +2681,7 @@ export class PipelineElementTemplate implements Storable {
     couchDbRev: string;
     elementId: string;
     rev: string;
-    templateConfigs: { [index: string]: PipelineElementTemplateConfig };
+    templateConfigs: { [index: string]: any }[];
     templateDescription: string;
     templateName: string;
 
@@ -2698,31 +2698,11 @@ export class PipelineElementTemplate implements Storable {
         instance.couchDbRev = data.couchDbRev;
         instance.elementId = data.elementId;
         instance.rev = data.rev;
-        instance.templateConfigs = __getCopyObjectFn(
-            PipelineElementTemplateConfig.fromData,
+        instance.templateConfigs = __getCopyArrayFn(
+            __getCopyObjectFn(__identity<any>()),
         )(data.templateConfigs);
         instance.templateDescription = data.templateDescription;
         instance.templateName = data.templateName;
-        return instance;
-    }
-}
-
-export class PipelineElementTemplateConfig {
-    displayed: boolean;
-    editable: boolean;
-    value: any;
-
-    static fromData(
-        data: PipelineElementTemplateConfig,
-        target?: PipelineElementTemplateConfig,
-    ): PipelineElementTemplateConfig {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new PipelineElementTemplateConfig();
-        instance.displayed = data.displayed;
-        instance.editable = data.editable;
-        instance.value = data.value;
         return instance;
     }
 }

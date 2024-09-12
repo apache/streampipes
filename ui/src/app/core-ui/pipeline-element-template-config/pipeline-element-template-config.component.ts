@@ -18,8 +18,8 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import {
-    PipelineElementTemplateService,
     PipelineElementTemplate,
+    PipelineElementTemplateService,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { PipelineElementTemplateGenerator } from './pipeline-element-template-generator';
@@ -34,7 +34,7 @@ export class PipelineElementTemplateConfigComponent implements OnInit {
     template: PipelineElementTemplate;
 
     @Input()
-    templateConfigs: Map<string, any>;
+    templateConfigs: Map<string, any>[] = [];
 
     @Input()
     appId: string;
@@ -42,7 +42,7 @@ export class PipelineElementTemplateConfigComponent implements OnInit {
     @Input()
     staticProperties: StaticPropertyUnion[];
 
-    existingTemplates: PipelineElementTemplate[];
+    existingTemplates: PipelineElementTemplate[] = [];
 
     constructor(
         private pipelineElementTemplateService: PipelineElementTemplateService,
@@ -52,9 +52,8 @@ export class PipelineElementTemplateConfigComponent implements OnInit {
         this.loadTemplates();
         this.template.basePipelineElementAppId = this.appId;
         this.staticProperties.forEach(sp => {
-            this.templateConfigs.set(
-                sp.internalName,
-                this.makeTemplateValue(sp),
+            this.templateConfigs.push(
+                new PipelineElementTemplateGenerator(sp).toTemplateValue(),
             );
         });
     }
@@ -65,39 +64,6 @@ export class PipelineElementTemplateConfigComponent implements OnInit {
             .subscribe(templates => {
                 this.existingTemplates = templates;
             });
-    }
-
-    handleSelection(sp: StaticPropertyUnion) {
-        if (this.templateConfigs.has(sp.internalName)) {
-            this.templateConfigs.delete(sp.internalName);
-        } else {
-            this.templateConfigs.set(
-                sp.internalName,
-                this.makeTemplateValue(sp),
-            );
-        }
-    }
-
-    makeTemplateValue(sp: StaticPropertyUnion) {
-        const config: any = {};
-        config.displayed = false;
-        config.editable = false;
-        config.value = new PipelineElementTemplateGenerator(
-            sp,
-        ).toTemplateValue();
-        return config;
-    }
-
-    toggleViewPermission(sp: StaticPropertyUnion) {
-        const config: any = this.templateConfigs.get(sp.internalName);
-        config.displayed = !config.displayed;
-        this.templateConfigs.set(sp.internalName, config);
-    }
-
-    toggleEditPermission(sp: StaticPropertyUnion) {
-        const config: any = this.templateConfigs.get(sp.internalName);
-        config.editable = !config.editable;
-        this.templateConfigs.set(sp.internalName, config);
     }
 
     deleteTemplate(templateId: string) {

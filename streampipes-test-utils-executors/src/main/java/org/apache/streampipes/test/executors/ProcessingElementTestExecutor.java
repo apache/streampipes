@@ -28,7 +28,6 @@ import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.runtime.SchemaInfo;
 import org.apache.streampipes.model.runtime.SourceInfo;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
-import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 
@@ -36,7 +35,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +60,7 @@ public class ProcessingElementTestExecutor {
     this.processor = processor;
     this.testConfiguration = testConfiguration;
     this.selectorPrefixes = testConfiguration.getPrefixes()
-                                             .iterator();
+        .iterator();
     this.invocationConfig = invocationConfig;
   }
 
@@ -70,7 +68,7 @@ public class ProcessingElementTestExecutor {
     this.processor = processor;
     this.testConfiguration = testConfiguration;
     this.selectorPrefixes = testConfiguration.getPrefixes()
-                                             .iterator();
+        .iterator();
   }
 
   /**
@@ -113,17 +111,17 @@ public class ProcessingElementTestExecutor {
 
     // Validate the output of the processor
     Mockito.verify(
-               mockCollector,
-               Mockito.times(expectedOutputEvents.size())
-           )
-           .collect(spOutputCollectorCaptor.capture());
+            mockCollector,
+            Mockito.times(expectedOutputEvents.size())
+        )
+        .collect(spOutputCollectorCaptor.capture());
     var resultingEvents = spOutputCollectorCaptor.getAllValues();
     IntStream.range(0, expectedOutputEvents.size())
-             .forEach(i -> assertEventEquality(
-                 expectedOutputEvents.get(i),
-                 resultingEvents.get(i)
-                                .getRaw()
-             ));
+        .forEach(i -> assertEventEquality(
+            expectedOutputEvents.get(i),
+            resultingEvents.get(i)
+                .getRaw()
+        ));
 
     // validate that the processor is stopped correctly
     processor.onPipelineStopped();
@@ -193,14 +191,16 @@ public class ProcessingElementTestExecutor {
         .getStaticProperties();
 
 
-    var configs = new HashMap<String, PipelineElementTemplateConfig>();
+    var configs = new ArrayList<Map<String, Object>>();
 
     staticProperties.forEach(staticProperty -> {
       var value = testConfiguration.getFieldConfiguration()
-                                   .get(staticProperty.getInternalName());
-      configs.put(
-          staticProperty.getInternalName(),
-          new PipelineElementTemplateConfig(true, true, value)
+          .get(staticProperty.getInternalName());
+      configs.add(
+          Map.of(
+              staticProperty.getInternalName(),
+              value
+          )
       );
     });
 
@@ -211,7 +211,7 @@ public class ProcessingElementTestExecutor {
 
     if (!selectorPrefixes.hasNext()) {
       selectorPrefixes = testConfiguration.getPrefixes()
-                                          .iterator();
+          .iterator();
     }
 
     String selectorPrefix = selectorPrefixes.next();

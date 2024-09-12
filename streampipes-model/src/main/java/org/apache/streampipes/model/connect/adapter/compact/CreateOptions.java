@@ -16,14 +16,8 @@
  *
  */
 
-package org.apache.streampipes.model.connect.adapter.simple;
+package org.apache.streampipes.model.connect.adapter.compact;
 
-public record SimpleEventProperty(
-    String runtimeType,
-    String label,
-    String description,
-    String runtimeName,
-    String propertyScope,
-    String domainProperty
-) {
+public record CreateOptions(boolean persist,
+                            boolean start) {
 }

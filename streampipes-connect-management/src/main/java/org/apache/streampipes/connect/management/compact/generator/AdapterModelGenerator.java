@@ -15,20 +15,14 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.test.generator.template;
 
-import org.apache.streampipes.model.template.PipelineElementTemplate;
+package org.apache.streampipes.connect.management.compact.generator;
 
-import java.util.ArrayList;
-import java.util.Map;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 
-public class PipelineElementTemplateHelpers {
+public interface AdapterModelGenerator {
 
-  public static PipelineElementTemplate makePipelineElementTemplate() {
-    var configs = new ArrayList<Map<String, Object>>();
-    configs.add(Map.of("test-key", "test-string"));
-    configs.add(Map.of("test-key-2", 2));
-
-    return new PipelineElementTemplate("name", "description", configs);
-  }
+  void apply(AdapterDescription adapterDescription,
+             CompactAdapter compactAdapter) throws Exception;
 }

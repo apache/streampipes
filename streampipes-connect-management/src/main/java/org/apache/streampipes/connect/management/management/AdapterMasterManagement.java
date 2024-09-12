@@ -70,7 +70,9 @@ public class AdapterMasterManagement {
 
     // Create elementId for adapter
     var dataStreamElementId = ElementIdGenerator.makeElementId(SpDataStream.class);
-    ad.setElementId(ElementIdGenerator.makeElementId(ad));
+    if (ad.getElementId() == null) {
+      ad.setElementId(ElementIdGenerator.makeElementId(ad));
+    }
     ad.setCreatedAt(System.currentTimeMillis());
     ad.setCorrespondingDataStreamElementId(dataStreamElementId);
 
@@ -88,8 +90,6 @@ public class AdapterMasterManagement {
 
     return ad.getElementId();
   }
-
-
 
   public AdapterDescription getAdapter(String elementId) throws AdapterException {
     List<AdapterDescription> allAdapters = adapterInstanceStorage.findAll();
