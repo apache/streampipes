@@ -22,8 +22,7 @@ import { PipelineElementTemplateGenerator } from '../pipeline-element-template-g
 
 @Component({
     selector: 'sp-pipeline-element-template-config-item',
-    templateUrl: './pipeline-element-template-config-item.component.html',
-    styleUrls: ['./pipeline-element-template-config-item.component.scss'],
+    templateUrl: './pipeline-element-template-config-item.component.html'
 })
 export class PipelineElementTemplateConfigItemComponent implements OnInit {
     @Input()
