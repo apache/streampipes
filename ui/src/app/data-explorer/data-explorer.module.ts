@@ -48,6 +48,8 @@ import { DataExplorerDashboardWidgetComponent } from './components/widget/data-e
 import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
 import { TrafficLightWidgetComponent } from './components/widgets/traffic-light/traffic-light-widget.component';
 import { TrafficLightWidgetConfigComponent } from './components/widgets/traffic-light/config/traffic-light-widget-config.component';
+import { StatusWidgetComponent } from './components/widgets/status/status-widget.component';
+import { StatusWidgetConfigComponent } from './components/widgets/status/config/status-widget-config.component';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { AggregateConfigurationComponent } from './components/widgets/utils/aggregate-configuration/aggregate-configuration.component';
 import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
@@ -251,6 +253,8 @@ import { GaugeWidgetConfigComponent } from './components/widgets/gauge/config/ga
         TableWidgetConfigComponent,
         TrafficLightWidgetComponent,
         TrafficLightWidgetConfigComponent,
+        StatusWidgetComponent,
+        StatusWidgetConfigComponent,
         MapWidgetConfigComponent,
         MapWidgetComponent,
         HeatmapWidgetConfigComponent,
