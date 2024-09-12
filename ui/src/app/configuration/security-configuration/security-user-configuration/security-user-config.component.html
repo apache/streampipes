@@ -29,12 +29,11 @@
         </button>
     </div>
     <div fxFlex="100" fxLayout="column">
-        <table
-            fxFlex="100"
-            mat-table
+        <sp-table
+            *ngIf="dataSource"
             data-cy="security-user-config"
             [dataSource]="dataSource"
-            style="width: 100%"
+            [columns]="displayedColumns"
             matSort
         >
             <ng-container matColumnDef="username">
@@ -44,7 +43,7 @@
                     *matCellDef="let account"
                     data-cy="user-accounts-table-row"
                 >
-                    <h4 style="margin-bottom: 0px">{{ account.username }}</h4>
+                    <b>{{ account.username }}</b>
                 </td>
             </ng-container>
             <ng-container matColumnDef="provider">
@@ -55,7 +54,7 @@
                     data-cy="user-provider-table-row"
                 >
                     <sp-label
-                        [small]="true"
+                        size="small"
                         [labelText]="account.provider"
                     ></sp-label>
                 </td>
@@ -114,9 +113,6 @@
                     </div>
                 </td>
             </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
+        </sp-table>
     </div>
 </div>

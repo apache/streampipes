@@ -17,24 +17,35 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { SpConfigurationTabs } from '../configuration-tabs';
+import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import {
     LocationConfig,
     LocationConfigService,
 } from '@streampipes/platform-services';
+import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
+import { SpConfigurationRoutes } from '../configuration.routes';
 
 @Component({
     selector: 'sp-sites-configuration',
     templateUrl: './sites-configuration.component.html',
 })
 export class SitesConfigurationComponent implements OnInit {
-    tabs = SpConfigurationTabs.getTabs();
+    tabs: SpNavigationItem[] = [];
 
     locationConfig: LocationConfig;
 
-    constructor(private locationConfigService: LocationConfigService) {}
+    constructor(
+        private locationConfigService: LocationConfigService,
+        private tabService: SpConfigurationTabsService,
+        private breadcrumbService: SpBreadcrumbService,
+    ) {}
 
     ngOnInit() {
+        this.tabs = this.tabService.getTabs();
+        this.breadcrumbService.updateBreadcrumb([
+            SpConfigurationRoutes.BASE,
+            { label: this.tabService.getTabTitle('sites') },
+        ]);
         this.locationConfigService.getLocationConfig().subscribe(res => {
             this.locationConfig = res;
         });

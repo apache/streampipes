@@ -1,0 +1,121 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content">
+        <div fxFlex="100" fxLayout="column" class="p-15">
+            <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+                <div class="general-options-panel" fxLayout="column">
+                    <span class="general-options-header">Basics</span>
+                    <mat-form-field color="accent">
+                        <mat-label>Role ID</mat-label>
+                        <input
+                            formControlName="elementId"
+                            fxFlex
+                            matInput
+                            required
+                        />
+                        <mat-error
+                            >Role ID must start with ROLE_ and must only include
+                            capital letters or underscore</mat-error
+                        >
+                    </mat-form-field>
+                    <mat-form-field color="accent">
+                        <mat-label>Role Name</mat-label>
+                        <input
+                            formControlName="label"
+                            fxFlex
+                            matInput
+                            required
+                        />
+                    </mat-form-field>
+                </div>
+                <div fxLayout="column" class="general-options-panel">
+                    <span class="general-options-header">Privileges</span>
+                    <div
+                        fxLayout="row"
+                        fxLayoutGap="10px"
+                        class="lists-container"
+                    >
+                        <div class="list-section">
+                            <div class="privilege-header">
+                                Available Privileges
+                            </div>
+                            <div *ngFor="let privilege of allPrivileges">
+                                <div fxLayoutAlign="start center">
+                                    <button
+                                        mat-icon-button
+                                        color="accent"
+                                        (click)="assignPrivilege(privilege)"
+                                        [disabled]="isAssigned(privilege)"
+                                    >
+                                        <mat-icon>add</mat-icon>
+                                    </button>
+                                    {{ privilege.elementId }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-section">
+                            <div class="privilege-header">
+                                Selected Privileges
+                            </div>
+                            <div *ngFor="let privilege of selectedPrivileges">
+                                <div fxLayoutAlign="start center">
+                                    <button
+                                        mat-icon-button
+                                        color="accent"
+                                        (click)="removePrivilege(privilege)"
+                                    >
+                                        <mat-icon>remove</mat-icon>
+                                    </button>
+                                    {{ privilege.elementId }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions">
+        <div fxLayout="row">
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="save()"
+                style="margin-right: 10px"
+                [disabled]="
+                    !parentForm.valid || selectedPrivileges.length === 0
+                "
+                data-cy="sp-edit-role-save"
+            >
+                <i class="material-icons">save</i><span>&nbsp;Save</span>
+            </button>
+            <button
+                mat-button
+                mat-raised-button
+                class="mat-basic"
+                (click)="close(false)"
+            >
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>

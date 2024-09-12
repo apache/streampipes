@@ -29,12 +29,11 @@
         </button>
     </div>
     <div fxFlex="100" fxLayout="column">
-        <table
-            fxFlex="100"
-            mat-table
+        <sp-table
+            *ngIf="dataSource"
             data-cy="security-service-config"
             [dataSource]="dataSource"
-            style="width: 100%"
+            [columns]="displayedColumns"
             matSort
         >
             <ng-container matColumnDef="username">
@@ -42,7 +41,7 @@
                     Username
                 </th>
                 <td mat-cell *matCellDef="let account">
-                    <h4 style="margin-bottom: 0px">{{ account.username }}</h4>
+                    <b>{{ account.username }}</b>
                 </td>
             </ng-container>
 
@@ -88,9 +87,6 @@
                     </div>
                 </td>
             </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
+        </sp-table>
     </div>
 </div>

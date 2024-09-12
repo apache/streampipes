@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.rest.security;
 
+import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Permission;
-import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendation;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -84,6 +84,6 @@ public class SpPermissionEvaluator implements PermissionEvaluator {
     return userDetails
         .getAuthorities()
         .stream()
-        .anyMatch(a -> a.getAuthority().equals(Role.Constants.ROLE_ADMIN_VALUE));
+        .anyMatch(a -> a.getAuthority().equals(DefaultRole.Constants.ROLE_ADMIN_VALUE));
   }
 }

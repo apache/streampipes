@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl.dashboard;
 
-import org.apache.streampipes.model.client.user.Privilege;
+import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.resource.management.AbstractCRUDResourceManager;
 
@@ -36,11 +36,11 @@ public class Dashboard extends AbstractDashboardResource {
 
   @Override
   public boolean hasReadAuthority() {
-    return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE);
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE);
   }
 
   @Override
   public boolean hasWriteAuthority() {
-    return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE);
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE);
   }
 }

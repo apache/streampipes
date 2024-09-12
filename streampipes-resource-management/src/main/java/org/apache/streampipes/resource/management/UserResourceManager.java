@@ -24,9 +24,9 @@ import org.apache.streampipes.commons.exceptions.SpException;
 import org.apache.streampipes.commons.exceptions.UserNotFoundException;
 import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
 import org.apache.streampipes.mail.MailSender;
+import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.model.client.user.UserRegistrationData;
@@ -82,7 +82,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
         .getUserStorageAPI()
         .getAllUserAccounts()
         .stream()
-        .filter(u -> u.getRoles().contains(Role.ROLE_ADMIN))
+        .filter(u -> u.getRoles().contains(DefaultRole.ROLE_ADMIN))
         .findFirst()
         .orElseThrow(IllegalArgumentException::new);
   }
@@ -112,7 +112,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
   private synchronized void createNewUser(UserRegistrationData data, String encryptedPassword) {
 
-    List<Role> roles = data.getRoles().stream().map(Role::valueOf).toList();
+    List<String> roles = data.getRoles();
     UserAccount user = UserAccount.from(data.getUsername(), encryptedPassword, new HashSet<>(roles));
     user.setUsername(data.getUsername());
     user.setPassword(encryptedPassword);

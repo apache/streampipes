@@ -45,6 +45,8 @@ export * from './lib/apis/extension-installation.service';
 export * from './lib/apis/pipeline-element-template.service';
 export * from './lib/apis/pipeline-monitoring.service';
 export * from './lib/apis/pipeline-template.service';
+export * from './lib/apis/privilege.service';
+export * from './lib/apis/role.service';
 export * from './lib/apis/semantic-types-rest.service';
 export * from './lib/apis/service-tags.service';
 export * from './lib/apis/user.service';

@@ -31,6 +31,12 @@ public class UserDesignDocument {
   public static final String USERNAME_MAP_FUNCTION =
       "function(doc) { if(doc.properties.username) { emit(doc.properties.username.toLowerCase(), doc); } }";
 
+  public static final String ROLE_KEY = "role";
+  public static final String ROLE_MAP_FUNCTION = "function(doc) { if(doc.$type === 'role') { emit(doc._id, doc); } }";
+
+  public static final String PRIVILEGE_MAP_FUNCTION =
+      "function(doc) { if(doc.$type === 'privilege') { emit(doc._id, doc); } }";
+
   public DesignDocument make() {
     DesignDocument userDocument = prepareDocument("_design/users");
     Map<String, DesignDocument.MapReduce> views = new HashMap<>();
@@ -69,6 +75,11 @@ public class UserDesignDocument {
     DesignDocument.MapReduce passwordRecoveryFunction = new DesignDocument.MapReduce();
     passwordRecoveryFunction.setMap("function(doc) { if (doc.$type === 'password-recovery') {emit(doc._id, doc);}}");
 
+    DesignDocument.MapReduce roleFunction = new DesignDocument.MapReduce();
+    roleFunction.setMap(ROLE_MAP_FUNCTION);
+
+    DesignDocument.MapReduce privilegeFunction = new DesignDocument.MapReduce();
+    privilegeFunction.setMap(PRIVILEGE_MAP_FUNCTION);
 
     views.put("password", passwordFunction);
     views.put(USERNAME_KEY, usernameFunction);
@@ -79,6 +90,8 @@ public class UserDesignDocument {
     views.put("objectpermissions", objectPermissionFunction);
     views.put("user-activation", userActivationFunction);
     views.put("password-recovery", passwordRecoveryFunction);
+    views.put(ROLE_KEY, roleFunction);
+    views.put("privilege", privilegeFunction);
 
     userDocument.setViews(views);
 
