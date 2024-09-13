@@ -18,7 +18,6 @@
 
 import { Observable } from 'rxjs';
 import { PageName } from '../../_enums/page-name.enum';
-import { UserRole } from '../../_enums/user-role.enum';
 
 export interface StatusBox {
     link: string[];
@@ -26,8 +25,8 @@ export interface StatusBox {
     title: string;
     createTitle: string;
     dataFns: Observable<any>[];
-    viewRoles: UserRole[];
-    createRoles: UserRole[];
+    viewRoles: string[];
+    createRoles: string[];
     icon: string;
 }
 
@@ -41,6 +40,7 @@ export interface ServiceLink {
     description: string;
     icon: string;
     pageNames: PageName[];
+    privileges: string[];
     link: Link;
     showStatusBox: boolean;
     statusBox?: StatusBox;

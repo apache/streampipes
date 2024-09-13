@@ -22,6 +22,7 @@ import { PageName } from '../../_enums/page-name.enum';
 import { AuthService } from '../../services/auth.service';
 import { CurrentUserService } from '@streampipes/shared-ui';
 import { AppConstants } from '../../services/app.constants';
+import { UserPrivilege } from '../../_enums/user-privilege.enum';
 
 export abstract class BaseNavigationComponent {
 
@@ -36,32 +37,18 @@ export abstract class BaseNavigationComponent {
       title: 'Home',
       icon: 'home',
       pagesNames: [PageName.HOME],
+      privileges: [],
       visible: false
     },
     {{#modulesActive}}
-    {{^admin}}
     {
         link: '{{{link}}}',
         title: '{{{title}}}',
         icon: '{{{icon}}}',
         pageNames: [{{{pageNames}}}],
+        privileges: {{{privileges}}},
         visible: false
     },
-    {{/admin}}
-    {{/modulesActive}}
-  ];
-
-  admin = [
-    {{#modulesActive}}
-    {{#admin}}
-    {
-        link: '{{{link}}}',
-        title: '{{{title}}}',
-        icon: '{{{icon}}}',
-        pageNames: [{{{pageNames}}}],
-        visible: false
-    },
-    {{/admin}}
     {{/modulesActive}}
   ];
 
@@ -77,9 +64,11 @@ export abstract class BaseNavigationComponent {
 
     onInit() {
       this.currentUserService.user$.subscribe(user => {
-        this.menu.forEach(m => m.visible = this.isNavItemVisible(m.pageNames));
-        this.admin.forEach(m => m.visible = this.isNavItemVisible(m.pageNames));
-        this.notificationsVisible = this.isNavItemVisible([PageName.NOTIFICATIONS]);
+        this.menu.forEach(m => m.visible = this.isNavItemVisible(m.privileges));
+        this.notificationsVisible = this.isNavItemVisible([
+        UserPrivilege.PRIVILEGE_READ_PIPELINE,
+        UserPrivilege.PRIVILEGE_WRITE_PIPELINE
+        ]);
       });
       this.activePage = this.router.url.replace('/', '');
       this.activePageName = this.getPageTitle(this.activePage);
@@ -96,9 +85,8 @@ export abstract class BaseNavigationComponent {
     }
 
     getPageTitle(path) {
-      const allMenuItems = this.menu.concat(this.admin);
       let currentTitle = this.appConstants.APP_NAME;
-      allMenuItems.forEach(m => {
+      this.menu.forEach(m => {
         if (m.link === path) {
           currentTitle = m.title;
         }
@@ -120,8 +108,8 @@ export abstract class BaseNavigationComponent {
       this.activePageName = this.getPageTitle(this.activePage);
     }
 
-    public isNavItemVisible(pageNames?: PageName[]): boolean {
-      return this.authService.isAnyAccessGranted(pageNames);
+    public isNavItemVisible(privileges: string[]): boolean {
+      return this.authService.isAnyAccessGranted(privileges);
     }
 
 }

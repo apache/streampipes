@@ -34,6 +34,7 @@
                 mat-button
                 mat-raised-button
                 color="accent"
+                *ngIf="hasPipelineWritePrivileges"
                 (click)="navigateToPipelineEditor()"
                 data-cy="pipelines-navigate-to-editor"
             >

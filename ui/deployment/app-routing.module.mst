@@ -39,6 +39,7 @@ import { RegistrationAllowedCanActivateGuard } from './_guards/registration-allo
 import { RestorePasswordAllowedCanActivateGuard } from './_guards/restore-password-allowed.can-activate.guard';
 import { SetNewPasswordComponent } from './login/components/set-new-password/set-new-password.component';
 import { ActivateAccountComponent } from './login/components/activate-account/activate-account.component';
+import { UserPrivilege } from './_enums/user-privilege.enum';
 
 {{#modulesActive}}
 {{#componentImport}}
@@ -60,10 +61,10 @@ const routes: Routes = [
       { path: '', component: HomeComponent, canActivate: [ConfiguredCanActivateGuard] },
       {{#modulesActive}}
       {{#componentImport}}
-      { path: '{{{link}}}', component: {{{component}}}, data: { authPageNames: [{{{pageNames}}}]}},
+      { path: '{{{link}}}', component: {{{component}}}, data: { privileges: {{{privileges}}}, authPageNames: [{{{pageNames}}}]}},
       {{/componentImport}}
       {{^componentImport}}
-      { path: '{{{link}}}', data: { authPageNames: [{{{pageNames}}}]}, loadChildren: () => import('{{{path}}}').then(m => m.{{{moduleName}}})},
+      { path: '{{{link}}}', data: { privileges: {{{privileges}}}, authPageNames: [{{{pageNames}}}]}, loadChildren: () => import('{{{path}}}').then(m => m.{{{moduleName}}})},
       {{/componentImport}}
       {{/modulesActive}}
 

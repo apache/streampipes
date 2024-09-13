@@ -21,26 +21,33 @@ import {
     DialogService,
     PanelType,
     SpBreadcrumbService,
+    SpNavigationItem,
 } from '@streampipes/shared-ui';
-import { FileUploadDialogComponent } from './dialog/file-upload/file-upload-dialog.component';
-import { SpFilesRoutes } from './files.routes';
+import { FileUploadDialogComponent } from '../dialog/file-upload/file-upload-dialog.component';
+import { SpConfigurationTabsService } from '../configuration-tabs.service';
+import { SpConfigurationRoutes } from '../configuration.routes';
 
 @Component({
     templateUrl: './files.component.html',
     styleUrls: ['./files.component.scss'],
 })
 export class FilesComponent implements OnInit {
+    tabs: SpNavigationItem[] = [];
+
     @ViewChild('fileOverviewComponent') fileOverviewComponent;
 
     constructor(
         private dialogService: DialogService,
         private breadcrumbService: SpBreadcrumbService,
+        private tabService: SpConfigurationTabsService,
     ) {}
 
     ngOnInit() {
-        this.breadcrumbService.updateBreadcrumb(
-            this.breadcrumbService.getRootLink(SpFilesRoutes.BASE),
-        );
+        this.tabs = this.tabService.getTabs();
+        this.breadcrumbService.updateBreadcrumb([
+            SpConfigurationRoutes.BASE,
+            { label: this.tabService.getTabTitle('files') },
+        ]);
     }
 
     openFileUploadDialog() {

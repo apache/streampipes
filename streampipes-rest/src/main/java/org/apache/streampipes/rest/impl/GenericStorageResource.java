@@ -83,7 +83,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
       path = "/{appDocName}/find",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_WRITE_GENERIC_STORAGE_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_READ_GENERIC_STORAGE_PRIVILEGE)
   public ResponseEntity<List<Map<String, Object>>> find(@PathVariable(APP_DOC_NAME) String appDocName,
                                                         @RequestBody Map<String, Object> query) {
     try {

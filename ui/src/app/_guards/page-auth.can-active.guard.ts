@@ -18,7 +18,6 @@
 
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { PageName } from '../_enums/page-name.enum';
 import { Injectable } from '@angular/core';
 
 @Injectable()
@@ -26,8 +25,8 @@ export class PageAuthGuard {
     constructor(private authService: AuthService) {}
 
     canActivateChild(activatedRouteSnapshot: ActivatedRouteSnapshot): boolean {
-        const pageNames: PageName[] = activatedRouteSnapshot.data.authPageNames;
+        const privileges: string[] = activatedRouteSnapshot.data.privileges;
 
-        return this.authService.isAnyAccessGranted(pageNames, true);
+        return this.authService.isAnyAccessGranted(privileges, true);
     }
 }

@@ -91,6 +91,11 @@ import { EditRoleDialogComponent } from './security-configuration/edit-role-dial
 import { MatListModule } from '@angular/material/list';
 import { configurationRouteGuard } from './configuration-route.guard';
 import { ServiceConfigsItemComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs-item/service-configs-item.component';
+import { FilesComponent } from './files/files.component';
+import { FileOverviewComponent } from './files/file-overview/file-overview.component';
+import { FileUploadDialogComponent } from './dialog/file-upload/file-upload-dialog.component';
+import { FileRenameDialogComponent } from './dialog/file-rename/file-rename-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
     imports: [
@@ -165,6 +170,11 @@ import { ServiceConfigsItemComponent } from './extensions-service-management/ext
                         canActivate: [configurationRouteGuard],
                     },
                     {
+                        path: 'files',
+                        component: FilesComponent,
+                        canActivate: [configurationRouteGuard],
+                    },
+                    {
                         path: 'security',
                         component: SecurityConfigurationComponent,
                         canActivate: [configurationRouteGuard],
@@ -182,6 +192,7 @@ import { ServiceConfigsItemComponent } from './extensions-service-management/ext
         CodemirrorModule,
         MatSort,
         MatListModule,
+        MatDialogModule,
     ],
     declarations: [
         ServiceConfigsComponent,
@@ -197,6 +208,10 @@ import { ServiceConfigsItemComponent } from './extensions-service-management/ext
         EditUserDialogComponent,
         EditGroupDialogComponent,
         EmailConfigurationComponent,
+        FilesComponent,
+        FileOverviewComponent,
+        FileUploadDialogComponent,
+        FileRenameDialogComponent,
         GeneralConfigurationComponent,
         ExtensionsServiceManagementComponent,
         LocationFeaturesConfigurationComponent,
