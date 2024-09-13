@@ -30,12 +30,12 @@ import {
     DialogService,
     PanelType,
     SpBreadcrumbService,
+    SpNavigationItem,
 } from '@streampipes/shared-ui';
 import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
-import { SpConfigurationTabs } from '../configuration-tabs';
+import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpConfigurationRoutes } from '../configuration.routes';
 import { DataDownloadDialogComponent } from '../../core-ui/data-download-dialog/data-download-dialog.component';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -43,7 +43,7 @@ import { HttpClient } from '@angular/common/http';
     styleUrls: ['./datalake-configuration.component.scss'],
 })
 export class DatalakeConfigurationComponent implements OnInit {
-    tabs = SpConfigurationTabs.getTabs();
+    tabs: SpNavigationItem[] = [];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -63,17 +63,18 @@ export class DatalakeConfigurationComponent implements OnInit {
     pageSize = 15;
 
     constructor(
-        private http: HttpClient,
         private datalakeRestService: DatalakeRestService,
         private dataViewDataExplorerService: DataViewDataExplorerService,
         private dialogService: DialogService,
         private breadcrumbService: SpBreadcrumbService,
+        private tabService: SpConfigurationTabsService,
     ) {}
 
     ngOnInit(): void {
+        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
-            { label: SpConfigurationTabs.getTabs()[1].itemTitle },
+            { label: this.tabService.getTabTitle('datalake') },
         ]);
         this.loadAvailableMeasurements();
     }

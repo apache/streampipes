@@ -133,13 +133,13 @@
                 <div fxLayout="column" class="general-options-panel">
                     <span class="general-options-header">Roles</span>
                     <mat-checkbox
-                        *ngFor="let role of availableRoles"
-                        [value]="role.role"
-                        [checked]="user.roles.indexOf(role.role) > -1"
+                        *ngFor="let role of availableRoles$ | async"
+                        [value]="role.elementId"
+                        [checked]="user.roles.indexOf(role.elementId) > -1"
                         (change)="changeRoleAssignment($event)"
-                        [attr.data-cy]="'role-' + role.role"
+                        [attr.data-cy]="'role-' + role.elementId"
                     >
-                        {{ role.roleTitle }}
+                        {{ role.label }}
                     </mat-checkbox>
                 </div>
                 <div fxLayout="column" class="general-options-panel">

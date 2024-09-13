@@ -86,6 +86,11 @@ import { MatSort } from '@angular/material/sort';
 import { ManageSiteDialogComponent } from './dialog/manage-site/manage-site-dialog.component';
 import { EditAssetLocationComponent } from './dialog/manage-site/edit-location/edit-location.component';
 import { EditAssetLocationAreaComponent } from './dialog/manage-site/edit-location/edit-location-area/edit-location-area.component';
+import { SecurityRoleConfigComponent } from './security-configuration/role-configuration/role-configuration.component';
+import { EditRoleDialogComponent } from './security-configuration/edit-role-dialog/edit-role-dialog.component';
+import { MatListModule } from '@angular/material/list';
+import { configurationRouteGuard } from './configuration-route.guard';
+import { ServiceConfigsItemComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs-item/service-configs-item.component';
 
 @NgModule({
     imports: [
@@ -122,42 +127,52 @@ import { EditAssetLocationAreaComponent } from './dialog/manage-site/edit-locati
                     {
                         path: 'general',
                         component: GeneralConfigurationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'datalake',
                         component: DatalakeConfigurationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'email',
                         component: EmailConfigurationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'export',
                         component: SpDataExportImportComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'labels',
                         component: SpLabelConfigurationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'messaging',
                         component: MessagingConfigurationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'extensions-installation',
                         component: SpExtensionsInstallationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'extensions-services',
                         component: ExtensionsServiceManagementComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'security',
                         component: SecurityConfigurationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'sites',
                         component: SitesConfigurationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                 ],
             },
@@ -166,16 +181,19 @@ import { EditAssetLocationAreaComponent } from './dialog/manage-site/edit-locati
         ColorPickerModule,
         CodemirrorModule,
         MatSort,
+        MatListModule,
     ],
     declarations: [
         ServiceConfigsComponent,
         ServiceConfigsTextComponent,
         ServiceConfigsPasswordComponent,
         ServiceConfigsBooleanComponent,
+        ServiceConfigsItemComponent,
         ServiceConfigsNumberComponent,
         DeleteDatalakeIndexComponent,
         EditAssetLocationComponent,
         EditAssetLocationAreaComponent,
+        EditRoleDialogComponent,
         EditUserDialogComponent,
         EditGroupDialogComponent,
         EmailConfigurationComponent,
@@ -186,6 +204,7 @@ import { EditAssetLocationAreaComponent } from './dialog/manage-site/edit-locati
         SitesConfigurationComponent,
         SecurityAuthenticationConfigurationComponent,
         SecurityConfigurationComponent,
+        SecurityRoleConfigComponent,
         SecurityUserConfigComponent,
         SecurityUserGroupConfigComponent,
         SecurityServiceConfigComponent,

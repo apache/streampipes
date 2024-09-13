@@ -58,7 +58,7 @@ public class UserAccount extends Principal {
 
   public static UserAccount from(String username,
                                  String encryptedPassword,
-                                 Set<Role> roles) {
+                                 Set<String> roles) {
     UserAccount account = new UserAccount();
     account.setUsername(username);
     account.setPassword(encryptedPassword);
@@ -69,11 +69,11 @@ public class UserAccount extends Principal {
     return account;
   }
 
-  public Set<Role> getRoles() {
+  public Set<String> getRoles() {
     return roles;
   }
 
-  public void setRoles(Set<Role> roles) {
+  public void setRoles(Set<String> roles) {
     this.roles = roles;
   }
 

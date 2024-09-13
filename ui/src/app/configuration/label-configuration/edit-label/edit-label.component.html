@@ -28,6 +28,7 @@
         fxLayoutAlign="start center"
     >
         <sp-label
+            size="small"
             [labelBackground]="label.color"
             [labelText]="label.label"
             *ngIf="label && showPreview"
@@ -37,7 +38,7 @@
             <input matInput [(ngModel)]="label.label" data-cy="label-name" />
         </mat-form-field>
         <mat-form-field color="accent" appearance="outline">
-            <mat-label>Desription</mat-label>
+            <mat-label>Description</mat-label>
             <input
                 matInput
                 [(ngModel)]="label.description"

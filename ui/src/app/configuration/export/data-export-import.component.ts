@@ -21,9 +21,10 @@ import {
     DialogService,
     PanelType,
     SpBreadcrumbService,
+    SpNavigationItem,
 } from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.routes';
-import { SpConfigurationTabs } from '../configuration-tabs';
+import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import {
     AssetManagementService,
     SpAsset,
@@ -38,7 +39,7 @@ import { SpDataImportDialogComponent } from './import-dialog/data-import-dialog.
     styleUrls: ['./data-export-import.component.scss'],
 })
 export class SpDataExportImportComponent implements OnInit {
-    tabs = SpConfigurationTabs.getTabs();
+    tabs: SpNavigationItem[] = [];
 
     assets: SpAsset[];
     selectedAssets: string[] = [];
@@ -47,12 +48,14 @@ export class SpDataExportImportComponent implements OnInit {
         private breadcrumbService: SpBreadcrumbService,
         private assetManagementService: AssetManagementService,
         private dialogService: DialogService,
+        private tabService: SpConfigurationTabsService,
     ) {}
 
     ngOnInit(): void {
+        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
-            { label: SpConfigurationTabs.getTabs()[2].itemTitle },
+            { label: this.tabService.getTabTitle('export') },
         ]);
         this.loadAssets();
     }

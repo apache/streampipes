@@ -30,7 +30,7 @@ public abstract class Principal {
   protected @SerializedName("_rev") String rev;
   protected String username;
   protected Set<String> objectPermissions;
-  protected Set<Role> roles;
+  protected Set<String> roles;
   protected Set<String> groups;
   @JsonIgnore
   private String type = "principal";
@@ -87,11 +87,11 @@ public abstract class Principal {
     this.accountExpired = accountExpired;
   }
 
-  public Set<Role> getRoles() {
+  public Set<String> getRoles() {
     return roles;
   }
 
-  public void setRoles(Set<Role> roles) {
+  public void setRoles(Set<String> roles) {
     this.roles = roles;
   }
 

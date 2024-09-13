@@ -52,6 +52,8 @@ import { SpTimeSeriesAppearanceConfigComponent } from '../components/widgets/tim
 import { SpGaugeRendererService } from '../components/widgets/gauge/gauge-renderer.service';
 import { GaugeWidgetConfigComponent } from '../components/widgets/gauge/config/gauge-widget-config.component';
 import { GaugeWidgetModel } from '../components/widgets/gauge/model/gauge-widget.model';
+import { TrafficLightWidgetConfigComponent } from '../components/widgets/traffic-light/config/traffic-light-widget-config.component';
+import { TrafficLightWidgetComponent } from '../components/widgets/traffic-light/traffic-light-widget.component';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerWidgetRegistry {
@@ -83,6 +85,12 @@ export class DataExplorerWidgetRegistry {
                 label: 'Table',
                 widgetConfigurationComponent: TableWidgetConfigComponent,
                 widgetComponent: TableWidgetComponent,
+            },
+            {
+                id: 'traffic-Light',
+                label: 'Traffic Light',
+                widgetConfigurationComponent: TrafficLightWidgetConfigComponent,
+                widgetComponent: TrafficLightWidgetComponent,
             },
             {
                 id: 'map',

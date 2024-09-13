@@ -35,12 +35,12 @@
                 <div fxLayout="column" class="general-options-panel">
                     <span class="general-options-header">Roles</span>
                     <mat-checkbox
-                        *ngFor="let role of availableRoles"
-                        [value]="role.role"
-                        [checked]="group.roles.indexOf(role.role) > -1"
+                        *ngFor="let role of availableRoles$ | async"
+                        [value]="role.elementId"
+                        [checked]="group.roles.indexOf(role.elementId) > -1"
                         (change)="changeRoleAssignment($event)"
                     >
-                        {{ role.roleTitle }}
+                        {{ role.label }}
                     </mat-checkbox>
                 </div>
             </form>
