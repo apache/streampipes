@@ -20,6 +20,7 @@ package org.apache.streampipes.connect.management.compact.generator;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 
 public class AdapterBasicsGenerator implements AdapterModelGenerator {
 
@@ -30,6 +31,8 @@ public class AdapterBasicsGenerator implements AdapterModelGenerator {
     adapterDescription.setDescription(compactAdapter.description());
     if (compactAdapter.id() != null) {
       adapterDescription.setElementId(compactAdapter.id());
+    } else {
+      adapterDescription.setElementId(ElementIdGenerator.makeElementId(adapterDescription));
     }
   }
 }

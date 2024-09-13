@@ -30,6 +30,7 @@ import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -81,7 +82,8 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     LOG.info("User: {} starts adapter {}", username, adapterDescription.getElementId());
 
     try {
-      adapterId = managementService.addAdapter(adapterDescription, principalSid);
+      adapterId = ElementIdGenerator.makeElementId(adapterDescription);
+      managementService.addAdapter(adapterDescription, adapterId, principalSid);
     } catch (AdapterException e) {
       LOG.error("Error while starting adapter with id {}", adapterDescription.getAppId(), e);
       return ok(Notifications.error(e.getMessage()));

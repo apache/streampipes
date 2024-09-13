@@ -82,7 +82,8 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     var principalSid = getAuthenticatedUserSid();
 
     try {
-      var adapterId = managementService.addAdapter(adapterDescription, principalSid);
+      var adapterId = adapterDescription.getElementId();
+      managementService.addAdapter(adapterDescription, adapterId, principalSid);
       if (compactAdapter.createOptions() != null) {
         if (compactAdapter.createOptions().persist()) {
           var storedAdapter = managementService.getAdapter(adapterId);
