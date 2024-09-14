@@ -54,6 +54,8 @@ import { GaugeWidgetConfigComponent } from '../components/widgets/gauge/config/g
 import { GaugeWidgetModel } from '../components/widgets/gauge/model/gauge-widget.model';
 import { TrafficLightWidgetConfigComponent } from '../components/widgets/traffic-light/config/traffic-light-widget-config.component';
 import { TrafficLightWidgetComponent } from '../components/widgets/traffic-light/traffic-light-widget.component';
+import { StatusWidgetConfigComponent } from '../components/widgets/status/config/status-widget-config.component';
+import { StatusWidgetComponent } from '../components/widgets/status/status-widget.component';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerWidgetRegistry {
@@ -91,6 +93,12 @@ export class DataExplorerWidgetRegistry {
                 label: 'Traffic Light',
                 widgetConfigurationComponent: TrafficLightWidgetConfigComponent,
                 widgetComponent: TrafficLightWidgetComponent,
+            },
+            {
+                id: 'status',
+                label: 'Status',
+                widgetConfigurationComponent: StatusWidgetConfigComponent,
+                widgetComponent: StatusWidgetComponent,
             },
             {
                 id: 'map',

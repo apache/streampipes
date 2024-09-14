@@ -110,8 +110,6 @@ export class TrafficLightWidgetComponent
                             (this.selectedWarningRange / 100)
                 );
             } else {
-                console.log(value);
-
                 return (
                     value <=
                     this.selectedThreshold +
@@ -125,13 +123,13 @@ export class TrafficLightWidgetComponent
         return !this.exceedsThreshold(value) && !this.isInWarningRange(value);
     }
 
-    public refreshView(): void {
+    refreshView(): void {
         this.updateSettings();
         this.fieldToObserve();
         this.getTrafficLightColor();
     }
 
-    public beforeDataFetched(): void {
+    beforeDataFetched(): void {
         this.setShownComponents(false, false, true, false);
     }
 
@@ -141,12 +139,19 @@ export class TrafficLightWidgetComponent
         );
     }
 
-    public onDataReceived(spQueryResult: SpQueryResult[]): void {
-        this.header = spQueryResult[0].allDataSeries[0].headers;
-        this.row = spQueryResult[0].allDataSeries[0].rows;
-        this.fieldToObserve();
-        this.getTrafficLightColor();
-        this.setShownComponents(false, true, false, false);
+    onDataReceived(spQueryResult: SpQueryResult[]): void {
+        if (
+            spQueryResult.length > 0 &&
+            spQueryResult[0].allDataSeries.length > 0
+        ) {
+            this.header = spQueryResult[0].allDataSeries[0].headers;
+            this.row = spQueryResult[0].allDataSeries[0].rows;
+            this.fieldToObserve();
+            this.getTrafficLightColor();
+            this.setShownComponents(false, true, false, false);
+        } else {
+            this.setShownComponents(true, false, false, false);
+        }
     }
 
     onResize(width: number, heigth: number) {
