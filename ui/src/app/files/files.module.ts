@@ -24,16 +24,14 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
-import { FilesComponent } from './files.component';
+import { FilesComponent } from '../configuration/files/files.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CoreUiModule } from '../core-ui/core-ui.module';
-import { FileUploadDialogComponent } from './dialog/file-upload/file-upload-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatInputModule } from '@angular/material/input';
 import { ServicesModule } from '../services/services.module';
-import { FileOverviewComponent } from './components/file-overview/file-overview.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatChipsModule } from '@angular/material/chips';
@@ -41,7 +39,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
-import { FileRenameDialogComponent } from './dialog/file-rename/file-rename-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
@@ -80,12 +77,7 @@ import { MatDialogModule } from '@angular/material/dialog';
         ]),
         MatDialogModule,
     ],
-    declarations: [
-        FilesComponent,
-        FileOverviewComponent,
-        FileUploadDialogComponent,
-        FileRenameDialogComponent,
-    ],
+    declarations: [],
     providers: [],
 })
 export class FilesModule {}

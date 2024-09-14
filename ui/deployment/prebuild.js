@@ -73,6 +73,7 @@ for (let module of config.modules) {
         path: modules[module]['path'],
         link: modules[module]['link'],
         pageNames: modules[module]['pageNames'],
+        privileges: modules[module]['privileges'],
         url: modules[module]['url'],
         title: modules[module]['title'],
         icon: modules[module]['icon'],

@@ -17,61 +17,65 @@
   -->
 
 <div fxLayout="row" fxFlex="100">
-    <div [fxFlex]="expanded ? browserWidth : '75px'">
-        <sp-basic-view [showBackLink]="false">
-            <div nav fxLayoutAlign="start center" fxFlex="100">
-                @if (assetBrowserData) {
-                    <sp-asset-browser-toolbar
-                        fxFlex="100"
+    @if (showAssetBrowser) {
+        <div [fxFlex]="expanded ? browserWidth : '75px'">
+            <sp-basic-view [showBackLink]="false">
+                <div nav fxLayoutAlign="start center" fxFlex="100">
+                    @if (assetBrowserData) {
+                        <sp-asset-browser-toolbar
+                            fxFlex="100"
+                            [assetBrowserData]="assetBrowserData"
+                            [expanded]="expanded"
+                            (toggleExpanded)="toggleExpanded($event)"
+                        >
+                        </sp-asset-browser-toolbar>
+                    }
+                </div>
+                @if (assetBrowserData?.assets?.length > 0 && expanded) {
+                    <sp-asset-browser-hierarchy
+                        [allResourcesAlias]="allResourcesAlias"
                         [assetBrowserData]="assetBrowserData"
-                        [expanded]="expanded"
-                        (toggleExpanded)="toggleExpanded($event)"
+                        [assetSelectionMode]="assetSelectionMode"
+                        [resourceCount]="resourceCount"
+                        [filteredAssetLinkType]="filteredAssetLinkType"
+                        (selectedAssetEmitter)="applyAssetFilter($event)"
+                        class="asset-hierarchy"
                     >
-                    </sp-asset-browser-toolbar>
+                    </sp-asset-browser-hierarchy>
+                } @else if (
+                    assetBrowserData?.assets?.length === 0 && expanded
+                ) {
+                    <div
+                        fxLayoutAlign="center center"
+                        fxLayout="column"
+                        fxFlex="100"
+                    >
+                        <span class="asset-creation-hint"
+                            >No assets found - use assets to better organize
+                            resources!</span
+                        >
+                        <button
+                            mat-button
+                            color="accent"
+                            class="mt-10"
+                            (click)="navigateToAssetManagement()"
+                        >
+                            Manage assets
+                        </button>
+                    </div>
                 }
-            </div>
-            @if (assetBrowserData?.assets?.length > 0 && expanded) {
-                <sp-asset-browser-hierarchy
-                    [allResourcesAlias]="allResourcesAlias"
-                    [assetBrowserData]="assetBrowserData"
-                    [assetSelectionMode]="assetSelectionMode"
-                    [resourceCount]="resourceCount"
-                    [filteredAssetLinkType]="filteredAssetLinkType"
-                    (selectedAssetEmitter)="applyAssetFilter($event)"
-                    class="asset-hierarchy"
-                >
-                </sp-asset-browser-hierarchy>
-            } @else if (assetBrowserData?.assets?.length === 0 && expanded) {
-                <div
-                    fxLayoutAlign="center center"
-                    fxLayout="column"
-                    fxFlex="100"
-                >
-                    <span class="asset-creation-hint"
-                        >No assets found - use assets to better organize
-                        resources!</span
+                @if (!expanded) {
+                    <div
+                        *ngIf="!expanded"
+                        class="asset-hierarchy asset-browser-text"
+                        fxLayoutAlign="center center"
                     >
-                    <button
-                        mat-button
-                        color="accent"
-                        class="mt-10"
-                        (click)="navigateToAssetManagement()"
-                    >
-                        Manage assets
-                    </button>
-                </div>
-            }
-            @if (!expanded) {
-                <div
-                    *ngIf="!expanded"
-                    class="asset-hierarchy asset-browser-text"
-                    fxLayoutAlign="center center"
-                >
-                    Asset Browser
-                </div>
-            }
-        </sp-basic-view>
-    </div>
+                        Asset Browser
+                    </div>
+                }
+            </sp-basic-view>
+        </div>
+    }
     <div fxFlex>
         <ng-content> </ng-content>
     </div>

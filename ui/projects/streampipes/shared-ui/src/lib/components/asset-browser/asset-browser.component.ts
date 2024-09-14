@@ -29,6 +29,7 @@ import { AssetBrowserData } from './asset-browser.model';
 import { Subscription } from 'rxjs';
 import { SpAsset } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
+import { CurrentUserService } from '../../services/current-user.service';
 
 @Component({
     selector: 'sp-asset-browser',
@@ -68,20 +69,28 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     expandedSub: Subscription;
 
     expanded = true;
+    showAssetBrowser = false;
 
     constructor(
         private assetBrowserService: SpAssetBrowserService,
         private router: Router,
+        private currentUserService: CurrentUserService,
     ) {}
 
     ngOnInit(): void {
-        this.assetBrowserDataSub =
-            this.assetBrowserService.assetData$.subscribe(assetData => {
-                this.assetBrowserData = assetData;
-            });
-        this.expandedSub = this.assetBrowserService.expanded$.subscribe(
-            expanded => (this.expanded = expanded),
-        );
+        this.showAssetBrowser = this.currentUserService.hasAnyRole([
+            'PRIVILEGE_READ_ASSETS',
+            'PRIVILEGE_WRITE_ASSETS',
+        ]);
+        if (this.showAssetBrowser) {
+            this.assetBrowserDataSub =
+                this.assetBrowserService.assetData$.subscribe(assetData => {
+                    this.assetBrowserData = assetData;
+                });
+            this.expandedSub = this.assetBrowserService.expanded$.subscribe(
+                expanded => (this.expanded = expanded),
+            );
+        }
     }
 
     toggleExpanded(event: boolean): void {

@@ -24,6 +24,7 @@ import {
     SpAssetModel,
 } from '@streampipes/platform-services';
 import {
+    CurrentUserService,
     DialogService,
     PanelType,
     SpAssetBrowserService,
@@ -33,6 +34,7 @@ import { SpAssetRoutes } from '../../assets.routes';
 import { Router } from '@angular/router';
 import { SpCreateAssetDialogComponent } from '../../dialog/create-asset/create-asset-dialog.component';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
+import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 
 @Component({
     selector: 'sp-asset-overview',
@@ -47,6 +49,8 @@ export class SpAssetOverviewComponent implements OnInit {
     dataSource: MatTableDataSource<SpAssetModel> =
         new MatTableDataSource<SpAssetModel>();
 
+    hasWritePrivilege = false;
+
     constructor(
         private genericStorageService: GenericStorageService,
         private breadcrumbService: SpBreadcrumbService,
@@ -54,9 +58,13 @@ export class SpAssetOverviewComponent implements OnInit {
         private router: Router,
         private idGeneratorService: IdGeneratorService,
         private assetBrowserService: SpAssetBrowserService,
+        private currentUserService: CurrentUserService,
     ) {}
 
     ngOnInit(): void {
+        this.hasWritePrivilege = this.currentUserService.hasRole(
+            UserPrivilege.PRIVILEGE_WRITE_ASSETS,
+        );
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpAssetRoutes.BASE),
         );

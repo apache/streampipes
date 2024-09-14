@@ -16,16 +16,11 @@
   ~
   -->
 
-<div style="padding-top: 0px" fxFlex="100" fxLayout="column">
+<div style="padding-top: 0" fxFlex="100" fxLayout="column">
     <div *ngFor="let item of menu">
         <div
             *ngIf="item.visible"
-            style="
-                min-width: 0px;
-                padding: 0px;
-                padding-top: 5px;
-                padding-bottom: 5px;
-            "
+            style="min-width: 0; padding: 5px 0"
             [ngClass]="
                 item.link === activePage
                     ? 'sp-navbar-item-selected'
@@ -49,39 +44,6 @@
                 >
                     {{ item.icon }}
                 </mat-icon>
-            </button>
-        </div>
-    </div>
-
-    <mat-divider
-        style="border-top-color: var(--color-navigation-text)"
-    ></mat-divider>
-    <div *ngFor="let item of admin">
-        <div
-            [ngClass]="
-                item.link === activePage
-                    ? 'sp-navbar-item-selected'
-                    : 'sp-navbar-item'
-            "
-            style="padding-top: 5px; padding-bottom: 5px"
-            *ngIf="item.visible"
-        >
-            <button
-                mat-icon-button
-                class="md-icon-button button-margin-iconbar iconbar-size"
-                (click)="go(item.link)"
-                matTooltip="{{ item.title }}"
-                matTooltipPosition="right"
-            >
-                <mat-icon
-                    [ngClass]="
-                        item.link === activePage
-                            ? 'sp-navbar-icon-selected'
-                            : 'sp-navbar-icon'
-                    "
-                    data-cy="navigation-icon"
-                    >{{ item.icon }}</mat-icon
-                >
             </button>
         </div>
     </div>

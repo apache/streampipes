@@ -16,36 +16,30 @@
   ~
   -->
 
-<sp-basic-view [showBackLink]="false" [padding]="true">
-    <div
-        nav
-        fxFlex="100"
-        fxLayoutAlign="start center"
-        fxLayout="row"
-        class="pl-10"
+<sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'files'">
+    <sp-split-section
+        title="Files"
+        subtitle="Upload and manage files that are used by adapters or pipeline elements."
     >
-        <button
-            mat-button
-            mat-raised-button
-            color="accent"
-            (click)="openFileUploadDialog()"
-            data-cy="sp-open-file-upload-dialog"
-            class="mr-10"
-        >
-            <i class="material-icons">cloud_upload</i>
-            &nbsp;Upload new file
-        </button>
-    </div>
+        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                (click)="openFileUploadDialog()"
+                data-cy="sp-open-file-upload-dialog"
+                class="mr-10"
+            >
+                <i class="material-icons">cloud_upload</i>
+                &nbsp;Upload new file
+            </button>
+        </div>
 
-    <div fxFlex="100" fxLayout="column">
-        <sp-basic-header-title-component
-            title="Files"
-        ></sp-basic-header-title-component>
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
+        <div fxFlex="100" fxLayout="column">
             <sp-file-overview
-                fxFlex="90"
+                fxFlex="100"
                 #fileOverviewComponent
             ></sp-file-overview>
         </div>
-    </div>
-</sp-basic-view>
+    </sp-split-section>
+</sp-basic-nav-tabs>

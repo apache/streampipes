@@ -54,6 +54,12 @@ export class SpConfigurationTabsService {
             roles: ['ROLE_ADMIN'],
         },
         {
+            itemId: 'files',
+            itemTitle: 'Files',
+            itemLink: ['configuration', 'files'],
+            roles: ['PRIVILEGE_READ_FILES', 'PRIVILEGE_WRITE_FILES'],
+        },
+        {
             itemId: 'labels',
             itemTitle: 'Labels',
             itemLink: ['configuration', 'labels'],

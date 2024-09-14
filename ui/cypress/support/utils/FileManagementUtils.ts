@@ -19,7 +19,7 @@
 export class FileManagementUtils {
     public static addFile(filePath: string) {
         // Go to StreamPipes file management
-        cy.visit('#/files');
+        cy.visit('#/configuration/files');
 
         // Open file upload dialog
         cy.dataCy('sp-open-file-upload-dialog').click();
@@ -32,7 +32,7 @@ export class FileManagementUtils {
 
     public static deleteFile() {
         // Go to StreamPipes file management
-        cy.visit('#/files');
+        cy.visit('#/configuration/files');
         // Check if file was uploaded and delete it
         cy.dataCy('delete').should('have.length', 1);
         cy.dataCy('delete').click();
@@ -44,7 +44,7 @@ export class FileManagementUtils {
         const downloadsFolder = Cypress.config('downloadsFolder');
 
         // Go to StreamPipes file management
-        cy.visit('#/files');
+        cy.visit('#/configuration/files');
         // Check if file was uploaded
         cy.dataCy('download').should('have.length', 1);
 

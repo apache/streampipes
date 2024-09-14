@@ -24,6 +24,7 @@
         class="pl-10"
     >
         <button
+            *ngIf="hasWritePrivilege"
             mat-button
             mat-raised-button
             color="accent"
@@ -100,6 +101,7 @@
                                     <i class="material-icons">search</i>
                                 </button>
                                 <button
+                                    *ngIf="hasWritePrivilege"
                                     color="accent"
                                     mat-icon-button
                                     matTooltip="Edit asset"
@@ -111,6 +113,7 @@
                                 </button>
 
                                 <button
+                                    *ngIf="hasWritePrivilege"
                                     color="accent"
                                     mat-icon-button
                                     matTooltip="Delete asset"

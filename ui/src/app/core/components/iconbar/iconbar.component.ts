@@ -19,9 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseNavigationComponent } from '../base-navigation.component';
 import { Router } from '@angular/router';
-import { NotificationCountService } from '../../../services/notification-count-service';
 import { AuthService } from '../../../services/auth.service';
-import { RestApi } from '../../../services/rest-api.service';
 import { AppConstants } from '../../../services/app.constants';
 import { CurrentUserService } from '@streampipes/shared-ui';
 
@@ -38,8 +36,6 @@ export class IconbarComponent
         router: Router,
         authService: AuthService,
         currentUserService: CurrentUserService,
-        public notificationCountService: NotificationCountService,
-        private restApi: RestApi,
         appConstants: AppConstants,
     ) {
         super(authService, currentUserService, router, appConstants);
