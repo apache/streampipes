@@ -115,6 +115,7 @@ import { StaticTreeInputNodeDetailsComponent } from './static-properties/static-
 import { SingleMarkerMapComponent } from './single-marker-map/single-marker-map.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { StaticTreeInputTextEditorComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-text-editor/static-tree-input-text-editor.component';
+import { PipelineElementTemplateConfigItemComponent } from './pipeline-element-template-config/pipeline-element-template-config-item/pipeline-element-template-config-item.component';
 
 @NgModule({
     imports: [
@@ -172,6 +173,7 @@ import { StaticTreeInputTextEditorComponent } from './static-properties/static-r
         DisplayRecommendedPipe,
         ObjectPermissionDialogComponent,
         PipelineElementTemplateConfigComponent,
+        PipelineElementTemplateConfigItemComponent,
         PipelineElementTemplatePipe,
         PipelineElementRuntimeInfoComponent,
         PipelineElementDocumentationComponent,

@@ -27,7 +27,6 @@ import org.apache.streampipes.integration.utils.Utils;
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
-import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,7 +34,7 @@ import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -58,15 +57,11 @@ public class PulsarAdapterTester extends AdapterTesterBase {
   public IAdapterConfiguration prepareAdapter() {
     IAdapterConfiguration configuration = new PulsarProtocol().declareConfig();
 
-    Map<String, PipelineElementTemplateConfig> configs = new HashMap<>();
-    configs.put(PulsarProtocol.PULSAR_BROKER_HOST,
-        new PipelineElementTemplateConfig(true, true, pulsarContainer.getBrokerHost()));
-    configs.put(PulsarProtocol.PULSAR_BROKER_PORT,
-        new PipelineElementTemplateConfig(true, false, pulsarContainer.getBrokerPort()));
-    configs.put(PulsarProtocol.PULSAR_TOPIC,
-        new PipelineElementTemplateConfig(true, false, TOPIC));
-    configs.put(PulsarProtocol.PULSAR_SUBSCRIPTION_NAME,
-        new PipelineElementTemplateConfig(true, false, "test-sub"));
+    List<Map<String, Object>> configs = new ArrayList<>();
+    configs.add(Map.of(PulsarProtocol.PULSAR_BROKER_HOST, pulsarContainer.getBrokerHost()));
+    configs.add(Map.of(PulsarProtocol.PULSAR_BROKER_PORT, pulsarContainer.getBrokerPort()));
+    configs.add(Map.of(PulsarProtocol.PULSAR_TOPIC, TOPIC));
+    configs.add(Map.of(PulsarProtocol.PULSAR_SUBSCRIPTION_NAME, "test-sub"));
 
     var template = new PipelineElementTemplate("name", "description", configs);
 

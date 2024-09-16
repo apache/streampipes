@@ -16,7 +16,7 @@
   ~
   -->
 
-<div class="p-15">
+<div class="p-15" *ngIf="templateConfigs">
     <div fxFlex="100" fxLayout="column">
         <h4>Basics</h4>
         <mat-form-field fxFlex color="accent">
@@ -58,16 +58,11 @@
                     {{ config.label }}
                 </div>
                 <div fxFlex="50">
-                    <div fxLayout="column">
-                        <mat-checkbox
-                            [checked]="templateConfigs.has(config.internalName)"
-                            (change)="handleSelection(config)"
-                            name="store"
-                            class="sp"
-                            color="accent"
-                            >Store as template
-                        </mat-checkbox>
-                    </div>
+                    <sp-pipeline-element-template-config-item
+                        [sp]="config"
+                        [templateConfigs]="templateConfigs"
+                    >
+                    </sp-pipeline-element-template-config-item>
                 </div>
             </div>
         </div>
