@@ -27,5 +27,5 @@ timestamp_mapping.description=The value which contains a timestamp
 schema_update.title=Schema Update
 schema_update.description=Update existing schemas with the new one or extend the existing schema with new properties
 
-dimensions_selection.key=Dimensions
+dimensions_selection.title=Dimensions
 dimensions_selection.description=Selected fields will be stored as dimensions.

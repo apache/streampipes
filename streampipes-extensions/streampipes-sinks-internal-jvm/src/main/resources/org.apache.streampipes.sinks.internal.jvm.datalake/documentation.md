@@ -70,3 +70,16 @@ The Schema Update Options dictate the behavior when encountering a measurement (
 - **Description:** Keeps old event fields in the event schema.
 - **Strategy:** This follows an append-only strategy, allowing continued work with historic data.
 - **Consideration:** Old properties may exist for which no new data is generated.
+
+
+### Dimensions
+
+Select fields which will be marked as dimensions. Dimensions reflect tags in the underlying time-series database. 
+Dimensions support grouping operations and can be used for fields with a limited set of values, e.g., boolean flags or 
+fields representing IDs. Dimensions are not a good choice for fields with a high number of different values since they 
+slow down database queries.
+
+By default, all fields which are marked as dimensions in the metadata are chosen and can be manually overridden 
+with this configuration.
+
+Data types which can be marked as dimensional values are booleans, integer, and strings.
