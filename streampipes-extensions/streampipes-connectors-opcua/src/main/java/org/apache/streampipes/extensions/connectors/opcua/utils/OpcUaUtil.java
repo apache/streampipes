@@ -121,6 +121,8 @@ public class OpcUaUtil {
 
       var returnValues = response.get();
 
+      spOpcUaClient.disconnect();
+
       makeEventPreview(selectedNodes, eventPreview, fieldStatusInfos, returnValues);
 
 

@@ -16,7 +16,7 @@
 #
 
 from enum import Enum
-from typing import Dict, Optional
+from typing import Dict
 
 from streampipes.functions.broker import SupportedBroker
 from streampipes.model.common import (
@@ -87,7 +87,6 @@ def create_data_stream(
             EventProperty(  # type: ignore
                 label=attribute_name,
                 runtime_name=attribute_name,
-                index=i,
                 runtime_type=f"http://www.w3.org/2001/XMLSchema#{attribute_type}",
             )
             for i, (attribute_name, attribute_type) in enumerate(attributes.items(), start=1)
@@ -107,14 +106,13 @@ def create_data_stream(
     sanitized_stream_id = stream_id.replace(" ", "")
 
     # Assign a default topic name incorporating the unique stream ID to each protocol.
-    # This ensures the topic name remains consistent across function restarts, avoiding reliance on client-side defaults.
+    # This ensures the topic name remains consistent across function restarts,
+    # avoiding reliance on client-side defaults.
     for protocol in transport_protocols:
         protocol.topic_definition.actual_topic_name = f"org.apache.streampipes.connect.{sanitized_stream_id}"
 
     data_stream = DataStream(
-        name=name,
-        event_schema=event_schema,
-        event_grounding=EventGrounding(transport_protocols=transport_protocols)
+        name=name, event_schema=event_schema, event_grounding=EventGrounding(transport_protocols=transport_protocols)
     )
 
     data_stream.element_id = sanitized_stream_id

@@ -18,16 +18,12 @@
 package org.apache.streampipes.test.generator.grounding;
 
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.test.generator.grounding.protocol.ProtocolGenerator;
-
-import java.util.Arrays;
 
 public class EventGroundingGenerator {
 
   public static EventGrounding makeDummyGrounding() {
     EventGrounding grounding = new EventGrounding();
-    grounding.setTransportFormats(Arrays.asList(new TransportFormat()));
     grounding.setTransportProtocol(ProtocolGenerator.makeDummyProtocol());
 
     return grounding;

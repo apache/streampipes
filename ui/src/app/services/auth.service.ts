@@ -23,11 +23,9 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../login/services/login.service';
-import { PageName } from '../_enums/page-name.enum';
-import { RoleModel } from '../_models/auth.model';
 import {
-    JwtTokenStorageService,
     CurrentUserService,
+    JwtTokenStorageService,
 } from '@streampipes/shared-ui';
 
 @Injectable({ providedIn: 'root' })
@@ -149,86 +147,23 @@ export class AuthService {
             });
     }
 
-    getUserRoles(): string[] {
-        return this.currentUserService.getCurrentUser().roles;
+    public hasRole(role: string): boolean {
+        return this.currentUserService.hasRole(role);
     }
 
-    public hasRole(role: RoleModel): boolean {
-        return (
-            this.getUserRoles().includes('ROLE_ADMIN') ||
-            this.getUserRoles().includes(role)
-        );
+    public hasAnyRole(roles: string[]): boolean {
+        return this.currentUserService.hasAnyRole(roles);
     }
 
-    public hasAnyRole(roles: RoleModel[]): boolean {
-        if (Array.isArray(roles)) {
-            return roles.reduce(
-                (aggregator: false, role: RoleModel) =>
-                    aggregator || this.hasRole(role),
-                false,
-            );
-        }
-
-        return false;
-    }
-
-    isAnyAccessGranted(pageNames: PageName[], redirect?: boolean): boolean {
-        if (!pageNames || pageNames.length === 0) {
+    isAnyAccessGranted(privileges: string[], redirect?: boolean): boolean {
+        if (!privileges || privileges.length === 0) {
             return true;
         }
 
-        const result = pageNames.some(pageName =>
-            this.isAccessGranted(pageName),
-        );
+        const result = this.hasAnyRole(privileges);
         if (!result && redirect) {
             this.router.navigate(['']);
         }
         return result;
-    }
-
-    isAccessGranted(pageName: PageName) {
-        if (this.hasRole('ROLE_ADMIN')) {
-            return true;
-        }
-        switch (pageName) {
-            case PageName.HOME:
-                return true;
-            case PageName.PIPELINE_EDITOR:
-                return this.hasAnyRole(['ROLE_PIPELINE_ADMIN']);
-            case PageName.PIPELINE_OVERVIEW:
-                return this.hasAnyRole([
-                    'ROLE_PIPELINE_ADMIN',
-                    'ROLE_PIPELINE_USER',
-                ]);
-            case PageName.CONNECT:
-                return this.hasAnyRole(['ROLE_CONNECT_ADMIN']);
-            case PageName.DASHBOARD:
-                return this.hasAnyRole([
-                    'ROLE_DASHBOARD_USER',
-                    'ROLE_DASHBOARD_ADMIN',
-                ]);
-            case PageName.DATA_EXPLORER:
-                return this.hasAnyRole([
-                    'ROLE_DATA_EXPLORER_ADMIN',
-                    'ROLE_DATA_EXPLORER_USER',
-                ]);
-            case PageName.APPS:
-                return this.hasAnyRole(['ROLE_APP_USER']);
-            case PageName.FILE_UPLOAD:
-                return this.hasAnyRole([
-                    'ROLE_CONNECT_ADMIN',
-                    'ROLE_PIPELINE_ADMIN',
-                ]);
-            case PageName.INSTALL_PIPELINE_ELEMENTS:
-                return this.hasAnyRole(['ROLE_ADMIN']);
-            case PageName.NOTIFICATIONS:
-                return this.hasAnyRole(['ROLE_PIPELINE_ADMIN']);
-            case PageName.ASSETS:
-                return this.hasAnyRole(['ROLE_ADMIN']);
-            case PageName.SETTINGS:
-                return this.hasAnyRole(['ROLE_ADMIN']);
-            default:
-                return true;
-        }
     }
 }

@@ -16,8 +16,8 @@
  *
  */
 export class ConnectBtns {
-    public static infoAdapter() {
-        return cy.dataCy('info-adapter');
+    public static detailsAdapter() {
+        return cy.dataCy('details-adapter');
     }
 
     public static editAdapter() {
@@ -107,6 +107,12 @@ export class ConnectBtns {
 
     public static timestampNumberDropdown() {
         return cy.dataCy('connect-timestamp-number-dropdown', {
+            timeout: 10000,
+        });
+    }
+
+    public static runtimeNameInput() {
+        return cy.dataCy('connect-edit-field-runtime-name', {
             timeout: 10000,
         });
     }

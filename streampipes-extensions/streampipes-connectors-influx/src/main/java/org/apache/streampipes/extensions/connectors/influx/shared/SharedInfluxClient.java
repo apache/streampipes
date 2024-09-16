@@ -23,7 +23,6 @@ import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxConnectionSettings;
 
 import org.influxdb.InfluxDB;
-import org.influxdb.dto.Pong;
 
 public abstract class SharedInfluxClient {
 
@@ -42,12 +41,14 @@ public abstract class SharedInfluxClient {
 
 
   protected void initClient() throws SpRuntimeException {
-    this.influxDb = InfluxClientProvider.getInfluxDBClient(connectionSettings);
+    InfluxClientProvider influxClientProvider = new InfluxClientProvider();
+    this.influxDb = influxClientProvider.getInitializedInfluxDBClient(connectionSettings);
+  }
 
-    // Checking, if server is available
-    Pong response = influxDb.ping();
-    if (response.getVersion().equalsIgnoreCase("unknown")) {
-      throw new SpRuntimeException("Could not connect to InfluxDb Server: " + connectionSettings.getConnectionUrl());
-    }
+  /**
+   * Shuts down the connection to the InfluxDB server
+   */
+  public void disconnect() {
+    influxDb.close();
   }
 }

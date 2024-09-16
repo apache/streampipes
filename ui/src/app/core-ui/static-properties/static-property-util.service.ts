@@ -19,6 +19,7 @@
 import { Injectable } from '@angular/core';
 import {
     AnyStaticProperty,
+    CodeInputStaticProperty,
     CollectionStaticProperty,
     ColorPickerStaticProperty,
     FileStaticProperty,
@@ -77,6 +78,12 @@ export class StaticPropertyUtilService {
             clone = new ColorPickerStaticProperty();
             clone.id = id;
             clone.selectedProperty = val.selectedColor;
+        } else if (val instanceof CodeInputStaticProperty) {
+            clone = new CodeInputStaticProperty();
+            clone.elementId = id;
+            clone.codeTemplate = val.codeTemplate;
+            clone.value = val.value;
+            clone.language = val.language;
         } else if (val instanceof StaticPropertyGroup) {
             clone = new StaticPropertyGroup();
             clone.elementId = id;
@@ -138,7 +145,6 @@ export class StaticPropertyUtilService {
         dst.label = src.label;
         dst.description = src.description;
         dst.internalName = src.internalName;
-        dst.index = src.index;
         return dst;
     }
 

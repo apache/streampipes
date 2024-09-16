@@ -30,14 +30,11 @@ import {
 import { GridsterItemComponent } from 'angular-gridster2';
 import {
     DashboardItem,
-    DataExplorerDataConfig,
     DataExplorerWidgetModel,
     DataLakeMeasure,
-    DateRange,
     SpLogMessage,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { DataDownloadDialogComponent } from '../../../core-ui/data-download-dialog/data-download-dialog.component';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
@@ -45,12 +42,9 @@ import { WidgetDirective } from './widget.directive';
 import { WidgetTypeService } from '../../services/widget-type.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
-import {
-    CurrentUserService,
-    DialogService,
-    PanelType,
-} from '@streampipes/shared-ui';
+import { CurrentUserService } from '@streampipes/shared-ui';
 import { BaseWidgetData } from '../../models/dataview-dashboard.model';
+import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-widget',
@@ -71,10 +65,10 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     editMode: boolean;
 
     @Input()
-    gridsterItemComponent: GridsterItemComponent;
+    dataViewMode = false;
 
     @Input()
-    currentlyConfiguredWidgetId: string;
+    gridsterItemComponent: GridsterItemComponent;
 
     @Input()
     previewMode = false;
@@ -82,25 +76,24 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     @Input()
     gridMode = true;
 
+    @Input()
+    widgetIndex: number;
+
     /**
      * This is the date range (start, end) to view the data and is set in data-explorer.ts
      */
     @Input()
     timeSettings: TimeSettings;
 
-    @Output() deleteCallback: EventEmitter<DataExplorerWidgetModel> =
-        new EventEmitter<DataExplorerWidgetModel>();
-    @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> =
-        new EventEmitter<DataExplorerWidgetModel>();
-    @Output() configureWidgetCallback: EventEmitter<DataExplorerWidgetModel> =
-        new EventEmitter<DataExplorerWidgetModel>();
+    @Input()
+    globalTimeEnabled = true;
+
+    @Output() deleteCallback: EventEmitter<number> = new EventEmitter<number>();
     @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> =
         new EventEmitter<DataExplorerWidgetModel>();
 
     title = '';
     widgetLoaded = false;
-
-    msCounter = interval(10);
     timerActive = false;
     loadingTime = 0;
 
@@ -118,7 +111,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
 
     constructor(
         private widgetRegistryService: DataExplorerWidgetRegistry,
-        private dialogService: DialogService,
+        private dashboardService: DataExplorerDashboardService,
         private componentFactoryResolver: ComponentFactoryResolver,
         private widgetTypeService: WidgetTypeService,
         private authService: AuthService,
@@ -149,13 +142,9 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.componentRef.destroy();
-        if (this.authSubscription) {
-            this.authSubscription.unsubscribe();
-        }
-        if (this.widgetTypeChangedSubscription) {
-            this.widgetTypeChangedSubscription.unsubscribe();
-        }
+        this.componentRef?.destroy();
+        this.authSubscription?.unsubscribe();
+        this.widgetTypeChangedSubscription?.unsubscribe();
     }
 
     chooseWidget(widgetTypeId: string) {
@@ -178,7 +167,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
                 componentFactory,
             );
         this.componentRef.instance.dataExplorerWidget = this.configuredWidget;
-        this.componentRef.instance.timeSettings = this.timeSettings;
+        this.componentRef.instance.timeSettings = this.getTimeSettings();
         this.componentRef.instance.gridsterItem = this.dashboardItem;
         this.componentRef.instance.gridsterItemComponent =
             this.gridsterItemComponent;
@@ -200,45 +189,24 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
 
         this.componentRef.onDestroy(destroy => {
             this.componentRef.instance.cleanupSubscriptions();
-            removeSub.unsubscribe();
-            timerSub.unsubscribe();
-            errorSub.unsubscribe();
+            removeSub?.unsubscribe();
+            timerSub?.unsubscribe();
+            errorSub?.unsubscribe();
         });
+    }
+
+    getTimeSettings(): TimeSettings {
+        return this.globalTimeEnabled
+            ? this.timeSettings
+            : (this.configuredWidget.timeSettings as TimeSettings);
     }
 
     removeWidget() {
-        this.deleteCallback.emit(this.configuredWidget);
-    }
-
-    downloadDataAsFile() {
-        this.dialogService.open(DataDownloadDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Download data',
-            width: '50vw',
-            data: {
-                dataDownloadDialogModel: {
-                    dataExplorerDateRange: DateRange.fromTimeSettings(
-                        this.timeSettings,
-                    ),
-                    dataExplorerDataConfig: this.configuredWidget
-                        .dataConfig as DataExplorerDataConfig,
-                },
-            },
-        });
+        this.deleteCallback.emit(this.widgetIndex);
     }
 
     startEditMode() {
         this.startEditModeEmitter.emit(this.configuredWidget);
-    }
-
-    triggerWidgetEditMode() {
-        if (
-            this.currentlyConfiguredWidgetId === this.configuredWidget.elementId
-        ) {
-            this.configureWidgetCallback.emit();
-        } else {
-            this.configureWidgetCallback.emit(this.configuredWidget);
-        }
     }
 
     startLoadingTimer() {
@@ -257,5 +225,12 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
 
     handleTimer(start: boolean) {
         start ? this.startLoadingTimer() : this.stopLoadingTimer();
+    }
+
+    downloadDataAsFile(): void {
+        this.dashboardService.downloadDataAsFile(
+            this.timeSettings,
+            this.configuredWidget,
+        );
     }
 }

@@ -19,15 +19,15 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import {
+    FileMetadata,
     FilesService,
     FileStaticProperty,
-    FileMetadata,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { UntypedFormControl, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { FileRenameDialogComponent } from '../../../files/dialog/file-rename/file-rename-dialog.component';
+import { FileRenameDialogComponent } from '../../../configuration/dialog/file-rename/file-rename-dialog.component';
 
 @Component({
     selector: 'sp-static-file-input',

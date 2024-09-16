@@ -58,12 +58,6 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
             .getOutputStream()
             .getEventGrounding()
             .getTransportProtocol(),
-        runtimeParameters
-            .getModel()
-            .getOutputStream()
-            .getEventGrounding()
-            .getTransportFormats()
-            .get(0),
         this.instanceId);
   }
 

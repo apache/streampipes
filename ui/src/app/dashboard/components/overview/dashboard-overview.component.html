@@ -16,139 +16,151 @@
   ~
   -->
 
-<sp-basic-view [showBackLink]="false" [padding]="true">
-    <div
-        nav
-        fxFlex="100"
-        fxLayoutAlign="start center"
-        fxLayout="row"
-        class="pl-10"
-    >
-        <button
-            mat-button
-            mat-raised-button
-            color="accent"
-            data-cy="new-dashboard-btn"
-            (click)="openNewDashboardDialog()"
-            *ngIf="hasDashboardWritePrivileges"
+<sp-asset-browser
+    filteredAssetLinkType="dashboard"
+    allResourcesAlias="Dashboards"
+    [resourceCount]="dashboards.length"
+    (filterIdsEmitter)="applyDashboardFilters($event)"
+>
+    <sp-basic-view [showBackLink]="false" [padding]="true">
+        <div
+            nav
+            fxFlex="100"
+            fxLayoutAlign="start center"
+            fxLayout="row"
+            class="pl-10"
         >
-            <i class="material-icons">add</i>
-            <span>New Dashboard</span>
-        </button>
-    </div>
-
-    <div fxFlex="100" fxLayout="column">
-        <sp-basic-header-title-component
-            title="Dashboards"
-        ></sp-basic-header-title-component>
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-            <sp-table
-                fxFlex="90"
-                [columns]="displayedColumns"
-                [dataSource]="dataSource"
-                matSort
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                data-cy="new-dashboard-btn"
+                (click)="openNewDashboardDialog()"
+                *ngIf="hasDashboardWritePrivileges"
             >
-                <ng-container matColumnDef="name">
-                    <th
-                        fxFlex="60"
-                        fxLayoutAlign="start center"
-                        mat-header-cell
-                        *matHeaderCellDef
-                    >
-                        Dashboard
-                    </th>
-                    <td
-                        fxFlex="60"
-                        fxLayoutAlign="start center"
-                        mat-cell
-                        *matCellDef="let element"
-                    >
-                        {{ element.name }}<br />
-                        {{ element.description }}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="actions">
-                    <th
-                        fxFlex="40"
-                        fxLayoutAlign="center center"
-                        mat-header-cell
-                        *matHeaderCellDef
-                    ></th>
-                    <td
-                        fxFlex="40"
-                        fxLayoutAlign="start center"
-                        mat-cell
-                        *matCellDef="let element"
-                    >
-                        <div
-                            fxLayout="row"
-                            fxFlex="100"
-                            fxLayoutAlign="end center"
-                        >
-                            <button
-                                mat-icon-button
-                                matTooltip="Open dashboard"
-                                color="accent"
-                                (click)="showDashboard(element)"
-                                [attr.data-cy]="
-                                    'show-dashboard-' + element.name
-                                "
-                            >
-                                <i class="material-icons">visibility</i>
-                            </button>
-                            <button
-                                mat-icon-button
-                                matTooltip="Open dashboard in new window"
-                                color="accent"
-                                (click)="openExternalDashboard(element)"
-                            >
-                                <i class="material-icons">open_in_new</i>
-                            </button>
-                            <button
-                                mat-icon-button
-                                matTooltip="Edit dashboard settings"
-                                color="accent"
-                                *ngIf="hasDashboardWritePrivileges"
-                                (click)="openEditDashboardDialog(element)"
-                                data-cy="change-dashboard-settings-button"
-                            >
-                                <i class="material-icons">settings</i>
-                            </button>
-                            <button
-                                mat-icon-button
-                                matTooltip="Edit dashboard"
-                                color="accent"
-                                (click)="editDashboard(element)"
-                                *ngIf="hasDashboardWritePrivileges"
-                                [attr.data-cy]="
-                                    'edit-dashboard-' + element.name
-                                "
-                            >
-                                <i class="material-icons">edit</i>
-                            </button>
-                            <button
-                                mat-icon-button
-                                matTooltip="Manage permissions"
-                                color="accent"
-                                *ngIf="isAdmin"
-                                (click)="showPermissionsDialog(element)"
-                            >
-                                <i class="material-icons">share</i>
-                            </button>
-                            <button
-                                mat-icon-button
-                                matTooltip="Delete dashboard"
-                                color="accent"
-                                *ngIf="hasDashboardDeletePrivileges"
-                                (click)="openDeleteDashboardDialog(element)"
-                            >
-                                <i class="material-icons">delete</i>
-                            </button>
-                        </div>
-                    </td>
-                </ng-container>
-            </sp-table>
+                <i class="material-icons">add</i>
+                <span>New Dashboard</span>
+            </button>
         </div>
-    </div>
-</sp-basic-view>
+
+        <div fxFlex="100" fxLayout="column">
+            <sp-basic-header-title-component
+                title="Dashboards"
+            ></sp-basic-header-title-component>
+            <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
+                <sp-table
+                    fxFlex="90"
+                    [columns]="displayedColumns"
+                    [dataSource]="dataSource"
+                    matSort
+                >
+                    <ng-container matColumnDef="name">
+                        <th
+                            fxFlex="60"
+                            fxLayoutAlign="start center"
+                            mat-header-cell
+                            *matHeaderCellDef
+                        >
+                            Dashboard
+                        </th>
+                        <td
+                            fxFlex="60"
+                            fxLayoutAlign="center start"
+                            fxLayout="column"
+                            mat-cell
+                            *matCellDef="let element"
+                        >
+                            <div>
+                                <b>{{ element.name }}</b>
+                            </div>
+                            <div>
+                                <small> {{ element.description }}</small>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                        <th
+                            fxFlex="40"
+                            fxLayoutAlign="center center"
+                            mat-header-cell
+                            *matHeaderCellDef
+                        ></th>
+                        <td
+                            fxFlex="40"
+                            fxLayoutAlign="start center"
+                            mat-cell
+                            *matCellDef="let element"
+                        >
+                            <div
+                                fxLayout="row"
+                                fxFlex="100"
+                                fxLayoutAlign="end center"
+                            >
+                                <button
+                                    mat-icon-button
+                                    matTooltip="Open dashboard"
+                                    color="accent"
+                                    (click)="showDashboard(element)"
+                                    [attr.data-cy]="
+                                        'show-dashboard-' + element.name
+                                    "
+                                >
+                                    <i class="material-icons">visibility</i>
+                                </button>
+                                <button
+                                    mat-icon-button
+                                    matTooltip="Open dashboard in new window"
+                                    color="accent"
+                                    (click)="openExternalDashboard(element)"
+                                >
+                                    <i class="material-icons">open_in_new</i>
+                                </button>
+                                <button
+                                    mat-icon-button
+                                    matTooltip="Edit dashboard settings"
+                                    color="accent"
+                                    *ngIf="hasDashboardWritePrivileges"
+                                    (click)="openEditDashboardDialog(element)"
+                                    data-cy="change-dashboard-settings-button"
+                                >
+                                    <i class="material-icons">settings</i>
+                                </button>
+                                <button
+                                    mat-icon-button
+                                    matTooltip="Edit dashboard"
+                                    color="accent"
+                                    (click)="editDashboard(element)"
+                                    *ngIf="hasDashboardWritePrivileges"
+                                    [attr.data-cy]="
+                                        'edit-dashboard-' + element.name
+                                    "
+                                >
+                                    <i class="material-icons">edit</i>
+                                </button>
+                                <button
+                                    mat-icon-button
+                                    matTooltip="Manage permissions"
+                                    color="accent"
+                                    *ngIf="isAdmin"
+                                    (click)="showPermissionsDialog(element)"
+                                >
+                                    <i class="material-icons">share</i>
+                                </button>
+                                <button
+                                    mat-icon-button
+                                    matTooltip="Delete dashboard"
+                                    color="accent"
+                                    *ngIf="hasDashboardWritePrivileges"
+                                    (click)="openDeleteDashboardDialog(element)"
+                                >
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+                </sp-table>
+            </div>
+        </div>
+    </sp-basic-view>
+</sp-asset-browser>

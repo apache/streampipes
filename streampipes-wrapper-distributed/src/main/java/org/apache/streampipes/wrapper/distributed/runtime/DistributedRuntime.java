@@ -33,7 +33,6 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
-import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.wrapper.runtime.PipelineElementRuntime;
 
@@ -61,8 +60,8 @@ public abstract class DistributedRuntime<
     return new ProducerConfigFactory(protocol).makeDefaultProperties();
   }
 
-  protected SpDataFormatDefinition getDataFormatDefinition(TransportFormat transportFormat) {
-    return SpDataFormatManager.INSTANCE.findDefinition(transportFormat).get();
+  protected SpDataFormatDefinition getDataFormatDefinition() {
+    return SpDataFormatManager.getFormatDefinition();
   }
 
   protected String getTopic(SpDataStream stream) {

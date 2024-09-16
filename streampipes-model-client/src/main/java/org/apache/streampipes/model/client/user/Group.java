@@ -39,7 +39,7 @@ public class Group implements Storable {
 
   private String groupName;
 
-  private Set<Role> roles;
+  private Set<String> roles;
 
   public Group() {
     this.roles = new HashSet<>();
@@ -79,11 +79,11 @@ public class Group implements Storable {
     this.groupName = groupName;
   }
 
-  public Set<Role> getRoles() {
+  public Set<String> getRoles() {
     return roles;
   }
 
-  public void setRoles(Set<Role> roles) {
+  public void setRoles(Set<String> roles) {
     this.roles = roles;
   }
 

@@ -96,11 +96,11 @@
 <sp-pipeline-element-preview
     *ngIf="
         previewModeActive &&
-        pipelinePreview.supportedPipelineElementDomIds.indexOf(
+        pipelinePreview.elementIdMappings[
             pipelineElementConfig.payload.elementId
-        ) > -1
+        ] !== undefined
     "
-    [previewId]="pipelinePreview.previewId"
+    [pipelinePreview]="pipelinePreview"
     [elementId]="pipelineElementConfig.payload.elementId"
 >
 </sp-pipeline-element-preview>

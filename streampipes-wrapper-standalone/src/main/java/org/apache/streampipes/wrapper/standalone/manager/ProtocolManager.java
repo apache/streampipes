@@ -19,7 +19,6 @@
 package org.apache.streampipes.wrapper.standalone.manager;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.wrapper.standalone.routing.StandaloneSpInputCollector;
 import org.apache.streampipes.wrapper.standalone.routing.StandaloneSpOutputCollector;
@@ -41,14 +40,13 @@ public class ProtocolManager {
   // in empire serializers
 
   public static <T extends TransportProtocol> StandaloneSpInputCollector findInputCollector(T protocol,
-                                                                                            TransportFormat format,
                                                                                             Boolean singletonEngine)
       throws SpRuntimeException {
 
     if (consumers.containsKey(topicName(protocol))) {
       return consumers.get(topicName(protocol));
     } else {
-      consumers.put(topicName(protocol), makeInputCollector(protocol, format, singletonEngine));
+      consumers.put(topicName(protocol), makeInputCollector(protocol, singletonEngine));
       LOG.info("Adding new consumer to consumer map (size=" + consumers.size() + "): " + topicName(protocol));
       return consumers.get(topicName(protocol));
     }
@@ -56,14 +54,13 @@ public class ProtocolManager {
   }
 
   public static <T extends TransportProtocol> StandaloneSpOutputCollector findOutputCollector(T protocol,
-                                                                                              TransportFormat format,
                                                                                               String resourceId)
       throws SpRuntimeException {
 
     if (producers.containsKey(topicName(protocol))) {
       return producers.get(topicName(protocol));
     } else {
-      producers.put(topicName(protocol), makeOutputCollector(protocol, format, resourceId));
+      producers.put(topicName(protocol), makeOutputCollector(protocol, resourceId));
       LOG.info("Adding new producer to producer map (size=" + producers.size() + "): " + topicName
           (protocol));
       return producers.get(topicName(protocol));
@@ -72,17 +69,15 @@ public class ProtocolManager {
   }
 
   private static <T extends TransportProtocol> StandaloneSpInputCollector<T> makeInputCollector(T protocol,
-                                                                                                TransportFormat format,
                                                                                                 Boolean singletonEngine)
       throws SpRuntimeException {
-    return new StandaloneSpInputCollector<>(protocol, format, singletonEngine);
+    return new StandaloneSpInputCollector<>(protocol, singletonEngine);
   }
 
   public static <T extends TransportProtocol> StandaloneSpOutputCollector<T> makeOutputCollector(T protocol,
-                                                                                                 TransportFormat format,
                                                                                                  String resourceId)
       throws SpRuntimeException {
-    return new StandaloneSpOutputCollector<>(protocol, format, resourceId);
+    return new StandaloneSpOutputCollector<>(protocol, resourceId);
   }
 
   private static String topicName(TransportProtocol protocol) {

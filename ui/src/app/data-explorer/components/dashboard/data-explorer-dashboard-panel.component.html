@@ -1,0 +1,97 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-basic-view
+    [backLinkTarget]="['dataexplorer']"
+    [showBackLink]="true"
+    *ngIf="dashboardLoaded"
+>
+    <div nav fxFlex="100" class="ml-10">
+        <sp-data-explorer-dashboard-toolbar
+            [dashboard]="dashboard"
+            [editMode]="editMode"
+            [(viewMode)]="viewMode"
+            [hasDataExplorerWritePrivileges]="hasDataExplorerWritePrivileges"
+            [timeRangeVisible]="timeRangeVisible"
+            [timeSettings]="timeSettings"
+            (saveDashboardEmitter)="persistDashboardChanges()"
+            (discardDashboardEmitter)="discardChanges()"
+            (deleteDashboardEmitter)="deleteDashboard()"
+            (triggerEditModeEmitter)="triggerEditMode()"
+            (updateDateRangeEmitter)="updateDateRange($event)"
+            (intervalSettingsChangedEmitter)="modifyRefreshInterval()"
+        >
+        </sp-data-explorer-dashboard-toolbar>
+    </div>
+
+    <div fxFlex="100" fxLayout="column">
+        <mat-drawer-container
+            class="designer-panel-container h-100 dashboard-grid"
+        >
+            <mat-drawer
+                [opened]="editMode"
+                mode="side"
+                position="end"
+                class="designer-panel"
+            >
+                <div fxLayout="column" fxFlex="100">
+                    <sp-data-explorer-dashboard-widget-selection-panel
+                        (addDataViewEmitter)="addDataViewToDashboard($event)"
+                        fxFlex="100"
+                    >
+                    </sp-data-explorer-dashboard-widget-selection-panel>
+                </div>
+            </mat-drawer>
+            <mat-drawer-content class="h-100 dashboard-grid">
+                <div
+                    *ngIf="dashboard.widgets.length === 0"
+                    fxFlex="100"
+                    fxLayout="column"
+                    fxLayoutAlign="center center"
+                    data-cy="empty-dashboard"
+                >
+                    <h4>
+                        This dashboard is empty and doesn't contain any widgets.
+                    </h4>
+                </div>
+                <sp-data-explorer-dashboard-grid
+                    #dashboardGrid
+                    *ngIf="dashboard.widgets.length > 0 && viewMode === 'grid'"
+                    [editMode]="editMode"
+                    [dashboard]="dashboard"
+                    [timeSettings]="timeSettings"
+                    (deleteCallback)="removeDataViewFromDashboard($event)"
+                    (startEditModeEmitter)="startEditMode($event)"
+                    class="h-100 dashboard-grid"
+                >
+                </sp-data-explorer-dashboard-grid>
+                <sp-data-explorer-dashboard-slide-view
+                    class="h-100 dashboard-grid"
+                    #dashboardSlide
+                    [editMode]="editMode"
+                    [dashboard]="dashboard"
+                    [timeSettings]="timeSettings"
+                    (deleteCallback)="removeDataViewFromDashboard($event)"
+                    (startEditModeEmitter)="startEditMode($event)"
+                    *ngIf="dashboard.widgets.length > 0 && viewMode === 'slide'"
+                >
+                </sp-data-explorer-dashboard-slide-view>
+            </mat-drawer-content>
+        </mat-drawer-container>
+    </div>
+</sp-basic-view>

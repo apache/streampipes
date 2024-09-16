@@ -32,6 +32,7 @@ public class SpCoreConfiguration {
   private EmailConfig emailConfig;
   private EmailTemplateConfig emailTemplateConfig;
   private GeneralConfig generalConfig;
+  private LocationConfig locationConfig;
 
   private boolean isConfigured;
   private SpCoreConfigurationStatus serviceStatus;
@@ -40,6 +41,7 @@ public class SpCoreConfiguration {
   private String filesDir;
 
   public SpCoreConfiguration() {
+    this.locationConfig = new LocationConfig(false, "", "");
   }
 
   public String getRev() {
@@ -128,5 +130,13 @@ public class SpCoreConfiguration {
 
   public void setServiceStatus(SpCoreConfigurationStatus serviceStatus) {
     this.serviceStatus = serviceStatus;
+  }
+
+  public LocationConfig getLocationConfig() {
+    return locationConfig;
+  }
+
+  public void setLocationConfig(LocationConfig locationConfig) {
+    this.locationConfig = locationConfig;
   }
 }

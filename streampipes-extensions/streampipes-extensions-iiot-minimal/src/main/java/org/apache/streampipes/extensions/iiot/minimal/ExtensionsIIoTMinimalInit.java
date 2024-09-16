@@ -19,10 +19,6 @@
 package org.apache.streampipes.extensions.iiot.minimal;
 
 import org.apache.streampipes.connect.iiot.IIoTAdaptersExtensionModuleExport;
-import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
-import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
-import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
-import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.extensions.connectors.influx.InfluxConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.mqtt.MqttConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.nats.NatsConnectorsModuleExport;
@@ -74,11 +70,6 @@ public class ExtensionsIIoTMinimalInit extends StreamPipesExtensionsServiceBase 
             new InternalSinksExtensionModuleExports(),
             new NotificationsExtensionModuleExport())
         .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
-        .registerMessagingFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory())
         .registerMessagingProtocols(
             new SpNatsProtocolFactory(),
             new SpMqttProtocolFactory()

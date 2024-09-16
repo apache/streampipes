@@ -24,6 +24,7 @@ import { FileManagementUtils } from '../FileManagementUtils';
 import { ConnectUtils } from '../connect/ConnectUtils';
 import { ConnectBtns } from '../connect/ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
+import { differenceInMonths } from 'date-fns';
 
 export class DataLakeUtils {
     public static goToDatalake() {
@@ -99,9 +100,12 @@ export class DataLakeUtils {
         // DataLakeUtils.addNewWidget();
         DataLakeUtils.selectDataSet(dataSet);
         DataLakeUtils.dataConfigSelectAllFields();
+
+        DataLakeUtils.selectAppearanceConfig();
+        DataLakeUtils.selectDataViewName(dataViewName);
+
         DataLakeUtils.openVisualizationConfig();
         DataLakeUtils.selectVisualizationType(widgetType);
-        DataLakeUtils.clickCreateButton();
 
         cy.wait(1000);
     }
@@ -132,29 +136,89 @@ export class DataLakeUtils {
         PrepareTestDataUtils.loadDataIntoDataLake('fileTest/random.csv');
     }
 
-    public static createAndEditDataView(name: string) {
+    public static createAndEditDashboard(name: string) {
         // Create new data view
-        cy.dataCy('open-new-data-view-dialog').click();
+        cy.dataCy('open-new-dashboard-dialog').click();
 
         // Configure data view
         cy.dataCy('data-view-name').type(name);
         cy.dataCy('save-data-view').click();
 
-        this.editDataView(name);
+        this.editDashboard(name);
     }
 
-    public static removeWidget(widgetName: string) {
-        cy.dataCy('remove-' + widgetName).click();
+    public static addDataViewToDashboard(
+        dataViewName: string,
+        ignoreTimeRange = false,
+    ) {
+        if (!ignoreTimeRange) {
+            this.selectTimeRange(
+                new Date(2020, 10, 20, 22, 44),
+                this.getFutureDate(),
+            );
+        }
+        cy.dataCy('add-data-view-btn-' + dataViewName).click();
+    }
+
+    public static createAndEditDataView() {
+        // Create new data view
+        cy.dataCy('open-new-data-view').click();
+    }
+
+    public static removeWidget(dataViewName: string) {
+        cy.dataCy('remove-' + dataViewName).click();
+    }
+
+    public static editDashboard(dashboardName: string) {
+        // Click edit button
+        // following only works if single view is available
+        cy.dataCy('edit-dashboard-' + dashboardName).click();
     }
 
     public static editDataView(dataViewName: string) {
         // Click edit button
         // following only works if single view is available
-        cy.dataCy('edit-dashboard-' + dataViewName).click();
+        cy.dataCy('edit-data-view-' + dataViewName).click();
     }
 
-    public static saveDataExplorerWidgetConfiguration() {
-        cy.dataCy('save-data-explorer-widget-btn', { timeout: 10000 }).click();
+    public static saveDataViewConfiguration() {
+        cy.dataCy('save-data-view-btn', { timeout: 10000 }).click();
+    }
+
+    public static saveDashboardConfiguration() {
+        cy.dataCy('save-dashboard-btn', { timeout: 10000 }).click();
+    }
+
+    public static getEmptyDashboardInformation() {
+        return cy.dataCy('empty-dashboard');
+    }
+
+    public static deleteDashboard(dashboardName: string) {
+        cy.dataCy('delete-dashboard-' + dashboardName, {
+            timeout: 10000,
+        }).click();
+        cy.dataCy('confirm-delete', { timeout: 10000 }).click();
+    }
+
+    public static deleteDataView(dataViewName: string) {
+        cy.dataCy('delete-data-view-' + dataViewName, {
+            timeout: 10000,
+        }).click();
+        cy.dataCy('confirm-delete', { timeout: 10000 }).click();
+    }
+
+    public static cancelDeleteDashboard(dashboardName: string) {
+        cy.dataCy('delete-dashboard-' + dashboardName, {
+            timeout: 10000,
+        }).click();
+        cy.dataCy('cancel-delete', { timeout: 10000 }).click();
+    }
+
+    public static cancelDeleteDataView(dataViewName: string) {
+        cy.dataCy('delete-data-view-' + dataViewName, {
+            timeout: 10000,
+        }).click();
+        cy.dataCy('cancel-delete', { timeout: 10000 }).click();
     }
 
     public static editWidget(widgetName: string) {
@@ -167,10 +231,15 @@ export class DataLakeUtils {
     }
 
     public static saveAndReEditWidget(dataViewName: string) {
-        // Save configuration
-        DataLakeUtils.saveDataExplorerWidgetConfiguration();
-        DataLakeUtils.goBackToOverview();
+        // Save data view configuration
+        DataLakeUtils.saveDataViewConfiguration();
         DataLakeUtils.editDataView(dataViewName);
+    }
+
+    public static saveAndReEditDashboard(dashboardName: string) {
+        // Save dashboard configuration
+        DataLakeUtils.saveDashboardConfiguration();
+        DataLakeUtils.editDashboard(dashboardName);
     }
 
     public static clickTab(tabName: string) {
@@ -250,12 +319,20 @@ export class DataLakeUtils {
             .click();
     }
 
+    public static clickOrderBy(order: String) {
+        if (order == 'ascending') {
+            cy.dataCy('ascending-radio-button').click();
+        } else {
+            cy.dataCy('descending-radio-button').click();
+        }
+    }
+
     /**
      * Select visualization type
      */
     public static selectVisualizationType(type: string | 'Table') {
         // Select visualization type
-        cy.dataCy('data-explorer-select-visualization-type')
+        cy.dataCy('data-explorer-select-visualization-type', { timeout: 10000 })
             .click()
             .get('mat-option')
             .contains(type)
@@ -275,6 +352,10 @@ export class DataLakeUtils {
 
     public static selectAppearanceConfig() {
         cy.get('.mdc-tab__text-label').contains('Appearance').parent().click();
+    }
+
+    public static selectDataViewName(dataViewName: string) {
+        cy.dataCy('appearance-config-widget-title').clear().type(dataViewName);
     }
 
     public static clickCreateButton() {
@@ -314,8 +395,41 @@ export class DataLakeUtils {
     }
 
     public static selectTimeRange(from: Date, to: Date) {
-        DataLakeUtils.setTimeInput('time-range-from', from);
-        DataLakeUtils.setTimeInput('time-range-to', to);
+        DataLakeUtils.openTimeSelectorMenu();
+        const monthsBack = Math.abs(differenceInMonths(from, new Date())) + 1;
+        DataLakeUtils.navigateCalendar('previous', monthsBack);
+        DataLakeUtils.selectDay(from.getDate());
+
+        const monthsForward = Math.abs(differenceInMonths(from, to));
+        DataLakeUtils.navigateCalendar('next', monthsForward);
+
+        DataLakeUtils.selectDay(to.getDate());
+
+        DataLakeUtils.setTimeInput('time-selector-start-time', from);
+        DataLakeUtils.setTimeInput('time-selector-end-time', to);
+        DataLakeUtils.applyCustomTimeSelection();
+    }
+
+    public static navigateCalendar(direction: string, numberOfMonths: number) {
+        for (let i = 0; i < numberOfMonths; i++) {
+            cy.get(`button.mat-calendar-${direction}-button`).click();
+        }
+    }
+
+    public static selectDay(day: number) {
+        cy.get(
+            `button:has(span.mat-calendar-body-cell-content:contains("${day}"))`,
+        )
+            .first()
+            .click();
+    }
+
+    public static openTimeSelectorMenu() {
+        cy.dataCy('time-selector-menu').click();
+    }
+
+    public static applyCustomTimeSelection() {
+        cy.dataCy('apply-custom-time').click();
     }
 
     public static setTimeInput(field: string, date: Date) {
@@ -323,7 +437,7 @@ export class DataLakeUtils {
     }
 
     public static makeTimeString(date: Date) {
-        return date.toISOString().slice(0, 16);
+        return date.toTimeString().slice(0, 5);
     }
 
     public static getFutureDate() {
@@ -348,5 +462,21 @@ export class DataLakeUtils {
             .should('be.visible')
             .invoke('text')
             .then(text => text.trim());
+    }
+
+    public static checkRowsDashboardTable(amount: number) {
+        cy.dataCy('dashboard-table-overview', {
+            timeout: 10000,
+        }).should('have.length', amount);
+    }
+
+    public static checkRowsViewsTable(amount: number) {
+        cy.dataCy('data-views-table-overview', {
+            timeout: 10000,
+        }).should('have.length', amount);
+    }
+
+    public static checkIfConfirmationDialogIsShowing(): void {
+        cy.get('confirmation-dialog').should('be.visible');
     }
 }

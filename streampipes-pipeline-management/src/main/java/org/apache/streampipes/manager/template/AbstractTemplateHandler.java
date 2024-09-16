@@ -20,9 +20,6 @@ package org.apache.streampipes.manager.template;
 
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public abstract class AbstractTemplateHandler<T> {
 
   protected T element;
@@ -39,9 +36,7 @@ public abstract class AbstractTemplateHandler<T> {
   }
 
   public T applyTemplateOnPipelineElement() {
-    Map<String, Object> configs = new HashMap<>();
-    template.getTemplateConfigs().forEach((key, value) -> configs.put(key, value.getValue()));
-    PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(configs);
+    PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(template.getTemplateConfigs());
     visitStaticProperties(visitor);
 
     if (overwriteNameAndDescription) {

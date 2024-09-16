@@ -55,7 +55,8 @@ class MeasurementGetQueryConfig(BaseModel):
         If provided, the returned data only consists of the given columns.<br>
         Please be aware that the column `time` as an index is always included.
     end_date: Optional[datetime]
-        Limits the queried data to only include data that is older than the specified time. In other words, any data that occurred after the end_date will not be included in the query results.
+        Limits the queried data to only include data that is older than the specified time.
+        In other words, any data that occurred after the end_date will not be included in the query results.
     limit: Optional[int]
         Amount of records returned at maximum (default: `1000`) <br>
         This needs to be at least `1`
@@ -69,7 +70,8 @@ class MeasurementGetQueryConfig(BaseModel):
         Page number used for paging operation <br>
         This needs to be at least `1`
     start_date: Optional[datetime]
-        Limits the queried data to only include data that is newer than the specified time. In other words, any data that occurred before the start_date will not be included in the query results.
+        Limits the queried data to only include data that is newer than the specified time.
+        In other words, any data that occurred before the start_date will not be included in the query results.
     """
 
     _regex_comma_separated_string = r"^[0-9a-zA-Z\_]+(,[0-9a-zA-Z\_]+)*$"
@@ -326,7 +328,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     @property
     def _container_cls(self) -> Type[ResourceContainer]:
         """Defines the model container class the endpoint refers to.
-        
+
         Returns
         -------
         [DataLakeMeasures][streampipes.model.container.DataLakeMeasures]

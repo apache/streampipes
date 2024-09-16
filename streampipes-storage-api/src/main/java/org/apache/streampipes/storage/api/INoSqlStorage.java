@@ -19,6 +19,8 @@ package org.apache.streampipes.storage.api;
 
 import org.apache.streampipes.model.client.user.Group;
 import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
+import org.apache.streampipes.model.client.user.Privilege;
+import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
@@ -41,8 +43,6 @@ public interface INoSqlStorage {
   CRUDStorage<Group> getUserGroupStorage();
 
   IPipelineStorage getPipelineStorageAPI();
-
-  IPipelineElementConnectionStorage getConnectionStorageApi();
 
   IUserStorage getUserStorageAPI();
 
@@ -83,4 +83,8 @@ public interface INoSqlStorage {
   CRUDStorage<SpServiceConfiguration> getExtensionsServiceConfigurationStorage();
 
   ISpCoreConfigurationStorage getSpCoreConfigurationStorage();
+
+  CRUDStorage<Role> getRoleStorage();
+
+  CRUDStorage<Privilege> getPrivilegeStorage();
 }

@@ -29,10 +29,8 @@ type EventProperty struct {
 	Label              string             `json:"label,omitempty"`
 	Description        string             `json:"description,omitempty"`
 	RuntimeName        string             `json:"runtimeName,omitempty"`
-	Required           bool               `json:"required,omitempty"`
 	DomainProperties   []string           `json:"domainProperties,omitempty"`
 	PropertyScope      string             `json:"propertyScope,omitempty"`
-	Index              int                `json:"index"`
 	RuntimeID          string             `json:"runtimeId,omitempty"`
 	RuntimeType        string             `json:"runtimeType"`
 	MeasurementUnit    string             `json:"measurementUnit,omitempty"`
@@ -44,10 +42,8 @@ type EventProperties struct {
 	Label              string            `json:"label"`
 	Description        string            `json:"description"`
 	RuntimeName        string            `json:"runtimeName"`
-	Required           bool              `json:"required"`
 	DomainProperties   []string          `json:"domainProperties"`
 	PropertyScope      string            `json:"propertyScope"`
-	Index              int               `json:"index"`
 	RuntimeID          string            `json:"runtimeId"`
 	RuntimeType        string            `json:"runtimeType,omitempty"`
 	MeasurementUnit    string            `json:"measurementUnit,omitempty"`
@@ -69,12 +65,80 @@ type DataSeries struct {
 
 type ResponseMessage struct {
 	Success       bool           `json:"success"`
-	ElementName   interface{}    `json:"elementName"`
+	ElementName   string         `json:"elementName"`
 	Notifications []Notification `json:"notifications"`
 }
 
 type Notification struct {
-	Title                 string `json:"title"`
-	Description           string `json:"description"`
-	AdditionalInformation string `json:"additionalInformation"`
+	Title                 string      `json:"title"`
+	Description           interface{} `json:"description"`
+	AdditionalInformation string      `json:"additionalInformation"`
+}
+
+type StaticProperty struct {
+	Optional           bool   `json:"optional,omitempty"`
+	StaticPropertyType string `json:"staticPropertyType"`
+	Index              int32  `json:"index"`
+	Label              string `json:"label"`
+	Description        string `json:"description"`
+	InternalName       string `json:"internalName"`
+	Predefined         bool   `json:"predefined"`
+	Class              string `json:"@class"`
+}
+
+type SpDataStream struct {
+	ElementId              string         `json:"elementId"`
+	Dom                    string         `json:"dom"`
+	ConnectedTo            []string       `json:"connectedTo"`
+	Name                   string         `json:"name"`
+	Description            string         `json:"description"`
+	IconUrl                string         `json:"iconUrl"`
+	AppId                  string         `json:"appId"`
+	IncludesAssets         bool           `json:"includesAssets"`
+	IncludesLocales        bool           `json:"includesLocales"`
+	IncludedAssets         []string       `json:"includedAssets"`
+	IncludedLocales        []string       `json:"includedLocales"`
+	InternallyManaged      bool           `json:"internallyManaged"`
+	EventGrounding         EventGrounding `json:"eventGrounding"`
+	EventSchema            EventSchema    `json:"eventSchema"`
+	Category               []string       `json:"category"`
+	Index                  int32          `json:"index"`
+	CorrespondingAdapterId string         `json:"correspondingAdapterId"`
+	Rev                    string         `json:"_rev"`
+}
+
+type EventGrounding struct {
+	TransportProtocols []TransportProtocol `json:"transportProtocols"`
+	TransportFormats   []TransportFormat   `json:"transportFormats"`
+}
+
+type TransportProtocol struct {
+	ElementId       string          `json:"elementId"`
+	BrokerHostname  string          `json:"brokerHostname"`
+	TopicDefinition TopicDefinition `json:"topicDefinition"`
+	Class           string          `json:"@class,omitempty"`
+	Port            int             `json:"port"`
+}
+
+type TopicDefinition struct {
+	ActualTopicName string `json:"actualTopicName"`
+	Class           string `json:"@class"`
+}
+
+type TransportFormat struct {
+	RdfType []string `json:"rdfType"`
+}
+
+type TransformationRuleDescription struct {
+	RulePriority int32
+}
+
+type SpServiceTag struct {
+	Prefix string `json:"prefix"`
+	Value  string `json:"value"`
+}
+
+type ExtensionDeploymentConfiguration struct {
+	DesiredServiceTags  []SpServiceTag `json:"desiredServiceTags"`
+	SelectedEndpointUrl string         `json:"selectedEndpointUrl"`
 }

@@ -15,272 +15,269 @@
   ~ limitations under the License.
   ~
   -->
-<sp-basic-view [showBackLink]="false" [padding]="true">
-    <div
-        nav
-        fxFlex="100"
-        fxLayoutAlign="start center"
-        fxLayout="row"
-        class="pl-10"
-    >
-        <button
-            mat-raised-button
-            color="accent"
-            data-cy="connect-create-new-adapter-button"
-            (click)="createNewAdapter()"
+
+<sp-asset-browser
+    filteredAssetLinkType="adapter"
+    allResourcesAlias="Adapters"
+    [resourceCount]="existingAdapters.length"
+    (filterIdsEmitter)="applyAdapterFilters($event)"
+>
+    <sp-basic-view [showBackLink]="false" [padding]="true">
+        <div
+            nav
+            fxFlex="100"
+            fxLayoutAlign="start center"
+            fxLayout="row"
+            class="pl-10"
         >
-            <i class="material-icons">add</i>&nbsp;New adapter
-        </button>
-        <button
-            class="mr-10"
-            mat-button
-            color="accent"
-            data-cy="start-all-adapters-btn"
-            [disabled]="checkCurrentSelectionStatus(false)"
-            (click)="startAllAdapters(true)"
-        >
-            <mat-icon>play_arrow</mat-icon><span>Start all adapters</span>
-        </button>
-        <button
-            mat-button
-            color="accent"
-            data-cy="stop-all-adapters-btn"
-            [disabled]="checkCurrentSelectionStatus(true)"
-            (click)="startAllAdapters(false)"
-        >
-            <mat-icon>stop</mat-icon>
-            <span>Stop all adapters</span>
-        </button>
-        <div fxFlex fxLayout="row" fxLayoutAlign="end center">
-            <sp-connect-filter-toolbar
-                class="filter-bar-margin"
-                (filterChangedEmitter)="applyFilter($event)"
+            <button
+                mat-raised-button
+                color="accent"
+                data-cy="connect-create-new-adapter-button"
+                (click)="createNewAdapter()"
             >
-            </sp-connect-filter-toolbar>
-            <div
-                fxFlex="100"
-                fxLayout="row"
-                fxLayoutAlign="end center"
-                class="page-container-nav"
+                <i class="material-icons">add</i>&nbsp;New adapter
+            </button>
+            <button
+                class="mr-10"
+                mat-button
+                color="accent"
+                data-cy="start-all-adapters-btn"
+                [disabled]="checkCurrentSelectionStatus(false)"
+                (click)="startAllAdapters(true)"
             >
+                <mat-icon>play_arrow</mat-icon>
+                <span>Start all adapters</span>
+            </button>
+            <button
+                mat-button
+                color="accent"
+                data-cy="stop-all-adapters-btn"
+                [disabled]="checkCurrentSelectionStatus(true)"
+                (click)="startAllAdapters(false)"
+            >
+                <mat-icon>stop</mat-icon>
+                <span>Stop all adapters</span>
+            </button>
+            <div fxFlex fxLayout="row" fxLayoutAlign="end center">
+                <sp-connect-filter-toolbar
+                    class="filter-bar-margin"
+                    (filterChangedEmitter)="applyFilter($event)"
+                >
+                </sp-connect-filter-toolbar>
+                <div
+                    fxFlex="100"
+                    fxLayout="row"
+                    fxLayoutAlign="end center"
+                    class="page-container-nav"
+                >
+                    <button
+                        mat-icon-button
+                        color="accent"
+                        id="startAdapterTutorial3"
+                        (click)="startAdapterTutorial()"
+                        matTooltip="Tutorial: Generic Adapter"
+                        [disabled]="tutorialActive"
+                    >
+                        <mat-icon>school</mat-icon>
+                    </button>
+                </div>
                 <button
                     mat-icon-button
+                    matTooltip="Refresh adapters"
+                    matTooltipPosition="below"
                     color="accent"
-                    id="startAdapterTutorial3"
-                    (click)="startAdapterTutorial()"
-                    matTooltip="Tutorial: Generic Adapter"
-                    [disabled]="tutorialActive"
+                    (click)="getAdaptersRunning()"
                 >
-                    <mat-icon>school</mat-icon>
+                    <i class="material-icons"> refresh </i>
                 </button>
             </div>
-            <button
-                mat-icon-button
-                matTooltip="Refresh adapters"
-                matTooltipPosition="below"
-                color="accent"
-                (click)="getAdaptersRunning()"
-            >
-                <i class="material-icons"> refresh </i>
-            </button>
         </div>
-    </div>
-    <div fxFlex="100" fxLayout="column">
-        <sp-basic-header-title-component
-            title="Adapters"
-        ></sp-basic-header-title-component>
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-            <sp-table
-                fxFlex="90"
-                [columns]="displayedColumns"
-                [dataSource]="dataSource"
-                data-cy="all-adapters-table"
-                matSort
-            >
-                <ng-container matColumnDef="status">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                        Status
-                    </th>
-                    <td mat-cell *matCellDef="let adapter">
-                        <sp-adapter-status-light
-                            [adapterRunning]="adapter.running"
+        <div fxFlex="100" fxLayout="column">
+            <sp-basic-header-title-component
+                title="Adapters"
+            ></sp-basic-header-title-component>
+            <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
+                <sp-table
+                    fxFlex="90"
+                    [columns]="displayedColumns"
+                    [dataSource]="dataSource"
+                    data-cy="all-adapters-table"
+                    matSort
+                >
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                            Status
+                        </th>
+                        <td mat-cell *matCellDef="let adapter">
+                            <sp-adapter-status-light
+                                [adapterRunning]="adapter.running"
+                            >
+                            </sp-adapter-status-light>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="start">
+                        <th mat-header-cell *matHeaderCellDef>Start</th>
+                        <td
+                            mat-cell
+                            *matCellDef="let adapter"
+                            data-cy="adapters-table"
                         >
-                        </sp-adapter-status-light>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="start">
-                    <th mat-header-cell *matHeaderCellDef>Start</th>
-                    <td
-                        mat-cell
-                        *matCellDef="let adapter"
-                        data-cy="adapters-table"
-                    >
-                        <button
-                            color="accent"
-                            mat-icon-button
-                            matTooltip="Start adapter"
-                            matTooltipPosition="above"
-                            data-cy="start-adapter"
-                            (click)="startAdapter(adapter)"
-                            *ngIf="!adapter.running"
+                            <button
+                                color="accent"
+                                mat-icon-button
+                                matTooltip="Start adapter"
+                                matTooltipPosition="above"
+                                data-cy="start-adapter"
+                                (click)="startAdapter(adapter)"
+                                *ngIf="!adapter.running"
+                            >
+                                <i class="material-icons">play_arrow</i>
+                            </button>
+                            <button
+                                color="accent"
+                                mat-icon-button
+                                matTooltip="Stop adapter"
+                                matTooltipPosition="above"
+                                data-cy="stop-adapter"
+                                (click)="stopAdapter(adapter)"
+                                *ngIf="adapter.running"
+                            >
+                                <i class="material-icons">stop</i>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                            Name
+                        </th>
+                        <td mat-cell *matCellDef="let adapter">
+                            <div>
+                                <b data-cy="adapter-name">{{ adapter.name }}</b>
+                            </div>
+                            <div>
+                                <small> {{ adapter.description }}</small>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="adapterBase">
+                        <th mat-header-cell *matHeaderCellDef>Adapter</th>
+                        <td mat-cell *matCellDef="let adapter">
+                            <img
+                                class="adapter-icon"
+                                *ngIf="getIconUrl(adapter) && !adapter.icon"
+                                [src]="getIconUrl(adapter)"
+                                [alt]="adapter.name"
+                            />
+                            <img
+                                class="adapter-icon"
+                                *ngIf="adapter.icon"
+                                [alt]="adapter.name"
+                                [src]="adapter.icon"
+                            />
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="lastModified">
+                        <th mat-header-cell *matHeaderCellDef>Created</th>
+                        <td mat-cell *matCellDef="let adapter">
+                            <h5>
+                                {{
+                                    adapter.createdAt | date: 'dd.MM.yyyy HH:mm'
+                                }}
+                            </h5>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="messagesSent">
+                        <th
+                            mat-header-cell
+                            *matHeaderCellDef
+                            matTooltip="Messages sent since last start"
                         >
-                            <i class="material-icons">play_arrow</i>
-                        </button>
-                        <button
-                            color="accent"
-                            mat-icon-button
-                            matTooltip="Stop adapter"
-                            matTooltipPosition="above"
-                            data-cy="stop-adapter"
-                            (click)="stopAdapter(adapter)"
-                            *ngIf="adapter.running"
-                        >
-                            <i class="material-icons">stop</i>
-                        </button>
-                    </td>
-                </ng-container>
+                            #Messages
+                        </th>
+                        <td mat-cell *matCellDef="let adapter">
+                            <h5 class="monitoring-info">
+                                {{
+                                    adapterMetrics[adapter.elementId]
+                                        ? adapterMetrics[adapter.elementId]
+                                              .messagesOut.counter
+                                        : 0
+                                }}
+                            </h5>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                        Name
-                    </th>
-                    <td mat-cell *matCellDef="let adapter">
-                        <div>
-                            <b
-                                style="margin-bottom: 0"
-                                data-cy="adapter-name"
-                                >{{ adapter.name }}</b
-                            >
-                        </div>
-                        <span>{{
-                            adapter.description !== ''
-                                ? adapter.description
-                                : '-'
-                        }}</span>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="adapterBase">
-                    <th mat-header-cell *matHeaderCellDef>Adapter</th>
-                    <td mat-cell *matCellDef="let adapter">
-                        <img
-                            class="adapter-icon"
-                            *ngIf="getIconUrl(adapter) && !adapter.icon"
-                            [src]="getIconUrl(adapter)"
-                            [alt]="adapter.name"
-                        />
-                        <img
-                            class="adapter-icon"
-                            *ngIf="adapter.icon"
-                            [alt]="adapter.name"
-                            [src]="adapter.icon"
-                        />
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="lastModified">
-                    <th mat-header-cell *matHeaderCellDef>Created</th>
-                    <td mat-cell *matCellDef="let adapter">
-                        <h5>
-                            {{ adapter.createdAt | date: 'dd.MM.yyyy HH:mm' }}
-                        </h5>
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="lastMessage">
+                        <th mat-header-cell *matHeaderCellDef>Last message</th>
+                        <td mat-cell *matCellDef="let adapter">
+                            <h5>
+                                {{
+                                    adapterMetrics[adapter.elementId] &&
+                                    adapterMetrics[adapter.elementId]
+                                        .lastTimestamp > 0
+                                        ? (adapterMetrics[adapter.elementId]
+                                              .lastTimestamp
+                                          | date: 'dd.MM.yyyy HH:mm')
+                                        : 'n/a'
+                                }}
+                            </h5>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="messagesSent">
-                    <th
-                        mat-header-cell
-                        *matHeaderCellDef
-                        matTooltip="Messages sent since last start"
-                    >
-                        #Messages
-                    </th>
-                    <td mat-cell *matCellDef="let adapter">
-                        <h5 class="monitoring-info">
-                            {{
-                                adapterMetrics[adapter.elementId]
-                                    ? adapterMetrics[adapter.elementId]
-                                          .messagesOut.counter
-                                    : 0
-                            }}
-                        </h5>
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let adapter">
+                            <div fxLayout="row" fxLayoutAlign="end center">
+                                <button
+                                    color="accent"
+                                    mat-icon-button
+                                    matTooltip="Show details"
+                                    matTooltipPosition="above"
+                                    data-cy="details-adapter"
+                                    (click)="
+                                        navigateToDetailsOverviewPage(adapter)
+                                    "
+                                >
+                                    <i class="material-icons">search</i>
+                                </button>
 
-                <ng-container matColumnDef="lastMessage">
-                    <th mat-header-cell *matHeaderCellDef>Last message</th>
-                    <td mat-cell *matCellDef="let adapter">
-                        <h5>
-                            {{
-                                adapterMetrics[adapter.elementId] &&
-                                adapterMetrics[adapter.elementId]
-                                    .lastTimestamp > 0
-                                    ? (adapterMetrics[adapter.elementId]
-                                          .lastTimestamp
-                                      | date: 'dd.MM.yyyy HH:mm')
-                                    : 'n/a'
-                            }}
-                        </h5>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let adapter">
-                        <div fxLayout="row" fxLayoutAlign="end center">
-                            <button
-                                color="accent"
-                                mat-icon-button
-                                matTooltip="Show details"
-                                matTooltipPosition="above"
-                                data-cy="details-adapter"
-                                (click)="navigateToDetailsOverviewPage(adapter)"
-                            >
-                                <i class="material-icons">search</i>
-                            </button>
-                            <button
-                                color="accent"
-                                mat-icon-button
-                                matTooltip="Show info"
-                                matTooltipPosition="above"
-                                data-cy="info-adapter"
-                                (click)="openHelpDialog(adapter)"
-                            >
-                                <i class="material-icons">help_outline</i>
-                            </button>
-
-                            <button
-                                color="accent"
-                                mat-icon-button
-                                matTooltip="Edit adapter"
-                                data-cy="edit-adapter"
-                                matTooltipPosition="above"
-                                (click)="editAdapter(adapter)"
-                            >
-                                <i class="material-icons">edit</i>
-                            </button>
-                            <button
-                                color="accent"
-                                mat-icon-button
-                                matTooltip="Manage permissions"
-                                matTooltipPosition="above"
-                                *ngIf="isAdmin"
-                                (click)="showPermissionsDialog(adapter)"
-                            >
-                                <i class="material-icons">share</i>
-                            </button>
-                            <button
-                                color="accent"
-                                mat-icon-button
-                                matTooltip="Delete adapter"
-                                data-cy="delete-adapter"
-                                matTooltipPosition="above"
-                                (click)="deleteAdapter(adapter)"
-                            >
-                                <i class="material-icons">delete</i>
-                            </button>
-                        </div>
-                    </td>
-                </ng-container>
-            </sp-table>
+                                <button
+                                    color="accent"
+                                    mat-icon-button
+                                    matTooltip="Edit adapter"
+                                    data-cy="edit-adapter"
+                                    matTooltipPosition="above"
+                                    (click)="editAdapter(adapter)"
+                                >
+                                    <i class="material-icons">edit</i>
+                                </button>
+                                <button
+                                    color="accent"
+                                    mat-icon-button
+                                    matTooltip="Manage permissions"
+                                    matTooltipPosition="above"
+                                    *ngIf="isAdmin"
+                                    (click)="showPermissionsDialog(adapter)"
+                                >
+                                    <i class="material-icons">share</i>
+                                </button>
+                                <button
+                                    color="accent"
+                                    mat-icon-button
+                                    matTooltip="Delete adapter"
+                                    data-cy="delete-adapter"
+                                    matTooltipPosition="above"
+                                    (click)="deleteAdapter(adapter)"
+                                >
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+                </sp-table>
+            </div>
         </div>
-    </div>
-</sp-basic-view>
+    </sp-basic-view>
+</sp-asset-browser>

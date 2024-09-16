@@ -145,11 +145,13 @@ public abstract class AbstractProcessingElementBuilder<K extends
    * Assigns supported transport formats to the pipeline elements that can be handled at runtime (e.g.,
    * JSON or XMl).
    *
+   * @deprecated format assignment is no longer necessary
    * @param format An arbitrary number of supported {@link org.apache.streampipes.model.grounding.TransportFormat}s. Use
    *               {@link org.apache.streampipes.sdk.helpers.SupportedFormats} to assign formats from some pre-defined
    *               ones or create your own by following the developer guide.
    * @return this
    */
+  @Deprecated(forRemoval = true, since = "0.97.0")
   public K supportedFormats(TransportFormat... format) {
     return supportedFormats(Arrays.asList(format));
   }
@@ -158,13 +160,14 @@ public abstract class AbstractProcessingElementBuilder<K extends
    * Assigns supported transport formats to the pipeline elements that can be handled at runtime (e.g.,
    * JSON or XMl).
    *
+   * @deprecated format assignment is no longer necessary
    * @param formats A list of supported {@link org.apache.streampipes.model.grounding.TransportFormat}s. Use
    *                {@link org.apache.streampipes.sdk.helpers.SupportedFormats} to assign formats from some pre-defined
    *                ones or create your own by following the developer guide.
    * @return this
    */
+  @Deprecated(forRemoval = true, since = "0.97.0")
   public K supportedFormats(List<TransportFormat> formats) {
-    this.supportedGrounding.setTransportFormats(formats);
     return me();
   }
 

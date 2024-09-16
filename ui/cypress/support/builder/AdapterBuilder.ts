@@ -19,7 +19,7 @@
 import { UserInput } from '../model/UserInput';
 import { UserInputType } from '../model/UserInputType';
 import { AdapterInput } from '../model/AdapterInput';
-import { TreeNodeBuilder } from './TreeNodeBuilder';
+import { TreeNodeUserInputBuilder } from './TreeNodeUserInputBuilder';
 
 export class AdapterBuilder {
     adapterInput: AdapterInput;
@@ -71,7 +71,7 @@ export class AdapterBuilder {
         return this;
     }
 
-    public addTreeNode(treeNode: TreeNodeBuilder) {
+    public addTreeNode(treeNode: TreeNodeUserInputBuilder) {
         const userInput = new UserInput();
         userInput.type = 'tree';
         userInput.treeNode = treeNode.build();

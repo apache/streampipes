@@ -26,8 +26,10 @@ export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
 export * from './lib/dialog/panel-dialog/panel-dialog.component';
 export * from './lib/dialog/standard-dialog/standard-dialog.component';
 
+export * from './lib/components/asset-browser/asset-browser.component';
 export * from './lib/components/basic-header-title/header-title.component';
 export * from './lib/components/basic-inner-panel/basic-inner-panel.component';
+export * from './lib/components/basic-field-description/basic-field-description.component';
 export * from './lib/components/basic-view/basic-view.component';
 export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
 export * from './lib/components/split-section/split-section.component';
@@ -44,3 +46,5 @@ export * from './lib/services/breadcrumb.service';
 export * from './lib/services/jwt-token-storage.service';
 export * from './lib/services/current-user.service';
 export * from './lib/services/echarts-toolbox.service';
+export * from './lib/services/colorization.service';
+export * from './lib/components/asset-browser/asset-browser.service';

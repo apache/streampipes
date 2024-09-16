@@ -19,6 +19,8 @@ package org.apache.streampipes.storage.couchdb;
 
 import org.apache.streampipes.model.client.user.Group;
 import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
+import org.apache.streampipes.model.client.user.Privilege;
+import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
@@ -38,7 +40,6 @@ import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.api.INotificationStorage;
 import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
-import org.apache.streampipes.storage.api.IPipelineElementConnectionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
@@ -46,7 +47,6 @@ import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.ConnectionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.CoreConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataProcessorStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataSinkStorageImpl;
@@ -61,6 +61,8 @@ import org.apache.streampipes.storage.couchdb.impl.PipelineCanvasMetadataStorage
 import org.apache.streampipes.storage.couchdb.impl.PipelineElementDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineElementTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.PipelineStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.PrivilegeStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.RoleStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
@@ -100,11 +102,6 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IPipelineStorage getPipelineStorageAPI() {
     return new PipelineStorageImpl();
-  }
-
-  @Override
-  public IPipelineElementConnectionStorage getConnectionStorageApi() {
-    return new ConnectionStorageImpl();
   }
 
   @Override
@@ -237,5 +234,15 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   @Override
   public ISpCoreConfigurationStorage getSpCoreConfigurationStorage() {
     return new CoreConfigurationStorageImpl();
+  }
+
+  @Override
+  public CRUDStorage<Role> getRoleStorage() {
+    return new RoleStorageImpl();
+  }
+
+  @Override
+  public CRUDStorage<Privilege> getPrivilegeStorage() {
+    return new PrivilegeStorageImpl();
   }
 }

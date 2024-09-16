@@ -134,10 +134,12 @@
     <ng-container matColumnDef="name">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
         <td mat-cell *matCellDef="let pipeline">
-            <h4 style="margin-bottom: 0">{{ pipeline.name }}</h4>
-            <span>
-                {{ pipeline.description !== '' ? pipeline.description : '-' }}
-            </span>
+            <div>
+                <b>{{ pipeline.name }}</b>
+            </div>
+            <div>
+                <small> {{ pipeline.description }}</small>
+            </div>
         </td>
     </ng-container>
 
@@ -199,7 +201,7 @@
                     mat-icon-button
                     matTooltip="Delete pipeline"
                     matTooltipPosition="above"
-                    *ngIf="hasPipelineDeletePrivileges"
+                    *ngIf="hasPipelineWritePrivileges"
                     (click)="
                         pipelineOperationsService.showDeleteDialog(
                             pipeline,

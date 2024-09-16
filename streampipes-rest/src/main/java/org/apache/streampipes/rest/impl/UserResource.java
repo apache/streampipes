@@ -20,9 +20,9 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.mail.MailSender;
 import org.apache.streampipes.model.ShortUserInfo;
 import org.apache.streampipes.model.client.user.ChangePasswordRequest;
+import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.RawUserApiToken;
-import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.message.Message;
@@ -286,7 +286,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
         .getAuthentication()
         .getAuthorities()
         .stream()
-        .anyMatch(r -> r.getAuthority().equals(Role.ROLE_ADMIN.name()));
+        .anyMatch(r -> r.getAuthority().equals(DefaultRole.ROLE_ADMIN.name()));
   }
 
   private void updateUser(UserAccount existingUser,

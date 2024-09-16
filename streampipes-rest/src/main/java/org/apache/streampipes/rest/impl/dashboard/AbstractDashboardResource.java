@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.resource.management.AbstractDashboardResourceManager;
+import org.apache.streampipes.resource.management.AbstractCRUDResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import org.springframework.http.MediaType;
@@ -58,7 +58,7 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
   }
 
   @DeleteMapping(path = "/{dashboardId}")
-  @PreAuthorize("this.hasDeleteAuthority() and hasPermission(#dashboardId, 'DELETE')")
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dashboardId, 'WRITE')")
   public ResponseEntity<Void> deleteDashboard(@PathVariable("dashboardId") String dashboardId) {
     getResourceManager().delete(dashboardId);
     return ok();
@@ -71,7 +71,7 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
     return ok();
   }
 
-  protected abstract AbstractDashboardResourceManager getResourceManager();
+  protected abstract AbstractCRUDResourceManager<DashboardModel> getResourceManager();
 
   /**
    * Do not delete these abstract methods below - required by Spring SPEL (see above)
@@ -80,7 +80,5 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
   public abstract boolean hasReadAuthority();
 
   public abstract boolean hasWriteAuthority();
-
-  public abstract boolean hasDeleteAuthority();
 
 }

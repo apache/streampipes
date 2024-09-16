@@ -30,16 +30,17 @@
             <sp-data-explorer-dashboard-widget
                 [ngStyle]="{ height: gridsterItemComponent.height - 13 + 'px' }"
                 [timeSettings]="timeSettings"
-                (updateCallback)="propagateItemUpdate($event)"
+                [globalTimeEnabled]="
+                    dashboard.dashboardGeneralSettings.globalTimeEnabled
+                "
                 (deleteCallback)="propagateItemRemoval($event)"
-                (configureWidgetCallback)="propagateWidgetSelection($event)"
                 (startEditModeEmitter)="startEditMode($event)"
                 [dashboardItem]="item"
                 [configuredWidget]="configuredWidgets.get(item.id)"
                 [dataLakeMeasure]="dataLakeMeasures.get(item.id)"
-                [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
                 [editMode]="editMode"
                 [gridMode]="true"
+                [widgetIndex]="i"
                 [gridsterItemComponent]="gridsterItemComponent"
                 *ngIf="widgetsAvailable && configuredWidgets.has(item.id)"
             ></sp-data-explorer-dashboard-widget>

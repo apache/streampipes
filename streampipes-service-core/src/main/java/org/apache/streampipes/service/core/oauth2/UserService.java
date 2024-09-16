@@ -20,7 +20,7 @@ package org.apache.streampipes.service.core.oauth2;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.model.client.user.Role;
+import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.rest.security.OAuth2AuthenticationProcessingException;
@@ -31,7 +31,6 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -91,7 +90,7 @@ public class UserService {
                                     String principalId,
                                     String email,
                                     Object fullName) {
-    List<Role> roles = Stream.of(Role.ROLE_ADMIN.toString()).map(Role::valueOf).toList();
+    var roles = Stream.of(DefaultRole.ROLE_ADMIN.toString()).toList();
     var user = UserAccount.from(email, null, new HashSet<>(roles));
     user.setPrincipalId(principalId);
     if (Objects.nonNull(fullName)) {

@@ -33,6 +33,8 @@ import { EChartsOption } from 'echarts';
 import { WidgetSize } from './dataset.model';
 import { EventEmitter } from '@angular/core';
 import { FieldUpdateInfo } from './field-update.model';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Observable } from 'rxjs';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IDataViewDashboardConfig extends GridsterConfig {}
@@ -111,7 +113,6 @@ export interface WidgetTypeChangeMessage {
 }
 
 export interface RefreshMessage {
-    widgetId: string;
     refreshData: boolean;
     refreshView: boolean;
 }
@@ -134,4 +135,11 @@ export interface AxisConfig {
 export interface DataExplorerVisConfig {
     forType?: number | string;
     configurationValid: boolean;
+}
+
+export interface SupportsUnsavedChangeDialog {
+    confirmLeaveDialog(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot,
+    ): Observable<boolean>;
 }

@@ -74,7 +74,7 @@ public class SpOpcUaConfigExtractor {
     String selectedAlternativeAuthentication =
         extractor.selectedAlternativeInternalId(ACCESS_MODE.name());
     List<String> selectedNodeNames =
-        extractor.selectedTreeNodesInternalNames(AVAILABLE_NODES.name(), String.class, true);
+        extractor.selectedTreeNodesInternalNames(AVAILABLE_NODES.name(), String.class);
 
     config.setSelectedNodeNames(selectedNodeNames);
 

@@ -1,0 +1,105 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="row" fxFlex="100">
+    <div
+        class="data-explorer-options-item"
+        fxLayoutAlign="start center"
+        fxLayout="row"
+        fxFlex="100"
+    >
+        <div
+            fxFlex="25"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            class="widget-header-text mr-15"
+        >
+            <div
+                fxFlex="100"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                class="mt-5 form-field-small widget-title-container"
+                *ngIf="editMode"
+            >
+                <span class="widget-title-text">Data View Name</span>
+                <mat-form-field
+                    appearance="outline"
+                    color="accent"
+                    fxFlex="100"
+                >
+                    <input
+                        data-cy="appearance-config-widget-title"
+                        matInput
+                        [(ngModel)]="
+                            configuredWidget.baseAppearanceConfig.widgetTitle
+                        "
+                    />
+                </mat-form-field>
+            </div>
+        </div>
+
+        <button
+            mat-raised-button
+            color="accent"
+            matTooltip="Save"
+            class="edit-menu-btn"
+            (click)="saveDataViewEmitter.emit()"
+            data-cy="save-data-view-btn"
+            *ngIf="editMode"
+        >
+            <mat-icon>save</mat-icon>
+            Save
+        </button>
+        <button
+            mat-raised-button
+            matTooltip="Discard"
+            class="mat-basic mr-10 edit-menu-btn"
+            (click)="discardDataViewEmitter.emit()"
+            data-cy="discard-data-explorer-widget-btn"
+            *ngIf="editMode"
+        >
+            <i class="material-icons">undo</i>
+            <span>&nbsp;Discard</span>
+        </button>
+        <button
+            mat-icon-button
+            color="accent"
+            matTooltip="Download data"
+            (click)="downloadFileEmitter.emit()"
+            data-cy="data-view-data-download-btn"
+            *ngIf="editMode"
+        >
+            <mat-icon>get_app</mat-icon>
+        </button>
+        <span fxFlex></span>
+        <div
+            class="data-explorer-options-item"
+            style="margin-right: 0"
+            fxLayoutAlign="end center"
+            fxFlex
+            fxLayout="row"
+        >
+            <sp-time-range-selector
+                *ngIf="editMode || timeRangeVisible"
+                (dateRangeEmitter)="updateDateRangeEmitter.emit($event)"
+                [timeSettings]="timeSettings"
+            >
+            </sp-time-range-selector>
+        </div>
+    </div>
+</div>

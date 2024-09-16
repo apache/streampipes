@@ -1,0 +1,270 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxFlex="100" fxLayout="column" class="form-field-small">
+    <mat-accordion fxFlex="100" class="data-source-selection-panel">
+        <mat-expansion-panel
+            [expanded]="step === 0"
+            hideToggle
+            class="expansion-panel"
+            *ngFor="let sourceConfig of dataConfig.sourceConfigs; let i = index"
+        >
+            <mat-expansion-panel-header class="expansion-panel-header">
+                <div fxFlex="100" fxLayout="row">
+                    <div fxFlex fxLayoutAlign="start center">
+                        {{
+                            sourceConfig.measureName
+                                ? sourceConfig.measureName
+                                : 'New Data Source'
+                        }}
+                    </div>
+                    <div fxFlex fxLayoutAlign="end center">
+                        <button
+                            mat-icon-button
+                            color="accent"
+                            matTooltip="Clone Data Source"
+                        >
+                            <i
+                                class="material-icons plus-icon align-btn"
+                                (click)="cloneSourceConfig(i)"
+                                >flip_to_front</i
+                            >
+                        </button>
+                        <button
+                            mat-icon-button
+                            color="accent"
+                            matTooltip="Delete Data Source"
+                            (click)="removeSourceConfig(i)"
+                        >
+                            <i class="material-icons align-btn">delete</i>
+                        </button>
+                    </div>
+                </div>
+            </mat-expansion-panel-header>
+            <div fxFlex="100" fxLayout="column" class="mt-10">
+                <sp-configuration-box title="From">
+                    <div header>
+                        <mat-radio-group
+                            class="selection-radio-group"
+                            [(ngModel)]="sourceConfig.sourceType"
+                        >
+                            <mat-radio-button
+                                class="selection-radio-button"
+                                [value]="'pipeline'"
+                                [disabled]="availablePipelines.length === 0"
+                                >Pipeline
+                            </mat-radio-button>
+                            <mat-radio-button
+                                class="selection-radio-button"
+                                [value]="'measurement'"
+                                >Measurement
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <div class="form-field-small">
+                        <mat-form-field
+                            color="accent"
+                            fxFlex="100"
+                            appearance="outline"
+                            *ngIf="sourceConfig.sourceType === 'pipeline'"
+                        >
+                            <mat-select
+                                [panelClass]="'form-field-small'"
+                                [(value)]="sourceConfig.measureName"
+                                (selectionChange)="
+                                    updateMeasure(sourceConfig, $event.value)
+                                "
+                                data-cy="data-explorer-select-data-set"
+                            >
+                                <mat-option
+                                    *ngFor="let pipeline of availablePipelines"
+                                    [value]="pipeline.measureName"
+                                >
+                                    <span class="pipeline-name">{{
+                                        pipeline.pipelineName
+                                    }}</span
+                                    ><br />{{ pipeline.measureName }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field
+                            color="accent"
+                            fxFlex="100"
+                            appearance="outline"
+                            *ngIf="sourceConfig.sourceType === 'measurement'"
+                        >
+                            <mat-select
+                                [(value)]="sourceConfig.measureName"
+                                (selectionChange)="
+                                    updateMeasure(sourceConfig, $event.value)
+                                "
+                            >
+                                <mat-option
+                                    [value]="measurement.measureName"
+                                    *ngFor="
+                                        let measurement of availableMeasurements
+                                    "
+                                >
+                                    <span class="pipeline-name">{{
+                                        measurement.measureName
+                                    }}</span>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </sp-configuration-box>
+                <sp-configuration-box
+                    title="Query"
+                    *ngIf="sourceConfig.measureName"
+                >
+                    <div header>
+                        <mat-radio-group
+                            class="selection-radio-group"
+                            [(ngModel)]="sourceConfig.queryType"
+                            (change)="changeDataAggregation()"
+                        >
+                            <mat-radio-button
+                                class="selection-radio-button"
+                                [value]="'raw'"
+                                >Raw
+                            </mat-radio-button>
+                            <mat-radio-button
+                                class="selection-radio-button"
+                                [value]="'aggregated'"
+                                >Aggregated
+                            </mat-radio-button>
+                            <mat-radio-button
+                                class="selection-radio-button"
+                                [value]="'single'"
+                                >Single
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <div
+                        fxLayout="column"
+                        fxFlex="100"
+                        *ngIf="sourceConfig.queryType === 'raw'"
+                    >
+                        <div class="form-field-small mb-10">
+                            <mat-form-field
+                                fxFlex="100"
+                                color="accent"
+                                appearance="outline"
+                            >
+                                <mat-label>
+                                    <span>&nbsp;Limit</span>
+                                </mat-label>
+                                <input
+                                    [(ngModel)]="sourceConfig.queryConfig.limit"
+                                    matInput
+                                    (change)="triggerDataRefresh()"
+                                />
+                            </mat-form-field>
+                        </div>
+                        <div class="form-field-small mb-10">
+                            <mat-form-field
+                                fxFlex="100"
+                                color="accent"
+                                appearance="outline"
+                            >
+                                <mat-label>
+                                    <span>&nbsp;Page</span>
+                                </mat-label>
+                                <input
+                                    [(ngModel)]="sourceConfig.queryConfig.page"
+                                    matInput
+                                    (change)="triggerDataRefresh()"
+                                />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div
+                        fxLayout="column"
+                        fxFlex="100"
+                        *ngIf="sourceConfig.queryType === 'aggregated'"
+                    >
+                        <div>
+                            <mat-checkbox
+                                color="accent"
+                                [(ngModel)]="
+                                    sourceConfig.queryConfig.autoAggregate
+                                "
+                                (change)="triggerDataRefresh()"
+                            >
+                                Auto-Aggregate
+                            </mat-checkbox>
+                        </div>
+                        <sp-aggregate-configuration
+                            class="mt-10"
+                            *ngIf="!sourceConfig.queryConfig.autoAggregate"
+                            [queryConfig]="sourceConfig.queryConfig"
+                            [widgetId]="widgetId"
+                        >
+                        </sp-aggregate-configuration>
+                    </div>
+                </sp-configuration-box>
+                <div
+                    *ngIf="sourceConfig.queryType && sourceConfig.measure"
+                    fxLayout="column"
+                >
+                    <sp-field-selection-panel
+                        #fieldSelectionPanel
+                        [sourceConfig]="sourceConfig"
+                    ></sp-field-selection-panel>
+
+                    <sp-filter-selection-panel
+                        [sourceConfig]="sourceConfig"
+                    ></sp-filter-selection-panel>
+
+                    <sp-group-selection-panel
+                        #groupSelectionPanel
+                        [sourceConfig]="sourceConfig"
+                    ></sp-group-selection-panel>
+
+                    <sp-order-selection-panel [sourceConfig]="sourceConfig">
+                    </sp-order-selection-panel>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <div class="p-10">
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            class="small-button"
+            (click)="addDataSource()"
+            style="margin-right: 10px; margin-bottom: 15px"
+        >
+            Add Data Source
+        </button>
+    </div>
+    <div class="p-10">
+        <mat-checkbox [(ngModel)]="dataConfig.ignoreTooMuchDataWarning">
+            Deactivate browser overload warning
+        </mat-checkbox>
+        <mat-checkbox
+            [(ngModel)]="dataConfig.ignoreMissingValues"
+            (change)="triggerDataRefresh()"
+            data-cy="data-explorer-ignore-missing-values-checkbox"
+        >
+            Ignore Events with missing values
+        </mat-checkbox>
+    </div>
+</div>

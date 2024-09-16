@@ -1,0 +1,139 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div
+    class="data-explorer-options-item"
+    fxLayoutAlign="start center"
+    fxLayout="row"
+    *ngIf="editMode"
+>
+    <button
+        mat-raised-button
+        color="accent"
+        matTooltip="Save"
+        class="edit-menu-btn"
+        (click)="saveDashboardEmitter.emit()"
+        data-cy="save-dashboard-btn"
+    >
+        <mat-icon>save</mat-icon>
+        <span>Save</span>
+    </button>
+    <button
+        mat-raised-button
+        color="accent"
+        matTooltip="Discard"
+        class="mat-basic mr-10 edit-menu-btn"
+        (click)="discardDashboardEmitter.emit()"
+    >
+        <i class="material-icons">undo</i>
+        <span>&nbsp;Discard</span>
+    </button>
+</div>
+<div
+    class="data-explorer-options-item"
+    fxLayoutAlign="start center"
+    fxLayout="row"
+>
+    <button
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        aria-label="View mode"
+        matTooltip="View mode"
+    >
+        <mat-icon
+            >{{ viewMode === 'grid' ? 'grid_view' : 'web_asset' }}
+        </mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="viewModeChange.emit('grid')">
+            <mat-icon>grid_view</mat-icon>
+            <span>Grid</span>
+        </button>
+        <button mat-menu-item (click)="viewModeChange.emit('slide')">
+            <mat-icon>web_asset</mat-icon>
+            <span>Slides</span>
+        </button>
+    </mat-menu>
+</div>
+<div
+    class="data-explorer-options-item"
+    style="margin-right: 0"
+    fxLayoutAlign="end center"
+    fxFlex
+    fxLayout="row"
+>
+    <sp-time-range-selector
+        [showTimeSelector]="
+            (editMode || timeRangeVisible) &&
+            dashboard.dashboardGeneralSettings.globalTimeEnabled
+        "
+        (dateRangeEmitter)="updateDateRangeEmitter.emit($event)"
+        [timeSettings]="timeSettings"
+    >
+    </sp-time-range-selector>
+
+    <sp-data-explorer-refresh-interval-settings-component
+        [dashboard]="dashboard"
+        (intervalSettingsChangedEmitter)="intervalSettingsChangedEmitter.emit()"
+    >
+    </sp-data-explorer-refresh-interval-settings-component>
+
+    <button
+        mat-icon-button
+        [matMenuTriggerFor]="optMenu"
+        aria-label="Options"
+        data-cy="options-data-explorer"
+    >
+        <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #optMenu="matMenu">
+        <button
+            mat-menu-item
+            (click)="triggerEditModeEmitter.emit()"
+            *ngIf="!editMode && hasDataExplorerWritePrivileges"
+            data-cy="options-edit-dashboard"
+        >
+            <mat-icon>edit</mat-icon>
+            <span>Edit dashboard</span>
+        </button>
+        <button
+            mat-menu-item
+            (click)="timeRangeVisible = true"
+            *ngIf="!editMode && !timeRangeVisible"
+        >
+            <mat-icon>alarm_on</mat-icon>
+            <span>Show time range selector</span>
+        </button>
+        <button
+            mat-menu-item
+            (click)="timeRangeVisible = false"
+            *ngIf="!editMode && timeRangeVisible"
+        >
+            <mat-icon>alarm_off</mat-icon>
+            <span>Hide time range selector</span>
+        </button>
+        <button
+            mat-menu-item
+            *ngIf="hasDataExplorerWritePrivileges"
+            (click)="deleteDashboardEmitter.emit()"
+        >
+            <mat-icon>clear</mat-icon>
+            <span>Delete dashboard</span>
+        </button>
+    </mat-menu>
+</div>

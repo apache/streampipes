@@ -27,13 +27,11 @@ import java.util.List;
 public class PipelineElementRecommendationMessage {
 
   private List<PipelineElementRecommendation> possibleElements;
-  private List<PipelineElementRecommendation> recommendedElements;
 
   private boolean success;
 
   public PipelineElementRecommendationMessage() {
     this.possibleElements = new ArrayList<>();
-    this.recommendedElements = new ArrayList<>();
     this.success = true;
   }
 
@@ -56,15 +54,4 @@ public class PipelineElementRecommendationMessage {
   public void setSuccess(boolean success) {
     this.success = success;
   }
-
-  public List<PipelineElementRecommendation> getRecommendedElements() {
-    return recommendedElements;
-  }
-
-  public void setRecommendedElements(
-      List<PipelineElementRecommendation> recommendedElements) {
-    this.recommendedElements = recommendedElements;
-  }
-
-
 }

@@ -24,81 +24,86 @@ import {
     FileStaticProperty,
     FreeTextStaticProperty,
     OneOfStaticProperty,
+    RuntimeResolvableTreeInputStaticProperty,
     SecretStaticProperty,
-    StaticPropertyAlternative,
+    SlideToggleStaticProperty,
     StaticPropertyAlternatives,
     StaticPropertyGroup,
     StaticPropertyUnion,
-    SlideToggleStaticProperty,
 } from '@streampipes/platform-services';
 
 export class PipelineElementTemplateGenerator {
     constructor(private sp: StaticPropertyUnion) {}
 
-    public toTemplateValue(): any {
+    public toTemplateValue(): Map<string, any> {
+        const map = new Map();
         if (this.sp instanceof FreeTextStaticProperty) {
-            return this.sp.value;
+            map.set(this.sp.internalName, this.sp.value);
         } else if (this.sp instanceof OneOfStaticProperty) {
-            return this.sp.options.find(o => o.selected)
-                ? this.sp.options.find(o => o.selected).name
-                : '';
+            const selectedOption = this.sp.options.find(o => o.selected);
+            if (selectedOption !== undefined) {
+                map.set(this.sp.internalName, selectedOption.name);
+            }
         } else if (this.sp instanceof ColorPickerStaticProperty) {
-            return this.sp.selectedColor;
+            map.set(this.sp.internalName, this.sp.selectedColor);
         } else if (this.sp instanceof SecretStaticProperty) {
-            return { encrypted: this.sp.encrypted, value: this.sp.value };
+            map.set(this.sp.internalName, this.sp.value);
+            map.set('encrypted', this.sp.encrypted);
         } else if (this.sp instanceof AnyStaticProperty) {
-            return this.sp.options.filter(o => o.selected).map(o => o.name);
+            map.set(
+                this.sp.internalName,
+                this.sp.options.filter(o => o.selected).map(o => o.name),
+            );
         } else if (this.sp instanceof CodeInputStaticProperty) {
-            return this.sp.value;
+            map.set(this.sp.internalName, this.sp.value);
         } else if (this.sp instanceof SlideToggleStaticProperty) {
-            return this.sp.selected;
+            map.set(this.sp.internalName, this.sp.selected);
         } else if (this.sp instanceof CollectionStaticProperty) {
-            return {
-                members: this.addListEntry(this.sp.members),
-            };
+            map.set(this.sp.internalName, this.addListEntry(this.sp.members));
         } else if (this.sp instanceof FileStaticProperty) {
-            return this.sp.locationPath;
+            map.set(this.sp.internalName, this.sp.locationPath);
         } else if (this.sp instanceof StaticPropertyAlternatives) {
-            return {
-                alternatives: this.addNestedEntry(this.sp.alternatives),
-            };
-        } else if (this.sp instanceof StaticPropertyAlternative) {
-            const sp = this.sp.staticProperty
-                ? this.addNestedEntry([this.sp.staticProperty])
-                : {};
-            return {
-                selected: this.sp.selected,
-                staticProperty: sp,
-            };
+            const selectedAlternative = this.sp.alternatives.find(
+                a => a.selected,
+            );
+            if (selectedAlternative !== undefined) {
+                map.set(this.sp.internalName, selectedAlternative.internalName);
+                const alternative = new PipelineElementTemplateGenerator(
+                    selectedAlternative.staticProperty,
+                ).toTemplateValue();
+                alternative.forEach((value, key) => {
+                    map.set(key, value);
+                });
+            }
         } else if (this.sp instanceof StaticPropertyGroup) {
-            return {
-                staticProperties: this.addNestedEntry(this.sp.staticProperties),
-            };
+            return this.addNestedEntry(this.sp.staticProperties);
+        } else if (
+            this.sp instanceof RuntimeResolvableTreeInputStaticProperty
+        ) {
+            map.set(this.sp.internalName, this.sp.selectedNodesInternalNames);
         }
-    }
-
-    addEntry(sp: StaticPropertyUnion) {
-        const entry = {};
-        entry[sp.internalName] = new PipelineElementTemplateGenerator(
-            sp,
-        ).toTemplateValue();
-        return entry;
+        return map;
     }
 
     addListEntry(staticProperties: StaticPropertyUnion[]) {
         const values = [];
         staticProperties.forEach(sp => {
-            values.push(this.addEntry(sp));
+            values.push(
+                new PipelineElementTemplateGenerator(sp).toTemplateValue(),
+            );
         });
         return values;
     }
 
     addNestedEntry(staticProperties: StaticPropertyUnion[]) {
-        const entry = {};
+        const entry = new Map<string, any>();
         staticProperties.forEach(sp => {
-            entry[sp.internalName] = new PipelineElementTemplateGenerator(
+            const groupEntries = new PipelineElementTemplateGenerator(
                 sp,
             ).toTemplateValue();
+            groupEntries.forEach((value, key) => {
+                entry.set(key, value);
+            });
         });
         return entry;
     }

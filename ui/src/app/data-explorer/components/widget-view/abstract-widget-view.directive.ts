@@ -25,8 +25,9 @@ import {
     TimeSettings,
 } from '@streampipes/platform-services';
 import { ResizeService } from '../../services/resize.service';
-import { zip } from 'rxjs';
+import { of, zip } from 'rxjs';
 import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
+import { catchError } from 'rxjs/operators';
 
 @Directive()
 export abstract class AbstractWidgetViewDirective {
@@ -56,12 +57,7 @@ export abstract class AbstractWidgetViewDirective {
     @Input()
     timeSettings: TimeSettings;
 
-    @Output() deleteCallback: EventEmitter<DataExplorerWidgetModel> =
-        new EventEmitter<DataExplorerWidgetModel>();
-    @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> =
-        new EventEmitter<DataExplorerWidgetModel>();
-    @Output() configureWidgetCallback: EventEmitter<DataExplorerWidgetModel> =
-        new EventEmitter<DataExplorerWidgetModel>();
+    @Output() deleteCallback: EventEmitter<number> = new EventEmitter<number>();
     @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> =
         new EventEmitter<DataExplorerWidgetModel>();
 
@@ -70,17 +66,6 @@ export abstract class AbstractWidgetViewDirective {
         protected dataViewDataExplorerService: DataViewDataExplorerService,
         protected widgetRegistryService: DataExplorerWidgetRegistry,
     ) {}
-
-    updateAllWidgets() {
-        this.configuredWidgets.forEach((value, key) => {
-            this.dataViewDataExplorerService
-                .updateWidget(value)
-                .subscribe(response => {
-                    value.rev = response._rev;
-                    this.currentlyConfiguredWidgetId = undefined;
-                });
-        });
-    }
 
     startEditMode(value: DataExplorerWidgetModel) {
         this.startEditModeEmitter.emit(value);
@@ -98,20 +83,15 @@ export abstract class AbstractWidgetViewDirective {
 
     loadWidgetConfigs() {
         const observables = this.dashboard.widgets.map(w =>
-            this.dataViewDataExplorerService.getWidget(w.id),
+            this.dataViewDataExplorerService
+                .getWidget(w.id)
+                .pipe(catchError(() => of(undefined))),
         );
         zip(...observables).subscribe(results => {
             results.forEach(r => {
                 this.processWidget(r);
                 this.onWidgetsAvailable();
                 this.widgetsAvailable = true;
-                if (this.dashboard.widgets.length > 0 && this.editMode) {
-                    this.startEditModeEmitter.emit(
-                        this.configuredWidgets.get(
-                            this.dashboard.widgets[0].id,
-                        ),
-                    );
-                }
             });
         });
     }
@@ -140,36 +120,29 @@ export abstract class AbstractWidgetViewDirective {
     }
 
     processWidget(widget: DataExplorerWidgetModel) {
-        widget.widgetType = this.widgetRegistryService.getWidgetType(
-            widget.widgetType,
-        );
-        this.configuredWidgets.set(widget.elementId, widget);
-        this.dataLakeMeasures.set(
-            widget.elementId,
-            widget.dataConfig.sourceConfigs[0].measure,
-        );
+        if (widget !== undefined) {
+            widget.widgetType = this.widgetRegistryService.getWidgetType(
+                widget.widgetType,
+            );
+            this.configuredWidgets.set(widget.elementId, widget);
+            this.dataLakeMeasures.set(
+                widget.elementId,
+                widget.dataConfig.sourceConfigs[0].measure,
+            );
+        }
     }
 
-    propagateItemRemoval(widget: DataExplorerWidgetModel) {
-        this.deleteCallback.emit(widget);
-    }
-
-    propagateItemUpdate(dashboardWidget: DataExplorerWidgetModel) {
-        this.updateCallback.emit(dashboardWidget);
+    propagateItemRemoval(widgetIndex: number) {
+        this.deleteCallback.emit(widgetIndex);
     }
 
     propagateWidgetSelection(configuredWidget: DataExplorerWidgetModel) {
-        this.configureWidgetCallback.emit(configuredWidget);
         if (configuredWidget) {
             this.currentlyConfiguredWidgetId = configuredWidget.elementId;
         } else {
             this.currentlyConfiguredWidgetId = undefined;
         }
         this.onOptionsChanged();
-    }
-
-    selectFirstWidgetForEditing(widgetId: string): void {
-        this.startEditModeEmitter.emit(this.configuredWidgets.get(widgetId));
     }
 
     abstract onOptionsChanged(): void;

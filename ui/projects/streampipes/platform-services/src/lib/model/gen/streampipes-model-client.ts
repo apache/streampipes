@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-07-29 21:20:28.
+// Generated using typescript-generator version 3.2.1263 on 2024-09-08 22:18:46.
 
 import { Storable } from './streampipes-model';
 
@@ -29,7 +29,7 @@ export class Group implements Storable {
     groupId: string;
     groupName: string;
     rev: string;
-    roles: Role[];
+    roles: string[];
 
     static fromData(data: Group, target?: Group): Group {
         if (!data) {
@@ -40,7 +40,7 @@ export class Group implements Storable {
         instance.groupId = data.groupId;
         instance.groupName = data.groupName;
         instance.rev = data.rev;
-        instance.roles = __getCopyArrayFn(__identity<Role>())(data.roles);
+        instance.roles = __getCopyArrayFn(__identity<string>())(data.roles);
         return instance;
     }
 }
@@ -127,7 +127,7 @@ export class Principal {
     principalId: string;
     principalType: PrincipalType;
     rev: string;
-    roles: Role[];
+    roles: string[];
     username: string;
 
     static fromData(data: Principal, target?: Principal): Principal {
@@ -145,8 +145,23 @@ export class Principal {
         instance.principalId = data.principalId;
         instance.principalType = data.principalType;
         instance.rev = data.rev;
-        instance.roles = __getCopyArrayFn(__identity<Role>())(data.roles);
+        instance.roles = __getCopyArrayFn(__identity<string>())(data.roles);
         instance.username = data.username;
+        return instance;
+    }
+}
+
+export class Privilege implements Storable {
+    elementId: string;
+    rev: string;
+
+    static fromData(data: Privilege, target?: Privilege): Privilege {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new Privilege();
+        instance.elementId = data.elementId;
+        instance.rev = data.rev;
         return instance;
     }
 }
@@ -169,6 +184,29 @@ export class RawUserApiToken {
         instance.rawToken = data.rawToken;
         instance.tokenId = data.tokenId;
         instance.tokenName = data.tokenName;
+        return instance;
+    }
+}
+
+export class Role implements Storable {
+    defaultRole: boolean;
+    elementId: string;
+    label: string;
+    privilegeIds: string[];
+    rev: string;
+
+    static fromData(data: Role, target?: Role): Role {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new Role();
+        instance.defaultRole = data.defaultRole;
+        instance.elementId = data.elementId;
+        instance.label = data.label;
+        instance.privilegeIds = __getCopyArrayFn(__identity<string>())(
+            data.privilegeIds,
+        );
+        instance.rev = data.rev;
         return instance;
     }
 }
@@ -245,54 +283,47 @@ export class UserApiToken {
     }
 }
 
-export type PrincipalType = 'USER_ACCOUNT' | 'SERVICE_ACCOUNT' | 'GROUP';
-
-export type Privilege =
+export type DefaultPrivilege =
     | 'PRIVILEGE_READ_PIPELINE'
     | 'PRIVILEGE_WRITE_PIPELINE'
-    | 'PRIVILEGE_DELETE_PIPELINE'
     | 'PRIVILEGE_READ_ADAPTER'
     | 'PRIVILEGE_WRITE_ADAPTER'
-    | 'PRIVILEGE_DELETE_ADAPTER'
     | 'PRIVILEGE_READ_PIPELINE_ELEMENT'
     | 'PRIVILEGE_WRITE_PIPELINE_ELEMENT'
-    | 'PRIVILEGE_DELETE_PIPELINE_ELEMENT'
     | 'PRIVILEGE_READ_DASHBOARD'
     | 'PRIVILEGE_WRITE_DASHBOARD'
-    | 'PRIVILEGE_DELETE_DASHBOARD'
     | 'PRIVILEGE_READ_DASHBOARD_WIDGET'
     | 'PRIVILEGE_WRITE_DASHBOARD_WIDGET'
-    | 'PRIVILEGE_DELETE_DASHBOARD_WIDGET'
     | 'PRIVILEGE_READ_DATA_EXPLORER_VIEW'
     | 'PRIVILEGE_WRITE_DATA_EXPLORER_VIEW'
-    | 'PRIVILEGE_DELETE_DATA_EXPLORER_VIEW'
     | 'PRIVILEGE_READ_DATA_EXPLORER_WIDGET'
     | 'PRIVILEGE_WRITE_DATA_EXPLORER_WIDGET'
-    | 'PRIVILEGE_DELETE_DATA_EXPLORER_WIDGET'
     | 'PRIVILEGE_READ_APPS'
     | 'PRIVILEGE_WRITE_APPS'
     | 'PRIVILEGE_READ_NOTIFICATIONS'
     | 'PRIVILEGE_READ_FILES'
     | 'PRIVILEGE_WRITE_FILES'
-    | 'PRIVILEGE_DELETE_FILES'
     | 'PRIVILEGE_READ_ASSETS'
     | 'PRIVILEGE_WRITE_ASSETS'
     | 'PRIVILEGE_READ_GENERIC_STORAGE'
-    | 'PRIVILEGE_WRITE_GENERIC_STORAGE';
+    | 'PRIVILEGE_WRITE_GENERIC_STORAGE'
+    | 'PRIVILEGE_READ_LABELS'
+    | 'PRIVILEGE_WRITE_LABELS';
 
-export type Role =
+export type DefaultRole =
     | 'ROLE_ADMIN'
     | 'ROLE_SERVICE_ADMIN'
     | 'ROLE_PIPELINE_ADMIN'
-    | 'ROLE_DASHBOARD_ADMIN'
-    | 'ROLE_DATA_EXPLORER_ADMIN'
-    | 'ROLE_CONNECT_ADMIN'
-    | 'ROLE_DASHBOARD_USER'
-    | 'ROLE_DATA_EXPLORER_USER'
     | 'ROLE_PIPELINE_USER'
-    | 'ROLE_APP_USER'
+    | 'ROLE_DASHBOARD_ADMIN'
+    | 'ROLE_DASHBOARD_USER'
+    | 'ROLE_DATA_EXPLORER_ADMIN'
+    | 'ROLE_DATA_EXPLORER_USER'
+    | 'ROLE_CONNECT_ADMIN'
     | 'ROLE_ASSET_USER'
     | 'ROLE_ASSET_ADMIN';
+
+export type PrincipalType = 'USER_ACCOUNT' | 'SERVICE_ACCOUNT' | 'GROUP';
 
 function __getCopyArrayFn<T>(itemCopyFn: (item: T) => T): (array: T[]) => T[] {
     return (array: T[]) => __copyArray(array, itemCopyFn);

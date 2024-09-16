@@ -16,7 +16,7 @@
  *
  */
 
-import { StaticPropertyUtils } from '../StaticPropertyUtils';
+import { StaticPropertyUtils } from '../userInput/StaticPropertyUtils';
 import { AdapterInput } from '../../model/AdapterInput';
 import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
 import { DataLakeUtils } from '../datalake/DataLakeUtils';
@@ -124,11 +124,17 @@ export class ConnectUtils {
     }
 
     public static configureAdapter(adapterInput: AdapterInput) {
-        cy.wait(2000);
         StaticPropertyUtils.input(adapterInput.adapterConfiguration);
 
         this.configureFormat(adapterInput);
 
+        ConnectUtils.finishAdapterSettings();
+    }
+
+    /**
+     * Clicks next on the adapter settings page
+     */
+    public static finishAdapterSettings() {
         // Next Button should not be disabled
         cy.get('button').contains('Next').parent().should('not.be.disabled');
 
@@ -347,20 +353,28 @@ export class ConnectUtils {
 
         ConnectBtns.startAdapter().click();
 
+        ConnectUtils.validateEventsInPreview(amountOfProperties);
+    }
+
+    public static validateEventsInPreview(amountOfProperties: number) {
         // View data
-        ConnectBtns.infoAdapter().click();
-        cy.get('div').contains('Values').parent().click();
+        ConnectBtns.detailsAdapter().click();
 
         // Validate resulting event
         cy.dataCy('sp-connect-adapter-success-live-preview', {
             timeout: 20000,
         }).should('be.visible');
 
-        // validate that X event properties. The +1 is for the header row
         cy.get('tr.mat-mdc-row', { timeout: 10000 }).should(
             'have.length',
-            amountOfProperties + 1,
+            amountOfProperties,
         );
+
+        cy.wait(1000);
+
+        cy.dataCy('live-preview-table-value')
+            .invoke('text')
+            .then(text => expect(text).not.to.include('no data'));
     }
 
     public static tearDownPreprocessingRuleTest(

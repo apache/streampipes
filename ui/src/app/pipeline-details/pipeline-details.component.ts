@@ -38,6 +38,8 @@ import { UserPrivilege } from '../_enums/user-privilege.enum';
 import { forkJoin, interval, Observable, of, Subscription } from 'rxjs';
 import { catchError, filter, switchMap } from 'rxjs/operators';
 import { PipelinePreviewComponent } from './components/preview/pipeline-preview.component';
+import { HttpContext } from '@angular/common/http';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Component({
     selector: 'sp-pipeline-details-overview-component',
@@ -46,7 +48,6 @@ import { PipelinePreviewComponent } from './components/preview/pipeline-preview.
 })
 export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     hasPipelineWritePrivileges = false;
-    hasPipelineDeletePrivileges = false;
 
     currentPipelineId: string;
 
@@ -80,9 +81,6 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
         this.currentUserSub = this.currentUserService.user$.subscribe(user => {
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
-            );
-            this.hasPipelineDeletePrivileges = this.authService.hasRole(
-                UserPrivilege.PRIVILEGE_DELETE_PIPELINE,
             );
             const pipelineId = this.activatedRoute.snapshot.params.pipelineId;
             if (pipelineId) {
@@ -162,12 +160,14 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
         return this.pipelineMonitoringService.getMetricsInfoForPipeline(
             this.currentPipelineId,
             forceUpdate,
+            new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
         );
     }
 
     getLogsObservable(): Observable<Record<string, SpLogEntry[]>> {
         return this.pipelineMonitoringService.getLogInfoForPipeline(
             this.currentPipelineId,
+            new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
         );
     }
 

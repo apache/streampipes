@@ -34,6 +34,7 @@ export * from './lib/apis/functions.service';
 export * from './lib/apis/general-config.service';
 export * from './lib/apis/generic-storage.service';
 export * from './lib/apis/labels.service';
+export * from './lib/apis/location-config.service';
 export * from './lib/apis/mail-config.service';
 export * from './lib/apis/measurement-units.service';
 export * from './lib/apis/permissions.service';
@@ -44,6 +45,8 @@ export * from './lib/apis/extension-installation.service';
 export * from './lib/apis/pipeline-element-template.service';
 export * from './lib/apis/pipeline-monitoring.service';
 export * from './lib/apis/pipeline-template.service';
+export * from './lib/apis/privilege.service';
+export * from './lib/apis/role.service';
 export * from './lib/apis/semantic-types-rest.service';
 export * from './lib/apis/service-tags.service';
 export * from './lib/apis/user.service';
@@ -69,5 +72,9 @@ export * from './lib/model/user/user.model';
 export * from './lib/model/assets/asset.model';
 export * from './lib/model/labels/labels.model';
 
+export * from './lib/model/assets/asset.constants';
+
 export * from './lib/model/types/data-type';
 export * from './lib/model/types/semantic-type';
+
+export * from './lib/services/isa95-type.service';

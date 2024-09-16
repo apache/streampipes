@@ -16,7 +16,7 @@
 #
 from typing import List, Optional
 
-from pydantic.v1 import Field, StrictBool, StrictInt, StrictStr
+from pydantic.v1 import Field, StrictBool, StrictStr
 
 from streampipes.model.common import (
     ApplicationLink,
@@ -102,7 +102,6 @@ class DataStream(Resource):
     event_schema: Optional[EventSchema]
     measurement_capability: Optional[List[MeasurementCapability]]
     measurement_object: Optional[List[MeasurementObject]]
-    index: StrictInt = Field(default=0)
     corresponding_adapter_id: Optional[StrictStr]
     category: Optional[List[StrictStr]]
     uri: Optional[StrictStr]

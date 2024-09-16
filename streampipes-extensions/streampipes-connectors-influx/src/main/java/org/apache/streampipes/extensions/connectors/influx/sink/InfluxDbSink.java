@@ -83,7 +83,7 @@ public class InfluxDbSink extends StreamPipesDataSink {
 
   @Override
   public void onDetach() throws SpRuntimeException {
-    influxDbClient.stop();
+    influxDbClient.disconnect();
   }
 
   public static String prepareString(String s) {

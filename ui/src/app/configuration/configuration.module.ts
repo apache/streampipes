@@ -79,6 +79,23 @@ import { EndpointItemComponent } from './extensions-installation/endpoint-item/e
 import { SpExtensionsInstallationComponent } from './extensions-installation/extensions-installation.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { SpConfigurationLinkSettingsComponent } from './general-configuration/link-settings/link-settings.component';
+import { SitesConfigurationComponent } from './sites-configuration/sites-configuration.component';
+import { LocationFeaturesConfigurationComponent } from './sites-configuration/location-features-configuration/location-features-configuration.component';
+import { SiteAreaConfigurationComponent } from './sites-configuration/site-area-configuration/site-area-configuration.component';
+import { MatSort } from '@angular/material/sort';
+import { ManageSiteDialogComponent } from './dialog/manage-site/manage-site-dialog.component';
+import { EditAssetLocationComponent } from './dialog/manage-site/edit-location/edit-location.component';
+import { EditAssetLocationAreaComponent } from './dialog/manage-site/edit-location/edit-location-area/edit-location-area.component';
+import { SecurityRoleConfigComponent } from './security-configuration/role-configuration/role-configuration.component';
+import { EditRoleDialogComponent } from './security-configuration/edit-role-dialog/edit-role-dialog.component';
+import { MatListModule } from '@angular/material/list';
+import { configurationRouteGuard } from './configuration-route.guard';
+import { ServiceConfigsItemComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs-item/service-configs-item.component';
+import { FilesComponent } from './files/files.component';
+import { FileOverviewComponent } from './files/file-overview/file-overview.component';
+import { FileUploadDialogComponent } from './dialog/file-upload/file-upload-dialog.component';
+import { FileRenameDialogComponent } from './dialog/file-rename/file-rename-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
     imports: [
@@ -115,38 +132,57 @@ import { SpConfigurationLinkSettingsComponent } from './general-configuration/li
                     {
                         path: 'general',
                         component: GeneralConfigurationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'datalake',
                         component: DatalakeConfigurationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'email',
                         component: EmailConfigurationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'export',
                         component: SpDataExportImportComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'labels',
                         component: SpLabelConfigurationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'messaging',
                         component: MessagingConfigurationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'extensions-installation',
                         component: SpExtensionsInstallationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'extensions-services',
                         component: ExtensionsServiceManagementComponent,
+                        canActivate: [configurationRouteGuard],
+                    },
+                    {
+                        path: 'files',
+                        component: FilesComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                     {
                         path: 'security',
                         component: SecurityConfigurationComponent,
+                        canActivate: [configurationRouteGuard],
+                    },
+                    {
+                        path: 'sites',
+                        component: SitesConfigurationComponent,
+                        canActivate: [configurationRouteGuard],
                     },
                 ],
             },
@@ -154,24 +190,40 @@ import { SpConfigurationLinkSettingsComponent } from './general-configuration/li
         SharedUiModule,
         ColorPickerModule,
         CodemirrorModule,
+        MatSort,
+        MatListModule,
+        MatDialogModule,
     ],
     declarations: [
         ServiceConfigsComponent,
         ServiceConfigsTextComponent,
         ServiceConfigsPasswordComponent,
         ServiceConfigsBooleanComponent,
+        ServiceConfigsItemComponent,
         ServiceConfigsNumberComponent,
         DeleteDatalakeIndexComponent,
+        EditAssetLocationComponent,
+        EditAssetLocationAreaComponent,
+        EditRoleDialogComponent,
         EditUserDialogComponent,
         EditGroupDialogComponent,
         EmailConfigurationComponent,
+        FilesComponent,
+        FileOverviewComponent,
+        FileUploadDialogComponent,
+        FileRenameDialogComponent,
         GeneralConfigurationComponent,
         ExtensionsServiceManagementComponent,
+        LocationFeaturesConfigurationComponent,
+        ManageSiteDialogComponent,
+        SitesConfigurationComponent,
         SecurityAuthenticationConfigurationComponent,
         SecurityConfigurationComponent,
+        SecurityRoleConfigComponent,
         SecurityUserConfigComponent,
         SecurityUserGroupConfigComponent,
         SecurityServiceConfigComponent,
+        SiteAreaConfigurationComponent,
         MessagingConfigurationComponent,
         DatalakeConfigurationComponent,
         SpConfigurationLinkSettingsComponent,

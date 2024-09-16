@@ -18,22 +18,17 @@
 package org.apache.streampipes.test.generator.template;
 
 import org.apache.streampipes.model.template.PipelineElementTemplate;
-import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class PipelineElementTemplateHelpers {
 
   public static PipelineElementTemplate makePipelineElementTemplate() {
-    Map<String, PipelineElementTemplateConfig> configs = new HashMap<>();
-    configs.put("test-key", makeConfig(true, true, "test-string"));
-    configs.put("test-key-2", makeConfig(true, false, 2));
+    var configs = new ArrayList<Map<String, Object>>();
+    configs.add(Map.of("test-key", "test-string"));
+    configs.add(Map.of("test-key-2", 2));
 
     return new PipelineElementTemplate("name", "description", configs);
-  }
-
-  public static PipelineElementTemplateConfig makeConfig(boolean editable, boolean displayed, Object value) {
-    return new PipelineElementTemplateConfig(editable, displayed, value);
   }
 }

@@ -34,6 +34,10 @@ public class PermissionResourceManager extends AbstractResourceManager<IPermissi
     return db.findAll();
   }
 
+  public Permission find(String elementId) {
+    return db.getElementById(elementId);
+  }
+
   public List<Permission> findForObjectId(String objectInstanceId) {
     return db.getUserPermissionsForObject(objectInstanceId);
   }

@@ -28,7 +28,7 @@
             >
                 <sp-pipeline-element-details-row
                     [pipelineElement]="element"
-                    [logInfo]="logInfo[element.elementId]"
+                    [logInfo]="logInfo[element.elementId] || []"
                     [pipelineRunning]="pipeline.running"
                 >
                 </sp-pipeline-element-details-row>
@@ -49,7 +49,6 @@
             (reloadPipelineEmitter)="reloadPipelineEmitter.emit()"
             [pipeline]="pipeline"
             [hasWritePipelinePrivileges]="hasWritePipelinePrivileges"
-            [hasDeletePipelinePrivileges]="hasDeletePipelinePrivileges"
         >
         </sp-pipeline-actions>
     </mat-expansion-panel>

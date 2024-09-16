@@ -64,13 +64,14 @@ public class AdapterMasterManagement {
     this.dataStreamResourceManager = dataStreamResourceManager;
   }
 
-  public String addAdapter(AdapterDescription ad,
+  public void addAdapter(AdapterDescription ad,
+                           String adapterElementId,
                            String principalSid)
       throws AdapterException {
 
     // Create elementId for adapter
     var dataStreamElementId = ElementIdGenerator.makeElementId(SpDataStream.class);
-    ad.setElementId(ElementIdGenerator.makeElementId(ad));
+    ad.setElementId(adapterElementId);
     ad.setCreatedAt(System.currentTimeMillis());
     ad.setCorrespondingDataStreamElementId(dataStreamElementId);
 
@@ -78,18 +79,14 @@ public class AdapterMasterManagement {
     var eventGrounding = GroundingUtils.createEventGrounding();
     ad.setEventGrounding(eventGrounding);
 
-    var elementId = this.adapterResourceManager.encryptAndCreate(ad);
+    this.adapterResourceManager.encryptAndCreate(ad);
 
     // Create stream
     var storedDescription = new SourcesManagement().createAdapterDataStream(ad, dataStreamElementId);
-    storedDescription.setCorrespondingAdapterId(elementId);
+    storedDescription.setCorrespondingAdapterId(adapterElementId);
     installDataSource(storedDescription, principalSid, true);
     LOG.info("Install source (source URL: {} in backend", ad.getElementId());
-
-    return ad.getElementId();
   }
-
-
 
   public AdapterDescription getAdapter(String elementId) throws AdapterException {
     List<AdapterDescription> allAdapters = adapterInstanceStorage.findAll();

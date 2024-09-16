@@ -1,0 +1,131 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxFlex="100">
+    <div
+        fxFlex="100"
+        fxLayout="column"
+        class="designer-panel-content"
+        *ngIf="currentlyConfiguredWidget"
+    >
+        <div fxFlex="100" fxLayout="column" class="no-overflow">
+            <mat-tab-group
+                [selectedIndex]="selectedIndex"
+                (selectedIndexChange)="selectOptionsPanel($event)"
+                color="accent"
+                fxFlexFill
+                class="small-tab-headers mat-tab-fill-height"
+            >
+                <mat-tab data-cy="designer-panel-data-config" label="Data">
+                    <div class="scroll-tab-content">
+                        <sp-data-explorer-widget-data-settings
+                            #dataSettingsPanel
+                            [(dataLakeMeasure)]="dataLakeMeasure"
+                            [dataConfig]="currentlyConfiguredWidget.dataConfig"
+                            [newWidgetMode]="newWidgetMode"
+                            [widgetId]="currentlyConfiguredWidget.elementId"
+                            (createWidgetEmitter)="createNewWidget()"
+                        >
+                        </sp-data-explorer-widget-data-settings>
+                    </div>
+                </mat-tab>
+                <mat-tab
+                    data-cy="designer-panel-visualization-config"
+                    label="Visualization"
+                    [disabled]="
+                        !currentlyConfiguredWidget.dataConfig.sourceConfigs ||
+                        currentlyConfiguredWidget.dataConfig.sourceConfigs
+                            .length === 0
+                    "
+                >
+                    <div class="scroll-tab-content">
+                        <sp-explorer-visualisation-settings
+                            fxFlex="100"
+                            fxLayout="column"
+                            [currentlyConfiguredWidget]="
+                                currentlyConfiguredWidget
+                            "
+                        >
+                        </sp-explorer-visualisation-settings>
+                    </div>
+                </mat-tab>
+                <mat-tab
+                    data-cy="designer-panel-appearance-config"
+                    label="Appearance"
+                >
+                    <div class="scroll-tab-content">
+                        <sp-data-explorer-widget-appearance-settings
+                            fxFlex="100"
+                            fxLayout="column"
+                            [currentlyConfiguredWidget]="
+                                currentlyConfiguredWidget
+                            "
+                        >
+                        </sp-data-explorer-widget-appearance-settings>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+        <div
+            fxFlex="50px"
+            fxLayoutAlign="end center"
+            fxLayout="row"
+            *ngIf="newWidgetMode"
+            class="new-widget-section"
+        >
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                data-cy="data-explorer-select-data-set-next-btn"
+                [disabled]="
+                    selectedIndex === 0 &&
+                    (!currentlyConfiguredWidget.dataConfig.sourceConfigs ||
+                        currentlyConfiguredWidget.dataConfig.sourceConfigs
+                            .length === 0 ||
+                        currentlyConfiguredWidget.dataConfig.sourceConfigs[0]
+                            .measureName === '')
+                "
+                *ngIf="newWidgetMode && selectedIndex === 0"
+                (click)="selectedIndex = 1"
+            >
+                Next
+            </button>
+            <button
+                *ngIf="newWidgetMode && selectedIndex === 1"
+                mat-button
+                mat-raised-button
+                class="mat-basic mr-10"
+                (click)="selectedIndex = 0"
+                style="margin-right: 10px"
+            >
+                Back
+            </button>
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                data-cy="data-explorer-select-data-set-create-btn"
+                *ngIf="newWidgetMode && selectedIndex === 1"
+                (click)="createNewWidget()"
+            >
+                Create
+            </button>
+        </div>
+    </div>
+</div>

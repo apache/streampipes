@@ -23,13 +23,15 @@ import org.apache.streampipes.model.shared.api.Storable;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @TsModel
 public class PipelineElementTemplate implements Storable {
 
-  Map<String, PipelineElementTemplateConfig> templateConfigs;
+  List<Map<String, Object>> templateConfigs;
 
   @JsonAlias("_id")
   private @SerializedName("_id") String elementId;
@@ -42,7 +44,7 @@ public class PipelineElementTemplate implements Storable {
 
   public PipelineElementTemplate(String templateName,
                                  String templateDescription,
-                                 Map<String, PipelineElementTemplateConfig> templateConfigs) {
+                                 List<Map<String, Object>> templateConfigs) {
     this.templateName = templateName;
     this.templateDescription = templateDescription;
     this.templateConfigs = templateConfigs;
@@ -50,6 +52,7 @@ public class PipelineElementTemplate implements Storable {
 
   public PipelineElementTemplate() {
     this.elementId = UUID.randomUUID().toString();
+    this.templateConfigs = new ArrayList<>();
   }
 
   public String getTemplateName() {
@@ -68,11 +71,11 @@ public class PipelineElementTemplate implements Storable {
     this.templateDescription = templateDescription;
   }
 
-  public Map<String, PipelineElementTemplateConfig> getTemplateConfigs() {
+  public List<Map<String, Object>> getTemplateConfigs() {
     return templateConfigs;
   }
 
-  public void setTemplateConfigs(Map<String, PipelineElementTemplateConfig> templateConfigs) {
+  public void setTemplateConfigs(List<Map<String, Object>> templateConfigs) {
     this.templateConfigs = templateConfigs;
   }
 

@@ -35,8 +35,6 @@ describe('Creates a new adapter without starting it', () => {
 
         ConnectUtils.startAndValidateAdapter(7);
 
-        ConnectUtils.closeAdapterPreview();
-
-        ConnectUtils.deleteAdapter();
+        //ConnectUtils.deleteAdapter();
     });
 });

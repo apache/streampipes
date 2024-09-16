@@ -29,6 +29,7 @@ import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogEx
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.setup.AutoInstallation;
 import org.apache.streampipes.manager.setup.StreamPipesEnvChecker;
+import org.apache.streampipes.manager.setup.tasks.ApplyDefaultRolesAndPrivilegesTask;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
@@ -135,6 +136,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
       }
       new MigrationsHandler().performMigrations();
     }
+
+    new ApplyDefaultRolesAndPrivilegesTask().execute();
     coreStatusManager.updateCoreStatus(SpCoreConfigurationStatus.READY);
 
     executorService.schedule(

@@ -24,7 +24,7 @@ spAssets:
     title: 'Asset Management'
     description: 'Manage assets which help assigning pipelines, dashboards and adapters to real-world objects such as machines and plants.'
     icon: 'precision_manufacturing'
-    admin: true
+    privileges: '[UserPrivilege.PRIVILEGE_READ_ASSETS, UserPrivilege.PRIVILEGE_WRITE_ASSETS]'
     pageNames: 'PageName.ASSETS'
     showStatusBox: false
 spConnect:
@@ -38,7 +38,7 @@ spConnect:
     title: 'Connect'
     description: 'StreamPipes Connect lets you easily connect new data sources for a variety of data formats and protocols.'
     icon: 'power'
-    admin: False
+    privileges: '[UserPrivilege.PRIVILEGE_READ_ADAPTER, UserPrivilege.PRIVILEGE_WRITE_ADAPTER]'
     pageNames: 'PageName.CONNECT'
     showStatusBox: true
     statusBox:
@@ -47,8 +47,8 @@ spConnect:
         title: 'Adapters'
         createTitle: 'New adapter'
         dataFns: '[this.adapterService.getAdapters()]'
-        viewRoles: '[UserRole.ROLE_CONNECT_ADMIN]'
-        createRoles: '[UserRole.ROLE_CONNECT_ADMIN]'
+        viewRoles: '[UserPrivilege.PRIVILEGE_READ_ADAPTER, UserPrivilege.PRIVILEGE_WRITE_ADAPTER]'
+        createRoles: '[UserPrivilege.PRIVILEGE_WRITE_ADAPTER]'
 spPipelines:
     componentImport: False
     moduleName: 'PipelinesModule'
@@ -60,8 +60,8 @@ spPipelines:
     title: 'Pipelines'
     description: 'All created pipelines are available in the pipeline view, where you can also start and stop pipelines.'
     icon: 'play_arrow'
-    admin: False
     pageNames: 'PageName.PIPELINE_OVERVIEW'
+    privileges: '[UserPrivilege.PRIVILEGE_READ_PIPELINE, UserPrivilege.PRIVILEGE_WRITE_PIPELINE]'
     showStatusBox: true
     statusBox:
         link: "['pipelines']"
@@ -69,8 +69,8 @@ spPipelines:
         title: 'Pipelines'
         createTitle: 'New pipeline'
         dataFns: '[this.pipelineService.getPipelines()]'
-        viewRoles: '[UserRole.ROLE_PIPELINE_ADMIN, UserRole.ROLE_PIPELINE_USER]'
-        createRoles: '[UserRole.ROLE_PIPELINE_ADMIN]'
+        viewRoles: '[UserPrivilege.PRIVILEGE_READ_PIPELINE, UserPrivilege.PRIVILEGE_WRITE_PIPELINE]'
+        createRoles: '[UserPrivilege.PRIVILEGE_WRITE_PIPELINE]'
 spConfiguration:
     componentImport: False
     moduleName: 'ConfigurationModule'
@@ -83,7 +83,7 @@ spConfiguration:
     description: 'In the configuration module, basic StreamPipes settings and services can be configured.'
     icon: 'settings'
     pageNames: 'PageName.SETTINGS'
-    admin: True
+    privileges: '[UserPrivilege.PRIVILEGE_WRITE_ASSETS, UserPrivilege.PRIVILEGE_WRITE_LABELS, UserPrivilege.PRIVILEGE_READ_FILES, UserPrivilege.PRIVILEGE_WRITE_FILES]'
     showStatusBox: false
 spAppOverview:
     componentImport: False
@@ -96,8 +96,8 @@ spAppOverview:
     title: 'Apps'
     description: 'The app overview lets you access additional plugins.'
     icon: 'apps'
-    admin: false
     pageNames: 'PageName.APPS'
+    privileges: '[UserPrivilege.PRIVILEGE_READ_APPS, UserPrivilege.PRIVILEGE_WRITE_APPS]'
     showStatusBox: false
 spDashboard:
     componentImport: False
@@ -110,8 +110,8 @@ spDashboard:
     title: 'Dashboard'
     description: 'The live dashboard visualizes data in real-time.'
     icon: 'insert_chart'
-    admin: false
     pageNames: 'PageName.DASHBOARD'
+    privileges: '[UserPrivilege.PRIVILEGE_READ_DASHBOARD, UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
     showStatusBox: true
     statusBox:
         link: "['dashboard']"
@@ -119,8 +119,8 @@ spDashboard:
         title: 'Dashboards'
         createTitle: 'New dashboard'
         dataFns: '[this.dashboardService.getDashboards()]'
-        viewRoles: '[UserRole.ROLE_DASHBOARD_ADMIN, UserRole.ROLE_DASHBOARD_USER]'
-        createRoles: '[UserRole.ROLE_DASHBOARD_ADMIN]'
+        viewRoles: '[UserPrivilege.PRIVILEGE_READ_DASHBOARD, UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
+        createRoles: '[UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
 spDataExplorer:
     componentImport: False
     moduleName: 'DataExplorerModule'
@@ -132,8 +132,8 @@ spDataExplorer:
     title: 'Data Explorer'
     description: 'The data explorer lets you visually inspect historical data from your connected sources.'
     icon: 'search'
-    admin: false
     pageNames: 'PageName.DATA_EXPLORER'
+    privileges: '[UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
     showStatusBox: true
     statusBox:
         link: "['dataexplorer']"
@@ -141,19 +141,5 @@ spDataExplorer:
         title: 'Data Views'
         createTitle: 'New data view'
         dataFns: '[this.dataViewService.getDataViews()]'
-        viewRoles: '[UserRole.ROLE_DATA_EXPLORER_ADMIN, UserRole.ROLE_DATA_EXPLORER_USER]'
-        createRoles: '[UserRole.ROLE_DATA_EXPLORER_ADMIN]'
-spFiles:
-    componentImport: False
-    moduleName: 'FilesModule'
-    component: 'FilesComponent'
-    componentPath: './files/files.component'
-    path: './files/files.module'
-    link: 'files'
-    url: '/files'
-    title: 'File Management'
-    description: 'The file management module lets you upload and manage files that are used by adapters or pipeline elements.'
-    icon: 'folder'
-    admin: true
-    pageNames: 'PageName.FILE_UPLOAD'
-    showStatusBox: false
+        viewRoles: '[UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
+        createRoles: '[UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'

@@ -1,0 +1,120 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxFlex="100" fxLayout="column">
+    <sp-basic-header-title-component
+        title="Dashboards"
+    ></sp-basic-header-title-component>
+    <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
+        <sp-table
+            fxFlex="90"
+            [columns]="displayedColumns"
+            [dataSource]="dataSource"
+        >
+            <ng-container matColumnDef="name">
+                <th
+                    fxFlex="60"
+                    fxLayoutAlign="start center"
+                    mat-header-cell
+                    *matHeaderCellDef
+                >
+                    Dashboard
+                </th>
+                <td
+                    fxFlex="60"
+                    fxLayoutAlign="center start"
+                    mat-cell
+                    data-cy="dashboard-table-overview"
+                    *matCellDef="let element"
+                    fxLayout="column"
+                >
+                    <div>
+                        <b>{{ element.name }}</b>
+                    </div>
+                    <div>
+                        <small> {{ element.description }}</small>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th
+                    fxFlex="40"
+                    fxLayoutAlign="center center"
+                    mat-header-cell
+                    *matHeaderCellDef
+                ></th>
+                <td
+                    fxFlex="40"
+                    fxLayoutAlign="start center"
+                    mat-cell
+                    *matCellDef="let element"
+                >
+                    <div fxLayout="row" fxFlex="100" fxLayoutAlign="end center">
+                        <button
+                            mat-icon-button
+                            color="accent"
+                            matTooltip="Show data view"
+                            (click)="showDashboard(element)"
+                        >
+                            <i class="material-icons">visibility</i>
+                        </button>
+                        <button
+                            mat-icon-button
+                            color="accent"
+                            matTooltip="Edit data view"
+                            *ngIf="hasDataExplorerWritePrivileges"
+                            [attr.data-cy]="'edit-dashboard-' + element.name"
+                            (click)="editDashboard(element)"
+                        >
+                            <i class="material-icons">edit</i>
+                        </button>
+                        <button
+                            mat-icon-button
+                            color="accent"
+                            matTooltip="Edit data view settings"
+                            *ngIf="hasDataExplorerWritePrivileges"
+                            (click)="openEditDashboardDialog(element)"
+                        >
+                            <i class="material-icons">settings</i>
+                        </button>
+                        <button
+                            mat-icon-button
+                            color="accent"
+                            matTooltip="Manage permissions"
+                            *ngIf="isAdmin"
+                            (click)="showPermissionsDialog(element)"
+                        >
+                            <i class="material-icons">share</i>
+                        </button>
+                        <button
+                            mat-icon-button
+                            color="accent"
+                            matTooltip="Delete data view"
+                            *ngIf="hasDataExplorerWritePrivileges"
+                            [attr.data-cy]="'delete-dashboard-' + element.name"
+                            (click)="openDeleteDashboardDialog(element)"
+                        >
+                            <i class="material-icons">delete</i>
+                        </button>
+                    </div>
+                </td>
+            </ng-container>
+        </sp-table>
+    </div>
+</div>

@@ -23,7 +23,11 @@ import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+    DefaultMatCalendarRangeStrategy,
+    MatDatepickerModule,
+    MatRangeDateSelectionModel,
+} from '@angular/material/datepicker';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSliderModule } from '@angular/material/slider';
@@ -37,36 +41,40 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { DataExplorerDashboardGridComponent } from './components/widget-view/grid-view/data-explorer-dashboard-grid.component';
-import { DataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview.component';
-import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
-import { TimeRangeSelectorComponent } from './components/time-selector/timeRangeSelector.component';
+import { DataExplorerOverviewComponent } from './components/overview/data-explorer-overview.component';
+import { DataExplorerDashboardPanelComponent } from './components/dashboard/data-explorer-dashboard-panel.component';
+import { TimeRangeSelectorComponent } from './components/time-selector/time-range-selector.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
 import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
+import { TrafficLightWidgetComponent } from './components/widgets/traffic-light/traffic-light-widget.component';
+import { TrafficLightWidgetConfigComponent } from './components/widgets/traffic-light/config/traffic-light-widget-config.component';
+import { StatusWidgetComponent } from './components/widgets/status/status-widget.component';
+import { StatusWidgetConfigComponent } from './components/widgets/status/config/status-widget-config.component';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { AggregateConfigurationComponent } from './components/widgets/utils/aggregate-configuration/aggregate-configuration.component';
 import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
 import { NoDataInDateRangeComponent } from './components/widgets/utils/no-data/no-data-in-date-range.component';
 import { SelectPropertiesComponent } from './components/widgets/utils/select-properties/select-properties.component';
 import { SelectColorPropertiesComponent } from './components/widgets/utils/select-color-properties/select-color-properties.component';
-import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
+import { DataExplorerEditDashboardDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-dashboard-dialog.component';
 import { GroupConfigurationComponent } from './components/widgets/utils/group-configuration/group-configuration.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { DataExplorerDesignerPanelComponent } from './components/designer-panel/data-explorer-designer-panel.component';
+import { DataExplorerDesignerPanelComponent } from './components/data-view/data-view-designer-panel/data-explorer-designer-panel.component';
 import { TableWidgetConfigComponent } from './components/widgets/table/config/table-widget-config.component';
 import { MapWidgetComponent } from './components/widgets/map/map-widget.component';
 import { MapWidgetConfigComponent } from './components/widgets/map/config/map-widget-config.component';
 import { HeatmapWidgetConfigComponent } from './components/widgets/heatmap/config/heatmap-widget-config.component';
-import { DataExplorerWidgetAppearanceSettingsComponent } from './components/designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component';
-import { DataExplorerWidgetDataSettingsComponent } from './components/designer-panel/data-settings/data-explorer-widget-data-settings.component';
+import { DataExplorerWidgetAppearanceSettingsComponent } from './components/data-view/data-view-designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component';
+import { DataExplorerWidgetDataSettingsComponent } from './components/data-view/data-view-designer-panel/data-settings/data-explorer-widget-data-settings.component';
 import { TimeSeriesChartWidgetConfigComponent } from './components/widgets/time-series-chart/config/time-series-chart-widget-config.component';
 import { ImageWidgetConfigComponent } from './components/widgets/image/config/image-widget-config.component';
 import { IndicatorWidgetConfigComponent } from './components/widgets/indicator/config/indicator-chart-widget-config.component';
-import { FieldSelectionPanelComponent } from './components/designer-panel/data-settings/field-selection-panel/field-selection-panel.component';
-import { FieldSelectionComponent } from './components/designer-panel/data-settings/field-selection/field-selection.component';
-import { FilterSelectionPanelComponent } from './components/designer-panel/data-settings/filter-selection-panel/filter-selection-panel.component';
+import { FieldSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/field-selection-panel/field-selection-panel.component';
+import { FieldSelectionComponent } from './components/data-view/data-view-designer-panel/data-settings/field-selection/field-selection.component';
+import { FilterSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel.component';
 import { SelectPropertyComponent } from './components/widgets/utils/select-property/select-property.component';
-import { DataExplorerVisualisationSettingsComponent } from './components/designer-panel/visualisation-settings/data-explorer-visualisation-settings.component';
-import { GroupSelectionPanelComponent } from './components/designer-panel/data-settings/group-selection-panel/group-selection-panel.component';
+import { DataExplorerVisualisationSettingsComponent } from './components/data-view/data-view-designer-panel/visualisation-settings/data-explorer-visualisation-settings.component';
+import { GroupSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/group-selection-panel/group-selection-panel.component';
 import { WidgetDirective } from './components/widget/widget.directive';
 import { CorrelationWidgetConfigComponent } from './components/widgets/correlation-chart/config/correlation-chart-widget-config.component';
 import { TooMuchDataComponent } from './components/widgets/utils/too-much-data/too-much-data.component';
@@ -113,6 +121,19 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SpImageContainerComponent } from './components/widgets/image/image-container/image-container.component';
+import { SpDataExplorerDataViewOverviewComponent } from './components/overview/data-explorer-data-view-overview/data-explorer-data-view-overview.component';
+import { SpDataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview/data-explorer-dashboard-overview.component';
+import { DataExplorerDataViewComponent } from './components/data-view/data-explorer-data-view.component';
+import { DataExplorerDataViewToolbarComponent } from './components/data-view/data-view-toolbar/data-explorer-data-view-toolbar.component';
+import { DataExplorerDataViewSelectionComponent } from './components/dashboard/dashboard-widget-selection-panel/data-view-selection/data-view-selection.component';
+import { DataExplorerDashboardWidgetSelectionPanelComponent } from './components/dashboard/dashboard-widget-selection-panel/dashboard-widget-selection-panel.component';
+import { DataExplorerDataViewPreviewComponent } from './components/dashboard/dashboard-widget-selection-panel/data-view-selection/data-view-preview/data-view-preview.component';
+import { DataExplorerDashboardToolbarComponent } from './components/dashboard/dashboard-toolbar/dashboard-toolbar.component';
+import { TimeRangeSelectorMenuComponent } from './components/time-selector/time-selector-menu/time-selector-menu.component';
+import { CustomTimeRangeSelectionComponent } from './components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
+import { DataExplorerRefreshIntervalSettingsComponent } from './components/dashboard/dashboard-toolbar/refresh-interval-settings/refresh-interval-settings.component';
+import { OrderSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/order-selection-panel/order-selection-panel.component';
+import { GaugeWidgetConfigComponent } from './components/widgets/gauge/config/gauge-widget-config.component';
 
 @NgModule({
     imports: [
@@ -167,15 +188,24 @@ import { SpImageContainerComponent } from './components/widgets/image/image-cont
                 children: [
                     {
                         path: '',
-                        component: DataExplorerDashboardOverviewComponent,
+                        component: DataExplorerOverviewComponent,
                     },
                     {
-                        path: ':id',
+                        path: 'data-view',
+                        component: DataExplorerDataViewComponent,
+                    },
+                    {
+                        path: 'data-view/:id',
+                        component: DataExplorerDataViewComponent,
+                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
+                    },
+                    {
+                        path: 'dashboard/:id',
                         component: DataExplorerDashboardPanelComponent,
                         canDeactivate: [DataExplorerPanelCanDeactivateGuard],
                     },
                     {
-                        path: ':id/:startTime/:endTime',
+                        path: 'dashboard/:id/:startTime/:endTime',
                         component: DataExplorerDashboardPanelComponent,
                         canDeactivate: [DataExplorerPanelCanDeactivateGuard],
                     },
@@ -185,19 +215,28 @@ import { SpImageContainerComponent } from './components/widgets/image/image-cont
     ],
     declarations: [
         AggregateConfigurationComponent,
+        CustomTimeRangeSelectionComponent,
         DataExplorerDashboardGridComponent,
-        DataExplorerDashboardOverviewComponent,
+        DataExplorerOverviewComponent,
         DataExplorerDashboardPanelComponent,
         DataExplorerDashboardSlideViewComponent,
+        DataExplorerDashboardToolbarComponent,
         DataExplorerDashboardWidgetComponent,
+        DataExplorerDashboardWidgetSelectionPanelComponent,
+        DataExplorerDataViewPreviewComponent,
+        DataExplorerDataViewSelectionComponent,
         DataExplorerDesignerPanelComponent,
-        DataExplorerEditDataViewDialogComponent,
+        DataExplorerEditDashboardDialogComponent,
+        DataExplorerRefreshIntervalSettingsComponent,
         DataExplorerWidgetAppearanceSettingsComponent,
         DataExplorerWidgetDataSettingsComponent,
+        DataExplorerDataViewComponent,
+        DataExplorerDataViewToolbarComponent,
         CorrelationWidgetConfigComponent,
         FieldSelectionPanelComponent,
         FieldSelectionComponent,
         FilterSelectionPanelComponent,
+        GaugeWidgetConfigComponent,
         GroupConfigurationComponent,
         ImageWidgetComponent,
         ImageBarComponent,
@@ -212,16 +251,24 @@ import { SpImageContainerComponent } from './components/widgets/image/image-cont
         SelectPropertyComponent,
         TableWidgetComponent,
         TableWidgetConfigComponent,
+        TrafficLightWidgetComponent,
+        TrafficLightWidgetConfigComponent,
+        StatusWidgetComponent,
+        StatusWidgetConfigComponent,
         MapWidgetConfigComponent,
         MapWidgetComponent,
         HeatmapWidgetConfigComponent,
         ImageViewerComponent,
         TimeRangeSelectorComponent,
+        TimeRangeSelectorMenuComponent,
         DataExplorerVisualisationSettingsComponent,
         GroupSelectionPanelComponent,
         DataExplorerVisualisationSettingsComponent,
         WidgetDirective,
         TooMuchDataComponent,
+        OrderSelectionPanelComponent,
+        SpDataExplorerDataViewOverviewComponent,
+        SpDataExplorerDashboardOverviewComponent,
         SpEchartsWidgetComponent,
         SpValueHeatmapWidgetConfigComponent,
         SpHistogramChartWidgetConfigComponent,
@@ -236,7 +283,7 @@ import { SpImageContainerComponent } from './components/widgets/image/image-cont
         SpTimeSeriesAppearanceConfigComponent,
         SpDataZoomConfigComponent,
     ],
-    providers: [],
+    providers: [DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel],
     exports: [],
 })
 export class DataExplorerModule {

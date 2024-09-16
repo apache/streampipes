@@ -117,13 +117,19 @@ public class SpServiceDefinitionBuilder {
   }
 
 
+  /**
+   * @deprecated data format registration is no longer required
+   */
+  @Deprecated(since = "0.97.0", forRemoval = true)
   public SpServiceDefinitionBuilder registerMessagingFormat(SpDataFormatFactory dataFormatDefinition) {
-    this.serviceDefinition.addDataFormatFactory(dataFormatDefinition);
     return this;
   }
 
+  /**
+   * @deprecated data format registration is no longer required
+   */
+  @Deprecated(since = "0.97.0", forRemoval = true)
   public SpServiceDefinitionBuilder registerMessagingFormats(SpDataFormatFactory... dataFormatDefinitions) {
-    this.serviceDefinition.addDataFormatFactories(Arrays.asList(dataFormatDefinitions));
     return this;
   }
 

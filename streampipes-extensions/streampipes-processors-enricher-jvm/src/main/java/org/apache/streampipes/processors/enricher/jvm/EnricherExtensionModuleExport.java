@@ -22,7 +22,10 @@ import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
+import org.apache.streampipes.processors.enricher.jvm.processor.expression.MathExpressionProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.jseval.JSEvalProcessor;
+import org.apache.streampipes.processors.enricher.jvm.processor.limitsalert.SensorLimitAlertProcessor;
+import org.apache.streampipes.processors.enricher.jvm.processor.limitsenrichment.QualityControlLimitsEnrichmentProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.math.MathOpProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.math.staticmathop.StaticMathOpProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.trigonometry.TrigonometryProcessor;
@@ -41,10 +44,13 @@ public class EnricherExtensionModuleExport implements IExtensionModuleExport {
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
     return List.of(
         new JSEvalProcessor(),
+        new QualityControlLimitsEnrichmentProcessor(),
+        new SensorLimitAlertProcessor(),
         new MathOpProcessor(),
         new StaticMathOpProcessor(),
         new TrigonometryProcessor(),
-        new ValueChangeProcessor()
+        new ValueChangeProcessor(),
+        new MathExpressionProcessor()
     );
   }
 

@@ -18,14 +18,19 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
-import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
+import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.model.util.ElementIdGenerator;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.resource.management.DataExplorerResourceManager;
+import org.apache.streampipes.resource.management.DataExplorerWidgetResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.BadRequestException;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,31 +44,50 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v3/datalake/dashboard/widgets")
-public class DataLakeWidgetResource extends AbstractRestResource {
+public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
+
+  private final DataExplorerWidgetResourceManager resourceManager;
+
+  public DataLakeWidgetResource() {
+    this.resourceManager = new SpResourceManager().manageDataExplorerWidget(
+        new DataExplorerResourceManager(),
+        getNoSqlStorage().getDataExplorerWidgetStorage()
+    );
+  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<DataExplorerWidgetModel>> getAllDataExplorerWidgets() {
-    return ok(getDataExplorerWidgetStorage().findAll());
+  @PreAuthorize(AuthConstants.HAS_READ_DATA_EXPLORER_PRIVILEGE)
+  @PostFilter("hasPermission(filterObject.elementId, 'READ')")
+  public List<DataExplorerWidgetModel> getAllDataExplorerWidgets() {
+    return resourceManager.findAll();
   }
 
   @GetMapping(path = "/{widgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<DataExplorerWidgetModel> getDataExplorerWidget(@PathVariable("widgetId") String widgetId) {
-    return ok(getDataExplorerWidgetStorage().getElementById(widgetId));
+  @PreAuthorize("this.hasReadAuthority() and hasPermission(#elementId, 'READ')")
+  public ResponseEntity<DataExplorerWidgetModel> getDataExplorerWidget(@PathVariable("widgetId") String elementId) {
+    var widget = resourceManager.find(elementId);
+    if (widget != null) {
+      return ok(widget);
+    } else {
+      throw new BadRequestException("Could not find widget");
+    }
   }
 
   @PutMapping(
       path = "/{widgetId}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dataExplorerWidgetModel.elementId, 'WRITE')")
   public ResponseEntity<DataExplorerWidgetModel> modifyDataExplorerWidget(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
-    getDataExplorerWidgetStorage().updateElement(dataExplorerWidgetModel);
-    return ok(getDataExplorerWidgetStorage().getElementById(dataExplorerWidgetModel.getElementId()));
+    resourceManager.update(dataExplorerWidgetModel);
+    return ok(resourceManager.find(dataExplorerWidgetModel.getElementId()));
   }
 
   @DeleteMapping(path = "/{widgetId}")
-  public ResponseEntity<Void> deleteDataExplorerWidget(@PathVariable("widgetId") String widgetId) {
-    getDataExplorerWidgetStorage().deleteElementById(widgetId);
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#elementId, 'WRITE')")
+  public ResponseEntity<Void> deleteDataExplorerWidget(@PathVariable("widgetId") String elementId) {
+    resourceManager.delete(elementId);
     return ok();
   }
 
@@ -71,16 +95,24 @@ public class DataLakeWidgetResource extends AbstractRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dataExplorerWidgetModel.elementId, 'WRITE')")
   public ResponseEntity<DataExplorerWidgetModel> createDataExplorerWidget(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
-    String elementId = ElementIdGenerator.makeElementId(DashboardWidgetModel.class);
-    dataExplorerWidgetModel.setElementId(elementId);
-    getDataExplorerWidgetStorage().persist(dataExplorerWidgetModel);
-    return ok(getDataExplorerWidgetStorage().getElementById(elementId));
+    return ok(resourceManager.create(dataExplorerWidgetModel, getAuthenticatedUserSid()));
   }
 
-  private CRUDStorage<DataExplorerWidgetModel> getDataExplorerWidgetStorage() {
-    return getNoSqlStorage().getDataExplorerWidgetStorage();
+  /**
+   * required by Spring expression
+   */
+  public boolean hasReadAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE);
+  }
+
+  /**
+   * required by Spring expression
+   */
+  public boolean hasWriteAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE);
   }
 
 }

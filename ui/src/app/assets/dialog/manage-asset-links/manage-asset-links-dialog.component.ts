@@ -49,7 +49,6 @@ export class SpManageAssetLinksDialogComponent
 
     clonedAssetLinks: AssetLink[] = [];
 
-    idFunction = el => el._id;
     elementIdFunction = el => el.elementId;
     fileIdFunction = el => el.fileId;
     nameFunction = el => el.name;

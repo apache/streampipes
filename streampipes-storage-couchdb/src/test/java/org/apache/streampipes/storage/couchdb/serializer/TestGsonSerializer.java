@@ -34,22 +34,18 @@ public class TestGsonSerializer {
     );
     Assertions.assertEquals(
         "test-string",
-        template.getTemplateConfigs()
-                .get("test-key")
-                .getValue()
+        findValue(template, "test-key")
     );
-    Assertions.assertTrue(template.getTemplateConfigs()
-                                  .get("test-key")
-                                  .isEditable());
-    Assertions.assertTrue(template.getTemplateConfigs()
-                                  .get("test-key")
-                                  .isDisplayed());
-    Assertions.assertTrue(template.getTemplateConfigs()
-                                  .get("test-key-2")
-                                  .isEditable());
-    Assertions.assertFalse(template.getTemplateConfigs()
-                                   .get("test-key-2")
-                                   .isDisplayed());
+  }
+
+  private static Object findValue(PipelineElementTemplate template,
+                           String key) {
+    return template.getTemplateConfigs()
+        .stream()
+        .filter(t -> t.containsKey(key))
+        .map(t -> t.get(key))
+        .findFirst()
+        .orElseThrow(() -> new AssertionError("test-key not found"));
   }
 
   @Test
@@ -66,9 +62,7 @@ public class TestGsonSerializer {
     assertions(template2);
     Assertions.assertEquals(
         2.0,
-        template2.getTemplateConfigs()
-                 .get("test-key-2")
-                 .getValue()
+        findValue(template2, "test-key-2")
     );
   }
 }
