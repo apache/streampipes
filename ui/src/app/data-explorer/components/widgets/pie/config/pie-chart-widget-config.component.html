@@ -38,33 +38,55 @@
                 ?.fieldCharacteristics.numeric
         "
     >
-        <div
-            fxFlex="100"
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            fxLayoutGap="10px"
-        >
-            <small>Rounding</small>
-            <mat-form-field
-                appearance="outline"
-                class="marginColorField"
-                color="accent"
-                fxFlex
+        <div fxLayout="column" fxLayoutGap="10px">
+            <div
+                fxFlex="100"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="10px"
             >
-                <mat-select
-                    [(value)]="
-                        currentlyConfiguredWidget.visualizationConfig
-                            .roundingValue
-                    "
-                    (selectionChange)="updateRoundingValue($event.value)"
+                <small>Rounding</small>
+                <mat-form-field
+                    appearance="outline"
+                    class="marginColorField"
+                    color="accent"
+                    fxFlex
                 >
-                    <mat-option [value]="100">100</mat-option>
-                    <mat-option [value]="10">10</mat-option>
-                    <mat-option [value]="1">1</mat-option>
-                    <mat-option [value]="0.1">0.1</mat-option>
-                    <mat-option [value]="0.01">0.01</mat-option>
-                </mat-select>
-            </mat-form-field>
+                    <mat-select
+                        [(value)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .roundingValue
+                        "
+                        (selectionChange)="updateRoundingValue($event.value)"
+                    >
+                        <mat-option [value]="100">100</mat-option>
+                        <mat-option [value]="10">10</mat-option>
+                        <mat-option [value]="1">1</mat-option>
+                        <mat-option [value]="0.1">0.1</mat-option>
+                        <mat-option [value]="0.01">0.01</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div
+                fxFlex="100"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="10px"
+            >
+                <small>Inner Radius</small>
+                <mat-slider min="0" max="80" step="1" fxFlex="65">
+                    <input
+                        matSliderThumb
+                        [(value)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .selectedRadius
+                        "
+                        (input)="updateInnerRadius($event.value)"
+                        #slider
+                    />
+                </mat-slider>
+                <small>{{ slider.value }}% </small>
+            </div>
         </div>
     </sp-configuration-box>
 </sp-visualization-config-outer>
