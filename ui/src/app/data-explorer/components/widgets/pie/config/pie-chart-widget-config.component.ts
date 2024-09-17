@@ -45,11 +45,18 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
             () => this.fieldProvider.allFields[0],
         );
         config.roundingValue ??= 0.1;
+        config.selectedRadius ??= 0;
     }
 
     updateRoundingValue(selectedType: number) {
         this.currentlyConfiguredWidget.visualizationConfig.roundingValue =
             selectedType;
+        this.triggerViewRefresh();
+    }
+
+    updateInnerRadius(selectedRadius: number) {
+        this.currentlyConfiguredWidget.visualizationConfig.selectedRadius =
+            selectedRadius;
         this.triggerViewRefresh();
     }
 

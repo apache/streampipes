@@ -26,6 +26,7 @@ import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.mod
 export interface PieChartVisConfig extends DataExplorerVisConfig {
     selectedProperty: DataExplorerField;
     roundingValue: number;
+    selectedRadius: number;
 }
 
 export interface PieChartWidgetModel extends DataExplorerWidgetModel {
