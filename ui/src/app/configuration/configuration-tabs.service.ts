@@ -57,7 +57,7 @@ export class SpConfigurationTabsService {
             itemId: 'files',
             itemTitle: 'Files',
             itemLink: ['configuration', 'files'],
-            roles: ['PRIVILEGE_READ_FILES', 'PRIVILEGE_WRITE_FILES'],
+            roles: ['PRIVILEGE_WRITE_FILES'],
         },
         {
             itemId: 'labels',

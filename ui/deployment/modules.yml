@@ -83,7 +83,7 @@ spConfiguration:
     description: 'In the configuration module, basic StreamPipes settings and services can be configured.'
     icon: 'settings'
     pageNames: 'PageName.SETTINGS'
-    privileges: '[UserPrivilege.PRIVILEGE_WRITE_ASSETS, UserPrivilege.PRIVILEGE_WRITE_LABELS, UserPrivilege.PRIVILEGE_READ_FILES, UserPrivilege.PRIVILEGE_WRITE_FILES]'
+    privileges: '[UserPrivilege.PRIVILEGE_WRITE_ASSETS, UserPrivilege.PRIVILEGE_WRITE_LABELS, UserPrivilege.PRIVILEGE_WRITE_FILES]'
     showStatusBox: false
 spAppOverview:
     componentImport: False
