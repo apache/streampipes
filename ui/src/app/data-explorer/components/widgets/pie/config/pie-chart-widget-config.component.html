@@ -77,11 +77,11 @@
                 <mat-slider min="0" max="80" step="1" fxFlex="65">
                     <input
                         matSliderThumb
-                        [(value)]="
+                        [ngModel]="
                             currentlyConfiguredWidget.visualizationConfig
                                 .selectedRadius
                         "
-                        (input)="updateInnerRadius($event.value)"
+                        (ngModelChange)="updateInnerRadius($event)"
                         #slider
                     />
                 </mat-slider>
