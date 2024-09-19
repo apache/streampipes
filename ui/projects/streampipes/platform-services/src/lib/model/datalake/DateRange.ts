@@ -24,6 +24,11 @@ export interface TimeSettings {
     timeSelectionId?: TimeSelectionId;
 }
 
+export interface WidgetTimeSettings {
+    timeSettings: TimeSettings;
+    widgetIndex?: number;
+}
+
 export interface TimeString {
     startDate: string;
     startTime: string;

@@ -22,9 +22,11 @@ import {
     ComponentRef,
     EventEmitter,
     Input,
+    OnChanges,
     OnDestroy,
     OnInit,
     Output,
+    SimpleChanges,
     ViewChild,
 } from '@angular/core';
 import { GridsterItemComponent } from 'angular-gridster2';
@@ -45,13 +47,18 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { CurrentUserService } from '@streampipes/shared-ui';
 import { BaseWidgetData } from '../../models/dataview-dashboard.model';
 import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
+import { TimeSelectionService } from '../../services/time-selection.service';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-widget',
     templateUrl: './data-explorer-dashboard-widget.component.html',
     styleUrls: ['./data-explorer-dashboard-widget.component.scss'],
 })
-export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
+export class DataExplorerDashboardWidgetComponent
+    implements OnInit, OnDestroy, OnChanges
+{
+    @ViewChild('menuTrigger') menu: MatMenuTrigger;
     @Input()
     dashboardItem: DashboardItem;
 
@@ -97,6 +104,9 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     timerActive = false;
     loadingTime = 0;
 
+    clonedTimeSettings: TimeSettings;
+    timeSettingsModified: boolean = false;
+
     hasDataExplorerWritePrivileges = false;
 
     authSubscription: Subscription;
@@ -116,7 +126,15 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
         private widgetTypeService: WidgetTypeService,
         private authService: AuthService,
         private currentUserService: CurrentUserService,
+        private timeSelectionService: TimeSelectionService,
     ) {}
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.widgetIndex && this.componentRef?.instance) {
+            this.componentRef.instance.widgetIndex =
+                changes.widgetIndex.currentValue;
+        }
+    }
 
     ngOnInit(): void {
         this.authSubscription = this.currentUserService.user$.subscribe(
@@ -139,6 +157,14 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
                 },
             );
         this.chooseWidget(this.configuredWidget.widgetType);
+        this.clonedTimeSettings = {
+            startTime: this.timeSettings.startTime,
+            endTime: this.timeSettings.endTime,
+            timeSelectionId: this.timeSettings.timeSelectionId,
+        };
+        if (this.dashboardItem.timeSettings !== undefined) {
+            this.timeSettingsModified = true;
+        }
     }
 
     ngOnDestroy() {
@@ -176,6 +202,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
         this.componentRef.instance.dataExplorerWidget = this.configuredWidget;
         this.componentRef.instance.previewMode = this.previewMode;
         this.componentRef.instance.gridMode = this.gridMode;
+        this.componentRef.instance.widgetIndex = this.widgetIndex;
         const removeSub =
             this.componentRef.instance.removeWidgetCallback.subscribe(ev =>
                 this.removeWidget(),
@@ -196,9 +223,13 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     }
 
     getTimeSettings(): TimeSettings {
-        return this.globalTimeEnabled
-            ? this.timeSettings
-            : (this.configuredWidget.timeSettings as TimeSettings);
+        if (this.globalTimeEnabled) {
+            return this.timeSettings;
+        } else if (this.dashboardItem.timeSettings !== undefined) {
+            return this.dashboardItem.timeSettings as TimeSettings;
+        } else {
+            return this.configuredWidget.timeSettings as TimeSettings;
+        }
     }
 
     removeWidget() {
@@ -232,5 +263,27 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
             this.timeSettings,
             this.configuredWidget,
         );
+    }
+
+    modifyWidgetTimeSettings(timeSettings: TimeSettings): void {
+        this.dashboardItem.timeSettings = timeSettings;
+        this.timeSelectionService.notify(timeSettings, this.widgetIndex);
+        this.menu.closeMenu();
+        this.timeSettingsModified = true;
+    }
+
+    resetWidgetTimeSettings(): void {
+        this.dashboardItem.timeSettings = undefined;
+        this.clonedTimeSettings = {
+            startTime: this.timeSettings.startTime,
+            endTime: this.timeSettings.endTime,
+            timeSelectionId: this.timeSettings.timeSelectionId,
+        };
+        this.timeSelectionService.notify(
+            this.getTimeSettings(),
+            this.widgetIndex,
+        );
+        this.menu.closeMenu();
+        this.timeSettingsModified = false;
     }
 }
