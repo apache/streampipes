@@ -78,6 +78,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
+        console.log(this.currentUserService.getCurrentUser());
         this.showAssetBrowser = this.currentUserService.hasAnyRole([
             'PRIVILEGE_READ_ASSETS',
             'PRIVILEGE_WRITE_ASSETS',

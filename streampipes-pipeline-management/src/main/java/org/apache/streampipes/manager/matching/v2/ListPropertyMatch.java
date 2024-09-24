@@ -30,14 +30,14 @@ public class ListPropertyMatch implements Matcher<EventPropertyList, EventProper
     if (requirement.getEventProperty() == null) {
       return true;
     } else {
-      return domainPropertyMatch(offer, requirement, errorLog) && listItemMatch(offer, requirement,
+      return semanticTypeMatch(offer, requirement, errorLog) && listItemMatch(offer, requirement,
           errorLog);
     }
   }
 
-  private boolean domainPropertyMatch(EventPropertyList offer, EventPropertyList requirement,
+  private boolean semanticTypeMatch(EventPropertyList offer, EventPropertyList requirement,
                                       List<MatchingResultMessage> errorLog) {
-    return new DomainPropertyMatch().match(offer.getDomainProperties(), requirement.getDomainProperties(),
+    return new DomainPropertyMatch().match(offer.getSemanticType(), requirement.getSemanticType(),
         errorLog);
   }
 

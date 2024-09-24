@@ -79,11 +79,11 @@ export class EditSchemaTransformationComponent implements OnInit {
     editTimestampDomainProperty(checked: boolean) {
         if (checked) {
             this.isTimestampProperty = true;
-            this.cachedProperty.domainProperties = [SemanticType.TIMESTAMP];
+            this.cachedProperty.semanticType = SemanticType.TIMESTAMP;
             this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
             this.cachedProperty.runtimeType = DataType.LONG;
         } else {
-            this.cachedProperty.domainProperties = [];
+            this.cachedProperty.semanticType = undefined;
             this.cachedProperty.propertyScope = 'MEASUREMENT_PROPERTY';
             this.isTimestampProperty = false;
         }

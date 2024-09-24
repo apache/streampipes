@@ -53,7 +53,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -212,9 +211,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
         .getEventSchema()
         .getEventProperties()
         .stream()
-        .filter(eventProperty ->
-                    eventProperty.getDomainProperties()
-                                 .contains(URI.create(SO.DATE_TIME)))
+        .filter(eventProperty -> SO.DATE_TIME.equals(eventProperty.getSemanticType()))
         .findFirst();
 
     if (timestampField.isEmpty()) {

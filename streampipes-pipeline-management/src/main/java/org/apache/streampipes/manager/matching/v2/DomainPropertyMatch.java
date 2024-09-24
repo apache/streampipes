@@ -22,22 +22,21 @@ import org.apache.streampipes.manager.matching.v2.utils.MatchingUtils;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.client.matching.MatchingResultType;
 
-import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
-public class DomainPropertyMatch extends AbstractMatcher<List<URI>, List<URI>> {
+public class DomainPropertyMatch extends AbstractMatcher<String, String> {
 
   public DomainPropertyMatch() {
     super(MatchingResultType.DOMAIN_PROPERTY_MATCH);
   }
 
   @Override
-  public boolean match(List<URI> offer, List<URI> requirement, List<MatchingResultMessage> errorLog) {
-    if (offer == null && ((requirement != null) && requirement.size() > 0)) {
+  public boolean match(String offer, String requirement, List<MatchingResultMessage> errorLog) {
+    if (offer == null && (requirement != null)) {
       return false;
     }
-    boolean match = MatchingUtils.nullCheck(offer, requirement)
-        || requirement.stream().allMatch(req -> offer.stream().anyMatch(of -> req.toString().equals(of.toString())));
+    boolean match = MatchingUtils.nullCheck(offer, requirement) || requirement.equalsIgnoreCase(offer);
 
     if (!match) {
       buildErrorMessage(errorLog, buildText(requirement));
@@ -45,12 +44,8 @@ public class DomainPropertyMatch extends AbstractMatcher<List<URI>, List<URI>> {
     return match;
   }
 
-  private String buildText(List<URI> requirement) {
-    if (requirement == null || requirement.size() == 0) {
-      return "-";
-    } else {
-      return requirement.get(0).toString();
-    }
+  private String buildText(String requirement) {
+    return Objects.requireNonNullElse(requirement, "-");
   }
 
 }

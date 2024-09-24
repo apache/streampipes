@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-09-10 17:11:03.
+// Generated using typescript-generator version 3.2.1263 on 2024-09-24 21:40:10.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1480,12 +1480,16 @@ export class EventProperty {
         | 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
     'additionalMetadata': { [index: string]: any };
     'description': string;
+    /**
+     * @deprecated since 0.97.0, for removal
+     */
     'domainProperties': string[];
     'elementId': string;
     'label': string;
     'propertyScope': string;
     'runtimeId': string;
     'runtimeName': string;
+    'semanticType': string;
 
     static 'fromData'(
         data: EventProperty,
@@ -1508,6 +1512,7 @@ export class EventProperty {
         instance.propertyScope = data.propertyScope;
         instance.runtimeId = data.runtimeId;
         instance.runtimeName = data.runtimeName;
+        instance.semanticType = data.semanticType;
         return instance;
     }
 

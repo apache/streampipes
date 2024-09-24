@@ -89,9 +89,7 @@ export class TransformationRuleService {
                 rule.label = ep.label;
                 rule.description = ep.description;
                 rule.propertyScope = ep.propertyScope as PropertyScope;
-                if (ep.domainProperties.length > 0) {
-                    rule.semanticType = ep.domainProperties[0];
-                }
+                rule.semanticType = ep.semanticType;
                 rule.measurementUnit = ep.measurementUnit;
                 rule.staticValue =
                     this.staticValueTransformService.getStaticValue(
@@ -569,9 +567,7 @@ export class TransformationRuleService {
     }
 
     isTimestampProperty(property: EventPropertyPrimitive) {
-        return property.domainProperties.some(
-            dp => dp === SemanticType.TIMESTAMP,
-        );
+        return SemanticType.isTimestamp(property);
     }
 
     private getDatatypeTransformRules(

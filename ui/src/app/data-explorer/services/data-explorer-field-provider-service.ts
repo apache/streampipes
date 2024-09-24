@@ -113,7 +113,7 @@ export class DataExplorerFieldProviderService {
                 dimension: this.isDimensionProperty(property),
                 numeric: this.isNumber(property) || aggregation === 'COUNT',
                 binary: this.isBoolean(property),
-                semanticTypes: property.domainProperties,
+                semanticTypes: [property.semanticType],
             },
         };
         provider.allFields.push(field);
@@ -156,7 +156,7 @@ export class DataExplorerFieldProviderService {
     }
 
     public isTimestamp(p: EventProperty) {
-        return p.domainProperties.some(dp => dp === SemanticType.TIMESTAMP);
+        return SemanticType.isTimestamp(p);
     }
 
     public getAddedFields(

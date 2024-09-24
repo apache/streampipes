@@ -81,7 +81,7 @@ export class UserDefinedOutputStrategyComponent
         const ep = {} as EventPropertyPrimitive;
         ep['@class'] =
             'org.apache.streampipes.model.schema.EventPropertyPrimitive';
-        ep.domainProperties = [];
+        ep.semanticType = undefined;
         ep.elementId =
             'urn:streampipes.org:spi:eventpropertyprimitive:' +
             this.idGeneratorService.generatePrefixedId();
