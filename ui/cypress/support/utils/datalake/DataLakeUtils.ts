@@ -425,7 +425,8 @@ export class DataLakeUtils {
     }
 
     public static openTimeSelectorMenu() {
-        cy.dataCy('time-selector-menu').click();
+        cy.dataCy('time-selector-menu',
+            { timeout: 10000 }).click();
     }
 
     public static applyCustomTimeSelection() {
