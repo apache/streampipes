@@ -76,9 +76,11 @@ ui-b94bd9766-rm6zb                             2/2     Running   0          3m27
 ```
 
 For **minikube users**:
-> **NOTE**: If you're running Docker Desktop or Minikube with a local k8s cluster, the above step to use your host IP
+> **NOTE**: If you're running Docker Desktop or Minikube with a local k8s
+> cluster, the above step to use your host IP
 > might not work. Luckily, you can port-forward a service port to your localhost using the following command to be able to
-> access the UI either via `http://localhost` or `http://<HOST_IP>` (you require sudo to run this command in order to bind
+> access the UI either via `http://localhost:8088` or `http://<HOST_IP>:8088` (you
+>do not require sudo to run this command in order to bind
 > to a privileged port).
 
 ```bash
@@ -93,8 +95,6 @@ helm del streampipes
 
 We retain the created persistent volume. You need to manually delete it:
 
-```bash
-rm -rf ${HOME}/streampipes-k8s
 ```
 
 ## Parameters
