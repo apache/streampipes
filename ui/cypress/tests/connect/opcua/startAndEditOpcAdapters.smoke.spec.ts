@@ -51,13 +51,11 @@ describe('Test starting and editing OPC-UA Adapters in different configurations'
 
     it('Edit OPC-UA Adapter created with Tree editor', () => {
         const adapterInput = OpcUaUtils.getAdapterBuilderWithTreeNodes(true);
-
         editAdapterTest(adapterInput);
     });
 
     it('Edit OPC-UA Adapter created with Text editor', () => {
         const adapterInput = getAdapterBuilderWithTextNodes(true);
-
         editAdapterTest(adapterInput);
     });
 });
