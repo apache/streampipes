@@ -91,7 +91,7 @@ export class DataLakeUtils {
         widgetType: string,
     ) {
         DataLakeUtils.goToDatalake();
-        DataLakeUtils.createAndEditDataView(dataViewName);
+        DataLakeUtils.createAndEditDataView();
 
         DataLakeUtils.selectTimeRange(
             new Date(2020, 10, 20, 22, 44),
@@ -162,7 +162,7 @@ export class DataLakeUtils {
 
     public static createAndEditDataView() {
         // Create new data view
-        cy.dataCy('open-new-data-view').click();
+        cy.dataCy('open-new-data-view', { timeout: 10000 }).click();
     }
 
     public static removeWidget(dataViewName: string) {
