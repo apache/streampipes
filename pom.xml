@@ -105,7 +105,7 @@
         <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
         <plexus-utils.version>4.0.0</plexus-utils.version>
         <postgresql.version>42.7.2</postgresql.version>
-        <protobuf.version>4.27.5</protobuf.version>
+        <protobuf.version>4.28.2</protobuf.version>
         <pulsar.version>3.2.2</pulsar.version>
         <quartz.version>2.3.2</quartz.version>
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
