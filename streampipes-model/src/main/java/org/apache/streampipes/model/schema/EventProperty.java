@@ -62,6 +62,7 @@ public abstract class EventProperty {
     this.propertyScope = other.getPropertyScope();
     this.runtimeId = other.getRuntimeId();
     this.additionalMetadata = other.getAdditionalMetadata();
+    this.semanticType = other.getSemanticType();
   }
 
   public EventProperty(String propertyName, List<URI> semanticTypes) {
