@@ -50,56 +50,57 @@ describe('Test Time Range Selectors in Data Explorer', () => {
         DataLakeUtils.goToDatalake();
         DataLakeUtils.createAndEditDataView();
 
-        const period = periods[0];
-        // periods.forEach(period => {
-        cy.log('Testing period: ' + period.selector);
-        DataLakeUtils.openTimeSelectorMenu();
-        // Choosing time period and saving initial start and end dates
-        cy.dataCy(`time-selector-quick-${period.selector}`).click();
-        const expectedEndDate = new Date();
-        DataLakeUtils.openTimeSelectorMenu();
-        // check if dates can differ from the selected dates
-        const expectedStartDate = getExpectedStartDate(
-            expectedEndDate,
-            period.start,
-        );
-        cy.dataCy(dateRangeFrom).should(
-            'have.text',
-            getLocalizedDateString(expectedStartDate),
-        );
-        cy.dataCy(dateRangeTo).should(
-            'have.text',
-            getLocalizedDateString(expectedEndDate),
-        );
+        periods.forEach(period => {
+            cy.log('Testing period: ' + period.selector);
+            DataLakeUtils.openTimeSelectorMenu();
+            // Choosing time period and saving initial start and end dates
+            cy.dataCy(`time-selector-quick-${period.selector}`).click();
+            const expectedEndDate = new Date();
+            DataLakeUtils.openTimeSelectorMenu();
+            // check if dates can differ from the selected dates
+            const expectedStartDate = getExpectedStartDate(
+                expectedEndDate,
+                period.start,
+            );
+            cy.dataCy(dateRangeFrom).should(
+                'have.text',
+                getLocalizedDateString(expectedStartDate),
+            );
+            cy.dataCy(dateRangeTo).should(
+                'have.text',
+                getLocalizedDateString(expectedEndDate),
+            );
 
-        cy.dataCy(timeRangeFrom)
-            .invoke('val')
-            .then(actualTime => {
-                const expectedDate = getLocalizedTimeString(expectedStartDate);
-                expect(
-                    isTimeWithinTolerance(
-                        actualTime as string,
-                        expectedDate,
-                        10,
-                    ),
-                ).to.be.true;
-            });
-        cy.dataCy(timeRangeTo)
-            .invoke('val')
-            .then(actualTime => {
-                const expectedDate = getLocalizedTimeString(expectedEndDate);
-                expect(
-                    isTimeWithinTolerance(
-                        actualTime as string,
-                        expectedDate,
-                        10,
-                    ),
-                ).to.be.true;
-            });
+            cy.dataCy(timeRangeFrom)
+                .invoke('val')
+                .then(actualTime => {
+                    const expectedDate =
+                        getLocalizedTimeString(expectedStartDate);
+                    expect(
+                        isTimeWithinTolerance(
+                            actualTime as string,
+                            expectedDate,
+                            10,
+                        ),
+                    ).to.be.true;
+                });
+            cy.dataCy(timeRangeTo)
+                .invoke('val')
+                .then(actualTime => {
+                    const expectedDate =
+                        getLocalizedTimeString(expectedEndDate);
+                    expect(
+                        isTimeWithinTolerance(
+                            actualTime as string,
+                            expectedDate,
+                            10,
+                        ),
+                    ).to.be.true;
+                });
 
-        DataLakeUtils.applyCustomTimeSelection();
+            DataLakeUtils.applyCustomTimeSelection();
+        });
     });
-    // });
 });
 
 function getExpectedStartDate(endDate: Date, startFn: (Date) => Date): Date {
