@@ -44,11 +44,12 @@ describe('Test Time Range Selectors in Data Explorer', () => {
     before('Setup Tests', () => {
         cy.initStreamPipesTest();
         DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv', false);
-        DataLakeUtils.goToDatalake();
-        DataLakeUtils.createAndEditDataView();
     });
 
     it('Perform Test', () => {
+        DataLakeUtils.goToDatalake();
+        DataLakeUtils.createAndEditDataView();
+
         periods.forEach(period => {
             cy.log('Testing period: ' + period.selector);
             DataLakeUtils.openTimeSelectorMenu();
