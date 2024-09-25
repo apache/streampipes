@@ -58,7 +58,7 @@ export class StaticRuntimeResolvableTreeInputComponent
     }
 
     ngOnInit(): void {
-        this.resetStaticPropertyState();
+        this.resetStaticPropertyStateAndReload();
 
         if (
             this.staticProperty.nodes.length === 0 &&
