@@ -18,37 +18,33 @@
 
 package org.apache.streampipes.storage.couchdb.serializer;
 
+import org.apache.streampipes.model.schema.EventProperty;
+
 import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.MalformedParameterizedTypeException;
 import java.lang.reflect.Type;
 
-public class EventPropertySerializer<T> implements JsonDeserializer<T>, JsonSerializer<T> {
+public class EventPropertySerializer extends CouchDbJsonSerializer<EventProperty> {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CouchDbJsonSerializer.class);
+  private static final String DomainProperties = "domainProperties";
 
   @Override
-  public T deserialize(JsonElement json, Type typeOfT,
+  public EventProperty deserialize(JsonElement json, Type typeOfT,
                        JsonDeserializationContext context) throws JsonParseException {
 
     JsonObject jsonObject = json.getAsJsonObject();
     String type = jsonObject.get("type").getAsString();
     JsonElement element = jsonObject.get("properties");
-    if (element.getAsJsonObject().has("domainProperties")) {
-      var domainProperties = element.getAsJsonObject().get("domainProperties").getAsJsonArray();
+    if (element.getAsJsonObject().has(DomainProperties)) {
+      var domainProperties = element.getAsJsonObject().get(DomainProperties).getAsJsonArray();
       if (!domainProperties.isEmpty()) {
         element.getAsJsonObject().add("semanticType", new JsonPrimitive(domainProperties.get(0).getAsString()));
       }
-      element.getAsJsonObject().remove("domainProperties");
+      element.getAsJsonObject().remove(DomainProperties);
 
     }
 
@@ -57,19 +53,5 @@ public class EventPropertySerializer<T> implements JsonDeserializer<T>, JsonSeri
     } catch (ClassNotFoundException cnfe) {
       throw new JsonParseException("Unknown element type: " + type, cnfe);
     }
-  }
-
-  @Override
-  public JsonElement serialize(T src, Type typeOfSrc,
-                               JsonSerializationContext context) {
-    JsonObject result = new JsonObject();
-    try {
-      result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
-      result.add("properties", context.serialize(src, src.getClass()));
-    } catch (MalformedParameterizedTypeException e) {
-      LOG.error("Could not serialize class {}", src.getClass().getCanonicalName(), e);
-    }
-
-    return result;
   }
 }
