@@ -25,6 +25,7 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
+import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeDimensionProvider;
 import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeSink;
@@ -43,7 +44,17 @@ public class DataLakeSinkMigrationV2 implements IDataSinkMigrator {
   @Override
   public MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element,
                                                      IDataSinkParameterExtractor extractor) throws RuntimeException {
-    var label = Labels.from(DataLakeSink.DIMENSIONS_KEY, "Dimensions", "Selected fields will be stored as dimensions.");
+    addDimensionSelection(element);
+    addDuplicateToggle(element);
+    return MigrationResult.success(element);
+  }
+
+  private void addDimensionSelection(DataSinkInvocation element) {
+    var label = Labels.from(
+        DataLakeSink.DIMENSIONS_KEY,
+        "Dimensions",
+        "Selected fields will be stored as dimensions."
+    );
     var staticProperty = new RuntimeResolvableAnyStaticProperty(
         label.getInternalId(),
         label.getLabel(),
@@ -53,6 +64,20 @@ public class DataLakeSinkMigrationV2 implements IDataSinkMigrator {
     new DataLakeDimensionProvider().applyOptions(inputFields, staticProperty);
 
     element.getStaticProperties().add(staticProperty);
-    return MigrationResult.success(element);
+  }
+
+  private void addDuplicateToggle(DataSinkInvocation element) {
+    var label = Labels.from(
+        DataLakeSink.IGNORE_DUPLICATES_KEY,
+        "Ignore duplicates",
+        "Fields having the same value than the previous event are not stored."
+    );
+    var staticProperty = new SlideToggleStaticProperty(
+        label.getInternalId(),
+        label.getLabel(),
+        label.getDescription(),
+        false);
+
+    element.getStaticProperties().add(staticProperty);
   }
 }
