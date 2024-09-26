@@ -83,7 +83,7 @@ describe('Test User Roles for Pipelines', () => {
 
         cy.dataCy('navigation-icon', { timeout: 10000 }).should(
             'have.length',
-            2,
+            3,
         );
 
         PipelineUtils.goToPipelines();

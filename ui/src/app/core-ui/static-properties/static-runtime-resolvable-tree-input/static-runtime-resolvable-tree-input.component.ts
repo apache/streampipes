@@ -58,7 +58,17 @@ export class StaticRuntimeResolvableTreeInputComponent
     }
 
     ngOnInit(): void {
-        this.resetStaticPropertyState();
+        // if a node is selected it is assumed the adapter was opened in edit mode
+        // when that is the case, the browse tree should be reloaded
+        // if the adapter is created, the reload should only be triggered if all previous configurations are set correctly
+        if (
+            this.staticProperty.selectedNodesInternalNames &&
+            this.staticProperty.selectedNodesInternalNames.length > 0
+        ) {
+            this.resetStaticPropertyStateAndReload();
+        } else {
+            this.resetStaticPropertyState();
+        }
 
         if (
             this.staticProperty.nodes.length === 0 &&

@@ -123,7 +123,7 @@ describe('Test Group Management for Pipelines', () => {
 
         cy.dataCy('navigation-icon', { timeout: 10000 }).should(
             'have.length',
-            2,
+            3,
         );
 
         // Check if pipeline is invisible to user2

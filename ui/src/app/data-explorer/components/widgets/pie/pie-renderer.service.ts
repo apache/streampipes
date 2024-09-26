@@ -64,6 +64,7 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
         datasetIndex: number,
         _widgetConfig: PieChartWidgetModel,
     ): PieSeriesOption {
+        const innerRadius = _widgetConfig.visualizationConfig.selectedRadius;
         return {
             name,
             type: 'pie',
@@ -80,6 +81,7 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
                 },
             },
             encode: { itemName: 'name', value: 'value' },
+            radius: [innerRadius + '%', '90%'],
         };
     }
 
