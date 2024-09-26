@@ -33,8 +33,9 @@ public class EventPropertySerializer extends CouchDbJsonSerializer<EventProperty
   private static final String DomainProperties = "domainProperties";
 
   @Override
-  public EventProperty deserialize(JsonElement json, Type typeOfT,
-                       JsonDeserializationContext context) throws JsonParseException {
+  public EventProperty deserialize(JsonElement json,
+                                   Type typeOfT,
+                                   JsonDeserializationContext context) throws JsonParseException {
 
     JsonObject jsonObject = json.getAsJsonObject();
     String type = jsonObject.get("type").getAsString();

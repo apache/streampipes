@@ -75,7 +75,7 @@ public class GsonSerializer {
 
   public static GsonBuilder getGsonBuilder() {
     GsonBuilder builder = new GsonBuilder();
-    builder.registerTypeAdapter(EventProperty.class, new EventPropertySerializer<>());
+    builder.registerTypeAdapter(EventProperty.class, new EventPropertySerializer());
     builder.registerTypeAdapter(StaticProperty.class, new CouchDbJsonSerializer<StaticProperty>());
     builder.registerTypeAdapter(OutputStrategy.class, new CouchDbJsonSerializer<OutputStrategy>());
     builder.registerTypeAdapter(TransportProtocol.class, new CouchDbJsonSerializer<TransportProtocol>());
