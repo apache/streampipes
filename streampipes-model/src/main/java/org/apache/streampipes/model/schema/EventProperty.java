@@ -48,7 +48,6 @@ public abstract class EventProperty {
   private String runtimeId;
   private Map<String, Object> additionalMetadata;
 
-
   public EventProperty() {
     this.elementId = ElementIdGenerator.makeElementId(EventProperty.class);
     this.additionalMetadata = new HashMap<>();
@@ -95,21 +94,6 @@ public abstract class EventProperty {
 
   public void setRuntimeName(String propertyName) {
     this.runtimeName = propertyName;
-  }
-
-  @Deprecated(forRemoval = true, since = "0.97.0")
-  public List<URI> getDomainProperties() {
-    try {
-      return List.of(URI.create(semanticType));
-    } catch (Exception e) {
-      return List.of();
-    }
-  }
-
-  public void setDomainProperties(List<URI> semanticTypes) {
-    if (semanticTypes != null && !semanticTypes.isEmpty()) {
-      this.semanticType = semanticTypes.get(0).toString();
-    }
   }
 
   public String getLabel() {

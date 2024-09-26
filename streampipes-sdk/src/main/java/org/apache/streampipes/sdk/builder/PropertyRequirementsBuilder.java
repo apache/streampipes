@@ -22,8 +22,6 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class PropertyRequirementsBuilder {
 
@@ -54,15 +52,6 @@ public class PropertyRequirementsBuilder {
 
   public PropertyRequirementsBuilder datatype(Datatypes propertyDatatype) {
     this.propertyReq.setRuntimeType(propertyDatatype.toString());
-    return this;
-  }
-
-  public PropertyRequirementsBuilder domainPropertyReq(String... domainProperties) {
-    this.propertyReq.setDomainProperties(Arrays
-        .stream(domainProperties)
-        .map(URI::create)
-        .collect(Collectors.toList()));
-
     return this;
   }
 

@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.sdk.helpers;
 
-import org.apache.streampipes.commons.Utils;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyList;
 import org.apache.streampipes.model.schema.EventPropertyNested;
@@ -129,10 +128,10 @@ public class EpRequirements {
     EventProperty ep = null;
     try {
       ep = eventProperty.newInstance();
+      ep.setSemanticType(domainProperty);
     } catch (InstantiationException | IllegalAccessException e) {
       e.printStackTrace();
     }
-    ep.setDomainProperties(Utils.createURI(domainProperty));
     return ep;
   }
 
@@ -144,8 +143,8 @@ public class EpRequirements {
     return (EventPropertyList) domainPropertyReq(domainProperty, EventPropertyList.class);
   }
 
-  private static EventPropertyPrimitive appendDomainProperty(EventPropertyPrimitive property, String domainProperty) {
-    property.setDomainProperties(Utils.createURI(domainProperty));
+  private static EventPropertyPrimitive appendDomainProperty(EventPropertyPrimitive property, String semanticType) {
+    property.setSemanticType(semanticType);
     return property;
   }
 

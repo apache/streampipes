@@ -58,9 +58,9 @@ public class EpProperties {
   }
 
   public static EventPropertyList listNestedEp(Label label, String runtimeName, String
-      domainProperty, List<EventProperty> listItemProperties) {
+      semanticType, List<EventProperty> listItemProperties) {
     EventPropertyList list = listNestedEp(label, runtimeName, listItemProperties);
-    list.setDomainProperties(Arrays.asList(URI.create(domainProperty)));
+    list.setSemanticType(semanticType);
     return list;
   }
 

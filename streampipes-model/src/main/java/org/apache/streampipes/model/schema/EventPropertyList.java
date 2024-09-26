@@ -54,7 +54,9 @@ public class EventPropertyList extends EventProperty {
   public EventPropertyList(String propertyName, EventProperty eventProperty, List<URI> domainProperties) {
     super(propertyName);
     this.eventProperty = eventProperty;
-    this.setDomainProperties(domainProperties);
+    if (!domainProperties.isEmpty()) {
+      setSemanticType(domainProperties.get(0).toString());
+    }
   }
 
   public EventProperty getEventProperty() {

@@ -28,6 +28,8 @@ import { Observable } from 'rxjs';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import {
     DataType,
+    EventPropertyPrimitive,
+    EventPropertyUnion,
     SemanticType,
     SemanticTypesRestService,
 } from '@streampipes/platform-services';
@@ -40,7 +42,7 @@ import { Router } from '@angular/router';
 })
 export class EditSchemaTransformationComponent implements OnInit {
     @Input()
-    cachedProperty: any;
+    cachedProperty: EventPropertyUnion;
 
     @Input() isTimestampProperty: boolean;
     @Input() isNestedProperty: boolean;
@@ -81,7 +83,8 @@ export class EditSchemaTransformationComponent implements OnInit {
             this.isTimestampProperty = true;
             this.cachedProperty.semanticType = SemanticType.TIMESTAMP;
             this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
-            this.cachedProperty.runtimeType = DataType.LONG;
+            (this.cachedProperty as EventPropertyPrimitive).runtimeType =
+                DataType.LONG;
         } else {
             this.cachedProperty.semanticType = undefined;
             this.cachedProperty.propertyScope = 'MEASUREMENT_PROPERTY';
