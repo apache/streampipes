@@ -55,7 +55,7 @@ public class DataLakeSinkMigrationV2Test {
     Assertions.assertTrue(actual.success());
     Assertions.assertEquals(actual.element()
         .getStaticProperties()
-        .size(), 1);
+        .size(), 2);
     var dimensionConfig = getAnyStaticProperty(actual);
     Assertions.assertEquals(dimensionConfig.getInternalName(), DataLakeSink.DIMENSIONS_KEY);
     Assertions.assertEquals(dimensionConfig.getOptions().size(), 3);
