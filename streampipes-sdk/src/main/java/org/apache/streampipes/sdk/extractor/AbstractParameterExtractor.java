@@ -247,6 +247,17 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   @Override
+  public <V> List<V> selectedMultiValuesInternalNames(String internalName, Class<V> targetClass) {
+    return getStaticPropertyByName(internalName, AnyStaticProperty.class)
+        .getOptions()
+        .stream()
+        .filter(Option::isSelected)
+        .map(Option::getInternalName)
+        .map(o -> typeParser.parse(o, targetClass))
+        .collect(Collectors.toList());
+  }
+
+  @Override
   /**
    * Extracts the user configuration from the tree static property.
    * @param internalName the internal name of the static property
