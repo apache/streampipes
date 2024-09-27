@@ -83,3 +83,9 @@ By default, all fields which are marked as dimensions in the metadata are chosen
 with this configuration.
 
 Data types which can be marked as dimensional values are booleans, integer, and strings.
+
+### Ignore Duplicates
+
+Before writing an event to the time series storage, a duplicate check is performed. By activating this option, only 
+fields having a different value than the previous event are stored. 
+This setting only affects measurement fields, not dimensions.
