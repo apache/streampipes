@@ -96,7 +96,7 @@ public enum StreamPipesFunctionHandler {
     this.runningInstances.forEach((key, value) -> {
       value.discardRuntime();
     });
-    new Thread(new FunctionDeregistrationHandler(getFunctionDefinitions())).start();
+    new FunctionDeregistrationHandler(getFunctionDefinitions()).run();
   }
 
   private List<FunctionDefinition> getFunctionDefinitions() {
