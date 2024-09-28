@@ -42,7 +42,6 @@ func TestAdapterCreate(t *testing.T) {
 		os.Exit(1)
 	}
 
-	// adapterData数据怎么确定？手动填还是get另外一个adapter的数据，再转成adapterData？
 	adapterData := adapter.AdapterDescription{
 		ElementID:                        "",
 		Rev:                              "",
@@ -78,7 +77,7 @@ func TestAdapterCreate(t *testing.T) {
 		os.Exit(1)
 	}
 	fmt.Println("create adapter success!")
-	err = streamPipesClient.Adapter().StartSingleAdapter("") // 看看上面CREATE后有没有返回adapterId
+	err = streamPipesClient.Adapter().StartSingleAdapter("")
 	if err != nil {
 		os.Exit(1)
 	}
