@@ -28,3 +28,5 @@ Introduction to StreamPipes Go.
 {{% /pageinfo %}}
 
 Apache StreamPipes aims to enable non-technical users to connect and analyze IoT data streams. To this end, it provides an easy-to-use and convenient user interface that allows one to connect to an IoT data source and create some visual graphs within a few minutes.
+
+--- StreamPipes Go-Client
