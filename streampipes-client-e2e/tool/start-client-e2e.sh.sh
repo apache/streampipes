@@ -20,15 +20,15 @@ HOST="localhost"
 PORT="8030"
 LOGIN_URL="/streampipes-backend/api/v2/auth/login"
 
-USERNAME="admin@streampipes.apache.org"
-PASSWORD="admin"
+SP_USERNAME="admin@streampipes.apache.org"
+SP_PASSWORD="admin"
 
-API_KEY_URL="/streampipes-backend/api/v2/users/$USERNAME/tokens"
+API_KEY_URL="/streampipes-backend/api/v2/users/$SP_USERNAME/tokens"
 API_KEY_USER_NAME="admin"
 
 loginRequestBody='{
-  "username": "'"$USERNAME"'",
-  "password": "'"$PASSWORD"'"
+  "username": "'"$SP_USERNAME"'",
+  "password": "'"$SP_PASSWORD"'"
 }'
 
 # Login and get accessToken
@@ -41,6 +41,7 @@ if [ $? -ne 0 ]; then
 fi
 
 accessToken=$(echo "$response" | sed -n 's/.*"accessToken":"\([^"]*\)".*/\1/p')
+
 if [ -z "$accessToken" ]; then
     echo "Error: Failed to retrieve access token"
     exit 1
@@ -66,11 +67,16 @@ if [ -z "$APIKEY" ]; then
     exit 1
 fi
 
-# Run go test
-go test -v ./go-client -args -HOST="$HOST" -PORT="$PORT" -APIKEY="$APIKEY" -API_KEY_USER_NAME="$API_KEY_USER_NAME"
+cd ../go-client-e2e || exit
+go test -v ../go-client-e2e/... -args "$HOST" "$PORT" "$APIKEY" "$API_KEY_USER_NAME"
 if [ $? -ne 0 ]; then
     echo "Error: go test failed"
     exit 1
 fi
+
+cd ../tool || exit
+
+# add other client test
+#...
 
 echo "All tests passed successfully"

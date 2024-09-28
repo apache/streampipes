@@ -15,4 +15,4 @@
 // limitations under the License.
 //
 
-package goclient
+package go_client_e2e

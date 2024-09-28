@@ -15,7 +15,7 @@
 // limitations under the License.
 //
 
-package goclient
+package go_client_e2e
 
 import (
 	"fmt"
@@ -41,7 +41,6 @@ func TestAdapterCreate(t *testing.T) {
 	if err != nil {
 		os.Exit(1)
 	}
-
 	adapterData := adapter.AdapterDescription{
 		ElementID:                        "",
 		Rev:                              "",
