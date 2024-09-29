@@ -15,11 +15,8 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.trigonometry;
 
 public enum Operation {
-    SIN,
-    COS,
-    TAN
+  SIN, COS, TAN
 }

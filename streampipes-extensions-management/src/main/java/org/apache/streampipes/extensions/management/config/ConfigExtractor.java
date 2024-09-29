@@ -71,10 +71,7 @@ public class ConfigExtractor implements IConfigExtractor {
   }
 
   private ConfigItem getItem(String key) {
-    return serviceConfig.getConfigs()
-        .stream()
-        .filter(c -> c.getKey().equals(key))
-        .findFirst()
-        .orElseThrow(IllegalArgumentException::new);
+    return serviceConfig.getConfigs().stream().filter(c -> c.getKey().equals(key)).findFirst()
+            .orElseThrow(IllegalArgumentException::new);
   }
 }

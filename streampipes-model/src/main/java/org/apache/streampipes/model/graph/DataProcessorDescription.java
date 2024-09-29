@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.graph;
 
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;

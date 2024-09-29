@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.pipeline;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -37,8 +36,7 @@ public class PipelineModification {
   private List<SpDataStream> inputStreams;
   private SpDataStream outputStream;
 
-  public PipelineModification(String domId, String elementId,
-                              List<StaticProperty> staticProperties) {
+  public PipelineModification(String domId, String elementId, List<StaticProperty> staticProperties) {
     super();
     this.domId = domId;
     this.elementId = elementId;

@@ -56,9 +56,7 @@ public class LabelGenerator<T extends NamedStreamPipesEntity> {
     this.assetResolver = new DefaultAssetResolver(desc.getAppId());
   }
 
-  public LabelGenerator(T desc,
-                        boolean replaceTitles,
-                        AssetResolver assetResolver) {
+  public LabelGenerator(T desc, boolean replaceTitles, AssetResolver assetResolver) {
     this.desc = desc;
     this.replaceTitles = replaceTitles;
     this.assetResolver = assetResolver;
@@ -77,15 +75,13 @@ public class LabelGenerator<T extends NamedStreamPipesEntity> {
       }
 
       if (isAdapter()) {
-        ((AdapterDescription) desc).getConfig()
-            .forEach(sp -> generateLabels(props, sp));
+        ((AdapterDescription) desc).getConfig().forEach(sp -> generateLabels(props, sp));
       }
 
       if (isConsumable()) {
-        ((ConsumableStreamPipesEntity) desc).getStaticProperties()
-            .forEach(sp -> {
-              generateLabels(props, sp);
-            });
+        ((ConsumableStreamPipesEntity) desc).getStaticProperties().forEach(sp -> {
+          generateLabels(props, sp);
+        });
       }
 
       if (isInvocable()) {
@@ -102,37 +98,21 @@ public class LabelGenerator<T extends NamedStreamPipesEntity> {
     return desc;
   }
 
-  private void applyOutputStrategies(List<OutputStrategy> outputStrategies,
-                                     Properties props) {
+  private void applyOutputStrategies(List<OutputStrategy> outputStrategies, Properties props) {
     outputStrategies.forEach(os -> {
       if (os instanceof AppendOutputStrategy) {
-        ((AppendOutputStrategy) os).getEventProperties()
-            .forEach(ep -> {
-              ep.setLabel(getTitle(
-                  props,
-                  ep.getRuntimeId()
-              ));
-              ep.setDescription(getDescription(
-                  props,
-                  ep.getRuntimeId()
-              ));
-            });
+        ((AppendOutputStrategy) os).getEventProperties().forEach(ep -> {
+          ep.setLabel(getTitle(props, ep.getRuntimeId()));
+          ep.setDescription(getDescription(props, ep.getRuntimeId()));
+        });
       } else if (os instanceof FixedOutputStrategy) {
-        ((FixedOutputStrategy) os).getEventProperties()
-            .forEach(ep -> {
-              ep.setLabel(getTitle(
-                  props,
-                  ep.getRuntimeId()
-              ));
-              ep.setDescription(getDescription(
-                  props,
-                  ep.getRuntimeId()
-              ));
-            });
+        ((FixedOutputStrategy) os).getEventProperties().forEach(ep -> {
+          ep.setLabel(getTitle(props, ep.getRuntimeId()));
+          ep.setDescription(getDescription(props, ep.getRuntimeId()));
+        });
       }
     });
   }
-
 
   /**
    * Returns the tile of the element description based on the data of the resource files
@@ -150,35 +130,31 @@ public class LabelGenerator<T extends NamedStreamPipesEntity> {
     return getDescription(props, desc.getAppId());
   }
 
-
   private StaticProperty generateLabels(Properties props, StaticProperty sp) {
     sp.setLabel(getTitle(props, sp.getInternalName(), sp.getLabel()));
     sp.setDescription(getDescription(props, sp.getInternalName(), sp.getDescription()));
     if (sp instanceof CollectionStaticProperty) {
 
       if (((CollectionStaticProperty) sp).getMembers() != null) {
-        ((CollectionStaticProperty) sp).getMembers()
-            .forEach(a -> {
-              generateLabels(props, a);
-            });
+        ((CollectionStaticProperty) sp).getMembers().forEach(a -> {
+          generateLabels(props, a);
+        });
       } else {
         ((StaticPropertyGroup) ((CollectionStaticProperty) sp).getStaticPropertyTemplate()).getStaticProperties()
-            .forEach(a -> {
-              generateLabels(props, a);
-            });
+                .forEach(a -> {
+                  generateLabels(props, a);
+                });
       }
 
     } else if (sp instanceof StaticPropertyGroup) {
-      ((StaticPropertyGroup) sp).getStaticProperties()
-          .forEach(g -> {
-            g.setLabel(getTitle(props, g.getInternalName(), g.getLabel()));
-            g.setDescription(getDescription(props, g.getInternalName(), g.getDescription()));
-          });
+      ((StaticPropertyGroup) sp).getStaticProperties().forEach(g -> {
+        g.setLabel(getTitle(props, g.getInternalName(), g.getLabel()));
+        g.setDescription(getDescription(props, g.getInternalName(), g.getDescription()));
+      });
     } else if (sp instanceof StaticPropertyAlternatives) {
-      ((StaticPropertyAlternatives) sp).getAlternatives()
-          .forEach(a -> {
-            generateLabels(props, a);
-          });
+      ((StaticPropertyAlternatives) sp).getAlternatives().forEach(a -> {
+        generateLabels(props, a);
+      });
     } else if (sp instanceof StaticPropertyAlternative) {
       if (((StaticPropertyAlternative) sp).getStaticProperty() != null) {
         generateLabels(props, ((StaticPropertyAlternative) sp).getStaticProperty());

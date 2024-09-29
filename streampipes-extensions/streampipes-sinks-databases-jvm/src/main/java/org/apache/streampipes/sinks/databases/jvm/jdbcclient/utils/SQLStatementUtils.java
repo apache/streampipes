@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.jdbcclient.utils;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -34,33 +33,38 @@ public class SQLStatementUtils {
   /**
    * Checks if the input string is allowed (regEx match and length > 0)
    *
-   * @param input           String which is getting matched with the regEx
-   * @param regExIdentifier Information about the use of the input. Gets included in the exception message
-   * @throws SpRuntimeException If {@code input} does not match with {@link DbDescription#getAllowedRegEx()}
-   *                            or if the length of {@code input} is 0
+   * @param input
+   *          String which is getting matched with the regEx
+   * @param regExIdentifier
+   *          Information about the use of the input. Gets included in the exception message
+   * @throws SpRuntimeException
+   *           If {@code input} does not match with {@link DbDescription#getAllowedRegEx()} or if the length of
+   *           {@code input} is 0
    */
   public static final void checkRegEx(String input, String regExIdentifier, DbDescription dbDescription)
-      throws SpRuntimeException {
+          throws SpRuntimeException {
     if (!input.matches(dbDescription.getAllowedRegEx()) || input.length() == 0) {
-      throw new SpRuntimeException(regExIdentifier + " '" + input
-          + "' not allowed (allowed: '" + dbDescription.getAllowedRegEx() + "') with a min length of 1");
+      throw new SpRuntimeException(regExIdentifier + " '" + input + "' not allowed (allowed: '"
+              + dbDescription.getAllowedRegEx() + "') with a min length of 1");
     }
   }
 
   /**
-   * Creates a SQL-Query with the given Properties (SQL-Injection safe). For nested properties it
-   * recursively extracts the information. EventPropertyList are getting converted to a string (so
-   * in SQL to a VARCHAR(255)). For each type it uses {@link DbDataTypeFactory#getFromUri(String, SupportedDbEngines)}
-   * internally to identify the SQL-type from the runtimeType.
+   * Creates a SQL-Query with the given Properties (SQL-Injection safe). For nested properties it recursively extracts
+   * the information. EventPropertyList are getting converted to a string (so in SQL to a VARCHAR(255)). For each type
+   * it uses {@link DbDataTypeFactory#getFromUri(String, SupportedDbEngines)} internally to identify the SQL-type from
+   * the runtimeType.
    *
-   * @param properties  The list of properties which should be included in the query
-   * @param preProperty A string which gets prepended to all property runtimeNames
+   * @param properties
+   *          The list of properties which should be included in the query
+   * @param preProperty
+   *          A string which gets prepended to all property runtimeNames
    * @return A StringBuilder with the query which needs to be executed in order to create the table
-   * @throws SpRuntimeException If the runtimeName of any property is not allowed
+   * @throws SpRuntimeException
+   *           If the runtimeName of any property is not allowed
    */
   public static StringBuilder extractEventProperties(List<EventProperty> properties, String preProperty,
-                                                     DbDescription dbDescription)
-      throws SpRuntimeException {
+          DbDescription dbDescription) throws SpRuntimeException {
     // output: "randomString VARCHAR(255), randomValue INT"
     StringBuilder stringBuilder = new StringBuilder();
     String separator = "";
@@ -72,7 +76,7 @@ public class SQLStatementUtils {
       if (property instanceof EventPropertyNested) {
         // if it is a nested property, recursively extract the needed properties
         StringBuilder tmp = extractEventProperties(((EventPropertyNested) property).getEventProperties(),
-            preProperty + property.getRuntimeName() + "_", dbDescription);
+                preProperty + property.getRuntimeName() + "_", dbDescription);
         if (tmp.length() > 0) {
           stringBuilder.append(separator).append(tmp);
         }
@@ -83,7 +87,7 @@ public class SQLStatementUtils {
 
         if (dbDescription.isColumnNameQuoted()) {
           stringBuilder.append(separator).append("\"").append(preProperty).append(property.getRuntimeName())
-              .append("\" ");
+                  .append("\" ");
         } else {
           stringBuilder.append(separator).append(preProperty).append(property.getRuntimeName()).append(" ");
         }
@@ -91,7 +95,7 @@ public class SQLStatementUtils {
         // adding the type of the property (e.g. "VARCHAR(255)")
         if (property instanceof EventPropertyPrimitive) {
           stringBuilder.append(DbDataTypeFactory.getFromUri(((EventPropertyPrimitive) property).getRuntimeType(),
-              dbDescription.getEngine()));
+                  dbDescription.getEngine()));
         } else {
           // Must be an EventPropertyList then
           stringBuilder.append(DbDataTypeFactory.getFromUri(XSD.STRING.toString(), dbDescription.getEngine()));

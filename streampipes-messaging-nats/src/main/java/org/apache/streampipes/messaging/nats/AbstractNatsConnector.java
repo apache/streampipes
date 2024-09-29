@@ -15,19 +15,18 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.nats;
 
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 import org.apache.streampipes.model.nats.NatsConfig;
 
-import io.nats.client.Connection;
-import io.nats.client.Nats;
-import io.nats.client.Options;
-
 import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.TimeoutException;
+
+import io.nats.client.Connection;
+import io.nats.client.Nats;
+import io.nats.client.Options;
 
 public abstract class AbstractNatsConnector {
 

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtojtspoint;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -56,37 +55,26 @@ public class LatLngToJtsPointProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtojtspoint", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(
-            StreamRequirementsBuilder
-                .create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT),
-                    Labels.withId(LAT_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                .requiredPropertyWithUnaryMapping(
-                    EpRequirements.domainPropertyReq(Geo.LNG),
-                    Labels.withId(LNG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                .requiredPropertyWithUnaryMapping(
-                    EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
-                    Labels.withId(EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                .build()
-        )
-        .outputStrategy(
-            OutputStrategies.append(
-                PrimitivePropertyBuilder
-                    .create(Datatypes.String, GEOMETRY_RUNTIME)
-                    .domainProperty("http://www.opengis.net/ont/geosparql#Geometry")
-                    .build()
-            )
-        )
-        .build();
+            .create("org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtojtspoint", 0)
+            .category(DataProcessorType.GEO).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT), Labels.withId(LAT_KEY),
+                            PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG), Labels.withId(LNG_KEY),
+                            PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
+                            Labels.withId(EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .outputStrategy(OutputStrategies.append(PrimitivePropertyBuilder.create(Datatypes.String, GEOMETRY_RUNTIME)
+                    .domainProperty("http://www.opengis.net/ont/geosparql#Geometry").build()))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.latitudeMapper = parameters.extractor().mappingPropertyValue(LAT_KEY);
     this.longitudeMapper = parameters.extractor().mappingPropertyValue(LNG_KEY);
     this.epsgMapper = parameters.extractor().mappingPropertyValue(EPSG_KEY);
@@ -106,8 +94,8 @@ public class LatLngToJtsPointProcessor extends StreamPipesDataProcessor {
       LOG.debug("Created Geometry: " + geom.toString());
       collector.collect(event);
     } else {
-      LOG.warn("An empty point geometry in " + EPA_NAME + " is created due"
-          + "invalid input field. Latitude: " + lat + "Longitude: " + lng);
+      LOG.warn("An empty point geometry in " + EPA_NAME + " is created due" + "invalid input field. Latitude: " + lat
+              + "Longitude: " + lng);
       LOG.error("An event is filtered out because of invalid geometry");
     }
   }

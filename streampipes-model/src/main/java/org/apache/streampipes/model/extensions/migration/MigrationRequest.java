@@ -15,14 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.extensions.migration;
 
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
 /**
  * Models a request that is sent from the core to an extensions service to mandate a migration.
- * @param migrationElement element that needs to be migrated
- * @param modelMigratorConfig migration config that describes the migration to be applied.
+ * 
+ * @param migrationElement
+ *          element that needs to be migrated
+ * @param modelMigratorConfig
+ *          migration config that describes the migration to be applied.
  */
-public record MigrationRequest<T>(T migrationElement, ModelMigratorConfig modelMigratorConfig) {}
+public record MigrationRequest<T>(T migrationElement, ModelMigratorConfig modelMigratorConfig) {
+}

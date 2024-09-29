@@ -15,14 +15,13 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx.auth;
+
+import java.io.IOException;
 
 import okhttp3.Interceptor;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 
 public class AuthInterceptor implements Interceptor {
 

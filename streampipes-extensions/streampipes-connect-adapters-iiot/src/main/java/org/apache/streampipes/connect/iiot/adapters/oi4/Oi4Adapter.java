@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.iiot.adapters.oi4;
+
+import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
@@ -46,11 +47,6 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -64,13 +60,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Adapter to connect to an Open Industry 4.0 (OI4) compatible device.
  *
- * @see <a href="https://openindustry4.com/fileadmin/Dateien/Downloads/OEC_Development_Guideline_V1.1.1.pdf"
- * >Open Industry 4.0 Development Guide</a>
+ * @see <a href="https://openindustry4.com/fileadmin/Dateien/Downloads/OEC_Development_Guideline_V1.1.1.pdf" >Open
+ *      Industry 4.0 Development Guide</a>
  */
 public class Oi4Adapter implements StreamPipesAdapter {
 
@@ -90,7 +89,6 @@ public class Oi4Adapter implements StreamPipesAdapter {
   private String givenSensorType;
   protected final ObjectMapper mapper;
 
-
   public Oi4Adapter() {
     mapper = new ObjectMapper();
   }
@@ -98,65 +96,44 @@ public class Oi4Adapter implements StreamPipesAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
 
-    return AdapterConfigurationBuilder
-        .create(ID, 0, Oi4Adapter::new)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
-        .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
-        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
-            MqttConnectUtils.getAlternativesTwo()
-        )
-        .requiredAlternatives(
-            Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSOR_DESCRIPTION),
-            Alternatives.from(
-                Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSOR_TYPE_ALTERNATIVE),
-                StaticProperties.freeTextProperty(
-                    Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSOR_TYPE_INPUT),
-                    Datatypes.String
-                )
-            ),
-            Alternatives.from(
-                Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSOR_IODD_ALTERNATIVE),
-                StaticProperties.fileProperty(Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSOR_IODD_INPUT))
-            )
-        )
-        .requiredAlternatives(
-            Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSORS_ALTERNATIVES),
-            Alternatives.from(Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSORS_ALL_ALTERNATIVE)),
-            Alternatives.from(
-                Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSORS_LIST_ALTERNATIVE),
-                StaticProperties.stringFreeTextProperty(Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSORS_LIST_INPUT))
-            )
+    return AdapterConfigurationBuilder.create(ID, 0, Oi4Adapter::new).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
+            .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
+            .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
+                    MqttConnectUtils.getAlternativesTwo())
+            .requiredAlternatives(Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSOR_DESCRIPTION),
+                    Alternatives.from(Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSOR_TYPE_ALTERNATIVE),
+                            StaticProperties.freeTextProperty(
+                                    Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSOR_TYPE_INPUT), Datatypes.String)),
+                    Alternatives.from(Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSOR_IODD_ALTERNATIVE),
+                            StaticProperties.fileProperty(Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSOR_IODD_INPUT))))
+            .requiredAlternatives(Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSORS_ALTERNATIVES),
+                    Alternatives.from(Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSORS_ALL_ALTERNATIVE)),
+                    Alternatives.from(Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSORS_LIST_ALTERNATIVE),
+                            StaticProperties.stringFreeTextProperty(
+                                    Labels.withId(OI4AdapterLabels.LABEL_KEY_SENSORS_LIST_INPUT)))
 
-        )
-        .requiredTextParameter(Labels.withId(OI4AdapterLabels.LABEL_KEY_APP_ID))
-        .buildConfiguration();
+            ).requiredTextParameter(Labels.withId(OI4AdapterLabels.LABEL_KEY_APP_ID)).buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(
-      IAdapterParameterExtractor extractor,
-      IEventCollector collector,
-      IAdapterRuntimeContext adapterRuntimeContext
-  ) throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
 
-    this.mqttConsumer = new MqttConsumer(
-        this.mqttConfig,
-        (mqttEvent) -> {
-          try {
-            InputStream in = convertByte(mqttEvent);
-            var networkMessage = mapper.readValue(in, NetworkMessage.class);
-            var payload = extractPayload(networkMessage);
-            payload.forEach(collector::collect);
-          } catch (ParseException e) {
-            LOG.debug("Message parsing failed - this might be caused by messages from a different sensor type");
-          } catch (IOException e) {
-            LOG.error("Error during reading the MQTT Event: {}", e.getMessage());
-          }
-        }
-    );
+    this.mqttConsumer = new MqttConsumer(this.mqttConfig, (mqttEvent) -> {
+      try {
+        InputStream in = convertByte(mqttEvent);
+        var networkMessage = mapper.readValue(in, NetworkMessage.class);
+        var payload = extractPayload(networkMessage);
+        payload.forEach(collector::collect);
+      } catch (ParseException e) {
+        LOG.debug("Message parsing failed - this might be caused by messages from a different sensor type");
+      } catch (IOException e) {
+        LOG.error("Error during reading the MQTT Event: {}", e.getMessage());
+      }
+    });
 
     Thread thread = new Thread(this.mqttConsumer);
     thread.start();
@@ -167,12 +144,10 @@ public class Oi4Adapter implements StreamPipesAdapter {
   }
 
   private void applyConfiguration(IStaticPropertyExtractor extractor) throws AdapterException {
-    String selectedAlternativeSensorDescription = extractor.selectedAlternativeInternalId(
-        OI4AdapterLabels.LABEL_KEY_SENSOR_DESCRIPTION
-    );
-    String selectedAlternativeSelectedSensors = extractor.selectedAlternativeInternalId(
-        OI4AdapterLabels.LABEL_KEY_SENSORS_ALTERNATIVES
-    );
+    String selectedAlternativeSensorDescription = extractor
+            .selectedAlternativeInternalId(OI4AdapterLabels.LABEL_KEY_SENSOR_DESCRIPTION);
+    String selectedAlternativeSelectedSensors = extractor
+            .selectedAlternativeInternalId(OI4AdapterLabels.LABEL_KEY_SENSORS_ALTERNATIVES);
 
     String appId = extractor.textParameter(OI4AdapterLabels.LABEL_KEY_APP_ID);
 
@@ -181,8 +156,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
       selectedSensors = List.of();
     } else {
       var selectedSensorsText = extractor.textParameter(OI4AdapterLabels.LABEL_KEY_SENSORS_LIST_INPUT);
-      selectedSensors = Arrays.stream(selectedSensorsText.split(","))
-          .toList();
+      selectedSensors = Arrays.stream(selectedSensorsText.split(",")).toList();
     }
 
     if (selectedAlternativeSensorDescription.equals(OI4AdapterLabels.LABEL_KEY_SENSOR_TYPE_ALTERNATIVE)) {
@@ -194,18 +168,13 @@ public class Oi4Adapter implements StreamPipesAdapter {
   }
 
   @Override
-  public void onAdapterStopped(
-      IAdapterParameterExtractor extractor,
-      IAdapterRuntimeContext adapterRuntimeContext
-  ) {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext) {
     mqttConsumer.close();
   }
 
   @Override
-  public GuessSchema onSchemaRequested(
-      IAdapterParameterExtractor extractor,
-      IAdapterGuessSchemaContext adapterGuessSchemaContext
-  ) throws AdapterException {
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     try {
       this.applyConfiguration(extractor.getStaticPropertyExtractor());
 
@@ -220,28 +189,25 @@ public class Oi4Adapter implements StreamPipesAdapter {
   }
 
   /**
-   * Updates the timestamp property in the given GuessSchema if it exists as it is not correctly guessed.
-   * If the timestamp property exists, it is replaced with a proper timestamp property.
+   * Updates the timestamp property in the given GuessSchema if it exists as it is not correctly guessed. If the
+   * timestamp property exists, it is replaced with a proper timestamp property.
    *
-   * @param guessSchema The GuessSchema to update.
+   * @param guessSchema
+   *          The GuessSchema to update.
    */
   private void updateTimestampPropertyIfExists(GuessSchema guessSchema) {
-    var eventProperties = guessSchema.getEventSchema()
-        .getEventProperties();
+    var eventProperties = guessSchema.getEventSchema().getEventProperties();
 
     var timestampPropertyOpt = eventProperties.stream()
-        .filter(eventProperty ->
-            eventProperty.getRuntimeName()
-                .equals(OI4AdapterLabels.EVENT_KEY_TIMESTAMP)
-        )
-        .findFirst();
+            .filter(eventProperty -> eventProperty.getRuntimeName().equals(OI4AdapterLabels.EVENT_KEY_TIMESTAMP))
+            .findFirst();
 
     var newTimestampProperty = timestampProperty(OI4AdapterLabels.EVENT_KEY_TIMESTAMP);
 
     // If the timestamp property exists, replace it with the new timestamp property
     timestampPropertyOpt.ifPresent(prop -> {
-      eventProperties.removeIf(eventProperty -> eventProperty.getRuntimeName()
-          .equals(OI4AdapterLabels.EVENT_KEY_TIMESTAMP));
+      eventProperties
+              .removeIf(eventProperty -> eventProperty.getRuntimeName().equals(OI4AdapterLabels.EVENT_KEY_TIMESTAMP));
       eventProperties.add(newTimestampProperty);
     });
 
@@ -255,7 +221,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
       String plainPayload = mapper.writeValueAsString(payload.get(0));
       return new JsonParsers(new JsonObjectParser())
-          .getGuessSchema(convertByte(plainPayload.getBytes(StandardCharsets.UTF_8)));
+              .getGuessSchema(convertByte(plainPayload.getBytes(StandardCharsets.UTF_8)));
     } catch (IOException e) {
       LOG.error("Error while reading sample message: {}", sampleMessage);
       throw new RuntimeException(e);
@@ -298,7 +264,8 @@ public class Oi4Adapter implements StreamPipesAdapter {
   /**
    * Obtain a specialized MQTT consumer designed to infer the event schema based on provided sampleMessages.
    *
-   * @param sampleMessages A list of byte arrays representing MQTT message payloads.
+   * @param sampleMessages
+   *          A list of byte arrays representing MQTT message payloads.
    * @return A customized MqttConsumer instance.
    */
   private MqttConsumer getGuessMqttConsumer(List<byte[]> sampleMessages) {
@@ -334,8 +301,7 @@ public class Oi4Adapter implements StreamPipesAdapter {
 
         // Verify that the message corresponds to the designated sensor type.
         // This validation relies on the assumption that the source information includes the sensor type.
-        if (dataMessage.source()
-            .contains(givenSensorType)) {
+        if (dataMessage.source().contains(givenSensorType)) {
 
           // an empty list of selected sensors means that we want to collect data from all sensors available
           if (selectedSensors.isEmpty() || selectedSensors.contains(sensorId)) {
@@ -352,40 +318,25 @@ public class Oi4Adapter implements StreamPipesAdapter {
   }
 
   private List<DataSetMessage> findProcessDataInputMessage(NetworkMessage message) {
-    return message.messages()
-        .stream()
-        .filter(msg -> msg.filter()
-            .equals(OI4AdapterLabels.MESSAGE_VALUE_FILTER))
-        .toList();
+    return message.messages().stream().filter(msg -> msg.filter().equals(OI4AdapterLabels.MESSAGE_VALUE_FILTER))
+            .toList();
   }
 
   private Map<String, Object> extractAndEnrichMessagePayload(DataSetMessage dataSetMessage, String sensorId) {
-    var payload = dataSetMessage
-        .payload();
+    var payload = dataSetMessage.payload();
     try {
-      payload.put(
-          OI4AdapterLabels.EVENT_KEY_TIMESTAMP,
-          parseDate(dataSetMessage.timestamp())
-      );
+      payload.put(OI4AdapterLabels.EVENT_KEY_TIMESTAMP, parseDate(dataSetMessage.timestamp()));
     } catch (DateTimeParseException e) {
       throw new RuntimeException(e);
     }
-    payload.put(
-        OI4AdapterLabels.EVENT_KEY_SENSOR_ID,
-        sensorId
-    );
+    payload.put(OI4AdapterLabels.EVENT_KEY_SENSOR_ID, sensorId);
 
     return replaceSpecialChars(payload);
   }
 
   private Map<String, Object> replaceSpecialChars(Map<String, Object> originalMap) {
-    return originalMap.entrySet()
-        .stream()
-        .collect(Collectors.toMap(
-            entry -> entry.getKey().replace("-", ""),
-            Map.Entry::getValue,
-            (oldValue, newValue) -> oldValue)
-        );
+    return originalMap.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey().replace("-", ""),
+            Map.Entry::getValue, (oldValue, newValue) -> oldValue));
   }
 
   private long parseDate(String timestamp) throws DateTimeParseException {
@@ -393,10 +344,11 @@ public class Oi4Adapter implements StreamPipesAdapter {
   }
 
   /**
-   * Extracts the sensor ID from the provided source string.
-   * It assumes that the sensor ID is located after the last occurrence of "/" in the source string.
+   * Extracts the sensor ID from the provided source string. It assumes that the sensor ID is located after the last
+   * occurrence of "/" in the source string.
    *
-   * @param source The source string
+   * @param source
+   *          The source string
    * @return The extracted sensor ID.
    */
   private String getSensorIdFromSource(String source) {

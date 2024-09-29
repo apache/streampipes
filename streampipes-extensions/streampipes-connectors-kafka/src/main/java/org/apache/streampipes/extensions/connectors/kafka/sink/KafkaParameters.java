@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.kafka.sink;
 
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
@@ -85,6 +84,6 @@ public class KafkaParameters {
 
   public boolean useAuthentication() {
     return KafkaConnectUtils.SASL_PLAIN.equals(this.authentication)
-        || KafkaConnectUtils.SASL_SSL.equals(this.authentication);
+            || KafkaConnectUtils.SASL_SSL.equals(this.authentication);
   }
 }

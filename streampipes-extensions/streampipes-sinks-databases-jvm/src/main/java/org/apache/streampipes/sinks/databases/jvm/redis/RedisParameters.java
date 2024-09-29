@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.redis;
 
 public class RedisParameters {
@@ -44,18 +43,9 @@ public class RedisParameters {
 
   private final Integer redisPoolTimeout;
 
-  public RedisParameters(String primaryKey,
-                         Boolean autoIncrement,
-                         Integer ttl,
-                         String redisHost,
-                         Integer redisPort,
-                         String redisPassword,
-                         String redisClient,
-                         Integer redisIndex,
-                         Integer redisPoolMaxActive,
-                         Integer redisPoolMaxIdle,
-                         Integer redisPoolMaxWait,
-                         Integer redisPoolTimeout) {
+  public RedisParameters(String primaryKey, Boolean autoIncrement, Integer ttl, String redisHost, Integer redisPort,
+          String redisPassword, String redisClient, Integer redisIndex, Integer redisPoolMaxActive,
+          Integer redisPoolMaxIdle, Integer redisPoolMaxWait, Integer redisPoolTimeout) {
     this.primaryKey = primaryKey;
     this.autoIncrement = autoIncrement;
     this.ttl = ttl;

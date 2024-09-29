@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
 import org.apache.streampipes.model.schema.EventProperty;
@@ -24,14 +23,14 @@ import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("unchecked")
 public class UnitTransformRuleTest {
@@ -57,16 +56,14 @@ public class UnitTransformRuleTest {
     keys.add("value");
 
     UnitTransformationRule unitTransformationRule = new UnitTransformationRule(keys,
-        "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
+            "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
 
     var result = unitTransformationRule.apply(event);
 
-    Assertions.assertEquals(1,
-                            result.keySet().size());
+    Assertions.assertEquals(1, result.keySet().size());
     Assertions.assertEquals(273.15, ((Map<String, Object>) result.get(eventPropertyList.getRuntimeName()))
-        .get(eventPropertyValue.getRuntimeName()));
+            .get(eventPropertyValue.getRuntimeName()));
   }
-
 
   @Test
   public void transformNested() {
@@ -90,16 +87,14 @@ public class UnitTransformRuleTest {
     keys.add("value");
 
     UnitTransformationRule unitTransformationRule = new UnitTransformationRule(keys,
-        "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
+            "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
 
     var result = unitTransformationRule.apply(event);
 
-    Assertions.assertEquals(1,
-                            result.keySet().size());
+    Assertions.assertEquals(1, result.keySet().size());
     Assertions.assertEquals(283.15, ((Map<String, Object>) result.get(eventPropertyMainKey.getRuntimeName()))
-        .get(eventPropertyValue.getRuntimeName()));
+            .get(eventPropertyValue.getRuntimeName()));
   }
-
 
   @Test
   public void transformMultiEvent() {
@@ -117,34 +112,29 @@ public class UnitTransformRuleTest {
     keys.add("value2");
 
     UnitTransformationRule unitTransformationRule = new UnitTransformationRule(keys,
-        "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
+            "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
     Map<String, Object> event = new HashMap<>();
     event.put("value1", 0.0);
     event.put("value2", 10.0);
 
     var result = unitTransformationRule.apply(event);
-    Assertions.assertEquals(2,
-                            result.keySet().size());
+    Assertions.assertEquals(2, result.keySet().size());
     Assertions.assertEquals(283.15, result.get(eventPropertyValue2.getLabel()));
-
 
     event = new HashMap<>();
     event.put("value1", 20.0);
     event.put("value2", 20.0);
 
     result = unitTransformationRule.apply(event);
-    Assertions.assertEquals(2,
-                            result.keySet().size());
+    Assertions.assertEquals(2, result.keySet().size());
     Assertions.assertEquals(293.15, result.get(eventPropertyValue2.getRuntimeName()));
-
 
     event = new HashMap<>();
     event.put("value1", 0.0);
     event.put("value2", 0.0);
 
     result = unitTransformationRule.apply(event);
-    Assertions.assertEquals(2,
-                            result.keySet().size());
+    Assertions.assertEquals(2, result.keySet().size());
     Assertions.assertEquals(273.15, result.get(eventPropertyValue2.getRuntimeName()));
   }
 

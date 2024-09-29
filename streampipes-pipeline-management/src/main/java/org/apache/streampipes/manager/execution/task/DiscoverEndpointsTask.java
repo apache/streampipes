@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution.task;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
@@ -33,8 +32,7 @@ import java.util.stream.Collectors;
 
 public class DiscoverEndpointsTask implements PipelineExecutionTask {
   @Override
-  public void executeTask(Pipeline pipeline,
-                          PipelineExecutionInfo executionInfo) {
+  public void executeTask(Pipeline pipeline, PipelineExecutionInfo executionInfo) {
     var processorsAndSinks = executionInfo.getProcessorsAndSinks();
 
     processorsAndSinks.forEach(el -> {
@@ -48,33 +46,25 @@ public class DiscoverEndpointsTask implements PipelineExecutionTask {
 
     var failedServices = executionInfo.getFailedServices();
     if (executionInfo.getFailedServices().size() > 0) {
-      List<PipelineElementStatus> pe = failedServices
-          .stream()
-          .map(fs -> new PipelineElementStatus(fs.getElementId(), fs.getName(), false,
-              "No active extensions service found which provides this pipeline element"))
-          .collect(Collectors.toList());
-      var status = new PipelineOperationStatus(pipeline.getPipelineId(),
-          pipeline.getName(),
-          "Could not start pipeline " + pipeline.getName() + ".",
-          pe);
+      List<PipelineElementStatus> pe = failedServices.stream()
+              .map(fs -> new PipelineElementStatus(fs.getElementId(), fs.getName(), false,
+                      "No active extensions service found which provides this pipeline element"))
+              .collect(Collectors.toList());
+      var status = new PipelineOperationStatus(pipeline.getPipelineId(), pipeline.getName(),
+              "Could not start pipeline " + pipeline.getName() + ".", pe);
       executionInfo.applyPipelineOperationStatus(status);
     }
   }
 
-  private void applyEndpointAndPipeline(String pipelineId,
-                                        EndpointSelectable pipelineElement,
-                                        String endpointUrl) {
+  private void applyEndpointAndPipeline(String pipelineId, EndpointSelectable pipelineElement, String endpointUrl) {
     pipelineElement.setSelectedEndpointUrl(endpointUrl);
     pipelineElement.setCorrespondingPipeline(pipelineId);
   }
 
   private String findSelectedEndpoint(InvocableStreamPipesEntity pipelineElement)
-      throws NoServiceEndpointsAvailableException {
-    return new ExtensionsServiceEndpointGenerator()
-        .getEndpointResourceUrl(
-            pipelineElement.getAppId(),
-            ExtensionsServiceEndpointUtils.getPipelineElementType(pipelineElement)
-        );
+          throws NoServiceEndpointsAvailableException {
+    return new ExtensionsServiceEndpointGenerator().getEndpointResourceUrl(pipelineElement.getAppId(),
+            ExtensionsServiceEndpointUtils.getPipelineElementType(pipelineElement));
   }
 
 }

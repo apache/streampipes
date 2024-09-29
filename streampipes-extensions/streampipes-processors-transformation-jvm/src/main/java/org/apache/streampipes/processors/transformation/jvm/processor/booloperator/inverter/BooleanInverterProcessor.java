@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -42,24 +41,20 @@ public class BooleanInverterProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.booloperator.inverter", 0)
-        .category(DataProcessorType.BOOLEAN_OPERATOR)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.booleanReq(),
-                Labels.withId(INVERT_FIELD_ID),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.keep())
-        .build();
+            .create("org.apache.streampipes.processors.transformation.jvm.booloperator.inverter", 0)
+            .category(DataProcessorType.BOOLEAN_OPERATOR).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(
+                    StreamRequirementsBuilder.create()
+                            .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(),
+                                    Labels.withId(INVERT_FIELD_ID), PropertyScope.NONE)
+                            .build())
+            .outputStrategy(OutputStrategies.keep()).build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     ProcessingElementParameterExtractor extractor = parameters.extractor();
     this.invertFieldName = extractor.mappingPropertyValue(INVERT_FIELD_ID);
   }

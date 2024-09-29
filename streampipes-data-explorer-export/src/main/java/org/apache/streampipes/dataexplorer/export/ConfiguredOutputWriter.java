@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.export;
 
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
@@ -26,26 +25,22 @@ import java.util.List;
 
 public abstract class ConfiguredOutputWriter {
 
-  public static ConfiguredOutputWriter getConfiguredWriter(OutputFormat format,
-                                                           ProvidedRestQueryParams params,
-                                                           boolean ignoreMissingValues) {
+  public static ConfiguredOutputWriter getConfiguredWriter(OutputFormat format, ProvidedRestQueryParams params,
+          boolean ignoreMissingValues) {
     var writer = format.getWriter();
     writer.configure(params, ignoreMissingValues);
 
     return writer;
   }
 
-  public abstract void configure(ProvidedRestQueryParams params,
-                                 boolean ignoreMissingValues);
+  public abstract void configure(ProvidedRestQueryParams params, boolean ignoreMissingValues);
 
   public abstract void beforeFirstItem(OutputStream outputStream) throws IOException;
 
   public abstract void afterLastItem(OutputStream outputStream) throws IOException;
 
-  public abstract void writeItem(OutputStream outputStream,
-                                 List<Object> row,
-                                 List<String> columnNames,
-                                 boolean firstObject) throws IOException;
+  public abstract void writeItem(OutputStream outputStream, List<Object> row, List<String> columnNames,
+          boolean firstObject) throws IOException;
 
   protected byte[] toBytes(String value) {
     return value.getBytes();

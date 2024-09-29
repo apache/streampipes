@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.brokers.jvm;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -39,13 +38,8 @@ public class BrokerSinksExtensionModuleExport implements IExtensionModuleExport 
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new JmsPublisherSink(),
-        new RestSink(),
-        new BufferRestPublisherSink(),
-        new RabbitMqPublisherSink(),
-        new WebsocketServerSink()
-    );
+    return List.of(new JmsPublisherSink(), new RestSink(), new BufferRestPublisherSink(), new RabbitMqPublisherSink(),
+            new WebsocketServerSink());
   }
 
   @Override

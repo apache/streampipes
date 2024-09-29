@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.couchdb;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -48,44 +47,29 @@ public class CouchDbSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.couchdb", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .category(DataSinkType.DATABASE)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
-        .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY))
-        .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
-        .build();
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.couchdb", 0).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).category(DataSinkType.DATABASE)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
+            .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY))
+            .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY)).build();
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     var extractor = parameters.extractor();
     String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
     String dbName = extractor.singleValueParameter(DATABASE_NAME_KEY, String.class);
 
-    //TODO: Use this after optional parameters implementation
-    //String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
-    //String password = extractor.singleValueParameter(DATABASE_PASSORD_KEY, String.class);
+    // TODO: Use this after optional parameters implementation
+    // String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
+    // String password = extractor.singleValueParameter(DATABASE_PASSORD_KEY, String.class);
 
     String user = null;
     String password = null;
 
-    this.couchDbClient = new CouchDbClient(new CouchDbProperties(
-        dbName,
-        true,
-        "http",
-       hostname,
-        port,
-        user,
-        password
-    ));
+    this.couchDbClient = new CouchDbClient(new CouchDbProperties(dbName, true, "http", hostname, port, user, password));
   }
 
   @Override

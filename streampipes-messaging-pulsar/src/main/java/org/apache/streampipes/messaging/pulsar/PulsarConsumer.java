@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.pulsar;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -48,19 +47,14 @@ public class PulsarConsumer implements EventConsumer {
       } else {
         serviceURL = protocolSettings.getBrokerHostname();
       }
-      pulsarClient = PulsarClient.builder()
-          .serviceUrl(serviceURL)
-          .build();
-      consumer = pulsarClient.newConsumer()
-          .topic(protocolSettings.getTopicDefinition().getActualTopicName())
-          .subscriptionName("streampipes")
-          .messageListener(new MessageListener<byte[]>() {
-            @Override
-            public void received(Consumer<byte[]> consumer, Message<byte[]> msg) {
-              eventProcessor.onEvent(msg.getData());
-            }
-          })
-          .subscribe();
+      pulsarClient = PulsarClient.builder().serviceUrl(serviceURL).build();
+      consumer = pulsarClient.newConsumer().topic(protocolSettings.getTopicDefinition().getActualTopicName())
+              .subscriptionName("streampipes").messageListener(new MessageListener<byte[]>() {
+                @Override
+                public void received(Consumer<byte[]> consumer, Message<byte[]> msg) {
+                  eventProcessor.onEvent(msg.getData());
+                }
+              }).subscribe();
     } catch (PulsarClientException e) {
       throw new SpRuntimeException(e);
     }

@@ -15,18 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.pulsar;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 
+import java.io.Serializable;
+
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
-
-import java.io.Serializable;
 
 public class PulsarProducer implements EventProducer, Serializable {
 
@@ -41,12 +40,8 @@ public class PulsarProducer implements EventProducer, Serializable {
   @Override
   public void connect() throws SpRuntimeException {
     try {
-      pulsarClient = PulsarClient.builder()
-          .serviceUrl(protocolSettings.getBrokerHostname())
-          .build();
-      producer = pulsarClient.newProducer()
-          .topic(protocolSettings.getTopicDefinition().getActualTopicName())
-          .create();
+      pulsarClient = PulsarClient.builder().serviceUrl(protocolSettings.getBrokerHostname()).build();
+      producer = pulsarClient.newProducer().topic(protocolSettings.getTopicDefinition().getActualTopicName()).create();
     } catch (PulsarClientException e) {
       throw new SpRuntimeException(e);
     }

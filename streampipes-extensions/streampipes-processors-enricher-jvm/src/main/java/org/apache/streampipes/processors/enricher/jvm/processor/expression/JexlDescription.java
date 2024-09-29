@@ -15,13 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.expression;
 
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
-public record JexlDescription(EventPropertyPrimitive ep,
-                              String script) {
+public record JexlDescription(EventPropertyPrimitive ep, String script) {
 
   public String getFieldName() {
     return ep.getRuntimeName();

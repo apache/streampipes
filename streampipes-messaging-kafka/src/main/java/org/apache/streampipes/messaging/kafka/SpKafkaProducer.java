@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.kafka;
 
 import org.apache.streampipes.commons.environment.Environments;
@@ -23,6 +22,14 @@ import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
 import org.apache.streampipes.messaging.kafka.config.ProducerConfigFactory;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.CreateTopicsResult;
@@ -37,16 +44,7 @@ import org.apache.kafka.common.config.TopicConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.ExecutionException;
-
 public class SpKafkaProducer implements EventProducer, Serializable {
-
 
   private static final String COLON = ":";
 
@@ -64,12 +62,9 @@ public class SpKafkaProducer implements EventProducer, Serializable {
   }
 
   // TODO backwards compatibility, remove later
-  public SpKafkaProducer(String url,
-                         String topic,
-                         List<KafkaConfigAppender> appenders) {
+  public SpKafkaProducer(String url, String topic, List<KafkaConfigAppender> appenders) {
     String[] urlParts = url.split(COLON);
-    KafkaTransportProtocol protocol = new KafkaTransportProtocol(urlParts[0],
-        Integer.parseInt(urlParts[1]), topic);
+    KafkaTransportProtocol protocol = new KafkaTransportProtocol(urlParts[0], Integer.parseInt(urlParts[1]), topic);
     this.brokerUrl = url;
     this.topic = topic;
     this.producer = new KafkaProducer<>(makeProperties(protocol, appenders));
@@ -86,8 +81,7 @@ public class SpKafkaProducer implements EventProducer, Serializable {
     }
   }
 
-  private Properties makeProperties(KafkaTransportProtocol protocol,
-                                    List<KafkaConfigAppender> appenders) {
+  private Properties makeProperties(KafkaTransportProtocol protocol, List<KafkaConfigAppender> appenders) {
     return new ProducerConfigFactory(protocol).buildProperties(appenders);
   }
 
@@ -112,7 +106,8 @@ public class SpKafkaProducer implements EventProducer, Serializable {
   /**
    * Create a new topic and define number partitions, replicas, and retention time
    *
-   * @param settings The settings to connect to a Kafka broker
+   * @param settings
+   *          The settings to connect to a Kafka broker
    */
   private void createKafkaTopic(KafkaTransportProtocol settings) throws ExecutionException, InterruptedException {
 

@@ -15,51 +15,42 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.datalake;
 
+import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 public class SpQueryResultBuilderTest {
 
   List<String> headers = List.of("h1", "h2");
   @Test
   public void withHeadersTest() {
-    var result = SpQueryResultBuilder.create(headers)
-        .build();
+    var result = SpQueryResultBuilder.create(headers).build();
 
-    Assertions.assertEquals(2,
-                            result.getHeaders().size());
+    Assertions.assertEquals(2, result.getHeaders().size());
     Assertions.assertEquals(headers, result.getHeaders());
   }
 
   @Test
   public void withSourceIndexTest() {
     var sourceIndex = 1;
-    var result = SpQueryResultBuilder.create(headers)
-        .withSourceIndex(sourceIndex)
-        .build();
+    var result = SpQueryResultBuilder.create(headers).withSourceIndex(sourceIndex).build();
 
     Assertions.assertEquals(sourceIndex, result.getSourceIndex());
   }
 
   @Test
   public void withQueryStatusDefaultTest() {
-    var result = SpQueryResultBuilder.create(headers)
-        .build();
+    var result = SpQueryResultBuilder.create(headers).build();
 
     Assertions.assertEquals(SpQueryStatus.OK, result.getSpQueryStatus());
   }
 
   @Test
   public void withQueryStatusTooMuchDataTest() {
-    var result = SpQueryResultBuilder.create(headers)
-        .withSpQueryStatus(SpQueryStatus.TOO_MUCH_DATA)
-        .build();
+    var result = SpQueryResultBuilder.create(headers).withSpQueryStatus(SpQueryStatus.TOO_MUCH_DATA).build();
 
     Assertions.assertEquals(SpQueryStatus.TOO_MUCH_DATA, result.getSpQueryStatus());
   }
@@ -67,9 +58,7 @@ public class SpQueryResultBuilderTest {
   @Test
   public void withForId() {
     var forId = "id";
-    var result = SpQueryResultBuilder.create(headers)
-        .withForId(forId)
-        .build();
+    var result = SpQueryResultBuilder.create(headers).withForId(forId).build();
 
     Assertions.assertEquals(forId, result.getForId());
   }
@@ -78,48 +67,26 @@ public class SpQueryResultBuilderTest {
   public void withDataSeriesTest() {
     List<Object> row = List.of("v1", 1);
 
-    var result = SpQueryResultBuilder.create(headers)
-        .withDataSeries(
-            DataSeriesBuilder.create()
-                .withRow(row)
-                .build()
-        )
-        .build();
+    var result = SpQueryResultBuilder.create(headers).withDataSeries(DataSeriesBuilder.create().withRow(row).build())
+            .build();
 
-    Assertions.assertEquals(1,
-                            result.getAllDataSeries().size());
-    Assertions.assertEquals(1,
-                            result.getAllDataSeries().get(0).getRows().size());
-    Assertions.assertEquals(row,
-                            result.getAllDataSeries().get(0).getRows().get(0)
-    );
+    Assertions.assertEquals(1, result.getAllDataSeries().size());
+    Assertions.assertEquals(1, result.getAllDataSeries().get(0).getRows().size());
+    Assertions.assertEquals(row, result.getAllDataSeries().get(0).getRows().get(0));
   }
 
   @Test
   public void completeExampleTest() {
 
     List<String> headers = List.of("timestamp", "id", "value");
-    List<List<Object>> rows = List.of(
-        List.of(1234L, "one", 1.1),
-        List.of(1235L, "two", 1.0)
-    );
+    List<List<Object>> rows = List.of(List.of(1234L, "one", 1.1), List.of(1235L, "two", 1.0));
 
     var spQueryResult = SpQueryResultBuilder.create(headers)
-        .withDataSeries(
-            DataSeriesBuilder.create()
-                .withRows(rows)
-                .build()
-        )
-        .build();
+            .withDataSeries(DataSeriesBuilder.create().withRows(rows).build()).build();
 
     Assertions.assertEquals(1, spQueryResult.getTotal());
-    Assertions.assertEquals(headers,
-                            spQueryResult.getAllDataSeries().get(0).getHeaders()
-    );
-    Assertions.assertEquals(2,
-                            spQueryResult.getAllDataSeries().get(0).getRows().size());
-    Assertions.assertEquals(rows,
-                            spQueryResult.getAllDataSeries().get(0).getRows()
-    );
+    Assertions.assertEquals(headers, spQueryResult.getAllDataSeries().get(0).getHeaders());
+    Assertions.assertEquals(2, spQueryResult.getAllDataSeries().get(0).getRows().size());
+    Assertions.assertEquals(rows, spQueryResult.getAllDataSeries().get(0).getRows());
   }
 }

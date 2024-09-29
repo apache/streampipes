@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe.param;
 
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
@@ -28,7 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface IDataProcessorParameters
-    extends IPipelineElementParameters<DataProcessorInvocation, IDataProcessorParameterExtractor> {
+        extends
+          IPipelineElementParameters<DataProcessorInvocation, IDataProcessorParameterExtractor> {
 
   Map<String, Object> getOutEventType();
 

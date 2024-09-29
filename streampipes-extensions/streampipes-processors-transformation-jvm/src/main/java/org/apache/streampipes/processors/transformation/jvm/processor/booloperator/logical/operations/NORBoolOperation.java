@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical.operations;
 
 public class NORBoolOperation implements IBoolOperation<Boolean> {

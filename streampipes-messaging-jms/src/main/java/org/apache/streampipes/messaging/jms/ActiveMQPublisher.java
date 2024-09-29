@@ -15,16 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.jms;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
@@ -34,6 +29,9 @@ import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ActiveMQPublisher extends ActiveMQConnectionProvider implements EventProducer {
 
@@ -66,17 +64,14 @@ public class ActiveMQPublisher extends ActiveMQConnectionProvider implements Eve
     } while (!co);
 
     try {
-      this.session = connection
-          .createSession(false, Session.AUTO_ACKNOWLEDGE);
-      this.producer = session.createProducer(session.createTopic(protocol
-          .getTopicDefinition()
-          .getActualTopicName()));
+      this.session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+      this.producer = session.createProducer(session.createTopic(protocol.getTopicDefinition().getActualTopicName()));
       this.producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
       this.connection.start();
       this.connected = true;
     } catch (JMSException e) {
-      throw new SpRuntimeException("could not connect to activemq broker. Broker: '"
-          + protocol.getBrokerHostname() + "' Port: " + protocol.getPort());
+      throw new SpRuntimeException("could not connect to activemq broker. Broker: '" + protocol.getBrokerHostname()
+              + "' Port: " + protocol.getPort());
     }
   }
 

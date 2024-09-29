@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.opcua.sink;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -23,6 +22,11 @@ import org.apache.streampipes.extensions.connectors.opcua.client.SpOpcUaClient;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.vocabulary.XSD;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.UaException;
@@ -32,11 +36,6 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 public class OpcUa {
 
@@ -66,15 +65,14 @@ public class OpcUa {
   private static final HashMap<Class<?>, Class<?>[]> compatibleDataTypes = new HashMap<>();
 
   static {
-    compatibleDataTypes.put(Double.class, new Class[]{Float.class, String.class});
-    compatibleDataTypes.put(Float.class, new Class[]{Double.class, String.class});
-    compatibleDataTypes.put(Integer.class, new Class[]{Double.class, Float.class, String.class});
-    compatibleDataTypes.put(Boolean.class, new Class[]{String.class});
-    compatibleDataTypes.put(String.class, new Class[]{String.class});
+    compatibleDataTypes.put(Double.class, new Class[] {Float.class, String.class});
+    compatibleDataTypes.put(Float.class, new Class[] {Double.class, String.class});
+    compatibleDataTypes.put(Integer.class, new Class[] {Double.class, Float.class, String.class});
+    compatibleDataTypes.put(Boolean.class, new Class[] {String.class});
+    compatibleDataTypes.put(String.class, new Class[] {String.class});
   }
 
-  public void onInvocation(OpcUaParameters params) throws
-      SpRuntimeException {
+  public void onInvocation(OpcUaParameters params) throws SpRuntimeException {
 
     try {
       this.params = params;
@@ -118,17 +116,16 @@ public class OpcUa {
         if (status.isBad()) {
           if (status.getValue() == 0x80740000L) {
             LOG.error("Type missmatch! Tried to write value of type: " + this.params.getMappingPropertyType()
-                + " but server did not accept this");
+                    + " but server did not accept this");
           } else if (status.getValue() == 0x803B0000L) {
             LOG.error("Wrong access level. Not allowed to write to nodes");
           }
-          LOG.error(
-              "Value: " + value.getValue().toString() + " could not be written to node Id: "
+          LOG.error("Value: " + value.getValue().toString() + " could not be written to node Id: "
                   + node.getIdentifier() + " on " + "OPC-UA server: " + params.getConfig().getOpcServerURL());
         }
       } catch (InterruptedException | ExecutionException e) {
         LOG.error("Exception: Value: " + value.getValue().toString() + " could not be written to node Id: "
-            + node.getIdentifier() + " on " + "OPC-UA server: " + params.getConfig().getOpcServerURL());
+                + node.getIdentifier() + " on " + "OPC-UA server: " + params.getConfig().getOpcServerURL());
       }
     }
   }
@@ -139,8 +136,8 @@ public class OpcUa {
 
   private Variant getValue(Event inputEvent) {
     Variant result = null;
-    PrimitiveField propertyPrimitive =
-        inputEvent.getFieldBySelector(this.params.getMappingPropertySelector()).getAsPrimitive();
+    PrimitiveField propertyPrimitive = inputEvent.getFieldBySelector(this.params.getMappingPropertySelector())
+            .getAsPrimitive();
 
     if (targetDataType.equals(Integer.class)) {
       result = new Variant(propertyPrimitive.getAsInt());

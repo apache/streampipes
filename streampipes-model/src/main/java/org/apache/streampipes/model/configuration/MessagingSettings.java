@@ -51,11 +51,8 @@ public class MessagingSettings {
 
   private List<String> supportedProtocols;
 
-  public MessagingSettings(Integer batchSize,
-                           Integer messageMaxBytes,
-                           Integer lingerMs,
-                           Integer acks,
-                           List<SpProtocol> prioritizedProtocols) {
+  public MessagingSettings(Integer batchSize, Integer messageMaxBytes, Integer lingerMs, Integer acks,
+          List<SpProtocol> prioritizedProtocols) {
     this.batchSize = batchSize;
     this.messageMaxBytes = messageMaxBytes;
     this.lingerMs = lingerMs;

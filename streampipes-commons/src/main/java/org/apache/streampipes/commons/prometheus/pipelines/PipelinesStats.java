@@ -33,7 +33,6 @@ public class PipelinesStats {
 
   private int elementCount;
 
-
   public PipelinesStats() {
   }
 
@@ -44,7 +43,6 @@ public class PipelinesStats {
   public void setAllPipelines(int allPipelines) {
     this.allPipelines = allPipelines;
   }
-
 
   public int getRunningPipelines() {
     return runningPipelines;
@@ -142,7 +140,6 @@ public class PipelinesStats {
     this.elementCount += 1;
   }
 
-
   public void clear() {
     this.allPipelines = 0;
     this.runningPipelines = 0;
@@ -152,7 +149,6 @@ public class PipelinesStats {
     this.healthyPipelines = 0;
     this.elementCount = 0;
   }
-
 
   public void metrics() {
     PipelinesMetrics.ALL_PIPELINES_GAUGE.set(this.allPipelines);

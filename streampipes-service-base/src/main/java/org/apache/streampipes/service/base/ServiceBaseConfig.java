@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.service.base;
 
-
 import org.apache.streampipes.commons.environment.Environments;
 
 import java.util.Properties;
@@ -32,16 +31,11 @@ public class ServiceBaseConfig {
 
   public static void addPrometheusConfig(Properties properties) {
 
-    properties.setProperty(ENDPOINTS_ENABLED_BY_DEFAULT, Environments
-                                                .getEnvironment()
-                                                .getSetupPrometheusEndpoint()
-                                                .getValueOrDefault()
-                                                .toString());
+    properties.setProperty(ENDPOINTS_ENABLED_BY_DEFAULT,
+            Environments.getEnvironment().getSetupPrometheusEndpoint().getValueOrDefault().toString());
 
-    properties.setProperty(ENDPOINT_INCLUDE_KEY, Environments
-                                                  .getEnvironment()
-                                                  .getPrometheusEndpointInclude()
-                                                  .getValueOrDefault());
+    properties.setProperty(ENDPOINT_INCLUDE_KEY,
+            Environments.getEnvironment().getPrometheusEndpointInclude().getValueOrDefault());
   }
 
   public static void addPortConfig(Integer port, Properties properties) {

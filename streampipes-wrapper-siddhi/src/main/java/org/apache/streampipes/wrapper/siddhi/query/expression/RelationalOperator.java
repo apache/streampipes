@@ -19,12 +19,7 @@ package org.apache.streampipes.wrapper.siddhi.query.expression;
 
 public enum RelationalOperator {
 
-  EQUALS("="),
-  GREATER_THAN(">"),
-  GREATER_EQUALS(">="),
-  LESSER_THAN("<"),
-  LESSER_EQUALS("<="),
-  NOT_EQUALS("!=");
+  EQUALS("="), GREATER_THAN(">"), GREATER_EQUALS(">="), LESSER_THAN("<"), LESSER_EQUALS("<="), NOT_EQUALS("!=");
 
   private final String operator;
 

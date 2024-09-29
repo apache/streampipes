@@ -15,10 +15,8 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.client.version;
 
 public enum ItemType {
-
 
 }

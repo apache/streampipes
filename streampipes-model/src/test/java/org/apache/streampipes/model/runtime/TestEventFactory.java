@@ -17,10 +17,10 @@
  */
 package org.apache.streampipes.model.runtime;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Map;
 
 public class TestEventFactory {
 
@@ -29,13 +29,9 @@ public class TestEventFactory {
     Map<String, Object> runtimeMap = RuntimeTestUtils.simpleMap();
     Event event = RuntimeTestUtils.makeSimpleEvent(runtimeMap, RuntimeTestUtils.getSourceInfo());
 
-    Assertions.assertEquals(1,
-                            event.getFields().keySet().size()
-    );
-    Assertions.assertEquals("timestamp",
-                            event.getFieldByRuntimeName("timestamp").getFieldNameIn());
-    Assertions.assertEquals("timestamp",
-                            event.getFieldBySelector("s0::timestamp").getFieldNameIn());
+    Assertions.assertEquals(1, event.getFields().keySet().size());
+    Assertions.assertEquals("timestamp", event.getFieldByRuntimeName("timestamp").getFieldNameIn());
+    Assertions.assertEquals("timestamp", event.getFieldBySelector("s0::timestamp").getFieldNameIn());
   }
 
   @Test
@@ -44,12 +40,8 @@ public class TestEventFactory {
 
     Event event = RuntimeTestUtils.makeSimpleEvent(runtimeMap, RuntimeTestUtils.getSourceInfo());
 
-    Assertions.assertEquals(2,
-                            event.getFields().size()
-    );
-    Assertions.assertEquals("nested",
-                            event.getFieldBySelector("s0::nested").getFieldNameIn());
-    Assertions.assertEquals("timestamp2",
-                            event.getFieldBySelector("s0::nested::timestamp2").getFieldNameIn());
+    Assertions.assertEquals(2, event.getFields().size());
+    Assertions.assertEquals("nested", event.getFieldBySelector("s0::nested").getFieldNameIn());
+    Assertions.assertEquals("timestamp2", event.getFieldBySelector("s0::nested::timestamp2").getFieldNameIn());
   }
 }

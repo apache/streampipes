@@ -15,32 +15,23 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.user.management.util;
+
+import java.security.SecureRandom;
 
 import org.apache.commons.text.CharacterPredicate;
 import org.apache.commons.text.RandomStringGenerator;
 
-import java.security.SecureRandom;
-
 public class SecureStringGenerator {
   public String generateSecureString(int length) {
     // filter for characters allowed in URLs
-    CharacterPredicate includeChars = ch -> (
-        (ch >= 'a' && ch <= 'z')
-            || (ch >= 'A' && ch <= 'Z')
-            || (ch >= '0' && ch <= '9')
-            || ch == '-' || ch == '_' || ch == '.'
-            || ch == '!' || ch == '*' || ch == '(' || ch == ')'
-            || ch == ':' || ch == '@' || ch == '='
-            || ch == '+' || ch == '$' || ch == ','
-    );
+    CharacterPredicate includeChars = ch -> ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
+            || (ch >= '0' && ch <= '9') || ch == '-' || ch == '_' || ch == '.' || ch == '!' || ch == '*' || ch == '('
+            || ch == ')' || ch == ':' || ch == '@' || ch == '=' || ch == '+' || ch == '$' || ch == ',');
     // allowing all ASCII-characters from decimal id 33 to 125
     // see https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html for full list
-    var pwdGenerator = new RandomStringGenerator.Builder().usingRandom(new SecureRandom()::nextInt)
-        .withinRange(33, 125)
-        .filteredBy(includeChars)
-        .build();
+    var pwdGenerator = new RandomStringGenerator.Builder().usingRandom(new SecureRandom()::nextInt).withinRange(33, 125)
+            .filteredBy(includeChars).build();
     return pwdGenerator.generate(length);
   }
 }

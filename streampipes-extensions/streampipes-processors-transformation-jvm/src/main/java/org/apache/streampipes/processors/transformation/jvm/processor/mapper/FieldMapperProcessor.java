@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.mapper;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -47,7 +46,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FieldMapperProcessor extends StreamPipesDataProcessor
-    implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
+        implements
+          ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   private static final String REPLACE_PROPERTIES = "replaceProperties";
   private static final String FIELD_NAME = "fieldName";
@@ -57,24 +57,19 @@ public class FieldMapperProcessor extends StreamPipesDataProcessor
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.field-mapper", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.withId
-                (REPLACE_PROPERTIES), PropertyScope.NONE)
-            .build())
-        .requiredTextParameter(Labels.withId(FIELD_NAME))
-        .outputStrategy(OutputStrategies.customTransformation())
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.field-mapper", 0)
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.withId(REPLACE_PROPERTIES),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredTextParameter(Labels.withId(FIELD_NAME)).outputStrategy(OutputStrategies.customTransformation())
+            .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     var extractor = parameters.extractor();
     this.replacePropertyNames = extractor.mappingPropertyValues(REPLACE_PROPERTIES);
     this.newFieldName = extractor.singleValueParameter(FIELD_NAME, String.class);
@@ -93,9 +88,7 @@ public class FieldMapperProcessor extends StreamPipesDataProcessor
       }
     }
 
-    event.addField(newFieldName, HashAlgorithmType.MD5.hashAlgorithm().toHashValue(hashValue
-        .toString
-            ()));
+    event.addField(newFieldName, HashAlgorithmType.MD5.hashAlgorithm().toHashValue(hashValue.toString()));
     out.collect(event);
   }
 
@@ -106,7 +99,7 @@ public class FieldMapperProcessor extends StreamPipesDataProcessor
 
   @Override
   public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
-                                           ProcessingElementParameterExtractor extractor) throws SpRuntimeException {
+          ProcessingElementParameterExtractor extractor) throws SpRuntimeException {
     List<String> replacePropertyNames = extractor.mappingPropertyValues(REPLACE_PROPERTIES);
     String newFieldName = extractor.singleValueParameter(FIELD_NAME, String.class);
 

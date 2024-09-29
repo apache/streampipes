@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.commons.environment.Environments;
@@ -36,6 +35,10 @@ import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,10 +53,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/v2/auth")
 public class Authentication extends AbstractRestResource {
@@ -61,14 +60,11 @@ public class Authentication extends AbstractRestResource {
   @Autowired
   AuthenticationManager authenticationManager;
 
-  @PostMapping(
-      path = "/login",
-      produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
-      consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/login", produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE, consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> doLogin(@RequestBody LoginRequest login) {
     try {
-      org.springframework.security.core.Authentication authentication = authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(login.username(), login.password()));
+      org.springframework.security.core.Authentication authentication = authenticationManager
+              .authenticate(new UsernamePasswordAuthenticationToken(login.username(), login.password()));
       SecurityContextHolder.getContext().setAuthentication(authentication);
       return processAuth(authentication);
     } catch (BadCredentialsException e) {
@@ -76,9 +72,7 @@ public class Authentication extends AbstractRestResource {
     }
   }
 
-  @GetMapping(
-      path = "/token/renew",
-      produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/token/renew", produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> doLogin() {
     try {
       org.springframework.security.core.Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -88,39 +82,28 @@ public class Authentication extends AbstractRestResource {
     }
   }
 
-  @PostMapping(
-      path = "/register",
-      produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
-      consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/register", produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE, consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
   public synchronized ResponseEntity<SuccessMessage> doRegister(
-      @RequestBody UserRegistrationData userRegistrationData
-  ) {
+          @RequestBody UserRegistrationData userRegistrationData) {
     GeneralConfig config = getSpCoreConfigurationStorage().get().getGeneralConfig();
     if (!config.isAllowSelfRegistration()) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
-    var enrichedUserRegistrationData = new UserRegistrationData(
-        userRegistrationData.getUsername(),
-        userRegistrationData.getPassword(),
-        config.getDefaultUserRoles()
-    );
+    var enrichedUserRegistrationData = new UserRegistrationData(userRegistrationData.getUsername(),
+            userRegistrationData.getPassword(), config.getDefaultUserRoles());
     try {
       getSpResourceManager().manageUsers().registerUser(enrichedUserRegistrationData);
       return ok(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
     } catch (UsernameAlreadyTakenException e) {
-      throw new SpMessageException(
-          HttpStatus.BAD_REQUEST,
-          Notifications.error("This email address already exists. Please choose another address."));
+      throw new SpMessageException(HttpStatus.BAD_REQUEST,
+              Notifications.error("This email address already exists. Please choose another address."));
     } catch (IllegalArgumentException e) {
-      throw new SpMessageException(
-          HttpStatus.INTERNAL_SERVER_ERROR,
-          Notifications.error("User registration failed. Please report this to your admin."));
+      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR,
+              Notifications.error("User registration failed. Please report this to your admin."));
     }
   }
 
-  @PostMapping(
-      path = "restore/{username}",
-      produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "restore/{username}", produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> sendPasswordRecoveryLink(@PathVariable("username") String username) {
     try {
       getSpResourceManager().manageUsers().sendPasswordRecoveryLink(username);
@@ -132,9 +115,7 @@ public class Authentication extends AbstractRestResource {
     }
   }
 
-  @GetMapping(
-      path = "settings",
-      produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "settings", produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> getAuthSettings() {
     GeneralConfig config = getSpCoreConfigurationStorage().get().getGeneralConfig();
     Map<String, Object> response = new HashMap<>();
@@ -164,22 +145,21 @@ public class Authentication extends AbstractRestResource {
   private UiOAuthSettings makeOAuthSettings() {
     var env = Environments.getEnvironment();
     var oAuthConfigs = env.getOAuthConfigurations();
-    return new UiOAuthSettings(
-        env.getOAuthEnabled().getValueOrDefault(),
-        env.getOAuthRedirectUri().getValueOrDefault(),
-        oAuthConfigs.stream().map(c -> new OAuthProvider(c.getRegistrationName(), c.getRegistrationId())).toList()
-    );
+    return new UiOAuthSettings(env.getOAuthEnabled().getValueOrDefault(), env.getOAuthRedirectUri().getValueOrDefault(),
+            oAuthConfigs.stream().map(c -> new OAuthProvider(c.getRegistrationName(), c.getRegistrationId())).toList());
   }
 
   /**
    * Record which contains information on the configured OAuth providers required by the login page
-   * @param enabled indicates if an OAuth provider is configured
-   * @param redirectUri the redirect URI
-   * @param supportedProviders A list of configured OAuth providers
+   * 
+   * @param enabled
+   *          indicates if an OAuth provider is configured
+   * @param redirectUri
+   *          the redirect URI
+   * @param supportedProviders
+   *          A list of configured OAuth providers
    */
-  private record UiOAuthSettings(boolean enabled,
-                                 String redirectUri,
-                                 List<OAuthProvider> supportedProviders) {
+  private record UiOAuthSettings(boolean enabled, String redirectUri, List<OAuthProvider> supportedProviders) {
   }
 
   private record OAuthProvider(String name, String registrationId) {

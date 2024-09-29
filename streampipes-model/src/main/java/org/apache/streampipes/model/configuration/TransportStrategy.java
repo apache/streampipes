@@ -18,7 +18,5 @@
 package org.apache.streampipes.model.configuration;
 
 public enum TransportStrategy {
-  SMTP,
-  SMTPS,
-  SMTP_TLS;
+  SMTP, SMTPS, SMTP_TLS;
 }

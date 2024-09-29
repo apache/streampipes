@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.grounding;
-
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;

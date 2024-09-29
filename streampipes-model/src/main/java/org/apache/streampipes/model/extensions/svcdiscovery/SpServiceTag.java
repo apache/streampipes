@@ -37,8 +37,7 @@ public class SpServiceTag {
     this.value = value;
   }
 
-  public static SpServiceTag create(SpServiceTagPrefix prefix,
-                                    String value) {
+  public static SpServiceTag create(SpServiceTagPrefix prefix, String value) {
     return new SpServiceTag(prefix, value);
   }
 

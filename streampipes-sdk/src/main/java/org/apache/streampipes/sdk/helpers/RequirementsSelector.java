@@ -21,8 +21,8 @@ import org.apache.streampipes.model.constants.PropertySelectorConstants;
 
 public enum RequirementsSelector {
 
-  FIRST_INPUT_STREAM(PropertySelectorConstants.FIRST_REQUIREMENT_PREFIX),
-  SECOND_INPUT_STREAM(PropertySelectorConstants.SECOND_REQUIREMENT_PREFIX);
+  FIRST_INPUT_STREAM(PropertySelectorConstants.FIRST_REQUIREMENT_PREFIX), SECOND_INPUT_STREAM(
+          PropertySelectorConstants.SECOND_REQUIREMENT_PREFIX);
 
   private String requirementPrefix;
 

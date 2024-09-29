@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.monitoring;
 
 import org.apache.streampipes.model.monitoring.SpLogMessage;
@@ -26,12 +25,9 @@ public interface IExtensionsLogger {
 
   void error(Exception e);
 
-  void error(String details,
-             Exception e);
+  void error(String details, Exception e);
 
-  void info(String title,
-            String details);
+  void info(String title, String details);
 
-  void warn(String title,
-            String details);
+  void warn(String title, String details);
 }

@@ -15,17 +15,16 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.units;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.github.jqudt.Unit;
 import com.github.jqudt.onto.UnitFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class UnitCollector {
 
@@ -33,70 +32,19 @@ public class UnitCollector {
 
   private static final String namespace = "http://qudt.org/schema/qudt#";
 
-  private static final String[] unitTypeClasses = new String[]{
-      "DerivedUnit",
-      "unit",
-      "DimensionlessUnit",
-      "ScienceAndEngineeringUnit",
-      "ResourceUnit",
-      "BaseUnit",
-      "SIBaseUnit",
-      "DerivedUnit",
-      "PhysicalUnit",
-      "ComputingUnit",
-      "CommunicationsUnit",
-      "BiomedicalUnit",
-      "RadiologyUnit",
-      "NonSIUnit",
-      "ChemistryUnit",
-      "LogarithmicUnit",
-      "SIUnit",
-      "AtomicPhysicsUnit",
-      "MechanicsUnit",
-      "SpaceAndTimeUnit",
-      "ElectricityAndMagnetismUnit",
-      "ThermodynamicsUnit",
-      "PerMeter",
-      "SquareMeterKelvin",
-      "PerCubicMeter",
-      "CurvatureUnit",
-      "LengthUnit",
-      "VolumeUnit",
-      "AngleUnit",
-      "AreaAngleUnit",
-      "TimeUnit",
-      "AccelerationUnit",
-      "TimeSquaredUnit",
-      "FrequencyUnit",
-      "VelocityUnit",
-      "TimeAreaUnit",
-      "AreaUnit",
-      "VolumePerTimeUnit",
-      "AreaTimeTemperatureUnit",
-      "SpecificHeatVolumeUnit",
-      "ThermalEnergyUnit",
-      "TemperaturePerTimeUnit",
-      "MolarHeatCapacityUnit",
-      "LengthTemperatureTimeUnit",
-      "ThermalEnergyLengthUnit",
-      "ThermalResistivityUnit",
-      "TemperatureUnit",
-      "ThermalDiffusivityUnit",
-      "ThermalConductivityUnit",
-      "MassTemperatureUnit",
-      "ThermalExpansionUnit",
-      "CoefficientOfHeatTransferUnit",
-      "SpecificHeatPressureUnit",
-      "HeatFlowRateUnit",
-      "ThermalResistanceUnit",
-      "HeatCapacityAndEntropyUnit",
-      "ThermalInsulanceUnit",
-      "LengthTemperatureUnit",
-      "AreaTemperatureUnit",
-      "SpecificHeatCapacityUnit",
-      "LinearVelocityUnit",
-      "AngularVelocityUnit"
-  };
+  private static final String[] unitTypeClasses = new String[] {"DerivedUnit", "unit", "DimensionlessUnit",
+      "ScienceAndEngineeringUnit", "ResourceUnit", "BaseUnit", "SIBaseUnit", "DerivedUnit", "PhysicalUnit",
+      "ComputingUnit", "CommunicationsUnit", "BiomedicalUnit", "RadiologyUnit", "NonSIUnit", "ChemistryUnit",
+      "LogarithmicUnit", "SIUnit", "AtomicPhysicsUnit", "MechanicsUnit", "SpaceAndTimeUnit",
+      "ElectricityAndMagnetismUnit", "ThermodynamicsUnit", "PerMeter", "SquareMeterKelvin", "PerCubicMeter",
+      "CurvatureUnit", "LengthUnit", "VolumeUnit", "AngleUnit", "AreaAngleUnit", "TimeUnit", "AccelerationUnit",
+      "TimeSquaredUnit", "FrequencyUnit", "VelocityUnit", "TimeAreaUnit", "AreaUnit", "VolumePerTimeUnit",
+      "AreaTimeTemperatureUnit", "SpecificHeatVolumeUnit", "ThermalEnergyUnit", "TemperaturePerTimeUnit",
+      "MolarHeatCapacityUnit", "LengthTemperatureTimeUnit", "ThermalEnergyLengthUnit", "ThermalResistivityUnit",
+      "TemperatureUnit", "ThermalDiffusivityUnit", "ThermalConductivityUnit", "MassTemperatureUnit",
+      "ThermalExpansionUnit", "CoefficientOfHeatTransferUnit", "SpecificHeatPressureUnit", "HeatFlowRateUnit",
+      "ThermalResistanceUnit", "HeatCapacityAndEntropyUnit", "ThermalInsulanceUnit", "LengthTemperatureUnit",
+      "AreaTemperatureUnit", "SpecificHeatCapacityUnit", "LinearVelocityUnit", "AngularVelocityUnit"};
 
   private final Set<Unit> availableUnits = new HashSet<>();
   private final Set<Unit> availableUnitTypes = new HashSet<>();
@@ -132,6 +80,5 @@ public class UnitCollector {
   public Set<Unit> getAvailableUnitTypes() {
     return availableUnitTypes;
   }
-
 
 }

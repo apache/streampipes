@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.export.generator;
 
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
@@ -37,17 +36,17 @@ import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExportPackageGenerator {
 
@@ -67,52 +66,32 @@ public class ExportPackageGenerator {
     ZipFileBuilder builder = ZipFileBuilder.create();
     var manifest = new StreamPipesApplicationPackage();
 
-    addAssets(builder, exportConfiguration
-        .getAssetExportConfiguration()
-        .stream()
-        .map(AssetExportConfiguration::getAssetId)
-        .collect(Collectors.toList()), manifest);
+    addAssets(builder, exportConfiguration.getAssetExportConfiguration().stream()
+            .map(AssetExportConfiguration::getAssetId).collect(Collectors.toList()), manifest);
 
     this.exportConfiguration.getAssetExportConfiguration().forEach(config -> {
 
-      config.getAdapters().forEach(item -> addDoc(builder,
-          item,
-          new AdapterResolver(),
-          manifest::addAdapter));
+      config.getAdapters().forEach(item -> addDoc(builder, item, new AdapterResolver(), manifest::addAdapter));
 
       config.getDashboards().forEach(item -> {
         var resolver = new DashboardResolver();
-        addDoc(builder,
-            item,
-            resolver,
-            manifest::addDashboard);
+        addDoc(builder, item, resolver, manifest::addDashboard);
 
         var widgets = resolver.getWidgets(item.getResourceId());
         var widgetResolver = new DashboardWidgetResolver();
         widgets.forEach(widgetId -> addDoc(builder, widgetId, widgetResolver, manifest::addDashboardWidget));
       });
 
-      config.getDataSources().forEach(item -> addDoc(builder,
-          item,
-          new DataSourceResolver(),
-          manifest::addDataSource));
+      config.getDataSources().forEach(item -> addDoc(builder, item, new DataSourceResolver(), manifest::addDataSource));
 
-      config.getDataLakeMeasures().forEach(item -> addDoc(builder,
-          item,
-          new MeasurementResolver(),
-          manifest::addDataLakeMeasure));
+      config.getDataLakeMeasures()
+              .forEach(item -> addDoc(builder, item, new MeasurementResolver(), manifest::addDataLakeMeasure));
 
-      config.getPipelines().forEach(item -> addDoc(builder,
-          item,
-          new PipelineResolver(),
-          manifest::addPipeline));
+      config.getPipelines().forEach(item -> addDoc(builder, item, new PipelineResolver(), manifest::addPipeline));
 
       config.getDataViews().forEach(item -> {
         var resolver = new DataViewResolver();
-        addDoc(builder,
-            item,
-            resolver,
-            manifest::addDataView);
+        addDoc(builder, item, resolver, manifest::addDataView);
 
         var widgets = resolver.getWidgets(item.getResourceId());
         var widgetResolver = new DataViewWidgetResolver();
@@ -133,32 +112,24 @@ public class ExportPackageGenerator {
 
     builder.addManifest(defaultMapper.writeValueAsString(manifest));
 
-
     return builder.buildZip();
   }
 
-  private void addDoc(ZipFileBuilder builder,
-                      String resourceId,
-                      AbstractResolver<?> resolver,
-                      Consumer<String> function) {
+  private void addDoc(ZipFileBuilder builder, String resourceId, AbstractResolver<?> resolver,
+          Consumer<String> function) {
     addDoc(builder, new ExportItem(resourceId, "", true), resolver, function);
   }
 
-  private void addDoc(ZipFileBuilder builder,
-                      ExportItem exportItem,
-                      AbstractResolver<?> resolver,
-                      Consumer<String> function) {
+  private void addDoc(ZipFileBuilder builder, ExportItem exportItem, AbstractResolver<?> resolver,
+          Consumer<String> function) {
     try {
       var resourceId = exportItem.getResourceId();
       var sanitizedResourceId = sanitize(resourceId);
       builder.addText(sanitizedResourceId, resolver.getSerializedDocument(resourceId));
       function.accept(sanitizedResourceId);
     } catch (JsonProcessingException | ElementNotFoundException e) {
-      LOG.warn(
-          "Could not find document with resource id {} with resolver {}",
-          exportItem.getResourceId(),
-          resolver.getClass().getCanonicalName(),
-          e);
+      LOG.warn("Could not find document with resource id {} with resolver {}", exportItem.getResourceId(),
+              resolver.getClass().getCanonicalName(), e);
     }
   }
 
@@ -166,9 +137,7 @@ public class ExportPackageGenerator {
     return resourceId.replaceAll(":", "").replaceAll("\\.", "");
   }
 
-  private void addAssets(ZipFileBuilder builder,
-                         List<String> assetIds,
-                         StreamPipesApplicationPackage manifest) {
+  private void addAssets(ZipFileBuilder builder, List<String> assetIds, StreamPipesApplicationPackage manifest) {
     assetIds.forEach(assetId -> {
       try {
         var asset = getAsset(assetId);

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -27,8 +26,7 @@ import java.util.Set;
 
 public interface IPipelineValidationStep {
 
-  void apply(NamedStreamPipesEntity source,
-             InvocableStreamPipesEntity target,
-             Set<InvocableStreamPipesEntity> allTargets,
-             List<PipelineElementValidationInfo> validationInfos) throws SpValidationException;
+  void apply(NamedStreamPipesEntity source, InvocableStreamPipesEntity target,
+          Set<InvocableStreamPipesEntity> allTargets, List<PipelineElementValidationInfo> validationInfos)
+          throws SpValidationException;
 }

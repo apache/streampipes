@@ -27,15 +27,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum AdapterType {
 
-  Generic("Generic Adapters", ""),
-  Finance("Finance", ""),
-  Environment("Environmental Data", ""),
-  News("News", ""),
-  SocialMedia("Social Media", ""),
-  OpenData("Open Data", ""),
-  Manufacturing("Production & Manufacturing", ""),
-  Energy("Energy", ""),
-  Debugging("Testing & Debugging", "");
+  Generic("Generic Adapters", ""), Finance("Finance", ""), Environment("Environmental Data", ""), News("News",
+          ""), SocialMedia("Social Media", ""), OpenData("Open Data", ""), Manufacturing("Production & Manufacturing",
+                  ""), Energy("Energy", ""), Debugging("Testing & Debugging", "");
 
   private final String label;
   private final String description;

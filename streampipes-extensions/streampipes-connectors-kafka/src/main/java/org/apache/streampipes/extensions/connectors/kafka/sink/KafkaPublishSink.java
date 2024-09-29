@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.kafka.sink;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -57,33 +56,24 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
 
   @Override
   public IDataSinkConfiguration declareConfig() {
-    return DataSinkConfiguration.create(
-        KafkaPublishSink::new,
-        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.kafka", 0)
-            .category(DataSinkType.MESSAGING)
-            .withLocales(Locales.EN)
-            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-            .requiredStream(StreamRequirementsBuilder
-                .create()
-                .requiredProperty(EpRequirements.anyProperty())
-                .build())
+    return DataSinkConfiguration.create(KafkaPublishSink::new, DataSinkBuilder
+            .create("org.apache.streampipes.sinks.brokers.jvm.kafka", 0).category(DataSinkType.MESSAGING)
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
 
             .requiredTextParameter(Labels.withId(KafkaConnectUtils.TOPIC_KEY), false, false)
             .requiredTextParameter(Labels.withId(KafkaConnectUtils.HOST_KEY), false, false)
             .requiredIntegerParameter(Labels.withId(KafkaConnectUtils.PORT_KEY), 9092)
 
             .requiredAlternatives(Labels.withId(KafkaConnectUtils.ACCESS_MODE),
-                KafkaConnectUtils.getAlternativeUnauthenticatedPlain(),
-                KafkaConnectUtils.getAlternativeUnauthenticatedSSL(),
-                KafkaConnectUtils.getAlternativesSaslPlain(),
-                KafkaConnectUtils.getAlternativesSaslSSL())
-            .build()
-    );
+                    KafkaConnectUtils.getAlternativeUnauthenticatedPlain(),
+                    KafkaConnectUtils.getAlternativeUnauthenticatedSSL(), KafkaConnectUtils.getAlternativesSaslPlain(),
+                    KafkaConnectUtils.getAlternativesSaslSSL())
+            .build());
   }
 
   @Override
-  public void onPipelineStarted(IDataSinkParameters parameters,
-                                EventSinkRuntimeContext runtimeContext) {
+  public void onPipelineStarted(IDataSinkParameters parameters, EventSinkRuntimeContext runtimeContext) {
     this.params = new KafkaParameters(parameters);
     this.dataFormatDefinition = new JsonDataFormatDefinition();
 
@@ -91,19 +81,17 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
     // check if a user for the authentication is defined
     if (params.useAuthentication()) {
       securityConfig = params.isUseSSL()
-          ? new KafkaSecuritySaslSSLConfig(params.getUsername(), params.getPassword()) :
-          new KafkaSecuritySaslPlainConfig(params.getUsername(), params.getPassword());
+              ? new KafkaSecuritySaslSSLConfig(params.getUsername(), params.getPassword())
+              : new KafkaSecuritySaslPlainConfig(params.getUsername(), params.getPassword());
     } else {
       // set security config for none authenticated access
       securityConfig = params.isUseSSL()
-          ? new KafkaSecurityUnauthenticatedSSLConfig() :
-          new KafkaSecurityUnauthenticatedPlainConfig();
+              ? new KafkaSecurityUnauthenticatedSSLConfig()
+              : new KafkaSecurityUnauthenticatedPlainConfig();
     }
 
-    this.producer = new SpKafkaProducer(
-        params.getKafkaHost() + ":" + params.getKafkaPort(),
-        params.getTopic(),
-        List.of(securityConfig));
+    this.producer = new SpKafkaProducer(params.getKafkaHost() + ":" + params.getKafkaPort(), params.getTopic(),
+            List.of(securityConfig));
   }
 
   @Override

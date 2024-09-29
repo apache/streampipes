@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.api;
 
 import org.apache.streampipes.model.file.GenericStorageAttachment;
@@ -41,7 +40,7 @@ public interface IGenericStorage {
   void delete(String id, String rev) throws IOException;
 
   void createAttachment(String docId, String attachmentName, String contentType, byte[] payload, String rev)
-      throws IOException;
+          throws IOException;
 
   GenericStorageAttachment findAttachment(String docId, String attachmentName) throws IOException;
 }

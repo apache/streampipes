@@ -32,15 +32,14 @@ public class InsertIntoClause extends SiddhiStatement {
     return new InsertIntoClause(streamName, insertAllEvents);
   }
 
-  public InsertIntoClause(String streamName,
-                          boolean insertAllEvents) {
+  public InsertIntoClause(String streamName, boolean insertAllEvents) {
     this.streamName = streamName;
     this.insertAllEvents = insertAllEvents;
   }
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.WHITESPACE, this.insertAllEvents
-        ? "insert all events into" : "insert into", streamName);
+    return join(SiddhiConstants.WHITESPACE, this.insertAllEvents ? "insert all events into" : "insert into",
+            streamName);
   }
 }

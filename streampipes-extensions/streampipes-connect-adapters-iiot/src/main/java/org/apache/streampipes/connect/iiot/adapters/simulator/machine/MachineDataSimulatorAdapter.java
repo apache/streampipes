@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.iiot.adapters.simulator.machine;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -44,20 +43,16 @@ public class MachineDataSimulatorAdapter implements StreamPipesAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder.create(ID, 0, MachineDataSimulatorAdapter::new)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .withCategory(AdapterType.Debugging)
-        .requiredIntegerParameter(Labels.withId(WAIT_TIME_MS), 1000)
-        .requiredSingleValueSelection(Labels.withId(SELECTED_SIMULATOR_OPTION), Options.from(
-            "flowrate", "pressure", "waterlevel"))
-        .buildConfiguration();
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .withCategory(AdapterType.Debugging).requiredIntegerParameter(Labels.withId(WAIT_TIME_MS), 1000)
+            .requiredSingleValueSelection(Labels.withId(SELECTED_SIMULATOR_OPTION),
+                    Options.from("flowrate", "pressure", "waterlevel"))
+            .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext)
-      throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     var ex = extractor.getStaticPropertyExtractor();
 
     var waitTimeMs = ex.singleValueParameter(WAIT_TIME_MS, Integer.class);
@@ -68,15 +63,14 @@ public class MachineDataSimulatorAdapter implements StreamPipesAdapter {
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
+          throws AdapterException {
     this.machineDataSimulator.setRunning(false);
   }
 
-
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     var ex = extractor.getStaticPropertyExtractor();
     var selectedSimulatorOption = ex.selectedSingleValue(SELECTED_SIMULATOR_OPTION, String.class);
     return MachineDataSimulatorUtils.getSchema(selectedSimulatorOption);

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.configuration.MessagingSettings;
@@ -41,10 +40,7 @@ public class MessagingConfigurationResource extends AbstractAuthGuardedRestResou
     return ok(getSpCoreConfigurationStorage().get().getMessagingSettings());
   }
 
-  @PostMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> updateMessagingSettings(@RequestBody MessagingSettings messagingSettings) {
     var cfg = getSpCoreConfigurationStorage().get();

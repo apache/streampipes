@@ -34,8 +34,7 @@ public class Event {
   private SourceInfo sourceInfo;
   private SchemaInfo schemaInfo;
 
-  public Event(Map<String, AbstractField> fieldMap, SourceInfo
-      sourceInfo, SchemaInfo schemaInfo) {
+  public Event(Map<String, AbstractField> fieldMap, SourceInfo sourceInfo, SchemaInfo schemaInfo) {
     this.fieldMap = fieldMap;
     this.sourceInfo = sourceInfo;
     this.schemaInfo = schemaInfo;
@@ -71,18 +70,14 @@ public class Event {
   }
 
   public Optional<AbstractField> getOptionalFieldByRuntimeName(String runtimeName) {
-    return fieldMap
-        .entrySet()
-        .stream()
-        .map(Map.Entry::getValue)
-        .filter(entry -> entry.getFieldNameIn().equals(runtimeName))
-        .findFirst();
+    return fieldMap.entrySet().stream().map(Map.Entry::getValue)
+            .filter(entry -> entry.getFieldNameIn().equals(runtimeName)).findFirst();
   }
 
   public AbstractField getFieldByRuntimeName(String runtimeName) {
     // TODO this currently only works for first-level properties
     return getOptionalFieldByRuntimeName(runtimeName)
-        .orElseThrow(() -> new SpRuntimeException("Field " + runtimeName + " not found"));
+            .orElseThrow(() -> new SpRuntimeException("Field " + runtimeName + " not found"));
   }
 
   public void removeFieldBySelector(String fieldSelector) {
@@ -93,8 +88,7 @@ public class Event {
     return getFieldBySelector(fieldSelector, fieldMap);
   }
 
-  private AbstractField getFieldBySelector(String fieldSelector, Map<String, AbstractField>
-      currentFieldMap) {
+  private AbstractField getFieldBySelector(String fieldSelector, Map<String, AbstractField> currentFieldMap) {
     if (currentFieldMap.containsKey(fieldSelector)) {
       return currentFieldMap.get(fieldSelector);
     } else {
@@ -102,10 +96,9 @@ public class Event {
     }
   }
 
-  private Map<String, AbstractField> getNestedItem(String fieldSelector, Map<String,
-      AbstractField> currentFieldMap) {
-    String key = currentFieldMap.keySet().stream().filter(fieldSelector::startsWith)
-        .findFirst().orElseThrow(() -> new IllegalArgumentException("Key not found"));
+  private Map<String, AbstractField> getNestedItem(String fieldSelector, Map<String, AbstractField> currentFieldMap) {
+    String key = currentFieldMap.keySet().stream().filter(fieldSelector::startsWith).findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Key not found"));
     return currentFieldMap.get(key).getAsComposite().getRawValue();
   }
 
@@ -113,9 +106,7 @@ public class Event {
     if (fieldMap.containsKey(selector)) {
       fieldMap.put(selector, field);
     } else {
-      updateFieldMap(fieldMap.get(makeSelector(selector, 2))
-          .getAsComposite()
-          .getRawValue(), selector, 2, field);
+      updateFieldMap(fieldMap.get(makeSelector(selector, 2)).getAsComposite().getRawValue(), selector, 2, field);
     }
   }
 
@@ -127,15 +118,13 @@ public class Event {
     addField(field);
   }
 
-  private void updateFieldMap(Map<String, AbstractField> currentFieldMap,
-                              String selector, Integer position,
-                              AbstractField field) {
+  private void updateFieldMap(Map<String, AbstractField> currentFieldMap, String selector, Integer position,
+          AbstractField field) {
     if (currentFieldMap.containsKey(selector)) {
       currentFieldMap.put(selector, field);
     } else {
-      updateFieldMap(currentFieldMap.get(makeSelector(selector, position + 1))
-          .getAsComposite()
-          .getRawValue(), selector, 2, field);
+      updateFieldMap(currentFieldMap.get(makeSelector(selector, position + 1)).getAsComposite().getRawValue(), selector,
+              2, field);
     }
   }
 
@@ -218,20 +207,14 @@ public class Event {
   }
 
   public void addFieldAtPosition(String baseSelector, AbstractField field) {
-    getFieldBySelector(baseSelector)
-        .getAsComposite()
-        .addField(
-            makeSelector(baseSelector, field.getFieldNameIn()
-            ),
-            field
-        );
+    getFieldBySelector(baseSelector).getAsComposite().addField(makeSelector(baseSelector, field.getFieldNameIn()),
+            field);
   }
 
   private String makeKey(AbstractField field) {
-    return sourceInfo != null && sourceInfo.getSelectorPrefix() != null ? sourceInfo
-        .getSelectorPrefix()
-        + PropertySelectorConstants.PROPERTY_DELIMITER
-        + field.getFieldNameIn() : field.getFieldNameIn();
+    return sourceInfo != null && sourceInfo.getSelectorPrefix() != null
+            ? sourceInfo.getSelectorPrefix() + PropertySelectorConstants.PROPERTY_DELIMITER + field.getFieldNameIn()
+            : field.getFieldNameIn();
   }
 
   public Event getSubset(List<String> fieldSelectors) {

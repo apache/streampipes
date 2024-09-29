@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.brokers.jvm.rabbitmq;
 
 public class RabbitMqParameters {
@@ -27,8 +26,8 @@ public class RabbitMqParameters {
   private String rabbitMqPassword;
   private String exchangeName;
 
-  public RabbitMqParameters(String rabbitMqHost, Integer rabbitMqPort, String rabbitMqTopic,
-                            String rabbitMqUser, String rabbitMqPassword, String exchangeName) {
+  public RabbitMqParameters(String rabbitMqHost, Integer rabbitMqPort, String rabbitMqTopic, String rabbitMqUser,
+          String rabbitMqPassword, String exchangeName) {
     this.rabbitMqHost = rabbitMqHost;
     this.rabbitMqPort = rabbitMqPort;
     this.rabbitMqTopic = rabbitMqTopic;

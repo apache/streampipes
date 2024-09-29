@@ -26,8 +26,7 @@ public class BaseNetworkingConfig {
   private final String host;
   private final Integer port;
 
-  public BaseNetworkingConfig(String host,
-                              Integer port) {
+  public BaseNetworkingConfig(String host, Integer port) {
     this.host = host;
     this.port = port;
   }

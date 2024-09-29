@@ -25,7 +25,6 @@ import java.util.List;
 
 public class DataSinkStorageImpl extends DefaultCrudStorage<DataSinkDescription> implements IDataSinkStorage {
 
-
   public DataSinkStorageImpl() {
     super(Utils::getCouchDbDataSinkDescriptionClient, DataSinkDescription.class);
   }
@@ -39,18 +38,12 @@ public class DataSinkStorageImpl extends DefaultCrudStorage<DataSinkDescription>
 
   @Override
   public DataSinkDescription getFirstDataSinkByAppId(String appId) {
-    return getDataSinksByAppId(appId)
-        .stream()
-        .findFirst()
-        .orElseThrow(IllegalArgumentException::new);
+    return getDataSinksByAppId(appId).stream().findFirst().orElseThrow(IllegalArgumentException::new);
   }
 
   @Override
   public List<DataSinkDescription> getDataSinksByAppId(String appId) {
-    return findAll()
-      .stream()
-      .filter(s -> s.getAppId().equals(appId))
-      .toList();
+    return findAll().stream().filter(s -> s.getAppId().equals(appId)).toList();
   }
 
   private String getCurrentRev(String elementId) {

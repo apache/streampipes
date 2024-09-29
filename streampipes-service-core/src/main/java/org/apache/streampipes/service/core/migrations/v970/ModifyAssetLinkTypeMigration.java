@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.migrations.v970;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
@@ -24,14 +23,14 @@ import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 public class ModifyAssetLinkTypeMigration implements Migration {
 
@@ -51,20 +50,18 @@ public class ModifyAssetLinkTypeMigration implements Migration {
 
   @Override
   public void executeMigration() throws IOException {
-    getAssetLinkTypes().stream()
-        .filter(assetLinkType -> switch (assetLinkType.getLinkType()) {
-          case "data-view", "adapter", "pipeline" -> true;
-          default -> false;
-        })
-        .forEach(assetLinkType -> {
-          assetLinkType.setNavPaths(switch (assetLinkType.getLinkType()) {
-            case "data-view" -> List.of("dataexplorer", "dashboard");
-            case "adapter" -> List.of("connect", "details");
-            case "pipeline" -> List.of("pipelines", "details");
-            default -> throw new IllegalStateException("Unexpected value: " + assetLinkType.getLinkType());
-          });
-          updateLinkType(assetLinkType);
-        });
+    getAssetLinkTypes().stream().filter(assetLinkType -> switch (assetLinkType.getLinkType()) {
+      case "data-view", "adapter", "pipeline" -> true;
+      default -> false;
+    }).forEach(assetLinkType -> {
+      assetLinkType.setNavPaths(switch (assetLinkType.getLinkType()) {
+        case "data-view" -> List.of("dataexplorer", "dashboard");
+        case "adapter" -> List.of("connect", "details");
+        case "pipeline" -> List.of("pipelines", "details");
+        default -> throw new IllegalStateException("Unexpected value: " + assetLinkType.getLinkType());
+      });
+      updateLinkType(assetLinkType);
+    });
   }
 
   @Override
@@ -89,8 +86,7 @@ public class ModifyAssetLinkTypeMigration implements Migration {
   }
 
   private List<AssetLinkType> deserialize(List<Map<String, Object>> list) {
-    CollectionType listType = objectMapper.getTypeFactory()
-        .constructCollectionType(List.class, AssetLinkType.class);
+    CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(List.class, AssetLinkType.class);
 
     return objectMapper.convertValue(list, listType);
   }

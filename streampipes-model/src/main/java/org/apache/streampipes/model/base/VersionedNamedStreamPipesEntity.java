@@ -31,7 +31,7 @@ public abstract class VersionedNamedStreamPipesEntity extends NamedStreamPipesEn
     this.version = other.version;
   }
 
-  public int getVersion(){
+  public int getVersion() {
     return version;
   }
 

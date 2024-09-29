@@ -29,8 +29,7 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import java.util.List;
 import java.util.Optional;
 
-public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation>
-    implements IDataSinkApi {
+public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation> implements IDataSinkApi {
 
   public DataSinkApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, DataSinkInvocation.class);
@@ -66,43 +65,43 @@ public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation>
   /**
    * Subscribe to the input stream of the sink
    *
-   * @param sink     The data sink to subscribe to
-   * @param callback The callback where events will be received
+   * @param sink
+   *          The data sink to subscribe to
+   * @param callback
+   *          The callback where events will be received
    */
   @Override
-  public ISubscription subscribe(DataSinkInvocation sink,
-                                 EventProcessor callback) {
+  public ISubscription subscribe(DataSinkInvocation sink, EventProcessor callback) {
     return new SubscriptionManager(sink.getInputStreams().get(0).getEventGrounding(), callback).subscribe();
   }
 
   /**
    * Subscribe to the input stream of the sink
    *
-   * @param sink                 The data sink to subscribe to
-   * @param brokerConfigOverride Additional kafka settings which will override the default value (see docs)
-   * @param callback             The callback where events will be received
+   * @param sink
+   *          The data sink to subscribe to
+   * @param brokerConfigOverride
+   *          Additional kafka settings which will override the default value (see docs)
+   * @param callback
+   *          The callback where events will be received
    */
   @Override
-  public ISubscription subscribe(DataSinkInvocation sink,
-                                 IBrokerConfigOverride brokerConfigOverride,
-                                 EventProcessor callback) {
-    return new SubscriptionManager(brokerConfigOverride,
-        sink.getInputStreams().get(0).getEventGrounding(), callback).subscribe();
+  public ISubscription subscribe(DataSinkInvocation sink, IBrokerConfigOverride brokerConfigOverride,
+          EventProcessor callback) {
+    return new SubscriptionManager(brokerConfigOverride, sink.getInputStreams().get(0).getEventGrounding(), callback)
+            .subscribe();
   }
 
   @Override
   public DataSinkInvocation getDataSinkForPipelineElement(String templateId, DataSinkInvocation pipelineElement) {
-    StreamPipesApiPath path = StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("pipeline-element-templates")
-        .addToPath(templateId)
-        .addToPath("sink");
+    StreamPipesApiPath path = StreamPipesApiPath.fromBaseApiPath().addToPath("pipeline-element-templates")
+            .addToPath(templateId).addToPath("sink");
 
     return post(path, pipelineElement, DataSinkInvocation.class);
   }
 
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
-    return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("actions");
+    return StreamPipesApiPath.fromBaseApiPath().addToPath("actions");
   }
 }

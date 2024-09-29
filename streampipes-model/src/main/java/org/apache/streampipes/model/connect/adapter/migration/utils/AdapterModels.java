@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.adapter.migration.utils;
 
 import java.util.List;
@@ -24,31 +23,18 @@ import java.util.stream.Stream;
 
 public class AdapterModels {
 
-  public static final String GENERIC_SET =
-      "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription";
-  public static final String SPECIFIC_SET =
-      "org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription";
-  public static final String GENERIC_STREAM =
-      "org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription";
-  public static final String SPECIFIC_STREAM =
-      "org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription";
+  public static final String GENERIC_SET = "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription";
+  public static final String SPECIFIC_SET = "org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription";
+  public static final String GENERIC_STREAM = "org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription";
+  public static final String SPECIFIC_STREAM = "org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription";
 
-  public static final String NEW_MODEL =
-      "org.apache.streampipes.model.connect.adapter.AdapterDescription";
-  public static List<String> deprecatedAdapterSetClasses = List.of(
-      GENERIC_SET,
-      SPECIFIC_SET
-  );
+  public static final String NEW_MODEL = "org.apache.streampipes.model.connect.adapter.AdapterDescription";
+  public static List<String> deprecatedAdapterSetClasses = List.of(GENERIC_SET, SPECIFIC_SET);
 
-  public static List<String> deprecatedAdapterStreamClasses = List.of(
-      GENERIC_STREAM,
-      SPECIFIC_STREAM
-  );
+  public static List<String> deprecatedAdapterStreamClasses = List.of(GENERIC_STREAM, SPECIFIC_STREAM);
 
-  public static List<String> deprecatedAdapterClasses =
-      Stream.concat(
-              deprecatedAdapterSetClasses.stream(),
-              deprecatedAdapterStreamClasses.stream())
+  public static List<String> deprecatedAdapterClasses = Stream
+          .concat(deprecatedAdapterSetClasses.stream(), deprecatedAdapterStreamClasses.stream())
           .collect(Collectors.toList());
 
   public static boolean shouldMigrate(String adapterClassName) {

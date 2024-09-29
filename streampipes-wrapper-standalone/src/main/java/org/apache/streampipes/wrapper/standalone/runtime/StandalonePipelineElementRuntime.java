@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -39,13 +38,11 @@ import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class StandalonePipelineElementRuntime<
-    PeT extends IStreamPipesPipelineElement<?>,
-    IvT extends InvocableStreamPipesEntity,
-    RcT extends RuntimeContext,
-    ExT extends IParameterExtractor,
-    PepT extends IPipelineElementParameters<IvT, ExT>>
-    extends PipelineElementRuntime<PeT, IvT, RcT, ExT, PepT> implements RawDataProcessor {
+public abstract class StandalonePipelineElementRuntime<PeT extends IStreamPipesPipelineElement<?>, IvT extends InvocableStreamPipesEntity, RcT extends RuntimeContext, ExT extends IParameterExtractor, PepT extends IPipelineElementParameters<IvT, ExT>>
+        extends
+          PipelineElementRuntime<PeT, IvT, RcT, ExT, PepT>
+        implements
+          RawDataProcessor {
 
   protected List<SpInputCollector> inputCollectors;
 
@@ -59,17 +56,15 @@ public abstract class StandalonePipelineElementRuntime<
   protected final SpMonitoringManager monitoringManager;
 
   public StandalonePipelineElementRuntime(IContextGenerator<RcT, IvT> contextGenerator,
-                                          IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
+          IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
     super(contextGenerator, parameterGenerator);
     this.internalRuntimeParameters = new InternalRuntimeParameters();
     this.monitoringManager = SpMonitoringManager.INSTANCE;
   }
 
   @Override
-  public void startRuntime(IvT pipelineElementInvocation,
-                           PeT pipelineElement,
-                           PepT runtimeParameters,
-                           RcT runtimeContext) {
+  public void startRuntime(IvT pipelineElementInvocation, PeT pipelineElement, PepT runtimeParameters,
+          RcT runtimeContext) {
     this.pipelineElement = pipelineElement;
     this.runtimeParameters = runtimeParameters;
     this.runtimeContext = runtimeContext;
@@ -92,9 +87,7 @@ public abstract class StandalonePipelineElementRuntime<
   protected List<SpInputCollector> getInputCollectors(List<SpDataStream> inputStreams) throws SpRuntimeException {
     List<SpInputCollector> inputCollectors = new ArrayList<>();
     for (SpDataStream is : inputStreams) {
-      inputCollectors.add(ProtocolManager.findInputCollector(is.getEventGrounding()
-              .getTransportProtocol(),
-          false));
+      inputCollectors.add(ProtocolManager.findInputCollector(is.getEventGrounding().getTransportProtocol(), false));
     }
     return inputCollectors;
   }

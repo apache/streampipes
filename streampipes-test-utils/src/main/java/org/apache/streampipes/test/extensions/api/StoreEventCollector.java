@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.test.extensions.api;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;

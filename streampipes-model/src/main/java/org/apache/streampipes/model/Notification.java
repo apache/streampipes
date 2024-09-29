@@ -15,14 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model;
 
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.Date;
 
 public class Notification {
 

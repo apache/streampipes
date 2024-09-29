@@ -15,15 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder.adapter;
 
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
 
-public class ParserDescriptionBuilder extends
-    AbstractConfigurablePipelineElementBuilder<ParserDescriptionBuilder, ParserDescription> {
+public class ParserDescriptionBuilder
+        extends
+          AbstractConfigurablePipelineElementBuilder<ParserDescriptionBuilder, ParserDescription> {
 
   protected ParserDescriptionBuilder(String appId, String label, String description) {
     super(appId, label, description, new ParserDescription());
@@ -32,10 +32,12 @@ public class ParserDescriptionBuilder extends
   /**
    * Creates a new format description using the builder pattern.
    *
-   * @param id          A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
-   * @param label       A human-readable name of the element.
-   *                    Will later be shown as the element name in the StreamPipes UI.
-   * @param description A human-readable description of the element.
+   * @param id
+   *          A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
+   * @param label
+   *          A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
+   * @param description
+   *          A human-readable description of the element.
    */
   public static ParserDescriptionBuilder create(String id, String label, String description) {
     return new ParserDescriptionBuilder(id, label, description);
@@ -48,12 +50,8 @@ public class ParserDescriptionBuilder extends
 
   @Override
   protected void prepareBuild() {
-    var group = new StaticPropertyGroup(
-        elementDescription.getAppId(),
-        elementDescription.getName(),
-        elementDescription.getDescription(),
-        getStaticProperties());
+    var group = new StaticPropertyGroup(elementDescription.getAppId(), elementDescription.getName(),
+            elementDescription.getDescription(), getStaticProperties());
     this.elementDescription.setConfig(group);
   }
 }
-

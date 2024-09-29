@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
@@ -23,6 +22,10 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +42,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/v2/assets")
 public class AssetManagementResource extends AbstractAuthGuardedRestResource {
@@ -57,10 +56,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
     return getGenericStorage().findAll(APP_DOC_TYPE);
   }
 
-  @PostMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
   public ResponseEntity<?> create(@RequestBody String asset) {
     try {
@@ -84,13 +80,9 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PutMapping(
-      path = "/{id}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
-  public ResponseEntity<Map<String, Object>> update(@PathVariable("id") String assetId,
-                                                    @RequestBody String asset) {
+  public ResponseEntity<Map<String, Object>> update(@PathVariable("id") String assetId, @RequestBody String asset) {
     try {
       Map<String, Object> obj = getGenericStorage().update(assetId, asset);
       return ok(obj);
@@ -102,8 +94,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
   @DeleteMapping(path = "/{id}/{rev}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
-  public ResponseEntity<Void> delete(@PathVariable("id") String assetId,
-                                     @PathVariable("rev") String rev) {
+  public ResponseEntity<Void> delete(@PathVariable("id") String assetId, @PathVariable("rev") String rev) {
     try {
       getGenericStorage().delete(assetId, rev);
       return ok();

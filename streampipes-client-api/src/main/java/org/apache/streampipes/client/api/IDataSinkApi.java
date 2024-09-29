@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.api.annotation.NotYetImplemented;
@@ -45,12 +44,9 @@ public interface IDataSinkApi extends CRUDApi<String, DataSinkInvocation> {
   @Override
   void update(DataSinkInvocation element);
 
-  ISubscription subscribe(DataSinkInvocation sink,
-                          EventProcessor callback);
+  ISubscription subscribe(DataSinkInvocation sink, EventProcessor callback);
 
-  ISubscription subscribe(DataSinkInvocation sink,
-                          IBrokerConfigOverride brokerConfigOverride,
-                          EventProcessor callback);
+  ISubscription subscribe(DataSinkInvocation sink, IBrokerConfigOverride brokerConfigOverride, EventProcessor callback);
 
   DataSinkInvocation getDataSinkForPipelineElement(String templateId, DataSinkInvocation pipelineElement);
 }

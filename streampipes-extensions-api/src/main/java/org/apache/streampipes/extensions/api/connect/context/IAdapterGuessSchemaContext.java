@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.connect.context;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;

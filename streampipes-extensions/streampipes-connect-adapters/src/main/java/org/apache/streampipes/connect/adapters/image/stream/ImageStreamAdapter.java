@@ -15,8 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.adapters.image.stream;
+
+import static org.apache.streampipes.sdk.helpers.EpProperties.imageProperty;
+import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.adapters.image.ImageZipAdapter;
@@ -35,9 +37,6 @@ import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
-import static org.apache.streampipes.sdk.helpers.EpProperties.imageProperty;
-import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
-
 public class ImageStreamAdapter implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.adapters.image.stream";
@@ -46,34 +45,28 @@ public class ImageStreamAdapter implements StreamPipesAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 0, ImageStreamAdapter::new)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredIntegerParameter(Labels.withId(ImageZipUtils.INTERVAL_KEY))
-        .requiredFile(Labels.withId(ImageZipUtils.ZIP_FILE_KEY), Filetypes.ZIP)
-        .buildConfiguration();
+    return AdapterConfigurationBuilder.create(ID, 0, ImageStreamAdapter::new).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredIntegerParameter(Labels.withId(ImageZipUtils.INTERVAL_KEY))
+            .requiredFile(Labels.withId(ImageZipUtils.ZIP_FILE_KEY), Filetypes.ZIP).buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     imageZipAdapter = new ImageZipAdapter();
     imageZipAdapter.start(collector, extractor.getStaticPropertyExtractor(), true);
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext) {
     imageZipAdapter.stop();
   }
 
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) {
-    return GuessSchemaBuilder.create()
-        .property(timestampProperty(ImageZipUtils.TIMESTAMP))
-        .property(imageProperty(ImageZipUtils.IMAGE))
-        .build();
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) {
+    return GuessSchemaBuilder.create().property(timestampProperty(ImageZipUtils.TIMESTAMP))
+            .property(imageProperty(ImageZipUtils.IMAGE)).build();
   }
 }

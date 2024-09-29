@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
 import org.apache.streampipes.connect.shared.preprocessing.SupportsNestedTransformationRule;
@@ -23,13 +22,13 @@ import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.units.UnitProvider;
 
+import java.util.List;
+import java.util.Map;
+
 import com.github.jqudt.Quantity;
 import com.github.jqudt.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.Map;
 
 public class UnitTransformationRule extends SupportsNestedTransformationRule {
 
@@ -45,8 +44,7 @@ public class UnitTransformationRule extends SupportsNestedTransformationRule {
     this.eventKey = Utils.toKeyArray(description.getRuntimeKey());
   }
 
-  public UnitTransformationRule(List<String> keys,
-                                String fromUnitRessourceURL, String toUnitRessourceURL) {
+  public UnitTransformationRule(List<String> keys, String fromUnitRessourceURL, String toUnitRessourceURL) {
     this.unitTypeFrom = UnitProvider.INSTANCE.getUnit(fromUnitRessourceURL);
     this.unitTypeTo = UnitProvider.INSTANCE.getUnit(toUnitRessourceURL);
     this.eventKey = keys;

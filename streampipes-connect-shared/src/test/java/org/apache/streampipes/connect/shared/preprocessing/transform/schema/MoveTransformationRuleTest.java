@@ -15,17 +15,16 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("unchecked")
 public class MoveTransformationRuleTest {
@@ -34,7 +33,6 @@ public class MoveTransformationRuleTest {
   public void transform() {
     Map<String, Object> child = new HashMap<>();
     child.put("key", new HashMap<>());
-
 
     Map<String, Object> event = new HashMap<>();
     event.put("old_parent", child);
@@ -47,17 +45,13 @@ public class MoveTransformationRuleTest {
     List<String> newKey = new ArrayList<>();
     newKey.add("new_parent");
 
-
     MoveTransformationRule moveRule = new MoveTransformationRule(oldKey, newKey);
 
     Map<String, Object> result = moveRule.apply(event);
 
-    Assertions.assertEquals(2,
-                            result.keySet().size());
-    Assertions.assertEquals(0,
-                            ((Map<String, Object>) result.get("old_parent")).keySet().size());
-    Assertions.assertEquals(1,
-                            ((Map<String, Object>) result.get("new_parent")).keySet().size());
+    Assertions.assertEquals(2, result.keySet().size());
+    Assertions.assertEquals(0, ((Map<String, Object>) result.get("old_parent")).keySet().size());
+    Assertions.assertEquals(1, ((Map<String, Object>) result.get("new_parent")).keySet().size());
   }
 
   @Test
@@ -70,10 +64,8 @@ public class MoveTransformationRuleTest {
 
     Map<String, Object> result = moveRule.apply(event);
 
-    Assertions.assertEquals(1,
-                            result.keySet().size());
-    Assertions.assertEquals(1,
-                            ((Map<String, Object>) result.get("new_parent")).keySet().size());
+    Assertions.assertEquals(1, result.keySet().size());
+    Assertions.assertEquals(1, ((Map<String, Object>) result.get("new_parent")).keySet().size());
   }
 
   @Test
@@ -88,10 +80,8 @@ public class MoveTransformationRuleTest {
 
     Map<String, Object> result = moveRule.apply(parent);
 
-    Assertions.assertEquals(2,
-                            result.keySet().size());
-    Assertions.assertEquals(0,
-                            ((Map<String, Object>) result.get("parent")).keySet().size());
+    Assertions.assertEquals(2, result.keySet().size());
+    Assertions.assertEquals(0, ((Map<String, Object>) result.get("parent")).keySet().size());
     Assertions.assertEquals("value", result.get("child"));
   }
 }

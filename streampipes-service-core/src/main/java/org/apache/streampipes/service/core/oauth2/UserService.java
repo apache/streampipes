@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.oauth2;
 
 import org.apache.streampipes.commons.environment.Environment;
@@ -27,13 +26,13 @@ import org.apache.streampipes.rest.security.OAuth2AuthenticationProcessingExcept
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
+
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 
 public class UserService {
 
@@ -45,19 +44,14 @@ public class UserService {
     this.env = Environments.getEnvironment();
   }
 
-  public OidcUserAccountDetails processUserRegistration(String registrationId,
-                                                        Map<String, Object> attributes) {
+  public OidcUserAccountDetails processUserRegistration(String registrationId, Map<String, Object> attributes) {
     return processUserRegistration(registrationId, attributes, null, null);
   }
 
-  public OidcUserAccountDetails processUserRegistration(String registrationId,
-                                                        Map<String, Object> attributes,
-                                                        OidcIdToken idToken,
-                                                        OidcUserInfo userInfo) {
-    var oAuthConfigOpt = env.getOAuthConfigurations()
-        .stream()
-        .filter(c -> c.getRegistrationId().equals(registrationId))
-        .findFirst();
+  public OidcUserAccountDetails processUserRegistration(String registrationId, Map<String, Object> attributes,
+          OidcIdToken idToken, OidcUserInfo userInfo) {
+    var oAuthConfigOpt = env.getOAuthConfigurations().stream().filter(c -> c.getRegistrationId().equals(registrationId))
+            .findFirst();
 
     if (oAuthConfigOpt.isPresent()) {
       var oAuthConfig = oAuthConfigOpt.get();
@@ -71,8 +65,7 @@ public class UserService {
       if (user != null) {
         if (!user.getProvider().equals(registrationId) && !user.getProvider().equals(UserAccount.LOCAL)) {
           throw new OAuth2AuthenticationProcessingException(
-              String.format("Already signed up with another provider %s", user.getProvider())
-          );
+                  String.format("Already signed up with another provider %s", user.getProvider()));
         }
       } else {
         new UserResourceManager().registerOauthUser(toUserAccount(registrationId, principalId, email, fullName));
@@ -81,15 +74,11 @@ public class UserService {
       return OidcUserAccountDetails.create(user, attributes, idToken, userInfo);
     } else {
       throw new OAuth2AuthenticationProcessingException(
-          String.format("No config found for provider %s", registrationId)
-      );
+              String.format("No config found for provider %s", registrationId));
     }
   }
 
-  private UserAccount toUserAccount(String registrationId,
-                                    String principalId,
-                                    String email,
-                                    Object fullName) {
+  private UserAccount toUserAccount(String registrationId, String principalId, String email, Object fullName) {
     var roles = Stream.of(DefaultRole.ROLE_ADMIN.toString()).toList();
     var user = UserAccount.from(email, null, new HashSet<>(roles));
     user.setPrincipalId(principalId);

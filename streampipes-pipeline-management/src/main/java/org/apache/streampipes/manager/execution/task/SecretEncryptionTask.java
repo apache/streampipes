@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution.task;
 
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
@@ -31,8 +30,7 @@ public class SecretEncryptionTask implements PipelineExecutionTask {
   }
 
   @Override
-  public void executeTask(Pipeline pipeline,
-                          PipelineExecutionInfo executionInfo) {
+  public void executeTask(Pipeline pipeline, PipelineExecutionInfo executionInfo) {
     this.secretService.apply(executionInfo.getProcessorsAndSinks());
   }
 }

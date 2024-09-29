@@ -15,18 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.extensions.function;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.model.function.FunctionDefinition;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class RegistrationHandler implements Runnable {
 

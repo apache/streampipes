@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.internal.jvm;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -37,10 +36,7 @@ public class InternalSinksExtensionModuleExports implements IExtensionModuleExpo
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new DataLakeSink(),
-        new InternalStreamPipesNotificationSink()
-    );
+    return List.of(new DataLakeSink(), new InternalStreamPipesNotificationSink());
   }
 
   @Override

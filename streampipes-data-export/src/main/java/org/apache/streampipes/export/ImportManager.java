@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.export;
 
 import org.apache.streampipes.export.dataimport.PerformImportGenerator;
@@ -31,9 +30,8 @@ public class ImportManager {
     return new PreviewImportGenerator().generate(packageZipStream);
   }
 
-  public static void performImport(InputStream packageZipStream,
-                                   AssetExportConfiguration exportConfiguration,
-                                   String ownerSid) throws IOException {
+  public static void performImport(InputStream packageZipStream, AssetExportConfiguration exportConfiguration,
+          String ownerSid) throws IOException {
     new PerformImportGenerator(exportConfiguration, ownerSid).generate(packageZipStream);
   }
 }

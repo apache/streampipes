@@ -34,11 +34,8 @@ public class GrantedPermissionsBuilder {
   public Set<String> buildAllPermissions() {
     Set<String> sids = extractSids();
 
-    return StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getPermissionStorage()
-        .getObjectPermissions(new ArrayList<>(sids));
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage()
+            .getObjectPermissions(new ArrayList<>(sids));
   }
 
   private Set<String> extractSids() {

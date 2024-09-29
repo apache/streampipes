@@ -15,19 +15,18 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.brokers.jvm.rabbitmq;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 public class RabbitMqPublisher {
 
@@ -69,7 +68,7 @@ public class RabbitMqPublisher {
 
   }
 
-  public boolean isConnected()  {
+  public boolean isConnected() {
     return this.connection.isOpen();
   }
 
@@ -100,19 +99,15 @@ public class RabbitMqPublisher {
   }
 
   public void cleanup() {
-    queueMap
-            .keySet()
-            .stream()
-            .map(key -> queueMap.get(key))
-            .forEach(channel -> {
-              try {
-                channel.close();
-              } catch (IOException e) {
-                e.printStackTrace();
-              } catch (TimeoutException e) {
-                e.printStackTrace();
-              }
-            });
+    queueMap.keySet().stream().map(key -> queueMap.get(key)).forEach(channel -> {
+      try {
+        channel.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      } catch (TimeoutException e) {
+        e.printStackTrace();
+      }
+    });
     try {
       connection.close();
     } catch (IOException e) {

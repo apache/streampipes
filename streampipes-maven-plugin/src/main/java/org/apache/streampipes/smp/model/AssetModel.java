@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.smp.model;
 
 import org.apache.streampipes.smp.constants.PeType;
@@ -46,7 +45,6 @@ public class AssetModel implements Comparable<AssetModel> {
     return appId;
   }
 
-
   public String getPipelineElementName() {
     return pipelineElementName;
   }
@@ -69,8 +67,7 @@ public class AssetModel implements Comparable<AssetModel> {
 
   @Override
   public String toString() {
-    return pipelineElementName + " (" + peType.toString() + ", " + appId + "): "
-        + pipelineElementDescription + "\n";
+    return pipelineElementName + " (" + peType.toString() + ", " + appId + "): " + pipelineElementDescription + "\n";
   }
 
   public int compareTo(AssetModel other) {

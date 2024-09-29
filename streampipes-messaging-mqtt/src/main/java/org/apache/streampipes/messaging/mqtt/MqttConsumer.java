@@ -22,23 +22,20 @@ import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
+import java.io.Serializable;
+
 import org.fusesource.mqtt.client.Message;
 import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
 
-import java.io.Serializable;
-
-public class MqttConsumer extends AbstractMqttConnector implements
-    EventConsumer,
-    AutoCloseable, Serializable {
+public class MqttConsumer extends AbstractMqttConnector implements EventConsumer, AutoCloseable, Serializable {
 
   public MqttConsumer(MqttTransportProtocol protocol) {
     super(protocol);
   }
 
   @Override
-  public void connect(InternalEventProcessor<byte[]> eventProcessor)
-      throws SpRuntimeException {
+  public void connect(InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
 
     try {
       this.createBrokerConnection(protocol);

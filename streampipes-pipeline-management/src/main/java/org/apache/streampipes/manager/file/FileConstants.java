@@ -20,11 +20,7 @@ package org.apache.streampipes.manager.file;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class FileConstants {
-  public static final String FILES_BASE_DIR = StorageDispatcher
-      .INSTANCE
-      .getNoSqlStore()
-      .getSpCoreConfigurationStorage()
-      .get()
-      .getFilesDir();
+  public static final String FILES_BASE_DIR = StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage()
+          .get().getFilesDir();
 
 }

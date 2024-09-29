@@ -15,36 +15,31 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.smp.generator;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 public class TestMarkdownTitleRemover {
 
   private String content = "---\n" + "id: org.apache.streampipes.processor.imageclassification.image-rectifier\n"
-                           + "title: Image Rectifier\n" + "sidebar_label: Image Rectifier\n" + "---\n" + "\n"
-                           + "## Image Rectifier\n" + "\n" + "<p align=\"center\"> \n"
-                           + "    <img src=\"/img/pipeline-elements/org.apache.streampipes.processor."
-                           + "imageclassification.image-rectifier/icon.png\" width=\"150px;\"/>\n"
-                           + "</p>\n" + "\n" + "***\n" + "\n" + "## Description\n" + "\n"
-                           + "Image Rectification: Rectifies  + an image\n" + "Add a detailed description here\n" + "\n"
-                           + "***\n" + "\n" + "## Required input\n" + "\n" + "\n" + "***\n" + "\n"
-                           + "## Configuration\n" + "\n" + "Describe the configuration parameters here\n" + "\n"
-                           + "### 1st parameter\n" + "\n" + "\n" + "### 2nd parameter\n" + "\n" + "## Output";
+          + "title: Image Rectifier\n" + "sidebar_label: Image Rectifier\n" + "---\n" + "\n" + "## Image Rectifier\n"
+          + "\n" + "<p align=\"center\"> \n" + "    <img src=\"/img/pipeline-elements/org.apache.streampipes.processor."
+          + "imageclassification.image-rectifier/icon.png\" width=\"150px;\"/>\n" + "</p>\n" + "\n" + "***\n" + "\n"
+          + "## Description\n" + "\n" + "Image Rectification: Rectifies  + an image\n"
+          + "Add a detailed description here\n" + "\n" + "***\n" + "\n" + "## Required input\n" + "\n" + "\n" + "***\n"
+          + "\n" + "## Configuration\n" + "\n" + "Describe the configuration parameters here\n" + "\n"
+          + "### 1st parameter\n" + "\n" + "\n" + "### 2nd parameter\n" + "\n" + "## Output";
 
   private String expected = "---\n" + "id: org.apache.streampipes.processor.imageclassification.image-rectifier\n"
-                            + "title: Image Rectifier\n" + "sidebar_label: Image Rectifier\n" + "---\n" + "\n" + "\n"
-                            + "\n" + "<p align=\"center\"> \n"
-                            + "    <img src=\"/img/pipeline-elements/org.apache.streampipes.processor."
-                            + "imageclassification.image-rectifier/icon.png\" width=\"150px;\"/>\n"
-                            + "</p>\n" + "\n" + "***\n" + "\n" + "## Description\n" + "\n"
-                            + "Image Rectification: Rectifies  + an image\n" + "Add a detailed description here\n"
-                            + "\n" + "***\n" + "\n" + "## Required input\n" + "\n" + "\n" + "***\n" + "\n"
-                            + "## Configuration\n" + "\n" + "Describe the configuration parameters here\n" + "\n"
-                            + "### 1st parameter\n" + "\n" + "\n" + "### 2nd parameter\n" + "\n" + "## Output";
+          + "title: Image Rectifier\n" + "sidebar_label: Image Rectifier\n" + "---\n" + "\n" + "\n" + "\n"
+          + "<p align=\"center\"> \n" + "    <img src=\"/img/pipeline-elements/org.apache.streampipes.processor."
+          + "imageclassification.image-rectifier/icon.png\" width=\"150px;\"/>\n" + "</p>\n" + "\n" + "***\n" + "\n"
+          + "## Description\n" + "\n" + "Image Rectification: Rectifies  + an image\n"
+          + "Add a detailed description here\n" + "\n" + "***\n" + "\n" + "## Required input\n" + "\n" + "\n" + "***\n"
+          + "\n" + "## Configuration\n" + "\n" + "Describe the configuration parameters here\n" + "\n"
+          + "### 1st parameter\n" + "\n" + "\n" + "### 2nd parameter\n" + "\n" + "## Output";
 
   @Test
   public void testTitleRemover() {

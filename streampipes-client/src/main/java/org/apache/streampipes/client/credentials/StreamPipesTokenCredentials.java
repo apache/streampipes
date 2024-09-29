@@ -21,11 +21,11 @@ import org.apache.streampipes.client.api.credentials.CredentialsProvider;
 import org.apache.streampipes.client.http.header.Headers;
 import org.apache.streampipes.security.jwt.JwtTokenGenerator;
 
-import org.apache.http.Header;
-
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.http.Header;
 
 public class StreamPipesTokenCredentials implements CredentialsProvider {
 

@@ -39,4 +39,3 @@ public class SpJmsProtocolFactory extends SpProtocolDefinitionFactory<JmsTranspo
     return new SpJmsProtocol();
   }
 }
-

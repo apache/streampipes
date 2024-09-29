@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.api;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;

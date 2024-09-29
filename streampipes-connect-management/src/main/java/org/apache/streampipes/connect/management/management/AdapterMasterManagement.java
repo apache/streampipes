@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
@@ -34,11 +33,11 @@ import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is responsible for managing all the adapter instances which are executed on worker nodes
@@ -53,21 +52,15 @@ public class AdapterMasterManagement {
 
   private final DataStreamResourceManager dataStreamResourceManager;
 
-  public AdapterMasterManagement(IAdapterStorage adapterInstanceStorage,
-                                 AdapterResourceManager adapterResourceManager,
-                                 DataStreamResourceManager dataStreamResourceManager,
-                                 AdapterMetrics adapterMetrics
-  ) {
+  public AdapterMasterManagement(IAdapterStorage adapterInstanceStorage, AdapterResourceManager adapterResourceManager,
+          DataStreamResourceManager dataStreamResourceManager, AdapterMetrics adapterMetrics) {
     this.adapterInstanceStorage = adapterInstanceStorage;
     this.adapterMetrics = adapterMetrics;
     this.adapterResourceManager = adapterResourceManager;
     this.dataStreamResourceManager = dataStreamResourceManager;
   }
 
-  public void addAdapter(AdapterDescription ad,
-                           String adapterElementId,
-                           String principalSid)
-      throws AdapterException {
+  public void addAdapter(AdapterDescription ad, String adapterElementId, String principalSid) throws AdapterException {
 
     // Create elementId for adapter
     var dataStreamElementId = ElementIdGenerator.makeElementId(SpDataStream.class);
@@ -105,8 +98,10 @@ public class AdapterMasterManagement {
   /**
    * First the adapter is stopped removed, then the corresponding data source is deleted
    *
-   * @param elementId The elementId of the adapter instance
-   * @throws AdapterException when adapter can not be stopped
+   * @param elementId
+   *          The elementId of the adapter instance
+   * @throws AdapterException
+   *           when adapter can not be stopped
    */
   public void deleteAdapter(String elementId) throws AdapterException {
 
@@ -160,11 +155,8 @@ public class AdapterMasterManagement {
 
     try {
       // Find endpoint to start adapter on
-      var baseUrl = new ExtensionsServiceEndpointGenerator().getEndpointBaseUrl(
-          ad.getAppId(),
-          SpServiceUrlProvider.ADAPTER,
-          ad.getDeploymentConfiguration().getDesiredServiceTags()
-      );
+      var baseUrl = new ExtensionsServiceEndpointGenerator().getEndpointBaseUrl(ad.getAppId(),
+              SpServiceUrlProvider.ADAPTER, ad.getDeploymentConfiguration().getDesiredServiceTags());
 
       // Update selected endpoint URL of adapter
       ad.setSelectedEndpointUrl(baseUrl);
@@ -182,9 +174,8 @@ public class AdapterMasterManagement {
     }
   }
 
-  private void installDataSource(SpDataStream stream,
-                                 String principalSid,
-                                 boolean publicElement) throws AdapterException {
+  private void installDataSource(SpDataStream stream, String principalSid, boolean publicElement)
+          throws AdapterException {
     try {
       new DataStreamVerifier(stream).verifyAndAdd(principalSid, publicElement);
     } catch (SepaParseException e) {

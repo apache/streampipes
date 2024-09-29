@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.param.model;
-
 
 import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
 import org.apache.streampipes.dataexplorer.api.IQueryStatement;
@@ -33,31 +31,28 @@ public class SelectClauseParams implements IQueryStatement {
   private List<SelectColumn> selectedColumnsCountOnly;
   private boolean selectWildcard = false;
 
-  public SelectClauseParams(String columns,
-                            boolean countOnly) {
+  public SelectClauseParams(String columns, boolean countOnly) {
     this.selectWildcard = false;
     this.selectedColumns = countOnly ? buildColumns(columns, AggregationFunction.COUNT.name()) : buildColumns(columns);
     this.selectedColumnsCountOnly = buildColumns(columns, AggregationFunction.COUNT.name());
   }
 
-  public SelectClauseParams(String columns,
-                            String aggregationFunction) {
+  public SelectClauseParams(String columns, String aggregationFunction) {
     if (columns != null) {
-      this.selectedColumns =
-          aggregationFunction != null ? buildColumns(columns, aggregationFunction) : buildColumns(columns);
+      this.selectedColumns = aggregationFunction != null
+              ? buildColumns(columns, aggregationFunction)
+              : buildColumns(columns);
       this.selectedColumnsCountOnly = buildColumns(columns, AggregationFunction.COUNT.name());
     } else {
       this.selectWildcard = true;
     }
   }
 
-  public static SelectClauseParams from(String columns,
-                                        String aggregationFunction) {
+  public static SelectClauseParams from(String columns, String aggregationFunction) {
     return new SelectClauseParams(columns, aggregationFunction);
   }
 
-  public static SelectClauseParams from(String columns,
-                                        boolean countOnly) {
+  public static SelectClauseParams from(String columns, boolean countOnly) {
     return new SelectClauseParams(columns, countOnly);
   }
 
@@ -67,7 +62,7 @@ public class SelectClauseParams implements IQueryStatement {
 
   private List<SelectColumn> buildColumns(String rawQuery, String globalAggregationFunction) {
     return Arrays.stream(rawQuery.split(",")).map(qp -> SelectColumn.fromApiQueryString(qp, globalAggregationFunction))
-        .collect(Collectors.toList());
+            .collect(Collectors.toList());
   }
 
   @Override
@@ -79,8 +74,7 @@ public class SelectClauseParams implements IQueryStatement {
     buildStatement(builder, selectedColumnsCountOnly);
   }
 
-  private void buildStatement(IDataLakeQueryBuilder<?> builder,
-                              List<SelectColumn> columns) {
+  private void buildStatement(IDataLakeQueryBuilder<?> builder, List<SelectColumn> columns) {
     if (selectWildcard) {
       builder.withAllColumns();
     } else {

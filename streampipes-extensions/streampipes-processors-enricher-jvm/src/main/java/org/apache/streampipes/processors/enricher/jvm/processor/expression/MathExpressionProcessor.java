@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.expression;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
@@ -42,13 +41,14 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.apache.commons.jexl3.JexlException;
-
 import java.util.List;
 
-public class MathExpressionProcessor implements
-    IStreamPipesDataProcessor,
-    ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
+import org.apache.commons.jexl3.JexlException;
+
+public class MathExpressionProcessor
+        implements
+          IStreamPipesDataProcessor,
+          ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   private static final String ID = "org.apache.streampipes.processors.enricher.jvm.processor.expression";
   static final String ENRICHED_FIELDS = "enriched-fields";
@@ -61,27 +61,17 @@ public class MathExpressionProcessor implements
 
   @Override
   public IDataProcessorConfiguration declareConfig() {
-    return DataProcessorConfiguration.create(
-        MathExpressionProcessor::new,
-        ProcessingElementBuilder.create(ID, 0)
-            .category(DataProcessorType.ENRICH)
-            .withLocales(Locales.EN)
+    return DataProcessorConfiguration.create(MathExpressionProcessor::new, ProcessingElementBuilder.create(ID, 0)
+            .category(DataProcessorType.ENRICH).withLocales(Locales.EN)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-            .requiredStream(StreamRequirementsBuilder.create()
-                .requiredProperty(EpRequirements.numberReq())
-                .build())
-            .requiredStaticProperty(makeCollection())
-            .outputStrategy(OutputStrategies.customTransformation())
-            .build()
-    );
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.numberReq()).build())
+            .requiredStaticProperty(makeCollection()).outputStrategy(OutputStrategies.customTransformation()).build());
   }
 
   private CollectionStaticProperty makeCollection() {
-    return StaticProperties.collection(
-        Labels.withId(ENRICHED_FIELDS),
-        false,
-        StaticProperties.freeTextProperty(Labels.withId(FIELD_NAME), Datatypes.String),
-        StaticProperties.codeStaticProperty(Labels.withId(EXPRESSION), CodeLanguage.None, getJexlComment()));
+    return StaticProperties.collection(Labels.withId(ENRICHED_FIELDS), false,
+            StaticProperties.freeTextProperty(Labels.withId(FIELD_NAME), Datatypes.String),
+            StaticProperties.codeStaticProperty(Labels.withId(EXPRESSION), CodeLanguage.None, getJexlComment()));
   }
 
   private String getJexlComment() {
@@ -89,9 +79,8 @@ public class MathExpressionProcessor implements
   }
 
   @Override
-  public void onPipelineStarted(IDataProcessorParameters params,
-                                SpOutputCollector collector,
-                                EventProcessorRuntimeContext runtimeContext) {
+  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector collector,
+          EventProcessorRuntimeContext runtimeContext) {
     var extractor = new MathExpressionFieldExtractor(params.getModel());
     var engine = new JexlEngineProvider().getEngine();
     var scripts = extractor.getAdditionalFields();
@@ -118,10 +107,9 @@ public class MathExpressionProcessor implements
 
   }
 
-
   @Override
   public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
-                                           ProcessingElementParameterExtractor parameterExtractor) {
+          ProcessingElementParameterExtractor parameterExtractor) {
     var fieldExtractor = new MathExpressionFieldExtractor(processingElement, parameterExtractor);
     var existingFields = fieldExtractor.getInputProperties();
     var additionalFields = fieldExtractor.getAdditionalFields();

@@ -17,10 +17,10 @@
  */
 package org.apache.streampipes.model.runtime;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 public class TestListField {
 
@@ -28,8 +28,7 @@ public class TestListField {
   public void testListParser() {
     Event event = RuntimeTestUtils.makeSimpleEvent(RuntimeTestUtils.listMap(), RuntimeTestUtils.getSourceInfo());
 
-    List<Integer> integerList = event.getFieldByRuntimeName("list").getAsList().parseAsSimpleType
-        (Integer.class);
+    List<Integer> integerList = event.getFieldByRuntimeName("list").getAsList().parseAsSimpleType(Integer.class);
 
     Assertions.assertEquals(3, integerList.size());
     Assertions.assertEquals(Integer.valueOf(1), integerList.get(0));

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect;
 
 import org.apache.streampipes.connect.adapters.image.stream.ImageStreamAdapter;
@@ -34,12 +33,7 @@ public class GeneralAdaptersExtensionModuleExport implements IExtensionModuleExp
 
   @Override
   public List<StreamPipesAdapter> adapters() {
-    return List.of(
-        new NetioRestAdapter(),
-        new NetioMQTTAdapter(),
-        new ImageStreamAdapter(),
-        new IssAdapter()
-    );
+    return List.of(new NetioRestAdapter(), new NetioMQTTAdapter(), new ImageStreamAdapter(), new IssAdapter());
   }
 
   @Override

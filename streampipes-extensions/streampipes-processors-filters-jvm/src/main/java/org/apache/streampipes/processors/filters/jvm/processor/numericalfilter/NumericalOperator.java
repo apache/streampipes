@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.filters.jvm.processor.numericalfilter;
 
 public enum NumericalOperator {

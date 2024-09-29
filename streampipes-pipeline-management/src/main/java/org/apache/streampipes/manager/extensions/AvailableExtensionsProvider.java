@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.extensions;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -34,8 +33,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Provides available extensions by taking into account service availability and installed elements
- * Extensions are filtered by their elementId so that no duplicates are returned.
+ * Provides available extensions by taking into account service availability and installed elements Extensions are
+ * filtered by their elementId so that no duplicates are returned.
  */
 public class AvailableExtensionsProvider {
 
@@ -50,12 +49,9 @@ public class AvailableExtensionsProvider {
     var installedExtensions = getAllInstalledExtensions(availableExtensions);
     var allExtensions = new ArrayList<>(installedExtensions);
 
-    availableExtensions.values()
-        .stream()
-        .filter(extension -> installedExtensions
-            .stream()
-            .noneMatch(e -> extension.getElementId().equals(e.getElementId())))
-        .forEach(allExtensions::add);
+    availableExtensions.values().stream().filter(
+            extension -> installedExtensions.stream().noneMatch(e -> extension.getElementId().equals(e.getElementId())))
+            .forEach(allExtensions::add);
 
     return allExtensions;
   }
@@ -66,43 +62,32 @@ public class AvailableExtensionsProvider {
    * @return Map of extension item descriptions keyed by their elementId
    */
   private Map<String, ExtensionItemDescription> getUniqueAvailableExtensions() {
-    return storage.getExtensionsServiceStorage().findAll()
-        .stream()
-        .filter(service -> service.getStatus() == SpServiceStatus.HEALTHY)
-        .flatMap(service -> service.getProvidedExtensions().stream())
-        .collect(Collectors.toMap(
-            ExtensionItemDescription::getElementId,
-            Function.identity(),
-            (existing, replacement) -> existing)
-        );
+    return storage.getExtensionsServiceStorage().findAll().stream()
+            .filter(service -> service.getStatus() == SpServiceStatus.HEALTHY)
+            .flatMap(service -> service.getProvidedExtensions().stream()).collect(Collectors.toMap(
+                    ExtensionItemDescription::getElementId, Function.identity(), (existing, replacement) -> existing));
   }
 
   /**
-   * Fetches all already installed extensions and determines if the installed extension
-   * is also currently available (.i.e., an extension service supporting this extension is registered)
+   * Fetches all already installed extensions and determines if the installed extension is also currently available
+   * (.i.e., an extension service supporting this extension is registered)
    *
-   * @param availableExtensions Map of unique available extensions
+   * @param availableExtensions
+   *          Map of unique available extensions
    * @return list of installed extensions
    */
   private List<ExtensionItemDescription> getAllInstalledExtensions(
-      Map<String, ExtensionItemDescription> availableExtensions
-  ) {
+          Map<String, ExtensionItemDescription> availableExtensions) {
     List<NamedStreamPipesEntity> elements = new ArrayList<>();
     elements.addAll(getAllAdapters());
     elements.addAll(getAllDataStreams());
     elements.addAll(getAllDataProcessors());
     elements.addAll(getAllDataSinks());
-    return elements
-        .stream()
-        .map(e -> e.toExtensionDescription(
-            true,
-            !e.isInternallyManaged(),
-            isExtensionAvailable(availableExtensions, e.getElementId())))
-        .toList();
+    return elements.stream().map(e -> e.toExtensionDescription(true, !e.isInternallyManaged(),
+            isExtensionAvailable(availableExtensions, e.getElementId()))).toList();
   }
 
-  private boolean isExtensionAvailable(Map<String, ExtensionItemDescription> availableExtensions,
-                                       String elementId) {
+  private boolean isExtensionAvailable(Map<String, ExtensionItemDescription> availableExtensions, String elementId) {
     return availableExtensions.containsKey(elementId);
   }
 
@@ -111,10 +96,7 @@ public class AvailableExtensionsProvider {
   }
 
   private List<SpDataStream> getAllDataStreams() {
-    return storage.getDataStreamStorage().findAll()
-        .stream()
-        .filter(stream -> !stream.isInternallyManaged())
-        .toList();
+    return storage.getDataStreamStorage().findAll().stream().filter(stream -> !stream.isInternallyManaged()).toList();
   }
 
   private List<DataProcessorDescription> getAllDataProcessors() {

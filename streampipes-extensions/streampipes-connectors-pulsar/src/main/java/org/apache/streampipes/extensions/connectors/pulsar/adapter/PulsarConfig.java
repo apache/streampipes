@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.pulsar.adapter;
-
-import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 
 import static org.apache.streampipes.extensions.connectors.pulsar.adapter.PulsarProtocol.PULSAR_BROKER_HOST;
 import static org.apache.streampipes.extensions.connectors.pulsar.adapter.PulsarProtocol.PULSAR_BROKER_PORT;
 import static org.apache.streampipes.extensions.connectors.pulsar.adapter.PulsarProtocol.PULSAR_SUBSCRIPTION_NAME;
 import static org.apache.streampipes.extensions.connectors.pulsar.adapter.PulsarProtocol.PULSAR_TOPIC;
+
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 
 public class PulsarConfig {
 
@@ -31,9 +30,7 @@ public class PulsarConfig {
   private final String topic;
   private final String subscriptionName;
 
-  public PulsarConfig(String brokerUrl,
-                      String topic,
-                      String subscriptionName) {
+  public PulsarConfig(String brokerUrl, String topic, String subscriptionName) {
     this.brokerUrl = brokerUrl;
     this.topic = topic;
     this.subscriptionName = subscriptionName;

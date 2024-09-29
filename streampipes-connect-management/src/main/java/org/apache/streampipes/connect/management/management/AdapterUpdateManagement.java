@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -35,14 +34,14 @@ import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AdapterUpdateManagement {
 
@@ -58,8 +57,7 @@ public class AdapterUpdateManagement {
     this.dataStreamResourceManager = new SpResourceManager().manageDataStreams();
   }
 
-  public void updateAdapter(AdapterDescription ad)
-      throws AdapterException {
+  public void updateAdapter(AdapterDescription ad) throws AdapterException {
     // update adapter in database
     this.adapterResourceManager.encryptAndUpdate(ad);
     boolean shouldRestart = ad.isRunning();
@@ -107,7 +105,7 @@ public class AdapterUpdateManagement {
 
   public List<PipelineUpdateInfo> checkPipelineMigrations(AdapterDescription adapterDescription) {
     var affectedPipelines = PipelineManager
-        .getPipelinesContainingElements(adapterDescription.getCorrespondingDataStreamElementId());
+            .getPipelinesContainingElements(adapterDescription.getCorrespondingDataStreamElementId());
     var updateInfos = new ArrayList<PipelineUpdateInfo>();
 
     affectedPipelines.forEach(pipeline -> {
@@ -124,8 +122,7 @@ public class AdapterUpdateManagement {
     return updateInfos;
   }
 
-  private PipelineUpdateInfo makeUpdateInfo(PipelineModificationMessage modificationMessage,
-                                            Pipeline pipeline) {
+  private PipelineUpdateInfo makeUpdateInfo(PipelineModificationMessage modificationMessage, Pipeline pipeline) {
     var updateInfo = new PipelineUpdateInfo();
     updateInfo.setPipelineId(pipeline.getPipelineId());
     updateInfo.setPipelineName(pipeline.getName());
@@ -135,61 +132,41 @@ public class AdapterUpdateManagement {
   }
 
   private boolean canAutoMigrate(PipelineModificationMessage modificationMessage) {
-    return modificationMessage
-        .getPipelineModifications()
-        .stream()
-        .allMatch(m -> m.isPipelineElementValid() && m.getValidationInfos().isEmpty());
+    return modificationMessage.getPipelineModifications().stream()
+            .allMatch(m -> m.isPipelineElementValid() && m.getValidationInfos().isEmpty());
   }
 
   private List<String> toNotification(PipelineUpdateInfo updateInfo) {
     var notifications = new ArrayList<String>();
     updateInfo.getValidationInfos().keySet().forEach((k) -> {
-      var msg =  updateInfo
-          .getValidationInfos()
-          .get(k)
-          .stream()
-          .map(PipelineElementValidationInfo::getMessage)
-          .toList()
-          .toString();
+      var msg = updateInfo.getValidationInfos().get(k).stream().map(PipelineElementValidationInfo::getMessage).toList()
+              .toString();
       notifications.add(String.format("Adapter modification: %s: %s", k, msg));
     });
     return notifications;
   }
 
-  private Map<String, List<PipelineElementValidationInfo>> extractModificationWarnings(
-      Pipeline pipeline,
-      PipelineModificationMessage modificationMessage) {
+  private Map<String, List<PipelineElementValidationInfo>> extractModificationWarnings(Pipeline pipeline,
+          PipelineModificationMessage modificationMessage) {
     var infos = new HashMap<String, List<PipelineElementValidationInfo>>();
-    modificationMessage
-        .getPipelineModifications()
-        .stream()
-        .filter(v -> !v.getValidationInfos().isEmpty())
-        .forEach(m -> infos.put(getPipelineElementName(pipeline, m.getElementId()), m.getValidationInfos()));
+    modificationMessage.getPipelineModifications().stream().filter(v -> !v.getValidationInfos().isEmpty())
+            .forEach(m -> infos.put(getPipelineElementName(pipeline, m.getElementId()), m.getValidationInfos()));
 
     return infos;
   }
 
-  private String getPipelineElementName(Pipeline pipeline,
-                                        String elementId) {
-    return Stream
-        .concat(pipeline.getSepas().stream(), pipeline.getActions().stream())
-        .filter(p -> p.getElementId().equals(elementId))
-        .findFirst()
-        .map(NamedStreamPipesEntity::getName)
-        .orElse(elementId);
+  private String getPipelineElementName(Pipeline pipeline, String elementId) {
+    return Stream.concat(pipeline.getSepas().stream(), pipeline.getActions().stream())
+            .filter(p -> p.getElementId().equals(elementId)).findFirst().map(NamedStreamPipesEntity::getName)
+            .orElse(elementId);
   }
 
-  private Pipeline applyUpdatedDataStream(Pipeline originalPipeline,
-                                          AdapterDescription updatedAdapter) {
-    var updatedStreams = originalPipeline
-        .getStreams()
-        .stream()
-        .peek(s -> {
-          if (s.getElementId().equals(updatedAdapter.getCorrespondingDataStreamElementId())) {
-            s.setEventSchema(updatedAdapter.getEventSchema());
-          }
-        })
-        .toList();
+  private Pipeline applyUpdatedDataStream(Pipeline originalPipeline, AdapterDescription updatedAdapter) {
+    var updatedStreams = originalPipeline.getStreams().stream().peek(s -> {
+      if (s.getElementId().equals(updatedAdapter.getCorrespondingDataStreamElementId())) {
+        s.setEventSchema(updatedAdapter.getEventSchema());
+      }
+    }).toList();
 
     originalPipeline.setStreams(updatedStreams);
 

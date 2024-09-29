@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.stream;
 
 import org.apache.streampipes.extensions.api.connect.TransformationRule;
@@ -26,7 +25,7 @@ public class EventRateTransformationRule implements TransformationRule {
 
   private final long aggregationTimeWindow;
 
-  //none (Values from last event), max, min, mean, sum (of the values in the time window)
+  // none (Values from last event), max, min, mean, sum (of the values in the time window)
   private final String aggregationType;
 
   private long lastSentToPipelineTimestamp = System.currentTimeMillis();
@@ -40,18 +39,17 @@ public class EventRateTransformationRule implements TransformationRule {
   public Map<String, Object> apply(Map<String, Object> event) {
     if (System.currentTimeMillis() > lastSentToPipelineTimestamp + aggregationTimeWindow) {
       switch (aggregationType) {
-        case "none":
+        case "none" :
           lastSentToPipelineTimestamp = System.currentTimeMillis();
           return event;
-//                case "max":
-//                case "min":
-//                case "mean":
-//                case "sum":
+        // case "max":
+        // case "min":
+        // case "mean":
+        // case "sum":
 
       }
     }
     return null;
   }
-
 
 }

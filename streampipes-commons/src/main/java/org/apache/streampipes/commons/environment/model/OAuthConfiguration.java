@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.environment.model;
 
 public class OAuthConfiguration {
@@ -34,7 +33,6 @@ public class OAuthConfiguration {
   private String userInfoUri;
   private String emailAttributeName;
   private String userIdAttributeName;
-
 
   public String getRegistrationId() {
     return registrationId;

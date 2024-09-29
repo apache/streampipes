@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.dataexplorer.export.item;
 
 import java.util.List;
@@ -32,8 +30,7 @@ public abstract class ItemGenerator {
     this.separator = separator;
   }
 
-  public String createItem(List<Object> row,
-                           List<String> columns) {
+  public String createItem(List<Object> row, List<String> columns) {
     StringJoiner joiner = new StringJoiner(separator);
 
     for (int i = 0; i < row.size(); i++) {
@@ -47,8 +44,7 @@ public abstract class ItemGenerator {
     return finalizeItem(joiner.toString());
   }
 
-  protected abstract String makeItemString(String key,
-                                           Object value);
+  protected abstract String makeItemString(String key, Object value);
 
   protected abstract String finalizeItem(String item);
 

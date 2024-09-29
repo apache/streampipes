@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.filters.jvm.processor.limit;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -69,69 +68,52 @@ public class RateLimitProcessor extends StreamPipesDataProcessor {
   private ConcurrentMap<Object, Window> windows;
   private WindowFactory factory;
 
-
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.limit", 0)
-        .category(DataProcessorType.FILTER, DataProcessorType.STRUCTURE_ANALYTICS)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredSingleValueSelection(Labels.withId(GROUPING_ENABLED),
-            Options.from(OPTION_TRUE, OPTION_FALSE))
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                Labels.withId(GROUPING_FIELD), PropertyScope.NONE)
-            .build())
-        .requiredAlternatives(Labels.withId(WINDOW_TYPE),
-            Alternatives.from(Labels.withId(TIME_WINDOW),
-                StaticProperties.integerFreeTextProperty(Labels.withId(TIME_WINDOW_SIZE))),
-            Alternatives.from(Labels.withId(CRON_WINDOW),
-                StaticProperties.stringFreeTextProperty(Labels.withId(CRON_WINDOW_EXPR))),
-            Alternatives.from(Labels.withId(LENGTH_WINDOW),
-                StaticProperties.integerFreeTextProperty(Labels.withId(LENGTH_WINDOW_SIZE))))
-        .requiredSingleValueSelection(Labels.withId(EVENT_SELECTION),
-            Options.from(OPTION_FIRST, OPTION_LAST, OPTION_ALL))
-        .outputStrategy(OutputStrategies.keep())
-        .build();
+            .category(DataProcessorType.FILTER, DataProcessorType.STRUCTURE_ANALYTICS)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .requiredSingleValueSelection(Labels.withId(GROUPING_ENABLED), Options.from(OPTION_TRUE, OPTION_FALSE))
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId(GROUPING_FIELD),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredAlternatives(Labels.withId(WINDOW_TYPE),
+                    Alternatives.from(Labels.withId(TIME_WINDOW),
+                            StaticProperties.integerFreeTextProperty(Labels.withId(TIME_WINDOW_SIZE))),
+                    Alternatives.from(Labels.withId(CRON_WINDOW),
+                            StaticProperties.stringFreeTextProperty(Labels.withId(CRON_WINDOW_EXPR))),
+                    Alternatives.from(Labels.withId(LENGTH_WINDOW),
+                            StaticProperties.integerFreeTextProperty(Labels.withId(LENGTH_WINDOW_SIZE))))
+            .requiredSingleValueSelection(Labels.withId(EVENT_SELECTION),
+                    Options.from(OPTION_FIRST, OPTION_LAST, OPTION_ALL))
+            .outputStrategy(OutputStrategies.keep()).build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams
-                               processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
 
-    this.groupingEnabled =
-        Boolean.valueOf(processorParams.extractor().selectedSingleValue(GROUPING_ENABLED, String.class));
+    this.groupingEnabled = Boolean
+            .valueOf(processorParams.extractor().selectedSingleValue(GROUPING_ENABLED, String.class));
     this.groupingField = processorParams.extractor().mappingPropertyValue(GROUPING_FIELD);
     this.windows = new ConcurrentHashMap<>();
 
-    EventSelection eventSelection = EventSelection.valueOf(processorParams.extractor()
-        .selectedSingleValue(EVENT_SELECTION, String.class).toUpperCase());
+    EventSelection eventSelection = EventSelection
+            .valueOf(processorParams.extractor().selectedSingleValue(EVENT_SELECTION, String.class).toUpperCase());
     String windowType = processorParams.extractor().selectedAlternativeInternalId(WINDOW_TYPE);
 
     if (TIME_WINDOW.equals(windowType)) {
       Integer windowSize = processorParams.extractor().singleValueParameter(TIME_WINDOW_SIZE, Integer.class);
-      this.factory = new WindowFactory(
-          WindowType.TIME,
-          windowSize,
-          eventSelection,
-          spOutputCollector);
+      this.factory = new WindowFactory(WindowType.TIME, windowSize, eventSelection, spOutputCollector);
 
     } else if (CRON_WINDOW.equals(windowType)) {
       String cronExpression = processorParams.extractor().singleValueParameter(CRON_WINDOW_EXPR, String.class);
-      this.factory = new WindowFactory(
-          WindowType.CRON,
-          cronExpression,
-          eventSelection,
-          spOutputCollector);
+      this.factory = new WindowFactory(WindowType.CRON, cronExpression, eventSelection, spOutputCollector);
 
     } else {
       Integer windowSize = processorParams.extractor().singleValueParameter(LENGTH_WINDOW_SIZE, Integer.class);
-      this.factory = new WindowFactory(
-          WindowType.LENGTH,
-          windowSize,
-          eventSelection,
-          spOutputCollector);
+      this.factory = new WindowFactory(WindowType.LENGTH, windowSize, eventSelection, spOutputCollector);
     }
   }
 

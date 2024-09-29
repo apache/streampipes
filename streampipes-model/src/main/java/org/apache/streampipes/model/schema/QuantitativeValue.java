@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.schema;
 
 import java.util.Objects;
@@ -79,7 +78,7 @@ public class QuantitativeValue extends ValueSpecification {
     }
     QuantitativeValue that = (QuantitativeValue) o;
     return Objects.equals(minValue, that.minValue) && Objects.equals(maxValue, that.maxValue)
-           && Objects.equals(step, that.step);
+            && Objects.equals(step, that.step);
   }
 
   @Override

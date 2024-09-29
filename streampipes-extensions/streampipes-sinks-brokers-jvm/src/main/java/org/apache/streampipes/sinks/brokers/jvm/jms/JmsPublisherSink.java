@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.brokers.jvm.jms;
-
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
@@ -49,23 +47,16 @@ public class JmsPublisherSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.jms", 0)
-        .category(DataSinkType.MESSAGING)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
-        .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
-        .requiredIntegerParameter(Labels.withId(PORT_KEY), 61616)
-        .build();
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.jms", 0).category(DataSinkType.MESSAGING)
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
+            .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
+            .requiredIntegerParameter(Labels.withId(PORT_KEY), 61616).build();
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
 
     var extractor = parameters.extractor();
     this.jsonDataFormatDefinition = new JsonDataFormatDefinition();
@@ -74,16 +65,14 @@ public class JmsPublisherSink extends StreamPipesDataSink {
     Integer jmsPort = extractor.singleValueParameter(PORT_KEY, Integer.class);
     String topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
 
-    JmsTransportProtocol jmsTransportProtocol =
-        new JmsTransportProtocol(jmsHost, jmsPort, topic);
+    JmsTransportProtocol jmsTransportProtocol = new JmsTransportProtocol(jmsHost, jmsPort, topic);
 
     this.publisher = new ActiveMQPublisher(jmsTransportProtocol);
     this.publisher.connect();
 
     if (!this.publisher.isConnected()) {
       throw new SpRuntimeException(
-          "Could not connect to JMS server " + jmsHost + " on Port: " + jmsPort
-              + " to topic: " + topic);
+              "Could not connect to JMS server " + jmsHost + " on Port: " + jmsPort + " to topic: " + topic);
     }
   }
 

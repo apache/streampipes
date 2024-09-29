@@ -15,29 +15,25 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.client.util;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 public class StreamPipesApiPathTest {
   Map<String, String> queryParameters = new HashMap();
 
-  StreamPipesApiPath streamPipesApiPath = StreamPipesApiPath
-      .fromBaseApiPath();
+  StreamPipesApiPath streamPipesApiPath = StreamPipesApiPath.fromBaseApiPath();
 
   String baseRoute = streamPipesApiPath.toString();
 
   @Test
   public void testWithEmptyQueryParameters() {
 
-    var result = streamPipesApiPath
-        .withQueryParameters(queryParameters)
-        .toString();
+    var result = streamPipesApiPath.withQueryParameters(queryParameters).toString();
 
     Assertions.assertEquals(baseRoute, result);
   }
@@ -46,9 +42,7 @@ public class StreamPipesApiPathTest {
   public void testWithOneQueryParameter() {
     queryParameters.put("one", "v1");
 
-    var result = streamPipesApiPath
-        .withQueryParameters(queryParameters)
-        .toString();
+    var result = streamPipesApiPath.withQueryParameters(queryParameters).toString();
 
     Assertions.assertEquals(baseRoute + "?one=v1", result);
   }
@@ -58,9 +52,7 @@ public class StreamPipesApiPathTest {
     queryParameters.put("one", "v1");
     queryParameters.put("two", "v2");
 
-    var result = streamPipesApiPath
-        .withQueryParameters(queryParameters)
-        .toString();
+    var result = streamPipesApiPath.withQueryParameters(queryParameters).toString();
 
     Assertions.assertEquals(baseRoute + "?two=v2&one=v1", result);
   }
@@ -69,9 +61,7 @@ public class StreamPipesApiPathTest {
   public void testEncodeParameters() {
     queryParameters.put("one", "[v1]");
 
-    var result = streamPipesApiPath
-        .withQueryParameters(queryParameters)
-        .toString();
+    var result = streamPipesApiPath.withQueryParameters(queryParameters).toString();
 
     Assertions.assertEquals(baseRoute + "?one=%5Bv1%5D", result);
   }

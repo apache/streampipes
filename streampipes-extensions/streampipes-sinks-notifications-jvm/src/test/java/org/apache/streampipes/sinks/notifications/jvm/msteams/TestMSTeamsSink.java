@@ -15,10 +15,19 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.notifications.jvm.msteams;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+
+import java.io.IOException;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -31,16 +40,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 public class TestMSTeamsSink {
 
   @Test
@@ -49,7 +48,7 @@ public class TestMSTeamsSink {
     var sink = new MSTeamsSink();
 
     assertEquals(MSTeamsSink.SIMPLE_MESSAGE_TEMPLATE.formatted(messageContent),
-                            sink.createMessageFromSimpleContent(messageContent));
+            sink.createMessageFromSimpleContent(messageContent));
   }
 
   @Test
@@ -88,20 +87,17 @@ public class TestMSTeamsSink {
     sink.sendPayloadToWebhook(mockedClient, payload, webhook);
     verify(mockedClient, times(1)).execute(argumentCaptor.capture());
 
-
     var capturedPost = argumentCaptor.getValue();
 
     Assertions.assertNotNull(capturedPost);
-    Assertions.assertEquals(webhook,
-                            capturedPost.getURI().toString()
-    );
+    Assertions.assertEquals(webhook, capturedPost.getURI().toString());
     Assertions.assertEquals(ContentType.APPLICATION_JSON.toString(),
-                            capturedPost.getEntity().getContentType().getValue());
+            capturedPost.getEntity().getContentType().getValue());
     Assertions.assertEquals(payload, EntityUtils.toString(capturedPost.getEntity()));
   }
 
   @Test
-  public void sendPayloadToWebhookBadResponse() throws  IOException {
+  public void sendPayloadToWebhookBadResponse() throws IOException {
     var mockedClient = mock(HttpClient.class);
     var mockedResponse = mock(CloseableHttpResponse.class);
     var mockedStatusLine = mock(StatusLine.class);

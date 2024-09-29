@@ -15,12 +15,13 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.resource.management.AbstractCRUDResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+
+import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
 
 public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestResource {
 

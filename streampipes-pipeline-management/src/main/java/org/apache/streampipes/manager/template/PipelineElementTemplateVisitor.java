@@ -130,8 +130,7 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
   public void visit(OneOfStaticProperty oneOfStaticProperty) {
     if (hasConfig(oneOfStaticProperty)) {
       String value = getConfigValueAsString(oneOfStaticProperty);
-      oneOfStaticProperty.getOptions().forEach(option ->
-          option.setSelected(option.getName().equals(value)));
+      oneOfStaticProperty.getOptions().forEach(option -> option.setSelected(option.getName().equals(value)));
     }
   }
 
@@ -140,7 +139,7 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
     if (hasConfig(secretStaticProperty)) {
       Map<String, Object> values = getConfig(secretStaticProperty);
       boolean encrypted = values.containsKey("encrypted")
-          && Boolean.parseBoolean(String.valueOf(values.get("encrypted")));
+              && Boolean.parseBoolean(String.valueOf(values.get("encrypted")));
       String value = getConfigValueAsString(secretStaticProperty);
       if (encrypted) {
         secretStaticProperty.setValue(value);
@@ -166,23 +165,19 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
     if (hasConfig(staticPropertyAlternatives)) {
       Map<String, Object> values = getConfig(staticPropertyAlternatives);
       var selectedId = getConfigValueAsString(staticPropertyAlternatives);
-      staticPropertyAlternatives
-          .getAlternatives()
-          .stream()
-          .filter(a -> a.getInternalName().equalsIgnoreCase(selectedId))
-          .forEach(a -> {
-            a.setSelected(true);
-            PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(List.of(values));
-            a.accept(visitor);
-          });
+      staticPropertyAlternatives.getAlternatives().stream()
+              .filter(a -> a.getInternalName().equalsIgnoreCase(selectedId)).forEach(a -> {
+                a.setSelected(true);
+                PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(List.of(values));
+                a.accept(visitor);
+              });
     }
   }
 
   @Override
   public void visit(StaticPropertyGroup staticPropertyGroup) {
     staticPropertyGroup.getStaticProperties().forEach(group -> {
-      PipelineElementTemplateVisitor visitor =
-          new PipelineElementTemplateVisitor(configs);
+      PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(configs);
       group.accept(visitor);
     });
   }
@@ -207,29 +202,21 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
     // TODO not yet supported
   }
 
-
   private Map<String, Object> getConfig(StaticProperty sp) {
     return getConfig(sp.getInternalName());
   }
 
   private Map<String, Object> getConfig(String key) {
-    return configs
-        .stream()
-        .filter(f -> hasKeyCaseInsensitive(key, f))
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException(String.format("No key found: %s", key)));
+    return configs.stream().filter(f -> hasKeyCaseInsensitive(key, f)).findFirst()
+            .orElseThrow(() -> new IllegalArgumentException(String.format("No key found: %s", key)));
   }
 
-//  private List<Map<String, Object>> getConfigAsList(StaticProperty sp) {
-//    return getConfig(sp).
-//  }
+  // private List<Map<String, Object>> getConfigAsList(StaticProperty sp) {
+  // return getConfig(sp).
+  // }
 
-  private boolean hasKeyCaseInsensitive(String internalName,
-                                        Map<String, Object> templateConfig) {
-    return templateConfig
-        .entrySet()
-        .stream()
-        .anyMatch(entry -> entry.getKey().equalsIgnoreCase(internalName));
+  private boolean hasKeyCaseInsensitive(String internalName, Map<String, Object> templateConfig) {
+    return templateConfig.entrySet().stream().anyMatch(entry -> entry.getKey().equalsIgnoreCase(internalName));
   }
 
   private boolean hasConfig(StaticProperty sp) {
@@ -254,31 +241,22 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
     return getValueAsStringList(getConfig(sp), sp.getInternalName());
   }
 
-  private String getCaseInsensitiveKey(Map<String, Object> config,
-                                       String key) {
-    return config.keySet().stream()
-        .filter(k -> k.equalsIgnoreCase(key))
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Key not found: " + key));
+  private String getCaseInsensitiveKey(Map<String, Object> config, String key) {
+    return config.keySet().stream().filter(k -> k.equalsIgnoreCase(key)).findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Key not found: " + key));
   }
 
   private List<String> getValueAsStringList(Map<String, Object> config, String key) {
     String caseInsensitiveKey = getCaseInsensitiveKey(config, key);
 
-    return Optional.ofNullable(config.get(caseInsensitiveKey))
-        .filter(value -> value instanceof List<?>)
-        .map(value -> ((List<?>) value).stream())
-        .map(s -> s.map(String.class::cast).collect(Collectors.toList()))
-        .orElseThrow(() -> new IllegalArgumentException("Value is not a List<String>"));
+    return Optional.ofNullable(config.get(caseInsensitiveKey)).filter(value -> value instanceof List<?>)
+            .map(value -> ((List<?>) value).stream()).map(s -> s.map(String.class::cast).collect(Collectors.toList()))
+            .orElseThrow(() -> new IllegalArgumentException("Value is not a List<String>"));
   }
 
   private List<Map<String, Object>> getConfigValueAsList(StaticProperty sp) {
-    return configs
-        .stream()
-        .filter(f -> hasKeyCaseInsensitive(sp.getInternalName(), f))
-        .findFirst()
-        .map(f -> getCaseInsensitiveList(f, sp.getInternalName()))
-        .orElseThrow(IllegalArgumentException::new);
+    return configs.stream().filter(f -> hasKeyCaseInsensitive(sp.getInternalName(), f)).findFirst()
+            .map(f -> getCaseInsensitiveList(f, sp.getInternalName())).orElseThrow(IllegalArgumentException::new);
   }
 
   private List<Map<String, Object>> getCaseInsensitiveList(Map<String, Object> map, String key) {
@@ -290,28 +268,27 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
     throw new IllegalArgumentException("Key '" + key + "' not found");
   }
 
-
-//  private String getAsString(StaticProperty sp) {
-//    return configs.get(sp.getInternalName()).toString();
-//  }
-//
-//  private boolean getAsBoolean(StaticProperty sp) {
-//    return Boolean.parseBoolean(configs.get(sp.getInternalName()).toString());
-//  }
-//
-//  private Map<String, Object> getAsMap(StaticProperty sp) {
-//    return (Map<String, Object>) configs.get(sp.getInternalName());
-//  }
-//
-//  private Map<String, Object> getAsMap(StaticProperty sp, String subkey) {
-//    return (Map<String, Object>) getAsMap(sp).get(subkey);
-//  }
-//
-//  private Map<String, Object> getAsMap(Map<String, Object> map, String key) {
-//    return (Map<String, Object>) map.get(key);
-//  }
-//
-//  private List<Map<String, Object>> getAsList(StaticProperty sp, String key) {
-//    return (List<Map<String, Object>>) getAsMap(sp).get(key);
-//  }
+  // private String getAsString(StaticProperty sp) {
+  // return configs.get(sp.getInternalName()).toString();
+  // }
+  //
+  // private boolean getAsBoolean(StaticProperty sp) {
+  // return Boolean.parseBoolean(configs.get(sp.getInternalName()).toString());
+  // }
+  //
+  // private Map<String, Object> getAsMap(StaticProperty sp) {
+  // return (Map<String, Object>) configs.get(sp.getInternalName());
+  // }
+  //
+  // private Map<String, Object> getAsMap(StaticProperty sp, String subkey) {
+  // return (Map<String, Object>) getAsMap(sp).get(subkey);
+  // }
+  //
+  // private Map<String, Object> getAsMap(Map<String, Object> map, String key) {
+  // return (Map<String, Object>) map.get(key);
+  // }
+  //
+  // private List<Map<String, Object>> getAsList(StaticProperty sp, String key) {
+  // return (List<Map<String, Object>>) getAsMap(sp).get(key);
+  // }
 }

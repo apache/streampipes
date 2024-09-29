@@ -15,13 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.grounding;
 
 public class PulsarTransportProtocol extends TransportProtocol {
 
-  public PulsarTransportProtocol(String brokerUrl,
-                                 TopicDefinition topicDefinition) {
+  public PulsarTransportProtocol(String brokerUrl, TopicDefinition topicDefinition) {
     super(brokerUrl, topicDefinition);
   }
 

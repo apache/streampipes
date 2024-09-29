@@ -35,12 +35,8 @@ public class SortWindowExpression extends WindowExpression {
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.EMPTY,
-        windowExpression(),
-        "sort",
-        windowValue(join(SiddhiConstants.COMMA,
-            String.valueOf(windowValue),
-            property.toSiddhiEpl(),
-            join(SiddhiConstants.EMPTY, "'", order.toString().toLowerCase(), "'"))));
+    return join(SiddhiConstants.EMPTY, windowExpression(), "sort",
+            windowValue(join(SiddhiConstants.COMMA, String.valueOf(windowValue), property.toSiddhiEpl(),
+                    join(SiddhiConstants.EMPTY, "'", order.toString().toLowerCase(), "'"))));
   }
 }

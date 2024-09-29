@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.migrations.v093.migrator;
 
 import org.apache.streampipes.model.connect.adapter.migration.IAdapterConverter;
@@ -39,8 +38,7 @@ public class SpecificAdapterMigrator implements AdapterMigrator {
   }
 
   @Override
-  public void migrate(CouchDbClient couchDbClient,
-                      JsonObject adapter) {
+  public void migrate(CouchDbClient couchDbClient, JsonObject adapter) {
     var adapterName = helpers.getAdapterName(adapter);
     var convertedAdapter = converter.convert(adapter);
 

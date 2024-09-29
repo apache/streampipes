@@ -31,10 +31,7 @@ public class CollectListExpression extends PropertyExpressionBase {
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.EMPTY,
-        "list:collect",
-        SiddhiConstants.PARENTHESIS_OPEN,
-        propertyExpression.toSiddhiEpl(),
-        SiddhiConstants.PARENTHESIS_CLOSE);
+    return join(SiddhiConstants.EMPTY, "list:collect", SiddhiConstants.PARENTHESIS_OPEN,
+            propertyExpression.toSiddhiEpl(), SiddhiConstants.PARENTHESIS_CLOSE);
   }
 }

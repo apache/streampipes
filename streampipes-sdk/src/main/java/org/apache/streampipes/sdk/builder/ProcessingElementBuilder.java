@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder;
 
 import org.apache.streampipes.model.DataProcessorType;
@@ -29,8 +28,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProcessingElementBuilder
-    extends AbstractProcessingElementBuilder<ProcessingElementBuilder, DataProcessorDescription> {
-
+        extends
+          AbstractProcessingElementBuilder<ProcessingElementBuilder, DataProcessorDescription> {
 
   private List<OutputStrategy> outputStrategies;
 
@@ -48,12 +47,16 @@ public class ProcessingElementBuilder
 
   /**
    * Creates a new processing element based on a label using the builder pattern.
-   * @param id          A unique identifier of the new element, e.g., com.mycompany.processor.mynewdataprocessor
-   * @param label       A human-readable name of the element.
-   *                    Will later be shown as the element name in the StreamPipes UI.
-   * @param description A human-readable description of the element.
-   * @param version     version of the processing element for migration purposes. Should be 0 in standard cases.
-   *                    Only in case there exist migrations for the specific element the version needs to be aligned.
+   * 
+   * @param id
+   *          A unique identifier of the new element, e.g., com.mycompany.processor.mynewdataprocessor
+   * @param label
+   *          A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
+   * @param description
+   *          A human-readable description of the element.
+   * @param version
+   *          version of the processing element for migration purposes. Should be 0 in standard cases. Only in case
+   *          there exist migrations for the specific element the version needs to be aligned.
    * @return Builder for the pre-defined processing element.
    */
   public static ProcessingElementBuilder create(String id, String label, String description, int version) {
@@ -61,13 +64,11 @@ public class ProcessingElementBuilder
   }
 
   /**
-   * Creates a new processing element using the builder pattern. If no label and description is
-   * given
-   * for an element,
-   * {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
-   * must be called.
+   * Creates a new processing element using the builder pattern. If no label and description is given for an element,
+   * {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)} must be called.
    *
-   * @param id A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
+   * @param id
+   *          A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
    */
   public static ProcessingElementBuilder create(String id, int version) {
     return new ProcessingElementBuilder(id, version);
@@ -76,8 +77,9 @@ public class ProcessingElementBuilder
   /**
    * Assigns an output strategy to the element which defines the output the data processor produces.
    *
-   * @param outputStrategy An {@link org.apache.streampipes.model.output.OutputStrategy}. Use
-   *                       {@link org.apache.streampipes.sdk.helpers.OutputStrategies} to assign the strategy.
+   * @param outputStrategy
+   *          An {@link org.apache.streampipes.model.output.OutputStrategy}. Use
+   *          {@link org.apache.streampipes.sdk.helpers.OutputStrategies} to assign the strategy.
    * @return {@link ProcessingElementBuilder}
    */
   public ProcessingElementBuilder outputStrategy(OutputStrategy outputStrategy) {
@@ -88,14 +90,12 @@ public class ProcessingElementBuilder
   /**
    * Assigns a category to the element which later serves to categorize data processors in the UI.
    *
-   * @param epaCategory The {@link org.apache.streampipes.model.DataProcessorType} of the element.
+   * @param epaCategory
+   *          The {@link org.apache.streampipes.model.DataProcessorType} of the element.
    * @return {@link ProcessingElementBuilder}
    */
   public ProcessingElementBuilder category(DataProcessorType... epaCategory) {
-    this.elementDescription.setCategory(Arrays
-        .stream(epaCategory)
-        .map(Enum::name)
-        .collect(Collectors.toList()));
+    this.elementDescription.setCategory(Arrays.stream(epaCategory).map(Enum::name).collect(Collectors.toList()));
     return me();
   }
 

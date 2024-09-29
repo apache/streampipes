@@ -17,10 +17,10 @@
  */
 package org.apache.streampipes.storage.couchdb.dao;
 
+import java.util.function.Supplier;
+
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.NoDocumentException;
-
-import java.util.function.Supplier;
 
 public class DeleteCommand<T> extends DbCommand<Boolean, T> {
 

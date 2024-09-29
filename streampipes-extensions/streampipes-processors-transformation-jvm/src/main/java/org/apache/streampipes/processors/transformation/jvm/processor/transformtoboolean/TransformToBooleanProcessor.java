@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.transformtoboolean;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -43,16 +42,16 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TransformToBooleanProcessor
-    extends StreamPipesDataProcessor
-    implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class TransformToBooleanProcessor extends StreamPipesDataProcessor
+        implements
+          ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   private static final Logger LOG = LoggerFactory.getLogger(TransformToBooleanProcessor.class);
 
@@ -63,43 +62,35 @@ public class TransformToBooleanProcessor
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.transform-to-boolean", 0)
-        .category(DataProcessorType.BOOLEAN_OPERATOR)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithNaryMapping(
-                EpRequirements.anyProperty(),   // anyProperty? Would be nice, to exclude
-                Labels.withId(TRANSFORM_FIELDS_ID),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.customTransformation())
-        .build();
+            .create("org.apache.streampipes.processors.transformation.jvm.transform-to-boolean", 0)
+            .category(DataProcessorType.BOOLEAN_OPERATOR).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), // anyProperty? Would be nice, to
+                                                                                   // exclude
+                            Labels.withId(TRANSFORM_FIELDS_ID), PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies.customTransformation()).build();
   }
 
   @Override
-  public EventSchema resolveOutputStrategy(
-      DataProcessorInvocation processingElement,
-      ProcessingElementParameterExtractor parameterExtractor) throws SpRuntimeException {
+  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
+          ProcessingElementParameterExtractor parameterExtractor) throws SpRuntimeException {
 
     EventSchema eventSchema = new EventSchema();
     EventSchema oldEventSchema = processingElement.getInputStreams().get(0).getEventSchema();
     // Gotta remove the "s0::" in the beginning
-    Set<String> transformFields =
-        (parameterExtractor.mappingPropertyValues(TRANSFORM_FIELDS_ID))
-            .stream()
-            .map(s -> s.substring(4))
-            .collect(Collectors.toSet());
+    Set<String> transformFields = (parameterExtractor.mappingPropertyValues(TRANSFORM_FIELDS_ID)).stream()
+            .map(s -> s.substring(4)).collect(Collectors.toSet());
 
     for (EventProperty eventProperty : oldEventSchema.getEventProperties()) {
-      //TODO: Test, if eventProperty is a primitive type (string, number, ...)
+      // TODO: Test, if eventProperty is a primitive type (string, number, ...)
 
       // if the runtimename is in transformfields, it should be converted to a boolean
       if (transformFields.contains(eventProperty.getRuntimeName())) {
         PrimitivePropertyBuilder property = PrimitivePropertyBuilder
-            .create(Datatypes.Boolean, eventProperty.getRuntimeName())
-            .label(eventProperty.getRuntimeName())
-            .description(eventProperty.getDescription());
+                .create(Datatypes.Boolean, eventProperty.getRuntimeName()).label(eventProperty.getRuntimeName())
+                .description(eventProperty.getDescription());
 
         eventSchema.addEventProperty(property.build());
       } else {
@@ -112,9 +103,8 @@ public class TransformToBooleanProcessor
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     transformFields = parameters.extractor().mappingPropertyValues(TRANSFORM_FIELDS_ID);
 
   }

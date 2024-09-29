@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe.param;
 
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
@@ -26,9 +25,7 @@ import org.apache.streampipes.model.runtime.SourceInfo;
 import java.util.List;
 import java.util.Map;
 
-public interface IPipelineElementParameters<
-    IvT extends InvocableStreamPipesEntity,
-    ExT extends IParameterExtractor> {
+public interface IPipelineElementParameters<IvT extends InvocableStreamPipesEntity, ExT extends IParameterExtractor> {
 
   IvT getModel();
 
@@ -49,6 +46,5 @@ public interface IPipelineElementParameters<
   SourceInfo getInputSourceInfo(int index);
 
   Integer getSourceIndex(String sourceId);
-
 
 }

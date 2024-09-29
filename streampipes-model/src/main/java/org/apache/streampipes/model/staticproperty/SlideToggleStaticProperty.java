@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.staticproperty;
 
 public class SlideToggleStaticProperty extends StaticProperty {
@@ -27,10 +26,7 @@ public class SlideToggleStaticProperty extends StaticProperty {
     super(StaticPropertyType.SlideToggleStaticProperty);
   }
 
-  public SlideToggleStaticProperty(String internalName,
-                                   String label,
-                                   String description,
-                                   boolean defaultValue) {
+  public SlideToggleStaticProperty(String internalName, String label, String description, boolean defaultValue) {
     super(StaticPropertyType.SlideToggleStaticProperty, internalName, label, description);
     this.defaultValue = defaultValue;
   }
@@ -40,7 +36,6 @@ public class SlideToggleStaticProperty extends StaticProperty {
     this.selected = other.isSelected();
     this.defaultValue = other.isDefaultValue();
   }
-
 
   @Override
   public void accept(StaticPropertyVisitor visitor) {

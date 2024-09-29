@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.api;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
@@ -29,14 +28,15 @@ public interface IDataExplorerManager {
    * Provide an instance of {@link IDataLakeMeasurementCounter} for counting the sizes of measurements within a data
    * lake.
    *
-   * @param allMeasurements     A list of {@link DataLakeMeasure} objects representing all measurements in the data lake.
-   * @param measurementsToCount A list of measurement names for which the sizes should be counted.
-   * @return An instance of {@link IDataLakeMeasurementCounter} configured to count the sizes of the specified measurements.
+   * @param allMeasurements
+   *          A list of {@link DataLakeMeasure} objects representing all measurements in the data lake.
+   * @param measurementsToCount
+   *          A list of measurement names for which the sizes should be counted.
+   * @return An instance of {@link IDataLakeMeasurementCounter} configured to count the sizes of the specified
+   *         measurements.
    */
-  IDataLakeMeasurementCounter getMeasurementCounter(
-    List<DataLakeMeasure> allMeasurements,
-    List<String> measurementsToCount
-  );
+  IDataLakeMeasurementCounter getMeasurementCounter(List<DataLakeMeasure> allMeasurements,
+          List<String> measurementsToCount);
 
   IDataExplorerQueryManagement getQueryManagement(IDataExplorerSchemaManagement dataExplorerSchemaManagement);
 

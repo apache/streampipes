@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions.pe;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
@@ -24,15 +23,15 @@ import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
-import java.util.Map;
 
 @RestController
 @RequestMapping(SpServicePathPrefix.DATA_STREAM)
@@ -46,9 +45,7 @@ public class DataStreamPipelineElementResource extends AbstractPipelineElementRe
   @GetMapping(path = "{streamId}/assets", produces = "application/zip")
   public ResponseEntity<byte[]> getAssets(@PathVariable("streamId") String streamId) {
     try {
-      return ok(new AssetZipGenerator(streamId,
-          getById(streamId)
-              .getIncludedAssets()).makeZip());
+      return ok(new AssetZipGenerator(streamId, getById(streamId).getIncludedAssets()).makeZip());
     } catch (IOException e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();

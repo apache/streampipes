@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.connect.management.compact.generator.AdapterModelGenerator;
@@ -46,7 +45,7 @@ public class CompactAdapterManagement {
   }
 
   public AdapterDescription convertToAdapterDescription(CompactAdapter compactAdapter,
-                                                        AdapterDescription existingAdapter) throws Exception {
+          AdapterDescription existingAdapter) throws Exception {
     var adapterDescription = convertToAdapterDescription(compactAdapter);
 
     existingAdapter.getDataStream().setEventSchema(adapterDescription.getDataStream().getEventSchema());
@@ -60,11 +59,7 @@ public class CompactAdapterManagement {
 
   private AdapterDescription findAdapterDescription(String appId) {
     IAdapterStorage adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
-    return adapterStorage.findAll()
-        .stream()
-        .filter(desc -> desc.getAppId()
-            .equals(appId))
-        .findFirst()
-        .orElseThrow(IllegalArgumentException::new);
+    return adapterStorage.findAll().stream().filter(desc -> desc.getAppId().equals(appId)).findFirst()
+            .orElseThrow(IllegalArgumentException::new);
   }
 }

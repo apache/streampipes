@@ -15,20 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.helpers;
 
 public enum CodeLanguage {
-  None("Write your custom logic here"),
-  Python("# Enter your python code here\n\n"
-      + "print('Hello, StreamPipes!')"),
-  Javascript("function process(event) {\n"
-      + "    // do processing here.\n"
-      + "    // return processed event.\n"
-      + "   // Type 'event' and press Ctrl+Space to see available fields.\n"
-      + "   // Example: \n"
-      + "    return {timestamp: event.timestamp, tempInCelsius: (event.tempInKelvin - 273.15)};\n"
-      + "}");
+  None("Write your custom logic here"), Python(
+          "# Enter your python code here\n\n" + "print('Hello, StreamPipes!')"), Javascript(
+                  "function process(event) {\n" + "    // do processing here.\n" + "    // return processed event.\n"
+                          + "   // Type 'event' and press Ctrl+Space to see available fields.\n" + "   // Example: \n"
+                          + "    return {timestamp: event.timestamp, tempInCelsius: (event.tempInKelvin - 273.15)};\n"
+                          + "}");
 
   private String defaultSkeleton;
 

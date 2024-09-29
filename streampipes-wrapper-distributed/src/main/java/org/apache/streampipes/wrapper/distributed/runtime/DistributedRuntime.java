@@ -38,17 +38,14 @@ import org.apache.streampipes.wrapper.runtime.PipelineElementRuntime;
 
 import java.util.Properties;
 
-public abstract class DistributedRuntime<
-    PeT extends IStreamPipesPipelineElement<?>,
-    IvT extends InvocableStreamPipesEntity,
-    RcT extends RuntimeContext,
-    ExT extends IParameterExtractor,
-    PepT extends IPipelineElementParameters<IvT, ExT>>
-    extends PipelineElementRuntime<PeT, IvT, RcT, ExT, PepT>
-    implements IStreamPipesRuntime<PeT, IvT> {
+public abstract class DistributedRuntime<PeT extends IStreamPipesPipelineElement<?>, IvT extends InvocableStreamPipesEntity, RcT extends RuntimeContext, ExT extends IParameterExtractor, PepT extends IPipelineElementParameters<IvT, ExT>>
+        extends
+          PipelineElementRuntime<PeT, IvT, RcT, ExT, PepT>
+        implements
+          IStreamPipesRuntime<PeT, IvT> {
 
   public DistributedRuntime(IContextGenerator<RcT, IvT> contextGenerator,
-                             IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
+          IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
     super(contextGenerator, parameterGenerator);
   }
 
@@ -65,9 +62,7 @@ public abstract class DistributedRuntime<
   }
 
   protected String getTopic(SpDataStream stream) {
-    return protocol(stream)
-        .getTopicDefinition()
-        .getActualTopicName();
+    return protocol(stream).getTopicDefinition().getActualTopicName();
   }
 
   protected JmsTransportProtocol getJmsProtocol(SpDataStream stream) {
@@ -91,16 +86,12 @@ public abstract class DistributedRuntime<
   }
 
   protected TransportProtocol protocol(SpDataStream stream) {
-    return stream
-        .getEventGrounding()
-        .getTransportProtocol();
+    return stream.getEventGrounding().getTransportProtocol();
   }
 
   protected String getKafkaUrl(SpDataStream stream) {
     // TODO add also jms support
-    return protocol(stream).getBrokerHostname()
-        + ":"
-        + ((KafkaTransportProtocol) protocol(stream)).getKafkaPort();
+    return protocol(stream).getBrokerHostname() + ":" + ((KafkaTransportProtocol) protocol(stream)).getKafkaPort();
   }
 
   protected String replaceWildcardWithPatternFormat(String topic) {

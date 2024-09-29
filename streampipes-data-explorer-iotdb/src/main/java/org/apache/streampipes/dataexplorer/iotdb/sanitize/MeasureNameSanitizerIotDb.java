@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.iotdb.sanitize;
 
 /**
@@ -23,22 +22,24 @@ package org.apache.streampipes.dataexplorer.iotdb.sanitize;
  * <p>
  * Measurement names in IoTDB paths should consist of characters that are either:
  * <ul>
- *    <li>Word characters (letters, digits, or underscore), or </li>
- *    <li>Chinese characters (Unicode range: u2E80-u9FFF). </li>
+ * <li>Word characters (letters, digits, or underscore), or</li>
+ * <li>Chinese characters (Unicode range: u2E80-u9FFF).</li>
  * </ul>
  * <p>
- * {@see <a href="https://iotdb.apache.org/UserGuide/latest/Basic-Concept/Data-Model-and-Terminology.html#path">IoTDB Data Model and Terminology</a>}
+ * {@see <a href="https://iotdb.apache.org/UserGuide/latest/Basic-Concept/Data-Model-and-Terminology.html#path">IoTDB
+ * Data Model and Terminology</a>}
  */
 public class MeasureNameSanitizerIotDb {
 
   /**
    * Sanitizes the given measurement name to comply with IoTDB path specifications.
    *
-   * @param measureName The measurement name to be sanitized
+   * @param measureName
+   *          The measurement name to be sanitized
    * @return The sanitized measurement name with non-compliant characters replaced by underscores
    */
   public String sanitize(String measureName) {
-    
+
     // matches any character that is not a word character (\w, equivalent to [a-zA-Z0-9_]) or
     // a Chinese character (\u2E80-\u9FFF).
     // according to https://iotdb.apache.org/UserGuide/latest/Basic-Concept/Data-Model-and-Terminology.html#path

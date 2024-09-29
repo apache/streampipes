@@ -15,10 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.opcua.config;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
@@ -28,39 +33,29 @@ import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 public class MiloOpcUaConfigurationProvider {
 
   public OpcUaClientConfig makeClientConfig(OpcUaConfig spOpcConfig)
-      throws ExecutionException, InterruptedException, SpConfigurationException, URISyntaxException {
+          throws ExecutionException, InterruptedException, SpConfigurationException, URISyntaxException {
     String opcServerUrl = spOpcConfig.getOpcServerURL();
     List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(opcServerUrl).get();
     String host = opcServerUrl.split("://")[1].split(":")[0];
 
-    EndpointDescription tmpEndpoint = endpoints
-        .stream()
-        .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri()))
-        .findFirst()
-        .orElseThrow(() -> new SpConfigurationException("No endpoint with security policy none"));
+    EndpointDescription tmpEndpoint = endpoints.stream()
+            .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri())).findFirst()
+            .orElseThrow(() -> new SpConfigurationException("No endpoint with security policy none"));
 
     tmpEndpoint = updateEndpointUrl(tmpEndpoint, host);
     endpoints = Collections.singletonList(tmpEndpoint);
 
-    EndpointDescription endpoint = endpoints
-        .stream()
-        .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri()))
-        .findFirst().orElseThrow(() -> new SpConfigurationException("no desired endpoints returned"));
+    EndpointDescription endpoint = endpoints.stream()
+            .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri())).findFirst()
+            .orElseThrow(() -> new SpConfigurationException("no desired endpoints returned"));
 
     return buildConfig(endpoint, spOpcConfig);
   }
 
-  private OpcUaClientConfig buildConfig(EndpointDescription endpoint,
-                                        OpcUaConfig spOpcConfig) {
+  private OpcUaClientConfig buildConfig(EndpointDescription endpoint, OpcUaConfig spOpcConfig) {
 
     OpcUaClientConfigBuilder builder = defaultBuilder(endpoint);
     if (!spOpcConfig.isUnauthenticated()) {
@@ -70,34 +65,19 @@ public class MiloOpcUaConfigurationProvider {
   }
 
   private OpcUaClientConfigBuilder defaultBuilder(EndpointDescription endpoint) {
-    return OpcUaClientConfig.builder()
-        .setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
-        .setApplicationUri("urn:eclipse:milo:examples:client")
-        .setEndpoint(endpoint);
+    return OpcUaClientConfig.builder().setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
+            .setApplicationUri("urn:eclipse:milo:examples:client").setEndpoint(endpoint);
   }
 
-  private EndpointDescription updateEndpointUrl(
-      EndpointDescription original, String hostname) throws URISyntaxException {
+  private EndpointDescription updateEndpointUrl(EndpointDescription original, String hostname)
+          throws URISyntaxException {
 
     URI uri = new URI(original.getEndpointUrl()).parseServerAuthority();
 
-    String endpointUrl = String.format(
-        "%s://%s:%s%s",
-        uri.getScheme(),
-        hostname,
-        uri.getPort(),
-        uri.getPath()
-    );
+    String endpointUrl = String.format("%s://%s:%s%s", uri.getScheme(), hostname, uri.getPort(), uri.getPath());
 
-    return new EndpointDescription(
-        endpointUrl,
-        original.getServer(),
-        original.getServerCertificate(),
-        original.getSecurityMode(),
-        original.getSecurityPolicyUri(),
-        original.getUserIdentityTokens(),
-        original.getTransportProfileUri(),
-        original.getSecurityLevel()
-    );
+    return new EndpointDescription(endpointUrl, original.getServer(), original.getServerCertificate(),
+            original.getSecurityMode(), original.getSecurityPolicyUri(), original.getUserIdentityTokens(),
+            original.getTransportProfileUri(), original.getSecurityLevel());
   }
 }

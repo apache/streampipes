@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.textmining.jvm.processor.chunker;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -39,15 +38,15 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-import opennlp.tools.chunker.ChunkerME;
-import opennlp.tools.chunker.ChunkerModel;
-import opennlp.tools.util.Span;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+
+import opennlp.tools.chunker.ChunkerME;
+import opennlp.tools.chunker.ChunkerModel;
+import opennlp.tools.util.Span;
 
 public class ChunkerProcessor extends StreamPipesDataProcessor {
 
@@ -63,39 +62,27 @@ public class ChunkerProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.textmining.jvm.chunker", 0)
-        .category(DataProcessorType.ENRICH_TEXT)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredFile(Labels.withId(BINARY_FILE_KEY))
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.listRequirement(Datatypes.String),
-                Labels.withId(TAGS_FIELD_KEY),
-                PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.listRequirement(Datatypes.String),
-                Labels.withId(TOKENS_FIELD_KEY),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.listStringEp(
-                Labels.withId(CHUNK_TYPE_FIELD_KEY),
-                CHUNK_TYPE_FIELD_KEY,
-                "http://schema.org/ItemList"),
-            EpProperties.listStringEp(
-                Labels.withId(CHUNK_FIELD_KEY),
-                CHUNK_FIELD_KEY,
-                "http://schema.org/ItemList")))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.chunker", 0)
+            .category(DataProcessorType.ENRICH_TEXT)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .requiredFile(Labels.withId(BINARY_FILE_KEY))
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(Datatypes.String),
+                            Labels.withId(TAGS_FIELD_KEY), PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(Datatypes.String),
+                            Labels.withId(TOKENS_FIELD_KEY), PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies.append(
+                    EpProperties.listStringEp(Labels.withId(CHUNK_TYPE_FIELD_KEY), CHUNK_TYPE_FIELD_KEY,
+                            "http://schema.org/ItemList"),
+                    EpProperties.listStringEp(Labels.withId(CHUNK_FIELD_KEY), CHUNK_FIELD_KEY,
+                            "http://schema.org/ItemList")))
+            .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext context) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext context) throws SpRuntimeException {
     this.tags = parameters.extractor().mappingPropertyValue(TAGS_FIELD_KEY);
     this.tokens = parameters.extractor().mappingPropertyValue(TOKENS_FIELD_KEY);
     String filename = parameters.extractor().selectedFilename(BINARY_FILE_KEY);
@@ -113,11 +100,9 @@ public class ChunkerProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onEvent(Event event,
-                      SpOutputCollector collector) throws SpRuntimeException {
+  public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
     ListField tags = event.getFieldBySelector(this.tags).getAsList();
     ListField tokens = event.getFieldBySelector(this.tokens).getAsList();
-
 
     String[] tagsArray = tags.castItems(String.class).toArray(String[]::new);
     String[] tokensArray = tokens.castItems(String.class).toArray(String[]::new);

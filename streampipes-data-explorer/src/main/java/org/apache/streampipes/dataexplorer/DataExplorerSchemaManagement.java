@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
@@ -73,10 +72,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
   /**
    * Distinguishes between the update strategy for existing measurements
    */
-  private void handleExistingMeasurement(
-      DataLakeMeasure measure,
-      DataLakeMeasure existingMeasure
-  ) {
+  private void handleExistingMeasurement(DataLakeMeasure measure, DataLakeMeasure existingMeasure) {
     measure.setElementId(existingMeasure.getElementId());
     if (DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA.equals(measure.getSchemaUpdateStrategy())) {
       // For the update schema strategy the old schema is overwritten with the new one
@@ -87,16 +83,11 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
     }
   }
 
-
   /**
    * Returns the existing measure that has the provided measure name
    */
   private Optional<DataLakeMeasure> getExistingMeasureByName(String measureName) {
-    return dataLakeStorage.findAll()
-                          .stream()
-                          .filter(m -> m.getMeasureName()
-                                        .equals(measureName))
-                          .findFirst();
+    return dataLakeStorage.findAll().stream().filter(m -> m.getMeasureName().equals(measureName)).findFirst();
   }
 
   private static void setDefaultUpdateStrategyIfNoneProvided(DataLakeMeasure measure) {
@@ -116,17 +107,13 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   @Override
   public boolean deleteMeasurementByName(String measureName) {
-    var measureToDeleteOpt = dataLakeStorage.findAll()
-                                            .stream()
-                                            .filter(measurement -> measurement.getMeasureName()
-                                                                               .equals(measureName))
-                                            .findFirst();
+    var measureToDeleteOpt = dataLakeStorage.findAll().stream()
+            .filter(measurement -> measurement.getMeasureName().equals(measureName)).findFirst();
 
     return measureToDeleteOpt.map(measure -> {
       dataLakeStorage.deleteElementById(measure.getElementId());
       return true;
-    }
-    ).orElse(false);
+    }).orElse(false);
   }
 
   @Override
@@ -148,49 +135,26 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
   /**
    * First the event schemas of the measurements are merged and then the measure is updated in the database
    */
-  private void unifyEventSchemaAndUpdateMeasure(
-      DataLakeMeasure measure,
-      DataLakeMeasure existingMeasure
-  ) {
-    var properties = getUnifiedEventProperties(
-        existingMeasure,
-        measure
-    );
+  private void unifyEventSchemaAndUpdateMeasure(DataLakeMeasure measure, DataLakeMeasure existingMeasure) {
+    var properties = getUnifiedEventProperties(existingMeasure, measure);
 
-    measure
-        .getEventSchema()
-        .setEventProperties(properties);
+    measure.getEventSchema().setEventProperties(properties);
 
     updateMeasurement(measure);
   }
 
   /**
-   * Returns the union of the unique event properties of the two measures.
-   * They are unique by runtime name.
+   * Returns the union of the unique event properties of the two measures. They are unique by runtime name.
    */
-  private List<EventProperty> getUnifiedEventProperties(
-      DataLakeMeasure measure1,
-      DataLakeMeasure measure2
-  ) {
-// Combine the event properties from both measures into a single Stream
-    var allMeasurementProperties = Stream.concat(
-        measure1.getEventSchema()
-                .getEventProperties()
-                .stream(),
-        measure2.getEventSchema()
-                .getEventProperties()
-                .stream()
-    );
+  private List<EventProperty> getUnifiedEventProperties(DataLakeMeasure measure1, DataLakeMeasure measure2) {
+    // Combine the event properties from both measures into a single Stream
+    var allMeasurementProperties = Stream.concat(measure1.getEventSchema().getEventProperties().stream(),
+            measure2.getEventSchema().getEventProperties().stream());
 
     // Filter event properties by removing duplicate runtime names
     // If there are duplicate keys, choose the first occurrence
-    var unifiedEventProperties = allMeasurementProperties
-        .collect(Collectors.toMap(
-            EventProperty::getRuntimeName,
-            Function.identity(),
-            (eventProperty, eventProperty2) -> eventProperty
-        ))
-        .values();
+    var unifiedEventProperties = allMeasurementProperties.collect(Collectors.toMap(EventProperty::getRuntimeName,
+            Function.identity(), (eventProperty, eventProperty2) -> eventProperty)).values();
     return new ArrayList<>(unifiedEventProperties);
   }
 }

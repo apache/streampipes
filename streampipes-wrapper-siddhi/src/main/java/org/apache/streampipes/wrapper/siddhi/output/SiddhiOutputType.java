@@ -19,7 +19,6 @@ package org.apache.streampipes.wrapper.siddhi.output;
 
 public enum SiddhiOutputType {
 
-  FIRST,
-  LIST
+  FIRST, LIST
 
 }

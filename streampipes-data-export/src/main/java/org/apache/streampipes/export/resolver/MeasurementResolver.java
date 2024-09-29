@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.export.utils.SerializationUtils;

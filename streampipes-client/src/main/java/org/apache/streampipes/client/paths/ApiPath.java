@@ -21,4 +21,3 @@ public class ApiPath {
 
   public static final String EMAIL_RESOURCE = "api/v2/mail";
 }
-

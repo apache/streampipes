@@ -15,22 +15,21 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect;
-
-import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
+
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 public class GuessManagementTest {
 
@@ -39,11 +38,8 @@ public class GuessManagementTest {
     var mockDeclarersSingleton = Mockito.mock(IDeclarersSingleton.class);
     var guessManagement = Mockito.spy(GuessManagement.class);
 
-    doReturn(mockDeclarersSingleton)
-        .when(guessManagement)
-        .getDeclarerSingleton();
-    when(mockDeclarersSingleton.getAdapter(any()))
-        .thenReturn(Optional.empty());
+    doReturn(mockDeclarersSingleton).when(guessManagement).getDeclarerSingleton();
+    when(mockDeclarersSingleton.getAdapter(any())).thenReturn(Optional.empty());
 
     assertThrows(AdapterException.class, () -> guessManagement.guessSchema(new AdapterDescription()));
 

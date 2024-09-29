@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.staticproperty;
 
 import java.net.URI;
@@ -77,7 +76,7 @@ public class FreeTextStaticProperty extends StaticProperty {
   }
 
   public FreeTextStaticProperty(String internalName, String label, String description,
-                                PropertyValueSpecification valueSpecification) {
+          PropertyValueSpecification valueSpecification) {
     super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
     this.valueSpecification = valueSpecification;
   }

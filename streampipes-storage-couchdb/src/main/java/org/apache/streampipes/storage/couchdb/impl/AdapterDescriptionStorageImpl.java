@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -33,19 +32,13 @@ public class AdapterDescriptionStorageImpl extends DefaultCrudStorage<AdapterDes
 
   @Override
   public AdapterDescription getFirstAdapterByAppId(String appId) {
-    return this.findAll()
-        .stream()
-        .filter(p -> p.getAppId().equals(appId))
-        .findFirst()
-        .orElseThrow(NoSuchElementException::new);
+    return this.findAll().stream().filter(p -> p.getAppId().equals(appId)).findFirst()
+            .orElseThrow(NoSuchElementException::new);
   }
 
   @Override
   public List<AdapterDescription> getAdaptersByAppId(String appId) {
-    return this.findAll()
-        .stream()
-        .filter(p -> p.getAppId().equals(appId))
-        .toList();
+    return this.findAll().stream().filter(p -> p.getAppId().equals(appId)).toList();
   }
 
   @Override

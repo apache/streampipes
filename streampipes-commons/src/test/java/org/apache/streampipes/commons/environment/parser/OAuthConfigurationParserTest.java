@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.environment.parser;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import org.junit.jupiter.api.Test;
 
 public class OAuthConfigurationParserTest {
 
@@ -70,7 +69,6 @@ public class OAuthConfigurationParserTest {
     assertEquals("github", gitHubConfig.getRegistrationId());
     assertEquals("authorizationUriB", gitHubConfig.getAuthorizationUri());
     assertNull(gitHubConfig.getTokenUri());
-
 
   }
 }

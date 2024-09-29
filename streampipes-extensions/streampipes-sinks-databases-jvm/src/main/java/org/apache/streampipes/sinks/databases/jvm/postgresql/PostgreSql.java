@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.postgresql;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -32,18 +31,15 @@ public class PostgreSql extends JdbcClient {
 
   private PostgreSqlParameters params;
 
-  public void onInvocation(PostgreSqlParameters parameters)
-      throws SpRuntimeException {
+  public void onInvocation(PostgreSqlParameters parameters) throws SpRuntimeException {
 
     this.params = parameters;
 
     // get(0) because it is the only input stream of the sink (and not two)
     // See (https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS)
     // for allowed postgres identifiers (for the regex)
-    initializeJdbc(
-        parameters.getGraph().getInputStreams().get(0).getEventSchema(),
-        parameters,
-        SupportedDbEngines.POSTGRESQL);
+    initializeJdbc(parameters.getGraph().getInputStreams().get(0).getEventSchema(), parameters,
+            SupportedDbEngines.POSTGRESQL);
   }
 
   @Override
@@ -51,10 +47,10 @@ public class PostgreSql extends JdbcClient {
 
     String query = "SELECT * FROM information_schema.columns WHERE table_name = ? ;";
 
-    String[] queryParameter = new String[]{params.getDbTable()};
+    String[] queryParameter = new String[] {params.getDbTable()};
 
     this.tableDescription.extractTableInformation(this.statementHandler.preparedStatement, this.connection, query,
-        queryParameter);
+            queryParameter);
   }
 
   public void onEvent(Event event) {

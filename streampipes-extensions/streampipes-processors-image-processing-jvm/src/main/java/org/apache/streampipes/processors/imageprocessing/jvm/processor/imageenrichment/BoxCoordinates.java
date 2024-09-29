@@ -26,24 +26,12 @@ public class BoxCoordinates {
   private float score;
   private String classesindex;
 
-  public static BoxCoordinates make(
-      Float width,
-      Float height,
-      Float x,
-      Float y) {
-    return new BoxCoordinates(Math.round(width),
-        Math.round(height),
-        Math.round(x),
-        Math.round(y));
+  public static BoxCoordinates make(Float width, Float height, Float x, Float y) {
+    return new BoxCoordinates(Math.round(width), Math.round(height), Math.round(x), Math.round(y));
   }
 
   public static BoxCoordinates make(Float width, Float height, Float x, Float y, float score, String classesindex) {
-    return new BoxCoordinates(Math.round(width),
-        Math.round(height),
-        Math.round(x),
-        Math.round(y),
-        score,
-        classesindex);
+    return new BoxCoordinates(Math.round(width), Math.round(height), Math.round(x), Math.round(y), score, classesindex);
   }
 
   public BoxCoordinates(int width, int height, int x, int y) {

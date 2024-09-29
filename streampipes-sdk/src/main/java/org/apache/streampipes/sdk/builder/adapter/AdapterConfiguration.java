@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder.adapter;
-
 
 import org.apache.streampipes.extensions.api.assets.AssetResolver;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
@@ -46,10 +44,8 @@ public class AdapterConfiguration extends NamedStreamPipesEntity implements IAda
   public AdapterConfiguration() {
   }
 
-  public AdapterConfiguration(AdapterDescription adapterDescription,
-                              List<IParser> supportedParsers,
-                              AssetResolver assetResolver,
-                              Supplier<StreamPipesAdapter> supplier) {
+  public AdapterConfiguration(AdapterDescription adapterDescription, List<IParser> supportedParsers,
+          AssetResolver assetResolver, Supplier<StreamPipesAdapter> supplier) {
     this.adapterDescription = adapterDescription;
     this.supportedParsers = supportedParsers;
     this.assetResolver = assetResolver;
@@ -66,18 +62,14 @@ public class AdapterConfiguration extends NamedStreamPipesEntity implements IAda
     // Add parser configuration to adapter description
     if (supportedParsers != null) {
 
-      var alternatives = supportedParsers.stream()
-          .map(parser -> {
-            var result = new StaticPropertyAlternative(
-                parser.declareDescription().getName(),
-                parser.declareDescription().getName(),
-                parser.declareDescription().getDescription());
+      var alternatives = supportedParsers.stream().map(parser -> {
+        var result = new StaticPropertyAlternative(parser.declareDescription().getName(),
+                parser.declareDescription().getName(), parser.declareDescription().getDescription());
 
-            result.setStaticProperty(parser.declareDescription().getConfig());
+        result.setStaticProperty(parser.declareDescription().getConfig());
 
-            return result;
-          })
-          .toList();
+        return result;
+      }).toList();
 
       if (alternatives.size() > 0) {
         adapterDescription.addConfig(getFormatAlternatives(alternatives));
@@ -98,8 +90,8 @@ public class AdapterConfiguration extends NamedStreamPipesEntity implements IAda
   }
 
   private StaticPropertyAlternatives getFormatAlternatives(List<StaticPropertyAlternative> alternatives) {
-    var alternativesContainer =
-        new StaticPropertyAlternatives("format", "Format", "Select the format that is used to parse the events");
+    var alternativesContainer = new StaticPropertyAlternatives("format", "Format",
+            "Select the format that is used to parse the events");
 
     alternativesContainer.setAlternatives(alternatives);
 

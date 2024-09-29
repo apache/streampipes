@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataformat;
 
 public abstract class SpDataFormatFactory {

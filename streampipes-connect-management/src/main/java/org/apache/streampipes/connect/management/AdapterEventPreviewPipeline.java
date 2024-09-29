@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.connect.management;
 
 import org.apache.streampipes.connect.shared.AdapterPipelineGeneratorBase;
@@ -25,12 +23,12 @@ import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AdapterEventPreviewPipeline implements IAdapterPipeline {
 
@@ -41,8 +39,8 @@ public class AdapterEventPreviewPipeline implements IAdapterPipeline {
 
   public AdapterEventPreviewPipeline(AdapterEventPreview previewRequest) {
     this.objectMapper = new ObjectMapper();
-    this.pipelineElements = new AdapterPipelineGeneratorBase()
-        .makeAdapterPipelineElements(previewRequest.getRules(), false);
+    this.pipelineElements = new AdapterPipelineGeneratorBase().makeAdapterPipelineElements(previewRequest.getRules(),
+            false);
     this.event = previewRequest.getInputData();
   }
 

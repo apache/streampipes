@@ -15,13 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.environment.parser;
 
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,35 +25,39 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * The {@code OAuthConfigurationParser} class is responsible for parsing OAuth provider configurations
- * from environment variables and converting them into a list of {@link OAuthConfiguration} objects.
+ * The {@code OAuthConfigurationParser} class is responsible for parsing OAuth provider configurations from environment
+ * variables and converting them into a list of {@link OAuthConfiguration} objects.
  *
- * <p>This class expects the environment variables to follow a specific naming convention:
- * {@code SP_OAUTH_{provider}_{settings}}. The parser identifies each provider by its unique
- * identifier (e.g., "github" or "azure") and maps the settings (such as "CLIENT_ID", "CLIENT_SECRET")
- * to their corresponding properties in the {@link OAuthConfiguration} object.</p>
+ * <p>
+ * This class expects the environment variables to follow a specific naming convention:
+ * {@code SP_OAUTH_{provider}_{settings}}. The parser identifies each provider by its unique identifier (e.g., "github"
+ * or "azure") and maps the settings (such as "CLIENT_ID", "CLIENT_SECRET") to their corresponding properties in the
+ * {@link OAuthConfiguration} object.
+ * </p>
  *
- * <p>Since environment variables cannot be structured as lists, the configuration for each provider
- * is derived from prefixed variables. For example, settings for a provider "github" could be
- * specified as:
+ * <p>
+ * Since environment variables cannot be structured as lists, the configuration for each provider is derived from
+ * prefixed variables. For example, settings for a provider "github" could be specified as:
  * <ul>
- *   <li>SP_OAUTH_GITHUB_CLIENT_ID=example-client-id</li>
- *   <li>SP_OAUTH_GITHUB_CLIENT_SECRET=example-client-secret</li>
- *   <li>...</li>
+ * <li>SP_OAUTH_GITHUB_CLIENT_ID=example-client-id</li>
+ * <li>SP_OAUTH_GITHUB_CLIENT_SECRET=example-client-secret</li>
+ * <li>...</li>
  * </ul>
- * The parser then groups these settings into a {@link OAuthConfiguration} object for "github".</p>
+ * The parser then groups these settings into a {@link OAuthConfiguration} object for "github".
+ * </p>
  */
 public class OAuthConfigurationParser {
 
   private static final Logger LOG = LoggerFactory.getLogger(OAuthConfigurationParser.class);
 
-
   private static final String OAUTH_PREFIX = "SP_OAUTH_PROVIDER";
 
   public List<OAuthConfiguration> parse(Map<String, String> env) {
     Map<String, OAuthConfiguration> oAuthConfigurationsMap = new HashMap<>();
-
 
     env.forEach((key, value) -> {
       if (key.startsWith(OAUTH_PREFIX)) {
@@ -68,11 +68,8 @@ public class OAuthConfigurationParser {
     return new ArrayList<>(oAuthConfigurationsMap.values());
   }
 
-  private void parseEnvironmentVariable(
-      String key,
-      String value,
-      Map<String, OAuthConfiguration> oAuthConfigurationsMap
-  ) {
+  private void parseEnvironmentVariable(String key, String value,
+          Map<String, OAuthConfiguration> oAuthConfigurationsMap) {
     var parts = getParts(key);
     if (parts.length >= 5) {
       // containst the identifier of the provider (e.g. azure, github, ...)
@@ -96,11 +93,7 @@ public class OAuthConfigurationParser {
         case "EMAIL_ATTRIBUTE_NAME" -> oAuthConfiguration.setEmailAttributeName(value);
         case "USER_ID_ATTRIBUTE_NAME" -> oAuthConfiguration.setUserIdAttributeName(value);
         case "NAME" -> oAuthConfiguration.setRegistrationName(value);
-        default -> LOG.warn(
-            "Unknown setting {} for oauth configuration in environment variable {}",
-            settingName,
-            key
-        );
+        default -> LOG.warn("Unknown setting {} for oauth configuration in environment variable {}", settingName, key);
       }
     } else {
       LOG.warn("Invalid environment variable for oauth configuration: {}", key);
@@ -122,14 +115,14 @@ public class OAuthConfigurationParser {
   /**
    * Retrieves an existing OAuthConfiguration for the given providerId or creates a new one if it does not exist.
    *
-   * @param oAuthConfigurationsMap The map containing existing OAuthConfiguration objects.
-   * @param registrationId         The identifier of the OAuth provider.
+   * @param oAuthConfigurationsMap
+   *          The map containing existing OAuthConfiguration objects.
+   * @param registrationId
+   *          The identifier of the OAuth provider.
    * @return The existing or newly created OAuthConfiguration for the given providerId.
    */
-  private OAuthConfiguration getOrCreateOAuthConfiguration(
-      Map<String, OAuthConfiguration> oAuthConfigurationsMap,
-      String registrationId
-  ) {
+  private OAuthConfiguration getOrCreateOAuthConfiguration(Map<String, OAuthConfiguration> oAuthConfigurationsMap,
+          String registrationId) {
     var oAuthConfiguration = oAuthConfigurationsMap.computeIfAbsent(registrationId, k -> new OAuthConfiguration());
     oAuthConfiguration.setRegistrationId(registrationId);
     return oAuthConfiguration;

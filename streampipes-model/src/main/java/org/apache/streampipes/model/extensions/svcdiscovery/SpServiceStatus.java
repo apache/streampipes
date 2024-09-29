@@ -15,12 +15,8 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.extensions.svcdiscovery;
 
 public enum SpServiceStatus {
-  REGISTERED,
-  MIGRATING,
-  HEALTHY,
-  UNHEALTHY
+  REGISTERED, MIGRATING, HEALTHY, UNHEALTHY
 }

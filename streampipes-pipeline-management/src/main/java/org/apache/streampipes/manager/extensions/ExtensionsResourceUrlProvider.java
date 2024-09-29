@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.extensions;
 
 import org.apache.streampipes.manager.api.extensions.IExtensionsResourceUrlProvider;
@@ -55,11 +54,9 @@ public class ExtensionsResourceUrlProvider implements IExtensionsResourceUrlProv
     return SpServiceUrlProvider.valueOf(serviceTagPrefix.name());
   }
 
-  private String getMatchingServiceBaseUrl(SpServiceTagPrefix serviceTagPrefix,
-                                           String appId) throws RuntimeException {
+  private String getMatchingServiceBaseUrl(SpServiceTagPrefix serviceTagPrefix, String appId) throws RuntimeException {
     var serviceTag = getServiceTag(serviceTagPrefix, appId);
-    var services = serviceDiscovery
-        .getServiceEndpoints(DefaultSpServiceTypes.EXT, true, List.of(serviceTag));
+    var services = serviceDiscovery.getServiceEndpoints(DefaultSpServiceTypes.EXT, true, List.of(serviceTag));
     if (!services.isEmpty()) {
       return services.get(0);
     } else {
@@ -67,8 +64,7 @@ public class ExtensionsResourceUrlProvider implements IExtensionsResourceUrlProv
     }
   }
 
-  private String getServiceTag(SpServiceTagPrefix tagPrefix,
-                               String appId) {
+  private String getServiceTag(SpServiceTagPrefix tagPrefix, String appId) {
     return SpServiceTag.create(tagPrefix, appId).asString();
   }
 }

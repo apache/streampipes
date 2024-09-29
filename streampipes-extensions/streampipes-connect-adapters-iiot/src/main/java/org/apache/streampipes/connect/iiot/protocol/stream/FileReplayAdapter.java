@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -48,9 +47,6 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.vocabulary.SO;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -59,6 +55,9 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileReplayAdapter implements StreamPipesAdapter {
 
@@ -77,7 +76,6 @@ public class FileReplayAdapter implements StreamPipesAdapter {
 
   private static final String SPEED_UP_FACTOR_GROUP = "speed-up-factor-group";
 
-
   private ScheduledExecutorService executor;
   private boolean replaceTimestamp;
   private String timestampRuntimeName;
@@ -92,50 +90,24 @@ public class FileReplayAdapter implements StreamPipesAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder
-        .create(ID, 0, FileReplayAdapter::new)
-        .withSupportedParsers(
-            new JsonParsers(),
-            new CsvParser(),
-            new XmlParser(),
-            new ImageParser()
-        )
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .withCategory(AdapterType.Generic)
-        .requiredFile(
-            Labels.withId(FILE_PATH),
-            Filetypes.CSV,
-            Filetypes.JSON,
-            Filetypes.XML
-        )
-        .requiredMultiValueSelection(Labels.withId(REPLACE_TIMESTAMP), Options.from(""))
-        .requiredSingleValueSelection(
-            Labels.withId(REPLAY_ONCE),
-            Options.from("no", "yes")
-        )
-        .requiredAlternatives(
-            Labels.withId(SPEED),
-            Alternatives.from(Labels.withId(KEEP_ORIGINAL_TIME), true),
-            Alternatives.from(Labels.withId(FASTEST)),
-            Alternatives.from(
-                Labels.withId(SPEED_UP_FACTOR),
-                StaticProperties.group(
-                    Labels.withId(SPEED_UP_FACTOR_GROUP),
-                    StaticProperties.doubleFreeTextProperty(Labels.withId(
-                        SPEED_UP))
-                )
-            )
-        )
-        .buildConfiguration();
+    return AdapterConfigurationBuilder.create(ID, 0, FileReplayAdapter::new)
+            .withSupportedParsers(new JsonParsers(), new CsvParser(), new XmlParser(), new ImageParser())
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .withCategory(AdapterType.Generic)
+            .requiredFile(Labels.withId(FILE_PATH), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)
+            .requiredMultiValueSelection(Labels.withId(REPLACE_TIMESTAMP), Options.from(""))
+            .requiredSingleValueSelection(Labels.withId(REPLAY_ONCE), Options.from("no", "yes"))
+            .requiredAlternatives(Labels.withId(SPEED), Alternatives.from(Labels.withId(KEEP_ORIGINAL_TIME), true),
+                    Alternatives.from(Labels.withId(FASTEST)),
+                    Alternatives.from(Labels.withId(SPEED_UP_FACTOR),
+                            StaticProperties.group(Labels.withId(SPEED_UP_FACTOR_GROUP),
+                                    StaticProperties.doubleFreeTextProperty(Labels.withId(SPEED_UP)))))
+            .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(
-      IAdapterParameterExtractor extractor,
-      IEventCollector collector,
-      IAdapterRuntimeContext adapterRuntimeContext
-  ) throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
 
     throwExceptionWhenAddTimestampRuleIsSelected(extractor);
 
@@ -149,100 +121,74 @@ public class FileReplayAdapter implements StreamPipesAdapter {
   }
 
   protected static void throwExceptionWhenAddTimestampRuleIsSelected(IAdapterParameterExtractor extractor)
-      throws AdapterException {
-    boolean ruleExists = extractor.getAdapterDescription()
-                                  .getRules()
-                                  .stream()
-                                  .anyMatch(rule -> rule instanceof AddTimestampRuleDescription);
+          throws AdapterException {
+    boolean ruleExists = extractor.getAdapterDescription().getRules().stream()
+            .anyMatch(rule -> rule instanceof AddTimestampRuleDescription);
 
     if (ruleExists) {
       throw new AdapterException("The file replay adapter requires a valid timestamp within the file. The add "
-                                     + "timestamp option in the schema editor is not supported. Please edit the "
-                                     + "adater to resolve this problem.");
+              + "timestamp option in the schema editor is not supported. Please edit the "
+              + "adater to resolve this problem.");
     }
   }
 
-  private void startAdapterReplayThread(
-      IAdapterParameterExtractor extractor,
-      IEventCollector collector,
-      IAdapterRuntimeContext adapterRuntimeContext,
-      boolean replayOnce
-  ) {
+  private void startAdapterReplayThread(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext, boolean replayOnce) {
     executor = Executors.newScheduledThreadPool(1);
     if (replayOnce) {
-      executor.schedule(
-          () -> getFileFromEndpointAndParseFile(extractor, collector, adapterRuntimeContext),
-          0,
-          TimeUnit.SECONDS
-      );
+      executor.schedule(() -> getFileFromEndpointAndParseFile(extractor, collector, adapterRuntimeContext), 0,
+              TimeUnit.SECONDS);
     } else {
-      executor.scheduleAtFixedRate(
-          () -> getFileFromEndpointAndParseFile(extractor, collector, adapterRuntimeContext),
-          0,
-          1,
-          TimeUnit.SECONDS);
+      executor.scheduleAtFixedRate(() -> getFileFromEndpointAndParseFile(extractor, collector, adapterRuntimeContext),
+              0, 1, TimeUnit.SECONDS);
     }
   }
 
   private boolean extractUserInputsAndReturnValueOfReplayOnce(IAdapterParameterExtractor extractor) {
-    boolean replayOnce = extractor
-        .getStaticPropertyExtractor()
-        .selectedSingleValue(REPLAY_ONCE, String.class)
-        .equals("yes");
-    var replaceTimestampStringList = extractor
-        .getStaticPropertyExtractor()
-        .selectedMultiValues(REPLACE_TIMESTAMP, String.class);
+    boolean replayOnce = extractor.getStaticPropertyExtractor().selectedSingleValue(REPLAY_ONCE, String.class)
+            .equals("yes");
+    var replaceTimestampStringList = extractor.getStaticPropertyExtractor().selectedMultiValues(REPLACE_TIMESTAMP,
+            String.class);
     replaceTimestamp = !replaceTimestampStringList.isEmpty();
-    var speedUpAlternative = extractor
-        .getStaticPropertyExtractor()
-        .selectedAlternativeInternalId(SPEED);
+    var speedUpAlternative = extractor.getStaticPropertyExtractor().selectedAlternativeInternalId(SPEED);
     speedUp = switch (speedUpAlternative) {
       case FASTEST -> Float.MAX_VALUE;
-      case SPEED_UP_FACTOR -> extractor
-          .getStaticPropertyExtractor()
-          .singleValueParameter(SPEED_UP, Float.class);
+      case SPEED_UP_FACTOR -> extractor.getStaticPropertyExtractor().singleValueParameter(SPEED_UP, Float.class);
       default -> 1.0f;
     };
     return replayOnce;
   }
 
   private void determineTimestampRuntimeName(IAdapterParameterExtractor extractor) throws AdapterException {
-    var timestampField = extractor
-        .getAdapterDescription()
-        .getEventSchema()
-        .getEventProperties()
-        .stream()
-        .filter(eventProperty ->
-                    eventProperty.getDomainProperties()
-                                 .contains(URI.create(SO.DATE_TIME)))
-        .findFirst();
+    var timestampField = extractor.getAdapterDescription().getEventSchema().getEventProperties().stream()
+            .filter(eventProperty -> eventProperty.getDomainProperties().contains(URI.create(SO.DATE_TIME)))
+            .findFirst();
 
     if (timestampField.isEmpty()) {
       throw new AdapterException("Could not find a timestamp field in event schema");
     } else {
-      timestampRuntimeName = timestampField.get()
-                                           .getRuntimeName();
+      timestampRuntimeName = timestampField.get().getRuntimeName();
     }
   }
 
   /**
-   * Determines the source field name for the timestamp property based
-   * on any renaming rules configured within the adapter.
-   * It ensures that the correct field name is used when extracting the timestamp from the raw data.
+   * Determines the source field name for the timestamp property based on any renaming rules configured within the
+   * adapter. It ensures that the correct field name is used when extracting the timestamp from the raw data.
    *
-   * @param extractor An instance of {@code IAdapterParameterExtractor} used for extracting adapter parameters.
-   * @throws AdapterException If there are multiple renaming rules detected affecting the timestamp property,
-   *                          indicating an invalid configuration.
+   * @param extractor
+   *          An instance of {@code IAdapterParameterExtractor} used for extracting adapter parameters.
+   * @throws AdapterException
+   *           If there are multiple renaming rules detected affecting the timestamp property, indicating an invalid
+   *           configuration.
    */
   private void determineSourceTimestampField(IAdapterParameterExtractor extractor) throws AdapterException {
     var renamingRulesTimestamp = getRenamingRulesTimestamp(extractor);
     if (!renamingRulesTimestamp.isEmpty()) {
       if (renamingRulesTimestamp.size() == 1) {
-        timestampSourceFieldName = renamingRulesTimestamp.get(0)
-                                                         .getOldRuntimeKey();
+        timestampSourceFieldName = renamingRulesTimestamp.get(0).getOldRuntimeKey();
       } else {
-        throw new AdapterException("Invalid configuration - multiple renaming rules detected which affect the "
-                                       + "timestamp property.");
+        throw new AdapterException(
+                "Invalid configuration - multiple renaming rules detected which affect the " + "timestamp property.");
       }
     } else {
       // no renaming rules can be found, timestamp name does not change
@@ -253,68 +199,42 @@ public class FileReplayAdapter implements StreamPipesAdapter {
   /**
    * Retrieves a list of {@link RenameRuleDescription} affecting the timestamp property.
    *
-   * @param extractor An instance of IAdapterParameterExtractor used to extract adapter description and rules.
+   * @param extractor
+   *          An instance of IAdapterParameterExtractor used to extract adapter description and rules.
    * @return A list of {@link RenameRuleDescription} containing rules affecting timestamp property.
    */
   private List<RenameRuleDescription> getRenamingRulesTimestamp(IAdapterParameterExtractor extractor) {
-    var renamingRules =
-        extractor.getAdapterDescription()
-                 .getRules()
-                 .stream()
-                 .filter(rule -> rule instanceof RenameRuleDescription)
-                 .map(rule -> (RenameRuleDescription) rule)
-                 .toList();
+    var renamingRules = extractor.getAdapterDescription().getRules().stream()
+            .filter(rule -> rule instanceof RenameRuleDescription).map(rule -> (RenameRuleDescription) rule).toList();
 
-    return renamingRules.stream()
-                        .filter(rule -> rule.getNewRuntimeKey()
-                                            .equals(timestampRuntimeName))
-                        .toList();
+    return renamingRules.stream().filter(rule -> rule.getNewRuntimeKey().equals(timestampRuntimeName)).toList();
   }
 
-  private void getFileFromEndpointAndParseFile(
-      IAdapterParameterExtractor extractor,
-      IEventCollector collector,
-      IAdapterRuntimeContext adapterRuntimeContext
-  ) {
+  private void getFileFromEndpointAndParseFile(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) {
     try {
       var inputStream = getFileAsInputStreamFromEndpoint(extractor);
 
-      parseFile(
-          extractor.selectedParser(),
-          collector,
-          inputStream,
-          adapterRuntimeContext
-      );
+      parseFile(extractor.selectedParser(), collector, inputStream, adapterRuntimeContext);
 
     } catch (AdapterException e) {
-      adapterRuntimeContext
-          .getLogger()
-          .error(e);
+      adapterRuntimeContext.getLogger().error(e);
     }
   }
 
-  private void parseFile(
-      IParser parser,
-      IEventCollector collector,
-      InputStream inputStream,
-      IAdapterRuntimeContext adapterRuntimeContext
-  ) {
+  private void parseFile(IParser parser, IEventCollector collector, InputStream inputStream,
+          IAdapterRuntimeContext adapterRuntimeContext) {
     // The parse method does not throw AdapterExceptions, that's why the logging is handeled within the catch blog here
     parser.parse(inputStream, (event) -> {
       try {
         processEvent(collector, event);
       } catch (AdapterException e) {
-        adapterRuntimeContext
-            .getLogger()
-            .error(e);
+        adapterRuntimeContext.getLogger().error(e);
       }
     });
   }
 
-  protected void processEvent(
-      IEventCollector collector,
-      Map<String, Object> event
-  ) throws AdapterException {
+  protected void processEvent(IEventCollector collector, Map<String, Object> event) throws AdapterException {
 
     long actualEventTimestamp = getTimestampFromEvent(event);
 
@@ -342,10 +262,9 @@ public class FileReplayAdapter implements StreamPipesAdapter {
     // transform timestamp if transformation rule is present
     actualEventTimestamp = transformTimestampIfTransformationRuleIsPresent(event, actualEventTimestamp);
 
-
     if (actualEventTimestamp == -1 && !replaceTimestamp) {
       throw new AdapterException("Timestamp field could not be parsed, skipping event. "
-                                     + "Value: %s".formatted(event.get(timestampSourceFieldName)));
+              + "Value: %s".formatted(event.get(timestampSourceFieldName)));
     }
 
     return actualEventTimestamp;
@@ -357,12 +276,9 @@ public class FileReplayAdapter implements StreamPipesAdapter {
 
       var transformationRuleVisitor = new StatelessTransformationRuleGeneratorVisitor();
       transformationRuleVisitor.visit(transformationRuleDescription);
-      var timestampTransformationRule = transformationRuleVisitor.getTransformationRules()
-                                                                 .get(0);
+      var timestampTransformationRule = transformationRuleVisitor.getTransformationRules().get(0);
 
-      actualEventTimestamp = (Long) (
-          timestampTransformationRule.apply(event)
-                                     .get(timestampSourceFieldName));
+      actualEventTimestamp = (Long) (timestampTransformationRule.apply(event).get(timestampSourceFieldName));
     }
     return actualEventTimestamp;
   }
@@ -397,19 +313,14 @@ public class FileReplayAdapter implements StreamPipesAdapter {
   }
 
   @Override
-  public GuessSchema onSchemaRequested(
-      IAdapterParameterExtractor extractor,
-      IAdapterGuessSchemaContext adapterGuessSchemaContext
-  ) throws AdapterException {
+  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     var inputStream = getFileAsInputStreamFromEndpoint(extractor);
-    return extractor.selectedParser()
-                    .getGuessSchema(inputStream);
+    return extractor.selectedParser().getGuessSchema(inputStream);
   }
 
   private InputStream getFileAsInputStreamFromEndpoint(IAdapterParameterExtractor extractor) throws AdapterException {
-    var selectedFileName = extractor
-        .getStaticPropertyExtractor()
-        .selectedFilename(FILE_PATH);
+    var selectedFileName = extractor.getStaticPropertyExtractor().selectedFilename(FILE_PATH);
 
     try {
       return FileProtocolUtils.getFileInputStream(selectedFileName);
@@ -427,33 +338,28 @@ public class FileReplayAdapter implements StreamPipesAdapter {
   }
 
   protected void setTimestampTranfsformationRuleDescription(
-      TimestampTranfsformationRuleDescription timestampTranfsformationRuleDescription
-  ) {
+          TimestampTranfsformationRuleDescription timestampTranfsformationRuleDescription) {
     this.timestampTranfsformationRuleDescription = timestampTranfsformationRuleDescription;
   }
 
   /**
    * Removes the timestamp transformation rules from the adapter description.
    *
-   * <p>The FileReplay adapter manages timestamp transformations internally to accurately simulate the replay frequency.
+   * <p>
+   * The FileReplay adapter manages timestamp transformations internally to accurately simulate the replay frequency.
    * This is necessary as the timestamp field values are crucial for this simulation. As a result, the timestamp rule
    * description is stored locally within the FileReplay adapter and is applied when the onAdapterStarted method is
-   * invoked.</p>
+   * invoked.
+   * </p>
    */
   @Override
   public void preprocessAdapterDescription(AdapterDescription adapterDescription) {
 
-    this.timestampTranfsformationRuleDescription = adapterDescription
-        .getRules()
-        .stream()
-        .filter(rule -> rule instanceof TimestampTranfsformationRuleDescription)
-        .map(rule -> (TimestampTranfsformationRuleDescription) rule)
-        .findFirst()
-        .orElse(null);
+    this.timestampTranfsformationRuleDescription = adapterDescription.getRules().stream()
+            .filter(rule -> rule instanceof TimestampTranfsformationRuleDescription)
+            .map(rule -> (TimestampTranfsformationRuleDescription) rule).findFirst().orElse(null);
 
     // remove timestamp preprocessing rule
-    adapterDescription
-        .getRules()
-        .removeIf(rule -> rule instanceof TimestampTranfsformationRuleDescription);
+    adapterDescription.getRules().removeIf(rule -> rule instanceof TimestampTranfsformationRuleDescription);
   }
 }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.AdapterType;
@@ -26,14 +25,14 @@ import org.apache.streampipes.model.client.Category;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v2/categories")
@@ -41,9 +40,8 @@ public class PipelineElementCategory extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/ep", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<Category>> getEps() {
-    return ok(makeCategories(StorageDispatcher.INSTANCE.getNoSqlStore()
-                                                       .getPipelineElementDescriptionStorage()
-                                                       .getAllDataStreams()));
+    return ok(makeCategories(
+            StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage().getAllDataStreams()));
   }
 
   @GetMapping(path = "/epa", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,9 +60,7 @@ public class PipelineElementCategory extends AbstractAuthGuardedRestResource {
   }
 
   private List<Category> makeCategories(List<SpDataStream> streams) {
-    return streams
-        .stream()
-        .map(p -> new Category(p.getElementId(), p.getName(), p.getDescription()))
-        .collect(Collectors.toList());
+    return streams.stream().map(p -> new Category(p.getElementId(), p.getName(), p.getDescription()))
+            .collect(Collectors.toList());
   }
 }

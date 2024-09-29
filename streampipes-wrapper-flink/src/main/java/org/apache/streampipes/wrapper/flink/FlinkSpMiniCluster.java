@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.wrapper.flink;
 
 import org.apache.flink.client.program.MiniClusterClient;
@@ -35,11 +33,8 @@ public enum FlinkSpMiniCluster {
   FlinkSpMiniCluster() {
     Configuration configuration = new Configuration();
     configuration.setString(RestOptions.BIND_PORT, "0");
-    MiniClusterConfiguration miniClusterConfiguration = new MiniClusterConfiguration
-        .Builder()
-        .setConfiguration(configuration)
-        .setNumTaskManagers(2)
-        .build();
+    MiniClusterConfiguration miniClusterConfiguration = new MiniClusterConfiguration.Builder()
+            .setConfiguration(configuration).setNumTaskManagers(2).build();
     this.miniCluster = new MiniCluster(miniClusterConfiguration);
   }
 

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
@@ -31,6 +30,8 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 
+import java.io.IOException;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,34 +43,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/api/v2/extension-installation")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResource {
 
-  @PostMapping(
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Message> addElement(@RequestBody ExtensionItemInstallationRequest installationReq) {
     var descriptionUrlProvider = new ExtensionsResourceUrlProvider(SpServiceDiscovery.getServiceDiscovery());
     try {
-      return ok(new ExtensionItemInstaller(descriptionUrlProvider)
-          .installExtension(installationReq, getAuthenticatedUserSid()));
+      return ok(new ExtensionItemInstaller(descriptionUrlProvider).installExtension(installationReq,
+              getAuthenticatedUserSid()));
     } catch (IOException | SepaParseException e) {
       return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR, e.getMessage()));
     }
   }
 
-  @PutMapping(
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Message> updateElement(@RequestBody ExtensionItemInstallationRequest installationReq) {
     var descriptionUrlProvider = new ExtensionsResourceUrlProvider(SpServiceDiscovery.getServiceDiscovery());
     try {
-      return ok(new ExtensionItemInstaller(descriptionUrlProvider)
-          .updateExtension(installationReq));
+      return ok(new ExtensionItemInstaller(descriptionUrlProvider).updateExtension(installationReq));
     } catch (IOException | SepaParseException e) {
       return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR, e.getMessage()));
     }
@@ -94,13 +88,13 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
         appId = requestor.getAdapterById(elementId).getAppId();
         resourceManager.manageAdapterDescriptions().delete(elementId);
       } else {
-        return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(),
-            NotificationType.STORAGE_ERROR.description()));
+        return constructErrorMessage(
+                new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
       }
       AssetManager.deleteAsset(appId);
     } catch (IOException e) {
-      return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(),
-          NotificationType.STORAGE_ERROR.description()));
+      return constructErrorMessage(
+              new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
     }
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }

@@ -21,27 +21,22 @@ import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
-import org.apache.http.HttpEntity;
-
 import java.io.IOException;
+
+import org.apache.http.HttpEntity;
 
 public class PostRequestWithPayloadResponse<K, V, T> extends PostRequest<K, V, T> {
 
   private Class<V> responseClass;
 
-  public PostRequestWithPayloadResponse(StreamPipesClientConfig clientConfig,
-                                        StreamPipesApiPath apiPath,
-                                        Serializer<K, V, T> serializer,
-                                        K body,
-                                        Class<V> responseClass) {
+  public PostRequestWithPayloadResponse(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath,
+          Serializer<K, V, T> serializer, K body, Class<V> responseClass) {
     super(clientConfig, apiPath, serializer, body);
     this.responseClass = responseClass;
   }
 
-  public PostRequestWithPayloadResponse(StreamPipesClientConfig clientConfig,
-                                        StreamPipesApiPath apiPath,
-                                        Serializer<K, V, T> serializer,
-                                        Class<V> responseClass) {
+  public PostRequestWithPayloadResponse(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath,
+          Serializer<K, V, T> serializer, Class<V> responseClass) {
     super(clientConfig, apiPath, serializer);
     this.responseClass = responseClass;
   }

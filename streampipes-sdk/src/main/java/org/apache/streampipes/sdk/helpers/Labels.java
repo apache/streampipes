@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.helpers;
 
 public class Labels {
@@ -24,9 +23,12 @@ public class Labels {
    * Creates a new label with internalId, label and description. Fully-configured labels are required by static
    * properties and are mandatory for event properties.
    *
-   * @param internalId  The internal identifier of the element, e.g., "latitude-field-mapping"
-   * @param label       A human-readable title
-   * @param description A human-readable brief summary of the element.
+   * @param internalId
+   *          The internal identifier of the element, e.g., "latitude-field-mapping"
+   * @param label
+   *          A human-readable title
+   * @param description
+   *          A human-readable brief summary of the element.
    * @return label object with the specified properties
    */
   public static Label from(String internalId, String label, String description) {
@@ -34,11 +36,12 @@ public class Labels {
   }
 
   /**
-   * Creates a new label only with an internal id.
-   * Static properties require a fully-specified label, see {@link #from(String, String, String)}
+   * Creates a new label only with an internal id. Static properties require a fully-specified label, see
+   * {@link #from(String, String, String)}
    *
    *
-   * @param internalId The internal identifier of the element, e.g., "latitude-field-mapping"
+   * @param internalId
+   *          The internal identifier of the element, e.g., "latitude-field-mapping"
    * @return label object with the internal id
    */
   public static Label withId(String internalId) {
@@ -46,9 +49,11 @@ public class Labels {
   }
 
   /**
-   * Creates a label with the string value of an enum.
-   * Static properties require a fully-specified label, see {@link #from(String, String, String)}
-   * @param internalId The internal identifier of the element, e.g., "LATITUDE-FIELD-MAPPING"
+   * Creates a label with the string value of an enum. Static properties require a fully-specified label, see
+   * {@link #from(String, String, String)}
+   * 
+   * @param internalId
+   *          The internal identifier of the element, e.g., "LATITUDE-FIELD-MAPPING"
    * @return label object with the specified properties
    */
   public static Label withId(Enum<?> internalId) {

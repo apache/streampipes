@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.api.annotation.NotYetImplemented;
@@ -48,19 +47,13 @@ public interface IDataProcessorApi extends CRUDApi<String, DataProcessorInvocati
   @NotYetImplemented
   void update(DataProcessorInvocation element);
 
-  ISubscription subscribe(DataProcessorInvocation processor,
-                          EventProcessor callback);
+  ISubscription subscribe(DataProcessorInvocation processor, EventProcessor callback);
 
-  ISubscription subscribe(DataProcessorInvocation processor,
-                          IBrokerConfigOverride brokerConfigOverride,
-                          EventProcessor callback);
+  ISubscription subscribe(DataProcessorInvocation processor, IBrokerConfigOverride brokerConfigOverride,
+          EventProcessor callback);
 
-  ISubscription subscribe(DataProcessorInvocation processor,
-                          InputStreamIndex index,
-                          EventProcessor callback);
+  ISubscription subscribe(DataProcessorInvocation processor, InputStreamIndex index, EventProcessor callback);
 
-  ISubscription subscribe(DataProcessorInvocation processor,
-                          InputStreamIndex index,
-                          IBrokerConfigOverride brokerConfigOverride,
-                          EventProcessor callback);
+  ISubscription subscribe(DataProcessorInvocation processor, InputStreamIndex index,
+          IBrokerConfigOverride brokerConfigOverride, EventProcessor callback);
 }

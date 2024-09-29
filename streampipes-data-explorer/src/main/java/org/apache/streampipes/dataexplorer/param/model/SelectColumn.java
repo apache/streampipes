@@ -35,16 +35,13 @@ public class SelectColumn implements IQueryStatement {
     this.originalField = originalField;
   }
 
-  public SelectColumn(String originalField,
-                      AggregationFunction aggregationFunction) {
+  public SelectColumn(String originalField, AggregationFunction aggregationFunction) {
     this(originalField);
     this.aggregationFunction = aggregationFunction;
     this.simpleField = false;
   }
 
-  public SelectColumn(String originalField,
-                      AggregationFunction aggregationFunction,
-                      String targetField) {
+  public SelectColumn(String originalField, AggregationFunction aggregationFunction, String targetField) {
     this(originalField, aggregationFunction);
     this.targetField = targetField;
     this.rename = true;
@@ -57,8 +54,9 @@ public class SelectColumn implements IQueryStatement {
         throw new IllegalArgumentException("Wrong query format for query part " + queryString);
       } else {
         AggregationFunction aggregationFunction = AggregationFunction.valueOf(queryParts[1]);
-        String targetField =
-            queryParts.length == 3 ? queryParts[2] : aggregationFunction.name().toLowerCase() + "_" + queryParts[0];
+        String targetField = queryParts.length == 3
+                ? queryParts[2]
+                : aggregationFunction.name().toLowerCase() + "_" + queryParts[0];
         return new SelectColumn(queryParts[0], aggregationFunction, targetField);
       }
     } else {
@@ -66,8 +64,7 @@ public class SelectColumn implements IQueryStatement {
     }
   }
 
-  public static SelectColumn fromApiQueryString(String queryString,
-                                                String globalAggregationFunction) {
+  public static SelectColumn fromApiQueryString(String queryString, String globalAggregationFunction) {
     SelectColumn column = SelectColumn.fromApiQueryString(queryString);
     AggregationFunction aggregationFunction = AggregationFunction.valueOf(globalAggregationFunction);
     column.setAggregationFunction(aggregationFunction);

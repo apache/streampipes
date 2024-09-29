@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.kafka;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -25,13 +24,6 @@ import org.apache.streampipes.messaging.kafka.config.ConsumerConfigFactory;
 import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
-
-import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.TopicPartition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -43,8 +35,14 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-public class SpKafkaConsumer implements EventConsumer, Runnable,
-    Serializable {
+import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class SpKafkaConsumer implements EventConsumer, Runnable, Serializable {
 
   private String topic;
   private InternalEventProcessor<byte[]> eventProcessor;
@@ -60,19 +58,15 @@ public class SpKafkaConsumer implements EventConsumer, Runnable,
     this.protocol = protocol;
   }
 
-  public SpKafkaConsumer(KafkaTransportProtocol protocol,
-                         String topic,
-                         InternalEventProcessor<byte[]> eventProcessor) {
+  public SpKafkaConsumer(KafkaTransportProtocol protocol, String topic, InternalEventProcessor<byte[]> eventProcessor) {
     this.protocol = protocol;
     this.topic = topic;
     this.eventProcessor = eventProcessor;
     this.isRunning = true;
   }
 
-  public SpKafkaConsumer(KafkaTransportProtocol protocol,
-                         String topic,
-                         InternalEventProcessor<byte[]> eventProcessor,
-                         List<KafkaConfigAppender> appenders) {
+  public SpKafkaConsumer(KafkaTransportProtocol protocol, String topic, InternalEventProcessor<byte[]> eventProcessor,
+          List<KafkaConfigAppender> appenders) {
     this(protocol, topic, eventProcessor);
     this.appenders = appenders;
   }
@@ -112,8 +106,7 @@ public class SpKafkaConsumer implements EventConsumer, Runnable,
     return topic.replaceAll("\\*", ".*");
   }
 
-  private Properties makeProperties(KafkaTransportProtocol protocol,
-                                    List<KafkaConfigAppender> appenders) {
+  private Properties makeProperties(KafkaTransportProtocol protocol, List<KafkaConfigAppender> appenders) {
     return new ConsumerConfigFactory(protocol).buildProperties(appenders);
   }
 

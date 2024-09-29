@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.init;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -64,7 +63,6 @@ public class DeclarersSingleton implements IDeclarersSingleton {
   private String route;
   private String hostName;
 
-
   private DeclarersSingleton() {
     this.dataProcessors = new HashMap<>();
     this.dataSinks = new HashMap<>();
@@ -82,7 +80,6 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     }
     return DeclarersSingleton.instance;
   }
-
 
   public void populate(String host, Integer port, SpServiceDefinition serviceDef) {
     this.serviceDefinition = serviceDef;
@@ -127,8 +124,7 @@ public class DeclarersSingleton implements IDeclarersSingleton {
 
   public void registerProtocol(SpProtocolDefinitionFactory<?> protocol) {
     SpProtocolManager.INSTANCE.register(protocol);
-    this.supportedProtocols.put(protocol.getTransportProtocolClass(),
-        protocol.getTransportProtocol());
+    this.supportedProtocols.put(protocol.getTransportProtocolClass(), protocol.getTransportProtocol());
   }
 
   public void registerProtocols(List<SpProtocolDefinitionFactory<?>> protocols) {
@@ -161,11 +157,7 @@ public class DeclarersSingleton implements IDeclarersSingleton {
   }
 
   public Collection<TransportProtocol> getSupportedProtocols() {
-    return this.supportedProtocols
-        .values()
-        .stream()
-        .map(p -> new Cloner().protocol(p))
-        .collect(Collectors.toList());
+    return this.supportedProtocols.values().stream().map(p -> new Cloner().protocol(p)).collect(Collectors.toList());
   }
 
   public int getPort() {
@@ -214,10 +206,7 @@ public class DeclarersSingleton implements IDeclarersSingleton {
 
   public Optional<StreamPipesAdapter> getAdapter(String id) {
     return getAdapters().stream()
-        .filter(adapter -> adapter.declareConfig()
-            .getAdapterDescription()
-            .getAppId().equals(id))
-        .findFirst();
+            .filter(adapter -> adapter.declareConfig().getAdapterDescription().getAppId().equals(id)).findFirst();
   }
 
   private void checkAndStartExecutableStreams(IStreamPipesDataStream declarer) {

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.filters.jvm.processor.movingaverage.util;
 
 import java.util.ArrayList;

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.jdbcclient.model;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -24,33 +23,30 @@ import org.apache.streampipes.vocabulary.XSD;
 
 public class DbDataTypeFactory {
 
-
   public static DbDataTypes getInteger(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case MY_SQL:
+      case MY_SQL :
         return DbDataTypes.INT;
-      case POSTGRESQL:
+      case POSTGRESQL :
         return DbDataTypes.INTEGER;
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support integer values.");
   }
 
-
   public static DbDataTypes getLong(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case MY_SQL:
-      case POSTGRESQL:
+      case MY_SQL :
+      case POSTGRESQL :
         return DbDataTypes.BIGINT;
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support long values.");
   }
 
-
   public static DbDataTypes getFloat(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case MY_SQL:
+      case MY_SQL :
         return DbDataTypes.FLOAT;
-      case POSTGRESQL:
+      case POSTGRESQL :
         return DbDataTypes.REAL;
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support float values.");
@@ -58,8 +54,8 @@ public class DbDataTypeFactory {
 
   public static DbDataTypes getDouble(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case MY_SQL:
-      case POSTGRESQL:
+      case MY_SQL :
+      case POSTGRESQL :
         return DbDataTypes.DOUBLE_PRECISION;
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support double values.");
@@ -67,8 +63,8 @@ public class DbDataTypeFactory {
 
   public static DbDataTypes getShortString(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case MY_SQL:
-      case POSTGRESQL:
+      case MY_SQL :
+      case POSTGRESQL :
         return DbDataTypes.VAR_CHAR;
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support short strings.");
@@ -76,8 +72,8 @@ public class DbDataTypeFactory {
 
   public static DbDataTypes getLongString(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case MY_SQL:
-      case POSTGRESQL:
+      case MY_SQL :
+      case POSTGRESQL :
         return DbDataTypes.TEXT;
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support long strings.");
@@ -85,8 +81,8 @@ public class DbDataTypeFactory {
 
   public static DbDataTypes getBoolean(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case MY_SQL:
-      case POSTGRESQL:
+      case MY_SQL :
+      case POSTGRESQL :
         return DbDataTypes.BOOLEAN;
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support boolean values.");
@@ -94,8 +90,8 @@ public class DbDataTypeFactory {
 
   public static DbDataTypes getTimestamp(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case MY_SQL:
-      case POSTGRESQL:
+      case MY_SQL :
+      case POSTGRESQL :
         return DbDataTypes.TIMESTAMP;
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support timestamps.");
@@ -103,8 +99,8 @@ public class DbDataTypeFactory {
 
   public static DbDataTypes getDate(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case MY_SQL:
-      case POSTGRESQL:
+      case MY_SQL :
+      case POSTGRESQL :
         return DbDataTypes.DATE;
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support dates.");
@@ -112,8 +108,8 @@ public class DbDataTypeFactory {
 
   public static DbDataTypes getTime(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case MY_SQL:
-      case POSTGRESQL:
+      case MY_SQL :
+      case POSTGRESQL :
         return DbDataTypes.TIME;
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support time.");
@@ -121,19 +117,19 @@ public class DbDataTypeFactory {
 
   public static DbDataTypes getDatetime(SupportedDbEngines sqlEngine) throws SpRuntimeException {
     switch (sqlEngine) {
-      case MY_SQL:
+      case MY_SQL :
         return DbDataTypes.DATETIME;
-      case POSTGRESQL:
+      case POSTGRESQL :
     }
     throw new SpRuntimeException("Database engine " + sqlEngine + " does not support datetime.");
   }
 
-
   /**
-   * Tries to identify the data type of the object {@code o}. In case it is not supported, it is
-   * interpreted as a String (VARCHAR(255))
+   * Tries to identify the data type of the object {@code o}. In case it is not supported, it is interpreted as a String
+   * (VARCHAR(255))
    *
-   * @param o The object which should be identified
+   * @param o
+   *          The object which should be identified
    * @return
    */
   public static DbDataTypes getFromObject(final Object o, SupportedDbEngines sqlEngine) {
@@ -173,27 +169,27 @@ public class DbDataTypeFactory {
   public static Datatypes getDataType(DbDataTypes dbDataType) throws SpRuntimeException {
 
     switch (dbDataType) {
-      case BOOLEAN:
+      case BOOLEAN :
         return Datatypes.Boolean;
-      case TEXT:
-      case VAR_CHAR:
-      case TIMESTAMP:
-      case DATE:
-      case TIME:
+      case TEXT :
+      case VAR_CHAR :
+      case TIMESTAMP :
+      case DATE :
+      case TIME :
         return Datatypes.String;
-      case DOUBLE_PRECISION:
+      case DOUBLE_PRECISION :
         return Datatypes.Double;
-      case FLOAT:
-      case REAL:
-      case DATETIME:
+      case FLOAT :
+      case REAL :
+      case DATETIME :
         return Datatypes.Float;
-      case BIGINT:
-      case TINYINT:
+      case BIGINT :
+      case TINYINT :
         return Datatypes.Long;
-      case INT:
-      case INTEGER:
+      case INT :
+      case INTEGER :
         return Datatypes.Integer;
-      default:
+      default :
         throw new SpRuntimeException("Unknown SQL datatype");
     }
 

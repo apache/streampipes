@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.couchdb.utils;
 
 import org.apache.streampipes.commons.environment.Environment;
@@ -124,17 +123,11 @@ public class Utils {
     return new CouchDbClient(props(database, createIfNotExists));
   }
 
-  private static CouchDbProperties props(String dbname,
-                                         boolean createDbIfNotExists) {
+  private static CouchDbProperties props(String dbname, boolean createDbIfNotExists) {
     var env = getEnvironment();
-    return new CouchDbProperties(
-        dbname,
-        createDbIfNotExists,
-        env.getCouchDbProtocol().getValueOrDefault(),
-        env.getCouchDbHost().getValueOrDefault(),
-        env.getCouchDbPort().getValueOrDefault(),
-        env.getCouchDbUsername().getValueOrDefault(),
-        env.getCouchDbPassword().getValueOrDefault());
+    return new CouchDbProperties(dbname, createDbIfNotExists, env.getCouchDbProtocol().getValueOrDefault(),
+            env.getCouchDbHost().getValueOrDefault(), env.getCouchDbPort().getValueOrDefault(),
+            env.getCouchDbUsername().getValueOrDefault(), env.getCouchDbPassword().getValueOrDefault());
   }
 
   private static CouchDbProperties props(String dbname) {
@@ -147,17 +140,15 @@ public class Utils {
 
   private static String toUrl() {
     var env = getEnvironment();
-    return env.getCouchDbProtocol().getValueOrDefault()
-        + "://" + env.getCouchDbHost().getValueOrDefault()
-        + ":" + env.getCouchDbPort().getValueOrDefault();
+    return env.getCouchDbProtocol().getValueOrDefault() + "://" + env.getCouchDbHost().getValueOrDefault() + ":"
+            + env.getCouchDbPort().getValueOrDefault();
   }
 
   public static Request getRequest(String route) {
     return append(Request.Get(route));
   }
 
-  public static Request postRequest(String route,
-                                    String payload) {
+  public static Request postRequest(String route, String payload) {
     return append(Request.Post(route).bodyString(payload, ContentType.APPLICATION_JSON));
   }
 
@@ -165,14 +156,11 @@ public class Utils {
     return append(Request.Delete(route));
   }
 
-  public static Request putRequest(String route,
-                                   String payload) {
+  public static Request putRequest(String route, String payload) {
     return append(Request.Put(route).bodyString(payload, ContentType.APPLICATION_JSON));
   }
 
-  public static Request putRequest(String route,
-                                   byte[] payload,
-                                   String contentType) {
+  public static Request putRequest(String route, byte[] payload, String contentType) {
     return append(Request.Put(route).bodyByteArray(payload, ContentType.getByMimeType(contentType)));
   }
 
@@ -182,10 +170,7 @@ public class Utils {
 
   public static Request append(Request req) {
     String encodedAuth = getAuthHeaderValue();
-    req
-        .setHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
-        .connectTimeout(1000)
-        .socketTimeout(100000);
+    req.setHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth).connectTimeout(1000).socketTimeout(100000);
 
     return req;
   }
@@ -198,8 +183,6 @@ public class Utils {
   }
 
   private static String getUserAndPassword(Environment env) {
-    return env.getCouchDbUsername().getValueOrDefault()
-        + ":"
-        + env.getCouchDbPassword().getValueOrDefault();
+    return env.getCouchDbUsername().getValueOrDefault() + ":" + env.getCouchDbPassword().getValueOrDefault();
   }
 }

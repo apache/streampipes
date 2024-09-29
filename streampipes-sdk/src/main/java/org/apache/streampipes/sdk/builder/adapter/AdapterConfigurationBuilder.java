@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder.adapter;
 
 import org.apache.streampipes.extensions.api.assets.AssetResolver;
@@ -33,17 +32,16 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class AdapterConfigurationBuilder extends
-    AbstractConfigurablePipelineElementBuilder<AdapterConfigurationBuilder, AdapterDescription> {
+public class AdapterConfigurationBuilder
+        extends
+          AbstractConfigurablePipelineElementBuilder<AdapterConfigurationBuilder, AdapterDescription> {
 
   private final List<IParser> supportedParsers;
   private final Supplier<StreamPipesAdapter> supplier;
 
   private AssetResolver assetResolver;
 
-  protected AdapterConfigurationBuilder(String appId,
-                                        int version,
-                                        Supplier<StreamPipesAdapter> supplier) {
+  protected AdapterConfigurationBuilder(String appId, int version, Supplier<StreamPipesAdapter> supplier) {
     super(appId, new AdapterDescription(version));
     supportedParsers = new ArrayList<>();
     assetResolver = new DefaultAssetResolver(appId);
@@ -52,14 +50,16 @@ public class AdapterConfigurationBuilder extends
 
   /**
    * Creates a new adapter configuration using the builder pattern.
-   * @param appId     A unique identifier of the new adapter, e.g., com.mycompany.processor.mynewdataprocessor
-   * @param supplier  instance of the adapter to be described
-   * @param version   version of the processing element for migration purposes. Should be 0 in standard cases.
-   *                  Only in case there exist migrations for the specific element the version needs to be aligned.
+   * 
+   * @param appId
+   *          A unique identifier of the new adapter, e.g., com.mycompany.processor.mynewdataprocessor
+   * @param supplier
+   *          instance of the adapter to be described
+   * @param version
+   *          version of the processing element for migration purposes. Should be 0 in standard cases. Only in case
+   *          there exist migrations for the specific element the version needs to be aligned.
    */
-  public static AdapterConfigurationBuilder create(String appId,
-                                                   int version,
-                                                   Supplier<StreamPipesAdapter> supplier) {
+  public static AdapterConfigurationBuilder create(String appId, int version, Supplier<StreamPipesAdapter> supplier) {
     return new AdapterConfigurationBuilder(appId, version, supplier);
   }
 
@@ -79,12 +79,7 @@ public class AdapterConfigurationBuilder extends
 
   public AdapterConfiguration buildConfiguration() {
     this.elementDescription.setConfig(getStaticProperties());
-    return new AdapterConfiguration(
-        this.elementDescription,
-        this.supportedParsers,
-        assetResolver,
-        supplier
-    );
+    return new AdapterConfiguration(this.elementDescription, this.supportedParsers, assetResolver, supplier);
   }
 
   public AdapterConfigurationBuilder withSupportedParsers(IParser... parsers) {
@@ -98,11 +93,7 @@ public class AdapterConfigurationBuilder extends
   }
 
   public AdapterConfigurationBuilder withCategory(AdapterType... categories) {
-    this.elementDescription
-        .setCategory(Arrays
-            .stream(categories)
-            .map(Enum::name)
-            .collect(Collectors.toList()));
+    this.elementDescription.setCategory(Arrays.stream(categories).map(Enum::name).collect(Collectors.toList()));
     return me();
   }
 

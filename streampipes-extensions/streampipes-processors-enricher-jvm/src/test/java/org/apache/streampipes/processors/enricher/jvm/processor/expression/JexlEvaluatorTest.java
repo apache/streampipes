@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.expression;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
@@ -24,16 +25,14 @@ import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.SO;
 
+import java.util.stream.Stream;
+
 import org.apache.commons.jexl3.JexlEngine;
 import org.apache.commons.jexl3.MapContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JexlEvaluatorTest {
 
@@ -46,9 +45,7 @@ public class JexlEvaluatorTest {
 
   @ParameterizedTest
   @MethodSource("provideTestArguments")
-  void testEvaluate(JexlDescription jexlDescription,
-                    Object expectedResult,
-                    MapContext context) {
+  void testEvaluate(JexlDescription jexlDescription, Object expectedResult, MapContext context) {
     var evaluator = new JexlEvaluator(jexlDescription, engine);
     var event = makeBaseEvent();
     evaluator.evaluate(context, event);
@@ -65,17 +62,14 @@ public class JexlEvaluatorTest {
     context.set("c", 2);
     context.set("Math", Math.class);
 
-    return Stream.of(
-        Arguments.of(number("result1", "a + 5"), 15, context),
-        Arguments.of(number("result1", "b + 5"), 25.0, context),
-        Arguments.of(number("result1", "a + b * 5"), 110.0, context),
-        Arguments.of(number("result1", "a + b * 5"), 110.0, context),
-        Arguments.of(number("result1", "Math.pow(a, c)"), 100.0, context)
-    );
+    return Stream.of(Arguments.of(number("result1", "a + 5"), 15, context),
+            Arguments.of(number("result1", "b + 5"), 25.0, context),
+            Arguments.of(number("result1", "a + b * 5"), 110.0, context),
+            Arguments.of(number("result1", "a + b * 5"), 110.0, context),
+            Arguments.of(number("result1", "Math.pow(a, c)"), 100.0, context));
   }
 
-  private static JexlDescription number(String runtimeName,
-                                      String script) {
+  private static JexlDescription number(String runtimeName, String script) {
     return new JexlDescription(numberEp(runtimeName), script);
   }
 
@@ -90,6 +84,5 @@ public class JexlEvaluatorTest {
     event.addField("c", 2);
     return event;
   }
-
 
 }

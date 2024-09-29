@@ -41,24 +41,9 @@ public class SupportedRestQueryParams {
   public static final String QP_FILTER = "filter";
   public static final String QP_MAXIMUM_AMOUNT_OF_EVENTS = "maximumAmountOfEvents";
 
-  public static final List<String> SUPPORTED_PARAMS = Arrays.asList(
-      QP_COLUMNS,
-      QP_START_DATE,
-      QP_END_DATE,
-      QP_PAGE,
-      QP_LIMIT,
-      QP_OFFSET,
-      QP_GROUP_BY,
-      QP_ORDER,
-      QP_AGGREGATION_FUNCTION,
-      QP_TIME_INTERVAL,
-      QP_FORMAT,
-      QP_CSV_DELIMITER,
-      QP_COUNT_ONLY,
-      QP_AUTO_AGGREGATE,
-      QP_MISSING_VALUE_BEHAVIOUR,
-      QP_FILTER,
-      QP_MAXIMUM_AMOUNT_OF_EVENTS
-  );
+  public static final List<String> SUPPORTED_PARAMS = Arrays.asList(QP_COLUMNS, QP_START_DATE, QP_END_DATE, QP_PAGE,
+          QP_LIMIT, QP_OFFSET, QP_GROUP_BY, QP_ORDER, QP_AGGREGATION_FUNCTION, QP_TIME_INTERVAL, QP_FORMAT,
+          QP_CSV_DELIMITER, QP_COUNT_ONLY, QP_AUTO_AGGREGATE, QP_MISSING_VALUE_BEHAVIOUR, QP_FILTER,
+          QP_MAXIMUM_AMOUNT_OF_EVENTS);
 
 }

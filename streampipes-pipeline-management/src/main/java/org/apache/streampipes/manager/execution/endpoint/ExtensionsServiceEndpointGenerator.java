@@ -24,12 +24,12 @@ import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEndpointGenerator {
 
@@ -38,55 +38,38 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
   public ExtensionsServiceEndpointGenerator() {
   }
 
-  public String getEndpointResourceUrl(String appId,
-                                       SpServiceUrlProvider spServiceUrlProvider,
-                                       Set<SpServiceTag> customServiceTags)
-      throws NoServiceEndpointsAvailableException {
+  public String getEndpointResourceUrl(String appId, SpServiceUrlProvider spServiceUrlProvider,
+          Set<SpServiceTag> customServiceTags) throws NoServiceEndpointsAvailableException {
     return spServiceUrlProvider.getInvocationUrl(selectService(appId, spServiceUrlProvider, customServiceTags), appId);
   }
 
-  public String getEndpointBaseUrl(String appId,
-                                   SpServiceUrlProvider spServiceUrlProvider,
-                                   Set<SpServiceTag> customServiceTags) throws NoServiceEndpointsAvailableException {
+  public String getEndpointBaseUrl(String appId, SpServiceUrlProvider spServiceUrlProvider,
+          Set<SpServiceTag> customServiceTags) throws NoServiceEndpointsAvailableException {
     return selectService(appId, spServiceUrlProvider, customServiceTags);
   }
 
-  private String selectService(String appId,
-                               SpServiceUrlProvider spServiceUrlProvider,
-                               Set<SpServiceTag> customServiceTags) throws NoServiceEndpointsAvailableException {
+  private String selectService(String appId, SpServiceUrlProvider spServiceUrlProvider,
+          Set<SpServiceTag> customServiceTags) throws NoServiceEndpointsAvailableException {
     List<String> serviceEndpoints = getServiceEndpoints(appId, spServiceUrlProvider, customServiceTags);
     if (!serviceEndpoints.isEmpty()) {
       return serviceEndpoints.get(0);
     } else {
       LOG.error("Could not find any service endpoints for appId {}, serviceTag {}", appId,
-          spServiceUrlProvider.getServiceTag(appId).asString());
+              spServiceUrlProvider.getServiceTag(appId).asString());
       throw new NoServiceEndpointsAvailableException(
-          "Could not find any matching service endpoints - are all software components running?");
+              "Could not find any matching service endpoints - are all software components running?");
     }
   }
 
-  private List<String> getServiceEndpoints(String appId,
-                                           SpServiceUrlProvider spServiceUrlProvider,
-                                           Set<SpServiceTag> customServiceTags) {
-    return SpServiceDiscovery
-        .getServiceDiscovery()
-        .getServiceEndpoints(
-            DefaultSpServiceTypes.EXT,
-            true,
-            getDesiredServiceTags(appId, spServiceUrlProvider, customServiceTags)
-        );
+  private List<String> getServiceEndpoints(String appId, SpServiceUrlProvider spServiceUrlProvider,
+          Set<SpServiceTag> customServiceTags) {
+    return SpServiceDiscovery.getServiceDiscovery().getServiceEndpoints(DefaultSpServiceTypes.EXT, true,
+            getDesiredServiceTags(appId, spServiceUrlProvider, customServiceTags));
   }
 
-  private List<String> getDesiredServiceTags(String appId,
-                                             SpServiceUrlProvider serviceUrlProvider,
-                                             Set<SpServiceTag> customServiceTags) {
-    return Stream.concat(
-            Stream.of(
-                serviceUrlProvider.getServiceTag(appId)
-            ),
-            customServiceTags.stream()
-        )
-        .map(SpServiceTag::asString)
-        .toList();
+  private List<String> getDesiredServiceTags(String appId, SpServiceUrlProvider serviceUrlProvider,
+          Set<SpServiceTag> customServiceTags) {
+    return Stream.concat(Stream.of(serviceUrlProvider.getServiceTag(appId)), customServiceTags.stream())
+            .map(SpServiceTag::asString).toList();
   }
 }

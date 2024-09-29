@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.oauth2;
-
 
 import org.apache.streampipes.rest.security.OAuth2AuthenticationProcessingException;
 
@@ -36,12 +34,8 @@ public class CustomOidcUserService extends OidcUserService {
     OidcUser oidcUser = super.loadUser(userRequest);
     try {
       var provider = userRequest.getClientRegistration().getRegistrationId();
-      return new UserService().processUserRegistration(
-          provider,
-          oidcUser.getAttributes(),
-          oidcUser.getIdToken(),
-          oidcUser.getUserInfo()
-      );
+      return new UserService().processUserRegistration(provider, oidcUser.getAttributes(), oidcUser.getIdToken(),
+              oidcUser.getUserInfo());
     } catch (AuthenticationException e) {
       throw e;
     } catch (Exception e) {

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging;
 
 import org.apache.streampipes.model.grounding.TransportProtocol;
@@ -43,14 +42,9 @@ public enum SpProtocolManager {
   }
 
   public <T extends TransportProtocol> Optional<SpProtocolDefinition<T>> findDefinition(T transportProtocol) {
-    return this.availableProtocols
-        .stream()
-        .filter
-            (adf -> adf.getTransportProtocolClass().equals(transportProtocol.getClass()
-                .getCanonicalName()))
-        .map(s -> (SpProtocolDefinitionFactory<T>) s)
-        .map(SpProtocolDefinitionFactory::createInstance)
-        .findFirst();
+    return this.availableProtocols.stream()
+            .filter(adf -> adf.getTransportProtocolClass().equals(transportProtocol.getClass().getCanonicalName()))
+            .map(s -> (SpProtocolDefinitionFactory<T>) s).map(SpProtocolDefinitionFactory::createInstance).findFirst();
 
   }
 }

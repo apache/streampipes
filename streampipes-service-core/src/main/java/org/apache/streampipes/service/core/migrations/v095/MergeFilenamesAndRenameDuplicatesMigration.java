@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.migrations.v095;
 
 import org.apache.streampipes.manager.file.FileHandler;
@@ -25,17 +24,17 @@ import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.lightcouch.CouchDbClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.lightcouch.CouchDbClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
 
@@ -48,8 +47,8 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
 
   private final ObjectMapper mapper = new ObjectMapper();
 
-  private final CRUDStorage<FileMetadata> fileMetadataStorage =
-      StorageDispatcher.INSTANCE.getNoSqlStore().getFileMetadataStorage();
+  private final CRUDStorage<FileMetadata> fileMetadataStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
+          .getFileMetadataStorage();
 
   private final FileHandler fileHandler = new FileHandler();
 
@@ -79,34 +78,30 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
   public void executeMigration() {
     var couchDbRawFileMetadata = getCouchDbRawFileMetadata(getAllFileIds(fileMetadataStorage));
     getFileMetadataToUpdate(couchDbRawFileMetadata);
-    fileMetadataGroupedByOriginalName.forEach(
-        (originalFilename, fileMetadataList) -> update(originalFilename, fileMetadataList));
+    fileMetadataGroupedByOriginalName
+            .forEach((originalFilename, fileMetadataList) -> update(originalFilename, fileMetadataList));
   }
 
   /**
-   * Gets all fileMetadata that need to be updated grouped by originalFilename
-   * key is (possibly) duplicated originalFilename and value is that file's FileMetadata list (if duplicated)
+   * Gets all fileMetadata that need to be updated grouped by originalFilename key is (possibly) duplicated
+   * originalFilename and value is that file's FileMetadata list (if duplicated)
    */
   protected void getFileMetadataToUpdate(List<Map<String, Object>> couchDbRawFileMetadata) {
-    couchDbRawFileMetadata.forEach(
-        this::checkDuplicateOriginalFilename);
+    couchDbRawFileMetadata.forEach(this::checkDuplicateOriginalFilename);
   }
 
   /**
    * Fetches all fileIds stored in CouchDB
    */
   private List<String> getAllFileIds(CRUDStorage<FileMetadata> fileMetadataStorage) {
-    return fileMetadataStorage.findAll().stream().map(FileMetadata::getFileId)
-        .toList();
+    return fileMetadataStorage.findAll().stream().map(FileMetadata::getFileId).toList();
   }
 
   /**
    * Takes the list of fileIds and searches for their raw metadata in CouchDB and returns them
    */
   private List<Map<String, Object>> getCouchDbRawFileMetadata(List<String> fileIds) {
-    return fileIds.stream()
-        .map(fileId -> convertInputStreamToMap(couchDbClient.find(fileId)))
-        .toList();
+    return fileIds.stream().map(fileId -> convertInputStreamToMap(couchDbClient.find(fileId))).toList();
   }
 
   /**
@@ -119,16 +114,16 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
       Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
       String inputStreamString = scanner.hasNext() ? scanner.next() : "";
       logger.error(
-          "Failed to construct a Map from InputStream stored in CouchDB, the data for this file is likely corrupted, "
-              + "skipping it for migration.\nThe original debug message is: " + e.getMessage()
-              + "\nThe original InputStream is: " + inputStreamString);
+              "Failed to construct a Map from InputStream stored in CouchDB, the data for this file is likely corrupted, "
+                      + "skipping it for migration.\nThe original debug message is: " + e.getMessage()
+                      + "\nThe original InputStream is: " + inputStreamString);
       return new HashMap<>();
     }
   }
 
   /**
-   * Takes raw data stored in CouchDB and constructs fileMetadataGroupedByOriginalName,
-   * key is (possibly) duplicated originalFilename and value is that file's FileMetadata list (if duplicated)
+   * Takes raw data stored in CouchDB and constructs fileMetadataGroupedByOriginalName, key is (possibly) duplicated
+   * originalFilename and value is that file's FileMetadata list (if duplicated)
    */
   private void checkDuplicateOriginalFilename(Map<String, Object> rawFileMetadata) {
     // If this file was already migrated or there was an error when converting InputStream to Map, skip it
@@ -199,17 +194,8 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
   /**
    * Creates the new file name for a file with a duplicate name.
    */
-  private String createNewFileName(
-      int index,
-      String fileName,
-      String fileType
-  ) {
-    return String.format(
-        "%s(%d).%s",
-        fileName,
-        index + 1,
-        fileType
-    );
+  private String createNewFileName(int index, String fileName, String fileType) {
+    return String.format("%s(%d).%s", fileName, index + 1, fileType);
   }
 
   /**
@@ -223,6 +209,6 @@ public class MergeFilenamesAndRenameDuplicatesMigration implements Migration {
   @Override
   public String getDescription() {
     return "Merge internalFilename and originalFilename. Additionally, rename"
-        + "duplicate files to ensure uniqueness.";
+            + "duplicate files to ensure uniqueness.";
   }
 }

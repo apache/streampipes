@@ -46,8 +46,9 @@ public class StreamExpression extends Expression {
 
   @Override
   public String toSiddhiEpl() {
-    String streamName = this.streamAlias == null ? this.streamName :
-            join(SiddhiConstants.EMPTY, this.streamAlias, SiddhiConstants.EQUALS, this.streamName);
+    String streamName = this.streamAlias == null
+            ? this.streamName
+            : join(SiddhiConstants.EMPTY, this.streamAlias, SiddhiConstants.EQUALS, this.streamName);
 
     if (this.windowExpression != null) {
       streamName = join(SiddhiConstants.EMPTY, streamName, this.windowExpression.toSiddhiEpl());

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.adapters.netio;
 
 import org.apache.streampipes.connect.adapters.netio.model.NetioGlobalMeasure;
@@ -67,7 +66,6 @@ public class NetioUtils {
     }
   }
 
-
   public static GuessSchema getNetioSchema() {
 
     GuessSchema guessSchema = new GuessSchema();
@@ -76,82 +74,32 @@ public class NetioUtils {
     List<EventProperty> allProperties = new ArrayList<>();
 
     allProperties.add(EpProperties.timestampProperty(TIMESTAMP_KEY));
+    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, NAME_KEY).label("Name")
+            .description("The configured name of plug").build());
+    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.Float, VOLTAGE_KEY).label("Voltage")
+            .description("Instantaneous voltage").measurementUnit(volt).build());
+    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.Float, FREQUENCY_KEY).label("Frequency")
+            .description("Instantaneous frequency").measurementUnit(hertz).build());
     allProperties.add(
-        PrimitivePropertyBuilder
-            .create(Datatypes.String, NAME_KEY)
-            .label("Name")
-            .description("The configured name of plug")
-            .build());
+            PrimitivePropertyBuilder.create(Datatypes.Float, OVERALL_POWER_FACTOR_KEY).label("Overall Power Factor")
+                    .description("Instantaneous Power Factor - weighted average from all meters").build());
+    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.Float, TOTAL_CURRENT_KEY).label("Total Current")
+            .description("Instantaneous total current for all power outputs").build());
+    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.Integer, STATE_KEY).label("State")
+            .description("State of the plug. 1 is on. 0 is off").build());
     allProperties.add(
-        PrimitivePropertyBuilder
-            .create(Datatypes.Float, VOLTAGE_KEY)
-            .label("Voltage")
-            .description("Instantaneous voltage")
-            .measurementUnit(volt)
-            .build());
-    allProperties.add(
-        PrimitivePropertyBuilder
-            .create(Datatypes.Float, FREQUENCY_KEY)
-            .label("Frequency")
-            .description("Instantaneous frequency")
-            .measurementUnit(hertz)
-            .build());
-    allProperties.add(
-        PrimitivePropertyBuilder
-            .create(Datatypes.Float, OVERALL_POWER_FACTOR_KEY)
-            .label("Overall Power Factor")
-            .description("Instantaneous Power Factor - weighted average from all meters")
-            .build());
-    allProperties.add(
-        PrimitivePropertyBuilder
-            .create(Datatypes.Float, TOTAL_CURRENT_KEY)
-            .label("Total Current")
-            .description("Instantaneous total current for all power outputs")
-            .build());
-    allProperties.add(
-        PrimitivePropertyBuilder
-            .create(Datatypes.Integer, STATE_KEY)
-            .label("State")
-            .description("State of the plug. 1 is on. 0 is off")
-            .build());
-    allProperties.add(
-        PrimitivePropertyBuilder
-            .create(Datatypes.Integer, ACTION_KEY)
-            .label("Action")
-            .description("")
-            .build());
-    allProperties.add(
-        PrimitivePropertyBuilder
-            .create(Datatypes.Integer, DELAY_KEY)
-            .label("Delay")
-            .description("")
-            .build());
-    allProperties.add(
-        PrimitivePropertyBuilder
-            .create(Datatypes.Float, CURRENT_KEY)
-            .label("Current")
-            .description("Instantaneous current for the specific power output")
-            .measurementUnit(ampere)
-            .build());
-    allProperties.add(
-        PrimitivePropertyBuilder
-            .create(Datatypes.Float, POWER_FACTOR_KEY)
-            .label("Power Factor")
-            .description("Instantaneous Power Factor for the specific power output")
-            .build());
-    allProperties.add(
-        PrimitivePropertyBuilder
-            .create(Datatypes.Float, LOAD_KEY)
-            .label("Load")
-            .description("Instantaneous load for the specific power output")
-            .build());
-    allProperties.add(
-        PrimitivePropertyBuilder
-            .create(Datatypes.Float, ENERGY_KEY)
-            .label("Energy")
+            PrimitivePropertyBuilder.create(Datatypes.Integer, ACTION_KEY).label("Action").description("").build());
+    allProperties
+            .add(PrimitivePropertyBuilder.create(Datatypes.Integer, DELAY_KEY).label("Delay").description("").build());
+    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.Float, CURRENT_KEY).label("Current")
+            .description("Instantaneous current for the specific power output").measurementUnit(ampere).build());
+    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.Float, POWER_FACTOR_KEY).label("Power Factor")
+            .description("Instantaneous Power Factor for the specific power output").build());
+    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.Float, LOAD_KEY).label("Load")
+            .description("Instantaneous load for the specific power output").build());
+    allProperties.add(PrimitivePropertyBuilder.create(Datatypes.Float, ENERGY_KEY).label("Energy")
             .description("Instantaneous energy counter for the value for the specific power output")
-            .measurementUnit(watthour)
-            .build());
+            .measurementUnit(watthour).build());
 
     eventSchema.setEventProperties(allProperties);
     guessSchema.setEventSchema(eventSchema);

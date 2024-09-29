@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.guess;
 
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
@@ -24,13 +23,13 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @TsModel
@@ -120,8 +119,8 @@ public class GuessSchema {
       return false;
     }
     GuessSchema that = (GuessSchema) o;
-    return Objects.equals(eventSchema, that.eventSchema) && Objects.equals(eventPreview,
-        that.eventPreview) && Objects.equals(fieldStatusInfo, that.fieldStatusInfo);
+    return Objects.equals(eventSchema, that.eventSchema) && Objects.equals(eventPreview, that.eventPreview)
+            && Objects.equals(fieldStatusInfo, that.fieldStatusInfo);
   }
 
   @Override
@@ -131,10 +130,7 @@ public class GuessSchema {
 
   @Override
   public String toString() {
-    return "GuessSchema{"
-           + "eventSchema=" + eventSchema
-           + ", eventPreview=" + eventPreview
-           + ", fieldStatusInfo=" + fieldStatusInfo
-           + '}';
+    return "GuessSchema{" + "eventSchema=" + eventSchema + ", eventPreview=" + eventPreview + ", fieldStatusInfo="
+            + fieldStatusInfo + '}';
   }
 }

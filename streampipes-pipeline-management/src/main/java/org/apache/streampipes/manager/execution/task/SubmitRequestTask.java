@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution.task;
 
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
@@ -28,8 +27,7 @@ public class SubmitRequestTask implements PipelineExecutionTask {
   private final PipelineElementProvider elementProvider;
   private final PipelineElementSubmitter submitter;
 
-  public SubmitRequestTask(PipelineElementSubmitter submitter,
-                           PipelineElementProvider elementProvider) {
+  public SubmitRequestTask(PipelineElementSubmitter submitter, PipelineElementProvider elementProvider) {
     this.elementProvider = elementProvider;
     this.submitter = submitter;
   }

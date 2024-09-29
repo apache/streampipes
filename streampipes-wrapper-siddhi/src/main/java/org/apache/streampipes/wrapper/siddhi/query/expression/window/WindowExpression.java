@@ -33,9 +33,6 @@ public abstract class WindowExpression extends Expression {
   }
 
   protected String windowValue(String value) {
-    return join(SiddhiConstants.EMPTY,
-            SiddhiConstants.PARENTHESIS_OPEN,
-            value,
-            SiddhiConstants.PARENTHESIS_CLOSE);
+    return join(SiddhiConstants.EMPTY, SiddhiConstants.PARENTHESIS_OPEN, value, SiddhiConstants.PARENTHESIS_CLOSE);
   }
 }

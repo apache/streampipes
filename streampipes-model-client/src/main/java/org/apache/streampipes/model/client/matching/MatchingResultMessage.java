@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.client.matching;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -34,7 +33,6 @@ public class MatchingResultMessage {
   private String requirementSubject;
 
   private String reasonText;
-
 
   public MatchingResultMessage() {
 
@@ -103,8 +101,9 @@ public class MatchingResultMessage {
     }
     MatchingResultMessage that = (MatchingResultMessage) o;
     return matchingSuccessful == that.matchingSuccessful && Objects.equals(title, that.title)
-        && Objects.equals(description, that.description) && Objects.equals(offerSubject, that.offerSubject)
-        && Objects.equals(requirementSubject, that.requirementSubject) && Objects.equals(reasonText, that.reasonText);
+            && Objects.equals(description, that.description) && Objects.equals(offerSubject, that.offerSubject)
+            && Objects.equals(requirementSubject, that.requirementSubject)
+            && Objects.equals(reasonText, that.reasonText);
   }
 
   @Override

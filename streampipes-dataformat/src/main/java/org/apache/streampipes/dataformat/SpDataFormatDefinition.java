@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataformat;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;

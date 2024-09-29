@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.user.management.util;
 
 import org.apache.streampipes.model.UserInfo;
@@ -27,26 +26,23 @@ import java.util.Set;
 
 public class UserInfoUtil {
 
-  public static UserInfo toUserInfoObj(Principal principal,
-                                       Set<String> roles) {
-    return principal instanceof UserAccount ? toUserInfo((UserAccount) principal, roles) :
-        toServiceUserInfo((ServiceAccount) principal, roles);
+  public static UserInfo toUserInfoObj(Principal principal, Set<String> roles) {
+    return principal instanceof UserAccount
+            ? toUserInfo((UserAccount) principal, roles)
+            : toServiceUserInfo((ServiceAccount) principal, roles);
   }
 
-  private static UserInfo toUserInfo(UserAccount userAccount,
-                                     Set<String> roles) {
+  private static UserInfo toUserInfo(UserAccount userAccount, Set<String> roles) {
     UserInfo userInfo = prepareUserInfo(userAccount, roles);
     userInfo.setShowTutorial(!userAccount.isHideTutorial());
     return userInfo;
   }
 
-  private static UserInfo toServiceUserInfo(ServiceAccount serviceAccount,
-                                            Set<String> roles) {
+  private static UserInfo toServiceUserInfo(ServiceAccount serviceAccount, Set<String> roles) {
     return prepareUserInfo(serviceAccount, roles);
   }
 
-  private static UserInfo prepareUserInfo(Principal principal,
-                                          Set<String> roles) {
+  private static UserInfo prepareUserInfo(Principal principal, Set<String> roles) {
     UserInfo userInfo = new UserInfo();
     userInfo.setUsername(principal.getUsername());
     userInfo.setDisplayName(principal.getUsername());

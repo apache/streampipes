@@ -15,16 +15,13 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.grounding;
 
 public class NatsTransportProtocol extends TransportProtocol {
 
   private int port;
 
-  public NatsTransportProtocol(String hostname,
-                               int port,
-                               String topicName) {
+  public NatsTransportProtocol(String hostname, int port, String topicName) {
     super(hostname, new SimpleTopicDefinition(topicName));
     this.port = port;
   }

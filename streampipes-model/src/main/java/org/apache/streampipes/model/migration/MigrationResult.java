@@ -15,19 +15,23 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.migration;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 
 /**
  * Models the outcome of a migration.
- * @param success whether the migration was successfully or not.
- * @param element the migrated pipeline element or in case of a failure the original one
- * @param message message that describes the outcome of the migration
- * @param <T> type of the migration element
+ * 
+ * @param success
+ *          whether the migration was successfully or not.
+ * @param element
+ *          the migrated pipeline element or in case of a failure the original one
+ * @param message
+ *          message that describes the outcome of the migration
+ * @param <T>
+ *          type of the migration element
  */
-public record MigrationResult<T extends NamedStreamPipesEntity> (boolean success, T element, String message){
+public record MigrationResult<T extends NamedStreamPipesEntity>(boolean success, T element, String message) {
 
   public static <T extends NamedStreamPipesEntity> MigrationResult<T> failure(T element, String message) {
     return new MigrationResult<>(false, element, message);

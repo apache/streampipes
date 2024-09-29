@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.latlong.processor.revgeocoder.geocityname;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -39,12 +38,12 @@ import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-import org.apache.http.client.fluent.Request;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipInputStream;
+
+import org.apache.http.client.fluent.Request;
 
 public class GeoCityNameRevdecodeProcessor extends StreamPipesDataProcessor {
   private static final String LATITUDE_MAPPING_KEY = "latitude-mapping-key";
@@ -52,35 +51,29 @@ public class GeoCityNameRevdecodeProcessor extends StreamPipesDataProcessor {
   private static final String GEONAME_RUNTIME_NAME = "geoname";
   String latitudeFieldMapper;
   String longitudeFieldMapper;
-  private static final String CITIES_DATASET_URL = "http://download.geonames"
-      + ".org/export/dump/cities1000.zip";
+  private static final String CITIES_DATASET_URL = "http://download.geonames" + ".org/export/dump/cities1000.zip";
   private ReverseGeoCode reverseGeoCode;
 
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.revgeocoder.geocityname", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT),
-                Labels.withId(LATITUDE_MAPPING_KEY),
-                PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG),
-                Labels.withId(LONGITUDE_MAPPING_KEY),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.stringEp(Labels.empty(), GEONAME_RUNTIME_NAME, "http://schema.org/city")
-        ))
-        .build();
+            .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.revgeocoder.geocityname", 0)
+            .category(DataProcessorType.GEO).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT),
+                            Labels.withId(LATITUDE_MAPPING_KEY), PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG),
+                            Labels.withId(LONGITUDE_MAPPING_KEY), PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies
+                    .append(EpProperties.stringEp(Labels.empty(), GEONAME_RUNTIME_NAME, "http://schema.org/city")))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.latitudeFieldMapper = parameters.extractor().mappingPropertyValue(LATITUDE_MAPPING_KEY);
     this.longitudeFieldMapper = parameters.extractor().mappingPropertyValue(LONGITUDE_MAPPING_KEY);
 

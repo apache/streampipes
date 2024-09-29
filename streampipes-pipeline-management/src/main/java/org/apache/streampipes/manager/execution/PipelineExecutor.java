@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution;
 
 import org.apache.streampipes.manager.execution.task.PipelineExecutionTask;
@@ -42,12 +41,11 @@ public class PipelineExecutor {
 
   private PipelineOperationStatus executeOperation(List<PipelineExecutionTask> executionTasks) {
     var executionInfo = PipelineExecutionInfo.create(pipeline);
-    executionTasks
-        .forEach(task -> {
-          if (task.shouldExecute(executionInfo)) {
-            task.executeTask(pipeline, executionInfo);
-          }
-        });
+    executionTasks.forEach(task -> {
+      if (task.shouldExecute(executionInfo)) {
+        task.executeTask(pipeline, executionInfo);
+      }
+    });
     return executionInfo.getPipelineOperationStatus();
   }
 

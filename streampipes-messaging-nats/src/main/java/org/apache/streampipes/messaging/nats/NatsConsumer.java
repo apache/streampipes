@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.nats;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -24,12 +23,12 @@ import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 import org.apache.streampipes.model.nats.NatsConfig;
 
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
 import io.nats.client.Connection;
 import io.nats.client.Dispatcher;
 import io.nats.client.Subscription;
-
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 public class NatsConsumer extends AbstractNatsConnector implements EventConsumer {
 
@@ -45,8 +44,8 @@ public class NatsConsumer extends AbstractNatsConnector implements EventConsumer
     this.natsConfig = natsConfig;
   }
 
-  public void connect(NatsConfig natsConfig,
-                      InternalEventProcessor<byte[]> eventProcessor) throws IOException, InterruptedException {
+  public void connect(NatsConfig natsConfig, InternalEventProcessor<byte[]> eventProcessor)
+          throws IOException, InterruptedException {
     this.natsConfig = natsConfig;
     connect(eventProcessor);
   }
@@ -77,9 +76,9 @@ public class NatsConsumer extends AbstractNatsConnector implements EventConsumer
   }
 
   private void createSubscription(InternalEventProcessor<byte[]> eventProcessor) {
-    dispatcher = natsConnection.createDispatcher((message) -> {});
+    dispatcher = natsConnection.createDispatcher((message) -> {
+    });
 
-    this.subscription = dispatcher.subscribe(subject, (message) ->
-        eventProcessor.onEvent(message.getData()));
+    this.subscription = dispatcher.subscribe(subject, (message) -> eventProcessor.onEvent(message.getData()));
   }
 }

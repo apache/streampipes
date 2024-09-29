@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.siddhi;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -40,14 +39,8 @@ public class SiddhiFilterExtensionModuleExport implements IExtensionModuleExport
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new TrendProcessor(),
-        new NumericalFilterSiddhiProcessor(),
-        new ListFilter(),
-        new ListCollector(),
-        new CountAggregation(),
-        new TopK()
-    );
+    return List.of(new TrendProcessor(), new NumericalFilterSiddhiProcessor(), new ListFilter(), new ListCollector(),
+            new CountAggregation(), new TopK());
   }
 
   @Override

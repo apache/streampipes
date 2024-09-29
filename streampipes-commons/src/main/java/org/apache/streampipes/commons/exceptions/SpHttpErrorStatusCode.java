@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.exceptions;
 
 public class SpHttpErrorStatusCode extends SpRuntimeException {
@@ -26,7 +25,8 @@ public class SpHttpErrorStatusCode extends SpRuntimeException {
   /**
    * Creates a new Exception with the given message and null as the cause.
    *
-   * @param message The exception message
+   * @param message
+   *          The exception message
    */
   public SpHttpErrorStatusCode(String message, Integer httpStatusCode) {
     super(message);

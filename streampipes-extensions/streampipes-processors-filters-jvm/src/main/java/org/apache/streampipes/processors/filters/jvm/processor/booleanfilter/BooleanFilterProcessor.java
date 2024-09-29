@@ -35,7 +35,6 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-
 public class BooleanFilterProcessor extends StreamPipesDataProcessor {
 
   public static final String BOOLEAN_MAPPING = "boolean-mapping";
@@ -47,29 +46,21 @@ public class BooleanFilterProcessor extends StreamPipesDataProcessor {
   private Boolean valueToFilter;
   private String mappingField;
 
-
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.processor.booleanfilter", 0)
-        .category(DataProcessorType.FILTER, DataProcessorType.BOOLEAN_OPERATOR)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredSingleValueSelection(Labels.withId(VALUE),
-            Options.from(OPTION_TRUE, OPTION_FALSE))
-        .outputStrategy(OutputStrategies.keep())
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(),
-                Labels.withId(BOOLEAN_MAPPING), PropertyScope.NONE)
-            .build())
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.processor.booleanfilter", 0)
+            .category(DataProcessorType.FILTER, DataProcessorType.BOOLEAN_OPERATOR)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .requiredSingleValueSelection(Labels.withId(VALUE), Options.from(OPTION_TRUE, OPTION_FALSE))
+            .outputStrategy(OutputStrategies.keep()).requiredStream(
+                    StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(),
+                            Labels.withId(BOOLEAN_MAPPING), PropertyScope.NONE).build())
+            .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams processorParams,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
     this.mappingField = processorParams.extractor().mappingPropertyValue(BOOLEAN_MAPPING);
 
     String selectedSingleValue = processorParams.extractor().selectedSingleValue(VALUE, String.class);

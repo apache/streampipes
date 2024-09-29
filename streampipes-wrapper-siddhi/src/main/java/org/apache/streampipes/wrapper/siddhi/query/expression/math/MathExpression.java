@@ -26,9 +26,7 @@ public class MathExpression extends PropertyExpressionBase {
   private final PropertyExpressionBase op1;
   private final PropertyExpressionBase op2;
 
-  public MathExpression(MathOperator operator,
-                        PropertyExpressionBase op1,
-                        PropertyExpressionBase op2) {
+  public MathExpression(MathOperator operator, PropertyExpressionBase op1, PropertyExpressionBase op2) {
     this.operator = operator;
     this.op1 = op1;
     this.op2 = op2;
@@ -36,9 +34,7 @@ public class MathExpression extends PropertyExpressionBase {
 
   @Override
   public String toSiddhiEpl() {
-    return joinWithParenthesis(SiddhiConstants.WHITESPACE,
-        op1.toSiddhiEpl(),
-        operator.toOperatorString(),
-        op2.toSiddhiEpl());
+    return joinWithParenthesis(SiddhiConstants.WHITESPACE, op1.toSiddhiEpl(), operator.toOperatorString(),
+            op2.toSiddhiEpl());
   }
 }

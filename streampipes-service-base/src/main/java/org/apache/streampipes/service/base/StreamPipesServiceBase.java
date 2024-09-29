@@ -17,23 +17,22 @@
  */
 package org.apache.streampipes.service.base;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.boot.SpringApplication;
-
 import java.net.UnknownHostException;
 import java.util.Properties;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.boot.SpringApplication;
 
 public abstract class StreamPipesServiceBase {
 
   public static final String AUTO_GENERATED_SERVICE_ID = RandomStringUtils.randomAlphanumeric(6);
 
-  public void startStreamPipesService(Class<?> serviceClass,
-                                         BaseNetworkingConfig networkingConfig) throws UnknownHostException {
+  public void startStreamPipesService(Class<?> serviceClass, BaseNetworkingConfig networkingConfig)
+          throws UnknownHostException {
     runApplication(serviceClass, networkingConfig.getPort());
   }
 
-  private void runApplication(Class<?> serviceClass,
-                              Integer port) {
+  private void runApplication(Class<?> serviceClass, Integer port) {
     SpringApplication app = new SpringApplication(serviceClass);
 
     Properties config = new Properties();

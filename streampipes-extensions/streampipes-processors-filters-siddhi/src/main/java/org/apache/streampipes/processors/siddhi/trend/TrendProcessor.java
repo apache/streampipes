@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.processors.siddhi.trend;
 
+import static org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils.prepareName;
+
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
@@ -48,8 +50,6 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.pattern.PatternCou
 
 import java.util.List;
 
-import static org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils.prepareName;
-
 public class TrendProcessor extends StreamPipesSiddhiProcessor {
 
   private static final String Mapping = "mapping";
@@ -68,21 +68,17 @@ public class TrendProcessor extends StreamPipesSiddhiProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.siddhi.increase", 0)
-        .withLocales(Locales.EN)
-        .category(DataProcessorType.PATTERN_DETECT)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId
-                (Mapping), PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(OPERATION), Options
-            .from(TrendOperator.INCREASE.getLabel(), TrendOperator.DECREASE.getLabel()))
-        .requiredIntegerParameter(Labels.withId(INCREASE), 0, 500, 1)
-        .requiredIntegerParameter(Labels.withId(DURATION))
-        .outputStrategy(OutputStrategies.custom())
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.increase", 0)
+            .withLocales(Locales.EN).category(DataProcessorType.PATTERN_DETECT)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId(Mapping),
+                            PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .requiredSingleValueSelection(Labels.withId(OPERATION),
+                    Options.from(TrendOperator.INCREASE.getLabel(), TrendOperator.DECREASE.getLabel()))
+            .requiredIntegerParameter(Labels.withId(INCREASE), 0, 500, 1)
+            .requiredIntegerParameter(Labels.withId(DURATION)).outputStrategy(OutputStrategies.custom()).build();
   }
 
   private TrendOperator getOperation(String operation) {
@@ -94,18 +90,14 @@ public class TrendProcessor extends StreamPipesSiddhiProcessor {
   }
 
   @Override
-  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
-                                        String finalInsertIntoStreamName) {
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams, String finalInsertIntoStreamName) {
 
     InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
 
-    return SiddhiAppConfigBuilder
-        .create()
-        .addQuery(SiddhiQueryBuilder
-            .create(fromStatement(siddhiParams), insertIntoClause)
-            .withSelectClause(selectStatement(siddhiParams))
-            .build())
-        .build();
+    return SiddhiAppConfigBuilder.create()
+            .addQuery(SiddhiQueryBuilder.create(fromStatement(siddhiParams), insertIntoClause)
+                    .withSelectClause(selectStatement(siddhiParams)).build())
+            .build();
   }
 
   public FromClause fromStatement(SiddhiProcessorParams siddhiParams) {
@@ -115,29 +107,25 @@ public class TrendProcessor extends StreamPipesSiddhiProcessor {
     int duration = extractor.singleValueParameter(DURATION, Integer.class);
     String mapping = extractor.mappingPropertyValue(Mapping);
 
-
     String mappingProperty = prepareName(mapping);
     increase = (increase / 100) + 1;
 
     FromClause fromClause = FromClause.create();
-    StreamExpression exp1 = Expressions.every(
-        Expressions.stream("e1", siddhiParams.getInputStreamNames().get(0)));
+    StreamExpression exp1 = Expressions.every(Expressions.stream("e1", siddhiParams.getInputStreamNames().get(0)));
     StreamExpression exp2 = Expressions.stream("e2", siddhiParams.getInputStreamNames().get(0));
 
     PropertyExpressionBase mathExp = operation == TrendOperator.INCREASE
-        ? Expressions.divide(Expressions.property(mappingProperty), Expressions.staticValue(increase)) :
-        Expressions.multiply(Expressions.property(mappingProperty), Expressions.staticValue(increase));
+            ? Expressions.divide(Expressions.property(mappingProperty), Expressions.staticValue(increase))
+            : Expressions.multiply(Expressions.property(mappingProperty), Expressions.staticValue(increase));
 
     RelationalOperatorExpression opExp = operation == TrendOperator.INCREASE
-        ? Expressions.le(Expressions.property("e1", mappingProperty), mathExp) :
-        Expressions.ge(Expressions.property("e1", mappingProperty), mathExp);
+            ? Expressions.le(Expressions.property("e1", mappingProperty), mathExp)
+            : Expressions.ge(Expressions.property("e1", mappingProperty), mathExp);
 
-    StreamFilterExpression filterExp = Expressions
-        .filter(exp2, Expressions.patternCount(1, PatternCountOperator.EXACTLY_N), opExp);
+    StreamFilterExpression filterExp = Expressions.filter(exp2,
+            Expressions.patternCount(1, PatternCountOperator.EXACTLY_N), opExp);
 
-    Expression sequence = (Expressions.sequence(exp1,
-        filterExp,
-        Expressions.within(duration, SiddhiTimeUnit.SECONDS)));
+    Expression sequence = (Expressions.sequence(exp1, filterExp, Expressions.within(duration, SiddhiTimeUnit.SECONDS)));
 
     fromClause.add(sequence);
 
@@ -147,9 +135,8 @@ public class TrendProcessor extends StreamPipesSiddhiProcessor {
   private SelectClause selectStatement(SiddhiProcessorParams siddhiParams) {
     List<String> outputFieldSelectors = siddhiParams.getParams().extractor().outputKeySelectors();
     SelectClause selectClause = SelectClause.create();
-    outputFieldSelectors
-        .forEach(outputFieldSelector -> selectClause
-            .addProperty(Expressions.property("e2", outputFieldSelector, "last")));
+    outputFieldSelectors.forEach(
+            outputFieldSelector -> selectClause.addProperty(Expressions.property("e2", outputFieldSelector, "last")));
 
     return selectClause;
   }

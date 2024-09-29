@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.migration;
 
 public class MigrationComparison {
@@ -24,4 +23,3 @@ public class MigrationComparison {
     return first.config().equals(second.config());
   }
 }
-

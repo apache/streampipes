@@ -15,20 +15,19 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
-import org.apache.streampipes.connect.shared.preprocessing.SupportsNestedTransformationRule;
+import static java.util.TimeZone.getTimeZone;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.streampipes.connect.shared.preprocessing.SupportsNestedTransformationRule;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.TimeZone.getTimeZone;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TimestampTransformationRule extends SupportsNestedTransformationRule {
 
@@ -40,10 +39,8 @@ public class TimestampTransformationRule extends SupportsNestedTransformationRul
 
   private static final Logger logger = LoggerFactory.getLogger(TimestampTransformationRule.class);
 
-  public TimestampTransformationRule(List<String> eventKey,
-                                     TimestampTranformationRuleMode mode,
-                                     String formatString,
-                                     long multiplier) {
+  public TimestampTransformationRule(List<String> eventKey, TimestampTranformationRuleMode mode, String formatString,
+          long multiplier) {
     this.eventKey = eventKey;
     this.mode = mode;
     this.multiplier = multiplier;
@@ -79,7 +76,7 @@ public class TimestampTransformationRule extends SupportsNestedTransformationRul
   }
 
   private long performFormatStringTransformation(String date) {
-    //TODO how to handle exception?
+    // TODO how to handle exception?
     try {
       return dateFormatter.parse(date).getTime();
     } catch (ParseException e) {

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.value.change;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -32,12 +31,12 @@ import org.apache.streampipes.test.extensions.api.StoreEventCollector;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestChangedValueDetectionProcessor {
 
@@ -55,10 +54,8 @@ public class TestChangedValueDetectionProcessor {
     var event = this.createTestEvent();
 
     // Create event with no DIMENSION_PROPERTY
-    event.getSchemaInfo()
-        .getEventSchema()
-        .getEventProperties().get(0)
-        .setPropertyScope(PropertyScope.MEASUREMENT_PROPERTY.name());
+    event.getSchemaInfo().getEventSchema().getEventProperties().get(0)
+            .setPropertyScope(PropertyScope.MEASUREMENT_PROPERTY.name());
 
     Assertions.assertEquals("l1", processor.getDimensionKey(event));
   }
@@ -82,10 +79,8 @@ public class TestChangedValueDetectionProcessor {
     // Set "s0::value" as COMPARE_FIELD_ID
     DataProcessorInvocation graph = InvocationGraphGenerator.makeEmptyInvocation(processor.declareModel());
 
-    graph.getStaticProperties().stream()
-        .filter(p -> p instanceof MappingPropertyUnary)
-        .map((p -> (MappingPropertyUnary) p))
-        .findFirst().get().setSelectedProperty("s0::value");
+    graph.getStaticProperties().stream().filter(p -> p instanceof MappingPropertyUnary)
+            .map((p -> (MappingPropertyUnary) p)).findFirst().get().setSelectedProperty("s0::value");
 
     ProcessorParams params = new ProcessorParams(graph);
     processor.onInvocation(params, null, null);
@@ -102,8 +97,7 @@ public class TestChangedValueDetectionProcessor {
     processor.onEvent(event, collector);
     processor.onEvent(event, collector);
 
-    Assertions.assertEquals(3,
-                            collector.getEvents().size());
+    Assertions.assertEquals(3, collector.getEvents().size());
   }
 
   @Test
@@ -113,10 +107,8 @@ public class TestChangedValueDetectionProcessor {
     // Set "s0::value" as COMPARE_FIELD_ID
     DataProcessorInvocation graph = InvocationGraphGenerator.makeEmptyInvocation(processor.declareModel());
 
-    graph.getStaticProperties().stream()
-        .filter(p -> p instanceof MappingPropertyUnary)
-        .map((p -> (MappingPropertyUnary) p))
-        .findFirst().get().setSelectedProperty("s0::value");
+    graph.getStaticProperties().stream().filter(p -> p instanceof MappingPropertyUnary)
+            .map((p -> (MappingPropertyUnary) p)).findFirst().get().setSelectedProperty("s0::value");
 
     ProcessorParams params = new ProcessorParams(graph);
     processor.onInvocation(params, null, null);
@@ -132,8 +124,7 @@ public class TestChangedValueDetectionProcessor {
     processor.onEvent(this.createTestEvent(1, "loc_1"), collector);
     processor.onEvent(this.createTestEvent(1, "loc_2"), collector);
 
-    Assertions.assertEquals(4,
-                            collector.getEvents().size());
+    Assertions.assertEquals(4, collector.getEvents().size());
   }
 
   private Event createTestEvent() {
@@ -147,19 +138,13 @@ public class TestChangedValueDetectionProcessor {
   private Event createTestEvent(Integer value, String location) {
 
     var eventSchema = GuessSchemaBuilder.create()
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.String, "sensorId")
-            .scope(PropertyScope.DIMENSION_PROPERTY)
-            .build())
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.Double, "location")
-            .scope(PropertyScope.DIMENSION_PROPERTY)
-            .build())
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.Integer, "value")
-            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .build().eventSchema;
+            .property(PrimitivePropertyBuilder.create(Datatypes.String, "sensorId")
+                    .scope(PropertyScope.DIMENSION_PROPERTY).build())
+            .property(PrimitivePropertyBuilder.create(Datatypes.Double, "location")
+                    .scope(PropertyScope.DIMENSION_PROPERTY).build())
+            .property(PrimitivePropertyBuilder.create(Datatypes.Integer, "value")
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY).build())
+            .build().eventSchema;
 
     Map<String, Object> map = new HashMap<>();
     map.put("sensorId", "sensor01");

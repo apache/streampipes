@@ -24,6 +24,8 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.CRUDStorage;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +38,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/usergroups")
@@ -58,12 +58,9 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
 
   @PutMapping(path = "{groupId}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public ResponseEntity<Group> updateUserGroup(@PathVariable("groupId") String groupId,
-                                           @RequestBody Group group) {
+  public ResponseEntity<Group> updateUserGroup(@PathVariable("groupId") String groupId, @RequestBody Group group) {
     if (!groupId.equals(group.getGroupId())) {
-      throw new SpMessageException(
-          HttpStatus.BAD_REQUEST,
-          Notifications.error("Wrong group id provided"));
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error("Wrong group id provided"));
     } else {
       return ok(getUserGroupStorage().updateElement(group));
     }

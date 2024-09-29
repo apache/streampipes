@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.migrations.v093.migrator;
 
 import com.google.gson.JsonObject;

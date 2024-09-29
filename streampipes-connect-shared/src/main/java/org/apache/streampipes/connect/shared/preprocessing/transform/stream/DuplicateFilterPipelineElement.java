@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.stream;
 
 import org.apache.streampipes.extensions.api.connect.TransformationRule;
@@ -24,9 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A hash of events is stored to check if event was already sent
- * If the same event is sent multiple times the timer is always reseted to cover polling of rest endpoints
- * User can configure how long events are stored in cache, it should be minimum 2x the polling intervall
+ * A hash of events is stored to check if event was already sent If the same event is sent multiple times the timer is
+ * always reseted to cover polling of rest endpoints User can configure how long events are stored in cache, it should
+ * be minimum 2x the polling intervall
  */
 public class DuplicateFilterPipelineElement implements TransformationRule {
 
@@ -41,7 +40,7 @@ public class DuplicateFilterPipelineElement implements TransformationRule {
   }
 
   // Trade of between computation and storage, maybe change value in future
-  private static final long CLEAN_UP_INTERVAL_MILLI_SEC = 10000; //10 seconds
+  private static final long CLEAN_UP_INTERVAL_MILLI_SEC = 10000; // 10 seconds
 
   private Map<Integer, Long> eventState = new HashMap<>();
   private long lastCleanUpTimestamp = System.currentTimeMillis();

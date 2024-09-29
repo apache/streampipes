@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.manager.matching.v2.utils.MatchingUtils;
@@ -33,14 +32,9 @@ public class SchemaMatch extends AbstractMatcher<EventSchema, EventSchema> {
 
   @Override
   public boolean match(EventSchema offer, EventSchema requirement, List<MatchingResultMessage> errorLog) {
-    boolean matches = MatchingUtils.nullCheck(offer, requirement)
-        || requirement.getEventProperties()
-        .stream()
-        .allMatch(req -> offer
-            .getEventProperties()
-            .stream()
-            .anyMatch(of -> new PropertyMatch().match(of, req, errorLog)));
-    //if (!matches) buildErrorMessage(errorLog, builtText(requirement));
+    boolean matches = MatchingUtils.nullCheck(offer, requirement) || requirement.getEventProperties().stream().allMatch(
+            req -> offer.getEventProperties().stream().anyMatch(of -> new PropertyMatch().match(of, req, errorLog)));
+    // if (!matches) buildErrorMessage(errorLog, builtText(requirement));
     return matches;
 
   }

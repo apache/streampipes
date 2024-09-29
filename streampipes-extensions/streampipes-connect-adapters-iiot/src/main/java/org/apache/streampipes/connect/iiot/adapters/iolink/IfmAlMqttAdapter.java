@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.iiot.adapters.iolink;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -42,13 +41,13 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IfmAlMqttAdapter implements StreamPipesAdapter {
 
@@ -76,126 +75,106 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder
-        .create(ID, 0, IfmAlMqttAdapter::new)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
-        .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
-        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
-            MqttConnectUtils.getAlternativesTwo())
-        .requiredMultiValueSelection(Labels.withId(PORTS),
-            Options.from("Port 1", "Port 2", "Port 3", "Port 4"))
-        .requiredSingleValueSelection(Labels.withId(SENSOR_TYPE),
-            Options.from("VVB001"))
-        .requiredTextParameter(MqttConnectUtils.getTopicLabel())
-        .buildConfiguration();
+    return AdapterConfigurationBuilder.create(ID, 0, IfmAlMqttAdapter::new).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
+            .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
+            .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
+                    MqttConnectUtils.getAlternativesTwo())
+            .requiredMultiValueSelection(Labels.withId(PORTS), Options.from("Port 1", "Port 2", "Port 3", "Port 4"))
+            .requiredSingleValueSelection(Labels.withId(SENSOR_TYPE), Options.from("VVB001"))
+            .requiredTextParameter(MqttConnectUtils.getTopicLabel()).buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     var sensor = new SensorVVB001();
 
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
-    this.mqttConsumer = new MqttConsumer(
-        this.mqttConfig,
-        (mqttEvent) -> {
-          try {
-            InputStream in = convertByte(mqttEvent);
-            parser.parse(in, (event) -> {
+    this.mqttConsumer = new MqttConsumer(this.mqttConfig, (mqttEvent) -> {
+      try {
+        InputStream in = convertByte(mqttEvent);
+        parser.parse(in, (event) -> {
 
-              var data = getMap(event, "data");
-              var payload = getMap(data, "payload");
+          var data = getMap(event, "data");
+          var payload = getMap(data, "payload");
 
-              var deviceInfo = getMap(payload, "/deviceinfo/serialnumber");
-              var serialnumber = deviceInfo.get("data");
+          var deviceInfo = getMap(payload, "/deviceinfo/serialnumber");
+          var serialnumber = deviceInfo.get("data");
 
-              for (int i = 0; i < ports.size(); i++) {
+          for (int i = 0; i < ports.size(); i++) {
 
-                String keyPortInformation = KEY_PORT_INFORMATION.formatted(ports.get(i));
+            String keyPortInformation = KEY_PORT_INFORMATION.formatted(ports.get(i));
 
-                Map<String, Object> portResult;
-                if (payload.containsKey(keyPortInformation)) {
+            Map<String, Object> portResult;
+            if (payload.containsKey(keyPortInformation)) {
 
-                  portResult = getMap(payload, keyPortInformation);
+              portResult = getMap(payload, keyPortInformation);
 
-                  try {
-                    String eventData;
-                    if (portResult.containsKey("data")) {
-                      eventData = (String) portResult.get("data");
+              try {
+                String eventData;
+                if (portResult.containsKey("data")) {
+                  eventData = (String) portResult.get("data");
 
-                      var parsedEvent = sensor.parseEvent(eventData);
-                      parsedEvent.put("timestamp", System.currentTimeMillis() + i);
-                      parsedEvent.put("port", "port" + ports.get(i));
-                      parsedEvent.put(SensorVVB001.IO_LINK_MASTER_SN, serialnumber);
+                  var parsedEvent = sensor.parseEvent(eventData);
+                  parsedEvent.put("timestamp", System.currentTimeMillis() + i);
+                  parsedEvent.put("port", "port" + ports.get(i));
+                  parsedEvent.put(SensorVVB001.IO_LINK_MASTER_SN, serialnumber);
 
-                      collector.collect(parsedEvent);
-                    } else {
-                      if (!missingEventDataDetected) {
-                        adapterRuntimeContext
-                                .getLogger()
-                                .warn("Payload for port %s does not contain event data".formatted(i), "");
-                        LOG.error(
-                                "IoLink event does not look like expected. "
-                                + "No port information found for port {}.", i);
-                        missingEventDataDetected = true;
-                      }
-                    }
-                  } catch (Exception e) {
-                    adapterRuntimeContext
-                            .getLogger()
-                            .error(e);
-                    LOG.error("Data from IOLink sensor could not be extracted for port {}: {}", i, e);
-                  }
-
+                  collector.collect(parsedEvent);
                 } else {
-                  if (!missingPortInformationDetected) {
-                    adapterRuntimeContext
-                            .getLogger()
-                            .warn("Event does not contain information about port " + i, "");
-                    LOG.error("IoLink event does not look like expected. No port information found for port {}.", i);
-                    missingPortInformationDetected = true;
+                  if (!missingEventDataDetected) {
+                    adapterRuntimeContext.getLogger()
+                            .warn("Payload for port %s does not contain event data".formatted(i), "");
+                    LOG.error("IoLink event does not look like expected. " + "No port information found for port {}.",
+                            i);
+                    missingEventDataDetected = true;
                   }
                 }
+              } catch (Exception e) {
+                adapterRuntimeContext.getLogger().error(e);
+                LOG.error("Data from IOLink sensor could not be extracted for port {}: {}", i, e);
               }
-            });
-          } catch (ParseException e) {
-            adapterRuntimeContext
-                    .getLogger()
-                    .error(e);
-            LOG.error("IOLink master event could not be parsed.", e);
+
+            } else {
+              if (!missingPortInformationDetected) {
+                adapterRuntimeContext.getLogger().warn("Event does not contain information about port " + i, "");
+                LOG.error("IoLink event does not look like expected. No port information found for port {}.", i);
+                missingPortInformationDetected = true;
+              }
+            }
           }
-        }
-        );
+        });
+      } catch (ParseException e) {
+        adapterRuntimeContext.getLogger().error(e);
+        LOG.error("IOLink master event could not be parsed.", e);
+      }
+    });
 
     Thread thread = new Thread(this.mqttConsumer);
     thread.start();
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
+          throws AdapterException {
     this.mqttConsumer.close();
   }
 
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
 
     return new SensorVVB001().getEventSchema();
   }
 
-
   private void applyConfiguration(IStaticPropertyExtractor extractor) {
     mqttConfig = MqttConnectUtils.getMqttConfig(extractor);
     String sensorType = extractor.selectedSingleValue(SENSOR_TYPE, String.class);
     var selectedPorts = extractor.selectedMultiValues(PORTS, String.class);
-    ports = selectedPorts.stream()
-        .map(port -> port.substring(5))
-        .toList();
+    ports = selectedPorts.stream().map(port -> port.substring(5)).toList();
   }
 
   private Map<String, Object> getMap(Map<String, Object> event, String key) {
@@ -212,8 +191,8 @@ public class IfmAlMqttAdapter implements StreamPipesAdapter {
   }
 
   private String getErrorMessage(String key) {
-    return "The event does not contain key: %s. Please reconfigure the IOLink master to include this key".formatted(
-        key);
+    return "The event does not contain key: %s. Please reconfigure the IOLink master to include this key"
+            .formatted(key);
   }
 
   private InputStream convertByte(byte[] event) {

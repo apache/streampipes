@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.template.instances;
 
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;

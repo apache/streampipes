@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.smp.util;
 
 import java.io.File;
@@ -25,15 +24,8 @@ import java.nio.file.Paths;
 public class Utils {
 
   public static String makePath(String sourceRoot, String appId) {
-    return sourceRoot
-        + File.separator
-        + "src"
-        + File.separator
-        + "main"
-        + File.separator
-        + "resources"
-        + File.separator
-        + appId;
+    return sourceRoot + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator
+            + appId;
   }
 
   public static Path makeResourcePath(String sourcePath) {

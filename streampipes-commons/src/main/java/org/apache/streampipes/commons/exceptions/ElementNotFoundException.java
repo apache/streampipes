@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.exceptions;
 
 public class ElementNotFoundException extends Exception {
@@ -24,7 +23,6 @@ public class ElementNotFoundException extends Exception {
    *
    */
   private static final long serialVersionUID = 1L;
-
 
   public ElementNotFoundException() {
   }

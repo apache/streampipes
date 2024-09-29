@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.health;
-
 
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
@@ -25,12 +23,12 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.List;
 
 public class ServiceHealthCheck implements Runnable {
 
@@ -42,9 +40,8 @@ public class ServiceHealthCheck implements Runnable {
   public ServiceHealthCheck() {
     var storage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
     this.serviceRegistrationManager = new ServiceRegistrationManager(storage);
-    this.maxUnhealthyDurationBeforeRemovalMs = Environments
-        .getEnvironment()
-        .getUnhealthyTimeBeforeServiceDeletionInMillis().getValueOrDefault();
+    this.maxUnhealthyDurationBeforeRemovalMs = Environments.getEnvironment()
+            .getUnhealthyTimeBeforeServiceDeletionInMillis().getValueOrDefault();
   }
 
   @Override
@@ -73,14 +70,12 @@ public class ServiceHealthCheck implements Runnable {
 
   private void processUnhealthyService(SpServiceRegistration service) {
     if (service.getStatus() == SpServiceStatus.HEALTHY) {
-      serviceRegistrationManager.applyServiceStatus(
-          service.getSvcId(),
-          SpServiceStatus.UNHEALTHY,
-          System.currentTimeMillis());
+      serviceRegistrationManager.applyServiceStatus(service.getSvcId(), SpServiceStatus.UNHEALTHY,
+              System.currentTimeMillis());
     }
     if (shouldDeleteService(service)) {
-      LOG.info("Removing service {} which has been unhealthy for more than {} milliseconds.",
-          service.getSvcId(), maxUnhealthyDurationBeforeRemovalMs);
+      LOG.info("Removing service {} which has been unhealthy for more than {} milliseconds.", service.getSvcId(),
+              maxUnhealthyDurationBeforeRemovalMs);
       serviceRegistrationManager.removeService(service.getSvcId());
     }
   }

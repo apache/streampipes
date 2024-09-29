@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class PipelineElementTemplateApi extends AbstractTypedClientApi<PipelineElementTemplate>
-    implements IPipelineElementTemplateApi {
+        implements
+          IPipelineElementTemplateApi {
 
   public PipelineElementTemplateApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, PipelineElementTemplate.class);
@@ -58,7 +59,6 @@ public class PipelineElementTemplateApi extends AbstractTypedClientApi<PipelineE
 
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
-    return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("pipeline-element-templates");
+    return StreamPipesApiPath.fromBaseApiPath().addToPath("pipeline-element-templates");
   }
 }

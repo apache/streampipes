@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.param;
-
 
 public record DeleteQueryParams(String measurementName, Long startTime, Long endTime, boolean timeRestricted) {
 
@@ -25,4 +23,3 @@ public record DeleteQueryParams(String measurementName, Long startTime, Long end
     this(measurementId, startTime != null ? startTime : 0, endTime != null ? endTime : 99999999999999L, true);
   }
 }
-

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.client.user;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;

@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.export;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.streampipes.dataexplorer.export.item.JsonItemGenerator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestJsonItemGenerator extends TestItemGenerator {
 

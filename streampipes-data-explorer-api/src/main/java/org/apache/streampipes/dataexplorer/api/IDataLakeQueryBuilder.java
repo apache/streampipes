@@ -15,10 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.api;
-
-
 
 import org.apache.streampipes.model.datalake.AggregationFunction;
 import org.apache.streampipes.model.datalake.DataLakeQueryOrdering;
@@ -34,41 +31,30 @@ public interface IDataLakeQueryBuilder<T> {
 
   IDataLakeQueryBuilder<T> withSimpleColumns(List<String> columnNames);
 
-  IDataLakeQueryBuilder<T> withAggregatedColumn(String columnName,
-                                            AggregationFunction aggregationFunction,
-                                            String targetName);
+  IDataLakeQueryBuilder<T> withAggregatedColumn(String columnName, AggregationFunction aggregationFunction,
+          String targetName);
 
-  IDataLakeQueryBuilder<T> withAggregatedColumn(String columnName,
-                                                AggregationFunction aggregationFunction);
+  IDataLakeQueryBuilder<T> withAggregatedColumn(String columnName, AggregationFunction aggregationFunction);
 
   IDataLakeQueryBuilder<T> withStartTime(long startTime);
 
   IDataLakeQueryBuilder<T> withEndTime(long endTime);
 
-  IDataLakeQueryBuilder<T> withEndTime(long endTime,
-                                   boolean includeEndTime);
+  IDataLakeQueryBuilder<T> withEndTime(long endTime, boolean includeEndTime);
 
-  IDataLakeQueryBuilder<T> withTimeBoundary(long startTime,
-                                        long endTime);
+  IDataLakeQueryBuilder<T> withTimeBoundary(long startTime, long endTime);
 
-  IDataLakeQueryBuilder<T> withFilter(String field,
-                                  String operator,
-                                  Object value);
+  IDataLakeQueryBuilder<T> withFilter(String field, String operator, Object value);
 
-  IDataLakeQueryBuilder<T> withExclusiveFilter(String field,
-                                           String operator,
-                                           List<?> values);
+  IDataLakeQueryBuilder<T> withExclusiveFilter(String field, String operator, List<?> values);
 
-  IDataLakeQueryBuilder<T> withInclusiveFilter(String field,
-                                            String operator,
-                                            List<?> values);
+  IDataLakeQueryBuilder<T> withInclusiveFilter(String field, String operator, List<?> values);
 
   IDataLakeQueryBuilder<T> withInclusiveFilter(List<FilterCondition> filterConditions);
 
   IDataLakeQueryBuilder<T> withGroupByTime(String timeInterval);
 
-  IDataLakeQueryBuilder<T> withGroupByTime(String timeInterval,
-                                       String offsetInterval);
+  IDataLakeQueryBuilder<T> withGroupByTime(String timeInterval, String offsetInterval);
 
   IDataLakeQueryBuilder<T> withGroupBy(String column);
 

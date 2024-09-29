@@ -27,12 +27,12 @@ import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
+import java.io.IOException;
+
 import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-
-import java.io.IOException;
 
 public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<CustomTransformOutputStrategy> {
 
@@ -44,11 +44,10 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
   }
 
   public CustomTransformOutputSchemaGenerator(CustomTransformOutputStrategy strategy,
-                                              DataProcessorInvocation invocation) {
+          DataProcessorInvocation invocation) {
     super(strategy);
     this.dataProcessorInvocation = invocation;
   }
-
 
   @Override
   public Tuple2<EventSchema, CustomTransformOutputStrategy> buildFromOneStream(SpDataStream stream) {
@@ -57,20 +56,17 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
 
   @Override
   public Tuple2<EventSchema, CustomTransformOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
-                                                                                SpDataStream stream2) {
+          SpDataStream stream2) {
     return makeTuple(makeRequest());
   }
 
   private EventSchema makeRequest() {
     try {
       String httpRequestBody = JacksonSerializer.getObjectMapper().writeValueAsString(dataProcessorInvocation);
-      String endpointUrl = new ExtensionsServiceEndpointGenerator().getEndpointResourceUrl(
-          dataProcessorInvocation.getAppId(),
-          SpServiceUrlProvider.DATA_PROCESSOR
-      );
-      Response httpResp = Request.Post(endpointUrl + "/output").bodyString(httpRequestBody,
-          ContentType
-              .APPLICATION_JSON).execute();
+      String endpointUrl = new ExtensionsServiceEndpointGenerator()
+              .getEndpointResourceUrl(dataProcessorInvocation.getAppId(), SpServiceUrlProvider.DATA_PROCESSOR);
+      Response httpResp = Request.Post(endpointUrl + "/output")
+              .bodyString(httpRequestBody, ContentType.APPLICATION_JSON).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       e.printStackTrace();
@@ -81,8 +77,6 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
   private EventSchema handleResponse(Response httpResp) throws JsonSyntaxException, IOException {
     String resp = httpResp.returnContent().asString();
 
-    return JacksonSerializer
-        .getObjectMapper()
-        .readValue(resp, EventSchema.class);
+    return JacksonSerializer.getObjectMapper().readValue(resp, EventSchema.class);
   }
 }

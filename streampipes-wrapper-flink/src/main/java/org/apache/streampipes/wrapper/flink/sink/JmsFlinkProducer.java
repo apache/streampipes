@@ -15,18 +15,16 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.flink.sink;
 
 import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.wrapper.flink.serializer.ByteArraySerializer;
 
-import org.apache.flink.configuration.Configuration;
-import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
-
 import java.util.Map;
 
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 
 public class JmsFlinkProducer extends RichSinkFunction<Map<String, Object>> {
 
@@ -40,8 +38,7 @@ public class JmsFlinkProducer extends RichSinkFunction<Map<String, Object>> {
 
   private ActiveMQPublisher publisher;
 
-  public JmsFlinkProducer(JmsTransportProtocol protocol, ByteArraySerializer
-      serializationSchema) {
+  public JmsFlinkProducer(JmsTransportProtocol protocol, ByteArraySerializer serializationSchema) {
     this.protocol = protocol;
     this.serializationSchema = serializationSchema;
   }
@@ -62,5 +59,3 @@ public class JmsFlinkProducer extends RichSinkFunction<Map<String, Object>> {
     publisher.publish(msg);
   }
 }
-
-

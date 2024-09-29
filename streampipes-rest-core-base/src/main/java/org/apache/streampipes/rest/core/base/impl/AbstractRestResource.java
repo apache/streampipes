@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.core.base.impl;
 
 import org.apache.streampipes.model.message.ErrorMessage;
@@ -78,9 +77,7 @@ public class AbstractRestResource extends AbstractSharedRestInterface {
   }
 
   protected ResponseEntity<Message> statusMessage(Message message) {
-    return ResponseEntity
-        .ok()
-        .body(message);
+    return ResponseEntity.ok().body(message);
   }
 
   protected ResponseEntity unauthorized() {

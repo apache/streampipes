@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.export.utils;
+
+import static org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels.GENERIC_STREAM;
 
 import org.apache.streampipes.model.connect.adapter.migration.GenericAdapterConverter;
 import org.apache.streampipes.model.connect.adapter.migration.IAdapterConverter;
@@ -25,8 +26,6 @@ import org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModel
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import static org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels.GENERIC_STREAM;
 
 public class ImportAdapterMigrationUtils {
 

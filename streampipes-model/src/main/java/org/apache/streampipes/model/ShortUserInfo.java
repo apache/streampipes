@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -27,18 +26,14 @@ public class ShortUserInfo {
   private String email;
   private String displayName;
 
-  public static ShortUserInfo create(String principalId,
-                                     String email,
-                                     String displayName) {
+  public static ShortUserInfo create(String principalId, String email, String displayName) {
     return new ShortUserInfo(principalId, email, displayName);
   }
 
   public ShortUserInfo() {
   }
 
-  public ShortUserInfo(String principalId,
-                       String email,
-                       String displayName) {
+  public ShortUserInfo(String principalId, String email, String displayName) {
     this.principalId = principalId;
     this.email = email;
     this.displayName = displayName;

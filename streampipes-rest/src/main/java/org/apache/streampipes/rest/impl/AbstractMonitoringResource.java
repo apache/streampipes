@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;

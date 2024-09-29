@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.smp.constants;
 
 public class PeGridConst {
@@ -36,8 +35,7 @@ public class PeGridConst {
   public static final String PE_CONTAINER_ITEM_HEADER_PE = "pe-container-item-header-pe";
 
   public static final String PE_CONTAINER_ITEM_LABEL = "pe-container-item-label";
-  public static final String PE_CONTAINER_ITEM_LABEL_PROCESSOR = "pe-container-item-label"
-      + "-processor";
+  public static final String PE_CONTAINER_ITEM_LABEL_PROCESSOR = "pe-container-item-label" + "-processor";
   public static final String PE_CONTAINER_ITEM_LABEL_SINK = "pe-container-item-label-sink";
   public static final String PE_CONTAINER_ITEM_LABEL_NAME = "pe-container-item-label-name";
 

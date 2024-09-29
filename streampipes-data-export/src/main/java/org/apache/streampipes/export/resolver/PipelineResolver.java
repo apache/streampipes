@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class PipelineResolver extends AbstractResolver<Pipeline> {
 
@@ -40,9 +39,7 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
     doc.setRunning(false);
     doc.setSepas(doc.getSepas().stream().peek(s -> s.setSelectedEndpointUrl(null)).collect(Collectors.toList()));
     doc.setActions(doc.getActions().stream().peek(s -> s.setSelectedEndpointUrl(null)).collect(Collectors.toList()));
-    doc.setStreams(doc.getStreams()
-        .stream()
-        .collect(Collectors.toList()));
+    doc.setStreams(doc.getStreams().stream().collect(Collectors.toList()));
     return doc;
   }
 
@@ -61,13 +58,11 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
     getNoSqlStore().getPipelineStorageAPI().persist(deserializeDocument(document));
   }
 
-  public void writeDocument(String document,
-                            boolean overrideDocument) throws JsonProcessingException {
+  public void writeDocument(String document, boolean overrideDocument) throws JsonProcessingException {
     var pipeline = deserializeDocument(document);
     if (overrideDocument) {
       pipeline.setSepas(pipeline.getSepas().stream().peek(processor -> {
-        processor.getInputStreams()
-            .forEach(is -> overrideProtocol(is.getEventGrounding()));
+        processor.getInputStreams().forEach(is -> overrideProtocol(is.getEventGrounding()));
         overrideProtocol(processor.getOutputStream().getEventGrounding());
       }).collect(Collectors.toList()));
 
@@ -76,8 +71,7 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
       }).collect(Collectors.toList()));
 
       pipeline.setActions(pipeline.getActions().stream().peek(sink -> {
-        sink.getInputStreams()
-            .forEach(is -> overrideProtocol(is.getEventGrounding()));
+        sink.getInputStreams().forEach(is -> overrideProtocol(is.getEventGrounding()));
       }).collect(Collectors.toList()));
 
     }

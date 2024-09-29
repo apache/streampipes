@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
@@ -23,13 +22,13 @@ import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeoutException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PullAdapterScheduler {
 
@@ -37,8 +36,7 @@ public class PullAdapterScheduler {
 
   private ScheduledExecutorService scheduler;
 
-  public void schedule(IPullAdapter pullAdapter,
-                       String adapterElementId) {
+  public void schedule(IPullAdapter pullAdapter, String adapterElementId) {
     scheduler = Executors.newSingleThreadScheduledExecutor();
     final Runnable task = new Runnable() {
       @Override
@@ -47,25 +45,16 @@ public class PullAdapterScheduler {
           pullAdapter.pullData();
         } catch (ExecutionException | InterruptedException | TimeoutException e) {
           LOG.error("Error while pulling data", e);
-          SpMonitoringManager.INSTANCE.addErrorMessage(
-              adapterElementId,
-              SpLogEntry.from(System.currentTimeMillis(), SpLogMessage.from(e))
-          );
+          SpMonitoringManager.INSTANCE.addErrorMessage(adapterElementId,
+                  SpLogEntry.from(System.currentTimeMillis(), SpLogMessage.from(e)));
         } finally {
-          scheduler.schedule(
-              this,
-              pullAdapter.getPollingInterval().value(),
-              pullAdapter.getPollingInterval().timeUnit()
-          );
+          scheduler.schedule(this, pullAdapter.getPollingInterval().value(),
+                  pullAdapter.getPollingInterval().timeUnit());
         }
       }
     };
 
-    scheduler.schedule(
-        task,
-        pullAdapter.getPollingInterval().value(),
-        pullAdapter.getPollingInterval().timeUnit()
-    );
+    scheduler.schedule(task, pullAdapter.getPollingInterval().value(), pullAdapter.getPollingInterval().timeUnit());
   }
 
   public void shutdown() {

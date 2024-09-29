@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.core.base.impl.converter;
+
+import java.util.List;
 
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import org.springframework.context.annotation.Configuration;
@@ -26,8 +27,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.List;
-
 @Configuration
 public class YamlConfiguration implements WebMvcConfigurer {
   private static final MediaType MEDIA_TYPE_YAML = MediaType.valueOf("application/yaml");
@@ -35,9 +34,8 @@ public class YamlConfiguration implements WebMvcConfigurer {
 
   @Override
   public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-    configurer
-        .mediaType(MEDIA_TYPE_YML.getSubtype(), MEDIA_TYPE_YML)
-        .mediaType(MEDIA_TYPE_YAML.getSubtype(), MEDIA_TYPE_YAML);
+    configurer.mediaType(MEDIA_TYPE_YML.getSubtype(), MEDIA_TYPE_YML).mediaType(MEDIA_TYPE_YAML.getSubtype(),
+            MEDIA_TYPE_YAML);
   }
 
   @Override
@@ -45,12 +43,7 @@ public class YamlConfiguration implements WebMvcConfigurer {
     YAMLMapper yamlMapper = new YAMLMapper();
 
     MappingJackson2HttpMessageConverter yamlConverter = new MappingJackson2HttpMessageConverter(yamlMapper);
-    yamlConverter.setSupportedMediaTypes(
-        List.of(
-            MEDIA_TYPE_YML,
-            MEDIA_TYPE_YAML
-        )
-    );
+    yamlConverter.setSupportedMediaTypes(List.of(MEDIA_TYPE_YML, MEDIA_TYPE_YAML));
     converters.add(yamlConverter);
   }
 }

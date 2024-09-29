@@ -22,8 +22,7 @@ public abstract class SiddhiOutputConfig {
   private SiddhiOutputType siddhiOutputType;
   private boolean outputAllEvents;
 
-  public SiddhiOutputConfig(SiddhiOutputType siddhiOutputType,
-                            boolean outputAllEvents) {
+  public SiddhiOutputConfig(SiddhiOutputType siddhiOutputType, boolean outputAllEvents) {
     this.siddhiOutputType = siddhiOutputType;
     this.outputAllEvents = outputAllEvents;
   }

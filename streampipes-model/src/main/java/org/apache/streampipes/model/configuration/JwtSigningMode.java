@@ -15,10 +15,8 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.configuration;
 
 public enum JwtSigningMode {
-  HMAC,
-  RSA
+  HMAC, RSA
 }

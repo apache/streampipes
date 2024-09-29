@@ -24,7 +24,6 @@ import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 
 public class SpJmsProtocol implements SpProtocolDefinition<JmsTransportProtocol> {
 
-
   @Override
   public EventConsumer getConsumer(JmsTransportProtocol transportProtocol) {
     return new ActiveMQConsumer(transportProtocol);

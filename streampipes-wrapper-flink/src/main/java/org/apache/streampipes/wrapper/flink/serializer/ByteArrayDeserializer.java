@@ -20,10 +20,10 @@ package org.apache.streampipes.wrapper.flink.serializer;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 
-import org.apache.flink.api.common.serialization.AbstractDeserializationSchema;
-
 import java.io.IOException;
 import java.util.Map;
+
+import org.apache.flink.api.common.serialization.AbstractDeserializationSchema;
 
 public class ByteArrayDeserializer extends AbstractDeserializationSchema<Map<String, Object>> {
 
@@ -42,4 +42,3 @@ public class ByteArrayDeserializer extends AbstractDeserializationSchema<Map<Str
     }
   }
 }
-

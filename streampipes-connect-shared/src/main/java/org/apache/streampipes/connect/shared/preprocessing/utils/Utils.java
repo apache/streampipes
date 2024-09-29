@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.utils;
 
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
@@ -47,10 +46,7 @@ public class Utils {
   }
 
   public static List<TransformationRuleDescription> sortByPriority(List<TransformationRuleDescription> rules) {
-    return rules
-        .stream()
-        .sorted(Comparator.comparingInt(TransformationRuleDescription::getRulePriority))
-        .toList();
+    return rules.stream().sorted(Comparator.comparingInt(TransformationRuleDescription::getRulePriority)).toList();
   }
 
 }

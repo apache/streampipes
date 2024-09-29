@@ -35,7 +35,7 @@ public class SpJtsGeoemtryException extends Exception {
   }
 
   public SpJtsGeoemtryException(String message, Throwable cause, boolean enableSuppression,
-                                boolean writableStackTrace) {
+          boolean writableStackTrace) {
     super(message, cause, enableSuppression, writableStackTrace);
   }
 }

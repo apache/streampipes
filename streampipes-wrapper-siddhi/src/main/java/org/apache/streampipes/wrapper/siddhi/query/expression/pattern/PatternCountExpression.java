@@ -34,16 +34,11 @@ public class PatternCountExpression extends Expression {
       countValue = SiddhiConstants.COLON + count;
     }
 
-    this.countString = SiddhiConstants.ANGLE_BRACKET_OPEN
-            + countValue
-            + SiddhiConstants.ANGLE_BRACKET_CLOSE;
+    this.countString = SiddhiConstants.ANGLE_BRACKET_OPEN + countValue + SiddhiConstants.ANGLE_BRACKET_CLOSE;
   }
 
   public PatternCountExpression(Integer minCount, Integer maxCount) {
-    this.countString = SiddhiConstants.ANGLE_BRACKET_OPEN
-            + minCount
-            + SiddhiConstants.COLON
-            + maxCount
+    this.countString = SiddhiConstants.ANGLE_BRACKET_OPEN + minCount + SiddhiConstants.COLON + maxCount
             + SiddhiConstants.ANGLE_BRACKET_CLOSE;
   }
 

@@ -17,10 +17,10 @@
  */
 package org.apache.streampipes.storage.couchdb.dao;
 
-import org.lightcouch.CouchDbClient;
-
 import java.util.List;
 import java.util.function.Supplier;
+
+import org.lightcouch.CouchDbClient;
 
 public class CrudViewDao extends CrudDao {
 
@@ -28,14 +28,7 @@ public class CrudViewDao extends CrudDao {
     super(couchDbClientSupplier);
   }
 
-  public <T> List<T> findByKey(String viewName,
-                               String key,
-                               Class<T> clazz) {
-    return couchDbClientSupplier
-        .get()
-        .view(viewName)
-        .key(key)
-        .includeDocs(true)
-        .query(clazz);
+  public <T> List<T> findByKey(String viewName, String key, Class<T> clazz) {
+    return couchDbClientSupplier.get().view(viewName).key(key).includeDocs(true).query(clazz);
   }
 }

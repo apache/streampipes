@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
@@ -53,28 +52,19 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdm
 
   public RuntimeResolvableResource() {
     super(() -> new WorkerAdministrationManagement(
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-            .getAdapterInstanceStorage(),
-        AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
-        new SpResourceManager().manageAdapters(),
-        new SpResourceManager().manageDataStreams()
-    ));
+            StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics(), new SpResourceManager().manageAdapters(),
+            new SpResourceManager().manageDataStreams()));
     this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
   }
 
-  @PostMapping(
-      path = "{id}/configurations",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "{id}/configurations", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> fetchConfigurations(@PathVariable("id") String appId,
-                                               @RequestBody RuntimeOptionsRequest runtimeOptionsRequest) {
+          @RequestBody RuntimeOptionsRequest runtimeOptionsRequest) {
 
     try {
-      String baseUrl = endpointGenerator.getEndpointBaseUrl(
-          appId,
-          SpServiceUrlProvider.ADAPTER,
-          runtimeOptionsRequest.getDeploymentConfiguration().getDesiredServiceTags()
-      );
+      String baseUrl = endpointGenerator.getEndpointBaseUrl(appId, SpServiceUrlProvider.ADAPTER,
+              runtimeOptionsRequest.getDeploymentConfiguration().getDesiredServiceTags());
       RuntimeOptionsResponse result = WorkerRestClient.getConfiguration(baseUrl, appId, runtimeOptionsRequest);
 
       return ok(result);

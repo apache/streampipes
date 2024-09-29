@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.flink;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
@@ -33,13 +32,11 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FlinkDataSinkRuntime extends FlinkRuntime<
-    IStreamPipesDataSink,
-    DataSinkInvocation,
-    EventSinkRuntimeContext,
-    IDataSinkParameterExtractor,
-    IDataSinkParameters,
-    IDataSinkProgram> implements IDataSinkRuntime {
+public class FlinkDataSinkRuntime
+        extends
+          FlinkRuntime<IStreamPipesDataSink, DataSinkInvocation, EventSinkRuntimeContext, IDataSinkParameterExtractor, IDataSinkParameters, IDataSinkProgram>
+        implements
+          IDataSinkRuntime {
 
   private static final long serialVersionUID = 1L;
   private static final Logger LOG = LoggerFactory.getLogger(FlinkDataSinkRuntime.class);
@@ -48,10 +45,8 @@ public class FlinkDataSinkRuntime extends FlinkRuntime<
     super(new DataSinkContextGenerator(), new DataSinkParameterGenerator());
   }
 
-
   @Override
-  public void appendExecutionConfig(IDataSinkProgram program,
-                                    DataStream<Event>... convertedStream) {
+  public void appendExecutionConfig(IDataSinkProgram program, DataStream<Event>... convertedStream) {
     program.getSink(convertedStream);
 
   }
@@ -61,11 +56,8 @@ public class FlinkDataSinkRuntime extends FlinkRuntime<
     IDataSinkProgram program;
 
     if (pipelineElement instanceof FlinkDataSinkDeclarer<?>) {
-      program = ((FlinkDataSinkDeclarer<?>) pipelineElement)
-          .getProgram(
-              runtimeParameters.getModel(),
-              DataSinkParameterExtractor.from(runtimeParameters.getModel())
-          );
+      program = ((FlinkDataSinkDeclarer<?>) pipelineElement).getProgram(runtimeParameters.getModel(),
+              DataSinkParameterExtractor.from(runtimeParameters.getModel()));
     } else {
       program = new FlinkDataSinkCompatProgram(pipelineElement);
     }

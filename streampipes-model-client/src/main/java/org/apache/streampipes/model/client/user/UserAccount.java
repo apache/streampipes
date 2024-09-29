@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.client.user;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -56,9 +55,7 @@ public class UserAccount extends Principal {
     this.provider = UserAccount.LOCAL;
   }
 
-  public static UserAccount from(String username,
-                                 String encryptedPassword,
-                                 Set<String> roles) {
+  public static UserAccount from(String username, String encryptedPassword, Set<String> roles) {
     UserAccount account = new UserAccount();
     account.setUsername(username);
     account.setPassword(encryptedPassword);

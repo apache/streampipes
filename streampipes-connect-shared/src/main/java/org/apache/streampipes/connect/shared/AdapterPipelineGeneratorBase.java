@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared;
 
 import org.apache.streampipes.connect.shared.preprocessing.elements.AdapterTransformationPipelineElement;
@@ -30,17 +29,11 @@ import java.util.List;
 public class AdapterPipelineGeneratorBase {
 
   public List<IAdapterPipelineElement> makeAdapterPipelineElements(List<TransformationRuleDescription> rules,
-                                                                   boolean includeStateful) {
+          boolean includeStateful) {
     var elements = new ArrayList<IAdapterPipelineElement>();
-    elements.add(new AdapterTransformationPipelineElement(
-        rules,
-        new StatelessTransformationRuleGeneratorVisitor())
-    );
+    elements.add(new AdapterTransformationPipelineElement(rules, new StatelessTransformationRuleGeneratorVisitor()));
     if (includeStateful) {
-      elements.add(new AdapterTransformationPipelineElement(
-          rules,
-          new StatefulTransformationRuleGeneratorVisitor())
-      );
+      elements.add(new AdapterTransformationPipelineElement(rules, new StatefulTransformationRuleGeneratorVisitor()));
     }
     return elements;
   }

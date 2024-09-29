@@ -85,8 +85,7 @@ public class HttpServerProtocol implements StreamPipesAdapter {
     EventPropertyPrimitive primitive = new EventPropertyPrimitive();
     primitive.setRuntimeName(memberExtractor.singleValueParameter(EP_RUNTIME_NAME, String.class));
     primitive.setRuntimeType(extractRuntimeType(memberExtractor.selectedSingleValue(EP_RUNTIME_TYPE, String.class)));
-    primitive
-        .setDomainProperties(Collections
+    primitive.setDomainProperties(Collections
             .singletonList(URI.create(memberExtractor.singleValueParameter(EP_DOMAIN_PROPERTY, String.class))));
     return primitive;
   }
@@ -102,43 +101,39 @@ public class HttpServerProtocol implements StreamPipesAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder
-        .create(ID, 0, HttpServerProtocol::new)
-        .withSupportedParsers(Parsers.defaultParsers())
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withCategory(AdapterType.Generic)
-        .requiredTextParameter(Labels.withId(ENDPOINT_NAME))
-        .requiredAlternatives(Labels.withId(CONFIGURE),
-            Alternatives.from(Labels.withId(MANUALLY),
-                StaticProperties.collection(Labels.withId(EP_CONFIG),
-                    StaticProperties.stringFreeTextProperty(Labels.withId(EP_RUNTIME_NAME)),
-                    StaticProperties.singleValueSelection(Labels.withId(EP_RUNTIME_TYPE),
-                        Options.from("String", "Integer", "Double", "Boolean")),
-                    StaticProperties.stringFreeTextProperty(Labels.withId(EP_DOMAIN_PROPERTY)))),
-            Alternatives.from(Labels.withId(FILE_IMPORT),
-                StaticProperties.fileProperty(Labels.withId(FILE), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)))
-        .buildConfiguration();
+    return AdapterConfigurationBuilder.create(ID, 0, HttpServerProtocol::new)
+            .withSupportedParsers(Parsers.defaultParsers()).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withCategory(AdapterType.Generic)
+            .requiredTextParameter(Labels.withId(ENDPOINT_NAME))
+            .requiredAlternatives(Labels.withId(CONFIGURE),
+                    Alternatives.from(Labels.withId(MANUALLY),
+                            StaticProperties.collection(Labels.withId(EP_CONFIG),
+                                    StaticProperties.stringFreeTextProperty(Labels.withId(EP_RUNTIME_NAME)),
+                                    StaticProperties.singleValueSelection(Labels.withId(EP_RUNTIME_TYPE),
+                                            Options.from("String", "Integer", "Double", "Boolean")),
+                                    StaticProperties.stringFreeTextProperty(Labels.withId(EP_DOMAIN_PROPERTY)))),
+                    Alternatives.from(Labels.withId(FILE_IMPORT), StaticProperties.fileProperty(Labels.withId(FILE),
+                            Filetypes.CSV, Filetypes.JSON, Filetypes.XML)))
+            .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     applyConfiguration(extractor.getStaticPropertyExtractor());
     var processor = new BrokerEventProcessor(extractor.selectedParser(), collector);
     HttpServerAdapterManagement.INSTANCE.addAdapter(this.endpointId, processor);
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
+          throws AdapterException {
     HttpServerAdapterManagement.INSTANCE.removeAdapter(this.endpointId);
   }
 
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor parameterExtractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     IStaticPropertyExtractor propertyExtractor = parameterExtractor.getStaticPropertyExtractor();
     applyConfiguration(propertyExtractor);
     GuessSchemaBuilder schemaBuilder = GuessSchemaBuilder.create();
@@ -148,12 +143,12 @@ public class HttpServerProtocol implements StreamPipesAdapter {
       CollectionStaticProperty sp = (CollectionStaticProperty) propertyExtractor.getStaticPropertyByName(EP_CONFIG);
 
       for (StaticProperty member : sp.getMembers()) {
-        StaticPropertyExtractor memberExtractor =
-            StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
+        StaticPropertyExtractor memberExtractor = StaticPropertyExtractor
+                .from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
         schemaBuilder.property(makeProperty(memberExtractor));
       }
       return schemaBuilder.build();
-    } else if (selectedImportMode.equals(FILE_IMPORT)){
+    } else if (selectedImportMode.equals(FILE_IMPORT)) {
       String fileName = propertyExtractor.selectedFilename(FILE);
       InputStream dataInputStream = this.getDataFromEndpoint(fileName);
 
@@ -162,7 +157,6 @@ public class HttpServerProtocol implements StreamPipesAdapter {
       throw new AdapterException("Unknown import mode selected: " + selectedImportMode);
     }
   }
-
 
   private InputStream getDataFromEndpoint(String fileName) throws ParseException {
     try {

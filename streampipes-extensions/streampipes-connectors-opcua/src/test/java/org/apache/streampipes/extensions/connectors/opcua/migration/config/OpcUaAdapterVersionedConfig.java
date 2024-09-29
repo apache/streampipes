@@ -15,20 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.opcua.migration.config;
-
-import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
-import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.sdk.StaticProperties;
-import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-import org.apache.streampipes.sdk.helpers.Alternatives;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Locales;
-
-import java.util.List;
 
 import static org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter.ID;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ACCESS_MODE;
@@ -49,54 +36,43 @@ import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabe
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME_GROUP;
 
+import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
+import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
+import org.apache.streampipes.sdk.StaticProperties;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.helpers.Alternatives;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+
+import java.util.List;
+
 public class OpcUaAdapterVersionedConfig {
 
-  public static AdapterDescription getOpcUaAdapterDescriptionV1(){
+  public static AdapterDescription getOpcUaAdapterDescriptionV1() {
     var builder = AdapterConfigurationBuilder.create(ID, 1, OpcUaAdapter::new)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
-        .requiredAlternatives(Labels.withId(ADAPTER_TYPE),
-        Alternatives.from(Labels.withId(PULL_MODE),
-          StaticProperties.integerFreeTextProperty(
-            Labels.withId(PULLING_INTERVAL))),
-        Alternatives.from(Labels.withId(SUBSCRIPTION_MODE)));
-    var dependsOn = List.of(
-        ADAPTER_TYPE.name(),
-        ACCESS_MODE.name(),
-        OPC_HOST_OR_URL.name());
-    builder
-        .requiredAlternatives(Labels.withId(ACCESS_MODE),
-        Alternatives.from(Labels.withId(UNAUTHENTICATED)),
-        Alternatives.from(Labels.withId(USERNAME_GROUP),
-          StaticProperties.group(
-            Labels.withId(USERNAME_GROUP),
-            StaticProperties.stringFreeTextProperty(
-              Labels.withId(USERNAME)),
-            StaticProperties.secretValue(Labels.withId(PASSWORD))
-          ))
-      )
-        .requiredAlternatives(Labels.withId(OPC_HOST_OR_URL),
-        Alternatives.from(
-          Labels.withId(OPC_URL),
-          StaticProperties.stringFreeTextProperty(
-            Labels.withId(OPC_SERVER_URL), "opc.tcp://localhost:4840"))
-        ,
-        Alternatives.from(Labels.withId(OPC_HOST),
-          StaticProperties.group(
-            Labels.withId(HOST_PORT),
-            StaticProperties.stringFreeTextProperty(
-              Labels.withId(OPC_SERVER_HOST)),
-            StaticProperties.stringFreeTextProperty(
-              Labels.withId(OPC_SERVER_PORT))
-          ))
-      )
-        .requiredRuntimeResolvableTreeInput(
-          Labels.withId(AVAILABLE_NODES.name()),
-          dependsOn,
-          true,
-          true
-        );
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
+            .requiredAlternatives(Labels.withId(ADAPTER_TYPE),
+                    Alternatives.from(Labels.withId(PULL_MODE),
+                            StaticProperties.integerFreeTextProperty(Labels.withId(PULLING_INTERVAL))),
+                    Alternatives.from(Labels.withId(SUBSCRIPTION_MODE)));
+    var dependsOn = List.of(ADAPTER_TYPE.name(), ACCESS_MODE.name(), OPC_HOST_OR_URL.name());
+    builder.requiredAlternatives(Labels.withId(ACCESS_MODE), Alternatives.from(Labels.withId(UNAUTHENTICATED)),
+            Alternatives.from(Labels.withId(USERNAME_GROUP),
+                    StaticProperties.group(Labels.withId(USERNAME_GROUP),
+                            StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
+                            StaticProperties.secretValue(Labels.withId(PASSWORD)))))
+            .requiredAlternatives(Labels.withId(OPC_HOST_OR_URL),
+                    Alternatives.from(Labels.withId(OPC_URL),
+                            StaticProperties.stringFreeTextProperty(Labels.withId(OPC_SERVER_URL),
+                                    "opc.tcp://localhost:4840")),
+                    Alternatives.from(Labels.withId(OPC_HOST),
+                            StaticProperties.group(Labels.withId(HOST_PORT),
+                                    StaticProperties.stringFreeTextProperty(Labels.withId(OPC_SERVER_HOST)),
+                                    StaticProperties.stringFreeTextProperty(Labels.withId(OPC_SERVER_PORT)))))
+            .requiredRuntimeResolvableTreeInput(Labels.withId(AVAILABLE_NODES.name()), dependsOn, true, true);
     return builder.buildConfiguration().getAdapterDescription();
   }
 }

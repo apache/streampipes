@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.model.SpDataStream;

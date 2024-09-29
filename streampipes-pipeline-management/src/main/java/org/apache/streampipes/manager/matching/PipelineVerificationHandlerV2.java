@@ -57,12 +57,8 @@ public class PipelineVerificationHandlerV2 {
   }
 
   private <T extends InvocableStreamPipesEntity> List<T> filterAndConvert(List<NamedStreamPipesEntity> elements,
-                                                                          Class<T> clazz) {
-    return elements
-        .stream()
-        .filter(clazz::isInstance)
-        .map(clazz::cast)
-        .toList();
+          Class<T> clazz) {
+    return elements.stream().filter(clazz::isInstance).map(clazz::cast).toList();
   }
 
   public List<NamedStreamPipesEntity> verifyAndBuildGraphs(boolean ignoreUnconfigured) {
@@ -91,12 +87,11 @@ public class PipelineVerificationHandlerV2 {
   }
 
   private void applyModificationsForDataProcessor(DataProcessorInvocation pipelineElement,
-                                                  PipelineModification modification) {
+          PipelineModification modification) {
     if (modification.getOutputStream() != null) {
       pipelineElement.setOutputStream(modification.getOutputStream());
       if (pipelineElement.getOutputStream().getEventGrounding() == null) {
-        EventGrounding grounding =
-            new GroundingBuilder(pipelineElement, Collections.emptySet()).getEventGrounding();
+        EventGrounding grounding = new GroundingBuilder(pipelineElement, Collections.emptySet()).getEventGrounding();
         pipelineElement.getOutputStream().setEventGrounding(grounding);
       }
     }
@@ -106,13 +101,12 @@ public class PipelineVerificationHandlerV2 {
   }
 
   private void applyModificationsForInvocable(InvocableStreamPipesEntity pipelineElement,
-                                              PipelineModification modification) {
+          PipelineModification modification) {
     pipelineElement.setInputStreams(modification.getInputStreams());
     pipelineElement.setStaticProperties(modification.getStaticProperties());
   }
 
-  private Optional<PipelineModification> getModification(String id,
-                                                         List<PipelineModification> modifications) {
+  private Optional<PipelineModification> getModification(String id, List<PipelineModification> modifications) {
     return modifications.stream().filter(m -> m.getDomId().equals(id)).findFirst();
   }
 }

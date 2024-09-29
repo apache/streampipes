@@ -21,6 +21,8 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
+import java.util.List;
+
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +31,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/admin/permissions")
@@ -44,12 +44,10 @@ public class PermissionResource extends AbstractAuthGuardedRestResource {
 
   @PutMapping(path = "{permissionId}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public void updatePermission(@PathVariable("permissionId") String permissionId,
-                               @RequestBody Permission permission) {
+  public void updatePermission(@PathVariable("permissionId") String permissionId, @RequestBody Permission permission) {
     if (permissionId.equals(permission.getPermissionId())) {
       getSpResourceManager().managePermissions().update(permission);
     }
   }
-
 
 }

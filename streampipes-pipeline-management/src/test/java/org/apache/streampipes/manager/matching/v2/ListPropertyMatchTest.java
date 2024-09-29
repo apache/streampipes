@@ -15,21 +15,19 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.schema.EventPropertyList;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListPropertyMatchTest {
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
+public class ListPropertyMatchTest {
 
   @Test
   public void matchSameDomainProperty() {

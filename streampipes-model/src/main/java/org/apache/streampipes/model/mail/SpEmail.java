@@ -29,26 +29,18 @@ public class SpEmail {
   public SpEmail() {
   }
 
-  public SpEmail(List<String> recipients,
-                 String subject,
-                 String preheader,
-                 String message) {
+  public SpEmail(List<String> recipients, String subject, String preheader, String message) {
     this.recipients = recipients;
     this.subject = subject;
     this.preheader = preheader;
     this.message = message;
   }
 
-  public static SpEmail from(List<String> recipients,
-                             String subject,
-                             String message) {
+  public static SpEmail from(List<String> recipients, String subject, String message) {
     return new SpEmail(recipients, subject, "", message);
   }
 
-  public static SpEmail from(List<String> recipients,
-                             String subject,
-                             String preheader,
-                             String message) {
+  public static SpEmail from(List<String> recipients, String subject, String preheader, String message) {
     return new SpEmail(recipients, subject, preheader, message);
   }
 

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -30,17 +29,17 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.wrapper.context.generator.DataSinkContextGenerator;
 import org.apache.streampipes.wrapper.params.generator.DataSinkParameterGenerator;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
-public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime<
-    IStreamPipesDataSink,
-    DataSinkInvocation,
-    EventSinkRuntimeContext,
-    IDataSinkParameterExtractor,
-    IDataSinkParameters> implements IDataSinkRuntime, RawDataProcessor {
+public class StandaloneEventSinkRuntime
+        extends
+          StandalonePipelineElementRuntime<IStreamPipesDataSink, DataSinkInvocation, EventSinkRuntimeContext, IDataSinkParameterExtractor, IDataSinkParameters>
+        implements
+          IDataSinkRuntime,
+          RawDataProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneEventSinkRuntime.class);
 

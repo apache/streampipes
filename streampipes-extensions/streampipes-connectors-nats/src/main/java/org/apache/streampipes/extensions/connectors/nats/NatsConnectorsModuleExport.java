@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.nats;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -31,16 +30,12 @@ import java.util.List;
 public class NatsConnectorsModuleExport implements IExtensionModuleExport {
   @Override
   public List<StreamPipesAdapter> adapters() {
-    return List.of(
-        new NatsProtocol()
-    );
+    return List.of(new NatsProtocol());
   }
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new NatsSink()
-    );
+    return List.of(new NatsSink());
   }
 
   @Override

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.rules;
 
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
@@ -37,22 +36,17 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @TsModel
-@JsonSubTypes({
-    @JsonSubTypes.Type(AddTimestampRuleDescription.class),
+@JsonSubTypes({@JsonSubTypes.Type(AddTimestampRuleDescription.class),
     @JsonSubTypes.Type(AddValueTransformationRuleDescription.class),
     @JsonSubTypes.Type(TimestampTranfsformationRuleDescription.class),
     @JsonSubTypes.Type(UnitTransformRuleDescription.class),
     @JsonSubTypes.Type(EventRateTransformationRuleDescription.class),
     @JsonSubTypes.Type(RemoveDuplicatesTransformationRuleDescription.class),
-    @JsonSubTypes.Type(CreateNestedRuleDescription.class),
-    @JsonSubTypes.Type(DeleteRuleDescription.class),
-    @JsonSubTypes.Type(RenameRuleDescription.class),
-    @JsonSubTypes.Type(MoveRuleDescription.class),
+    @JsonSubTypes.Type(CreateNestedRuleDescription.class), @JsonSubTypes.Type(DeleteRuleDescription.class),
+    @JsonSubTypes.Type(RenameRuleDescription.class), @JsonSubTypes.Type(MoveRuleDescription.class),
     @JsonSubTypes.Type(ChangeDatatypeTransformationRuleDescription.class),
-    @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),
-})
+    @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),})
 public abstract class TransformationRuleDescription {
-
 
   public TransformationRuleDescription() {
     super();

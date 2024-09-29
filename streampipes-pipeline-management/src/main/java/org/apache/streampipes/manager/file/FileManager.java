@@ -23,8 +23,6 @@ import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.apache.commons.io.input.BOMInputStream;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,25 +30,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.input.BOMInputStream;
+
 public class FileManager {
 
   private final CRUDStorage<FileMetadata> fileMetadataStorage;
   private final FileHandler fileHandler;
   private final FileHasher fileHasher;
 
-  public FileManager(CRUDStorage<FileMetadata> fileMetadataStorage,
-                     FileHandler fileHandler,
-                     FileHasher fileHasher) {
+  public FileManager(CRUDStorage<FileMetadata> fileMetadataStorage, FileHandler fileHandler, FileHasher fileHasher) {
     this.fileMetadataStorage = fileMetadataStorage;
     this.fileHandler = fileHandler;
     this.fileHasher = fileHasher;
   }
 
   public FileManager() {
-    this.fileMetadataStorage = StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getFileMetadataStorage();
+    this.fileMetadataStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getFileMetadataStorage();
     this.fileHandler = new FileHandler();
     this.fileHasher = new FileHasher();
   }
@@ -69,17 +64,17 @@ public class FileManager {
   }
 
   /**
-   * Store a file in the internal file storage.
-   * For csv files the bom is removed
+   * Store a file in the internal file storage. For csv files the bom is removed
    *
-   * @param user who created the file
-   * @param filename name of file
-   * @param fileInputStream content of file
+   * @param user
+   *          who created the file
+   * @param filename
+   *          name of file
+   * @param fileInputStream
+   *          content of file
    * @return metadata of file
    */
-  public FileMetadata storeFile(String user,
-                                       String filename,
-                                       InputStream fileInputStream) throws IOException {
+  public FileMetadata storeFile(String user, String filename, InputStream fileInputStream) throws IOException {
 
     var filetype = filename.substring(filename.lastIndexOf(".") + 1);
 
@@ -92,7 +87,6 @@ public class FileManager {
     return makeAndStoreFileMetadata(user, sanitizedFilename, filetype);
   }
 
-
   public void deleteFile(String id) {
     var fileMetadata = fileMetadataStorage.getElementById(id);
     if (fileMetadata != null) {
@@ -101,9 +95,7 @@ public class FileManager {
     }
   }
 
-  private InputStream validateFileNameAndCleanFile(String filename,
-                                                  String filetype,
-                                                  InputStream fileInputStream) {
+  private InputStream validateFileNameAndCleanFile(String filename, String filetype, InputStream fileInputStream) {
     if (!validateFileType(filename)) {
       throw new IllegalArgumentException("Filetype for file %s not allowed".formatted(filename));
     }
@@ -114,8 +106,10 @@ public class FileManager {
   /**
    * Remove Byte Order Mark (BOM) from csv files
    *
-   * @param fileInputStream content of file
-   * @param filetype file of type
+   * @param fileInputStream
+   *          content of file
+   * @param filetype
+   *          file of type
    * @return input stream without BOM
    */
   protected InputStream cleanFile(InputStream fileInputStream, String filetype) {
@@ -136,27 +130,21 @@ public class FileManager {
   }
 
   public boolean validateFileType(String filename) {
-    return Filetypes.getAllFileExtensions()
-                    .stream()
-                    .anyMatch(filename::endsWith);
+    return Filetypes.getAllFileExtensions().stream().anyMatch(filename::endsWith);
   }
 
   protected void writeToFile(String sanitizedFilename, InputStream fileInputStream) throws IOException {
     fileHandler.storeFile(sanitizedFilename, fileInputStream);
   }
 
-  protected FileMetadata makeAndStoreFileMetadata(String user,
-                                                       String sanitizedFilename,
-                                                       String filetype) {
+  protected FileMetadata makeAndStoreFileMetadata(String user, String sanitizedFilename, String filetype) {
     var fileMetadata = makeFileMetadata(user, sanitizedFilename, filetype);
     storeFileMetadata(fileMetadata);
 
     return fileMetadata;
   }
 
-  private FileMetadata makeFileMetadata(String user,
-                                               String filename,
-                                               String filetype) {
+  private FileMetadata makeFileMetadata(String user, String filename, String filetype) {
 
     FileMetadata fileMetadata = new FileMetadata();
     fileMetadata.setCreatedAt(System.currentTimeMillis());
@@ -171,14 +159,10 @@ public class FileManager {
     fileMetadataStorage.persist(fileMetadata);
   }
 
-
   private List<FileMetadata> filterFiletypes(List<FileMetadata> allFiles, String filetypes) {
-    return allFiles
-        .stream()
-        .filter(fileMetadata -> Arrays
-            .stream(filetypes.split(","))
-            .anyMatch(ft -> ft.equals(fileMetadata.getFiletype())))
-        .collect(Collectors.toList());
+    return allFiles.stream().filter(
+            fileMetadata -> Arrays.stream(filetypes.split(",")).anyMatch(ft -> ft.equals(fileMetadata.getFiletype())))
+            .collect(Collectors.toList());
   }
 
 }

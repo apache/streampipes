@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -28,8 +27,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractPipelineElementBuilder<X extends AbstractPipelineElementBuilder<X, T>,
-    T extends NamedStreamPipesEntity> {
+public abstract class AbstractPipelineElementBuilder<X extends AbstractPipelineElementBuilder<X, T>, T extends NamedStreamPipesEntity> {
 
   protected T elementDescription;
 
@@ -53,10 +51,8 @@ public abstract class AbstractPipelineElementBuilder<X extends AbstractPipelineE
 
   public X withLocales(Locales... locales) {
     this.elementDescription.setIncludesLocales(true);
-    this.elementDescription.setIncludedLocales(Stream
-        .of(locales)
-        .map(Locales::toFilename)
-        .collect(Collectors.toList()));
+    this.elementDescription
+            .setIncludedLocales(Stream.of(locales).map(Locales::toFilename).collect(Collectors.toList()));
 
     return me();
   }

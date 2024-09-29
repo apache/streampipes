@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.configuration;
 
 import org.apache.streampipes.commons.environment.Environment;
@@ -41,13 +40,11 @@ public class DefaultSpCoreConfiguration {
   }
 
   private String makeAssetLocation() {
-    return makeStreamPipesHomeLocation()
-        + "assets";
+    return makeStreamPipesHomeLocation() + "assets";
   }
 
   private String makeFileLocation() {
-    return makeStreamPipesHomeLocation()
-        + "files";
+    return makeStreamPipesHomeLocation() + "files";
   }
 
   private String makeStreamPipesHomeLocation() {

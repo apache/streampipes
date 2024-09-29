@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.datalake;
 
 import org.apache.streampipes.model.dashboard.DashboardEntity;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class DataExplorerWidgetModel extends DashboardEntity {
 
@@ -45,7 +44,6 @@ public class DataExplorerWidgetModel extends DashboardEntity {
 
   private String pipelineId;
   private String measureName;
-
 
   public DataExplorerWidgetModel() {
     super();

@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("unchecked")
 public class CreateNestedTransformationRuleTest {
@@ -33,25 +32,20 @@ public class CreateNestedTransformationRuleTest {
   public void transformSimple() {
     Map<String, Object> event = new HashMap<>();
 
-
     List<String> key = new ArrayList<>();
     key.add("key");
     CreateNestedTransformationRule createNested = new CreateNestedTransformationRule(key);
 
     Map<String, Object> result = createNested.apply(event);
 
-    Assertions.assertEquals(1,
-                            result.keySet().size());
-    Assertions.assertEquals(0,
-                            ((Map<String, Object>) result.get("key")).keySet().size());
+    Assertions.assertEquals(1, result.keySet().size());
+    Assertions.assertEquals(0, ((Map<String, Object>) result.get("key")).keySet().size());
   }
-
 
   @Test
   public void transformNested() {
     Map<String, Object> event = new HashMap<>();
     event.put("parent", new HashMap<>());
-
 
     List<String> key = new ArrayList<>();
     key.add("parent");
@@ -61,11 +55,9 @@ public class CreateNestedTransformationRuleTest {
 
     Map<String, Object> result = createNested.apply(event);
 
-    Assertions.assertEquals(1,
-                            result.keySet().size());
-    Assertions.assertEquals(1,
-                            ((Map<String, Object>) result.get("parent")).keySet().size());
+    Assertions.assertEquals(1, result.keySet().size());
+    Assertions.assertEquals(1, ((Map<String, Object>) result.get("parent")).keySet().size());
     Assertions.assertEquals(0,
-                            (((Map<String, Object>) ((Map<String, Object>) result.get("parent")).get("child")).keySet().size()));
+            (((Map<String, Object>) ((Map<String, Object>) result.get("parent")).get("child")).keySet().size()));
   }
 }

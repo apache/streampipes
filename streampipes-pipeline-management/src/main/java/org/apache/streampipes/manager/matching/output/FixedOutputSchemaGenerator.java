@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.output;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -46,8 +45,7 @@ public class FixedOutputSchemaGenerator extends OutputSchemaGenerator<FixedOutpu
   }
 
   @Override
-  public Tuple2<EventSchema, FixedOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
-                                                                      SpDataStream stream2) {
+  public Tuple2<EventSchema, FixedOutputStrategy> buildFromTwoStreams(SpDataStream stream1, SpDataStream stream2) {
     return buildFromOneStream(stream1);
   }
 }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
 import org.apache.streampipes.connect.shared.preprocessing.SupportsNestedTransformationRule;

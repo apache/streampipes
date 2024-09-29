@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -26,11 +25,11 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 public class AdapterMigrationManager extends AbstractMigrationManager implements IMigrationHandler {
 
@@ -39,19 +38,17 @@ public class AdapterMigrationManager extends AbstractMigrationManager implements
   private final IAdapterStorage adapterStorage;
   private final IAdapterStorage adapterDescriptionStorage;
 
-  public AdapterMigrationManager(IAdapterStorage adapterStorage,
-                                 IAdapterStorage adapterDescriptionStorage) {
+  public AdapterMigrationManager(IAdapterStorage adapterStorage, IAdapterStorage adapterDescriptionStorage) {
     this.adapterStorage = adapterStorage;
     this.adapterDescriptionStorage = adapterDescriptionStorage;
   }
 
   @Override
   public void handleMigrations(SpServiceRegistration extensionsServiceConfig,
-                               List<ModelMigratorConfig> migrationConfigs) {
+          List<ModelMigratorConfig> migrationConfigs) {
 
-    LOG.info("Received {} migrations from extension service {}.",
-        migrationConfigs.size(),
-        extensionsServiceConfig.getServiceUrl());
+    LOG.info("Received {} migrations from extension service {}.", migrationConfigs.size(),
+            extensionsServiceConfig.getServiceUrl());
     LOG.info("Updating adapter descriptions by replacement...");
     updateDescriptions(migrationConfigs, extensionsServiceConfig.getServiceUrl());
     LOG.info("Adapter descriptions are up to date.");
@@ -68,33 +65,21 @@ public class AdapterMigrationManager extends AbstractMigrationManager implements
 
         if (adapterVersion == migrationConfig.fromVersion()) {
           LOG.info("Migration is required for adapter '{}'. Migrating from version '{}' to '{}' ...",
-              adapterDescription.getElementId(),
-              adapterVersion, migrationConfig.toVersion()
-          );
+                  adapterDescription.getElementId(), adapterVersion, migrationConfig.toVersion());
 
-          var migrationResult = performMigration(
-              adapterDescription,
-              migrationConfig,
-              String.format("%s/%s/adapter",
-                  extensionsServiceConfig.getServiceUrl(),
-                  MIGRATION_ENDPOINT
-              )
-          );
+          var migrationResult = performMigration(adapterDescription, migrationConfig,
+                  String.format("%s/%s/adapter", extensionsServiceConfig.getServiceUrl(), MIGRATION_ENDPOINT));
 
           if (migrationResult.success()) {
             LOG.info("Migration successfully performed by extensions service. Updating adapter description ...");
-            LOG.debug(
-                "Migration was performed by extensions service '{}'",
-                extensionsServiceConfig.getServiceUrl());
+            LOG.debug("Migration was performed by extensions service '{}'", extensionsServiceConfig.getServiceUrl());
 
             adapterStorage.updateElement(migrationResult.element());
             LOG.info("Adapter description is updated - Migration successfully completed at Core.");
           } else {
             LOG.error("Migration failed with the following reason: {}", migrationResult.message());
-            LOG.error(
-                "Migration for adapter '{}' failed - Stopping adapter ...",
-                migrationResult.element().getElementId()
-            );
+            LOG.error("Migration for adapter '{}' failed - Stopping adapter ...",
+                    migrationResult.element().getElementId());
             try {
               WorkerRestClient.stopStreamAdapter(extensionsServiceConfig.getServiceUrl(), adapterDescription);
             } catch (AdapterException e) {
@@ -104,12 +89,9 @@ public class AdapterMigrationManager extends AbstractMigrationManager implements
           }
         } else {
           LOG.info(
-              "Migration is not applicable for adapter '{}' because of a version mismatch - "
-                  + "adapter version: '{}',  migration starts at: '{}'",
-              adapterDescription.getElementId(),
-              adapterVersion,
-              migrationConfig.fromVersion()
-          );
+                  "Migration is not applicable for adapter '{}' because of a version mismatch - "
+                          + "adapter version: '{}',  migration starts at: '{}'",
+                  adapterDescription.getElementId(), adapterVersion, migrationConfig.fromVersion());
         }
       }
     }

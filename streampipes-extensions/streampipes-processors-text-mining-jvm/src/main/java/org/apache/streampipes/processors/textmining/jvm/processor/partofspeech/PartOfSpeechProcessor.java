@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.textmining.jvm.processor.partofspeech;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -38,12 +37,12 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-import opennlp.tools.postag.POSModel;
-import opennlp.tools.postag.POSTaggerME;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import opennlp.tools.postag.POSModel;
+import opennlp.tools.postag.POSTaggerME;
 
 public class PartOfSpeechProcessor extends StreamPipesDataProcessor {
 
@@ -57,35 +56,24 @@ public class PartOfSpeechProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.textmining.jvm.partofspeech", 0)
-        .category(DataProcessorType.ENRICH_TEXT)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredFile(Labels.withId(BINARY_FILE_KEY))
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.listRequirement(Datatypes.String),
-                Labels.withId(DETECTION_FIELD_KEY),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.listDoubleEp(
-                Labels.withId(CONFIDENCE_KEY),
-                CONFIDENCE_KEY,
-                "http://schema.org/ItemList"),
-            EpProperties.listStringEp(
-                Labels.withId(TAG_KEY),
-                TAG_KEY,
-                "http://schema.org/ItemList")))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.partofspeech", 0)
+            .category(DataProcessorType.ENRICH_TEXT)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .requiredFile(Labels.withId(BINARY_FILE_KEY))
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(Datatypes.String),
+                            Labels.withId(DETECTION_FIELD_KEY), PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies.append(
+                    EpProperties.listDoubleEp(Labels.withId(CONFIDENCE_KEY), CONFIDENCE_KEY,
+                            "http://schema.org/ItemList"),
+                    EpProperties.listStringEp(Labels.withId(TAG_KEY), TAG_KEY, "http://schema.org/ItemList")))
+            .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     String filename = parameters.extractor().selectedFilename(BINARY_FILE_KEY);
     byte[] fileContent = runtimeContext.getStreamPipesClient().fileApi().getFileContent(filename);
     this.detection = parameters.extractor().mappingPropertyValue(DETECTION_FIELD_KEY);
@@ -107,7 +95,6 @@ public class PartOfSpeechProcessor extends StreamPipesDataProcessor {
 
     String[] tags = posTagger.tag(text.castItems(String.class).toArray(String[]::new));
     double[] confidence = posTagger.probs();
-
 
     event.addField(PartOfSpeechProcessor.CONFIDENCE_KEY, confidence);
     event.addField(PartOfSpeechProcessor.TAG_KEY, tags);

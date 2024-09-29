@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.opcua.sink;
 
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
@@ -27,10 +26,8 @@ public final class OpcUaParameters {
 
   private final OpcUaConfig config;
 
-  public OpcUaParameters(OpcUaConfig config,
-                         String mappingPropertySelector,
-                         String mappingPropertyType,
-                         String selectedNode) {
+  public OpcUaParameters(OpcUaConfig config, String mappingPropertySelector, String mappingPropertyType,
+          String selectedNode) {
     this.config = config;
     this.mappingPropertySelector = mappingPropertySelector;
     this.mappingPropertyType = mappingPropertyType;

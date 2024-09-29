@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.resource.management.secret;
 
-
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
 public class SecretDecrypter implements ISecretHandler {

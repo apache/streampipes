@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.iiot.adapters.oi4;
 
 public class OI4AdapterLabels {

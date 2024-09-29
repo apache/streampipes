@@ -22,8 +22,9 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-public class DataProcessorResourceManager extends
-    AbstractPipelineElementResourceManager<IDataProcessorStorage, DataProcessorDescription, DataProcessorInvocation> {
+public class DataProcessorResourceManager
+        extends
+          AbstractPipelineElementResourceManager<IDataProcessorStorage, DataProcessorDescription, DataProcessorInvocation> {
 
   public DataProcessorResourceManager() {
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataProcessorStorage());

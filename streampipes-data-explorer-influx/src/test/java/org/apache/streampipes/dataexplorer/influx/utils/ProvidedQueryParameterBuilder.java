@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx.utils;
 
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;

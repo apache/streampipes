@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.kafka;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -31,16 +30,12 @@ import java.util.List;
 public class KafkaConnectorsModuleExport implements IExtensionModuleExport {
   @Override
   public List<StreamPipesAdapter> adapters() {
-    return List.of(
-        new KafkaProtocol()
-    );
+    return List.of(new KafkaProtocol());
   }
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new KafkaPublishSink()
-    );
+    return List.of(new KafkaPublishSink());
   }
 
   @Override

@@ -28,14 +28,11 @@ public class ElementIdGenerator {
   }
 
   public static String makeElementId(Class<?> clazz) {
-    return makeFixedElementId(clazz)
-        + ":"
-        + RandomStringUtils.randomAlphabetic(6);
+    return makeFixedElementId(clazz) + ":" + RandomStringUtils.randomAlphabetic(6);
   }
 
   public static String makeFixedElementId(Class<?> clazz) {
-    return prefix
-        + clazz.getSimpleName().toLowerCase();
+    return prefix + clazz.getSimpleName().toLowerCase();
   }
 
   public static String makeElementIdFromAppId(String appId) {

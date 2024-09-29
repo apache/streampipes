@@ -22,7 +22,8 @@ import org.apache.streampipes.storage.api.IDataStreamStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class DataStreamResourceManager
-    extends AbstractPipelineElementResourceManager<IDataStreamStorage, SpDataStream, SpDataStream> {
+        extends
+          AbstractPipelineElementResourceManager<IDataStreamStorage, SpDataStream, SpDataStream> {
 
   public DataStreamResourceManager(IDataStreamStorage db) {
     super(db);

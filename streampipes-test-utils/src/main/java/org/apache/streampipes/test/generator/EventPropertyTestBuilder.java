@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.test.generator;
 
 import org.apache.streampipes.model.schema.EventProperty;
 
-public abstract  class EventPropertyTestBuilder<T extends EventProperty, K extends EventPropertyTestBuilder> {
+public abstract class EventPropertyTestBuilder<T extends EventProperty, K extends EventPropertyTestBuilder> {
 
   protected T eventProperty;
 

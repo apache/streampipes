@@ -44,12 +44,10 @@ public class AssetExtractor {
   }
 
   private String makeAssetLocation(String appId) {
-    return AssetConstants.ASSET_BASE_DIR
-        + File.separator + appId;
+    return AssetConstants.ASSET_BASE_DIR + File.separator + appId;
   }
 
   private String makeDocumentationAssetPath(String appId) {
-    return makeAssetLocation(appId) + File.separator + GlobalStreamPipesConstants
-        .STD_DOCUMENTATION_NAME;
+    return makeAssetLocation(appId) + File.separator + GlobalStreamPipesConstants.STD_DOCUMENTATION_NAME;
   }
 }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution.task;
 
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
@@ -27,6 +26,5 @@ public interface PipelineExecutionTask {
     return true;
   }
 
-  void executeTask(Pipeline pipeline,
-                   PipelineExecutionInfo executionInfo);
+  void executeTask(Pipeline pipeline, PipelineExecutionInfo executionInfo);
 }

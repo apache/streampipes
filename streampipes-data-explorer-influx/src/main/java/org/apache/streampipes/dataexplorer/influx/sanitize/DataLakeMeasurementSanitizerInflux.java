@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx.sanitize;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
@@ -24,10 +23,7 @@ import org.apache.streampipes.dataexplorer.DataLakeMeasurementSanitizer;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
 public class DataLakeMeasurementSanitizerInflux extends DataLakeMeasurementSanitizer {
-  public DataLakeMeasurementSanitizerInflux(
-    IStreamPipesClient client,
-    DataLakeMeasure measure
-  ) {
+  public DataLakeMeasurementSanitizerInflux(IStreamPipesClient client, DataLakeMeasure measure) {
     super(client, measure);
   }
 
@@ -37,8 +33,7 @@ public class DataLakeMeasurementSanitizerInflux extends DataLakeMeasurementSanit
     measure.setMeasureName(new MeasureNameSanitizer().sanitize(measure.getMeasureName()));
 
     // Removes all spaces with _ and validates that no special terms are used as runtime names
-    measure.getEventSchema()
-           .getEventProperties()
-           .forEach(ep -> ep.setRuntimeName(InfluxNameSanitizer.renameReservedKeywords(ep.getRuntimeName())));
+    measure.getEventSchema().getEventProperties()
+            .forEach(ep -> ep.setRuntimeName(InfluxNameSanitizer.renameReservedKeywords(ep.getRuntimeName())));
   }
 }

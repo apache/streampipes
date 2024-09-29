@@ -15,20 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.rules.value;
 
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
-@JsonSubTypes({
-    @JsonSubTypes.Type(AddTimestampRuleDescription.class),
+@JsonSubTypes({@JsonSubTypes.Type(AddTimestampRuleDescription.class),
     @JsonSubTypes.Type(AddValueTransformationRuleDescription.class),
     @JsonSubTypes.Type(TimestampTranfsformationRuleDescription.class),
     @JsonSubTypes.Type(UnitTransformRuleDescription.class),
-    @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),
-})
+    @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),})
 public abstract class ValueTransformationRuleDescription extends TransformationRuleDescription {
 
   public ValueTransformationRuleDescription() {

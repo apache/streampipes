@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.hasher.algorithm;
 
 import org.apache.commons.codec.digest.DigestUtils;

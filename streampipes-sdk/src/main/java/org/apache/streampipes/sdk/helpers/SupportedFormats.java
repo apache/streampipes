@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.helpers;
 
 import org.apache.streampipes.model.grounding.TransportFormat;
@@ -47,8 +46,7 @@ public class SupportedFormats {
   }
 
   /**
-   * Defines that a pipeline element (data processor or data sink) supports processing messaging
-   * arriving in Cbor format
+   * Defines that a pipeline element (data processor or data sink) supports processing messaging arriving in Cbor format
    *
    * @return The resulting {@link org.apache.streampipes.model.grounding.TransportFormat}.
    */
@@ -57,8 +55,8 @@ public class SupportedFormats {
   }
 
   /**
-   * Defines that a pipeline element (data processor or data sink) supports processing messaging
-   * arriving in fast-serialization format
+   * Defines that a pipeline element (data processor or data sink) supports processing messaging arriving in
+   * fast-serialization format
    *
    * @return The resulting {@link org.apache.streampipes.model.grounding.TransportFormat}.
    */
@@ -67,8 +65,8 @@ public class SupportedFormats {
   }
 
   /**
-   * Defines that a pipeline element (data processor or data sink) supports processing messaging
-   * arriving in smile format
+   * Defines that a pipeline element (data processor or data sink) supports processing messaging arriving in smile
+   * format
    *
    * @return The resulting {@link org.apache.streampipes.model.grounding.TransportFormat}.
    */

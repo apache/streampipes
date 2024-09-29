@@ -15,17 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.staticmetadata;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 
 public class StaticMetaDataEnrichmentProcessorTest {
 
@@ -38,66 +36,45 @@ public class StaticMetaDataEnrichmentProcessorTest {
 
   @Test
   public void transformToStreamPipesDataTypeForValidOption() {
-    assertEquals(
-        Datatypes.Boolean,
-        processor.transformToStreamPipesDataType(StaticMetaDataEnrichmentProcessor.OPTION_BOOL)
-    );
-    assertEquals(
-        Datatypes.String,
-        processor.transformToStreamPipesDataType(StaticMetaDataEnrichmentProcessor.OPTION_STRING)
-    );
-    assertEquals(
-        Datatypes.Float,
-        processor.transformToStreamPipesDataType(StaticMetaDataEnrichmentProcessor.OPTION_FLOAT)
-    );
-    assertEquals(
-        Datatypes.Integer,
-        processor.transformToStreamPipesDataType(StaticMetaDataEnrichmentProcessor.OPTION_INTEGER)
-    );
+    assertEquals(Datatypes.Boolean,
+            processor.transformToStreamPipesDataType(StaticMetaDataEnrichmentProcessor.OPTION_BOOL));
+    assertEquals(Datatypes.String,
+            processor.transformToStreamPipesDataType(StaticMetaDataEnrichmentProcessor.OPTION_STRING));
+    assertEquals(Datatypes.Float,
+            processor.transformToStreamPipesDataType(StaticMetaDataEnrichmentProcessor.OPTION_FLOAT));
+    assertEquals(Datatypes.Integer,
+            processor.transformToStreamPipesDataType(StaticMetaDataEnrichmentProcessor.OPTION_INTEGER));
   }
 
   @Test
   public void transformToStreamPipesDataTypeForInvalidOption() {
-    assertThrows(IllegalArgumentException.class, () ->
-        processor.transformToStreamPipesDataType("InvalidOption"));
+    assertThrows(IllegalArgumentException.class, () -> processor.transformToStreamPipesDataType("InvalidOption"));
   }
 
   @Test
   public void castValueOfMetaDataConfigurationBoolean() {
-    var config = getSampleMetaDataConfiguration(
-        "true",
-        StaticMetaDataEnrichmentProcessor.OPTION_BOOL
-    );
+    var config = getSampleMetaDataConfiguration("true", StaticMetaDataEnrichmentProcessor.OPTION_BOOL);
 
     assertEquals(true, processor.castValueOfMetaDataConfiguration(config));
   }
 
   @Test
   public void castValueOfMetaDataConfigurationFloat() {
-    var config = getSampleMetaDataConfiguration(
-        "1.23",
-        StaticMetaDataEnrichmentProcessor.OPTION_FLOAT
-    );
+    var config = getSampleMetaDataConfiguration("1.23", StaticMetaDataEnrichmentProcessor.OPTION_FLOAT);
 
     assertEquals(1.23f, processor.castValueOfMetaDataConfiguration(config));
   }
 
   @Test
   public void castValueOfMetaDataConfigurationInteger() {
-    var config = getSampleMetaDataConfiguration(
-        "123",
-        StaticMetaDataEnrichmentProcessor.OPTION_INTEGER
-    );
+    var config = getSampleMetaDataConfiguration("123", StaticMetaDataEnrichmentProcessor.OPTION_INTEGER);
 
     assertEquals(123, processor.castValueOfMetaDataConfiguration(config));
   }
 
   @Test
   public void castValueOfMetaDataConfigurationString() {
-    var config = getSampleMetaDataConfiguration(
-        "test",
-        StaticMetaDataEnrichmentProcessor.OPTION_STRING
-    );
+    var config = getSampleMetaDataConfiguration("test", StaticMetaDataEnrichmentProcessor.OPTION_STRING);
 
     assertEquals("test", processor.castValueOfMetaDataConfiguration(config));
   }
@@ -109,9 +86,7 @@ public class StaticMetaDataEnrichmentProcessorTest {
     assertEquals("default", processor.castValueOfMetaDataConfiguration(config));
   }
 
-  private static StaticMetaDataConfiguration getSampleMetaDataConfiguration(
-      String value, String dataType
-  ) {
+  private static StaticMetaDataConfiguration getSampleMetaDataConfiguration(String value, String dataType) {
     return new StaticMetaDataConfiguration("runtimeName", value, dataType);
   }
 

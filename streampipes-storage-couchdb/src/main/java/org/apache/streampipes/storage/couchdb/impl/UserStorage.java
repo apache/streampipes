@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.client.user.Principal;
@@ -25,18 +24,17 @@ import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.dao.CrudViewDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.http.client.methods.HttpGet;
 import org.lightcouch.NoDocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
- * User Storage.
- * Handles operations on user including user-specified pipelines.
+ * User Storage. Handles operations on user including user-specified pipelines.
  */
 public class UserStorage extends CrudViewDao implements IUserStorage {
 
@@ -54,20 +52,14 @@ public class UserStorage extends CrudViewDao implements IUserStorage {
 
   @Override
   public List<UserAccount> getAllUserAccounts() {
-    return getAllUsers()
-        .stream()
-        .filter(u -> u instanceof UserAccount)
-        .map(u -> (UserAccount) u)
-        .collect(Collectors.toList());
+    return getAllUsers().stream().filter(u -> u instanceof UserAccount).map(u -> (UserAccount) u)
+            .collect(Collectors.toList());
   }
 
   @Override
   public List<ServiceAccount> getAllServiceAccounts() {
-    return getAllUsers()
-        .stream()
-        .filter(u -> u instanceof ServiceAccount)
-        .map(u -> (ServiceAccount) u)
-        .collect(Collectors.toList());
+    return getAllUsers().stream().filter(u -> u instanceof ServiceAccount).map(u -> (ServiceAccount) u)
+            .collect(Collectors.toList());
   }
 
   @Override

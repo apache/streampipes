@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.core.base.impl;
+
+import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,8 +27,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-
 public interface CRUDResource<T, ReT> {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,10 +35,7 @@ public interface CRUDResource<T, ReT> {
   @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   T findById(@PathVariable("id") String id);
 
-  @PostMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   void create(@RequestBody T entity);
 
   @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

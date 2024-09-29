@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
@@ -23,20 +22,22 @@ import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
-public interface IModelMigrator<
-        T extends VersionedNamedStreamPipesEntity,
-        ExT extends IParameterExtractor
-        > extends Comparable<Object> {
+public interface IModelMigrator<T extends VersionedNamedStreamPipesEntity, ExT extends IParameterExtractor>
+        extends
+          Comparable<Object> {
 
   ModelMigratorConfig config();
 
   /**
    * Defines the migration to be performed.
    *
-   * @param element   Entity to be transformed.
-   * @param extractor Extractor that allows to handle static properties.
+   * @param element
+   *          Entity to be transformed.
+   * @param extractor
+   *          Extractor that allows to handle static properties.
    * @return Result of the migration that describes both outcomes: successful and failed migrations
-   * @throws RuntimeException in case any unexpected error occurs
+   * @throws RuntimeException
+   *           in case any unexpected error occurs
    */
   MigrationResult<T> migrate(T element, ExT extractor) throws RuntimeException;
 

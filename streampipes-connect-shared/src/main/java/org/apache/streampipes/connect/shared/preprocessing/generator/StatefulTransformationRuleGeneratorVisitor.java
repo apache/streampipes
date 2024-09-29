@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.generator;
 
 import org.apache.streampipes.connect.shared.preprocessing.transform.stream.DuplicateFilterPipelineElement;
@@ -57,14 +56,12 @@ public class StatefulTransformationRuleGeneratorVisitor extends TransformationRu
 
   @Override
   public void visit(EventRateTransformationRuleDescription ruleDesc) {
-    rules.add(
-        new EventRateTransformationRule(ruleDesc.getAggregationTimeWindow(), ruleDesc.getAggregationType()));
+    rules.add(new EventRateTransformationRule(ruleDesc.getAggregationTimeWindow(), ruleDesc.getAggregationType()));
   }
 
   @Override
   public void visit(RemoveDuplicatesTransformationRuleDescription ruleDesc) {
-    this.rules.add(
-        new DuplicateFilterPipelineElement(ruleDesc.getFilterTimeWindow()));
+    this.rules.add(new DuplicateFilterPipelineElement(ruleDesc.getFilterTimeWindow()));
   }
 
   @Override

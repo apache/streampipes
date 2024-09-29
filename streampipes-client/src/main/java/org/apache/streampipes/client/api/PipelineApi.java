@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.client.api;
 
-
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.message.Message;
@@ -49,7 +48,6 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPi
     return getAll(getBaseResourcePath());
   }
 
-
   @Override
   public void create(Pipeline element) {
     post(getBaseResourcePath(), element, SuccessMessage.class);
@@ -58,7 +56,8 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPi
   /**
    * Deletes the pipeline with a given id
    *
-   * @param pipelineId The id of the pipeline
+   * @param pipelineId
+   *          The id of the pipeline
    */
   @Override
   public void delete(String pipelineId) {
@@ -73,7 +72,8 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPi
   /**
    * Starts a pipeline by given id
    *
-   * @param pipelineId The id of the pipeline
+   * @param pipelineId
+   *          The id of the pipeline
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after invocation
    */
   @Override
@@ -84,7 +84,8 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPi
   /**
    * Starts a pipeline by given id
    *
-   * @param pipeline The pipeline
+   * @param pipeline
+   *          The pipeline
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after invocation
    */
   @Override
@@ -95,7 +96,8 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPi
   /**
    * Stops a pipeline by given id
    *
-   * @param pipeline The pipeline
+   * @param pipeline
+   *          The pipeline
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after detach
    */
   @Override
@@ -106,7 +108,8 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPi
   /**
    * Stops a pipeline by given id
    *
-   * @param pipelineId The id of the pipeline
+   * @param pipelineId
+   *          The id of the pipeline
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after detach
    */
   @Override
@@ -116,7 +119,6 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPi
 
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
-    return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("pipelines");
+    return StreamPipesApiPath.fromBaseApiPath().addToPath("pipelines");
   }
 }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -28,10 +27,9 @@ import java.util.Set;
 public class UpdateStaticPropertiesStep extends AbstractPipelineValidationStep {
 
   @Override
-  public void apply(NamedStreamPipesEntity source,
-                    InvocableStreamPipesEntity target,
-                    Set<InvocableStreamPipesEntity> allTargets,
-                    List<PipelineElementValidationInfo> validationInfos) throws SpValidationException {
+  public void apply(NamedStreamPipesEntity source, InvocableStreamPipesEntity target,
+          Set<InvocableStreamPipesEntity> allTargets, List<PipelineElementValidationInfo> validationInfos)
+          throws SpValidationException {
 
     UpdateStaticPropertiesVisitor visitor = new UpdateStaticPropertiesVisitor(target);
     target.getStaticProperties().forEach(t -> t.accept(visitor));

@@ -15,8 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.health;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
@@ -24,14 +26,11 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class AdapterHealthCheckTest {
 
@@ -76,15 +75,9 @@ public class AdapterHealthCheckTest {
 
     when(adapterInstanceStorageMock.findAll()).thenReturn(List.of(stoppedAdapter, runningAdapter));
 
-    var healthCheck = new AdapterHealthCheck(
-        adapterInstanceStorageMock,
-        new AdapterMasterManagement(
-            adapterInstanceStorageMock,
-            new SpResourceManager().manageAdapters(),
-            new SpResourceManager().manageDataStreams(),
-            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
-        )
-    );
+    var healthCheck = new AdapterHealthCheck(adapterInstanceStorageMock,
+            new AdapterMasterManagement(adapterInstanceStorageMock, new SpResourceManager().manageAdapters(),
+                    new SpResourceManager().manageDataStreams(), AdapterMetricsManager.INSTANCE.getAdapterMetrics()));
     var result = healthCheck.getAllAdaptersSupposedToRun();
 
     Assertions.assertEquals(1, result.size());

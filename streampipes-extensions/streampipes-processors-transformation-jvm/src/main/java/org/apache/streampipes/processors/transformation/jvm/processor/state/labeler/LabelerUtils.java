@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.state.labeler;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -32,20 +31,13 @@ import java.util.List;
 public class LabelerUtils {
 
   public static EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement, String labelName,
-                                                  List<String> labelStrings) throws SpRuntimeException {
+          List<String> labelStrings) throws SpRuntimeException {
 
-    List<EventProperty> properties = processingElement
-        .getInputStreams()
-        .get(0)
-        .getEventSchema()
-        .getEventProperties();
+    List<EventProperty> properties = processingElement.getInputStreams().get(0).getEventSchema().getEventProperties();
 
-    properties.add(PrimitivePropertyBuilder
-        .create(Datatypes.String, labelName)
-        .valueSpecification(labelName, "possible label values", labelStrings)
-        .domainProperty(SPSensor.STATE)
-        .scope(PropertyScope.DIMENSION_PROPERTY)
-        .build());
+    properties.add(PrimitivePropertyBuilder.create(Datatypes.String, labelName)
+            .valueSpecification(labelName, "possible label values", labelStrings).domainProperty(SPSensor.STATE)
+            .scope(PropertyScope.DIMENSION_PROPERTY).build());
 
     return new EventSchema(properties);
   }

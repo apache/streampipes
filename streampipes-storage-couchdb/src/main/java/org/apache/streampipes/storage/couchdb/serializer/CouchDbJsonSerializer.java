@@ -15,8 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.couchdb.serializer;
+
+import java.lang.reflect.MalformedParameterizedTypeException;
+import java.lang.reflect.Type;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -29,16 +31,12 @@ import com.google.gson.JsonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.MalformedParameterizedTypeException;
-import java.lang.reflect.Type;
-
 public class CouchDbJsonSerializer<T> implements JsonDeserializer<T>, JsonSerializer<T> {
 
   private static final Logger LOG = LoggerFactory.getLogger(CouchDbJsonSerializer.class);
 
   @Override
-  public T deserialize(JsonElement json, Type typeOfT,
-                       JsonDeserializationContext context) throws JsonParseException {
+  public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
     JsonObject jsonObject = json.getAsJsonObject();
     String type = jsonObject.get("type").getAsString();
@@ -52,8 +50,7 @@ public class CouchDbJsonSerializer<T> implements JsonDeserializer<T>, JsonSerial
   }
 
   @Override
-  public JsonElement serialize(T src, Type typeOfSrc,
-                               JsonSerializationContext context) {
+  public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
     JsonObject result = new JsonObject();
     try {
       result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));

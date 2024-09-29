@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.output;
 
 import org.apache.streampipes.model.schema.EventProperty;
@@ -52,6 +51,5 @@ public class AppendOutputStrategy extends OutputStrategy {
   public void setEventProperties(List<EventProperty> eventProperties) {
     this.eventProperties = eventProperties;
   }
-
 
 }

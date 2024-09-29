@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.internal.jvm.datalake.migrations;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
@@ -33,46 +32,31 @@ public class DataLakeSinkMigrationV1 implements IDataSinkMigrator {
 
   @Override
   public ModelMigratorConfig config() {
-    return new ModelMigratorConfig(
-        "org.apache.streampipes.sinks.internal.jvm.datalake",
-        SpServiceTagPrefix.DATA_SINK,
-        0,
-        1
-    );
+    return new ModelMigratorConfig("org.apache.streampipes.sinks.internal.jvm.datalake", SpServiceTagPrefix.DATA_SINK,
+            0, 1);
   }
 
   /**
-   * Adds the static property for schema update to the sink and selects the option to update the
-   * schema as a default
+   * Adds the static property for schema update to the sink and selects the option to update the schema as a default
    */
   @Override
-  public MigrationResult<DataSinkInvocation> migrate(
-      DataSinkInvocation element,
-      IDataSinkParameterExtractor extractor
-  ) throws RuntimeException {
+  public MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element, IDataSinkParameterExtractor extractor)
+          throws RuntimeException {
     var oneOfStaticProperty = createDefaultSchemaUpdateStrategy();
 
-    element.getStaticProperties()
-           .add(oneOfStaticProperty);
+    element.getStaticProperties().add(oneOfStaticProperty);
 
     return MigrationResult.success(element);
   }
 
   private static OneOfStaticProperty createDefaultSchemaUpdateStrategy() {
-    var label = Labels.from(
-        DataLakeSink.SCHEMA_UPDATE_KEY,
-        "Schema Update",
-        "Update existing schemas with the new one or extend the existing schema with new properties"
-    );
-    var schemaUpdateStaticProperty = new OneOfStaticProperty(
-        label.getInternalId(),
-        label.getLabel(),
-        label.getDescription()
-    );
+    var label = Labels.from(DataLakeSink.SCHEMA_UPDATE_KEY, "Schema Update",
+            "Update existing schemas with the new one or extend the existing schema with new properties");
+    var schemaUpdateStaticProperty = new OneOfStaticProperty(label.getInternalId(), label.getLabel(),
+            label.getDescription());
 
     var options = Options.from(DataLakeSink.SCHEMA_UPDATE_OPTION, DataLakeSink.EXTEND_EXISTING_SCHEMA_OPTION);
-    options.get(0)
-           .setSelected(true);
+    options.get(0).setSelected(true);
     schemaUpdateStaticProperty.setOptions(options);
     return schemaUpdateStaticProperty;
   }

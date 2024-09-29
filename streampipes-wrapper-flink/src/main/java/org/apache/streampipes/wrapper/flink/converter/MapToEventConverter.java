@@ -22,14 +22,14 @@ import org.apache.streampipes.extensions.api.pe.param.IPipelineElementParameters
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.params.InternalRuntimeParameters;
 
+import java.util.Map;
+
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
-import java.util.Map;
-
-public class MapToEventConverter<T extends IPipelineElementParameters<?, ?>> implements
-    FlatMapFunction<Map<String,
-        Object>, Event> {
+public class MapToEventConverter<T extends IPipelineElementParameters<?, ?>>
+        implements
+          FlatMapFunction<Map<String, Object>, Event> {
 
   private static final long serialVersionUID = 1L;
 

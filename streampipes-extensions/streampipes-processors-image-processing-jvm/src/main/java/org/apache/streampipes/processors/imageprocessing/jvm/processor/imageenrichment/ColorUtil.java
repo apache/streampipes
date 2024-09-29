@@ -15,24 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment;
 
 import java.awt.Color;
 
 public enum ColorUtil {
 
-  DARK_GREY(Color.DARK_GRAY),
-  BLACK(Color.BLACK),
-  RED(Color.RED),
-  PINK(Color.PINK),
-  ORANGE(Color.ORANGE),
-  YELLO(Color.YELLOW),
-  GREEN(Color.GREEN),
-  MAGENTA(Color.MAGENTA),
-  CYAN(Color.CYAN),
-  BLUE(Color.BLUE);
-
+  DARK_GREY(Color.DARK_GRAY), BLACK(Color.BLACK), RED(Color.RED), PINK(Color.PINK), ORANGE(Color.ORANGE), YELLO(
+          Color.YELLOW), GREEN(Color.GREEN), MAGENTA(Color.MAGENTA), CYAN(Color.CYAN), BLUE(Color.BLUE);
 
   Color color;
 

@@ -15,14 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.export;
 
 import java.util.function.Supplier;
 
 public enum OutputFormat {
-  JSON(ConfiguredJsonOutputWriter::new),
-  CSV(ConfiguredCsvOutputWriter::new);
+  JSON(ConfiguredJsonOutputWriter::new), CSV(ConfiguredCsvOutputWriter::new);
 
   private final Supplier<ConfiguredOutputWriter> writerSupplier;
 

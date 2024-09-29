@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.pe;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -25,6 +24,8 @@ import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+
+import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +38,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/streams")
@@ -75,10 +74,7 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PostMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
   public ResponseEntity<?> addDataStream(@RequestBody SpDataStream dataStream) {
     try {

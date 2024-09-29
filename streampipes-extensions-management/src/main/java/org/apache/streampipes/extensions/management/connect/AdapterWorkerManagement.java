@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -29,21 +28,19 @@ import org.apache.streampipes.extensions.management.init.RunningAdapterInstances
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-
 public class AdapterWorkerManagement {
-
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerManagement.class);
 
   private final RunningAdapterInstances runningAdapterInstances;
   private final IDeclarersSingleton declarers;
 
-  public AdapterWorkerManagement(RunningAdapterInstances runningAdapterInstances,
-                                 IDeclarersSingleton declarers) {
+  public AdapterWorkerManagement(RunningAdapterInstances runningAdapterInstances, IDeclarersSingleton declarers) {
     this.runningAdapterInstances = runningAdapterInstances;
     this.declarers = declarers;
   }
@@ -53,15 +50,11 @@ public class AdapterWorkerManagement {
   }
 
   public void invokeAdapter(AdapterDescription adapterDescription) throws AdapterException {
-    var adapter = declarers
-        .getAdapter(adapterDescription.getAppId());
+    var adapter = declarers.getAdapter(adapterDescription.getAppId());
 
     if (adapter.isPresent()) {
       var newAdapterInstance = adapter.get().declareConfig().getSupplier().get();
-      runningAdapterInstances.addAdapter(
-          adapterDescription.getElementId(),
-          newAdapterInstance,
-          adapterDescription);
+      runningAdapterInstances.addAdapter(adapterDescription.getElementId(), newAdapterInstance, adapterDescription);
 
       // This method allows adapters to modify the adapter description prior to invocation.
       // It is particularly useful for adapters like FileReplayAdapter that need to manipulate timestamp values

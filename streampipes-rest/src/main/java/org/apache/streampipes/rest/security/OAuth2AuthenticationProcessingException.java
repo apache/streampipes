@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.security;
 
 import org.springframework.security.core.AuthenticationException;

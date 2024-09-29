@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.filters.jvm.processor.throughputmon;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -56,29 +55,22 @@ public class ThroughputMonitorProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.throughputmon", 0)
-        .category(DataProcessorType.STRUCTURE_ANALYTICS)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty()).build())
-        .outputStrategy(OutputStrategies.fixed(
-            EpProperties.timestampProperty(TIMESTAMP_FIELD),
-            EpProperties.longEp(Labels.withId(START_TIME_FIELD), START_TIME_FIELD, SO.DATE_TIME),
-            EpProperties.longEp(Labels.withId(END_TIME_FIELD), END_TIME_FIELD, SO.DATE_TIME),
-            EpProperties.longEp(Labels.withId(DURATION_FIELD), DURATION_FIELD, SO.NUMBER),
-            EpProperties.longEp(Labels.withId(EVENT_COUNT_FIELD), EVENT_COUNT_FIELD, SO.NUMBER),
-            EpProperties.doubleEp(Labels.withId(THROUGHPUT_FIELD), THROUGHPUT_FIELD, SO.NUMBER)))
-        .requiredIntegerParameter(Labels.withId(BATCH_WINDOW_KEY))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.throughputmon", 0)
+            .category(DataProcessorType.STRUCTURE_ANALYTICS).withAssets(ExtensionAssetType.DOCUMENTATION)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .outputStrategy(OutputStrategies.fixed(EpProperties.timestampProperty(TIMESTAMP_FIELD),
+                    EpProperties.longEp(Labels.withId(START_TIME_FIELD), START_TIME_FIELD, SO.DATE_TIME),
+                    EpProperties.longEp(Labels.withId(END_TIME_FIELD), END_TIME_FIELD, SO.DATE_TIME),
+                    EpProperties.longEp(Labels.withId(DURATION_FIELD), DURATION_FIELD, SO.NUMBER),
+                    EpProperties.longEp(Labels.withId(EVENT_COUNT_FIELD), EVENT_COUNT_FIELD, SO.NUMBER),
+                    EpProperties.doubleEp(Labels.withId(THROUGHPUT_FIELD), THROUGHPUT_FIELD, SO.NUMBER)))
+            .requiredIntegerParameter(Labels.withId(BATCH_WINDOW_KEY)).build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.batchSize = parameters.extractor().singleValueParameter(BATCH_WINDOW_KEY, Integer.class);
     this.stopWatch = new StopWatch();
     this.restartTimer();

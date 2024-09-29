@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -23,7 +22,8 @@ import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class AdapterDescriptionResourceManager
-    extends AbstractPipelineElementResourceManager<IAdapterStorage, AdapterDescription, AdapterDescription> {
+        extends
+          AbstractPipelineElementResourceManager<IAdapterStorage, AdapterDescription, AdapterDescription> {
 
   public AdapterDescriptionResourceManager() {
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage());

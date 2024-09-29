@@ -15,8 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -25,60 +28,35 @@ import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.Geo;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 public class GeoJsonParserTest {
 
   GeoJsonParser parser = new GeoJsonParser();
 
-  Map<String, Object> event = Map.of(
-      "type", "Feature",
-      "geometry", Map.of(
-          "type", "Point",
-          "coordinates", new Double[]{6.946535, 51.437344}
-      ),
-      "properties", Map.of(
-          "temperature", 5.0
-      )
-  );
+  Map<String, Object> event = Map.of("type", "Feature", "geometry",
+          Map.of("type", "Point", "coordinates", new Double[] {6.946535, 51.437344}), "properties",
+          Map.of("temperature", 5.0));
 
   @Test
   public void getGuessSchema() {
     var expected = GuessSchemaBuilder.create()
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.Float, "longitude")
-            .domainProperty(Geo.LNG)
-            .description("")
-            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.Float, "latitude")
-            .domainProperty(Geo.LAT)
-            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .description("")
-            .build())
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.Float, "temperature")
-            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .description("")
-            .build())
-        .sample("longitude", 6.946535)
-        .sample("latitude", 51.437344)
-        .sample("temperature", 5.0)
-        .build();
+            .property(PrimitivePropertyBuilder.create(Datatypes.Float, "longitude").domainProperty(Geo.LNG)
+                    .description("").scope(PropertyScope.MEASUREMENT_PROPERTY).build())
+            .property(PrimitivePropertyBuilder.create(Datatypes.Float, "latitude").domainProperty(Geo.LAT)
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY).description("").build())
+            .property(PrimitivePropertyBuilder.create(Datatypes.Float, "temperature")
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY).description("").build())
+            .sample("longitude", 6.946535).sample("latitude", 51.437344).sample("temperature", 5.0).build();
 
     var result = parser.getGuessSchema(toEvent(event));
 
@@ -96,7 +74,6 @@ public class GeoJsonParserTest {
     expectedEvent.put("longitude", 6.946535);
     verify(mockEventHandler, times(1)).handle(expectedEvent);
   }
-
 
   private InputStream toEvent(Map<String, Object> event) {
     try {

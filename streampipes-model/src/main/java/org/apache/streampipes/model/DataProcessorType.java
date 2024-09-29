@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -28,23 +27,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum DataProcessorType {
 
-  FILTER("Filters and Thresholds", "b"),
-  BOOLEAN_OPERATOR("Boolean Operators", ""),
-  STRING_OPERATOR("Text/String Operators", ""),
-  COUNT_OPERATOR("Count Operators", ""),
-  AGGREGATE("Aggregation", ""),
-  ENRICH_TEXT("Text/NLP Operators", ""),
-  ENRICH("Enrichment", ""),
-  GEO("Geospatial Operations", ""),
-  IMAGE_PROCESSING("Image Processing", ""),
-  PATTERN_DETECT("Pattern Detection", ""),
-  ALGORITHM("Algorithm", ""),
-  VALUE_OBSERVER("Value Observation", ""),
-  STRUCTURE_ANALYTICS("Structure/Stream Analytics", ""),
-  TRANSFORM("Transformation", ""),
-  TIME("Time Operators", ""),
-  SCRIPTING("Scripting/Code", ""),
-  UNCATEGORIZED("Uncategorized", "");
+  FILTER("Filters and Thresholds", "b"), BOOLEAN_OPERATOR("Boolean Operators", ""), STRING_OPERATOR(
+          "Text/String Operators",
+          ""), COUNT_OPERATOR("Count Operators", ""), AGGREGATE("Aggregation", ""), ENRICH_TEXT("Text/NLP Operators",
+                  ""), ENRICH("Enrichment", ""), GEO("Geospatial Operations", ""), IMAGE_PROCESSING("Image Processing",
+                          ""), PATTERN_DETECT("Pattern Detection", ""), ALGORITHM("Algorithm", ""), VALUE_OBSERVER(
+                                  "Value Observation", ""), STRUCTURE_ANALYTICS("Structure/Stream Analytics",
+                                          ""), TRANSFORM("Transformation", ""), TIME("Time Operators", ""), SCRIPTING(
+                                                  "Scripting/Code", ""), UNCATEGORIZED("Uncategorized", "");
 
   private String label;
   private String description;

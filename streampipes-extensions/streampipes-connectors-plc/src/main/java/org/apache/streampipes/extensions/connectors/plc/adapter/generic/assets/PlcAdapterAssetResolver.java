@@ -15,25 +15,22 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.generic.assets;
 
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.extensions.api.assets.DefaultAssetResolver;
 
-import org.apache.plc4x.java.api.PlcDriver;
-
 import java.io.IOException;
 import java.util.Properties;
+
+import org.apache.plc4x.java.api.PlcDriver;
 
 public class PlcAdapterAssetResolver extends DefaultAssetResolver {
 
   private final String appId;
   private final PlcDriver driver;
 
-  public PlcAdapterAssetResolver(String folderName,
-                                 String appId,
-                                 PlcDriver driver) {
+  public PlcAdapterAssetResolver(String folderName, String appId, PlcDriver driver) {
     super(folderName);
     this.appId = appId;
     this.driver = driver;

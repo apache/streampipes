@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.param;
 
 import org.apache.streampipes.dataexplorer.param.model.FillClauseParams;
@@ -33,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class ProvidedRestQueryParamConverter {
 
   public static final String BRACKET_OPEN = "\\[";
@@ -45,22 +43,19 @@ public class ProvidedRestQueryParamConverter {
     SelectQueryParams queryParameters = new SelectQueryParams(params.getMeasurementId());
 
     if (params.has(SupportedRestQueryParams.QP_COUNT_ONLY)
-        && params.getAsBoolean(SupportedRestQueryParams.QP_COUNT_ONLY)) {
-      queryParameters.withSelectParams(SelectClauseParams.from(params.getAsString(SupportedRestQueryParams.QP_COLUMNS),
-                                                               true)
-      );
+            && params.getAsBoolean(SupportedRestQueryParams.QP_COUNT_ONLY)) {
+      queryParameters
+              .withSelectParams(SelectClauseParams.from(params.getAsString(SupportedRestQueryParams.QP_COLUMNS), true));
     } else {
       queryParameters.withSelectParams(SelectClauseParams.from(params.getAsString(SupportedRestQueryParams.QP_COLUMNS),
-          params.getAsString(SupportedRestQueryParams.QP_AGGREGATION_FUNCTION)));
+              params.getAsString(SupportedRestQueryParams.QP_AGGREGATION_FUNCTION)));
     }
 
     String filterConditions = params.getAsString(SupportedRestQueryParams.QP_FILTER);
 
     if (hasTimeParams(params)) {
-      queryParameters.withWhereParams(WhereClauseParams.from(
-          params.getAsLong(SupportedRestQueryParams.QP_START_DATE),
-          params.getAsLong(SupportedRestQueryParams.QP_END_DATE),
-          filterConditions));
+      queryParameters.withWhereParams(WhereClauseParams.from(params.getAsLong(SupportedRestQueryParams.QP_START_DATE),
+              params.getAsLong(SupportedRestQueryParams.QP_END_DATE), filterConditions));
     } else if (filterConditions != null) {
       queryParameters.withWhereParams(WhereClauseParams.from(filterConditions));
     }
@@ -71,18 +66,16 @@ public class ProvidedRestQueryParamConverter {
         queryParameters.withGroupByTimeParams(GroupByTimeClauseParams.from(timeInterval));
       } else {
         params.update(SupportedRestQueryParams.QP_GROUP_BY,
-                      params.getAsString(SupportedRestQueryParams.QP_GROUP_BY) + ",time(" + timeInterval + ")");
+                params.getAsString(SupportedRestQueryParams.QP_GROUP_BY) + ",time(" + timeInterval + ")");
       }
 
       queryParameters.withFillParams(FillClauseParams.from());
     }
 
     if (params.has(SupportedRestQueryParams.QP_GROUP_BY)) {
-      queryParameters.withGroupByTagsParams(GroupByTagsClauseParams.from(
-          params.getAsString(SupportedRestQueryParams.QP_GROUP_BY))
-      );
+      queryParameters.withGroupByTagsParams(
+              GroupByTagsClauseParams.from(params.getAsString(SupportedRestQueryParams.QP_GROUP_BY)));
     }
-
 
     if (params.has(SupportedRestQueryParams.QP_ORDER)) {
       String order = params.getAsString(SupportedRestQueryParams.QP_ORDER);
@@ -99,21 +92,18 @@ public class ProvidedRestQueryParamConverter {
       queryParameters.withOffsetParams(OffsetClauseParams.from(params.getAsInt(SupportedRestQueryParams.QP_OFFSET)));
     } else if (params.has(SupportedRestQueryParams.QP_LIMIT) && params.has(SupportedRestQueryParams.QP_PAGE)) {
       queryParameters.withOffsetParams(OffsetClauseParams.from(
-          params.getAsInt(SupportedRestQueryParams.QP_PAGE) * params.getAsInt(SupportedRestQueryParams.QP_LIMIT)));
+              params.getAsInt(SupportedRestQueryParams.QP_PAGE) * params.getAsInt(SupportedRestQueryParams.QP_LIMIT)));
     }
 
     return queryParameters;
   }
 
-  public static DeleteQueryParams getDeleteQueryParams(String measurementName,
-                                                       Long startTime,
-                                                       Long endTime) {
+  public static DeleteQueryParams getDeleteQueryParams(String measurementName, Long startTime, Long endTime) {
     return new DeleteQueryParams(measurementName, startTime, endTime);
   }
 
   private static boolean hasTimeParams(ProvidedRestQueryParams params) {
-    return params.has(SupportedRestQueryParams.QP_START_DATE)
-        || params.has(SupportedRestQueryParams.QP_END_DATE);
+    return params.has(SupportedRestQueryParams.QP_START_DATE) || params.has(SupportedRestQueryParams.QP_END_DATE);
   }
 
   public static List<String[]> buildConditions(String queryPart) {
@@ -128,9 +118,6 @@ public class ProvidedRestQueryParamConverter {
   }
 
   public static String[] buildSingleCondition(String queryPart) {
-    return queryPart
-        .replaceAll(BRACKET_OPEN, "")
-        .replaceAll(BRACKET_CLOSE, "")
-        .split(";");
+    return queryPart.replaceAll(BRACKET_OPEN, "").replaceAll(BRACKET_CLOSE, "").split(";");
   }
 }

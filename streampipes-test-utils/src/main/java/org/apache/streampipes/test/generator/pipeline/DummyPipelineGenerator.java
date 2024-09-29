@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.test.generator.pipeline;
 
 import org.apache.streampipes.model.pipeline.Pipeline;

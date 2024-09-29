@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profiles version="12">
+    <profile>
+        <setting id="org.eclipse.jdt.core.formatter.tabulation.char" value="space"/>
+        <setting id="org.eclipse.jdt.core.formatter.tabulation.size" value="2"/>
+        <setting id="org.eclipse.jdt.core.formatter.lineSplit" value="120"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.line_length" value="120"/>
+        <setting id="org.eclipse.jdt.core.formatter.use_on_off_tags" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_type_declaration" value="this_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_method_declaration" value="this_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_block" value="this_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_array_initializer" value="this_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_method_invocation_arguments" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_method_invocation_arguments" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_method_declaration" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_method_declaration" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_method_declaration" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_constructor_declaration_parameters" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_array_initializer" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.format_javadoc_comments" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.format_block_comments" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.new_lines_at_javadoc_boundaries" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.indentation.size" value="2"/>
+        <setting id="org.eclipse.jdt.core.formatter.continuation_indentation" value="4"/>
+        <setting id="org.eclipse.jdt.core.formatter.array_initializer_indent" value="2"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_brace_in_array_initializer" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_type_declaration" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_lambda_arrow" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_lambda_arrow" value="insert"/>
+    </profile>
+</profiles>

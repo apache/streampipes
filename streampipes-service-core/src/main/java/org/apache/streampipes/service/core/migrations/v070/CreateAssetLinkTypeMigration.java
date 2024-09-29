@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.service.core.migrations.v070;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
@@ -32,7 +30,7 @@ public class CreateAssetLinkTypeMigration implements Migration {
   public boolean shouldExecute() {
     try {
       return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE)
-          .size() == 0;
+              .size() == 0;
     } catch (IOException e) {
       return true;
     }

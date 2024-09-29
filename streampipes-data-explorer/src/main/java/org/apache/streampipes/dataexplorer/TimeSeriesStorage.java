@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -25,13 +24,13 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
 
@@ -74,45 +73,30 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
   private void logMissingFields(Event event) {
     var missingFields = getMissingProperties(allEventProperties, event);
     if (!missingFields.isEmpty()) {
-      LOG.debug(
-          "Ignored {} fields which were present in the schema, but not in the provided event: {}",
-          missingFields.size(),
-          String.join(", ", missingFields)
-      );
+      LOG.debug("Ignored {} fields which were present in the schema, but not in the provided event: {}",
+              missingFields.size(), String.join(", ", missingFields));
     }
   }
 
   /**
    * Returns a list of the runtime names that are missing within the event
    */
-  private List<String> getMissingProperties(
-      List<EventProperty> allEventProperties,
-      Event event
-  ) {
-    return allEventProperties.stream()
-                             .map(EventProperty::getRuntimeName)
-                             .filter(runtimeName -> event.getOptionalFieldByRuntimeName(runtimeName)
-                                                         .isEmpty())
-                             .toList();
+  private List<String> getMissingProperties(List<EventProperty> allEventProperties, Event event) {
+    return allEventProperties.stream().map(EventProperty::getRuntimeName)
+            .filter(runtimeName -> event.getOptionalFieldByRuntimeName(runtimeName).isEmpty()).toList();
   }
 
   /**
    * Logs all fields that contain null values
    */
   private void logNullFields(Event event) {
-    List<String> nullFields = allEventProperties
-        .stream()
-        .filter(EventPropertyPrimitive.class::isInstance)
-        .filter(ep -> {
-          var runtimeName = ep.getRuntimeName();
-          var field = event.getOptionalFieldByRuntimeName(runtimeName);
+    List<String> nullFields = allEventProperties.stream().filter(EventPropertyPrimitive.class::isInstance)
+            .filter(ep -> {
+              var runtimeName = ep.getRuntimeName();
+              var field = event.getOptionalFieldByRuntimeName(runtimeName);
 
-          return field.isPresent() && field.get()
-                                           .getAsPrimitive()
-                                           .getRawValue() == null;
-        })
-        .map(EventProperty::getRuntimeName)
-        .collect(Collectors.toList());
+              return field.isPresent() && field.get().getAsPrimitive().getRawValue() == null;
+            }).map(EventProperty::getRuntimeName).collect(Collectors.toList());
 
     if (!nullFields.isEmpty()) {
       LOG.warn("Ignored {} fields which had a value 'null': {}", nullFields.size(), String.join(", ", nullFields));
@@ -123,12 +107,8 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
    * Returns all measurements properties except the timestamp field
    */
   private List<EventProperty> getAllEventPropertiesExceptTimestamp() {
-    return measure.getEventSchema()
-                  .getEventProperties()
-                  .stream()
-                  .filter(ep -> !measure.getTimestampField()
-                                        .endsWith(ep.getRuntimeName()))
-                  .toList();
+    return measure.getEventSchema().getEventProperties().stream()
+            .filter(ep -> !measure.getTimestampField().endsWith(ep.getRuntimeName())).toList();
   }
 
   /**

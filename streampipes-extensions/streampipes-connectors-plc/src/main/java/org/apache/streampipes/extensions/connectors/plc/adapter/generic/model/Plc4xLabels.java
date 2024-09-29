@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.generic.model;
 
 public class Plc4xLabels {

@@ -21,23 +21,15 @@ public class PermissionBuilder {
 
   private final Permission permission;
 
-  private PermissionBuilder(String objectInstanceId,
-                            Class<?> objectInstanceClass,
-                            String ownerSid) {
+  private PermissionBuilder(String objectInstanceId, Class<?> objectInstanceClass, String ownerSid) {
     this.permission = new Permission();
     this.permission.setObjectInstanceId(objectInstanceId);
     this.permission.setObjectClassName(objectInstanceClass.getCanonicalName());
     this.permission.setOwnerSid(ownerSid);
   }
 
-  public static PermissionBuilder create(String objectInstanceId,
-                                         Class<?> objectInstanceClass,
-                                         String ownerSid) {
-    return new PermissionBuilder(
-        objectInstanceId,
-        objectInstanceClass,
-        ownerSid
-    );
+  public static PermissionBuilder create(String objectInstanceId, Class<?> objectInstanceClass, String ownerSid) {
+    return new PermissionBuilder(objectInstanceId, objectInstanceClass, ownerSid);
   }
 
   public PermissionBuilder with(PermissionEntry permissionEntry) {

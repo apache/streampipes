@@ -35,8 +35,7 @@ public abstract class AbstractConfigFactory {
 
   protected abstract Properties makeDefaultProperties();
 
-  protected <T> T getConfigOrDefault(Supplier<T> function,
-                                      T defaultValue) {
+  protected <T> T getConfigOrDefault(Supplier<T> function, T defaultValue) {
     return function.get() != null ? function.get() : defaultValue;
   }
 
@@ -48,6 +47,6 @@ public abstract class AbstractConfigFactory {
     Properties props = makeDefaultProperties();
     appenders.forEach(appender -> appender.appendConfig(props));
 
-    return  props;
+    return props;
   }
 }

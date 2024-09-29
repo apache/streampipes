@@ -73,79 +73,40 @@ public class BufferGeomProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.buffergeometry", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReq("http://www.opengis.net/ont/geosparql#Geometry"),
-                Labels.withId(GEOM_KEY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
-                Labels.withId(EPSG_KEY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .outputStrategy(OutputStrategies.append(
-                EpProperties.stringEp(
-                    Labels.withId(GEOM_KEY),
-                    GEOM_RUNTIME,
-                    "http://www.opengis.net/ont/geosparql#Geometry"
-                ),
-                EpProperties.numberEp(
-                    Labels.withId(EPSG_KEY),
-                    EPSG_RUNTIME,
-                    "http://data.ign.fr/def/ignf#CartesianCS"
-                )
-            )
-        )
-        .requiredSingleValueSelection(
-            Labels.withId(CAP_KEY),
-            Options.from(
-                CapStyle.Square.name(),
-                CapStyle.Flat.name(),
-                CapStyle.Round.name())
-        )
-        .requiredSingleValueSelection(
-            Labels.withId(JOIN_KEY),
-            Options.from(
-                JoinStyle.Bevel.name(),
-                JoinStyle.Mitre.name(),
-                JoinStyle.Round.name())
-        )
-        .requiredSingleValueSelection(
-            Labels.withId(SIDE_KEY),
-            Options.from(
-                BufferSide.Both.name(),
-                BufferSide.Left.name(),
-                BufferSide.Right.name())
-        )
-        .requiredIntegerParameter(
-            Labels.withId(MITRE_LIMIT_KEY),
-            5)
-        .requiredIntegerParameter(
-            Labels.withId(SEGMENTS_KEY),
-            8
-        )
-        .requiredFloatParameter(
-            Labels.withId(SIMPLIFY_FACTOR_KEY),
-            0.01f
-        )
-        .requiredFloatParameter(
-            Labels.withId(DISTANCE_KEY)
-        )
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.jts.processor.buffergeometry", 0)
+            .category(DataProcessorType.GEO).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.domainPropertyReq("http://www.opengis.net/ont/geosparql#Geometry"),
+                            Labels.withId(GEOM_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
+                            Labels.withId(EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .outputStrategy(OutputStrategies.append(
+                    EpProperties.stringEp(Labels.withId(GEOM_KEY), GEOM_RUNTIME,
+                            "http://www.opengis.net/ont/geosparql#Geometry"),
+                    EpProperties.numberEp(Labels.withId(EPSG_KEY), EPSG_RUNTIME,
+                            "http://data.ign.fr/def/ignf#CartesianCS")))
+            .requiredSingleValueSelection(Labels.withId(CAP_KEY),
+                    Options.from(CapStyle.Square.name(), CapStyle.Flat.name(), CapStyle.Round.name()))
+            .requiredSingleValueSelection(Labels.withId(JOIN_KEY),
+                    Options.from(JoinStyle.Bevel.name(), JoinStyle.Mitre.name(), JoinStyle.Round.name()))
+            .requiredSingleValueSelection(Labels.withId(SIDE_KEY),
+                    Options.from(BufferSide.Both.name(), BufferSide.Left.name(), BufferSide.Right.name()))
+            .requiredIntegerParameter(Labels.withId(MITRE_LIMIT_KEY), 5)
+            .requiredIntegerParameter(Labels.withId(SEGMENTS_KEY), 8)
+            .requiredFloatParameter(Labels.withId(SIMPLIFY_FACTOR_KEY), 0.01f)
+            .requiredFloatParameter(Labels.withId(DISTANCE_KEY)).build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
 
     try {
-      if (SpReprojectionBuilder.isSisConfigurationValid()){
+      if (SpReprojectionBuilder.isSisConfigurationValid()) {
         LOG.info("SIS DB Settings successful checked ");
       } else {
         LOG.warn("The required EPSG database is not imported");
@@ -195,17 +156,8 @@ public class BufferGeomProcessor extends StreamPipesDataProcessor {
     String geom = event.getFieldBySelector(geometryMapper).getAsPrimitive().getAsString();
     Integer epsg = event.getFieldBySelector(epsgMapper).getAsPrimitive().getAsInt();
     Geometry geometry = SpGeometryBuilder.createSPGeom(geom, epsg);
-    Geometry bufferGeom =
-        SpBufferBuilder.createSpBuffer(
-            geometry,
-            distance,
-            capStyle,
-            joinStyle,
-            mitreLimit,
-            segments,
-            simplifyFactor,
-            singleSided,
-            side);
+    Geometry bufferGeom = SpBufferBuilder.createSpBuffer(geometry, distance, capStyle, joinStyle, mitreLimit, segments,
+            simplifyFactor, singleSided, side);
 
     if (!bufferGeom.isEmpty()) {
       event.addField(GEOM_RUNTIME, bufferGeom.toText());

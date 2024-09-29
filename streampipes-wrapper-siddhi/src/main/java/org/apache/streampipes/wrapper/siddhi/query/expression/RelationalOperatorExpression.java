@@ -26,20 +26,16 @@ public class RelationalOperatorExpression extends Expression {
 
   private final RelationalOperator operator;
 
-  public RelationalOperatorExpression(RelationalOperator operator,
-                                      PropertyExpressionBase exp1,
-                                      PropertyExpressionBase exp2) {
+  public RelationalOperatorExpression(RelationalOperator operator, PropertyExpressionBase exp1,
+          PropertyExpressionBase exp2) {
     this.operator = operator;
     this.exp1 = exp1;
     this.exp2 = exp2;
   }
 
-
   @Override
   public String toSiddhiEpl() {
-    return joinWithParenthesis(SiddhiConstants.EMPTY,
-        exp1.toSiddhiEpl(),
-        operator.toOperatorString(),
-        exp2.toSiddhiEpl());
+    return joinWithParenthesis(SiddhiConstants.EMPTY, exp1.toSiddhiEpl(), operator.toOperatorString(),
+            exp2.toSiddhiEpl());
   }
 }

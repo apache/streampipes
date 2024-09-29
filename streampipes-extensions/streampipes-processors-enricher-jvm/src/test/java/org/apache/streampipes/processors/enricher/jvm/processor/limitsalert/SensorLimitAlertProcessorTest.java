@@ -15,22 +15,21 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.limitsalert;
 
 import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.TestConfiguration;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 
 class SensorLimitAlertProcessorTest {
 
@@ -40,12 +39,8 @@ class SensorLimitAlertProcessorTest {
   private final String lowerWarningLimit = "lowerWarningLimit";
   private final String lowerControlLimit = "lowerControlLimit";
 
-  private final Map<String, Object> baseEvent = Map.of(
-      upperControlLimit, 90.0,
-      upperWarningLimit, 80.0,
-      lowerWarningLimit, 20.0,
-      lowerControlLimit, 10.0
-  );
+  private final Map<String, Object> baseEvent = Map.of(upperControlLimit, 90.0, upperWarningLimit, 80.0,
+          lowerWarningLimit, 20.0, lowerControlLimit, 10.0);
 
   private SensorLimitAlertProcessor processor;
 
@@ -55,51 +50,29 @@ class SensorLimitAlertProcessorTest {
   }
 
   static Stream<Arguments> arguments() {
-    return Stream.of(
-        Arguments.of(
-            5.0,
-            SensorLimitAlertProcessor.ALERT,
-            SensorLimitAlertProcessor.LOWER_LIMIT
-        ),
-        Arguments.of(
-            15.0,
-            SensorLimitAlertProcessor.WARNING,
-            SensorLimitAlertProcessor.LOWER_LIMIT
-        ),
-        Arguments.of(
-            85.0,
-            SensorLimitAlertProcessor.WARNING,
-            SensorLimitAlertProcessor.UPPER_LIMIT
-        ),
-        Arguments.of(
-            95.0,
-            SensorLimitAlertProcessor.ALERT,
-            SensorLimitAlertProcessor.UPPER_LIMIT
-        )
-    );
+    return Stream.of(Arguments.of(5.0, SensorLimitAlertProcessor.ALERT, SensorLimitAlertProcessor.LOWER_LIMIT),
+            Arguments.of(15.0, SensorLimitAlertProcessor.WARNING, SensorLimitAlertProcessor.LOWER_LIMIT),
+            Arguments.of(85.0, SensorLimitAlertProcessor.WARNING, SensorLimitAlertProcessor.UPPER_LIMIT),
+            Arguments.of(95.0, SensorLimitAlertProcessor.ALERT, SensorLimitAlertProcessor.UPPER_LIMIT));
   }
 
   @ParameterizedTest
   @MethodSource("arguments")
-  void onEvent_differentAlertsTest(
-      double sensorValue,
-      String alertValue,
-      String limitBreachedValue
-  ) {
+  void onEvent_differentAlertsTest(double sensorValue, String alertValue, String limitBreachedValue) {
 
-    List<Map<String, Object>> inputEvents = List.of(
-        new HashMap<>(baseEvent) {{
-          put(temperature, sensorValue);
-        }}
-    );
+    List<Map<String, Object>> inputEvents = List.of(new HashMap<>(baseEvent) {
+      {
+        put(temperature, sensorValue);
+      }
+    });
 
-    List<Map<String, Object>> outputEvents = List.of(
-        new HashMap<>(baseEvent) {{
-          put(temperature, sensorValue);
-          put(SensorLimitAlertProcessor.ALERT_STATUS, alertValue);
-          put(SensorLimitAlertProcessor.LIMIT_BREACHED, limitBreachedValue);
-        }}
-    );
+    List<Map<String, Object>> outputEvents = List.of(new HashMap<>(baseEvent) {
+      {
+        put(temperature, sensorValue);
+        put(SensorLimitAlertProcessor.ALERT_STATUS, alertValue);
+        put(SensorLimitAlertProcessor.LIMIT_BREACHED, limitBreachedValue);
+      }
+    });
 
     var configuration = getTestConfiguration();
 
@@ -111,11 +84,11 @@ class SensorLimitAlertProcessorTest {
   @Test
   void onEvent_noEventIsEmittedIfInValueRangeTest() {
 
-    List<Map<String, Object>> inputEvents = List.of(
-        new HashMap<>(baseEvent) {{
-          put(temperature, 50.0);
-        }}
-    );
+    List<Map<String, Object>> inputEvents = List.of(new HashMap<>(baseEvent) {
+      {
+        put(temperature, 50.0);
+      }
+    });
 
     List<Map<String, Object>> outputEvents = List.of();
 
@@ -127,14 +100,12 @@ class SensorLimitAlertProcessorTest {
   }
 
   private TestConfiguration getTestConfiguration() {
-    return TestConfiguration
-        .builder()
-        .configWithDefaultPrefix(SensorLimitAlertProcessor.SENSOR_VALUE_LABEL, temperature)
-        .configWithDefaultPrefix(SensorLimitAlertProcessor.UPPER_CONTROL_LIMIT_LABEL, upperControlLimit)
-        .configWithDefaultPrefix(SensorLimitAlertProcessor.UPPER_WARNING_LIMIT_LABEL, upperWarningLimit)
-        .configWithDefaultPrefix(SensorLimitAlertProcessor.LOWER_WARNING_LIMIT_LABEL, lowerWarningLimit)
-        .configWithDefaultPrefix(SensorLimitAlertProcessor.LOWER_CONTROL_LIMIT_LABEL, lowerControlLimit)
-        .build();
+    return TestConfiguration.builder()
+            .configWithDefaultPrefix(SensorLimitAlertProcessor.SENSOR_VALUE_LABEL, temperature)
+            .configWithDefaultPrefix(SensorLimitAlertProcessor.UPPER_CONTROL_LIMIT_LABEL, upperControlLimit)
+            .configWithDefaultPrefix(SensorLimitAlertProcessor.UPPER_WARNING_LIMIT_LABEL, upperWarningLimit)
+            .configWithDefaultPrefix(SensorLimitAlertProcessor.LOWER_WARNING_LIMIT_LABEL, lowerWarningLimit)
+            .configWithDefaultPrefix(SensorLimitAlertProcessor.LOWER_CONTROL_LIMIT_LABEL, lowerControlLimit).build();
 
   }
 

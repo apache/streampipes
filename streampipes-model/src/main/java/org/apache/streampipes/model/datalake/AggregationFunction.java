@@ -19,14 +19,7 @@ package org.apache.streampipes.model.datalake;
 
 public enum AggregationFunction {
 
-  MEAN("MEAN"),
-  MIN("MIN"),
-  MAX("MAX"),
-  COUNT("COUNT"),
-  FIRST("FIRST"),
-  LAST("LAST"),
-  MODE("MODE"),
-  SUM("SUM");
+  MEAN("MEAN"), MIN("MIN"), MAX("MAX"), COUNT("COUNT"), FIRST("FIRST"), LAST("LAST"), MODE("MODE"), SUM("SUM");
 
   private final String dbName;
 

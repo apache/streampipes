@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.integration.utils;
 
 import java.util.ArrayList;
@@ -28,11 +27,7 @@ public class Utils {
     List<Map<String, Object>> result = new ArrayList<>();
 
     for (int i = 0; i < 3; i++) {
-      result.add(
-          Map.of(
-              "timestamp", i,
-              "value", "test-data")
-      );
+      result.add(Map.of("timestamp", i, "value", "test-data"));
     }
 
     return result;

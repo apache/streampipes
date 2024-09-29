@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.client.user.DefaultPrivilege;

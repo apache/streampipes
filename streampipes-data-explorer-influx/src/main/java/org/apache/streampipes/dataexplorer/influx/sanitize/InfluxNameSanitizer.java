@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx.sanitize;
 
 import org.apache.streampipes.dataexplorer.influx.InfluxDbReservedKeywords;

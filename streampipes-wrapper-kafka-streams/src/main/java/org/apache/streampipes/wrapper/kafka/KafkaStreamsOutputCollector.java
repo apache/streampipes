@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.kafka;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -34,9 +33,7 @@ public class KafkaStreamsOutputCollector implements SpOutputCollector {
   private final EventProducer outputProducer;
   private final SpDataFormatDefinition outputFormatConverter;
 
-
-  public KafkaStreamsOutputCollector(SpDataFormatDefinition outputFormatConverter,
-                                     EventProducer outputProducer) {
+  public KafkaStreamsOutputCollector(SpDataFormatDefinition outputFormatConverter, EventProducer outputProducer) {
     this.outputFormatConverter = outputFormatConverter;
     this.outputProducer = outputProducer;
   }
@@ -47,8 +44,7 @@ public class KafkaStreamsOutputCollector implements SpOutputCollector {
   }
 
   @Override
-  public void registerConsumer(String routeId,
-                               InternalEventProcessor<Map<String, Object>> consumer) {
+  public void registerConsumer(String routeId, InternalEventProcessor<Map<String, Object>> consumer) {
 
   }
 

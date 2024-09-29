@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
@@ -40,41 +39,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/migrations/processor")
-public class DataProcessorMigrationResource extends MigrateExtensionsResource<
-        DataProcessorInvocation,
-        IDataProcessorParameterExtractor,
-        IDataProcessorMigrator
-        > {
+public class DataProcessorMigrationResource
+        extends
+          MigrateExtensionsResource<DataProcessorInvocation, IDataProcessorParameterExtractor, IDataProcessorMigrator> {
 
-  @PostMapping(
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(
-          summary = "Execute the migration for a specific data processor instance", tags = {"Extensions", "Migration"},
-          responses = {
-              @ApiResponse(
-                      responseCode = "" + HttpStatus.SC_OK,
-                      description = "The migration was executed. It's result is described in the response. "
-                              + "The Response needs to be handled accordingly.",
-                      content = @Content(
-                              examples = @ExampleObject(
-                                      name = "Successful migration",
-                                      value = "{\"success\": true,\"messages\": \"SUCCESS\", \"element\": {}}"
-                              ),
-                              mediaType = MediaType.APPLICATION_JSON_VALUE
-                      )
-              )
-          }
-  )
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Execute the migration for a specific data processor instance", tags = {"Extensions",
+      "Migration"}, responses = {@ApiResponse(responseCode = ""
+              + HttpStatus.SC_OK, description = "The migration was executed. It's result is described in the response. "
+                      + "The Response needs to be handled accordingly.", content = @Content(examples = @ExampleObject(name = "Successful migration", value = "{\"success\": true,\"messages\": \"SUCCESS\", \"element\": {}}"), mediaType = MediaType.APPLICATION_JSON_VALUE))})
   public ResponseEntity<MigrationResult<DataProcessorInvocation>> migrateDataProcessor(
-          @Parameter(
-                  description = "Request that encompasses the data processor description (DataProcessorInvocation) and "
-                          + "the configuration of the migration to be performed",
-                  example = "{\"migrationElement\": {}, \"modelMigratorConfig\": {\"targetAppId\": \"app-id\", "
-                          + "\"modelType\": \"dprocessor\", \"fromVersion\": 0, \"toVersion\": 1}}",
-                  required = true
-          )
-          @RequestBody MigrationRequest<DataProcessorInvocation> processorMigrationRequest) {
+          @Parameter(description = "Request that encompasses the data processor description (DataProcessorInvocation) and "
+                  + "the configuration of the migration to be performed", example = "{\"migrationElement\": {}, \"modelMigratorConfig\": {\"targetAppId\": \"app-id\", "
+                          + "\"modelType\": \"dprocessor\", \"fromVersion\": 0, \"toVersion\": 1}}", required = true) @RequestBody MigrationRequest<DataProcessorInvocation> processorMigrationRequest) {
     return ok(handleMigration(processorMigrationRequest));
   }
 

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution;
 
 import org.apache.streampipes.manager.execution.http.DetachPipelineElementSubmitter;
@@ -38,23 +37,18 @@ import java.util.List;
 public class PipelineExecutionTaskFactory {
 
   public static List<PipelineExecutionTask> makeStartPipelineTasks(Pipeline pipeline) {
-    return List.of(
-        new UpdateGroupIdTask(),
-        new SecretEncryptionTask(SecretProvider.getDecryptionService()),
-        new DiscoverEndpointsTask(),
-        new SubmitRequestTask(new InvokePipelineElementSubmitter(pipeline), new CurrentPipelineElementProvider()),
-        new SecretEncryptionTask(SecretProvider.getEncryptionService()),
-        new AfterInvocationTask(PipelineStatusMessageType.PIPELINE_STARTED),
-        new StorePipelineStatusTask(true, false)
-    );
+    return List.of(new UpdateGroupIdTask(), new SecretEncryptionTask(SecretProvider.getDecryptionService()),
+            new DiscoverEndpointsTask(),
+            new SubmitRequestTask(new InvokePipelineElementSubmitter(pipeline), new CurrentPipelineElementProvider()),
+            new SecretEncryptionTask(SecretProvider.getEncryptionService()),
+            new AfterInvocationTask(PipelineStatusMessageType.PIPELINE_STARTED),
+            new StorePipelineStatusTask(true, false));
   }
 
-  public static List<PipelineExecutionTask> makeStopPipelineTasks(Pipeline pipeline,
-                                                                  boolean forceStop) {
+  public static List<PipelineExecutionTask> makeStopPipelineTasks(Pipeline pipeline, boolean forceStop) {
     return List.of(
-        new SubmitRequestTask(new DetachPipelineElementSubmitter(pipeline), new StoredPipelineElementProvider()),
-        new AfterInvocationTask(PipelineStatusMessageType.PIPELINE_STOPPED),
-        new StorePipelineStatusTask(false, forceStop)
-    );
+            new SubmitRequestTask(new DetachPipelineElementSubmitter(pipeline), new StoredPipelineElementProvider()),
+            new AfterInvocationTask(PipelineStatusMessageType.PIPELINE_STOPPED),
+            new StorePipelineStatusTask(false, forceStop));
   }
 }

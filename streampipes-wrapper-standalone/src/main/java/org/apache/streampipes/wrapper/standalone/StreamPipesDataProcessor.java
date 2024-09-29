@@ -27,31 +27,26 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public abstract class StreamPipesDataProcessor
-    implements IStreamPipesDataProcessor {
+public abstract class StreamPipesDataProcessor implements IStreamPipesDataProcessor {
 
   @Override
-  public void onPipelineStarted(IDataProcessorParameters params,
-                                SpOutputCollector collector,
-                                EventProcessorRuntimeContext runtimeContext) {
+  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector collector,
+          EventProcessorRuntimeContext runtimeContext) {
     ProcessorParams parameters = new ProcessorParams(params);
     this.onInvocation(parameters, collector, runtimeContext);
   }
 
   @Override
   public IDataProcessorConfiguration declareConfig() {
-    return DataProcessorConfiguration.create(
-        () -> {
-          try {
-            return this.getClass().newInstance();
-          } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-          } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-          }
-        },
-        declareModel()
-    );
+    return DataProcessorConfiguration.create(() -> {
+      try {
+        return this.getClass().newInstance();
+      } catch (InstantiationException e) {
+        throw new RuntimeException(e);
+      } catch (IllegalAccessException e) {
+        throw new RuntimeException(e);
+      }
+    }, declareModel());
   }
 
   @Override
@@ -61,9 +56,8 @@ public abstract class StreamPipesDataProcessor
 
   public abstract DataProcessorDescription declareModel();
 
-  public abstract void onInvocation(ProcessorParams parameters,
-                                    SpOutputCollector spOutputCollector,
-                                    EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException;
+  public abstract void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException;
 
   public abstract void onDetach();
 }

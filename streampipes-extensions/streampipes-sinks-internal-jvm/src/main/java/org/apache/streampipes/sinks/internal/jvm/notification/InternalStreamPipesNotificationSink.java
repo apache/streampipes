@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.internal.jvm.notification;
-
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -50,19 +48,13 @@ public class InternalStreamPipesNotificationSink extends StreamPipesNotification
 
   private IStreamPipesClient client;
 
-
   @Override
-  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext context) throws
-                                                                                   SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext context) throws SpRuntimeException {
     super.onInvocation(parameters, context);
-    this.title = parameters.extractor()
-                           .singleValueParameter(TITLE_KEY, String.class);
-    this.content = parameters.extractor()
-                             .singleValueParameter(CONTENT_KEY, String.class);
-    this.correspondingPipelineId = parameters.getModel()
-                                             .getCorrespondingPipeline();
-    this.correspondingUser = parameters.getModel()
-                                       .getCorrespondingUser();
+    this.title = parameters.extractor().singleValueParameter(TITLE_KEY, String.class);
+    this.content = parameters.extractor().singleValueParameter(CONTENT_KEY, String.class);
+    this.correspondingPipelineId = parameters.getModel().getCorrespondingPipeline();
+    this.correspondingUser = parameters.getModel().getCorrespondingUser();
     this.client = context.getStreamPipesClient();
   }
 
@@ -71,8 +63,7 @@ public class InternalStreamPipesNotificationSink extends StreamPipesNotification
 
     Date currentDate = new Date();
     Notification notification = new Notification();
-    notification.setId(UUID.randomUUID()
-                           .toString());
+    notification.setId(UUID.randomUUID().toString());
     notification.setRead(false);
     notification.setTitle(title);
     notification.setMessage(PlaceholderExtractor.replacePlaceholders(inputEvent, content));
@@ -81,11 +72,9 @@ public class InternalStreamPipesNotificationSink extends StreamPipesNotification
     notification.setCorrespondingPipelineId(correspondingPipelineId);
     notification.setTargetedAt(correspondingUser);
 
-    client.notificationsApi()
-          .add(notification);
+    client.notificationsApi().add(notification);
 
   }
-
 
   @Override
   public void onDetach() throws SpRuntimeException {
@@ -94,16 +83,10 @@ public class InternalStreamPipesNotificationSink extends StreamPipesNotification
 
   @Override
   public DataSinkBuilder declareModelWithoutSilentPeriod() {
-    return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.internal.jvm.notification", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .category(DataSinkType.INTERNAL, DataSinkType.NOTIFICATION)
-        .requiredStream(StreamRequirementsBuilder
-                            .create()
-                            .requiredProperty(EpRequirements.anyProperty())
-                            .build())
-        .requiredTextParameter(Labels.withId(TITLE_KEY))
-        .requiredHtmlInputParameter(Labels.withId(CONTENT_KEY));
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.internal.jvm.notification", 0).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .category(DataSinkType.INTERNAL, DataSinkType.NOTIFICATION)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredTextParameter(Labels.withId(TITLE_KEY)).requiredHtmlInputParameter(Labels.withId(CONTENT_KEY));
   }
 }

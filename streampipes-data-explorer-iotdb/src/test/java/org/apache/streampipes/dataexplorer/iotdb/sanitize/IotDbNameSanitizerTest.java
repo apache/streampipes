@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.iotdb.sanitize;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 public class IotDbNameSanitizerTest {
 

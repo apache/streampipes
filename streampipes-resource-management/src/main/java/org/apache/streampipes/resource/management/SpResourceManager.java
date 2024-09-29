@@ -39,7 +39,7 @@ public class SpResourceManager {
   }
 
   public DataExplorerWidgetResourceManager manageDataExplorerWidget(DataExplorerResourceManager dashboardManager,
-                                                                    CRUDStorage<DataExplorerWidgetModel> db) {
+          CRUDStorage<DataExplorerWidgetModel> db) {
     return new DataExplorerWidgetResourceManager(dashboardManager, db);
   }
 

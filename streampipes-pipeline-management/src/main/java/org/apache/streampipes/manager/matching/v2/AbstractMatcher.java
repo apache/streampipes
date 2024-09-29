@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.model.client.matching.MatchingResultFactory;
@@ -45,8 +44,7 @@ public abstract class AbstractMatcher<T, V> implements Matcher<T, V> {
 
   public abstract boolean match(T offer, V requirement, List<MatchingResultMessage> errorLog);
 
-  private boolean containsMessage(List<MatchingResultMessage> errorLog,
-                                  MatchingResultMessage message) {
+  private boolean containsMessage(List<MatchingResultMessage> errorLog, MatchingResultMessage message) {
     return errorLog.contains(message);
   }
 }

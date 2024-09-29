@@ -15,19 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor;
 
 public enum OutputFields {
 
-  YEAR("Year"),
-  MONTH("Month"),
-  DAY("Day"),
-  HOUR("Hour"),
-  MINUTE("Minute"),
-  SECOND("Second"),
-  WEEKDAY("Weekday (e.g 'Monday')"),
-  ;
+  YEAR("Year"), MONTH("Month"), DAY("Day"), HOUR("Hour"), MINUTE("Minute"), SECOND("Second"), WEEKDAY(
+          "Weekday (e.g 'Monday')"),;
 
   private final String value;
 

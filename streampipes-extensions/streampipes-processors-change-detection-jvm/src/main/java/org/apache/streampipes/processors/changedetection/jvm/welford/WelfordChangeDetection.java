@@ -55,31 +55,25 @@ public class WelfordChangeDetection extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.changedetection.jvm.welford", 0)
-        .category(DataProcessorType.VALUE_OBSERVER)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(NUMBER_MAPPING),
-                PropertyScope.NONE).build())
-        .requiredFloatParameter(Labels.withId(PARAM_K), 0.0f, 0.0f, 100.0f, 0.01f)
-        .requiredFloatParameter(Labels.withId(PARAM_H), 0.0f, 0.0f, 100.0f, 0.01f)
-        .outputStrategy(
-            OutputStrategies.append(
-                Arrays.asList(
+            .category(DataProcessorType.VALUE_OBSERVER)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId(NUMBER_MAPPING),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredFloatParameter(Labels.withId(PARAM_K), 0.0f, 0.0f, 100.0f, 0.01f)
+            .requiredFloatParameter(Labels.withId(PARAM_H), 0.0f, 0.0f, 100.0f, 0.01f)
+            .outputStrategy(OutputStrategies.append(Arrays.asList(
                     EpProperties.numberEp(Labels.empty(), WelfordEventFields.VAL_LOW.label, SO.NUMBER),
                     EpProperties.numberEp(Labels.empty(), WelfordEventFields.VAL_HIGH.label, SO.NUMBER),
                     EpProperties.booleanEp(Labels.empty(), WelfordEventFields.DECISION_LOW.label, SO.BOOLEAN),
-                    EpProperties.booleanEp(Labels.empty(), WelfordEventFields.DECISION_HIGH.label, SO.BOOLEAN)
-                )
-            ))
-        .build();
+                    EpProperties.booleanEp(Labels.empty(), WelfordEventFields.DECISION_HIGH.label, SO.BOOLEAN))))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
 
     ProcessingElementParameterExtractor extractor = parameters.extractor();
     this.selectedNumberMapping = extractor.mappingPropertyValue(NUMBER_MAPPING);
@@ -95,7 +89,7 @@ public class WelfordChangeDetection extends StreamPipesDataProcessor {
   public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
 
     Double number = event.getFieldBySelector(selectedNumberMapping).getAsPrimitive().getAsDouble();
-    welfordAggregate.update(number);  // update mean and standard deviation
+    welfordAggregate.update(number); // update mean and standard deviation
     Double normalized = getZScoreNormalizedValue(number);
     updateStatistics(normalized);
 

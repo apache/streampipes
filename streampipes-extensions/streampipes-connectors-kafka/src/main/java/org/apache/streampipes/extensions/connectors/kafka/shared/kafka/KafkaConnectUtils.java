@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.kafka.shared.kafka;
 
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
@@ -56,7 +55,6 @@ public class KafkaConnectUtils {
   public static final String USERNAME_KEY = "username";
   public static final String PASSWORD_KEY = "password";
 
-
   private static final String HIDE_INTERNAL_TOPICS = "hide-internal-topics";
 
   public static final String AUTO_OFFSET_RESET_CONFIG = ConsumerConfig.AUTO_OFFSET_RESET_CONFIG;
@@ -92,7 +90,6 @@ public class KafkaConnectUtils {
     return Labels.withId(AUTO_OFFSET_RESET_CONFIG);
   }
 
-
   public static KafkaConfig getConfig(IStaticPropertyExtractor extractor, boolean containsTopic) {
     String brokerUrl = extractor.singleValueParameter(HOST_KEY, String.class);
     String topic = "";
@@ -107,7 +104,7 @@ public class KafkaConnectUtils {
 
     KafkaSecurityConfig securityConfig;
 
-    //KafkaSerializerConfig serializerConfig = new KafkaSerializerByteArrayConfig()
+    // KafkaSerializerConfig serializerConfig = new KafkaSerializerByteArrayConfig()
 
     // check if a user for the authentication is defined
     if (authentication.equals(KafkaConnectUtils.SASL_SSL) || authentication.equals(KafkaConnectUtils.SASL_PLAIN)) {
@@ -115,13 +112,13 @@ public class KafkaConnectUtils {
       String password = extractor.secretValue(PASSWORD_KEY);
 
       securityConfig = isUseSSL
-          ? new KafkaSecuritySaslSSLConfig(username, password) :
-          new KafkaSecuritySaslPlainConfig(username, password);
+              ? new KafkaSecuritySaslSSLConfig(username, password)
+              : new KafkaSecuritySaslPlainConfig(username, password);
     } else {
       // set security config for none authenticated access
       securityConfig = isUseSSL
-          ? new KafkaSecurityUnauthenticatedSSLConfig() :
-          new KafkaSecurityUnauthenticatedPlainConfig();
+              ? new KafkaSecurityUnauthenticatedSSLConfig()
+              : new KafkaSecurityUnauthenticatedPlainConfig();
     }
 
     StaticPropertyAlternatives alternatives = extractor.getStaticPropertyByName(AUTO_OFFSET_RESET_CONFIG,
@@ -142,13 +139,12 @@ public class KafkaConnectUtils {
 
   private static boolean isUseSSL(String authentication) {
     if (authentication.equals(KafkaConnectUtils.UNAUTHENTICATED_PLAIN)
-        || authentication.equals(KafkaConnectUtils.SASL_PLAIN)) {
+            || authentication.equals(KafkaConnectUtils.SASL_PLAIN)) {
       return false;
     } else {
       return true;
     }
   }
-
 
   public static StaticPropertyAlternative getAlternativeUnauthenticatedPlain() {
     return Alternatives.from(Labels.withId(KafkaConnectUtils.UNAUTHENTICATED_PLAIN));
@@ -160,18 +156,17 @@ public class KafkaConnectUtils {
 
   public static StaticPropertyAlternative getAlternativesSaslPlain() {
     return Alternatives.from(Labels.withId(KafkaConnectUtils.SASL_PLAIN),
-        StaticProperties.group(Labels.withId(KafkaConnectUtils.USERNAME_GROUP),
-            StaticProperties.stringFreeTextProperty(Labels.withId(KafkaConnectUtils.USERNAME_KEY)),
-            StaticProperties.secretValue(Labels.withId(KafkaConnectUtils.PASSWORD_KEY))));
+            StaticProperties.group(Labels.withId(KafkaConnectUtils.USERNAME_GROUP),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(KafkaConnectUtils.USERNAME_KEY)),
+                    StaticProperties.secretValue(Labels.withId(KafkaConnectUtils.PASSWORD_KEY))));
   }
 
   public static StaticPropertyAlternative getAlternativesSaslSSL() {
     return Alternatives.from(Labels.withId(KafkaConnectUtils.SASL_SSL),
-        StaticProperties.group(Labels.withId(KafkaConnectUtils.USERNAME_GROUP),
-            StaticProperties.stringFreeTextProperty(Labels.withId(KafkaConnectUtils.USERNAME_KEY)),
-            StaticProperties.secretValue(Labels.withId(KafkaConnectUtils.PASSWORD_KEY))));
+            StaticProperties.group(Labels.withId(KafkaConnectUtils.USERNAME_GROUP),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(KafkaConnectUtils.USERNAME_KEY)),
+                    StaticProperties.secretValue(Labels.withId(KafkaConnectUtils.PASSWORD_KEY))));
   }
-
 
   public static StaticPropertyAlternative getAlternativesLatest() {
     return Alternatives.from(Labels.withId(LATEST));

@@ -29,33 +29,28 @@ public class StreamFilterExpression extends StreamExpression {
   private final List<Expression> filterExpressions;
   private PatternCountExpression patternCountExpression;
 
-  public StreamFilterExpression(StreamExpression streamExpression,
-                                List<Expression> filterExpressions) {
+  public StreamFilterExpression(StreamExpression streamExpression, List<Expression> filterExpressions) {
     this.streamExpression = streamExpression;
     this.filterExpressions = filterExpressions;
   }
 
-  public StreamFilterExpression(StreamExpression streamExpression,
-                                List<Expression> filterExpressions,
-                                PatternCountExpression patternCountExpression) {
+  public StreamFilterExpression(StreamExpression streamExpression, List<Expression> filterExpressions,
+          PatternCountExpression patternCountExpression) {
     this(streamExpression, filterExpressions);
     this.patternCountExpression = patternCountExpression;
   }
 
   @Override
   public String toSiddhiEpl() {
-    String filterExpressions = join(SiddhiConstants.COMMA, this.filterExpressions
-        .stream()
-        .map(Expression::toSiddhiEpl)
-        .collect(Collectors.toList()));
+    String filterExpressions = join(SiddhiConstants.COMMA,
+            this.filterExpressions.stream().map(Expression::toSiddhiEpl).collect(Collectors.toList()));
 
-    filterExpressions = join(SiddhiConstants.EMPTY,
-        this.streamExpression.toSiddhiEpl(),
-        joinWithSquareBracket(SiddhiConstants.EMPTY, filterExpressions));
+    filterExpressions = join(SiddhiConstants.EMPTY, this.streamExpression.toSiddhiEpl(),
+            joinWithSquareBracket(SiddhiConstants.EMPTY, filterExpressions));
 
     if (this.patternCountExpression != null) {
-      filterExpressions =
-          join(SiddhiConstants.WHITESPACE, filterExpressions, this.patternCountExpression.toSiddhiEpl());
+      filterExpressions = join(SiddhiConstants.WHITESPACE, filterExpressions,
+              this.patternCountExpression.toSiddhiEpl());
     }
 
     return filterExpressions;

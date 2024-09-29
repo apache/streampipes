@@ -15,20 +15,19 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx;
 
+import org.apache.streampipes.dataexplorer.QueryResultProvider;
+import org.apache.streampipes.dataexplorer.StreamedQueryResultProvider;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
-import org.apache.streampipes.dataexplorer.QueryResultProvider;
-import org.apache.streampipes.dataexplorer.StreamedQueryResultProvider;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
-import org.apache.streampipes.model.datalake.SpQueryStatus;
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.datalake.SpQueryStatus;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -44,26 +43,18 @@ public class DataExplorerQueryManagementInflux implements IDataExplorerQueryMana
   }
 
   @Override
-  public SpQueryResult getData(ProvidedRestQueryParams queryParams,
-                               boolean ignoreMissingData) throws IllegalArgumentException {
-    return new QueryResultProvider(queryParams,
-                                   this,
-                                   new DataExplorerInfluxQueryExecutor(),
-                                   ignoreMissingData
-    ).getData();
+  public SpQueryResult getData(ProvidedRestQueryParams queryParams, boolean ignoreMissingData)
+          throws IllegalArgumentException {
+    return new QueryResultProvider(queryParams, this, new DataExplorerInfluxQueryExecutor(), ignoreMissingData)
+            .getData();
   }
 
   @Override
-  public void getDataAsStream(ProvidedRestQueryParams params,
-                              OutputFormat format,
-                              boolean ignoreMissingValues,
-                              OutputStream outputStream) throws IOException {
+  public void getDataAsStream(ProvidedRestQueryParams params, OutputFormat format, boolean ignoreMissingValues,
+          OutputStream outputStream) throws IOException {
 
-    new StreamedQueryResultProvider(params, format,
-                                    this,
-                                    new DataExplorerInfluxQueryExecutor(),
-                                    ignoreMissingValues
-    ).getDataAsStream(outputStream);
+    new StreamedQueryResultProvider(params, format, this, new DataExplorerInfluxQueryExecutor(), ignoreMissingValues)
+            .getDataAsStream(outputStream);
   }
 
   @Override
@@ -84,26 +75,21 @@ public class DataExplorerQueryManagementInflux implements IDataExplorerQueryMana
   public boolean deleteData(String measurementID) {
     List<DataLakeMeasure> allMeasurements = getAllMeasurements();
 
-    var measureToDeleteOpt = allMeasurements.stream()
-                                            .filter(measure -> measure.getMeasureName().equals(measurementID))
-                                            .findFirst();
+    var measureToDeleteOpt = allMeasurements.stream().filter(measure -> measure.getMeasureName().equals(measurementID))
+            .findFirst();
 
-    return measureToDeleteOpt.filter(measure -> new DataExplorerInfluxQueryExecutor().deleteData(measure))
-                             .isPresent();
+    return measureToDeleteOpt.filter(measure -> new DataExplorerInfluxQueryExecutor().deleteData(measure)).isPresent();
   }
 
   @Override
   public boolean deleteData(String measurementName, Long startDate, Long endDate) {
-    DeleteQueryParams params =
-        ProvidedRestQueryParamConverter.getDeleteQueryParams(measurementName, startDate, endDate);
-    return new DataExplorerInfluxQueryExecutor().executeQuery(params)
-                                                .getSpQueryStatus()
-                                                .equals(SpQueryStatus.OK);
+    DeleteQueryParams params = ProvidedRestQueryParamConverter.getDeleteQueryParams(measurementName, startDate,
+            endDate);
+    return new DataExplorerInfluxQueryExecutor().executeQuery(params).getSpQueryStatus().equals(SpQueryStatus.OK);
   }
 
   @Override
-  public Map<String, Object> getTagValues(String measurementId,
-                                          String fields) {
+  public Map<String, Object> getTagValues(String measurementId, String fields) {
     return new DataExplorerInfluxQueryExecutor().getTagValues(measurementId, fields);
   }
 

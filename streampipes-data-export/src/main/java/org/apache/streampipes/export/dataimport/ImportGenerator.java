@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.export.dataimport;
 
 import org.apache.streampipes.commons.zip.ZipFileExtractor;
@@ -23,16 +22,16 @@ import org.apache.streampipes.export.constants.ExportConstants;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.lightcouch.DocumentConflictException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 public abstract class ImportGenerator<T> {
 
@@ -142,7 +141,7 @@ public abstract class ImportGenerator<T> {
 
   private StreamPipesApplicationPackage getManifest(Map<String, byte[]> previewFiles) throws JsonProcessingException {
     return this.defaultMapper.readValue(asString(previewFiles.get(ExportConstants.MANIFEST)),
-        StreamPipesApplicationPackage.class);
+            StreamPipesApplicationPackage.class);
   }
 
   protected abstract void handleAsset(Map<String, byte[]> previewFiles, String assetId) throws IOException;
@@ -158,15 +157,15 @@ public abstract class ImportGenerator<T> {
   protected abstract void handlePipeline(String document, String pipelineId) throws JsonProcessingException;
 
   protected abstract void handleDataLakeMeasure(String document, String dataLakeMeasureId)
-      throws JsonProcessingException;
+          throws JsonProcessingException;
 
   protected abstract void handleDashboardWidget(String document, String dashboardWidgetId)
-      throws JsonProcessingException;
+          throws JsonProcessingException;
 
   protected abstract void handleDataViewWidget(String document, String dataViewWidgetId) throws JsonProcessingException;
 
   protected abstract void handleFile(String document, String fileMetadataId, Map<String, byte[]> zipContent)
-      throws IOException;
+          throws IOException;
 
   protected abstract T getReturnObject();
 

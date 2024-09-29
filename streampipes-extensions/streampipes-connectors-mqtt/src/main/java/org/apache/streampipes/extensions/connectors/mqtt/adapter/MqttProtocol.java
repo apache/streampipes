@@ -37,14 +37,14 @@ import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Locales;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MqttProtocol implements StreamPipesAdapter {
 
@@ -64,49 +64,41 @@ public class MqttProtocol implements StreamPipesAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder
-        .create(ID, 0, MqttProtocol::new)
-        .withSupportedParsers(Parsers.defaultParsers())
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
-        .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
-        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
-            MqttConnectUtils.getAlternativesTwo())
-        .requiredTextParameter(MqttConnectUtils.getTopicLabel())
-        .buildConfiguration();
+    return AdapterConfigurationBuilder.create(ID, 0, MqttProtocol::new).withSupportedParsers(Parsers.defaultParsers())
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
+            .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
+            .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
+                    MqttConnectUtils.getAlternativesTwo())
+            .requiredTextParameter(MqttConnectUtils.getTopicLabel()).buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
 
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
-    this.mqttConsumer = new MqttConsumer(
-        this.mqttConfig,
-        new BrokerEventProcessor(extractor.selectedParser(), collector)
-    );
+    this.mqttConsumer = new MqttConsumer(this.mqttConfig,
+            new BrokerEventProcessor(extractor.selectedParser(), collector));
 
     Thread thread = new Thread(this.mqttConsumer);
     thread.start();
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
+          throws AdapterException {
     this.mqttConsumer.close();
   }
 
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     try {
       AtomicReference<Throwable> exceptionRef = new AtomicReference<>();
       this.applyConfiguration(extractor.getStaticPropertyExtractor());
       List<byte[]> elements = new ArrayList<>();
       InternalEventProcessor<byte[]> eventProcessor = elements::add;
-
 
       MqttConsumer consumer = new MqttConsumer(this.mqttConfig, eventProcessor);
 

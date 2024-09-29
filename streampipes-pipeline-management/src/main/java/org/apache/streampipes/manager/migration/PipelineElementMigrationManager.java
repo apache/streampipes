@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.migration;
+
+import static org.apache.streampipes.manager.migration.MigrationUtils.getApplicableMigration;
 
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -33,15 +34,13 @@ import org.apache.streampipes.storage.api.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.IDataSinkStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.apache.streampipes.manager.migration.MigrationUtils.getApplicableMigration;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PipelineElementMigrationManager extends AbstractMigrationManager implements IMigrationHandler {
 
@@ -51,9 +50,8 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
   private final IDataProcessorStorage dataProcessorStorage;
   private final IDataSinkStorage dataSinkStorage;
 
-  public PipelineElementMigrationManager(IPipelineStorage pipelineStorage,
-                                         IDataProcessorStorage dataProcessorStorage,
-                                         IDataSinkStorage dataSinkStorage) {
+  public PipelineElementMigrationManager(IPipelineStorage pipelineStorage, IDataProcessorStorage dataProcessorStorage,
+          IDataSinkStorage dataSinkStorage) {
     this.pipelineStorage = pipelineStorage;
     this.dataProcessorStorage = dataProcessorStorage;
     this.dataSinkStorage = dataSinkStorage;
@@ -61,66 +59,46 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
 
   @Override
   public void handleMigrations(SpServiceRegistration extensionsServiceConfig,
-                               List<ModelMigratorConfig> migrationConfigs) {
+          List<ModelMigratorConfig> migrationConfigs) {
     if (!migrationConfigs.isEmpty()) {
       LOG.info("Updating pipeline element descriptions by replacement...");
       updateDescriptions(migrationConfigs, extensionsServiceConfig.getServiceUrl());
       LOG.info("Pipeline element descriptions are up to date.");
 
-      LOG.info("Received {} pipeline element migrations from extension service {}.",
-          migrationConfigs.size(),
-          extensionsServiceConfig.getServiceUrl());
+      LOG.info("Received {} pipeline element migrations from extension service {}.", migrationConfigs.size(),
+              extensionsServiceConfig.getServiceUrl());
       var availablePipelines = pipelineStorage.findAll();
       if (!availablePipelines.isEmpty()) {
         LOG.info("Found {} available pipelines. Checking pipelines for applicable migrations...",
-            availablePipelines.size()
-        );
+                availablePipelines.size());
       }
 
       for (var pipeline : availablePipelines) {
         if (shouldMigratePipeline(pipeline, migrationConfigs)) {
           List<MigrationResult<?>> failedMigrations = new ArrayList<>();
 
-          var migratedDataProcessors = pipeline.getSepas()
-              .stream()
-              .map(processor -> {
-                if (getApplicableMigration(processor, migrationConfigs).isPresent()) {
-                  return migratePipelineElement(
-                      processor,
-                      migrationConfigs,
-                      String.format("%s/%s/processor",
-                          extensionsServiceConfig.getServiceUrl(),
-                          MIGRATION_ENDPOINT
-                      ),
-                      failedMigrations
-                  );
-                } else {
-                  LOG.info("No migration applicable for data processor '{}'.", processor.getElementId());
-                  return processor;
-                }
-              })
-              .toList();
+          var migratedDataProcessors = pipeline.getSepas().stream().map(processor -> {
+            if (getApplicableMigration(processor, migrationConfigs).isPresent()) {
+              return migratePipelineElement(processor, migrationConfigs,
+                      String.format("%s/%s/processor", extensionsServiceConfig.getServiceUrl(), MIGRATION_ENDPOINT),
+                      failedMigrations);
+            } else {
+              LOG.info("No migration applicable for data processor '{}'.", processor.getElementId());
+              return processor;
+            }
+          }).toList();
           pipeline.setSepas(migratedDataProcessors);
 
-          var migratedDataSinks = pipeline.getActions()
-              .stream()
-              .map(sink -> {
-                if (getApplicableMigration(sink, migrationConfigs).isPresent()) {
-                  return migratePipelineElement(
-                      sink,
-                      migrationConfigs,
-                      String.format("%s/%s/sink",
-                          extensionsServiceConfig.getServiceUrl(),
-                          MIGRATION_ENDPOINT
-                      ),
-                      failedMigrations
-                  );
-                } else {
-                  LOG.info("No migration applicable for data sink '{}'.", sink.getElementId());
-                  return sink;
-                }
-              })
-              .toList();
+          var migratedDataSinks = pipeline.getActions().stream().map(sink -> {
+            if (getApplicableMigration(sink, migrationConfigs).isPresent()) {
+              return migratePipelineElement(sink, migrationConfigs,
+                      String.format("%s/%s/sink", extensionsServiceConfig.getServiceUrl(), MIGRATION_ENDPOINT),
+                      failedMigrations);
+            } else {
+              LOG.info("No migration applicable for data sink '{}'.", sink.getElementId());
+              return sink;
+            }
+          }).toList();
           pipeline.setActions(migratedDataSinks);
 
           pipelineStorage.updateElement(pipeline);
@@ -138,33 +116,32 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
     }
   }
 
-  private boolean shouldMigratePipeline(Pipeline pipeline,
-                                        List<ModelMigratorConfig> migrationConfigs) {
-    return Stream
-        .concat(pipeline.getSepas().stream(), pipeline.getActions().stream())
-        .anyMatch(element -> getApplicableMigration(element, migrationConfigs).isPresent());
+  private boolean shouldMigratePipeline(Pipeline pipeline, List<ModelMigratorConfig> migrationConfigs) {
+    return Stream.concat(pipeline.getSepas().stream(), pipeline.getActions().stream())
+            .anyMatch(element -> getApplicableMigration(element, migrationConfigs).isPresent());
   }
 
   /**
-   * Takes care about the failed migrations of pipeline elements.
-   * This includes the following steps:
+   * Takes care about the failed migrations of pipeline elements. This includes the following steps:
    * <ul>
-   *   <li> logging of failed pipeline elements
-   *   <li> setting migration results as pipeline notifications
-   *   <li> updating pipeline health status
-   *   <li> stopping the pipeline
+   * <li>logging of failed pipeline elements
+   * <li>setting migration results as pipeline notifications
+   * <li>updating pipeline health status
+   * <li>stopping the pipeline
    * </ul>
    *
-   * @param pipeline         the pipeline affected by failed migrations
-   * @param failedMigrations the list of failed migrations
+   * @param pipeline
+   *          the pipeline affected by failed migrations
+   * @param failedMigrations
+   *          the list of failed migrations
    */
   protected void handleFailedMigrations(Pipeline pipeline, List<MigrationResult<?>> failedMigrations) {
     LOG.error("Failures in migration detected - The following pipeline elements could to be migrated:\n"
-        + StringUtils.join(failedMigrations.stream().map(Record::toString).toList()), "\n");
+            + StringUtils.join(failedMigrations.stream().map(Record::toString).toList()), "\n");
 
-    pipeline.setPipelineNotifications(failedMigrations.stream().map(
-        failedMigration -> "Failed migration of pipeline element: %s".formatted(failedMigration.message())
-    ).toList());
+    pipeline.setPipelineNotifications(failedMigrations.stream()
+            .map(failedMigration -> "Failed migration of pipeline element: %s".formatted(failedMigration.message()))
+            .toList());
     pipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
 
     pipelineStorage.updateElement(pipeline);
@@ -174,7 +151,6 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
 
     stopPipeline(pipeline);
   }
-
 
   public void stopPipeline(Pipeline pipeline) {
     var pipelineExecutor = new PipelineExecutor(pipeline);
@@ -188,24 +164,25 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
   }
 
   /**
-   * Handle the migration of a pipeline element with respect to the given model migration configs.
-   * All applicable migrations found in the provided configs are executed for the given pipeline element.
-   * In case a migration fails, the related pipeline element receives the latest definition of its static properties,
-   * so that the pipeline element can be adapted by the user to resolve the failed migration.
+   * Handle the migration of a pipeline element with respect to the given model migration configs. All applicable
+   * migrations found in the provided configs are executed for the given pipeline element. In case a migration fails,
+   * the related pipeline element receives the latest definition of its static properties, so that the pipeline element
+   * can be adapted by the user to resolve the failed migration.
    *
-   * @param pipelineElement  pipeline element to be migrated
-   * @param modelMigrations  list of model migrations that might be applicable for this pipeline element
-   * @param url              url of the extensions service endpoint that handles the migration
-   * @param failedMigrations collection of failed migrations which is extended by occurring migration failures
-   * @param <T>              type of the pipeline element (e.g., DataProcessorInvocation)
+   * @param pipelineElement
+   *          pipeline element to be migrated
+   * @param modelMigrations
+   *          list of model migrations that might be applicable for this pipeline element
+   * @param url
+   *          url of the extensions service endpoint that handles the migration
+   * @param failedMigrations
+   *          collection of failed migrations which is extended by occurring migration failures
+   * @param <T>
+   *          type of the pipeline element (e.g., DataProcessorInvocation)
    * @return the migrated (or - in case of a failure - updated) pipeline element
    */
-  protected <T extends InvocableStreamPipesEntity> T migratePipelineElement(
-      T pipelineElement,
-      List<ModelMigratorConfig> modelMigrations,
-      String url,
-      List<MigrationResult<?>> failedMigrations
-  ) {
+  protected <T extends InvocableStreamPipesEntity> T migratePipelineElement(T pipelineElement,
+          List<ModelMigratorConfig> modelMigrations, String url, List<MigrationResult<?>> failedMigrations) {
 
     // loop until no migrations are available anymore
     // this allows to apply multiple migrations for a pipeline element sequentially
@@ -213,17 +190,10 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
     while (getApplicableMigration(pipelineElement, modelMigrations).isPresent() && failedMigrations.isEmpty()) {
 
       var migrationConfig = getApplicableMigration(pipelineElement, modelMigrations).get();
-      LOG.info(
-          "Found applicable migration for pipeline element '{}': {}",
-          pipelineElement.getElementId(),
-          migrationConfig
-      );
+      LOG.info("Found applicable migration for pipeline element '{}': {}", pipelineElement.getElementId(),
+              migrationConfig);
 
-      var migrationResult = performMigration(
-          pipelineElement,
-          migrationConfig,
-          url
-      );
+      var migrationResult = performMigration(pipelineElement, migrationConfig, url);
 
       if (migrationResult.success()) {
         LOG.info("Migration successfully performed by extensions service. Updating pipeline element invocation ...");
@@ -242,21 +212,20 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
   }
 
   /**
-   * Update the static properties of the failed pipeline element with its description.
-   * This allows to adapt the failed pipeline element in the UI to overcome the failed migration.
+   * Update the static properties of the failed pipeline element with its description. This allows to adapt the failed
+   * pipeline element in the UI to overcome the failed migration.
    *
-   * @param pipelineElement pipeline element with failed migration
+   * @param pipelineElement
+   *          pipeline element with failed migration
    */
   protected void updateFailedPipelineElement(InvocableStreamPipesEntity pipelineElement) {
     List<StaticProperty> updatedStaticProperties = new ArrayList<>();
     if (pipelineElement instanceof DataProcessorInvocation) {
-      updatedStaticProperties = dataProcessorStorage
-          .getFirstDataProcessorByAppId(pipelineElement.getAppId())
-          .getStaticProperties();
+      updatedStaticProperties = dataProcessorStorage.getFirstDataProcessorByAppId(pipelineElement.getAppId())
+              .getStaticProperties();
     } else if (pipelineElement instanceof DataSinkInvocation) {
-      updatedStaticProperties = dataSinkStorage
-          .getFirstDataSinkByAppId(pipelineElement.getAppId())
-          .getStaticProperties();
+      updatedStaticProperties = dataSinkStorage.getFirstDataSinkByAppId(pipelineElement.getAppId())
+              .getStaticProperties();
     }
     pipelineElement.setStaticProperties(updatedStaticProperties);
   }

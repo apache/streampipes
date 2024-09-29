@@ -34,12 +34,13 @@ public interface ISpServiceDiscovery {
   /**
    * Get service endpoints
    *
-   * @param svcGroup          service group for registered service
-   * @param restrictToHealthy retrieve healthy or all registered services for a service group
-   * @param filterByTags      filter param to filter list of registered services
+   * @param svcGroup
+   *          service group for registered service
+   * @param restrictToHealthy
+   *          retrieve healthy or all registered services for a service group
+   * @param filterByTags
+   *          filter param to filter list of registered services
    * @return list of services
    */
-  List<String> getServiceEndpoints(String svcGroup,
-                                   boolean restrictToHealthy,
-                                   List<String> filterByTags);
+  List<String> getServiceEndpoints(String svcGroup, boolean restrictToHealthy, List<String> filterByTags);
 }

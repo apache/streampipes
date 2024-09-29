@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.schema;
 
 import java.util.List;
@@ -82,7 +81,7 @@ public class Enumeration extends ValueSpecification {
     }
     Enumeration that = (Enumeration) o;
     return Objects.equals(label, that.label) && Objects.equals(description, that.description)
-           && Objects.equals(runtimeValues, that.runtimeValues);
+            && Objects.equals(runtimeValues, that.runtimeValues);
   }
 
   @Override

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
 import org.apache.streampipes.extensions.api.connect.TransformationRule;
@@ -23,14 +22,13 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ValueEventTransformerTest {
 
@@ -49,10 +47,10 @@ public class ValueEventTransformerTest {
     keys.add("a");
 
     List<TransformationRule> rules = new ArrayList<>();
-    rules.add(new UnitTransformationRule(keys,
-        "http://qudt.org/vocab/unit#Kelvin", "http://qudt.org/vocab/unit#DegreeCelsius"));
+    rules.add(new UnitTransformationRule(keys, "http://qudt.org/vocab/unit#Kelvin",
+            "http://qudt.org/vocab/unit#DegreeCelsius"));
 
-    for (var rule: rules) {
+    for (var rule : rules) {
       event = rule.apply(event);
     }
 

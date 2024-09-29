@@ -15,23 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer;
-
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.test.generator.EventPropertyPrimitiveTestBuilder;
-import org.apache.streampipes.test.generator.EventSchemaTestBuilder;
-import org.apache.streampipes.vocabulary.XSD;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
-import java.net.URI;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -41,6 +25,20 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.test.generator.EventPropertyPrimitiveTestBuilder;
+import org.apache.streampipes.test.generator.EventSchemaTestBuilder;
+import org.apache.streampipes.vocabulary.XSD;
+
+import java.net.URI;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 public class DataExplorerSchemaManagementTest {
   public static final String NEW_PROPERTY = "newProperty";
@@ -69,16 +67,11 @@ public class DataExplorerSchemaManagementTest {
         .persist(any());
   }
 
-
   @Test
   public void createMeasurementWithUpdateStrategy() {
 
-    var oldMeasure = getSampleMeasure(
-        DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA,
-        List.of(
-            getEventProperty(OLD_PROPERTY, XSD.STRING)
-        )
-    );
+    var oldMeasure = getSampleMeasure(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA,
+            List.of(getEventProperty(OLD_PROPERTY, XSD.STRING)));
 
     when(dataLakeStorageMock.findAll()).thenReturn(List.of(oldMeasure));
     when(dataLakeStorageMock.getElementById(any())).thenReturn(oldMeasure);
@@ -89,23 +82,17 @@ public class DataExplorerSchemaManagementTest {
     var resultMeasure = schemaManagement.createOrUpdateMeasurement(newMeasure);
 
     assertEquals(newMeasure.getMeasureName(), resultMeasure.getMeasureName());
-    verify(dataLakeStorageMock, Mockito.times(1))
-        .updateElement(any());
+    verify(dataLakeStorageMock, Mockito.times(1)).updateElement(any());
     assertFalse(containsPropertyWithName(resultMeasure, OLD_PROPERTY));
     assertTrue(containsPropertyWithName(resultMeasure, NEW_PROPERTY));
 
   }
 
-
   @Test
   public void createMeasurementWithExtendSchemaStrategy() {
 
-    var oldMeasure = getSampleMeasure(
-        DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA,
-        List.of(
-            getEventProperty(OLD_PROPERTY, XSD.STRING)
-        )
-    );
+    var oldMeasure = getSampleMeasure(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA,
+            List.of(getEventProperty(OLD_PROPERTY, XSD.STRING)));
     when(dataLakeStorageMock.findAll()).thenReturn(List.of(oldMeasure));
     when(dataLakeStorageMock.getElementById(any())).thenReturn(oldMeasure);
     var schemaManagement = new DataExplorerSchemaManagement(dataLakeStorageMock);
@@ -118,17 +105,11 @@ public class DataExplorerSchemaManagementTest {
     assertTrue(containsPropertyWithName(resultMeasure, OLD_PROPERTY));
     assertTrue(containsPropertyWithName(resultMeasure, NEW_PROPERTY));
   }
-
 
   @Test
   public void createMeasurementWithExtendSchemaStrategyAndDifferentPropertyTypes() {
-    var oldMeasure = getSampleMeasure(
-        DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA,
-        List.of(
-            getEventProperty(OLD_PROPERTY, XSD.STRING),
-            getEventProperty(NEW_PROPERTY, XSD.INTEGER)
-        )
-    );
+    var oldMeasure = getSampleMeasure(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA,
+            List.of(getEventProperty(OLD_PROPERTY, XSD.STRING), getEventProperty(NEW_PROPERTY, XSD.INTEGER)));
 
     when(dataLakeStorageMock.findAll()).thenReturn(List.of(oldMeasure));
     when(dataLakeStorageMock.getElementById(any())).thenReturn(oldMeasure);
@@ -140,65 +121,32 @@ public class DataExplorerSchemaManagementTest {
     var resultMeasure = schemaManagement.createOrUpdateMeasurement(newMeasure);
     assertEquals(newMeasure.getMeasureName(), resultMeasure.getMeasureName());
     verify(dataLakeStorageMock, Mockito.times(1)).updateElement(any());
-    assertEquals(
-        2,
-        resultMeasure.getEventSchema()
-                     .getEventProperties()
-                     .size()
-    );
+    assertEquals(2, resultMeasure.getEventSchema().getEventProperties().size());
     assertTrue(containsPropertyWithName(resultMeasure, OLD_PROPERTY));
     assertTrue(containsPropertyWithName(resultMeasure, NEW_PROPERTY));
   }
 
-  private EventProperty getEventProperty(
-      String runtimeName,
-      URI runtimeType
-  ) {
-    return EventPropertyPrimitiveTestBuilder
-        .create()
-        .withRuntimeName(runtimeName)
-        .withRuntimeType(runtimeType)
-        .build();
+  private EventProperty getEventProperty(String runtimeName, URI runtimeType) {
+    return EventPropertyPrimitiveTestBuilder.create().withRuntimeName(runtimeName).withRuntimeType(runtimeType).build();
   }
 
   private DataLakeMeasure getNewMeasure(DataLakeMeasureSchemaUpdateStrategy updateStrategy) {
-    return getSampleMeasure(
-        updateStrategy,
-        List.of(getEventProperty(NEW_PROPERTY, XSD.STRING))
-    );
+    return getSampleMeasure(updateStrategy, List.of(getEventProperty(NEW_PROPERTY, XSD.STRING)));
   }
 
-  private DataLakeMeasure getSampleMeasure(
-      DataLakeMeasureSchemaUpdateStrategy updateStrategy,
-      List<EventProperty> eventProperties
-  ) {
+  private DataLakeMeasure getSampleMeasure(DataLakeMeasureSchemaUpdateStrategy updateStrategy,
+          List<EventProperty> eventProperties) {
     var measure = new DataLakeMeasure();
     measure.setMeasureName("testMeasure");
     measure.setSchemaUpdateStrategy(updateStrategy);
 
-    measure.setEventSchema(
-        EventSchemaTestBuilder
-            .create()
-            .withEventProperties(
-                eventProperties
-            )
-            .build()
-    );
+    measure.setEventSchema(EventSchemaTestBuilder.create().withEventProperties(eventProperties).build());
 
     return measure;
   }
 
-  private boolean containsPropertyWithName(
-      DataLakeMeasure measure,
-      String runtimeName
-  ) {
-    return measure
-        .getEventSchema()
-        .getEventProperties()
-        .stream()
-        .anyMatch(
-            eventProperty -> eventProperty.getRuntimeName()
-                                          .equals(runtimeName)
-        );
+  private boolean containsPropertyWithName(DataLakeMeasure measure, String runtimeName) {
+    return measure.getEventSchema().getEventProperties().stream()
+            .anyMatch(eventProperty -> eventProperty.getRuntimeName().equals(runtimeName));
   }
 }

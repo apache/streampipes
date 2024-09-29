@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
@@ -27,6 +26,8 @@ import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +37,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v2/connect/master/guess")
@@ -49,10 +48,7 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
     super(GuessManagement::new);
   }
 
-  @PostMapping(
-      path = "/schema",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/schema", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> guessSchema(@RequestBody AdapterDescription adapterDescription) {
 
     try {
@@ -70,10 +66,7 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
     }
   }
 
-  @PostMapping(
-      path = "/schema/preview",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/schema/preview", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getAdapterEventPreview(@RequestBody AdapterEventPreview previewRequest) {
     try {
       return ok(managementService.performAdapterEventPreview(previewRequest));
@@ -82,4 +75,3 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
     }
   }
 }
-

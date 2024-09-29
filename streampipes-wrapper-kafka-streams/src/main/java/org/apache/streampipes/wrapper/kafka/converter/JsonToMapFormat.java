@@ -19,16 +19,15 @@ package org.apache.streampipes.wrapper.kafka.converter;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.kafka.streams.kstream.ValueMapper;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JsonToMapFormat implements ValueMapper<String, Iterable<Map<String,
-    Object>>> {
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.kafka.streams.kstream.ValueMapper;
+
+public class JsonToMapFormat implements ValueMapper<String, Iterable<Map<String, Object>>> {
 
   private ObjectMapper mapper;
   private InvocableStreamPipesEntity graph;
@@ -37,7 +36,6 @@ public class JsonToMapFormat implements ValueMapper<String, Iterable<Map<String,
     this.mapper = new ObjectMapper();
     this.graph = graph;
   }
-
 
   @Override
   public Iterable<Map<String, Object>> apply(String s) {

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.helpers;
 
 import org.apache.streampipes.model.output.AppendOutputStrategy;
@@ -47,21 +46,21 @@ public class OutputStrategies {
   /**
    * Creates a {@link org.apache.streampipes.model.output.CustomOutputStrategy}.
    *
-   * @param outputBoth If two input streams are expected by a pipeline element, you can use outputBoth to indicate
-   *                   whether the properties of both input streams should be available to the pipeline developer for
-   *                   selection.
+   * @param outputBoth
+   *          If two input streams are expected by a pipeline element, you can use outputBoth to indicate whether the
+   *          properties of both input streams should be available to the pipeline developer for selection.
    * @return CustomOutputStrategy
    */
   public static CustomOutputStrategy custom(boolean outputBoth) {
     return new CustomOutputStrategy(outputBoth);
   }
 
-
   /**
    * Creates a {@link org.apache.streampipes.model.output.AppendOutputStrategy}. Append output strategies add additional
    * properties to an input event stream.
    *
-   * @param appendProperties An arbitrary number of event properties that are appended to any input stream.
+   * @param appendProperties
+   *          An arbitrary number of event properties that are appended to any input stream.
    * @return AppendOutputStrategy
    */
   public static AppendOutputStrategy append(EventProperty... appendProperties) {
@@ -73,10 +72,11 @@ public class OutputStrategies {
   }
 
   /**
-   * Creates a {@link org.apache.streampipes.model.output.FixedOutputStrategy}.
-   * Fixed output strategies always output the schema defined by the pipeline element itself.
+   * Creates a {@link org.apache.streampipes.model.output.FixedOutputStrategy}. Fixed output strategies always output
+   * the schema defined by the pipeline element itself.
    *
-   * @param fixedProperties An arbitrary number of event properties that form the output event schema
+   * @param fixedProperties
+   *          An arbitrary number of event properties that form the output event schema
    * @return FixedOutputStrategy
    */
   public static FixedOutputStrategy fixed(EventProperty... fixedProperties) {

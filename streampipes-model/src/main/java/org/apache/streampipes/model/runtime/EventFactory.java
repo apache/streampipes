@@ -25,12 +25,12 @@ import org.apache.streampipes.model.runtime.field.NestedField;
 import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import com.google.gson.internal.LinkedTreeMap;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gson.internal.LinkedTreeMap;
 
 public class EventFactory {
 
@@ -39,16 +39,14 @@ public class EventFactory {
     fieldMap.putAll(firstEvent.getFields());
     fieldMap.putAll(secondEvent.getFields());
 
-    return new Event(fieldMap, makeMergedSourceInfo(), makeMergedSchemaInfo(firstEvent, secondEvent,
-        outputSchema));
+    return new Event(fieldMap, makeMergedSourceInfo(), makeMergedSchemaInfo(firstEvent, secondEvent, outputSchema));
   }
 
   private static SourceInfo makeMergedSourceInfo() {
     return new SourceInfo(null, null);
   }
 
-  private static SchemaInfo makeMergedSchemaInfo(Event firstEvent, Event secondEvent, EventSchema
-      outputSchema) {
+  private static SchemaInfo makeMergedSchemaInfo(Event firstEvent, Event secondEvent, EventSchema outputSchema) {
     List<PropertyRenameRule> propertyRenameRules = new ArrayList<>();
     propertyRenameRules.addAll(firstEvent.getSchemaInfo().getRenameRules());
     propertyRenameRules.addAll(secondEvent.getSchemaInfo().getRenameRules());
@@ -62,9 +60,7 @@ public class EventFactory {
     return fromMap(event, sourceInfo, schemaInfo);
   }
 
-  public static Event fromMap(Map<String, Object> event,
-                              SourceInfo sourceInfo,
-                              SchemaInfo schemaInfo) {
+  public static Event fromMap(Map<String, Object> event, SourceInfo sourceInfo, SchemaInfo schemaInfo) {
 
     Map<String, AbstractField> fields = new LinkedTreeMap<>();
     String selectorPrefix = sourceInfo.getSelectorPrefix();
@@ -82,8 +78,8 @@ public class EventFactory {
     return new Event(fieldMap, event.getSourceInfo(), event.getSchemaInfo());
   }
 
-  private static Map<String, Object> makeRuntimeMapSubset(Map<String, Object> event, List<String>
-      fieldSelectors, String currentPrefix) {
+  private static Map<String, Object> makeRuntimeMapSubset(Map<String, Object> event, List<String> fieldSelectors,
+          String currentPrefix) {
     Map<String, Object> outMap = new HashMap<>();
     for (String key : event.keySet()) {
       if (contains(makeSelector(key, currentPrefix), fieldSelectors)) {
@@ -100,7 +96,7 @@ public class EventFactory {
   }
 
   private static Map<String, AbstractField> makeFieldMap(Map<String, AbstractField> fields,
-                                                         List<String> fieldSelectors) {
+          List<String> fieldSelectors) {
     Map<String, AbstractField> outMap = new HashMap<>();
     for (String key : fields.keySet()) {
       if (contains(key, fieldSelectors)) {
@@ -108,8 +104,7 @@ public class EventFactory {
         if (PrimitiveField.class.isInstance(field) || ListField.class.isInstance(field)) {
           outMap.put(key, field);
         } else {
-          field.getAsComposite().setValue(makeFieldMap(field.getAsComposite().getRawValue(),
-              fieldSelectors));
+          field.getAsComposite().setValue(makeFieldMap(field.getAsComposite().getRawValue(), fieldSelectors));
           outMap.put(key, field);
         }
       }
@@ -122,8 +117,7 @@ public class EventFactory {
     return fieldSelectors.stream().anyMatch(f -> f.equals(key));
   }
 
-  private static AbstractField makeField(String runtimeName, Object o, String currentSelector,
-                                         SchemaInfo schemaInfo) {
+  private static AbstractField makeField(String runtimeName, Object o, String currentSelector, SchemaInfo schemaInfo) {
     if (o instanceof Map) {
       Map<String, Object> items = (Map<String, Object>) o;
       Map<String, AbstractField> fieldMap = new LinkedTreeMap<>();
@@ -131,30 +125,25 @@ public class EventFactory {
         String selector = makeSelector(key, currentSelector);
         fieldMap.put(selector, makeField(key, value, selector, schemaInfo));
       });
-      return new NestedField(runtimeName, getNewRuntimeName(currentSelector, runtimeName,
-          schemaInfo.getRenameRules()),
-          fieldMap);
+      return new NestedField(runtimeName, getNewRuntimeName(currentSelector, runtimeName, schemaInfo.getRenameRules()),
+              fieldMap);
     } else if (o instanceof List) {
       List<AbstractField> items = new ArrayList<>();
       for (Integer i = 0; i < ((List) o).size(); i++) {
         items.add(makeField("", ((List) o).get(i), currentSelector + "::" + i, schemaInfo));
       }
-      return new ListField(runtimeName, getNewRuntimeName(currentSelector, runtimeName, schemaInfo
-          .getRenameRules()), items);
+      return new ListField(runtimeName, getNewRuntimeName(currentSelector, runtimeName, schemaInfo.getRenameRules()),
+              items);
     } else {
-      return new PrimitiveField(runtimeName, getNewRuntimeName(currentSelector, runtimeName,
-          schemaInfo.getRenameRules()), o);
+      return new PrimitiveField(runtimeName,
+              getNewRuntimeName(currentSelector, runtimeName, schemaInfo.getRenameRules()), o);
     }
   }
 
-  private static String getNewRuntimeName(String currentSelector, String
-      runtimeName, List<PropertyRenameRule>
-                                              renameRules) {
-    return renameRules
-        .stream()
-        .filter(r -> r.getRuntimeId().equals(currentSelector))
-        .findFirst()
-        .map(PropertyRenameRule::getNewRuntimeName).orElse(runtimeName);
+  private static String getNewRuntimeName(String currentSelector, String runtimeName,
+          List<PropertyRenameRule> renameRules) {
+    return renameRules.stream().filter(r -> r.getRuntimeId().equals(currentSelector)).findFirst()
+            .map(PropertyRenameRule::getNewRuntimeName).orElse(runtimeName);
   }
 
   private static String makeSelector(String key, String selectorPrefix) {

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.storage;
 
 import org.apache.streampipes.manager.data.PipelineGraph;
@@ -50,11 +49,9 @@ public class PipelineStorageService {
 
   private void preparePipeline() {
     PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
-    List<InvocableStreamPipesEntity> graphs = pipelineGraph
-        .vertexSet()
-        .stream()
-        .filter(v -> v instanceof InvocableStreamPipesEntity).map(v -> (InvocableStreamPipesEntity) v)
-        .collect(Collectors.toList());
+    List<InvocableStreamPipesEntity> graphs = pipelineGraph.vertexSet().stream()
+            .filter(v -> v instanceof InvocableStreamPipesEntity).map(v -> (InvocableStreamPipesEntity) v)
+            .collect(Collectors.toList());
     encryptSecrets(graphs);
 
     List<DataSinkInvocation> secs = filter(graphs, DataSinkInvocation.class);
@@ -73,10 +70,6 @@ public class PipelineStorageService {
   }
 
   private <T> List<T> filter(List<InvocableStreamPipesEntity> graphs, Class<T> clazz) {
-    return graphs
-        .stream()
-        .filter(clazz::isInstance)
-        .map(clazz::cast)
-        .collect(Collectors.toList());
+    return graphs.stream().filter(clazz::isInstance).map(clazz::cast).collect(Collectors.toList());
   }
 }

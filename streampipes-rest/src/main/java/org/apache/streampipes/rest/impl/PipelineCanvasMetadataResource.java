@@ -41,10 +41,9 @@ public class PipelineCanvasMetadataResource extends AbstractRestResource {
 
   @GetMapping(path = "/pipeline/{pipelineId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PipelineCanvasMetadata> getPipelineCanvasMetadataForPipeline(
-      @PathVariable("pipelineId") String pipelineId) {
+          @PathVariable("pipelineId") String pipelineId) {
     try {
-      return ok(getPipelineCanvasMetadataStorage()
-          .getPipelineCanvasMetadataForPipeline(pipelineId));
+      return ok(getPipelineCanvasMetadataStorage().getPipelineCanvasMetadataForPipeline(pipelineId));
     } catch (IllegalArgumentException e) {
       throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
     }
@@ -52,48 +51,38 @@ public class PipelineCanvasMetadataResource extends AbstractRestResource {
 
   @GetMapping(path = "{canvasId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PipelineCanvasMetadata> getPipelineCanvasMetadata(
-      @PathVariable("canvasId") String pipelineCanvasId) {
+          @PathVariable("canvasId") String pipelineCanvasId) {
     try {
-      return ok(getPipelineCanvasMetadataStorage()
-          .getElementById(pipelineCanvasId));
+      return ok(getPipelineCanvasMetadataStorage().getElementById(pipelineCanvasId));
     } catch (IllegalArgumentException e) {
       throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
     }
   }
 
-  @PostMapping(
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> storePipelineCanvasMetadata(@RequestBody PipelineCanvasMetadata pipelineCanvasMetadata) {
     getPipelineCanvasMetadataStorage().persist(pipelineCanvasMetadata);
     return ok();
   }
 
-  @DeleteMapping(
-      path = "{canvasId}",
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @DeleteMapping(path = "{canvasId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> deletePipelineCanvasMetadata(@PathVariable("canvasId") String pipelineCanvasId) {
     PipelineCanvasMetadata metadata = find(pipelineCanvasId);
     getPipelineCanvasMetadataStorage().deleteElement(metadata);
     return ok();
   }
 
-  @DeleteMapping(
-      path = "/pipeline/{pipelineId}",
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @DeleteMapping(path = "/pipeline/{pipelineId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> deletePipelineCanvasMetadataForPipeline(@PathVariable("pipelineId") String pipelineId) {
-    PipelineCanvasMetadata metadata =
-        getPipelineCanvasMetadataStorage().getPipelineCanvasMetadataForPipeline(pipelineId);
+    PipelineCanvasMetadata metadata = getPipelineCanvasMetadataStorage()
+            .getPipelineCanvasMetadataForPipeline(pipelineId);
     getPipelineCanvasMetadataStorage().deleteElement(metadata);
     return ok();
   }
 
-  @PutMapping(
-      path = "{canvasId}",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "{canvasId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> updatePipelineCanvasMetadata(@PathVariable("canvasId") String pipelineCanvasId,
-                                                           @RequestBody PipelineCanvasMetadata pipelineCanvasMetadata) {
+          @RequestBody PipelineCanvasMetadata pipelineCanvasMetadata) {
     try {
       var existing = getPipelineCanvasMetadataStorage().getElementById(pipelineCanvasMetadata.getId());
       pipelineCanvasMetadata.setRev(existing.getRev());

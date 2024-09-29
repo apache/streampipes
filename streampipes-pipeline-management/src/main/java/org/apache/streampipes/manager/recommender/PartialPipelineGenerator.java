@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.manager.recommender;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -32,8 +30,7 @@ public class PartialPipelineGenerator {
   private final String baseRecDomId;
   private final AllElementsProvider elementsProvider;
 
-  public PartialPipelineGenerator(String baseRecDomId,
-                                  AllElementsProvider elementsProvider) {
+  public PartialPipelineGenerator(String baseRecDomId, AllElementsProvider elementsProvider) {
     this.baseRecDomId = baseRecDomId;
     this.elementsProvider = elementsProvider;
   }
@@ -50,9 +47,8 @@ public class PartialPipelineGenerator {
     return pipeline;
   }
 
-  private void findConnectedElements(NamedStreamPipesEntity pipelineElement,
-                                     List<SpDataStream> streams,
-                                     List<DataProcessorInvocation> processors) {
+  private void findConnectedElements(NamedStreamPipesEntity pipelineElement, List<SpDataStream> streams,
+          List<DataProcessorInvocation> processors) {
     if (pipelineElement instanceof SpDataStream) {
       streams.add((SpDataStream) pipelineElement);
     } else if (pipelineElement instanceof DataProcessorInvocation) {
@@ -64,6 +60,5 @@ public class PartialPipelineGenerator {
       });
     }
   }
-
 
 }

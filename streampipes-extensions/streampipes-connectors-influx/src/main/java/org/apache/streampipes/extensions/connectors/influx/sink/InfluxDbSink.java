@@ -15,8 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.influx.sink;
+
+import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.BATCH_INTERVAL_ACTIONS_KEY;
+import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.DATABASE_MEASUREMENT_KEY;
+import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.MAX_FLUSH_DURATION_KEY;
+import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.TIMESTAMP_MAPPING_KEY;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
@@ -37,21 +41,14 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.BATCH_INTERVAL_ACTIONS_KEY;
-import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.DATABASE_MEASUREMENT_KEY;
-import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.MAX_FLUSH_DURATION_KEY;
-import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.TIMESTAMP_MAPPING_KEY;
-
 public class InfluxDbSink extends StreamPipesDataSink {
 
   private static final Logger LOG = LoggerFactory.getLogger(InfluxDbSink.class);
 
   private InfluxDbClient influxDbClient;
 
-
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
 
     var extractor = parameters.extractor();
 
@@ -62,14 +59,7 @@ public class InfluxDbSink extends StreamPipesDataSink {
     Integer batchSize = extractor.singleValueParameter(BATCH_INTERVAL_ACTIONS_KEY, Integer.class);
     Integer flushDuration = extractor.singleValueParameter(MAX_FLUSH_DURATION_KEY, Integer.class);
 
-
-    this.influxDbClient = new InfluxDbClient(
-        connectionSettings,
-        measureName,
-        timestampField,
-        batchSize,
-        flushDuration
-    );
+    this.influxDbClient = new InfluxDbClient(connectionSettings, measureName, timestampField, batchSize, flushDuration);
   }
 
   @Override
@@ -93,18 +83,16 @@ public class InfluxDbSink extends StreamPipesDataSink {
   @Override
   public DataSinkDescription declareModel() {
     var builder = DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.influxdb", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .category(DataSinkType.DATABASE);
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .category(DataSinkType.DATABASE);
 
     InfluxConfigs.appendSharedInfluxConfig(builder);
 
-    builder.requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
-            EpRequirements.timestampReq(),
-            Labels.withId(TIMESTAMP_MAPPING_KEY),
-            PropertyScope.NONE).build())
-        .requiredIntegerParameter(Labels.withId(BATCH_INTERVAL_ACTIONS_KEY))
-        .requiredIntegerParameter(Labels.withId(MAX_FLUSH_DURATION_KEY), 2000);
+    builder.requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.withId(TIMESTAMP_MAPPING_KEY),
+                    PropertyScope.NONE)
+            .build()).requiredIntegerParameter(Labels.withId(BATCH_INTERVAL_ACTIONS_KEY))
+            .requiredIntegerParameter(Labels.withId(MAX_FLUSH_DURATION_KEY), 2000);
 
     return builder.build();
   }

@@ -15,8 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.extractor;
 
-public interface IDataSinkParameterExtractor extends IParameterExtractor  {
+public interface IDataSinkParameterExtractor extends IParameterExtractor {
 }

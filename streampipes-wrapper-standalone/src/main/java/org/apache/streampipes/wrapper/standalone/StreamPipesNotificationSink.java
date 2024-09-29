@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -31,9 +30,9 @@ import java.time.Instant;
 /**
  * An abstract class representing a StreamPipesNotificationSink in StreamPipes.
  * <p>
- * It provides some share functionalities for all notification sinks in StreamPipes.
- * Thereby, it slightly modifies the interfaces to implement for the actual data sink compared
- * to sinks directly inheriting from {@link StreamPipesDataSink}.
+ * It provides some share functionalities for all notification sinks in StreamPipes. Thereby, it slightly modifies the
+ * interfaces to implement for the actual data sink compared to sinks directly inheriting from
+ * {@link StreamPipesDataSink}.
  */
 
 public abstract class StreamPipesNotificationSink extends StreamPipesDataSink {
@@ -67,42 +66,34 @@ public abstract class StreamPipesNotificationSink extends StreamPipesDataSink {
     if (this.lastMessageEpochSecond == -1) {
       return true;
     } else {
-      return Instant.now()
-                    .getEpochSecond() >= (this.lastMessageEpochSecond + this.silentPeriodInSeconds);
+      return Instant.now().getEpochSecond() >= (this.lastMessageEpochSecond + this.silentPeriodInSeconds);
     }
   }
 
   /**
-   * This method is meant to be overridden by child classes.
-   * It contains some important logic, and child classes are expected to call
-   * the super.onInvocation() to ensure proper behavior.
+   * This method is meant to be overridden by child classes. It contains some important logic, and child classes are
+   * expected to call the super.onInvocation() to ensure proper behavior.
    */
-  public void onInvocation(
-      SinkParams parameters,
-      EventSinkRuntimeContext runtimeContext
-  ) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     // convert input given in minutes to seconds
     // this is later used to determine if a notification should be sent
-    this.silentPeriodInSeconds = parameters.extractor()
-                                           .singleValueParameter(KEY_SILENT_PERIOD, Long.class) * 60
-    ;
+    this.silentPeriodInSeconds = parameters.extractor().singleValueParameter(KEY_SILENT_PERIOD, Long.class) * 60;
   }
 
   public final void onEvent(Event inputEvent) {
     if (shouldSendNotification()) {
       onNotificationEvent(inputEvent);
 
-      lastMessageEpochSecond = Instant.now()
-                                      .getEpochSecond();
+      lastMessageEpochSecond = Instant.now().getEpochSecond();
     }
   }
 
   /**
-   * Abstract method to be implemented by subclasses for handling notification events.
-   * This should only contain logic that is directly related to the notification and
-   * is only executed when the silent period is over.
+   * Abstract method to be implemented by subclasses for handling notification events. This should only contain logic
+   * that is directly related to the notification and is only executed when the silent period is over.
    *
-   * @param inputEvent The event triggering the notification.
+   * @param inputEvent
+   *          The event triggering the notification.
    */
   public abstract void onNotificationEvent(Event inputEvent);
 
@@ -112,21 +103,17 @@ public abstract class StreamPipesNotificationSink extends StreamPipesDataSink {
     var builder = declareModelWithoutSilentPeriod();
 
     builder.requiredIntegerParameter(
-        Labels.from(
-            KEY_SILENT_PERIOD,
-            "Silent Period [min]",
-            "The minimum number of minutes between two consecutive notifications that are sent"
-        ),
-        DEFAULT_WAITING_TIME_MINUTES
-    );
+            Labels.from(KEY_SILENT_PERIOD, "Silent Period [min]",
+                    "The minimum number of minutes between two consecutive notifications that are sent"),
+            DEFAULT_WAITING_TIME_MINUTES);
 
     return builder.build();
 
   }
 
   /**
-   * Abstract method to be implemented by subclasses for declaring the description of the data sink.
-   * Unlike {@link StreamPipesDataSink#declareModel()} it is expected to return a {@link DataSinkBuilder}
+   * Abstract method to be implemented by subclasses for declaring the description of the data sink. Unlike
+   * {@link StreamPipesDataSink#declareModel()} it is expected to return a {@link DataSinkBuilder}
    *
    * @return The DataSinkBuilder representing the notification model.
    */

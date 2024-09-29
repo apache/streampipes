@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.compact;
 
 import org.apache.streampipes.model.connect.adapter.compact.CompactEventProperty;
@@ -29,8 +28,7 @@ import java.util.List;
 
 public class SchemaMetadataEnricher {
 
-  public void enrich(EventProperty property,
-                     CompactEventProperty propertyDef) {
+  public void enrich(EventProperty property, CompactEventProperty propertyDef) {
     if (propertyDef.propertyScope() != null) {
       property.setPropertyScope(convertScope(propertyDef.propertyScope()).name());
     }

@@ -15,17 +15,16 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.limitsenrichment;
 
 import org.apache.streampipes.test.executors.PrefixStrategy;
 import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.TestConfiguration;
 
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Map;
+
+import org.junit.jupiter.api.Test;
 
 class QualityControlLimitsEnrichmentTest {
 
@@ -34,26 +33,20 @@ class QualityControlLimitsEnrichmentTest {
 
     var processor = new QualityControlLimitsEnrichmentProcessor();
 
-    List<Map<String, Object>> inputEvents = List.of(Map.of(
-        "temperature", 10.1
-    ));
+    List<Map<String, Object>> inputEvents = List.of(Map.of("temperature", 10.1));
 
-    List<Map<String, Object>> outputEvents = List.of(Map.of(
-        "temperature", 10.1,
-        QualityControlLimitsEnrichmentProcessor.UPPER_CONTROL_LIMIT, 80.0,
-        QualityControlLimitsEnrichmentProcessor.UPPER_WARNING_LIMIT, 70.0,
-        QualityControlLimitsEnrichmentProcessor.LOWER_CONTROL_LIMIT, 30.0,
-        QualityControlLimitsEnrichmentProcessor.LOWER_WARNING_LIMIT, 20.0
-    ));
+    List<Map<String, Object>> outputEvents = List
+            .of(Map.of("temperature", 10.1, QualityControlLimitsEnrichmentProcessor.UPPER_CONTROL_LIMIT, 80.0,
+                    QualityControlLimitsEnrichmentProcessor.UPPER_WARNING_LIMIT, 70.0,
+                    QualityControlLimitsEnrichmentProcessor.LOWER_CONTROL_LIMIT, 30.0,
+                    QualityControlLimitsEnrichmentProcessor.LOWER_WARNING_LIMIT, 20.0));
 
-    var configuration = TestConfiguration
-        .builder()
-        .config(QualityControlLimitsEnrichmentProcessor.UPPER_CONTROL_LIMIT_LABEL, 80.0)
-        .config(QualityControlLimitsEnrichmentProcessor.UPPER_WARNING_LIMIT_LABEL, 70.0)
-        .config(QualityControlLimitsEnrichmentProcessor.LOWER_CONTROL_LIMIT_LABEL, 30.0)
-        .config(QualityControlLimitsEnrichmentProcessor.LOWER_WARNING_LIMIT_LABEL, 20.0)
-        .prefixStrategy(PrefixStrategy.SAME_PREFIX)
-        .build();
+    var configuration = TestConfiguration.builder()
+            .config(QualityControlLimitsEnrichmentProcessor.UPPER_CONTROL_LIMIT_LABEL, 80.0)
+            .config(QualityControlLimitsEnrichmentProcessor.UPPER_WARNING_LIMIT_LABEL, 70.0)
+            .config(QualityControlLimitsEnrichmentProcessor.LOWER_CONTROL_LIMIT_LABEL, 30.0)
+            .config(QualityControlLimitsEnrichmentProcessor.LOWER_WARNING_LIMIT_LABEL, 20.0)
+            .prefixStrategy(PrefixStrategy.SAME_PREFIX).build();
 
     var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 

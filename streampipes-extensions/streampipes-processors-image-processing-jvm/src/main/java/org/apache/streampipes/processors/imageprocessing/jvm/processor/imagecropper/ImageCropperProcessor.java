@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.imagecropper;
 
-
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
@@ -51,22 +50,20 @@ public class ImageCropperProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processor.imageclassification.jvm.image-cropper", 0)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .category(DataProcessorType.IMAGE_PROCESSING)
-        .requiredStream(RequiredBoxStream.getBoxStream())
-        .outputStrategy(OutputStrategies.append(EpProperties.integerEp(Labels.empty(),
-                ImagePropertyConstants.CLASS_NAME.getProperty(), "https://streampipes.org/classname"),
-            EpProperties.doubleEp(Labels.empty(), ImagePropertyConstants.SCORE.getProperty(),
-                "https://streampipes.org/Label")))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processor.imageclassification.jvm.image-cropper", 0)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .category(DataProcessorType.IMAGE_PROCESSING).requiredStream(RequiredBoxStream.getBoxStream())
+            .outputStrategy(OutputStrategies.append(
+                    EpProperties.integerEp(Labels.empty(), ImagePropertyConstants.CLASS_NAME.getProperty(),
+                            "https://streampipes.org/classname"),
+                    EpProperties.doubleEp(Labels.empty(), ImagePropertyConstants.SCORE.getProperty(),
+                            "https://streampipes.org/Label")))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) {
+          EventProcessorRuntimeContext runtimeContext) {
     ProcessingElementParameterExtractor extractor = parameters.extractor();
     this.imageProperty = extractor.mappingPropertyValue(RequiredBoxStream.IMAGE_PROPERTY);
     this.boxArray = extractor.mappingPropertyValue(RequiredBoxStream.BOX_ARRAY_PROPERTY);
@@ -85,24 +82,24 @@ public class ImageCropperProcessor extends StreamPipesDataProcessor {
         BoxCoordinates boxCoordinates = imageTransformer.getBoxCoordinates(image, box);
 
         BufferedImage dest = image.getSubimage(boxCoordinates.getX(), boxCoordinates.getY(), boxCoordinates.getWidth(),
-            boxCoordinates.getHeight());
+                boxCoordinates.getHeight());
 
         Optional<byte[]> finalImage = imageTransformer.makeImage(dest);
 
         if (finalImage.isPresent()) {
           Event outEvent = new Event();
 
-          outEvent.addField(ImagePropertyConstants.TIMESTAMP.getProperty(),
-              in.getFieldByRuntimeName(ImagePropertyConstants.TIMESTAMP.getProperty()).getAsPrimitive().getAsLong());
+          outEvent.addField(ImagePropertyConstants.TIMESTAMP.getProperty(), in
+                  .getFieldByRuntimeName(ImagePropertyConstants.TIMESTAMP.getProperty()).getAsPrimitive().getAsLong());
 
           outEvent.addField(ImagePropertyConstants.IMAGE.getProperty(),
-              Base64.getEncoder().encodeToString(finalImage.get()));
+                  Base64.getEncoder().encodeToString(finalImage.get()));
 
           outEvent.addField(ImagePropertyConstants.CLASS_NAME.getProperty(),
-              box.get(ImagePropertyConstants.CLASS_NAME.getProperty()));
+                  box.get(ImagePropertyConstants.CLASS_NAME.getProperty()));
 
           outEvent.addField(ImagePropertyConstants.SCORE.getProperty(),
-              box.get(ImagePropertyConstants.SCORE.getProperty()));
+                  box.get(ImagePropertyConstants.SCORE.getProperty()));
 
           out.collect(outEvent);
         }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.assets;
 
 import org.junit.jupiter.api.Assertions;
@@ -25,13 +24,8 @@ public class AssetLinkBuilderTest {
 
   @Test
   public void withoutEditingDisabled() {
-    AssetLink assetLink = AssetLinkBuilder.create()
-            .withResourceId("123")
-            .withLinkType("type")
-            .withLinkLabel("label")
-            .withQueryHint("hint")
-            .withEditingDisabled(false)
-            .build();
+    AssetLink assetLink = AssetLinkBuilder.create().withResourceId("123").withLinkType("type").withLinkLabel("label")
+            .withQueryHint("hint").withEditingDisabled(false).build();
 
     Assertions.assertEquals("123", assetLink.getResourceId());
     Assertions.assertEquals("type", assetLink.getLinkType());
@@ -42,13 +36,8 @@ public class AssetLinkBuilderTest {
 
   @Test
   public void withEditingDisabled() {
-    AssetLink assetLink = AssetLinkBuilder.create()
-            .withResourceId("456")
-            .withLinkType("anotherType")
-            .withLinkLabel("anotherLabel")
-            .withQueryHint("anotherHint")
-            .withEditingDisabled(true)
-            .build();
+    AssetLink assetLink = AssetLinkBuilder.create().withResourceId("456").withLinkType("anotherType")
+            .withLinkLabel("anotherLabel").withQueryHint("anotherHint").withEditingDisabled(true).build();
 
     Assertions.assertEquals("456", assetLink.getResourceId());
     Assertions.assertEquals("anotherType", assetLink.getLinkType());

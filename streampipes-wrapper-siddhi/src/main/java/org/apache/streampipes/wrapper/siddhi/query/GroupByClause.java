@@ -43,10 +43,7 @@ public class GroupByClause extends SiddhiStatement {
   @Override
   public String toSiddhiEpl() {
     return join(SiddhiConstants.WHITESPACE, "group by", join(SiddhiConstants.COMMA,
-            propertyExpressions
-                    .stream()
-                    .map(PropertyExpression::toSiddhiEpl)
-                    .collect(Collectors.toList())));
+            propertyExpressions.stream().map(PropertyExpression::toSiddhiEpl).collect(Collectors.toList())));
   }
 
 }

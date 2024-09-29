@@ -39,8 +39,8 @@ public class PropertyRequirementsBuilder {
   }
 
   /**
-   * Creates new requirements for a data processor or a data sink at a property level. A matching event property
-   * needs to provide all requirements assigned by this class.
+   * Creates new requirements for a data processor or a data sink at a property level. A matching event property needs
+   * to provide all requirements assigned by this class.
    *
    * @return {@link PropertyRequirementsBuilder}
    */
@@ -58,10 +58,7 @@ public class PropertyRequirementsBuilder {
   }
 
   public PropertyRequirementsBuilder domainPropertyReq(String... domainProperties) {
-    this.propertyReq.setDomainProperties(Arrays
-        .stream(domainProperties)
-        .map(URI::create)
-        .collect(Collectors.toList()));
+    this.propertyReq.setDomainProperties(Arrays.stream(domainProperties).map(URI::create).collect(Collectors.toList()));
 
     return this;
   }

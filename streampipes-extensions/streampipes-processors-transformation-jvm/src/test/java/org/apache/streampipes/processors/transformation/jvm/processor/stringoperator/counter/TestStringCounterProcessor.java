@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter;
 
 import org.apache.streampipes.test.executors.PrefixStrategy;
@@ -23,14 +22,14 @@ import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.StreamPrefix;
 import org.apache.streampipes.test.executors.TestConfiguration;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 
 public class TestStringCounterProcessor {
   private static final String KEY_1 = "key1";
@@ -42,33 +41,19 @@ public class TestStringCounterProcessor {
     processor = new StringCounterProcessor();
   }
 
-
   static Stream<Arguments> arguments() {
-    return Stream.of(
-        Arguments.of(
-            List.of(Map.of(KEY_1, "v1"), Map.of(KEY_1, "v2")),
-            List.of(Map.of(
-                KEY_1, "v2",
-                StringCounterProcessor.CHANGE_FROM_FIELD_RUNTIME_NAME, "v1",
-                StringCounterProcessor.CHANGE_TO_FIELD_RUNTIME_NAME, "v2",
-                StringCounterProcessor.COUNT_FIELD_RUNTIME_NAME, 1
-            ))
-        )
-    );
+    return Stream.of(Arguments.of(List.of(Map.of(KEY_1, "v1"), Map.of(KEY_1, "v2")),
+            List.of(Map.of(KEY_1, "v2", StringCounterProcessor.CHANGE_FROM_FIELD_RUNTIME_NAME, "v1",
+                    StringCounterProcessor.CHANGE_TO_FIELD_RUNTIME_NAME, "v2",
+                    StringCounterProcessor.COUNT_FIELD_RUNTIME_NAME, 1))));
   }
 
   @ParameterizedTest
   @MethodSource("arguments")
-  public void testStringToState(
-      List<Map<String, Object>> intpuEvents,
-      List<Map<String, Object>> outputEvents
-  ) {
+  public void testStringToState(List<Map<String, Object>> intpuEvents, List<Map<String, Object>> outputEvents) {
 
-    var configuration = TestConfiguration
-        .builder()
-        .config(StringCounterProcessor.FIELD_ID, StreamPrefix.s0(KEY_1))
-        .prefixStrategy(PrefixStrategy.SAME_PREFIX)
-        .build();
+    var configuration = TestConfiguration.builder().config(StringCounterProcessor.FIELD_ID, StreamPrefix.s0(KEY_1))
+            .prefixStrategy(PrefixStrategy.SAME_PREFIX).build();
 
     var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 

@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PipelineElementTemplateStorageImpl extends AbstractDao<PipelineElementTemplate>
-    implements IPipelineElementTemplateStorage {
+        implements
+          IPipelineElementTemplateStorage {
 
   public PipelineElementTemplateStorageImpl() {
     super(Utils::getCouchDbPipelineElementTemplateClient, PipelineElementTemplate.class);
@@ -50,9 +51,7 @@ public class PipelineElementTemplateStorageImpl extends AbstractDao<PipelineElem
 
   @Override
   public List<PipelineElementTemplate> getPipelineElementTemplatesforAppId(String appId) {
-    return this.findAll()
-        .stream()
-        .filter(template -> template.getBasePipelineElementAppId().equals(appId))
-        .collect(Collectors.toList());
+    return this.findAll().stream().filter(template -> template.getBasePipelineElementAppId().equals(appId))
+            .collect(Collectors.toList());
   }
 }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.migrations.v970;
 
 import org.apache.streampipes.model.configuration.DefaultLinkSettings;
@@ -27,10 +26,8 @@ import java.io.IOException;
 
 public class AddLinkSettingsMigration implements Migration {
 
-  private final ISpCoreConfigurationStorage coreConfigStore = StorageDispatcher
-      .INSTANCE
-      .getNoSqlStore()
-      .getSpCoreConfigurationStorage();
+  private final ISpCoreConfigurationStorage coreConfigStore = StorageDispatcher.INSTANCE.getNoSqlStore()
+          .getSpCoreConfigurationStorage();
 
   @Override
   public boolean shouldExecute() {

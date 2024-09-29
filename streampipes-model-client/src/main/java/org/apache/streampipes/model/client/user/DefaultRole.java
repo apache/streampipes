@@ -15,24 +15,22 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.client.user;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
 public enum DefaultRole {
-  ROLE_ADMIN(Constants.ROLE_ADMIN_VALUE),
-  ROLE_SERVICE_ADMIN(Constants.ROLE_SERVICE_ADMIN_VALUE),
-  ROLE_PIPELINE_ADMIN(Constants.ROLE_PIPELINE_ADMIN_VALUE),
-  ROLE_PIPELINE_USER(Constants.ROLE_PIPELINE_USER_VALUE),
-  ROLE_DASHBOARD_ADMIN(Constants.ROLE_DASHBOARD_ADMIN_VALUE),
-  ROLE_DASHBOARD_USER(Constants.ROLE_DASHBOARD_USER_VALUE),
-  ROLE_DATA_EXPLORER_ADMIN(Constants.ROLE_DATA_EXPLORER_ADMIN_VALUE),
-  ROLE_DATA_EXPLORER_USER(Constants.ROLE_DATA_EXPLORER_USER_VALUE),
-  ROLE_CONNECT_ADMIN(Constants.ROLE_CONNECT_ADMIN_VALUE),
-  ROLE_ASSET_USER(Constants.ROLE_ASSET_USER_VALUE),
-  ROLE_ASSET_ADMIN(Constants.ROLE_ASSET_ADMIN_VALUE);
+  ROLE_ADMIN(Constants.ROLE_ADMIN_VALUE), ROLE_SERVICE_ADMIN(Constants.ROLE_SERVICE_ADMIN_VALUE), ROLE_PIPELINE_ADMIN(
+          Constants.ROLE_PIPELINE_ADMIN_VALUE), ROLE_PIPELINE_USER(
+                  Constants.ROLE_PIPELINE_USER_VALUE), ROLE_DASHBOARD_ADMIN(
+                          Constants.ROLE_DASHBOARD_ADMIN_VALUE), ROLE_DASHBOARD_USER(
+                                  Constants.ROLE_DASHBOARD_USER_VALUE), ROLE_DATA_EXPLORER_ADMIN(
+                                          Constants.ROLE_DATA_EXPLORER_ADMIN_VALUE), ROLE_DATA_EXPLORER_USER(
+                                                  Constants.ROLE_DATA_EXPLORER_USER_VALUE), ROLE_CONNECT_ADMIN(
+                                                          Constants.ROLE_CONNECT_ADMIN_VALUE), ROLE_ASSET_USER(
+                                                                  Constants.ROLE_ASSET_USER_VALUE), ROLE_ASSET_ADMIN(
+                                                                          Constants.ROLE_ASSET_ADMIN_VALUE);
 
   DefaultRole(String roleString) {
   }

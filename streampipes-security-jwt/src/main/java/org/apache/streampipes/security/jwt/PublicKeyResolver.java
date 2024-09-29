@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.security.jwt;
+
+import java.io.IOException;
+import java.security.Key;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.SigningKeyResolver;
-
-import java.io.IOException;
-import java.security.Key;
 
 public class PublicKeyResolver implements SigningKeyResolver {
 

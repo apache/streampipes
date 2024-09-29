@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.datalake;
 
 import org.junit.jupiter.api.Assertions;

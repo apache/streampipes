@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.staticproperty;
 
 import org.apache.streampipes.model.util.Cloner;
@@ -39,14 +38,14 @@ public class CollectionStaticProperty extends StaticProperty {
   }
 
   public CollectionStaticProperty(String internalName, String label, String description, List<StaticProperty> members,
-                                  String memberType) {
+          String memberType) {
     super(StaticPropertyType.CollectionStaticProperty, internalName, label, description);
     this.members = members;
     this.memberType = memberType;
   }
 
   public CollectionStaticProperty(String internalName, String label, String description,
-                                  StaticProperty propertyTemplate) {
+          StaticProperty propertyTemplate) {
     super(StaticPropertyType.CollectionStaticProperty, internalName, label, description);
     this.staticPropertyTemplate = propertyTemplate;
   }
@@ -55,8 +54,7 @@ public class CollectionStaticProperty extends StaticProperty {
     super(other);
     this.members = new Cloner().staticProperties(other.getMembers());
     if (other.getStaticPropertyTemplate() != null) {
-      this.staticPropertyTemplate = new Cloner()
-          .staticProperty(other.getStaticPropertyTemplate());
+      this.staticPropertyTemplate = new Cloner().staticProperty(other.getStaticPropertyTemplate());
     }
     this.memberType = other.getMemberType();
   }

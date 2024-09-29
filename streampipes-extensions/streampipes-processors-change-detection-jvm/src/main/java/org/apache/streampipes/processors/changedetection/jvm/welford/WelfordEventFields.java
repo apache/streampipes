@@ -15,14 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.changedetection.jvm.welford;
 
 public enum WelfordEventFields {
-  VAL_LOW("cumSumLow"),
-  VAL_HIGH("cumSumHigh"),
-  DECISION_LOW("changeDetectedLow"),
-  DECISION_HIGH("changeDetectedHigh");
+  VAL_LOW("cumSumLow"), VAL_HIGH("cumSumHigh"), DECISION_LOW("changeDetectedLow"), DECISION_HIGH("changeDetectedHigh");
 
   public final String label;
 

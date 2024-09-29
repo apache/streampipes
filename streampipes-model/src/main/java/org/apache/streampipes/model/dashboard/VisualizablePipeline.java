@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.dashboard;
 
 import org.apache.streampipes.model.schema.EventSchema;

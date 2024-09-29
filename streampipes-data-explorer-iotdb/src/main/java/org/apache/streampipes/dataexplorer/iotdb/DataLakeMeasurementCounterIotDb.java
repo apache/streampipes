@@ -15,34 +15,33 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.iotdb;
 
-import org.apache.iotdb.rpc.IoTDBConnectionException;
-import org.apache.iotdb.rpc.StatementExecutionException;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.query.DataLakeMeasurementCounter;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import org.apache.iotdb.rpc.IoTDBConnectionException;
+import org.apache.iotdb.rpc.StatementExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DataLakeMeasurementCounterIotDb extends DataLakeMeasurementCounter {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeMeasurementCounterIotDb.class);
 
-  public DataLakeMeasurementCounterIotDb(List<DataLakeMeasure> allMeasurements,
-                                         List<String> measurementNames) {
+  public DataLakeMeasurementCounterIotDb(List<DataLakeMeasure> allMeasurements, List<String> measurementNames) {
     super(allMeasurements, measurementNames);
   }
 
   /**
    * Creates a CompletableFuture to execute a count query on a DataLakeMeasure asynchronously.
    *
-   * @param measure The DataLakeMeasure object representing the measure to query.
+   * @param measure
+   *          The DataLakeMeasure object representing the measure to query.
    * @return A CompletableFuture<Integer> representing the count query result as a future.
    */
   @Override
@@ -56,8 +55,7 @@ public class DataLakeMeasurementCounterIotDb extends DataLakeMeasurementCounter 
       var propertyName = getFirstMeasurementProperty(measure);
 
       try (var result = new DataExplorerIotDbQueryExecutor(sessionPool).executeQuery(
-          "Select count(%s) from root.streampipes.%s".formatted(propertyName, measure.getMeasureName())
-      )) {
+              "Select count(%s) from root.streampipes.%s".formatted(propertyName, measure.getMeasureName()))) {
         var resultRecord = result.next();
         if (resultRecord == null) {
           LOG.error("Result of count query does not contain any row - empty result");

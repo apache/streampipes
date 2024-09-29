@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.adapter;
 
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;

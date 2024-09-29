@@ -15,11 +15,8 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.configuration;
 
 public enum SpCoreConfigurationStatus {
-  INSTALLING,
-  MIGRATING,
-  READY
+  INSTALLING, MIGRATING, READY
 }

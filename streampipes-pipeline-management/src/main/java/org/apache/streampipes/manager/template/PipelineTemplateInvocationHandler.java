@@ -46,15 +46,15 @@ public class PipelineTemplateInvocationHandler {
 
   public PipelineOperationStatus handlePipelineInvocation() {
     Pipeline pipeline = new PipelineGenerator(pipelineTemplateInvocation.getDataStreamId(), pipelineTemplateDescription,
-        pipelineTemplateInvocation.getKviName()).makePipeline();
+            pipelineTemplateInvocation.getKviName()).makePipeline();
     pipeline.setCreatedByUser(username);
     pipeline.setCreatedAt(System.currentTimeMillis());
     replaceStaticProperties(pipeline);
     new PipelineStorageService(pipeline).addPipeline();
     Permission permission = new PermissionManager().makePermission(pipeline, username);
     StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage().persist(permission);
-    Pipeline storedPipeline =
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getElementById(pipeline.getPipelineId());
+    Pipeline storedPipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI()
+            .getElementById(pipeline.getPipelineId());
     return new PipelineExecutor(storedPipeline).startPipeline();
   }
 
@@ -75,27 +75,21 @@ public class PipelineTemplateInvocationHandler {
     pe.setStaticProperties(newProperties);
   }
 
-
   private StaticProperty getCustomizedElement(String dom, String internalName) {
-    StaticProperty staticProperty = pipelineTemplateInvocation
-        .getStaticProperties()
-        .stream()
-        .filter(sp -> sp.getInternalName().equals(internalName)).findFirst().get();
+    StaticProperty staticProperty = pipelineTemplateInvocation.getStaticProperties().stream()
+            .filter(sp -> sp.getInternalName().equals(internalName)).findFirst().get();
 
     staticProperty.setInternalName(staticProperty.getInternalName().replace(dom, ""));
     return staticProperty;
   }
 
   private boolean existsInCustomizedElements(String dom, StaticProperty staticProperty) {
-    return pipelineTemplateInvocation
-        .getStaticProperties()
-        .stream()
-        .anyMatch(sp -> sp.getInternalName().equals(dom + staticProperty.getInternalName()));
+    return pipelineTemplateInvocation.getStaticProperties().stream()
+            .anyMatch(sp -> sp.getInternalName().equals(dom + staticProperty.getInternalName()));
   }
-
 
   private PipelineTemplateDescription getTemplateById(String pipelineTemplateId) {
     return new PipelineTemplateGenerator().getAllPipelineTemplates().stream()
-        .filter(template -> template.getAppId().equals(pipelineTemplateId)).findFirst().get();
+            .filter(template -> template.getAppId().equals(pipelineTemplateId)).findFirst().get();
   }
 }

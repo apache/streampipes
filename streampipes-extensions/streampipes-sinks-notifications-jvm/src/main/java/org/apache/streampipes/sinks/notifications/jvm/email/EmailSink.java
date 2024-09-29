@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.notifications.jvm.email;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
@@ -49,25 +48,15 @@ public class EmailSink extends StreamPipesNotificationSink {
 
   @Override
   public DataSinkBuilder declareModelWithoutSilentPeriod() {
-    return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.notifications.jvm.email", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .category(DataSinkType.NOTIFICATION)
-        .requiredTextParameter(Labels.withId(TO_EMAIL_ADRESS))
-        .requiredTextParameter(Labels.withId(EMAIL_SUBJECT))
-        .requiredStream(StreamRequirementsBuilder
-                            .create()
-                            .requiredProperty(EpRequirements.anyProperty())
-                            .build())
-        .requiredHtmlInputParameter(Labels.withId(EMAIL_CONTENT));
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.email", 0).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).category(DataSinkType.NOTIFICATION)
+            .requiredTextParameter(Labels.withId(TO_EMAIL_ADRESS)).requiredTextParameter(Labels.withId(EMAIL_SUBJECT))
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredHtmlInputParameter(Labels.withId(EMAIL_CONTENT));
   }
 
   @Override
-  public void onInvocation(
-      SinkParams parameters,
-      EventSinkRuntimeContext runtimeContext
-  ) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     super.onInvocation(parameters, runtimeContext);
 
     var extractor = parameters.extractor();
@@ -94,4 +83,3 @@ public class EmailSink extends StreamPipesNotificationSink {
 
   }
 }
-

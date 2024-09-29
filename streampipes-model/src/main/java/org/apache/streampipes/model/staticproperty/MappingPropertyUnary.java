@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.staticproperty;
 
 public class MappingPropertyUnary extends MappingProperty {
@@ -33,8 +32,7 @@ public class MappingPropertyUnary extends MappingProperty {
     this.selectedProperty = other.getSelectedProperty();
   }
 
-  public MappingPropertyUnary(String requirementSelector, String internalName, String
-      label, String description) {
+  public MappingPropertyUnary(String requirementSelector, String internalName, String label, String description) {
     super(StaticPropertyType.MappingPropertyUnary, requirementSelector, internalName, label, description);
   }
 

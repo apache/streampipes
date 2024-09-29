@@ -17,41 +17,34 @@
  */
 package org.apache.streampipes.security.jwt;
 
+import java.nio.charset.StandardCharsets;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SigningKeyResolver;
 
-import java.nio.charset.StandardCharsets;
-
 public class JwtTokenUtils {
 
-  public static String getUserIdFromToken(String tokenSecret,
-                                          String token) {
+  public static String getUserIdFromToken(String tokenSecret, String token) {
     Claims claims = jwtParser(tokenSecret).parseClaimsJws(token).getBody();
     return claims.getSubject();
   }
 
-  public static String getUserIdFromToken(String token,
-                                          SigningKeyResolver resolver) {
+  public static String getUserIdFromToken(String token, SigningKeyResolver resolver) {
     return jwtParser(resolver).parseClaimsJws(token).getBody().getSubject();
   }
 
-  public static Claims getClaimsFromToken(String token,
-                                          SigningKeyResolver resolver) {
+  public static Claims getClaimsFromToken(String token, SigningKeyResolver resolver) {
     return jwtParser(resolver).parseClaimsJws(token).getBody();
   }
 
   public static JwtParser jwtParser(String tokenSecret) {
-    return Jwts.parserBuilder()
-        .setSigningKey(tokenSecret.getBytes(StandardCharsets.UTF_8))
-        .build();
+    return Jwts.parserBuilder().setSigningKey(tokenSecret.getBytes(StandardCharsets.UTF_8)).build();
   }
 
   public static JwtParser jwtParser(SigningKeyResolver resolver) {
-    return Jwts.parserBuilder()
-        .setSigningKeyResolver(resolver)
-        .build();
+    return Jwts.parserBuilder().setSigningKeyResolver(resolver).build();
   }
 
 }

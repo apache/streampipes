@@ -15,8 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.management;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
@@ -24,14 +27,10 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AdapterMasterManagementTest {
 
@@ -41,13 +40,8 @@ public class AdapterMasterManagementTest {
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
     when(adapterStorage.findAll()).thenReturn(null);
 
-    AdapterMasterManagement adapterMasterManagement =
-        new AdapterMasterManagement(
-            adapterStorage,
-            resourceManager,
-            null,
-            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
-        );
+    AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager, null,
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics());
 
     assertThrows(AdapterException.class, () -> adapterMasterManagement.getAdapter("id2"));
   }
@@ -59,13 +53,8 @@ public class AdapterMasterManagementTest {
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
     when(adapterStorage.findAll()).thenReturn(adapterDescriptions);
 
-    AdapterMasterManagement adapterMasterManagement =
-        new AdapterMasterManagement(
-            adapterStorage,
-            resourceManager,
-            null,
-            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
-        );
+    AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager, null,
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics());
 
     assertThrows(AdapterException.class, () -> adapterMasterManagement.getAdapter("id2"));
   }
@@ -77,13 +66,8 @@ public class AdapterMasterManagementTest {
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
     when(adapterStorage.findAll()).thenReturn(adapterDescriptions);
 
-    AdapterMasterManagement adapterMasterManagement =
-        new AdapterMasterManagement(
-            adapterStorage,
-            resourceManager,
-            null,
-            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
-        );
+    AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager, null,
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics());
 
     List<AdapterDescription> result = adapterMasterManagement.getAllAdapterInstances();
 
@@ -96,13 +80,8 @@ public class AdapterMasterManagementTest {
     AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
     when(adapterStorage.findAll()).thenReturn(null);
 
-    AdapterMasterManagement adapterMasterManagement =
-        new AdapterMasterManagement(
-            adapterStorage,
-            resourceManager,
-            null,
-            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
-        );
+    AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager, null,
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics());
 
     assertThrows(AdapterException.class, adapterMasterManagement::getAllAdapterInstances);
 

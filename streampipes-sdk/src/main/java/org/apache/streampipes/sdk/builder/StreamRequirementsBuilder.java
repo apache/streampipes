@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -60,12 +59,12 @@ public class StreamRequirementsBuilder {
   }
 
   /**
-   * Sets a new property requirement, e.g., a property of a specific data type or with specific semantics
-   * a data stream that is connected to this pipeline element must provide.
+   * Sets a new property requirement, e.g., a property of a specific data type or with specific semantics a data stream
+   * that is connected to this pipeline element must provide.
    *
-   * @param propertyRequirement The property requirement.
-   *                            Use {@link org.apache.streampipes.sdk.helpers.EpRequirements} to
-   *                            create a new requirement.
+   * @param propertyRequirement
+   *          The property requirement. Use {@link org.apache.streampipes.sdk.helpers.EpRequirements} to create a new
+   *          requirement.
    * @return this
    */
   public StreamRequirementsBuilder requiredProperty(EventProperty propertyRequirement) {
@@ -79,21 +78,21 @@ public class StreamRequirementsBuilder {
    * {@link org.apache.streampipes.model.staticproperty.MappingPropertyUnary} static property to the pipeline element
    * definition.
    *
-   * @param propertyRequirement The property requirement.
-   *                            Use {@link org.apache.streampipes.sdk.helpers.EpRequirements} to
-   *                            create a new requirement.
-   * @param label               The {@link org.apache.streampipes.sdk.helpers.Label} that defines the mapping property.
-   * @param propertyScope       The {@link org.apache.streampipes.model.schema.PropertyScope} of the requirement.
+   * @param propertyRequirement
+   *          The property requirement. Use {@link org.apache.streampipes.sdk.helpers.EpRequirements} to create a new
+   *          requirement.
+   * @param label
+   *          The {@link org.apache.streampipes.sdk.helpers.Label} that defines the mapping property.
+   * @param propertyScope
+   *          The {@link org.apache.streampipes.model.schema.PropertyScope} of the requirement.
    * @return this
    */
   public StreamRequirementsBuilder requiredPropertyWithUnaryMapping(EventProperty propertyRequirement, Label label,
-                                                                    PropertyScope propertyScope) {
+          PropertyScope propertyScope) {
     propertyRequirement.setRuntimeName(label.getInternalId());
     this.eventProperties.add(propertyRequirement);
-    MappingPropertyUnary mp = new MappingPropertyUnary(label.getInternalId(), label
-        .getInternalId(),
-        label.getLabel(),
-        label.getDescription());
+    MappingPropertyUnary mp = new MappingPropertyUnary(label.getInternalId(), label.getInternalId(), label.getLabel(),
+            label.getDescription());
 
     mp.setPropertyScope(propertyScope.name());
 
@@ -106,30 +105,31 @@ public class StreamRequirementsBuilder {
    * {@link org.apache.streampipes.model.staticproperty.MappingPropertyNary} static property to the pipeline element
    * definition.
    *
-   * @param propertyRequirement The property requirement.
-   *                            Use {@link org.apache.streampipes.sdk.helpers.EpRequirements} to
-   *                            create a new requirement.
-   * @param label               The {@link org.apache.streampipes.sdk.helpers.Label} that defines the mapping property.
-   * @param propertyScope       The {@link org.apache.streampipes.model.schema.PropertyScope} of the requirement.
+   * @param propertyRequirement
+   *          The property requirement. Use {@link org.apache.streampipes.sdk.helpers.EpRequirements} to create a new
+   *          requirement.
+   * @param label
+   *          The {@link org.apache.streampipes.sdk.helpers.Label} that defines the mapping property.
+   * @param propertyScope
+   *          The {@link org.apache.streampipes.model.schema.PropertyScope} of the requirement.
    * @return this
    */
   public StreamRequirementsBuilder requiredPropertyWithNaryMapping(EventProperty propertyRequirement, Label label,
-                                                                   PropertyScope propertyScope) {
+          PropertyScope propertyScope) {
     propertyRequirement.setRuntimeName(label.getInternalId());
     this.eventProperties.add(propertyRequirement);
-    MappingPropertyNary mp = new MappingPropertyNary(label.getInternalId(), label
-        .getInternalId(), label.getLabel(), label.getDescription());
+    MappingPropertyNary mp = new MappingPropertyNary(label.getInternalId(), label.getInternalId(), label.getLabel(),
+            label.getDescription());
     mp.setPropertyScope(propertyScope.name());
     this.mappingProperties.add(mp);
     return this;
   }
 
-
   /**
    * Finishes the stream requirements definition.
    *
-   * @return an object of type {@link org.apache.streampipes.sdk.helpers.CollectedStreamRequirements}
-   * that contains all defined property requirements and static properties.
+   * @return an object of type {@link org.apache.streampipes.sdk.helpers.CollectedStreamRequirements} that contains all
+   *         defined property requirements and static properties.
    */
   public CollectedStreamRequirements build() {
     SpDataStream stream = new SpDataStream();
@@ -137,6 +137,5 @@ public class StreamRequirementsBuilder {
 
     return new CollectedStreamRequirements(stream, mappingProperties);
   }
-
 
 }

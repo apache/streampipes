@@ -15,18 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.dashboard;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.google.gson.annotations.SerializedName;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.google.gson.annotations.SerializedName;
 
 @TsModel
 public class DashboardModel implements Storable {

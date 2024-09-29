@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.textmining.jvm;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -40,13 +39,8 @@ public class TextMiningExtensionModuleExport implements IExtensionModuleExport {
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new TokenizerProcessor(),
-        new PartOfSpeechProcessor(),
-        new ChunkerProcessor(),
-        new NameFinderProcessor(),
-        new SentenceDetectionProcessor()
-    );
+    return List.of(new TokenizerProcessor(), new PartOfSpeechProcessor(), new ChunkerProcessor(),
+            new NameFinderProcessor(), new SentenceDetectionProcessor());
   }
 
   @Override

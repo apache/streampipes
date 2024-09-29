@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.smp.parser;
 
 import org.apache.streampipes.smp.model.AssetModel;
@@ -30,10 +29,8 @@ public class DocumentationParser {
 
   public String parseAndStoreDocumentation(String markdown) {
 
-    markdown = new PipelineElementNameReplacer(assetModel.getPipelineElementName(),
-        markdown).replace();
-    markdown = new PipelineElementDescriptionReplacer(assetModel.getPipelineElementDescription(),
-        markdown).replace();
+    markdown = new PipelineElementNameReplacer(assetModel.getPipelineElementName(), markdown).replace();
+    markdown = new PipelineElementDescriptionReplacer(assetModel.getPipelineElementDescription(), markdown).replace();
 
     return markdown;
 

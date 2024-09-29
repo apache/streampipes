@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.recommender;
 
 import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
@@ -35,13 +34,13 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ElementRecommender {
 
@@ -51,8 +50,7 @@ public class ElementRecommender {
   private final String baseRecDomId;
   private final PipelineElementRecommendationMessage recommendationMessage;
 
-  public ElementRecommender(Pipeline partialPipeline,
-                            String baseRecDomId) {
+  public ElementRecommender(Pipeline partialPipeline, String baseRecDomId) {
     this.pipeline = partialPipeline;
     this.baseRecDomId = baseRecDomId;
     this.recommendationMessage = new PipelineElementRecommendationMessage();
@@ -82,28 +80,21 @@ public class ElementRecommender {
 
   private void addPossibleElements(NamedStreamPipesEntity sepa) {
     recommendationMessage.addPossibleElement(
-        new PipelineElementRecommendation(sepa.getElementId(), sepa.getName(), sepa.getDescription()));
+            new PipelineElementRecommendation(sepa.getElementId(), sepa.getName(), sepa.getDescription()));
   }
 
   private List<ConsumableStreamPipesEntity> getAllDataProcessors() {
     List<String> userObjects = new SpResourceManager().manageDataProcessors().findAllIdsOnly();
-    return getNoSqlStore()
-        .getAllDataProcessors()
-        .stream()
-        .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getAppId())))
-        .map(DataProcessorDescription::new)
-        .collect(Collectors.toList());
+    return getNoSqlStore().getAllDataProcessors().stream()
+            .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getAppId()))).map(DataProcessorDescription::new)
+            .collect(Collectors.toList());
   }
-
 
   private List<ConsumableStreamPipesEntity> getAllDataSinks() {
     List<String> userObjects = new SpResourceManager().manageDataSinks().findAllIdsOnly();
-    return getNoSqlStore()
-        .getAllDataSinks()
-        .stream()
-        .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getAppId())))
-        .map(DataSinkDescription::new)
-        .collect(Collectors.toList());
+    return getNoSqlStore().getAllDataSinks().stream()
+            .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getAppId()))).map(DataSinkDescription::new)
+            .collect(Collectors.toList());
   }
 
   private List<ConsumableStreamPipesEntity> getAll() {
@@ -124,14 +115,11 @@ public class ElementRecommender {
     if (entity instanceof SpDataStream) {
       return Optional.of((SpDataStream) entity);
     } else {
-      Pipeline partialPipeline =
-          new PartialPipelineGenerator(this.baseRecDomId, elementsProvider).makePartialPipeline();
+      Pipeline partialPipeline = new PartialPipelineGenerator(this.baseRecDomId, elementsProvider)
+              .makePartialPipeline();
       PipelineModificationMessage modifications = new PipelineVerificationHandlerV2(partialPipeline).verifyPipeline();
-      return modifications.getPipelineModifications()
-          .stream()
-          .filter(m -> m.getDomId().equals(this.baseRecDomId))
-          .map(PipelineModification::getOutputStream)
-          .findFirst();
+      return modifications.getPipelineModifications().stream().filter(m -> m.getDomId().equals(this.baseRecDomId))
+              .map(PipelineModification::getOutputStream).findFirst();
     }
   }
 }

@@ -25,6 +25,8 @@ import org.apache.streampipes.model.preview.PipelinePreviewModel;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,28 +38,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import jakarta.servlet.http.HttpServletResponse;
-
 @RestController
 @RequestMapping("/api/v2/pipeline-element-preview")
 public class PipelineElementPreview extends AbstractAuthGuardedRestResource {
 
-
-  @PostMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PipelinePreviewModel> requestPipelinePreview(@RequestBody Pipeline pipeline) {
     PipelinePreviewModel previewModel = new PipelinePreview().initiatePreview(pipeline);
 
     return ok(previewModel);
   }
 
-  @GetMapping(path = "{previewId}",
-      produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-  public StreamingResponseBody getPipelinePreviewResult(
-      HttpServletResponse response,
-      @PathVariable("previewId") String previewId) {
+  @GetMapping(path = "{previewId}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+  public StreamingResponseBody getPipelinePreviewResult(HttpServletResponse response,
+          @PathVariable("previewId") String previewId) {
     try {
       // deactivate nginx proxy buffering for better performance of streaming output
       response.addHeader("X-Accel-Buffering", "no");

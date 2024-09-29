@@ -15,18 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.resource.management;
-
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.storage.api.IAdapterStorage;
-
-import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.storage.api.IAdapterStorage;
+
+import org.junit.jupiter.api.Test;
 
 public class AdapterResourceManagerTest {
 

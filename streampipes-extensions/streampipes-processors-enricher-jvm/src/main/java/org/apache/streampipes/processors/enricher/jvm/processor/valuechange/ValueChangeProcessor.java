@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.valuechange;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -51,27 +50,22 @@ public class ValueChangeProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.enricher.jvm.valuechange", 0)
-        .category(DataProcessorType.VALUE_OBSERVER)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .withLocales(Locales.EN)
-        .requiredFloatParameter(Labels.withId(FROM_PROPERTY_VALUE_ID))
-        .requiredFloatParameter(Labels.withId(TO_PROPERTY_VALUE_ID))
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(CHANGE_VALUE_MAPPING_ID),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.booleanEp(Labels.withId(IS_CHANGED_ID), IS_CHANGED, SO.BOOLEAN)))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.valuechange", 0)
+            .category(DataProcessorType.VALUE_OBSERVER).withAssets(ExtensionAssetType.DOCUMENTATION)
+            .withLocales(Locales.EN).requiredFloatParameter(Labels.withId(FROM_PROPERTY_VALUE_ID))
+            .requiredFloatParameter(Labels.withId(TO_PROPERTY_VALUE_ID))
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                            Labels.withId(CHANGE_VALUE_MAPPING_ID), PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies
+                    .append(EpProperties.booleanEp(Labels.withId(IS_CHANGED_ID), IS_CHANGED, SO.BOOLEAN)))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
     this.lastValueOfEvent = Float.MAX_VALUE;
     this.userDefinedFrom = processorParams.extractor().singleValueParameter(FROM_PROPERTY_VALUE_ID, Float.class);
     this.userDefinedTo = processorParams.extractor().singleValueParameter(TO_PROPERTY_VALUE_ID, Float.class);

@@ -17,11 +17,11 @@
  */
 package org.apache.streampipes.manager.assets;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+
+import org.apache.commons.io.FileUtils;
 
 public class DocumentationParser {
 
@@ -32,7 +32,6 @@ public class DocumentationParser {
     this.file = file;
     this.appId = appId;
   }
-
 
   public void replaceImageUrls() {
     try {

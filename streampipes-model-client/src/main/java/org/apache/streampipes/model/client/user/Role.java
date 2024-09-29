@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.client.user;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 
 @TsModel
 public class Role implements Storable {
@@ -41,9 +40,7 @@ public class Role implements Storable {
   @SerializedName("$type")
   private String type = "role";
 
-  public static Role createDefaultRole(String id,
-                                       String label,
-                                       List<String> privilegeIds) {
+  public static Role createDefaultRole(String id, String label, List<String> privilegeIds) {
     Role role = new Role();
     role.elementId = id;
     role.label = label;

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.model.api.EndpointSelectable;
@@ -32,20 +31,15 @@ public class InvokeHttpRequest extends PipelineElementHttpRequest {
   private static final Logger LOG = LoggerFactory.getLogger(InvokeHttpRequest.class);
 
   @Override
-  protected Request initRequest(EndpointSelectable pipelineElement,
-                             String endpointUrl) throws JsonProcessingException {
+  protected Request initRequest(EndpointSelectable pipelineElement, String endpointUrl) throws JsonProcessingException {
     LOG.info("Invoking element: " + endpointUrl);
-    return Request
-        .Post(endpointUrl)
-        .bodyString(toJson(pipelineElement), ContentType.APPLICATION_JSON);
+    return Request.Post(endpointUrl).bodyString(toJson(pipelineElement), ContentType.APPLICATION_JSON);
   }
 
   @Override
-  protected void logError(String endpointUrl,
-                       String pipelineElementName,
-                       String exceptionMessage) {
-    LOG.error("Could not perform invocation request at {} for pipeline element {}: {}",
-        endpointUrl, pipelineElementName, exceptionMessage);
+  protected void logError(String endpointUrl, String pipelineElementName, String exceptionMessage) {
+    LOG.error("Could not perform invocation request at {} for pipeline element {}: {}", endpointUrl,
+            pipelineElementName, exceptionMessage);
   }
 
   private String toJson(EndpointSelectable pipelineElement) throws JsonProcessingException {

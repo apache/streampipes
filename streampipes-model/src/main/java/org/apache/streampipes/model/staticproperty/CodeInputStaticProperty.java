@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.staticproperty;
 
 public class CodeInputStaticProperty extends StaticProperty {

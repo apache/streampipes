@@ -15,19 +15,18 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.init;
+
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DeclarersSingletonTest {
 
@@ -35,19 +34,12 @@ public class DeclarersSingletonTest {
   public void getAdapterTest() {
     var id = "id";
     var testAdapter = mock(StreamPipesAdapter.class);
-    doAnswer(invocation ->
-                 AdapterConfigurationBuilder
-                     .create(id, 0, null)
-                     .buildConfiguration())
-        .when(testAdapter)
-        .declareConfig();
+    doAnswer(invocation -> AdapterConfigurationBuilder.create(id, 0, null).buildConfiguration()).when(testAdapter)
+            .declareConfig();
 
+    DeclarersSingleton.getInstance().setAdapters(List.of(testAdapter));
 
-    DeclarersSingleton.getInstance()
-                      .setAdapters(List.of(testAdapter));
-
-    var result = DeclarersSingleton.getInstance()
-                                   .getAdapter(id);
+    var result = DeclarersSingleton.getInstance().getAdapter(id);
 
     Assertions.assertTrue(result.isPresent());
     Assertions.assertEquals(testAdapter, result.get());

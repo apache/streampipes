@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -39,13 +38,7 @@ public class DatabaseSinksExtensionModuleExport implements IExtensionModuleExpor
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new CouchDbSink(),
-        new PostgreSqlSink(),
-        new IotDbSink(),
-        new DittoSink(),
-        new RedisSink()
-    );
+    return List.of(new CouchDbSink(), new PostgreSqlSink(), new IotDbSink(), new DittoSink(), new RedisSink());
   }
 
   @Override

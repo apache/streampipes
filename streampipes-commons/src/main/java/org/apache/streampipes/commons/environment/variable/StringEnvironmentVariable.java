@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.environment.variable;
 
 import org.apache.streampipes.commons.constants.Envs;

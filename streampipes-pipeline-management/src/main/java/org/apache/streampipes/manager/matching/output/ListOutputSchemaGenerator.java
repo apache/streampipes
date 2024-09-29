@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.output;
 
 import org.apache.streampipes.commons.Utils;
@@ -48,15 +47,14 @@ public class ListOutputSchemaGenerator extends OutputSchemaGenerator<ListOutputS
   }
 
   @Override
-  public Tuple2<EventSchema, ListOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
-                                                                     SpDataStream stream2) {
+  public Tuple2<EventSchema, ListOutputStrategy> buildFromTwoStreams(SpDataStream stream1, SpDataStream stream2) {
     return buildFromOneStream(stream1);
   }
 
   private EventSchema makeList(List<EventProperty> schemaProperties) {
     // TODO SIP08
     EventPropertyList list = new EventPropertyList();
-    //list.setEventProperties(schemaProperties);
+    // list.setEventProperties(schemaProperties);
     list.setRuntimeName(propertyName);
     EventSchema schema = new EventSchema();
     schema.setEventProperties(Utils.createList(list));

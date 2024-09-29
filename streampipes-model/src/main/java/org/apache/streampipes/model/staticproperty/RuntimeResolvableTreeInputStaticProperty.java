@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.staticproperty;
 
 import java.util.ArrayList;
@@ -42,9 +41,7 @@ public class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
     this.selectedNodesInternalNames = new ArrayList<>();
   }
 
-  public RuntimeResolvableTreeInputStaticProperty(String internalName,
-                                                  String label,
-                                                  String description) {
+  public RuntimeResolvableTreeInputStaticProperty(String internalName, String label, String description) {
     super(StaticPropertyType.RuntimeResolvableTreeInputStaticProperty, internalName, label, description);
     this.dependsOn = new ArrayList<>();
     this.nodes = new ArrayList<>();

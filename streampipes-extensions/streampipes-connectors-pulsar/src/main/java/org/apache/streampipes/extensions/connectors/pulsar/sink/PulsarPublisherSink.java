@@ -18,8 +18,8 @@
 package org.apache.streampipes.extensions.connectors.pulsar.sink;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
+import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
@@ -34,13 +34,13 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
+import java.util.Map;
+
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.pulsar.client.api.ClientBuilder;
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
-
-import java.util.Map;
 
 public class PulsarPublisherSink implements IStreamPipesDataSink {
 
@@ -64,24 +64,15 @@ public class PulsarPublisherSink implements IStreamPipesDataSink {
     this.clientBuilder = pulsarClientBuilder;
   }
 
-
   @Override
   public IDataSinkConfiguration declareConfig() {
-    return DataSinkConfiguration.create(
-        PulsarPublisherSink::new,
-        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.pulsar", 0)
-            .category(DataSinkType.MESSAGING)
-            .withLocales(Locales.EN)
-            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-            .requiredStream(StreamRequirementsBuilder
-                .create()
-                .requiredProperty(EpRequirements.anyProperty())
-                .build())
+    return DataSinkConfiguration.create(PulsarPublisherSink::new, DataSinkBuilder
+            .create("org.apache.streampipes.sinks.brokers.jvm.pulsar", 0).category(DataSinkType.MESSAGING)
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
             .requiredTextParameter(Labels.withId(PULSAR_HOST_KEY))
             .requiredIntegerParameter(Labels.withId(PULSAR_PORT_KEY), 6650)
-            .requiredTextParameter(Labels.withId(TOPIC_KEY))
-            .build()
-    );
+            .requiredTextParameter(Labels.withId(TOPIC_KEY)).build());
   }
 
   @Override
@@ -91,11 +82,9 @@ public class PulsarPublisherSink implements IStreamPipesDataSink {
     this.spDataFormatDefinition = new JsonDataFormatDefinition();
     try {
       this.pulsarClient = clientBuilder.serviceUrl(makePulsarUrl(params.getPulsarHost(), params.getPulsarPort()))
-          .build();
+              .build();
 
-      this.producer = this.pulsarClient.newProducer()
-          .topic(params.getTopic())
-          .create();
+      this.producer = this.pulsarClient.newProducer().topic(params.getTopic()).create();
     } catch (PulsarClientException e) {
       throw new SpRuntimeException(e);
     }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.s7.config;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -34,7 +33,8 @@ public class ConfigurationParser {
    * This method takes a string with the PLC configuration and parses the configuration accorting to this pattern:
    * variableName=value
    *
-   * @param codePropertyValue code block with the PLC configuration
+   * @param codePropertyValue
+   *          code block with the PLC configuration
    * @return returns a list of Maps, with the variable name as the Key and value as value
    */
   public Map<String, String> getNodeInformationFromCodeProperty(String codePropertyValue) {
@@ -64,11 +64,11 @@ public class ConfigurationParser {
     return result;
   }
 
-
   /**
    * Transforms PLC4X data types to datatypes supported in StreamPipes
    *
-   * @param plcType String
+   * @param plcType
+   *          String
    * @return Datatypes
    */
   public Datatypes getStreamPipesDataType(String plcType) throws AdapterException {
@@ -92,12 +92,12 @@ public class ConfigurationParser {
   /**
    * Takes the PLC4X address description and validates if it describes an array
    *
-   * @param plcType address of the register that should be read
+   * @param plcType
+   *          address of the register that should be read
    * @return whether the address describes an array or not
    */
   public boolean isPLCArray(String plcType) {
     return plcType.matches(".*\\[.*\\].*");
   }
-
 
 }

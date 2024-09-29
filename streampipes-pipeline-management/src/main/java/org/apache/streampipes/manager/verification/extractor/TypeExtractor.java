@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.verification.extractor;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
@@ -30,10 +29,10 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
+import java.util.logging.Logger;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import java.util.logging.Logger;
 
 public class TypeExtractor {
 
@@ -48,8 +47,8 @@ public class TypeExtractor {
 
   public ElementVerifier<?> getTypeVerifier() throws SepaParseException {
     try {
-      ObjectNode jsonNode =
-          JacksonSerializer.getObjectMapper().readValue(this.extensionElementDescription, ObjectNode.class);
+      ObjectNode jsonNode = JacksonSerializer.getObjectMapper().readValue(this.extensionElementDescription,
+              ObjectNode.class);
       String jsonClassName = jsonNode.get("@class").asText();
       return getTypeDef(jsonClassName);
     } catch (JsonProcessingException e) {

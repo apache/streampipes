@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
@@ -37,44 +36,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("/api/v1/migrations/adapter")
-public class AdapterMigrationResource extends MigrateExtensionsResource<
-    AdapterDescription,
-    IStaticPropertyExtractor,
-        IAdapterMigrator
-    > {
+public class AdapterMigrationResource
+        extends
+          MigrateExtensionsResource<AdapterDescription, IStaticPropertyExtractor, IAdapterMigrator> {
 
-  @PostMapping(
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(
-      summary = "Execute the migration for a specific adapter instance", tags = {"Extensions", "Migration"},
-      responses = {
-          @ApiResponse(
-              responseCode = "200",
-              description = "The migration was executed. Its result is described in the response. "
-                  + "The Response needs to be handled accordingly.",
-              content = @Content(
-                  examples = @ExampleObject(
-                      name = "Successful migration",
-                      value = "{\"success\": true,\"messages\": \"SUCCESS\", \"element\": {}}"
-                  ),
-                  mediaType = MediaType.APPLICATION_JSON_VALUE
-              )
-          )
-      }
-  )
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Execute the migration for a specific adapter instance", tags = {"Extensions",
+      "Migration"}, responses = {
+          @ApiResponse(responseCode = "200", description = "The migration was executed. Its result is described in the response. "
+                  + "The Response needs to be handled accordingly.", content = @Content(examples = @ExampleObject(name = "Successful migration", value = "{\"success\": true,\"messages\": \"SUCCESS\", \"element\": {}}"), mediaType = MediaType.APPLICATION_JSON_VALUE))})
   public ResponseEntity<MigrationResult<AdapterDescription>> migrateAdapter(
-      @Parameter(
-          description = "request that encompasses the adapter description(AdapterDescription) and "
-              + "the configuration of the migration",
-          example = "{\"migrationElement\": {}, \"modelMigratorConfig\": {\"targetAppId\": \"app-id\","
-              + "\"modelType\": \"adapter\", \"fromVersion\": 0, \"toVersion\": 1}}",
-          required = true
-      )
-      @RequestBody MigrationRequest<AdapterDescription> adapterMigrationRequest) {
+          @Parameter(description = "request that encompasses the adapter description(AdapterDescription) and "
+                  + "the configuration of the migration", example = "{\"migrationElement\": {}, \"modelMigratorConfig\": {\"targetAppId\": \"app-id\","
+                          + "\"modelType\": \"adapter\", \"fromVersion\": 0, \"toVersion\": 1}}", required = true) @RequestBody MigrationRequest<AdapterDescription> adapterMigrationRequest) {
     return ok(handleMigration(adapterMigrationRequest));
   }
 

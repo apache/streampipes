@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -69,33 +68,27 @@ public class StringTimerProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.stringoperator.timer", 0)
-        .category(DataProcessorType.STRING_OPERATOR, DataProcessorType.TIME)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.stringReq(),
-                Labels.withId(FIELD_ID),
-                PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID),
-            Options.from(MILLISECONDS, SECONDS, MINUTES))
-        .requiredSingleValueSelection(Labels.withId(OUTPUT_FREQUENCY),
-            Options.from(ON_INPUT_EVENT, ON_STRING_VALUE_CHANGE))
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.numberEp(Labels.withId(MEASURED_TIME_ID),
-                MEASURED_TIME_FIELD_RUNTIME_NAME, "http://schema.org/Number"),
-            EpProperties.stringEp(Labels.withId(FIELD_VALUE_ID),
-                FIELD_VALUE_RUNTIME_NAME, "http://schema.org/String")
-        ))
-        .build();
+            .create("org.apache.streampipes.processors.transformation.jvm.stringoperator.timer", 0)
+            .category(DataProcessorType.STRING_OPERATOR, DataProcessorType.TIME).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId(FIELD_ID),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
+            .requiredSingleValueSelection(Labels.withId(OUTPUT_FREQUENCY),
+                    Options.from(ON_INPUT_EVENT, ON_STRING_VALUE_CHANGE))
+            .outputStrategy(OutputStrategies.append(
+                    EpProperties.numberEp(Labels.withId(MEASURED_TIME_ID), MEASURED_TIME_FIELD_RUNTIME_NAME,
+                            "http://schema.org/Number"),
+                    EpProperties.stringEp(Labels.withId(FIELD_VALUE_ID), FIELD_VALUE_RUNTIME_NAME,
+                            "http://schema.org/String")))
+            .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     ProcessingElementParameterExtractor extractor = parameters.extractor();
 
     this.selectedFieldName = extractor.mappingPropertyValue(FIELD_ID);

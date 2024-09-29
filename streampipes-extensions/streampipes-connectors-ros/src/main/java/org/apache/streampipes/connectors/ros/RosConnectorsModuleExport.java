@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connectors.ros;
 
 import org.apache.streampipes.connectors.ros.adapter.RosBridgeAdapter;
@@ -31,16 +30,12 @@ import java.util.List;
 public class RosConnectorsModuleExport implements IExtensionModuleExport {
   @Override
   public List<StreamPipesAdapter> adapters() {
-    return List.of(
-        new RosBridgeAdapter()
-    );
+    return List.of(new RosBridgeAdapter());
   }
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new RosBridgeSink()
-    );
+    return List.of(new RosBridgeSink());
   }
 
   @Override

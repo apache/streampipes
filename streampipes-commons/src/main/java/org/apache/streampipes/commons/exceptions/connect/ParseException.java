@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.exceptions.connect;
 
 public class ParseException extends RuntimeException {
@@ -27,8 +26,7 @@ public class ParseException extends RuntimeException {
     super(message);
   }
 
-  public ParseException(String message,
-                        Throwable throwable) {
+  public ParseException(String message, Throwable throwable) {
     super(message, throwable);
   }
 }

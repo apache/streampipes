@@ -33,10 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v2/pe/options")
 public class ContainerProvidedOptions extends AbstractRestResource {
 
-  @PostMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RuntimeOptionsResponse> fetchRemoteOptions(@RequestBody RuntimeOptionsRequest request) {
     return ok(new ContainerProvidedOptionsHandler().fetchRemoteOptions(request));
   }

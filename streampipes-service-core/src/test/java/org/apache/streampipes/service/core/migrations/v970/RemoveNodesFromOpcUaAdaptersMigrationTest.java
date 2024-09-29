@@ -15,26 +15,24 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.migrations.v970;
-
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
-import org.apache.streampipes.model.staticproperty.TreeInputNode;
-import org.apache.streampipes.storage.api.IAdapterStorage;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-
-import java.io.IOException;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
+import org.apache.streampipes.model.staticproperty.TreeInputNode;
+import org.apache.streampipes.storage.api.IAdapterStorage;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 class RemoveNodesFromOpcUaAdaptersMigrationTest {
 
@@ -60,17 +58,13 @@ class RemoveNodesFromOpcUaAdaptersMigrationTest {
     var updatedAdapter = captor.getValue();
     var treeProperty = getFirstTreeInputProperty(updatedAdapter);
     assertTrue(treeProperty.getNodes().isEmpty());
-    assertTrue(treeProperty.getLatestFetchedNodes()
-                           .isEmpty());
+    assertTrue(treeProperty.getLatestFetchedNodes().isEmpty());
   }
 
   private RuntimeResolvableTreeInputStaticProperty getFirstTreeInputProperty(AdapterDescription adapterDescription) {
-    return adapterDescription.getConfig()
-                             .stream()
-                             .filter(config -> config instanceof RuntimeResolvableTreeInputStaticProperty)
-                             .map(config -> (RuntimeResolvableTreeInputStaticProperty) config)
-                             .findFirst()
-                             .orElse(null);
+    return adapterDescription.getConfig().stream()
+            .filter(config -> config instanceof RuntimeResolvableTreeInputStaticProperty)
+            .map(config -> (RuntimeResolvableTreeInputStaticProperty) config).findFirst().orElse(null);
   }
 
   private AdapterDescription prepareOpcUaAdapterWithNodesAndLatestFetchedNodes() {

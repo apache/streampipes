@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.value.duration;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -54,34 +53,27 @@ public class CalculateDurationProcessor extends StreamPipesDataProcessor {
   private String endTs;
   private String unit;
 
-
-  //TODO: Change Icon
+  // TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.duration-value", 0)
-        .category(DataProcessorType.TIME)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                Labels.withId(START_TS_FIELD_ID),
-                PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                Labels.withId(END_TS_FIELD_ID),
-                PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(UNIT_FIELD_ID),
-            Options.from(MS, SECONDS, MINUTES, HOURS))
-        .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), DURATION_FIELD_NAME,
-            SO.NUMBER)))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.duration-value", 0)
+            .category(DataProcessorType.TIME).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.withId(START_TS_FIELD_ID),
+                            PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.withId(END_TS_FIELD_ID),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredSingleValueSelection(Labels.withId(UNIT_FIELD_ID), Options.from(MS, SECONDS, MINUTES, HOURS))
+            .outputStrategy(
+                    OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), DURATION_FIELD_NAME, SO.NUMBER)))
+            .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     var extractor = parameters.extractor();
     startTs = extractor.mappingPropertyValue(START_TS_FIELD_ID);
     endTs = extractor.mappingPropertyValue(END_TS_FIELD_ID);

@@ -32,6 +32,11 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+
 import org.eclipse.ditto.client.DittoClient;
 import org.eclipse.ditto.client.DittoClients;
 import org.eclipse.ditto.client.configuration.BasicAuthenticationConfiguration;
@@ -45,11 +50,6 @@ import org.eclipse.ditto.model.things.Features;
 import org.eclipse.ditto.model.things.Thing;
 import org.eclipse.ditto.model.things.ThingId;
 import org.eclipse.ditto.signals.commands.things.exceptions.ThingNotAccessibleException;
-
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 
 public class DittoSink extends StreamPipesDataSink {
 
@@ -68,29 +68,22 @@ public class DittoSink extends StreamPipesDataSink {
 
   private List<String> selectedFields;
 
-
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.databases.ditto", 0)
-        .category(DataSinkType.FORWARD)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithNaryMapping(
-            EpRequirements.anyProperty(),
-            Labels.withId(SELECTED_FIELDS_KEY),
-            PropertyScope.NONE).build())
-        .requiredTextParameter(Labels.withId(DITTO_API_ENDPOINT_KEY))
-        .requiredTextParameter(Labels.withId(DITTO_USER_KEY))
-        .requiredSecret(Labels.withId(DITTO_PASSWORD_KEY))
-        .requiredTextParameter(Labels.withId(DITTO_THING_ID_KEY))
-        .requiredTextParameter(Labels.withId(DITTO_FEATURE_ID_KEY))
-        .build();
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.ditto", 0).category(DataSinkType.FORWARD)
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.withId(SELECTED_FIELDS_KEY),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredTextParameter(Labels.withId(DITTO_API_ENDPOINT_KEY))
+            .requiredTextParameter(Labels.withId(DITTO_USER_KEY)).requiredSecret(Labels.withId(DITTO_PASSWORD_KEY))
+            .requiredTextParameter(Labels.withId(DITTO_THING_ID_KEY))
+            .requiredTextParameter(Labels.withId(DITTO_FEATURE_ID_KEY)).build();
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     var extractor = parameters.extractor();
     String dittoApiEndpoint = extractor.textParameter(DITTO_API_ENDPOINT_KEY);
     String dittoUser = extractor.textParameter(DITTO_USER_KEY);
@@ -100,16 +93,12 @@ public class DittoSink extends StreamPipesDataSink {
     this.featureId = extractor.textParameter(DITTO_FEATURE_ID_KEY);
     this.selectedFields = extractor.mappingPropertyValues(SELECTED_FIELDS_KEY);
 
-    MessagingConfiguration configuration = WebSocketMessagingConfiguration.newBuilder()
-        .endpoint(dittoApiEndpoint)
-        .build();
+    MessagingConfiguration configuration = WebSocketMessagingConfiguration.newBuilder().endpoint(dittoApiEndpoint)
+            .build();
     WebSocketMessagingProvider provider = WebSocketMessagingProvider.newInstance(configuration,
-        AuthenticationProviders
-            .basic(BasicAuthenticationConfiguration.newBuilder()
-                .username(dittoUser)
-                .password(dittoPassword)
-                .build()),
-        Executors.newFixedThreadPool(4));
+            AuthenticationProviders.basic(
+                    BasicAuthenticationConfiguration.newBuilder().username(dittoUser).password(dittoPassword).build()),
+            Executors.newFixedThreadPool(4));
     this.client = DittoClients.newInstance(provider);
 
     TwinThingHandle twinHandle = client.twin().forId(ThingId.of(thingId));
@@ -130,8 +119,7 @@ public class DittoSink extends StreamPipesDataSink {
 
     boolean present;
     try {
-      present = twinHandle.retrieve().get().getFeatures().map(features -> features.getFeature(
-          featureId)).isPresent();
+      present = twinHandle.retrieve().get().getFeatures().map(features -> features.getFeature(featureId)).isPresent();
     } catch (InterruptedException | ExecutionException e) {
       throw new SpRuntimeException(e);
     }
@@ -148,8 +136,8 @@ public class DittoSink extends StreamPipesDataSink {
     Map<String, Object> raw = reducedEvent.getRaw();
     for (String key : raw.keySet()) {
       try {
-        client.twin().forId(ThingId.of(this.thingId)).forFeature(this.featureId).putProperty(key,
-            String.valueOf(raw.get(key))).get();
+        client.twin().forId(ThingId.of(this.thingId)).forFeature(this.featureId)
+                .putProperty(key, String.valueOf(raw.get(key))).get();
       } catch (InterruptedException | ExecutionException e) {
         throw new SpRuntimeException(e);
       }

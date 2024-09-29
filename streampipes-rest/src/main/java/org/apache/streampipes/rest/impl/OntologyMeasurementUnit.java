@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.units.UnitProvider;
+
+import java.util.List;
 
 import com.github.jqudt.Unit;
 import org.springframework.http.MediaType;
@@ -29,31 +30,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v2/units")
 public class OntologyMeasurementUnit extends AbstractRestResource {
 
   @GetMapping(path = "/instances", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<Unit>> getAllUnits() {
-    return ok(UnitProvider
-        .INSTANCE
-        .getAvailableUnits());
+    return ok(UnitProvider.INSTANCE.getAvailableUnits());
   }
 
   @GetMapping(path = "/types", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<Unit>> getAllUnitTypes() {
-    return ok(UnitProvider
-        .INSTANCE
-        .getAvailableUnitTypes());
+    return ok(UnitProvider.INSTANCE.getAvailableUnitTypes());
   }
 
   @GetMapping(path = "/instances/{resourceId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Unit> getUnit(@PathVariable("resourceId") String resourceUri) {
-    return ok(UnitProvider
-        .INSTANCE
-        .getUnit(resourceUri));
+    return ok(UnitProvider.INSTANCE.getUnit(resourceUri));
   }
 
 }

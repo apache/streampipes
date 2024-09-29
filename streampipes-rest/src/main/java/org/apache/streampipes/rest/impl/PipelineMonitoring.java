@@ -22,6 +22,9 @@ import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogEx
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,23 +33,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/v2/pipeline-monitoring")
 public class PipelineMonitoring extends AbstractMonitoringResource {
 
   @GetMapping(value = "/pipeline/{pipelineId}/logs", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, List<SpLogEntry>>> getLogInfoForPipeline(
-      @PathVariable("pipelineId") String pipelineId) {
+          @PathVariable("pipelineId") String pipelineId) {
     return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForPipeline(pipelineId));
   }
 
   @GetMapping(value = "/pipeline/{pipelineId}/metrics", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, SpMetricsEntry>> getMetricsInfoForPipeline(
-      @PathVariable("pipelineId") String pipelineId,
-      @RequestParam(value = "forceUpdate", required = false, defaultValue = "false") boolean forceUpdate) {
+          @PathVariable("pipelineId") String pipelineId,
+          @RequestParam(value = "forceUpdate", required = false, defaultValue = "false") boolean forceUpdate) {
     if (forceUpdate) {
       new ExtensionsServiceLogExecutor().triggerUpdate();
     }

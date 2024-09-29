@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.filters.jvm.processor.merge;
 
 import org.apache.streampipes.model.runtime.Event;

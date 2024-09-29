@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.oauth2;
 
 import org.apache.streampipes.commons.environment.Environment;
@@ -34,8 +33,7 @@ public class OAuthEnabledCondition implements Condition {
   }
 
   @Override
-  public boolean matches(ConditionContext context,
-                         AnnotatedTypeMetadata metadata) {
+  public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
     return env.getOAuthEnabled().getValueOrDefault();
   }
 }

@@ -15,20 +15,19 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.brokers.jvm.websocket;
 
 import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
 import org.apache.streampipes.model.runtime.Event;
+
+import java.net.InetSocketAddress;
+import java.util.Map;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.InetSocketAddress;
-import java.util.Map;
 
 public class SocketServer extends WebSocketServer {
 
@@ -44,9 +43,9 @@ public class SocketServer extends WebSocketServer {
 
   @Override
   public void onOpen(WebSocket conn, ClientHandshake handshake) {
-    conn.send("Welcome!"); //This method sends a message to the new client
-    broadcast(
-        "New connection: " + handshake.getResourceDescriptor()); //This method sends a message to all clients connected
+    conn.send("Welcome!"); // This method sends a message to the new client
+    broadcast("New connection: " + handshake.getResourceDescriptor()); // This method sends a message to all clients
+                                                                       // connected
     LOG.info("{} connected.", conn.getRemoteSocketAddress().getAddress().getHostAddress());
   }
 

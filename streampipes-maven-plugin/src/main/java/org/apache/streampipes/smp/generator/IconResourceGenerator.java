@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.smp.generator;
 
 import org.apache.streampipes.smp.model.AssetModel;
@@ -31,9 +30,7 @@ public class IconResourceGenerator extends ResourceGenerator {
   public static final String ICON_NAME = "icon.png";
   private static final String PlaceholderIconName = "placeholder-icon.png";
 
-  public IconResourceGenerator(ClassLoader loader,
-                               AssetModel extensionsElement,
-                               Path targetPath) {
+  public IconResourceGenerator(ClassLoader loader, AssetModel extensionsElement, Path targetPath) {
     super(loader, extensionsElement, targetPath);
   }
 

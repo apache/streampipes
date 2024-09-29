@@ -15,18 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
 import org.apache.plc4x.java.api.types.PlcResponseCode;
 import org.apache.plc4x.java.api.value.PlcValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class PlcEventGenerator {
 
@@ -46,19 +45,13 @@ public class PlcEventGenerator {
 
         // if the response is a list, add each element to the result
         if (response.getObject(key) instanceof List) {
-          event.put(key,
-              response.getAsPlcValue()
-                  .getValue(key)
-                  .getList().stream()
-                  .map(PlcValue::getObject)
-                  .toList()
+          event.put(key, response.getAsPlcValue().getValue(key).getList().stream().map(PlcValue::getObject).toList()
                   .toArray());
         } else {
           event.put(key, response.getObject(key));
         }
       } else {
-        LOG.error("Error[" + key + "]: "
-            + response.getResponseCode(key).name());
+        LOG.error("Error[" + key + "]: " + response.getResponseCode(key).name());
       }
     }
     return event;

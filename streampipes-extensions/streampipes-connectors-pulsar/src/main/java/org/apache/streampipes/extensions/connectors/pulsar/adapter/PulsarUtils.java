@@ -26,8 +26,6 @@ public class PulsarUtils {
 
   public static PulsarClient makePulsarClient(String brokerHostname) throws PulsarClientException {
     String serviceUrl = PULSAR_SCHEME + brokerHostname;
-    return PulsarClient.builder()
-        .serviceUrl(serviceUrl)
-        .build();
+    return PulsarClient.builder().serviceUrl(serviceUrl).build();
   }
 }

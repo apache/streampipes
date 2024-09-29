@@ -18,7 +18,5 @@
 package org.apache.streampipes.model.extensions.configuration;
 
 public enum ConfigurationScope {
-  CONTAINER_STARTUP_CONFIG,
-  CONTAINER_GLOBAL_CONFIG,
-  PIPELINE_ELEMENT_CONFIG
+  CONTAINER_STARTUP_CONFIG, CONTAINER_GLOBAL_CONFIG, PIPELINE_ELEMENT_CONFIG
 }

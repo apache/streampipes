@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.pulsar;
 
 import org.apache.streampipes.messaging.EventConsumer;

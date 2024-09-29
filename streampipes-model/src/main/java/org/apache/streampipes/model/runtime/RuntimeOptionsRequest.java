@@ -22,9 +22,9 @@ import org.apache.streampipes.model.deployment.ExtensionDeploymentConfiguration;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @TsModel
@@ -52,7 +52,7 @@ public class RuntimeOptionsRequest {
   }
 
   public RuntimeOptionsRequest(String requestId, List<StaticProperty> staticProperties,
-                               List<SpDataStream> inputStreams) {
+          List<SpDataStream> inputStreams) {
     super();
     this.requestId = requestId;
     this.staticProperties = staticProperties;

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timekeeping;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -67,37 +66,26 @@ public class BooleanTimekeepingProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.booloperator.timekeeping", 0)
-        .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.TIME)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON, "time_measure_example.png")
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.booleanReq(),
-                Labels.withId(LEFT_FIELD_ID),
-                PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.booleanReq(),
-                Labels.withId(RIGHT_FIELD_ID),
-                PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.numberEp(Labels.withId(TIME_FIELD_ID),
-                "measured_time",
-                "http://schema.org/Number"),
-            EpProperties.numberEp(Labels.withId(COUNT_FIELD_ID),
-                "counter",
-                "http://schema.org/Number")
+            .create("org.apache.streampipes.processors.transformation.jvm.booloperator.timekeeping", 0)
+            .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.TIME).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON, "time_measure_example.png")
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(), Labels.withId(LEFT_FIELD_ID),
+                            PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(), Labels.withId(RIGHT_FIELD_ID),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
+            .outputStrategy(OutputStrategies.append(
+                    EpProperties.numberEp(Labels.withId(TIME_FIELD_ID), "measured_time", "http://schema.org/Number"),
+                    EpProperties.numberEp(Labels.withId(COUNT_FIELD_ID), "counter", "http://schema.org/Number")
 
-        ))
-        .build();
+            )).build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     var extractor = parameters.extractor();
     leftFieldName = extractor.mappingPropertyValue(LEFT_FIELD_ID);
     rightFieldName = extractor.mappingPropertyValue(LEFT_FIELD_ID);
@@ -120,7 +108,6 @@ public class BooleanTimekeepingProcessor extends StreamPipesDataProcessor {
     boolean leftField = inputEvent.getFieldBySelector(leftFieldName).getAsPrimitive().getAsBoolean();
     boolean rightField = inputEvent.getFieldBySelector(rightFieldName).getAsPrimitive().getAsBoolean();
 
-
     if (!rightFieldLast && rightField) {
       if (this.allPending.size() > 0) {
         Long startTime = this.allPending.removeLast();
@@ -141,7 +128,6 @@ public class BooleanTimekeepingProcessor extends StreamPipesDataProcessor {
         collector.collect(inputEvent);
       }
     }
-
 
     if (!leftFieldLast && leftField) {
       this.allPending.push(System.currentTimeMillis());

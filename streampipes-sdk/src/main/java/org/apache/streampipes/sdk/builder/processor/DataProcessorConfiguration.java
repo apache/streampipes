@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder.processor;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
@@ -30,12 +29,12 @@ public class DataProcessorConfiguration implements IDataProcessorConfiguration {
   private final DataProcessorDescription dataProcessorDescription;
 
   public static DataProcessorConfiguration create(Supplier<IStreamPipesDataProcessor> supplier,
-                                                  DataProcessorDescription dataProcessorDescription) {
+          DataProcessorDescription dataProcessorDescription) {
     return new DataProcessorConfiguration(supplier, dataProcessorDescription);
   }
 
   private DataProcessorConfiguration(Supplier<IStreamPipesDataProcessor> supplier,
-                                    DataProcessorDescription dataProcessorDescription) {
+          DataProcessorDescription dataProcessorDescription) {
     this.supplier = supplier;
     this.dataProcessorDescription = dataProcessorDescription;
   }

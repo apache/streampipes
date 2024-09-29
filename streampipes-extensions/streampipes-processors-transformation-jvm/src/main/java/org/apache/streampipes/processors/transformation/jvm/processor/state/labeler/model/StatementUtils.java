@@ -15,17 +15,16 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.model;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.Event;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StatementUtils {
 
@@ -50,9 +49,8 @@ public class StatementUtils {
     return inputEvent;
   }
 
-
   public static List<Statement> getStatements(List<Double> numberValues, List<String> labelStrings,
-                                              List<String> comparators) throws SpRuntimeException {
+          List<String> comparators) throws SpRuntimeException {
 
     List<Statement> result = new ArrayList<>();
 

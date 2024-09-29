@@ -15,18 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.adapter.migration;
-
-import org.apache.streampipes.model.connect.adapter.migration.format.CsvFormatMigrator;
-import org.apache.streampipes.model.connect.adapter.migration.format.EmptyFormatMigrator;
-import org.apache.streampipes.model.connect.adapter.migration.format.JsonFormatMigrator;
-import org.apache.streampipes.model.connect.adapter.migration.format.XmlFormatMigrator;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.apache.streampipes.model.connect.adapter.migration.MigrationHelpers.PROPERTIES;
 import static org.apache.streampipes.model.connect.adapter.migration.utils.FormatIds.CSV;
@@ -46,6 +35,16 @@ import static org.apache.streampipes.model.connect.adapter.migration.utils.Forma
 import static org.apache.streampipes.model.connect.adapter.migration.utils.FormatIds.XML_FORMAT_ID;
 import static org.apache.streampipes.model.connect.adapter.migration.utils.GenericAdapterUtils.applyFormat;
 import static org.apache.streampipes.model.connect.adapter.migration.utils.GenericAdapterUtils.getFormatTemplate;
+
+import org.apache.streampipes.model.connect.adapter.migration.format.CsvFormatMigrator;
+import org.apache.streampipes.model.connect.adapter.migration.format.EmptyFormatMigrator;
+import org.apache.streampipes.model.connect.adapter.migration.format.JsonFormatMigrator;
+import org.apache.streampipes.model.connect.adapter.migration.format.XmlFormatMigrator;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GenericAdapterConverter implements IAdapterConverter {
 
@@ -95,18 +94,14 @@ public class GenericAdapterConverter implements IAdapterConverter {
     return importMode ? object : object.get(PROPERTIES).getAsJsonObject();
   }
 
-  private void migrateProtocolDescription(JsonObject adapter,
-                                          JsonObject protocolDescription) {
+  private void migrateProtocolDescription(JsonObject adapter, JsonObject protocolDescription) {
     JsonArray config = getProperties(adapter).get(CONFIG_KEY).getAsJsonArray();
     JsonArray protocolDescriptionConfig = protocolDescription.get(CONFIG_KEY).getAsJsonArray();
     protocolDescriptionConfig.forEach(config::add);
   }
 
-  private void migrateFormatDescription(JsonObject adapter,
-                                        JsonObject formatDescription) {
-    var adapterConfig = getProperties(adapter)
-        .get(CONFIG_KEY)
-        .getAsJsonArray();
+  private void migrateFormatDescription(JsonObject adapter, JsonObject formatDescription) {
+    var adapterConfig = getProperties(adapter).get(CONFIG_KEY).getAsJsonArray();
 
     var formatTemplate = getFormatTemplate();
 
@@ -137,14 +132,11 @@ public class GenericAdapterConverter implements IAdapterConverter {
     adapterConfig.add(formatTemplate);
   }
 
-  private boolean isFormat(JsonObject formatDescription,
-                           String format) {
+  private boolean isFormat(JsonObject formatDescription, String format) {
     return getAppId(formatDescription).equals(format);
   }
 
   private String getAppId(JsonObject formatDescription) {
-    return formatDescription
-        .getAsJsonObject()
-        .get(MigrationHelpers.APP_ID).getAsString();
+    return formatDescription.getAsJsonObject().get(MigrationHelpers.APP_ID).getAsString();
   }
 }

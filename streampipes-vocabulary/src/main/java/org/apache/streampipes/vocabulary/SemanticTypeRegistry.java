@@ -44,9 +44,6 @@ public enum SemanticTypeRegistry {
   }
 
   public List<String> matches(String text) {
-    return this.semanticTypes
-        .stream()
-        .filter(type -> type.contains(text))
-        .collect(Collectors.toList());
+    return this.semanticTypes.stream().filter(type -> type.contains(text)).collect(Collectors.toList());
   }
 }

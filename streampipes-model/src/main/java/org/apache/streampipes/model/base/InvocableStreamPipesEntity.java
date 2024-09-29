@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.base;
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
@@ -26,13 +25,11 @@ import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.List;
 
-public abstract class InvocableStreamPipesEntity
-        extends VersionedNamedStreamPipesEntity
-        implements EndpointSelectable {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public abstract class InvocableStreamPipesEntity extends VersionedNamedStreamPipesEntity implements EndpointSelectable {
 
   protected List<SpDataStream> inputStreams;
 

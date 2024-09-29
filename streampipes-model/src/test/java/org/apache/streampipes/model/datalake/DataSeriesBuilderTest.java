@@ -15,15 +15,13 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.datalake;
-
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DataSeriesBuilderTest {
 
@@ -32,50 +30,36 @@ public class DataSeriesBuilderTest {
   @Test
   public void withHeadersTest() {
     var headers = List.of("h1", "h2");
-    var result = DataSeriesBuilder.create()
-        .withHeaders(headers)
-        .build();
+    var result = DataSeriesBuilder.create().withHeaders(headers).build();
 
-    Assertions.assertEquals(2,
-                            result.getHeaders().size());
+    Assertions.assertEquals(2, result.getHeaders().size());
     Assertions.assertEquals(headers, result.getHeaders());
   }
-
 
   @Test
   public void withRowTest() {
 
-    var result = DataSeriesBuilder.create()
-        .withRow(rowOne)
-        .build();
+    var result = DataSeriesBuilder.create().withRow(rowOne).build();
 
-    Assertions.assertEquals(1,
-                            result.getRows().size());
+    Assertions.assertEquals(1, result.getRows().size());
     Assertions.assertEquals(1, result.getTotal());
     Assertions.assertEquals(List.of(rowOne), result.getRows());
   }
 
   @Test
   public void withTwoRowsTest() {
-    var result = DataSeriesBuilder.create()
-        .withRow(rowOne)
-        .withRow(rowTwo)
-        .build();
+    var result = DataSeriesBuilder.create().withRow(rowOne).withRow(rowTwo).build();
 
-    Assertions.assertEquals(2,
-                            result.getRows().size());
+    Assertions.assertEquals(2, result.getRows().size());
     Assertions.assertEquals(2, result.getTotal());
     Assertions.assertEquals(List.of(rowOne, rowTwo), result.getRows());
   }
 
   @Test
   public void withRowsTest() {
-    var result = DataSeriesBuilder.create()
-        .withRows(List.of(rowOne, rowTwo))
-        .build();
+    var result = DataSeriesBuilder.create().withRows(List.of(rowOne, rowTwo)).build();
 
-    Assertions.assertEquals(2,
-                            result.getRows().size());
+    Assertions.assertEquals(2, result.getRows().size());
     Assertions.assertEquals(2, result.getTotal());
     Assertions.assertEquals(List.of(rowOne, rowTwo), result.getRows());
   }
@@ -84,9 +68,7 @@ public class DataSeriesBuilderTest {
   public void withTagsTest() {
     Map<String, String> tags = Map.of("t1", "v1");
 
-    var result = DataSeriesBuilder.create()
-        .withTags(tags)
-        .build();
+    var result = DataSeriesBuilder.create().withTags(tags).build();
 
     Assertions.assertEquals(tags, result.getTags());
   }

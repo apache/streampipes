@@ -17,10 +17,10 @@
  */
 package org.apache.streampipes.model.runtime;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Map;
 
 public class TestPropertyRenaming {
 
@@ -32,8 +32,7 @@ public class TestPropertyRenaming {
     Map<String, Object> outMap = new EventConverter(event).toMap();
 
     Assertions.assertTrue(outMap.containsKey("ts"));
-    Assertions.assertEquals(1,
-                            outMap.keySet().size());
+    Assertions.assertEquals(1, outMap.keySet().size());
   }
 
   @Test
@@ -44,15 +43,13 @@ public class TestPropertyRenaming {
     Map<String, Object> outMap = new EventConverter(event).toMap();
 
     Assertions.assertTrue(outMap.containsKey("timestamp"));
-    Assertions.assertEquals(1,
-                            outMap.keySet().size());
+    Assertions.assertEquals(1, outMap.keySet().size());
   }
 
   @Test
   public void testNestedRenaming() {
     Map<String, Object> runtimeMap = RuntimeTestUtils.nestedMap();
-    Event event = RuntimeTestUtils.makeNestedEventWithRenameRule(runtimeMap, RuntimeTestUtils
-        .getSourceInfo());
+    Event event = RuntimeTestUtils.makeNestedEventWithRenameRule(runtimeMap, RuntimeTestUtils.getSourceInfo());
 
     Map<String, Object> outMap = new EventConverter(event).toMap();
 
@@ -61,9 +58,7 @@ public class TestPropertyRenaming {
 
     Map<String, Object> nestedMap = (Map<String, Object>) outMap.get("ns");
     Assertions.assertTrue(nestedMap.containsKey("ts2"));
-    Assertions.assertEquals(2,
-                            nestedMap.keySet().size());
+    Assertions.assertEquals(2, nestedMap.keySet().size());
   }
-
 
 }

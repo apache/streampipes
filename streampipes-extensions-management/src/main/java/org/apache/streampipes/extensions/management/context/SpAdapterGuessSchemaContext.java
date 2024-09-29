@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.context;
 
 import org.apache.streampipes.client.StreamPipesClient;
@@ -27,8 +26,7 @@ public class SpAdapterGuessSchemaContext implements IAdapterGuessSchemaContext {
   protected IConfigExtractor configExtractor;
   protected StreamPipesClient streamPipesClient;
 
-  public SpAdapterGuessSchemaContext(IConfigExtractor configExtractor,
-                                     StreamPipesClient streamPipesClient) {
+  public SpAdapterGuessSchemaContext(IConfigExtractor configExtractor, StreamPipesClient streamPipesClient) {
     this.configExtractor = configExtractor;
     this.streamPipesClient = streamPipesClient;
   }

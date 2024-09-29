@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.nats.shared;
 
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
@@ -66,6 +65,5 @@ public class NatsConfigUtils {
 
     return natsConfig;
   }
-
 
 }

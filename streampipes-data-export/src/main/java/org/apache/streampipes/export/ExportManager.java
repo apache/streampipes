@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.export;
 
 import org.apache.streampipes.export.generator.ExportPackageGenerator;
@@ -29,10 +28,8 @@ public class ExportManager {
 
   public static ExportConfiguration getExportPreview(List<String> selectedAssetIds) {
     var exportConfig = new ExportConfiguration();
-    var assetExportConfigurations = selectedAssetIds
-        .stream()
-        .map(assetId -> new AssetLinkResolver(assetId).resolveResources())
-        .collect(Collectors.toList());
+    var assetExportConfigurations = selectedAssetIds.stream()
+            .map(assetId -> new AssetLinkResolver(assetId).resolveResources()).collect(Collectors.toList());
 
     exportConfig.setAssetExportConfiguration(assetExportConfigurations);
 

@@ -21,6 +21,8 @@ import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -29,8 +31,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v2/pe")
@@ -50,18 +50,13 @@ public class PipelineElementAsset extends AbstractRestResource {
   @GetMapping(path = "/{appId}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
   public ResponseEntity<?> getDocumentationAsset(@PathVariable("appId") String appId) {
     try {
-      //If the provided appId contains "sp:spdatastream",
-      //it indicates usage by the asset-overview view where the data stream ID is supplied.
-      //In such cases, the appId of the adapter description needs retrieval for successful documentation loading.
+      // If the provided appId contains "sp:spdatastream",
+      // it indicates usage by the asset-overview view where the data stream ID is supplied.
+      // In such cases, the appId of the adapter description needs retrieval for successful documentation loading.
       if (appId.contains("sp:spdatastream")) {
-        var dataStream = StorageDispatcher.INSTANCE
-            .getNoSqlStore()
-            .getDataStreamStorage()
-            .getDataStreamByAppId(appId);
-        var adapterDescription = StorageDispatcher.INSTANCE
-            .getNoSqlStore()
-            .getAdapterInstanceStorage()
-            .getElementById(dataStream.getCorrespondingAdapterId());
+        var dataStream = StorageDispatcher.INSTANCE.getNoSqlStore().getDataStreamStorage().getDataStreamByAppId(appId);
+        var adapterDescription = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage()
+                .getElementById(dataStream.getCorrespondingAdapterId());
         appId = adapterDescription.getAppId();
       }
       return ok(AssetManager.getAssetDocumentation(appId));
@@ -71,8 +66,7 @@ public class PipelineElementAsset extends AbstractRestResource {
   }
 
   @GetMapping(path = "/{appId}/assets/{assetName}", produces = MediaType.IMAGE_PNG_VALUE)
-  public ResponseEntity<?> getAsset(@PathVariable("appId") String appId, @PathVariable("assetName") String
-      assetName) {
+  public ResponseEntity<?> getAsset(@PathVariable("appId") String appId, @PathVariable("assetName") String assetName) {
     try {
       byte[] asset = AssetManager.getAsset(appId, assetName);
       return ok(asset);

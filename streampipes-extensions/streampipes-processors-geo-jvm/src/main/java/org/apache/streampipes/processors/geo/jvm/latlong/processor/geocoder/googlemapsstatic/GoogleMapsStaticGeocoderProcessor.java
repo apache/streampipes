@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemapsstatic;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -37,12 +36,12 @@ import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
+import java.io.IOException;
+
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.GeocodingResult;
-
-import java.io.IOException;
 
 public class GoogleMapsStaticGeocoderProcessor extends StreamPipesDataProcessor {
   private static final String STATIC_GEOCODER_REQUEST_KEY = "sg-request-key";
@@ -56,30 +55,21 @@ public class GoogleMapsStaticGeocoderProcessor extends StreamPipesDataProcessor 
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemapsstatic", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(
-            StreamRequirementsBuilder
-                .create()
-                .requiredProperty(EpRequirements.anyProperty())
-                .build()
-        )
-        .requiredTextParameter(Labels.withId(STATIC_GEOCODER_REQUEST_KEY))
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.doubleEp(Labels.empty(), LAT_RUNTIME_NAME, Geo.LAT),
-            EpProperties.stringEp(Labels.empty(), LONG_RUNTIME_NAME, Geo.LNG))
-        )
-        .build();
+            .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemapsstatic", 0)
+            .category(DataProcessorType.GEO).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredTextParameter(Labels.withId(STATIC_GEOCODER_REQUEST_KEY))
+            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), LAT_RUNTIME_NAME, Geo.LAT),
+                    EpProperties.stringEp(Labels.empty(), LONG_RUNTIME_NAME, Geo.LNG)))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
 
-    this.staticGeocoderRequest =
-        parameters.extractor().singleValueParameter(STATIC_GEOCODER_REQUEST_KEY, String.class);
+    this.staticGeocoderRequest = parameters.extractor().singleValueParameter(STATIC_GEOCODER_REQUEST_KEY, String.class);
     String googleMapsApiKey = runtimeContext.getConfigStore().getString(ConfigKeys.GOOGLE_API_KEY);
 
     if (googleMapsApiKey == null || googleMapsApiKey.equals("")) {

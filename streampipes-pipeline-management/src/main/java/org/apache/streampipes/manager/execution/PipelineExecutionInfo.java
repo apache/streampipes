@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -48,11 +47,7 @@ public class PipelineExecutionInfo {
   }
 
   private List<InvocableStreamPipesEntity> findProcessorsAndSinks(Pipeline pipeline) {
-    return Stream
-        .concat(
-            pipeline.getSepas().stream(),
-            pipeline.getActions().stream()
-        ).collect(Collectors.toList());
+    return Stream.concat(pipeline.getSepas().stream(), pipeline.getActions().stream()).collect(Collectors.toList());
   }
 
   public void addFailedPipelineElement(NamedStreamPipesEntity failedElement) {

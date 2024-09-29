@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.brokers.jvm.rabbitmq;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -52,29 +51,22 @@ public class RabbitMqPublisherSink extends StreamPipesDataSink {
   private JsonDataFormatDefinition dataFormatDefinition;
   private String topic;
 
-
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.rabbitmq", 0)
-        .category(DataSinkType.MESSAGING)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
-        .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
-        .requiredIntegerParameter(Labels.withId(PORT_KEY), 5672)
-        .requiredTextParameter(Labels.withId(USER_KEY), false, false)
-        .requiredTextParameter(Labels.withId(EXCHANGE_NAME_KEY), false, false)
-        .requiredSecret(Labels.withId(PASSWORD_KEY))
-        .build();
+            .category(DataSinkType.MESSAGING).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
+            .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
+            .requiredIntegerParameter(Labels.withId(PORT_KEY), 5672)
+            .requiredTextParameter(Labels.withId(USER_KEY), false, false)
+            .requiredTextParameter(Labels.withId(EXCHANGE_NAME_KEY), false, false)
+            .requiredSecret(Labels.withId(PASSWORD_KEY)).build();
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
 
     var extractor = parameters.extractor();
     this.dataFormatDefinition = new JsonDataFormatDefinition();
@@ -86,15 +78,15 @@ public class RabbitMqPublisherSink extends StreamPipesDataSink {
     String rabbitMqPassword = extractor.secretValue(PASSWORD_KEY);
     String exchangeName = extractor.singleValueParameter(EXCHANGE_NAME_KEY, String.class);
 
-    var rabbitMqParameters = new RabbitMqParameters(rabbitMqHost, rabbitMqPort, publisherTopic,
-        rabbitMqUser, rabbitMqPassword, exchangeName);
+    var rabbitMqParameters = new RabbitMqParameters(rabbitMqHost, rabbitMqPort, publisherTopic, rabbitMqUser,
+            rabbitMqPassword, exchangeName);
 
     this.publisher = new RabbitMqPublisher(rabbitMqParameters);
     this.topic = rabbitMqParameters.getRabbitMqTopic();
 
     if (!this.publisher.isConnected()) {
       throw new SpRuntimeException("Could not establish conntection to RabbitMQ broker. Host: "
-          + rabbitMqParameters.getRabbitMqHost() + " Port: " + rabbitMqParameters.getRabbitMqPort());
+              + rabbitMqParameters.getRabbitMqHost() + " Port: " + rabbitMqParameters.getRabbitMqPort());
     }
   }
 
@@ -102,7 +94,7 @@ public class RabbitMqPublisherSink extends StreamPipesDataSink {
   public void onEvent(Event inputEvent) throws SpRuntimeException {
     try {
       publisher.fire(dataFormatDefinition.fromMap(inputEvent.getRaw()),
-          PlaceholderExtractor.replacePlaceholders(inputEvent, topic));
+              PlaceholderExtractor.replacePlaceholders(inputEvent, topic));
     } catch (SpRuntimeException e) {
       LOG.error("Could not serialiaze event");
     }

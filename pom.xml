@@ -142,6 +142,8 @@
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
         <maven.version>3.8.7</maven.version>
         <typescript-generator-maven-plugin.version>3.2.1263</typescript-generator-maven-plugin.version>
+        <spotless.skip>false</spotless.skip>
+        <spotless.version>2.43.0</spotless.version>
 
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -1109,6 +1111,40 @@
                     <failOnError>false</failOnError>
                     <source>8</source>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <configuration>
+                    <skip>${spotless.skip}</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless.version}</version>
+                <configuration>
+                    <java>
+                        <importOrder>
+                            <order>org.apache.streampipes,*,jakarta,javax,java,scala</order>
+                        </importOrder>
+                        <eclipse>
+                            <file>tools/maven/eclipse-code-formatter.xml</file>
+                        </eclipse>
+                        <licenseHeader>
+                            <file>tools/maven/checkstyle-header.txt</file>
+                        </licenseHeader>
+                    </java>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>spotless-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>validate</phase>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.rat</groupId>

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.trigonometry;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -47,44 +46,34 @@ public class TrigonometryProcessor extends StreamPipesDataProcessor {
   private Operation operation;
   private String operand;
 
-
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.enricher.jvm.processor.trigonometry", 0)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .category(DataProcessorType.ALGORITHM)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(OPERAND),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(
-            OutputStrategies.append(
-                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.NUMBER)))
-        .requiredSingleValueSelection(Labels.withId(OPERATION),
-            Options.from("sin", "cos", "tan"))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.processor.trigonometry", 0)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .category(DataProcessorType.ALGORITHM)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId(OPERAND),
+                            PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies.append(EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.NUMBER)))
+            .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("sin", "cos", "tan")).build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
 
     this.operand = parameters.extractor().mappingPropertyValue(OPERAND);
     String stringOperation = parameters.extractor().selectedSingleValue(OPERATION, String.class);
 
     switch (stringOperation) {
-      case "sin":
+      case "sin" :
         operation = Operation.SIN;
         break;
-      case "cos":
+      case "cos" :
         operation = Operation.COS;
         break;
-      case "tan":
+      case "tan" :
         operation = Operation.TAN;
 
     }

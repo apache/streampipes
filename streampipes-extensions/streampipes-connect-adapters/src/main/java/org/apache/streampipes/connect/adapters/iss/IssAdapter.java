@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.adapters.iss;
 
+import static org.apache.streampipes.sdk.helpers.EpProperties.doubleEp;
+import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 import org.apache.streampipes.connect.adapters.iss.model.IssModel;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
@@ -38,18 +39,15 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.vocabulary.Geo;
 
-import com.google.gson.Gson;
-import org.apache.http.client.fluent.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static org.apache.streampipes.sdk.helpers.EpProperties.doubleEp;
-import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
+import com.google.gson.Gson;
+import org.apache.http.client.fluent.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IssAdapter implements StreamPipesAdapter, IPullAdapter {
 
@@ -76,11 +74,7 @@ public class IssAdapter implements StreamPipesAdapter, IPullAdapter {
   }
 
   private Map<String, Object> getNextPosition() throws IOException {
-    String response = Request
-        .Get(ISS_ENDPOINT_URL)
-        .execute()
-        .returnContent()
-        .asString();
+    String response = Request.Get(ISS_ENDPOINT_URL).execute().returnContent().asString();
 
     IssModel issModel = new Gson().fromJson(response, IssModel.class);
 
@@ -103,17 +97,14 @@ public class IssAdapter implements StreamPipesAdapter, IPullAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 0, IssAdapter::new)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withCategory(AdapterType.OpenData)
-        .buildConfiguration();
+    return AdapterConfigurationBuilder.create(ID, 0, IssAdapter::new).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withCategory(AdapterType.OpenData)
+            .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) {
     this.pollingIntervalInSeconds = 5;
     this.collector = collector;
     this.scheduler = new PullAdapterScheduler();
@@ -121,23 +112,18 @@ public class IssAdapter implements StreamPipesAdapter, IPullAdapter {
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext) {
     this.scheduler.shutdown();
   }
 
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) {
-    return GuessSchemaBuilder.create()
-        .property(timestampProperty(Timestamp))
-        .property(doubleEp(Labels.from(
-                Latitude, "Latitude",
-                "The latitude value of the current ISS location"),
-            Latitude, Geo.LAT))
-        .property(doubleEp(Labels.from(Longitude, "Longitude",
-                "The longitude value of the current ISS location"),
-            Longitude, Geo.LNG))
-        .build();
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) {
+    return GuessSchemaBuilder.create().property(timestampProperty(Timestamp))
+            .property(doubleEp(Labels.from(Latitude, "Latitude", "The latitude value of the current ISS location"),
+                    Latitude, Geo.LAT))
+            .property(doubleEp(Labels.from(Longitude, "Longitude", "The longitude value of the current ISS location"),
+                    Longitude, Geo.LNG))
+            .build();
   }
 }

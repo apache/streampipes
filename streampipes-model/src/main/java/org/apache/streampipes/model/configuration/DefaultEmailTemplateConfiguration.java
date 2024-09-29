@@ -15,18 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.configuration;
 
 import org.apache.streampipes.commons.resources.Resources;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultEmailTemplateConfiguration {
 
@@ -39,9 +38,7 @@ public class DefaultEmailTemplateConfiguration {
     try {
       template = removeHeader(getTemplate());
     } catch (IOException e) {
-      LOG.warn(
-          "Default email template could not be loaded - set this manually in the UI under Configuration->Mail"
-      );
+      LOG.warn("Default email template could not be loaded - set this manually in the UI under Configuration->Mail");
     }
     return new EmailTemplateConfig(template);
   }
@@ -51,8 +48,6 @@ public class DefaultEmailTemplateConfiguration {
   }
 
   private String removeHeader(String template) {
-    return Arrays.stream(template.split("\n"))
-        .skip(22)
-        .collect(Collectors.joining("\n"));
+    return Arrays.stream(template.split("\n")).skip(22).collect(Collectors.joining("\n"));
   }
 }

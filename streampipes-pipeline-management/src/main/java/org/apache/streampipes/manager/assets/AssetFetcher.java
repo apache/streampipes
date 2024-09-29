@@ -21,10 +21,10 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
-import org.apache.http.client.fluent.Request;
-
 import java.io.IOException;
 import java.io.InputStream;
+
+import org.apache.http.client.fluent.Request;
 
 public class AssetFetcher {
 
@@ -33,19 +33,14 @@ public class AssetFetcher {
   private SpServiceUrlProvider spServiceUrlProvider;
   private String appId;
 
-  public AssetFetcher(SpServiceUrlProvider spServiceUrlProvider,
-                      String appId) {
+  public AssetFetcher(SpServiceUrlProvider spServiceUrlProvider, String appId) {
     this.spServiceUrlProvider = spServiceUrlProvider;
     this.appId = appId;
   }
 
   public InputStream fetchPipelineElementAssets() throws IOException, NoServiceEndpointsAvailableException {
     String endpointUrl = new ExtensionsServiceEndpointGenerator().getEndpointResourceUrl(appId, spServiceUrlProvider);
-    return Request
-        .Get(endpointUrl + ASSET_ENDPOINT_APPENDIX)
-        .execute()
-        .returnContent()
-        .asStream();
+    return Request.Get(endpointUrl + ASSET_ENDPOINT_APPENDIX).execute().returnContent().asStream();
 
   }
 }

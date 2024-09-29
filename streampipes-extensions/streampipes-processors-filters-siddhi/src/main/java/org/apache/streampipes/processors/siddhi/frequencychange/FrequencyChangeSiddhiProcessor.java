@@ -41,29 +41,18 @@ public class FrequencyChangeSiddhiProcessor extends StreamPipesSiddhiProcessor {
   private static final String TIME_UNIT = "timeUnit";
   private static final String INCREASE = "increase";
 
-
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.siddhi.frequencychange", 0)
-        .category(DataProcessorType.FILTER)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredSingleValueSelection(Labels.withId(TIME_UNIT), Options.from("sec", "min",
-            "hrs"))
-        .requiredIntegerParameter(Labels.withId(INCREASE), 0, 500, 1)
-        .outputStrategy(OutputStrategies.custom(true))
-        .requiredIntegerParameter(Labels.withId(DURATION))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.frequencychange", 0)
+            .category(DataProcessorType.FILTER).withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredSingleValueSelection(Labels.withId(TIME_UNIT), Options.from("sec", "min", "hrs"))
+            .requiredIntegerParameter(Labels.withId(INCREASE), 0, 500, 1).outputStrategy(OutputStrategies.custom(true))
+            .requiredIntegerParameter(Labels.withId(DURATION)).build();
   }
 
   @Override
-  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
-                                        String finalInsertIntoStreamName) {
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams, String finalInsertIntoStreamName) {
 
     var extractor = siddhiParams.getParams().extractor();
     int duration = extractor.singleValueParameter(DURATION, Integer.class);
@@ -71,21 +60,14 @@ public class FrequencyChangeSiddhiProcessor extends StreamPipesSiddhiProcessor {
     int increase = extractor.selectedSingleValue(INCREASE, Integer.class);
 
     InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
-    return SiddhiAppConfigBuilder
-        .create()
-        .addQuery(SiddhiQueryBuilder.create(fromStatement(siddhiParams, duration), insertIntoClause)
-            .withSelectClause(selectStatement(siddhiParams))
-            .build())
-        .build();
+    return SiddhiAppConfigBuilder.create()
+            .addQuery(SiddhiQueryBuilder.create(fromStatement(siddhiParams, duration), insertIntoClause)
+                    .withSelectClause(selectStatement(siddhiParams)).build())
+            .build();
   }
 
-  private String fromStatement(SiddhiProcessorParams siddhiParams,
-                               int duration) {
-    return "from every not "
-        + siddhiParams.getInputStreamNames().get(0)
-        + " for "
-        + duration
-        + " sec";
+  private String fromStatement(SiddhiProcessorParams siddhiParams, int duration) {
+    return "from every not " + siddhiParams.getInputStreamNames().get(0) + " for " + duration + " sec";
   }
 
   private String selectStatement(SiddhiProcessorParams siddhiParams) {

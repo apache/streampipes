@@ -15,24 +15,23 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter;
+
+import static org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterProcessor.INVERT_FIELD_ID;
 
 import org.apache.streampipes.test.executors.PrefixStrategy;
 import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.StreamPrefix;
 import org.apache.streampipes.test.executors.TestConfiguration;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterProcessor.INVERT_FIELD_ID;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class TestBooleanInverterProcessor {
   private static final String KEY_1 = "key1";
@@ -45,34 +44,18 @@ public class TestBooleanInverterProcessor {
   }
 
   static Stream<Arguments> arguments() {
-    return Stream.of(
-        Arguments.of(
-            List.of(Map.of(KEY_1, true)),
-            List.of(Map.of(KEY_1, false))
-        ),
-        Arguments.of(
-            List.of(Map.of(KEY_1, false)),
-            List.of(Map.of(KEY_1, true))
-        ),
-        Arguments.of(
-            List.of(Map.of(KEY_1, true), Map.of(KEY_1, false), Map.of(KEY_1, true)),
-            List.of(Map.of(KEY_1, false), Map.of(KEY_1, true), Map.of(KEY_1, false))
-        )
-    );
+    return Stream.of(Arguments.of(List.of(Map.of(KEY_1, true)), List.of(Map.of(KEY_1, false))),
+            Arguments.of(List.of(Map.of(KEY_1, false)), List.of(Map.of(KEY_1, true))),
+            Arguments.of(List.of(Map.of(KEY_1, true), Map.of(KEY_1, false), Map.of(KEY_1, true)),
+                    List.of(Map.of(KEY_1, false), Map.of(KEY_1, true), Map.of(KEY_1, false))));
   }
 
   @ParameterizedTest
   @MethodSource("arguments")
-  public void testStringToState(
-      List<Map<String, Object>> intpuEvents,
-      List<Map<String, Object>> outputEvents
-  ) {
+  public void testStringToState(List<Map<String, Object>> intpuEvents, List<Map<String, Object>> outputEvents) {
 
-    var configuration = TestConfiguration
-        .builder()
-        .config(INVERT_FIELD_ID, StreamPrefix.s0(KEY_1))
-        .prefixStrategy(PrefixStrategy.SAME_PREFIX)
-        .build();
+    var configuration = TestConfiguration.builder().config(INVERT_FIELD_ID, StreamPrefix.s0(KEY_1))
+            .prefixStrategy(PrefixStrategy.SAME_PREFIX).build();
 
     var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.convert;
 
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
@@ -67,16 +66,14 @@ public class Helpers {
     return rule;
   }
 
-  public static MoveRuleDescription makeMoveTransformationRule(String runtimeKey,
-                                                         String newRuntimeKey) {
+  public static MoveRuleDescription makeMoveTransformationRule(String runtimeKey, String newRuntimeKey) {
     var rule = new MoveRuleDescription();
     rule.setOldRuntimeKey(runtimeKey);
     rule.setNewRuntimeKey(newRuntimeKey);
     return rule;
   }
 
-  public static RenameRuleDescription makeRenameTransformationRule(String runtimeKey,
-                                                             String newRuntimeName) {
+  public static RenameRuleDescription makeRenameTransformationRule(String runtimeKey, String newRuntimeName) {
     var rule = new RenameRuleDescription();
     rule.setOldRuntimeKey(runtimeKey);
     rule.setNewRuntimeKey(newRuntimeName);

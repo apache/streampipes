@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.array.count;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -49,25 +48,20 @@ public class CountArrayProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.count-array", 0)
-        .category(DataProcessorType.COUNT_OPERATOR)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(
-            StreamRequirementsBuilder.create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(),
-                    Labels.withId(ARRAY_FIELD), PropertyScope.NONE)
-                .build())
-        .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), COUNT_NAME,
-            SO.NUMBER)))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.count-array", 0)
+            .category(DataProcessorType.COUNT_OPERATOR).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(), Labels.withId(ARRAY_FIELD),
+                            PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), COUNT_NAME, SO.NUMBER)))
+            .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.arrayField = parameters.extractor().mappingPropertyValue(ARRAY_FIELD);
   }
 

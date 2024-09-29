@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.flink;
 
 import org.apache.streampipes.commons.environment.Environment;
@@ -25,12 +24,9 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 public interface IFlinkProgram {
 
   default FlinkDeploymentConfig getDeploymentConfig(Environment env) {
-    return new FlinkDeploymentConfig(
-        env.getFlinkJarFileLoc().getValueOrDefault(),
-        env.getFlinkJobmanagerHost().getValueOrDefault(),
-        env.getFlinkJobmanagerPort().getValueOrDefault(),
-        env.getSpDebug().getValueOrDefault()
-    );
+    return new FlinkDeploymentConfig(env.getFlinkJarFileLoc().getValueOrDefault(),
+            env.getFlinkJobmanagerHost().getValueOrDefault(), env.getFlinkJobmanagerPort().getValueOrDefault(),
+            env.getSpDebug().getValueOrDefault());
   }
 
   default void appendEnvironmentConfig(StreamExecutionEnvironment env) {

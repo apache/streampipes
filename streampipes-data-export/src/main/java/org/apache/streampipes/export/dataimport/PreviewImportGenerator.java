@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.export.dataimport;
-
 
 import org.apache.streampipes.export.resolver.AdapterResolver;
 import org.apache.streampipes.export.resolver.DashboardResolver;
@@ -30,13 +28,13 @@ import org.apache.streampipes.export.utils.ImportAdapterMigrationUtils;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 
+import java.util.Map;
+import java.util.function.Consumer;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
-import java.util.function.Consumer;
 
 public class PreviewImportGenerator extends ImportGenerator<AssetExportConfiguration> {
 
@@ -49,25 +47,21 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
 
   }
 
-  private void addExportItem(String id,
-                             String name,
-                             Consumer<ExportItem> addAdapter) {
+  private void addExportItem(String id, String name, Consumer<ExportItem> addAdapter) {
     var item = new ExportItem(id, name, true);
     addAdapter.accept(item);
   }
 
-
   @Override
   protected void handleAsset(Map<String, byte[]> previewFiles, String assetId) throws JsonProcessingException {
     Map<String, Object> assetDescription = this.defaultMapper.readValue(asString(previewFiles.get(assetId)),
-        new TypeReference<>() {
-        });
+            new TypeReference<>() {
+            });
     importConfig.addAsset(new ExportItem(assetId, String.valueOf(assetDescription.get("assetName")), true));
   }
 
   @Override
-  protected void handleAdapter(String document,
-                               String adapterId) throws JsonProcessingException {
+  protected void handleAdapter(String document, String adapterId) throws JsonProcessingException {
     try {
       var convertedDoc = ImportAdapterMigrationUtils.checkAndPerformMigration(document);
       addExportItem(adapterId, new AdapterResolver().readDocument(convertedDoc).getName(), importConfig::addAdapter);
@@ -99,7 +93,7 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   @Override
   protected void handleDataLakeMeasure(String document, String measurementId) throws JsonProcessingException {
     addExportItem(measurementId, new MeasurementResolver().readDocument(document).getMeasureName(),
-        importConfig::addDataLakeMeasure);
+            importConfig::addDataLakeMeasure);
   }
 
   @Override
@@ -113,11 +107,9 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   }
 
   @Override
-  protected void handleFile(String document,
-                            String fileMetadataId,
-                            Map<String, byte[]> zipContent) throws JsonProcessingException {
-    addExportItem(fileMetadataId, new FileResolver().readDocument(document).getFilename(),
-        importConfig::addFile);
+  protected void handleFile(String document, String fileMetadataId, Map<String, byte[]> zipContent)
+          throws JsonProcessingException {
+    addExportItem(fileMetadataId, new FileResolver().readDocument(document).getFilename(), importConfig::addFile);
   }
 
   @Override

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;

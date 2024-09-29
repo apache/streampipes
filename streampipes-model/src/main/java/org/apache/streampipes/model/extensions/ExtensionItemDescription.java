@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.extensions;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;

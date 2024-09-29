@@ -34,15 +34,12 @@ public class MqttConsumer implements Runnable {
 
   private final MqttConfig mqttConfig;
 
-  public MqttConsumer(MqttConfig mqttConfig,
-                      InternalEventProcessor<byte[]> consumer) {
+  public MqttConsumer(MqttConfig mqttConfig, InternalEventProcessor<byte[]> consumer) {
     this.mqttConfig = mqttConfig;
     this.consumer = consumer;
   }
 
-  public MqttConsumer(MqttConfig mqttConfig,
-                      InternalEventProcessor<byte[]> consumer,
-                      int maxElementsToReceive) {
+  public MqttConsumer(MqttConfig mqttConfig, InternalEventProcessor<byte[]> consumer, int maxElementsToReceive) {
     this(mqttConfig, consumer);
     this.maxElementsToReceive = maxElementsToReceive;
   }

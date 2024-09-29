@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.client.user.Privilege;

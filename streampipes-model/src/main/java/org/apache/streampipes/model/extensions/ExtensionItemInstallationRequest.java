@@ -15,23 +15,18 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.extensions;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
-public record ExtensionItemInstallationRequest(String appId,
-                                               SpServiceTagPrefix serviceTagPrefix,
-                                               boolean publicElement) {
+public record ExtensionItemInstallationRequest(String appId, SpServiceTagPrefix serviceTagPrefix,
+        boolean publicElement) {
 
   public static ExtensionItemInstallationRequest fromDescription(ExtensionItemDescription itemDescription,
-                                                          boolean publicElement) {
-    return new ExtensionItemInstallationRequest(
-        itemDescription.getAppId(),
-        itemDescription.getServiceTagPrefix(),
-        publicElement
-    );
+          boolean publicElement) {
+    return new ExtensionItemInstallationRequest(itemDescription.getAppId(), itemDescription.getServiceTagPrefix(),
+            publicElement);
   }
 }

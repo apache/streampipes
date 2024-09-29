@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.config;
 
 import org.apache.streampipes.model.extensions.configuration.ConfigItem;

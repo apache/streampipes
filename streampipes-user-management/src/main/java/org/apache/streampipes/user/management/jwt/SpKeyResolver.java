@@ -25,11 +25,11 @@ import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
+import java.security.Key;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.SigningKeyResolver;
-
-import java.security.Key;
 
 public class SpKeyResolver implements SigningKeyResolver {
 
@@ -69,14 +69,8 @@ public class SpKeyResolver implements SigningKeyResolver {
   }
 
   public String getPublicKeyFromConfig() {
-    return StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getSpCoreConfigurationStorage()
-        .get()
-        .getLocalAuthConfig()
-        .getPublicKey();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage().get().getLocalAuthConfig()
+            .getPublicKey();
   }
-
 
 }

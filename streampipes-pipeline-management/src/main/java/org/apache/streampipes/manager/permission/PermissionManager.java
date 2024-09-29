@@ -23,10 +23,7 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 
 public class PermissionManager {
 
-  public Permission makePermission(Pipeline pipeline,
-                                   String ownerSid) {
-    return PermissionBuilder
-        .create(pipeline.getPipelineId(), pipeline.getClass(), ownerSid)
-        .build();
+  public Permission makePermission(Pipeline pipeline, String ownerSid) {
+    return PermissionBuilder.create(pipeline.getPipelineId(), pipeline.getClass(), ownerSid).build();
   }
 }

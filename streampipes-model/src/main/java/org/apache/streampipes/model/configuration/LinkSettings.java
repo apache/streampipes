@@ -15,15 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.configuration;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
-public record LinkSettings(String documentationUrl,
-                           String supportUrl,
-                           boolean showDocumentationLinkOnStartScreen,
-                           boolean showApiDocumentationLinkOnStartScreen,
-                           boolean showSupportUrlOnStartScreen,
-                           boolean showDocumentationLinkInProfileMenu) {}
+public record LinkSettings(String documentationUrl, String supportUrl, boolean showDocumentationLinkOnStartScreen,
+        boolean showApiDocumentationLinkOnStartScreen, boolean showSupportUrlOnStartScreen,
+        boolean showDocumentationLinkInProfileMenu) {
+}

@@ -15,10 +15,8 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.pipeline;
 
 public enum ValidationInfoLevel {
-  INFO,
-  ERROR;
+  INFO, ERROR;
 }

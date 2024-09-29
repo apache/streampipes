@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.dataexplorer.query.DataLakeMeasurementCounter;
@@ -30,8 +29,7 @@ public class DataLakeMeasurementCounterInflux extends DataLakeMeasurementCounter
 
   private static final String COUNT_FIELD = "count";
 
-  public DataLakeMeasurementCounterInflux(List<DataLakeMeasure> allMeasurements,
-                                          List<String> measurementNames) {
+  public DataLakeMeasurementCounterInflux(List<DataLakeMeasure> allMeasurements, List<String> measurementNames) {
     super(allMeasurements, measurementNames);
   }
 
@@ -39,9 +37,8 @@ public class DataLakeMeasurementCounterInflux extends DataLakeMeasurementCounter
   protected CompletableFuture<Integer> createQueryAsAsyncFuture(DataLakeMeasure measure) {
     return CompletableFuture.supplyAsync(() -> {
       var firstColumn = getFirstMeasurementProperty(measure);
-      var builder = DataLakeInfluxQueryBuilder
-          .create(measure.getMeasureName()).withEndTime(System.currentTimeMillis())
-          .withAggregatedColumn(firstColumn, AggregationFunction.COUNT);
+      var builder = DataLakeInfluxQueryBuilder.create(measure.getMeasureName()).withEndTime(System.currentTimeMillis())
+              .withAggregatedColumn(firstColumn, AggregationFunction.COUNT);
       var queryResult = new DataExplorerInfluxQueryExecutor().executeQuery(builder.build(), Optional.empty(), true);
       if (queryResult.getTotal() > 0) {
         return extractResult(queryResult, COUNT_FIELD);

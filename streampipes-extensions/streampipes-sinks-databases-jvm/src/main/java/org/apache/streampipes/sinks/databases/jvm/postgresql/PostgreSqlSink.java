@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.postgresql;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -50,30 +49,21 @@ public class PostgreSqlSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.databases.jvm.postgresql", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .category(DataSinkType.DATABASE)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
-        .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 5432)
-        .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
-        .requiredTextParameter(Labels.withId(DATABASE_TABLE_KEY))
-        .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
-        .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
-        .requiredSingleValueSelection(Labels.withId(SSL_MODE),
-            Options.from(
-                new Tuple2<>("Yes", SSL_ENABLED),
-                new Tuple2<>("No", SSL_DISABLED)))
-        .build();
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.postgresql", 0).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).category(DataSinkType.DATABASE)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
+            .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 5432)
+            .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
+            .requiredTextParameter(Labels.withId(DATABASE_TABLE_KEY))
+            .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
+            .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY)).requiredSingleValueSelection(Labels.withId(SSL_MODE),
+                    Options.from(new Tuple2<>("Yes", SSL_ENABLED), new Tuple2<>("No", SSL_DISABLED)))
+            .build();
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     var extractor = parameters.extractor();
     String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
@@ -83,15 +73,8 @@ public class PostgreSqlSink extends StreamPipesDataSink {
     String password = extractor.secretValue(DATABASE_PASSWORD_KEY);
     String sslSelection = extractor.selectedSingleValueInternalName(SSL_MODE, String.class);
 
-    PostgreSqlParameters params = new PostgreSqlParameters(
-        parameters.getModel(),
-        hostname,
-        port,
-        dbName,
-        tableName,
-        user,
-        password,
-        sslSelection.equals(SSL_ENABLED));
+    PostgreSqlParameters params = new PostgreSqlParameters(parameters.getModel(), hostname, port, dbName, tableName,
+            user, password, sslSelection.equals(SSL_ENABLED));
 
     this.postgreSql = new PostgreSql();
     postgreSql.onInvocation(params);

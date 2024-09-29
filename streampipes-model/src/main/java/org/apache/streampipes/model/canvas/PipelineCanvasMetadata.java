@@ -19,11 +19,11 @@ package org.apache.streampipes.model.canvas;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 @TsModel
 public class PipelineCanvasMetadata {

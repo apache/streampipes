@@ -15,14 +15,13 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.kafka.security;
+
+import java.util.Properties;
 
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.security.auth.SecurityProtocol;
-
-import java.util.Properties;
 
 public class KafkaSecuritySaslPlainConfig extends KafkaSecurityConfig {
 
@@ -40,11 +39,8 @@ public class KafkaSecuritySaslPlainConfig extends KafkaSecurityConfig {
     props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
     props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, SecurityProtocol.SASL_PLAINTEXT.toString());
 
-    String saslJaasConfig = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\""
-        + username
-        + "\" password=\""
-        + password
-        + "\";";
+    String saslJaasConfig = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"" + username
+            + "\" password=\"" + password + "\";";
 
     props.put(SaslConfigs.SASL_JAAS_CONFIG, saslJaasConfig);
   }

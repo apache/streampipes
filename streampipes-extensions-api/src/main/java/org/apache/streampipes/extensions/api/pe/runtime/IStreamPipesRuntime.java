@@ -15,20 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe.runtime;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
-public interface IStreamPipesRuntime<
-    PeT extends IStreamPipesPipelineElement<?>,
-    IvT extends InvocableStreamPipesEntity> {
+public interface IStreamPipesRuntime<PeT extends IStreamPipesPipelineElement<?>, IvT extends InvocableStreamPipesEntity> {
 
-  Response onRuntimeInvoked(String instanceId,
-                            PeT pipelineElement,
-                            IvT pipelineElementInvocation);
+  Response onRuntimeInvoked(String instanceId, PeT pipelineElement, IvT pipelineElementInvocation);
 
   Response onRuntimeDetached(String instanceId);
 }

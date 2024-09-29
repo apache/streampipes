@@ -25,8 +25,7 @@ public class ProvidedRestQueryParams {
   private final String measurementId;
   private final Map<String, String> providedParams;
 
-  public ProvidedRestQueryParams(String measurementId,
-                                 Map<String, String> providedParams) {
+  public ProvidedRestQueryParams(String measurementId, Map<String, String> providedParams) {
     this.measurementId = measurementId;
     this.providedParams = providedParams;
   }

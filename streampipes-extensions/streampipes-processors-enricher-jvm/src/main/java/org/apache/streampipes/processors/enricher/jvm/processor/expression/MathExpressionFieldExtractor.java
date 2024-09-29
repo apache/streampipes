@@ -15,8 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.expression;
+
+import static org.apache.streampipes.processors.enricher.jvm.processor.expression.MathExpressionProcessor.ENRICHED_FIELDS;
+import static org.apache.streampipes.processors.enricher.jvm.processor.expression.MathExpressionProcessor.EXPRESSION;
+import static org.apache.streampipes.processors.enricher.jvm.processor.expression.MathExpressionProcessor.FIELD_NAME;
 
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -30,10 +33,6 @@ import org.apache.streampipes.vocabulary.SO;
 
 import java.util.List;
 
-import static org.apache.streampipes.processors.enricher.jvm.processor.expression.MathExpressionProcessor.ENRICHED_FIELDS;
-import static org.apache.streampipes.processors.enricher.jvm.processor.expression.MathExpressionProcessor.EXPRESSION;
-import static org.apache.streampipes.processors.enricher.jvm.processor.expression.MathExpressionProcessor.FIELD_NAME;
-
 public class MathExpressionFieldExtractor {
 
   private final DataProcessorInvocation processingElement;
@@ -45,19 +44,17 @@ public class MathExpressionFieldExtractor {
   }
 
   public MathExpressionFieldExtractor(DataProcessorInvocation processingElement,
-                                      IDataProcessorParameterExtractor extractor) {
+          IDataProcessorParameterExtractor extractor) {
     this.processingElement = processingElement;
     this.extractor = extractor;
   }
 
   public List<JexlDescription> getAdditionalFields() {
-    return extractor
-        .collectionMembersAsGroup(ENRICHED_FIELDS)
-        .stream().map(group -> {
-          var runtimeName = extractor.extractGroupMember(FIELD_NAME, group).as(FreeTextStaticProperty.class).getValue();
-          var expression = extractor.extractGroupMember(EXPRESSION, group).as(CodeInputStaticProperty.class).getValue();
-          return new JexlDescription(EpProperties.doubleEp(Labels.empty(), runtimeName, SO.NUMBER), expression);
-        }).toList();
+    return extractor.collectionMembersAsGroup(ENRICHED_FIELDS).stream().map(group -> {
+      var runtimeName = extractor.extractGroupMember(FIELD_NAME, group).as(FreeTextStaticProperty.class).getValue();
+      var expression = extractor.extractGroupMember(EXPRESSION, group).as(CodeInputStaticProperty.class).getValue();
+      return new JexlDescription(EpProperties.doubleEp(Labels.empty(), runtimeName, SO.NUMBER), expression);
+    }).toList();
   }
 
   public List<EventProperty> getInputProperties() {
@@ -69,4 +66,3 @@ public class MathExpressionFieldExtractor {
     }
   }
 }
-

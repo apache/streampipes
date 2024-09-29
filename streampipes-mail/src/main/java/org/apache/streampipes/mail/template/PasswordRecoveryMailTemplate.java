@@ -46,12 +46,11 @@ public class PasswordRecoveryMailTemplate extends AbstractMailTemplate {
   @Override
   protected void addPlaceholders(Map<String, String> placeholders) {
     placeholders.put(DefaultPlaceholders.LINK.key(), makeLink());
-    placeholders.put(DefaultPlaceholders.MANUAL.key(),
-        "Click the button below to reset your account password."
+    placeholders.put(DefaultPlaceholders.MANUAL.key(), "Click the button below to reset your account password."
             + " If you didn't request a new password, you can safely delete this email.");
     placeholders.put(DefaultPlaceholders.BUTTON_TEXT.key(), "Reset your password");
     placeholders.put(DefaultPlaceholders.LINK_DESCRIPTION.key(),
-        "If that doesn't work, copy and paste the following link in your browser:");
+            "If that doesn't work, copy and paste the following link in your browser:");
   }
 
   @Override

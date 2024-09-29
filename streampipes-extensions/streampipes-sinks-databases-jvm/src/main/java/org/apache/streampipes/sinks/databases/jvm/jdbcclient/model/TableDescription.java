@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.jdbcclient.model;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -48,8 +47,8 @@ public class TableDescription {
     this.eventSchema = eventSchema;
   }
 
-  public void extractTableInformation(PreparedStatement preparedStatement, Connection connection,
-                                      String queryString, String[] queryParameter) throws SpRuntimeException {
+  public void extractTableInformation(PreparedStatement preparedStatement, Connection connection, String queryString,
+          String[] queryParameter) throws SpRuntimeException {
 
     ResultSet resultSet = null;
     this.dataTypesHashMap = new HashMap<String, DbDataTypes>();
@@ -75,7 +74,7 @@ public class TableDescription {
       }
     } catch (SQLException e) {
       throw new SpRuntimeException("SqlException: " + e.getMessage() + ", Error code: " + e.getErrorCode()
-          + ", SqlState: " + e.getSQLState());
+              + ", SqlState: " + e.getSQLState());
     } finally {
       try {
         resultSet.close();
@@ -84,29 +83,27 @@ public class TableDescription {
     }
   }
 
-
   /**
-   * Creates a table with the name {@link JdbcConnectionParameters#getDbTable()} and the
-   * properties from {@link TableDescription#getEventSchema()}. Calls
+   * Creates a table with the name {@link JdbcConnectionParameters#getDbTable()} and the properties from
+   * {@link TableDescription#getEventSchema()}. Calls
    * {@link SQLStatementUtils#extractEventProperties(List, String, DbDescription)} internally with the
    * {@link TableDescription#getEventSchema()} to extract all possible columns.
    *
-   * @throws SpRuntimeException If the {@link JdbcConnectionParameters#getDbTable()}  is not allowed, if
-   *                            executeUpdate throws an SQLException or if
-   *                            {@link SQLStatementUtils#extractEventProperties(List, String, DbDescription)}
-   *                            throws an exception
+   * @throws SpRuntimeException
+   *           If the {@link JdbcConnectionParameters#getDbTable()} is not allowed, if executeUpdate throws an
+   *           SQLException or if {@link SQLStatementUtils#extractEventProperties(List, String, DbDescription)} throws
+   *           an exception
    */
   public void createTable(String createStatement, StatementHandler statementHandler, DbDescription dbDescription,
-                          TableDescription tableDescription) throws SpRuntimeException {
+          TableDescription tableDescription) throws SpRuntimeException {
 
     SQLStatementUtils.checkRegEx(tableDescription.getName(), "Tablename", dbDescription);
-
 
     StringBuilder statement = new StringBuilder(createStatement);
     statement.append(this.getName()).append(" ( ");
     statement.append(
             SQLStatementUtils.extractEventProperties(this.getEventSchema().getEventProperties(), "", dbDescription))
-        .append(" );");
+            .append(" );");
 
     try {
       statementHandler.statement.executeUpdate(statement.toString());
@@ -121,7 +118,7 @@ public class TableDescription {
         if (property instanceof EventPropertyPrimitive) {
           DbDataTypes dataType = this.getDataTypesHashMap().get(property.getRuntimeName());
           if (!((EventPropertyPrimitive) property).getRuntimeType()
-              .equals(DbDataTypeFactory.getDataType(dataType).toString())) {
+                  .equals(DbDataTypeFactory.getDataType(dataType).toString())) {
             throw new SpRuntimeException("Table '" + this.getName() + "' does not match the EventProperties");
           }
         }

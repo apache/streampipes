@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.helpers;
 
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
@@ -26,8 +25,8 @@ import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
 public class SupportedProtocols {
 
   /**
-   * Defines that a pipeline element (data processor or data sink) supports processing messages arriving from a
-   * Kafka broker.
+   * Defines that a pipeline element (data processor or data sink) supports processing messages arriving from a Kafka
+   * broker.
    *
    * @return The {@link org.apache.streampipes.model.grounding.KafkaTransportProtocol}.
    */
@@ -36,8 +35,8 @@ public class SupportedProtocols {
   }
 
   /**
-   * Defines that a pipeline element (data processor or data sink) supports processing messages arriving from a
-   * JMS broker.
+   * Defines that a pipeline element (data processor or data sink) supports processing messages arriving from a JMS
+   * broker.
    *
    * @return The {@link org.apache.streampipes.model.grounding.JmsTransportProtocol}.
    */
@@ -46,8 +45,8 @@ public class SupportedProtocols {
   }
 
   /**
-   * Defines that a pipeline element (data processor or data sink) supports processing messages arriving from a
-   * Mqtt broker.
+   * Defines that a pipeline element (data processor or data sink) supports processing messages arriving from a Mqtt
+   * broker.
    *
    * @return The {@link org.apache.streampipes.model.grounding.MqttTransportProtocol}.
    */

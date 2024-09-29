@@ -15,10 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.oauth2.util;
-
-import org.springframework.util.SerializationUtils;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,10 +24,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.Optional;
 
+import org.springframework.util.SerializationUtils;
+
 public class CookieUtils {
 
-  public static Optional<Cookie> getCookie(HttpServletRequest request,
-                                           String name) {
+  public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
     Cookie[] cookies = request.getCookies();
 
     if (cookies != null) {
@@ -44,10 +42,7 @@ public class CookieUtils {
     return Optional.empty();
   }
 
-  public static void addCookie(HttpServletResponse response,
-                               String name,
-                               String value,
-                               int maxAge) {
+  public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
     Cookie cookie = new Cookie(name, value);
     cookie.setPath("/");
     cookie.setHttpOnly(true);
@@ -55,9 +50,7 @@ public class CookieUtils {
     response.addCookie(cookie);
   }
 
-  public static void deleteCookie(HttpServletRequest request,
-                                  HttpServletResponse response,
-                                  String name) {
+  public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
     Cookie[] cookies = request.getCookies();
     if (cookies != null) {
       for (Cookie cookie : cookies) {

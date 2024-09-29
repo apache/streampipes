@@ -20,9 +20,9 @@ package org.apache.streampipes.user.management.util;
 import org.apache.streampipes.model.client.user.RawUserApiToken;
 import org.apache.streampipes.model.client.user.UserApiToken;
 
-import org.apache.commons.codec.digest.DigestUtils;
-
 import java.util.UUID;
+
+import org.apache.commons.codec.digest.DigestUtils;
 
 public class TokenUtil {
 

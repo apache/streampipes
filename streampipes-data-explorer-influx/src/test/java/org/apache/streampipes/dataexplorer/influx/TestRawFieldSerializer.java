@@ -15,18 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx;
 
-
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import org.junit.jupiter.api.Test;
 
 public class TestRawFieldSerializer {
   private RawFieldSerializer rawFieldSerializer = new RawFieldSerializer();

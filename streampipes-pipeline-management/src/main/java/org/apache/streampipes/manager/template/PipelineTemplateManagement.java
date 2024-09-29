@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.template;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -29,49 +28,34 @@ import java.util.Optional;
 
 public class PipelineTemplateManagement {
 
-  public PipelineTemplateInvocation prepareInvocation(String streamId,
-                                                      String pipelineTemplateId) {
+  public PipelineTemplateInvocation prepareInvocation(String streamId, String pipelineTemplateId) {
     SpDataStream dataStream = getDataStream(streamId);
 
     var pipelineTemplateDescriptionOpt = getPipelineTemplateDescription(pipelineTemplateId);
     if (pipelineTemplateDescriptionOpt.isPresent()) {
-      PipelineTemplateInvocation invocation =
-          new PipelineTemplateInvocationGenerator(
-              dataStream,
-              pipelineTemplateDescriptionOpt.get()
-          ).generateInvocation();
+      PipelineTemplateInvocation invocation = new PipelineTemplateInvocationGenerator(dataStream,
+              pipelineTemplateDescriptionOpt.get()).generateInvocation();
       PipelineTemplateInvocation clonedInvocation = new PipelineTemplateInvocation(invocation);
       return new PipelineTemplateInvocation(clonedInvocation);
     } else {
-      throw new IllegalArgumentException(String.format(
-          "Could not find pipeline template with ID %s",
-          pipelineTemplateId)
-      );
+      throw new IllegalArgumentException(
+              String.format("Could not find pipeline template with ID %s", pipelineTemplateId));
     }
   }
 
   public PipelineOperationStatus createAndStartPipeline(PipelineTemplateInvocation pipelineTemplateInvocation,
-                                                        String authenticatedUserSid) {
-    return new PipelineTemplateInvocationHandler(
-        authenticatedUserSid,
-        pipelineTemplateInvocation
-    ).handlePipelineInvocation();
+          String authenticatedUserSid) {
+    return new PipelineTemplateInvocationHandler(authenticatedUserSid, pipelineTemplateInvocation)
+            .handlePipelineInvocation();
   }
 
   private Optional<PipelineTemplateDescription> getPipelineTemplateDescription(String pipelineTemplateId) {
-    return new PipelineTemplateGenerator()
-        .getAllPipelineTemplates()
-        .stream()
-        .filter(pt -> pt.getAppId().equals(pipelineTemplateId))
-        .findFirst();
+    return new PipelineTemplateGenerator().getAllPipelineTemplates().stream()
+            .filter(pt -> pt.getAppId().equals(pipelineTemplateId)).findFirst();
   }
 
   private SpDataStream getDataStream(String streamId) {
-    return getAllDataStreams()
-        .stream()
-        .filter(sp -> sp.getElementId().equals(streamId))
-        .findFirst()
-        .get();
+    return getAllDataStreams().stream().filter(sp -> sp.getElementId().equals(streamId)).findFirst().get();
   }
 
   private List<SpDataStream> getAllDataStreams() {

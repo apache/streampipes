@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.rules.value;
 
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
@@ -35,8 +34,7 @@ public class TimestampTranfsformationRuleDescription extends ValueTransformation
     super();
   }
 
-  public TimestampTranfsformationRuleDescription(String runtimeKey, String mode,
-                                                 String formatString, Long multiplier) {
+  public TimestampTranfsformationRuleDescription(String runtimeKey, String mode, String formatString, Long multiplier) {
     this.runtimeKey = runtimeKey;
     this.mode = mode;
     this.formatString = formatString;

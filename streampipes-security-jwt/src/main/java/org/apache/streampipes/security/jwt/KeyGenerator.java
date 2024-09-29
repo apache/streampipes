@@ -15,14 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.security.jwt;
 
 import org.apache.streampipes.commons.environment.Environments;
-
-import io.jsonwebtoken.security.Keys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -35,6 +30,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 
+import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class KeyGenerator {
 
   private static final Logger LOG = LoggerFactory.getLogger(KeyGenerator.class);
@@ -43,20 +42,16 @@ public class KeyGenerator {
     return Keys.hmacShaKeyFor(tokenSecret.getBytes(StandardCharsets.UTF_8));
   }
 
-  public Key makeKeyForSecret(String alg,
-                              String tokenSecret) throws IOException {
+  public Key makeKeyForSecret(String alg, String tokenSecret) throws IOException {
     return makeKeyForSecret(alg, tokenSecret, readKey());
   }
 
-  public Key makeKeyForSecret(String alg,
-                              String tokenSecret,
-                              String pkContent) {
+  public Key makeKeyForSecret(String alg, String tokenSecret, String pkContent) {
     if (alg.equals("RS256")) {
       try {
         return makeKeyForRsa(pkContent);
       } catch (IOException | InvalidKeySpecException | NoSuchAlgorithmException e) {
-        LOG.error(
-            "Could not properly create the provided key, defaulting to an HMAC token, "
+        LOG.error("Could not properly create the provided key, defaulting to an HMAC token, "
                 + "which will almost certainly lead to problems");
         return makeKeyForSecret(tokenSecret);
       }

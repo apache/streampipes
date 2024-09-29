@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.minimal;
 
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
@@ -28,34 +27,23 @@ import org.apache.streampipes.service.core.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.core.WebSecurityConfig;
 import org.apache.streampipes.service.core.WelcomePageController;
 
+import java.util.List;
+
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import java.util.List;
-
 @Configuration
 @EnableAutoConfiguration
-@Import({
-    OpenApiConfiguration.class,
-    SpPermissionEvaluator.class,
-    StreamPipesPasswordEncoder.class,
-    StreamPipesPrometheusConfig.class,
-    WebSecurityConfig.class,
-    WelcomePageController.class
-})
-@ComponentScan({
-    "org.apache.streampipes.rest.*",
-    "org.apache.streampipes.ps",
+@Import({OpenApiConfiguration.class, SpPermissionEvaluator.class, StreamPipesPasswordEncoder.class,
+    StreamPipesPrometheusConfig.class, WebSecurityConfig.class, WelcomePageController.class})
+@ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.ps",
     "org.apache.streampipes.service.core.oauth2"})
 public class StreamPipesCoreApplicationMinimal extends StreamPipesCoreApplication {
 
   public static void main(String[] args) {
     var application = new StreamPipesCoreApplicationMinimal();
-    application.initialize(() -> List.of(
-        new SpNatsProtocolFactory(),
-        new SpMqttProtocolFactory()
-    ));
+    application.initialize(() -> List.of(new SpNatsProtocolFactory(), new SpMqttProtocolFactory()));
   }
 }

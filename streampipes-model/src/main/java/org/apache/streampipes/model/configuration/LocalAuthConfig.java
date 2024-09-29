@@ -31,14 +31,11 @@ public class LocalAuthConfig {
     return new LocalAuthConfig(jwtSecret, TokenExpirationTimeMillisDefault);
   }
 
-  public static LocalAuthConfig fromDefaults(JwtSigningMode signingMode,
-                                             String key,
-                                             long tokenExpirationTimeMillis) {
+  public static LocalAuthConfig fromDefaults(JwtSigningMode signingMode, String key, long tokenExpirationTimeMillis) {
     return new LocalAuthConfig(signingMode, key, tokenExpirationTimeMillis);
   }
 
-  public static LocalAuthConfig from(String tokenSecret,
-                                     long tokenExpirationTimeMillis) {
+  public static LocalAuthConfig from(String tokenSecret, long tokenExpirationTimeMillis) {
     return new LocalAuthConfig(tokenSecret, tokenExpirationTimeMillis);
   }
 
@@ -46,9 +43,7 @@ public class LocalAuthConfig {
 
   }
 
-  private LocalAuthConfig(JwtSigningMode jwtSigningMode,
-                          String key,
-                          long tokenExpirationTimeMillis) {
+  private LocalAuthConfig(JwtSigningMode jwtSigningMode, String key, long tokenExpirationTimeMillis) {
     this.jwtSigningMode = jwtSigningMode;
     this.tokenExpirationTimeMillis = tokenExpirationTimeMillis;
     if (jwtSigningMode == JwtSigningMode.HMAC) {
@@ -58,8 +53,7 @@ public class LocalAuthConfig {
     }
   }
 
-  private LocalAuthConfig(String tokenSecret,
-                          long tokenExpirationTimeMillis) {
+  private LocalAuthConfig(String tokenSecret, long tokenExpirationTimeMillis) {
     this.tokenSecret = tokenSecret;
     this.jwtSigningMode = JwtSigningMode.HMAC;
     this.tokenExpirationTimeMillis = tokenExpirationTimeMillis;

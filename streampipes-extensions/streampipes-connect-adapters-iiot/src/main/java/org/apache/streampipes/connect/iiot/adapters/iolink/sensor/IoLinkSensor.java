@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.iiot.adapters.iolink.sensor;
 
 import org.apache.streampipes.model.connect.guess.GuessSchema;

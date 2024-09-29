@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
 
 public class GeoJsonConstants {

@@ -26,6 +26,9 @@ import org.apache.streampipes.model.template.PipelineTemplateInvocation;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +38,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/pipeline-templates")
@@ -54,40 +54,31 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
     List<SpDataStream> sources = getPipelineElementRdfStorage().getAllDataStreams();
     List<SpDataStream> datasets = new ArrayList<>();
 
-    sources.stream()
-        .map(SpDataStream::new)
-        .forEach(datasets::add);
+    sources.stream().map(SpDataStream::new).forEach(datasets::add);
 
     return ok((new SpDataStreamContainer(datasets)));
   }
 
-  @GetMapping(
-      path = "/invocation",
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/invocation", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PipelineTemplateInvocation> getPipelineTemplateInvocation(
-      @RequestParam(value = "streamId", required = false) String streamId,
-      @RequestParam(value = "templateId") String pipelineTemplateId) {
+          @RequestParam(value = "streamId", required = false) String streamId,
+          @RequestParam(value = "templateId") String pipelineTemplateId) {
     try {
       return ok(pipelineTemplateManagement.prepareInvocation(streamId, pipelineTemplateId));
     } catch (IllegalArgumentException e) {
-      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(
-          String.format(
-              "Could not create pipeline template %s - did you install all pipeline elements?",
-              pipelineTemplateId.substring(pipelineTemplateId.lastIndexOf(".") + 1))
-      ));
+      throw new SpMessageException(HttpStatus.BAD_REQUEST,
+              Notifications.error(
+                      String.format("Could not create pipeline template %s - did you install all pipeline elements?",
+                              pipelineTemplateId.substring(pipelineTemplateId.lastIndexOf(".") + 1))));
     }
   }
 
-  @PostMapping(
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PipelineOperationStatus> generatePipeline(
-      @RequestBody PipelineTemplateInvocation pipelineTemplateInvocation) {
+          @RequestBody PipelineTemplateInvocation pipelineTemplateInvocation) {
 
-    var status = pipelineTemplateManagement.createAndStartPipeline(
-        pipelineTemplateInvocation,
-        getAuthenticatedUserSid()
-    );
+    var status = pipelineTemplateManagement.createAndStartPipeline(pipelineTemplateInvocation,
+            getAuthenticatedUserSid());
     return ok(status);
   }
 }

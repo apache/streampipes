@@ -15,14 +15,13 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.units.test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.streampipes.units.UnitProvider;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestUnitProvider {
 

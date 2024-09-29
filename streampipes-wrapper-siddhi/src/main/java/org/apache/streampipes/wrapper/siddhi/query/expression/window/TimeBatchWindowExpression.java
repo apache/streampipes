@@ -31,9 +31,7 @@ public class TimeBatchWindowExpression extends WindowExpression {
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.EMPTY,
-            windowExpression(),
-            "timeBatch",
+    return join(SiddhiConstants.EMPTY, windowExpression(), "timeBatch",
             windowValue(windowValue + SiddhiConstants.WHITESPACE + timeUnit.toTimeUnitString()));
   }
 }

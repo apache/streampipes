@@ -29,8 +29,7 @@ public class EventPropertyDef {
     return sanitizedFieldName.replaceAll(WHITESPACE_REPLACEMENT, " ");
   }
 
-  public EventPropertyDef(String fieldName,
-                          String fieldType) {
+  public EventPropertyDef(String fieldName, String fieldType) {
     this.fieldName = fieldName;
     this.fieldType = fieldType;
   }

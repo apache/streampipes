@@ -15,22 +15,16 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.notifications.jvm.migrations;
+
+import static org.apache.streampipes.sinks.notifications.jvm.telegram.TelegramSink.TELEGRAM_NOTIFICATION_SINK_ID;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
-import static org.apache.streampipes.sinks.notifications.jvm.telegram.TelegramSink.TELEGRAM_NOTIFICATION_SINK_ID;
-
 public class TelegramSinkMigrationV1 implements INotificationDataSinkMigrator {
   @Override
   public ModelMigratorConfig config() {
-    return new ModelMigratorConfig(
-      TELEGRAM_NOTIFICATION_SINK_ID,
-      SpServiceTagPrefix.DATA_SINK,
-      0,
-      1
-    );
+    return new ModelMigratorConfig(TELEGRAM_NOTIFICATION_SINK_ID, SpServiceTagPrefix.DATA_SINK, 0, 1);
   }
 }

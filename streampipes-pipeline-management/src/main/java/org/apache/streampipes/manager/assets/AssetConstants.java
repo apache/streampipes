@@ -21,11 +21,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class AssetConstants {
 
-  public static final String ASSET_BASE_DIR = StorageDispatcher
-      .INSTANCE
-      .getNoSqlStore()
-      .getSpCoreConfigurationStorage()
-      .get()
-      .getAssetDir();
+  public static final String ASSET_BASE_DIR = StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage()
+          .get().getAssetDir();
 
 }

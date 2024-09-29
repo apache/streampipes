@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.extractor;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -37,9 +36,7 @@ public class AdapterParameterExtractor implements IAdapterParameterExtractor {
 
   private final AdapterDescription adapterDescription;
 
-  public AdapterParameterExtractor(
-      IStaticPropertyExtractor extractor,
-      AdapterDescription adapterDescription) {
+  public AdapterParameterExtractor(IStaticPropertyExtractor extractor, AdapterDescription adapterDescription) {
     super();
     this.staticPropertyExtractor = extractor;
     this.adapterDescription = adapterDescription;
@@ -47,24 +44,16 @@ public class AdapterParameterExtractor implements IAdapterParameterExtractor {
 
   @Override
   public IParser selectedParser() throws AdapterException {
-    var parserStaticProperties =
-        staticPropertyExtractor.getStaticPropertyByName("format");
+    var parserStaticProperties = staticPropertyExtractor.getStaticPropertyByName("format");
 
     if (parserStaticProperties instanceof StaticPropertyAlternatives) {
-      var selectedFormat = ((StaticPropertyAlternatives) parserStaticProperties).getAlternatives()
-          .stream()
-          .filter(StaticPropertyAlternative::getSelected)
-          .findFirst()
-          .orElseThrow(() -> new AdapterException("No format was selected in adapter configuration"));
+      var selectedFormat = ((StaticPropertyAlternatives) parserStaticProperties).getAlternatives().stream()
+              .filter(StaticPropertyAlternative::getSelected).findFirst()
+              .orElseThrow(() -> new AdapterException("No format was selected in adapter configuration"));
 
-      var selectedParser = parsers
-          .stream()
-          .filter(parser ->
-              parser.declareDescription().getName().equals(selectedFormat.getInternalName())
-          ).findFirst()
-          .orElseThrow(
-              () -> new AdapterException("Selected parser is not supported")
-          );
+      var selectedParser = parsers.stream()
+              .filter(parser -> parser.declareDescription().getName().equals(selectedFormat.getInternalName()))
+              .findFirst().orElseThrow(() -> new AdapterException("Selected parser is not supported"));
 
       var parserConfigs = ((StaticPropertyGroup) selectedFormat.getStaticProperty()).getStaticProperties();
       return selectedParser.fromDescription(parserConfigs);

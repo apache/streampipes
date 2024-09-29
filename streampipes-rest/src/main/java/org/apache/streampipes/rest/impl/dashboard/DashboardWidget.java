@@ -15,12 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.storage.api.CRUDStorage;
+
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +34,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v2/dashboard/widgets")
@@ -50,10 +49,7 @@ public class DashboardWidget extends AbstractRestResource {
     return ok(getDashboardWidgetStorage().getElementById(widgetId));
   }
 
-  @PutMapping(
-      path = "/{widgetId}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "/{widgetId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> modifyDashboardWidget(@RequestBody DashboardWidgetModel dashboardWidgetModel) {
     getDashboardWidgetStorage().updateElement(dashboardWidgetModel);
     return ok();
@@ -65,12 +61,9 @@ public class DashboardWidget extends AbstractRestResource {
     return ok();
   }
 
-  @PostMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<DashboardWidgetModel> createDashboardWidget(
-      @RequestBody DashboardWidgetModel dashboardWidgetModel) {
+          @RequestBody DashboardWidgetModel dashboardWidgetModel) {
     String elementId = UUID.randomUUID().toString();
     dashboardWidgetModel.setElementId(elementId);
     getDashboardWidgetStorage().persist(dashboardWidgetModel);

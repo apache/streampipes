@@ -38,7 +38,7 @@ public class EventConverter {
     Map<String, Object> outMap = new HashMap<>();
 
     event.getFields()
-        .forEach((key, value) -> outMap.put(getValue(value, renameProperties), makeEntry(value, renameProperties)));
+            .forEach((key, value) -> outMap.put(getValue(value, renameProperties), makeEntry(value, renameProperties)));
 
     return outMap;
   }
@@ -62,9 +62,7 @@ public class EventConverter {
       return objects;
     } else {
       Map<String, Object> outMap = new HashMap<>();
-      value.getAsComposite()
-          .getRawValue()
-          .forEach(
+      value.getAsComposite().getRawValue().forEach(
               (key, value1) -> outMap.put(getValue(value1, renameProperties), makeEntry(value1, renameProperties)));
       return outMap;
     }

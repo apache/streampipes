@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.array.split;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -49,7 +48,8 @@ import java.util.List;
 import java.util.Map;
 
 public class SplitArrayProcessor extends StreamPipesDataProcessor
-    implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
+        implements
+          ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   public static final String KEEP_PROPERTIES_ID = "keep";
   public static final String ARRAY_FIELD_ID = "array-field";
@@ -60,27 +60,21 @@ public class SplitArrayProcessor extends StreamPipesDataProcessor
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.split-array", 0)
-        .category(DataProcessorType.TRANSFORM)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
-                Labels.withId(KEEP_PROPERTIES_ID),
-                PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(),
-                Labels.withId(ARRAY_FIELD_ID),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.customTransformation())
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.split-array", 0)
+            .category(DataProcessorType.TRANSFORM).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.withId(KEEP_PROPERTIES_ID),
+                            PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(), Labels.withId(ARRAY_FIELD_ID),
+                            PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies.customTransformation()).build();
   }
 
   @Override
   public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
-                                           ProcessingElementParameterExtractor extractor)
-      throws SpRuntimeException {
+          ProcessingElementParameterExtractor extractor) throws SpRuntimeException {
     String arrayFieldSelector = extractor.mappingPropertyValue(ARRAY_FIELD_ID);
     List<String> keepPropertySelectors = extractor.mappingPropertyValues(KEEP_PROPERTIES_ID);
 
@@ -91,8 +85,7 @@ public class SplitArrayProcessor extends StreamPipesDataProcessor
     newProperty.setLabel("Array Value");
     newProperty.setDescription("Contains values of the array. Created by Split Array processor.");
 
-    List<EventProperty> keepProperties = extractor.getEventPropertiesBySelector
-        (keepPropertySelectors);
+    List<EventProperty> keepProperties = extractor.getEventPropertiesBySelector(keepPropertySelectors);
     outProperties.add(newProperty);
     outProperties.addAll(keepProperties);
 
@@ -100,27 +93,24 @@ public class SplitArrayProcessor extends StreamPipesDataProcessor
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     arrayField = parameters.extractor().mappingPropertyValue(ARRAY_FIELD_ID);
     keepProperties = parameters.extractor().mappingPropertyValues(KEEP_PROPERTIES_ID);
   }
 
   @Override
-  public void onEvent(Event event,
-                      SpOutputCollector collector) throws SpRuntimeException {
+  public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
 
-    List<AbstractField> allEvents = event.getFieldBySelector(arrayField).getAsList()
-        .parseAsCustomType(o -> {
-          if (o instanceof NestedField) {
-            return o;
-          } else if (o instanceof ListField) {
-            return o;
-          } else {
-            return o;
-          }
-        });
+    List<AbstractField> allEvents = event.getFieldBySelector(arrayField).getAsList().parseAsCustomType(o -> {
+      if (o instanceof NestedField) {
+        return o;
+      } else if (o instanceof ListField) {
+        return o;
+      } else {
+        return o;
+      }
+    });
 
     for (AbstractField field : allEvents) {
       Event outEvent = new Event();

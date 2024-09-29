@@ -29,8 +29,7 @@ import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
 import org.apache.streampipes.wrapper.siddhi.engine.generator.SiddhiInvocationConfigGenerator;
 
-public abstract class StreamPipesSiddhiProcessor
-    implements IStreamPipesDataProcessor, SiddhiStatementGenerator {
+public abstract class StreamPipesSiddhiProcessor implements IStreamPipesDataProcessor, SiddhiStatementGenerator {
 
   private final SiddhiEngine siddhiEngine;
 
@@ -43,11 +42,9 @@ public abstract class StreamPipesSiddhiProcessor
   }
 
   @Override
-  public void onPipelineStarted(IDataProcessorParameters params,
-                                SpOutputCollector collector,
-                                EventProcessorRuntimeContext runtimeContext) {
-    SiddhiInvocationConfigGenerator siddhiConfigGenerator =
-        new SiddhiInvocationConfigGenerator(params,
+  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector collector,
+          EventProcessorRuntimeContext runtimeContext) {
+    SiddhiInvocationConfigGenerator siddhiConfigGenerator = new SiddhiInvocationConfigGenerator(params,
             this::makeStatements);
     this.siddhiEngine.initializeEngine(siddhiConfigGenerator, collector, params);
   }
@@ -64,10 +61,7 @@ public abstract class StreamPipesSiddhiProcessor
 
   @Override
   public IDataProcessorConfiguration declareConfig() {
-    return DataProcessorConfiguration.create(
-        () -> this,
-        declareModel()
-    );
+    return DataProcessorConfiguration.create(() -> this, declareModel());
   }
 
   public abstract DataProcessorDescription declareModel();

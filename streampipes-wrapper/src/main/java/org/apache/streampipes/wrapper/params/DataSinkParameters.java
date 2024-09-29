@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.params;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
@@ -27,17 +26,12 @@ import java.util.List;
 import java.util.Map;
 
 public class DataSinkParameters extends PipelineElementParameters<DataSinkInvocation, IDataSinkParameterExtractor>
-    implements IDataSinkParameters {
+        implements
+          IDataSinkParameters {
 
   public DataSinkParameters(DataSinkInvocation pipelineElementInvocation,
-                            IDataSinkParameterExtractor parameterExtractor,
-                            List<InputStreamParams> params,
-                            Map<String, Map<String, Object>> inEventTypes) {
-    super(
-        pipelineElementInvocation,
-        parameterExtractor,
-        params,
-        inEventTypes
-    );
+          IDataSinkParameterExtractor parameterExtractor, List<InputStreamParams> params,
+          Map<String, Map<String, Object>> inEventTypes) {
+    super(pipelineElementInvocation, parameterExtractor, params, inEventTypes);
   }
 }

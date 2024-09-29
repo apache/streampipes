@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.util;
 
 import org.apache.streampipes.model.schema.EventProperty;
@@ -53,11 +52,11 @@ public class PropertyUtils {
       EventPropertyList listEp = (EventPropertyList) ep;
       Map<String, Object> result = new HashMap<>();
       if (listEp.getEventProperty() instanceof EventPropertyPrimitive) {
-        result.put(listEp.getRuntimeName(), ModelUtils.getPrimitiveClassAsArray((
-            (EventPropertyPrimitive) listEp.getEventProperty()).getRuntimeType()));
+        result.put(listEp.getRuntimeName(), ModelUtils
+                .getPrimitiveClassAsArray(((EventPropertyPrimitive) listEp.getEventProperty()).getRuntimeType()));
       } else {
-        result.put(listEp.getRuntimeName(), ModelUtils.asList(PropertyUtils
-            .getUntypedRuntimeFormat(listEp.getEventProperty())));
+        result.put(listEp.getRuntimeName(),
+                ModelUtils.asList(PropertyUtils.getUntypedRuntimeFormat(listEp.getEventProperty())));
       }
 
       return result;

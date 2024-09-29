@@ -18,7 +18,5 @@
 package org.apache.streampipes.model.pipeline;
 
 public enum PipelineHealthStatus {
-  OK,
-  REQUIRES_ATTENTION,
-  FAILURE
+  OK, REQUIRES_ATTENTION, FAILURE
 }

@@ -29,20 +29,17 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.wrapper.distributed.runtime.DistributedRuntime;
 import org.apache.streampipes.wrapper.params.InternalRuntimeParameters;
 
+import java.util.Properties;
+
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsConfig;
 
-import java.util.Properties;
-
-public abstract class KafkaStreamsRuntime<
-    PeT extends IStreamPipesPipelineElement<?>,
-    IvT extends InvocableStreamPipesEntity,
-    RcT extends RuntimeContext,
-    ExT extends IParameterExtractor,
-    PepT extends IPipelineElementParameters<IvT, ExT>>
-    extends DistributedRuntime<PeT, IvT, RcT, ExT, PepT>
-    implements IStreamPipesRuntime<PeT, IvT> {
+public abstract class KafkaStreamsRuntime<PeT extends IStreamPipesPipelineElement<?>, IvT extends InvocableStreamPipesEntity, RcT extends RuntimeContext, ExT extends IParameterExtractor, PepT extends IPipelineElementParameters<IvT, ExT>>
+        extends
+          DistributedRuntime<PeT, IvT, RcT, ExT, PepT>
+        implements
+          IStreamPipesRuntime<PeT, IvT> {
 
   Properties config;
   KafkaStreams streams;
@@ -56,15 +53,13 @@ public abstract class KafkaStreamsRuntime<
   protected InternalRuntimeParameters internalRuntimeParameters;
 
   public KafkaStreamsRuntime(IContextGenerator<RcT, IvT> contextGenerator,
-                             IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
+          IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
     super(contextGenerator, parameterGenerator);
   }
 
   @Override
-  public void startRuntime(IvT pipelineElementInvocation,
-                           PeT pipelineElement,
-                           PepT runtimeParameters,
-                           RcT runtimeContext) {
+  public void startRuntime(IvT pipelineElementInvocation, PeT pipelineElement, PepT runtimeParameters,
+          RcT runtimeContext) {
     this.pipelineElementInvocation = pipelineElementInvocation;
     this.pipelineElement = pipelineElement;
     this.runtimeParameters = runtimeParameters;
@@ -82,12 +77,9 @@ public abstract class KafkaStreamsRuntime<
 
   public void prepareRuntime() throws SpRuntimeException {
     config = new Properties();
-    config.put(StreamsConfig.APPLICATION_ID_CONFIG, gneerateApplicationId(runtimeParameters
-        .getModel()
-        .getElementId()));
-    config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, getKafkaUrl(runtimeParameters
-        .getModel()
-        .getInputStreams().get(0)));
+    config.put(StreamsConfig.APPLICATION_ID_CONFIG, gneerateApplicationId(runtimeParameters.getModel().getElementId()));
+    config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG,
+            getKafkaUrl(runtimeParameters.getModel().getInputStreams().get(0)));
     config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
     config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
   }

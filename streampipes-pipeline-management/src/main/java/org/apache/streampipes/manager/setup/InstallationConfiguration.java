@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.model.client.setup.InitialSettings;
@@ -31,18 +30,15 @@ public class InstallationConfiguration {
 
     steps.add(new SpCoreConfigurationStep());
     steps.add(new CouchDbInstallationStep());
-    steps.add(new UserRegistrationInstallationStep(
-        settings.getAdminEmail(),
-        settings.getAdminPassword(),
-        settings.getInitialServiceAccountName(),
-        settings.getInitialServiceAccountSecret(),
-        settings.getInitialAdminUserSid()));
+    steps.add(new UserRegistrationInstallationStep(settings.getAdminEmail(), settings.getAdminPassword(),
+            settings.getInitialServiceAccountName(), settings.getInitialServiceAccountSecret(),
+            settings.getInitialAdminUserSid()));
 
     return steps;
   }
 
   public static List<Runnable> getBackgroundInstallationSteps(InitialSettings settings,
-                                                              BackgroundTaskNotifier callback) {
+          BackgroundTaskNotifier callback) {
     return List.of(new ExtensionsInstallationTask(settings, StorageDispatcher.INSTANCE.getNoSqlStore(), callback));
   }
 }

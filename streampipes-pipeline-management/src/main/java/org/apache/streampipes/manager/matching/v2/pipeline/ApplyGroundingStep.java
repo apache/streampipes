@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
 import org.apache.streampipes.manager.matching.GroundingBuilder;
@@ -38,17 +37,12 @@ public class ApplyGroundingStep extends AbstractPipelineValidationStep {
   private final Map<String, EventGrounding> sourceGroundingVisitorMap = new HashMap<>();
 
   @Override
-  public void apply(NamedStreamPipesEntity source,
-                    InvocableStreamPipesEntity target,
-                    Set<InvocableStreamPipesEntity> allTargets,
-                    List<PipelineElementValidationInfo> validationInfos) throws SpValidationException {
+  public void apply(NamedStreamPipesEntity source, InvocableStreamPipesEntity target,
+          Set<InvocableStreamPipesEntity> allTargets, List<PipelineElementValidationInfo> validationInfos)
+          throws SpValidationException {
 
     List<MatchingResultMessage> errorLog = getNewErrorLog();
-    boolean match = new GroundingMatch().match(
-        getSourceGrounding(source),
-        target.getSupportedGrounding(),
-        errorLog
-    );
+    boolean match = new GroundingMatch().match(getSourceGrounding(source), target.getSupportedGrounding(), errorLog);
 
     if (!match) {
       throw new SpValidationException(errorLog);
@@ -62,17 +56,12 @@ public class ApplyGroundingStep extends AbstractPipelineValidationStep {
       }
 
       if (source instanceof DataProcessorInvocation) {
-        ((DataProcessorInvocation) source)
-            .getOutputStream()
-            .setEventGrounding(selectedGrounding);
+        ((DataProcessorInvocation) source).getOutputStream().setEventGrounding(selectedGrounding);
       }
 
       if (!target.getInputStreams().isEmpty()) {
 
-        target
-            .getInputStreams()
-            .get(getIndex(target))
-            .setEventGrounding(selectedGrounding);
+        target.getInputStreams().get(getIndex(target)).setEventGrounding(selectedGrounding);
 
         if (target.getInputStreams().size() > 1) {
           this.visitorHistory.put(target.getDom(), 1);

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.filters.jvm.processor.textfilter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -48,38 +47,31 @@ public class TextFilterProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.textfilter", 0)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .category(DataProcessorType.FILTER, DataProcessorType.STRING_OPERATOR)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements
-                .stringReq(), Labels.withId(MAPPING_PROPERTY_ID), PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(OPERATION_ID), Options.from("MATCHES",
-            "CONTAINS"))
-        .requiredTextParameterWithLink(Labels.withId(KEYWORD_ID), "text")
-        .outputStrategy(OutputStrategies.keep())
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.textfilter", 0)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .category(DataProcessorType.FILTER, DataProcessorType.STRING_OPERATOR)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId(MAPPING_PROPERTY_ID),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredSingleValueSelection(Labels.withId(OPERATION_ID), Options.from("MATCHES", "CONTAINS"))
+            .requiredTextParameterWithLink(Labels.withId(KEYWORD_ID), "text").outputStrategy(OutputStrategies.keep())
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
     this.keyword = processorParams.extractor().singleValueParameter(KEYWORD_ID, String.class);
-    this.stringOperator =
-        StringOperator.valueOf(processorParams.extractor().selectedSingleValue(OPERATION_ID, String.class));
+    this.stringOperator = StringOperator
+            .valueOf(processorParams.extractor().selectedSingleValue(OPERATION_ID, String.class));
     this.filterProperty = processorParams.extractor().mappingPropertyValue(MAPPING_PROPERTY_ID);
   }
 
   @Override
   public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
     Boolean satisfiesFilter = false;
-    String value = event.getFieldBySelector(this.filterProperty)
-        .getAsPrimitive()
-        .getAsString();
+    String value = event.getFieldBySelector(this.filterProperty).getAsPrimitive().getAsString();
 
     if (this.stringOperator == StringOperator.MATCHES) {
       satisfiesFilter = (value.equals(this.keyword));

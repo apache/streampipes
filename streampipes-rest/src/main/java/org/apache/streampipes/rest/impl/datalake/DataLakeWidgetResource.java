@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
@@ -26,6 +25,8 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
+
+import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +41,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v3/datalake/dashboard/widgets")
 public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
@@ -49,10 +48,8 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
   private final DataExplorerWidgetResourceManager resourceManager;
 
   public DataLakeWidgetResource() {
-    this.resourceManager = new SpResourceManager().manageDataExplorerWidget(
-        new DataExplorerResourceManager(),
-        getNoSqlStorage().getDataExplorerWidgetStorage()
-    );
+    this.resourceManager = new SpResourceManager().manageDataExplorerWidget(new DataExplorerResourceManager(),
+            getNoSqlStorage().getDataExplorerWidgetStorage());
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,13 +70,10 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PutMapping(
-      path = "/{widgetId}",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "/{widgetId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dataExplorerWidgetModel.elementId, 'WRITE')")
   public ResponseEntity<DataExplorerWidgetModel> modifyDataExplorerWidget(
-      @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
+          @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     resourceManager.update(dataExplorerWidgetModel);
     return ok(resourceManager.find(dataExplorerWidgetModel.getElementId()));
   }
@@ -91,13 +85,10 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
     return ok();
   }
 
-  @PostMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dataExplorerWidgetModel.elementId, 'WRITE')")
   public ResponseEntity<DataExplorerWidgetModel> createDataExplorerWidget(
-      @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
+          @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     return ok(resourceManager.create(dataExplorerWidgetModel, getAuthenticatedUserSid()));
   }
 

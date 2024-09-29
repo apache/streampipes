@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.configuration;
 
 import org.apache.streampipes.commons.environment.Environments;
@@ -31,26 +30,21 @@ public class DefaultMessagingSettings {
     if (env.getPrioritizedProtocol().exists()) {
       protocolList = switch (env.getPrioritizedProtocol().getValueOrDefault().toLowerCase()) {
         case "mqtt" ->
-            Arrays.asList(SpProtocol.MQTT, SpProtocol.KAFKA, SpProtocol.JMS, SpProtocol.NATS, SpProtocol.PULSAR);
+          Arrays.asList(SpProtocol.MQTT, SpProtocol.KAFKA, SpProtocol.JMS, SpProtocol.NATS, SpProtocol.PULSAR);
         case "jms" ->
-            Arrays.asList(SpProtocol.JMS, SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.NATS, SpProtocol.PULSAR);
+          Arrays.asList(SpProtocol.JMS, SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.NATS, SpProtocol.PULSAR);
         case "nats" ->
-            Arrays.asList(SpProtocol.NATS, SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS, SpProtocol.PULSAR);
+          Arrays.asList(SpProtocol.NATS, SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS, SpProtocol.PULSAR);
         case "pulsar" ->
-            Arrays.asList(SpProtocol.PULSAR, SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS, SpProtocol.NATS);
+          Arrays.asList(SpProtocol.PULSAR, SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS, SpProtocol.NATS);
         default -> Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS, SpProtocol.NATS, SpProtocol.PULSAR);
       };
     } else {
-      protocolList =
-          Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS, SpProtocol.NATS, SpProtocol.PULSAR);
+      protocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS, SpProtocol.NATS,
+              SpProtocol.PULSAR);
     }
 
-    var defaultSettings = new MessagingSettings(
-        1638400,
-        5000012,
-        20,
-        2,
-        protocolList);
+    var defaultSettings = new MessagingSettings(1638400, 5000012, 20, 2, protocolList);
 
     defaultSettings.setJmsHost("activemq");
     defaultSettings.setJmsPort(61616);

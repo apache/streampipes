@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe.param;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 
 public interface IDataSinkParameters
-    extends IPipelineElementParameters<DataSinkInvocation, IDataSinkParameterExtractor> {
+        extends
+          IPipelineElementParameters<DataSinkInvocation, IDataSinkParameterExtractor> {
 }

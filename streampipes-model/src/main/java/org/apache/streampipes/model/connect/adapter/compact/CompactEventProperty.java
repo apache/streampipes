@@ -15,13 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.adapter.compact;
 
-public record CompactEventProperty(
-    String label,
-    String description,
-    String propertyScope,
-    String semanticType
-) {
+public record CompactEventProperty(String label, String description, String propertyScope, String semanticType) {
 }

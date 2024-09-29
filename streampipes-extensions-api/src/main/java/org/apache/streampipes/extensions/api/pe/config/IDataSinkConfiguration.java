@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe.config;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 
 public interface IDataSinkConfiguration
-    extends IPipelineElementConfiguration<DataSinkDescription, IStreamPipesDataSink> {
+        extends
+          IPipelineElementConfiguration<DataSinkDescription, IStreamPipesDataSink> {
 }

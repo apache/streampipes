@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
@@ -26,7 +25,7 @@ public class DataExplorerWidgetResourceManager extends AbstractCRUDResourceManag
   private final DataExplorerResourceManager dashboardManager;
 
   public DataExplorerWidgetResourceManager(DataExplorerResourceManager dashboardManager,
-                                           CRUDStorage<DataExplorerWidgetModel> db) {
+          CRUDStorage<DataExplorerWidgetModel> db) {
     super(db, DataExplorerWidgetModel.class);
     this.dashboardManager = dashboardManager;
   }
@@ -39,7 +38,7 @@ public class DataExplorerWidgetResourceManager extends AbstractCRUDResourceManag
 
   private void deleteDataViewsFromDashboard(String widgetElementId) {
     dashboardManager.findAll().stream()
-        .filter(dashboard -> dashboard.getWidgets().removeIf(w -> w.getId().equals(widgetElementId)))
-        .forEach(dashboardManager::update);
+            .filter(dashboard -> dashboard.getWidgets().removeIf(w -> w.getId().equals(widgetElementId)))
+            .forEach(dashboardManager::update);
   }
 }

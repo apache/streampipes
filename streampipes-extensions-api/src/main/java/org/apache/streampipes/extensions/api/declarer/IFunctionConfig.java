@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.declarer;
 
 import org.apache.streampipes.model.SpDataStream;

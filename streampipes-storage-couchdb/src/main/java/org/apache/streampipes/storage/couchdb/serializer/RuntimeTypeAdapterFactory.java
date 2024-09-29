@@ -15,8 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.couchdb.serializer;
+
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -29,11 +32,6 @@ import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 
 public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
   private final Class<?> baseType;
@@ -58,19 +56,17 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
   }
 
   /**
-   * Creates a new runtime type adapter for {@code baseType} using {@code "type"} as
-   * the type field name.
+   * Creates a new runtime type adapter for {@code baseType} using {@code "type"} as the type field name.
    */
   public static <T> RuntimeTypeAdapterFactory<T> of(Class<T> baseType) {
     return new RuntimeTypeAdapterFactory<>(baseType, "type");
   }
 
   /**
-   * Registers {@code type} identified by {@code label}. Labels are case
-   * sensitive.
+   * Registers {@code type} identified by {@code label}. Labels are case sensitive.
    *
-   * @throws IllegalArgumentException if either {@code type} or {@code label}
-   *                                  have already been registered on this type adapter.
+   * @throws IllegalArgumentException
+   *           if either {@code type} or {@code label} have already been registered on this type adapter.
    */
   public RuntimeTypeAdapterFactory<T> registerSubtype(Class<? extends T> type, String label) {
     if (type == null || label == null) {
@@ -85,11 +81,10 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
   }
 
   /**
-   * Registers {@code type} identified by its {@link Class#getSimpleName simple
-   * name}. Labels are case sensitive.
+   * Registers {@code type} identified by its {@link Class#getSimpleName simple name}. Labels are case sensitive.
    *
-   * @throws IllegalArgumentException if either {@code type} or its simple name
-   *                                  have already been registered on this type adapter.
+   * @throws IllegalArgumentException
+   *           if either {@code type} or its simple name have already been registered on this type adapter.
    */
   public RuntimeTypeAdapterFactory<T> registerSubtype(Class<? extends T> type) {
     return registerSubtype(type, type.getSimpleName());
@@ -114,15 +109,15 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
         JsonElement jsonElement = Streams.parse(in);
         JsonElement labelJsonElement = jsonElement.getAsJsonObject().remove(typeFieldName);
         if (labelJsonElement == null) {
-          throw new JsonParseException("cannot deserialize " + baseType
-              + " because it does not define a field named " + typeFieldName);
+          throw new JsonParseException(
+                  "cannot deserialize " + baseType + " because it does not define a field named " + typeFieldName);
         }
         String label = labelJsonElement.getAsString();
         @SuppressWarnings("unchecked") // registration requires that subtype extends T
         TypeAdapter<X> delegate = (TypeAdapter<X>) labelToDelegate.get(label);
         if (delegate == null) {
-          throw new JsonParseException("cannot deserialize " + baseType + " subtype named "
-              + label + "; did you forget to register a subtype?");
+          throw new JsonParseException("cannot deserialize " + baseType + " subtype named " + label
+                  + "; did you forget to register a subtype?");
         }
         return delegate.fromJsonTree(jsonElement);
       }
@@ -134,13 +129,13 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
         @SuppressWarnings("unchecked") // registration requires that subtype extends T
         TypeAdapter<X> delegate = (TypeAdapter<X>) subtypeToDelegate.get(srcType);
         if (delegate == null) {
-          throw new JsonParseException("cannot serialize " + srcType.getName()
-              + "; did you forget to register a subtype?");
+          throw new JsonParseException(
+                  "cannot serialize " + srcType.getName() + "; did you forget to register a subtype?");
         }
         JsonObject jsonObject = delegate.toJsonTree(value).getAsJsonObject();
         if (jsonObject.has(typeFieldName)) {
           throw new JsonParseException("cannot serialize " + srcType.getName()
-              + " because it already defines a field named " + typeFieldName);
+                  + " because it already defines a field named " + typeFieldName);
         }
         JsonObject clone = new JsonObject();
         clone.add(typeFieldName, new JsonPrimitive(label));

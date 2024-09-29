@@ -15,20 +15,19 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.core.base.impl;
 
 import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.storage.api.CRUDStorage;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-
-public class DefaultCRUDRestResource<T extends Storable>
-    extends AbstractAuthGuardedRestResource
-    implements CRUDResource<T, Void> {
+public class DefaultCRUDRestResource<T extends Storable> extends AbstractAuthGuardedRestResource
+        implements
+          CRUDResource<T, Void> {
 
   protected final CRUDStorage<T> storage;
 

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.message;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -28,9 +27,7 @@ public class PipelineStatusMessage {
   private String messageType;
   private String message;
 
-  public PipelineStatusMessage(String pipelineId,
-                               long timestamp,
-                               PipelineStatusMessageType message) {
+  public PipelineStatusMessage(String pipelineId, long timestamp, PipelineStatusMessageType message) {
     super();
     this.pipelineId = pipelineId;
     this.timestamp = timestamp;
@@ -69,6 +66,5 @@ public class PipelineStatusMessage {
   public void setMessage(String message) {
     this.message = message;
   }
-
 
 }

@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class DataProcessorStorageImpl extends DefaultCrudStorage<DataProcessorDescription>
-    implements IDataProcessorStorage {
-
+        implements
+          IDataProcessorStorage {
 
   public DataProcessorStorageImpl() {
     super(Utils::getCouchDbDataProcessorDescriptionClient, DataProcessorDescription.class);
@@ -41,18 +41,12 @@ public class DataProcessorStorageImpl extends DefaultCrudStorage<DataProcessorDe
 
   @Override
   public DataProcessorDescription getFirstDataProcessorByAppId(String appId) {
-    return getDataProcessorsByAppId(appId)
-        .stream()
-        .findFirst()
-        .orElseThrow(NoSuchElementException::new);
+    return getDataProcessorsByAppId(appId).stream().findFirst().orElseThrow(NoSuchElementException::new);
   }
 
   @Override
   public List<DataProcessorDescription> getDataProcessorsByAppId(String appId) {
-    return this.findAll()
-      .stream()
-      .filter(p -> p.getAppId().equals(appId))
-      .toList();
+    return this.findAll().stream().filter(p -> p.getAppId().equals(appId)).toList();
   }
 
   private String getCurrentRev(String elementId) {

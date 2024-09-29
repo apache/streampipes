@@ -15,19 +15,18 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions.html;
-
-import org.apache.streampipes.rest.extensions.html.model.Description;
-
-import org.rendersnake.HtmlCanvas;
-
-import java.io.IOException;
-import java.util.List;
 
 import static org.rendersnake.HtmlAttributesFactory.class_;
 import static org.rendersnake.HtmlAttributesFactory.href;
 import static org.rendersnake.HtmlAttributesFactory.name;
+
+import org.apache.streampipes.rest.extensions.html.model.Description;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.rendersnake.HtmlCanvas;
 
 public class HTMLGenerator {
 
@@ -40,36 +39,26 @@ public class HTMLGenerator {
   public String buildHtml() {
     HtmlCanvas html = new HtmlCanvas();
     try {
-      html
-          .head()
-          .meta(name("viewport").content("width=device-width, initial-scale=1"))
-          .macros().javascript("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js")
-          .macros().stylesheet("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css")
-          .macros().javascript("https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
-          .style().write("body {padding-top: 70px;}")._style()
-          ._head()
-          .body()
-          .nav(class_("navbar navbar-inverse navbar-fixed-top").style("background:#0A3F54"))
-          .div(class_("container"))
-          .div(class_("navbar-header"))
-          .a(class_("navbar-brand").style("color:white;"))
-          .content("StreamPipes Extensions Service")
-          ._div()
-          ._div()
-          ._nav()
-          .div(class_("container"));
+      html.head().meta(name("viewport").content("width=device-width, initial-scale=1")).macros()
+              .javascript("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js").macros()
+              .stylesheet("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css").macros()
+              .javascript("https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js").style()
+              .write("body {padding-top: 70px;}")._style()._head().body()
+              .nav(class_("navbar navbar-inverse navbar-fixed-top").style("background:#0A3F54"))
+              .div(class_("container")).div(class_("navbar-header")).a(class_("navbar-brand").style("color:white;"))
+              .content("StreamPipes Extensions Service")._div()._div()._nav().div(class_("container"));
 
       html.h4().write("This is a developer-oriented view."
-          + "Navigate to 'Install Pipeline Elements' in the StreamPipes "
-          + "UI to import the elements shown here.")._h4();
+              + "Navigate to 'Install Pipeline Elements' in the StreamPipes " + "UI to import the elements shown here.")
+              ._h4();
 
       for (Description description : descriptions) {
 
         html.h3();
         html.write(description.getName());
         html._h3();
-        html.h4().write("URI: ").a(href(description.getDescriptionUrl()))
-            .content(description.getDescriptionUrl())._h4();
+        html.h4().write("URI: ").a(href(description.getDescriptionUrl())).content(description.getDescriptionUrl())
+                ._h4();
         html.h4().write("Description: ").write(description.getDescription())._h4();
       }
       html._div();

@@ -32,15 +32,15 @@ public class PipelineTemplateInvocationGenerator {
   private final PipelineTemplateDescription pipelineTemplateDescription;
 
   public PipelineTemplateInvocationGenerator(SpDataStream dataStream,
-                                             PipelineTemplateDescription pipelineTemplateDescription) {
+          PipelineTemplateDescription pipelineTemplateDescription) {
     this.spDataStream = dataStream;
     this.pipelineTemplateDescription = pipelineTemplateDescription;
   }
 
   public PipelineTemplateInvocation generateInvocation() {
 
-    Pipeline pipeline =
-        new PipelineGenerator(spDataStream.getElementId(), pipelineTemplateDescription, "test").makePipeline();
+    Pipeline pipeline = new PipelineGenerator(spDataStream.getElementId(), pipelineTemplateDescription, "test")
+            .makePipeline();
 
     PipelineTemplateInvocation pipelineTemplateInvocation = new PipelineTemplateInvocation();
     pipelineTemplateInvocation.setStaticProperties(collectStaticProperties(pipeline));

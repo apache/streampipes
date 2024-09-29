@@ -15,8 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.xml.XmlParser;
@@ -26,35 +30,20 @@ import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.junit.jupiter.api.Test;
-
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import org.junit.jupiter.api.Test;
 
 public class XmlParserTest extends ParserTest {
 
-  private final String sampleEvent = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>"
-                               + "<list>"
-                               + "<enclosing>"
-                               + "<k1>v1</k1><k2>1.0</k2>"
-                               + "</enclosing>"
-                               + "<enclosing>"
-                               + "<k1>v2</k1><k2>2.0</k2>"
-                               + "</enclosing>"
-                               + "</list>";
+  private final String sampleEvent = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>" + "<list>" + "<enclosing>"
+          + "<k1>v1</k1><k2>1.0</k2>" + "</enclosing>" + "<enclosing>" + "<k1>v2</k1><k2>2.0</k2>" + "</enclosing>"
+          + "</list>";
 
-  private final String sampleEventWithSingleObject = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>"
-      + "<list>"
-      + "<enclosing>"
-      + "<k1>v1</k1><k2>1.0</k2>"
-      + "</enclosing>"
-      + "</list>";
+  private final String sampleEventWithSingleObject = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>" + "<list>"
+          + "<enclosing>" + "<k1>v1</k1><k2>1.0</k2>" + "</enclosing>" + "</list>";
 
   private final String tag = "enclosing";
 
@@ -104,18 +93,10 @@ public class XmlParserTest extends ParserTest {
 
   private GuessSchema getExpectedSchema() {
     return GuessSchemaBuilder.create()
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.String, K1)
-            .description("")
-            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.Float, K2)
-            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .description("")
-            .build())
-        .sample(K1, "v1")
-        .sample(K2, 1.0f)
-        .build();
+            .property(PrimitivePropertyBuilder.create(Datatypes.String, K1).description("")
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY).build())
+            .property(PrimitivePropertyBuilder.create(Datatypes.Float, K2).scope(PropertyScope.MEASUREMENT_PROPERTY)
+                    .description("").build())
+            .sample(K1, "v1").sample(K2, 1.0f).build();
   }
 }

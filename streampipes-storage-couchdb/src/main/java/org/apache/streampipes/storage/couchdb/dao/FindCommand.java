@@ -17,11 +17,11 @@
  */
 package org.apache.streampipes.storage.couchdb.dao;
 
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.NoDocumentException;
-
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import org.lightcouch.CouchDbClient;
+import org.lightcouch.NoDocumentException;
 
 public class FindCommand<T> extends DbCommand<Optional<T>, T> {
 

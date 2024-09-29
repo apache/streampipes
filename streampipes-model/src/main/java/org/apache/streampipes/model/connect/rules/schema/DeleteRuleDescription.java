@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.rules.schema;
 
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
@@ -24,7 +23,6 @@ import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 public class DeleteRuleDescription extends SchemaTransformationRuleDescription {
 
   private String runtimeKey;
-
 
   public DeleteRuleDescription() {
     super();

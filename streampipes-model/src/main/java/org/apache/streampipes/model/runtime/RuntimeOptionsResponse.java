@@ -29,8 +29,7 @@ public class RuntimeOptionsResponse extends RuntimeOptionsRequest {
     super();
   }
 
-  public RuntimeOptionsResponse(RuntimeOptionsRequest request,
-                                StaticProperty staticProperty) {
+  public RuntimeOptionsResponse(RuntimeOptionsRequest request, StaticProperty staticProperty) {
     super();
     this.requestId = request.getRequestId();
     this.staticProperty = staticProperty;

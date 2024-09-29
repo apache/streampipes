@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.api.extensions;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
@@ -27,19 +26,14 @@ import java.util.Set;
 
 public interface IExtensionsServiceEndpointGenerator {
 
-  String getEndpointResourceUrl(String appId,
-                                SpServiceUrlProvider spServiceUrlProvider,
-                                Set<SpServiceTag> customServiceTags)
-      throws NoServiceEndpointsAvailableException;
+  String getEndpointResourceUrl(String appId, SpServiceUrlProvider spServiceUrlProvider,
+          Set<SpServiceTag> customServiceTags) throws NoServiceEndpointsAvailableException;
 
-  default String getEndpointResourceUrl(String appId,
-                                        SpServiceUrlProvider spServiceUrlProvider)
-      throws NoServiceEndpointsAvailableException {
+  default String getEndpointResourceUrl(String appId, SpServiceUrlProvider spServiceUrlProvider)
+          throws NoServiceEndpointsAvailableException {
     return getEndpointResourceUrl(appId, spServiceUrlProvider, Collections.emptySet());
   }
 
-  String getEndpointBaseUrl(String appId,
-                            SpServiceUrlProvider spServiceUrlProvider,
-                            Set<SpServiceTag> customServiceTags)
-      throws NoServiceEndpointsAvailableException;
+  String getEndpointBaseUrl(String appId, SpServiceUrlProvider spServiceUrlProvider,
+          Set<SpServiceTag> customServiceTags) throws NoServiceEndpointsAvailableException;
 }

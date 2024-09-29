@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder;
 
 import org.apache.streampipes.model.DataSinkType;
@@ -27,41 +26,30 @@ import java.util.stream.Collectors;
 
 public class DataSinkBuilder extends AbstractProcessingElementBuilder<DataSinkBuilder, DataSinkDescription> {
 
-  protected DataSinkBuilder(
-          String id,
-          String label,
-          String description,
-          int version
-  ) {
+  protected DataSinkBuilder(String id, String label, String description, int version) {
     super(id, label, description, new DataSinkDescription());
     this.elementDescription.setVersion(version);
   }
 
-  protected DataSinkBuilder(
-          String id,
-          int version
-  ) {
+  protected DataSinkBuilder(String id, int version) {
     super(id, new DataSinkDescription());
     this.elementDescription.setVersion(version);
   }
 
   /**
    * Creates a new data sink using the builder pattern.
-   * {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
-   * must be called, to provide a label and description.
+   * {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)} must be called,
+   * to provide a label and description.
    *
-   * @param id A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
+   * @param id
+   *          A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
    */
   public static DataSinkBuilder create(String id, int version) {
     return new DataSinkBuilder(id, version);
   }
 
   public DataSinkBuilder category(DataSinkType... categories) {
-    this.elementDescription
-        .setCategory(Arrays
-            .stream(categories)
-            .map(Enum::name)
-            .collect(Collectors.toList()));
+    this.elementDescription.setCategory(Arrays.stream(categories).map(Enum::name).collect(Collectors.toList()));
     return me();
   }
 

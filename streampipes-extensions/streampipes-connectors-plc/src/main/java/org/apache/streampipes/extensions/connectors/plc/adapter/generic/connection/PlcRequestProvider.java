@@ -15,18 +15,16 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection;
+
+import java.util.Map;
 
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.messages.PlcReadRequest;
 
-import java.util.Map;
-
 public class PlcRequestProvider {
 
-  public PlcReadRequest makeReadRequest(PlcConnection plcConnection,
-                                        Map<String, String> nodes) {
+  public PlcReadRequest makeReadRequest(PlcConnection plcConnection, Map<String, String> nodes) {
     PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
 
     for (Map.Entry<String, String> entry : nodes.entrySet()) {

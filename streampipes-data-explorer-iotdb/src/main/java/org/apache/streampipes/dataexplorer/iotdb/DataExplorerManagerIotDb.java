@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
@@ -36,23 +35,20 @@ import java.util.List;
 public class DataExplorerManagerIotDb implements IDataExplorerManager {
 
   @Override
-  public IDataLakeMeasurementCounter getMeasurementCounter(List<DataLakeMeasure> allMeasurements, List<String> measurementsToCount) {
+  public IDataLakeMeasurementCounter getMeasurementCounter(List<DataLakeMeasure> allMeasurements,
+          List<String> measurementsToCount) {
     return new DataLakeMeasurementCounterIotDb(allMeasurements, measurementsToCount);
   }
 
   @Override
   public IDataExplorerQueryManagement getQueryManagement(IDataExplorerSchemaManagement dataExplorerSchemaManagement) {
-    return new DataExplorerQueryManagementIotDb(
-        dataExplorerSchemaManagement,
-        new DataExplorerIotDbQueryExecutor(new IotDbSessionProvider().getSessionPool(Environments.getEnvironment()))
-    );
+    return new DataExplorerQueryManagementIotDb(dataExplorerSchemaManagement, new DataExplorerIotDbQueryExecutor(
+            new IotDbSessionProvider().getSessionPool(Environments.getEnvironment())));
   }
 
   @Override
   public IDataExplorerSchemaManagement getSchemaManagement() {
-    return new DataExplorerSchemaManagement(StorageDispatcher.INSTANCE
-                                                             .getNoSqlStore()
-                                                             .getDataLakeStorage());
+    return new DataExplorerSchemaManagement(StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage());
   }
 
   @Override

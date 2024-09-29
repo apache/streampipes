@@ -40,10 +40,8 @@ public class CustomRequestApi extends AbstractClientApi implements ICustomReques
 
   @Override
   public <T> T sendGet(String apiPath, Map<String, String> queryParameters, Class<T> responseClass) {
-    return getSingle(
-        StreamPipesApiPath.fromStreamPipesBasePath(apiPath)
-            .withQueryParameters(queryParameters),
-        responseClass);
+    return getSingle(StreamPipesApiPath.fromStreamPipesBasePath(apiPath).withQueryParameters(queryParameters),
+            responseClass);
   }
 
 }

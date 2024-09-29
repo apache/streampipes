@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.monitoring;
 
 import java.util.HashMap;
@@ -32,8 +31,7 @@ public class SpEndpointMonitoringInfo {
     this.metricsInfos = new HashMap<>();
   }
 
-  public SpEndpointMonitoringInfo(Map<String, List<SpLogEntry>> logInfos,
-                                  Map<String, SpMetricsEntry> metricsInfos) {
+  public SpEndpointMonitoringInfo(Map<String, List<SpLogEntry>> logInfos, Map<String, SpMetricsEntry> metricsInfos) {
     this.logInfos = logInfos;
     this.metricsInfos = metricsInfos;
   }

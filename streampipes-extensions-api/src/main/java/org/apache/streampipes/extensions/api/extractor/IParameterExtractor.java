@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.extractor;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -60,19 +59,15 @@ public interface IParameterExtractor {
 
   <V> List<V> selectedMultiValues(String internalName, Class<V> targetClass);
 
-  <V> List<V> selectedTreeNodesInternalNames(String internalName,
-                                             Class<V> targetClass);
+  <V> List<V> selectedTreeNodesInternalNames(String internalName, Class<V> targetClass);
 
   /**
    * @deprecated use {@link #selectedTreeNodesInternalNames(String, Class)} instead
    */
   @Deprecated(since = "0.97.0", forRemoval = true)
-  <V> List<V> selectedTreeNodesInternalNames(String internalName,
-                                             Class<V> targetClass,
-                                             boolean onlyDataNodes);
+  <V> List<V> selectedTreeNodesInternalNames(String internalName, Class<V> targetClass, boolean onlyDataNodes);
 
-  <W extends StaticProperty> W getStaticPropertyByName(String internalName, Class<W>
-      spType);
+  <W extends StaticProperty> W getStaticPropertyByName(String internalName, Class<W> spType);
 
   StaticProperty getStaticPropertyByName(String name);
 
@@ -84,8 +79,7 @@ public interface IParameterExtractor {
 
   String propertyDatatype(String runtimeName);
 
-  List<EventProperty> getEventPropertiesBySelector(List<String> selectors) throws
-      SpRuntimeException;
+  List<EventProperty> getEventPropertiesBySelector(List<String> selectors) throws SpRuntimeException;
 
   EventProperty getEventPropertyBySelector(String selector) throws SpRuntimeException;
 

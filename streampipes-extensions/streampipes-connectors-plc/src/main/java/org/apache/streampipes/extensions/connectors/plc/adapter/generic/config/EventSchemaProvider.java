@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.generic.config;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -35,11 +34,8 @@ public class EventSchemaProvider {
     for (Map.Entry<String, String> entry : nodes.entrySet()) {
       var datatype = new ConfigurationParser().getStreamPipesDataType(entry.getValue());
 
-      var primitiveProperty = PrimitivePropertyBuilder
-          .create(datatype, entry.getKey())
-          .label(entry.getKey())
-          .description("")
-          .build();
+      var primitiveProperty = PrimitivePropertyBuilder.create(datatype, entry.getKey()).label(entry.getKey())
+              .description("").build();
 
       // Check if the address configuration is an array
       var isArray = new ConfigurationParser().isPLCArray(entry.getValue());

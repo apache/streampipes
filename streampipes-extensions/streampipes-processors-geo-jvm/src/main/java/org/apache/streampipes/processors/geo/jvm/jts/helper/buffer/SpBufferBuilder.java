@@ -34,7 +34,7 @@ public class SpBufferBuilder {
     Point geomInternal = geom;
     Polygon bufferGeom = null;
 
-    //if capStyle is flat it will be forced to be round
+    // if capStyle is flat it will be forced to be round
     if (capStyle == 2) {
       capStyle = 1;
     }
@@ -43,39 +43,32 @@ public class SpBufferBuilder {
       // transform to metric coordinate system
       if (!SpReprojectionBuilder.isMeterCRS(geom.getSRID())) {
 
-        geomInternal =
-            (Point) SpReprojectionBuilder.reprojectSpGeometry(geom, SpReprojectionBuilder.findWgsUtm_EPSG(geom));
+        geomInternal = (Point) SpReprojectionBuilder.reprojectSpGeometry(geom,
+                SpReprojectionBuilder.findWgsUtm_EPSG(geom));
       }
 
-      //creates buffer params
-      BufferParameters bufferParam = new BufferParameters(); //init
+      // creates buffer params
+      BufferParameters bufferParam = new BufferParameters(); // init
       bufferParam.setEndCapStyle(capStyle);
       bufferParam.setQuadrantSegments(segments);
       bufferParam.setSimplifyFactor(simplifyFactor);
 
       bufferGeom = (Polygon) SpGeometryBuilder.createSPGeom(BufferOp.bufferOp(geomInternal, distance, bufferParam),
-          geomInternal.getSRID());
+              geomInternal.getSRID());
 
       if (bufferGeom.getSRID() != geom.getSRID()) {
         bufferGeom = (Polygon) SpReprojectionBuilder.reprojectSpGeometry(bufferGeom, geom.getSRID());
       }
     } catch (SpNotSupportedGeometryException e) {
-      //if reprojection geometry is not supported an empty geometry has to be created
+      // if reprojection geometry is not supported an empty geometry has to be created
       bufferGeom = (Polygon) SpGeometryBuilder.createEmptyGeometry(bufferGeom);
     }
 
     return bufferGeom;
   }
 
-  public static Geometry createSpBuffer(Geometry geom,
-                                        Double distance,
-                                        int endCapStyle,
-                                        int joinStyle,
-                                        double mitreLimit,
-                                        int segment,
-                                        double simplifyFactor,
-                                        boolean singleSided,
-                                        int side) {
+  public static Geometry createSpBuffer(Geometry geom, Double distance, int endCapStyle, int joinStyle,
+          double mitreLimit, int segment, double simplifyFactor, boolean singleSided, int side) {
     Geometry internal = geom;
     Geometry result = null;
     BufferParameters bufferParameter = new BufferParameters();
@@ -91,17 +84,16 @@ public class SpBufferBuilder {
     }
 
     try {
-      //if epsg is not a metric CRS, it will be transformed to corresponding utm zone
+      // if epsg is not a metric CRS, it will be transformed to corresponding utm zone
       if (!SpReprojectionBuilder.isMeterCRS(geom.getSRID())) {
 
         internal = SpReprojectionBuilder.reprojectSpGeometry(internal,
-            SpReprojectionBuilder.findWgsUtm_EPSG(SpGeometryBuilder.extractPoint(internal)));
+                SpReprojectionBuilder.findWgsUtm_EPSG(SpGeometryBuilder.extractPoint(internal)));
       }
 
-      //using bufferOP with input geometry (internal) distance and Parameter)
+      // using bufferOP with input geometry (internal) distance and Parameter)
       result = SpGeometryBuilder.createSPGeom(BufferOp.bufferOp(internal, distance, bufferParameter).toText(),
-          internal.getSRID());
-
+              internal.getSRID());
 
       // If the geometry is not in a metric system, an automatic transformation takes place. To get the
       // original CRS, it must be back-transformed
@@ -112,13 +104,12 @@ public class SpBufferBuilder {
       result = SpGeometryBuilder.createEmptyGeometry(internal);
     }
 
-    //========VALIDATE RESULT
+    // ========VALIDATE RESULT
     if (result.isEmpty()) {
       // TODO: Logger Info
     }
 
     return result;
   }
-
 
 }

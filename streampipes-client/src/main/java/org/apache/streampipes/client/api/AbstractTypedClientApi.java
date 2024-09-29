@@ -25,10 +25,10 @@ import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.commons.exceptions.SpHttpErrorStatusCode;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
-import org.apache.http.HttpStatus;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.apache.http.HttpStatus;
 
 public abstract class AbstractTypedClientApi<T> extends AbstractClientApi {
 

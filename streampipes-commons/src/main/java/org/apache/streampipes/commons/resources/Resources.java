@@ -15,19 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.resources;
-
-import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
+import org.apache.commons.io.IOUtils;
+
 public class Resources {
 
-  public static String asString(String resourceName,
-                                Charset charset) throws IOException {
+  public static String asString(String resourceName, Charset charset) throws IOException {
     var loader = getLoader();
     return IOUtils.resourceToString(resourceName, charset, loader);
   }

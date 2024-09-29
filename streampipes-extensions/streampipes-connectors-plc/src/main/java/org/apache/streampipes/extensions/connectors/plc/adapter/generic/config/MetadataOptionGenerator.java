@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.generic.config;
 
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels;
@@ -25,11 +24,11 @@ import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
+import java.util.List;
+
 import org.apache.plc4x.java.api.metadata.Option;
 import org.apache.plc4x.java.api.metadata.OptionMetadata;
 import org.apache.plc4x.java.api.types.OptionType;
-
-import java.util.List;
 
 public class MetadataOptionGenerator {
 
@@ -38,57 +37,35 @@ public class MetadataOptionGenerator {
   }
 
   public StaticProperty makeRuntimeResolvableMetadata(String labelId) {
-    return makeMetadata(
-        labelId,
-        getRuntimeResolvableGroup(Plc4xLabels.REQUIRED_GROUP_TRANSPORT),
-        getRuntimeResolvableGroup(Plc4xLabels.ADVANCED_GROUP_TRANSPORT)
-    );
+    return makeMetadata(labelId, getRuntimeResolvableGroup(Plc4xLabels.REQUIRED_GROUP_TRANSPORT),
+            getRuntimeResolvableGroup(Plc4xLabels.ADVANCED_GROUP_TRANSPORT));
   }
 
-  public StaticProperty makeMetadata(String labelId,
-                                     OptionMetadata optionMetadata) {
-    return makeMetadata(
-        labelId,
-        getGroup(optionMetadata.getRequiredOptions(), Plc4xLabels.REQUIRED_GROUP_PROTOCOL),
-        getGroup(optionMetadata.getOptions(), Plc4xLabels.ADVANCED_GROUP_PROTOCOL)
-    );
+  public StaticProperty makeMetadata(String labelId, OptionMetadata optionMetadata) {
+    return makeMetadata(labelId, getGroup(optionMetadata.getRequiredOptions(), Plc4xLabels.REQUIRED_GROUP_PROTOCOL),
+            getGroup(optionMetadata.getOptions(), Plc4xLabels.ADVANCED_GROUP_PROTOCOL));
   }
 
-  private StaticProperty makeMetadata(String labelId,
-                                      StaticProperty requiredProperty,
-                                      StaticProperty advancedProperty) {
-    return StaticProperties.alternatives(
-        Labels.withId(labelId),
-        Alternatives.from(Labels.withId(Plc4xLabels.REQUIRED_OPTIONS),
-            requiredProperty,
-            true),
-        Alternatives.from(Labels.withId(Plc4xLabels.ADVANCED_OPTIONS),
-            advancedProperty)
-    );
+  private StaticProperty makeMetadata(String labelId, StaticProperty requiredProperty,
+          StaticProperty advancedProperty) {
+    return StaticProperties.alternatives(Labels.withId(labelId),
+            Alternatives.from(Labels.withId(Plc4xLabels.REQUIRED_OPTIONS), requiredProperty, true),
+            Alternatives.from(Labels.withId(Plc4xLabels.ADVANCED_OPTIONS), advancedProperty));
   }
 
   private static StaticProperty getRuntimeResolvableGroup(String labelId) {
-    return StaticProperties.runtimeResolvableGroupStaticProperty(
-        Labels.withId(labelId),
-        List.of(Plc4xLabels.SUPPORTED_TRANSPORTS)
-    );
+    return StaticProperties.runtimeResolvableGroupStaticProperty(Labels.withId(labelId),
+            List.of(Plc4xLabels.SUPPORTED_TRANSPORTS));
   }
 
-  private StaticProperty getGroup(List<Option> options,
-                                  String labelId) {
-    return StaticProperties.group(
-        Labels.withId(labelId),
-        false,
-        getOptions(options)
-    );
+  private StaticProperty getGroup(List<Option> options, String labelId) {
+    return StaticProperties.group(Labels.withId(labelId), false, getOptions(options));
   }
 
   public StaticProperty[] getOptions(List<Option> options) {
     return options.stream().map(option -> {
-      var sp = StaticProperties.freeTextProperty(
-          Labels.from(option.getKey(), option.getKey(), option.getDescription()),
-          getDatatype(option.getType())
-      );
+      var sp = StaticProperties.freeTextProperty(Labels.from(option.getKey(), option.getKey(), option.getDescription()),
+              getDatatype(option.getType()));
       sp.setOptional(!option.isRequired());
       return sp;
     }).toArray(StaticProperty[]::new);

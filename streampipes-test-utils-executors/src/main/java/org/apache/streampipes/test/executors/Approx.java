@@ -15,14 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.test.executors;
 
 /**
  * This record can be used to define a double property that consides an epsilon for the assertion
  *
- * @param value   The numeric value of the event property.
- * @param epsilon The tolerance level for the rounding operation, determining its precision for the assertion
+ * @param value
+ *          The numeric value of the event property.
+ * @param epsilon
+ *          The tolerance level for the rounding operation, determining its precision for the assertion
  */
 public record Approx(Double value, Double epsilon) {
 }

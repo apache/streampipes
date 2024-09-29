@@ -15,17 +15,16 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.iotdb.sanitize;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 public class MeasureNameSanitizerIotDbTest {
 
   @Test
-  public void sanitize(){
+  public void sanitize() {
     var sanitizer = new MeasureNameSanitizerIotDb();
 
     assertEquals("myMeasure", sanitizer.sanitize("myMeasure"));

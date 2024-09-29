@@ -29,10 +29,8 @@ public class WindowFactory {
   private final EventSelection eventSelection;
   private final SpOutputCollector outputCollector;
 
-  public WindowFactory(WindowType windowType,
-                       Object windowExpression,
-                       EventSelection eventSelection,
-                       SpOutputCollector outputCollector) {
+  public WindowFactory(WindowType windowType, Object windowExpression, EventSelection eventSelection,
+          SpOutputCollector outputCollector) {
     this.windowType = windowType;
     this.windowExpression = windowExpression;
     this.eventSelection = eventSelection;

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.siddhi.trend;
 
 import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
@@ -44,10 +43,8 @@ public class TrendConfigurationVisitor implements StaticPropertyVisitor {
   private final int increase;
   private final int timeWindow;
 
-  public TrendConfigurationVisitor(String mappingPropertyValue,
-                                   TrendOperator trendOperator,
-                                   Integer increase,
-                                   Integer timeWindow) {
+  public TrendConfigurationVisitor(String mappingPropertyValue, TrendOperator trendOperator, Integer increase,
+          Integer timeWindow) {
     this.mappingPropertyValue = mappingPropertyValue;
     this.trendOperator = trendOperator;
     this.increase = increase;

@@ -15,14 +15,13 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.runtime;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class RateLimitedRuntimeInfoProvider {
 

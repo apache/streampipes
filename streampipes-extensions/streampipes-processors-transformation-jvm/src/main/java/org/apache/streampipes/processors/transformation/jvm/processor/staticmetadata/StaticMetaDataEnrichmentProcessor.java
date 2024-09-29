@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.staticmetadata;
 
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
@@ -52,8 +51,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StaticMetaDataEnrichmentProcessor
-    implements IStreamPipesDataProcessor,
-               ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
+        implements
+          IStreamPipesDataProcessor,
+          ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   protected static final String STATIC_METADATA_INPUT = "static-metadata-input";
   protected static final String STATIC_METADATA_INPUT_RUNTIME_NAME = "static-metadata-input-runtime-name";
@@ -65,80 +65,42 @@ public class StaticMetaDataEnrichmentProcessor
   protected static final String OPTION_FLOAT = "Float";
   protected static final String OPTION_INTEGER = "Integer";
 
-
   private List<StaticMetaDataConfiguration> staticMetaDataConfigurations = new ArrayList<>();
 
   @Override
   public IDataProcessorConfiguration declareConfig() {
-    return DataProcessorConfiguration.create(
-        StaticMetaDataEnrichmentProcessor::new,
-        ProcessingElementBuilder.create(
-                                    "org.apache.streampipes.processors.transformation.jvm.processor.staticmetadata",
-                                    1
-                                )
-                                .category(
-                                    DataProcessorType.ENRICH)
-                                .withLocales(
-                                    Locales.EN)
-                                .withAssets(
-                                    ExtensionAssetType.DOCUMENTATION,
-                                    ExtensionAssetType.ICON
-                                )
-                                .requiredCollection(
-                                    Labels.withId(
-                                        STATIC_METADATA_INPUT),
-                                    StaticProperties.stringFreeTextProperty(
-                                        Labels.withId(
-                                            STATIC_METADATA_INPUT_RUNTIME_NAME)),
-                                    StaticProperties.stringFreeTextProperty(
-                                        Labels.withId(
-                                            STATIC_METADATA_INPUT_VALUE)),
-                                    StaticProperties.singleValueSelection(
-                                        Labels.withId(
-                                            STATIC_METADATA_INPUT_DATATYPE),
-                                        Options.from(
-                                            OPTION_BOOL,
-                                            OPTION_STRING,
-                                            OPTION_FLOAT,
-                                            OPTION_INTEGER
-                                        )
-                                    )
-                                )
-                                .requiredStream(
-                                    StreamRequirementsBuilder.any())
-                                .outputStrategy(
-                                    OutputStrategies.customTransformation())
-                                .build()
-    );
+    return DataProcessorConfiguration.create(StaticMetaDataEnrichmentProcessor::new,
+            ProcessingElementBuilder
+                    .create("org.apache.streampipes.processors.transformation.jvm.processor.staticmetadata", 1)
+                    .category(DataProcessorType.ENRICH).withLocales(Locales.EN)
+                    .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+                    .requiredCollection(Labels.withId(STATIC_METADATA_INPUT),
+                            StaticProperties.stringFreeTextProperty(Labels.withId(STATIC_METADATA_INPUT_RUNTIME_NAME)),
+                            StaticProperties.stringFreeTextProperty(Labels.withId(STATIC_METADATA_INPUT_VALUE)),
+                            StaticProperties.singleValueSelection(Labels.withId(STATIC_METADATA_INPUT_DATATYPE),
+                                    Options.from(OPTION_BOOL, OPTION_STRING, OPTION_FLOAT, OPTION_INTEGER)))
+                    .requiredStream(StreamRequirementsBuilder.any())
+                    .outputStrategy(OutputStrategies.customTransformation()).build());
   }
 
   @Override
-  public EventSchema resolveOutputStrategy(
-      DataProcessorInvocation processingElement,
-      ProcessingElementParameterExtractor parameterExtractor
-  ) {
+  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
+          ProcessingElementParameterExtractor parameterExtractor) {
 
     var metaDataConfigurations = getMetaDataConfigurations(parameterExtractor);
 
-    var eventSchema = processingElement.getInputStreams()
-                                       .get(0)
-                                       .getEventSchema();
+    var eventSchema = processingElement.getInputStreams().get(0).getEventSchema();
 
     addMetaDataConfigurationPropertiesToEventSchema(metaDataConfigurations, eventSchema);
 
     return eventSchema;
   }
 
-
   @Override
-  public void onPipelineStarted(
-      IDataProcessorParameters params,
-      SpOutputCollector collector,
-      EventProcessorRuntimeContext runtimeContext
-  ) {
+  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector collector,
+          EventProcessorRuntimeContext runtimeContext) {
     this.staticMetaDataConfigurations = getMetaDataConfigurations(params.extractor());
   }
-
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) {
@@ -174,9 +136,7 @@ public class StaticMetaDataEnrichmentProcessor
   }
 
   private StaticPropertyExtractor getMemberExtractor(StaticProperty member) {
-    return StaticPropertyExtractor.from(
-        ((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>()
-    );
+    return StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
   }
 
   private StaticMetaDataConfiguration getMetaDataConfiguration(StaticPropertyExtractor memberExtractor) {
@@ -205,29 +165,17 @@ public class StaticMetaDataEnrichmentProcessor
     };
   }
 
-  private void addMetaDataConfigurationPropertiesToEventSchema(
-      List<StaticMetaDataConfiguration> metaDataConfigurations,
-      EventSchema eventSchema
-  ) {
+  private void addMetaDataConfigurationPropertiesToEventSchema(List<StaticMetaDataConfiguration> metaDataConfigurations,
+          EventSchema eventSchema) {
     for (StaticMetaDataConfiguration metaDataConfiguration : metaDataConfigurations) {
       var metaDataEventProperty = getMetaDataEventProperty(metaDataConfiguration);
-      eventSchema.getEventProperties()
-                 .add(metaDataEventProperty);
+      eventSchema.getEventProperties().add(metaDataEventProperty);
     }
   }
 
-  private EventPropertyPrimitive getMetaDataEventProperty(
-      StaticMetaDataConfiguration metaDataConfiguration
-  ) {
-    return PrimitivePropertyBuilder
-        .create(
-            transformToStreamPipesDataType(metaDataConfiguration.dataType()),
-            metaDataConfiguration.runtimeName()
-        )
-        .scope(PropertyScope.MEASUREMENT_PROPERTY)
-        .build();
+  private EventPropertyPrimitive getMetaDataEventProperty(StaticMetaDataConfiguration metaDataConfiguration) {
+    return PrimitivePropertyBuilder.create(transformToStreamPipesDataType(metaDataConfiguration.dataType()),
+            metaDataConfiguration.runtimeName()).scope(PropertyScope.MEASUREMENT_PROPERTY).build();
   }
 
-
 }
-

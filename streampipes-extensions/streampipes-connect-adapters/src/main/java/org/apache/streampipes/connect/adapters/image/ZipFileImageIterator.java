@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.adapters.image;
 
 import org.apache.streampipes.client.StreamPipesClient;
@@ -78,10 +77,8 @@ public class ZipFileImageIterator {
   }
 
   private static boolean isImage(String name) {
-    return (!name.startsWith("_"))
-        && (name.toLowerCase().endsWith(".png")
-        || name.toLowerCase().endsWith(".jpg")
-        || name.toLowerCase().endsWith(".jpeg"));
+    return (!name.startsWith("_")) && (name.toLowerCase().endsWith(".png") || name.toLowerCase().endsWith(".jpg")
+            || name.toLowerCase().endsWith(".jpeg"));
 
   }
 

@@ -22,10 +22,10 @@ import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.runtime.Event;
 
+import java.net.URI;
+
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
-
-import java.net.URI;
 
 public class MqttClient {
 
@@ -69,8 +69,8 @@ public class MqttClient {
       mqtt.setClientId(options.getClientId());
 
       /**
-       * Set to false if you want the MQTT server to persist topic subscriptions and ack positions across
-       * client sessions. Defaults to true.
+       * Set to false if you want the MQTT server to persist topic subscriptions and ack positions across client
+       * sessions. Defaults to true.
        */
       mqtt.setCleanSession(options.isCleanSession());
 
@@ -80,9 +80,9 @@ public class MqttClient {
       mqtt.setReconnectDelayMax(options.getReconnectDelayMaxInMs());
 
       /**
-       * Configures the Keep Alive timer in seconds. Defines the maximum time interval between messages
-       * received from a client. It enables the server to detect that the network connection to a client has
-       * dropped, without having to wait for the long TCP/IP timeout.
+       * Configures the Keep Alive timer in seconds. Defines the maximum time interval between messages received from a
+       * client. It enables the server to detect that the network connection to a client has dropped, without having to
+       * wait for the long TCP/IP timeout.
        */
       mqtt.setKeepAlive(options.getKeepAliveInSec());
 
@@ -94,8 +94,8 @@ public class MqttClient {
       // last will and testament options
       if (options.isLastWill()) {
         /**
-         * If set the server will publish the client's Will message to the specified topics if the client has
-         * an unexpected disconnection.
+         * If set the server will publish the client's Will message to the specified topics if the client has an
+         * unexpected disconnection.
          */
         mqtt.setWillTopic(options.getWillTopic());
 
@@ -127,15 +127,15 @@ public class MqttClient {
       this.conn = mqtt.blockingConnection();
       this.conn.connect();
     } catch (Exception e) {
-      throw new SpRuntimeException("Could not connect to MQTT broker: "
-          + uri.toString() + ", " + e.getMessage(), e);
+      throw new SpRuntimeException("Could not connect to MQTT broker: " + uri.toString() + ", " + e.getMessage(), e);
     }
   }
 
   /**
    * Publish received event to MQTT broker.
    *
-   * @param event event to be published
+   * @param event
+   *          event to be published
    */
   public void publish(Event event) {
     JsonDataFormatDefinition dataFormatDefinition = new JsonDataFormatDefinition();
@@ -143,8 +143,7 @@ public class MqttClient {
     try {
       this.conn.publish(options.getTopic(), payload, options.getQos(), options.isRetain());
     } catch (Exception e) {
-      throw new SpRuntimeException("Could not publish to MQTT broker: "
-          + uri.toString() + ", " + e.getMessage(), e);
+      throw new SpRuntimeException("Could not publish to MQTT broker: " + uri.toString() + ", " + e.getMessage(), e);
     }
   }
 
@@ -157,8 +156,8 @@ public class MqttClient {
         this.conn.disconnect();
       }
     } catch (Exception e) {
-      throw new SpRuntimeException("Could not disconnect from MQTT broker: "
-          + uri.toString() + ", " + e.getMessage(), e);
+      throw new SpRuntimeException("Could not disconnect from MQTT broker: " + uri.toString() + ", " + e.getMessage(),
+              e);
     }
   }
 

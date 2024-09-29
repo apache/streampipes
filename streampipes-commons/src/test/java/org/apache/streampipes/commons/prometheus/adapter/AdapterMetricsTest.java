@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.prometheus.adapter;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AdapterMetricsTest {
 
@@ -55,10 +54,8 @@ public class AdapterMetricsTest {
   public void updateTotalEventsPublishedNoSuchElement() {
     var metrics = AdapterMetricsManager.INSTANCE.getAdapterMetrics();
 
-    assertThrows(
-        NoSuchElementException.class,
-        () -> metrics.updateTotalEventsPublished(OTHER_ADAPTER_ID, ADAPTER_NAME, 0)
-    );
+    assertThrows(NoSuchElementException.class,
+            () -> metrics.updateTotalEventsPublished(OTHER_ADAPTER_ID, ADAPTER_NAME, 0));
 
   }
 }

@@ -15,10 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx.client;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+
+import java.util.List;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Query;
@@ -29,12 +34,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class InfluxClientProviderTest {
 

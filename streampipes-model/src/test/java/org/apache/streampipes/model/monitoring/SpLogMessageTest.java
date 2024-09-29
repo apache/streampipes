@@ -15,19 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.monitoring;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SpLogMessageTest {
 
   private static final String EXCEPTION_TEXT = "Test exception";
   private static final String CAUSE_EXCEPTION_TEXT = "Cause exception";
-
 
   @Test
   void from_ExceptionWithDetail() {

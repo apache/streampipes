@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.context.generator;
 
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
@@ -26,14 +25,13 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.context.SpEventProcessorRuntimeContext;
 
 public class DataProcessorContextGenerator
-    implements IContextGenerator<EventProcessorRuntimeContext, DataProcessorInvocation> {
+        implements
+          IContextGenerator<EventProcessorRuntimeContext, DataProcessorInvocation> {
 
   @Override
   public EventProcessorRuntimeContext makeContext(DataProcessorInvocation invocation) {
-    return new SpEventProcessorRuntimeContext(
-        invocation.getCorrespondingUser(),
-        RuntimeContextUtils.makeConfigExtractor(),
-        RuntimeContextUtils.makeStreamPipesClient(),
-        new ExtensionsLogger(invocation.getElementId()));
+    return new SpEventProcessorRuntimeContext(invocation.getCorrespondingUser(),
+            RuntimeContextUtils.makeConfigExtractor(), RuntimeContextUtils.makeStreamPipesClient(),
+            new ExtensionsLogger(invocation.getElementId()));
   }
 }

@@ -19,8 +19,7 @@ package org.apache.streampipes.sdk.helpers;
 
 public enum Locales {
 
-  EN("en"),
-  DE("de");
+  EN("en"), DE("de");
 
   private final String filename = "strings";
 

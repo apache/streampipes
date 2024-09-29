@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
@@ -29,10 +28,9 @@ public class ImageStoreUtils {
 
   public static List<EventProperty> getImageProperties(DataLakeMeasure measure) {
     return measure.getEventSchema().getEventProperties().stream()
-        .filter(eventProperty -> eventProperty.getDomainProperties() != null
-            && !eventProperty.getDomainProperties()
-                             .isEmpty()
-            && eventProperty.getDomainProperties().get(0).toString().equals(SPSensor.IMAGE))
-        .collect(Collectors.toList());
+            .filter(eventProperty -> eventProperty.getDomainProperties() != null
+                    && !eventProperty.getDomainProperties().isEmpty()
+                    && eventProperty.getDomainProperties().get(0).toString().equals(SPSensor.IMAGE))
+            .collect(Collectors.toList());
   }
 }

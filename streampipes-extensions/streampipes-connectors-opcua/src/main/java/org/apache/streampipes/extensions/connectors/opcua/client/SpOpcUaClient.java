@@ -15,14 +15,21 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.opcua.client;
 
+import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
 import org.apache.streampipes.extensions.connectors.opcua.config.MiloOpcUaConfigurationProvider;
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
+
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
@@ -43,15 +50,6 @@ import org.eclipse.milo.opcua.stack.core.types.structured.MonitoringParameters;
 import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicLong;
-
-import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 
 /***
  * Wrapper class for all OPC UA specific stuff.
@@ -80,10 +78,11 @@ public class SpOpcUaClient<T extends OpcUaConfig> {
   /***
    * Establishes appropriate connection to OPC UA endpoint depending on the {@link SpOpcUaClient} instance
    *
-   * @throws UaException An exception occurring during OPC connection
+   * @throws UaException
+   *           An exception occurring during OPC connection
    */
   public void connect()
-      throws UaException, ExecutionException, InterruptedException, SpConfigurationException, URISyntaxException {
+          throws UaException, ExecutionException, InterruptedException, SpConfigurationException, URISyntaxException {
     OpcUaClientConfig clientConfig = new MiloOpcUaConfigurationProvider().makeClientConfig(spOpcConfig);
     this.client = OpcUaClient.create(clientConfig);
     client.connect().get();
@@ -95,12 +94,14 @@ public class SpOpcUaClient<T extends OpcUaConfig> {
 
   /***
    * Register subscriptions for given OPC UA nodes
-   * @param nodes List of {@link org.eclipse.milo.opcua.stack.core.types.builtin.NodeId}
-   * @param opcUaAdapter current instance of {@link OpcUaAdapter}
+   * 
+   * @param nodes
+   *          List of {@link org.eclipse.milo.opcua.stack.core.types.builtin.NodeId}
+   * @param opcUaAdapter
+   *          current instance of {@link OpcUaAdapter}
    * @throws Exception
    */
-  public void createListSubscription(List<NodeId> nodes,
-                                     OpcUaAdapter opcUaAdapter) throws Exception {
+  public void createListSubscription(List<NodeId> nodes, OpcUaAdapter opcUaAdapter) throws Exception {
     client.getSubscriptionManager().addSubscriptionListener(new UaSubscriptionManager.SubscriptionListener() {
       @Override
       public void onSubscriptionTransferFailed(UaSubscription subscription, StatusCode statusCode) {
@@ -116,9 +117,7 @@ public class SpOpcUaClient<T extends OpcUaConfig> {
     initSubscription(nodes, opcUaAdapter);
   }
 
-
-  public void initSubscription(List<NodeId> nodes,
-                               OpcUaAdapter opcUaAdapter) throws Exception {
+  public void initSubscription(List<NodeId> nodes, OpcUaAdapter opcUaAdapter) throws Exception {
     /*
      * create a subscription @ 1000ms
      */
@@ -136,7 +135,6 @@ public class SpOpcUaClient<T extends OpcUaConfig> {
       }
     }
 
-
     List<ReadValueId> readValues = new ArrayList<>();
     // Read a specific value attribute
     for (NodeId node : nodes) {
@@ -149,24 +147,19 @@ public class SpOpcUaClient<T extends OpcUaConfig> {
       // important: client handle must be unique per item
       UInteger clientHandle = uint(clientHandles.getAndIncrement());
 
-      MonitoringParameters parameters = new MonitoringParameters(
-          clientHandle,
-          1000.0,     // sampling interval
-          null,      // filter, null means use default
-          uint(10),   // queue size
-          true         // discard oldest
+      MonitoringParameters parameters = new MonitoringParameters(clientHandle, 1000.0, // sampling interval
+              null, // filter, null means use default
+              uint(10), // queue size
+              true // discard oldest
       );
 
       requests.add(new MonitoredItemCreateRequest(readValue, MonitoringMode.Reporting, parameters));
     }
 
-    UaSubscription.ItemCreationCallback onItemCreated =
-        (item, i) -> item.setValueConsumer(opcUaAdapter::onSubscriptionValue);
-    List<UaMonitoredItem> items = subscription.createMonitoredItems(
-        TimestampsToReturn.Both,
-        requests,
-        onItemCreated
-    ).get();
+    UaSubscription.ItemCreationCallback onItemCreated = (item, i) -> item
+            .setValueConsumer(opcUaAdapter::onSubscriptionValue);
+    List<UaMonitoredItem> items = subscription.createMonitoredItems(TimestampsToReturn.Both, requests, onItemCreated)
+            .get();
 
     for (UaMonitoredItem item : items) {
       NodeId tagId = item.getReadValueId().getNodeId();

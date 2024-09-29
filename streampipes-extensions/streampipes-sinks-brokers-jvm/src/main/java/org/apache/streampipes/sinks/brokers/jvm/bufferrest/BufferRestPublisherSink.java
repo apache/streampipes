@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.brokers.jvm.bufferrest;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -36,15 +35,15 @@ import org.apache.streampipes.sinks.brokers.jvm.bufferrest.buffer.MessageBuffer;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.io.Charsets;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.StringEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 public class BufferRestPublisherSink extends StreamPipesDataSink implements BufferListener {
 
@@ -62,25 +61,21 @@ public class BufferRestPublisherSink extends StreamPipesDataSink implements Buff
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.brokers.jvm.bufferrest", 0)
-        .category(DataSinkType.NOTIFICATION)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.withId(
-                KEY + FIELDS), PropertyScope.NONE)
-            .build())
-        .requiredTextParameter(Labels.from(KEY + URI, "REST Endpoint URI", "REST Endpoint URI"))
-        .requiredIntegerParameter(Labels.from(KEY + COUNT, "Buffered Event Count",
-                "Number (1 <= x <= 1000000) of incoming events before sending data on to the given REST endpoint"),
-            1, 1000000, 1)
-        .build();
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.bufferrest", 0)
+            .category(DataSinkType.NOTIFICATION).withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.withId(KEY + FIELDS),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredTextParameter(Labels.from(KEY + URI, "REST Endpoint URI", "REST Endpoint URI"))
+            .requiredIntegerParameter(Labels.from(KEY + COUNT, "Buffered Event Count",
+                    "Number (1 <= x <= 1000000) of incoming events before sending data on to the given REST endpoint"),
+                    1, 1000000, 1)
+            .build();
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
 
     var extractor = parameters.extractor();
     fieldsToSend = extractor.mappingPropertyValues(KEY + FIELDS);

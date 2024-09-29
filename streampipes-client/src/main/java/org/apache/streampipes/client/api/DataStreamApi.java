@@ -43,8 +43,7 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
 
   @Override
   public Optional<SpDataStream> get(String streamId) {
-    return getSingle(StreamPipesApiPath.fromBaseApiPath()
-        .addToPath(STREAMS_PATH).addToPath(streamId));
+    return getSingle(StreamPipesApiPath.fromBaseApiPath().addToPath(STREAMS_PATH).addToPath(streamId));
   }
 
   /**
@@ -60,7 +59,8 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
   /**
    * Directly install a new data stream
    *
-   * @param stream The data stream to add
+   * @param stream
+   *          The data stream to add
    */
   @Override
   public void create(SpDataStream stream) {
@@ -70,7 +70,8 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
   /**
    * Delete a data stream
    *
-   * @param streamId The elementId of the stream
+   * @param streamId
+   *          The elementId of the stream
    */
   @Override
   public void delete(String streamId) {
@@ -90,32 +91,33 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
   /**
    * Subscribe to a data stream
    *
-   * @param stream   The data stream to subscribe to
-   * @param callback The callback where events will be received
+   * @param stream
+   *          The data stream to subscribe to
+   * @param callback
+   *          The callback where events will be received
    */
   @Override
-  public ISubscription subscribe(SpDataStream stream,
-                                 EventProcessor callback) {
+  public ISubscription subscribe(SpDataStream stream, EventProcessor callback) {
     return new SubscriptionManager(stream.getEventGrounding(), callback).subscribe();
   }
 
   /**
    * Subscribe to a data stream
    *
-   * @param stream      The data stream to subscribe to
-   * @param kafkaConfig Additional kafka settings which will override the default value (see docs)
-   * @param callback    The callback where events will be received
+   * @param stream
+   *          The data stream to subscribe to
+   * @param kafkaConfig
+   *          Additional kafka settings which will override the default value (see docs)
+   * @param callback
+   *          The callback where events will be received
    */
   @Override
-  public ISubscription subscribe(SpDataStream stream,
-                                 IBrokerConfigOverride kafkaConfig,
-                                 EventProcessor callback) {
+  public ISubscription subscribe(SpDataStream stream, IBrokerConfigOverride kafkaConfig, EventProcessor callback) {
     return new SubscriptionManager(kafkaConfig, stream.getEventGrounding(), callback).subscribe();
   }
 
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
-    return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath(STREAMS_PATH);
+    return StreamPipesApiPath.fromBaseApiPath().addToPath(STREAMS_PATH);
   }
 }

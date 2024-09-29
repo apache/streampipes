@@ -33,32 +33,21 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-
 public class MergeBySchemaProcessor extends StreamPipesDataProcessor {
-
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.schema", 0)
-        .category(DataProcessorType.TRANSFORM)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .withLocales(Locales.EN)
-        .outputStrategy(OutputStrategies.keep())
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.schema", 0)
+            .category(DataProcessorType.TRANSFORM).withAssets(ExtensionAssetType.DOCUMENTATION).withLocales(Locales.EN)
+            .outputStrategy(OutputStrategies.keep())
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
 
     EventSchema schema1 = processorParams.getInputStreamParams().get(1).getSchemaInfo().getEventSchema();
     EventSchema schema2 = processorParams.getInputStreamParams().get(0).getSchemaInfo().getEventSchema();

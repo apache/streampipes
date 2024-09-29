@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.datalake;
 
 import java.util.ArrayList;
@@ -38,8 +37,7 @@ public class SpQueryResultBuilder {
 
   public SpQueryResult build() {
     // set the header of all data series
-    allDataSeries
-        .forEach(series -> series.setHeaders(spQueryResult.getHeaders()));
+    allDataSeries.forEach(series -> series.setHeaders(spQueryResult.getHeaders()));
     spQueryResult.setAllDataSeries(allDataSeries);
     spQueryResult.setTotal(allDataSeries.size());
     return spQueryResult;

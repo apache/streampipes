@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder.stream;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
@@ -29,13 +28,11 @@ public class DataStreamConfiguration implements IDataStreamConfiguration {
   private final Supplier<IStreamPipesDataStream> supplier;
   private final SpDataStream dataStream;
 
-  public static DataStreamConfiguration create(Supplier<IStreamPipesDataStream> supplier,
-                                               SpDataStream dataStream) {
+  public static DataStreamConfiguration create(Supplier<IStreamPipesDataStream> supplier, SpDataStream dataStream) {
     return new DataStreamConfiguration(supplier, dataStream);
   }
 
-  public DataStreamConfiguration(Supplier<IStreamPipesDataStream> supplier,
-                                 SpDataStream dataStream) {
+  public DataStreamConfiguration(Supplier<IStreamPipesDataStream> supplier, SpDataStream dataStream) {
     this.supplier = supplier;
     this.dataStream = dataStream;
   }

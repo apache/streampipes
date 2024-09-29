@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
@@ -33,12 +32,12 @@ import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WorkerAdministrationManagement {
 
@@ -49,21 +48,10 @@ public class WorkerAdministrationManagement {
 
   private final AdapterHealthCheck adapterHealthCheck;
 
-  public WorkerAdministrationManagement(
-      IAdapterStorage adapterStorage,
-      AdapterMetrics adapterMetrics,
-      AdapterResourceManager adapterResourceManager,
-      DataStreamResourceManager dataStreamResourceManager
-  ) {
-    this.adapterHealthCheck = new AdapterHealthCheck(
-        adapterStorage,
-        new AdapterMasterManagement(
-            adapterStorage,
-            adapterResourceManager,
-            dataStreamResourceManager,
-            adapterMetrics
-        )
-    );
+  public WorkerAdministrationManagement(IAdapterStorage adapterStorage, AdapterMetrics adapterMetrics,
+          AdapterResourceManager adapterResourceManager, DataStreamResourceManager dataStreamResourceManager) {
+    this.adapterHealthCheck = new AdapterHealthCheck(adapterStorage, new AdapterMasterManagement(adapterStorage,
+            adapterResourceManager, dataStreamResourceManager, adapterMetrics));
     this.adapterDescriptionStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
   }
 
@@ -94,27 +82,24 @@ public class WorkerAdministrationManagement {
     var installedAdapters = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage().findAll();
     var adminSid = new SpResourceManager().manageUsers().getAdminUser().getPrincipalId();
     installedAdapters.stream()
-        .filter(adapter -> tags.stream().anyMatch(tag -> tag.getValue().equals(adapter.getAppId())))
-        .forEach(adapter -> {
-          if (!AssetManager.existsAssetDir(adapter.getAppId())) {
-            try {
-              LOG.info("Updating assets for adapter {}", adapter.getAppId());
-              AssetManager.storeAsset(SpServiceUrlProvider.ADAPTER, adapter.getAppId());
-            } catch (IOException | NoServiceEndpointsAvailableException e) {
-              LOG.error(
-                  "Could not fetch asset for adapter {}, please try to manually update this adapter.",
-                  adapter.getAppId(),
-                  e);
-            }
-          }
-          var permissionStorage = CouchDbStorageManager.INSTANCE.getPermissionStorage();
-          var elementId = adapter.getElementId();
-          var permissions = permissionStorage.getUserPermissionsForObject(elementId);
-          if (permissions.isEmpty()) {
-            LOG.info("Adding default permission for adapter {}", adapter.getAppId());
-            new PermissionResourceManager()
-                .createDefault(elementId, AdapterDescription.class, adminSid, true);
-          }
-        });
+            .filter(adapter -> tags.stream().anyMatch(tag -> tag.getValue().equals(adapter.getAppId())))
+            .forEach(adapter -> {
+              if (!AssetManager.existsAssetDir(adapter.getAppId())) {
+                try {
+                  LOG.info("Updating assets for adapter {}", adapter.getAppId());
+                  AssetManager.storeAsset(SpServiceUrlProvider.ADAPTER, adapter.getAppId());
+                } catch (IOException | NoServiceEndpointsAvailableException e) {
+                  LOG.error("Could not fetch asset for adapter {}, please try to manually update this adapter.",
+                          adapter.getAppId(), e);
+                }
+              }
+              var permissionStorage = CouchDbStorageManager.INSTANCE.getPermissionStorage();
+              var elementId = adapter.getElementId();
+              var permissions = permissionStorage.getUserPermissionsForObject(elementId);
+              if (permissions.isEmpty()) {
+                LOG.info("Adding default permission for adapter {}", adapter.getAppId());
+                new PermissionResourceManager().createDefault(elementId, AdapterDescription.class, adminSid, true);
+              }
+            });
   }
 }

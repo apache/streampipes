@@ -18,17 +18,9 @@
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.commons;
 
 public enum ImagePropertyConstants {
-  BOX_WIDTH(Constants.boxWidth),
-  BOX_HEIGHT(Constants.boxHeight),
-  BOX_X(Constants.boxX),
-  BOX_Y(Constants.boxY),
-  SCORE(Constants.score),
-  CLASS_INDEX(Constants.classesindex),
-  IMAGE(Constants.image),
-  CLASS_NAME(Constants.classname),
-  TIMESTAMP(Constants.timestamp),
-  IMAGE_MAPPING(Constants.imageMapping);
-
+  BOX_WIDTH(Constants.boxWidth), BOX_HEIGHT(Constants.boxHeight), BOX_X(Constants.boxX), BOX_Y(Constants.boxY), SCORE(
+          Constants.score), CLASS_INDEX(Constants.classesindex), IMAGE(Constants.image), CLASS_NAME(
+                  Constants.classname), TIMESTAMP(Constants.timestamp), IMAGE_MAPPING(Constants.imageMapping);
 
   private final String property;
 

@@ -15,14 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.staticproperty;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
-@JsonSubTypes({
-    @JsonSubTypes.Type(RuntimeResolvableOneOfStaticProperty.class),
-})
+@JsonSubTypes({@JsonSubTypes.Type(RuntimeResolvableOneOfStaticProperty.class),})
 public class OneOfStaticProperty extends SelectionStaticProperty {
 
   private static final long serialVersionUID = 3483290363677184344L;
@@ -35,13 +32,13 @@ public class OneOfStaticProperty extends SelectionStaticProperty {
     super(staticPropertyType);
   }
 
-  public OneOfStaticProperty(StaticPropertyType staticPropertyType, String internalName,
-                             String label, String description) {
+  public OneOfStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label,
+          String description) {
     super(staticPropertyType, internalName, label, description);
   }
 
-  public OneOfStaticProperty(StaticPropertyType staticPropertyType, String internalName,
-                             String label, String description, boolean horizontalRendering) {
+  public OneOfStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label,
+          String description, boolean horizontalRendering) {
     super(staticPropertyType, internalName, label, description, horizontalRendering);
   }
 
@@ -61,6 +58,5 @@ public class OneOfStaticProperty extends SelectionStaticProperty {
   public void accept(StaticPropertyVisitor visitor) {
     visitor.visit(this);
   }
-
 
 }

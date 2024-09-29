@@ -15,12 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.monitoring;
 
 public enum SpLogLevel {
 
-  INFO,
-  WARN,
-  ERROR
+  INFO, WARN, ERROR
 }

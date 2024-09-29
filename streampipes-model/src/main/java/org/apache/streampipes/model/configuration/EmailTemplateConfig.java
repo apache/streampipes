@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.configuration;
 
 public class EmailTemplateConfig {
@@ -37,5 +36,3 @@ public class EmailTemplateConfig {
     this.template = template;
   }
 }
-
-

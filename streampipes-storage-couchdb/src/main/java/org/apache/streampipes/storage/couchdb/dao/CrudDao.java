@@ -19,11 +19,11 @@ package org.apache.streampipes.storage.couchdb.dao;
 
 import org.apache.streampipes.model.Tuple2;
 
-import org.lightcouch.CouchDbClient;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import org.lightcouch.CouchDbClient;
 
 public class CrudDao {
 
@@ -34,9 +34,7 @@ public class CrudDao {
   }
 
   public <T> Tuple2<Boolean, String> persist(T objToPersist, Class<T> clazz) {
-    DbCommand<Tuple2<Boolean, String>, T> cmd = new PersistCommand<>(couchDbClientSupplier,
-        objToPersist,
-        clazz);
+    DbCommand<Tuple2<Boolean, String>, T> cmd = new PersistCommand<>(couchDbClientSupplier, objToPersist, clazz);
     return cmd.execute();
   }
 
@@ -55,8 +53,7 @@ public class CrudDao {
     return cmd.execute();
   }
 
-  public <T> List<T> findAll(String viewName,
-                             Class<T> clazz) {
+  public <T> List<T> findAll(String viewName, Class<T> clazz) {
     DbCommand<List<T>, T> cmd = new FindAllCommand<>(couchDbClientSupplier, clazz, viewName);
     return cmd.execute();
   }

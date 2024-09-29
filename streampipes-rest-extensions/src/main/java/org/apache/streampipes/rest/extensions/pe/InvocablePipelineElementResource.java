@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions.pe;
 
 import org.apache.streampipes.commons.environment.Environments;
@@ -37,6 +36,9 @@ import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,15 +50,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-import java.util.Map;
-
-public abstract class InvocablePipelineElementResource<
-    K extends InvocableStreamPipesEntity,
-    T extends IStreamPipesPipelineElement<PcT>,
-    PcT extends IPipelineElementConfiguration<?, T>,
-    V extends IStreamPipesRuntime<T, K>,
-    W extends AbstractParameterExtractor<K>> extends AbstractPipelineElementResource<T> {
+public abstract class InvocablePipelineElementResource<K extends InvocableStreamPipesEntity, T extends IStreamPipesPipelineElement<PcT>, PcT extends IPipelineElementConfiguration<?, T>, V extends IStreamPipesRuntime<T, K>, W extends AbstractParameterExtractor<K>>
+        extends
+          AbstractPipelineElementResource<T> {
 
   private static final Logger LOG = LoggerFactory.getLogger(InvocablePipelineElementResource.class);
   protected Class<K> clazz;
@@ -69,12 +65,8 @@ public abstract class InvocablePipelineElementResource<
 
   protected abstract String getInstanceId(String uri, String elementId);
 
-  @PostMapping(
-      path = "{elementId}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Response> invokeRuntime(@PathVariable("elementId") String elementId,
-                                         @RequestBody K graph) {
+  @PostMapping(path = "{elementId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response> invokeRuntime(@PathVariable("elementId") String elementId, @RequestBody K graph) {
 
     if (isDebug()) {
       LOG.info("SP_DEBUG env variable is set - overriding broker hostname and port for local development");
@@ -88,15 +80,14 @@ public abstract class InvocablePipelineElementResource<
       if (!RunningInstances.INSTANCE.exists(runningInstanceId)) {
         Response resp = invokeRuntime(runningInstanceId, declarer, graph);
         if (!resp.isSuccess()) {
-          LOG.error("Could not invoke pipeline element {} due to the following error: {}",
-              graph.getName(),
-              resp.getOptionalMessage());
+          LOG.error("Could not invoke pipeline element {} due to the following error: {}", graph.getName(),
+                  resp.getOptionalMessage());
           RunningInstances.INSTANCE.remove(runningInstanceId);
         }
         return ok(resp);
       } else {
         LOG.info("Pipeline element {} with id {} seems to be already running, skipping invocation request.",
-            graph.getName(), runningInstanceId);
+                graph.getName(), runningInstanceId);
         Response resp = new Response(graph.getElementId(), true);
         return ok(resp);
       }
@@ -106,60 +97,47 @@ public abstract class InvocablePipelineElementResource<
     return ok(new Response(elementId, false, "Could not find the element with id: " + elementId));
   }
 
-  @PostMapping(
-      path = "{elementId}/configurations",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "{elementId}/configurations", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> fetchConfigurations(@PathVariable("elementId") String elementId,
-                                               @RequestBody RuntimeOptionsRequest req) {
+          @RequestBody RuntimeOptionsRequest req) {
 
     T declarer = getDeclarerById(elementId);
     RuntimeOptionsResponse responseOptions;
 
     try {
       if (declarer instanceof ResolvesContainerProvidedOptions) {
-        responseOptions =
-            new RuntimeResolvableRequestHandler().handleRuntimeResponse((ResolvesContainerProvidedOptions) declarer,
-                req);
+        responseOptions = new RuntimeResolvableRequestHandler()
+                .handleRuntimeResponse((ResolvesContainerProvidedOptions) declarer, req);
         return ok(responseOptions);
       } else if (declarer instanceof SupportsRuntimeConfig) {
-        responseOptions =
-            new RuntimeResolvableRequestHandler().handleRuntimeResponse((SupportsRuntimeConfig) declarer, req);
+        responseOptions = new RuntimeResolvableRequestHandler().handleRuntimeResponse((SupportsRuntimeConfig) declarer,
+                req);
         return ok(responseOptions);
       } else {
         return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
       }
     } catch (SpConfigurationException e) {
-      return ResponseEntity
-          .status(HttpStatus.SC_BAD_REQUEST)
-          .body(e);
+      return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(e);
     }
   }
 
-  @PostMapping(
-      path = "{elementId}/output",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "{elementId}/output", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> fetchOutputStrategy(@PathVariable("elementId") String elementId,
-                                               @RequestBody K runtimeOptionsRequest) {
+          @RequestBody K runtimeOptionsRequest) {
     try {
-      //I runtimeOptionsRequest = JacksonSerializer.getObjectMapper().readValue(payload, clazz);
-      ResolvesContainerProvidedOutputStrategy<K, W> resolvesOutput =
-          (ResolvesContainerProvidedOutputStrategy<K, W>)
-              getDeclarerById
-                  (elementId);
-      return ok(resolvesOutput.resolveOutputStrategy
-          (runtimeOptionsRequest, getExtractor(runtimeOptionsRequest)));
+      // I runtimeOptionsRequest = JacksonSerializer.getObjectMapper().readValue(payload, clazz);
+      ResolvesContainerProvidedOutputStrategy<K, W> resolvesOutput = (ResolvesContainerProvidedOutputStrategy<K, W>) getDeclarerById(
+              elementId);
+      return ok(resolvesOutput.resolveOutputStrategy(runtimeOptionsRequest, getExtractor(runtimeOptionsRequest)));
     } catch (SpRuntimeException | SpConfigurationException e) {
       return ok(new Response(elementId, false));
     }
   }
 
-
   // TODO move endpoint to /elementId/instances/runningInstanceId
   @DeleteMapping(path = "{elementId}/{runningInstanceId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Response> detach(@PathVariable("elementId") String elementId,
-                                         @PathVariable("runningInstanceId") String runningInstanceId) {
+          @PathVariable("runningInstanceId") String runningInstanceId) {
 
     IStreamPipesRuntime<?, ?> runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
 
@@ -187,9 +165,7 @@ public abstract class InvocablePipelineElementResource<
 
   protected abstract V getRuntime();
 
-  protected abstract Response invokeRuntime(String instanceId,
-                                            T pipelineElement,
-                                            K graph);
+  protected abstract Response invokeRuntime(String instanceId, T pipelineElement, K graph);
 
   private Boolean isDebug() {
     return Environments.getEnvironment().getSpDebug().getValueOrDefault();
@@ -199,4 +175,3 @@ public abstract class InvocablePipelineElementResource<
     return DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup();
   }
 }
-

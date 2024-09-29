@@ -19,6 +19,9 @@ package org.apache.streampipes.storage.couchdb.serializer;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
+import java.lang.reflect.MalformedParameterizedTypeException;
+import java.lang.reflect.Type;
+
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -28,15 +31,11 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import java.lang.reflect.MalformedParameterizedTypeException;
-import java.lang.reflect.Type;
-
 public class AdapterSerializer implements JsonSerializer<AdapterDescription>, JsonDeserializer<AdapterDescription> {
-
 
   @Override
   public AdapterDescription deserialize(JsonElement json, Type typeInfo, JsonDeserializationContext context)
-      throws JsonParseException {
+          throws JsonParseException {
     JsonObject jsonObject = json.getAsJsonObject();
     String type = jsonObject.get("field_type").getAsString();
     JsonElement element = jsonObject.get("properties");

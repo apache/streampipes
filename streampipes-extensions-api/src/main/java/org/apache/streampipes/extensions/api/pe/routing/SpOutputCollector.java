@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe.routing;
 
 import org.apache.streampipes.messaging.InternalEventProcessor;
@@ -23,8 +22,7 @@ import org.apache.streampipes.model.runtime.Event;
 
 import java.util.Map;
 
-public interface SpOutputCollector extends PipelineElementCollector<InternalEventProcessor<Map<String,
-    Object>>> {
+public interface SpOutputCollector extends PipelineElementCollector<InternalEventProcessor<Map<String, Object>>> {
 
   void collect(Event event);
 }

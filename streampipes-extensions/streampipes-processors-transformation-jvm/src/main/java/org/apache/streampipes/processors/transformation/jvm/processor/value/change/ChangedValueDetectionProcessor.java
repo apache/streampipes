@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.value.change;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -37,15 +36,14 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ChangedValueDetectionProcessor
-    extends StreamPipesDataProcessor {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class ChangedValueDetectionProcessor extends StreamPipesDataProcessor {
 
   private static Logger logger = LoggerFactory.getLogger(ChangedValueDetectionProcessor.class);
 
@@ -57,27 +55,22 @@ public class ChangedValueDetectionProcessor
 
   private HashMap<String, Object> dimensionsState = new HashMap<>();
 
-  //TODO: Change Icon
+  // TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.changed-value", 0)
-        .category(DataProcessorType.VALUE_OBSERVER)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                Labels.withId(COMPARE_FIELD_ID),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.append(EpProperties.timestampProperty(CHANGE_FIELD_NAME)))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.changed-value", 0)
+            .category(DataProcessorType.VALUE_OBSERVER).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId(COMPARE_FIELD_ID),
+                            PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies.append(EpProperties.timestampProperty(CHANGE_FIELD_NAME))).build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
 
     compareParameter = parameters.extractor().mappingPropertyValue(COMPARE_FIELD_ID);
   }
@@ -96,7 +89,7 @@ public class ChangedValueDetectionProcessor
     if (newObject != null) {
       if (!newObject.equals(lastObject)) {
         dimensionsState.put(dimensionKey, newObject);
-        //TODO: Better handling of multiple timestamps (if the field "change_detected" is already in the input)?
+        // TODO: Better handling of multiple timestamps (if the field "change_detected" is already in the input)?
         inputEvent.addField(CHANGE_FIELD_NAME, System.currentTimeMillis());
         collector.collect(inputEvent);
       }
@@ -108,13 +101,10 @@ public class ChangedValueDetectionProcessor
     List<EventProperty> eventProperties = inputEvent.getSchemaInfo().getEventSchema().getEventProperties();
 
     return eventProperties.stream()
-        .filter(ep ->
-          ep.getPropertyScope() != null
-          && ep.getPropertyScope().equals(PropertyScope.DIMENSION_PROPERTY.name())
-        )
-        .map(ep -> inputEvent.getFieldByRuntimeName(ep.getRuntimeName()).getRawValue().toString())
-        .sorted()
-        .collect(Collectors.joining());
+            .filter(ep -> ep.getPropertyScope() != null
+                    && ep.getPropertyScope().equals(PropertyScope.DIMENSION_PROPERTY.name()))
+            .map(ep -> inputEvent.getFieldByRuntimeName(ep.getRuntimeName()).getRawValue().toString()).sorted()
+            .collect(Collectors.joining());
   }
   @Override
   public void onDetach() throws SpRuntimeException {

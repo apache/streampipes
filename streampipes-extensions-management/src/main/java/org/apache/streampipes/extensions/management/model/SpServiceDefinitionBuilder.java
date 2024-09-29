@@ -27,11 +27,11 @@ import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvi
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.model.extensions.configuration.ConfigItem;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SpServiceDefinitionBuilder {
 
@@ -39,10 +39,8 @@ public class SpServiceDefinitionBuilder {
 
   private SpServiceDefinition serviceDefinition;
 
-  private SpServiceDefinitionBuilder(String serviceGroup,
-                                     String serviceName,
-                                     String serviceDescription,
-                                     Integer defaultPort) {
+  private SpServiceDefinitionBuilder(String serviceGroup, String serviceName, String serviceDescription,
+          Integer defaultPort) {
     this.serviceDefinition = new SpServiceDefinition();
     this.serviceDefinition.setServiceGroup(serviceGroup);
     this.serviceDefinition.setServiceName(serviceName);
@@ -50,10 +48,8 @@ public class SpServiceDefinitionBuilder {
     this.serviceDefinition.setDefaultPort(defaultPort);
   }
 
-  public static SpServiceDefinitionBuilder create(String serviceGroup,
-                                                  String serviceName,
-                                                  String serviceDescription,
-                                                  Integer defaultPort) {
+  public static SpServiceDefinitionBuilder create(String serviceGroup, String serviceName, String serviceDescription,
+          Integer defaultPort) {
     return new SpServiceDefinitionBuilder(serviceGroup, serviceName, serviceDescription, defaultPort);
   }
 
@@ -116,7 +112,6 @@ public class SpServiceDefinitionBuilder {
     return this;
   }
 
-
   /**
    * @deprecated data format registration is no longer required
    */
@@ -144,10 +139,11 @@ public class SpServiceDefinitionBuilder {
   }
 
   /**
-   * Include migrations in the service definition.
-   * <br>
+   * Include migrations in the service definition. <br>
    * Please refrain from providing {@link IModelMigrator}s with overlapping version definitions for one application id.
-   * @param migrations List of migrations to be registered
+   * 
+   * @param migrations
+   *          List of migrations to be registered
    * @return {@link SpServiceDefinitionBuilder}
    */
   public SpServiceDefinitionBuilder registerMigrators(IModelMigrator<?, ?>... migrations) {
@@ -162,7 +158,7 @@ public class SpServiceDefinitionBuilder {
     other.getKvConfigs().forEach(value -> {
       if (this.serviceDefinition.getKvConfigs().stream().anyMatch(c -> c.getKey().equals(value.getKey()))) {
         LOG.warn("Config key {} already exists and will be overridden by merge, which might lead to strange results.",
-            value.getKey());
+                value.getKey());
       }
       this.serviceDefinition.addConfig(value);
     });

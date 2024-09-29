@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.base;
-
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
@@ -26,14 +24,14 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.model.util.ServiceDefinitionUtil;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * named pipeline element, can be accessed via the URI provided in @RdfId
@@ -60,7 +58,6 @@ public abstract class NamedStreamPipesEntity implements Storable, Serializable {
   private List<String> includedAssets;
   private List<String> includedLocales;
   private boolean internallyManaged;
-
 
   public NamedStreamPipesEntity() {
     super();
@@ -193,9 +190,7 @@ public abstract class NamedStreamPipesEntity implements Storable, Serializable {
     this.elementId = elementId;
   }
 
-  public ExtensionItemDescription toExtensionDescription(boolean installed,
-                                                         boolean editable,
-                                                         boolean available) {
+  public ExtensionItemDescription toExtensionDescription(boolean installed, boolean editable, boolean available) {
     ExtensionItemDescription endpoint = new ExtensionItemDescription();
     endpoint.setDescription(getDescription());
     endpoint.setName(getName());

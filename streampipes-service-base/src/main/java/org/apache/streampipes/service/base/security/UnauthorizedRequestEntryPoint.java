@@ -15,18 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.base.security;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
 public class UnauthorizedRequestEntryPoint implements AuthenticationEntryPoint {
 
@@ -34,7 +33,7 @@ public class UnauthorizedRequestEntryPoint implements AuthenticationEntryPoint {
 
   @Override
   public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                       AuthenticationException e) throws IOException {
+          AuthenticationException e) throws IOException {
     LOG.error("Unauthorized request to {}", httpServletRequest.getServletPath());
 
     httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getLocalizedMessage());

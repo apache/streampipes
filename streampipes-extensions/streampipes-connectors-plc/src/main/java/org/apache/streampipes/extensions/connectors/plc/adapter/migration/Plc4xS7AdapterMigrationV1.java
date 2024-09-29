@@ -15,8 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.migration;
+
+import static org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter.CODE_TEMPLATE;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter.PLC_CODE_BLOCK;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter.PLC_NODES;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter.PLC_NODE_INPUT_ALTERNATIVES;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter.PLC_NODE_INPUT_CODE_BLOCK_ALTIVE;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter.PLC_NODE_INPUT_COLLECTION_ALTERNATIVE;
 
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.migration.IAdapterMigrator;
@@ -33,27 +39,16 @@ import org.apache.streampipes.sdk.helpers.Labels;
 
 import java.util.List;
 
-import static org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter.CODE_TEMPLATE;
-import static org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter.PLC_CODE_BLOCK;
-import static org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter.PLC_NODES;
-import static org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter.PLC_NODE_INPUT_ALTERNATIVES;
-import static org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter.PLC_NODE_INPUT_CODE_BLOCK_ALTIVE;
-import static org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter.PLC_NODE_INPUT_COLLECTION_ALTERNATIVE;
-
 public class Plc4xS7AdapterMigrationV1 implements IAdapterMigrator {
   @Override
   public ModelMigratorConfig config() {
-    return new ModelMigratorConfig(
-        "org.apache.streampipes.connect.iiot.adapters.plc4x.s7",
-        SpServiceTagPrefix.ADAPTER,
-        0,
-        1
-    );
+    return new ModelMigratorConfig("org.apache.streampipes.connect.iiot.adapters.plc4x.s7", SpServiceTagPrefix.ADAPTER,
+            0, 1);
   }
 
   @Override
-  public MigrationResult<AdapterDescription> migrate(AdapterDescription element,
-                                                     IStaticPropertyExtractor extractor) throws RuntimeException {
+  public MigrationResult<AdapterDescription> migrate(AdapterDescription element, IStaticPropertyExtractor extractor)
+          throws RuntimeException {
     var newConfigs = new java.util.ArrayList<>(element.getConfig().stream().map(config -> {
       if (isCollectionConfig(config)) {
         return modifyCollection((CollectionStaticProperty) config);
@@ -71,12 +66,9 @@ public class Plc4xS7AdapterMigrationV1 implements IAdapterMigrator {
   private StaticProperty modifyCollection(CollectionStaticProperty collectionConfig) {
 
     var alternatives = List.of(
-        Alternatives.from(Labels.withId(PLC_NODE_INPUT_COLLECTION_ALTERNATIVE),
-            collectionConfig,
-            true),
-        Alternatives.from(Labels.withId(PLC_NODE_INPUT_CODE_BLOCK_ALTIVE),
-            StaticProperties.codeStaticProperty(Labels.withId(PLC_CODE_BLOCK), CodeLanguage.None, CODE_TEMPLATE))
-    );
+            Alternatives.from(Labels.withId(PLC_NODE_INPUT_COLLECTION_ALTERNATIVE), collectionConfig, true),
+            Alternatives.from(Labels.withId(PLC_NODE_INPUT_CODE_BLOCK_ALTIVE), StaticProperties
+                    .codeStaticProperty(Labels.withId(PLC_CODE_BLOCK), CodeLanguage.None, CODE_TEMPLATE)));
 
     return StaticProperties.alternatives(Labels.withId(PLC_NODE_INPUT_ALTERNATIVES), alternatives);
   }

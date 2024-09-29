@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
@@ -63,9 +62,9 @@ public class MqttConnectUtils {
 
   public static StaticPropertyAlternative getAlternativesTwo() {
     return Alternatives.from(Labels.withId(USERNAME_ACCESS),
-        StaticProperties.group(Labels.withId(USERNAME_GROUP),
-            StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
-            StaticProperties.secretValue(Labels.withId(PASSWORD))));
+            StaticProperties.group(Labels.withId(USERNAME_GROUP),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
+                    StaticProperties.secretValue(Labels.withId(PASSWORD))));
 
   }
 

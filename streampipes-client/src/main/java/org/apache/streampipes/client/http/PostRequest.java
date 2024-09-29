@@ -29,27 +29,21 @@ public abstract class PostRequest<K, V, T> extends HttpRequest<K, V, T> {
   private K body;
   private final boolean withBody;
 
-  public PostRequest(StreamPipesClientConfig clientConfig,
-                     StreamPipesApiPath apiPath,
-                     Serializer<K, V, T> serializer,
-                     K body) {
+  public PostRequest(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath, Serializer<K, V, T> serializer,
+          K body) {
     super(clientConfig, apiPath, serializer);
     this.body = body;
     this.withBody = true;
   }
 
-  public PostRequest(StreamPipesClientConfig clientConfig,
-                     StreamPipesApiPath apiPath,
-                     Serializer<K, V, T> serializer) {
+  public PostRequest(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath, Serializer<K, V, T> serializer) {
     super(clientConfig, apiPath, serializer);
     this.withBody = false;
   }
 
   @Override
   protected Request makeRequest(Serializer<K, V, T> serializer) {
-    Request request = Request
-        .Post(makeUrl())
-        .setHeaders(standardPostHeaders());
+    Request request = Request.Post(makeUrl()).setHeaders(standardPostHeaders());
 
     if (withBody) {
       addBody(request, serializer);

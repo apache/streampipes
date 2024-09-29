@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.jts.helper;
 
 import org.locationtech.jts.geom.Coordinate;
@@ -33,15 +32,16 @@ public class SpTrajectoryBuilder {
   /**
    * Constructor of SpTrajectory
    *
-   * @param numberSubPoints Integer number of allowed sub-points of the trajectory
-   * @param description     Text Description of the single Trajectory
+   * @param numberSubPoints
+   *          Integer number of allowed sub-points of the trajectory
+   * @param description
+   *          Text Description of the single Trajectory
    */
   public SpTrajectoryBuilder(int numberSubPoints, String description) {
     this.numberSubPoints = numberSubPoints;
     this.description = description;
     this.coordinateList = new CoordinateList();
   }
-
 
   /**
    * getter method for description text
@@ -52,14 +52,15 @@ public class SpTrajectoryBuilder {
     return description;
   }
 
-
   /**
-   * Adds a Point to the trajectory object and also handle removes old point
-   * if {link #numberSubPoints} threshold is exceeded.
+   * Adds a Point to the trajectory object and also handle removes old point if {link #numberSubPoints} threshold is
+   * exceeded.
    *
-   * @param point {@link org.locationtech.jts.geom.Point}
-   * @param m     stores an extra double value to the subpoint of a
-   *              trajectory {@link org.locationtech.jts.geom.CoordinateXYM#M}
+   * @param point
+   *          {@link org.locationtech.jts.geom.Point}
+   * @param m
+   *          stores an extra double value to the subpoint of a trajectory
+   *          {@link org.locationtech.jts.geom.CoordinateXYM#M}
    */
   public void addPointToTrajectory(Point point, Double m) {
     coordinateList.add(createSingleTrajectoryCoordinate(point, m));
@@ -68,21 +69,20 @@ public class SpTrajectoryBuilder {
     }
   }
 
-
   /**
-   * returns a JTS LineString geometry from the trajectory object. LineString only stores the point
-   * geometry without M value. The lineString is oriented to the trajectory direction. This means: the
-   * newest point is always the last point and has the highest subpoint index. The First point is the
-   * oldest point with the lowest index [0]
+   * returns a JTS LineString geometry from the trajectory object. LineString only stores the point geometry without M
+   * value. The lineString is oriented to the trajectory direction. This means: the newest point is always the last
+   * point and has the highest subpoint index. The First point is the oldest point with the lowest index [0]
    *
-   * @param factory a Geometry factory for creating the lineString with the same precision and CRS and should be
-   *                the factory of the input point geometry
+   * @param factory
+   *          a Geometry factory for creating the lineString with the same precision and CRS and should be the factory
+   *          of the input point geometry
    * @return JTS LineString JTS LineString
    */
   public LineString returnAsLineString(GeometryFactory factory) {
     LineString geom;
     if (coordinateList.size() > 1) {
-      //only linestring if more than 2 points.
+      // only linestring if more than 2 points.
       // reverse output of linestring. so last added point is first
       geom = factory.createLineString(coordinateList.toCoordinateArray());
     } else {
@@ -90,7 +90,6 @@ public class SpTrajectoryBuilder {
     }
     return geom;
   }
-
 
   /**
    * removes the oldest point (Index 0) from the CoordinateList object.
@@ -100,12 +99,14 @@ public class SpTrajectoryBuilder {
   }
 
   /**
-   * Creates a Coordinate object with X, Y and M Value to be stored later directly in the trajectory
-   * object. Should be used always used if adding a subpoint to the trajectory list
+   * Creates a Coordinate object with X, Y and M Value to be stored later directly in the trajectory object. Should be
+   * used always used if adding a subpoint to the trajectory list
    *
-   * @param geom Point geometry, which coordinates will be added to the trajectory list
-   * @param m    Double M value, which will be used to store as extra parameter  in the trajectory list
-   *             for additional calculations
+   * @param geom
+   *          Point geometry, which coordinates will be added to the trajectory list
+   * @param m
+   *          Double M value, which will be used to store as extra parameter in the trajectory list for additional
+   *          calculations
    * @return CoordinateXYM coordinate object
    */
   private Coordinate createSingleTrajectoryCoordinate(Point geom, Double m) {
@@ -113,5 +114,3 @@ public class SpTrajectoryBuilder {
     return coordinate;
   }
 }
-
-

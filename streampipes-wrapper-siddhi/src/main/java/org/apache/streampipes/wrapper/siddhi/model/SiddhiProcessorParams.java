@@ -35,11 +35,9 @@ public class SiddhiProcessorParams {
   private final List<String> outputEventKeys;
   private final List<EventPropertyDef> outTypeInfo;
 
-  public SiddhiProcessorParams(IDataProcessorParameters params,
-                               List<String> inputStreamNames,
-                               Map<String, List<EventPropertyDef>> eventTypeInfo,
-                               List<String> outputEventKeys,
-                               List<EventPropertyDef> outTypeInfo) {
+  public SiddhiProcessorParams(IDataProcessorParameters params, List<String> inputStreamNames,
+          Map<String, List<EventPropertyDef>> eventTypeInfo, List<String> outputEventKeys,
+          List<EventPropertyDef> outTypeInfo) {
     this.params = params;
     this.inputStreamNames = inputStreamNames;
     this.eventTypeInfo = eventTypeInfo;
@@ -64,7 +62,7 @@ public class SiddhiProcessorParams {
   }
 
   public List<Tuple2<SiddhiStreamSelector, String>> getAllInputFieldNames() {
-    //return this.params.getInEventTypes()
+    // return this.params.getInEventTypes()
     return null;
   }
 
@@ -74,20 +72,14 @@ public class SiddhiProcessorParams {
 
     if (outputEventKeys.size() > 0) {
       for (int i = 0; i < outputEventKeys.size() - 1; i++) {
-        selectString
-            .append(SiddhiConstants.FIRST_STREAM_PREFIX)
-            .append(outputEventKeys.get(i))
-            .append(",");
+        selectString.append(SiddhiConstants.FIRST_STREAM_PREFIX).append(outputEventKeys.get(i)).append(",");
       }
-      selectString
-          .append(SiddhiConstants.FIRST_STREAM_PREFIX)
-          .append(outputEventKeys.get(outputEventKeys.size() - 1));
+      selectString.append(SiddhiConstants.FIRST_STREAM_PREFIX).append(outputEventKeys.get(outputEventKeys.size() - 1));
     }
     return selectString.toString();
   }
 
-  public String getCustomOutputSelectStatement(DataProcessorInvocation invocation,
-                                               String eventName) {
+  public String getCustomOutputSelectStatement(DataProcessorInvocation invocation, String eventName) {
     StringBuilder selectString = new StringBuilder();
     selectString.append(SiddhiConstants.SELECT).append(" ");
 

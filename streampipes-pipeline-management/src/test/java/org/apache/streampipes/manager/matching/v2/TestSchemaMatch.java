@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2;
-
 
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
@@ -27,12 +25,12 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.Geo;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestSchemaMatch {
 

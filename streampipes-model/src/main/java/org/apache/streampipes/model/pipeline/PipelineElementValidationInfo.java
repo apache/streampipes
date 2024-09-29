@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.pipeline;
 
 public class PipelineElementValidationInfo {
@@ -23,8 +22,7 @@ public class PipelineElementValidationInfo {
   private ValidationInfoLevel level;
   private String message;
 
-  public PipelineElementValidationInfo(ValidationInfoLevel level,
-                                       String message) {
+  public PipelineElementValidationInfo(ValidationInfoLevel level, String message) {
     this.level = level;
     this.message = message;
   }

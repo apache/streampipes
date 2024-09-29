@@ -21,28 +21,24 @@ import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
+import java.io.IOException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.client.fluent.Request;
-
-import java.io.IOException;
 
 public class GetRequest<K, V> extends HttpRequest<Void, K, V> {
 
   private Class<K> targetClass;
 
-  public GetRequest(StreamPipesClientConfig clientConfig,
-                    StreamPipesApiPath apiPath,
-                    Class<K> targetClass,
-                    Serializer<Void, K, V> serializer) {
+  public GetRequest(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath, Class<K> targetClass,
+          Serializer<Void, K, V> serializer) {
     super(clientConfig, apiPath, serializer);
     this.targetClass = targetClass;
   }
 
   @Override
   protected Request makeRequest(Serializer<Void, K, V> serializer) {
-    return Request
-        .Get(makeUrl())
-        .setHeaders(standardJsonHeaders());
+    return Request.Get(makeUrl()).setHeaders(standardJsonHeaders());
   }
 
   @Override

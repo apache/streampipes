@@ -30,12 +30,9 @@ public class StaticPropertyAlternatives extends StaticProperty {
 
   public StaticPropertyAlternatives(StaticPropertyAlternatives other) {
     super(other);
-//    this.alternatives = new Cloner().staticProperties()
-    this.alternatives = other
-        .getAlternatives()
-        .stream()
-        .map(StaticPropertyAlternative::new)
-        .collect(Collectors.toList());
+    // this.alternatives = new Cloner().staticProperties()
+    this.alternatives = other.getAlternatives().stream().map(StaticPropertyAlternative::new)
+            .collect(Collectors.toList());
   }
 
   public StaticPropertyAlternatives(String internalName, String label, String description) {
@@ -71,8 +68,8 @@ public class StaticPropertyAlternatives extends StaticProperty {
       return false;
     }
 
-    for (var i = 0; i < alternatives.size(); i++){
-      if (!alternatives.get(i).equals(that.alternatives.get(i))){
+    for (var i = 0; i < alternatives.size(); i++) {
+      if (!alternatives.get(i).equals(that.alternatives.get(i))) {
         return false;
       }
     }

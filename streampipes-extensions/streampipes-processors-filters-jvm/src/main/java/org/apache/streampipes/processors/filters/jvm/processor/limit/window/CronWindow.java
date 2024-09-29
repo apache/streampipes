@@ -27,9 +27,7 @@ import org.quartz.Trigger;
 public class CronWindow extends ScheduleWindow {
   private String cronExpression;
 
-  public CronWindow(String cronExpression,
-                    EventSelection eventSelection,
-                    SpOutputCollector outputCollector) {
+  public CronWindow(String cronExpression, EventSelection eventSelection, SpOutputCollector outputCollector) {
     super(eventSelection, outputCollector);
     this.cronExpression = cronExpression;
   }

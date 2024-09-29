@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.monitoring;
 
 import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
@@ -38,25 +37,20 @@ public enum SpMonitoringManager {
     this.metricsInfos = new HashMap<>();
   }
 
-  public void addErrorMessage(String resourceId,
-                              SpLogEntry errorMessageEntry) {
+  public void addErrorMessage(String resourceId, SpLogEntry errorMessageEntry) {
     if (!logInfos.containsKey(resourceId)) {
       logInfos.put(resourceId, new FixedSizeList<>(100));
     }
     this.logInfos.get(resourceId).add(errorMessageEntry);
   }
 
-  public void increaseInCounter(String resourceId,
-                                String sourceInfo,
-                                long timestamp) {
+  public void increaseInCounter(String resourceId, String sourceInfo, long timestamp) {
     var currentEntry = getMetricsEntry(resourceId, timestamp);
     currentEntry.addInMetrics(sourceInfo, timestamp);
     this.metricsInfos.put(resourceId, currentEntry);
   }
 
-
-  public void increaseOutCounter(String resourceId,
-                                 long timestamp) {
+  public void increaseOutCounter(String resourceId, long timestamp) {
     var currentEntry = getMetricsEntry(resourceId, timestamp);
     currentEntry.addOutMetrics(timestamp);
     this.metricsInfos.put(resourceId, currentEntry);
@@ -77,8 +71,7 @@ public enum SpMonitoringManager {
     this.resetLogs(resourceId);
   }
 
-  public SpMetricsEntry getMetricsEntry(String resourceId,
-                                        long timestamp) {
+  public SpMetricsEntry getMetricsEntry(String resourceId, long timestamp) {
     checkAndPrepareMetrics(resourceId);
     var currentEntry = this.metricsInfos.get(resourceId);
     currentEntry.setLastTimestamp(timestamp);
@@ -97,8 +90,7 @@ public enum SpMonitoringManager {
 
   private Map<String, List<SpLogEntry>> makeLogInfos() {
     var logEntries = new HashMap<String, List<SpLogEntry>>();
-    this.logInfos.forEach((key, value) ->
-        logEntries.put(key, cloneList(value.getAllItems())));
+    this.logInfos.forEach((key, value) -> logEntries.put(key, cloneList(value.getAllItems())));
 
     return logEntries;
   }
@@ -106,7 +98,6 @@ public enum SpMonitoringManager {
   private List<SpLogEntry> cloneList(List<SpLogEntry> allItems) {
     return allItems.stream().map(SpLogEntry::new).toList();
   }
-
 
   private void checkAndPrepareMetrics(String resourceId) {
     if (!metricsInfos.containsKey(resourceId)) {

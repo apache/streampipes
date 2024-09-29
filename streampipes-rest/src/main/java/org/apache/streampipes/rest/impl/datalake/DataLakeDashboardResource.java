@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.datalake;
-
 
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.dashboard.DashboardModel;

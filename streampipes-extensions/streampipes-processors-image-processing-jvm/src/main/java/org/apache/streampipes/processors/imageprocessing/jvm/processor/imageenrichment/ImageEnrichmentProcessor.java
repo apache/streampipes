@@ -57,22 +57,17 @@ public class ImageEnrichmentProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(ID, 1)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .category(DataProcessorType.IMAGE_PROCESSING)
-        .requiredStream(RequiredBoxStream.getBoxStream())
-        .outputStrategy(OutputStrategies.fixed(
-            EpProperties.timestampProperty("timestamp"),
-            EpProperties.stringEp(Labels.empty(), ImagePropertyConstants.IMAGE.getProperty(),
-                "https://image.com")
-        ))
-        .build();
+    return ProcessingElementBuilder.create(ID, 1).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN).category(DataProcessorType.IMAGE_PROCESSING)
+            .requiredStream(RequiredBoxStream.getBoxStream())
+            .outputStrategy(OutputStrategies.fixed(EpProperties.timestampProperty("timestamp"), EpProperties
+                    .stringEp(Labels.empty(), ImagePropertyConstants.IMAGE.getProperty(), "https://image.com")))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     ProcessingElementParameterExtractor extractor = parameters.extractor();
     this.imageProperty = extractor.mappingPropertyValue(RequiredBoxStream.IMAGE_PROPERTY);
     this.boxArray = extractor.mappingPropertyValue(RequiredBoxStream.BOX_ARRAY_PROPERTY);
@@ -99,7 +94,7 @@ public class ImageEnrichmentProcessor extends StreamPipesDataProcessor {
         // Box
         graph.setStroke(new BasicStroke(5));
         graph.draw(new Rectangle(boxCoordinates.getX(), boxCoordinates.getY(), boxCoordinates.getWidth(),
-            boxCoordinates.getHeight()));
+                boxCoordinates.getHeight()));
 
         // Label
         String str = boxCoordinates.getClassesindex() + ": " + boxCoordinates.getScore();
@@ -107,10 +102,8 @@ public class ImageEnrichmentProcessor extends StreamPipesDataProcessor {
         FontMetrics fm = graph.getFontMetrics();
         Rectangle2D rect = fm.getStringBounds(str, graph);
 
-        graph.fillRect(boxCoordinates.getX(),
-            boxCoordinates.getY() - fm.getAscent(),
-            (int) rect.getWidth(),
-            (int) rect.getHeight());
+        graph.fillRect(boxCoordinates.getX(), boxCoordinates.getY() - fm.getAscent(), (int) rect.getWidth(),
+                (int) rect.getHeight());
 
         graph.setColor(Color.white);
         graph.drawString(str, boxCoordinates.getX(), boxCoordinates.getY());
@@ -124,7 +117,7 @@ public class ImageEnrichmentProcessor extends StreamPipesDataProcessor {
         Event outEvent = new Event();
         outEvent.addField("timestamp", System.currentTimeMillis());
         outEvent.addField(ImagePropertyConstants.IMAGE.getProperty(),
-            Base64.getEncoder().encodeToString(finalImage.get()));
+                Base64.getEncoder().encodeToString(finalImage.get()));
         out.collect(outEvent);
       }
     }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.adapter;
 
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
@@ -23,12 +22,12 @@ import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AdapterDescriptionTest {
 
@@ -55,19 +54,16 @@ public class AdapterDescriptionTest {
 
   @Test
   public void getValueRules() {
-    Assertions.assertEquals(2,
-                            adapterDescription.getValueRules().size());
+    Assertions.assertEquals(2, adapterDescription.getValueRules().size());
   }
 
   @Test
   public void getStreamRules() {
-    Assertions.assertEquals(0,
-                            adapterDescription.getStreamRules().size());
+    Assertions.assertEquals(0, adapterDescription.getStreamRules().size());
   }
 
   @Test
   public void getSchemaRules() {
-    Assertions.assertEquals(7,
-                            adapterDescription.getSchemaRules().size());
+    Assertions.assertEquals(7, adapterDescription.getSchemaRules().size());
   }
 }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.jdbcclient.model;
 
 public class DbDescription {
@@ -23,12 +22,10 @@ public class DbDescription {
   private final JdbcConnectionParameters connectionParameters;
   protected final SupportedDbEngines dbEngine;
 
-  public DbDescription(JdbcConnectionParameters connectionParameters,
-                       SupportedDbEngines dbEngine) {
+  public DbDescription(JdbcConnectionParameters connectionParameters, SupportedDbEngines dbEngine) {
     this.connectionParameters = connectionParameters;
     this.dbEngine = dbEngine;
   }
-
 
   public String getAllowedRegEx() {
     return dbEngine.getAllowedRegex();

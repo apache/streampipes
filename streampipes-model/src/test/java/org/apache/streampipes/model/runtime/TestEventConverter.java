@@ -17,10 +17,10 @@
  */
 package org.apache.streampipes.model.runtime;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Map;
 
 public class TestEventConverter {
 
@@ -31,8 +31,7 @@ public class TestEventConverter {
 
     Map<String, Object> convertedMap = new EventConverter(event).toMap();
 
-    Assertions.assertEquals(1,
-                            convertedMap.keySet().size());
+    Assertions.assertEquals(1, convertedMap.keySet().size());
     Assertions.assertEquals(1, convertedMap.get("timestamp"));
   }
 
@@ -43,8 +42,7 @@ public class TestEventConverter {
 
     Map<String, Object> convertedMap = new EventConverter(event).toMap();
 
-    Assertions.assertEquals(2,
-                            convertedMap.keySet().size());
+    Assertions.assertEquals(2, convertedMap.keySet().size());
     Assertions.assertEquals(1, convertedMap.get("timestamp"));
     Assertions.assertTrue(convertedMap.containsKey("nested"));
     Assertions.assertTrue(Map.class.isInstance(convertedMap.get("nested")));

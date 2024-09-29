@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;

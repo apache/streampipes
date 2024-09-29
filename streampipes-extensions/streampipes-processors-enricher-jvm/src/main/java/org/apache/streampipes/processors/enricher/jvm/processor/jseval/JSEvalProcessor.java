@@ -34,12 +34,12 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.proxy.ProxyObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class JSEvalProcessor extends StreamPipesDataProcessor {
 
@@ -50,24 +50,17 @@ public class JSEvalProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.enricher.jvm.jseval", 0)
-        .category(DataProcessorType.SCRIPTING)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredCodeblock(Labels.withId(JS_FUNCTION), CodeLanguage.Javascript)
-        .outputStrategy(OutputStrategies.userDefined())
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.jseval", 0)
+            .category(DataProcessorType.SCRIPTING).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredCodeblock(Labels.withId(JS_FUNCTION), CodeLanguage.Javascript)
+            .outputStrategy(OutputStrategies.userDefined()).build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     polyglot = Context.create();
     String code = parameters.extractor().codeblockValue(JS_FUNCTION);
     function = polyglot.eval("js", "(" + code + ")");

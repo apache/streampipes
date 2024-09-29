@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.api;
 
 /**
@@ -40,7 +39,8 @@ public interface EndpointSelectable {
   /**
    * Sets the URL of the currently selected endpoint.
    *
-   * @param selectedEndpointUrl new URL.
+   * @param selectedEndpointUrl
+   *          new URL.
    */
   void setSelectedEndpointUrl(String selectedEndpointUrl);
 
@@ -51,17 +51,17 @@ public interface EndpointSelectable {
    */
   String getCorrespondingPipeline();
 
-
   /**
    * Sets the ID of the corresponding pipeline.
    *
-   * @param pipelineId The ID of the pipeline to set as corresponding to the currently selected endpoint.
+   * @param pipelineId
+   *          The ID of the pipeline to set as corresponding to the currently selected endpoint.
    */
   void setCorrespondingPipeline(String pipelineId);
 
   /**
-   * Gets the path detach that can be called to detatch the endpoint.
-   * When an endpoint is detached it usally is also sopped
+   * Gets the path detach that can be called to detatch the endpoint. When an endpoint is detached it usally is also
+   * sopped
    *
    * @return detach path.
    */

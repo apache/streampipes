@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.staticproperty;
 
 import java.util.ArrayList;
@@ -37,8 +36,7 @@ public class MappingPropertyNary extends MappingProperty {
     this.selectedProperties = other.getSelectedProperties();
   }
 
-  public MappingPropertyNary(String requirementSelector, String internalName, String label, String
-      description) {
+  public MappingPropertyNary(String requirementSelector, String internalName, String label, String description) {
     super(StaticPropertyType.MappingPropertyNary, requirementSelector, internalName, label, description);
     this.selectedProperties = new ArrayList<>();
   }

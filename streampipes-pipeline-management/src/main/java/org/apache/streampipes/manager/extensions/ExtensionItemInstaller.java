@@ -34,8 +34,8 @@ public class ExtensionItemInstaller {
     this.urlProvider = urlProvider;
   }
 
-  public Message installExtension(ExtensionItemInstallationRequest req,
-                                  String principalSid) throws IOException, SepaParseException {
+  public Message installExtension(ExtensionItemInstallationRequest req, String principalSid)
+          throws IOException, SepaParseException {
     var descriptionUrl = getDescriptionUrl(req);
     var description = fetchDescription(descriptionUrl);
     return new TypeExtractor(description).getTypeVerifier().verifyAndAdd(principalSid, req.publicElement());

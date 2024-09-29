@@ -17,27 +17,25 @@
  */
 package org.apache.streampipes.manager.selector;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 public class TestSelectorGenerator {
 
   @Test
   public void test() {
-    List<String> propertySelectors = new PropertySelectorGenerator(TestSelectorUtils.makeSchema()
-        , false)
-        .generateSelectors();
+    List<String> propertySelectors = new PropertySelectorGenerator(TestSelectorUtils.makeSchema(), false)
+            .generateSelectors();
 
     Assertions.assertEquals(10, propertySelectors.size());
   }
 
   @Test
   public void testTwoSchemas() {
-    List<String> propertySelectors = new PropertySelectorGenerator(TestSelectorUtils.makeSchema()
-        , TestSelectorUtils.makeSchema(), false)
-        .generateSelectors();
+    List<String> propertySelectors = new PropertySelectorGenerator(TestSelectorUtils.makeSchema(),
+            TestSelectorUtils.makeSchema(), false).generateSelectors();
 
     Assertions.assertEquals(20, propertySelectors.size());
   }

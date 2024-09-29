@@ -46,7 +46,6 @@ import org.opengis.util.FactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class BufferPointProcessor extends StreamPipesDataProcessor {
   public static final String GEOM_KEY = "geometry-key";
   public static final String EPSG_KEY = "epsg-key";
@@ -66,61 +65,35 @@ public class BufferPointProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.bufferpoint", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON, "output.png")
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReq("http://www.opengis.net/ont/geosparql#Geometry"),
-                Labels.withId(GEOM_KEY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
-                Labels.withId(EPSG_KEY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .outputStrategy(OutputStrategies.append(
-                EpProperties.stringEp(
-                    Labels.withId(GEOM_KEY),
-                    GEOM_RUNTIME,
-                    "http://www.opengis.net/ont/geosparql#Geometry"
-                ),
-                EpProperties.numberEp(
-                    Labels.withId(EPSG_KEY),
-                    EPSG_RUNTIME,
-                    "http://data.ign.fr/def/ignf#CartesianCS"
-                )
-            )
-        )
-        .requiredSingleValueSelection(
-            Labels.withId(CAP_KEY),
-            Options.from(
-                CapStyle.Square.name(),
-                CapStyle.Round.name())
-        )
-        .requiredIntegerParameter(
-            Labels.withId(SEGMENTS_KEY),
-            8
-        )
-        .requiredFloatParameter(
-            Labels.withId(SIMPLIFY_FACTOR_KEY),
-            0.01f
-        )
-        .requiredFloatParameter(
-            Labels.withId(DISTANCE_KEY)
-        )
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.jts.processor.bufferpoint", 0)
+            .category(DataProcessorType.GEO)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON, "output.png").withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.domainPropertyReq("http://www.opengis.net/ont/geosparql#Geometry"),
+                            Labels.withId(GEOM_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
+                            Labels.withId(EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .outputStrategy(OutputStrategies.append(
+                    EpProperties.stringEp(Labels.withId(GEOM_KEY), GEOM_RUNTIME,
+                            "http://www.opengis.net/ont/geosparql#Geometry"),
+                    EpProperties.numberEp(Labels.withId(EPSG_KEY), EPSG_RUNTIME,
+                            "http://data.ign.fr/def/ignf#CartesianCS")))
+            .requiredSingleValueSelection(Labels.withId(CAP_KEY),
+                    Options.from(CapStyle.Square.name(), CapStyle.Round.name()))
+            .requiredIntegerParameter(Labels.withId(SEGMENTS_KEY), 8)
+            .requiredFloatParameter(Labels.withId(SIMPLIFY_FACTOR_KEY), 0.01f)
+            .requiredFloatParameter(Labels.withId(DISTANCE_KEY)).build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
 
     try {
-      if (SpReprojectionBuilder.isSisConfigurationValid()){
+      if (SpReprojectionBuilder.isSisConfigurationValid()) {
         LOG.info("SIS DB Settings successful checked ");
       } else {
         LOG.warn("The required EPSG database is not imported");
@@ -151,7 +124,6 @@ public class BufferPointProcessor extends StreamPipesDataProcessor {
     String geom = event.getFieldBySelector(geometryMapper).getAsPrimitive().getAsString();
     Integer epsg = event.getFieldBySelector(epsgMapper).getAsPrimitive().getAsInt();
     Geometry geometry = SpGeometryBuilder.createSPGeom(geom, epsg);
-
 
     if (geometry instanceof Point) {
       Geometry buffer = SpBufferBuilder.createSpBuffer((Point) geometry, distance, capStyle, segments, simplifyFactor);

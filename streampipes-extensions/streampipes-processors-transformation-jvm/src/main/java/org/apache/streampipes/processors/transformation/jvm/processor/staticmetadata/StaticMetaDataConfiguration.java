@@ -15,12 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.staticmetadata;
 
-public record StaticMetaDataConfiguration(
-    String runtimeName,
-    String value,
-    String dataType
-) {
+public record StaticMetaDataConfiguration(String runtimeName, String value, String dataType) {
 }

@@ -15,36 +15,37 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.iotdb;
 
-import org.apache.iotdb.isession.pool.SessionDataSetWrapper;
-import org.apache.iotdb.rpc.IoTDBConnectionException;
-import org.apache.iotdb.rpc.StatementExecutionException;
-import org.apache.iotdb.session.pool.SessionPool;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.SpQueryResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Optional;
+
+import org.apache.iotdb.isession.pool.SessionDataSetWrapper;
+import org.apache.iotdb.rpc.IoTDBConnectionException;
+import org.apache.iotdb.rpc.StatementExecutionException;
+import org.apache.iotdb.session.pool.SessionPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DataExplorerIotDbQueryExecutor extends DataExplorerQueryExecutor<String, SessionDataSetWrapper> {
 
   private final SessionPool sessionPool;
 
-  public DataExplorerIotDbQueryExecutor(SessionPool sessionPool){
+  public DataExplorerIotDbQueryExecutor(SessionPool sessionPool) {
     this.sessionPool = sessionPool;
   }
 
   private static final Logger LOG = LoggerFactory.getLogger(DataExplorerIotDbQueryExecutor.class);
   @Override
-  protected SpQueryResult postQuery(SessionDataSetWrapper queryResult, Optional<String> forIdOpt, boolean ignoreMissingValues) {
+  protected SpQueryResult postQuery(SessionDataSetWrapper queryResult, Optional<String> forIdOpt,
+          boolean ignoreMissingValues) {
     return null;
   }
 

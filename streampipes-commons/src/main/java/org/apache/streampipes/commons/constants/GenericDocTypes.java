@@ -15,14 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.constants;
 
 public class GenericDocTypes {
 
   public static final String DOC_ASSET_MANGEMENT = "asset-management";
   public static final String DOC_ASSET_LINK_TYPE = "asset-link-type";
-
 
   public static final String DEFAULT_ASSET_DOC_ID = "default-asset";
 }

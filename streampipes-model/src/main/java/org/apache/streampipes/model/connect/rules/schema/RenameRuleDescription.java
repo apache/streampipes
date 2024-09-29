@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.rules.schema;
 
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;

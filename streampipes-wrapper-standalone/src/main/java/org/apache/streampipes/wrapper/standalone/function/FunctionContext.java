@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone.function;
 
 import org.apache.streampipes.client.StreamPipesClient;
@@ -46,11 +45,8 @@ public class FunctionContext {
     this.streams = new HashMap<>();
   }
 
-  public FunctionContext(String functionId,
-                         String serviceGroup,
-                         List<SpDataStream> streams,
-                         Map<String, SpOutputCollector> outputCollectors,
-                         StreamPipesClient client) {
+  public FunctionContext(String functionId, String serviceGroup, List<SpDataStream> streams,
+          Map<String, SpOutputCollector> outputCollectors, StreamPipesClient client) {
     this();
     streams.forEach(stream -> this.streams.put(stream.getElementId(), stream));
     this.config = ConfigExtractor.from(serviceGroup);

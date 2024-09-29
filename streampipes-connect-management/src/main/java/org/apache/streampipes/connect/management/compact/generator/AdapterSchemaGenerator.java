@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.compact.generator;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
@@ -33,16 +32,14 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
   private final SchemaMetadataEnricher enricher;
   private final GuessManagement guessManagement;
 
-  public AdapterSchemaGenerator(SchemaMetadataEnricher enricher,
-                                GuessManagement guessManagement) {
+  public AdapterSchemaGenerator(SchemaMetadataEnricher enricher, GuessManagement guessManagement) {
     this.enricher = enricher;
     this.guessManagement = guessManagement;
   }
 
   @Override
-  public void apply(AdapterDescription adapterDescription,
-                    CompactAdapter compactAdapter)
-      throws WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
+  public void apply(AdapterDescription adapterDescription, CompactAdapter compactAdapter)
+          throws WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
 
     GuessSchema result = guessManagement.guessSchema(adapterDescription);
     adapterDescription.getDataStream().setEventSchema(result.getEventSchema());

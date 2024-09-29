@@ -24,15 +24,15 @@ import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AutoAggregationHandler {
 
@@ -50,7 +50,7 @@ public class AutoAggregationHandler {
   private final ProvidedRestQueryParams queryParams;
 
   public AutoAggregationHandler(ProvidedRestQueryParams params,
-                                IDataExplorerQueryManagement dataExplorerQueryManagement) {
+          IDataExplorerQueryManagement dataExplorerQueryManagement) {
     this.queryParams = params;
     this.dataLakeQueryManagement = dataExplorerQueryManagement;
   }
@@ -96,13 +96,7 @@ public class AutoAggregationHandler {
 
     SpQueryResult result = dataLakeQueryManagement.getData(countParams, true);
 
-    return result.getTotal() > 0 ? (
-        (Double) result.getAllDataSeries()
-                       .get(0)
-                       .getRows()
-                       .get(0)
-                       .get(1)
-    ).intValue() : 0;
+    return result.getTotal() > 0 ? ((Double) result.getAllDataSeries().get(0).getRows().get(0).get(1)).intValue() : 0;
   }
 
   private SpQueryResult fireQuery(ProvidedRestQueryParams params) {
@@ -112,8 +106,7 @@ public class AutoAggregationHandler {
   private int getAggregationValue(SpQueryResult newest, SpQueryResult oldest) throws ParseException {
     long timerange = extractTimestamp(newest) - extractTimestamp(oldest);
     double v = timerange / MAX_RETURN_LIMIT;
-    return Double.valueOf(v)
-                 .intValue();
+    return Double.valueOf(v).intValue();
   }
 
   private SpQueryResult getSingleRecord(DataLakeQueryOrdering order) throws ParseException {
@@ -121,20 +114,15 @@ public class AutoAggregationHandler {
     singleEvent.remove(SupportedRestQueryParams.QP_AGGREGATION_FUNCTION);
     singleEvent.update(SupportedRestQueryParams.QP_LIMIT, 1);
     singleEvent.update(SupportedRestQueryParams.QP_ORDER, order.name());
-    singleEvent.update(SupportedRestQueryParams.QP_COLUMNS, transformColumns(singleEvent.getAsString(
-        SupportedRestQueryParams.QP_COLUMNS)));
+    singleEvent.update(SupportedRestQueryParams.QP_COLUMNS,
+            transformColumns(singleEvent.getAsString(SupportedRestQueryParams.QP_COLUMNS)));
 
     return fireQuery(singleEvent);
   }
 
   private String transformColumns(String rawQuery) {
-    List<SelectColumn> columns =
-        Arrays.stream(rawQuery.split(COMMA))
-              .map(SelectColumn::fromApiQueryString)
-              .toList();
-    return columns.stream()
-                  .map(SelectColumn::getOriginalField)
-                  .collect(Collectors.joining(COMMA));
+    List<SelectColumn> columns = Arrays.stream(rawQuery.split(COMMA)).map(SelectColumn::fromApiQueryString).toList();
+    return columns.stream().map(SelectColumn::getOriginalField).collect(Collectors.joining(COMMA));
   }
 
   private String getSampleField(SpQueryResult result) {
@@ -147,14 +135,8 @@ public class AutoAggregationHandler {
   }
 
   private long extractTimestamp(SpQueryResult result) throws ParseException {
-    int timestampIndex = result.getHeaders()
-                               .indexOf(TIMESTAMP_FIELD);
-    return tryParseDate(result.getAllDataSeries()
-                              .get(0)
-                              .getRows()
-                              .get(0)
-                              .get(timestampIndex)
-                              .toString()).getTime();
+    int timestampIndex = result.getHeaders().indexOf(TIMESTAMP_FIELD);
+    return tryParseDate(result.getAllDataSeries().get(0).getRows().get(0).get(timestampIndex).toString()).getTime();
   }
 
   private Date tryParseDate(String v) throws ParseException {

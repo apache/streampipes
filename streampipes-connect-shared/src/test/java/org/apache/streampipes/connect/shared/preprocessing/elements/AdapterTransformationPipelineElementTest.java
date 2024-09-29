@@ -15,21 +15,20 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.elements;
+
+import static org.mockito.Mockito.when;
 
 import org.apache.streampipes.connect.shared.preprocessing.generator.StatelessTransformationRuleGeneratorVisitor;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 import java.util.HashMap;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 public class AdapterTransformationPipelineElementTest {
 
@@ -44,7 +43,8 @@ public class AdapterTransformationPipelineElementTest {
 
     var rules = List.of(spy, addTimestampRule);
 
-    var pipelineElement = new AdapterTransformationPipelineElement(rules, new StatelessTransformationRuleGeneratorVisitor());
+    var pipelineElement = new AdapterTransformationPipelineElement(rules,
+            new StatelessTransformationRuleGeneratorVisitor());
     var event = new HashMap<String, Object>();
     event.put("temperature", 1);
 

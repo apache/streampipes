@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -27,11 +26,11 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.extractor.AdapterParameterExtractor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GuessManagement {
 
@@ -47,8 +46,7 @@ public class GuessManagement {
   }
 
   public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
-    var adapter = getDeclarerSingleton()
-        .getAdapter(adapterDescription.getAppId());
+    var adapter = getDeclarerSingleton().getAdapter(adapterDescription.getAppId());
 
     if (adapter.isPresent()) {
       var adapterInstance = adapter.get();
@@ -63,8 +61,7 @@ public class GuessManagement {
       LOG.info("Requesting the event schema for: " + adapterDescription.getAppId());
 
       try {
-        var guessedSchemaObj = adapterInstance
-            .onSchemaRequested(extractor, guessSchemaContext);
+        var guessedSchemaObj = adapterInstance.onSchemaRequested(extractor, guessSchemaContext);
 
         if (!adapterDescription.getEventSchema().getEventProperties().isEmpty()) {
           new SchemaUpdateManagement().computeSchemaChanges(adapterDescription, guessedSchemaObj);

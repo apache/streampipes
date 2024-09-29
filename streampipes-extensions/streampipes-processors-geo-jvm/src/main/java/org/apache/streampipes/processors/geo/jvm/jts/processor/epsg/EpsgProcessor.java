@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.jts.processor.epsg;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -43,26 +42,17 @@ public class EpsgProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.epsg", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .build())
-        .outputStrategy(OutputStrategies.append(PrimitivePropertyBuilder
-            .create(Datatypes.Integer, EPSG_RUNTIME)
-            .domainProperty("http://data.ign.fr/def/ignf#CartesianCS")
-            .build())
-        )
-        .requiredIntegerParameter(Labels.withId(EPSG_KEY), 4326)
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.jts.processor.epsg", 0)
+            .category(DataProcessorType.GEO).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN).requiredStream(StreamRequirementsBuilder.create().build())
+            .outputStrategy(OutputStrategies.append(PrimitivePropertyBuilder.create(Datatypes.Integer, EPSG_RUNTIME)
+                    .domainProperty("http://data.ign.fr/def/ignf#CartesianCS").build()))
+            .requiredIntegerParameter(Labels.withId(EPSG_KEY), 4326).build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.epsgCode = parameters.extractor().singleValueParameter(EPSG_KEY, Integer.class);
   }
 

@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.export.utils.SerializationUtils;
@@ -24,11 +22,11 @@ import org.apache.streampipes.model.dashboard.DashboardItem;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.export.ExportItem;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class DataViewResolver extends AbstractResolver<DashboardModel> {
 

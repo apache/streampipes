@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone.routing;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -26,16 +25,15 @@ import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 
-public class StandaloneSpInputCollector<T extends TransportProtocol> extends
-    StandaloneSpCollector<T, RawDataProcessor>
-    implements
-    InternalEventProcessor<byte[]>, SpInputCollector {
+public class StandaloneSpInputCollector<T extends TransportProtocol> extends StandaloneSpCollector<T, RawDataProcessor>
+        implements
+          InternalEventProcessor<byte[]>,
+          SpInputCollector {
 
   private final Boolean singletonEngine;
   private final EventConsumer consumer;
 
-  public StandaloneSpInputCollector(T protocol,
-                                    Boolean singletonEngine) throws SpRuntimeException {
+  public StandaloneSpInputCollector(T protocol, Boolean singletonEngine) throws SpRuntimeException {
     super(protocol);
     this.consumer = protocolDefinition.getConsumer(protocol);
     this.singletonEngine = singletonEngine;

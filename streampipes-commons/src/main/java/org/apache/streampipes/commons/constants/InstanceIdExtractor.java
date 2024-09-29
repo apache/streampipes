@@ -25,7 +25,7 @@ public class InstanceIdExtractor {
     return StringUtils.substringAfterLast(elementId, ":");
   }
 
-  public static String getSimpleName(String elementId){
+  public static String getSimpleName(String elementId) {
     return StringUtils.substringBetween(elementId, ":", ":");
   }
 }

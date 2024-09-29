@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.iiot.adapters.iolink.sensor;
 
 import org.junit.jupiter.api.Assertions;
@@ -30,8 +29,7 @@ public class SensorVVB001Test {
   @Test
   public void checkEventSize() {
     var result = sensor.parseEvent(sampleInput);
-    Assertions.assertEquals(8,
-                            result.keySet().size());
+    Assertions.assertEquals(8, result.keySet().size());
   }
 
   @Test

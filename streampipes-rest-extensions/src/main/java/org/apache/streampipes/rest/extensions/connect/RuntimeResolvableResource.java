@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
@@ -41,12 +40,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/worker/resolvable")
 public class RuntimeResolvableResource extends AbstractSharedRestInterface {
 
-  @PostMapping(
-      path = "{id}/configurations",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "{id}/configurations", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> fetchConfigurations(@PathVariable("id") String elementId,
-                                               @RequestBody RuntimeOptionsRequest runtimeOptionsRequest) {
+          @RequestBody RuntimeOptionsRequest runtimeOptionsRequest) {
 
     var adapter = RuntimeResovable.getAdapter(elementId);
     RuntimeOptionsResponse response;
@@ -61,12 +57,10 @@ public class RuntimeResolvableResource extends AbstractSharedRestInterface {
         return ok(response);
       } else {
         throw new SpRuntimeException(
-            "This element does not support dynamic options - is the pipeline element description up to date?");
+                "This element does not support dynamic options - is the pipeline element description up to date?");
       }
     } catch (SpConfigurationException e) {
-      return ResponseEntity
-          .status(HttpStatus.BAD_REQUEST)
-          .body(e);
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
     }
   }
 }

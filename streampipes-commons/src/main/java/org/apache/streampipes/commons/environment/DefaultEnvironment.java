@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.environment;
 
 import org.apache.streampipes.commons.constants.Envs;
@@ -95,22 +94,22 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
-  public IntEnvironmentVariable getIotDbSessionPoolSize(){
+  public IntEnvironmentVariable getIotDbSessionPoolSize() {
     return new IntEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_SESSION_POOL_SIZE);
   }
 
   @Override
-  public BooleanEnvironmentVariable getIotDbSessionEnableCompression(){
+  public BooleanEnvironmentVariable getIotDbSessionEnableCompression() {
     return new BooleanEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_SESSION_POOL_ENABLE_COMPRESSION);
   }
 
   @Override
-  public StringEnvironmentVariable getIotDbUser(){
+  public StringEnvironmentVariable getIotDbUser() {
     return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_USER);
   }
 
   @Override
-  public StringEnvironmentVariable getIotDbPassword(){
+  public StringEnvironmentVariable getIotDbPassword() {
     return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_PASSWORD);
   }
 

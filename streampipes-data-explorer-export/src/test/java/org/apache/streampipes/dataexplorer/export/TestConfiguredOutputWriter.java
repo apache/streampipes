@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.export;
-
-import org.junit.jupiter.api.BeforeEach;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class TestConfiguredOutputWriter {
 
@@ -30,13 +29,9 @@ public abstract class TestConfiguredOutputWriter {
 
   @BeforeEach
   public void before() {
-    this.rows = Arrays.asList(
-        Arrays.asList(1668578077051.0, "test", 1),
-        Arrays.asList(1668578127050.0, "test2", 2)
-    );
+    this.rows = Arrays.asList(Arrays.asList(1668578077051.0, "test", 1), Arrays.asList(1668578127050.0, "test2", 2));
 
     this.columns = Arrays.asList("time", "string", "number");
   }
-
 
 }

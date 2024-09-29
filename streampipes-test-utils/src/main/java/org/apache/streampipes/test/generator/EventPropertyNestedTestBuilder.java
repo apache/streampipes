@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.test.generator;
 
 import org.apache.streampipes.model.schema.EventProperty;
@@ -25,7 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventPropertyNestedTestBuilder
-    extends EventPropertyTestBuilder<EventPropertyNested, EventPropertyNestedTestBuilder> {
+        extends
+          EventPropertyTestBuilder<EventPropertyNested, EventPropertyNestedTestBuilder> {
 
   private List<EventProperty> eventProperties;
 

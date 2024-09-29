@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.adapters.netio;
 
 import org.apache.streampipes.connect.adapters.netio.model.NetioAllPowerOutputs;
@@ -36,11 +35,11 @@ import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Locales;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gson.Gson;
 
 public class NetioMQTTAdapter implements StreamPipesAdapter {
 
@@ -53,23 +52,20 @@ public class NetioMQTTAdapter implements StreamPipesAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 0, NetioMQTTAdapter::new)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withCategory(AdapterType.Energy)
-        .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
-        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
-            MqttConnectUtils.getAlternativesTwo())
-        .buildConfiguration();
+    return AdapterConfigurationBuilder.create(ID, 0, NetioMQTTAdapter::new).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withCategory(AdapterType.Energy)
+            .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
+            .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
+                    MqttConnectUtils.getAlternativesTwo())
+            .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) {
 
-    MqttConfig mqttConfig = MqttConnectUtils.getMqttConfig(
-        extractor.getStaticPropertyExtractor(), "devices/netio/messages/events/");
+    MqttConfig mqttConfig = MqttConnectUtils.getMqttConfig(extractor.getStaticPropertyExtractor(),
+            "devices/netio/messages/events/");
     this.mqttConsumer = new MqttConsumer(mqttConfig, new EventProcessor(collector));
 
     Thread thread = new Thread(this.mqttConsumer);
@@ -77,14 +73,13 @@ public class NetioMQTTAdapter implements StreamPipesAdapter {
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext) {
     this.mqttConsumer.close();
   }
 
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) {
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) {
     return NetioUtils.getNetioSchema();
   }
 

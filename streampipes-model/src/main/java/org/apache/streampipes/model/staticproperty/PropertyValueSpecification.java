@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.staticproperty;
 
 public class PropertyValueSpecification {
@@ -28,8 +27,7 @@ public class PropertyValueSpecification {
 
   private double step;
 
-  public PropertyValueSpecification(double minValue, double maxValue,
-                                    double step) {
+  public PropertyValueSpecification(double minValue, double maxValue, double step) {
     super();
     this.minValue = minValue;
     this.maxValue = maxValue;

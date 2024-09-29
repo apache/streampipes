@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.flink;
 
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;

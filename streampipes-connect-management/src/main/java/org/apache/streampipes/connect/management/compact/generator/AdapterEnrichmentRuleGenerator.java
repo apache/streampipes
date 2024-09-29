@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.compact.generator;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -26,15 +25,12 @@ import org.apache.streampipes.sdk.helpers.EpProperties;
 public class AdapterEnrichmentRuleGenerator implements AdapterModelGenerator {
 
   @Override
-  public void apply(AdapterDescription adapterDescription,
-                    CompactAdapter compactAdapter) throws Exception {
+  public void apply(AdapterDescription adapterDescription, CompactAdapter compactAdapter) throws Exception {
     if (compactAdapter.enrich() != null) {
       if (compactAdapter.enrich().timestamp() != null) {
         var timestampRule = new AddTimestampRuleDescription(compactAdapter.enrich().timestamp());
         adapterDescription.getRules().add(timestampRule);
-        adapterDescription.getEventSchema().addEventProperty(
-            EpProperties.timestampProperty("timestamp")
-        );
+        adapterDescription.getEventSchema().addEventProperty(EpProperties.timestampProperty("timestamp"));
       }
     }
   }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.params;
 
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
@@ -32,7 +31,8 @@ import java.util.List;
 import java.util.Map;
 
 public class PipelineElementParameters<T extends InvocableStreamPipesEntity, V extends IParameterExtractor>
-    implements IPipelineElementParameters<T, V> {
+        implements
+          IPipelineElementParameters<T, V> {
 
   private final List<InputStreamParams> inputStreamParams;
   protected final T pipelineElementInvocation;
@@ -42,10 +42,8 @@ public class PipelineElementParameters<T extends InvocableStreamPipesEntity, V e
 
   private final Map<String, Integer> eventInfoMap = new HashMap<>();
 
-  public PipelineElementParameters(T pipelineElementInvocation,
-                                   V parameterExtractor,
-                                   List<InputStreamParams> params,
-                                   Map<String, Map<String, Object>> inEventTypes) {
+  public PipelineElementParameters(T pipelineElementInvocation, V parameterExtractor, List<InputStreamParams> params,
+          Map<String, Map<String, Object>> inEventTypes) {
     this.pipelineElementInvocation = pipelineElementInvocation;
     this.parameterExtractor = parameterExtractor;
     this.inputStreamParams = params;
@@ -55,22 +53,23 @@ public class PipelineElementParameters<T extends InvocableStreamPipesEntity, V e
 
   private void buildEventInfoMap() {
     for (int i = 0; i < inputStreamParams.size(); i++) {
-      String sourceInfo = inputStreamParams.get(i).getSourceInfo()
-          .getSourceId();
+      String sourceInfo = inputStreamParams.get(i).getSourceInfo().getSourceId();
       eventInfoMap.put(sourceInfo, i);
     }
   }
 
   @Override
   public List<SourceInfo> getInputSourceInfos() {
-    return inputStreamParams.size() == 1 ? Collections.singletonList
-        (getInputSourceInfo(0)) : Arrays.asList(getInputSourceInfo(0), getInputSourceInfo(1));
+    return inputStreamParams.size() == 1
+            ? Collections.singletonList(getInputSourceInfo(0))
+            : Arrays.asList(getInputSourceInfo(0), getInputSourceInfo(1));
   }
 
   @Override
   public List<SchemaInfo> getInputSchemaInfos() {
-    return inputStreamParams.size() == 1 ? Collections.singletonList
-        (getInputSchemaInfo(0)) : Arrays.asList(getInputSchemaInfo(0), getInputSchemaInfo(1));
+    return inputStreamParams.size() == 1
+            ? Collections.singletonList(getInputSchemaInfo(0))
+            : Arrays.asList(getInputSchemaInfo(0), getInputSchemaInfo(1));
   }
 
   @Override

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -24,8 +23,7 @@ import org.apache.streampipes.model.grounding.EventGrounding;
 
 public class SourcesManagement {
 
-  public static SpDataStream updateDataStream(AdapterDescription adapterDescription,
-                                              SpDataStream oldDataStream) {
+  public static SpDataStream updateDataStream(AdapterDescription adapterDescription, SpDataStream oldDataStream) {
 
     oldDataStream.setName(adapterDescription.getName());
 
@@ -36,8 +34,7 @@ public class SourcesManagement {
     return oldDataStream;
   }
 
-  public SpDataStream createAdapterDataStream(AdapterDescription adapterDescription,
-                                              String dataStreamElementId) {
+  public SpDataStream createAdapterDataStream(AdapterDescription adapterDescription, String dataStreamElementId) {
 
     var ds = adapterDescription.getDataStream();
     ds.setEventGrounding(new EventGrounding(adapterDescription.getEventGrounding()));

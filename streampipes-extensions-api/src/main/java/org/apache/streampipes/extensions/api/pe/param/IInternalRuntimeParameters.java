@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe.param;
 
 import org.apache.streampipes.model.runtime.Event;
@@ -24,8 +23,6 @@ import java.util.Map;
 
 public interface IInternalRuntimeParameters {
 
-  Event makeEvent(IPipelineElementParameters<?, ?> parameters,
-                  Map<String, Object> mapEvent,
-                  String sourceId);
+  Event makeEvent(IPipelineElementParameters<?, ?> parameters, Map<String, Object> mapEvent, String sourceId);
 
 }

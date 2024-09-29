@@ -39,9 +39,8 @@ public class ImageTransformer extends PlainImageTransformer {
   }
 
   public List<Map<String, Object>> getAllBoxCoordinates(String boxArrayProperty) {
-    List<Map<String, AbstractField>> allBoxes = in.getFieldBySelector(boxArrayProperty)
-        .getAsList()
-        .parseAsCustomType(value -> value.getAsComposite().getRawValue());
+    List<Map<String, AbstractField>> allBoxes = in.getFieldBySelector(boxArrayProperty).getAsList()
+            .parseAsCustomType(value -> value.getAsComposite().getRawValue());
 
     List<Map<String, Object>> allBoxesMap = new ArrayList<>();
     allBoxes.forEach(box -> {
@@ -58,7 +57,6 @@ public class ImageTransformer extends PlainImageTransformer {
     Float y = toFloat(box.get(ImagePropertyConstants.BOX_Y.getProperty()));
     Float width = toFloat(box.get(ImagePropertyConstants.BOX_WIDTH.getProperty()));
     Float height = toFloat(box.get(ImagePropertyConstants.BOX_HEIGHT.getProperty()));
-
 
     return BoxCoordinates.make(width, height, x, y);
   }
@@ -81,7 +79,6 @@ public class ImageTransformer extends PlainImageTransformer {
   private String toString(Object obj) {
     return String.valueOf(obj);
   }
-
 
   public Optional<byte[]> makeImage(BufferedImage image) {
 

@@ -33,8 +33,7 @@ public enum ActivePipelinePreviews {
     this.activePreviews = new HashMap<>();
   }
 
-  public void addActivePreview(String previewId,
-                               List<NamedStreamPipesEntity> activePreviews) {
+  public void addActivePreview(String previewId, List<NamedStreamPipesEntity> activePreviews) {
     this.activePreviews.put(previewId, activePreviews);
   }
 

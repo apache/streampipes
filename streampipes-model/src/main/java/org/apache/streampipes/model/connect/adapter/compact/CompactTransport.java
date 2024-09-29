@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.adapter.compact;
 
 public record CompactTransport(String channel) {

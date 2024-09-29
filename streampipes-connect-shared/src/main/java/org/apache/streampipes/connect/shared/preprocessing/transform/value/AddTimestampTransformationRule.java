@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
 import org.apache.streampipes.extensions.api.connect.TransformationRule;

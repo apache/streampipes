@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.monitoring;
 
 import org.apache.streampipes.extensions.api.monitoring.IExtensionsLogger;
@@ -35,9 +34,7 @@ public class ExtensionsLogger implements IExtensionsLogger {
 
   @Override
   public void log(SpLogMessage logMessage) {
-    monitoringManager.addErrorMessage(
-        resourceId,
-        SpLogEntry.from(System.currentTimeMillis(), logMessage));
+    monitoringManager.addErrorMessage(resourceId, SpLogEntry.from(System.currentTimeMillis(), logMessage));
   }
 
   @Override

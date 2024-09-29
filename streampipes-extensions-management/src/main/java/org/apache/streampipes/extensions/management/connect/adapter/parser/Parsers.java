@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 import org.apache.streampipes.extensions.api.connect.IParser;
@@ -26,11 +25,6 @@ import java.util.List;
 public class Parsers {
 
   public static List<IParser> defaultParsers() {
-    return List.of(
-        new JsonParsers(),
-        new CsvParser(),
-        new XmlParser(),
-        new ImageParser()
-    );
+    return List.of(new JsonParsers(), new CsvParser(), new XmlParser(), new ImageParser());
   }
 }

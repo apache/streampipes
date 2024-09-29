@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.limitsenrichment;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -38,7 +37,6 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 public class QualityControlLimitsEnrichmentProcessor extends StreamPipesDataProcessor {
 
-
   protected static final String UPPER_CONTROL_LIMIT_LABEL = "upperControlLimitInput";
   protected static final String UPPER_WARNING_LIMIT_LABEL = "upperWarningLimitInput";
   protected static final String LOWER_WARNING_LIMIT_LABEL = "lowerWarningLimitInput";
@@ -57,42 +55,29 @@ public class QualityControlLimitsEnrichmentProcessor extends StreamPipesDataProc
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.enricher.jvm.processor.limitsenrichment", 0)
-        .category(DataProcessorType.ENRICH)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-                            .create()
-                            .requiredProperty(EpRequirements.anyProperty())
-                            .build())
-        .requiredFloatParameter(Labels.withId(UPPER_CONTROL_LIMIT_LABEL))
-        .requiredFloatParameter(Labels.withId(UPPER_WARNING_LIMIT_LABEL))
-        .requiredFloatParameter(Labels.withId(LOWER_WARNING_LIMIT_LABEL))
-        .requiredFloatParameter(Labels.withId(LOWER_CONTROL_LIMIT_LABEL))
-        .outputStrategy(
-            OutputStrategies.append(
-                EpProperties.doubleEp(Labels.empty(), UPPER_CONTROL_LIMIT, SO.NUMBER),
-                EpProperties.doubleEp(Labels.empty(), UPPER_WARNING_LIMIT, SO.NUMBER),
-                EpProperties.doubleEp(Labels.empty(), LOWER_WARNING_LIMIT, SO.NUMBER),
-                EpProperties.doubleEp(Labels.empty(), LOWER_CONTROL_LIMIT, SO.NUMBER)
-            ))
-        .build();
+            .create("org.apache.streampipes.processors.enricher.jvm.processor.limitsenrichment", 0)
+            .category(DataProcessorType.ENRICH).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredFloatParameter(Labels.withId(UPPER_CONTROL_LIMIT_LABEL))
+            .requiredFloatParameter(Labels.withId(UPPER_WARNING_LIMIT_LABEL))
+            .requiredFloatParameter(Labels.withId(LOWER_WARNING_LIMIT_LABEL))
+            .requiredFloatParameter(Labels.withId(LOWER_CONTROL_LIMIT_LABEL))
+            .outputStrategy(
+                    OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), UPPER_CONTROL_LIMIT, SO.NUMBER),
+                            EpProperties.doubleEp(Labels.empty(), UPPER_WARNING_LIMIT, SO.NUMBER),
+                            EpProperties.doubleEp(Labels.empty(), LOWER_WARNING_LIMIT, SO.NUMBER),
+                            EpProperties.doubleEp(Labels.empty(), LOWER_CONTROL_LIMIT, SO.NUMBER)))
+            .build();
   }
 
   @Override
-  public void onInvocation(
-      ProcessorParams parameters,
-      SpOutputCollector spOutputCollector,
-      EventProcessorRuntimeContext runtimeContext
-  ) throws SpRuntimeException {
-    this.upperControlLimitValue = parameters.extractor()
-                                            .singleValueParameter(UPPER_CONTROL_LIMIT_LABEL, Double.class);
-    this.upperWarningLimitValue = parameters.extractor()
-                                            .singleValueParameter(UPPER_WARNING_LIMIT_LABEL, Double.class);
-    this.lowerWarningLimitValue = parameters.extractor()
-                                            .singleValueParameter(LOWER_WARNING_LIMIT_LABEL, Double.class);
-    this.lowerControlLimitValue = parameters.extractor()
-                                            .singleValueParameter(LOWER_CONTROL_LIMIT_LABEL, Double.class);
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    this.upperControlLimitValue = parameters.extractor().singleValueParameter(UPPER_CONTROL_LIMIT_LABEL, Double.class);
+    this.upperWarningLimitValue = parameters.extractor().singleValueParameter(UPPER_WARNING_LIMIT_LABEL, Double.class);
+    this.lowerWarningLimitValue = parameters.extractor().singleValueParameter(LOWER_WARNING_LIMIT_LABEL, Double.class);
+    this.lowerControlLimitValue = parameters.extractor().singleValueParameter(LOWER_CONTROL_LIMIT_LABEL, Double.class);
   }
 
   @Override

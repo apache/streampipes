@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.compact.generator;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -33,8 +32,7 @@ import java.util.stream.Stream;
 public class AdapterTransformationRuleGenerator implements AdapterModelGenerator {
 
   @Override
-  public void apply(AdapterDescription adapterDescription,
-                    CompactAdapter compactAdapter) throws Exception {
+  public void apply(AdapterDescription adapterDescription, CompactAdapter compactAdapter) throws Exception {
     if (compactAdapter.transform() != null) {
       var transforms = compactAdapter.transform();
       if (transforms.rename() != null) {
@@ -48,38 +46,26 @@ public class AdapterTransformationRuleGenerator implements AdapterModelGenerator
           var currentUnitOpt = getCurrentUnit(adapterDescription, key);
           currentUnitOpt.ifPresent(unit -> {
             addRule(adapterDescription, new UnitTransformRuleDescription(key, unit, value));
-            findProperty(adapterDescription, key)
-                .filter(ep -> ep instanceof EventPropertyPrimitive)
-                .map(ep -> (EventPropertyPrimitive) ep)
-                .forEach(ep -> ep.setMeasurementUnit(URI.create(value)));
+            findProperty(adapterDescription, key).filter(ep -> ep instanceof EventPropertyPrimitive)
+                    .map(ep -> (EventPropertyPrimitive) ep).forEach(ep -> ep.setMeasurementUnit(URI.create(value)));
           });
         });
       }
     }
   }
 
-  private void addRule(AdapterDescription adapterDescription,
-                       TransformationRuleDescription rule) {
+  private void addRule(AdapterDescription adapterDescription, TransformationRuleDescription rule) {
     adapterDescription.getRules().add(rule);
   }
 
-  private Optional<String> getCurrentUnit(AdapterDescription adapterDescription,
-                                          String runtimeName) {
-    return findProperty(adapterDescription, runtimeName)
-        .filter(ep -> ep instanceof EventPropertyPrimitive)
-        .map(ep -> (EventPropertyPrimitive) ep)
-        .map(EventPropertyPrimitive::getMeasurementUnit)
-        .map(URI::toString)
-        .findFirst();
+  private Optional<String> getCurrentUnit(AdapterDescription adapterDescription, String runtimeName) {
+    return findProperty(adapterDescription, runtimeName).filter(ep -> ep instanceof EventPropertyPrimitive)
+            .map(ep -> (EventPropertyPrimitive) ep).map(EventPropertyPrimitive::getMeasurementUnit).map(URI::toString)
+            .findFirst();
   }
 
-  private Stream<EventProperty> findProperty(AdapterDescription adapterDescription,
-                                             String runtimeName) {
-    return adapterDescription
-        .getDataStream()
-        .getEventSchema()
-        .getEventProperties()
-        .stream()
-        .filter(ep -> ep.getRuntimeName().equalsIgnoreCase(runtimeName));
+  private Stream<EventProperty> findProperty(AdapterDescription adapterDescription, String runtimeName) {
+    return adapterDescription.getDataStream().getEventSchema().getEventProperties().stream()
+            .filter(ep -> ep.getRuntimeName().equalsIgnoreCase(runtimeName));
   }
 }

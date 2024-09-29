@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.client.user.Principal;
@@ -25,6 +24,8 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.ResetManagement;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
+import java.util.ArrayList;
+
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,13 +33,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-
 @RestController
 @RequestMapping("/api/v2/reset")
 public class ResetResource extends AbstractAuthGuardedRestResource {
 
-  @PostMapping(produces =  MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Resets StreamPipes instance")
   public ResponseEntity<SuccessMessage> reset() {
     ResetManagement.reset(getAuthenticatedUsername());
@@ -47,7 +46,7 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
     var allUsers = new ArrayList<Principal>(userStorage.getAllUsers());
     for (var user : allUsers) {
       if (user.getPrincipalType() == PrincipalType.USER_ACCOUNT
-          && !user.getPrincipalId().equals(getAuthenticatedUserSid())) {
+              && !user.getPrincipalId().equals(getAuthenticatedUserSid())) {
         ResetManagement.reset(user.getUsername());
         userStorage.deleteUser(user.getPrincipalId());
       }

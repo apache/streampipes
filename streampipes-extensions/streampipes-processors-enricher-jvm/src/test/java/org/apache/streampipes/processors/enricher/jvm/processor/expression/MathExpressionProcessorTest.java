@@ -15,21 +15,19 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.expression;
 
 import org.apache.streampipes.test.executors.PrefixStrategy;
 import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.TestConfiguration;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Map;
 
-public class MathExpressionProcessorTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+public class MathExpressionProcessorTest {
 
   private MathExpressionProcessor processor;
 
@@ -41,34 +39,18 @@ public class MathExpressionProcessorTest {
   @Test
   public void testProcessor() {
 
-    List<Map<String, Object>> inputEvents = List.of(Map.of(
-        "temperature", 10.1,
-        "flowrate", 2
-    ));
+    List<Map<String, Object>> inputEvents = List.of(Map.of("temperature", 10.1, "flowrate", 2));
 
-    List<Map<String, Object>> outputEvents = List.of(Map.of(
-        "temperature", 10.1,
-        "flowrate", 2,
-        "result1", 22.1,
-        "result2", 20.2
-    ));
+    List<Map<String, Object>> outputEvents = List
+            .of(Map.of("temperature", 10.1, "flowrate", 2, "result1", 22.1, "result2", 20.2));
 
-    var config =
-        List.of(Map.of(
-                MathExpressionProcessor.FIELD_NAME, "result1",
-                MathExpressionProcessor.EXPRESSION, "temperature+12"
-            ),
-            Map.of(
-                MathExpressionProcessor.FIELD_NAME, "result2",
-                MathExpressionProcessor.EXPRESSION, "temperature*flowrate"
-            )
-        );
+    var config = List.of(
+            Map.of(MathExpressionProcessor.FIELD_NAME, "result1", MathExpressionProcessor.EXPRESSION, "temperature+12"),
+            Map.of(MathExpressionProcessor.FIELD_NAME, "result2", MathExpressionProcessor.EXPRESSION,
+                    "temperature*flowrate"));
 
-    var configuration = TestConfiguration
-        .builder()
-        .config(MathExpressionProcessor.ENRICHED_FIELDS, config)
-        .prefixStrategy(PrefixStrategy.SAME_PREFIX)
-        .build();
+    var configuration = TestConfiguration.builder().config(MathExpressionProcessor.ENRICHED_FIELDS, config)
+            .prefixStrategy(PrefixStrategy.SAME_PREFIX).build();
 
     var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 

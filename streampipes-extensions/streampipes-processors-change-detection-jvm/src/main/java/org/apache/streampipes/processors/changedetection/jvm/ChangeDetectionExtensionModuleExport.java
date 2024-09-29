@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.changedetection.jvm;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -36,9 +35,7 @@ public class ChangeDetectionExtensionModuleExport implements IExtensionModuleExp
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new WelfordChangeDetection()
-    );
+    return List.of(new WelfordChangeDetection());
   }
 
   @Override

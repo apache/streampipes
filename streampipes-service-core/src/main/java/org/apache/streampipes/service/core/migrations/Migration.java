@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.service.core.migrations;
 
 import java.io.IOException;

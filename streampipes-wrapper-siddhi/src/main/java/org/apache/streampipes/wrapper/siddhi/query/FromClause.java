@@ -42,8 +42,8 @@ public class FromClause extends SiddhiStatement {
 
   @Override
   public String toSiddhiEpl() {
-    List<String> fromExpressions =
-        this.fromExpressions.stream().map(Expression::toSiddhiEpl).collect(Collectors.toList());
+    List<String> fromExpressions = this.fromExpressions.stream().map(Expression::toSiddhiEpl)
+            .collect(Collectors.toList());
     return join(SiddhiConstants.WHITESPACE, SiddhiConstants.FROM, join(SiddhiConstants.COMMA, fromExpressions));
   }
 }

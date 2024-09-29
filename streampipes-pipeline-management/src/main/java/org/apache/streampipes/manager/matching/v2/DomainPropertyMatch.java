@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.manager.matching.v2.utils.MatchingUtils;
@@ -36,8 +35,8 @@ public class DomainPropertyMatch extends AbstractMatcher<List<URI>, List<URI>> {
     if (offer == null && ((requirement != null) && requirement.size() > 0)) {
       return false;
     }
-    boolean match = MatchingUtils.nullCheck(offer, requirement)
-        || requirement.stream().allMatch(req -> offer.stream().anyMatch(of -> req.toString().equals(of.toString())));
+    boolean match = MatchingUtils.nullCheck(offer, requirement) || requirement.stream()
+            .allMatch(req -> offer.stream().anyMatch(of -> req.toString().equals(of.toString())));
 
     if (!match) {
       buildErrorMessage(errorLog, buildText(requirement));

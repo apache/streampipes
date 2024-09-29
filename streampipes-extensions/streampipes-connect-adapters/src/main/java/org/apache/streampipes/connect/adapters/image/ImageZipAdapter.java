@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.adapters.image;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -23,13 +22,13 @@ import org.apache.streampipes.connect.adapters.image.stream.ImageStreamAdapter;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ImageZipAdapter {
 
@@ -43,13 +42,15 @@ public class ImageZipAdapter {
   /**
    * First extracts the user input and then starts a thread publishing events with images in the zip file
    *
-   * @param collector is used to pre-process and publish events on message broker
-   * @param extractor to extract configurations
-   * @param infinite  Describes if the replay should be restarted when it is finished or not
+   * @param collector
+   *          is used to pre-process and publish events on message broker
+   * @param extractor
+   *          to extract configurations
+   * @param infinite
+   *          Describes if the replay should be restarted when it is finished or not
    */
-  public void start(IEventCollector collector,
-                    IStaticPropertyExtractor extractor,
-                    boolean infinite) throws AdapterException {
+  public void start(IEventCollector collector, IStaticPropertyExtractor extractor, boolean infinite)
+          throws AdapterException {
     Integer timeBetweenReplay = extractor.singleValueParameter(ImageZipUtils.INTERVAL_KEY, Integer.class);
     String zipFileUrl = extractor.selectedFilename(ImageZipUtils.ZIP_FILE_KEY);
     ZipFileImageIterator zipFileImageIterator;

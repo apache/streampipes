@@ -15,13 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.export.ImportManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+
+import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +35,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/api/v2/import")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
@@ -43,21 +42,16 @@ public class DataImportResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataImportResource.class);
 
-  @PostMapping(
-      path = "/preview",
-      consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/preview", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AssetExportConfiguration> getImportPreview(@RequestPart("file_upload") MultipartFile fileDetail)
-      throws IOException {
+          throws IOException {
     var importConfig = ImportManager.getImportPreview(fileDetail.getInputStream());
     return ok(importConfig);
   }
 
-  @PostMapping(
-      consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> importData(@RequestPart("file_upload") MultipartFile fileDetail,
-                                         @RequestPart("configuration") AssetExportConfiguration exportConfiguration) {
+          @RequestPart("configuration") AssetExportConfiguration exportConfiguration) {
     try {
       ImportManager.performImport(fileDetail.getInputStream(), exportConfiguration, getAuthenticatedUserSid());
       return ok();

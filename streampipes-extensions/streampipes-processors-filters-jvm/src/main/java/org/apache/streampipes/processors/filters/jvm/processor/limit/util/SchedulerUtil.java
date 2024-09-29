@@ -33,27 +33,17 @@ public class SchedulerUtil {
   public static JobDetail createJob(Window window) {
     JobDataMap dataMap = new JobDataMap();
     dataMap.put(WINDOW_KEY, window);
-    return JobBuilder.newJob(ProcessJob.class)
-        .setJobData(dataMap)
-        .build();
+    return JobBuilder.newJob(ProcessJob.class).setJobData(dataMap).build();
   }
 
   public static Trigger getFixedRateTrigger(int intervalInMilliseconds) {
-    final SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder
-        .simpleSchedule()
-        .withIntervalInMilliseconds(intervalInMilliseconds)
-        .repeatForever();
-    return TriggerBuilder
-        .newTrigger()
-        .withSchedule(scheduleBuilder)
-        .startNow()
-        .build();
+    final SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
+            .withIntervalInMilliseconds(intervalInMilliseconds).repeatForever();
+    return TriggerBuilder.newTrigger().withSchedule(scheduleBuilder).startNow().build();
   }
 
   public static Trigger getCronTrigger(String cronExpression) {
-    return TriggerBuilder.newTrigger()
-        .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
-        .build();
+    return TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)).build();
   }
 
 }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.flink;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
@@ -30,14 +29,11 @@ import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 
-public abstract class FlinkDataProcessorDeclarer<T extends ProcessorParams>
-    implements IStreamPipesDataProcessor {
-
+public abstract class FlinkDataProcessorDeclarer<T extends ProcessorParams> implements IStreamPipesDataProcessor {
 
   @Override
-  public void onPipelineStarted(IDataProcessorParameters params,
-                                SpOutputCollector collector,
-                                EventProcessorRuntimeContext runtimeContext) {
+  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector collector,
+          EventProcessorRuntimeContext runtimeContext) {
 
   }
 
@@ -53,14 +49,11 @@ public abstract class FlinkDataProcessorDeclarer<T extends ProcessorParams>
 
   @Override
   public IDataProcessorConfiguration declareConfig() {
-    return DataProcessorConfiguration.create(
-        () -> this,
-        declareModel()
-    );
+    return DataProcessorConfiguration.create(() -> this, declareModel());
   }
 
   public abstract FlinkDataProcessorProgram<T> getProgram(DataProcessorInvocation graph,
-                                                          ProcessingElementParameterExtractor extractor);
+          ProcessingElementParameterExtractor extractor);
 
   public abstract DataProcessorDescription declareModel();
 }

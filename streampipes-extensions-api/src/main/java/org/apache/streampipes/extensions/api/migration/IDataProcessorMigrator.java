@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 
 public interface IDataProcessorMigrator
-        extends IModelMigrator<DataProcessorInvocation, IDataProcessorParameterExtractor> {
+        extends
+          IModelMigrator<DataProcessorInvocation, IDataProcessorParameterExtractor> {
 }

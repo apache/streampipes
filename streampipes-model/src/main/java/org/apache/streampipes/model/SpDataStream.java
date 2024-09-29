@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 import java.util.List;
+
+import org.apache.commons.lang3.RandomStringUtils;
 
 public class SpDataStream extends NamedStreamPipesEntity {
 

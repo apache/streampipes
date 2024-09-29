@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
@@ -37,24 +36,19 @@ import java.util.List;
 public class DataExplorerManagerInflux implements IDataExplorerManager {
 
   @Override
-  public IDataLakeMeasurementCounter getMeasurementCounter(
-    List<DataLakeMeasure> allMeasurements,
-    List<String> measurementsToCount) {
+  public IDataLakeMeasurementCounter getMeasurementCounter(List<DataLakeMeasure> allMeasurements,
+          List<String> measurementsToCount) {
     return new DataLakeMeasurementCounterInflux(allMeasurements, measurementsToCount);
   }
 
   @Override
-  public IDataExplorerQueryManagement getQueryManagement(
-    IDataExplorerSchemaManagement dataExplorerSchemaManagement
-    ) {
+  public IDataExplorerQueryManagement getQueryManagement(IDataExplorerSchemaManagement dataExplorerSchemaManagement) {
     return new DataExplorerQueryManagementInflux(dataExplorerSchemaManagement);
   }
 
   @Override
   public IDataExplorerSchemaManagement getSchemaManagement() {
-    return new DataExplorerSchemaManagement(StorageDispatcher.INSTANCE
-                                                             .getNoSqlStore()
-                                                             .getDataLakeStorage());
+    return new DataExplorerSchemaManagement(StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage());
   }
 
   @Override

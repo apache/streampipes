@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.kafka.shared.kafka;
 
 import org.apache.streampipes.messaging.kafka.config.AutoOffsetResetConfig;
@@ -30,11 +29,8 @@ public class KafkaConfig {
   KafkaSecurityConfig securityConfig;
   AutoOffsetResetConfig autoOffsetResetConfig;
 
-  public KafkaConfig(String kafkaHost,
-                     Integer kafkaPort,
-                     String topic,
-                     KafkaSecurityConfig securityConfig,
-                     AutoOffsetResetConfig autoOffsetResetConfig) {
+  public KafkaConfig(String kafkaHost, Integer kafkaPort, String topic, KafkaSecurityConfig securityConfig,
+          AutoOffsetResetConfig autoOffsetResetConfig) {
     this.kafkaHost = kafkaHost;
     this.kafkaPort = kafkaPort;
     this.topic = topic;

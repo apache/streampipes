@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.influx.adapter;
+
+import static org.apache.streampipes.vocabulary.SO.DATE_TIME;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -29,10 +30,6 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.influxdb.InfluxDBIOException;
-import org.influxdb.dto.Query;
-import org.influxdb.dto.QueryResult;
-
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
@@ -41,7 +38,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.streampipes.vocabulary.SO.DATE_TIME;
+import org.influxdb.InfluxDBIOException;
+import org.influxdb.dto.Query;
+import org.influxdb.dto.QueryResult;
 
 public class InfluxDbClient extends SharedInfluxClient {
 
@@ -76,9 +75,7 @@ public class InfluxDbClient extends SharedInfluxClient {
     }
   }
 
-  InfluxDbClient(InfluxConnectionSettings connectionSettings,
-                 String measurement,
-                 boolean replaceNullValues) {
+  InfluxDbClient(InfluxConnectionSettings connectionSettings, String measurement, boolean replaceNullValues) {
     super(connectionSettings, measurement);
     this.replaceNullValues = replaceNullValues;
     this.influxClientProvider = new InfluxClientProvider();
@@ -116,8 +113,7 @@ public class InfluxDbClient extends SharedInfluxClient {
 
   private boolean measurementExists(String measurement) {
     // Database must exist
-    QueryResult queryResult = influxDb
-        .query(new Query("SHOW MEASUREMENTS", connectionSettings.getDatabaseName()));
+    QueryResult queryResult = influxDb.query(new Query("SHOW MEASUREMENTS", connectionSettings.getDatabaseName()));
     for (List<Object> a : queryResult.getResults().get(0).getSeries().get(0).getValues()) {
       if (a.get(0).equals(measurement)) {
         return true;
@@ -135,9 +131,8 @@ public class InfluxDbClient extends SharedInfluxClient {
     List<EventProperty> allProperties = new ArrayList<>();
 
     for (Column column : columns) {
-      PrimitivePropertyBuilder property = PrimitivePropertyBuilder
-          .create(column.getDatatypes(), column.getName())
-          .label(column.getName());
+      PrimitivePropertyBuilder property = PrimitivePropertyBuilder.create(column.getDatatypes(), column.getName())
+              .label(column.getName());
       // Setting the timestamp field to the correct domainProperty
       if (column.getName().equals("time")) {
         property.domainProperty(DATE_TIME);
@@ -159,7 +154,7 @@ public class InfluxDbClient extends SharedInfluxClient {
     }
     List<List<Object>> fieldKeys = query("SHOW FIELD KEYS FROM " + measureName);
     List<List<Object>> tagKeys = query("SHOW TAG KEYS FROM " + measureName);
-//        if (fieldKeys.size() == 0 || tagKeys.size() == 0) {
+    // if (fieldKeys.size() == 0 || tagKeys.size() == 0) {
     if (fieldKeys.size() == 0) {
       throw new AdapterException("Error while checking the Schema (does the measurement exist?)");
     }
@@ -173,16 +168,16 @@ public class InfluxDbClient extends SharedInfluxClient {
       String name = o.get(0).toString();
       Datatypes datatype;
       switch (o.get(1).toString()) {
-        case "float":
+        case "float" :
           datatype = Datatypes.Float;
           break;
-        case "boolean":
+        case "boolean" :
           datatype = Datatypes.Boolean;
           break;
-        case "integer":
+        case "integer" :
           datatype = Datatypes.Integer;
           break;
-        default:
+        default :
           datatype = Datatypes.String;
           break;
       }
@@ -239,19 +234,19 @@ public class InfluxDbClient extends SharedInfluxClient {
         if (replaceNullValues) {
           // Replace null values with defaults
           switch (columns.get(i).getDatatypes()) {
-            case String:
+            case String :
               out.put(columns.get(i).getName(), "");
               break;
-            case Integer:
+            case Integer :
               out.put(columns.get(i).getName(), 0);
               break;
-            case Float:
+            case Float :
               out.put(columns.get(i).getName(), 0.0f);
               break;
-            case Boolean:
+            case Boolean :
               out.put(columns.get(i).getName(), false);
               break;
-            default:
+            default :
               throw new SpRuntimeException("Unexpected value: " + columns.get(i).getDatatypes());
           }
         } else {

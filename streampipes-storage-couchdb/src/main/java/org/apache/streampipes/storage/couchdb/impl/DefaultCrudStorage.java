@@ -15,21 +15,19 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 
-import org.lightcouch.CouchDbClient;
-
 import java.util.function.Supplier;
+
+import org.lightcouch.CouchDbClient;
 
 public class DefaultCrudStorage<T extends Storable> extends AbstractDao<T> implements CRUDStorage<T> {
 
-  public DefaultCrudStorage(Supplier<CouchDbClient> couchDbClientSupplier,
-                            Class<T> clazz) {
+  public DefaultCrudStorage(Supplier<CouchDbClient> couchDbClientSupplier, Class<T> clazz) {
     super(couchDbClientSupplier, clazz);
   }
 

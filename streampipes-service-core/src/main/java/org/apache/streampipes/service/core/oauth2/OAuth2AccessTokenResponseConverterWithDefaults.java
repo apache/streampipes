@@ -15,14 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.oauth2;
-
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
-import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
-import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,17 +25,19 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
+import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
+import org.springframework.util.StringUtils;
+
 public class OAuth2AccessTokenResponseConverterWithDefaults
-    implements Converter<Map<String, Object>, OAuth2AccessTokenResponse> {
+        implements
+          Converter<Map<String, Object>, OAuth2AccessTokenResponse> {
   private static final Set<String> TOKEN_RESPONSE_PARAMETER_NAMES = Stream
-      .of(
-          OAuth2ParameterNames.ACCESS_TOKEN,
-          OAuth2ParameterNames.TOKEN_TYPE,
-          OAuth2ParameterNames.EXPIRES_IN,
-          OAuth2ParameterNames.REFRESH_TOKEN,
-          OAuth2ParameterNames.SCOPE
-      )
-      .collect(Collectors.toSet());
+          .of(OAuth2ParameterNames.ACCESS_TOKEN, OAuth2ParameterNames.TOKEN_TYPE, OAuth2ParameterNames.EXPIRES_IN,
+                  OAuth2ParameterNames.REFRESH_TOKEN, OAuth2ParameterNames.SCOPE)
+          .collect(Collectors.toSet());
 
   private final OAuth2AccessToken.TokenType defaultAccessTokenType = OAuth2AccessToken.TokenType.BEARER;
 
@@ -67,23 +62,14 @@ public class OAuth2AccessTokenResponseConverterWithDefaults
     Set<String> scopes = Collections.emptySet();
     if (tokenResponseParameters.containsKey(OAuth2ParameterNames.SCOPE)) {
       var scope = tokenResponseParameters.get(OAuth2ParameterNames.SCOPE);
-      scopes = Arrays
-          .stream(StringUtils.delimitedListToStringArray((String) scope, " "))
-          .collect(Collectors.toSet());
+      scopes = Arrays.stream(StringUtils.delimitedListToStringArray((String) scope, " ")).collect(Collectors.toSet());
     }
 
     Map<String, Object> additionalParameters = new LinkedHashMap<>();
-    tokenResponseParameters
-        .entrySet()
-        .stream().filter(e -> !TOKEN_RESPONSE_PARAMETER_NAMES.contains(e.getKey()))
-        .forEach(e -> additionalParameters.put(e.getKey(), e.getValue()));
+    tokenResponseParameters.entrySet().stream().filter(e -> !TOKEN_RESPONSE_PARAMETER_NAMES.contains(e.getKey()))
+            .forEach(e -> additionalParameters.put(e.getKey(), e.getValue()));
 
-    return OAuth2AccessTokenResponse
-        .withToken((String) accessToken)
-        .tokenType(accessTokenType)
-        .expiresIn(expiresIn)
-        .scopes(scopes)
-        .additionalParameters(additionalParameters)
-        .build();
+    return OAuth2AccessTokenResponse.withToken((String) accessToken).tokenType(accessTokenType).expiresIn(expiresIn)
+            .scopes(scopes).additionalParameters(additionalParameters).build();
   }
 }

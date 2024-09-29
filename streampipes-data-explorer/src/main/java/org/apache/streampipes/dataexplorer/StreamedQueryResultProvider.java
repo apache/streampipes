@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
@@ -40,19 +39,16 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
 
   private final OutputFormat format;
 
-  public StreamedQueryResultProvider(ProvidedRestQueryParams params,
-                                     OutputFormat format,
-                                     IDataExplorerQueryManagement dataExplorerQueryManagement,
-                                     DataExplorerQueryExecutor<?, ?> queryExecutor,
-                                     boolean ignoreMissingValues) {
+  public StreamedQueryResultProvider(ProvidedRestQueryParams params, OutputFormat format,
+          IDataExplorerQueryManagement dataExplorerQueryManagement, DataExplorerQueryExecutor<?, ?> queryExecutor,
+          boolean ignoreMissingValues) {
     super(params, dataExplorerQueryManagement, queryExecutor, ignoreMissingValues);
     this.format = format;
   }
 
   public void getDataAsStream(OutputStream outputStream) throws IOException {
     var usesLimit = queryParams.has(SupportedRestQueryParams.QP_LIMIT);
-    var configuredWriter = ConfiguredOutputWriter
-        .getConfiguredWriter(format, queryParams, ignoreMissingData);
+    var configuredWriter = ConfiguredOutputWriter.getConfiguredWriter(format, queryParams, ignoreMissingData);
 
     if (!queryParams.has(SupportedRestQueryParams.QP_LIMIT)) {
       queryParams.update(SupportedRestQueryParams.QP_LIMIT, MAX_RESULTS_PER_QUERY);
@@ -85,9 +81,7 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
     configuredWriter.afterLastItem(outputStream);
   }
 
-  private boolean queryNextPage(int lastResultsCount,
-                                boolean usesLimit,
-                                int limit) {
+  private boolean queryNextPage(int lastResultsCount, boolean usesLimit, int limit) {
     if (usesLimit) {
       return lastResultsCount >= limit;
     } else {
@@ -96,20 +90,19 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
   }
 
   private Optional<DataLakeMeasure> findByMeasurementName(String measurementName) {
-    return DataExplorerUtils.getInfos()
-        .stream()
-        .filter(measurement -> measurement.getMeasureName().equals(measurementName))
-        .findFirst();
+    return DataExplorerUtils.getInfos().stream()
+            .filter(measurement -> measurement.getMeasureName().equals(measurementName)).findFirst();
   }
 
   /**
    * Replaces the field 'time' of the data result with the actual timestamp field name of the measurement
    *
-   * @param measurement contains the actual timestamp name value
-   * @param dataResult  the query result of the database with 'time' as timestamp field name
+   * @param measurement
+   *          contains the actual timestamp name value
+   * @param dataResult
+   *          the query result of the database with 'time' as timestamp field name
    */
-  private void changeTimestampHeader(DataLakeMeasure measurement,
-                                     SpQueryResult dataResult) {
+  private void changeTimestampHeader(DataLakeMeasure measurement, SpQueryResult dataResult) {
     var timeFieldIndex = dataResult.getHeaders().indexOf(TIME_FIELD);
     if (timeFieldIndex > -1) {
       dataResult.getHeaders().set(timeFieldIndex, measurement.getTimestampFieldName());

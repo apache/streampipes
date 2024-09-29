@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.opcua.utils;
 
 import org.junit.jupiter.api.Assertions;

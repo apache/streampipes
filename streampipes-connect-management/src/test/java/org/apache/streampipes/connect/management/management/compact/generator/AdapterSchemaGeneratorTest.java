@@ -15,8 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.management.compact.generator;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.apache.streampipes.connect.management.compact.SchemaMetadataEnricher;
 import org.apache.streampipes.connect.management.compact.generator.AdapterSchemaGenerator;
@@ -29,14 +32,10 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Test;
 
 public class AdapterSchemaGeneratorTest {
 
@@ -45,11 +44,7 @@ public class AdapterSchemaGeneratorTest {
     var compactAdapter = mock(CompactAdapter.class);
     var guessMgmt = mock(GuessManagement.class);
 
-    var epDef = new CompactEventProperty(
-        "label",
-        "description",
-        "dimension",
-        "semanticType"
+    var epDef = new CompactEventProperty("label", "description", "dimension", "semanticType"
 
     );
     var ep = new EventPropertyPrimitive();
@@ -66,10 +61,7 @@ public class AdapterSchemaGeneratorTest {
     new AdapterSchemaGenerator(new SchemaMetadataEnricher(), guessMgmt).apply(adapterDescription, compactAdapter);
     var properties = adapterDescription.getEventSchema().getEventProperties();
     assertEquals(1, properties.size());
-    assertEquals(
-        "label",
-        properties.get(0).getLabel()
-    );
+    assertEquals("label", properties.get(0).getLabel());
     assertEquals("description", properties.get(0).getDescription());
     assertEquals(PropertyScope.DIMENSION_PROPERTY.name(), properties.get(0).getPropertyScope());
     assertEquals("semanticType", properties.get(0).getDomainProperties().get(0).toString());

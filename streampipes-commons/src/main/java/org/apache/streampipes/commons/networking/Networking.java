@@ -20,15 +20,15 @@ package org.apache.streampipes.commons.networking;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Objects;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Networking {
 
@@ -43,11 +43,8 @@ public class Networking {
     if (svcHostname.exists()) {
       selectedAddress = svcHostname.getValue();
       if (Objects.isNull(lastSelectedHostname)) {
-        LOG.info(
-            "Using IP from provided environment variable {}: {}",
-            svcHostname.getEnvVariableName(),
-            selectedAddress
-        );
+        LOG.info("Using IP from provided environment variable {}: {}", svcHostname.getEnvVariableName(),
+                selectedAddress);
       }
     } else {
       selectedAddress = InetAddress.getLocalHost().getHostAddress();
@@ -68,9 +65,8 @@ public class Networking {
   }
 
   /**
-   * this method is a workaround for developers using osx
-   * in OSX InetAddress.getLocalHost().getHostAddress() always returns 127.0.0.1
-   * as a workaround developers must manually set the SP_HOST environment variable with the actual ip
+   * this method is a workaround for developers using osx in OSX InetAddress.getLocalHost().getHostAddress() always
+   * returns 127.0.0.1 as a workaround developers must manually set the SP_HOST environment variable with the actual ip
    * with this method the IP is set automatically
    *
    * @return IP

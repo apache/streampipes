@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.util;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -75,12 +74,12 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.model.staticproperty.SupportedProperty;
 import org.apache.streampipes.model.template.BoundPipelineElement;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Cloner {
 
@@ -212,8 +211,7 @@ public class Cloner {
     }
   }
 
-  public List<StaticProperty> staticProperties(
-      List<StaticProperty> staticProperties) {
+  public List<StaticProperty> staticProperties(List<StaticProperty> staticProperties) {
     if (staticProperties != null) {
       return staticProperties.stream().map(o -> staticProperty(o)).collect(Collectors.toList());
     } else {
@@ -233,8 +231,7 @@ public class Cloner {
     return options.stream().map(o -> new Option(o)).collect(Collectors.toList());
   }
 
-  public List<SupportedProperty> supportedProperties(
-      List<SupportedProperty> supportedProperties) {
+  public List<SupportedProperty> supportedProperties(List<SupportedProperty> supportedProperties) {
     return supportedProperties.stream().map(s -> new SupportedProperty(s)).collect(Collectors.toList());
   }
 
@@ -255,17 +252,11 @@ public class Cloner {
   }
 
   public List<BoundPipelineElement> boundPipelineElements(List<BoundPipelineElement> boundPipelineElements) {
-    return boundPipelineElements
-        .stream()
-        .map(BoundPipelineElement::new)
-        .collect(Collectors.toList());
+    return boundPipelineElements.stream().map(BoundPipelineElement::new).collect(Collectors.toList());
   }
 
   public List<NamedStreamPipesEntity> cloneDescriptions(List<NamedStreamPipesEntity> pipelineElementDescriptions) {
-    return pipelineElementDescriptions
-        .stream()
-        .map(pe -> cloneDescription(pe))
-        .collect(Collectors.toList());
+    return pipelineElementDescriptions.stream().map(pe -> cloneDescription(pe)).collect(Collectors.toList());
   }
 
   private NamedStreamPipesEntity cloneDescription(NamedStreamPipesEntity pe) {
@@ -282,10 +273,7 @@ public class Cloner {
   }
 
   public List<PropertyRenameRule> renameRules(List<PropertyRenameRule> renameRules) {
-    return renameRules
-        .stream()
-        .map(PropertyRenameRule::new)
-        .collect(Collectors.toList());
+    return renameRules.stream().map(PropertyRenameRule::new).collect(Collectors.toList());
   }
 
   public AdapterDescription adapterDescription(AdapterDescription ad) {

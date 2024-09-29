@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.extensions.configuration;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
 
 @TsModel
 public class SpServiceConfiguration implements Storable {
@@ -37,9 +36,7 @@ public class SpServiceConfiguration implements Storable {
   public SpServiceConfiguration() {
   }
 
-  public SpServiceConfiguration(String serviceGroup,
-                                String serviceName,
-                                List<ConfigItem> configs) {
+  public SpServiceConfiguration(String serviceGroup, String serviceName, List<ConfigItem> configs) {
     this.serviceGroup = serviceGroup;
     this.serviceName = serviceName;
     this.configs = configs;

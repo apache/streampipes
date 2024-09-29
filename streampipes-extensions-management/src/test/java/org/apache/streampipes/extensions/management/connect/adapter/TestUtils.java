@@ -17,20 +17,17 @@
  */
 package org.apache.streampipes.extensions.management.connect.adapter;
 
+import java.util.Arrays;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-
-import java.util.Arrays;
 
 public class TestUtils {
 
   public static String getJsonArrayWithThreeElements() {
     JsonObject jsonObject = new JsonObject();
-    jsonObject.add("key0", makeJsonArray(
-        makeJsonObject("one", 1),
-        makeJsonObject("one", 2),
-        makeJsonObject("one", 3)));
+    jsonObject.add("key0", makeJsonArray(makeJsonObject("one", 1), makeJsonObject("one", 2), makeJsonObject("one", 3)));
     return jsonObject.toString();
   }
 

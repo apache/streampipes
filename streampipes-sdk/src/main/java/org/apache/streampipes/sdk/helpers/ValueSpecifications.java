@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.helpers;
 
 import org.apache.streampipes.model.schema.Enumeration;
@@ -48,6 +47,5 @@ public class ValueSpecifications {
     enumeration.setRuntimeValues(values);
     return enumeration;
   }
-
 
 }

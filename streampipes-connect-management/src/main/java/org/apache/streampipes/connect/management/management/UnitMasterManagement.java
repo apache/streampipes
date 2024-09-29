@@ -15,21 +15,20 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.unit.UnitDescription;
 import org.apache.streampipes.units.UnitProvider;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.github.jqudt.Unit;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 public class UnitMasterManagement {
 
@@ -54,8 +53,7 @@ public class UnitMasterManagement {
     }
     List<Unit> units = UnitProvider.INSTANCE.getUnitsByType(unit.getType());
 
-
-    for (Iterator iter = units.iterator(); iter.hasNext(); ) {
+    for (Iterator iter = units.iterator(); iter.hasNext();) {
       Unit unitTmp = (Unit) iter.next();
       try {
         UnitDescription unitDescriptionTmp = new UnitDescription(unitTmp.getResource().toString(), unitTmp.getLabel());
@@ -68,15 +66,14 @@ public class UnitMasterManagement {
     return gson.toJson(unitDescriptionList);
   }
 
-  public List<UnitDescription> getAllUnitDescriptions(){
+  public List<UnitDescription> getAllUnitDescriptions() {
     List<UnitDescription> unitDescriptionList = new LinkedList<>();
 
     List<Unit> units = UnitProvider.INSTANCE.getAvailableUnits();
 
     for (Unit unit : units) {
       try {
-        UnitDescription unitDescriptionTmp =
-            new UnitDescription(unit.getResource().toString(), unit.getLabel());
+        UnitDescription unitDescriptionTmp = new UnitDescription(unit.getResource().toString(), unit.getLabel());
         unitDescriptionList.add(unitDescriptionTmp);
       } catch (NullPointerException e) {
         logger.error("Unit has no resource and/or Label");

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
@@ -35,24 +34,14 @@ import java.util.List;
 public class ImageEnrichmentProcessorMigrationv1 implements IDataProcessorMigrator {
   @Override
   public ModelMigratorConfig config() {
-    return new ModelMigratorConfig(
-        ImageEnrichmentProcessor.ID,
-        SpServiceTagPrefix.DATA_PROCESSOR,
-        0,
-        1);
+    return new ModelMigratorConfig(ImageEnrichmentProcessor.ID, SpServiceTagPrefix.DATA_PROCESSOR, 0, 1);
   }
 
   @Override
   public MigrationResult<DataProcessorInvocation> migrate(DataProcessorInvocation element,
-                                                          IDataProcessorParameterExtractor extractor)
-      throws RuntimeException {
-    element.setOutputStrategies(List.of(
-        OutputStrategies.fixed(
-            EpProperties.timestampProperty("timestamp"),
-            EpProperties.stringEp(Labels.empty(), ImagePropertyConstants.IMAGE.getProperty(),
-                "https://image.com")
-        )
-    ));
+          IDataProcessorParameterExtractor extractor) throws RuntimeException {
+    element.setOutputStrategies(List.of(OutputStrategies.fixed(EpProperties.timestampProperty("timestamp"),
+            EpProperties.stringEp(Labels.empty(), ImagePropertyConstants.IMAGE.getProperty(), "https://image.com"))));
     return MigrationResult.success(element);
   }
 }

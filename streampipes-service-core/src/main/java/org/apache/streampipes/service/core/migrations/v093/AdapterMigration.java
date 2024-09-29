@@ -15,8 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.migrations.v093;
+
+import static org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels.GENERIC_STREAM;
+import static org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels.isSetAdapter;
 
 import org.apache.streampipes.manager.migration.AdapterDescriptionMigration093Provider;
 import org.apache.streampipes.model.connect.adapter.migration.MigrationHelpers;
@@ -27,16 +29,13 @@ import org.apache.streampipes.service.core.migrations.v093.migrator.GenericAdapt
 import org.apache.streampipes.service.core.migrations.v093.migrator.SpecificAdapterMigrator;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gson.JsonObject;
 import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels.GENERIC_STREAM;
-import static org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels.isSetAdapter;
 
 public class AdapterMigration implements Migration {
 
@@ -49,7 +48,6 @@ public class AdapterMigration implements Migration {
   private final List<JsonObject> adapterDescriptionsToRemove;
 
   private final MigrationHelpers helpers;
-
 
   public AdapterMigration() {
     this.adapterInstanceClient = Utils.getCouchDbAdapterInstanceClient();
@@ -70,9 +68,7 @@ public class AdapterMigration implements Migration {
     return !adaptersToMigrate.isEmpty() || !adapterDescriptionsToRemove.isEmpty();
   }
 
-  private void findDocsToMigrate(CouchDbClient adapterClient,
-                                 String uri,
-                                 List<JsonObject> collector) {
+  private void findDocsToMigrate(CouchDbClient adapterClient, String uri, List<JsonObject> collector) {
     var existingAdapters = adapterClient.findAny(JsonObject.class, uri);
     if (existingAdapters.size() > 0 && existingAdapters.has(ROWS)) {
       var rows = existingAdapters.get(ROWS);
@@ -91,7 +87,7 @@ public class AdapterMigration implements Migration {
     var adapterInstanceBackupClient = Utils.getCouchDbAdapterInstanceBackupClient();
 
     LOG.info("Deleting {} adapter descriptions, which will be regenerated after migration",
-        adapterDescriptionsToRemove.size());
+            adapterDescriptionsToRemove.size());
 
     adapterDescriptionsToRemove.forEach(ad -> {
       String docId = helpers.getDocId(ad);

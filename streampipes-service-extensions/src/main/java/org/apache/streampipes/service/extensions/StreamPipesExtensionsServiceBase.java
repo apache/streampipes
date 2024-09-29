@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.client.StreamPipesClient;
@@ -39,13 +38,6 @@ import org.apache.streampipes.service.extensions.function.StreamPipesFunctionHan
 import org.apache.streampipes.service.extensions.security.WebSecurityConfig;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-
 import jakarta.annotation.PreDestroy;
 
 import java.net.UnknownHostException;
@@ -54,14 +46,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
 @Configuration
 @EnableAutoConfiguration
-@Import({
-    WebSecurityConfig.class,
-    WelcomePage.class,
-    ServiceHealthResource.class,
-    RestResponseLogMessageExceptionHandler.class
-})
+@Import({WebSecurityConfig.class, WelcomePage.class, ServiceHealthResource.class,
+    RestResponseLogMessageExceptionHandler.class})
 @ComponentScan({"org.apache.streampipes.rest.extensions.*", "org.apache.streampipes.service.base.rest.*"})
 public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
 
@@ -81,14 +76,12 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
 
       startExtensionsService(this.getClass(), serviceDef, networkingConfig);
     } catch (UnknownHostException e) {
-      LOG.error(
-          "Could not auto-resolve host address - "
+      LOG.error("Could not auto-resolve host address - "
               + "please manually provide the hostname using the SP_HOST environment variable");
     }
   }
 
-  public void afterServiceRegistered(SpServiceDefinition serviceDef,
-                                     SpServiceRegistration serviceReg) {
+  public void afterServiceRegistered(SpServiceDefinition serviceDef, SpServiceRegistration serviceReg) {
     StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
 
     // register all migrations at StreamPipes Core
@@ -99,28 +92,18 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     StreamPipesFunctionHandler.INSTANCE.initializeFunctions(serviceDef.getServiceGroup());
   }
 
-  public void startExtensionsService(Class<?> serviceClass,
-                                     SpServiceDefinition serviceDef,
-                                     BaseNetworkingConfig networkingConfig) throws UnknownHostException {
+  public void startExtensionsService(Class<?> serviceClass, SpServiceDefinition serviceDef,
+          BaseNetworkingConfig networkingConfig) throws UnknownHostException {
     var extensions = new ExtensionItemProvider().getAllItemDescriptions();
-    var req = SpServiceRegistration.from(
-        DefaultSpServiceTypes.EXT,
-        serviceDef.getServiceGroup(),
-        serviceId(),
-        networkingConfig.getHost(),
-        networkingConfig.getPort(),
-        getServiceTags(extensions),
-        getHealthCheckPath(),
-        extensions);
+    var req = SpServiceRegistration.from(DefaultSpServiceTypes.EXT, serviceDef.getServiceGroup(), serviceId(),
+            networkingConfig.getHost(), networkingConfig.getPort(), getServiceTags(extensions), getHealthCheckPath(),
+            extensions);
 
     LOG.info("Registering service {} with id {} at core", req.getSvcGroup(), req.getSvcId());
     registerService(req);
 
     this.registerConfigs(serviceDef.getServiceGroup(), serviceDef.getServiceName(), serviceDef.getKvConfigs());
-    this.startStreamPipesService(
-        serviceClass,
-        networkingConfig
-    );
+    this.startStreamPipesService(serviceClass, networkingConfig);
 
     this.afterServiceRegistered(serviceDef, req);
   }
@@ -134,7 +117,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     Set<SpServiceTag> tags = new HashSet<>();
     if (DeclarersSingleton.getInstance().getServiceDefinition() != null) {
       tags.add(SpServiceTag.create(SpServiceTagPrefix.SP_GROUP,
-          DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup()));
+              DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup()));
     }
     tags.addAll(getExtensionsServiceTags(extensions));
     tags.addAll(new CustomServiceTagResolver(Environments.getEnvironment()).getCustomServiceTags());
@@ -148,15 +131,11 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   }
 
   protected Set<SpServiceTag> getExtensionsServiceTags(Set<ExtensionItemDescription> extensions) {
-    return extensions
-        .stream()
-        .map(e -> SpServiceTag.create(e.getServiceTagPrefix(), e.getAppId()))
-        .collect(Collectors.toSet());
+    return extensions.stream().map(e -> SpServiceTag.create(e.getServiceTagPrefix(), e.getAppId()))
+            .collect(Collectors.toSet());
   }
 
-  private void registerConfigs(String serviceGroup,
-                               String serviceName,
-                               List<ConfigItem> configs) {
+  private void registerConfigs(String serviceGroup, String serviceName, List<ConfigItem> configs) {
     LOG.info("Registering {} service configs for service {}", configs.size(), serviceGroup);
     StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
     var serviceConfiguration = new SpServiceConfiguration(serviceGroup, serviceName, configs);

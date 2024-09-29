@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.model;
 
-
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.Set;

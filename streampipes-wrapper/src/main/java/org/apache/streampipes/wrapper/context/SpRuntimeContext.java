@@ -24,16 +24,13 @@ import org.apache.streampipes.extensions.api.pe.context.RuntimeContext;
 
 public class SpRuntimeContext implements RuntimeContext {
 
-
   private final String correspondingUser;
   private final IConfigExtractor configExtractor;
   private final IStreamPipesClient streamPipesClient;
   private final IExtensionsLogger extensionsLogger;
 
-  public SpRuntimeContext(String correspondingUser,
-                          IConfigExtractor configExtractor,
-                          IStreamPipesClient streamPipesClient,
-                          IExtensionsLogger extensionsLogger) {
+  public SpRuntimeContext(String correspondingUser, IConfigExtractor configExtractor,
+          IStreamPipesClient streamPipesClient, IExtensionsLogger extensionsLogger) {
     this.correspondingUser = correspondingUser;
     this.configExtractor = configExtractor;
     this.streamPipesClient = streamPipesClient;

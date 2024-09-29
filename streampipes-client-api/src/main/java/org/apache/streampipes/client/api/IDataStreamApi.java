@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.api.live.EventProcessor;
@@ -45,10 +44,7 @@ public interface IDataStreamApi extends CRUDApi<String, SpDataStream> {
 
   IConfiguredEventProducer getProducer(SpDataStream stream);
 
-  ISubscription subscribe(SpDataStream stream,
-                          EventProcessor callback);
+  ISubscription subscribe(SpDataStream stream, EventProcessor callback);
 
-  ISubscription subscribe(SpDataStream stream,
-                          IBrokerConfigOverride brokerConfigOverride,
-                          EventProcessor callback);
+  ISubscription subscribe(SpDataStream stream, IBrokerConfigOverride brokerConfigOverride, EventProcessor callback);
 }

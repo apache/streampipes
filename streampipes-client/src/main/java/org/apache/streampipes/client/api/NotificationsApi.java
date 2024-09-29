@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
@@ -30,8 +29,7 @@ public class NotificationsApi extends AbstractTypedClientApi<Notification> imple
 
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
-    return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("notifications");
+    return StreamPipesApiPath.fromBaseApiPath().addToPath("notifications");
   }
 
   @Override

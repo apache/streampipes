@@ -20,9 +20,9 @@ package org.apache.streampipes.wrapper.flink.serializer;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 
-import org.apache.flink.api.common.serialization.SerializationSchema;
-
 import java.util.Map;
+
+import org.apache.flink.api.common.serialization.SerializationSchema;
 
 public class ByteArraySerializer implements SerializationSchema<Map<String, Object>> {
 

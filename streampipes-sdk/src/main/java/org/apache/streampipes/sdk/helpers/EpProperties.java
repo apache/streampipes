@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.helpers;
 
 import org.apache.streampipes.commons.Utils;
@@ -38,15 +37,14 @@ import java.util.List;
 
 public class EpProperties {
 
-  public static EventPropertyNested nestedEp(Label label, String runtimeName, EventProperty...
-      eventProperties) {
+  public static EventPropertyNested nestedEp(Label label, String runtimeName, EventProperty... eventProperties) {
     EventPropertyNested nestedProperty = getPreparedProperty(label, new EventPropertyNested(runtimeName));
     nestedProperty.setEventProperties(new ArrayList<>(Arrays.asList(eventProperties)));
     return nestedProperty;
   }
 
   public static EventPropertyList listNestedEp(Label label, String runtimeName,
-                                               List<EventProperty> listItemProperties) {
+          List<EventProperty> listItemProperties) {
     EventPropertyList list = getPreparedProperty(label, new EventPropertyList());
     list.setRuntimeName(runtimeName);
 
@@ -57,8 +55,8 @@ public class EpProperties {
     return list;
   }
 
-  public static EventPropertyList listNestedEp(Label label, String runtimeName, String
-      domainProperty, List<EventProperty> listItemProperties) {
+  public static EventPropertyList listNestedEp(Label label, String runtimeName, String domainProperty,
+          List<EventProperty> listItemProperties) {
     EventPropertyList list = listNestedEp(label, runtimeName, listItemProperties);
     list.setDomainProperties(Arrays.asList(URI.create(domainProperty)));
     return list;
@@ -67,13 +65,14 @@ public class EpProperties {
   /**
    * Creates a new primitive property of type timestamp (with data type long and domain property schema.org/DateTime
    *
-   * @param runtimeName The field identifier of the event property at runtime.
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyPrimitive timestampProperty(String runtimeName) {
     // TODO we need a real timestamp property!
-    EventPropertyPrimitive ep = ep(Labels.from("", "Timestamp", "The current timestamp value"),
-        XSD.LONG.toString(), runtimeName, "http://schema.org/DateTime");
+    EventPropertyPrimitive ep = ep(Labels.from("", "Timestamp", "The current timestamp value"), XSD.LONG.toString(),
+            runtimeName, "http://schema.org/DateTime");
     ep.setPropertyScope(PropertyScope.HEADER_PROPERTY.name());
     return ep;
   }
@@ -81,12 +80,12 @@ public class EpProperties {
   /**
    * Creates a new primitive property of type image (with data type string and domain property image
    *
-   * @param runtimeName The field identifier of the event property at runtime.
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyPrimitive imageProperty(String runtimeName) {
-    EventPropertyPrimitive ep = ep(Labels.from("", "Image", ""),
-        XSD.STRING.toString(), runtimeName, SPSensor.IMAGE);
+    EventPropertyPrimitive ep = ep(Labels.from("", "Image", ""), XSD.STRING.toString(), runtimeName, SPSensor.IMAGE);
     ep.setPropertyScope(PropertyScope.MEASUREMENT_PROPERTY.name());
     return ep;
   }
@@ -94,11 +93,14 @@ public class EpProperties {
   /**
    * Creates a new list-based event property of type integer and with the assigned domain property.
    *
-   * @param label          A human-readable label of the property
-   * @param runtimeName    The field identifier of the event property at runtime.
-   * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
-   *                       provided by a vocabulary. Use one of the vocabularies provided in
-   *                       {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
+   * @param label
+   *          A human-readable label of the property
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param domainProperty
+   *          The semantics of the list property as a String. The string should correspond to a URI provided by a
+   *          vocabulary. Use one of the vocabularies provided in {@link org.apache.streampipes.vocabulary} or create
+   *          your own domain-specific vocabulary.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyList listIntegerEp(Label label, String runtimeName, String domainProperty) {
@@ -108,11 +110,14 @@ public class EpProperties {
   /**
    * Creates a new list-based event property of type long and with the assigned domain property.
    *
-   * @param label          A human-readable label of the property
-   * @param runtimeName    The field identifier of the event property at runtime.
-   * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
-   *                       provided by a vocabulary. Use one of the vocabularies provided in
-   *                       {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
+   * @param label
+   *          A human-readable label of the property
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param domainProperty
+   *          The semantics of the list property as a String. The string should correspond to a URI provided by a
+   *          vocabulary. Use one of the vocabularies provided in {@link org.apache.streampipes.vocabulary} or create
+   *          your own domain-specific vocabulary.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyList listLongEp(Label label, String runtimeName, String domainProperty) {
@@ -122,11 +127,14 @@ public class EpProperties {
   /**
    * Creates a new list-based event property of type double and with the assigned domain property.
    *
-   * @param label          A human-readable label of the property
-   * @param runtimeName    The field identifier of the event property at runtime.
-   * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
-   *                       provided by a vocabulary. Use one of the vocabularies provided in
-   *                       {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
+   * @param label
+   *          A human-readable label of the property
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param domainProperty
+   *          The semantics of the list property as a String. The string should correspond to a URI provided by a
+   *          vocabulary. Use one of the vocabularies provided in {@link org.apache.streampipes.vocabulary} or create
+   *          your own domain-specific vocabulary.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyList listDoubleEp(Label label, String runtimeName, String domainProperty) {
@@ -136,11 +144,14 @@ public class EpProperties {
   /**
    * Creates a new list-based event property of type string and with the assigned domain property.
    *
-   * @param label          A human-readable label of the property
-   * @param runtimeName    The field identifier of the event property at runtime.
-   * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
-   *                       provided by a vocabulary. Use one of the vocabularies provided in
-   *                       {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
+   * @param label
+   *          A human-readable label of the property
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param domainProperty
+   *          The semantics of the list property as a String. The string should correspond to a URI provided by a
+   *          vocabulary. Use one of the vocabularies provided in {@link org.apache.streampipes.vocabulary} or create
+   *          your own domain-specific vocabulary.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyList listStringEp(Label label, String runtimeName, String domainProperty) {
@@ -150,31 +161,35 @@ public class EpProperties {
   /**
    * Creates a new list-based event property of type boolean and with the assigned domain property.
    *
-   * @param label          A human-readable label of the property
-   * @param runtimeName    The field identifier of the event property at runtime.
-   * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
-   *                       provided by a vocabulary. Use one of the vocabularies provided in
-   *                       {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
+   * @param label
+   *          A human-readable label of the property
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param domainProperty
+   *          The semantics of the list property as a String. The string should correspond to a URI provided by a
+   *          vocabulary. Use one of the vocabularies provided in {@link org.apache.streampipes.vocabulary} or create
+   *          your own domain-specific vocabulary.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyList listBooleanEp(Label label, String runtimeName, String domainProperty) {
     return listEp(label, runtimeName, Datatypes.Boolean, domainProperty);
   }
 
-  public static EventPropertyList listEp(Label label, String runtimeName, Datatypes runtimeType, String
-      domainProperty) {
-    return getPreparedProperty(label, new EventPropertyList(runtimeName, ep(Labels.empty(), runtimeType
-            .toString(),
-        runtimeName,
-        domainProperty)));
+  public static EventPropertyList listEp(Label label, String runtimeName, Datatypes runtimeType,
+          String domainProperty) {
+    return getPreparedProperty(label, new EventPropertyList(runtimeName,
+            ep(Labels.empty(), runtimeType.toString(), runtimeName, domainProperty)));
   }
 
   /**
    * Creates a new list-based event property of the parameter type eventProperty
    *
-   * @param label         A human-readable label of the property
-   * @param runtimeName   The field identifier of the event property at runtime.
-   * @param eventProperty The complex type of data in the list
+   * @param label
+   *          A human-readable label of the property
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param eventProperty
+   *          The complex type of data in the list
    * @return {@link org.apache.streampipes.model.schema.EventPropertyList}
    */
   public static EventPropertyList listEp(Label label, String runtimeName, EventProperty eventProperty) {
@@ -184,24 +199,29 @@ public class EpProperties {
   /**
    * Creates a new list-based event property of the parameter type eventProperty
    *
-   * @param label         A human-readable label of the property
-   * @param runtimeName   The field identifier of the event property at runtime.
-   * @param eventProperty The complex type of data in the list
+   * @param label
+   *          A human-readable label of the property
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param eventProperty
+   *          The complex type of data in the list
    * @return {@link org.apache.streampipes.model.schema.EventPropertyList}
    */
   public static EventPropertyList listEp(Label label, String runtimeName, EventProperty eventProperty,
-                                         String domainProperty) {
-    return getPreparedProperty(label, new EventPropertyList(runtimeName, eventProperty, Utils.createURI
-        (domainProperty)));
+          String domainProperty) {
+    return getPreparedProperty(label,
+            new EventPropertyList(runtimeName, eventProperty, Utils.createURI(domainProperty)));
   }
 
   /**
    * Creates a new primitive property of type boolean and the provided domain property.
    *
-   * @param runtimeName    The field identifier of the event property at runtime.
-   * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
-   *                       provided by a vocabulary. Use one of the vocabularies provided in
-   *                       {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param domainProperty
+   *          The semantics of the list property as a String. The string should correspond to a URI provided by a
+   *          vocabulary. Use one of the vocabularies provided in {@link org.apache.streampipes.vocabulary} or create
+   *          your own domain-specific vocabulary.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyPrimitive booleanEp(Label label, String runtimeName, String domainProperty) {
@@ -211,10 +231,12 @@ public class EpProperties {
   /**
    * Creates a new primitive property of type number and the provided domain property.
    *
-   * @param runtimeName    The field identifier of the event property at runtime.
-   * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
-   *                       provided by a vocabulary. Use one of the vocabularies provided in
-   *                       {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param domainProperty
+   *          The semantics of the list property as a String. The string should correspond to a URI provided by a
+   *          vocabulary. Use one of the vocabularies provided in {@link org.apache.streampipes.vocabulary} or create
+   *          your own domain-specific vocabulary.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyPrimitive numberEp(Label label, String runtimeName, String domainProperty) {
@@ -224,10 +246,12 @@ public class EpProperties {
   /**
    * Creates a new primitive property of type string and the provided domain property.
    *
-   * @param runtimeName    The field identifier of the event property at runtime.
-   * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
-   *                       provided by a vocabulary. Use one of the vocabularies provided in
-   *                       {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param domainProperty
+   *          The semantics of the list property as a String. The string should correspond to a URI provided by a
+   *          vocabulary. Use one of the vocabularies provided in {@link org.apache.streampipes.vocabulary} or create
+   *          your own domain-specific vocabulary.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyPrimitive stringEp(Label label, String runtimeName, String domainProperty) {
@@ -237,46 +261,53 @@ public class EpProperties {
   /**
    * Creates a new primitive property of type string and the provided domain property.
    *
-   * @param runtimeName    The field identifier of the event property at runtime.
-   * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
-   *                       provided by a vocabulary. Use one of the vocabularies provided in
-   *                       {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
-   * @param propertyScope  The scope for the property, whether it is a HEADER, MEASUREMENT, od DIMENSION property
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param domainProperty
+   *          The semantics of the list property as a String. The string should correspond to a URI provided by a
+   *          vocabulary. Use one of the vocabularies provided in {@link org.apache.streampipes.vocabulary} or create
+   *          your own domain-specific vocabulary.
+   * @param propertyScope
+   *          The scope for the property, whether it is a HEADER, MEASUREMENT, od DIMENSION property
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyPrimitive stringEp(Label label, String runtimeName, String domainProperty,
-                                                PropertyScope propertyScope) {
+          PropertyScope propertyScope) {
     EventPropertyPrimitive ep = ep(label, XSD.STRING.toString(), runtimeName, domainProperty);
     ep.setPropertyScope(propertyScope.name());
     return ep;
   }
 
   /**
-   * Creates a new primitive property of type string and the provided domain property. In addition, the value range
-   * of the property is restricted to the defined {@link org.apache.streampipes.model.schema.Enumeration}
+   * Creates a new primitive property of type string and the provided domain property. In addition, the value range of
+   * the property is restricted to the defined {@link org.apache.streampipes.model.schema.Enumeration}
    *
-   * @param runtimeName    The field identifier of the event property at runtime.
-   * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
-   *                       provided by a vocabulary. Use one of the vocabularies provided in
-   *                       {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
-   * @param enumeration    The allowed values of the event property at runtime.
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param domainProperty
+   *          The semantics of the list property as a String. The string should correspond to a URI provided by a
+   *          vocabulary. Use one of the vocabularies provided in {@link org.apache.streampipes.vocabulary} or create
+   *          your own domain-specific vocabulary.
+   * @param enumeration
+   *          The allowed values of the event property at runtime.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
-  public static EventPropertyPrimitive stringEp(Label label, String runtimeName, String domainProperty, Enumeration
-      enumeration) {
+  public static EventPropertyPrimitive stringEp(Label label, String runtimeName, String domainProperty,
+          Enumeration enumeration) {
     EventPropertyPrimitive ep = ep(label, XSD.STRING.toString(), runtimeName, domainProperty);
     ep.setValueSpecification(enumeration);
     return ep;
   }
 
   /**
-   * Creates a new primitive property of type string and the provided domain property. In addition, the value range
-   * of the property is restricted to the defined {@link org.apache.streampipes.model.schema.Enumeration}
+   * Creates a new primitive property of type string and the provided domain property. In addition, the value range of
+   * the property is restricted to the defined {@link org.apache.streampipes.model.schema.Enumeration}
    *
-   * @param runtimeName      The field identifier of the event property at runtime.
-   * @param domainProperties The semantics of the list property as a list of URIs. Use one of the vocabularies
-   *                         provided in
-   *                         {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param domainProperties
+   *          The semantics of the list property as a list of URIs. Use one of the vocabularies provided in
+   *          {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyPrimitive stringEp(Label label, String runtimeName, List<URI> domainProperties) {
@@ -286,10 +317,12 @@ public class EpProperties {
   /**
    * Creates a new primitive property of type integer and the provided domain property.
    *
-   * @param runtimeName    The field identifier of the event property at runtime.
-   * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
-   *                       provided by a vocabulary. Use one of the vocabularies provided in
-   *                       {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param domainProperty
+   *          The semantics of the list property as a String. The string should correspond to a URI provided by a
+   *          vocabulary. Use one of the vocabularies provided in {@link org.apache.streampipes.vocabulary} or create
+   *          your own domain-specific vocabulary.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyPrimitive integerEp(Label label, String runtimeName, String domainProperty) {
@@ -300,10 +333,11 @@ public class EpProperties {
    * Creates a new primitive property of type integer and the provided domain properties. In addition, the value range
    * of the property is restricted to the defined {@link org.apache.streampipes.model.schema.Enumeration}
    *
-   * @param runtimeName      The field identifier of the event property at runtime.
-   * @param domainProperties The semantics of the list property as a list of URIs. Use one of the vocabularies
-   *                         provided in
-   *                         {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param domainProperties
+   *          The semantics of the list property as a list of URIs. Use one of the vocabularies provided in
+   *          {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyPrimitive integerEp(Label label, String runtimeName, List<URI> domainProperties) {
@@ -313,13 +347,15 @@ public class EpProperties {
   /**
    * Creates a new primitive property of type integer and the provided domain property.
    *
-   * @param label          A human-readable identifier of the property presented to users in the StreamPipes UI.
-   *                       If you do not want to have a label besides the runtime name, use
-   *                       {@link org.apache.streampipes.sdk.helpers.Labels}
-   * @param runtimeName    The field identifier of the event property at runtime.
-   * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
-   *                       provided by a vocabulary. Use one of the vocabularies provided in
-   *                       {@link org.apache.streampipes.vocabulary} or create your own domain-specific vocabulary.
+   * @param label
+   *          A human-readable identifier of the property presented to users in the StreamPipes UI. If you do not want
+   *          to have a label besides the runtime name, use {@link org.apache.streampipes.sdk.helpers.Labels}
+   * @param runtimeName
+   *          The field identifier of the event property at runtime.
+   * @param domainProperty
+   *          The semantics of the list property as a String. The string should correspond to a URI provided by a
+   *          vocabulary. Use one of the vocabularies provided in {@link org.apache.streampipes.vocabulary} or create
+   *          your own domain-specific vocabulary.
    * @return {@link org.apache.streampipes.model.schema.EventPropertyPrimitive}
    */
   public static EventPropertyPrimitive longEp(Label label, String runtimeName, String domainProperty) {
@@ -330,13 +366,13 @@ public class EpProperties {
     return ep(label, XSD.LONG.toString(), runtimeName, domainProperties);
   }
 
-  public static EventPropertyPrimitive integerEp(Label label, String runtimeName, String domainProperty, Float
-      minValue, Float maxValue, Float step) {
+  public static EventPropertyPrimitive integerEp(Label label, String runtimeName, String domainProperty, Float minValue,
+          Float maxValue, Float step) {
     return integerEp(label, runtimeName, domainProperty, new QuantitativeValue(minValue, maxValue, step));
   }
 
   public static EventPropertyPrimitive integerEp(Label label, String runtimeName, String domainProperty,
-                                                 QuantitativeValue valueSpecification) {
+          QuantitativeValue valueSpecification) {
     EventPropertyPrimitive ep = ep(label, XSD.INTEGER.toString(), runtimeName, domainProperty);
     ep.setValueSpecification(valueSpecification);
     return ep;
@@ -347,19 +383,19 @@ public class EpProperties {
   }
 
   public static EventPropertyPrimitive doubleEp(Label label, String runtimeName, String domainProperty, Float minValue,
-                                                Float maxValue, Float step) {
+          Float maxValue, Float step) {
     EventPropertyPrimitive ep = ep(label, XSD.DOUBLE.toString(), runtimeName, domainProperty);
     ep.setValueSpecification(new QuantitativeValue(minValue, maxValue, step));
     return ep;
   }
 
   public static EventPropertyPrimitive ep(Label label, String runtimeType, String runtimeName, String domainProperty) {
-    return getPreparedProperty(label, new EventPropertyPrimitive(runtimeType, runtimeName, "", Utils.createURI
-        (domainProperty)));
+    return getPreparedProperty(label,
+            new EventPropertyPrimitive(runtimeType, runtimeName, "", Utils.createURI(domainProperty)));
   }
 
-  private static EventPropertyPrimitive ep(Label label, String runtimeType, String runtimeName, List<URI>
-      domainProperties) {
+  private static EventPropertyPrimitive ep(Label label, String runtimeType, String runtimeName,
+          List<URI> domainProperties) {
     return getPreparedProperty(label, new EventPropertyPrimitive(runtimeType, runtimeName, "", domainProperties));
   }
 

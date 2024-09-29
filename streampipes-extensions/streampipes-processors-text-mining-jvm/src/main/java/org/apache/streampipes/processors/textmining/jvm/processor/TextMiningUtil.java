@@ -15,20 +15,19 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.textmining.jvm.processor;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
-import opennlp.tools.util.Span;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import opennlp.tools.util.Span;
+
 public class TextMiningUtil {
   /*
-   * Given an array of spans and an array of tokens, it extracts and merges the tokens
-   * specified in the spans and adds them to a list. This list is returned
+   * Given an array of spans and an array of tokens, it extracts and merges the tokens specified in the spans and adds
+   * them to a list. This list is returned
    */
   public static List<String> extractSpans(Span[] spans, String[] tokens) throws SpRuntimeException {
     List<String> list = new ArrayList<>();
@@ -37,7 +36,7 @@ public class TextMiningUtil {
       for (int i = span.getStart(); i < span.getEnd(); i++) {
         if (i >= tokens.length) {
           throw new SpRuntimeException("token list does not fit spans (token list lenght: " + tokens.length
-              + ", span: [" + span.getStart() + ", " + span.getEnd() + "))");
+                  + ", span: [" + span.getStart() + ", " + span.getEnd() + "))");
         }
         stringBuilder.append(tokens[i]).append(' ');
       }

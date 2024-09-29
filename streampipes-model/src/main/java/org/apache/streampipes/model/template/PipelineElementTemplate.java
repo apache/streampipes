@@ -20,13 +20,13 @@ package org.apache.streampipes.model.template;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.google.gson.annotations.SerializedName;
 
 @TsModel
 public class PipelineElementTemplate implements Storable {
@@ -42,9 +42,8 @@ public class PipelineElementTemplate implements Storable {
   private String templateDescription;
   private String basePipelineElementAppId;
 
-  public PipelineElementTemplate(String templateName,
-                                 String templateDescription,
-                                 List<Map<String, Object>> templateConfigs) {
+  public PipelineElementTemplate(String templateName, String templateDescription,
+          List<Map<String, Object>> templateConfigs) {
     this.templateName = templateName;
     this.templateDescription = templateDescription;
     this.templateConfigs = templateConfigs;
@@ -95,7 +94,6 @@ public class PipelineElementTemplate implements Storable {
     return rev;
   }
 
-
   @Override
   public String getRev() {
     return rev;
@@ -116,4 +114,3 @@ public class PipelineElementTemplate implements Storable {
     this.elementId = elementId;
   }
 }
-

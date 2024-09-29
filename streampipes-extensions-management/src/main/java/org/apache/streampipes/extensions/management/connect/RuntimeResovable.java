@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.tubemq;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -32,16 +31,12 @@ public class TubeMQConnectorsModuleExport implements IExtensionModuleExport {
 
   @Override
   public List<StreamPipesAdapter> adapters() {
-    return List.of(
-        new TubeMQProtocol()
-    );
+    return List.of(new TubeMQProtocol());
   }
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new TubeMQPublisherSink()
-    );
+    return List.of(new TubeMQPublisherSink());
   }
 
   @Override

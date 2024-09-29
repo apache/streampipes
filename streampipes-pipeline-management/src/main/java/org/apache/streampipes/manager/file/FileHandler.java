@@ -17,15 +17,15 @@
  */
 package org.apache.streampipes.manager.file;
 
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileHandler {
 
@@ -52,8 +52,9 @@ public class FileHandler {
       storeFile(newFilename, fileInputStream);
     } catch (FileNotFoundException e) {
       logger.error(
-          "Failed to find the old file locally with internalFilename as the identifier, this is most likely a mismatch "
-              + "between local file and FileMetadata stored in CouchDB. Raw exception message: " + e.getMessage());
+              "Failed to find the old file locally with internalFilename as the identifier, this is most likely a mismatch "
+                      + "between local file and FileMetadata stored in CouchDB. Raw exception message: "
+                      + e.getMessage());
     } catch (IOException e) {
       logger.error("Failed to save renamed file locally: " + e.getMessage());
     }
@@ -68,7 +69,6 @@ public class FileHandler {
   }
 
   private String makeFileLocation() {
-    return FileConstants.FILES_BASE_DIR
-        + File.separator;
+    return FileConstants.FILES_BASE_DIR + File.separator;
   }
 }

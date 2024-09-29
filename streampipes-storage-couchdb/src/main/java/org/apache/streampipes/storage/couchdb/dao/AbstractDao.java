@@ -19,11 +19,11 @@ package org.apache.streampipes.storage.couchdb.dao;
 
 import org.apache.streampipes.model.Tuple2;
 
-import org.lightcouch.CouchDbClient;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import org.lightcouch.CouchDbClient;
 
 public class AbstractDao<T> extends CrudDao {
 

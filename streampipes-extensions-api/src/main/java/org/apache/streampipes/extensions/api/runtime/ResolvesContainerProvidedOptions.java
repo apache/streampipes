@@ -29,6 +29,6 @@ import java.util.List;
  */
 public interface ResolvesContainerProvidedOptions {
 
-  List<Option> resolveOptions(String staticPropertyInternalName,
-                              IStaticPropertyExtractor parameterExtractor) throws SpConfigurationException;
+  List<Option> resolveOptions(String staticPropertyInternalName, IStaticPropertyExtractor parameterExtractor)
+          throws SpConfigurationException;
 }

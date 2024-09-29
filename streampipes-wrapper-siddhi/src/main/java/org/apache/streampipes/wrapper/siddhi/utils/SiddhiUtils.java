@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.wrapper.siddhi.utils;
 
-
 import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.runtime.EventFactory;
@@ -26,21 +25,18 @@ import org.apache.streampipes.model.runtime.SourceInfo;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 import org.apache.streampipes.wrapper.siddhi.model.EventPropertyDef;
 
-import io.siddhi.core.event.Event;
-import io.siddhi.query.api.definition.Attribute;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.siddhi.core.event.Event;
+import io.siddhi.query.api.definition.Attribute;
+
 public class SiddhiUtils {
 
-  public static org.apache.streampipes.model.runtime.Event toSpEvent(List<Event> events,
-                                                                     String listFieldName,
-                                                                     SchemaInfo schemaInfo,
-                                                                     SourceInfo sourceInfo,
-                                                                     List<Attribute> streamAttributes) {
+  public static org.apache.streampipes.model.runtime.Event toSpEvent(List<Event> events, String listFieldName,
+          SchemaInfo schemaInfo, SourceInfo sourceInfo, List<Attribute> streamAttributes) {
     List<Map<String, Object>> allEvents = new ArrayList<>();
 
     events.forEach(event -> allEvents.add(toMap(event, streamAttributes)));
@@ -51,22 +47,19 @@ public class SiddhiUtils {
     return EventFactory.fromMap(outMap, sourceInfo, schemaInfo);
   }
 
-  public static org.apache.streampipes.model.runtime.Event toSpEvent(Event event,
-                                                                     SchemaInfo schemaInfo,
-                                                                     SourceInfo sourceInfo,
-                                                                     List<Attribute> streamAttributes) {
+  public static org.apache.streampipes.model.runtime.Event toSpEvent(Event event, SchemaInfo schemaInfo,
+          SourceInfo sourceInfo, List<Attribute> streamAttributes) {
     Map<String, Object> outMap = toMap(event, streamAttributes);
     return EventFactory.fromMap(outMap, sourceInfo, schemaInfo);
   }
 
-  public static Map<String, Object> toMap(Event event,
-                                          List<Attribute> streamAttributes) {
+  public static Map<String, Object> toMap(Event event, List<Attribute> streamAttributes) {
     Map<String, Object> outMap = new HashMap<>();
 
     for (int i = 0; i < streamAttributes.size(); i++) {
       String outputKey = streamAttributes.get(i).getName();
       if (outputKey.startsWith(SiddhiConstants.FIRST_STREAM_PREFIX)
-          || outputKey.startsWith(SiddhiConstants.SECOND_STREAM_PREFIX)) {
+              || outputKey.startsWith(SiddhiConstants.SECOND_STREAM_PREFIX)) {
         outputKey = outputKey.substring(2);
       }
       Object data = event.getData(i);
@@ -90,26 +83,18 @@ public class SiddhiUtils {
   }
 
   public static String getOutputTopicName(IDataProcessorParameters parameters) {
-    return parameters
-        .getModel()
-        .getOutputStream()
-        .getEventGrounding()
-        .getTransportProtocol()
-        .getTopicDefinition()
-        .getActualTopicName();
+    return parameters.getModel().getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition()
+            .getActualTopicName();
   }
 
   public static String prepareName(String eventName) {
-    return eventName
-        .replaceAll("\\.", "")
-        .replaceAll("-", "")
-        .replaceAll(PropertySelectorConstants.PROPERTY_DELIMITER, "");
+    return eventName.replaceAll("\\.", "").replaceAll("-", "").replaceAll(PropertySelectorConstants.PROPERTY_DELIMITER,
+            "");
   }
 
   public static String prepareProperty(String propertyName) {
-    return propertyName
-        .replaceAll(PropertySelectorConstants.PROPERTY_DELIMITER, "")
-        .replaceAll(" ", EventPropertyDef.WHITESPACE_REPLACEMENT);
+    return propertyName.replaceAll(PropertySelectorConstants.PROPERTY_DELIMITER, "").replaceAll(" ",
+            EventPropertyDef.WHITESPACE_REPLACEMENT);
   }
 
 }

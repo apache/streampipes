@@ -15,12 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.configuration;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
-public record LocationConfig(boolean locationEnabled,
-                             String tileServerUrl,
-                             String attributionText) {}
+public record LocationConfig(boolean locationEnabled, String tileServerUrl, String attributionText) {
+}

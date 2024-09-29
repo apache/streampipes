@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.guess;
 
 import java.util.Objects;
@@ -35,8 +34,7 @@ public class FieldStatusInfo {
     return info;
   }
 
-  public static FieldStatusInfo bad(String additionalInfo,
-                                    boolean changesRequired) {
+  public static FieldStatusInfo bad(String additionalInfo, boolean changesRequired) {
     var info = new FieldStatusInfo();
     info.setFieldStatus(FieldStatus.BAD);
     info.setAdditionalInfo(additionalInfo);
@@ -78,8 +76,8 @@ public class FieldStatusInfo {
       return false;
     }
     FieldStatusInfo that = (FieldStatusInfo) o;
-    return changesRequired == that.changesRequired && fieldStatus == that.fieldStatus && Objects.equals(
-        additionalInfo, that.additionalInfo);
+    return changesRequired == that.changesRequired && fieldStatus == that.fieldStatus
+            && Objects.equals(additionalInfo, that.additionalInfo);
   }
 
   @Override

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.exceptions;
 
 public class SpRuntimeException extends SpException {
@@ -25,7 +24,8 @@ public class SpRuntimeException extends SpException {
   /**
    * Creates a new Exception with the given message and null as the cause.
    *
-   * @param message The exception message
+   * @param message
+   *          The exception message
    */
   public SpRuntimeException(String message) {
     super(message);
@@ -34,7 +34,8 @@ public class SpRuntimeException extends SpException {
   /**
    * Creates a new exception with a null message and the given cause.
    *
-   * @param cause The exception that caused this exception
+   * @param cause
+   *          The exception that caused this exception
    */
   public SpRuntimeException(Throwable cause) {
     super(cause);
@@ -43,8 +44,10 @@ public class SpRuntimeException extends SpException {
   /**
    * Creates a new exception with the given message and cause
    *
-   * @param message The exception message
-   * @param cause   The exception that caused this exception
+   * @param message
+   *          The exception message
+   * @param cause
+   *          The exception that caused this exception
    */
   public SpRuntimeException(String message, Throwable cause) {
     super(message, cause);

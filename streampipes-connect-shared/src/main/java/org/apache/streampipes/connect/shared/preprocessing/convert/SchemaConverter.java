@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.convert;
 
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
@@ -30,32 +29,26 @@ import java.util.stream.Collectors;
 public class SchemaConverter {
 
   public EventSchema toOriginalSchema(EventSchema transformedSchema,
-                                      List<TransformationRuleDescription> transformationRules) {
+          List<TransformationRuleDescription> transformationRules) {
 
-    var converter = new ToOriginalSchemaConverter(
-        transformedSchema.getEventProperties()
-    );
+    var converter = new ToOriginalSchemaConverter(transformedSchema.getEventProperties());
 
     return transform(transformationRules, converter, true);
   }
 
   public EventSchema toTransformedSchema(EventSchema originalSchema,
-                                         List<TransformationRuleDescription> transformationRules) {
+          List<TransformationRuleDescription> transformationRules) {
 
-    var converter = new ToTransformedSchemaConverter(
-        originalSchema.getEventProperties()
-    );
+    var converter = new ToTransformedSchemaConverter(originalSchema.getEventProperties());
 
     return transform(transformationRules, converter, false);
   }
 
   private EventSchema transform(List<TransformationRuleDescription> transformationRules,
-                                ProvidesConversionResult converter,
-                                boolean reverseRules) {
-    var rules = transformationRules
-        .stream()
-        .sorted(Comparator.comparingInt(TransformationRuleDescription::getRulePriority))
-        .collect(Collectors.toCollection(ArrayList::new));
+          ProvidesConversionResult converter, boolean reverseRules) {
+    var rules = transformationRules.stream()
+            .sorted(Comparator.comparingInt(TransformationRuleDescription::getRulePriority))
+            .collect(Collectors.toCollection(ArrayList::new));
 
     if (reverseRules) {
       Collections.reverse(rules);

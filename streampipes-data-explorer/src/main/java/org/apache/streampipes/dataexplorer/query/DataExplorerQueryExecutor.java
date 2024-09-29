@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
@@ -25,24 +24,22 @@ import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.SpQueryStatus;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Map;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class DataExplorerQueryExecutor<X, W> {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataExplorerQueryExecutor.class);
 
   /**
-   * Execute the data explorer query and return the result or a warning message
-   * in case the maximum amount of events to return is defined
+   * Execute the data explorer query and return the result or a warning message in case the maximum amount of events to
+   * return is defined
    */
-  public SpQueryResult executeQuery(SelectQueryParams params,
-                                    int maximumAmountOfEvents,
-                                    Optional<String> forIdOpt,
-                                    boolean ignoreMissingValues) throws RuntimeException {
+  public SpQueryResult executeQuery(SelectQueryParams params, int maximumAmountOfEvents, Optional<String> forIdOpt,
+          boolean ignoreMissingValues) throws RuntimeException {
     X query = makeSelectQuery(params);
     var result = executeQuery(query, forIdOpt, ignoreMissingValues);
     if (maximumAmountOfEvents != -1) {
@@ -52,13 +49,8 @@ public abstract class DataExplorerQueryExecutor<X, W> {
     }
   }
 
-  private SpQueryResult validateAndReturnQueryResult(SpQueryResult queryResult,
-                                                     int limit,
-                                                     int maximumAmountOfEvents) {
-    var amountOfResults = queryResult.getAllDataSeries()
-        .stream()
-        .mapToInt(DataSeries::getTotal)
-        .sum();
+  private SpQueryResult validateAndReturnQueryResult(SpQueryResult queryResult, int limit, int maximumAmountOfEvents) {
+    var amountOfResults = queryResult.getAllDataSeries().stream().mapToInt(DataSeries::getTotal).sum();
 
     var amountOfQueryResults = limit == Integer.MIN_VALUE ? amountOfResults : Math.min(amountOfResults, limit);
     if (amountOfQueryResults > maximumAmountOfEvents) {
@@ -79,9 +71,7 @@ public abstract class DataExplorerQueryExecutor<X, W> {
     return executeQuery(makeDeleteQuery(params), Optional.empty(), true);
   }
 
-  public SpQueryResult executeQuery(X query,
-                                    Optional<String> forIdOpt,
-                                    boolean ignoreMissingValues) {
+  public SpQueryResult executeQuery(X query, Optional<String> forIdOpt, boolean ignoreMissingValues) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Data Lake Query {}", asQueryString(query));
     }
@@ -94,9 +84,7 @@ public abstract class DataExplorerQueryExecutor<X, W> {
     return postQuery(result, forIdOpt, ignoreMissingValues);
   }
 
-  protected abstract SpQueryResult postQuery(W queryResult,
-                                             Optional<String> forIdOpt,
-                                             boolean ignoreMissingValues);
+  protected abstract SpQueryResult postQuery(W queryResult, Optional<String> forIdOpt, boolean ignoreMissingValues);
 
   public abstract W executeQuery(X query);
 

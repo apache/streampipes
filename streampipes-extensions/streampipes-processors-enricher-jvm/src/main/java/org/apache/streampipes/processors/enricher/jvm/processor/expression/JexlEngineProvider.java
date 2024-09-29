@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.expression;
 
 import org.apache.commons.jexl3.JexlBuilder;
@@ -26,10 +25,7 @@ import org.apache.commons.jexl3.introspection.JexlPermissions;
 public class JexlEngineProvider {
 
   public JexlEngine getEngine() {
-    var features = new JexlFeatures()
-        .loops(false)
-        .sideEffect(false)
-        .sideEffectGlobal(false);
+    var features = new JexlFeatures().loops(false).sideEffect(false).sideEffectGlobal(false);
 
     var permissions = new JexlPermissions.ClassPermissions(java.lang.Math.class);
 

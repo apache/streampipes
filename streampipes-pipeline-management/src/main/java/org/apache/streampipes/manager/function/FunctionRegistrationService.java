@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.function;
 
 import org.apache.streampipes.model.function.FunctionDefinition;
@@ -38,7 +37,7 @@ public enum FunctionRegistrationService {
     return registeredFunctions.values();
   }
 
-  public FunctionDefinition getFunction (String functionId) {
+  public FunctionDefinition getFunction(String functionId) {
     return registeredFunctions.get(functionId);
   }
 

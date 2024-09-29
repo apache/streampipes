@@ -174,11 +174,11 @@ public class SpServiceDefinition {
   }
 
   /**
-   * Add a list of migrations to the service definition.
-   * This inherently checks for duplicates and sorts the migrations as such that
-   * migrations affecting lower versions always come first.
+   * Add a list of migrations to the service definition. This inherently checks for duplicates and sorts the migrations
+   * as such that migrations affecting lower versions always come first.
    *
-   * @param migrators migrators to add
+   * @param migrators
+   *          migrators to add
    */
   public void addMigrators(List<IModelMigrator<?, ?>> migrators) {
     for (var migratorToAdd : migrators) {

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.configuration.SpCoreConfiguration;
@@ -26,8 +25,8 @@ import org.apache.streampipes.storage.couchdb.utils.Utils;
 import java.util.List;
 
 public class CoreConfigurationStorageImpl extends AbstractDao<SpCoreConfiguration>
-    implements ISpCoreConfigurationStorage {
-
+        implements
+          ISpCoreConfigurationStorage {
 
   public CoreConfigurationStorageImpl() {
     super(Utils::getCouchDbGeneralConfigStorage, SpCoreConfiguration.class);

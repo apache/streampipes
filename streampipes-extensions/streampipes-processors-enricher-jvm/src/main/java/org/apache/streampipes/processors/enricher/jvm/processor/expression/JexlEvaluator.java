@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.expression;
 
 import org.apache.streampipes.model.runtime.Event;
@@ -29,14 +28,12 @@ public class JexlEvaluator {
   private final JexlDescription jexlDescription;
   private final JexlScript script;
 
-  public JexlEvaluator(JexlDescription jexlDescription,
-                       JexlEngine engine) {
+  public JexlEvaluator(JexlDescription jexlDescription, JexlEngine engine) {
     this.jexlDescription = jexlDescription;
     this.script = engine.createScript(jexlDescription.script());
   }
 
-  public void evaluate(MapContext context,
-                       Event event) {
+  public void evaluate(MapContext context, Event event) {
     event.addField(jexlDescription.getFieldName(), script.execute(context));
   }
 }

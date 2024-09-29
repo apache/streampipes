@@ -46,14 +46,10 @@ public class PermissionResourceManager extends AbstractResourceManager<IPermissi
     db.persist(permission);
   }
 
-  public void createDefault(String objectInstanceId,
-                            Class<?> objectInstanceClass,
-                            String ownerSid,
-                            boolean publicElement) {
-    Permission permission = PermissionBuilder
-        .create(objectInstanceId, objectInstanceClass, ownerSid)
-        .publicElement(publicElement)
-        .build();
+  public void createDefault(String objectInstanceId, Class<?> objectInstanceClass, String ownerSid,
+          boolean publicElement) {
+    Permission permission = PermissionBuilder.create(objectInstanceId, objectInstanceClass, ownerSid)
+            .publicElement(publicElement).build();
 
     create(permission);
   }

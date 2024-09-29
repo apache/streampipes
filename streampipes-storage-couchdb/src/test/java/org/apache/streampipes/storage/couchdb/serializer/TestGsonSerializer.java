@@ -27,42 +27,23 @@ public class TestGsonSerializer {
   public static void assertions(PipelineElementTemplate template) {
     Assertions.assertEquals("name", template.getTemplateName());
     Assertions.assertEquals("description", template.getTemplateDescription());
-    Assertions.assertEquals(
-        2,
-        template.getTemplateConfigs()
-                .size()
-    );
-    Assertions.assertEquals(
-        "test-string",
-        findValue(template, "test-key")
-    );
+    Assertions.assertEquals(2, template.getTemplateConfigs().size());
+    Assertions.assertEquals("test-string", findValue(template, "test-key"));
   }
 
-  private static Object findValue(PipelineElementTemplate template,
-                           String key) {
-    return template.getTemplateConfigs()
-        .stream()
-        .filter(t -> t.containsKey(key))
-        .map(t -> t.get(key))
-        .findFirst()
-        .orElseThrow(() -> new AssertionError("test-key not found"));
+  private static Object findValue(PipelineElementTemplate template, String key) {
+    return template.getTemplateConfigs().stream().filter(t -> t.containsKey(key)).map(t -> t.get(key)).findFirst()
+            .orElseThrow(() -> new AssertionError("test-key not found"));
   }
 
   @Test
   public void testPipelineElementTemplateSerialization() {
     PipelineElementTemplate template = PipelineElementTemplateHelpers.makePipelineElementTemplate();
 
-    String json = GsonSerializer.getGsonBuilder()
-                                .create()
-                                .toJson(template);
-    PipelineElementTemplate template2 = GsonSerializer
-        .getGsonBuilder()
-        .create()
-        .fromJson(json, PipelineElementTemplate.class);
+    String json = GsonSerializer.getGsonBuilder().create().toJson(template);
+    PipelineElementTemplate template2 = GsonSerializer.getGsonBuilder().create().fromJson(json,
+            PipelineElementTemplate.class);
     assertions(template2);
-    Assertions.assertEquals(
-        2.0,
-        findValue(template2, "test-key-2")
-    );
+    Assertions.assertEquals(2.0, findValue(template2, "test-key-2"));
   }
 }

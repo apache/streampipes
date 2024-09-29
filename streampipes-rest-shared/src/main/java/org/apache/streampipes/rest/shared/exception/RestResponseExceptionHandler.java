@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.shared.exception;
 
 import org.springframework.http.ResponseEntity;
@@ -27,12 +26,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler(value = { SpNotificationException.class })
-  protected ResponseEntity<Object> handleException(
-      RuntimeException ex, WebRequest request) {
+  @ExceptionHandler(value = {SpNotificationException.class})
+  protected ResponseEntity<Object> handleException(RuntimeException ex, WebRequest request) {
     var notificationException = (SpNotificationException) ex;
-    return ResponseEntity
-        .status(notificationException.getStatus())
-        .body(notificationException.getNotification());
+    return ResponseEntity.status(notificationException.getStatus()).body(notificationException.getNotification());
   }
 }

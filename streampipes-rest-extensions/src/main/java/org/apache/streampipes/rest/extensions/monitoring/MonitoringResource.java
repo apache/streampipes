@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.rest.extensions.monitoring;
 
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;

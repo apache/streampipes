@@ -15,11 +15,8 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.guess;
 
 public enum FieldStatus {
-  GOOD,
-  BAD,
-  ATTENTION
+  GOOD, BAD, ATTENTION
 }

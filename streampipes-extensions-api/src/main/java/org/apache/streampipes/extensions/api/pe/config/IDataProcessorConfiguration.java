@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe.config;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
@@ -24,7 +23,8 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import java.util.function.Supplier;
 
 public interface IDataProcessorConfiguration
-    extends IPipelineElementConfiguration<DataProcessorDescription, IStreamPipesDataProcessor> {
+        extends
+          IPipelineElementConfiguration<DataProcessorDescription, IStreamPipesDataProcessor> {
 
   @Override
   DataProcessorDescription getDescription();

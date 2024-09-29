@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.mail.template;
 
 import org.apache.streampipes.mail.template.generation.MailTemplateBuilder;
@@ -28,9 +27,7 @@ public class CustomMailTemplate extends AbstractMailTemplate {
   private final String preheader;
   private final String content;
 
-  public CustomMailTemplate(String title,
-                            String preheader,
-                            String content) {
+  public CustomMailTemplate(String title, String preheader, String content) {
     this.title = title;
     this.preheader = preheader;
     this.content = content;

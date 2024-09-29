@@ -15,18 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.migrations.v970;
 
 import org.apache.streampipes.manager.setup.design.UserDesignDocument;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import java.io.IOException;
+
 import org.lightcouch.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class AddRolesToUserDbMigration implements Migration {
 

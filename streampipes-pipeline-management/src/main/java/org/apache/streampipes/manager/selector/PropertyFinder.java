@@ -45,8 +45,7 @@ public class PropertyFinder {
         if (currentPointer == (propertySelectors.length - 1)) {
           return Collections.singletonList(property);
         } else {
-          return findProperty(((EventPropertyNested) property).getEventProperties(),
-              currentPointer + 1);
+          return findProperty(((EventPropertyNested) property).getEventProperties(), currentPointer + 1);
         }
       }
     }

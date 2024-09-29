@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.filters.jvm.processor.movingaverage;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -53,36 +52,28 @@ public class MovingAverageProcessor extends StreamPipesDataProcessor {
   private static final String MEAN_INTERNAL_NAME = "MEAN";
   private static final String MEDIAN_INTERNAL_NAME = "MEDIAN";
 
-
   private String numberName;
   private MovingFilter filter;
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.movingaverage", 0)
-        .category(DataProcessorType.FILTER)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(NUMBER_VALUE),
-                PropertyScope.NONE)
-            .build())
-        .requiredIntegerParameter(Labels.withId(N_VALUE))
-        .requiredSingleValueSelection(Labels.withId(METHOD_KEY),
-            Options.from(new Tuple2<>("mean", MEAN_INTERNAL_NAME),
-                new Tuple2<>("median", MEDIAN_INTERNAL_NAME)))
-        .outputStrategy(
-            OutputStrategies.append(
-                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.NUMBER)))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.movingaverage", 0)
+            .category(DataProcessorType.FILTER).withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId(NUMBER_VALUE),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredIntegerParameter(Labels.withId(N_VALUE))
+            .requiredSingleValueSelection(Labels.withId(METHOD_KEY),
+                    Options.from(new Tuple2<>("mean", MEAN_INTERNAL_NAME),
+                            new Tuple2<>("median", MEDIAN_INTERNAL_NAME)))
+            .outputStrategy(OutputStrategies.append(EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.NUMBER)))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.numberName = parameters.extractor().mappingPropertyValue(NUMBER_VALUE);
     int n = parameters.extractor().singleValueParameter(N_VALUE, Integer.class);
     String methode = parameters.extractor().selectedSingleValueInternalName(METHOD_KEY, String.class);

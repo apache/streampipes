@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
@@ -23,16 +22,14 @@ import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 
+import java.nio.charset.StandardCharsets;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.StandardCharsets;
-
-public record BrokerEventProcessor(
-    IParser parser,
-    IEventCollector collector
-) implements InternalEventProcessor<byte[]> {
+public record BrokerEventProcessor(IParser parser,
+        IEventCollector collector) implements InternalEventProcessor<byte[]> {
 
   private static final Logger LOG = LoggerFactory.getLogger(BrokerEventProcessor.class);
 

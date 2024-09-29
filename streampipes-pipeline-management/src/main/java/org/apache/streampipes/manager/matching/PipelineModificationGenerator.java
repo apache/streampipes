@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching;
 
 import org.apache.streampipes.manager.data.PipelineGraph;
@@ -50,8 +49,7 @@ public class PipelineModificationGenerator {
   private final Map<String, PipelineEdgeValidation> edgeValidations;
   private final PipelineValidator pipelineValidator;
 
-  public PipelineModificationGenerator(PipelineGraph pipelineGraph,
-                                       List<IPipelineValidationStep> steps) {
+  public PipelineModificationGenerator(PipelineGraph pipelineGraph, List<IPipelineValidationStep> steps) {
     this.pipelineGraph = pipelineGraph;
     this.pipelineModifications = new HashMap<>();
     this.pipelineValidator = new PipelineValidator(steps);
@@ -74,9 +72,7 @@ public class PipelineModificationGenerator {
     List<PipelineEdgeValidation> edgesWithoutConnectedStream = collectEdgesWithoutStream(modifications);
     edgeValidations.addAll(edgesWithoutConnectedStream);
     message.setEdgeValidations(edgeValidations);
-    message.setPipelineValid(
-        edgeValidations
-            .stream()
+    message.setPipelineValid(edgeValidations.stream()
             .allMatch(e -> e.getStatus().getValidationStatusType() == EdgeValidationStatusType.COMPLETE)
             && message.getPipelineModifications().stream().allMatch(PipelineModification::isPipelineElementValid));
     return message;
@@ -89,8 +85,7 @@ public class PipelineModificationGenerator {
     return edgeValidations;
   }
 
-  private void addModification(NamedStreamPipesEntity source,
-                               Set<InvocableStreamPipesEntity> targets) {
+  private void addModification(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
 
     targets.forEach(t -> {
       PipelineModification modification = new PipelineModification();
@@ -104,7 +99,7 @@ public class PipelineModificationGenerator {
       } catch (SpValidationException e) {
         e.getErrorLog().forEach(log -> validationInfos.add(PipelineElementValidationInfo.error(log.toString())));
         edgeValidations.put(makeKey(source, t),
-            PipelineEdgeValidation.invalid(source.getDom(), t.getDom(), toNotifications(e.getErrorLog())));
+                PipelineEdgeValidation.invalid(source.getDom(), t.getDom(), toNotifications(e.getErrorLog())));
         buildModification(modification, t, Collections.emptyList(), false);
       }
       modification.setValidationInfos(validationInfos);
@@ -114,8 +109,7 @@ public class PipelineModificationGenerator {
     });
   }
 
-  private String makeKey(NamedStreamPipesEntity source,
-                         InvocableStreamPipesEntity t) {
+  private String makeKey(NamedStreamPipesEntity source, InvocableStreamPipesEntity t) {
     return source.getDom() + "-" + t.getDom();
   }
 
@@ -123,10 +117,8 @@ public class PipelineModificationGenerator {
     return new ArrayList<>(map.values());
   }
 
-  private void buildModification(PipelineModification modification,
-                                 InvocableStreamPipesEntity t,
-                                 List<SpDataStream> inputStreams,
-                                 boolean valid) {
+  private void buildModification(PipelineModification modification, InvocableStreamPipesEntity t,
+          List<SpDataStream> inputStreams, boolean valid) {
     if (t instanceof DataProcessorInvocation) {
       modification.setOutputStrategies(((DataProcessorInvocation) t).getOutputStrategies());
       modification.setOutputStream(((DataProcessorInvocation) t).getOutputStream());
@@ -138,17 +130,11 @@ public class PipelineModificationGenerator {
 
   private Set<InvocableStreamPipesEntity> getConnections(NamedStreamPipesEntity source) {
     Set<String> outgoingEdges = pipelineGraph.outgoingEdgesOf(source);
-    return outgoingEdges
-        .stream()
-        .map(pipelineGraph::getEdgeTarget)
-        .map(g -> (InvocableStreamPipesEntity) g)
-        .collect(Collectors.toSet());
+    return outgoingEdges.stream().map(pipelineGraph::getEdgeTarget).map(g -> (InvocableStreamPipesEntity) g)
+            .collect(Collectors.toSet());
   }
 
   private List<Notification> toNotifications(List<MatchingResultMessage> matchingResultMessages) {
-    return matchingResultMessages
-        .stream()
-        .map(m -> new Notification(m.getTitle(), m.toString()))
-        .toList();
+    return matchingResultMessages.stream().map(m -> new Notification(m.getTitle(), m.toString())).toList();
   }
 }

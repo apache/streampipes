@@ -15,17 +15,16 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.nats;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 
-import io.nats.client.Connection;
-
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
+
+import io.nats.client.Connection;
 
 public class NatsPublisher extends AbstractNatsConnector implements EventProducer {
 

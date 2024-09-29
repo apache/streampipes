@@ -32,14 +32,13 @@ public class EmptyRequirementsSelectorGenerator extends AbstractRequirementsSele
 
   @Override
   public List<String> generateSelectors() {
-    List<String> selectors = new ArrayList<>(new PropertySelectorGenerator(inputStreams
-        .get(0).getEventSchema().getEventProperties(), true)
-        .generateSelectors(PropertySelectorConstants.FIRST_STREAM_ID_PREFIX));
+    List<String> selectors = new ArrayList<>(
+            new PropertySelectorGenerator(inputStreams.get(0).getEventSchema().getEventProperties(), true)
+                    .generateSelectors(PropertySelectorConstants.FIRST_STREAM_ID_PREFIX));
 
     if (inputStreams.size() > 1) {
-      selectors.addAll(new PropertySelectorGenerator(inputStreams
-          .get(1).getEventSchema().getEventProperties(), true)
-          .generateSelectors(PropertySelectorConstants.SECOND_STREAM_ID_PREFIX));
+      selectors.addAll(new PropertySelectorGenerator(inputStreams.get(1).getEventSchema().getEventProperties(), true)
+              .generateSelectors(PropertySelectorConstants.SECOND_STREAM_ID_PREFIX));
     }
 
     return selectors;

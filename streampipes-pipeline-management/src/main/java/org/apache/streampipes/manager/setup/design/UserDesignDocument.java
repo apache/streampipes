@@ -15,36 +15,33 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.setup.design;
 
-import org.lightcouch.DesignDocument;
+import static org.apache.streampipes.manager.setup.design.DesignDocumentUtils.prepareDocument;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.apache.streampipes.manager.setup.design.DesignDocumentUtils.prepareDocument;
+import org.lightcouch.DesignDocument;
 
 public class UserDesignDocument {
 
   public static final String USERNAME_KEY = "username";
-  public static final String USERNAME_MAP_FUNCTION =
-      "function(doc) { if(doc.properties.username) { emit(doc.properties.username.toLowerCase(), doc); } }";
+  public static final String USERNAME_MAP_FUNCTION = "function(doc) { if(doc.properties.username) { emit(doc.properties.username.toLowerCase(), doc); } }";
 
   public static final String ROLE_KEY = "role";
   public static final String ROLE_MAP_FUNCTION = "function(doc) { if(doc.$type === 'role') { emit(doc._id, doc); } }";
 
-  public static final String PRIVILEGE_MAP_FUNCTION =
-      "function(doc) { if(doc.$type === 'privilege') { emit(doc._id, doc); } }";
+  public static final String PRIVILEGE_MAP_FUNCTION = "function(doc) { if(doc.$type === 'privilege') { emit(doc._id, doc); } }";
 
   public DesignDocument make() {
     DesignDocument userDocument = prepareDocument("_design/users");
     Map<String, DesignDocument.MapReduce> views = new HashMap<>();
 
     DesignDocument.MapReduce passwordFunction = new DesignDocument.MapReduce();
-    passwordFunction.setMap(
-        "function(doc) { if(doc.properties.username && doc.properties.principalType === 'USER_ACCOUNT' && "
-            + "doc.properties.password) { emit(doc.properties.username.toLowerCase(), doc.properties.password); } }");
+    passwordFunction
+            .setMap("function(doc) { if(doc.properties.username && doc.properties.principalType === 'USER_ACCOUNT' && "
+                    + "doc.properties.password) { emit(doc.properties.username.toLowerCase(), doc.properties.password); } }");
 
     DesignDocument.MapReduce usernameFunction = new DesignDocument.MapReduce();
     usernameFunction.setMap(USERNAME_MAP_FUNCTION);
@@ -57,17 +54,17 @@ public class UserDesignDocument {
 
     DesignDocument.MapReduce tokenFunction = new DesignDocument.MapReduce();
     tokenFunction.setMap(
-        "function(doc) { if (doc.properties.userApiTokens) { doc.properties.userApiTokens.forEach(function(token) "
-            + "{ emit(token.properties.hashedToken, doc.properties.email); });}}");
+            "function(doc) { if (doc.properties.userApiTokens) { doc.properties.userApiTokens.forEach(function(token) "
+                    + "{ emit(token.properties.hashedToken, doc.properties.email); });}}");
 
     DesignDocument.MapReduce userPermissionFunction = new DesignDocument.MapReduce();
-    userPermissionFunction.setMap(
-        "function(doc) { if (doc.$type === 'permission') {emit(doc.ownerSid, doc); for(var i = 0; "
-            + "i < doc.grantedAuthorities.length; i++) {emit(doc.grantedAuthorities[i].sid,doc)}}}");
+    userPermissionFunction
+            .setMap("function(doc) { if (doc.$type === 'permission') {emit(doc.ownerSid, doc); for(var i = 0; "
+                    + "i < doc.grantedAuthorities.length; i++) {emit(doc.grantedAuthorities[i].sid,doc)}}}");
 
     DesignDocument.MapReduce objectPermissionFunction = new DesignDocument.MapReduce();
-    objectPermissionFunction.setMap(
-        "function(doc) { if (doc.$type === 'permission') {emit(doc.objectInstanceId, doc);}}");
+    objectPermissionFunction
+            .setMap("function(doc) { if (doc.$type === 'permission') {emit(doc.objectInstanceId, doc);}}");
 
     DesignDocument.MapReduce userActivationFunction = new DesignDocument.MapReduce();
     userActivationFunction.setMap("function(doc) { if (doc.$type === 'user-activation') {emit(doc._id, doc);}}");

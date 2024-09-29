@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
@@ -28,7 +27,6 @@ import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 
 import java.util.Optional;
 
-
 public class QueryResultProvider {
 
   public static final String FOR_ID_KEY = "forId";
@@ -38,9 +36,8 @@ public class QueryResultProvider {
   protected ProvidedRestQueryParams queryParams;
 
   public QueryResultProvider(ProvidedRestQueryParams queryParams,
-                             IDataExplorerQueryManagement dataExplorerQueryManagement,
-                             DataExplorerQueryExecutor<?, ?> queryExecutor,
-                             boolean ignoreMissingData) {
+          IDataExplorerQueryManagement dataExplorerQueryManagement, DataExplorerQueryExecutor<?, ?> queryExecutor,
+          boolean ignoreMissingData) {
     this.queryParams = queryParams;
     this.ignoreMissingData = ignoreMissingData;
     this.dataExplorerQueryManagement = dataExplorerQueryManagement;
@@ -49,15 +46,14 @@ public class QueryResultProvider {
 
   public SpQueryResult getData() {
     if (queryParams.has(SupportedRestQueryParams.QP_AUTO_AGGREGATE)) {
-      queryParams = new AutoAggregationHandler(queryParams,
-                                               dataExplorerQueryManagement).makeAutoAggregationQueryParams();
+      queryParams = new AutoAggregationHandler(queryParams, dataExplorerQueryManagement)
+              .makeAutoAggregationQueryParams();
     }
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(queryParams);
 
     if (queryParams.getProvidedParams().containsKey(SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS)) {
-      int maximumAmountOfEvents = Integer.parseInt(queryParams.getProvidedParams()
-                                                              .get(SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS)
-      );
+      int maximumAmountOfEvents = Integer
+              .parseInt(queryParams.getProvidedParams().get(SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS));
       return queryExecutor.executeQuery(qp, maximumAmountOfEvents, Optional.empty(), ignoreMissingData);
     }
 

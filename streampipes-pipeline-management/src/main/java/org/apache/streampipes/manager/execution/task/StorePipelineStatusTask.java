@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution.task;
 
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
@@ -24,11 +23,11 @@ import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import java.util.Date;
+
 import org.lightcouch.DocumentConflictException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Date;
 
 public class StorePipelineStatusTask implements PipelineExecutionTask {
 
@@ -37,8 +36,7 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
   private final boolean start;
   private final boolean forceStop;
 
-  public StorePipelineStatusTask(boolean start,
-                                 boolean forceStop) {
+  public StorePipelineStatusTask(boolean start, boolean forceStop) {
     this.start = start;
     this.forceStop = forceStop;
   }
@@ -49,8 +47,7 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
   }
 
   @Override
-  public void executeTask(Pipeline pipeline,
-                          PipelineExecutionInfo executionInfo) {
+  public void executeTask(Pipeline pipeline, PipelineExecutionInfo executionInfo) {
     if (this.start) {
       pipeline.setHealthStatus(PipelineHealthStatus.OK);
       setPipelineStarted(pipeline);

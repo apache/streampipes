@@ -41,13 +41,13 @@ public class PipelineTemplateDescription extends NamedStreamPipesEntity {
     if (other.getBoundTo() != null) {
       this.boundTo = new Cloner().boundPipelineElements(other.getBoundTo());
     }
-    //this.pipelineTemplateName = other.getPipelineTemplateName();
-    //this.pipelineTemplateDescription = other.getPipelineTemplateDescription();
-    //this.pipelineTemplateId = other.getPipelineTemplateId();
+    // this.pipelineTemplateName = other.getPipelineTemplateName();
+    // this.pipelineTemplateDescription = other.getPipelineTemplateDescription();
+    // this.pipelineTemplateId = other.getPipelineTemplateId();
   }
 
   public PipelineTemplateDescription(String elementName, SpDataStream requiredStream,
-                                     List<BoundPipelineElement> connectedTo) {
+          List<BoundPipelineElement> connectedTo) {
     super(elementName);
     this.boundTo = connectedTo;
   }

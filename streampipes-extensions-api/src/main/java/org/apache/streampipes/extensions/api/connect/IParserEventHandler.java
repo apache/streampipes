@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;

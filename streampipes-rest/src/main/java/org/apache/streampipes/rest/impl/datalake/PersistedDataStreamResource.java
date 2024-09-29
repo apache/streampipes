@@ -24,6 +24,9 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.rest.impl.dashboard.AbstractPipelineExtractionResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
@@ -32,9 +35,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v3/datalake/pipelines")
@@ -52,8 +52,7 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
 
   @GetMapping(path = "{pipelineId}/{measureName}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getVisualizablePipelineByPipelineIdAndVisualizationName(
-      @PathVariable("pipelineId") String pipelineId,
-      @PathVariable("measureName") String measureName) {
+          @PathVariable("pipelineId") String pipelineId, @PathVariable("measureName") String measureName) {
     return getPipelineByIdAndFieldValue(DataLakeAppId, pipelineId, measureName);
   }
 

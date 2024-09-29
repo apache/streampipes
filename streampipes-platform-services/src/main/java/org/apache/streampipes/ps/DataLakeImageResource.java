@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.ps;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v4/datalake/images")

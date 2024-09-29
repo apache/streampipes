@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.helpers;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -32,8 +31,10 @@ public class CollectedStreamRequirements {
   /**
    * Collects stream requirements and mapping properties
    *
-   * @param streamRequirements All stream requirements represented as an abstract data stream.
-   * @param mappingProperties  All mapping properties
+   * @param streamRequirements
+   *          All stream requirements represented as an abstract data stream.
+   * @param mappingProperties
+   *          All mapping properties
    */
   public CollectedStreamRequirements(SpDataStream streamRequirements, List<MappingProperty> mappingProperties) {
     this.streamRequirements = streamRequirements;

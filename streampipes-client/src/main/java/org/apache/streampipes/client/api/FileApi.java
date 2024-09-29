@@ -15,13 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.http.BinaryGetRequest;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
-
 
 public class FileApi extends AbstractClientApi implements IFileApi {
 
@@ -31,12 +29,7 @@ public class FileApi extends AbstractClientApi implements IFileApi {
 
   @Override
   public byte[] getFileContent(String filename) {
-    return new BinaryGetRequest(
-        clientConfig,
-        getBaseResourcePath(filename),
-        null
-    )
-        .executeRequest();
+    return new BinaryGetRequest(clientConfig, getBaseResourcePath(filename), null).executeRequest();
   }
 
   @Override
@@ -46,23 +39,15 @@ public class FileApi extends AbstractClientApi implements IFileApi {
 
   @Override
   public void writeToFile(String file, String fileLocation) {
-    new BinaryGetRequest(clientConfig, getBaseResourcePath(file), null)
-        .writeToFile(fileLocation);
+    new BinaryGetRequest(clientConfig, getBaseResourcePath(file), null).writeToFile(fileLocation);
   }
 
   @Override
   public boolean checkFileContentChanged(String filename, String hash) {
-    return getSingle(
-        getBaseResourcePath(filename)
-            .addToPath("checkFileContentChanged")
-            .addToPath(hash),
-        Boolean.class
-    );
+    return getSingle(getBaseResourcePath(filename).addToPath("checkFileContentChanged").addToPath(hash), Boolean.class);
   }
 
   protected StreamPipesApiPath getBaseResourcePath(String fileName) {
-    return StreamPipesApiPath.fromBaseApiPath()
-                             .addToPath("files")
-                             .addToPath(fileName);
+    return StreamPipesApiPath.fromBaseApiPath().addToPath("files").addToPath(fileName);
   }
 }

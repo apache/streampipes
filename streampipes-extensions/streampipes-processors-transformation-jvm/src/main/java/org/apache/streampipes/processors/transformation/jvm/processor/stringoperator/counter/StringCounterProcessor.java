@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -58,30 +57,26 @@ public class StringCounterProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.stringoperator.counter", 0)
-        .category(DataProcessorType.STRING_OPERATOR, DataProcessorType.COUNT_OPERATOR)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.stringReq(),
-                Labels.withId(FIELD_ID),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.stringEp(Labels.withId(CHANGE_FROM_FIELD_ID), CHANGE_FROM_FIELD_RUNTIME_NAME,
-                "http://schema.org/String"),
-            EpProperties.stringEp(Labels.withId(CHANGE_TO_FIELD_ID), CHANGE_TO_FIELD_RUNTIME_NAME,
-                "http://schema.org/String"),
-            EpProperties.numberEp(Labels.withId(COUNT_FIELD_ID), COUNT_FIELD_RUNTIME_NAME, "http://schema.org/Number")
-        ))
-        .build();
+            .create("org.apache.streampipes.processors.transformation.jvm.stringoperator.counter", 0)
+            .category(DataProcessorType.STRING_OPERATOR, DataProcessorType.COUNT_OPERATOR).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId(FIELD_ID),
+                            PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies.append(
+                    EpProperties.stringEp(Labels.withId(CHANGE_FROM_FIELD_ID), CHANGE_FROM_FIELD_RUNTIME_NAME,
+                            "http://schema.org/String"),
+                    EpProperties.stringEp(Labels.withId(CHANGE_TO_FIELD_ID), CHANGE_TO_FIELD_RUNTIME_NAME,
+                            "http://schema.org/String"),
+                    EpProperties.numberEp(Labels.withId(COUNT_FIELD_ID), COUNT_FIELD_RUNTIME_NAME,
+                            "http://schema.org/Number")))
+            .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     ProcessingElementParameterExtractor extractor = parameters.extractor();
     this.selectedFieldName = extractor.mappingPropertyValue(FIELD_ID);
     this.fieldValueOfLastEvent = "";

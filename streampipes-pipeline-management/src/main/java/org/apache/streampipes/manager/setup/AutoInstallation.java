@@ -22,13 +22,13 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AutoInstallation implements BackgroundTaskNotifier {
 
@@ -89,15 +89,11 @@ public class AutoInstallation implements BackgroundTaskNotifier {
   }
 
   private String findAdminUser() {
-    return getStringOrDefault(
-        env.getInitialAdminEmail()
-    );
+    return getStringOrDefault(env.getInitialAdminEmail());
   }
 
   private String findAdminPassword() {
-    return getStringOrDefault(
-        env.getInitialAdminPassword()
-    );
+    return getStringOrDefault(env.getInitialAdminPassword());
   }
 
   private String getStringOrDefault(StringEnvironmentVariable variable) {

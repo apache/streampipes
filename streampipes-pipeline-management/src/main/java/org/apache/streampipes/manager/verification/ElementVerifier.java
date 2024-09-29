@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.verification;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
@@ -38,11 +37,11 @@ import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
@@ -55,10 +54,8 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   protected List<VerificationResult> validationResults;
   protected List<Verifier> validators;
 
-  protected IPipelineElementDescriptionStorage storageApi = StorageDispatcher
-      .INSTANCE
-      .getNoSqlStore()
-      .getPipelineElementDescriptionStorage();
+  protected IPipelineElementDescriptionStorage storageApi = StorageDispatcher.INSTANCE.getNoSqlStore()
+          .getPipelineElementDescriptionStorage();
 
   public ElementVerifier(String graphData, Class<T> elementClass) {
     this.elementClass = elementClass;
@@ -177,42 +174,27 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   }
 
   private boolean isVerifiedSuccessfully() {
-    return validationResults.stream()
-                            .noneMatch(validator -> (validator instanceof VerificationError));
+    return validationResults.stream().noneMatch(validator -> (validator instanceof VerificationError));
   }
 
   protected T transform() throws JsonProcessingException {
-    return JacksonSerializer.getObjectMapper()
-                            .readValue(graphData, elementClass);
+    return JacksonSerializer.getObjectMapper().readValue(graphData, elementClass);
   }
 
-  private void createAndStorePermission(
-      String principalSid,
-      boolean publicElement
-  ) {
-    Permission permission = makePermission(
-        this.elementDescription.getElementId(),
-        this.elementDescription.getClass(),
-        principalSid, publicElement
-    );
+  private void createAndStorePermission(String principalSid, boolean publicElement) {
+    Permission permission = makePermission(this.elementDescription.getElementId(), this.elementDescription.getClass(),
+            principalSid, publicElement);
 
     storeNewObjectPermission(permission);
   }
 
-  protected Permission makePermission(
-      String objectInstanceId,
-      Class<?> objectInstanceClass,
-      String principalSid,
-      boolean publicElement
-  ) {
-    return PermissionBuilder
-      .create(objectInstanceId, objectInstanceClass, principalSid)
-      .publicElement(publicElement)
-      .build();
+  protected Permission makePermission(String objectInstanceId, Class<?> objectInstanceClass, String principalSid,
+          boolean publicElement) {
+    return PermissionBuilder.create(objectInstanceId, objectInstanceClass, principalSid).publicElement(publicElement)
+            .build();
   }
 
   protected void storeNewObjectPermission(Permission permission) {
-    new SpResourceManager().managePermissions()
-                           .create(permission);
+    new SpResourceManager().managePermissions().create(permission);
   }
 }

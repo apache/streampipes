@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder;
 
 import org.apache.streampipes.model.schema.EventProperty;
@@ -50,7 +49,8 @@ public class NestedPropertyBuilder {
   /**
    * Static factory method to create a new instance of the builder.
    *
-   * @param propertyName The name of the property.
+   * @param propertyName
+   *          The name of the property.
    * @return A new instance of {@code NestedPropertyBuilder}.
    */
   public static NestedPropertyBuilder create(String propertyName) {
@@ -60,7 +60,8 @@ public class NestedPropertyBuilder {
   /**
    * Adds a single {@link EventProperty} to the list of nested properties.
    *
-   * @param eventProperty The {@link EventProperty} to add.
+   * @param eventProperty
+   *          The {@link EventProperty} to add.
    * @return This builder instance for method chaining.
    */
   public NestedPropertyBuilder withEventProperty(EventProperty eventProperty) {
@@ -71,7 +72,8 @@ public class NestedPropertyBuilder {
   /**
    * Adds multiple {@link EventProperty} instances to the list of nested properties.
    *
-   * @param eventProperties The array of {@link EventProperty} instances to add.
+   * @param eventProperties
+   *          The array of {@link EventProperty} instances to add.
    * @return This builder instance for method chaining.
    */
   public NestedPropertyBuilder withEventProperties(EventProperty... eventProperties) {
@@ -80,8 +82,8 @@ public class NestedPropertyBuilder {
   }
 
   /**
-   * Builds and returns the final {@link EventPropertyNested} instance.
-   * Note: This method creates a new instance to ensure immutability.
+   * Builds and returns the final {@link EventPropertyNested} instance. Note: This method creates a new instance to
+   * ensure immutability.
    *
    * @return The constructed {@link EventPropertyNested}.
    */

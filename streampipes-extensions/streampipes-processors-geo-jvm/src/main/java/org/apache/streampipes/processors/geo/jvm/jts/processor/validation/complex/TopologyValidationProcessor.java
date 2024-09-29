@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.jts.processor.validation.complex;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -62,38 +61,26 @@ public class TopologyValidationProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.validation.complex", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReq("http://www.opengis.net/ont/geosparql#Geometry"),
-                Labels.withId(GEOM_KEY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
-                Labels.withId(EPSG_KEY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .outputStrategy(OutputStrategies.keep())
-        .requiredSingleValueSelection(
-            Labels.withId(VALIDATION_OUTPUT_KEY),
-            Options.from(
-                ValidationOutput.VALID.name(),
-                ValidationOutput.INVALID.name()
-            )
-        )
-        .requiredSlideToggle(
-            Labels.withId(LOG_OUTPUT_KEY),
-            false)
-        .build();
+            .create("org.apache.streampipes.processors.geo.jvm.jts.processor.validation.complex", 0)
+            .category(DataProcessorType.GEO).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.domainPropertyReq("http://www.opengis.net/ont/geosparql#Geometry"),
+                            Labels.withId(GEOM_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
+                            Labels.withId(EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .outputStrategy(OutputStrategies.keep())
+            .requiredSingleValueSelection(Labels.withId(VALIDATION_OUTPUT_KEY),
+                    Options.from(ValidationOutput.VALID.name(), ValidationOutput.INVALID.name()))
+            .requiredSlideToggle(Labels.withId(LOG_OUTPUT_KEY), false).build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
 
     this.params = parameters;
     this.geometryMapper = parameters.extractor().mappingPropertyValue(GEOM_KEY);
@@ -117,12 +104,11 @@ public class TopologyValidationProcessor extends StreamPipesDataProcessor {
     IsValidOp validator = new IsValidOp(geometry);
     validator.setSelfTouchingRingFormingHoleValid(true);
     boolean itIsValid = validator.isValid();
-    if (!itIsValid){
+    if (!itIsValid) {
       if (isLogOutput) {
         SpMonitoringManager.INSTANCE.addErrorMessage(params.getGraph().getElementId(),
-            SpLogEntry.from(System.currentTimeMillis(),
-                SpLogMessage.from(new SpJtsGeoemtryException(
-                    validator.getValidationError().toString()))));
+                SpLogEntry.from(System.currentTimeMillis(),
+                        SpLogMessage.from(new SpJtsGeoemtryException(validator.getValidationError().toString()))));
       }
     }
 

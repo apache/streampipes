@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.opcua.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
@@ -32,16 +31,13 @@ public class OpcUaAdapterMigrationV1 implements IAdapterMigrator {
 
   @Override
   public ModelMigratorConfig config() {
-    return new ModelMigratorConfig(
-        "org.apache.streampipes.connect.iiot.adapters.opcua",
-        SpServiceTagPrefix.ADAPTER,
-        0,
-        1);
+    return new ModelMigratorConfig("org.apache.streampipes.connect.iiot.adapters.opcua", SpServiceTagPrefix.ADAPTER, 0,
+            1);
   }
 
   @Override
-  public MigrationResult<AdapterDescription> migrate(AdapterDescription element,
-                                                     IStaticPropertyExtractor extractor) throws RuntimeException {
+  public MigrationResult<AdapterDescription> migrate(AdapterDescription element, IStaticPropertyExtractor extractor)
+          throws RuntimeException {
 
     element.getConfig().removeIf(c -> c.getInternalName().equals(OldNamespaceIndexKey));
     element.getConfig().removeIf(c -> c.getInternalName().equals(OldNodeId));

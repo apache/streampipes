@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.smp.parser;
 
 import java.util.regex.Pattern;
@@ -29,7 +28,6 @@ public class PipelineElementDescriptionReplacer extends PlaceholderReplacer {
   public PipelineElementDescriptionReplacer(String newContent, String markdown) {
     super(newContent, markdown);
   }
-
 
   @Override
   protected Pattern getPattern() {

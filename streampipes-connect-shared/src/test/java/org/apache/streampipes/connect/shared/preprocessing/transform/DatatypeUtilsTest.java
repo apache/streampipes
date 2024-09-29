@@ -15,25 +15,23 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.streampipes.connect.shared.DatatypeUtils;
 import org.apache.streampipes.vocabulary.XSD;
 
-import org.junit.jupiter.api.Test;
-
 import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 public class DatatypeUtilsTest {
 
   /**
-   * The following tests ensure that timestamps represented as strings are correctly parsed.
-   * Often they are first parsed into floating point number before transformed back to long.
-   * The data type for those values should be Double and not Float, because the transformation to Float might change
-   * the value
+   * The following tests ensure that timestamps represented as strings are correctly parsed. Often they are first parsed
+   * into floating point number before transformed back to long. The data type for those values should be Double and not
+   * Float, because the transformation to Float might change the value
    */
   @Test
   public void convertValue_StringToStringValue() {
@@ -120,7 +118,6 @@ public class DatatypeUtilsTest {
     assertEquals(1234567890L, actualValue);
   }
 
-
   String booleanInputValue = "true";
 
   @Test
@@ -163,7 +160,6 @@ public class DatatypeUtilsTest {
     assertEquals(Float.class, result);
   }
 
-
   String doubleInputValue = String.format(Locale.US, "%.2f", Double.MAX_VALUE);
 
   @Test
@@ -177,7 +173,6 @@ public class DatatypeUtilsTest {
     var result = DatatypeUtils.getTypeClass(doubleInputValue, true);
     assertEquals(Double.class, result);
   }
-
 
   String longInputValue = "1667904471000";
 

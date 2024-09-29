@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.verification;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
@@ -28,12 +27,9 @@ import java.io.IOException;
 
 public class DataSinkVerifier extends ElementVerifier<DataSinkDescription> {
 
-
-  public DataSinkVerifier(String graphData)
-      throws SepaParseException {
+  public DataSinkVerifier(String graphData) throws SepaParseException {
     super(graphData, DataSinkDescription.class);
   }
-
 
   @Override
   protected StorageState store() {
@@ -50,7 +46,6 @@ public class DataSinkVerifier extends ElementVerifier<DataSinkDescription> {
   protected void collectValidators() {
     super.collectValidators();
   }
-
 
   @Override
   protected void update() {

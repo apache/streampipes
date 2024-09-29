@@ -37,9 +37,9 @@ public class RuntimeResolvableOneOfStaticProperty extends OneOfStaticProperty {
   }
 
   public RuntimeResolvableOneOfStaticProperty(String internalName, String label, String description,
-                                              boolean horizontalRendering) {
+          boolean horizontalRendering) {
     super(StaticPropertyType.RuntimeResolvableOneOfStaticProperty, internalName, label, description,
-        horizontalRendering);
+            horizontalRendering);
   }
 
   public List<String> getDependsOn() {

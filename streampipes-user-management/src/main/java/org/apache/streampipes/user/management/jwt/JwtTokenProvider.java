@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.user.management.jwt;
 
 import org.apache.streampipes.commons.environment.Environment;
@@ -32,11 +31,6 @@ import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.apache.streampipes.user.management.util.GrantedAuthoritiesBuilder;
 import org.apache.streampipes.user.management.util.UserInfoUtil;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -48,6 +42,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+
 public class JwtTokenProvider {
 
   public static final String CLAIM_USER = "user";
@@ -56,22 +55,15 @@ public class JwtTokenProvider {
   private Environment env;
 
   public JwtTokenProvider() {
-    this.config =  StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getSpCoreConfigurationStorage()
-        .get();
+    this.config = StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage().get();
 
     this.env = Environments.getEnvironment();
   }
 
   public String createToken(Authentication authentication) {
     Principal userPrincipal = ((PrincipalUserDetails<?>) authentication.getPrincipal()).getDetails();
-    Set<String> roles = authentication
-        .getAuthorities()
-        .stream()
-        .map(GrantedAuthority::getAuthority)
-        .collect(Collectors.toSet());
+    Set<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toSet());
 
     return createToken(userPrincipal, roles);
 
@@ -82,8 +74,7 @@ public class JwtTokenProvider {
     return createToken(userPrincipal, roles);
   }
 
-  public String createToken(Principal userPrincipal,
-                            Set<String> roles) {
+  public String createToken(Principal userPrincipal, Set<String> roles) {
     Date tokenExpirationDate = makeExpirationDate();
     Map<String, Object> claims = makeClaims(userPrincipal, roles);
 
@@ -92,7 +83,7 @@ public class JwtTokenProvider {
     } else {
       try {
         return JwtTokenGenerator.makeJwtToken(userPrincipal.getUsername(), getKeyFilePath(), claims,
-            tokenExpirationDate);
+                tokenExpirationDate);
       } catch (NoSuchAlgorithmException | IOException | InvalidKeySpecException e) {
         LOG.warn("Could not create JWT token from private key location..defaulting to HMAC");
         return JwtTokenGenerator.makeJwtToken(userPrincipal.getUsername(), tokenSecret(), claims, tokenExpirationDate);
@@ -100,8 +91,7 @@ public class JwtTokenProvider {
     }
   }
 
-  private Map<String, Object> makeClaims(Principal principal,
-                                         Set<String> roles) {
+  private Map<String, Object> makeClaims(Principal principal, Set<String> roles) {
     Map<String, Object> claims = new HashMap<>();
     claims.put(CLAIM_USER, UserInfoUtil.toUserInfoObj(principal, roles));
 
@@ -116,8 +106,7 @@ public class JwtTokenProvider {
     return JwtTokenValidator.validateJwtToken(jwtToken, new SpKeyResolver(tokenSecret()));
   }
 
-  public boolean validateJwtToken(String tokenSecret,
-                                  String jwtToken) {
+  public boolean validateJwtToken(String tokenSecret, String jwtToken) {
     return JwtTokenValidator.validateJwtToken(tokenSecret, jwtToken);
   }
 
@@ -137,6 +126,5 @@ public class JwtTokenProvider {
     Date now = new Date();
     return new Date(now.getTime() + authConfig().getTokenExpirationTimeMillis());
   }
-
 
 }

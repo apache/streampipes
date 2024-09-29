@@ -40,8 +40,7 @@ import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.model.mail.SpEmail;
 
-public class StreamPipesClient implements
-    IStreamPipesClient {
+public class StreamPipesClient implements IStreamPipesClient {
 
   private static final Integer SP_DEFAULT_PORT = 80;
 
@@ -51,17 +50,16 @@ public class StreamPipesClient implements
     this.config = new StreamPipesClientConfig(connectionConfig);
   }
 
-  private StreamPipesClient(String streamPipesHost,
-                            Integer streamPipesPort,
-                            CredentialsProvider credentials,
-                            boolean httpsDisabled) {
+  private StreamPipesClient(String streamPipesHost, Integer streamPipesPort, CredentialsProvider credentials,
+          boolean httpsDisabled) {
     this(new StreamPipesClientConnectionConfig(credentials, streamPipesHost, streamPipesPort, httpsDisabled));
   }
 
   /**
    * Create a new StreamPipes API client with a runtime connection resolver
    *
-   * @param connectionConfig A ClientConnectionConfigResolver providing connection details
+   * @param connectionConfig
+   *          A ClientConnectionConfigResolver providing connection details
    */
   public static StreamPipesClient create(ClientConnectionUrlResolver connectionConfig) {
     return new StreamPipesClient(connectionConfig);
@@ -70,52 +68,59 @@ public class StreamPipesClient implements
   /**
    * Create a new StreamPipes API client with default port and custom HTTPS settings
    *
-   * @param streamPipesHost The hostname of the StreamPipes instance without scheme
-   * @param credentials     The credentials object
-   * @param httpsDisabled   Set true if the instance is not served over HTTPS
+   * @param streamPipesHost
+   *          The hostname of the StreamPipes instance without scheme
+   * @param credentials
+   *          The credentials object
+   * @param httpsDisabled
+   *          Set true if the instance is not served over HTTPS
    */
-  public static StreamPipesClient create(String streamPipesHost,
-                                         CredentialsProvider credentials,
-                                         boolean httpsDisabled) {
+  public static StreamPipesClient create(String streamPipesHost, CredentialsProvider credentials,
+          boolean httpsDisabled) {
     return new StreamPipesClient(streamPipesHost, SP_DEFAULT_PORT, credentials, httpsDisabled);
   }
 
   /**
    * Create a new StreamPipes API client with default port 80 and HTTPS settings (HTTPS enabled)
    *
-   * @param streamPipesHost The hostname of the StreamPipes instance without scheme
-   * @param credentials     The credentials object
+   * @param streamPipesHost
+   *          The hostname of the StreamPipes instance without scheme
+   * @param credentials
+   *          The credentials object
    */
-  public static StreamPipesClient create(String streamPipesHost,
-                                         CredentialsProvider credentials) {
+  public static StreamPipesClient create(String streamPipesHost, CredentialsProvider credentials) {
     return new StreamPipesClient(streamPipesHost, SP_DEFAULT_PORT, credentials, false);
   }
 
   /**
    * Create a new StreamPipes API client with custom port and default HTTPS settings
    *
-   * @param streamPipesHost The hostname of the StreamPipes instance without scheme
-   * @param streamPipesPort The port of the StreamPipes instance
-   * @param credentials     The credentials object
+   * @param streamPipesHost
+   *          The hostname of the StreamPipes instance without scheme
+   * @param streamPipesPort
+   *          The port of the StreamPipes instance
+   * @param credentials
+   *          The credentials object
    */
-  public static StreamPipesClient create(String streamPipesHost,
-                                         Integer streamPipesPort,
-                                         CredentialsProvider credentials) {
+  public static StreamPipesClient create(String streamPipesHost, Integer streamPipesPort,
+          CredentialsProvider credentials) {
     return new StreamPipesClient(streamPipesHost, streamPipesPort, credentials, false);
   }
 
   /**
    * Create a new StreamPipes API client with custom port and HTTPS settings
    *
-   * @param streamPipesHost The hostname of the StreamPipes instance without scheme
-   * @param streamPipesPort The port of the StreamPipes instance
-   * @param credentials     The credentials object
-   * @param httpsDisabled   Set true if the instance is not served over HTTPS
+   * @param streamPipesHost
+   *          The hostname of the StreamPipes instance without scheme
+   * @param streamPipesPort
+   *          The port of the StreamPipes instance
+   * @param credentials
+   *          The credentials object
+   * @param httpsDisabled
+   *          Set true if the instance is not served over HTTPS
    */
-  public static StreamPipesClient create(String streamPipesHost,
-                                         Integer streamPipesPort,
-                                         CredentialsProvider credentials,
-                                         boolean httpsDisabled) {
+  public static StreamPipesClient create(String streamPipesHost, Integer streamPipesPort,
+          CredentialsProvider credentials, boolean httpsDisabled) {
     return new StreamPipesClient(streamPipesHost, streamPipesPort, credentials, httpsDisabled);
   }
 
@@ -123,7 +128,8 @@ public class StreamPipesClient implements
    * Register a new data format that is used by the live API
    *
    * @deprecated
-   * @param spDataFormatFactory The data format factory
+   * @param spDataFormatFactory
+   *          The data format factory
    */
   @Deprecated(forRemoval = true, since = "0.97.0")
   @Override

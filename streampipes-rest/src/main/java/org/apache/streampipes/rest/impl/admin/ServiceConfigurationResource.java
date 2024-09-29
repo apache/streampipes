@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
@@ -24,6 +23,8 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.CRUDStorage;
+
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,16 +38,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v2/extensions-services-configurations")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ServiceConfigurationResource extends AbstractAuthGuardedRestResource {
 
-  private final CRUDStorage<SpServiceConfiguration> extensionsServicesConfigStorage =
-      getNoSqlStorage().getExtensionsServiceConfigurationStorage();
-
+  private final CRUDStorage<SpServiceConfiguration> extensionsServicesConfigStorage = getNoSqlStorage()
+          .getExtensionsServiceConfigurationStorage();
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<SpServiceConfiguration>> getAllServiceConfigurations() {
@@ -55,7 +53,7 @@ public class ServiceConfigurationResource extends AbstractAuthGuardedRestResourc
 
   @GetMapping(path = "{serviceGroup}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SpServiceConfiguration> getServiceConfiguration(
-      @PathVariable("serviceGroup") String serviceGroup) {
+          @PathVariable("serviceGroup") String serviceGroup) {
     var config = extensionsServicesConfigStorage.getElementById(serviceGroup);
     if (config != null) {
       return ok(config);
@@ -76,7 +74,7 @@ public class ServiceConfigurationResource extends AbstractAuthGuardedRestResourc
 
   @PutMapping(path = "{serviceGroup}", consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> registerServiceConfiguration(@PathVariable("serviceGroup") String serviceGroup,
-                                                           @RequestBody SpServiceConfiguration serviceConfiguration) {
+          @RequestBody SpServiceConfiguration serviceConfiguration) {
     if (extensionsServicesConfigStorage.getElementById(serviceGroup) != null) {
       extensionsServicesConfigStorage.updateElement(serviceConfiguration);
       return ok();

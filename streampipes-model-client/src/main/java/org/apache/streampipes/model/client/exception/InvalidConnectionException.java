@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.client.exception;
 
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;

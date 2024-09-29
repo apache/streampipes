@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.grounding;
 
 public class KafkaTransportProtocol extends TransportProtocol {
@@ -50,7 +49,7 @@ public class KafkaTransportProtocol extends TransportProtocol {
   }
 
   public KafkaTransportProtocol(String kafkaHost, int kafkaPort, String topic, String zookeeperHost,
-                                int zookeeperPort) {
+          int zookeeperPort) {
     super(kafkaHost, new SimpleTopicDefinition(topic));
     this.zookeeperHost = zookeeperHost;
     this.zookeeperPort = zookeeperPort;

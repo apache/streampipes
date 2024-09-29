@@ -15,8 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.opcua.adapter;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
@@ -26,10 +29,6 @@ import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class OpcUaNodeMetadataExtractor {
   private final OpcUaClient client;
@@ -68,7 +67,6 @@ public class OpcUaNodeMetadataExtractor {
 
     return metadata;
   }
-
 
   public void extractDescription() {
     if (node.getDescription() != null) {

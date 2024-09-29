@@ -15,22 +15,21 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class CorrectionValueTest {
 
@@ -61,11 +60,7 @@ public class CorrectionValueTest {
   @Test
   public void testAdd() {
 
-    var correctionRule = new CorrectionValueTransformationRule(
-         List.of(propertyNameBasicValue),
-         10.0,
-         "ADD"
-     );
+    var correctionRule = new CorrectionValueTransformationRule(List.of(propertyNameBasicValue), 10.0, "ADD");
 
     var resultEvent = correctionRule.apply(event);
     Assertions.assertNotNull(resultEvent);
@@ -75,11 +70,7 @@ public class CorrectionValueTest {
   @Test
   public void testSubtract() {
 
-    var correctionRule = new CorrectionValueTransformationRule(
-        List.of(propertyNameBasicValue),
-        10.0,
-        "SUBTRACT"
-    );
+    var correctionRule = new CorrectionValueTransformationRule(List.of(propertyNameBasicValue), 10.0, "SUBTRACT");
     var resultEvent = correctionRule.apply(event);
     Assertions.assertNotNull(resultEvent);
     Assertions.assertEquals(90.0, resultEvent.get(propertyNameBasicValue));
@@ -88,11 +79,7 @@ public class CorrectionValueTest {
   @Test
   public void testMultiply() {
 
-    var correctionRule = new CorrectionValueTransformationRule(
-        List.of(propertyNameBasicValue),
-        1.5,
-        "MULTIPLY"
-    );
+    var correctionRule = new CorrectionValueTransformationRule(List.of(propertyNameBasicValue), 1.5, "MULTIPLY");
     var resultEvent = correctionRule.apply(event);
     Assertions.assertNotNull(resultEvent);
     Assertions.assertEquals(150.0, resultEvent.get(propertyNameBasicValue));
@@ -101,11 +88,7 @@ public class CorrectionValueTest {
   @Test
   public void testDivide() {
 
-    var correctionRule = new CorrectionValueTransformationRule(
-        List.of(propertyNameBasicValue),
-        5,
-        "DIVIDE"
-    );
+    var correctionRule = new CorrectionValueTransformationRule(List.of(propertyNameBasicValue), 5, "DIVIDE");
     var resultEvent = correctionRule.apply(event);
     Assertions.assertNotNull(resultEvent);
     Assertions.assertEquals(20.0, resultEvent.get(propertyNameBasicValue));
@@ -114,11 +97,7 @@ public class CorrectionValueTest {
   @Test
   public void testDivideByZero() {
 
-    var correctionRule = new CorrectionValueTransformationRule(
-        List.of(propertyNameBasicValue),
-        0.0,
-        "DIVIDE"
-    );
+    var correctionRule = new CorrectionValueTransformationRule(List.of(propertyNameBasicValue), 0.0, "DIVIDE");
     var resultEvent = correctionRule.apply(event);
     Assertions.assertNotNull(resultEvent);
     Assertions.assertEquals(Double.POSITIVE_INFINITY, resultEvent.get(propertyNameBasicValue));
@@ -127,27 +106,15 @@ public class CorrectionValueTest {
   @Test
   public void testNonNumericValue() {
 
-    var correctionRule = new CorrectionValueTransformationRule(
-        List.of(propertyNameOtherValue),
-        10.0,
-        "ADD"
-    );
-    assertThrows(
-        RuntimeException.class,
-        () -> correctionRule.apply(event).get(propertyNameOtherValue)
-    );
-
+    var correctionRule = new CorrectionValueTransformationRule(List.of(propertyNameOtherValue), 10.0, "ADD");
+    assertThrows(RuntimeException.class, () -> correctionRule.apply(event).get(propertyNameOtherValue));
 
   }
 
   @Test
   public void testUnsupportedOperation() {
 
-    var correctionRule = new CorrectionValueTransformationRule(
-        List.of(propertyNameBasicValue),
-        10.0,
-        "TEST"
-    );
+    var correctionRule = new CorrectionValueTransformationRule(List.of(propertyNameBasicValue), 10.0, "TEST");
     var resultEvent = correctionRule.apply(event);
     Assertions.assertNotNull(resultEvent);
     Assertions.assertEquals(100.0, resultEvent.get(propertyNameBasicValue));

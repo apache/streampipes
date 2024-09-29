@@ -15,23 +15,22 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.notifications.jvm.migrations;
-
-import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.migration.MigrationResult;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-
-import org.junit.Test;
-
-import java.util.ArrayList;
 
 import static org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink.DEFAULT_WAITING_TIME_MINUTES;
 import static org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink.KEY_SILENT_PERIOD;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+
+import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.migration.MigrationResult;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+
+import java.util.ArrayList;
+
+import org.junit.Test;
 
 public class INotificationDataSinkMigratorTest {
 

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.math.staticmathop;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -53,57 +52,49 @@ public class StaticMathOpProcessor extends StreamPipesDataProcessor {
   String leftOperand;
   double rightOperandValue;
 
-
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.enricher.jvm.processor.math.staticmathop", 0)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .category(DataProcessorType.ALGORITHM)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(LEFT_OPERAND),
-                PropertyScope.NONE)
-            .build())
-        .requiredFloatParameter(Labels.withId(RIGHT_OPERAND_VALUE))
-        .outputStrategy(
-            OutputStrategies.keep())
-        .requiredSingleValueSelection(Labels.withId(OPERATION),
-            Options.from("+", "-", "/", "*", "%"))
-        .build();
+            .create("org.apache.streampipes.processors.enricher.jvm.processor.math.staticmathop", 0)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .category(DataProcessorType.ALGORITHM)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId(LEFT_OPERAND),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredFloatParameter(Labels.withId(RIGHT_OPERAND_VALUE)).outputStrategy(OutputStrategies.keep())
+            .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("+", "-", "/", "*", "%")).build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.leftOperand = parameters.extractor().mappingPropertyValue(LEFT_OPERAND);
     this.rightOperandValue = parameters.extractor().singleValueParameter(RIGHT_OPERAND_VALUE, Double.class);
     String operation = parameters.extractor().selectedSingleValue(OPERATION, String.class);
 
     switch (operation) {
-      case "+":
+      case "+" :
         arithmeticOperation = new OperationAddition();
         break;
-      case "-":
+      case "-" :
         arithmeticOperation = new OperationSubtracting();
         break;
-      case "*":
+      case "*" :
         arithmeticOperation = new OperationMultiply();
         break;
-      case "/":
+      case "/" :
         arithmeticOperation = new OperationDivide();
         break;
-      case "%":
+      case "%" :
         arithmeticOperation = new OperationModulo();
     }
   }
 
   @Override
   public void onEvent(Event in, SpOutputCollector out) throws SpRuntimeException {
-    Double leftValue = Double.parseDouble(String.valueOf(in.getFieldBySelector(leftOperand)
-        .getAsPrimitive().getAsDouble()));
+    Double leftValue = Double
+            .parseDouble(String.valueOf(in.getFieldBySelector(leftOperand).getAsPrimitive().getAsDouble()));
 
     Double result = arithmeticOperation.operate(leftValue, rightOperandValue);
     in.updateFieldBySelector(leftOperand, result);

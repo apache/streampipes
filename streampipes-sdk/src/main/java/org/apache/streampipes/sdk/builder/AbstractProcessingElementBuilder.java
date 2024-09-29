@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -37,9 +36,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractProcessingElementBuilder<K extends
-    AbstractProcessingElementBuilder<K, T>, T extends ConsumableStreamPipesEntity> extends
-    AbstractConfigurablePipelineElementBuilder<K, T> {
+public abstract class AbstractProcessingElementBuilder<K extends AbstractProcessingElementBuilder<K, T>, T extends ConsumableStreamPipesEntity>
+        extends
+          AbstractConfigurablePipelineElementBuilder<K, T> {
 
   protected List<SpDataStream> streamRequirements;
 
@@ -50,7 +49,6 @@ public abstract class AbstractProcessingElementBuilder<K extends
 
   protected boolean stream1 = false;
   protected boolean stream2 = false;
-
 
   protected AbstractProcessingElementBuilder(String id, String label, String description, T element) {
     super(id, label, description, element);
@@ -78,42 +76,43 @@ public abstract class AbstractProcessingElementBuilder<K extends
   }
 
   /**
-   * Set a new stream requirement by adding restrictions on this stream. Use
-   * {@link StreamRequirementsBuilder} to create requirements for a single stream.
+   * Set a new stream requirement by adding restrictions on this stream. Use {@link StreamRequirementsBuilder} to create
+   * requirements for a single stream.
    *
-   * @param streamRequirements A bundle of collected {@link CollectedStreamRequirements}
+   * @param streamRequirements
+   *          A bundle of collected {@link CollectedStreamRequirements}
    * @return this
    */
   public K requiredStream(CollectedStreamRequirements streamRequirements) {
 
     this.streamRequirements.add(streamRequirements.getStreamRequirements());
-    this.staticProperties.addAll(rewrite(streamRequirements.getMappingProperties(), this
-        .streamRequirements.size()));
+    this.staticProperties.addAll(rewrite(streamRequirements.getMappingProperties(), this.streamRequirements.size()));
 
     return me();
   }
 
   private List<MappingProperty> rewrite(List<MappingProperty> mappingProperties, int index) {
-    mappingProperties.forEach(mp -> mp.setRequirementSelector
-        (getIndex(index) + PropertySelectorConstants.PROPERTY_DELIMITER + mp
-            .getRequirementSelector()));
+    mappingProperties.forEach(mp -> mp.setRequirementSelector(
+            getIndex(index) + PropertySelectorConstants.PROPERTY_DELIMITER + mp.getRequirementSelector()));
     return mappingProperties;
   }
 
   private String getIndex(int index) {
-    return index == 1 ? PropertySelectorConstants.FIRST_REQUIREMENT_PREFIX :
-        PropertySelectorConstants.SECOND_REQUIREMENT_PREFIX;
+    return index == 1
+            ? PropertySelectorConstants.FIRST_REQUIREMENT_PREFIX
+            : PropertySelectorConstants.SECOND_REQUIREMENT_PREFIX;
   }
 
   /**
-   * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyNary}
-   * to the pipeline element definition which is not linked to a specific input property.
-   * Use this method if you want to present users a selection (in form of a Checkbox Group)
-   * of all available input event properties.
+   * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyNary} to the pipeline element
+   * definition which is not linked to a specific input property. Use this method if you want to present users a
+   * selection (in form of a Checkbox Group) of all available input event properties.
    *
-   * @param label         A human-readable label that is displayed to users in the StreamPipes UI.
-   * @param propertyScope Only input event properties that match the
-   *                      {@link org.apache.streampipes.model.schema.PropertyScope} are displayed.
+   * @param label
+   *          A human-readable label that is displayed to users in the StreamPipes UI.
+   * @param propertyScope
+   *          Only input event properties that match the {@link org.apache.streampipes.model.schema.PropertyScope} are
+   *          displayed.
    * @return
    */
   public K naryMappingPropertyWithoutRequirement(Label label, PropertyScope propertyScope) {
@@ -124,15 +123,16 @@ public abstract class AbstractProcessingElementBuilder<K extends
   }
 
   /**
-   * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyUnary}
-   * to the pipeline element definition which is not linked to a specific input property.
+   * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyUnary} to the pipeline element
+   * definition which is not linked to a specific input property.
    *
-   * @param label         A human-readable label that is displayed to users in the StreamPipes UI.
-   * @param propertyScope Only input event properties that match the
-   *                      {@link org.apache.streampipes.model.schema.PropertyScope} are displayed.
-   * @return this
-   * Use this method if you want to present users a single-value selection of all available input
-   * event properties.
+   * @param label
+   *          A human-readable label that is displayed to users in the StreamPipes UI.
+   * @param propertyScope
+   *          Only input event properties that match the {@link org.apache.streampipes.model.schema.PropertyScope} are
+   *          displayed.
+   * @return this Use this method if you want to present users a single-value selection of all available input event
+   *         properties.
    */
   public K unaryMappingPropertyWithoutRequirement(Label label, PropertyScope propertyScope) {
     MappingPropertyUnary mp = new MappingPropertyUnary(label.getInternalId(), label.getLabel(), label.getDescription());
@@ -142,13 +142,13 @@ public abstract class AbstractProcessingElementBuilder<K extends
   }
 
   /**
-   * Assigns supported transport formats to the pipeline elements that can be handled at runtime (e.g.,
-   * JSON or XMl).
+   * Assigns supported transport formats to the pipeline elements that can be handled at runtime (e.g., JSON or XMl).
    *
    * @deprecated format assignment is no longer necessary
-   * @param format An arbitrary number of supported {@link org.apache.streampipes.model.grounding.TransportFormat}s. Use
-   *               {@link org.apache.streampipes.sdk.helpers.SupportedFormats} to assign formats from some pre-defined
-   *               ones or create your own by following the developer guide.
+   * @param format
+   *          An arbitrary number of supported {@link org.apache.streampipes.model.grounding.TransportFormat}s. Use
+   *          {@link org.apache.streampipes.sdk.helpers.SupportedFormats} to assign formats from some pre-defined ones
+   *          or create your own by following the developer guide.
    * @return this
    */
   @Deprecated(forRemoval = true, since = "0.97.0")
@@ -157,13 +157,13 @@ public abstract class AbstractProcessingElementBuilder<K extends
   }
 
   /**
-   * Assigns supported transport formats to the pipeline elements that can be handled at runtime (e.g.,
-   * JSON or XMl).
+   * Assigns supported transport formats to the pipeline elements that can be handled at runtime (e.g., JSON or XMl).
    *
    * @deprecated format assignment is no longer necessary
-   * @param formats A list of supported {@link org.apache.streampipes.model.grounding.TransportFormat}s. Use
-   *                {@link org.apache.streampipes.sdk.helpers.SupportedFormats} to assign formats from some pre-defined
-   *                ones or create your own by following the developer guide.
+   * @param formats
+   *          A list of supported {@link org.apache.streampipes.model.grounding.TransportFormat}s. Use
+   *          {@link org.apache.streampipes.sdk.helpers.SupportedFormats} to assign formats from some pre-defined ones
+   *          or create your own by following the developer guide.
    * @return this
    */
   @Deprecated(forRemoval = true, since = "0.97.0")
@@ -175,10 +175,10 @@ public abstract class AbstractProcessingElementBuilder<K extends
    * Assigns supported communication/transport protocols to the pipeline elements that can be handled at runtime (e.g.,
    * Kafka or JMS).
    *
-   * @param protocol An arbitrary number of supported
-   *                 {@link org.apache.streampipes.model.grounding.TransportProtocol}s.
-   *                 Use {@link org.apache.streampipes.sdk.helpers.SupportedProtocols} to assign protocols
-   *                 from some pre-defined ones or create your own by following the developer guide.
+   * @param protocol
+   *          An arbitrary number of supported {@link org.apache.streampipes.model.grounding.TransportProtocol}s. Use
+   *          {@link org.apache.streampipes.sdk.helpers.SupportedProtocols} to assign protocols from some pre-defined
+   *          ones or create your own by following the developer guide.
    * @return this
    */
   public K supportedProtocols(TransportProtocol... protocol) {
@@ -189,9 +189,10 @@ public abstract class AbstractProcessingElementBuilder<K extends
    * Assigns supported communication/transport protocols to the pipeline elements that can be handled at runtime (e.g.,
    * Kafka or JMS).
    *
-   * @param protocols A list of supported {@link org.apache.streampipes.model.grounding.TransportProtocol}s.
-   *                  Use {@link org.apache.streampipes.sdk.helpers.SupportedProtocols} to assign protocols
-   *                  from some pre-defined ones or create your own by following the developer guide.
+   * @param protocols
+   *          A list of supported {@link org.apache.streampipes.model.grounding.TransportProtocol}s. Use
+   *          {@link org.apache.streampipes.sdk.helpers.SupportedProtocols} to assign protocols from some pre-defined
+   *          ones or create your own by following the developer guide.
    * @return this
    */
   public K supportedProtocols(List<TransportProtocol> protocols) {

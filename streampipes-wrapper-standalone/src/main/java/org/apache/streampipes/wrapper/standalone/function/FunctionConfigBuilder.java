@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone.function;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -41,6 +40,5 @@ public class FunctionConfigBuilder {
   public FunctionConfig build() {
     return functionConfig;
   }
-
 
 }

@@ -15,13 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
 public enum TimestampTranformationRuleMode {
 
-  TIME_UNIT("timeUnit"),
-  FORMAT_STRING("formatString");
+  TIME_UNIT("timeUnit"), FORMAT_STRING("formatString");
 
   private final String internalName;
 

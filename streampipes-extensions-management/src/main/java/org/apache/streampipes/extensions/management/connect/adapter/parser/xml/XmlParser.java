@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.parser.xml;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
@@ -29,13 +28,13 @@ import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 public class XmlParser implements IParser {
 
@@ -65,9 +64,8 @@ public class XmlParser implements IParser {
   @Override
   public ParserDescription declareDescription() {
     return ParserDescriptionBuilder.create(ID, LABEL, DESCRIPTION)
-        .requiredTextParameter(Labels.from(TAG, "Tag",
-            "Information in the tag is transformed into an event"))
-        .build();
+            .requiredTextParameter(Labels.from(TAG, "Tag", "Information in the tag is transformed into an event"))
+            .build();
   }
 
   @Override
@@ -95,7 +93,6 @@ public class XmlParser implements IParser {
       handler.handle(converter.convert());
     });
   }
-
 
   private List<Map<String, Object>> getEvents(InputStream inputStream) {
 

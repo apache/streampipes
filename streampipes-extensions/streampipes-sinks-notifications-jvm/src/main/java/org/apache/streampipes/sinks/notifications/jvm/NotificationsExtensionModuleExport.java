@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.notifications.jvm;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -43,22 +42,13 @@ public class NotificationsExtensionModuleExport implements IExtensionModuleExpor
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new EmailSink(),
-        new MSTeamsSink(),
-        new OneSignalSink(),
-        new SlackNotificationSink(),
-        new TelegramSink()
-    );
+    return List.of(new EmailSink(), new MSTeamsSink(), new OneSignalSink(), new SlackNotificationSink(),
+            new TelegramSink());
   }
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return List.of(
-        new OneSignalSinkMigrationV1(),
-        new SlackNotificationSinkMigrationV1(),
-        new TelegramSinkMigrationV1(),
-        new MsTeamsSinkMigrationV1()
-    );
+    return List.of(new OneSignalSinkMigrationV1(), new SlackNotificationSinkMigrationV1(),
+            new TelegramSinkMigrationV1(), new MsTeamsSinkMigrationV1());
   }
 }

@@ -22,7 +22,6 @@ import org.apache.streampipes.wrapper.siddhi.model.SiddhiProcessorParams;
 
 public interface SiddhiStatementGenerator {
 
-  SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
-                                 String finalInsertIntoStreamName);
+  SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams, String finalInsertIntoStreamName);
 
 }

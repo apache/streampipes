@@ -15,28 +15,8 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.staticproperty;
 
 public enum StaticPropertyType {
-  AnyStaticProperty,
-  CodeInputStaticProperty,
-  CollectionStaticProperty,
-  ColorPickerStaticProperty,
-  DomainStaticProperty,
-  FreeTextStaticProperty,
-  FileStaticProperty,
-  MappingPropertyUnary,
-  MappingPropertyNary,
-  MatchingStaticProperty,
-  OneOfStaticProperty,
-  RuntimeResolvableAnyStaticProperty,
-  RuntimeResolvableGroupStaticProperty,
-  RuntimeResolvableOneOfStaticProperty,
-  RuntimeResolvableTreeInputStaticProperty,
-  StaticPropertyGroup,
-  StaticPropertyAlternatives,
-  StaticPropertyAlternative,
-  SecretStaticProperty,
-  SlideToggleStaticProperty
+  AnyStaticProperty, CodeInputStaticProperty, CollectionStaticProperty, ColorPickerStaticProperty, DomainStaticProperty, FreeTextStaticProperty, FileStaticProperty, MappingPropertyUnary, MappingPropertyNary, MatchingStaticProperty, OneOfStaticProperty, RuntimeResolvableAnyStaticProperty, RuntimeResolvableGroupStaticProperty, RuntimeResolvableOneOfStaticProperty, RuntimeResolvableTreeInputStaticProperty, StaticPropertyGroup, StaticPropertyAlternatives, StaticPropertyAlternative, SecretStaticProperty, SlideToggleStaticProperty
 }

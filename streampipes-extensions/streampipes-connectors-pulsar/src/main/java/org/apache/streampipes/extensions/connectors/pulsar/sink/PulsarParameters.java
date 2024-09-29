@@ -17,11 +17,11 @@
  */
 package org.apache.streampipes.extensions.connectors.pulsar.sink;
 
-import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
-
 import static org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink.PULSAR_HOST_KEY;
 import static org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink.PULSAR_PORT_KEY;
 import static org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink.TOPIC_KEY;
+
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 
 public class PulsarParameters {
   private final String pulsarHost;

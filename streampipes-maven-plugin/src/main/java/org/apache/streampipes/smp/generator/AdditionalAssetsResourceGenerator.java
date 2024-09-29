@@ -15,13 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.smp.generator;
 
 import org.apache.streampipes.smp.extractor.LocalesExtractor;
 import org.apache.streampipes.smp.model.AssetModel;
-
-import org.apache.maven.plugin.logging.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,16 +32,15 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.apache.maven.plugin.logging.Log;
+
 public class AdditionalAssetsResourceGenerator extends ResourceGenerator {
 
   private static final String Slash = "/";
 
   private final Log log;
 
-  public AdditionalAssetsResourceGenerator(Log log,
-                                           ClassLoader loader,
-                                           AssetModel extensionsElement,
-                                           Path targetPath) {
+  public AdditionalAssetsResourceGenerator(Log log, ClassLoader loader, AssetModel extensionsElement, Path targetPath) {
     super(loader, extensionsElement, targetPath);
     this.log = log;
   }
@@ -79,10 +75,8 @@ public class AdditionalAssetsResourceGenerator extends ResourceGenerator {
   }
 
   private boolean isDefaultResource(String resourceName) {
-    var defaultResources = List.of(
-        IconResourceGenerator.ICON_NAME,
-        DocumentationResourceGenerator.DOCUMENTATION_FILE_NAME,
-        LocalesExtractor.LOCALES_FILE_EN);
+    var defaultResources = List.of(IconResourceGenerator.ICON_NAME,
+            DocumentationResourceGenerator.DOCUMENTATION_FILE_NAME, LocalesExtractor.LOCALES_FILE_EN);
     return defaultResources.stream().anyMatch(resourceName::contains);
   }
 }

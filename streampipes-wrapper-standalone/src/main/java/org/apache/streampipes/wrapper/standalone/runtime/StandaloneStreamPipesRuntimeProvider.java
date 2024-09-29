@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone.runtime;
 
 import org.apache.streampipes.extensions.api.pe.runtime.IDataProcessorRuntime;

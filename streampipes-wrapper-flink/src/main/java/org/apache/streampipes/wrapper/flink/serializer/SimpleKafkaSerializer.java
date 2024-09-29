@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.flink.serializer;
 
-import org.apache.flink.streaming.util.serialization.SerializationSchema;
-
 import java.util.Map;
+
+import org.apache.flink.streaming.util.serialization.SerializationSchema;
 
 public class SimpleKafkaSerializer implements SerializationSchema<Map<String, Object>> {
 

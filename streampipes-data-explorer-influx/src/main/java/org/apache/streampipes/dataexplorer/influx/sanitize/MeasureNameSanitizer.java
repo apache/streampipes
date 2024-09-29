@@ -15,24 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx.sanitize;
 
 import java.util.List;
 
 public class MeasureNameSanitizer {
 
-  private final List<String> forbiddenChars = List.of(
-      "/",
-      "?",
-      "=",
-      "\""
-  );
+  private final List<String> forbiddenChars = List.of("/", "?", "=", "\"");
 
   private final String replacement = "_";
 
   public String sanitize(String measureName) {
-    return forbiddenChars.stream()
-        .reduce(measureName, (str, forbiddenChar) -> str.replace(forbiddenChar, replacement));
+    return forbiddenChars.stream().reduce(measureName, (str, forbiddenChar) -> str.replace(forbiddenChar, replacement));
   }
 }

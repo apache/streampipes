@@ -15,8 +15,16 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.template;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
@@ -31,21 +39,12 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class PipelineElementTemplateVisitorTest {
   private static final String PROPERTY_NAME = "propertyName";
@@ -91,11 +90,7 @@ class PipelineElementTemplateVisitorTest {
   void anyStaticPropertyTest() {
     configs.add(Map.of(PROPERTY_NAME, List.of("option1", "option2")));
     var anyStaticProperty = new AnyStaticProperty(PROPERTY_NAME, "", "");
-    anyStaticProperty.setOptions(List.of(
-            new Option("option1"),
-            new Option("option2")
-        )
-    );
+    anyStaticProperty.setOptions(List.of(new Option("option1"), new Option("option2")));
     visitor.visit(anyStaticProperty);
     assertEquals(2, anyStaticProperty.getOptions().size());
     assertTrue(anyStaticProperty.getOptions().get(0).isSelected());
@@ -114,17 +109,10 @@ class PipelineElementTemplateVisitorTest {
   @Test
   void simpleCollectionStaticPropertyTest() {
     var freeTextId = "free_text";
-    configs.add(Map.of(PROPERTY_NAME, List.of(
-        Map.of(freeTextId, "A"),
-        Map.of(freeTextId, "B"),
-        Map.of(freeTextId, "C")))
-    );
-    var collectionProperty = new CollectionStaticProperty(
-        PROPERTY_NAME,
-        "",
-        "",
-        new FreeTextStaticProperty(freeTextId, "", "")
-    );
+    configs.add(
+            Map.of(PROPERTY_NAME, List.of(Map.of(freeTextId, "A"), Map.of(freeTextId, "B"), Map.of(freeTextId, "C"))));
+    var collectionProperty = new CollectionStaticProperty(PROPERTY_NAME, "", "",
+            new FreeTextStaticProperty(freeTextId, "", ""));
 
     visitor.visit(collectionProperty);
     assertEquals(3, collectionProperty.getMembers().size());
@@ -144,56 +132,28 @@ class PipelineElementTemplateVisitorTest {
 
   @Test
   void alternativesStaticPropertyTest() {
-    configs.add(Map.of(
-        PROPERTY_NAME, "alternatives1",
-        "free_text", "abc")
-    );
+    configs.add(Map.of(PROPERTY_NAME, "alternatives1", "free_text", "abc"));
     var staticProperty = new StaticPropertyAlternatives(PROPERTY_NAME, "", "");
     staticProperty.setAlternatives(
-        List.of(
-            Alternatives.from(
-                Labels.withId("alternatives1"),
-                new FreeTextStaticProperty("free_text", "", "")
-            ),
-            Alternatives.from(
-                Labels.withId("alternatives2"),
-                new OneOfStaticProperty("one_of", "", "")
-            )
-        )
-    );
+            List.of(Alternatives.from(Labels.withId("alternatives1"), new FreeTextStaticProperty("free_text", "", "")),
+                    Alternatives.from(Labels.withId("alternatives2"), new OneOfStaticProperty("one_of", "", ""))));
 
     visitor.visit(staticProperty);
     assertTrue(staticProperty.getAlternatives().get(0).getSelected());
     assertFalse(staticProperty.getAlternatives().get(1).getSelected());
-    assertEquals(
-        "abc",
-        ((FreeTextStaticProperty) staticProperty.getAlternatives().get(0).getStaticProperty()).getValue()
-    );
+    assertEquals("abc",
+            ((FreeTextStaticProperty) staticProperty.getAlternatives().get(0).getStaticProperty()).getValue());
   }
 
   @Test
   void alternativesStaticPropertyWithGroupTest() {
-    configs.add(Map.of(
-        PROPERTY_NAME, "alternatives2",
-        "free_text", "abc",
-        "free_text_number", 1000)
-    );
+    configs.add(Map.of(PROPERTY_NAME, "alternatives2", "free_text", "abc", "free_text_number", 1000));
     var staticProperty = new StaticPropertyAlternatives(PROPERTY_NAME, "", "");
-    staticProperty.setAlternatives(
-        List.of(
-            Alternatives.from(
-                Labels.withId("alternatives1"),
-                new OneOfStaticProperty("one_of", "", "")
-            ),
-            Alternatives.from(
-                Labels.withId("alternatives2"),
-                new StaticPropertyGroup("group", "", "", List.of(
-                    new FreeTextStaticProperty("free_text", "", ""),
-                    new FreeTextStaticProperty("free_text_number", "", ""))
-                )
-            )
-        )
-    );
+    staticProperty.setAlternatives(List.of(
+            Alternatives.from(Labels.withId("alternatives1"), new OneOfStaticProperty("one_of", "", "")),
+            Alternatives.from(Labels.withId("alternatives2"),
+                    new StaticPropertyGroup("group", "", "", List.of(new FreeTextStaticProperty("free_text", "", ""),
+                            new FreeTextStaticProperty("free_text_number", "", ""))))));
 
     visitor.visit(staticProperty);
     assertTrue(staticProperty.getAlternatives().get(1).getSelected());

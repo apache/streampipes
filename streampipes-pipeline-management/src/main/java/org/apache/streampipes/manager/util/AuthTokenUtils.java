@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.util;
 
 import org.apache.streampipes.model.client.user.Permission;
@@ -61,12 +60,8 @@ public class AuthTokenUtils {
   }
 
   private static String getOwnerSid(String resourceId) {
-    return new SpResourceManager()
-        .managePermissions()
-        .findForObjectId(resourceId)
-        .stream()
-        .findFirst()
-        .map(Permission::getOwnerSid)
-        .orElseThrow(() -> new IllegalArgumentException("Could not find owner for resource " + resourceId));
+    return new SpResourceManager().managePermissions().findForObjectId(resourceId).stream().findFirst()
+            .map(Permission::getOwnerSid)
+            .orElseThrow(() -> new IllegalArgumentException("Could not find owner for resource " + resourceId));
   }
 }

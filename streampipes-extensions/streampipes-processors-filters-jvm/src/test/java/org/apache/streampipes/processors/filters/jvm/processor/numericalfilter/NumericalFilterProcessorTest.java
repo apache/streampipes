@@ -15,23 +15,21 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.filters.jvm.processor.numericalfilter;
 
 import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.TestConfiguration;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Map;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class NumericalFilterProcessorTest {
 
   private static final String PROPERTY_NAME = "propertyName";
   private NumericalFilterProcessor processor;
-
 
   @BeforeEach
   public void setup() {
@@ -42,18 +40,12 @@ public class NumericalFilterProcessorTest {
   public void testLowerThenOperatorFilterNotApplied() {
 
     TestConfiguration configuration = TestConfiguration.builder()
-        .configWithDefaultPrefix(NumericalFilterProcessor.NUMBER_MAPPING, PROPERTY_NAME)
-        .config(NumericalFilterProcessor.VALUE, 10.0)
-        .config(NumericalFilterProcessor.OPERATION, "<")
-        .build();
+            .configWithDefaultPrefix(NumericalFilterProcessor.NUMBER_MAPPING, PROPERTY_NAME)
+            .config(NumericalFilterProcessor.VALUE, 10.0).config(NumericalFilterProcessor.OPERATION, "<").build();
 
-    List<Map<String, Object>> inputEvents = List.of(
-        Map.of(PROPERTY_NAME, 1.0f)
-    );
+    List<Map<String, Object>> inputEvents = List.of(Map.of(PROPERTY_NAME, 1.0f));
 
-    List<Map<String, Object>> outputEvents = List.of(
-        Map.of(PROPERTY_NAME, 1.0f)
-    );
+    List<Map<String, Object>> outputEvents = List.of(Map.of(PROPERTY_NAME, 1.0f));
 
     ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 
@@ -64,14 +56,10 @@ public class NumericalFilterProcessorTest {
   public void testLowerThenOperatorFilterApplied() {
 
     TestConfiguration configuration = TestConfiguration.builder()
-        .configWithDefaultPrefix(NumericalFilterProcessor.NUMBER_MAPPING, PROPERTY_NAME)
-        .config(NumericalFilterProcessor.VALUE, 10.0)
-        .config(NumericalFilterProcessor.OPERATION, "<")
-        .build();
+            .configWithDefaultPrefix(NumericalFilterProcessor.NUMBER_MAPPING, PROPERTY_NAME)
+            .config(NumericalFilterProcessor.VALUE, 10.0).config(NumericalFilterProcessor.OPERATION, "<").build();
 
-    List<Map<String, Object>> inputEvents = List.of(
-        Map.of(PROPERTY_NAME, 11.0f)
-    );
+    List<Map<String, Object>> inputEvents = List.of(Map.of(PROPERTY_NAME, 11.0f));
 
     List<Map<String, Object>> outputEvents = List.of();
 

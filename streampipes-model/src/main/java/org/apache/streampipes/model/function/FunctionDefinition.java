@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.model.function;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -55,9 +53,7 @@ public class FunctionDefinition {
 
   @Override
   public String toString() {
-    return String.format("FunctionDefinition{functionId='%s',consumedStreams='%s'}",
-        functionId.toString(),
-        consumedStreams.toString()
-    );
+    return String.format("FunctionDefinition{functionId='%s',consumedStreams='%s'}", functionId.toString(),
+            consumedStreams.toString());
   }
 }

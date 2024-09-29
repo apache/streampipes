@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -39,13 +38,13 @@ import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
-import org.apache.http.client.fluent.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.http.client.fluent.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
 
@@ -73,23 +72,20 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
     int interval = extractor.singleValueParameter(INTERVAL_PROPERTY, Integer.class);
     this.pollingSettings = PollingSettings.from(TimeUnit.SECONDS, interval);
     // TODO change access token to an optional parameter
-//            String accessToken = extractor.singleValue(ACCESS_TOKEN_PROPERTY);
+    // String accessToken = extractor.singleValue(ACCESS_TOKEN_PROPERTY);
     this.accessToken = "";
   }
 
   private InputStream getDataFromEndpoint() throws ParseException {
 
     try {
-      Request request = Request.Get(url)
-          .connectTimeout(1000)
-          .socketTimeout(100000);
+      Request request = Request.Get(url).connectTimeout(1000).socketTimeout(100000);
 
       if (this.accessToken != null && !this.accessToken.equals("")) {
         request.setHeader("Authorization", "Bearer " + this.accessToken);
       }
 
-      var result = request
-          .execute().returnContent().asStream();
+      var result = request.execute().returnContent().asStream();
 
       if (result == null) {
         throw new ParseException("Could not receive Data from file: " + url);
@@ -105,21 +101,16 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder
-        .create(ID, 0, HttpStreamProtocol::new)
-        .withSupportedParsers(Parsers.defaultParsers())
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .withCategory(AdapterType.Generic)
-        .requiredTextParameter(Labels.withId(URL_PROPERTY))
-        .requiredIntegerParameter(Labels.withId(INTERVAL_PROPERTY))
-        .buildConfiguration();
+    return AdapterConfigurationBuilder.create(ID, 0, HttpStreamProtocol::new)
+            .withSupportedParsers(Parsers.defaultParsers())
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .withCategory(AdapterType.Generic).requiredTextParameter(Labels.withId(URL_PROPERTY))
+            .requiredIntegerParameter(Labels.withId(INTERVAL_PROPERTY)).buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     this.parser = extractor.selectedParser();
 
@@ -129,14 +120,14 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
+          throws AdapterException {
     this.pullAdapterScheduler.shutdown();
   }
 
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     var dataInputStream = getDataFromEndpoint();
 
@@ -146,9 +137,7 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
   @Override
   public void pullData() throws RuntimeException {
     var result = getDataFromEndpoint();
-    parser.parse(result, (event ->
-        collector.collect(event))
-    );
+    parser.parse(result, (event -> collector.collect(event)));
   }
 
   @Override

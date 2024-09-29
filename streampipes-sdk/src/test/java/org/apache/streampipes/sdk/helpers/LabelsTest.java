@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.helpers;
-
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
 
 public class LabelsTest {
 

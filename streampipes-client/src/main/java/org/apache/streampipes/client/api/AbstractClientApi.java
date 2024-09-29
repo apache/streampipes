@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.client.api;
 
-
 import org.apache.streampipes.client.http.DeleteRequest;
 import org.apache.streampipes.client.http.GetRequest;
 import org.apache.streampipes.client.http.PostRequestWithPayloadResponse;
@@ -31,9 +30,9 @@ import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.commons.exceptions.SpHttpErrorStatusCode;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
-import org.apache.http.HttpStatus;
-
 import java.util.Optional;
+
+import org.apache.http.HttpStatus;
 
 public class AbstractClientApi {
 
@@ -68,9 +67,7 @@ public class AbstractClientApi {
     return new DeleteRequest<>(clientConfig, apiPath, responseClass, serializer).executeRequest();
   }
 
-  protected <K, V> V delete(StreamPipesApiPath apiPath,
-                            K object,
-                            Class<V> responseClass) {
+  protected <K, V> V delete(StreamPipesApiPath apiPath, K object, Class<V> responseClass) {
     Serializer<K, V, V> serializer = new ObjectSerializer<>();
     return new DeleteRequest<>(clientConfig, apiPath, responseClass, serializer, object).executeRequest();
   }
@@ -78,7 +75,7 @@ public class AbstractClientApi {
   protected <K, V> V post(StreamPipesApiPath apiPath, K object, Class<V> responseClass) {
     ObjectSerializer<K, V> serializer = new ObjectSerializer<>();
     return new PostRequestWithPayloadResponse<>(clientConfig, apiPath, serializer, object, responseClass)
-        .executeRequest();
+            .executeRequest();
   }
 
   protected <T> T getSingle(StreamPipesApiPath apiPath, Class<T> targetClass) throws SpRuntimeException {
@@ -86,8 +83,7 @@ public class AbstractClientApi {
     return new GetRequest<>(clientConfig, apiPath, targetClass, serializer).executeRequest();
   }
 
-  protected <T> Optional<T> getSingleOpt(StreamPipesApiPath apiPath,
-                                         Class<T> targetClass) throws SpRuntimeException {
+  protected <T> Optional<T> getSingleOpt(StreamPipesApiPath apiPath, Class<T> targetClass) throws SpRuntimeException {
     try {
       ObjectSerializer<Void, T> serializer = new ObjectSerializer<>();
       return Optional.of(new GetRequest<>(clientConfig, apiPath, targetClass, serializer).executeRequest());

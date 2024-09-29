@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.security.jwt;
 
 import org.apache.commons.codec.binary.Base64;
@@ -23,17 +22,13 @@ import org.apache.commons.codec.binary.Base64;
 public class KeyUtils {
 
   public static byte[] extractPrivate(String key) {
-    return decode(key
-        .replace("-----BEGIN PRIVATE KEY-----", "")
-        .replaceAll(System.lineSeparator(), "")
-        .replace("-----END PRIVATE KEY-----", ""));
+    return decode(key.replace("-----BEGIN PRIVATE KEY-----", "").replaceAll(System.lineSeparator(), "")
+            .replace("-----END PRIVATE KEY-----", ""));
   }
 
   public static byte[] extractPublic(String key) {
-    return decode(key
-        .replace("-----BEGIN PUBLIC KEY-----", "")
-        .replaceAll(System.lineSeparator(), "")
-        .replace("-----END PUBLIC KEY-----", ""));
+    return decode(key.replace("-----BEGIN PUBLIC KEY-----", "").replaceAll(System.lineSeparator(), "")
+            .replace("-----END PUBLIC KEY-----", ""));
   }
 
   private static byte[] decode(String key) {

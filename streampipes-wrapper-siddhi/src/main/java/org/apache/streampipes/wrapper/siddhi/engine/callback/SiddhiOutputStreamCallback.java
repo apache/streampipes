@@ -24,12 +24,12 @@ import org.apache.streampipes.wrapper.siddhi.output.SiddhiOutputConfig;
 import org.apache.streampipes.wrapper.siddhi.output.SiddhiOutputType;
 import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 
+import java.util.Arrays;
+import java.util.List;
+
 import io.siddhi.core.event.Event;
 import io.siddhi.core.stream.output.StreamCallback;
 import io.siddhi.query.api.definition.Attribute;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class SiddhiOutputStreamCallback extends StreamCallback {
 
@@ -39,10 +39,8 @@ public class SiddhiOutputStreamCallback extends StreamCallback {
 
   private final List<Attribute> streamAttributes;
 
-  public SiddhiOutputStreamCallback(SpOutputCollector collector,
-                                    IDataProcessorParameters runtimeParameters,
-                                    List<Attribute> streamAttributes,
-                                    SiddhiOutputConfig outputConfig) {
+  public SiddhiOutputStreamCallback(SpOutputCollector collector, IDataProcessorParameters runtimeParameters,
+          List<Attribute> streamAttributes, SiddhiOutputConfig outputConfig) {
     this.collector = collector;
     this.runtimeParameters = runtimeParameters;
     this.streamAttributes = streamAttributes;
@@ -50,18 +48,13 @@ public class SiddhiOutputStreamCallback extends StreamCallback {
   }
 
   private void sendEvents(List<Event> events) {
-    collector.collect(SiddhiUtils.toSpEvent(events,
-        ((SiddhiListOutputConfig) outputConfig).getListFieldName(),
-        runtimeParameters.getOutputSchemaInfo(),
-        runtimeParameters.getOutputSourceInfo(),
-        streamAttributes));
+    collector.collect(SiddhiUtils.toSpEvent(events, ((SiddhiListOutputConfig) outputConfig).getListFieldName(),
+            runtimeParameters.getOutputSchemaInfo(), runtimeParameters.getOutputSourceInfo(), streamAttributes));
   }
 
   private void sendEvent(Event event) {
-    collector.collect(SiddhiUtils.toSpEvent(event,
-        runtimeParameters.getOutputSchemaInfo(),
-        runtimeParameters.getOutputSourceInfo(),
-        streamAttributes));
+    collector.collect(SiddhiUtils.toSpEvent(event, runtimeParameters.getOutputSchemaInfo(),
+            runtimeParameters.getOutputSourceInfo(), streamAttributes));
   }
 
   @Override

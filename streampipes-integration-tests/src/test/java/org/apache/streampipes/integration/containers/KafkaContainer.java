@@ -15,13 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.integration.containers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.utility.DockerImageName;
-
 
 public class KafkaContainer extends org.testcontainers.containers.KafkaContainer {
 
@@ -29,11 +27,9 @@ public class KafkaContainer extends org.testcontainers.containers.KafkaContainer
 
   private static final int KAFKA_PORT = 9093;
 
-
   public KafkaContainer() {
     super(DockerImageName.parse("confluentinc/cp-kafka"));
   }
-
 
   public void start() {
     super.start();
@@ -50,6 +46,5 @@ public class KafkaContainer extends org.testcontainers.containers.KafkaContainer
   public String getHttpUrl() {
     return "http://" + getHost() + ":" + getBrokerPort();
   }
-
 
 }

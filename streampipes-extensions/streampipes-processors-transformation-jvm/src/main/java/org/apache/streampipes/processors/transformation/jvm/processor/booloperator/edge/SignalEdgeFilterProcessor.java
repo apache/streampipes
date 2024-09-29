@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -66,26 +65,23 @@ public class SignalEdgeFilterProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge", 0)
-        .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.FILTER)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(), Labels.withId(BOOLEAN_SIGNAL_FIELD),
-                PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(FLANK_ID), Options.from(BOTH, FLANK_UP, FLANK_DOWN))
-        .requiredIntegerParameter(Labels.withId(DELAY_ID), 0)
-        .requiredSingleValueSelection(Labels.withId(EVENT_SELECTION_ID),
-            Options.from(OPTION_FIRST, OPTION_LAST, OPTION_ALL))
-        .outputStrategy(OutputStrategies.keep())
-        .build();
+            .create("org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge", 0)
+            .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.FILTER).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(), Labels.withId(BOOLEAN_SIGNAL_FIELD),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredSingleValueSelection(Labels.withId(FLANK_ID), Options.from(BOTH, FLANK_UP, FLANK_DOWN))
+            .requiredIntegerParameter(Labels.withId(DELAY_ID), 0)
+            .requiredSingleValueSelection(Labels.withId(EVENT_SELECTION_ID),
+                    Options.from(OPTION_FIRST, OPTION_LAST, OPTION_ALL))
+            .outputStrategy(OutputStrategies.keep()).build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     booleanSignalField = parameters.extractor().mappingPropertyValue(BOOLEAN_SIGNAL_FIELD);
     flank = parameters.extractor().selectedSingleValue(FLANK_ID, String.class);
     delay = parameters.extractor().singleValueParameter(DELAY_ID, Integer.class);
@@ -98,8 +94,7 @@ public class SignalEdgeFilterProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onEvent(Event inputEvent,
-                      SpOutputCollector collector) throws SpRuntimeException {
+  public void onEvent(Event inputEvent, SpOutputCollector collector) throws SpRuntimeException {
     boolean value = inputEvent.getFieldBySelector(this.booleanSignalField).getAsPrimitive().getAsBoolean();
 
     // Detect edges in signal

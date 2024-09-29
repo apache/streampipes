@@ -17,33 +17,30 @@
  */
 package org.apache.streampipes.manager.selector;
 
+import static org.apache.streampipes.manager.selector.TestSelectorUtils.makeSchema;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.streampipes.model.schema.EventProperty;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.List;
-import java.util.stream.Stream;
-
-import static org.apache.streampipes.manager.selector.TestSelectorUtils.makeSchema;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class TestSelector {
 
   static Stream<Arguments> data() {
-    return Stream.of(
-        Arguments.of(List.of("s0::testDimension"), 1),
-        Arguments.of(List.of("s0::location", "s0::location::latitude"), 1),
-        Arguments.of(List.of("s0::testDimension", "s0::testMeasurement"), 2)
-    );
+    return Stream.of(Arguments.of(List.of("s0::testDimension"), 1),
+            Arguments.of(List.of("s0::location", "s0::location::latitude"), 1),
+            Arguments.of(List.of("s0::testDimension", "s0::testMeasurement"), 2));
   }
 
   @ParameterizedTest
   @MethodSource("data")
   public void test(List<String> fieldSelectors, int expectedPropertyCount) {
-    List<EventProperty> newProperties = new PropertySelector(makeSchema())
-        .createPropertyList(fieldSelectors);
+    List<EventProperty> newProperties = new PropertySelector(makeSchema()).createPropertyList(fieldSelectors);
 
     assertEquals(expectedPropertyCount, newProperties.size());
   }

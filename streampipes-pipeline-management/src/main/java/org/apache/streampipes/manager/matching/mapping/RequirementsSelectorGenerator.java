@@ -31,7 +31,7 @@ public class RequirementsSelectorGenerator extends AbstractRequirementsSelectorG
   private InvocableStreamPipesEntity rootPipelineElement;
 
   public RequirementsSelectorGenerator(List<SpDataStream> inputStreams, InvocableStreamPipesEntity rootPipelineElement,
-                                       String requirementSelector) {
+          String requirementSelector) {
     super(inputStreams);
     this.rootPipelineElement = rootPipelineElement;
     this.requirementSelector = requirementSelector;
@@ -44,12 +44,11 @@ public class RequirementsSelectorGenerator extends AbstractRequirementsSelectorG
     EventProperty propertyRequirement = selector.findPropertyRequirement(rootPipelineElement.getStreamRequirements());
     SpDataStream inputStream = selector.getAffectedStream(inputStreams);
 
-    List<String> availablePropertySelectors =
-        new PropertySelectorGenerator(inputStream.getEventSchema(), true).generateSelectors(
-            selector.getAffectedStreamPrefix());
+    List<String> availablePropertySelectors = new PropertySelectorGenerator(inputStream.getEventSchema(), true)
+            .generateSelectors(selector.getAffectedStreamPrefix());
 
-    return new MappingPropertyCalculator(inputStream.getEventSchema(), availablePropertySelectors,
-        propertyRequirement).matchedPropertySelectors();
+    return new MappingPropertyCalculator(inputStream.getEventSchema(), availablePropertySelectors, propertyRequirement)
+            .matchedPropertySelectors();
   }
 
 }

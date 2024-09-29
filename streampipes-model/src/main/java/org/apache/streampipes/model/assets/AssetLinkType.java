@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.assets;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class AssetLinkType {
 
@@ -44,13 +43,8 @@ public class AssetLinkType {
   private List<String> navPaths;
   private boolean navigationActive;
 
-  public AssetLinkType(String linkType,
-                       String linkLabel,
-                       String linkColor,
-                       String linkIcon,
-                       String linkQueryHint,
-                       List<String> navPaths,
-                       boolean navigationActive) {
+  public AssetLinkType(String linkType, String linkLabel, String linkColor, String linkIcon, String linkQueryHint,
+          List<String> navPaths, boolean navigationActive) {
     this.linkType = linkType;
     this.linkLabel = linkLabel;
     this.linkColor = linkColor;

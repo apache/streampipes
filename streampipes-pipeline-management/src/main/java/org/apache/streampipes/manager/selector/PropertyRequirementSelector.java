@@ -31,8 +31,7 @@ public class PropertyRequirementSelector {
     this.requirementSelector = requirementSelector;
   }
 
-  public EventProperty findPropertyRequirement(List<SpDataStream> streamRequirements) throws
-      IllegalArgumentException {
+  public EventProperty findPropertyRequirement(List<SpDataStream> streamRequirements) throws IllegalArgumentException {
     SpDataStream affectedStream = getAffectedStream(streamRequirements);
     for (EventProperty property : affectedStream.getEventSchema().getEventProperties()) {
       if (makePropertySelector(property.getRuntimeName()).equals(requirementSelector)) {

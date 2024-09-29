@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe;
 
 import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
@@ -24,15 +23,12 @@ import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.runtime.Event;
 
-public interface IStreamPipesDataProcessor
-    extends IStreamPipesPipelineElement<IDataProcessorConfiguration> {
+public interface IStreamPipesDataProcessor extends IStreamPipesPipelineElement<IDataProcessorConfiguration> {
 
-  void onPipelineStarted(IDataProcessorParameters params,
-                         SpOutputCollector collector,
-                         EventProcessorRuntimeContext runtimeContext);
+  void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector collector,
+          EventProcessorRuntimeContext runtimeContext);
 
-  void onEvent(Event event,
-               SpOutputCollector collector);
+  void onEvent(Event event, SpOutputCollector collector);
 
   void onPipelineStopped();
 

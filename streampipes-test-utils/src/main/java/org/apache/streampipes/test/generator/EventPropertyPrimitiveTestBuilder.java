@@ -24,7 +24,8 @@ import java.net.URI;
 import java.util.List;
 
 public class EventPropertyPrimitiveTestBuilder
-    extends EventPropertyTestBuilder<EventPropertyPrimitive, EventPropertyPrimitiveTestBuilder> {
+        extends
+          EventPropertyTestBuilder<EventPropertyPrimitive, EventPropertyPrimitiveTestBuilder> {
 
   protected EventPropertyPrimitiveTestBuilder() {
     super(new EventPropertyPrimitive());

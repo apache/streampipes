@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
 import org.apache.streampipes.manager.selector.PropertySelectorGenerator;
@@ -33,25 +32,21 @@ import java.util.stream.Collectors;
 public class UpdateOutputStrategiesStep extends AbstractPipelineValidationStep {
 
   @Override
-  public void apply(NamedStreamPipesEntity source,
-                    InvocableStreamPipesEntity target,
-                    Set<InvocableStreamPipesEntity> allTargets,
-                    List<PipelineElementValidationInfo> validationInfos) throws SpValidationException {
+  public void apply(NamedStreamPipesEntity source, InvocableStreamPipesEntity target,
+          Set<InvocableStreamPipesEntity> allTargets, List<PipelineElementValidationInfo> validationInfos)
+          throws SpValidationException {
     List<SpDataStream> inputStreams = target.getInputStreams();
     if (target instanceof DataProcessorInvocation) {
-      ((DataProcessorInvocation) target)
-          .getOutputStrategies()
-          .forEach(strategy -> {
-            if (strategy instanceof CustomOutputStrategy) {
-              handleCustomOutputStrategy(inputStreams, (CustomOutputStrategy) strategy, validationInfos);
-            }
-          });
+      ((DataProcessorInvocation) target).getOutputStrategies().forEach(strategy -> {
+        if (strategy instanceof CustomOutputStrategy) {
+          handleCustomOutputStrategy(inputStreams, (CustomOutputStrategy) strategy, validationInfos);
+        }
+      });
     }
   }
 
-  private void handleCustomOutputStrategy(List<SpDataStream> inputStreams,
-                                          CustomOutputStrategy strategy,
-                                          List<PipelineElementValidationInfo> validationInfos) {
+  private void handleCustomOutputStrategy(List<SpDataStream> inputStreams, CustomOutputStrategy strategy,
+          List<PipelineElementValidationInfo> validationInfos) {
     PropertySelectorGenerator generator = getGenerator(inputStreams, strategy);
     strategy.setAvailablePropertyKeys(generator.generateSelectors());
     // delete selected keys that are not present as available keys
@@ -62,19 +57,12 @@ public class UpdateOutputStrategiesStep extends AbstractPipelineValidationStep {
     }
   }
 
-  private PropertySelectorGenerator getGenerator(List<SpDataStream> inputStreams,
-                                                 CustomOutputStrategy strategy) {
+  private PropertySelectorGenerator getGenerator(List<SpDataStream> inputStreams, CustomOutputStrategy strategy) {
     if (inputStreams.size() == 1 || (inputStreams.size() > 1 && !strategy.isOutputRight())) {
-      return new PropertySelectorGenerator(
-          inputStreams.get(0).getEventSchema(),
-          false
-      );
+      return new PropertySelectorGenerator(inputStreams.get(0).getEventSchema(), false);
     } else {
-      return new PropertySelectorGenerator(
-          inputStreams.get(0).getEventSchema(),
-          inputStreams.get(1).getEventSchema(),
-          false
-      );
+      return new PropertySelectorGenerator(inputStreams.get(0).getEventSchema(), inputStreams.get(1).getEventSchema(),
+              false);
     }
   }
 
@@ -83,9 +71,7 @@ public class UpdateOutputStrategiesStep extends AbstractPipelineValidationStep {
   }
 
   private List<String> getValidSelectedPropertyKeys(CustomOutputStrategy strategy) {
-    return strategy
-        .getSelectedPropertyKeys()
-        .stream()
-        .filter(p -> strategy.getAvailablePropertyKeys().contains(p)).collect(Collectors.toList());
+    return strategy.getSelectedPropertyKeys().stream().filter(p -> strategy.getAvailablePropertyKeys().contains(p))
+            .collect(Collectors.toList());
   }
 }

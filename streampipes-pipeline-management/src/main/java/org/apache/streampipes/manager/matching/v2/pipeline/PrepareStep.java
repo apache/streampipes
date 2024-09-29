@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -31,10 +30,9 @@ import java.util.Set;
 public class PrepareStep extends AbstractPipelineValidationStep {
 
   @Override
-  public void apply(NamedStreamPipesEntity source,
-                    InvocableStreamPipesEntity target,
-                    Set<InvocableStreamPipesEntity> allTargets,
-                    List<PipelineElementValidationInfo> validationInfos) throws SpValidationException {
+  public void apply(NamedStreamPipesEntity source, InvocableStreamPipesEntity target,
+          Set<InvocableStreamPipesEntity> allTargets, List<PipelineElementValidationInfo> validationInfos)
+          throws SpValidationException {
     if (target instanceof DataProcessorInvocation) {
       if (target.getInputStreams() == null || target.getInputStreams().isEmpty()) {
         target.setInputStreams(new ArrayList<>());

@@ -17,12 +17,19 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -42,13 +49,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.List;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
 @RestController
 @RequestMapping("/api/v2/files")
 public class PipelineElementFile extends AbstractAuthGuardedRestResource {
@@ -59,18 +59,12 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
     this.fileManager = new FileManager();
   }
 
-  @PostMapping(
-      consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<?> storeFile(@RequestPart("file_upload") MultipartFile fileDetail) {
     try {
-      FileMetadata metadata =
-          fileManager.storeFile(
-              getAuthenticatedUsername(),
-              fileDetail.getOriginalFilename(),
-              fileDetail.getInputStream()
-          );
+      FileMetadata metadata = fileManager.storeFile(getAuthenticatedUsername(), fileDetail.getOriginalFilename(),
+              fileDetail.getInputStream());
       return ok(metadata);
     } catch (Exception e) {
       return fail();
@@ -87,40 +81,25 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
   public ResponseEntity<List<FileMetadata>> getFileInfo(
-      @RequestParam(value = "filetypes", required = false) String filetypes
-  ) {
+          @RequestParam(value = "filetypes", required = false) String filetypes) {
     return ok(fileManager.getAllFiles(filetypes));
   }
 
   @GetMapping(path = "/{filename}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-  @Operation(
-      summary = "Get file content by file name."
+  @Operation(summary = "Get file content by file name."
           + "If multiple files with the same name exist, only the first is returned."
-          + "This can only be the case when the original file name is provided.", tags = {"Core", "Files"},
-      responses = {
-          @ApiResponse(
-              responseCode = "" + HttpStatus.SC_OK,
-              description = "File could be found and is returned"),
-          @ApiResponse(
-              responseCode = "" + HttpStatus.SC_NOT_FOUND,
-              description = "No file with the given file name could be found")
-      }
-  )
+          + "This can only be the case when the original file name is provided.", tags = {"Core",
+              "Files"}, responses = {
+                  @ApiResponse(responseCode = ""
+                          + HttpStatus.SC_OK, description = "File could be found and is returned"),
+                  @ApiResponse(responseCode = ""
+                          + HttpStatus.SC_NOT_FOUND, description = "No file with the given file name could be found")})
   public ResponseEntity<byte[]> getFile(
-      @Parameter(
-          in = ParameterIn.PATH,
-          description = "The name of the file to be retrieved",
-          required = true
-      )
-      @PathVariable("filename") String filename
-  ) {
+          @Parameter(in = ParameterIn.PATH, description = "The name of the file to be retrieved", required = true) @PathVariable("filename") String filename) {
     try {
       return ok(getFileContents(fileManager.getFile(filename)));
     } catch (IOException e) {
-      throw new SpMessageException(
-          NOT_FOUND,
-          Notifications.error("File not found")
-      );
+      throw new SpMessageException(NOT_FOUND, Notifications.error("File not found"));
     }
   }
 
@@ -131,30 +110,19 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   @GetMapping(path = "/allFilenames", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
   public ResponseEntity<List<String>> getAllOriginalFilenames() {
-    return ok(fileManager.getAllFiles()
-                         .stream()
-                         .map(fileMetadata -> fileMetadata.getFilename()
-                                                          .toLowerCase())
-                         .toList());
+    return ok(
+            fileManager.getAllFiles().stream().map(fileMetadata -> fileMetadata.getFilename().toLowerCase()).toList());
   }
 
-  @GetMapping(
-      path = "/{filename}/checkFileContentChanged/{hash}",
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/{filename}/checkFileContentChanged/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
-  public ResponseEntity<Boolean> checkFileContentChanged(
-      @PathVariable(value = "filename") String filename,
-      @PathVariable(value = "hash") String hash
-  ) {
+  public ResponseEntity<Boolean> checkFileContentChanged(@PathVariable(value = "filename") String filename,
+          @PathVariable(value = "hash") String hash) {
     try {
       return ok(fileManager.checkFileContentChanged(filename, hash));
     } catch (IOException e) {
-      throw new SpMessageException(
-          NOT_FOUND,
-          Notifications.error("File not found")
-      );
+      throw new SpMessageException(NOT_FOUND, Notifications.error("File not found"));
     }
   }
-
 
 }

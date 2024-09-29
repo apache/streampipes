@@ -20,6 +20,9 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.model.client.user.UserRegistrationData;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,9 +31,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 @RestController
 @RequestMapping("/api/v2/restore-password")
@@ -46,13 +46,9 @@ public class RestorePasswordResource extends AbstractRestResource {
     }
   }
 
-  @PostMapping(
-      path = "{recoveryCode}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "{recoveryCode}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> changePassword(@PathVariable("recoveryCode") String recoveryCode,
-                                             @RequestBody UserRegistrationData userRegistrationData
-  ) {
+          @RequestBody UserRegistrationData userRegistrationData) {
     try {
       getSpResourceManager().manageUsers().changePassword(recoveryCode, userRegistrationData);
       return ok();

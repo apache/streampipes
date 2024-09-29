@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.utils;
 
 import org.apache.streampipes.vocabulary.SO;
@@ -26,14 +25,8 @@ import java.util.Arrays;
 
 public enum Datatypes {
 
-  Integer(XSD.INTEGER),
-  Long(XSD.LONG),
-  Float(XSD.FLOAT),
-  Boolean(XSD.BOOLEAN),
-  String(XSD.STRING),
-  Double(XSD.DOUBLE),
-  Number(URI.create(SO.NUMBER)),
-  Sequence(XSD.SEQUENCE);
+  Integer(XSD.INTEGER), Long(XSD.LONG), Float(XSD.FLOAT), Boolean(XSD.BOOLEAN), String(XSD.STRING), Double(
+          XSD.DOUBLE), Number(URI.create(SO.NUMBER)), Sequence(XSD.SEQUENCE);
 
   private URI uri;
 
@@ -42,10 +35,8 @@ public enum Datatypes {
   }
 
   public static Datatypes fromDatatypeString(String datatype) {
-    return Arrays.stream(Datatypes.values())
-        .filter(d -> d.uri.toString().equals(datatype))
-        .findFirst()
-        .orElseThrow(() -> new RuntimeException("Could not find datatype with URI " + datatype));
+    return Arrays.stream(Datatypes.values()).filter(d -> d.uri.toString().equals(datatype)).findFirst()
+            .orElseThrow(() -> new RuntimeException("Could not find datatype with URI " + datatype));
   }
 
   public String toString() {

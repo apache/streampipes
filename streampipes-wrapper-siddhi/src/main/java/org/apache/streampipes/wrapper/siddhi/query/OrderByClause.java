@@ -38,11 +38,7 @@ public class OrderByClause extends SiddhiStatement {
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.WHITESPACE,
-            "order by",
-            join(SiddhiConstants.COMMA, orderByExpressions
-                    .stream()
-                    .map(OrderByExpression::toSiddhiEpl)
-                    .collect(Collectors.toList())));
+    return join(SiddhiConstants.WHITESPACE, "order by", join(SiddhiConstants.COMMA,
+            orderByExpressions.stream().map(OrderByExpression::toSiddhiEpl).collect(Collectors.toList())));
   }
 }

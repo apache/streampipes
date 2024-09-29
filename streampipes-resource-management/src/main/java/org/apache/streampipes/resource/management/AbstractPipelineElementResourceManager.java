@@ -26,8 +26,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class AbstractPipelineElementResourceManager<T extends CRUDStorage<W>,
-    W extends NamedStreamPipesEntity, X> extends AbstractResourceManager<T> {
+public abstract class AbstractPipelineElementResourceManager<T extends CRUDStorage<W>, W extends NamedStreamPipesEntity, X>
+        extends
+          AbstractResourceManager<T> {
 
   public AbstractPipelineElementResourceManager(T db) {
     super(db);
@@ -42,11 +43,7 @@ public abstract class AbstractPipelineElementResourceManager<T extends CRUDStora
   }
 
   public List<X> findAllAsInvocation() {
-    return findAll()
-        .stream()
-        .filter(Objects::nonNull)
-        .map(this::toInvocation)
-        .collect(Collectors.toList());
+    return findAll().stream().filter(Objects::nonNull).map(this::toInvocation).collect(Collectors.toList());
   }
 
   public W find(String elementId) {
@@ -74,8 +71,8 @@ public abstract class AbstractPipelineElementResourceManager<T extends CRUDStora
     W existing = find(pipelineElement.getElementId());
     if (existing == null) {
       this.db.persist(pipelineElement);
-      new PermissionResourceManager()
-          .createDefault(pipelineElement.getElementId(), SpDataStream.class, principalSid, false);
+      new PermissionResourceManager().createDefault(pipelineElement.getElementId(), SpDataStream.class, principalSid,
+              false);
     } else {
       throw new IllegalArgumentException("This pipeline element already exists");
     }

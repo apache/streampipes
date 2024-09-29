@@ -15,21 +15,19 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.schema;
 
 /**
  * A property scope defines the scope of an event property. Although an event schema consists of a flat list of event
- * properties, properties might differ in terms of their purpose. For instance, a property indicating a timestamp
- * are typically not be used for performing calculations (e.g., filter operations or sensor measurement value
+ * properties, properties might differ in terms of their purpose. For instance, a property indicating a timestamp are
+ * typically not be used for performing calculations (e.g., filter operations or sensor measurement value
  * transformations). In contrast, a property that describes an identifier (e.g., machineId) is often used for
  * partitioning a stream (e.g., calculating separate temperature values per machine).
  * <p>
  * Use the SDK to assign property scopes to stream descriptions and stream (property) requirements.
  * <p>
  * For better understanding the meaning of property scopes, think of the meaning of variables in the data warehousing
- * domains:
- * Measurements are often numbers, while the dimension is what numbers are “sliced and diced” by.
+ * domains: Measurements are often numbers, while the dimension is what numbers are “sliced and diced” by.
  */
 public enum PropertyScope {
 

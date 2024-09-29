@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.environment.variable;
 
 public interface EnvResolver<T> {

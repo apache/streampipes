@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -24,10 +23,10 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.storage.api.INotificationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 public class NotificationsResourceManager extends AbstractResourceManager<INotificationStorage> {
 
@@ -53,23 +52,15 @@ public class NotificationsResourceManager extends AbstractResourceManager<INotif
   }
 
   private List<String> getAllNotificationTypesForPipeline(Pipeline pipeline) {
-    return pipeline
-        .getActions()
-        .stream()
-        .filter(sink -> sink.getAppId().equals(InternalNotificationsAppId))
-        .map(sink -> sink.getCorrespondingPipeline() + "-" + extractNotificationTitle(sink.getStaticProperties()))
-        .toList();
+    return pipeline.getActions().stream().filter(sink -> sink.getAppId().equals(InternalNotificationsAppId))
+            .map(sink -> sink.getCorrespondingPipeline() + "-" + extractNotificationTitle(sink.getStaticProperties()))
+            .toList();
   }
 
   private String extractNotificationTitle(List<StaticProperty> staticProperties) {
-    return staticProperties
-        .stream()
-        .filter(sp -> sp instanceof FreeTextStaticProperty)
-        .filter(sp -> sp.getInternalName().equals(InternalNotificationsTitleKey))
-        .map(sp -> ((FreeTextStaticProperty) sp).getValue())
-        .findFirst()
-        .orElseThrow(IllegalArgumentException::new);
+    return staticProperties.stream().filter(sp -> sp instanceof FreeTextStaticProperty)
+            .filter(sp -> sp.getInternalName().equals(InternalNotificationsTitleKey))
+            .map(sp -> ((FreeTextStaticProperty) sp).getValue()).findFirst().orElseThrow(IllegalArgumentException::new);
   }
-
 
 }

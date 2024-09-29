@@ -15,28 +15,24 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx.client;
 
 import org.apache.streampipes.dataexplorer.influx.auth.AuthInterceptor;
 
-import okhttp3.OkHttpClient;
-
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 
 public class InfluxClientUtils {
 
   public static OkHttpClient.Builder getHttpClientBuilder(String authToken) {
-    var builder = getHttpClientBuilder()
-        .addInterceptor(new AuthInterceptor(authToken));
+    var builder = getHttpClientBuilder().addInterceptor(new AuthInterceptor(authToken));
 
     return builder;
   }
 
   public static OkHttpClient.Builder getHttpClientBuilder() {
-    return new OkHttpClient().newBuilder()
-        .connectTimeout(120, TimeUnit.SECONDS)
-        .readTimeout(120, TimeUnit.SECONDS)
-        .writeTimeout(120, TimeUnit.SECONDS);
+    return new OkHttpClient().newBuilder().connectTimeout(120, TimeUnit.SECONDS).readTimeout(120, TimeUnit.SECONDS)
+            .writeTimeout(120, TimeUnit.SECONDS);
   }
 }

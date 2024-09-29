@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connectors.ros.migrations;
 
 import org.apache.streampipes.connectors.ros.config.RosConfig;
@@ -33,16 +32,13 @@ public class RosBridgeAdapterMigrationV1 implements IAdapterMigrator {
 
   @Override
   public ModelMigratorConfig config() {
-    return new ModelMigratorConfig(
-      "org.apache.streampipes.connect.iiot.adapters.ros",
-      SpServiceTagPrefix.ADAPTER,
-      0,
-      1);
+    return new ModelMigratorConfig("org.apache.streampipes.connect.iiot.adapters.ros", SpServiceTagPrefix.ADAPTER, 0,
+            1);
   }
 
   @Override
-  public MigrationResult<AdapterDescription> migrate(AdapterDescription element,
-                                                     IStaticPropertyExtractor extractor) throws RuntimeException {
+  public MigrationResult<AdapterDescription> migrate(AdapterDescription element, IStaticPropertyExtractor extractor)
+          throws RuntimeException {
 
     var portProperty = extractPortProperty(element);
     portProperty.setRequiredDatatype(XSD.INTEGER);
@@ -51,10 +47,8 @@ public class RosBridgeAdapterMigrationV1 implements IAdapterMigrator {
   }
 
   protected FreeTextStaticProperty extractPortProperty(AdapterDescription adapterDescription) {
-    return (FreeTextStaticProperty) adapterDescription.getConfig().stream()
-                                                      .filter(this::isPortConfig)
-                                                      .findFirst()
-                                                      .orElseThrow();
+    return (FreeTextStaticProperty) adapterDescription.getConfig().stream().filter(this::isPortConfig).findFirst()
+            .orElseThrow();
   }
 
   private boolean isPortConfig(StaticProperty config) {

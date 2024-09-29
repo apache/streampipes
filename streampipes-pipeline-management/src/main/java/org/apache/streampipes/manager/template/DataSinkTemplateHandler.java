@@ -22,9 +22,8 @@ import org.apache.streampipes.model.template.PipelineElementTemplate;
 
 public class DataSinkTemplateHandler extends PipelineElementTemplateHandler<DataSinkInvocation> {
 
-  public DataSinkTemplateHandler(PipelineElementTemplate template,
-                                 DataSinkInvocation pipelineElement,
-                                 boolean overwriteNameAndDescription) {
+  public DataSinkTemplateHandler(PipelineElementTemplate template, DataSinkInvocation pipelineElement,
+          boolean overwriteNameAndDescription) {
     super(template, pipelineElement, overwriteNameAndDescription);
   }
 }

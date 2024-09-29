@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.manager.matching.v2.utils.MatchingUtils;
@@ -33,8 +32,7 @@ public class ProtocolMatch extends AbstractMatcher<TransportProtocol, TransportP
 
   @Override
   public boolean match(TransportProtocol offer, TransportProtocol requirement, List<MatchingResultMessage> errorLog) {
-    return MatchingUtils.nullCheck(offer, requirement)
-        || canonicalName(requirement).equals(canonicalName(offer));
+    return MatchingUtils.nullCheck(offer, requirement) || canonicalName(requirement).equals(canonicalName(offer));
   }
 
   private String canonicalName(TransportProtocol protocol) {

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone.function;
 
 import org.apache.streampipes.client.StreamPipesClient;
@@ -35,10 +34,8 @@ public class FunctionContextGenerator {
 
   private final Map<String, SpOutputCollector> outputCollectors;
 
-  public FunctionContextGenerator(String functionId,
-                                  String serviceGroup,
-                                  List<String> streamIds,
-                                  Map<String, SpOutputCollector> outputCollectors) {
+  public FunctionContextGenerator(String functionId, String serviceGroup, List<String> streamIds,
+          Map<String, SpOutputCollector> outputCollectors) {
     this.streamIds = streamIds;
     this.serviceGroup = serviceGroup;
     this.functionId = functionId;
@@ -57,10 +54,6 @@ public class FunctionContextGenerator {
   }
 
   private List<SpDataStream> receiveStreams(StreamPipesClient client) {
-    return this.streamIds
-        .stream()
-        .map(streamId -> client.streams().get(streamId))
-        .flatMap(Optional::stream)
-        .toList();
+    return this.streamIds.stream().map(streamId -> client.streams().get(streamId)).flatMap(Optional::stream).toList();
   }
 }

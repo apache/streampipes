@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.manager.matching.v2.utils.MatchingUtils;
@@ -35,10 +34,8 @@ public class DatatypeMatch extends AbstractMatcher<String, String> {
   @Override
   public boolean match(String offer, String requirement, List<MatchingResultMessage> errorLog) {
 
-    boolean match = MatchingUtils.nullCheckReqAllowed(offer, requirement)
-                    || requirement.equals(offer)
-                    || subClassOf(offer, requirement)
-                    || MatchingUtils.nullCheck(offer, requirement);
+    boolean match = MatchingUtils.nullCheckReqAllowed(offer, requirement) || requirement.equals(offer)
+            || subClassOf(offer, requirement) || MatchingUtils.nullCheck(offer, requirement);
 
     if (!match) {
       buildErrorMessage(errorLog, requirement);
@@ -50,10 +47,8 @@ public class DatatypeMatch extends AbstractMatcher<String, String> {
     if (!requirement.equals(SO.NUMBER)) {
       return false;
     } else {
-      if (offer.equals(XSD.INTEGER.toString())
-          || offer.equals(XSD.LONG.toString())
-          || offer.equals(XSD.DOUBLE.toString())
-          || offer.equals(XSD.FLOAT.toString())) {
+      if (offer.equals(XSD.INTEGER.toString()) || offer.equals(XSD.LONG.toString())
+              || offer.equals(XSD.DOUBLE.toString()) || offer.equals(XSD.FLOAT.toString())) {
         return true;
       }
     }

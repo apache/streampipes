@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -36,9 +35,7 @@ public class DescriptionManagement {
   }
 
   public Optional<AdapterDescription> getAdapter(String id) {
-    return getAdapters().stream()
-        .filter(desc -> desc.getAppId().equals(id))
-        .findFirst();
+    return getAdapters().stream().filter(desc -> desc.getAppId().equals(id)).findFirst();
   }
 
   public void deleteAdapterDescription(String id) throws SpRuntimeException {
@@ -66,9 +63,7 @@ public class DescriptionManagement {
   private boolean isAdapterUsed(AdapterDescription adapter) {
     var allAdapters = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage().findAll();
 
-    return allAdapters
-        .stream()
-        .anyMatch(runningAdapter -> runningAdapter.getAppId().equals(adapter.getAppId()));
+    return allAdapters.stream().anyMatch(runningAdapter -> runningAdapter.getAppId().equals(adapter.getAppId()));
   }
 
 }

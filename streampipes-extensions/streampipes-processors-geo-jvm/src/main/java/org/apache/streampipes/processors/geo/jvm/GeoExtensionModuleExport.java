@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -50,22 +49,12 @@ public class GeoExtensionModuleExport implements IExtensionModuleExport {
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new HaversineDistanceCalculatorProcessor(),
-        new HaversineStaticDistanceCalculatorProcessor(),
-        new GoogleMapsGeocoderProcessor(),
-        new GoogleMapsStaticGeocoderProcessor(),
-        new GeoCityNameRevdecodeProcessor(),
-        new EpsgProcessor(),
-        new LatLngToJtsPointProcessor(),
-        new TrajectoryFromPointsProcessor(),
-        new SpeedCalculatorProcessor(),
-        new ReprojectionProcessor(),
-        new GeometryValidationProcessor(),
-        new TopologyValidationProcessor(),
-        new BufferGeomProcessor(),
-        new BufferPointProcessor()
-    );
+    return List.of(new HaversineDistanceCalculatorProcessor(), new HaversineStaticDistanceCalculatorProcessor(),
+            new GoogleMapsGeocoderProcessor(), new GoogleMapsStaticGeocoderProcessor(),
+            new GeoCityNameRevdecodeProcessor(), new EpsgProcessor(), new LatLngToJtsPointProcessor(),
+            new TrajectoryFromPointsProcessor(), new SpeedCalculatorProcessor(), new ReprojectionProcessor(),
+            new GeometryValidationProcessor(), new TopologyValidationProcessor(), new BufferGeomProcessor(),
+            new BufferPointProcessor());
   }
 
   @Override
@@ -75,8 +64,6 @@ public class GeoExtensionModuleExport implements IExtensionModuleExport {
 
   @Override
   public List<ConfigItem> configItems() {
-    return List.of(
-        ConfigItem.from(ConfigKeys.GOOGLE_API_KEY, "", "Google Maps API key")
-    );
+    return List.of(ConfigItem.from(ConfigKeys.GOOGLE_API_KEY, "", "Google Maps API key"));
   }
 }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
@@ -23,6 +22,10 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +41,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v2/storage-generic")
@@ -63,13 +62,10 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PostMapping(
-      path = "/{appDocName}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/{appDocName}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_GENERIC_STORAGE_PRIVILEGE)
   public ResponseEntity<Map<String, Object>> create(@PathVariable(APP_DOC_NAME) String appDocName,
-                                                    @RequestBody String document) {
+          @RequestBody String document) {
     try {
       Map<String, Object> obj = getGenericStorage().create(document);
       return ok(obj);
@@ -79,13 +75,10 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PostMapping(
-      path = "/{appDocName}/find",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/{appDocName}/find", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_GENERIC_STORAGE_PRIVILEGE)
   public ResponseEntity<List<Map<String, Object>>> find(@PathVariable(APP_DOC_NAME) String appDocName,
-                                                        @RequestBody Map<String, Object> query) {
+          @RequestBody Map<String, Object> query) {
     try {
       var docs = getGenericStorage().find(appDocName, query);
       return ok(docs);
@@ -98,7 +91,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
   @GetMapping(path = "/{appDocName}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_GENERIC_STORAGE_PRIVILEGE)
   public ResponseEntity<Map<String, Object>> getCategory(@PathVariable(APP_DOC_NAME) String appDocName,
-                                                         @PathVariable("id") String documentId) {
+          @PathVariable("id") String documentId) {
     try {
       Map<String, Object> obj = getGenericStorage().findOne(documentId);
       return ok(obj);
@@ -108,14 +101,10 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PutMapping(
-      path = "/{appDocName}/{id}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "/{appDocName}/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_GENERIC_STORAGE_PRIVILEGE)
   public ResponseEntity<Map<String, Object>> update(@PathVariable(APP_DOC_NAME) String appDocName,
-                                                    @PathVariable("id") String documentId,
-                                                    @RequestBody String document) {
+          @PathVariable("id") String documentId, @RequestBody String document) {
     try {
       Map<String, Object> obj = getGenericStorage().update(documentId, document);
       return ok(obj);
@@ -128,8 +117,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
   @DeleteMapping(path = "/{appDocName}/{id}/{rev}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_GENERIC_STORAGE_PRIVILEGE)
   public ResponseEntity<Void> delete(@PathVariable(APP_DOC_NAME) String appDocName,
-                                     @PathVariable("id") String documentId,
-                                     @PathVariable("rev") String rev) {
+          @PathVariable("id") String documentId, @PathVariable("rev") String rev) {
     try {
       getGenericStorage().delete(documentId, rev);
       return ok();

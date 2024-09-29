@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons;
 
 import java.security.MessageDigest;
@@ -28,7 +27,8 @@ public final class MD5 {
   /**
    * Encodes a string
    *
-   * @param str String to encode
+   * @param str
+   *          String to encode
    * @return Encoded String
    */
   public static String crypt(String str) {

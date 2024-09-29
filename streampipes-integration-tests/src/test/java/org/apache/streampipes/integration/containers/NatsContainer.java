@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.integration.containers;
 
 import org.testcontainers.containers.GenericContainer;

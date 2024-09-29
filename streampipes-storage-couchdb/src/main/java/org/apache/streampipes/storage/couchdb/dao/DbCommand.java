@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.storage.couchdb.dao;
 
-import org.lightcouch.CouchDbClient;
-
 import java.util.function.Supplier;
+
+import org.lightcouch.CouchDbClient;
 
 public abstract class DbCommand<K, V> {
 
@@ -32,7 +32,6 @@ public abstract class DbCommand<K, V> {
   }
 
   protected abstract K executeCommand(CouchDbClient couchDbClient);
-
 
   public K execute() {
     CouchDbClient couchDbClient = couchDbClientSupplier.get();

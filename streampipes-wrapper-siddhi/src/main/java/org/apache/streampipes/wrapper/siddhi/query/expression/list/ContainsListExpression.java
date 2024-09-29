@@ -33,13 +33,8 @@ public class ContainsListExpression extends PropertyExpressionBase {
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.EMPTY,
-        "list:contains",
-        SiddhiConstants.PARENTHESIS_OPEN,
-        propertyExpression.toSiddhiEpl(),
-        SiddhiConstants.COMMA,
-        prepare(value),
-        SiddhiConstants.PARENTHESIS_CLOSE);
+    return join(SiddhiConstants.EMPTY, "list:contains", SiddhiConstants.PARENTHESIS_OPEN,
+            propertyExpression.toSiddhiEpl(), SiddhiConstants.COMMA, prepare(value), SiddhiConstants.PARENTHESIS_CLOSE);
   }
 
   public String prepare(Object value) {

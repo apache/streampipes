@@ -27,10 +27,10 @@ import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 public class MigrateExtensionsResourceTest {
 
@@ -45,14 +45,10 @@ public class MigrateExtensionsResourceTest {
       }
 
       @Override
-      public MigrationResult<DataProcessorInvocation> migrate(
-              DataProcessorInvocation element,
-              IDataProcessorParameterExtractor extractor
-      ) throws RuntimeException {
+      public MigrationResult<DataProcessorInvocation> migrate(DataProcessorInvocation element,
+              IDataProcessorParameterExtractor extractor) throws RuntimeException {
         var properties = element.getStaticProperties();
-        properties.add(
-                StaticProperties.freeTextProperty(Labels.empty(), Datatypes.String)
-        );
+        properties.add(StaticProperties.freeTextProperty(Labels.empty(), Datatypes.String));
         element.setStaticProperties(properties);
         return MigrationResult.success(element);
       }
@@ -65,10 +61,8 @@ public class MigrateExtensionsResourceTest {
 
     Assertions.assertTrue(result.success());
     Assertions.assertEquals("SUCCESS", result.message());
-    Assertions.assertEquals(1,
-                            result.element().getVersion());
-    Assertions.assertEquals(1,
-                            result.element().getStaticProperties().size());
+    Assertions.assertEquals(1, result.element().getVersion());
+    Assertions.assertEquals(1, result.element().getStaticProperties().size());
 
   }
 
@@ -83,10 +77,8 @@ public class MigrateExtensionsResourceTest {
       }
 
       @Override
-      public MigrationResult<DataProcessorInvocation> migrate(
-              DataProcessorInvocation element,
-              IDataProcessorParameterExtractor extractor
-      ) throws RuntimeException {
+      public MigrationResult<DataProcessorInvocation> migrate(DataProcessorInvocation element,
+              IDataProcessorParameterExtractor extractor) throws RuntimeException {
         return MigrationResult.failure(element, "This should fail");
       }
     };
@@ -97,8 +89,7 @@ public class MigrateExtensionsResourceTest {
 
     Assertions.assertFalse(result.success());
     Assertions.assertEquals("This should fail", result.message());
-    Assertions.assertEquals(0,
-                            result.element().getVersion());
+    Assertions.assertEquals(0, result.element().getVersion());
   }
 
   @Test
@@ -112,10 +103,8 @@ public class MigrateExtensionsResourceTest {
       }
 
       @Override
-      public MigrationResult<DataProcessorInvocation> migrate(
-              DataProcessorInvocation element,
-              IDataProcessorParameterExtractor extractor
-      ) throws RuntimeException {
+      public MigrationResult<DataProcessorInvocation> migrate(DataProcessorInvocation element,
+              IDataProcessorParameterExtractor extractor) throws RuntimeException {
         throw new NullPointerException();
       }
     };
@@ -126,7 +115,6 @@ public class MigrateExtensionsResourceTest {
 
     Assertions.assertFalse(result.success());
     Assertions.assertTrue(result.message().startsWith("Migration failed due to an unexpected exception:"));
-    Assertions.assertEquals(0,
-                            result.element().getVersion());
+    Assertions.assertEquals(0, result.element().getVersion());
   }
 }

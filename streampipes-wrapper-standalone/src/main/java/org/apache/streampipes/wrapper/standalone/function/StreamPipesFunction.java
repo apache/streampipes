@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone.function;
 
 import org.apache.streampipes.commons.environment.Environment;
@@ -40,14 +39,14 @@ import org.apache.streampipes.model.runtime.SourceInfo;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclarer, RawDataProcessor {
 
@@ -70,24 +69,18 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
 
     this.initializeProducers(functionId);
 
-    var context = new FunctionContextGenerator(
-        functionId.getId(),
-        serviceGroup,
-        this.requiredStreamIds(),
-        this.outputCollectors
-    ).generate();
+    var context = new FunctionContextGenerator(functionId.getId(), serviceGroup, this.requiredStreamIds(),
+            this.outputCollectors).generate();
 
     // Creates a source info for each incoming SpDataStream
     // The index is used to create the selector prefix for the SourceInfo
     AtomicInteger index = new AtomicInteger();
-    context
-        .getStreams()
-        .forEach(stream -> {
-          var topic = getTopic(stream);
-          sourceInfoMapper.put(topic, createSourceInfo(stream, index.get()));
-          schemaInfoMapper.put(topic, createSchemaInfo(stream.getEventSchema()));
-          index.getAndIncrement();
-        });
+    context.getStreams().forEach(stream -> {
+      var topic = getTopic(stream);
+      sourceInfoMapper.put(topic, createSourceInfo(stream, index.get()));
+      schemaInfoMapper.put(topic, createSchemaInfo(stream.getEventSchema()));
+      index.getAndIncrement();
+    });
 
     this.inputCollectors = getInputCollectors(functionId, context.getStreams());
 
@@ -110,8 +103,7 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
     try {
       var sourceInfo = sourceInfoMapper.get(topicName);
 
-      var event = EventFactory
-          .fromMap(rawEvent, sourceInfo, schemaInfoMapper.get(topicName));
+      var event = EventFactory.fromMap(rawEvent, sourceInfo, schemaInfoMapper.get(topicName));
 
       this.onEvent(event, sourceInfo.getSourceId());
       increaseCounter(sourceInfo.getSourceId());
@@ -126,18 +118,13 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
 
   private void increaseCounter(String sourceInfo) {
     var functionId = this.getFunctionConfig().getFunctionId();
-    SpMonitoringManager.INSTANCE.increaseInCounter(
-        functionId.getId(),
-        sourceInfo,
-        System.currentTimeMillis()
-    );
+    SpMonitoringManager.INSTANCE.increaseInCounter(functionId.getId(), sourceInfo, System.currentTimeMillis());
   }
 
   private void addError(RuntimeException e) {
     var functionId = this.getFunctionConfig().getFunctionId();
-    SpMonitoringManager.INSTANCE.addErrorMessage(
-        functionId.getId(),
-        SpLogEntry.from(System.currentTimeMillis(), SpLogMessage.from(e)));
+    SpMonitoringManager.INSTANCE.addErrorMessage(functionId.getId(),
+            SpLogEntry.from(System.currentTimeMillis(), SpLogMessage.from(e)));
   }
 
   private void initializeProducers(FunctionId functionId) {
@@ -148,18 +135,15 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   private Map<String, SpOutputCollector> getOutputCollectors(FunctionId functionId) {
     this.getFunctionConfig().getOutputDataStreams().forEach((key, value) -> {
       var uniqueStreamId = getUniqueStreamId(functionId, value);
-      this.outputCollectors.put(
-          uniqueStreamId,
-          ProtocolManager.makeOutputCollector(
-              value.getEventGrounding().getTransportProtocol(),
-              uniqueStreamId));
+      this.outputCollectors.put(uniqueStreamId,
+              ProtocolManager.makeOutputCollector(value.getEventGrounding().getTransportProtocol(), uniqueStreamId));
     });
 
     return this.outputCollectors;
   }
 
-  private Map<String, SpInputCollector> getInputCollectors(FunctionId functionId,
-                                                           Collection<SpDataStream> streams) throws SpRuntimeException {
+  private Map<String, SpInputCollector> getInputCollectors(FunctionId functionId, Collection<SpDataStream> streams)
+          throws SpRuntimeException {
     Map<String, SpInputCollector> inputCollectors = new HashMap<>();
     var env = getEnvironment();
     for (SpDataStream is : streams) {
@@ -167,14 +151,13 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
       if (env.getSpDebug().getValueOrDefault()) {
         GroundingDebugUtils.modifyGrounding(is.getEventGrounding());
       }
-      inputCollectors.put(uniqueStreamId, ProtocolManager.findInputCollector(is.getEventGrounding()
-          .getTransportProtocol(), false));
+      inputCollectors.put(uniqueStreamId,
+              ProtocolManager.findInputCollector(is.getEventGrounding().getTransportProtocol(), false));
     }
     return inputCollectors;
   }
 
-  private String getUniqueStreamId(FunctionId functionId,
-                                   SpDataStream dataStream) {
+  private String getUniqueStreamId(FunctionId functionId, SpDataStream dataStream) {
     return String.join("-", functionId.getId(), dataStream.getElementId());
   }
 
@@ -193,10 +176,7 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   }
 
   private SourceInfo createSourceInfo(SpDataStream stream, int streamIndex) {
-    return new SourceInfo(
-        stream.getElementId(),
-        PropertySelectorConstants.STREAM_ID_PREFIX
-            + streamIndex);
+    return new SourceInfo(stream.getElementId(), PropertySelectorConstants.STREAM_ID_PREFIX + streamIndex);
   }
 
   private SchemaInfo createSchemaInfo(EventSchema eventSchema) {
@@ -211,8 +191,7 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
 
   public abstract void onServiceStarted(FunctionContext context);
 
-  public abstract void onEvent(Event event,
-                               String streamId);
+  public abstract void onEvent(Event event, String streamId);
 
   public abstract void onServiceStopped();
 

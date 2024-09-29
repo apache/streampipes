@@ -30,10 +30,7 @@ public class MinForeverExpression extends PropertyExpressionBase {
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.EMPTY,
-        AggregationFunction.MIN_FOREVER.toAggregationFunction(),
-        SiddhiConstants.PARENTHESIS_OPEN,
-        propertyExpression.toSiddhiEpl(),
-        SiddhiConstants.PARENTHESIS_CLOSE);
+    return join(SiddhiConstants.EMPTY, AggregationFunction.MIN_FOREVER.toAggregationFunction(),
+            SiddhiConstants.PARENTHESIS_OPEN, propertyExpression.toSiddhiEpl(), SiddhiConstants.PARENTHESIS_CLOSE);
   }
 }

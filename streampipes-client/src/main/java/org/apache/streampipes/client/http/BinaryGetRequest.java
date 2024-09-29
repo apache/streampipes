@@ -15,30 +15,27 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.client.http;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
+import java.io.IOException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.client.fluent.Request;
-
-import java.io.IOException;
 
 public class BinaryGetRequest extends HttpRequest<Void, byte[], byte[]> {
 
   public BinaryGetRequest(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath,
-                          Serializer<Void, byte[], byte[]> serializer) {
+          Serializer<Void, byte[], byte[]> serializer) {
     super(clientConfig, apiPath, serializer);
   }
 
   @Override
   protected Request makeRequest(Serializer<Void, byte[], byte[]> serializer) {
-    return Request
-        .Get(makeUrl())
-        .setHeaders(standardHeaders());
+    return Request.Get(makeUrl()).setHeaders(standardHeaders());
   }
 
   @Override

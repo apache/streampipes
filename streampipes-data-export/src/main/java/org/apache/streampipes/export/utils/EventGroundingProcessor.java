@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.export.utils;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -34,15 +33,10 @@ public class EventGroundingProcessor {
   private final SpProtocol configuredProtocol;
 
   public EventGroundingProcessor() {
-    this.messagingSettings = StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getSpCoreConfigurationStorage()
-        .get()
-        .getMessagingSettings();
+    this.messagingSettings = StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage().get()
+            .getMessagingSettings();
 
-    this.configuredProtocol = messagingSettings
-        .getPrioritizedProtocols().get(0);
+    this.configuredProtocol = messagingSettings.getPrioritizedProtocols().get(0);
   }
 
   public TransportProtocol applyOverride(TransportProtocol protocol) {
@@ -69,11 +63,9 @@ public class EventGroundingProcessor {
     }
   }
 
-  private boolean isProtocol(SpProtocol configuredProtocol,
-                             Class<?> actualProtocolClass) {
+  private boolean isProtocol(SpProtocol configuredProtocol, Class<?> actualProtocolClass) {
     return configuredProtocol.getProtocolClass().equals(actualProtocolClass.getCanonicalName());
   }
-
 
   private KafkaTransportProtocol makeKafkaProtocol() {
     var protocol = new KafkaTransportProtocol();
@@ -101,6 +93,5 @@ public class EventGroundingProcessor {
     protocol.setBrokerHostname(messagingSettings.getNatsHost());
     return protocol;
   }
-
 
 }

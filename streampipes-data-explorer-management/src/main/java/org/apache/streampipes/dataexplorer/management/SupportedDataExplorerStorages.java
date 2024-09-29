@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.management;
 
 /**
@@ -23,7 +22,7 @@ package org.apache.streampipes.dataexplorer.management;
  * <p>
  * Supported time series storage implementations:
  * <ul>
- *     <li>{@link #INFLUX_DB}: Represents the InfluxDB time series storage implementation.</li>
+ * <li>{@link #INFLUX_DB}: Represents the InfluxDB time series storage implementation.</li>
  * </ul>
  */
 public class SupportedDataExplorerStorages {

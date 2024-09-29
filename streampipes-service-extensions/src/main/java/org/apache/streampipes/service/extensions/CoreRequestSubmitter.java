@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
@@ -23,12 +22,12 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CoreRequestSubmitter {
 
@@ -36,17 +35,12 @@ public class CoreRequestSubmitter {
 
   private static final int RETRY_INTERVAL_SECONDS = 3;
 
-  public void submitRepeatedRequest(Supplier<Boolean> request,
-                                    String successMessage,
-                                    String failureMessage) {
+  public void submitRepeatedRequest(Supplier<Boolean> request, String successMessage, String failureMessage) {
     try {
       request.get();
       LOG.info(successMessage);
     } catch (SpRuntimeException e) {
-      LOG.warn(
-          failureMessage + " Trying again in {} seconds",
-          RETRY_INTERVAL_SECONDS
-      );
+      LOG.warn(failureMessage + " Trying again in {} seconds", RETRY_INTERVAL_SECONDS);
       try {
         TimeUnit.SECONDS.sleep(RETRY_INTERVAL_SECONDS);
         submitRepeatedRequest(request, successMessage, failureMessage);
@@ -56,36 +50,25 @@ public class CoreRequestSubmitter {
     }
   }
 
-  public void submitRegistrationRequest(IStreamPipesClient client,
-                                        SpServiceRegistration serviceReg) {
-    submitRepeatedRequest(
-        () -> {
-          client.adminApi().registerService(serviceReg);
-          return true;
-        },
-        "Successfully registered service at core.",
-        String.format(
-            "Could not register service at core at url %s",
-            client.getConnectionConfig().getBaseUrl()
-        ));
+  public void submitRegistrationRequest(IStreamPipesClient client, SpServiceRegistration serviceReg) {
+    submitRepeatedRequest(() -> {
+      client.adminApi().registerService(serviceReg);
+      return true;
+    }, "Successfully registered service at core.",
+            String.format("Could not register service at core at url %s", client.getConnectionConfig().getBaseUrl()));
   }
 
-  public void submitMigrationRequest(IStreamPipesClient client,
-                                     List<ModelMigratorConfig> migrationConfigs,
-                                     String serviceId,
-                                     SpServiceRegistration serviceReg) {
-    submitRepeatedRequest(
-        () -> {
-          try {
-            client.adminApi().registerMigrations(migrationConfigs, serviceId);
-            return true;
-          } catch (RuntimeException e) {
-            submitRegistrationRequest(client, serviceReg);
-            submitMigrationRequest(client, migrationConfigs, serviceId, serviceReg);
-            return true;
-          }
-        },
-        "Successfully sent migration request",
-        "Core currently doesn't accept migration requests.");
+  public void submitMigrationRequest(IStreamPipesClient client, List<ModelMigratorConfig> migrationConfigs,
+          String serviceId, SpServiceRegistration serviceReg) {
+    submitRepeatedRequest(() -> {
+      try {
+        client.adminApi().registerMigrations(migrationConfigs, serviceId);
+        return true;
+      } catch (RuntimeException e) {
+        submitRegistrationRequest(client, serviceReg);
+        submitMigrationRequest(client, migrationConfigs, serviceId, serviceReg);
+        return true;
+      }
+    }, "Successfully sent migration request", "Core currently doesn't accept migration requests.");
   }
 }

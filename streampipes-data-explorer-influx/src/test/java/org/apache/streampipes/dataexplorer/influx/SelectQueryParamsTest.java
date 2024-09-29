@@ -15,28 +15,24 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.apache.streampipes.dataexplorer.influx.utils.ProvidedQueryParameterBuilder;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
-import org.apache.streampipes.dataexplorer.influx.utils.ProvidedQueryParameterBuilder;
-
-import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 public class SelectQueryParamsTest {
 
   @Test
   public void testWildcardTimeBoundQuery() {
-    var params = ProvidedQueryParameterBuilder.create("abc")
-        .withStartDate(1)
-        .withEndDate(2)
-        .build();
+    var params = ProvidedQueryParameterBuilder.create("abc").withStartDate(1).withEndDate(2).build();
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
@@ -47,11 +43,8 @@ public class SelectQueryParamsTest {
 
   @Test
   public void testSimpleColumnQuery() {
-    var params = ProvidedQueryParameterBuilder.create("abc")
-        .withStartDate(1)
-        .withEndDate(2)
-        .withSimpleColumns(Arrays.asList("p1", "p2"))
-        .build();
+    var params = ProvidedQueryParameterBuilder.create("abc").withStartDate(1).withEndDate(2)
+            .withSimpleColumns(Arrays.asList("p1", "p2")).build();
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
@@ -62,12 +55,8 @@ public class SelectQueryParamsTest {
 
   @Test
   public void testSimpleColumnQueryWithBooleanFilter() {
-    var params = ProvidedQueryParameterBuilder.create("abc")
-        .withStartDate(1)
-        .withEndDate(2)
-        .withSimpleColumns(Arrays.asList("p1", "p2"))
-        .withFilter("[p1;=;true]")
-        .build();
+    var params = ProvidedQueryParameterBuilder.create("abc").withStartDate(1).withEndDate(2)
+            .withSimpleColumns(Arrays.asList("p1", "p2")).withFilter("[p1;=;true]").build();
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
@@ -78,12 +67,8 @@ public class SelectQueryParamsTest {
 
   @Test
   public void testSimpleColumnQueryWithStringFilter() {
-    var params = ProvidedQueryParameterBuilder.create("abc")
-        .withStartDate(1)
-        .withEndDate(2)
-        .withSimpleColumns(Arrays.asList("p1", "p2"))
-        .withFilter("[p1;=;def]")
-        .build();
+    var params = ProvidedQueryParameterBuilder.create("abc").withStartDate(1).withEndDate(2)
+            .withSimpleColumns(Arrays.asList("p1", "p2")).withFilter("[p1;=;def]").build();
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
@@ -94,12 +79,8 @@ public class SelectQueryParamsTest {
 
   @Test
   public void testSimpleColumnQueryWithIntFilter() {
-    var params = ProvidedQueryParameterBuilder.create("abc")
-        .withStartDate(1)
-        .withEndDate(2)
-        .withSimpleColumns(Arrays.asList("p1", "p2"))
-        .withFilter("[p1;=;1]")
-        .build();
+    var params = ProvidedQueryParameterBuilder.create("abc").withStartDate(1).withEndDate(2)
+            .withSimpleColumns(Arrays.asList("p1", "p2")).withFilter("[p1;=;1]").build();
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
@@ -110,12 +91,8 @@ public class SelectQueryParamsTest {
 
   @Test
   public void testSimpleColumnQueryWithFloatFilter() {
-    var params = ProvidedQueryParameterBuilder.create("abc")
-        .withStartDate(1)
-        .withEndDate(2)
-        .withSimpleColumns(Arrays.asList("p1", "p2"))
-        .withFilter("[p1;>;1.0]")
-        .build();
+    var params = ProvidedQueryParameterBuilder.create("abc").withStartDate(1).withEndDate(2)
+            .withSimpleColumns(Arrays.asList("p1", "p2")).withFilter("[p1;>;1.0]").build();
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
@@ -126,28 +103,21 @@ public class SelectQueryParamsTest {
 
   @Test
   public void testSimpleColumnQueryWithTwoFilters() {
-    var params = ProvidedQueryParameterBuilder.create("abc")
-        .withStartDate(1)
-        .withEndDate(2)
-        .withSimpleColumns(Arrays.asList("p1", "p2"))
-        .withFilter("[p1;>;1.0],[p2;<;2]")
-        .build();
+    var params = ProvidedQueryParameterBuilder.create("abc").withStartDate(1).withEndDate(2)
+            .withSimpleColumns(Arrays.asList("p1", "p2")).withFilter("[p1;>;1.0],[p2;<;2]").build();
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
     String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
 
-    assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 > 1.0 AND"
-        + " p2 < 2.0);", query);
+    assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 > 1.0 AND" + " p2 < 2.0);",
+            query);
   }
 
   @Test
   public void testAggregatedColumn() {
-    var params = ProvidedQueryParameterBuilder.create("abc")
-        .withStartDate(1)
-        .withEndDate(2)
-        .withQueryColumns(List.of("[p1;MEAN;p1_mean]"))
-        .build();
+    var params = ProvidedQueryParameterBuilder.create("abc").withStartDate(1).withEndDate(2)
+            .withQueryColumns(List.of("[p1;MEAN;p1_mean]")).build();
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
@@ -158,52 +128,43 @@ public class SelectQueryParamsTest {
 
   @Test
   public void testAggregatedColumns() {
-    var params = ProvidedQueryParameterBuilder.create("abc")
-        .withStartDate(1)
-        .withEndDate(2)
-        .withQueryColumns(Arrays.asList("[p1;MEAN;p1_mean]", "[p2;COUNT;p2_count]"))
-        .build();
+    var params = ProvidedQueryParameterBuilder.create("abc").withStartDate(1).withEndDate(2)
+            .withQueryColumns(Arrays.asList("[p1;MEAN;p1_mean]", "[p2;COUNT;p2_count]")).build();
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
     String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
-        + " time > 1000000);", query);
+            + " time > 1000000);", query);
   }
 
   @Test
   public void testGroupByTag() {
-    var params = ProvidedQueryParameterBuilder.create("abc")
-        .withStartDate(1)
-        .withEndDate(2)
-        .withQueryColumns(Arrays.asList("[p1;MEAN;p1_mean]", "[p2;COUNT;p2_count]"))
-        .withGroupBy(List.of("sensorId"))
-        .build();
+    var params = ProvidedQueryParameterBuilder.create("abc").withStartDate(1).withEndDate(2)
+            .withQueryColumns(Arrays.asList("[p1;MEAN;p1_mean]", "[p2;COUNT;p2_count]"))
+            .withGroupBy(List.of("sensorId")).build();
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
     String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
-        + " time > 1000000) GROUP BY sensorId;", query);
+            + " time > 1000000) GROUP BY sensorId;", query);
   }
 
   @Test
   public void testGroupByTags() {
-    var params = ProvidedQueryParameterBuilder.create("abc")
-        .withStartDate(1)
-        .withEndDate(2)
-        .withQueryColumns(Arrays.asList("[p1;MEAN;p1_mean]", "[p2;COUNT;p2_count]"))
-        .withGroupBy(Arrays.asList("sensorId", "sensorId2"))
-        .build();
+    var params = ProvidedQueryParameterBuilder.create("abc").withStartDate(1).withEndDate(2)
+            .withQueryColumns(Arrays.asList("[p1;MEAN;p1_mean]", "[p2;COUNT;p2_count]"))
+            .withGroupBy(Arrays.asList("sensorId", "sensorId2")).build();
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
     String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
-        + " time > 1000000) GROUP BY sensorId,sensorId2;", query);
+            + " time > 1000000) GROUP BY sensorId,sensorId2;", query);
   }
 
 }

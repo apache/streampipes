@@ -20,9 +20,6 @@ package org.apache.streampipes.extensions.management.assets;
 import org.apache.streampipes.extensions.api.assets.AssetResolver;
 import org.apache.streampipes.extensions.api.assets.DefaultAssetResolver;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,6 +27,9 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AssetZipGenerator {
 
@@ -44,8 +44,7 @@ public class AssetZipGenerator {
     this.assetResolver = new DefaultAssetResolver(appId);
   }
 
-  public AssetZipGenerator(List<String> includedAssets,
-                           AssetResolver assetResolver) {
+  public AssetZipGenerator(List<String> includedAssets, AssetResolver assetResolver) {
     this.includedAssets = includedAssets;
     this.assetResolver = assetResolver;
   }

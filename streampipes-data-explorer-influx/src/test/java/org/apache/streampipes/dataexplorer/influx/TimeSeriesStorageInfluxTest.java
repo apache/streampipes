@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -36,14 +37,6 @@ import org.apache.streampipes.test.generator.EventSchemaTestBuilder;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
-import org.influxdb.InfluxDB;
-import org.influxdb.dto.Point;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -51,8 +44,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.influxdb.InfluxDB;
+import org.influxdb.dto.Point;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 
 public class TimeSeriesStorageInfluxTest {
 
@@ -77,12 +75,9 @@ public class TimeSeriesStorageInfluxTest {
     assertThrows(SpRuntimeException.class, () -> influxStore.onEvent(null));
   }
 
-
   @Test
   public void onEventWithInteger() {
-    var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, 1)
-        .build();
+    var expected = getPointBuilderWithTimestamp().addField(FIELD_NAME, 1).build();
 
     var actualPoint = testEventWithOneField(XSD.INTEGER, 1);
 
@@ -91,9 +86,7 @@ public class TimeSeriesStorageInfluxTest {
 
   @Test
   public void onEventWithIntegerFloatValue() {
-    var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, 1.0f)
-        .build();
+    var expected = getPointBuilderWithTimestamp().addField(FIELD_NAME, 1.0f).build();
 
     var actualPoint = testEventWithOneField(XSD.INTEGER, 1.0f);
 
@@ -102,9 +95,7 @@ public class TimeSeriesStorageInfluxTest {
 
   @Test
   public void onEventWithLong() {
-    var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, 1L)
-        .build();
+    var expected = getPointBuilderWithTimestamp().addField(FIELD_NAME, 1L).build();
 
     var actualPoint = testEventWithOneField(XSD.LONG, 1L);
 
@@ -113,9 +104,7 @@ public class TimeSeriesStorageInfluxTest {
 
   @Test
   public void onEventWithLongFloatValue() {
-    var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, 1.0f)
-        .build();
+    var expected = getPointBuilderWithTimestamp().addField(FIELD_NAME, 1.0f).build();
 
     var actualPoint = testEventWithOneField(XSD.LONG, 1.0f);
 
@@ -124,9 +113,7 @@ public class TimeSeriesStorageInfluxTest {
 
   @Test
   public void onEventWithFloat() {
-    var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, 1.0f)
-        .build();
+    var expected = getPointBuilderWithTimestamp().addField(FIELD_NAME, 1.0f).build();
 
     var actualPoint = testEventWithOneField(XSD.FLOAT, 1.0f);
 
@@ -135,9 +122,7 @@ public class TimeSeriesStorageInfluxTest {
 
   @Test
   public void onEventWithDouble() {
-    var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, 1.0)
-        .build();
+    var expected = getPointBuilderWithTimestamp().addField(FIELD_NAME, 1.0).build();
 
     var actualPoint = testEventWithOneField(XSD.DOUBLE, 1.0);
 
@@ -146,9 +131,7 @@ public class TimeSeriesStorageInfluxTest {
 
   @Test
   public void onEventWithBoolean() {
-    var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, true)
-        .build();
+    var expected = getPointBuilderWithTimestamp().addField(FIELD_NAME, true).build();
 
     var actualPoint = testEventWithOneField(XSD.BOOLEAN, true);
 
@@ -157,9 +140,7 @@ public class TimeSeriesStorageInfluxTest {
 
   @Test
   public void onEventWithNumber() throws URISyntaxException {
-    var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, 1.0)
-        .build();
+    var expected = getPointBuilderWithTimestamp().addField(FIELD_NAME, 1.0).build();
 
     var actualPoint = testEventWithOneField(new URI(SO.NUMBER), 1.0);
 
@@ -168,9 +149,7 @@ public class TimeSeriesStorageInfluxTest {
 
   @Test
   public void onEventWithString() {
-    var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, "testValue")
-        .build();
+    var expected = getPointBuilderWithTimestamp().addField(FIELD_NAME, "testValue").build();
 
     var actualPoint = testEventWithOneField(XSD.STRING, "testValue");
 
@@ -184,18 +163,10 @@ public class TimeSeriesStorageInfluxTest {
     var sanitizedFieldName = "name_";
     var value = 1;
 
-    var expected = getPointBuilderWithTimestamp()
-        .addField(sanitizedFieldName, value)
-        .build();
+    var expected = getPointBuilderWithTimestamp().addField(sanitizedFieldName, value).build();
 
-    var eventSchema = getEventSchemaBuilderWithTimestamp()
-        .withEventProperty(
-            EventPropertyPrimitiveTestBuilder
-                .create()
-                .withRuntimeName(sanitizedFieldName)
-                .withRuntimeType(XSD.INTEGER)
-                .build())
-        .build();
+    var eventSchema = getEventSchemaBuilderWithTimestamp().withEventProperty(EventPropertyPrimitiveTestBuilder.create()
+            .withRuntimeName(sanitizedFieldName).withRuntimeType(XSD.INTEGER).build()).build();
 
     var event = getEvent(eventSchema, Map.of(fieldName, value));
 
@@ -208,26 +179,14 @@ public class TimeSeriesStorageInfluxTest {
 
   @Test
   public void onEventWithTag() {
-    var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, "value")
-        .tag("id", "id1")
-        .build();
+    var expected = getPointBuilderWithTimestamp().addField(FIELD_NAME, "value").tag("id", "id1").build();
 
     var eventSchema = getEventSchemaBuilderWithTimestamp()
-        .withEventProperty(
-            EventPropertyPrimitiveTestBuilder
-                .create()
-                .withRuntimeName(FIELD_NAME)
-                .withRuntimeType(XSD.STRING)
-                .build())
-        .withEventProperty(
-            EventPropertyPrimitiveTestBuilder
-                .create()
-                .withRuntimeName("id")
-                .withRuntimeType(XSD.STRING)
-                .withPropertyScope(PropertyScope.DIMENSION_PROPERTY)
-                .build())
-        .build();
+            .withEventProperty(EventPropertyPrimitiveTestBuilder.create().withRuntimeName(FIELD_NAME)
+                    .withRuntimeType(XSD.STRING).build())
+            .withEventProperty(EventPropertyPrimitiveTestBuilder.create().withRuntimeName("id")
+                    .withRuntimeType(XSD.STRING).withPropertyScope(PropertyScope.DIMENSION_PROPERTY).build())
+            .build();
 
     var event = getEvent(eventSchema, Map.of(FIELD_NAME, "value", "id", "id1"));
 
@@ -238,23 +197,15 @@ public class TimeSeriesStorageInfluxTest {
     assertEquals(expected, actualPoint);
   }
 
-
   @Test
   public void onEventWithNestedProperty() {
     Map<String, Object> value = new HashMap<>();
     value.put("one", "two");
 
-    var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, serializer.serialize(value))
-        .build();
+    var expected = getPointBuilderWithTimestamp().addField(FIELD_NAME, serializer.serialize(value)).build();
 
     var eventSchema = getEventSchemaBuilderWithTimestamp()
-        .withEventProperty(
-            EventPropertyNestedTestBuilder
-                .create()
-                .withRuntimeName(FIELD_NAME)
-                .build())
-        .build();
+            .withEventProperty(EventPropertyNestedTestBuilder.create().withRuntimeName(FIELD_NAME).build()).build();
 
     var event = getEvent(eventSchema, Map.of(FIELD_NAME, value));
 
@@ -268,17 +219,10 @@ public class TimeSeriesStorageInfluxTest {
   @Test
   public void onEventWithListProperty() {
     String[] value = {"one", "two"};
-    var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, serializer.serialize(value))
-        .build();
+    var expected = getPointBuilderWithTimestamp().addField(FIELD_NAME, serializer.serialize(value)).build();
 
     var eventSchema = getEventSchemaBuilderWithTimestamp()
-        .withEventProperty(
-            EventPropertyListTestBuilder
-                .create()
-                .withRuntimeName(FIELD_NAME)
-                .build())
-        .build();
+            .withEventProperty(EventPropertyListTestBuilder.create().withRuntimeName(FIELD_NAME).build()).build();
 
     var event = getEvent(eventSchema, Map.of(FIELD_NAME, value));
 
@@ -293,10 +237,8 @@ public class TimeSeriesStorageInfluxTest {
    * Initialize a Point builder with a timestamp
    */
   private Point.Builder getPointBuilderWithTimestamp() {
-    return Point.measurement(EXPECTED_MEASUREMENT)
-                .time(SAMPLE_TIMESTAMP, TimeUnit.MILLISECONDS);
+    return Point.measurement(EXPECTED_MEASUREMENT).time(SAMPLE_TIMESTAMP, TimeUnit.MILLISECONDS);
   }
-
 
   /**
    * Executes the onEvent method and returns the resuting data point using an argument captor
@@ -318,37 +260,21 @@ public class TimeSeriesStorageInfluxTest {
     data.put(TIMESTAMP, SAMPLE_TIMESTAMP);
     data.putAll(inputData);
 
-    return EventFactory.fromMap(
-        data,
-        new SourceInfo("test-topic", "s0"),
-        new SchemaInfo(eventSchema, new ArrayList<>())
-    );
+    return EventFactory.fromMap(data, new SourceInfo("test-topic", "s0"),
+            new SchemaInfo(eventSchema, new ArrayList<>()));
   }
-
 
   /**
    * This convenience method is used to test all cases for the different supported data types
    */
-  private Point testEventWithOneField(
-      URI type,
-      Object value
-  ) {
+  private Point testEventWithOneField(URI type, Object value) {
 
-    var eventSchema = getEventSchemaBuilderWithTimestamp()
-        .withEventProperty(
-            EventPropertyPrimitiveTestBuilder
-                .create()
-                .withRuntimeName(FIELD_NAME)
-                .withRuntimeType(type)
-                .build())
-        .build();
+    var eventSchema = getEventSchemaBuilderWithTimestamp().withEventProperty(
+            EventPropertyPrimitiveTestBuilder.create().withRuntimeName(FIELD_NAME).withRuntimeType(type).build())
+            .build();
 
-
-    var event = EventFactory.fromMap(
-        Map.of(TIMESTAMP, SAMPLE_TIMESTAMP, FIELD_NAME, value),
-        new SourceInfo("test-topic", "s0"),
-        new SchemaInfo(eventSchema, new ArrayList<>())
-    );
+    var event = EventFactory.fromMap(Map.of(TIMESTAMP, SAMPLE_TIMESTAMP, FIELD_NAME, value),
+            new SourceInfo("test-topic", "s0"), new SchemaInfo(eventSchema, new ArrayList<>()));
 
     var influxStore = getInfluxStore(eventSchema);
 
@@ -363,13 +289,8 @@ public class TimeSeriesStorageInfluxTest {
    * Returns the event schema builder with a default timestamp property
    */
   private EventSchemaTestBuilder getEventSchemaBuilderWithTimestamp() {
-    return EventSchemaTestBuilder
-        .create()
-        .withEventProperty(
-            EventPropertyPrimitiveTestBuilder
-                .create()
-                .withRuntimeName(TIMESTAMP)
-                .build());
+    return EventSchemaTestBuilder.create()
+            .withEventProperty(EventPropertyPrimitiveTestBuilder.create().withRuntimeName(TIMESTAMP).build());
   }
 
   /**
@@ -377,15 +298,11 @@ public class TimeSeriesStorageInfluxTest {
    */
   private TimeSeriesStorageInflux getInfluxStore(EventSchema eventSchema) {
 
-    DataLakeMeasure measure = new DataLakeMeasure(
-        EXPECTED_MEASUREMENT,
-        "s0::%s".formatted(TIMESTAMP),
-        eventSchema
-    );
+    DataLakeMeasure measure = new DataLakeMeasure(EXPECTED_MEASUREMENT, "s0::%s".formatted(TIMESTAMP), eventSchema);
 
     var influxClientProviderMock = Mockito.mock(InfluxClientProvider.class);
     Mockito.when(influxClientProviderMock.getSetUpInfluxDBClient((Environment) ArgumentMatchers.any()))
-           .thenReturn(influxDBMock);
+            .thenReturn(influxDBMock);
 
     return new TimeSeriesStorageInflux(measure, null, influxClientProviderMock);
   }

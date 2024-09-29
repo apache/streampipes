@@ -26,6 +26,8 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
+import java.io.IOException;
+
 import org.simplejavamail.MailException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,8 +39,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v2/admin/mail-config")

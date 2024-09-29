@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.commons.environment.Environment;
@@ -24,10 +23,10 @@ import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;
 
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class TimeSeriesStore {
 
@@ -35,13 +34,8 @@ public class TimeSeriesStore {
   private final ITimeSeriesStorage timeSeriesStorage;
   private ImageStore imageStore;
 
-
-  public TimeSeriesStore(
-      ITimeSeriesStorage timeSeriesStorage,
-      DataLakeMeasure measure,
-      Environment environment,
-      boolean enableImageStore
-  ) {
+  public TimeSeriesStore(ITimeSeriesStorage timeSeriesStorage, DataLakeMeasure measure, Environment environment,
+          boolean enableImageStore) {
 
     if (enableImageStore) {
       this.imageStore = new ImageStore(measure, environment);

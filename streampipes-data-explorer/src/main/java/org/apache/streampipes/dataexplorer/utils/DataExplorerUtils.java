@@ -25,9 +25,6 @@ import java.util.List;
 public class DataExplorerUtils {
 
   public static List<DataLakeMeasure> getInfos() {
-    return StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getDataLakeStorage()
-        .findAll();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage().findAll();
   }
 }

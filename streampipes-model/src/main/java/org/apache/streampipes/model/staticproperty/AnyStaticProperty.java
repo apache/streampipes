@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.staticproperty;
 
 public class AnyStaticProperty extends SelectionStaticProperty {
@@ -34,13 +33,13 @@ public class AnyStaticProperty extends SelectionStaticProperty {
     super(staticPropertyType);
   }
 
-  public AnyStaticProperty(StaticPropertyType staticPropertyType, String internalName,
-                           String label, String description) {
+  public AnyStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label,
+          String description) {
     super(staticPropertyType, internalName, label, description);
   }
 
-  public AnyStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label, String
-      description, boolean horizontalRendering) {
+  public AnyStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label, String description,
+          boolean horizontalRendering) {
     super(staticPropertyType, internalName, label, description, horizontalRendering);
   }
 

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.smp.generator;
 
 import org.apache.streampipes.smp.model.AssetModel;
@@ -30,9 +29,7 @@ public abstract class ResourceGenerator {
   protected final AssetModel extensionsElement;
   protected final Path targetPath;
 
-  public ResourceGenerator(ClassLoader loader,
-                           AssetModel extensionsElement,
-                           Path targetPath) {
+  public ResourceGenerator(ClassLoader loader, AssetModel extensionsElement, Path targetPath) {
     this.loader = loader;
     this.extensionsElement = extensionsElement;
     this.targetPath = targetPath;

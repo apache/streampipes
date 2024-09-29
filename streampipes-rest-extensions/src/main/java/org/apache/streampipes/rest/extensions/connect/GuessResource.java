@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -54,10 +53,7 @@ public class GuessResource extends AbstractSharedRestInterface {
     this.guessManagement = guessManagement;
   }
 
-  @PostMapping(
-      path = "/schema",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/schema", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<GuessSchema> guessSchema(@RequestBody AdapterDescription adapterDescription) {
 
     try {
@@ -69,10 +65,9 @@ public class GuessResource extends AbstractSharedRestInterface {
       throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));
     } catch (AdapterException e) {
       logger.error("Error while guessing schema for AdapterDescription: {}, {}", adapterDescription.getElementId(),
-          e.getMessage());
+              e.getMessage());
       throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));
     }
 
   }
 }
-

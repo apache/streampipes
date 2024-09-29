@@ -15,16 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.schema;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-@JsonSubTypes({
-    @JsonSubTypes.Type(QuantitativeValue.class),
-    @JsonSubTypes.Type(Enumeration.class),
-})
+@JsonSubTypes({@JsonSubTypes.Type(QuantitativeValue.class), @JsonSubTypes.Type(Enumeration.class),})
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 public abstract class ValueSpecification {
 

@@ -21,6 +21,12 @@ import org.apache.streampipes.model.configuration.GeneralConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
+import java.io.StringWriter;
+import java.security.Key;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.util.Base64;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +36,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.StringWriter;
-import java.security.Key;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.util.Base64;
 
 @RestController
 @RequestMapping("/api/v2/admin/general-config")
@@ -76,17 +76,10 @@ public class GeneralConfigurationResource extends AbstractAuthGuardedRestResourc
     headers.set(HttpHeaders.CONTENT_TYPE, "multipart/mixed;boundary=" + boundary);
 
     // Construct the response body with multiple parts
-    String responseBody = "--" + boundary + "\r\n"
-        + "Content-Type: text/plain\r\n\r\n"
-        + publicKeyPem + "\r\n"
-        + "--" + boundary + "\r\n"
-        + "Content-Type: text/plain\r\n\r\n"
-        + privateKeyPem + "\r\n"
-        + "--" + boundary + "--";
+    String responseBody = "--" + boundary + "\r\n" + "Content-Type: text/plain\r\n\r\n" + publicKeyPem + "\r\n" + "--"
+            + boundary + "\r\n" + "Content-Type: text/plain\r\n\r\n" + privateKeyPem + "\r\n" + "--" + boundary + "--";
 
-    return ResponseEntity.ok()
-        .headers(headers)
-        .body(responseBody.getBytes());
+    return ResponseEntity.ok().headers(headers).body(responseBody.getBytes());
   }
 
   private String exportKeyAsPem(Key key, String keyType) {

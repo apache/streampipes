@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder;
 
 import org.apache.streampipes.model.schema.Enumeration;
@@ -39,11 +38,13 @@ public class PrimitivePropertyBuilder {
   }
 
   /**
-   * A builder class helping to define advanced primitive properties. For simple property definitions, you can also
-   * use {@link org.apache.streampipes.sdk.helpers.EpProperties}.
+   * A builder class helping to define advanced primitive properties. For simple property definitions, you can also use
+   * {@link org.apache.streampipes.sdk.helpers.EpProperties}.
    *
-   * @param datatype    The primitive {@link org.apache.streampipes.sdk.utils.Datatypes} definition of the new property.
-   * @param runtimeName The name of the property at runtime (e.g., the field name of the JSON primitive.
+   * @param datatype
+   *          The primitive {@link org.apache.streampipes.sdk.utils.Datatypes} definition of the new property.
+   * @param runtimeName
+   *          The name of the property at runtime (e.g., the field name of the JSON primitive.
    * @return this
    */
   public static PrimitivePropertyBuilder create(Datatypes datatype, String runtimeName) {
@@ -53,8 +54,9 @@ public class PrimitivePropertyBuilder {
   /**
    * Specifies the semantics of the property (e.g., whether a double value stands for a latitude coordinate).
    *
-   * @param domainProperty The domain property as a String. The domain property should reflect an URI. Use some
-   *                       existing vocabulary from {@link org.apache.streampipes.vocabulary} or create your own.
+   * @param domainProperty
+   *          The domain property as a String. The domain property should reflect an URI. Use some existing vocabulary
+   *          from {@link org.apache.streampipes.vocabulary} or create your own.
    * @return
    */
   public PrimitivePropertyBuilder domainProperty(String domainProperty) {
@@ -65,7 +67,8 @@ public class PrimitivePropertyBuilder {
   /**
    * Defines the measurement unit (e.g., tons) of the event property.
    *
-   * @param measurementUnit The measurement unit as a URI from a vocabulary (e.g., QUDT).
+   * @param measurementUnit
+   *          The measurement unit as a URI from a vocabulary (e.g., QUDT).
    * @return
    */
   public PrimitivePropertyBuilder measurementUnit(URI measurementUnit) {
@@ -76,9 +79,12 @@ public class PrimitivePropertyBuilder {
   /**
    * Defines the value range. The data type of the event property must be a number.
    *
-   * @param min  The minimum value the property can have at runtime.
-   * @param max  The maximum value the property can have at runtime.
-   * @param step The expected granularity the property has at runtime.
+   * @param min
+   *          The minimum value the property can have at runtime.
+   * @param max
+   *          The maximum value the property can have at runtime.
+   * @param step
+   *          The expected granularity the property has at runtime.
    * @return this
    */
   public PrimitivePropertyBuilder valueSpecification(Float min, Float max, Float step) {
@@ -87,12 +93,15 @@ public class PrimitivePropertyBuilder {
   }
 
   /**
-   * Defines the value range in form of an enumeration. The data type of the event property must be of type String
-   * or Number.
+   * Defines the value range in form of an enumeration. The data type of the event property must be of type String or
+   * Number.
    *
-   * @param label         A human-readable label describing this enumeration.
-   * @param description   A human-readable description of the enumeration.
-   * @param allowedValues A list of allowed values of the event property at runtime.
+   * @param label
+   *          A human-readable label describing this enumeration.
+   * @param description
+   *          A human-readable description of the enumeration.
+   * @param allowedValues
+   *          A list of allowed values of the event property at runtime.
    * @return this
    */
   public PrimitivePropertyBuilder valueSpecification(String label, String description, List<String> allowedValues) {
@@ -101,8 +110,8 @@ public class PrimitivePropertyBuilder {
   }
 
   /**
-   * Assigns a human-readable label to the event property. The label is used in the StreamPipes UI for better
-   * explaining  users the meaning of the property.
+   * Assigns a human-readable label to the event property. The label is used in the StreamPipes UI for better explaining
+   * users the meaning of the property.
    *
    * @param label
    * @return this
@@ -127,14 +136,14 @@ public class PrimitivePropertyBuilder {
   /**
    * Assigns a property scope to the event property.
    *
-   * @param propertyScope The {@link org.apache.streampipes.model.schema.PropertyScope}.
+   * @param propertyScope
+   *          The {@link org.apache.streampipes.model.schema.PropertyScope}.
    * @return this
    */
   public PrimitivePropertyBuilder scope(PropertyScope propertyScope) {
     this.eventProperty.setPropertyScope(propertyScope.name());
     return this;
   }
-
 
   public EventPropertyPrimitive build() {
     return this.eventProperty;

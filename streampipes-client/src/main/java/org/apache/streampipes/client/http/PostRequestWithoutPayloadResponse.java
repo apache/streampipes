@@ -21,25 +21,21 @@ import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
-import org.apache.http.HttpEntity;
-
 import java.io.IOException;
+
+import org.apache.http.HttpEntity;
 
 public class PostRequestWithoutPayloadResponse<K, V> extends PostRequest<K, V, Void> {
 
-  public PostRequestWithoutPayloadResponse(StreamPipesClientConfig clientConfig,
-                                           StreamPipesApiPath apiPath,
-                                           Serializer<K, V, Void> serializer,
-                                           K body) {
+  public PostRequestWithoutPayloadResponse(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath,
+          Serializer<K, V, Void> serializer, K body) {
     super(clientConfig, apiPath, serializer, body);
   }
 
-  public PostRequestWithoutPayloadResponse(StreamPipesClientConfig clientConfig,
-                                           StreamPipesApiPath apiPath,
-                                           Serializer<K, V, Void> serializer) {
+  public PostRequestWithoutPayloadResponse(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath,
+          Serializer<K, V, Void> serializer) {
     super(clientConfig, apiPath, serializer);
   }
-
 
   @Override
   protected Void afterRequest(Serializer<K, V, Void> serializer, HttpEntity entity) throws IOException {

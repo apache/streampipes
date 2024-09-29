@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.Notification;
@@ -24,16 +23,15 @@ import org.apache.streampipes.storage.api.INotificationStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import org.lightcouch.View;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NotificationStorageImpl extends AbstractDao<Notification> implements
-    INotificationStorage {
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import org.lightcouch.View;
+
+public class NotificationStorageImpl extends AbstractDao<Notification> implements INotificationStorage {
 
   public NotificationStorageImpl() {
     super(Utils::getCouchDbNotificationClient, Notification.class);
@@ -45,14 +43,8 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
   }
 
   @Override
-  public List<Notification> getAllNotifications(String notificationTypeId,
-                                                Integer offset,
-                                                Integer count) {
-    List<JsonObject> notifications =
-        getQuery(notificationTypeId)
-            .includeDocs(true)
-            .skip(offset)
-            .limit(count)
+  public List<Notification> getAllNotifications(String notificationTypeId, Integer offset, Integer count) {
+    List<JsonObject> notifications = getQuery(notificationTypeId).includeDocs(true).skip(offset).limit(count)
             .query(JsonObject.class);
 
     return map(notifications);
@@ -60,38 +52,28 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
 
   @Override
   public List<Notification> getAllNotifications(String notificationTypeId) {
-    List<JsonObject> notifications =
-        getQuery(notificationTypeId)
-            .includeDocs(true)
-            .query(JsonObject.class);
+    List<JsonObject> notifications = getQuery(notificationTypeId).includeDocs(true).query(JsonObject.class);
 
     return map(notifications);
   }
 
   private View getQuery(String notificationTypeId) {
-    return couchDbClientSupplier
-        .get()
-        .view("notificationtypes/notificationtypes")
-        .startKey(Arrays.asList(notificationTypeId, "\ufff0"))
-        .endKey(Arrays.asList(notificationTypeId, 0))
-        .descending(true)
-        .includeDocs(true);
+    return couchDbClientSupplier.get().view("notificationtypes/notificationtypes")
+            .startKey(Arrays.asList(notificationTypeId, "\ufff0")).endKey(Arrays.asList(notificationTypeId, 0))
+            .descending(true).includeDocs(true);
   }
 
   @Override
   public List<Notification> getAllNotificationsFromTimestamp(long startTime) {
 
-    return couchDbClientSupplier
-        .get()
-        .findDocs("{\"selector\": {\"createdAtTimestamp\": {\"$gt\": " + startTime + "}}}", Notification.class);
+    return couchDbClientSupplier.get()
+            .findDocs("{\"selector\": {\"createdAtTimestamp\": {\"$gt\": " + startTime + "}}}", Notification.class);
   }
 
   private List<Notification> map(List<JsonObject> jsonObjects) {
     Gson gson = couchDbClientSupplier.get().getGson();
-    return jsonObjects
-        .stream()
-        .map(notification -> gson.fromJson(notification, Notification.class))
-        .collect(Collectors.toList());
+    return jsonObjects.stream().map(notification -> gson.fromJson(notification, Notification.class))
+            .collect(Collectors.toList());
   }
 
   @Override
@@ -117,20 +99,12 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
   public List<Notification> getUnreadNotifications() {
     List<Notification> msgs = findAll();
 
-    return msgs
-        .stream()
-        .filter(m -> !m.isRead())
-        .collect(Collectors.toList());
+    return msgs.stream().filter(m -> !m.isRead()).collect(Collectors.toList());
   }
 
   @Override
   public NotificationCount getUnreadNotificationsCount(String username) {
-    List<JsonObject> count =
-        couchDbClientSupplier
-            .get()
-            .view("unread/unread")
-            .key(username)
-            .group(true)
+    List<JsonObject> count = couchDbClientSupplier.get().view("unread/unread").key(username).group(true)
             .query(JsonObject.class);
 
     if (!count.isEmpty()) {

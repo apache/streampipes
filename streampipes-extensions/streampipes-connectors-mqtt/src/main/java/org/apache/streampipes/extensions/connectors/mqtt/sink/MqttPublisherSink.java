@@ -72,71 +72,42 @@ public class MqttPublisherSink implements IStreamPipesDataSink {
 
   @Override
   public IDataSinkConfiguration declareConfig() {
-    return DataSinkConfiguration.create(
-        MqttPublisherSink::new,
-        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.mqtt", 0)
-            .category(DataSinkType.MESSAGING)
-            .withLocales(Locales.EN)
-            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-            .requiredStream(StreamRequirementsBuilder.any())
-            .requiredTextParameter(Labels.withId(TOPIC))
-            .requiredTextParameter(Labels.withId(HOST))
-            .requiredIntegerParameter(Labels.withId(PORT), DEFAULT_MQTT_PORT)
-            .requiredAlternatives(
-                Labels.withId(AUTH_MODE),
-                Alternatives.from(Labels.withId(NO_AUTH_ALTERNATIVE), true),
-                Alternatives.from(Labels.withId(AUTH_ALTERNATIVE),
-                    StaticProperties.group(Labels.withId(USERNAME_GROUP),
-                        StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
-                        StaticProperties.secretValue(Labels.withId(PASSWORD)))))
-            .requiredSingleValueSelection(
-                Labels.withId(ENCRYPTION_MODE),
-                Arrays.asList(
-                    new Option("TCP", true),
+    return DataSinkConfiguration.create(MqttPublisherSink::new, DataSinkBuilder
+            .create("org.apache.streampipes.sinks.brokers.jvm.mqtt", 0).category(DataSinkType.MESSAGING)
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.any()).requiredTextParameter(Labels.withId(TOPIC))
+            .requiredTextParameter(Labels.withId(HOST)).requiredIntegerParameter(Labels.withId(PORT), DEFAULT_MQTT_PORT)
+            .requiredAlternatives(Labels.withId(AUTH_MODE), Alternatives.from(Labels.withId(NO_AUTH_ALTERNATIVE), true),
+                    Alternatives.from(Labels.withId(AUTH_ALTERNATIVE),
+                            StaticProperties.group(Labels.withId(USERNAME_GROUP),
+                                    StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
+                                    StaticProperties.secretValue(Labels.withId(PASSWORD)))))
+            .requiredSingleValueSelection(Labels.withId(ENCRYPTION_MODE), Arrays.asList(new Option("TCP", true),
                     // SSL not yet supported
                     new Option("SSL/TLS", false)))
-            .requiredSingleValueSelection(
-                Labels.withId(QOS_LEVEL_KEY),
-                Arrays.asList(
-                    new Option("0 - at-most-once", false),
-                    new Option("1 - at-least-once", true),
-                    new Option("2 - exactly-once", false)))
-            .requiredSingleValueSelection(
-                Labels.withId(RETAIN),
-                Arrays.asList(
-                    new Option("Yes", false),
-                    new Option("No", true)))
-            .requiredSingleValueSelection(
-                Labels.withId(CLEAN_SESSION_KEY),
-                Arrays.asList(
-                    new Option("Yes", true),
-                    new Option("No", false)))
+            .requiredSingleValueSelection(Labels.withId(QOS_LEVEL_KEY),
+                    Arrays.asList(new Option("0 - at-most-once", false), new Option("1 - at-least-once", true),
+                            new Option("2 - exactly-once", false)))
+            .requiredSingleValueSelection(Labels.withId(RETAIN),
+                    Arrays.asList(new Option("Yes", false), new Option("No", true)))
+            .requiredSingleValueSelection(Labels.withId(CLEAN_SESSION_KEY),
+                    Arrays.asList(new Option("Yes", true), new Option("No", false)))
             .requiredIntegerParameter(Labels.withId(RECONNECT_PERIOD_IN_SEC), DEFAULT_RECONNECT_PERIOD)
             .requiredIntegerParameter(Labels.withId(KEEP_ALIVE_IN_SEC), DEFAULT_KEEP_ALIVE)
-            .requiredSingleValueSelection(
-                Labels.withId(MQTT_COMPLIANT),
-                Arrays.asList(
-                    new Option("Yes", true),
-                    new Option("No", false)))
-            .requiredAlternatives(
-                Labels.withId(WILL_MODE),
-                Alternatives.from(Labels.withId(NO_WILL_ALTERNATIVE), true),
-                Alternatives.from(Labels.withId(WILL_ALTERNATIVE),
-                    StaticProperties.group(Labels.withId(WILL_GROUP),
-                        StaticProperties.stringFreeTextProperty(Labels.withId(WILL_TOPIC)),
-                        StaticProperties.stringFreeTextProperty(Labels.withId(WILL_MESSAGE)),
-                        StaticProperties.singleValueSelection(Labels.withId(WILL_RETAIN),
-                            Arrays.asList(
-                                new Option("Yes", false),
-                                new Option("No", true))),
-                        StaticProperties.singleValueSelection(
-                            Labels.withId(WILL_QOS),
-                            Arrays.asList(
-                                new Option("0 - at-most-once", true),
-                                new Option("1 - at-least-once", false),
-                                new Option("2 - exactly-once", false))))))
-            .build()
-    );
+            .requiredSingleValueSelection(Labels.withId(MQTT_COMPLIANT),
+                    Arrays.asList(new Option("Yes", true), new Option("No", false)))
+            .requiredAlternatives(Labels.withId(WILL_MODE), Alternatives.from(Labels.withId(NO_WILL_ALTERNATIVE), true),
+                    Alternatives.from(Labels.withId(WILL_ALTERNATIVE),
+                            StaticProperties.group(Labels.withId(WILL_GROUP),
+                                    StaticProperties.stringFreeTextProperty(Labels.withId(WILL_TOPIC)),
+                                    StaticProperties.stringFreeTextProperty(Labels.withId(WILL_MESSAGE)),
+                                    StaticProperties.singleValueSelection(Labels.withId(WILL_RETAIN),
+                                            Arrays.asList(new Option("Yes", false), new Option("No", true))),
+                                    StaticProperties.singleValueSelection(Labels.withId(WILL_QOS),
+                                            Arrays.asList(new Option("0 - at-most-once", true),
+                                                    new Option("1 - at-least-once", false),
+                                                    new Option("2 - exactly-once", false))))))
+            .build());
   }
 
   @Override

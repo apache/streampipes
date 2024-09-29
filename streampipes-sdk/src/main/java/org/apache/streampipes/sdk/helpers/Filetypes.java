@@ -23,13 +23,7 @@ import java.util.stream.Stream;
 
 public enum Filetypes {
 
-  CSV("csv"),
-  JPG("jpg", "jpeg"),
-  JSON("json"),
-  XLS("xls"),
-  XLSX("xlsx"),
-  XML("xml"),
-  ZIP("zip");
+  CSV("csv"), JPG("jpg", "jpeg"), JSON("json"), XLS("xls"), XLSX("xlsx"), XML("xml"), ZIP("zip");
 
   private final List<String> fileExtensions;
 
@@ -42,8 +36,6 @@ public enum Filetypes {
   }
 
   public static List<String> getAllFileExtensions() {
-    return Stream.of(Filetypes.values())
-        .flatMap(filetype -> filetype.getFileExtensions().stream())
-        .toList();
+    return Stream.of(Filetypes.values()).flatMap(filetype -> filetype.getFileExtensions().stream()).toList();
   }
 }

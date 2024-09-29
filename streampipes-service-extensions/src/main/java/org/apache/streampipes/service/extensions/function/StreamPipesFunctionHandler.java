@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.extensions.function;
 
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
@@ -46,8 +45,7 @@ public enum StreamPipesFunctionHandler {
     initializeFunctions(DeclarersSingleton.getInstance().getFunctions().values(), serviceId);
   }
 
-  public void initializeFunctions(Collection<IStreamPipesFunctionDeclarer> functions,
-                                  String serviceGroup) {
+  public void initializeFunctions(Collection<IStreamPipesFunctionDeclarer> functions, String serviceGroup) {
     registerDataStreams(functions);
     functions.forEach(function -> {
       function.invokeRuntime(serviceGroup);
@@ -66,10 +64,7 @@ public enum StreamPipesFunctionHandler {
           DeclarersSingleton.getInstance().add(new IStreamPipesDataStream() {
             @Override
             public IDataStreamConfiguration declareConfig() {
-              return DataStreamConfiguration.create(
-                  () -> this,
-                  ds
-              );
+              return DataStreamConfiguration.create(() -> this, ds);
             }
 
             @Override
@@ -100,13 +95,10 @@ public enum StreamPipesFunctionHandler {
   }
 
   private List<FunctionDefinition> getFunctionDefinitions() {
-    return this.runningInstances
-        .values()
-        .stream()
-        .map(function -> new FunctionDefinition(
-            function.getFunctionConfig().getFunctionId(),
-            function.requiredStreamIds()))
-        .collect(Collectors.toList());
+    return this.runningInstances.values().stream()
+            .map(function -> new FunctionDefinition(function.getFunctionConfig().getFunctionId(),
+                    function.requiredStreamIds()))
+            .collect(Collectors.toList());
   }
 
 }

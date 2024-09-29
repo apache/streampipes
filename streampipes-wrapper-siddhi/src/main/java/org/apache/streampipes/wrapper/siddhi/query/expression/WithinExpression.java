@@ -31,10 +31,8 @@ public class WithinExpression extends Expression {
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.WHITESPACE,
-        SiddhiConstants.WITHIN,
-        String.valueOf(this.duration),
-        this.timeUnit.toTimeUnitString());
+    return join(SiddhiConstants.WHITESPACE, SiddhiConstants.WITHIN, String.valueOf(this.duration),
+            this.timeUnit.toTimeUnitString());
   }
 
 }

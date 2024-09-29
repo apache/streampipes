@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.client.api.live;
 
 import org.apache.streampipes.model.runtime.Event;

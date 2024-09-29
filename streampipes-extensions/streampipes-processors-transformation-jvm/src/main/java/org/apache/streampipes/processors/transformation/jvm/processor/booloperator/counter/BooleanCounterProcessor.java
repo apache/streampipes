@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -49,10 +48,7 @@ public class BooleanCounterProcessor implements IStreamPipesDataProcessor {
   private static final String BOTH = "BOTH";
   private String fieldName;
   /**
-   * Defines which boolean changes should be counted
-   * 0: BOTH
-   * 1: TRUE -> FALSE
-   * 2: FALSE -> TRUE
+   * Defines which boolean changes should be counted 0: BOTH 1: TRUE -> FALSE 2: FALSE -> TRUE
    */
   private int flankUp;
   private boolean fieldValueOfLastEvent;
@@ -60,36 +56,25 @@ public class BooleanCounterProcessor implements IStreamPipesDataProcessor {
 
   @Override
   public IDataProcessorConfiguration declareConfig() {
-    return DataProcessorConfiguration.create(
-        BooleanCounterProcessor::new,
-        ProcessingElementBuilder
-            .create("org.apache.streampipes.processors.transformation.jvm.booloperator.counter", 0)
-            .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.COUNT_OPERATOR)
-            .withLocales(Locales.EN)
-            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-            .requiredStream(StreamRequirementsBuilder.create()
-                .requiredPropertyWithUnaryMapping(
-                    EpRequirements.booleanReq(),
-                    Labels.withId(FIELD_ID),
-                    PropertyScope.NONE)
-                .build())
+    return DataProcessorConfiguration.create(BooleanCounterProcessor::new,
+            ProcessingElementBuilder
+                    .create("org.apache.streampipes.processors.transformation.jvm.booloperator.counter", 0)
+                    .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.COUNT_OPERATOR)
+                    .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+                    .requiredStream(StreamRequirementsBuilder.create()
+                            .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(), Labels.withId(FIELD_ID),
+                                    PropertyScope.NONE)
+                            .build())
 
-            .requiredSingleValueSelection(Labels.withId(FLANK_ID), Options.from(BOTH, FLANK_UP, FLANK_DOWN))
-            .outputStrategy(OutputStrategies
-                .append(EpProperties
-                    .numberEp(
-                        Labels.withId(COUNT_FIELD_ID),
-                        COUNT_FIELD_RUNTIME_NAME,
-                        "http://schema.org/Number")
-                ))
-            .build()
-    );
+                    .requiredSingleValueSelection(Labels.withId(FLANK_ID), Options.from(BOTH, FLANK_UP, FLANK_DOWN))
+                    .outputStrategy(OutputStrategies.append(EpProperties.numberEp(Labels.withId(COUNT_FIELD_ID),
+                            COUNT_FIELD_RUNTIME_NAME, "http://schema.org/Number")))
+                    .build());
   }
 
   @Override
-  public void onPipelineStarted(IDataProcessorParameters parameters,
-                                SpOutputCollector collector,
-                                EventProcessorRuntimeContext runtimeContext) {
+  public void onPipelineStarted(IDataProcessorParameters parameters, SpOutputCollector collector,
+          EventProcessorRuntimeContext runtimeContext) {
     IDataProcessorParameterExtractor extractor = parameters.extractor();
     String flank = extractor.selectedSingleValue(FLANK_ID, String.class);
     this.fieldName = extractor.mappingPropertyValue(FIELD_ID);

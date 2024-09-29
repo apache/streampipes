@@ -15,19 +15,18 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.export;
 
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Test;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 public class TestConfiguredCsvOutputWriter extends TestConfiguredOutputWriter {
 

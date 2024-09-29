@@ -15,10 +15,8 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.datalake;
 
 public enum SpQueryStatus {
-  OK,
-  TOO_MUCH_DATA
+  OK, TOO_MUCH_DATA
 }

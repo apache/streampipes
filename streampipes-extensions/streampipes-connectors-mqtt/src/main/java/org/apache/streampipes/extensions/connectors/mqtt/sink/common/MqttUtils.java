@@ -19,9 +19,9 @@ package org.apache.streampipes.extensions.connectors.mqtt.sink.common;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
-import org.fusesource.mqtt.client.QoS;
-
 import java.net.URI;
+
+import org.fusesource.mqtt.client.QoS;
 
 public class MqttUtils {
 
@@ -38,11 +38,11 @@ public class MqttUtils {
   public static QoS extractQoSFromString(String s) {
     int qos = Integer.parseInt(s.replaceAll("\\D+", ""));
     switch (qos) {
-      case 0:
+      case 0 :
         return QoS.AT_MOST_ONCE;
-      case 1:
+      case 1 :
         return QoS.AT_LEAST_ONCE;
-      case 2:
+      case 2 :
         return QoS.EXACTLY_ONCE;
     }
     throw new SpRuntimeException("Could not retrieve QoS level: QoS " + qos);
@@ -63,9 +63,9 @@ public class MqttUtils {
 
   public static boolean extractBoolean(String s) {
     switch (s) {
-      case "Yes":
+      case "Yes" :
         return true;
-      case "No":
+      case "No" :
         return false;
     }
     throw new SpRuntimeException("Could not map string value to boolean: " + s);

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.all.iiot;
 
 import org.apache.streampipes.connect.iiot.IIoTAdaptersExtensionModuleExport;
@@ -56,41 +55,24 @@ public class AllExtensionsIIoTInit extends StreamPipesExtensionsServiceBase {
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
-    return SpServiceDefinitionBuilder.create("org.apache.streampipes.extensions.all.iiot",
-            "StreamPipes Extensions (IIoT only)",
-            "", 8090)
-        .registerModules(
-            new IIoTAdaptersExtensionModuleExport(),
+    return SpServiceDefinitionBuilder
+            .create("org.apache.streampipes.extensions.all.iiot", "StreamPipes Extensions (IIoT only)", "", 8090)
+            .registerModules(new IIoTAdaptersExtensionModuleExport(),
 
-            new InfluxConnectorsModuleExport(),
-            new KafkaConnectorsModuleExport(),
-            new MqttConnectorsModuleExport(),
-            new NatsConnectorsModuleExport(),
-            new OpcUaConnectorsModuleExport(),
-            new PlcConnectorsModuleExport(),
-            new PulsarConnectorsModuleExport(),
-            new RocketMqConnectorsModuleExport(),
-            new RosConnectorsModuleExport(),
-            new TubeMQConnectorsModuleExport(),
+                    new InfluxConnectorsModuleExport(), new KafkaConnectorsModuleExport(),
+                    new MqttConnectorsModuleExport(), new NatsConnectorsModuleExport(),
+                    new OpcUaConnectorsModuleExport(), new PlcConnectorsModuleExport(),
+                    new PulsarConnectorsModuleExport(), new RocketMqConnectorsModuleExport(),
+                    new RosConnectorsModuleExport(), new TubeMQConnectorsModuleExport(),
 
-            new ChangeDetectionExtensionModuleExport(),
-            new EnricherExtensionModuleExport(),
-            new FilterExtensionModuleExport(),
-            new SiddhiFilterExtensionModuleExport(),
-            new FilterExtensionModuleExport(),
-            new TransformationExtensionModuleExport(),
-            new BrokerSinksExtensionModuleExport(),
-            new DatabaseSinksExtensionModuleExport(),
-            new InternalSinksExtensionModuleExports(),
-            new NotificationsExtensionModuleExport()
-        )
-        .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
-        .registerMessagingProtocols(
-            new SpKafkaProtocolFactory(),
-            new SpJmsProtocolFactory(),
-            new SpMqttProtocolFactory(),
-            new SpNatsProtocolFactory(),
-            new SpPulsarProtocolFactory())
-        .build();
+                    new ChangeDetectionExtensionModuleExport(), new EnricherExtensionModuleExport(),
+                    new FilterExtensionModuleExport(), new SiddhiFilterExtensionModuleExport(),
+                    new FilterExtensionModuleExport(), new TransformationExtensionModuleExport(),
+                    new BrokerSinksExtensionModuleExport(), new DatabaseSinksExtensionModuleExport(),
+                    new InternalSinksExtensionModuleExports(), new NotificationsExtensionModuleExport())
+            .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
+            .registerMessagingProtocols(new SpKafkaProtocolFactory(), new SpJmsProtocolFactory(),
+                    new SpMqttProtocolFactory(), new SpNatsProtocolFactory(), new SpPulsarProtocolFactory())
+            .build();
   }
 }

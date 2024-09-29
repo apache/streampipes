@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.generator;
 
 import org.apache.streampipes.connect.shared.preprocessing.transform.schema.AddValueTransformationRule;
@@ -47,28 +46,24 @@ public class StatelessTransformationRuleGeneratorVisitor extends TransformationR
 
   @Override
   public void visit(CreateNestedRuleDescription ruleDesc) {
-    rules.add(new CreateNestedTransformationRule(
-        Utils.toKeyArray(ruleDesc.getRuntimeKey())));
+    rules.add(new CreateNestedTransformationRule(Utils.toKeyArray(ruleDesc.getRuntimeKey())));
   }
 
   @Override
   public void visit(DeleteRuleDescription ruleDesc) {
-    rules.add(new DeleteTransformationRule(
-        Utils.toKeyArray(ruleDesc.getRuntimeKey())));
+    rules.add(new DeleteTransformationRule(Utils.toKeyArray(ruleDesc.getRuntimeKey())));
   }
 
   @Override
   public void visit(MoveRuleDescription ruleDesc) {
-    rules.add(new MoveTransformationRule(
-        Utils.toKeyArray(ruleDesc.getOldRuntimeKey()),
-        Utils.toKeyArray(ruleDesc.getNewRuntimeKey())));
+    rules.add(new MoveTransformationRule(Utils.toKeyArray(ruleDesc.getOldRuntimeKey()),
+            Utils.toKeyArray(ruleDesc.getNewRuntimeKey())));
   }
 
   @Override
   public void visit(RenameRuleDescription ruleDesc) {
-    rules.add(new RenameTransformationRule(
-        Utils.toKeyArray(ruleDesc.getOldRuntimeKey()),
-        Utils.getLastKey(ruleDesc.getNewRuntimeKey())));
+    rules.add(new RenameTransformationRule(Utils.toKeyArray(ruleDesc.getOldRuntimeKey()),
+            Utils.getLastKey(ruleDesc.getNewRuntimeKey())));
   }
 
   @Override
@@ -83,32 +78,25 @@ public class StatelessTransformationRuleGeneratorVisitor extends TransformationR
 
   @Override
   public void visit(AddTimestampRuleDescription ruleDesc) {
-    rules.add(new AddTimestampTransformationRule(
-        ruleDesc.getRuntimeKey()));
+    rules.add(new AddTimestampTransformationRule(ruleDesc.getRuntimeKey()));
   }
 
   @Override
   public void visit(AddValueTransformationRuleDescription ruleDesc) {
-    rules.add(new AddValueTransformationRule(
-        ruleDesc.getRuntimeKey(),
-        ruleDesc.getStaticValue(),
-        ruleDesc.getDatatype()));
+    rules.add(new AddValueTransformationRule(ruleDesc.getRuntimeKey(), ruleDesc.getStaticValue(),
+            ruleDesc.getDatatype()));
   }
 
   @Override
   public void visit(ChangeDatatypeTransformationRuleDescription ruleDesc) {
-    rules.add(new DatatypeTransformationRule(
-        ruleDesc.getRuntimeKey(),
-        ruleDesc.getOriginalDatatypeXsd(),
-        ruleDesc.getTargetDatatypeXsd()));
+    rules.add(new DatatypeTransformationRule(ruleDesc.getRuntimeKey(), ruleDesc.getOriginalDatatypeXsd(),
+            ruleDesc.getTargetDatatypeXsd()));
   }
 
   @Override
   public void visit(CorrectionValueTransformationRuleDescription ruleDesc) {
-    rules.add(new CorrectionValueTransformationRule(
-        Utils.toKeyArray(ruleDesc.getRuntimeKey()),
-        ruleDesc.getCorrectionValue(),
-        ruleDesc.getOperator()));
+    rules.add(new CorrectionValueTransformationRule(Utils.toKeyArray(ruleDesc.getRuntimeKey()),
+            ruleDesc.getCorrectionValue(), ruleDesc.getOperator()));
   }
 
   @Override
@@ -120,11 +108,8 @@ public class StatelessTransformationRuleGeneratorVisitor extends TransformationR
       mode = TimestampTranformationRuleMode.TIME_UNIT;
     }
 
-    rules.add(new TimestampTransformationRule(Utils.toKeyArray(
-        ruleDesc.getRuntimeKey()),
-        mode,
-        ruleDesc.getFormatString(),
-        ruleDesc.getMultiplier()));
+    rules.add(new TimestampTransformationRule(Utils.toKeyArray(ruleDesc.getRuntimeKey()), mode,
+            ruleDesc.getFormatString(), ruleDesc.getMultiplier()));
   }
 
   @Override

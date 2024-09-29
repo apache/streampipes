@@ -35,7 +35,7 @@ public class InputStreamNameGenerator {
     List<String> inputStreamNames = new ArrayList<>();
     this.params.getInEventTypes().forEach((key, value) -> {
       // TODO why is the prefix not in the parameters.getInEventType
-      //registerEventTypeIfNotExists(key, value);
+      // registerEventTypeIfNotExists(key, value);
       inputStreamNames.add(SiddhiUtils.prepareName(key));
     });
 

@@ -15,17 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.rules.stream;
 
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
-@JsonSubTypes({
-    @JsonSubTypes.Type(EventRateTransformationRuleDescription.class),
-    @JsonSubTypes.Type(RemoveDuplicatesTransformationRuleDescription.class),
-})
+@JsonSubTypes({@JsonSubTypes.Type(EventRateTransformationRuleDescription.class),
+    @JsonSubTypes.Type(RemoveDuplicatesTransformationRuleDescription.class),})
 public abstract class StreamTransformationRuleDescription extends TransformationRuleDescription {
 
   public StreamTransformationRuleDescription() {

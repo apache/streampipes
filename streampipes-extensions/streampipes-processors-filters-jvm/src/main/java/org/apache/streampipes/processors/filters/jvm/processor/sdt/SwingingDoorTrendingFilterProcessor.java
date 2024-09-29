@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.filters.jvm.processor.sdt;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -54,65 +53,60 @@ public class SwingingDoorTrendingFilterProcessor extends StreamPipesDataProcesso
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.sdt", 0)
-        .category(DataProcessorType.FILTER)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                Labels.withId(SDT_TIMESTAMP_FIELD_KEY), PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(SDT_VALUE_FIELD_KEY), PropertyScope.NONE)
-            .build())
-        .requiredFloatParameter(Labels.withId(SDT_COMPRESSION_DEVIATION_KEY))
-        .requiredLongParameter(Labels.withId(SDT_COMPRESSION_MIN_INTERVAL_KEY), 0L)
-        .requiredLongParameter(Labels.withId(SDT_COMPRESSION_MAX_INTERVAL_KEY), Long.MAX_VALUE)
-        .outputStrategy(OutputStrategies.keep())
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.sdt", 0)
+            .category(DataProcessorType.FILTER).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                            Labels.withId(SDT_TIMESTAMP_FIELD_KEY), PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId(SDT_VALUE_FIELD_KEY),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredFloatParameter(Labels.withId(SDT_COMPRESSION_DEVIATION_KEY))
+            .requiredLongParameter(Labels.withId(SDT_COMPRESSION_MIN_INTERVAL_KEY), 0L)
+            .requiredLongParameter(Labels.withId(SDT_COMPRESSION_MAX_INTERVAL_KEY), Long.MAX_VALUE)
+            .outputStrategy(OutputStrategies.keep()).build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     // extract field names on stream
     sdtTimestampField = parameters.extractor().mappingPropertyValue(SDT_TIMESTAMP_FIELD_KEY);
     sdtValueField = parameters.extractor().mappingPropertyValue(SDT_VALUE_FIELD_KEY);
 
     // extract & check sdt compression params
     sdtCompressionDeviation = parameters.extractor().singleValueParameter(SDT_COMPRESSION_DEVIATION_KEY, Float.class);
-    sdtCompressionMinTimeInterval =
-        parameters.extractor().singleValueParameter(SDT_COMPRESSION_MIN_INTERVAL_KEY, Long.class);
-    sdtCompressionMaxTimeInterval =
-        parameters.extractor().singleValueParameter(SDT_COMPRESSION_MAX_INTERVAL_KEY, Long.class);
+    sdtCompressionMinTimeInterval = parameters.extractor().singleValueParameter(SDT_COMPRESSION_MIN_INTERVAL_KEY,
+            Long.class);
+    sdtCompressionMaxTimeInterval = parameters.extractor().singleValueParameter(SDT_COMPRESSION_MAX_INTERVAL_KEY,
+            Long.class);
     checkSdtCompressionParams();
 
     sdtFilter = new SwingingDoorTrendingFilter(sdtCompressionDeviation, sdtCompressionMinTimeInterval,
-        sdtCompressionMaxTimeInterval);
+            sdtCompressionMaxTimeInterval);
   }
 
   /**
-   * @throws SpRuntimeException throw if the followings are not satisfied:
-   *                            0 < sdtCompressionDeviation
-   *                            0 <= sdtCompressionMinTimeInterval < sdtCompressionMaxTimeInterval <= Long.MAX_VALUE
+   * @throws SpRuntimeException
+   *           throw if the followings are not satisfied: 0 < sdtCompressionDeviation 0 <= sdtCompressionMinTimeInterval
+   *           < sdtCompressionMaxTimeInterval <= Long.MAX_VALUE
    */
   private void checkSdtCompressionParams() {
     if (sdtCompressionDeviation <= 0) {
       throw new SpRuntimeException(
-          String.format("Compression Deviation should be positive! Actual value: %f. ", sdtCompressionDeviation));
+              String.format("Compression Deviation should be positive! Actual value: %f. ", sdtCompressionDeviation));
     }
 
     if (sdtCompressionMinTimeInterval < 0) {
-      throw new SpRuntimeException(
-          String.format("Compression Minimum Time Interval should be >= 0! Actual value: %d. ",
+      throw new SpRuntimeException(String.format("Compression Minimum Time Interval should be >= 0! Actual value: %d. ",
               sdtCompressionMinTimeInterval));
     }
 
     if (sdtCompressionMaxTimeInterval <= sdtCompressionMinTimeInterval) {
-      throw new SpRuntimeException(
-          String.format(
+      throw new SpRuntimeException(String.format(
               "Compression Minimum Time Interval should be < Compression Maximum Time Interval! "
-                  + "Actual: Compression Minimum Time Interval(%d), Compression Maximum Time Interval(%d). ",
+                      + "Actual: Compression Minimum Time Interval(%d), Compression Maximum Time Interval(%d). ",
               sdtCompressionMinTimeInterval, sdtCompressionMaxTimeInterval));
     }
   }

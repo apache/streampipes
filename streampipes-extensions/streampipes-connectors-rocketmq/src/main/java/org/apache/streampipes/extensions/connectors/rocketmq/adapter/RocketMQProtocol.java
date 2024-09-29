@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.extensions.connectors.rocketmq.adapter;
 
-
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
@@ -36,15 +35,15 @@ import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
-import org.apache.rocketmq.client.apis.ClientException;
-import org.apache.rocketmq.client.apis.consumer.ConsumeResult;
-import org.apache.rocketmq.client.apis.consumer.PushConsumer;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+
+import org.apache.rocketmq.client.apis.ClientException;
+import org.apache.rocketmq.client.apis.consumer.ConsumeResult;
+import org.apache.rocketmq.client.apis.consumer.PushConsumer;
 
 public class RocketMQProtocol implements StreamPipesAdapter {
 
@@ -72,36 +71,28 @@ public class RocketMQProtocol implements StreamPipesAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder
-        .create(ID, 0, RocketMQProtocol::new)
-        .withSupportedParsers(Parsers.defaultParsers())
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .withCategory(AdapterType.Generic)
-        .requiredTextParameter(Labels.withId(ENDPOINT_KEY))
-        .requiredTextParameter(Labels.withId(TOPIC_KEY))
-        .requiredTextParameter(Labels.withId(CONSUMER_GROUP_KEY))
-        .buildConfiguration();
+    return AdapterConfigurationBuilder.create(ID, 0, RocketMQProtocol::new)
+            .withSupportedParsers(Parsers.defaultParsers())
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .withCategory(AdapterType.Generic).requiredTextParameter(Labels.withId(ENDPOINT_KEY))
+            .requiredTextParameter(Labels.withId(TOPIC_KEY)).requiredTextParameter(Labels.withId(CONSUMER_GROUP_KEY))
+            .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
-    this.rocketMQConsumer = new RocketMQConsumer(
-        endpoint,
-        topic,
-        consumerGroup,
-        new BrokerEventProcessor(extractor.selectedParser(), collector));
+    this.rocketMQConsumer = new RocketMQConsumer(endpoint, topic, consumerGroup,
+            new BrokerEventProcessor(extractor.selectedParser(), collector));
 
     thread = new Thread(this.rocketMQConsumer);
     thread.start();
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
+          throws AdapterException {
     try {
       rocketMQConsumer.stop();
     } catch (IOException e) {
@@ -111,7 +102,7 @@ public class RocketMQProtocol implements StreamPipesAdapter {
 
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     List<byte[]> nEventsByte = new ArrayList<>(1);
     CountDownLatch latch = new CountDownLatch(1);
     this.applyConfiguration(extractor.getStaticPropertyExtractor());

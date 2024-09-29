@@ -15,22 +15,21 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 
 /**
- * Represents a record containing a measurement and its associated metadata
- * to be inserted into the Apache IoTDB.
+ * Represents a record containing a measurement and its associated metadata to be inserted into the Apache IoTDB.
  * <p>
  * This record encapsulates the measurement name, data type, and its corresponding value.
  *
- * @param measurementName The name of the measurement.
- * @param dataType        The data type of the measurement value.
- * @param value           The value of the measurement.
+ * @param measurementName
+ *          The name of the measurement.
+ * @param dataType
+ *          The data type of the measurement value.
+ * @param value
+ *          The value of the measurement.
  */
-public record IotDbMeasurementRecord(String measurementName,
-                                     TSDataType dataType,
-                                     Object value) {
+public record IotDbMeasurementRecord(String measurementName, TSDataType dataType, Object value) {
 }

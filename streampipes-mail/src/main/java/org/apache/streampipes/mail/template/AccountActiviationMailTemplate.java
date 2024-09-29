@@ -46,12 +46,11 @@ public class AccountActiviationMailTemplate extends AbstractMailTemplate {
   @Override
   protected void addPlaceholders(Map<String, String> placeholders) {
     placeholders.put(DefaultPlaceholders.LINK.key(), makeLink());
-    placeholders.put(DefaultPlaceholders.MANUAL.key(),
-        "Click on the button below to activate your account. "
+    placeholders.put(DefaultPlaceholders.MANUAL.key(), "Click on the button below to activate your account. "
             + "If you didn't create an account, you can safely delete this message.");
     placeholders.put(DefaultPlaceholders.BUTTON_TEXT.key(), "Activate your account");
     placeholders.put(DefaultPlaceholders.LINK_DESCRIPTION.key(),
-        "If that doesn't work, copy and paste the following link in your browser:");
+            "If that doesn't work, copy and paste the following link in your browser:");
   }
 
   @Override

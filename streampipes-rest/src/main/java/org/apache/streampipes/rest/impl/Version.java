@@ -45,5 +45,4 @@ public class Version extends AbstractAuthGuardedRestResource {
     return ok(new SystemInfoProvider().getSystemInfo());
   }
 
-
 }

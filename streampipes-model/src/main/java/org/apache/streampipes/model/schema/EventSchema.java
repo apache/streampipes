@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.schema;
 
 import org.apache.streampipes.model.util.Cloner;
@@ -52,7 +51,6 @@ public class EventSchema {
     this.eventProperties = eventProperties;
   }
 
-
   public boolean addEventProperty(EventProperty p) {
     return eventProperties.add(p);
   }
@@ -71,8 +69,6 @@ public class EventSchema {
 
   @Override
   public String toString() {
-    return "EventSchema{"
-           + "eventProperties=" + eventProperties
-           + '}';
+    return "EventSchema{" + "eventProperties=" + eventProperties + '}';
   }
 }

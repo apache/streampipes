@@ -37,10 +37,9 @@ public class RuntimeResolvableAnyStaticProperty extends AnyStaticProperty {
   }
 
   public RuntimeResolvableAnyStaticProperty(String internalName, String label, String description,
-                                            boolean horizontalRendering) {
+          boolean horizontalRendering) {
     super(StaticPropertyType.RuntimeResolvableAnyStaticProperty, internalName, label, description, horizontalRendering);
   }
-
 
   public List<String> getDependsOn() {
     return dependsOn;

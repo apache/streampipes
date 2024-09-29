@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.sdk.utils.Datatypes;
@@ -24,63 +25,38 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 public class NestedPropertyBuilderTest {
 
   @Test
   public void buildNestedProperty() {
     EventPropertyNested result = NestedPropertyBuilder.create("TestProperty")
-                                                      .withEventProperty(PrimitivePropertyBuilder.create(
-                                                                                                     Datatypes.String,
-                                                                                                     "SubProperty1"
-                                                                                                 )
-                                                                                                 .build())
-                                                      .withEventProperty(PrimitivePropertyBuilder.create(
-                                                                                                     Datatypes.String,
-                                                                                                     "SubProperty2"
-                                                                                                 )
-                                                                                                 .build())
-                                                      .build();
+            .withEventProperty(PrimitivePropertyBuilder.create(Datatypes.String, "SubProperty1").build())
+            .withEventProperty(PrimitivePropertyBuilder.create(Datatypes.String, "SubProperty2").build()).build();
 
     Assertions.assertNotNull(result);
     Assertions.assertEquals("TestProperty", result.getRuntimeName());
-    Assertions.assertEquals(2, result.getEventProperties()
-                                 .size());
+    Assertions.assertEquals(2, result.getEventProperties().size());
   }
 
   @Test
   public void buildNestedPropertyWithoutProperties() {
-    EventPropertyNested result = NestedPropertyBuilder.create("TestProperty")
-                                                      .build();
+    EventPropertyNested result = NestedPropertyBuilder.create("TestProperty").build();
 
     Assertions.assertNotNull(result);
     Assertions.assertEquals("TestProperty", result.getRuntimeName());
-    Assertions.assertTrue(result.getEventProperties()
-                                .isEmpty());
+    Assertions.assertTrue(result.getEventProperties().isEmpty());
   }
 
   @Test
   public void buildNestedPropertyWithArray() {
     EventPropertyNested result = NestedPropertyBuilder.create("TestProperty")
-                                                      .withEventProperties(
-                                                          PrimitivePropertyBuilder.create(
-                                                                                      Datatypes.String,
-                                                                                      "SubProperty1"
-                                                                                  )
-                                                                                  .build(),
-                                                          PrimitivePropertyBuilder.create(
-                                                                                      Datatypes.String,
-                                                                                      "SubProperty2"
-                                                                                  )
-                                                                                  .build()
-                                                      )
-                                                      .build();
+            .withEventProperties(PrimitivePropertyBuilder.create(Datatypes.String, "SubProperty1").build(),
+                    PrimitivePropertyBuilder.create(Datatypes.String, "SubProperty2").build())
+            .build();
 
     Assertions.assertNotNull(result);
     Assertions.assertEquals("TestProperty", result.getRuntimeName());
-    Assertions.assertEquals(2, result.getEventProperties()
-                                 .size());
+    Assertions.assertEquals(2, result.getEventProperties().size());
   }
 
   @Test

@@ -21,11 +21,11 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
 public abstract class PipelineElementTemplateHandler<T extends InvocableStreamPipesEntity>
-    extends AbstractTemplateHandler<T> {
+        extends
+          AbstractTemplateHandler<T> {
 
-  public PipelineElementTemplateHandler(PipelineElementTemplate template,
-                                        T pipelineElement,
-                                        boolean overwriteNameAndDescription) {
+  public PipelineElementTemplateHandler(PipelineElementTemplate template, T pipelineElement,
+          boolean overwriteNameAndDescription) {
     super(template, pipelineElement, overwriteNameAndDescription);
   }
 
@@ -37,6 +37,5 @@ public abstract class PipelineElementTemplateHandler<T extends InvocableStreamPi
     element.setName(name);
     element.setDescription(description);
   }
-
 
 }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.manager.util.AuthTokenUtils;
@@ -23,23 +22,19 @@ import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 
-import java.io.IOException;
-
 public abstract class PipelineElementHttpRequest {
 
-  public PipelineElementStatus execute(EndpointSelectable pipelineElement,
-                                       String endpointUrl,
-                                       String pipelineId) {
+  public PipelineElementStatus execute(EndpointSelectable pipelineElement, String endpointUrl, String pipelineId) {
     try {
       Response httpResp = initRequest(pipelineElement, endpointUrl)
-              .addHeader("Authorization", AuthTokenUtils.getAuthToken(pipelineId))
-              .connectTimeout(10000)
-              .execute();
+              .addHeader("Authorization", AuthTokenUtils.getAuthToken(pipelineId)).connectTimeout(10000).execute();
       return handleResponse(httpResp, pipelineElement, endpointUrl);
     } catch (Exception e) {
       logError(endpointUrl, pipelineElement.getName(), e.getMessage());
@@ -47,27 +42,22 @@ public abstract class PipelineElementHttpRequest {
     }
   }
 
-  protected abstract Request initRequest(EndpointSelectable pipelineElement,
-                                      String endpointUrl) throws JsonProcessingException;
+  protected abstract Request initRequest(EndpointSelectable pipelineElement, String endpointUrl)
+          throws JsonProcessingException;
 
-  protected abstract void logError(String endpointUrl,
-                                String pipelineElementName,
-                                String exceptionMessage);
+  protected abstract void logError(String endpointUrl, String pipelineElementName, String exceptionMessage);
 
-  protected PipelineElementStatus handleResponse(Response httpResp,
-                                                 EndpointSelectable pipelineElement,
-                                                 String endpointUrl) throws JsonSyntaxException, IOException {
+  protected PipelineElementStatus handleResponse(Response httpResp, EndpointSelectable pipelineElement,
+          String endpointUrl) throws JsonSyntaxException, IOException {
     String resp = httpResp.returnContent().asString();
-    org.apache.streampipes.model.Response streamPipesResp = JacksonSerializer
-        .getObjectMapper()
-        .readValue(resp, org.apache.streampipes.model.Response.class);
+    org.apache.streampipes.model.Response streamPipesResp = JacksonSerializer.getObjectMapper().readValue(resp,
+            org.apache.streampipes.model.Response.class);
     return convert(streamPipesResp, endpointUrl, pipelineElement.getName());
   }
 
-  private PipelineElementStatus convert(org.apache.streampipes.model.Response response,
-                                        String endpointUrl,
-                                        String pipelineElementName) {
+  private PipelineElementStatus convert(org.apache.streampipes.model.Response response, String endpointUrl,
+          String pipelineElementName) {
     return new PipelineElementStatus(endpointUrl, pipelineElementName, response.isSuccess(),
-        response.getOptionalMessage());
+            response.getOptionalMessage());
   }
 }

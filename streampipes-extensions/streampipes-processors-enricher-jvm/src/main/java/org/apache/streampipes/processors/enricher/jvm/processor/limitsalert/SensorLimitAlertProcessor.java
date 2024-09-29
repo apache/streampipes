@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.limitsalert;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
@@ -60,59 +59,32 @@ public class SensorLimitAlertProcessor implements IStreamPipesDataProcessor {
   private String lowerWarningLimitField;
   private String lowerControlLimitField;
 
-
   @Override
   public IDataProcessorConfiguration declareConfig() {
-    return DataProcessorConfiguration.create(
-        SensorLimitAlertProcessor::new,
-        ProcessingElementBuilder
+    return DataProcessorConfiguration.create(SensorLimitAlertProcessor::new, ProcessingElementBuilder
             .create("org.apache.streampipes.processors.enricher.jvm.processor.limitsalert", 0)
-            .category(DataProcessorType.ENRICH)
-            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .category(DataProcessorType.ENRICH).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
             .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                                .create()
-                                .requiredPropertyWithUnaryMapping(
-                                    EpRequirements.numberReq(),
-                                    Labels.withId(SENSOR_VALUE_LABEL),
-                                    PropertyScope.MEASUREMENT_PROPERTY
-                                )
-                                .requiredPropertyWithUnaryMapping(
-                                    EpRequirements.numberReq(),
-                                    Labels.withId(UPPER_CONTROL_LIMIT_LABEL),
-                                    PropertyScope.MEASUREMENT_PROPERTY
-                                )
-                                .requiredPropertyWithUnaryMapping(
-                                    EpRequirements.numberReq(),
-                                    Labels.withId(UPPER_WARNING_LIMIT_LABEL),
-                                    PropertyScope.MEASUREMENT_PROPERTY
-                                )
-                                .requiredPropertyWithUnaryMapping(
-                                    EpRequirements.numberReq(),
-                                    Labels.withId(LOWER_WARNING_LIMIT_LABEL),
-                                    PropertyScope.MEASUREMENT_PROPERTY
-                                )
-                                .requiredPropertyWithUnaryMapping(
-                                    EpRequirements.numberReq(),
-                                    Labels.withId(LOWER_CONTROL_LIMIT_LABEL),
-                                    PropertyScope.MEASUREMENT_PROPERTY
-                                )
-                                .build())
-            .outputStrategy(
-                OutputStrategies.append(
-                    EpProperties.stringEp(Labels.empty(), ALERT_STATUS, SO.TEXT),
-                    EpProperties.stringEp(Labels.empty(), LIMIT_BREACHED, SO.TEXT)
-                ))
-            .build()
-    );
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId(SENSOR_VALUE_LABEL),
+                            PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                            Labels.withId(UPPER_CONTROL_LIMIT_LABEL), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                            Labels.withId(UPPER_WARNING_LIMIT_LABEL), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                            Labels.withId(LOWER_WARNING_LIMIT_LABEL), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                            Labels.withId(LOWER_CONTROL_LIMIT_LABEL), PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .outputStrategy(OutputStrategies.append(EpProperties.stringEp(Labels.empty(), ALERT_STATUS, SO.TEXT),
+                    EpProperties.stringEp(Labels.empty(), LIMIT_BREACHED, SO.TEXT)))
+            .build());
   }
 
   @Override
-  public void onPipelineStarted(
-      IDataProcessorParameters params,
-      SpOutputCollector collector,
-      EventProcessorRuntimeContext runtimeContext
-  ) {
+  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector collector,
+          EventProcessorRuntimeContext runtimeContext) {
     var extractor = params.extractor();
 
     sensorField = extractor.mappingPropertyValue(SENSOR_VALUE_LABEL);
@@ -124,21 +96,11 @@ public class SensorLimitAlertProcessor implements IStreamPipesDataProcessor {
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) {
-    var sensorValue = event.getFieldBySelector(sensorField)
-                           .getAsPrimitive()
-                           .getAsDouble();
-    var upperControlLimit = event.getFieldBySelector(upperControlLimitField)
-                                 .getAsPrimitive()
-                                 .getAsDouble();
-    var upperWarningLimit = event.getFieldBySelector(upperWarningLimitField)
-                                 .getAsPrimitive()
-                                 .getAsDouble();
-    var lowerWarningLimit = event.getFieldBySelector(lowerWarningLimitField)
-                                 .getAsPrimitive()
-                                 .getAsDouble();
-    var lowerControlLimit = event.getFieldBySelector(lowerControlLimitField)
-                                 .getAsPrimitive()
-                                 .getAsDouble();
+    var sensorValue = event.getFieldBySelector(sensorField).getAsPrimitive().getAsDouble();
+    var upperControlLimit = event.getFieldBySelector(upperControlLimitField).getAsPrimitive().getAsDouble();
+    var upperWarningLimit = event.getFieldBySelector(upperWarningLimitField).getAsPrimitive().getAsDouble();
+    var lowerWarningLimit = event.getFieldBySelector(lowerWarningLimitField).getAsPrimitive().getAsDouble();
+    var lowerControlLimit = event.getFieldBySelector(lowerControlLimitField).getAsPrimitive().getAsDouble();
 
     String alertStatus = null;
     String limitBreached = null;

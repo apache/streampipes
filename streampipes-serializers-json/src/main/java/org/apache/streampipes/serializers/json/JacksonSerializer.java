@@ -27,7 +27,7 @@ public class JacksonSerializer {
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     mapper.activateDefaultTypingAsProperty(mapper.getPolymorphicTypeValidator(),
-        ObjectMapper.DefaultTyping.JAVA_LANG_OBJECT, "@class");
+            ObjectMapper.DefaultTyping.JAVA_LANG_OBJECT, "@class");
     mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
     return mapper;

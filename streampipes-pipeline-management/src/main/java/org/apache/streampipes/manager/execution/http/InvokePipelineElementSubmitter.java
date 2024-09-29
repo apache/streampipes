@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.model.api.EndpointSelectable;
@@ -24,11 +23,11 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class InvokePipelineElementSubmitter extends PipelineElementSubmitter {
 
@@ -56,8 +55,7 @@ public class InvokePipelineElementSubmitter extends PipelineElementSubmitter {
     status.setTitle("Could not start pipeline " + pipelineName + ".");
   }
 
-  private void rollbackInvokedPipelineElements(PipelineOperationStatus status,
-                                               List<InvocableStreamPipesEntity> pe) {
+  private void rollbackInvokedPipelineElements(PipelineOperationStatus status, List<InvocableStreamPipesEntity> pe) {
     for (PipelineElementStatus s : status.getElementStatus()) {
       if (s.isSuccess()) {
         Optional<InvocableStreamPipesEntity> graph = findPipelineElements(s.getElementId(), pe);
@@ -67,10 +65,7 @@ public class InvokePipelineElementSubmitter extends PipelineElementSubmitter {
   }
 
   private Optional<InvocableStreamPipesEntity> findPipelineElements(String elementId,
-                                                                    List<InvocableStreamPipesEntity> pe) {
-    return pe
-        .stream()
-        .filter(g -> g.getBelongsTo().equals(elementId))
-        .findFirst();
+          List<InvocableStreamPipesEntity> pe) {
+    return pe.stream().filter(g -> g.getBelongsTo().equals(elementId)).findFirst();
   }
 }

@@ -19,17 +19,10 @@ package org.apache.streampipes.mail.template.generation;
 
 public enum DefaultPlaceholders {
 
-  TITLE("TITLE"),
-  PREHEADER("PREHEADER"),
-  INNER("INNER"),
+  TITLE("TITLE"), PREHEADER("PREHEADER"), INNER("INNER"),
 
-  BUTTON_TEXT("BUTTON_TEXT"),
-  MANUAL("MANUAL"),
-  LINK("LINK"),
-  LINK_DESCRIPTION("LINK_DESCRIPTION"),
-  TEXT("TEXT"),
-  LOGO("LOGO"),
-  BASE_URL("BASE_URL");
+  BUTTON_TEXT("BUTTON_TEXT"), MANUAL("MANUAL"), LINK("LINK"), LINK_DESCRIPTION("LINK_DESCRIPTION"), TEXT("TEXT"), LOGO(
+          "LOGO"), BASE_URL("BASE_URL");
 
   private String placeholderKey;
 

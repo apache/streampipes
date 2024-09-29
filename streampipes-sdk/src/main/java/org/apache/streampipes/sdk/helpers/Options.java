@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.helpers;
 
 import org.apache.streampipes.model.staticproperty.Option;
@@ -29,7 +28,8 @@ public class Options {
   /**
    * Creates a new list of options by using the provided string values.
    *
-   * @param optionLabel An arbitrary number of option labels.
+   * @param optionLabel
+   *          An arbitrary number of option labels.
    * @return
    */
   public static List<Option> from(String... optionLabel) {

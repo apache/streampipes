@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.export;
 
 import org.apache.streampipes.dataexplorer.export.item.CsvItemGenerator;
@@ -37,8 +36,7 @@ public class ConfiguredCsvOutputWriter extends ConfiguredOutputWriter {
   private String delimiter = COMMA;
 
   @Override
-  public void configure(ProvidedRestQueryParams params,
-                        boolean ignoreMissingValues) {
+  public void configure(ProvidedRestQueryParams params, boolean ignoreMissingValues) {
     if (params.has(SupportedRestQueryParams.QP_CSV_DELIMITER)) {
       delimiter = params.getAsString(SupportedRestQueryParams.QP_CSV_DELIMITER).equals("comma") ? COMMA : SEMICOLON;
     }
@@ -56,10 +54,8 @@ public class ConfiguredCsvOutputWriter extends ConfiguredOutputWriter {
   }
 
   @Override
-  public void writeItem(OutputStream outputStream,
-                        List<Object> row,
-                        List<String> columnNames,
-                        boolean firstObject) throws IOException {
+  public void writeItem(OutputStream outputStream, List<Object> row, List<String> columnNames, boolean firstObject)
+          throws IOException {
     if (firstObject) {
       outputStream.write(toBytes(makeHeaderLine(columnNames)));
     }

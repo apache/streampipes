@@ -15,19 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.configuration;
 
 public class DefaultLinkSettings {
 
   public LinkSettings make() {
-    return new LinkSettings(
-        "https://streampipes.apache.org",
-        "",
-        true,
-        true,
-        false,
-        true
-    );
+    return new LinkSettings("https://streampipes.apache.org", "", true, true, false, true);
   }
 }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.jdbcclient.model;
 
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -34,16 +33,9 @@ public class JdbcConnectionParameters {
   private String sslFactory;
   private boolean columnNameQuoted;
 
-  public JdbcConnectionParameters(DataSinkInvocation graph,
-                                  String dbHost,
-                                  Integer dbPort,
-                                  String dbName,
-                                  String username,
-                                  String password,
-                                  String dbTable,
-                                  boolean sslEnabled,
-                                  String sslFactory,
-                                  boolean quotedColumnNames) {
+  public JdbcConnectionParameters(DataSinkInvocation graph, String dbHost, Integer dbPort, String dbName,
+          String username, String password, String dbTable, boolean sslEnabled, String sslFactory,
+          boolean quotedColumnNames) {
     this.graph = graph;
     this.dbHost = dbHost;
     this.dbPort = dbPort;
@@ -55,7 +47,6 @@ public class JdbcConnectionParameters {
     this.sslFactory = sslFactory;
     this.columnNameQuoted = quotedColumnNames;
   }
-
 
   public String getDbHost() {
     return dbHost;

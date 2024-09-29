@@ -15,10 +15,8 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe.routing;
 
-public interface SpInputCollector extends
-    PipelineElementCollector<RawDataProcessor> {
+public interface SpInputCollector extends PipelineElementCollector<RawDataProcessor> {
 
 }

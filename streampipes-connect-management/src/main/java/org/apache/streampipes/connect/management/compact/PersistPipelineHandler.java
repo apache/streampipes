@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.compact;
 
 import org.apache.streampipes.manager.template.PipelineTemplateManagement;
@@ -40,17 +39,14 @@ public class PersistPipelineHandler {
   private final PipelineTemplateManagement pipelineTemplateManagement;
   private final String authenticatedUserSid;
 
-  public PersistPipelineHandler(PipelineTemplateManagement pipelineTemplateManagement,
-                                String authenticatedUserSid) {
+  public PersistPipelineHandler(PipelineTemplateManagement pipelineTemplateManagement, String authenticatedUserSid) {
     this.pipelineTemplateManagement = pipelineTemplateManagement;
     this.authenticatedUserSid = authenticatedUserSid;
   }
 
   public PipelineOperationStatus createAndStartPersistPipeline(AdapterDescription adapterDescription) {
-    var pipelineTemplateInvocation = pipelineTemplateManagement.prepareInvocation(
-        adapterDescription.getCorrespondingDataStreamElementId(),
-        templateId
-    );
+    var pipelineTemplateInvocation = pipelineTemplateManagement
+            .prepareInvocation(adapterDescription.getCorrespondingDataStreamElementId(), templateId);
 
     applyPipelineName(pipelineTemplateInvocation, adapterDescription.getName());
     applyDataLakeConfig(pipelineTemplateInvocation, adapterDescription);
@@ -58,22 +54,19 @@ public class PersistPipelineHandler {
     return pipelineTemplateManagement.createAndStartPipeline(pipelineTemplateInvocation, authenticatedUserSid);
   }
 
-  private void applyPipelineName(PipelineTemplateInvocation pipelineTemplateInvocation,
-                                 String adapterName) {
+  private void applyPipelineName(PipelineTemplateInvocation pipelineTemplateInvocation, String adapterName) {
     pipelineTemplateInvocation.setPipelineTemplateId(templateId);
     pipelineTemplateInvocation.setKviName(adapterName);
   }
 
   private void applyDataLakeConfig(PipelineTemplateInvocation pipelineTemplateInvocation,
-                                   AdapterDescription adapterDescription) {
+          AdapterDescription adapterDescription) {
     pipelineTemplateInvocation.getStaticProperties().forEach(sp -> {
       if (sp.getInternalName().equalsIgnoreCase(withPrefix("db_measurement"))) {
         ((FreeTextStaticProperty) sp).setValue(adapterDescription.getName());
       }
       if (sp.getInternalName().equalsIgnoreCase(withPrefix("timestamp_mapping"))) {
-        ((MappingPropertyUnary) sp).setSelectedProperty(
-            String.format("s0::%s", getTimestampField(adapterDescription)
-        ));
+        ((MappingPropertyUnary) sp).setSelectedProperty(String.format("s0::%s", getTimestampField(adapterDescription)));
       }
       if (sp.getInternalName().equalsIgnoreCase(withPrefix("schema_update"))) {
         ((OneOfStaticProperty) sp).getOptions().forEach(o -> {
@@ -90,23 +83,13 @@ public class PersistPipelineHandler {
   }
 
   private String getTimestampField(AdapterDescription adapterDescription) {
-    return adapterDescription
-        .getDataStream()
-        .getEventSchema()
-        .getEventProperties()
-        .stream()
-        .filter(ep -> ep instanceof EventPropertyPrimitive)
-        .map(ep -> (EventPropertyPrimitive) ep)
-        .filter(ep -> hasTimestampType(ep.getDomainProperties()))
-        .map(EventProperty::getRuntimeName)
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Could not find timestamp field in schema"));
+    return adapterDescription.getDataStream().getEventSchema().getEventProperties().stream()
+            .filter(ep -> ep instanceof EventPropertyPrimitive).map(ep -> (EventPropertyPrimitive) ep)
+            .filter(ep -> hasTimestampType(ep.getDomainProperties())).map(EventProperty::getRuntimeName).findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Could not find timestamp field in schema"));
   }
 
   private boolean hasTimestampType(List<URI> semanticTypes) {
-    return semanticTypes
-        .stream()
-        .map(URI::toString)
-        .anyMatch(s -> s.equalsIgnoreCase(SO.DATE_TIME));
+    return semanticTypes.stream().map(URI::toString).anyMatch(s -> s.equalsIgnoreCase(SO.DATE_TIME));
   }
 }

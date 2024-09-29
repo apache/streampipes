@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.shared.exception;
 
 import org.apache.streampipes.model.monitoring.SpLogMessage;
@@ -27,8 +26,7 @@ public class SpLogMessageException extends RuntimeException {
   private final SpLogMessage message;
   private final HttpStatus status;
 
-  public SpLogMessageException(HttpStatus status,
-                               SpLogMessage message) {
+  public SpLogMessageException(HttpStatus status, SpLogMessage message) {
     this.status = status;
     this.message = message;
   }

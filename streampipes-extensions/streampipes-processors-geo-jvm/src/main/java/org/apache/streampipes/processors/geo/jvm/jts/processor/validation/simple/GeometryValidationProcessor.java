@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.jts.processor.validation.simple;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -39,11 +38,11 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
+import java.util.List;
+
 import org.locationtech.jts.geom.Geometry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 public class GeometryValidationProcessor extends StreamPipesDataProcessor {
   public static final String GEOM_KEY = "geom-key";
@@ -62,42 +61,28 @@ public class GeometryValidationProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.validation.simple", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReq("http://www.opengis.net/ont/geosparql#Geometry"),
-                Labels.withId(GEOM_KEY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
-                Labels.withId(EPSG_KEY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .outputStrategy(OutputStrategies.keep())
-        .requiredSingleValueSelection(
-            Labels.withId(VALIDATION_OUTPUT_KEY),
-            Options.from(
-                ValidationOutput.VALID.name(),
-                ValidationOutput.INVALID.name()
-            )
-        )
-        .requiredMultiValueSelection(
-            Labels.withId(VALIDATION_TYPE_KEY),
-            Options.from(
-                ValidationType.IsEmpty.name(),
-                ValidationType.IsSimple.name()
-            )
-        )
-        .build();
+            .create("org.apache.streampipes.processors.geo.jvm.jts.processor.validation.simple", 0)
+            .category(DataProcessorType.GEO).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.domainPropertyReq("http://www.opengis.net/ont/geosparql#Geometry"),
+                            Labels.withId(GEOM_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
+                            Labels.withId(EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .outputStrategy(OutputStrategies.keep())
+            .requiredSingleValueSelection(Labels.withId(VALIDATION_OUTPUT_KEY),
+                    Options.from(ValidationOutput.VALID.name(), ValidationOutput.INVALID.name()))
+            .requiredMultiValueSelection(Labels.withId(VALIDATION_TYPE_KEY),
+                    Options.from(ValidationType.IsEmpty.name(), ValidationType.IsSimple.name()))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
 
     this.geometryMapper = parameters.extractor().mappingPropertyValue(GEOM_KEY);
     this.epsgMapper = parameters.extractor().mappingPropertyValue(EPSG_KEY);

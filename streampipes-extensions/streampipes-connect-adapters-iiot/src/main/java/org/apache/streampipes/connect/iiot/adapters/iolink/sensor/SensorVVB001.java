@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.iiot.adapters.iolink.sensor;
+
+import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -26,8 +27,6 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 public class SensorVVB001 implements IoLinkSensor {
 
@@ -43,95 +42,47 @@ public class SensorVVB001 implements IoLinkSensor {
 
   public static final String IO_LINK_MASTER_SN = "ioLinkMasterSN";
 
-
   @Override
   public GuessSchema getEventSchema() {
 
-    return GuessSchemaBuilder.create()
-        .property(timestampProperty("timestamp"))
-        .sample("timestamp", 1685525380729L)
-        .property(
-            PrimitivePropertyBuilder
-                .create(Datatypes.Float, V_RMS_NAME)
-                .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                .description("Speed RMS value")
-                .build()
-        )
-        .sample(V_RMS_NAME, 0.0023)
-        .property(
-            PrimitivePropertyBuilder
-                .create(Datatypes.Float, A_PEAK_NAME)
-                .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                .description("Acceleration peak value")
-                .build()
-        )
-        .sample(A_PEAK_NAME, 6.6)
-        .property(
-            PrimitivePropertyBuilder
-                .create(Datatypes.Float, A_RMS_NAME)
-                .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                .description("Acceleration RMS value")
-                .build()
-        )
-        .sample(A_RMS_NAME, 1.8)
-        .property(
-            PrimitivePropertyBuilder
-                .create(Datatypes.Float, TEMPERATURE_NAME)
-                .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                .description("Current temperature")
-                .build()
-        )
-        .sample(TEMPERATURE_NAME, 22.0)
-        .property(
-            PrimitivePropertyBuilder
-                .create(Datatypes.Float, CREST_NAME)
-                .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                .description("Acceleration crest factor")
-                .build()
-        )
-        .sample(CREST_NAME, 3.7)
-        .property(
-            PrimitivePropertyBuilder
-                .create(Datatypes.Integer, STATUS_NAME)
-                .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                .description("Device status (0: OK, 1: Maintenance required, "
-                             + "2: Out of specification, 3: Function Test, 4: Error)")
-                .build()
-        )
-        .sample(STATUS_NAME, 0)
-        .property(
-            PrimitivePropertyBuilder
-                .create(Datatypes.Boolean, OUT_1_NAME)
-                .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                .description("Current state of the digital signal")
-                .build()
-        )
-        .sample(OUT_1_NAME, true)
-        .property(
-            PrimitivePropertyBuilder
-                .create(Datatypes.Boolean, OUT_2_NAME)
-                .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                .description("Current state of the digital signal")
-                .build()
-        )
-        .sample(OUT_2_NAME, true)
-        .property(
-            PrimitivePropertyBuilder
-                .create(Datatypes.String, PORT_NAME)
-                .scope(PropertyScope.DIMENSION_PROPERTY)
-                .description("Port the sensor is connected to at IOLink master")
-                .build()
-        )
-        .sample(PORT_NAME, "port1")
-        .property(
-            PrimitivePropertyBuilder
-                .create(Datatypes.String, IO_LINK_MASTER_SN)
-                .scope(PropertyScope.DIMENSION_PROPERTY)
-                .description("This is the serial number of the IO-Link Master")
-                .build()
-        )
-        .sample(PORT_NAME, "XXXXXXXXXXXX")
-        .build();
+    return GuessSchemaBuilder.create().property(timestampProperty("timestamp")).sample("timestamp", 1685525380729L)
+            .property(PrimitivePropertyBuilder.create(Datatypes.Float, V_RMS_NAME)
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY).description("Speed RMS value").build())
+            .sample(V_RMS_NAME, 0.0023)
+            .property(PrimitivePropertyBuilder.create(Datatypes.Float, A_PEAK_NAME)
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY).description("Acceleration peak value").build())
+            .sample(A_PEAK_NAME, 6.6)
+            .property(PrimitivePropertyBuilder.create(Datatypes.Float, A_RMS_NAME)
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY).description("Acceleration RMS value").build())
+            .sample(A_RMS_NAME, 1.8)
+            .property(PrimitivePropertyBuilder.create(Datatypes.Float, TEMPERATURE_NAME)
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY).description("Current temperature").build())
+            .sample(TEMPERATURE_NAME, 22.0)
+            .property(PrimitivePropertyBuilder.create(Datatypes.Float, CREST_NAME)
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY).description("Acceleration crest factor").build())
+            .sample(CREST_NAME, 3.7)
+            .property(PrimitivePropertyBuilder.create(Datatypes.Integer, STATUS_NAME)
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
+                    .description("Device status (0: OK, 1: Maintenance required, "
+                            + "2: Out of specification, 3: Function Test, 4: Error)")
+                    .build())
+            .sample(STATUS_NAME, 0)
+            .property(PrimitivePropertyBuilder.create(Datatypes.Boolean, OUT_1_NAME)
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY).description("Current state of the digital signal")
+                    .build())
+            .sample(OUT_1_NAME, true)
+            .property(PrimitivePropertyBuilder.create(Datatypes.Boolean, OUT_2_NAME)
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY).description("Current state of the digital signal")
+                    .build())
+            .sample(OUT_2_NAME, true)
+            .property(
+                    PrimitivePropertyBuilder.create(Datatypes.String, PORT_NAME).scope(PropertyScope.DIMENSION_PROPERTY)
+                            .description("Port the sensor is connected to at IOLink master").build())
+            .sample(PORT_NAME, "port1")
+            .property(PrimitivePropertyBuilder.create(Datatypes.String, IO_LINK_MASTER_SN)
+                    .scope(PropertyScope.DIMENSION_PROPERTY)
+                    .description("This is the serial number of the IO-Link Master").build())
+            .sample(PORT_NAME, "XXXXXXXXXXXX").build();
   }
 
   @Override

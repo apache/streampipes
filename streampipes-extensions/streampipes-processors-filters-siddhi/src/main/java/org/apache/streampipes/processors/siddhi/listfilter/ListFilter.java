@@ -48,18 +48,13 @@ public class ListFilter extends StreamPipesSiddhiProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.siddhi.listfilter", 0)
-        .withLocales(Locales.EN)
-        .category(DataProcessorType.FILTER)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(), Labels.withId
-                (LIST_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .requiredTextParameter(Labels.withId(REQUIRED_VALUE_KEY))
-        .outputStrategy(OutputStrategies.keep())
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.listfilter", 0)
+            .withLocales(Locales.EN).category(DataProcessorType.FILTER).withAssets(ExtensionAssetType.DOCUMENTATION)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(), Labels.withId(LIST_KEY),
+                            PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .requiredTextParameter(Labels.withId(REQUIRED_VALUE_KEY)).outputStrategy(OutputStrategies.keep()).build();
   }
 
   private Object extractFilterValue(String selector, IDataProcessorParameterExtractor extractor) {
@@ -68,8 +63,7 @@ public class ListFilter extends StreamPipesSiddhiProcessor {
   }
 
   @Override
-  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
-                                        String finalInsertIntoStreamName) {
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams, String finalInsertIntoStreamName) {
     String filteredFieldSelector = siddhiParams.getParams().extractor().mappingPropertyValue(LIST_KEY);
     Object filterValue = extractFilterValue(filteredFieldSelector, siddhiParams.getParams().extractor());
     FromClause fromClause = FromClause.create();
@@ -81,12 +75,8 @@ public class ListFilter extends StreamPipesSiddhiProcessor {
 
     InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
 
-    return SiddhiAppConfigBuilder
-        .create()
-        .addQuery(SiddhiQueryBuilder
-            .create(fromClause, insertIntoClause)
-            .withSelectClause(selectClause)
-            .build())
-        .build();
+    return SiddhiAppConfigBuilder.create()
+            .addQuery(SiddhiQueryBuilder.create(fromClause, insertIntoClause).withSelectClause(selectClause).build())
+            .build();
   }
 }

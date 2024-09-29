@@ -21,9 +21,9 @@ import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.Set;
+
+import com.google.gson.annotations.SerializedName;
 
 @TsModel
 public class SpServiceRegistration implements Storable {
@@ -46,14 +46,8 @@ public class SpServiceRegistration implements Storable {
   public SpServiceRegistration() {
   }
 
-  public SpServiceRegistration(String svcType,
-                               String svcGroup,
-                               String svcId,
-                               String host,
-                               int port,
-                               Set<SpServiceTag> tags,
-                               String healthCheckPath,
-                               Set<ExtensionItemDescription> providedExtensions) {
+  public SpServiceRegistration(String svcType, String svcGroup, String svcId, String host, int port,
+          Set<SpServiceTag> tags, String healthCheckPath, Set<ExtensionItemDescription> providedExtensions) {
     this.svcType = svcType;
     this.svcGroup = svcGroup;
     this.svcId = svcId;
@@ -64,14 +58,8 @@ public class SpServiceRegistration implements Storable {
     this.providedExtensions = providedExtensions;
   }
 
-  public static SpServiceRegistration from(String svcType,
-                                           String svcGroup,
-                                           String svcId,
-                                           String host,
-                                           Integer port,
-                                           Set<SpServiceTag> tags,
-                                           String healthCheckPath,
-                                           Set<ExtensionItemDescription> providedExtensions) {
+  public static SpServiceRegistration from(String svcType, String svcGroup, String svcId, String host, Integer port,
+          Set<SpServiceTag> tags, String healthCheckPath, Set<ExtensionItemDescription> providedExtensions) {
     return new SpServiceRegistration(svcType, svcGroup, svcId, host, port, tags, healthCheckPath, providedExtensions);
   }
 

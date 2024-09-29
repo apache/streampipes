@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.commons.environment.Environment;
@@ -24,14 +23,14 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 
-import org.apache.commons.codec.binary.Base64;
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.CouchDbProperties;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+
+import org.apache.commons.codec.binary.Base64;
+import org.lightcouch.CouchDbClient;
+import org.lightcouch.CouchDbProperties;
 
 public class ImageStore {
   private static final String DB_NAME = "images";
@@ -39,8 +38,7 @@ public class ImageStore {
   private final List<EventProperty> imageProperties;
   private final CouchDbClient couchDbClient;
 
-  public ImageStore(DataLakeMeasure measure,
-                    Environment environment) {
+  public ImageStore(DataLakeMeasure measure, Environment environment) {
     this.couchDbClient = new CouchDbClient(from(environment));
     this.imageProperties = ImageStoreUtils.getImageProperties(measure);
   }
@@ -52,8 +50,7 @@ public class ImageStore {
     String username = env.getCouchDbUsername().getValueOrDefault();
     String password = env.getCouchDbPassword().getValueOrDefault();
 
-    return new CouchDbProperties(DB_NAME, true, couchDbProtocol,
-        couchDbHost, couchDbPort, username, password);
+    return new CouchDbProperties(DB_NAME, true, couchDbProtocol, couchDbHost, couchDbPort, username, password);
   }
 
   public void onEvent(Event event) throws SpRuntimeException {
@@ -67,14 +64,8 @@ public class ImageStore {
     });
   }
 
-  public void storeImage(byte[] imageBytes,
-                         String imageDocId) {
-    this.couchDbClient.saveAttachment(
-        new ByteArrayInputStream(imageBytes),
-        imageDocId,
-        "image/jpeg",
-        imageDocId,
-        null);
+  public void storeImage(byte[] imageBytes, String imageDocId) {
+    this.couchDbClient.saveAttachment(new ByteArrayInputStream(imageBytes), imageDocId, "image/jpeg", imageDocId, null);
 
   }
 

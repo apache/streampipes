@@ -19,10 +19,10 @@ package org.apache.streampipes.user.management.service;
 
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import java.util.List;
+
 import com.google.gson.JsonObject;
 import org.lightcouch.CouchDbClient;
-
-import java.util.List;
 
 public class UserService {
 

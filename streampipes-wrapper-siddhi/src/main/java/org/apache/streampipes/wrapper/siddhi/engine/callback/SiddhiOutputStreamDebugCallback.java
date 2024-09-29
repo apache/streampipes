@@ -17,16 +17,15 @@
  */
 package org.apache.streampipes.wrapper.siddhi.engine.callback;
 
-
 import org.apache.streampipes.wrapper.siddhi.output.SiddhiOutputConfig;
 import org.apache.streampipes.wrapper.siddhi.output.SiddhiOutputType;
+
+import java.util.Arrays;
 
 import io.siddhi.core.event.Event;
 import io.siddhi.core.stream.output.StreamCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
 
 public class SiddhiOutputStreamDebugCallback extends StreamCallback {
 
@@ -35,8 +34,7 @@ public class SiddhiOutputStreamDebugCallback extends StreamCallback {
   private final SiddhiDebugCallback callback;
   private final SiddhiOutputConfig outputConfig;
 
-  public SiddhiOutputStreamDebugCallback(SiddhiDebugCallback callback,
-                                         SiddhiOutputConfig outputConfig) {
+  public SiddhiOutputStreamDebugCallback(SiddhiDebugCallback callback, SiddhiOutputConfig outputConfig) {
     this.callback = callback;
     this.outputConfig = outputConfig;
   }

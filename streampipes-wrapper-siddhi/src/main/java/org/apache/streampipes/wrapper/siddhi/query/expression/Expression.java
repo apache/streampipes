@@ -34,9 +34,7 @@ public abstract class Expression {
   }
 
   protected String joinWithParenthesis(String delimiter, List<String> substrings) {
-    return join(delimiter,
-            SiddhiConstants.PARENTHESIS_OPEN,
-            join(delimiter, substrings),
+    return join(delimiter, SiddhiConstants.PARENTHESIS_OPEN, join(delimiter, substrings),
             SiddhiConstants.PARENTHESIS_CLOSE);
   }
 
@@ -45,12 +43,9 @@ public abstract class Expression {
   }
 
   protected String joinWithSquareBracket(String delimiter, List<String> substrings) {
-    return join(delimiter,
-            SiddhiConstants.SQUARE_BRACKET_OPEN,
-            join(delimiter, substrings),
+    return join(delimiter, SiddhiConstants.SQUARE_BRACKET_OPEN, join(delimiter, substrings),
             SiddhiConstants.SQUARE_BRACKED_CLOSE);
   }
-
 
   protected String join(String delimiter, List<String> substrings) {
     StringJoiner joiner = new StringJoiner(delimiter);

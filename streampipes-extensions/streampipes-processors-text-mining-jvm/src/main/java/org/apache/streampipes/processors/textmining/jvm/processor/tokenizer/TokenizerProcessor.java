@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.textmining.jvm.processor.tokenizer;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -36,12 +35,12 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-import opennlp.tools.tokenize.TokenizerME;
-import opennlp.tools.tokenize.TokenizerModel;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import opennlp.tools.tokenize.TokenizerME;
+import opennlp.tools.tokenize.TokenizerModel;
 
 public class TokenizerProcessor extends StreamPipesDataProcessor {
 
@@ -52,32 +51,24 @@ public class TokenizerProcessor extends StreamPipesDataProcessor {
   private String detection;
   private TokenizerME tokenizer;
 
-
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.textmining.jvm.tokenizer", 0)
-        .category(DataProcessorType.ENRICH_TEXT)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredFile(Labels.withId(BINARY_FILE_KEY))
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.stringReq(),
-                Labels.withId(DETECTION_FIELD_KEY),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.append(EpProperties.listStringEp(Labels.withId(TOKEN_LIST_FIELD_KEY),
-            TOKEN_LIST_FIELD_KEY,
-            "http://schema.org/ItemList")))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.tokenizer", 0)
+            .category(DataProcessorType.ENRICH_TEXT)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .requiredFile(Labels.withId(BINARY_FILE_KEY))
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId(DETECTION_FIELD_KEY),
+                            PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies.append(EpProperties.listStringEp(Labels.withId(TOKEN_LIST_FIELD_KEY),
+                    TOKEN_LIST_FIELD_KEY, "http://schema.org/ItemList")))
+            .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     String filename = parameters.extractor().selectedFilename(BINARY_FILE_KEY);
     byte[] fileContent = runtimeContext.getStreamPipesClient().fileApi().getFileContent(filename);
     this.detection = parameters.extractor().mappingPropertyValue(DETECTION_FIELD_KEY);

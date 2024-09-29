@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.migrations.v093;
 
 import org.apache.streampipes.model.connect.adapter.migration.MigrationHelpers;
@@ -35,8 +34,7 @@ public class AdapterBackupWriter {
 
   private final CouchDbClient couchDbClient;
 
-  public AdapterBackupWriter(CouchDbClient couchDbClient,
-                             MigrationHelpers migrationHelpers) {
+  public AdapterBackupWriter(CouchDbClient couchDbClient, MigrationHelpers migrationHelpers) {
     this.couchDbClient = couchDbClient;
     this.helpers = migrationHelpers;
   }

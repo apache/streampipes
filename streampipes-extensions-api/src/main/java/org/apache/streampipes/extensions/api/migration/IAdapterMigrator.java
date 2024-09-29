@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;

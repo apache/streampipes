@@ -15,8 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.notifications.jvm.migrations;
+
+import static org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink.DEFAULT_WAITING_TIME_MINUTES;
+import static org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink.KEY_SILENT_PERIOD;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.extensions.api.migration.IDataSinkMigrator;
@@ -25,17 +27,12 @@ import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.vocabulary.XSD;
 
-import static org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink.DEFAULT_WAITING_TIME_MINUTES;
-import static org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink.KEY_SILENT_PERIOD;
-
-public interface INotificationDataSinkMigrator extends IDataSinkMigrator  {
+public interface INotificationDataSinkMigrator extends IDataSinkMigrator {
   @Override
-  default MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element,
-                                                      IDataSinkParameterExtractor extractor) throws RuntimeException {
-    var fsp = new FreeTextStaticProperty(KEY_SILENT_PERIOD,
-        "Silent Period [min]",
-        "The minimum number of minutes between two consecutive notifications that are sent",
-        XSD.INTEGER);
+  default MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element, IDataSinkParameterExtractor extractor)
+          throws RuntimeException {
+    var fsp = new FreeTextStaticProperty(KEY_SILENT_PERIOD, "Silent Period [min]",
+            "The minimum number of minutes between two consecutive notifications that are sent", XSD.INTEGER);
     fsp.setValue(String.valueOf(DEFAULT_WAITING_TIME_MINUTES));
     element.getStaticProperties().add(fsp);
 

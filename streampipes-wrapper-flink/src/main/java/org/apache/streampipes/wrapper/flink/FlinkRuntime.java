@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.flink;
 
 import org.apache.streampipes.commons.environment.Environments;
@@ -44,6 +43,13 @@ import org.apache.streampipes.wrapper.flink.logger.StatisticLogger;
 import org.apache.streampipes.wrapper.flink.serializer.ByteArrayDeserializer;
 import org.apache.streampipes.wrapper.params.InternalRuntimeParameters;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.regex.Pattern;
+
 import org.apache.flink.client.program.ClusterClient;
 import org.apache.flink.client.program.MiniClusterClient;
 import org.apache.flink.client.program.rest.RestClusterClient;
@@ -57,22 +63,13 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.regex.Pattern;
-
-public abstract class FlinkRuntime<
-    PeT extends IStreamPipesPipelineElement<?>,
-    IvT extends InvocableStreamPipesEntity,
-    RcT extends RuntimeContext,
-    ExT extends IParameterExtractor,
-    PepT extends IPipelineElementParameters<IvT, ExT>,
-    FpT extends IFlinkProgram>
-    extends DistributedRuntime<PeT, IvT, RcT, ExT, PepT>
-    implements IStreamPipesRuntime<PeT, IvT>, Runnable, Serializable {
+public abstract class FlinkRuntime<PeT extends IStreamPipesPipelineElement<?>, IvT extends InvocableStreamPipesEntity, RcT extends RuntimeContext, ExT extends IParameterExtractor, PepT extends IPipelineElementParameters<IvT, ExT>, FpT extends IFlinkProgram>
+        extends
+          DistributedRuntime<PeT, IvT, RcT, ExT, PepT>
+        implements
+          IStreamPipesRuntime<PeT, IvT>,
+          Runnable,
+          Serializable {
 
   protected TimeCharacteristic streamTimeCharacteristic;
   protected FlinkDeploymentConfig config;
@@ -89,7 +86,7 @@ public abstract class FlinkRuntime<
   protected InternalRuntimeParameters internalRuntimeParameters;
 
   public FlinkRuntime(IContextGenerator<RcT, IvT> contextGenerator,
-                      IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
+          IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
     super(contextGenerator, parameterGenerator);
   }
 
@@ -99,10 +96,8 @@ public abstract class FlinkRuntime<
         env.execute(runtimeParameters.getModel().getElementId());
       } else {
         FlinkSpMiniCluster.INSTANCE.start();
-        FlinkSpMiniCluster
-            .INSTANCE
-            .getClusterClient()
-            .submitJob(env.getStreamGraph(runtimeParameters.getModel().getElementId()).getJobGraph());
+        FlinkSpMiniCluster.INSTANCE.getClusterClient()
+                .submitJob(env.getStreamGraph(runtimeParameters.getModel().getElementId()).getJobGraph());
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -122,9 +117,8 @@ public abstract class FlinkRuntime<
   }
 
   /**
-   * This method takes the i's input stream and creates a source for the flink graph
-   * Currently just kafka is supported as a protocol
-   * TODO Add also jms support
+   * This method takes the i's input stream and creates a source for the flink graph Currently just kafka is supported
+   * as a protocol TODO Add also jms support
    *
    * @param i
    * @return
@@ -154,25 +148,24 @@ public abstract class FlinkRuntime<
   }
 
   private SourceFunction<Map<String, Object>> getJmsConsumer(JmsTransportProtocol protocol,
-                                                             SpDataFormatDefinition spDataFormatDefinition) {
+          SpDataFormatDefinition spDataFormatDefinition) {
     return new JmsFlinkConsumer(protocol, spDataFormatDefinition);
   }
 
   private SourceFunction<Map<String, Object>> getMqttConsumer(MqttTransportProtocol protocol,
-                                                              SpDataFormatDefinition spDataFormatDefinition) {
+          SpDataFormatDefinition spDataFormatDefinition) {
     return new MqttFlinkConsumer(protocol, spDataFormatDefinition);
   }
 
   private SourceFunction<Map<String, Object>> getKafkaConsumer(KafkaTransportProtocol protocol,
-                                                               SpDataFormatDefinition spDataFormatDefinition) {
+          SpDataFormatDefinition spDataFormatDefinition) {
     if (protocol.getTopicDefinition() instanceof SimpleTopicDefinition) {
-      return new FlinkKafkaConsumer<>(protocol
-          .getTopicDefinition()
-          .getActualTopicName(), new ByteArrayDeserializer(spDataFormatDefinition), getProperties(protocol));
+      return new FlinkKafkaConsumer<>(protocol.getTopicDefinition().getActualTopicName(),
+              new ByteArrayDeserializer(spDataFormatDefinition), getProperties(protocol));
     } else {
       String patternTopic = replaceWildcardWithPatternFormat(protocol.getTopicDefinition().getActualTopicName());
       return new FlinkKafkaConsumer<>(Pattern.compile(patternTopic), new ByteArrayDeserializer(spDataFormatDefinition),
-          getProperties(protocol));
+              getProperties(protocol));
     }
   }
 
@@ -180,8 +173,8 @@ public abstract class FlinkRuntime<
     if (config.isMiniClusterMode()) {
       this.env = StreamExecutionEnvironment.createLocalEnvironment();
     } else {
-      this.env = StreamExecutionEnvironment
-          .createRemoteEnvironment(config.getHost(), config.getPort(), config.getJarFile());
+      this.env = StreamExecutionEnvironment.createRemoteEnvironment(config.getHost(), config.getPort(),
+              config.getJarFile());
     }
 
     appendEnvironmentConfig(this.env);
@@ -204,13 +197,11 @@ public abstract class FlinkRuntime<
   }
 
   // TODO
-  private DataStream<Event> addSource(SourceFunction<Map<String, Object>> sourceFunction,
-                                      Integer sourceIndex) {
-    return env
-        .addSource(sourceFunction)
-        .flatMap(new MapToEventConverter<>(runtimeParameters.getInputSourceInfo(sourceIndex).getSourceId(),
-            runtimeParameters))
-        .flatMap(new StatisticLogger(null));
+  private DataStream<Event> addSource(SourceFunction<Map<String, Object>> sourceFunction, Integer sourceIndex) {
+    return env.addSource(sourceFunction)
+            .flatMap(new MapToEventConverter<>(runtimeParameters.getInputSourceInfo(sourceIndex).getSourceId(),
+                    runtimeParameters))
+            .flatMap(new StatisticLogger(null));
   }
 
   public void bindRuntime() throws SpRuntimeException {
@@ -231,10 +222,8 @@ public abstract class FlinkRuntime<
           try {
             count++;
             Thread.sleep(1000);
-            Optional<JobStatusMessage> statusMessageOpt =
-                getJobStatus(runtimeParameters.getModel().getElementId());
-            if (statusMessageOpt.isPresent()
-                && statusMessageOpt.get().getJobState().name().equals("RUNNING")) {
+            Optional<JobStatusMessage> statusMessageOpt = getJobStatus(runtimeParameters.getModel().getElementId());
+            if (statusMessageOpt.isPresent() && statusMessageOpt.get().getJobState().name().equals("RUNNING")) {
               isDeployed = true;
             }
 
@@ -257,11 +246,12 @@ public abstract class FlinkRuntime<
   /**
    * This method can be called in case additional environment settings should be applied to the runtime.
    *
-   * @param env The Stream Execution environment
+   * @param env
+   *          The Stream Execution environment
    */
   public void appendEnvironmentConfig(StreamExecutionEnvironment env) {
-    //This sets the stream time characteristics
-    //The default value is TimeCharacteristic.ProcessingTime
+    // This sets the stream time characteristics
+    // The default value is TimeCharacteristic.ProcessingTime
     if (this.streamTimeCharacteristic != null) {
       env.setStreamTimeCharacteristic(this.streamTimeCharacteristic);
       env.setParallelism(1);
@@ -296,15 +286,13 @@ public abstract class FlinkRuntime<
 
       // First, find a job with Running status
       Optional<JobStatusMessage> job = jobsFound.stream()
-          .filter(j -> j.getJobName().equals(jobName) && j.getJobState().name().equals("RUNNING")).findFirst();
+              .filter(j -> j.getJobName().equals(jobName) && j.getJobState().name().equals("RUNNING")).findFirst();
       if (job.isPresent()) {
         return job;
       }
 
       // Otherwise return job with any other status
-      return jobs.get()
-          .stream()
-          .filter(j -> j.getJobName().equals(jobName)).findFirst();
+      return jobs.get().stream().filter(j -> j.getJobName().equals(jobName)).findFirst();
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -313,10 +301,8 @@ public abstract class FlinkRuntime<
   }
 
   @Override
-  public void startRuntime(IvT pipelineElementInvocation,
-                           PeT pipelineElement,
-                           PepT runtimeParameters,
-                           RcT runtimeContext) {
+  public void startRuntime(IvT pipelineElementInvocation, PeT pipelineElement, PepT runtimeParameters,
+          RcT runtimeContext) {
     this.pipelineElementInvocation = pipelineElementInvocation;
     this.pipelineElement = pipelineElement;
     this.runtimeParameters = runtimeParameters;
@@ -331,8 +317,7 @@ public abstract class FlinkRuntime<
   public void stopRuntime() {
     try {
       ClusterClient<? extends Comparable<? extends Comparable<?>>> clusterClient = getClusterClient();
-      Optional<JobStatusMessage> jobStatusMessage =
-          getJobStatus(runtimeParameters.getModel().getElementId());
+      Optional<JobStatusMessage> jobStatusMessage = getJobStatus(runtimeParameters.getModel().getElementId());
       if (jobStatusMessage.isPresent()) {
         String jobStatusStr = jobStatusMessage.get().getJobState().name();
         // Cancel the job if running
@@ -348,8 +333,7 @@ public abstract class FlinkRuntime<
     }
   }
 
-  protected abstract void appendExecutionConfig(FpT program,
-                                                DataStream<Event>... convertedStream);
+  protected abstract void appendExecutionConfig(FpT program, DataStream<Event>... convertedStream);
 
   protected abstract FpT getFlinkProgram(PeT pipelineElement);
 }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.latlong.processor.distancecalculator.haversine;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -55,35 +54,29 @@ public class HaversineDistanceCalculatorProcessor extends StreamPipesDataProcess
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(
-            "org.apache.streampipes.processors.geo.jvm.latlong.processor.distancecalculator.haversine", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT),
-                Labels.withId(LAT_1_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG),
-                Labels.withId(LONG_1_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT),
-                Labels.withId(LAT_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG),
-                Labels.withId(LONG_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .build()
-        )
-        .outputStrategy(OutputStrategies.append(PrimitivePropertyBuilder
-                .create(Datatypes.Float, DISTANCE_RUNTIME_NAME)
-                .domainProperty(SO.NUMBER)
-                .measurementUnit(URI.create("http://qudt.org/vocab/unit#Kilometer"))
-                .build())
-            )
-        .build();
+    return ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.distancecalculator.haversine", 0)
+            .category(DataProcessorType.GEO).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT),
+                            Labels.withId(LAT_1_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG),
+                            Labels.withId(LONG_1_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT),
+                            Labels.withId(LAT_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG),
+                            Labels.withId(LONG_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .outputStrategy(OutputStrategies.append(
+                    PrimitivePropertyBuilder.create(Datatypes.Float, DISTANCE_RUNTIME_NAME).domainProperty(SO.NUMBER)
+                            .measurementUnit(URI.create("http://qudt.org/vocab/unit#Kilometer")).build()))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
 
     this.lat1FieldMapper = parameters.extractor().mappingPropertyValue(LAT_1_KEY);
     this.long1FieldMapper = parameters.extractor().mappingPropertyValue(LONG_1_KEY);

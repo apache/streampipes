@@ -15,29 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.jdbcclient.model;
-
 
 public enum DbDataTypes {
 
-  BOOLEAN("BOOLEAN"),
-  TEXT("TEXT"),
-  VAR_CHAR("VARCHAR255"),
-  DOUBLE_PRECISION("DOUBLE PRECISION"),
-  FLOAT("FLOAT"),
-  REAL("REAL"),
-  BIGINT("BIGINT"),
-  TINYINT("TINYINT"),
-  INT("INT"),
-  INTEGER("INTEGER"),
-  TIMESTAMP("TIMESTAMP"),
-  DATE("DATE"),
-  TIME("TIME"),
-  DATETIME("DATETIME");
+  BOOLEAN("BOOLEAN"), TEXT("TEXT"), VAR_CHAR("VARCHAR255"), DOUBLE_PRECISION("DOUBLE PRECISION"), FLOAT("FLOAT"), REAL(
+          "REAL"), BIGINT("BIGINT"), TINYINT("TINYINT"), INT(
+                  "INT"), INTEGER("INTEGER"), TIMESTAMP("TIMESTAMP"), DATE("DATE"), TIME("TIME"), DATETIME("DATETIME");
 
   private String sqlTerm;
-
 
   DbDataTypes(String sqlTerm) {
     this.sqlTerm = sqlTerm;

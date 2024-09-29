@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.data;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -30,11 +29,6 @@ public class PipelineGraphHelpers {
   }
 
   private static <T> List<T> find(PipelineGraph pipelineGraph, Class<T> clazz) {
-    return pipelineGraph
-        .vertexSet()
-        .stream()
-        .filter(clazz::isInstance)
-        .map(clazz::cast)
-        .collect(Collectors.toList());
+    return pipelineGraph.vertexSet().stream().filter(clazz::isInstance).map(clazz::cast).collect(Collectors.toList());
   }
 }

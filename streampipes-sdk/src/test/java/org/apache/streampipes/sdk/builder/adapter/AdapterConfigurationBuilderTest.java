@@ -15,20 +15,18 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder.adapter;
 
+import static org.mockito.Mockito.mock;
 
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AdapterConfigurationBuilderTest {
 
@@ -36,16 +34,10 @@ public class AdapterConfigurationBuilderTest {
 
   @Test
   public void create() {
-    var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id, 0, null)
-        .buildConfiguration();
+    var adapterConfiguration = AdapterConfigurationBuilder.create(id, 0, null).buildConfiguration();
 
     Assertions.assertNotNull(adapterConfiguration);
-    Assertions.assertEquals(
-        id,
-        adapterConfiguration.getAdapterDescription()
-                            .getAppId()
-    );
+    Assertions.assertEquals(id, adapterConfiguration.getAdapterDescription().getAppId());
 
     var expected = new AdapterDescription();
     expected.setElementId("sp:" + id);
@@ -55,10 +47,8 @@ public class AdapterConfigurationBuilderTest {
   @Test
   public void withOneParser() {
     var expected = mock(IParser.class);
-    var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id, 0, null)
-        .withSupportedParsers(expected)
-        .buildConfiguration();
+    var adapterConfiguration = AdapterConfigurationBuilder.create(id, 0, null).withSupportedParsers(expected)
+            .buildConfiguration();
 
     Assertions.assertEquals(List.of(expected), adapterConfiguration.getSupportedParsers());
   }
@@ -67,10 +57,8 @@ public class AdapterConfigurationBuilderTest {
   public void withMultipleParserInOneCall() {
     var parser1 = mock(IParser.class);
     var parser2 = mock(IParser.class);
-    var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id, 0, null)
-        .withSupportedParsers(parser1, parser2)
-        .buildConfiguration();
+    var adapterConfiguration = AdapterConfigurationBuilder.create(id, 0, null).withSupportedParsers(parser1, parser2)
+            .buildConfiguration();
 
     Assertions.assertEquals(List.of(parser1, parser2), adapterConfiguration.getSupportedParsers());
   }
@@ -79,28 +67,21 @@ public class AdapterConfigurationBuilderTest {
   public void withMultipleParserInTwoCall() {
     var parser1 = mock(IParser.class);
     var parser2 = mock(IParser.class);
-    var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id, 0, null)
-        .withSupportedParsers(parser1)
-        .withSupportedParsers(parser2)
-        .buildConfiguration();
+    var adapterConfiguration = AdapterConfigurationBuilder.create(id, 0, null).withSupportedParsers(parser1)
+            .withSupportedParsers(parser2).buildConfiguration();
 
     Assertions.assertEquals(List.of(parser1, parser2), adapterConfiguration.getSupportedParsers());
   }
 
   @Test
   public void withCategory() {
-    var adapterConfiguration = AdapterConfigurationBuilder
-        .create(id, 0, null)
-        .withCategory(AdapterType.Manufacturing)
-        .buildConfiguration();
+    var adapterConfiguration = AdapterConfigurationBuilder.create(id, 0, null).withCategory(AdapterType.Manufacturing)
+            .buildConfiguration();
 
-    var actual = adapterConfiguration.getAdapterDescription()
-                                     .getCategory();
+    var actual = adapterConfiguration.getAdapterDescription().getCategory();
 
     Assertions.assertEquals(1, actual.size());
     Assertions.assertEquals(AdapterType.Manufacturing.getCode(), actual.get(0));
   }
-
 
 }

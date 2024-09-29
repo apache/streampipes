@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.iiot.minimal;
 
 import org.apache.streampipes.connect.iiot.IIoTAdaptersExtensionModuleExport;
@@ -48,32 +47,19 @@ public class ExtensionsIIoTMinimalInit extends StreamPipesExtensionsServiceBase 
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
-    return SpServiceDefinitionBuilder.create("org.apache.streampipes.extensions.iiot.minimal",
-            "StreamPipes Extensions (Minimal extensions for edge deployments)",
-            "", 8090)
-        .registerModules(
-            new IIoTAdaptersExtensionModuleExport(),
-            new InfluxConnectorsModuleExport(),
-            new MqttConnectorsModuleExport(),
-            new NatsConnectorsModuleExport(),
-            new OpcUaConnectorsModuleExport(),
-            new PlcConnectorsModuleExport(),
+    return SpServiceDefinitionBuilder
+            .create("org.apache.streampipes.extensions.iiot.minimal",
+                    "StreamPipes Extensions (Minimal extensions for edge deployments)", "", 8090)
+            .registerModules(new IIoTAdaptersExtensionModuleExport(), new InfluxConnectorsModuleExport(),
+                    new MqttConnectorsModuleExport(), new NatsConnectorsModuleExport(),
+                    new OpcUaConnectorsModuleExport(), new PlcConnectorsModuleExport(),
 
-            new ChangeDetectionExtensionModuleExport(),
-            new EnricherExtensionModuleExport(),
-            new FilterExtensionModuleExport(),
-            new SiddhiFilterExtensionModuleExport(),
-            new FilterExtensionModuleExport(),
-            new TransformationExtensionModuleExport(),
-            new BrokerSinksExtensionModuleExport(),
-            new DatabaseSinksExtensionModuleExport(),
-            new InternalSinksExtensionModuleExports(),
-            new NotificationsExtensionModuleExport())
-        .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
-        .registerMessagingProtocols(
-            new SpNatsProtocolFactory(),
-            new SpMqttProtocolFactory()
-        )
-        .build();
+                    new ChangeDetectionExtensionModuleExport(), new EnricherExtensionModuleExport(),
+                    new FilterExtensionModuleExport(), new SiddhiFilterExtensionModuleExport(),
+                    new FilterExtensionModuleExport(), new TransformationExtensionModuleExport(),
+                    new BrokerSinksExtensionModuleExport(), new DatabaseSinksExtensionModuleExport(),
+                    new InternalSinksExtensionModuleExports(), new NotificationsExtensionModuleExport())
+            .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
+            .registerMessagingProtocols(new SpNatsProtocolFactory(), new SpMqttProtocolFactory()).build();
   }
 }

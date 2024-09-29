@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.filters.jvm.processor.threshold;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -50,33 +49,24 @@ public class ThresholdDetectionProcessor extends StreamPipesDataProcessor {
   private ThresholdDetectionOperator numericalOperator;
   private String filterProperty;
 
-
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.threshold", 0)
-        .category(DataProcessorType.FILTER)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(NUMBER_MAPPING),
-                PropertyScope.NONE).build())
-        .outputStrategy(
-            OutputStrategies.append(
-                EpProperties.booleanEp(Labels.empty(), RESULT_FIELD, SO.BOOLEAN)))
-        .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
-            ">=", "==", "!="))
-        .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING)
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.threshold", 0)
+            .category(DataProcessorType.FILTER).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId(NUMBER_MAPPING),
+                            PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies.append(EpProperties.booleanEp(Labels.empty(), RESULT_FIELD, SO.BOOLEAN)))
+            .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">", ">=", "==", "!="))
+            .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING).build();
 
   }
 
-
   @Override
   public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
     this.threshold = processorParams.extractor().singleValueParameter(VALUE, Double.class);
     String stringOperation = processorParams.extractor().selectedSingleValue(OPERATION, String.class);
 
@@ -103,8 +93,7 @@ public class ThresholdDetectionProcessor extends StreamPipesDataProcessor {
   public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
     Boolean satisfiesFilter = false;
 
-    Double value = event.getFieldBySelector(this.filterProperty).getAsPrimitive()
-        .getAsDouble();
+    Double value = event.getFieldBySelector(this.filterProperty).getAsPrimitive().getAsDouble();
 
     Double threshold = this.threshold;
 

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.model.pipeline;
 
 import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
@@ -32,15 +31,13 @@ public class AdapterPipeline implements IAdapterPipeline {
 
   private final EventSchema resultingEventSchema;
 
-  public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements,
-                         EventSchema resultingEventSchema) {
+  public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements, EventSchema resultingEventSchema) {
     this.pipelineElements = pipelineElements;
     this.resultingEventSchema = resultingEventSchema;
   }
 
-  public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements,
-                         IAdapterPipelineElement pipelineSink,
-                         EventSchema resultingEventSchema) {
+  public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements, IAdapterPipelineElement pipelineSink,
+          EventSchema resultingEventSchema) {
     this.pipelineElements = pipelineElements;
     this.pipelineSink = pipelineSink;
     this.resultingEventSchema = resultingEventSchema;

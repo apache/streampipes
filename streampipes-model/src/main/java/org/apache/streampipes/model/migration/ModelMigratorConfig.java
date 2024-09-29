@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.migration;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
@@ -23,14 +22,17 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 /**
  * The configuration element for a 'ModelMigrator'.
  *
- * @param targetAppId 'appId' of the model to be migrated
- * @param modelType Type of the model to be migrated, e.g., adapter
- * @param fromVersion Base version from which the migration starts
- * @param toVersion   Target version that the migration aims to achieve
+ * @param targetAppId
+ *          'appId' of the model to be migrated
+ * @param modelType
+ *          Type of the model to be migrated, e.g., adapter
+ * @param fromVersion
+ *          Base version from which the migration starts
+ * @param toVersion
+ *          Target version that the migration aims to achieve
  */
-public record ModelMigratorConfig(String targetAppId, SpServiceTagPrefix modelType,
-                                  int fromVersion, int toVersion) implements Comparable<Object>{
-
+public record ModelMigratorConfig(String targetAppId, SpServiceTagPrefix modelType, int fromVersion,
+        int toVersion) implements Comparable<Object> {
 
   @Override
   public int compareTo(Object o) {
@@ -39,7 +41,7 @@ public record ModelMigratorConfig(String targetAppId, SpServiceTagPrefix modelTy
       throw new NullPointerException();
     }
 
-    if (!(o instanceof ModelMigratorConfig)){
+    if (!(o instanceof ModelMigratorConfig)) {
       throw new ClassCastException("Given object is not an instance of `ModelMigratorConfig` - "
               + "only instances of `ModelMigratorConfig` can be compared.");
     }

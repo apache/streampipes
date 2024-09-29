@@ -17,12 +17,6 @@
  */
 package org.apache.streampipes.extensions.connectors.pulsar;
 
-import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
-import org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarParameters;
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
-
-import org.junit.jupiter.api.Test;
-
 import static org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink.PULSAR_HOST_KEY;
 import static org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink.PULSAR_PORT_KEY;
 import static org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarPublisherSink.TOPIC_KEY;
@@ -30,6 +24,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
+import org.apache.streampipes.extensions.connectors.pulsar.sink.PulsarParameters;
+import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
+
+import org.junit.jupiter.api.Test;
 
 public class TestPulsarParameters {
   @Test

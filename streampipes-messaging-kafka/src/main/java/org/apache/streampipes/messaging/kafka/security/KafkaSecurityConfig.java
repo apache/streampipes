@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.kafka.security;
 
 import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;

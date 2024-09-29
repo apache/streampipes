@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.couchdb.serializer;
+
+import java.io.IOException;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
 
 public abstract class PeTypeAdapter<T> extends TypeAdapter<T> {
 

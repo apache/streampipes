@@ -26,13 +26,13 @@ import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DataStreamRuntimeInfoProvider {
 
@@ -61,9 +61,8 @@ public class DataStreamRuntimeInfoProvider {
       }
 
       var converter = new SpDataFormatConverter(SpDataFormatManager.getFormatDefinition());
-      var protocolDefinitionOpt = SpProtocolManager
-          .INSTANCE
-          .findDefinition(dataStream.getEventGrounding().getTransportProtocol());
+      var protocolDefinitionOpt = SpProtocolManager.INSTANCE
+              .findDefinition(dataStream.getEventGrounding().getTransportProtocol());
 
       if (protocolDefinitionOpt.isPresent()) {
         var consumer = protocolDefinitionOpt.get().getConsumer(protocol);
@@ -74,7 +73,7 @@ public class DataStreamRuntimeInfoProvider {
         consumers.add(consumer);
       } else {
         LOG.error("Error while fetching data for preview - protocol {} not found - did you register the protocol? ",
-            protocol.getClass().getCanonicalName());
+                protocol.getClass().getCanonicalName());
         throw new SpRuntimeException("Protocol not found");
       }
     });

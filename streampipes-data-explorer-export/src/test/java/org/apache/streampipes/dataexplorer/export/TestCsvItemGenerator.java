@@ -15,14 +15,13 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.export;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.streampipes.dataexplorer.export.item.CsvItemGenerator;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestCsvItemGenerator extends TestItemGenerator {
 

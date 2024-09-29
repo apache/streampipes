@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.api;
 
 import org.apache.streampipes.model.datalake.DataLakeMeasure;

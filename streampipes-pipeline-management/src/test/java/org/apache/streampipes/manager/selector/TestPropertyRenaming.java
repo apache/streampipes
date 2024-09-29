@@ -22,11 +22,11 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestPropertyRenaming {
 
@@ -37,8 +37,8 @@ public class TestPropertyRenaming {
 
     List<String> propertySelectors = Arrays.asList("s0::timestamp", "s1::timestamp");
 
-    Tuple2<List<EventProperty>, List<PropertyRenameRule>> properties =
-        new PropertySelector(schema1, schema2).createRenamedPropertyList(propertySelectors);
+    Tuple2<List<EventProperty>, List<PropertyRenameRule>> properties = new PropertySelector(schema1, schema2)
+            .createRenamedPropertyList(propertySelectors);
 
     Assertions.assertEquals(properties.k.size(), 2);
   }

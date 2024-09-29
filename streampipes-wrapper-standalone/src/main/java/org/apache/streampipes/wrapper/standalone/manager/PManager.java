@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone.manager;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;

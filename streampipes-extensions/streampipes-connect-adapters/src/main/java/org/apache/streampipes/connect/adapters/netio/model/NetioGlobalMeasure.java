@@ -15,13 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.adapters.netio.model;
 
+import jakarta.annotation.Generated;
 
 import com.google.gson.annotations.SerializedName;
-
-import jakarta.annotation.Generated;
 
 @Generated("net.hexar.json2pojo")
 public class NetioGlobalMeasure {

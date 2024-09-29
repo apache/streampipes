@@ -20,31 +20,29 @@ package org.apache.streampipes.manager.assets;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-
 public class TestImagePathReplacer {
 
   private static final String testContentReplaced = """
-      ## Numerical Filter
+          ## Numerical Filter
 
-      <img src="/streampipes-backend/api/v2/pe/app/assets/logo.png"/>
+          <img src="/streampipes-backend/api/v2/pe/app/assets/logo.png"/>
 
-      ## Description
+          ## Description
 
-      Lorem ipsu""";
+          Lorem ipsu""";
 
   private static final String appId = "app";
-
 
   @Test
   public void testRegexReplacement() {
     String testContent = """
-        ## Numerical Filter
+            ## Numerical Filter
 
-        <img src="logo.png"/>
+            <img src="logo.png"/>
 
-        ## Description
+            ## Description
 
-        Lorem ipsu""";
+            Lorem ipsu""";
     String newContent = new ImagePathReplacer(testContent, appId).replaceContent();
     Assertions.assertEquals(testContentReplaced, newContent);
 

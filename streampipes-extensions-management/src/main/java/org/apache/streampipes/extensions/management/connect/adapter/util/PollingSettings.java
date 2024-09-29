@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.util;
 
 import org.apache.streampipes.extensions.api.connect.IPollingSettings;
@@ -24,8 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 public record PollingSettings(Integer value, TimeUnit timeUnit) implements IPollingSettings {
 
-  public static PollingSettings from(TimeUnit timeUnit,
-                                     Integer value) {
+  public static PollingSettings from(TimeUnit timeUnit, Integer value) {
     return new PollingSettings(value, timeUnit);
   }
 

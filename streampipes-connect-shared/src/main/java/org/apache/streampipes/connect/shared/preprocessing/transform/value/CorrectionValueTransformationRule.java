@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
 import org.apache.streampipes.connect.shared.preprocessing.SupportsNestedTransformationRule;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CorrectionValueTransformationRule extends SupportsNestedTransformationRule {
 
@@ -34,8 +33,7 @@ public class CorrectionValueTransformationRule extends SupportsNestedTransformat
   private final double correctionValue;
   private final String operator;
 
-  public CorrectionValueTransformationRule(List<String> keys,
-                                           double correctionValue, String operator) {
+  public CorrectionValueTransformationRule(List<String> keys, double correctionValue, String operator) {
     this.correctionValue = correctionValue;
     this.operator = operator;
     this.eventKey = keys;
@@ -55,8 +53,7 @@ public class CorrectionValueTransformationRule extends SupportsNestedTransformat
         old = ((Number) obj).doubleValue();
       } else {
         throw new RuntimeException(
-            String.format("Selected property `%s` does not contain a numeric value: `%s", eventKey.get(0), obj)
-        );
+                String.format("Selected property `%s` does not contain a numeric value: `%s", eventKey.get(0), obj));
       }
 
       double corrected = switch (operator) {

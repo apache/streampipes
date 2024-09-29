@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.mapping;
 
 import org.apache.streampipes.manager.matching.v2.PropertyMatch;
@@ -32,9 +31,8 @@ public class MappingPropertyCalculator {
   private final List<String> availablePropertySelectors;
   private final EventProperty requirement;
 
-  public MappingPropertyCalculator(EventSchema schema,
-                                   List<String> availablePropertySelectors,
-                                   EventProperty requirement) {
+  public MappingPropertyCalculator(EventSchema schema, List<String> availablePropertySelectors,
+          EventProperty requirement) {
     this.schema = schema;
     this.availablePropertySelectors = availablePropertySelectors;
     this.requirement = requirement;

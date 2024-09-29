@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder.adapter;
-
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 

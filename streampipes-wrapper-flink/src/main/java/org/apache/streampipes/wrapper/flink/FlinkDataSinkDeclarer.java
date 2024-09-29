@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.flink;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
@@ -29,8 +28,7 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 
-public abstract class FlinkDataSinkDeclarer<T extends SinkParams>
-    implements IStreamPipesDataSink {
+public abstract class FlinkDataSinkDeclarer<T extends SinkParams> implements IStreamPipesDataSink {
 
   @Override
   public void onPipelineStarted(IDataSinkParameters params, EventSinkRuntimeContext runtimeContext) {
@@ -49,14 +47,10 @@ public abstract class FlinkDataSinkDeclarer<T extends SinkParams>
 
   @Override
   public IDataSinkConfiguration declareConfig() {
-    return DataSinkConfiguration.create(
-        () -> this,
-        declareModel()
-    );
+    return DataSinkConfiguration.create(() -> this, declareModel());
   }
 
-  public abstract FlinkDataSinkProgram<T> getProgram(DataSinkInvocation graph,
-                                                     IDataSinkParameterExtractor extractor);
+  public abstract FlinkDataSinkProgram<T> getProgram(DataSinkInvocation graph, IDataSinkParameterExtractor extractor);
 
   public abstract DataSinkDescription declareModel();
 }

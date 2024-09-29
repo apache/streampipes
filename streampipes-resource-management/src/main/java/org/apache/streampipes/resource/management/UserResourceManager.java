@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.commons.environment.Environment;
@@ -37,14 +36,14 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 import org.apache.streampipes.user.management.util.TokenUtil;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.HashSet;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
@@ -72,19 +71,13 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
   public Principal getServiceAdmin() {
     var env = getEnvironment();
-    return db.getServiceAccount(
-        env.getInitialServiceUser().getValueOrDefault()
-    );
+    return db.getServiceAccount(env.getInitialServiceUser().getValueOrDefault());
   }
 
   public Principal getAdminUser() {
-    return CouchDbStorageManager.INSTANCE
-        .getUserStorageAPI()
-        .getAllUserAccounts()
-        .stream()
-        .filter(u -> u.getRoles().contains(DefaultRole.ROLE_ADMIN))
-        .findFirst()
-        .orElseThrow(IllegalArgumentException::new);
+    return CouchDbStorageManager.INSTANCE.getUserStorageAPI().getAllUserAccounts().stream()
+            .filter(u -> u.getRoles().contains(DefaultRole.ROLE_ADMIN)).findFirst()
+            .orElseThrow(IllegalArgumentException::new);
   }
 
   public void registerUser(UserRegistrationData data) throws UsernameAlreadyTakenException {
@@ -139,8 +132,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     storeActivationCode(username, activationCode);
   }
 
-  private void storeActivationCode(String username,
-                                   String activationCode) throws IOException {
+  private void storeActivationCode(String username, String activationCode) throws IOException {
     UserActivationToken token = UserActivationToken.create(activationCode, username);
     getUserActivationTokenStorage().persist(token);
     new MailSender().sendAccountActivationMail(username, activationCode);
@@ -163,8 +155,8 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     }
   }
 
-  public void changePassword(String recoveryCode,
-                             UserRegistrationData data) throws NoSuchAlgorithmException, InvalidKeySpecException {
+  public void changePassword(String recoveryCode, UserRegistrationData data)
+          throws NoSuchAlgorithmException, InvalidKeySpecException {
     checkPasswordRecoveryCode(recoveryCode);
     PasswordRecoveryToken token = getPasswordRecoveryTokenStorage().getElementById(recoveryCode);
     Principal user = db.getUser(token.getUsername());
@@ -176,8 +168,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     }
   }
 
-  private void storeRecoveryCode(String username,
-                                 String recoveryCode) {
+  private void storeRecoveryCode(String username, String recoveryCode) {
     getPasswordRecoveryTokenStorage().persist(PasswordRecoveryToken.create(recoveryCode, username));
   }
 
@@ -192,7 +183,6 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   private Environment getEnvironment() {
     return Environments.getEnvironment();
   }
-
 
   public void registerOauthUser(UserAccount userAccount) {
     db.storeUser(userAccount);

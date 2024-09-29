@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
@@ -44,12 +43,9 @@ public class TransformationRuleUpdateVisitor implements ITransformationRuleVisit
   private final List<TransformationRuleDescription> validRules;
   private final List<TransformationRuleDescription> allRules;
 
-
   public TransformationRuleUpdateVisitor(List<EventProperty> existingProperties,
-                                         List<TransformationRuleDescription> allRules) {
-    this.existingPropertyRuntimeNames = existingProperties
-        .stream()
-        .map(EventProperty::getRuntimeName).toList();
+          List<TransformationRuleDescription> allRules) {
+    this.existingPropertyRuntimeNames = existingProperties.stream().map(EventProperty::getRuntimeName).toList();
     this.allRules = allRules;
     this.validRules = new ArrayList<>();
   }
@@ -138,10 +134,8 @@ public class TransformationRuleUpdateVisitor implements ITransformationRuleVisit
   }
 
   private boolean inRenameRule(String runtimeKey) {
-    return this.allRules
-        .stream()
-        .filter(rule -> rule instanceof RenameRuleDescription)
-        .anyMatch(rule -> ((RenameRuleDescription) rule).getNewRuntimeKey().equals(runtimeKey));
+    return this.allRules.stream().filter(rule -> rule instanceof RenameRuleDescription)
+            .anyMatch(rule -> ((RenameRuleDescription) rule).getNewRuntimeKey().equals(runtimeKey));
   }
 
   public List<TransformationRuleDescription> getValidRules() {

@@ -26,13 +26,12 @@ import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
+import java.io.IOException;
+
 import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Response;
 
-import java.io.IOException;
-
 public class ContainerProvidedOptionsHandler {
-
 
   public RuntimeOptionsResponse fetchRemoteOptions(RuntimeOptionsRequest request) {
 

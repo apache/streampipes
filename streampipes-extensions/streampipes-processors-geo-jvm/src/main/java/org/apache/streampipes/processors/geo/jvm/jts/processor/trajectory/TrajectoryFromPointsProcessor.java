@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -64,53 +63,34 @@ public class TrajectoryFromPointsProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(
-            StreamRequirementsBuilder
-                .create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq
-                        ("http://www.opengis.net/ont/geosparql#Geometry"),
-                    Labels.withId(POINT_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                .requiredPropertyWithUnaryMapping(
-                    EpRequirements.domainPropertyReq
-                        ("http://data.ign.fr/def/ignf#CartesianCS"),
-                    Labels.withId(EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                .requiredPropertyWithUnaryMapping(
-                    EpRequirements.numberReq(),
-                    Labels.withId(M_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                .build()
-        )
-        .requiredTextParameter(
-            Labels.withId(DESCRIPTION_KEY))
-        .requiredIntegerParameter(
-            Labels.withId(SUBPOINTS_KEY),
-            2, 30, 1)
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory", 0)
+            .category(DataProcessorType.GEO).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.domainPropertyReq("http://www.opengis.net/ont/geosparql#Geometry"),
+                            Labels.withId(POINT_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
+                            Labels.withId(EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId(M_KEY),
+                            PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .requiredTextParameter(Labels.withId(DESCRIPTION_KEY))
+            .requiredIntegerParameter(Labels.withId(SUBPOINTS_KEY), 2, 30, 1)
 
-        .outputStrategy(OutputStrategies.append(
-                EpProperties.stringEp(
-                    Labels.withId(DESCRIPTION_KEY),
-                    DESCRIPTION_RUNTIME,
-                    SO.TEXT),
-                EpProperties.stringEp(
-                    Labels.withId(TRAJECTORY_KEY),
-                    TRAJECTORY_GEOMETRY_RUNTIME,
-                    "http://www.opengis.net/ont/geosparql#Geometry"),
-                EpProperties.integerEp(
-                    Labels.withId(EPSG_KEY),
-                    TRAJECTORY_EPSG_RUNTIME,
-                "http://data.ign.fr/def/ignf#CartesianCS")
-            )
-        )
-        .build();
+            .outputStrategy(OutputStrategies.append(
+                    EpProperties.stringEp(Labels.withId(DESCRIPTION_KEY), DESCRIPTION_RUNTIME, SO.TEXT),
+                    EpProperties.stringEp(Labels.withId(TRAJECTORY_KEY), TRAJECTORY_GEOMETRY_RUNTIME,
+                            "http://www.opengis.net/ont/geosparql#Geometry"),
+                    EpProperties.integerEp(Labels.withId(EPSG_KEY), TRAJECTORY_EPSG_RUNTIME,
+                            "http://data.ign.fr/def/ignf#CartesianCS")))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.pointMapper = parameters.extractor().mappingPropertyValue(POINT_KEY);
     this.mValueMapper = parameters.extractor().mappingPropertyValue(M_KEY);
     this.epsgMapper = parameters.extractor().mappingPropertyValue(EPSG_KEY);
@@ -126,10 +106,10 @@ public class TrajectoryFromPointsProcessor extends StreamPipesDataProcessor {
     String point = event.getFieldBySelector(pointMapper).getAsPrimitive().getAsString();
     Integer epsg = event.getFieldBySelector(epsgMapper).getAsPrimitive().getAsInt();
     Double m = event.getFieldBySelector(mValueMapper).getAsPrimitive().getAsDouble();
-    //create JTS geometry
+    // create JTS geometry
     Point eventGeom = (Point) SpGeometryBuilder.createSPGeom(point, epsg);
     LOG.debug("Geometry Point created");
-    //adds point and m value to trajectory object
+    // adds point and m value to trajectory object
     trajectory.addPointToTrajectory(eventGeom, m);
     LOG.debug("Point added to trajectory");
     // returns JTS LineString

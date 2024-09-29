@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.api;
 
 import java.util.Map;
@@ -28,8 +27,8 @@ public interface IDataLakeMeasurementCounter {
   /**
    * Counts the sizes of measurements within the StreamPipes data storage.
    *
-   * @return A map where each key represents a measurement name and its corresponding value represents
-   *         the number of events contained by that measurement.
+   * @return A map where each key represents a measurement name and its corresponding value represents the number of
+   *         events contained by that measurement.
    */
   Map<String, Integer> countMeasurementSizes();
 }

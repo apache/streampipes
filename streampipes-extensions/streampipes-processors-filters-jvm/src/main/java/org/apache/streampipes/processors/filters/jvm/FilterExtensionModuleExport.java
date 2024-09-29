@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.filters.jvm;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -48,22 +47,11 @@ public class FilterExtensionModuleExport implements IExtensionModuleExport {
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new BooleanFilterProcessor(),
-        new TextFilterProcessor(),
-        new NumericalFilterProcessor(),
-        new ThresholdDetectionProcessor(),
-        new ThroughputMonitorProcessor(),
-        new ProjectionProcessor(),
-        new MergeByEnrichProcessor(),
-        new MergeByTimeProcessor(),
-        new MergeBySchemaProcessor(),
-        new ComposeProcessor(),
-        new NumericalTextFilterProcessor(),
-        new RateLimitProcessor(),
-        new MovingAverageProcessor(),
-        new SwingingDoorTrendingFilterProcessor()
-    );
+    return List.of(new BooleanFilterProcessor(), new TextFilterProcessor(), new NumericalFilterProcessor(),
+            new ThresholdDetectionProcessor(), new ThroughputMonitorProcessor(), new ProjectionProcessor(),
+            new MergeByEnrichProcessor(), new MergeByTimeProcessor(), new MergeBySchemaProcessor(),
+            new ComposeProcessor(), new NumericalTextFilterProcessor(), new RateLimitProcessor(),
+            new MovingAverageProcessor(), new SwingingDoorTrendingFilterProcessor());
   }
 
   @Override

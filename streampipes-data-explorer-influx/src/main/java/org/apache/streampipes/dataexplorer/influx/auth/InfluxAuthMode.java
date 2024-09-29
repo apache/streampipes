@@ -15,11 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx.auth;
 
 public enum InfluxAuthMode {
 
-  USERNAME_PASSWORD,
-  TOKEN;
+  USERNAME_PASSWORD, TOKEN;
 }

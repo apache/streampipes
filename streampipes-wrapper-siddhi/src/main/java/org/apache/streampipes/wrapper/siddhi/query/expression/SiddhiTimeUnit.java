@@ -19,9 +19,7 @@ package org.apache.streampipes.wrapper.siddhi.query.expression;
 
 public enum SiddhiTimeUnit {
 
-  SECONDS("sec"),
-  MINUTES("minute"),
-  HOURS("hour");
+  SECONDS("sec"), MINUTES("minute"), HOURS("hour");
 
   final String timeUnitString;
 

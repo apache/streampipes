@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.output;
 
 import org.apache.streampipes.model.schema.EventProperty;

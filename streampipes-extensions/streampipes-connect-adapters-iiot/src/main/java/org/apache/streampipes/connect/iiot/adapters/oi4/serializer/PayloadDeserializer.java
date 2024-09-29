@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.iiot.adapters.oi4.serializer;
+
+import java.io.IOException;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-
-import java.io.IOException;
-import java.util.Map;
 
 public class PayloadDeserializer extends JsonDeserializer<Map<String, Object>> {
 

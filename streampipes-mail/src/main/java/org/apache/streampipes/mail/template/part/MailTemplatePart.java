@@ -23,8 +23,8 @@ import java.io.IOException;
 
 public enum MailTemplatePart {
 
-  MAIL_TEMPLATE_INNER_BUTTON("mail-template-inner-button.html"),
-  MAIL_TEMPLATE_INNER_PLAIN("mail-template-inner-plain.html");
+  MAIL_TEMPLATE_INNER_BUTTON("mail-template-inner-button.html"), MAIL_TEMPLATE_INNER_PLAIN(
+          "mail-template-inner-plain.html");
 
   private final String templateFilename;
 

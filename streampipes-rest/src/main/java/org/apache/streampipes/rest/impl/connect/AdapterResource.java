@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -37,6 +36,9 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,9 +56,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/api/v2/connect/master/adapters")
 public class AdapterResource extends AbstractAdapterResource<AdapterMasterManagement> {
@@ -64,13 +63,9 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   private static final Logger LOG = LoggerFactory.getLogger(AdapterResource.class);
 
   public AdapterResource() {
-    super(() -> new AdapterMasterManagement(
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getAdapterInstanceStorage(),
-        new SpResourceManager().manageAdapters(),
-        new SpResourceManager().manageDataStreams(),
-        AdapterMetricsManager.INSTANCE.getAdapterMetrics()
-    ));
+    super(() -> new AdapterMasterManagement(StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+            new SpResourceManager().manageAdapters(), new SpResourceManager().manageDataStreams(),
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics()));
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -107,19 +102,17 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     return ok(Notifications.success(adapterDescription.getElementId()));
   }
 
-  @PutMapping(path = "pipeline-migration-preflight", consumes = MediaType.APPLICATION_JSON_VALUE,
-              produces = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "pipeline-migration-preflight", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public ResponseEntity<List<PipelineUpdateInfo>> performPipelineMigrationPreflight(
-      @RequestBody AdapterDescription adapterDescription
-  ) {
+          @RequestBody AdapterDescription adapterDescription) {
     var updateManager = new AdapterUpdateManagement(managementService);
     var migrations = updateManager.checkPipelineMigrations(adapterDescription);
 
     return ok(migrations);
   }
 
-  @GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, "application/yaml" })
+  @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, "application/yaml"})
   @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
   public ResponseEntity<?> getAdapter(@PathVariable("id") String adapterId) {
 
@@ -160,11 +153,9 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public ResponseEntity<?> deleteAdapter(@PathVariable("id") String elementId,
-                                         @RequestParam(value = "deleteAssociatedPipelines", defaultValue = "false")
-                                         boolean deleteAssociatedPipelines) {
+          @RequestParam(value = "deleteAssociatedPipelines", defaultValue = "false") boolean deleteAssociatedPipelines) {
     List<String> pipelinesUsingAdapter = getPipelinesUsingAdapter(elementId);
-    IPipelineStorage pipelineStorageAPI = StorageDispatcher.INSTANCE.getNoSqlStore()
-                                                                    .getPipelineStorageAPI();
+    IPipelineStorage pipelineStorageAPI = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
 
     if (pipelinesUsingAdapter.isEmpty()) {
       try {
@@ -175,25 +166,20 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         return ok(Notifications.error(e.getMessage()));
       }
     } else if (!deleteAssociatedPipelines) {
-      List<String> namesOfPipelinesUsingAdapter = pipelinesUsingAdapter
-          .stream()
-          .map(pipelineId -> pipelineStorageAPI.getElementById(
-                                                   pipelineId)
-                                               .getName())
-          .collect(Collectors.toList());
-      return ResponseEntity.status(HttpStatus.SC_CONFLICT)
-                           .body(String.join(", ", namesOfPipelinesUsingAdapter));
+      List<String> namesOfPipelinesUsingAdapter = pipelinesUsingAdapter.stream()
+              .map(pipelineId -> pipelineStorageAPI.getElementById(pipelineId).getName()).collect(Collectors.toList());
+      return ResponseEntity.status(HttpStatus.SC_CONFLICT).body(String.join(", ", namesOfPipelinesUsingAdapter));
     } else {
       PermissionResourceManager permissionResourceManager = new PermissionResourceManager();
       // find out the names of pipelines that have an owner and the owner is not the current user
-      List<String> namesOfPipelinesNotOwnedByUser = pipelinesUsingAdapter.stream().filter(pipelineId ->
-              !permissionResourceManager.findForObjectId(pipelineId).stream().findFirst().map(Permission::getOwnerSid)
-                  // if a pipeline has no owner, pretend the owner is the user so the user can delete it
-                  .orElse(this.getAuthenticatedUserSid()).equals(this.getAuthenticatedUserSid()))
-          .map(pipelineId -> pipelineStorageAPI.getElementById(pipelineId).getName()).collect(Collectors.toList());
+      List<String> namesOfPipelinesNotOwnedByUser = pipelinesUsingAdapter.stream()
+              .filter(pipelineId -> !permissionResourceManager.findForObjectId(pipelineId).stream().findFirst()
+                      .map(Permission::getOwnerSid)
+                      // if a pipeline has no owner, pretend the owner is the user so the user can delete it
+                      .orElse(this.getAuthenticatedUserSid()).equals(this.getAuthenticatedUserSid()))
+              .map(pipelineId -> pipelineStorageAPI.getElementById(pipelineId).getName()).collect(Collectors.toList());
       boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-          .anyMatch(r -> r.getAuthority().equals(
-              DefaultRole.ROLE_ADMIN.name()));
+              .anyMatch(r -> r.getAuthority().equals(DefaultRole.ROLE_ADMIN.name()));
       // if the user is admin or owns all pipelines using this adapter,
       // the user can delete all associated pipelines and this adapter
       if (isAdmin || namesOfPipelinesNotOwnedByUser.isEmpty()) {
@@ -203,17 +189,15 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
             PipelineManager.deletePipeline(pipelineId);
           }
           managementService.deleteAdapter(elementId);
-          return ok(Notifications.success("Adapter with id: " + elementId
-                                              + " and all pipelines using the adapter are deleted."));
+          return ok(Notifications
+                  .success("Adapter with id: " + elementId + " and all pipelines using the adapter are deleted."));
         } catch (Exception e) {
-          LOG.error("Error while deleting adapter with id "
-                        + elementId + " and all pipelines using the adapter", e);
+          LOG.error("Error while deleting adapter with id " + elementId + " and all pipelines using the adapter", e);
           return ok(Notifications.error(e.getMessage()));
         }
       } else {
         // otherwise, hint the user the names of pipelines using the adapter but not owned by the user
-        return ResponseEntity.status(HttpStatus.SC_CONFLICT)
-                             .body(String.join(", ", namesOfPipelinesNotOwnedByUser));
+        return ResponseEntity.status(HttpStatus.SC_CONFLICT).body(String.join(", ", namesOfPipelinesNotOwnedByUser));
       }
     }
   }
@@ -225,8 +209,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
       return ok(managementService.getAllAdapterInstances());
     } catch (AdapterException e) {
       LOG.error("Error while getting all adapters", e);
-      return ResponseEntity.status(500)
-                           .build();
+      return ResponseEntity.status(500).build();
     }
   }
 
@@ -235,9 +218,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   }
 
   private List<String> getPipelinesUsingAdapter(String adapterId) {
-    return StorageDispatcher.INSTANCE.getNoSqlStore()
-                                     .getPipelineStorageAPI()
-                                     .getPipelinesUsingAdapter(adapterId);
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipelinesUsingAdapter(adapterId);
   }
 
 }

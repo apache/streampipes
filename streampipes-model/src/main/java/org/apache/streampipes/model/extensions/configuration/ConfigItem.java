@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.extensions.configuration;
 
 import java.util.Objects;
@@ -33,34 +32,23 @@ public class ConfigItem {
     setPassword(false);
   }
 
-  public static <T> ConfigItem from(String key,
-                                    T defaultValue,
-                                    String description) {
+  public static <T> ConfigItem from(String key, T defaultValue, String description) {
     return from(key, defaultValue, description, ConfigurationScope.CONTAINER_STARTUP_CONFIG, false);
   }
 
-  public static <T> ConfigItem from(String key,
-                                    T defaultValue,
-                                    String description,
-                                    ConfigurationScope configurationScope) {
+  public static <T> ConfigItem from(String key, T defaultValue, String description,
+          ConfigurationScope configurationScope) {
     return from(key, defaultValue, description, configurationScope, false);
   }
 
-  public static <T> ConfigItem from(String key,
-                                    T defaultValue,
-                                    String description,
-                                    ConfigurationScope configurationScope,
-                                    boolean isPassword) {
+  public static <T> ConfigItem from(String key, T defaultValue, String description,
+          ConfigurationScope configurationScope, boolean isPassword) {
     return from(key, defaultValue, description, ConfigItemUtils.getValueType(defaultValue), configurationScope,
-        isPassword);
+            isPassword);
   }
 
-  public static <T> ConfigItem from(String key,
-                                    T defaultValue,
-                                    String description,
-                                    String valueType,
-                                    ConfigurationScope configurationScope,
-                                    boolean isPassword) {
+  public static <T> ConfigItem from(String key, T defaultValue, String description, String valueType,
+          ConfigurationScope configurationScope, boolean isPassword) {
     ConfigItem configItem = new ConfigItem();
     configItem.setKey(key);
     configItem.setValue(String.valueOf(defaultValue));
@@ -129,12 +117,9 @@ public class ConfigItem {
       return false;
     }
     ConfigItem that = (ConfigItem) o;
-    return isPassword == that.isPassword
-        && Objects.equals(key, that.key)
-        && Objects.equals(description, that.description)
-        && Objects.equals(value, that.value)
-        && Objects.equals(valueType, that.valueType)
-        && configurationScope == that.configurationScope;
+    return isPassword == that.isPassword && Objects.equals(key, that.key)
+            && Objects.equals(description, that.description) && Objects.equals(value, that.value)
+            && Objects.equals(valueType, that.valueType) && configurationScope == that.configurationScope;
   }
 
   @Override

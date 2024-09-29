@@ -36,20 +36,19 @@ import org.apache.streampipes.wrapper.context.generator.DataProcessorContextGene
 import org.apache.streampipes.wrapper.kafka.converter.JsonToMapFormat;
 import org.apache.streampipes.wrapper.params.generator.DataProcessorParameterGenerator;
 
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.ValueMapper;
 
-import java.util.Map;
-import java.util.regex.Pattern;
-
-public class KafkaStreamsDataProcessorRuntime extends KafkaStreamsRuntime<
-    IStreamPipesDataProcessor,
-    DataProcessorInvocation,
-    EventProcessorRuntimeContext,
-    IDataProcessorParameterExtractor,
-    IDataProcessorParameters> implements IDataProcessorRuntime {
+public class KafkaStreamsDataProcessorRuntime
+        extends
+          KafkaStreamsRuntime<IStreamPipesDataProcessor, DataProcessorInvocation, EventProcessorRuntimeContext, IDataProcessorParameterExtractor, IDataProcessorParameters>
+        implements
+          IDataProcessorRuntime {
 
   private KafkaStreamsOutputCollector outputCollector;
 
@@ -80,13 +79,13 @@ public class KafkaStreamsDataProcessorRuntime extends KafkaStreamsRuntime<
         this.outputCollector.connect();
       }
 
-      stream
-          .flatMapValues((ValueMapper<String, Iterable<Map<String, Object>>>) s ->
-              new JsonToMapFormat(pipelineElementInvocation).apply(s))
-          .foreach((key, rawEvent) -> {
-            var event = internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, getTopic(inputStream));
-            pipelineElement.onEvent(event, outputCollector);
-          });
+      stream.flatMapValues(
+              (ValueMapper<String, Iterable<Map<String, Object>>>) s -> new JsonToMapFormat(pipelineElementInvocation)
+                      .apply(s))
+              .foreach((key, rawEvent) -> {
+                var event = internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, getTopic(inputStream));
+                pipelineElement.onEvent(event, outputCollector);
+              });
 
       streams = new KafkaStreams(builder.build(), config);
 
@@ -107,12 +106,8 @@ public class KafkaStreamsDataProcessorRuntime extends KafkaStreamsRuntime<
   }
 
   private SpProtocolDefinition<KafkaTransportProtocol> getOutputProtocol() {
-    return SpProtocolManager
-        .INSTANCE
-        .findDefinition((KafkaTransportProtocol)
-            pipelineElementInvocation.getOutputStream().getEventGrounding().getTransportProtocol())
-        .orElseThrow();
+    return SpProtocolManager.INSTANCE.findDefinition((KafkaTransportProtocol) pipelineElementInvocation
+            .getOutputStream().getEventGrounding().getTransportProtocol()).orElseThrow();
   }
-
 
 }

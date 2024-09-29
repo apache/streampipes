@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -35,15 +34,14 @@ public class ElementVerification {
   }
 
   public boolean verify(DataProcessorInvocation offer, InvocableStreamPipesEntity requirement) {
-    return new StreamMatch()
-        .matchIgnoreGrounding(offer.getOutputStream(),
-            requirement.getStreamRequirements().get(0), errorLog)
-        && new GroundingMatch().match(offer.getSupportedGrounding(), requirement.getSupportedGrounding(), errorLog);
+    return new StreamMatch().matchIgnoreGrounding(offer.getOutputStream(), requirement.getStreamRequirements().get(0),
+            errorLog)
+            && new GroundingMatch().match(offer.getSupportedGrounding(), requirement.getSupportedGrounding(), errorLog);
   }
 
   public boolean verify(SpDataStream offer, InvocableStreamPipesEntity requirement) {
     return new StreamMatch().matchIgnoreGrounding(offer, requirement.getStreamRequirements().get(0), errorLog)
-        && new GroundingMatch().match(offer.getEventGrounding(), requirement.getSupportedGrounding(), errorLog);
+            && new GroundingMatch().match(offer.getEventGrounding(), requirement.getSupportedGrounding(), errorLog);
   }
 
   public List<MatchingResultMessage> getErrorLog() {

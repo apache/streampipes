@@ -36,11 +36,8 @@ public class DataStreamStorageImpl extends DefaultCrudStorage<SpDataStream> impl
 
   @Override
   public SpDataStream getDataStreamByAppId(String appId) {
-    return this.findAll()
-        .stream()
-        .filter(s -> s.getAppId().equals(appId))
-        .findFirst()
-        .orElseThrow(IllegalArgumentException::new);
+    return this.findAll().stream().filter(s -> s.getAppId().equals(appId)).findFirst()
+            .orElseThrow(IllegalArgumentException::new);
   }
 
   private String getCurrentRev(String elementId) {

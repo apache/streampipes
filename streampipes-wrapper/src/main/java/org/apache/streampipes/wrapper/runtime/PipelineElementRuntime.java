@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.runtime;
 
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
@@ -28,13 +27,9 @@ import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntime;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
-public abstract class PipelineElementRuntime<
-    PeT extends IStreamPipesPipelineElement<?>,
-    IvT extends InvocableStreamPipesEntity,
-    RcT extends RuntimeContext,
-    ExT extends IParameterExtractor,
-    PepT extends IPipelineElementParameters<IvT, ExT>>
-    implements IStreamPipesRuntime<PeT, IvT> {
+public abstract class PipelineElementRuntime<PeT extends IStreamPipesPipelineElement<?>, IvT extends InvocableStreamPipesEntity, RcT extends RuntimeContext, ExT extends IParameterExtractor, PepT extends IPipelineElementParameters<IvT, ExT>>
+        implements
+          IStreamPipesRuntime<PeT, IvT> {
 
   protected String elementId;
 
@@ -42,15 +37,13 @@ public abstract class PipelineElementRuntime<
   IParameterGenerator<IvT, ExT, PepT> parameterGenerator;
 
   public PipelineElementRuntime(IContextGenerator<RcT, IvT> contextGenerator,
-                                IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
+          IParameterGenerator<IvT, ExT, PepT> parameterGenerator) {
     this.contextGenerator = contextGenerator;
     this.parameterGenerator = parameterGenerator;
   }
 
   @Override
-  public Response onRuntimeInvoked(String instanceId,
-                                   PeT pipelineElement,
-                                   IvT pipelineElementInvocation) {
+  public Response onRuntimeInvoked(String instanceId, PeT pipelineElement, IvT pipelineElementInvocation) {
     try {
       var context = contextGenerator.makeContext(pipelineElementInvocation);
       var parameters = parameterGenerator.makeParameters(pipelineElementInvocation);
@@ -74,10 +67,8 @@ public abstract class PipelineElementRuntime<
     }
   }
 
-  public abstract void startRuntime(IvT pipelineElementInvocation,
-                                    PeT pipelineElement,
-                                    PepT runtimeParameters,
-                                    RcT runtimeContext);
+  public abstract void startRuntime(IvT pipelineElementInvocation, PeT pipelineElement, PepT runtimeParameters,
+          RcT runtimeContext);
 
   public abstract void stopRuntime();
 

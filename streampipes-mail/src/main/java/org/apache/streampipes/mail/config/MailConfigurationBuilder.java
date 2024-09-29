@@ -28,39 +28,29 @@ public class MailConfigurationBuilder {
 
   public Mailer buildMailerFromConfig(EmailConfig config) {
     MailerRegularBuilderImpl builder = MailerBuilder
-        .withTransportStrategy(toTransportStrategy(config.getTransportStrategy()));
+            .withTransportStrategy(toTransportStrategy(config.getTransportStrategy()));
 
     if (config.isUsesAuthentication()) {
-      builder.withSMTPServer(
-          config.getSmtpServerHost(),
-          config.getSmtpServerPort(),
-          config.getSmtpUsername(),
-          config.getSmtpPassword()
-      );
+      builder.withSMTPServer(config.getSmtpServerHost(), config.getSmtpServerPort(), config.getSmtpUsername(),
+              config.getSmtpPassword());
     } else {
       builder.withSMTPServer(config.getSmtpServerHost(), config.getSmtpServerPort());
     }
 
     if (config.isUsesProxy()) {
       if (config.isUsesProxyAuthentication()) {
-        builder.withProxy(
-            config.getProxyHost(),
-            config.getProxyPort(),
-            config.getProxyUser(),
-            config.getProxyPassword()
-        );
+        builder.withProxy(config.getProxyHost(), config.getProxyPort(), config.getProxyUser(),
+                config.getProxyPassword());
       } else {
         builder.withProxy(config.getProxyHost(), config.getProxyPort());
       }
     }
 
-
     return builder.buildMailer();
 
   }
 
-  private TransportStrategy toTransportStrategy(
-      org.apache.streampipes.model.configuration.TransportStrategy strategy) {
+  private TransportStrategy toTransportStrategy(org.apache.streampipes.model.configuration.TransportStrategy strategy) {
     if (strategy == org.apache.streampipes.model.configuration.TransportStrategy.SMTP) {
       return TransportStrategy.SMTP;
     } else if (strategy == org.apache.streampipes.model.configuration.TransportStrategy.SMTPS) {

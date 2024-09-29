@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.nats;
 
 import org.apache.streampipes.messaging.EventConsumer;

@@ -21,5 +21,4 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.Expression;
 
 public abstract class SiddhiStatement extends Expression {
 
-
 }

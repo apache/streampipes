@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.extractor;
 
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
@@ -26,7 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProcessingElementParameterExtractor extends AbstractParameterExtractor<DataProcessorInvocation>
-    implements IDataProcessorParameterExtractor {
+        implements
+          IDataProcessorParameterExtractor {
 
   public ProcessingElementParameterExtractor(DataProcessorInvocation sepaElement) {
     super(sepaElement);
@@ -38,24 +38,15 @@ public class ProcessingElementParameterExtractor extends AbstractParameterExtrac
 
   @Override
   public String outputTopic() {
-    return sepaElement
-        .getOutputStream()
-        .getEventGrounding()
-        .getTransportProtocol()
-        .getTopicDefinition()
-        .getActualTopicName();
+    return sepaElement.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition()
+            .getActualTopicName();
   }
 
   @Override
   public List<String> outputKeySelectors() {
-    return sepaElement
-        .getOutputStrategies()
-        .stream()
-        .filter(CustomOutputStrategy.class::isInstance)
-        .map(o -> (CustomOutputStrategy) o)
-        .findFirst()
-        .map(CustomOutputStrategy::getSelectedPropertyKeys)
-        .orElse(new ArrayList<>());
+    return sepaElement.getOutputStrategies().stream().filter(CustomOutputStrategy.class::isInstance)
+            .map(o -> (CustomOutputStrategy) o).findFirst().map(CustomOutputStrategy::getSelectedPropertyKeys)
+            .orElse(new ArrayList<>());
 
   }
 

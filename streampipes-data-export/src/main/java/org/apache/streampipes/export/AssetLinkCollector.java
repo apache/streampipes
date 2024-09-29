@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.export;
 
 import org.apache.streampipes.model.assets.AssetLink;
@@ -40,8 +39,7 @@ public class AssetLinkCollector {
     return assetLinks;
   }
 
-  private void addLinks(HashSet<AssetLink> assetLinks,
-                        SpAsset asset) {
+  private void addLinks(HashSet<AssetLink> assetLinks, SpAsset asset) {
     assetLinks.addAll(asset.getAssetLinks());
     if (asset.getAssets() != null) {
       asset.getAssets().forEach(a -> addLinks(assetLinks, a));

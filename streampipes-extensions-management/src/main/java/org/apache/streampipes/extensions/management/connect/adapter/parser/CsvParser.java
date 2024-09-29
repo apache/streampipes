@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
-
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.connect.shared.DatatypeUtils;
@@ -32,14 +30,6 @@ import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 
-import com.opencsv.CSVParser;
-import com.opencsv.CSVParserBuilder;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.exceptions.CsvValidationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,6 +39,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
+
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CsvParser implements IParser {
 
@@ -83,22 +81,19 @@ public class CsvParser implements IParser {
 
     char delimiter = extractor.singleValueParameter(DELIMITER, String.class).charAt(0);
 
-    boolean header = extractor.selectedMultiValues(HEADER, String.class).stream()
-        .anyMatch("Header"::equals);
+    boolean header = extractor.selectedMultiValues(HEADER, String.class).stream().anyMatch("Header"::equals);
 
     return new CsvParser(header, delimiter);
   }
 
-
   @Override
   public ParserDescription declareDescription() {
     return ParserDescriptionBuilder.create(ID, LABEL, DESCRIPTION)
-        .requiredTextParameter(Labels.from(DELIMITER, "Delimiter",
-            "The delimiter of the CSV file(s). Mostly either , or ;"))
-        .requiredMultiValueSelection(Labels.from(HEADER, "Header",
-                "Does the CSV file include a header or not"),
-            List.of(new Option("Header", "Header")))
-        .build();
+            .requiredTextParameter(
+                    Labels.from(DELIMITER, "Delimiter", "The delimiter of the CSV file(s). Mostly either , or ;"))
+            .requiredMultiValueSelection(Labels.from(HEADER, "Header", "Does the CSV file include a header or not"),
+                    List.of(new Option("Header", "Header")))
+            .build();
   }
 
   @Override
@@ -111,7 +106,6 @@ public class CsvParser implements IParser {
 
     return parserUtils.getGuessSchema(event);
   }
-
 
   @Override
   public void parse(InputStream inputStream, IParserEventHandler handler) throws ParseException {
@@ -133,7 +127,6 @@ public class CsvParser implements IParser {
     }
   }
 
-
   private Map<String, Object> toMap(String[] header, String[] values, boolean preferFloat) throws ParseException {
     if (header == null) {
       throw new ParseException("Header of csv could not be parsed");
@@ -144,8 +137,7 @@ public class CsvParser implements IParser {
     }
 
     if (header.length != values.length) {
-      throw new ParseException(
-          "Row in csv does not have the same length as header. header: %s row: %s"
+      throw new ParseException("Row in csv does not have the same length as header. header: %s row: %s"
               .formatted(Arrays.toString(header), Arrays.toString(values)));
     }
 
@@ -162,15 +154,9 @@ public class CsvParser implements IParser {
   private CSVReader getCsvReader(InputStream inputStream) {
 
     var reader = new BufferedReader(new InputStreamReader(inputStream));
-    CSVParser parser = new CSVParserBuilder()
-        .withSeparator(delimiter)
-        .withIgnoreQuotations(true)
-        .build();
+    CSVParser parser = new CSVParserBuilder().withSeparator(delimiter).withIgnoreQuotations(true).build();
 
-    return new CSVReaderBuilder(reader)
-        .withSkipLines(0)
-        .withCSVParser(parser)
-        .build();
+    return new CSVReaderBuilder(reader).withSkipLines(0).withCSVParser(parser).build();
   }
 
   private Tuple2<String[], String[]> getHeaderAndFirstSample(CSVReader csvReader) throws ParseException {
@@ -187,9 +173,7 @@ public class CsvParser implements IParser {
 
       // create headers if not available in data
       if (!header) {
-        headers = IntStream.range(0, sample.length)
-            .mapToObj(i -> "key_" + i)
-            .toArray(String[]::new);
+        headers = IntStream.range(0, sample.length).mapToObj(i -> "key_" + i).toArray(String[]::new);
       }
 
     } catch (IOException | CsvValidationException e) {
@@ -198,6 +182,5 @@ public class CsvParser implements IParser {
 
     return new Tuple2<>(headers, sample);
   }
-
 
 }

@@ -20,11 +20,11 @@ package org.apache.streampipes.model.client.user;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.SerializedName;
 
 @TsModel
 public class Permission implements Storable {

@@ -28,23 +28,19 @@ import java.util.Optional;
 public class ConnectWorkerDescriptionProvider {
 
   public Optional<IAdapterConfiguration> getAdapterConfiguration(String id) {
-    return getRegisteredAdapters()
-        .stream()
-        .filter(ad -> ad.declareConfig().getAdapterDescription().getAppId().equals(id))
-        .map(StreamPipesAdapter::declareConfig)
-        .findFirst();
+    return getRegisteredAdapters().stream()
+            .filter(ad -> ad.declareConfig().getAdapterDescription().getAppId().equals(id))
+            .map(StreamPipesAdapter::declareConfig).findFirst();
   }
 
   public Optional<AdapterDescription> getAdapterDescription(String id) {
-    return getRegisteredAdapters()
-        .stream()
-        .map(ac -> ac.declareConfig().getAdapterDescription())
-        .filter(ad -> ad.getAppId().equals(id))
-        .findFirst();
+    return getRegisteredAdapters().stream().map(ac -> ac.declareConfig().getAdapterDescription())
+            .filter(ad -> ad.getAppId().equals(id)).findFirst();
   }
 
   /**
    * This is a helper method to mock the Declarer Singleton in unit tests
+   * 
    * @return the registered adapters from the DeclarerSingleton
    */
   public Collection<StreamPipesAdapter> getRegisteredAdapters() {

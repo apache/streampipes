@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -30,8 +29,7 @@ public abstract class GroundingSelector {
   protected NamedStreamPipesEntity source;
   protected Set<InvocableStreamPipesEntity> targets;
 
-  public GroundingSelector(NamedStreamPipesEntity source,
-                           Set<InvocableStreamPipesEntity> targets) {
+  public GroundingSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
     this.source = source;
     this.targets = targets;
   }

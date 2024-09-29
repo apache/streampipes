@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -52,24 +51,21 @@ public class StringToStateProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state", 0)
-        .category(DataProcessorType.STRING_OPERATOR)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithNaryMapping(EpRequirements.stringReq(), Labels.withId(STRING_STATE_FIELD),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.listStringEp(Labels.withId(CURRENT_STATE), CURRENT_STATE, SPSensor.STATE)
-        ))
-        .build();
+            .create("org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state", 0)
+            .category(DataProcessorType.STRING_OPERATOR).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithNaryMapping(EpRequirements.stringReq(), Labels.withId(STRING_STATE_FIELD),
+                            PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies
+                    .append(EpProperties.listStringEp(Labels.withId(CURRENT_STATE), CURRENT_STATE, SPSensor.STATE)))
+            .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     ProcessingElementParameterExtractor extractor = parameters.extractor();
     this.stateFields = extractor.mappingPropertyValues(STRING_STATE_FIELD);
   }

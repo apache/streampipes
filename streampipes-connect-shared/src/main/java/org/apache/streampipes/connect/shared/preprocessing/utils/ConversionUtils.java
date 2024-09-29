@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.utils;
 
 import org.apache.streampipes.model.schema.EventProperty;
@@ -28,33 +27,28 @@ import java.util.List;
 
 public class ConversionUtils {
 
-  public static EventProperty findProperty(List<EventProperty> properties,
-                                           String runtimeKey) {
+  public static EventProperty findProperty(List<EventProperty> properties, String runtimeKey) {
     return findProperty(properties, Utils.toKeyArray(runtimeKey));
   }
 
-  public static EventPropertyPrimitive findPrimitiveProperty(List<EventProperty> properties,
-                                                       String runtimeKey) {
+  public static EventPropertyPrimitive findPrimitiveProperty(List<EventProperty> properties, String runtimeKey) {
     return (EventPropertyPrimitive) findProperty(properties, runtimeKey);
   }
 
-  public static List<EventProperty> findPropertyHierarchy(List<EventProperty> originalProperties,
-                                                          String runtimeKeys) {
+  public static List<EventProperty> findPropertyHierarchy(List<EventProperty> originalProperties, String runtimeKeys) {
     return findPropertyHierarchy(originalProperties, Utils.toKeyArray(runtimeKeys));
   }
 
   public static List<EventProperty> findPropertyHierarchy(List<EventProperty> originalProperties,
-                                                          List<String> runtimeKeys) {
+          List<String> runtimeKeys) {
     if (runtimeKeys.isEmpty()) {
       return Collections.emptyList();
     } else if (runtimeKeys.size() == 1) {
       return originalProperties;
     } else {
       List<String> finalRuntimeKeys = runtimeKeys;
-      var properties = originalProperties
-          .stream()
-          .filter(ep -> ep.getRuntimeName().equals(finalRuntimeKeys.get(0)))
-          .toList();
+      var properties = originalProperties.stream().filter(ep -> ep.getRuntimeName().equals(finalRuntimeKeys.get(0)))
+              .toList();
       if (!properties.isEmpty()) {
         runtimeKeys = runtimeKeys.subList(1, runtimeKeys.size());
         EventPropertyNested nestedProperty = (EventPropertyNested) properties.get(0);
@@ -65,8 +59,7 @@ public class ConversionUtils {
     }
   }
 
-  public static EventProperty findProperty(List<EventProperty> originalProperties,
-                                           List<String> runtimeKeys) {
+  public static EventProperty findProperty(List<EventProperty> originalProperties, List<String> runtimeKeys) {
     if (runtimeKeys.isEmpty()) {
       throw new IllegalArgumentException("Could not find property");
     }
@@ -78,10 +71,8 @@ public class ConversionUtils {
         if (property instanceof EventPropertyPrimitive || property instanceof EventPropertyList) {
           return property;
         } else if (runtimeKeys.size() > 1) {
-          return findProperty(
-              ((EventPropertyNested) property).getEventProperties(),
-              runtimeKeys.subList(1, runtimeKeys.size())
-          );
+          return findProperty(((EventPropertyNested) property).getEventProperties(),
+                  runtimeKeys.subList(1, runtimeKeys.size()));
         } else {
           return property;
         }

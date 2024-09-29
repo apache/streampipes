@@ -30,10 +30,7 @@ public class MaxExpression extends PropertyExpressionBase {
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.EMPTY,
-        AggregationFunction.MAX.toAggregationFunction(),
-        SiddhiConstants.PARENTHESIS_OPEN,
-        propertyExpression.toSiddhiEpl(),
-        SiddhiConstants.PARENTHESIS_CLOSE);
+    return join(SiddhiConstants.EMPTY, AggregationFunction.MAX.toAggregationFunction(),
+            SiddhiConstants.PARENTHESIS_OPEN, propertyExpression.toSiddhiEpl(), SiddhiConstants.PARENTHESIS_CLOSE);
   }
 }

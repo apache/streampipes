@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.service.extensions.security;
 
 import org.apache.streampipes.commons.constants.HttpConstants;
@@ -24,13 +22,6 @@ import org.apache.streampipes.model.UserInfo;
 import org.apache.streampipes.security.jwt.JwtTokenUtils;
 import org.apache.streampipes.security.jwt.JwtTokenValidator;
 import org.apache.streampipes.security.jwt.PublicKeyResolver;
-
-import io.jsonwebtoken.Claims;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -42,16 +33,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-public class TokenAuthenticationFilter extends OncePerRequestFilter {
+import io.jsonwebtoken.Claims;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
 
+public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
   public TokenAuthenticationFilter() {
   }
 
   @Override
-  protected void doFilterInternal(HttpServletRequest request,
-                                  HttpServletResponse response,
-                                  FilterChain filterChain) throws ServletException, IOException {
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+          throws ServletException, IOException {
     try {
       String jwt = getJwtFromRequest(request);
       if (StringUtils.hasText(jwt) && JwtTokenValidator.validateJwtToken(jwt, new PublicKeyResolver())) {
@@ -73,8 +69,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     return null;
   }
 
-  private void applySuccessfulAuth(HttpServletRequest request,
-                                   Claims claims) {
+  private void applySuccessfulAuth(HttpServletRequest request, Claims claims) {
     UserInfo userInfo = parseUserInfo((Map<String, Object>) claims.get("user"));
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userInfo, null, null);
     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

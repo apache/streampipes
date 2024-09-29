@@ -26,21 +26,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StaticPropertyExtractor extends AbstractParameterExtractor<DataSinkInvocation>
-    implements IStaticPropertyExtractor {
+        implements
+          IStaticPropertyExtractor {
 
   public StaticPropertyExtractor(DataSinkInvocation sepaElement) {
     super(sepaElement);
   }
 
-  public static StaticPropertyExtractor from(List<StaticProperty> staticProperties,
-                                             List<SpDataStream> inputStreams, String appId) {
+  public static StaticPropertyExtractor from(List<StaticProperty> staticProperties, List<SpDataStream> inputStreams,
+          String appId) {
     DataSinkInvocation dataSinkInvocation = makeGraph(staticProperties, inputStreams);
     dataSinkInvocation.setAppId(appId);
     return new StaticPropertyExtractor(dataSinkInvocation);
   }
 
-  public static StaticPropertyExtractor from(List<StaticProperty> staticProperties,
-                                             List<SpDataStream> inputStreams) {
+  public static StaticPropertyExtractor from(List<StaticProperty> staticProperties, List<SpDataStream> inputStreams) {
     DataSinkInvocation dataSinkInvocation = makeGraph(staticProperties, inputStreams);
     return new StaticPropertyExtractor(dataSinkInvocation);
   }
@@ -49,8 +49,7 @@ public class StaticPropertyExtractor extends AbstractParameterExtractor<DataSink
     return from(staticProperties, new ArrayList<>());
   }
 
-  private static DataSinkInvocation makeGraph(List<StaticProperty> staticProperties,
-                                              List<SpDataStream> inputStreams) {
+  private static DataSinkInvocation makeGraph(List<StaticProperty> staticProperties, List<SpDataStream> inputStreams) {
     DataSinkInvocation dataSinkInvocation = new DataSinkInvocation();
     dataSinkInvocation.setStaticProperties(staticProperties);
     dataSinkInvocation.setInputStreams(inputStreams);

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
@@ -26,15 +25,10 @@ import java.util.List;
 public class NestedPropertyMatch implements Matcher<EventPropertyNested, EventPropertyNested> {
 
   @Override
-  public boolean match(EventPropertyNested offer,
-                       EventPropertyNested requirement, List<MatchingResultMessage> errorLog) {
-    return requirement
-        .getEventProperties()
-        .stream()
-        .allMatch(r -> offer
-            .getEventProperties()
-            .stream()
-            .anyMatch(of -> new PropertyMatch().match(of, r, errorLog)));
+  public boolean match(EventPropertyNested offer, EventPropertyNested requirement,
+          List<MatchingResultMessage> errorLog) {
+    return requirement.getEventProperties().stream().allMatch(
+            r -> offer.getEventProperties().stream().anyMatch(of -> new PropertyMatch().match(of, r, errorLog)));
   }
 
 }

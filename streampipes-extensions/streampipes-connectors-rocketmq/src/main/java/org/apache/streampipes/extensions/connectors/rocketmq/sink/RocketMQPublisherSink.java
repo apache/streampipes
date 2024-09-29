@@ -17,10 +17,9 @@
  */
 package org.apache.streampipes.extensions.connectors.rocketmq.sink;
 
-
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
+import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
@@ -35,6 +34,9 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
+import java.io.IOException;
+import java.util.Map;
+
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.rocketmq.client.apis.ClientConfiguration;
 import org.apache.rocketmq.client.apis.ClientConfigurationBuilder;
@@ -42,9 +44,6 @@ import org.apache.rocketmq.client.apis.ClientException;
 import org.apache.rocketmq.client.apis.ClientServiceProvider;
 import org.apache.rocketmq.client.apis.message.Message;
 import org.apache.rocketmq.client.apis.producer.Producer;
-
-import java.io.IOException;
-import java.util.Map;
 
 public class RocketMQPublisherSink implements IStreamPipesDataSink {
 
@@ -68,22 +67,13 @@ public class RocketMQPublisherSink implements IStreamPipesDataSink {
 
   @Override
   public IDataSinkConfiguration declareConfig() {
-    return DataSinkConfiguration.create(
-        RocketMQPublisherSink::new,
-        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.rocketmq", 0)
-            .category(DataSinkType.MESSAGING)
-            .withLocales(Locales.EN)
-            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-            .requiredStream(StreamRequirementsBuilder
-                .create()
-                .requiredProperty(EpRequirements.anyProperty())
-                .build())
-            .requiredTextParameter(Labels.withId(ENDPOINT_KEY))
-            .requiredTextParameter(Labels.withId(TOPIC_KEY))
-            .build()
-    );
+    return DataSinkConfiguration.create(RocketMQPublisherSink::new, DataSinkBuilder
+            .create("org.apache.streampipes.sinks.brokers.jvm.rocketmq", 0).category(DataSinkType.MESSAGING)
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredTextParameter(Labels.withId(ENDPOINT_KEY)).requiredTextParameter(Labels.withId(TOPIC_KEY))
+            .build());
   }
-
 
   @Override
   public void onPipelineStarted(IDataSinkParameters parameters, EventSinkRuntimeContext runtimeContext) {
@@ -93,10 +83,8 @@ public class RocketMQPublisherSink implements IStreamPipesDataSink {
     ClientConfigurationBuilder builder = ClientConfiguration.newBuilder().setEndpoints(params.getEndpoint());
     ClientConfiguration configuration = builder.build();
     try {
-      this.producer = provider.newProducerBuilder()
-          .setTopics(params.getTopic())
-          .setClientConfiguration(configuration)
-          .build();
+      this.producer = provider.newProducerBuilder().setTopics(params.getTopic()).setClientConfiguration(configuration)
+              .build();
     } catch (ClientException e) {
       throw new SpRuntimeException(e);
     }
@@ -107,10 +95,7 @@ public class RocketMQPublisherSink implements IStreamPipesDataSink {
     Map<String, Object> rawMap = event.getRaw();
     byte[] jsonMessage = spDataFormatDefinition.fromMap(rawMap);
 
-    Message message = provider.newMessageBuilder()
-        .setTopic(params.getTopic())
-        .setBody(jsonMessage)
-        .build();
+    Message message = provider.newMessageBuilder().setTopic(params.getTopic()).setBody(jsonMessage).build();
     try {
       producer.send(message);
     } catch (ClientException e) {

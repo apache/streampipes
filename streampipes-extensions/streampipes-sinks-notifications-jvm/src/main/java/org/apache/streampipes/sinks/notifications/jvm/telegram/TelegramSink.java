@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.notifications.jvm.telegram;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -31,15 +30,15 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class TelegramSink extends StreamPipesNotificationSink {
   public static final String TELEGRAM_NOTIFICATION_SINK_ID = "org.apache.streampipes.sinks.notifications.jvm.telegram";
@@ -58,23 +57,15 @@ public class TelegramSink extends StreamPipesNotificationSink {
 
   @Override
   public DataSinkBuilder declareModelWithoutSilentPeriod() {
-    return DataSinkBuilder
-        .create(TELEGRAM_NOTIFICATION_SINK_ID, 1)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .category(DataSinkType.NOTIFICATION)
-        .requiredStream(StreamRequirementsBuilder
-                            .create()
-                            .requiredProperty(EpRequirements.anyProperty())
-                            .build())
-        .requiredSecret(Labels.withId(BOT_API_KEY))
-        .requiredTextParameter(Labels.withId(CHANNEL_NAME_OR_CHAT_ID))
-        .requiredTextParameter(Labels.withId(MESSAGE_TEXT), true, true, true);
+    return DataSinkBuilder.create(TELEGRAM_NOTIFICATION_SINK_ID, 1).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).category(DataSinkType.NOTIFICATION)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredSecret(Labels.withId(BOT_API_KEY)).requiredTextParameter(Labels.withId(CHANNEL_NAME_OR_CHAT_ID))
+            .requiredTextParameter(Labels.withId(MESSAGE_TEXT), true, true, true);
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     super.onInvocation(parameters, runtimeContext);
     var extractor = parameters.extractor();
     apiKey = extractor.secretValue(BOT_API_KEY);
@@ -109,10 +100,7 @@ public class TelegramSink extends StreamPipesNotificationSink {
 
   private String replacePlaceholders(Event event, String content) {
     for (Map.Entry<String, Object> entry : event.getRaw().entrySet()) {
-      content = content.replaceAll(
-          HASH_TAG + entry.getKey() + HASH_TAG,
-          String.valueOf(entry.getValue())
-      );
+      content = content.replaceAll(HASH_TAG + entry.getKey() + HASH_TAG, String.valueOf(entry.getValue()));
     }
     return content;
   }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.test.executors;
 
 public enum PrefixStrategy {

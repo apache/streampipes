@@ -22,15 +22,15 @@ import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.util.EventSelection;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 public abstract class ScheduleWindow implements Window {
   private EventSelection eventSelection;
@@ -39,8 +39,7 @@ public abstract class ScheduleWindow implements Window {
   private Scheduler scheduler;
   private static int schedulerCount = 0;
 
-  ScheduleWindow(EventSelection eventSelection,
-                 SpOutputCollector outputCollector) {
+  ScheduleWindow(EventSelection eventSelection, SpOutputCollector outputCollector) {
     this.eventSelection = eventSelection;
     this.outputCollector = outputCollector;
     this.events = new ArrayList<>();
@@ -70,13 +69,13 @@ public abstract class ScheduleWindow implements Window {
   public void onTrigger() {
     if (!events.isEmpty()) {
       switch (eventSelection) {
-        case FIRST:
+        case FIRST :
           emit(events.get(0));
           break;
-        case LAST:
+        case LAST :
           emit(events.get(events.size() - 1));
           break;
-        case ALL:
+        case ALL :
           events.forEach(this::emit);
           break;
       }

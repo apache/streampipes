@@ -17,13 +17,13 @@
  */
 package org.apache.streampipes.model.datalake;
 
+import java.io.IOException;
+import java.util.Map;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
-
-import java.io.IOException;
-import java.util.Map;
 
 /* TODO This is a really ugly hack to properly serialize custom configuration maps
     that are only typed in the UI.

@@ -21,30 +21,25 @@ import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
+import java.io.IOException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
-
-import java.io.IOException;
 
 public class DeleteRequest<K, V, T> extends HttpRequest<K, V, T> {
 
   private final Class<V> responseClass;
   private K body;
 
-  public DeleteRequest(StreamPipesClientConfig clientConfig,
-                       StreamPipesApiPath apiPath,
-                       Class<V> responseClass,
-                       Serializer<K, V, T> serializer) {
+  public DeleteRequest(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath, Class<V> responseClass,
+          Serializer<K, V, T> serializer) {
     super(clientConfig, apiPath, serializer);
     this.responseClass = responseClass;
   }
 
-  public DeleteRequest(StreamPipesClientConfig clientConfig,
-                       StreamPipesApiPath apiPath,
-                       Class<V> responseClass,
-                       Serializer<K, V, T> serializer,
-                       K body) {
+  public DeleteRequest(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath, Class<V> responseClass,
+          Serializer<K, V, T> serializer, K body) {
     super(clientConfig, apiPath, serializer);
     this.responseClass = responseClass;
     this.body = body;
@@ -52,9 +47,7 @@ public class DeleteRequest<K, V, T> extends HttpRequest<K, V, T> {
 
   @Override
   protected Request makeRequest(Serializer<K, V, T> serializer) {
-    var req = Request
-        .Delete(makeUrl())
-        .setHeaders(standardJsonHeaders());
+    var req = Request.Delete(makeUrl()).setHeaders(standardJsonHeaders());
 
     if (this.body != null) {
       req.bodyString(serializer.serialize(body), ContentType.APPLICATION_JSON);

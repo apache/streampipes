@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing;
 
 import org.apache.streampipes.extensions.api.connect.TransformationRule;
@@ -30,16 +29,14 @@ public abstract class SupportsNestedTransformationRule implements Transformation
     return applyNested(event, getEventKeys());
   }
 
-  protected Map<String, Object> applyNested(Map<String, Object> event,
-                                          List<String> eventKey) {
+  protected Map<String, Object> applyNested(Map<String, Object> event, List<String> eventKey) {
     if (eventKey.size() == 1) {
       applyTransformation(event, eventKey);
     } else {
       String key = eventKey.get(0);
       List<String> newKeysTmpList = eventKey.subList(1, eventKey.size());
 
-      Map<String, Object> newSubEvent =
-          applyNested((Map<String, Object>) event.get(eventKey.get(0)), newKeysTmpList);
+      Map<String, Object> newSubEvent = applyNested((Map<String, Object>) event.get(eventKey.get(0)), newKeysTmpList);
 
       event.remove(key);
 
@@ -52,8 +49,6 @@ public abstract class SupportsNestedTransformationRule implements Transformation
 
   protected abstract List<String> getEventKeys();
 
-  protected abstract void applyTransformation(Map<String, Object> event,
-                                              List<String> eventKey);
-
+  protected abstract void applyTransformation(Map<String, Object> event, List<String> eventKey);
 
 }

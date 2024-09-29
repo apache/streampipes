@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution.task;
 
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
@@ -42,20 +41,18 @@ public class AfterInvocationTask implements PipelineExecutionTask {
   }
 
   @Override
-  public void executeTask(Pipeline pipeline,
-                          PipelineExecutionInfo executionInfo) {
+  public void executeTask(Pipeline pipeline, PipelineExecutionInfo executionInfo) {
     var graphs = executionInfo.getProcessorsAndSinks();
     storeInvocationGraphs(pipeline.getPipelineId(), graphs);
     addPipelineStatus(pipeline);
   }
 
-  private void storeInvocationGraphs(String pipelineId,
-                                     List<InvocableStreamPipesEntity> graphs) {
+  private void storeInvocationGraphs(String pipelineId, List<InvocableStreamPipesEntity> graphs) {
     RunningPipelineElementStorage.runningProcessorsAndSinks.put(pipelineId, graphs);
   }
 
   private void addPipelineStatus(Pipeline pipeline) {
     PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(),
-        new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), statusMessageType));
+            new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), statusMessageType));
   }
 }

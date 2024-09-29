@@ -15,13 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.smp.constants;
 
 public enum PeType {
-  ADAPTER("Adapter"),
-  PROCESSOR("Data Processor"),
-  SINK("Data Sink");
+  ADAPTER("Adapter"), PROCESSOR("Data Processor"), SINK("Data Sink");
 
   private String friendly;
 

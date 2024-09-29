@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.manager.matching.v2.utils.MatchingUtils;
@@ -36,24 +35,23 @@ public class StreamMatch extends AbstractMatcher<SpDataStream, SpDataStream> {
   @Override
   public boolean match(SpDataStream offer, SpDataStream requirement, List<MatchingResultMessage> errorLog) {
     return MatchingUtils.nullCheck(offer, requirement)
-        || (checkSchemaMatch(offer.getEventSchema(), requirement.getEventSchema(), errorLog)
-        && checkGroundingMatch(offer.getEventGrounding(), requirement.getEventGrounding(), errorLog));
+            || (checkSchemaMatch(offer.getEventSchema(), requirement.getEventSchema(), errorLog)
+                    && checkGroundingMatch(offer.getEventGrounding(), requirement.getEventGrounding(), errorLog));
   }
 
   public boolean matchIgnoreGrounding(SpDataStream offer, SpDataStream requirement,
-                                      List<MatchingResultMessage> errorLog) {
-    boolean match = /*MatchingUtils.nullCheckReqAllowed(offer, requirement) ||*/
-        (checkSchemaMatch(offer.getEventSchema(), requirement.getEventSchema(), errorLog));
+          List<MatchingResultMessage> errorLog) {
+    boolean match = /* MatchingUtils.nullCheckReqAllowed(offer, requirement) || */
+            (checkSchemaMatch(offer.getEventSchema(), requirement.getEventSchema(), errorLog));
     return match;
   }
 
-  private boolean checkGroundingMatch(EventGrounding offer,
-                                      EventGrounding requirement, List<MatchingResultMessage> errorLog) {
+  private boolean checkGroundingMatch(EventGrounding offer, EventGrounding requirement,
+          List<MatchingResultMessage> errorLog) {
     return new GroundingMatch().match(offer, requirement, errorLog);
   }
 
-  private boolean checkSchemaMatch(EventSchema offer,
-                                   EventSchema requirement, List<MatchingResultMessage> errorLog) {
+  private boolean checkSchemaMatch(EventSchema offer, EventSchema requirement, List<MatchingResultMessage> errorLog) {
     return new SchemaMatch().match(offer, requirement, errorLog);
   }
 

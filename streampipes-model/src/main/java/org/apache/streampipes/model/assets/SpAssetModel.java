@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.assets;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;

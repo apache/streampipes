@@ -15,17 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.influx.shared;
-
-import org.apache.streampipes.dataexplorer.influx.client.InfluxConnectionSettings;
-import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
-import org.apache.streampipes.sdk.StaticProperties;
-import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
-import org.apache.streampipes.sdk.helpers.Alternatives;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sdk.helpers.Tuple2;
 
 import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.DATABASE_AUTHENTICATION;
 import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.DATABASE_HOST_KEY;
@@ -40,28 +30,31 @@ import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxK
 import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.USERNAME_GROUP_KEY;
 import static org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys.USERNAME_PASSWORD_ALT;
 
+import org.apache.streampipes.dataexplorer.influx.client.InfluxConnectionSettings;
+import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
+import org.apache.streampipes.sdk.StaticProperties;
+import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
+import org.apache.streampipes.sdk.helpers.Alternatives;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.Tuple2;
+
 public class InfluxConfigs {
 
   public static void appendSharedInfluxConfig(AbstractConfigurablePipelineElementBuilder<?, ?> builder) {
-    builder
-        .requiredSingleValueSelection(Labels.withId(DATABASE_PROTOCOL),
+    builder.requiredSingleValueSelection(Labels.withId(DATABASE_PROTOCOL),
             Options.from(new Tuple2<>("HTTP", "http"), new Tuple2<>("HTTPS", "https")))
-        .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
-        .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 8086)
-        .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
-        .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
-        .requiredAlternatives(Labels.withId(DATABASE_AUTHENTICATION),
-            Alternatives.from(Labels.withId(DATABASE_TOKEN_ALT),
-                StaticProperties.secretValue(Labels.withId(DATABASE_TOKEN_KEY))
-            ),
-            Alternatives.from(Labels.withId(USERNAME_PASSWORD_ALT),
-                StaticProperties.group(
-                    Labels.withId(USERNAME_GROUP_KEY),
-                    StaticProperties.stringFreeTextProperty(
-                        Labels.withId(DATABASE_USER_KEY)),
-                    StaticProperties.secretValue(Labels.withId(DATABASE_PASSWORD_KEY))
-                ))
-        );
+            .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
+            .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 8086)
+            .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
+            .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
+            .requiredAlternatives(Labels.withId(DATABASE_AUTHENTICATION),
+                    Alternatives.from(Labels.withId(DATABASE_TOKEN_ALT),
+                            StaticProperties.secretValue(Labels.withId(DATABASE_TOKEN_KEY))),
+                    Alternatives.from(Labels.withId(USERNAME_PASSWORD_ALT),
+                            StaticProperties.group(Labels.withId(USERNAME_GROUP_KEY),
+                                    StaticProperties.stringFreeTextProperty(Labels.withId(DATABASE_USER_KEY)),
+                                    StaticProperties.secretValue(Labels.withId(DATABASE_PASSWORD_KEY)))));
   }
 
   public static InfluxConnectionSettings fromExtractor(IParameterExtractor extractor) {

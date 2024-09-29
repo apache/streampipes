@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.migrations.v970;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -24,12 +23,12 @@ import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RemoveNodesFromOpcUaAdaptersMigration implements Migration {
 
@@ -38,8 +37,7 @@ public class RemoveNodesFromOpcUaAdaptersMigration implements Migration {
   private final IAdapterStorage adapterStorage;
 
   public RemoveNodesFromOpcUaAdaptersMigration() {
-    adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
-                                               .getAdapterInstanceStorage();
+    adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
   }
 
   public RemoveNodesFromOpcUaAdaptersMigration(IAdapterStorage adapterStorage) {
@@ -78,21 +76,17 @@ public class RemoveNodesFromOpcUaAdaptersMigration implements Migration {
    * This method sets the nodes and latest fetched nodes of the adapter configuration to an empty list.
    */
   private static void removeTreeNodesFromConfiguration(AdapterDescription adapter) {
-    adapter.getConfig()
-           .stream()
-           .filter(RuntimeResolvableTreeInputStaticProperty.class::isInstance)
-           .map(RuntimeResolvableTreeInputStaticProperty.class::cast)
-           .forEach(treeInputProperty -> {
-             treeInputProperty.setNodes(Collections.emptyList());
-             treeInputProperty.setLatestFetchedNodes(Collections.emptyList());
-           });
+    adapter.getConfig().stream().filter(RuntimeResolvableTreeInputStaticProperty.class::isInstance)
+            .map(RuntimeResolvableTreeInputStaticProperty.class::cast).forEach(treeInputProperty -> {
+              treeInputProperty.setNodes(Collections.emptyList());
+              treeInputProperty.setLatestFetchedNodes(Collections.emptyList());
+            });
   }
 
   private static List<AdapterDescription> filterForOpcUaAdapters(List<AdapterDescription> adapters) {
     return adapters.stream()
-                   .filter(adapter -> adapter.getAppId()
-                                             .equals("org.apache.streampipes.connect.iiot.adapters.opcua"))
-                   .toList();
+            .filter(adapter -> adapter.getAppId().equals("org.apache.streampipes.connect.iiot.adapters.opcua"))
+            .toList();
   }
 
 }

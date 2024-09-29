@@ -15,35 +15,34 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.s7.config;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ConfigurationParserTest {
 
   @Test
   public void testGetNodeInformationFromCodePropertyWithComments() {
     var configBlock = """
-        // This code block can be used to manually specify the addresses of the PLC registers.
-        // The syntax is based on the PLC4X syntax, see [1].
-        // Address Pattern:
-        // propertyName=%{Memory-Area}{start-address}:{Data-Type}[{array-size}]
-        //
-        // Sample:
-        temperature=%I0.0:INT
+            // This code block can be used to manually specify the addresses of the PLC registers.
+            // The syntax is based on the PLC4X syntax, see [1].
+            // Address Pattern:
+            // propertyName=%{Memory-Area}{start-address}:{Data-Type}[{array-size}]
+            //
+            // Sample:
+            temperature=%I0.0:INT
 
 
-        // [1] https://plc4x.apache.org/users/protocols/s7.html
-        """;
+            // [1] https://plc4x.apache.org/users/protocols/s7.html
+            """;
     var result = new ConfigurationParser().getNodeInformationFromCodeProperty(configBlock);
 
     assertEquals(1, result.size());
@@ -54,9 +53,9 @@ public class ConfigurationParserTest {
   @Test
   public void testGetNodeInformationFromCodePropertyMultipleEntries() {
     var configBlock = """
-        v1=%I0.0:INT
-        v2=%I0.0:BOOL
-        """;
+            v1=%I0.0:INT
+            v2=%I0.0:BOOL
+            """;
     var result = new ConfigurationParser().getNodeInformationFromCodeProperty(configBlock);
 
     assertEquals(2, result.size());
@@ -81,7 +80,6 @@ public class ConfigurationParserTest {
     assertEquals(Datatypes.Integer, result);
   }
 
-
   @Test
   public void testGetNodeInformationFromCodePropertyNoEntries() {
     var configBlock = "";
@@ -95,7 +93,6 @@ public class ConfigurationParserTest {
     var result = new ConfigurationParser().isPLCArray("%DB3.DB0:BOOL[100]");
     Assertions.assertTrue(result);
   }
-
 
   @Test
   public void testIsNoPLCArray() {

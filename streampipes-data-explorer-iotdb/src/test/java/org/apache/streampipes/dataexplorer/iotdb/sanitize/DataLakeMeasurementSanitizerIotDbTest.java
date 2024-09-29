@@ -15,18 +15,18 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.iotdb.sanitize;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.test.generator.EventPropertyPrimitiveTestBuilder;
 import org.apache.streampipes.test.generator.EventSchemaTestBuilder;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
 public class DataLakeMeasurementSanitizerIotDbTest {
 
@@ -40,27 +40,10 @@ public class DataLakeMeasurementSanitizerIotDbTest {
   @Test
   public void cleanDataLakeMeasure() {
     var eventSchema = EventSchemaTestBuilder.create()
-        .withEventProperty(
-            EventPropertyPrimitiveTestBuilder
-                .create()
-                .withRuntimeName("timestamp")
-                .build())
-        .withEventProperty(
-            EventPropertyPrimitiveTestBuilder
-                .create()
-                .withRuntimeName("all")
-                .build())
-        .withEventProperty(
-            EventPropertyPrimitiveTestBuilder
-                .create()
-                .withRuntimeName("pressure")
-                .build())
-        .build();
-    var measure = new DataLakeMeasure(
-        "invalid.Measure",
-        "s0::%s".formatted("timestamp"),
-        eventSchema
-    );
+            .withEventProperty(EventPropertyPrimitiveTestBuilder.create().withRuntimeName("timestamp").build())
+            .withEventProperty(EventPropertyPrimitiveTestBuilder.create().withRuntimeName("all").build())
+            .withEventProperty(EventPropertyPrimitiveTestBuilder.create().withRuntimeName("pressure").build()).build();
+    var measure = new DataLakeMeasure("invalid.Measure", "s0::%s".formatted("timestamp"), eventSchema);
     var sanitizer = new DataLakeMeasurementSanitizerIotDb(clientMock, measure);
 
     sanitizer.cleanDataLakeMeasure();

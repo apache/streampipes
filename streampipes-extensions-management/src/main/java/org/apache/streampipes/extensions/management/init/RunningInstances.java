@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.init;
 
 import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntime;
@@ -30,13 +29,9 @@ import java.util.Map;
 public enum RunningInstances {
   INSTANCE;
 
-  private final Map<String,
-      ElementInfo<NamedStreamPipesEntity, IStreamPipesRuntime<?, ?>>> runningInstances = new HashMap<>();
+  private final Map<String, ElementInfo<NamedStreamPipesEntity, IStreamPipesRuntime<?, ?>>> runningInstances = new HashMap<>();
 
-
-  public void add(String id,
-                  NamedStreamPipesEntity description,
-                  IStreamPipesRuntime<?, ?> runtime) {
+  public void add(String id, NamedStreamPipesEntity description, IStreamPipesRuntime<?, ?> runtime) {
     runningInstances.put(id, new ElementInfo<>(description, runtime));
   }
 

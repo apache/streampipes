@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.monitoring;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -36,34 +35,19 @@ public class SpLogMessage {
     return from(exception, "");
   }
 
-  public static SpLogMessage from(Exception exception,
-                                  String detail) {
+  public static SpLogMessage from(Exception exception, String detail) {
     var cause = exception.getCause() != null ? exception.getCause().getMessage() : exception.getMessage();
 
-    return new SpLogMessage(
-        SpLogLevel.ERROR,
-        exception.getMessage(),
-        detail,
-        ExceptionUtils.getStackTrace(exception),
-        cause);
+    return new SpLogMessage(SpLogLevel.ERROR, exception.getMessage(), detail, ExceptionUtils.getStackTrace(exception),
+            cause);
   }
 
-  public static SpLogMessage info(String title,
-                                  String details) {
-    return new SpLogMessage(
-        SpLogLevel.INFO,
-        title,
-        details
-    );
+  public static SpLogMessage info(String title, String details) {
+    return new SpLogMessage(SpLogLevel.INFO, title, details);
   }
 
-  public static SpLogMessage warn(String title,
-                                  String details) {
-    return new SpLogMessage(
-        SpLogLevel.WARN,
-        title,
-        details
-    );
+  public static SpLogMessage warn(String title, String details) {
+    return new SpLogMessage(SpLogLevel.WARN, title, details);
   }
 
   public SpLogMessage() {
@@ -78,19 +62,13 @@ public class SpLogMessage {
     this.fullStackTrace = other.getFullStackTrace();
   }
 
-  private SpLogMessage(SpLogLevel level,
-                      String title,
-                      String detail) {
+  private SpLogMessage(SpLogLevel level, String title, String detail) {
     this.level = level;
     this.title = title;
     this.detail = detail;
   }
 
-  private SpLogMessage(SpLogLevel level,
-                      String title,
-                      String detail,
-                      String fullStackTrace,
-                      String cause) {
+  private SpLogMessage(SpLogLevel level, String title, String detail, String fullStackTrace, String cause) {
     this.level = level;
     this.title = title;
     this.detail = detail;

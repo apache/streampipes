@@ -15,13 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.prometheus.adapter;
 
 /**
- * The `AdapterMetricsManager` enum provides a single access point for retrieving the instance of
- * the `AdapterMetrics` class and ensures that only one instance of the metrics manager exists throughout the
- * application's lifecycle.
+ * The `AdapterMetricsManager` enum provides a single access point for retrieving the instance of the `AdapterMetrics`
+ * class and ensures that only one instance of the metrics manager exists throughout the application's lifecycle.
  */
 public enum AdapterMetricsManager {
 

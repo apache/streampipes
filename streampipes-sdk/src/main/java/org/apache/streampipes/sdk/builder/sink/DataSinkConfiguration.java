@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder.sink;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
@@ -30,12 +29,11 @@ public class DataSinkConfiguration implements IDataSinkConfiguration {
   private final DataSinkDescription dataSinkDescription;
 
   public static DataSinkConfiguration create(Supplier<IStreamPipesDataSink> supplier,
-                                             DataSinkDescription dataSinkDescription) {
+          DataSinkDescription dataSinkDescription) {
     return new DataSinkConfiguration(supplier, dataSinkDescription);
   }
 
-  private DataSinkConfiguration(Supplier<IStreamPipesDataSink> supplier,
-                               DataSinkDescription dataSinkDescription) {
+  private DataSinkConfiguration(Supplier<IStreamPipesDataSink> supplier, DataSinkDescription dataSinkDescription) {
     this.supplier = supplier;
     this.dataSinkDescription = dataSinkDescription;
   }

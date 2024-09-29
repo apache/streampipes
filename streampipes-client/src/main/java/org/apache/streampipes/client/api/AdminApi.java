@@ -51,8 +51,8 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
 
   @Override
   public SpServiceConfiguration getServiceConfiguration(String serviceGroup) {
-    var opt = getSingleOpt(
-        getExtensionsServiceConfigurationPath().addToPath(serviceGroup), SpServiceConfiguration.class);
+    var opt = getSingleOpt(getExtensionsServiceConfigurationPath().addToPath(serviceGroup),
+            SpServiceConfiguration.class);
 
     return opt.orElseGet(SpServiceConfiguration::new);
   }
@@ -69,7 +69,9 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
 
   /**
    * Register migration configs {@link ModelMigratorConfig} at the StreamPipes Core service.
-   * @param migrationConfigs list of migration configs to be registered
+   * 
+   * @param migrationConfigs
+   *          list of migration configs to be registered
    */
   @Override
   public void registerMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId) {
@@ -82,27 +84,19 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
   }
 
   private StreamPipesApiPath getExtensionsServiceRegistrationPath() {
-    return StreamPipesApiPath
-        .fromBaseApiPath()
-        .addToPath("extensions-services");
+    return StreamPipesApiPath.fromBaseApiPath().addToPath("extensions-services");
   }
 
   private StreamPipesApiPath getExtensionsServiceConfigurationPath() {
-    return StreamPipesApiPath
-        .fromBaseApiPath()
-        .addToPath("extensions-services-configurations");
+    return StreamPipesApiPath.fromBaseApiPath().addToPath("extensions-services-configurations");
   }
 
   private StreamPipesApiPath getMessagingSettingsPath() {
-    return StreamPipesApiPath
-        .fromBaseApiPath()
-        .addToPath("messaging");
+    return StreamPipesApiPath.fromBaseApiPath().addToPath("messaging");
   }
 
   private StreamPipesApiPath getFunctionsPath() {
-    return StreamPipesApiPath
-        .fromBaseApiPath()
-        .addToPath("functions");
+    return StreamPipesApiPath.fromBaseApiPath().addToPath("functions");
   }
 
   private StreamPipesApiPath getDeleteFunctionPath(String functionId) {
@@ -110,8 +104,6 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
   }
 
   private StreamPipesApiPath getMigrationPath() {
-    return StreamPipesApiPath
-            .fromBaseApiPath()
-            .addToPath("migrations");
+    return StreamPipesApiPath.fromBaseApiPath().addToPath("migrations");
   }
 }

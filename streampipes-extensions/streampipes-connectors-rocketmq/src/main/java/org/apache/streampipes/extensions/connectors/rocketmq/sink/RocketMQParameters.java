@@ -17,10 +17,10 @@
  */
 package org.apache.streampipes.extensions.connectors.rocketmq.sink;
 
-import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
-
 import static org.apache.streampipes.extensions.connectors.rocketmq.sink.RocketMQPublisherSink.ENDPOINT_KEY;
 import static org.apache.streampipes.extensions.connectors.rocketmq.sink.RocketMQPublisherSink.TOPIC_KEY;
+
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 
 public class RocketMQParameters {
   private final String endpoint;

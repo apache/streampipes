@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.migration;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
@@ -23,19 +22,18 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 public class MigrationUtilsTest {
 
   List<ModelMigratorConfig> migrationConfigs = List.of(
-          new ModelMigratorConfig("app-id",  SpServiceTagPrefix.DATA_PROCESSOR, 0, 1),
-          new ModelMigratorConfig("app-id", SpServiceTagPrefix.DATA_PROCESSOR,  1, 2),
+          new ModelMigratorConfig("app-id", SpServiceTagPrefix.DATA_PROCESSOR, 0, 1),
+          new ModelMigratorConfig("app-id", SpServiceTagPrefix.DATA_PROCESSOR, 1, 2),
           new ModelMigratorConfig("other-app-id", SpServiceTagPrefix.DATA_PROCESSOR, 0, 1),
-          new ModelMigratorConfig("other-app-id", SpServiceTagPrefix.DATA_SINK, 1, 2)
-  );
+          new ModelMigratorConfig("other-app-id", SpServiceTagPrefix.DATA_SINK, 1, 2));
 
   @Test
   public void findMigrations() {
@@ -57,11 +55,11 @@ public class MigrationUtilsTest {
     pipelineElement4.setVersion(0);
 
     Assertions.assertEquals(migrationConfigs.get(0),
-                            MigrationUtils.getApplicableMigration(pipelineElement1, migrationConfigs).get());
+            MigrationUtils.getApplicableMigration(pipelineElement1, migrationConfigs).get());
     Assertions.assertEquals(migrationConfigs.get(1),
-                            MigrationUtils.getApplicableMigration(pipelineElement2, migrationConfigs).get());
+            MigrationUtils.getApplicableMigration(pipelineElement2, migrationConfigs).get());
     Assertions.assertEquals(migrationConfigs.get(2),
-                            MigrationUtils.getApplicableMigration(pipelineElement3, migrationConfigs).get());
+            MigrationUtils.getApplicableMigration(pipelineElement3, migrationConfigs).get());
     Assertions.assertTrue(MigrationUtils.getApplicableMigration(pipelineElement4, migrationConfigs).isEmpty());
   }
 }

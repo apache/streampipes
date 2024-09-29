@@ -17,19 +17,15 @@
  */
 package org.apache.streampipes.commons.prometheus;
 
-
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
 import io.prometheus.client.Summary;
 
-
 public class StreamPipesCollectorRegistry {
 
   private static final CollectorRegistry collectorRegistry = new CollectorRegistry(true);
-
-
 
   public static CollectorRegistry getCollectorRegistry() {
     return collectorRegistry;
@@ -37,63 +33,38 @@ public class StreamPipesCollectorRegistry {
 
   public static Gauge registerGauge(String name, String help) {
 
-    return Gauge.build()
-      .name(name)
-      .help(help)
-      .register(collectorRegistry);
+    return Gauge.build().name(name).help(help).register(collectorRegistry);
   }
 
   public static Gauge registerGauge(String name, String help, String... labelNames) {
-    return Gauge.build()
-                .name(name)
-                .help(help)
-                .labelNames(labelNames)
-                .register(collectorRegistry);
+    return Gauge.build().name(name).help(help).labelNames(labelNames).register(collectorRegistry);
   }
 
   public static Counter registerCounter(String name, String help) {
-    return Counter.build()
-      .name(name)
-      .help(help)
-      .register(collectorRegistry);
+    return Counter.build().name(name).help(help).register(collectorRegistry);
   }
 
   public static Histogram registerHistogram(String name, String help) {
-    return Histogram.build()
-      .name(name)
-      .help(help)
-      .register(collectorRegistry);
+    return Histogram.build().name(name).help(help).register(collectorRegistry);
   }
 
   public static Summary registerSummary(String name, String help) {
-    return Summary.build()
-      .name(name)
-      .help(help)
-      .register(collectorRegistry);
+    return Summary.build().name(name).help(help).register(collectorRegistry);
   }
   public static Gauge registerGauge(String name) {
-    return Gauge.build()
-      .name(name)
-      .register(collectorRegistry);
+    return Gauge.build().name(name).register(collectorRegistry);
   }
 
   public static Counter registerCounter(String name) {
-    return Counter.build()
-      .name(name)
-      .register(collectorRegistry);
+    return Counter.build().name(name).register(collectorRegistry);
   }
 
   public static Histogram registerHistogram(String name) {
-    return Histogram.build()
-      .name(name)
-      .register(collectorRegistry);
+    return Histogram.build().name(name).register(collectorRegistry);
   }
 
   public static Summary registerSummary(String name) {
-    return Summary.build()
-      .name(name)
-      .register(collectorRegistry);
+    return Summary.build().name(name).register(collectorRegistry);
   }
-
 
 }

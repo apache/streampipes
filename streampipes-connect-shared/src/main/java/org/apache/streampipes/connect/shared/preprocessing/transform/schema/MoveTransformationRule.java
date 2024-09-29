@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
 import org.apache.streampipes.extensions.api.connect.TransformationRule;
@@ -38,7 +37,6 @@ public class MoveTransformationRule implements TransformationRule {
   public Map<String, Object> apply(Map<String, Object> event) {
 
     Map<String, Object> objectToMove = (Map<String, Object>) ((HashMap<String, Object>) getItem(event, oldKey)).clone();
-
 
     Map<String, Object> resultEvent = addItem(event, newKey, objectToMove);
     resultEvent = deleteItem(resultEvent, oldKey);
@@ -63,15 +61,14 @@ public class MoveTransformationRule implements TransformationRule {
       String key = keys.get(0);
       List<String> newKeysTmpList = keys.subList(1, keys.size());
 
-      Map<String, Object> newSubEvent =
-          addItem((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList, movedObject);
+      Map<String, Object> newSubEvent = addItem((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList,
+              movedObject);
 
       event.remove(key);
       event.put(key, newSubEvent);
       return event;
     }
   }
-
 
   private Map<String, Object> getItem(Map<String, Object> event, List<String> keys) {
     if (keys.size() == 1) {
@@ -94,8 +91,7 @@ public class MoveTransformationRule implements TransformationRule {
       String key = keys.get(0);
       List<String> newKeysTmpList = keys.subList(1, keys.size());
 
-      Map<String, Object> newSubEvent =
-          deleteItem((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList);
+      Map<String, Object> newSubEvent = deleteItem((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList);
 
       event.remove(key);
       event.put(key, newSubEvent);

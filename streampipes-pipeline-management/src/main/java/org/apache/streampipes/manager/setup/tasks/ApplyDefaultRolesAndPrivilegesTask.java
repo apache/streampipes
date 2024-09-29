@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.setup.tasks;
 
 import org.apache.streampipes.model.client.user.Privilege;
@@ -26,10 +25,10 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.authorization.PrivilegeManager;
 import org.apache.streampipes.user.management.authorization.RoleManager;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 public class ApplyDefaultRolesAndPrivilegesTask implements InstallationTask {
 
@@ -52,8 +51,7 @@ public class ApplyDefaultRolesAndPrivilegesTask implements InstallationTask {
     updateDocs(privilegeStorage, defaultPrivileges);
   }
 
-  private <T extends Storable> void updateDocs(CRUDStorage<T> storage,
-                                               List<T> defaultDocs) {
+  private <T extends Storable> void updateDocs(CRUDStorage<T> storage, List<T> defaultDocs) {
     defaultDocs.forEach(role -> {
       var doc = storage.getElementById(role.getElementId());
       if (doc != null) {

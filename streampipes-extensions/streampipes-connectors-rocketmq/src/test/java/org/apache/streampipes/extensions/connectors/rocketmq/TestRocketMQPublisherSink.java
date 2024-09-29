@@ -17,10 +17,21 @@
  */
 package org.apache.streampipes.extensions.connectors.rocketmq;
 
+import static org.apache.streampipes.extensions.connectors.rocketmq.sink.RocketMQPublisherSink.ENDPOINT_KEY;
+import static org.apache.streampipes.extensions.connectors.rocketmq.sink.RocketMQPublisherSink.TOPIC_KEY;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.extensions.connectors.rocketmq.sink.RocketMQPublisherSink;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
+
+import java.io.IOException;
 
 import org.apache.rocketmq.client.apis.ClientException;
 import org.apache.rocketmq.client.apis.ClientServiceProvider;
@@ -30,17 +41,6 @@ import org.apache.rocketmq.client.apis.producer.Producer;
 import org.apache.rocketmq.client.apis.producer.ProducerBuilder;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import java.io.IOException;
-
-import static org.apache.streampipes.extensions.connectors.rocketmq.sink.RocketMQPublisherSink.ENDPOINT_KEY;
-import static org.apache.streampipes.extensions.connectors.rocketmq.sink.RocketMQPublisherSink.TOPIC_KEY;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class TestRocketMQPublisherSink {
 

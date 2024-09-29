@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.export;
-
-import org.junit.jupiter.api.BeforeEach;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class TestItemGenerator {
 

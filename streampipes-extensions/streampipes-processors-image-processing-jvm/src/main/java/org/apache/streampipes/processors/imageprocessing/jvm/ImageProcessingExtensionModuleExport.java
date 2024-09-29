@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.imageprocessing.jvm;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -39,18 +38,12 @@ public class ImageProcessingExtensionModuleExport implements IExtensionModuleExp
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new ImageEnrichmentProcessor(),
-        new ImageCropperProcessor(),
-        new QrCodeReaderProcessor(),
-        new GenericImageClassificationProcessor()
-    );
+    return List.of(new ImageEnrichmentProcessor(), new ImageCropperProcessor(), new QrCodeReaderProcessor(),
+            new GenericImageClassificationProcessor());
   }
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return List.of(
-        new ImageEnrichmentProcessorMigrationv1()
-    );
+    return List.of(new ImageEnrichmentProcessorMigrationv1());
   }
 }

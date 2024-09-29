@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.function.FunctionRegistrationService;
@@ -27,6 +26,9 @@ import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,9 +38,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/functions")
@@ -54,10 +53,7 @@ public class FunctionsResource extends AbstractAuthGuardedRestResource {
     return ok(FunctionRegistrationService.INSTANCE.getFunction(functionId));
   }
 
-  @PostMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SuccessMessage> registerFunctions(@RequestBody List<FunctionDefinition> functions) {
     functions.forEach(FunctionRegistrationService.INSTANCE::registerFunction);
     return ok(Notifications.success("Function successfully registered"));

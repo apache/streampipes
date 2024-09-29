@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.parser;
-
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,6 +44,5 @@ public class BooleanParserTest {
   public void parseNotABoolean() {
     Assertions.assertFalse(parser.parse("not a boolean"));
   }
-
 
 }

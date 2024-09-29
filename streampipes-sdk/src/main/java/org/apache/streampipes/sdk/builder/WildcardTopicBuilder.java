@@ -41,8 +41,8 @@ public class WildcardTopicBuilder {
   }
 
   public WildcardTopicBuilder addSimpleMapping(TopicParameterType topicParameterType, String runtimeName) {
-    this.wildcardTopicDefinition.getWildcardTopicMappings().add(new WildcardTopicMapping(topicParameterType.name(),
-        runtimeName, runtimeName));
+    this.wildcardTopicDefinition.getWildcardTopicMappings()
+            .add(new WildcardTopicMapping(topicParameterType.name(), runtimeName, runtimeName));
     return this;
   }
 
@@ -65,7 +65,6 @@ public class WildcardTopicBuilder {
   public WildcardTopicBuilder addSensorTypeMapping(String runtimeName) {
     return addSimpleMapping(TopicParameterType.SENSOR_TYPE, runtimeName);
   }
-
 
   public WildcardTopicDefinition build() {
     return this.wildcardTopicDefinition;

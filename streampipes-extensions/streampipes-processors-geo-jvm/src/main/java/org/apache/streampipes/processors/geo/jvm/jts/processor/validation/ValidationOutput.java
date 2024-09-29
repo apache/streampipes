@@ -15,10 +15,8 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.jts.processor.validation;
 
 public enum ValidationOutput {
   VALID, INVALID;
 }
-

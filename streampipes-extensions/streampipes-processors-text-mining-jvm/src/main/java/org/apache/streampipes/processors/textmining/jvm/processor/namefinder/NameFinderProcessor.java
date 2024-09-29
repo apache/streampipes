@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.textmining.jvm.processor.namefinder;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -39,14 +38,14 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-import opennlp.tools.namefind.NameFinderME;
-import opennlp.tools.namefind.TokenNameFinderModel;
-import opennlp.tools.util.Span;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+import opennlp.tools.namefind.NameFinderME;
+import opennlp.tools.namefind.TokenNameFinderModel;
+import opennlp.tools.util.Span;
 
 public class NameFinderProcessor extends StreamPipesDataProcessor {
 
@@ -59,31 +58,22 @@ public class NameFinderProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.textmining.jvm.namefinder", 0)
-        .category(DataProcessorType.ENRICH_TEXT)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.listRequirement(Datatypes.String),
-                Labels.withId(TOKENS_FIELD_KEY),
-                PropertyScope.NONE)
-            .build())
-        .requiredFile(Labels.withId(MODEL))
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.listStringEp(
-                Labels.withId(FOUND_NAME_FIELD_KEY),
-                FOUND_NAME_FIELD_KEY,
-                "http://schema.org/ItemList")))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.namefinder", 0)
+            .category(DataProcessorType.ENRICH_TEXT)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(Datatypes.String),
+                            Labels.withId(TOKENS_FIELD_KEY), PropertyScope.NONE)
+                    .build())
+            .requiredFile(Labels.withId(MODEL))
+            .outputStrategy(OutputStrategies.append(EpProperties.listStringEp(Labels.withId(FOUND_NAME_FIELD_KEY),
+                    FOUND_NAME_FIELD_KEY, "http://schema.org/ItemList")))
+            .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     String filename = parameters.extractor().selectedFilename(MODEL);
     byte[] fileContent = runtimeContext.getStreamPipesClient().fileApi().getFileContent(filename);
     this.tokens = parameters.extractor().mappingPropertyValue(TOKENS_FIELD_KEY);

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.client.api.config;
 
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.tubemq.adapter;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -36,6 +35,12 @@ import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+
 import org.apache.inlong.tubemq.client.common.PeerInfo;
 import org.apache.inlong.tubemq.client.config.ConsumerConfig;
 import org.apache.inlong.tubemq.client.consumer.ConsumePosition;
@@ -47,12 +52,6 @@ import org.apache.inlong.tubemq.client.factory.TubeSingleSessionFactory;
 import org.apache.inlong.tubemq.corebase.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
 
 public class TubeMQProtocol implements StreamPipesAdapter {
 
@@ -101,23 +100,16 @@ public class TubeMQProtocol implements StreamPipesAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder
-        .create(ID, 0, TubeMQProtocol::new)
-        .withSupportedParsers(Parsers.defaultParsers())
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .withCategory(AdapterType.Generic)
-        .requiredTextParameter(
-            Labels.withId(MASTER_HOST_AND_PORT_KEY))
-        .requiredTextParameter(Labels.withId(TOPIC_KEY))
-        .requiredTextParameter(Labels.withId(CONSUMER_GROUP_KEY))
-        .buildConfiguration();
+    return AdapterConfigurationBuilder.create(ID, 0, TubeMQProtocol::new).withSupportedParsers(Parsers.defaultParsers())
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .withCategory(AdapterType.Generic).requiredTextParameter(Labels.withId(MASTER_HOST_AND_PORT_KEY))
+            .requiredTextParameter(Labels.withId(TOPIC_KEY)).requiredTextParameter(Labels.withId(CONSUMER_GROUP_KEY))
+            .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     applyConfiguration(extractor.getStaticPropertyExtractor());
     var processor = new BrokerEventProcessor(extractor.selectedParser(), collector);
 
@@ -161,14 +153,14 @@ public class TubeMQProtocol implements StreamPipesAdapter {
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
+          throws AdapterException {
     shutdown(messageSessionFactory, pushConsumer);
   }
 
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     final List<byte[]> elements = new ArrayList<>();
     applyConfiguration(extractor.getStaticPropertyExtractor());
 

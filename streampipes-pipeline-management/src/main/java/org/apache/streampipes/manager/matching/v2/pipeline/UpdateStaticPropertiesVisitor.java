@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
 import org.apache.streampipes.manager.matching.mapping.AbstractRequirementsSelectorGenerator;
@@ -117,11 +116,7 @@ public class UpdateStaticPropertiesVisitor extends DefaultStaticPropertyVisitor 
 
   private void updateMappingProperty(MappingProperty mappingProperty) {
     AbstractRequirementsSelectorGenerator generator = RequirementsSelectorGeneratorFactory
-        .getRequirementsSelector(
-            mappingProperty,
-            inputStreams,
-            pipelineElement
-        );
+            .getRequirementsSelector(mappingProperty, inputStreams, pipelineElement);
     mappingProperty.setMapsFromOptions(generator.generateSelectors());
   }
 }

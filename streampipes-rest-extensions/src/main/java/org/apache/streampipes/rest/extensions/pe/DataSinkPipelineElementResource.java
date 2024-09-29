@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions.pe;
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
@@ -30,19 +29,16 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping(SpServicePathPrefix.DATA_SINK)
-public class DataSinkPipelineElementResource extends InvocablePipelineElementResource
-    <DataSinkInvocation,
-        IStreamPipesDataSink,
-        IDataSinkConfiguration,
-        IDataSinkRuntime,
-        DataSinkParameterExtractor> {
+public class DataSinkPipelineElementResource
+        extends
+          InvocablePipelineElementResource<DataSinkInvocation, IStreamPipesDataSink, IDataSinkConfiguration, IDataSinkRuntime, DataSinkParameterExtractor> {
 
   public DataSinkPipelineElementResource() {
     super(DataSinkInvocation.class);
@@ -55,7 +51,7 @@ public class DataSinkPipelineElementResource extends InvocablePipelineElementRes
 
   @Override
   protected String getInstanceId(String uri, String elementId) {
-    //return Util.getInstanceId(uri, PipelineElementPrefix.DATA_SINK, elementId);
+    // return Util.getInstanceId(uri, PipelineElementPrefix.DATA_SINK, elementId);
     return InstanceIdExtractor.extractId(uri);
   }
 
@@ -79,9 +75,8 @@ public class DataSinkPipelineElementResource extends InvocablePipelineElementRes
   }
 
   @Override
-  protected Response invokeRuntime(String runningInstanceId,
-                                   IStreamPipesDataSink pipelineElement,
-                                   DataSinkInvocation graph) {
+  protected Response invokeRuntime(String runningInstanceId, IStreamPipesDataSink pipelineElement,
+          DataSinkInvocation graph) {
     var runtime = getRuntime();
     var response = runtime.onRuntimeInvoked(runningInstanceId, pipelineElement, graph);
     RunningInstances.INSTANCE.add(runningInstanceId, graph, runtime);

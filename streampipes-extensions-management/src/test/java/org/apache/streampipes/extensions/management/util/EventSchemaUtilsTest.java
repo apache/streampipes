@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.util;
 
 import org.apache.streampipes.model.schema.EventProperty;
@@ -29,18 +28,14 @@ import org.junit.jupiter.api.Test;
 
 public class EventSchemaUtilsTest {
 
-  EventProperty timestampProperty = EventPropertyPrimitiveTestBuilder.create()
-      .withSemanticType(SO.DATE_TIME)
-      .withRuntimeName("timestamp")
-      .build();
+  EventProperty timestampProperty = EventPropertyPrimitiveTestBuilder.create().withSemanticType(SO.DATE_TIME)
+          .withRuntimeName("timestamp").build();
 
   @Test
   public void noTimestampPropery() {
 
     var eventSchema = EventSchemaTestBuilder.create()
-        .withEventProperty(
-            EventPropertyPrimitiveTestBuilder.create().build())
-        .build();
+            .withEventProperty(EventPropertyPrimitiveTestBuilder.create().build()).build();
 
     var result = EventSchemaUtils.getTimestampProperty(eventSchema);
 
@@ -49,9 +44,7 @@ public class EventSchemaUtilsTest {
 
   @Test
   public void getTimestampProperty() {
-    var eventSchema = EventSchemaTestBuilder.create()
-        .withEventProperty(timestampProperty)
-        .build();
+    var eventSchema = EventSchemaTestBuilder.create().withEventProperty(timestampProperty).build();
 
     var result = EventSchemaUtils.getTimestampProperty(eventSchema);
 
@@ -63,11 +56,8 @@ public class EventSchemaUtilsTest {
   public void getNestedTimestampProperty() {
 
     var eventSchema = EventSchemaTestBuilder.create()
-        .withEventProperty(
-            EventPropertyNestedTestBuilder.create()
-                .withEventProperty(timestampProperty)
-                .build())
-        .build();
+            .withEventProperty(EventPropertyNestedTestBuilder.create().withEventProperty(timestampProperty).build())
+            .build();
 
     var result = EventSchemaUtils.getTimestampProperty(eventSchema);
 

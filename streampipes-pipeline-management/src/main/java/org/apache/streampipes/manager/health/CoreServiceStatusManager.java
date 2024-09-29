@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.health;
 
 import org.apache.streampipes.model.configuration.SpCoreConfiguration;
@@ -51,9 +50,6 @@ public class CoreServiceStatusManager {
   }
 
   private void logService(SpCoreConfiguration coreConfig) {
-    LOG.info(
-        "Core is now in {} state",
-        coreConfig.getServiceStatus()
-    );
+    LOG.info("Core is now in {} state", coreConfig.getServiceStatus());
   }
 }

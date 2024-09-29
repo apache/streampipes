@@ -21,7 +21,6 @@ import org.apache.streampipes.model.client.user.ServiceAccount;
 
 public class ServiceAccountDetails extends PrincipalUserDetails<ServiceAccount> {
 
-
   public ServiceAccountDetails(ServiceAccount details) {
     super(details);
   }

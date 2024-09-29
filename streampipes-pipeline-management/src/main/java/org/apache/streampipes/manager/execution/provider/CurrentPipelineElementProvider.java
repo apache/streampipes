@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution.provider;
 
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;

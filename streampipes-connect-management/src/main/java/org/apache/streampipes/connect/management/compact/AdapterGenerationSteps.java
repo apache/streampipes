@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.compact;
 
 import org.apache.streampipes.connect.management.compact.generator.AdapterBasicsGenerator;
@@ -31,15 +30,8 @@ import java.util.List;
 public class AdapterGenerationSteps {
 
   public List<AdapterModelGenerator> getGenerators() {
-    return List.of(
-        new AdapterBasicsGenerator(),
-        new AdapterConfigGenerator(),
-        new AdapterSchemaGenerator(
-            new SchemaMetadataEnricher(),
-            new GuessManagement()
-        ),
-        new AdapterEnrichmentRuleGenerator(),
-        new AdapterTransformationRuleGenerator()
-    );
+    return List.of(new AdapterBasicsGenerator(), new AdapterConfigGenerator(),
+            new AdapterSchemaGenerator(new SchemaMetadataEnricher(), new GuessManagement()),
+            new AdapterEnrichmentRuleGenerator(), new AdapterTransformationRuleGenerator());
   }
 }

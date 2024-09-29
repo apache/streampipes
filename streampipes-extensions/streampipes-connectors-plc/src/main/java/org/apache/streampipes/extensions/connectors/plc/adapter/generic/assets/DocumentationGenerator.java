@@ -15,18 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.generic.assets;
-
-import org.apache.plc4x.java.api.PlcDriver;
-import org.apache.plc4x.java.api.metadata.Option;
-import org.apache.plc4x.java.api.metadata.OptionMetadata;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.apache.plc4x.java.api.PlcDriver;
+import org.apache.plc4x.java.api.metadata.Option;
+import org.apache.plc4x.java.api.metadata.OptionMetadata;
 
 public class DocumentationGenerator {
 
@@ -43,8 +42,7 @@ public class DocumentationGenerator {
   private final PlcDriver driver;
   private String docsTemplate;
 
-  public DocumentationGenerator(PlcDriver driver,
-                                String docsTemplate) {
+  public DocumentationGenerator(PlcDriver driver, String docsTemplate) {
     this.driver = driver;
     this.docsTemplate = docsTemplate;
   }
@@ -54,11 +52,10 @@ public class DocumentationGenerator {
     var protocolMetadataRequired = getMetadata(optionMetadata, OptionMetadata::getRequiredOptions);
     var protocolMetadataAdvanced = getMetadata(optionMetadata, OptionMetadata::getOptions);
 
-    docsTemplate = docsTemplate
-        .replaceAll(DRIVER_NAME, driver.getProtocolName())
-        .replaceAll(SUPPORTED_TRANSPORTS, toMarkdownList(getSupportedTransports()))
-        .replaceAll(PROTOCOL_METADATA_REQUIRED, toMarkdownList(protocolMetadataRequired))
-        .replaceAll(PROTOCOL_METADATA_ADVANCED, toMarkdownList(protocolMetadataAdvanced));
+    docsTemplate = docsTemplate.replaceAll(DRIVER_NAME, driver.getProtocolName())
+            .replaceAll(SUPPORTED_TRANSPORTS, toMarkdownList(getSupportedTransports()))
+            .replaceAll(PROTOCOL_METADATA_REQUIRED, toMarkdownList(protocolMetadataRequired))
+            .replaceAll(PROTOCOL_METADATA_ADVANCED, toMarkdownList(protocolMetadataAdvanced));
 
     driver.getMetadata().getSupportedTransportCodes().forEach(tc -> {
       var transportMetadata = driver.getMetadata().getTransportConfigurationOptionMetadata(tc);
@@ -71,37 +68,23 @@ public class DocumentationGenerator {
     return docsTemplate.getBytes(StandardCharsets.UTF_8);
   }
 
-  private String replaceTransportMetadata(String docsTemplate,
-                                          String placeholder,
-                                          String transportCode,
-                                          List<String> metadata) {
-    return docsTemplate.replaceAll(
-        placeholder,
-        String.format(
-            "**%s**\n\n%s",
-            transportCode,
-            toMarkdownList(metadata)
-        ));
+  private String replaceTransportMetadata(String docsTemplate, String placeholder, String transportCode,
+          List<String> metadata) {
+    return docsTemplate.replaceAll(placeholder, String.format("**%s**\n\n%s", transportCode, toMarkdownList(metadata)));
   }
 
   private List<String> getSupportedTransports() {
     return driver.getMetadata().getSupportedTransportCodes();
   }
 
-
   private List<String> getMetadata(Optional<OptionMetadata> optionMetadata,
-                                   Function<OptionMetadata, List<Option>> metadataFn) {
-    return optionMetadata
-        .map(om -> metadataFn.apply(om)
-            .stream()
+          Function<OptionMetadata, List<Option>> metadataFn) {
+    return optionMetadata.map(om -> metadataFn.apply(om).stream()
             .map(meta -> String.format("%s: %s (%s)", meta.getKey(), meta.getDescription(), meta.getType().toString()))
-            .toList())
-        .orElseGet(List::of);
+            .toList()).orElseGet(List::of);
   }
 
   private String toMarkdownList(List<String> metadata) {
-    return metadata.stream()
-        .map(s -> "* " + s)
-        .collect(Collectors.joining("\n"));
+    return metadata.stream().map(s -> "* " + s).collect(Collectors.joining("\n"));
   }
 }

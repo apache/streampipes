@@ -15,15 +15,22 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx;
+
+import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.asc;
+import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.desc;
+import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.select;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
 import org.apache.streampipes.model.datalake.AggregationFunction;
 import org.apache.streampipes.model.datalake.DataLakeQueryOrdering;
 import org.apache.streampipes.model.datalake.FilterCondition;
-import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import org.influxdb.dto.Query;
 import org.influxdb.querybuilder.Ordering;
@@ -35,14 +42,6 @@ import org.influxdb.querybuilder.clauses.NestedClause;
 import org.influxdb.querybuilder.clauses.OrConjunction;
 import org.influxdb.querybuilder.clauses.RawTextClause;
 import org.influxdb.querybuilder.clauses.SimpleClause;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.asc;
-import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.desc;
-import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.select;
 
 public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> {
 
@@ -70,7 +69,6 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
     return new DataLakeInfluxQueryBuilder(measurementId);
   }
 
-
   @Override
   public DataLakeInfluxQueryBuilder withAllColumns() {
     this.selectionQuery.all();
@@ -91,9 +89,8 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withAggregatedColumn(String columnName,
-                                                         AggregationFunction aggregationFunction,
-                                                         String aliasName) {
+  public DataLakeInfluxQueryBuilder withAggregatedColumn(String columnName, AggregationFunction aggregationFunction,
+          String aliasName) {
 
     this.selectionQuery.function(aggregationFunction.toDbName(), columnName).as(aliasName);
 
@@ -113,23 +110,20 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
     return this;
   }
 
-
   @Override
   public DataLakeInfluxQueryBuilder withEndTime(long endTime) {
     return withEndTime(endTime, true);
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withEndTime(long endTime,
-                                                boolean includeEndTime) {
+  public DataLakeInfluxQueryBuilder withEndTime(long endTime, boolean includeEndTime) {
     String operator = includeEndTime ? "<=" : "<";
     this.whereClauses.add(new SimpleClause("time", operator, endTime * 1000000));
     return this;
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withTimeBoundary(long startTime,
-                                                     long endTime) {
+  public DataLakeInfluxQueryBuilder withTimeBoundary(long startTime, long endTime) {
     this.withStartTime(startTime);
     this.withEndTime(endTime);
 
@@ -137,17 +131,13 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withFilter(String field,
-                                               String operator,
-                                               Object value) {
+  public DataLakeInfluxQueryBuilder withFilter(String field, String operator, Object value) {
     this.whereClauses.add(new SimpleClause(field, operator, value));
     return this;
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withExclusiveFilter(String field,
-                                                        String operator,
-                                                        List<?> values) {
+  public DataLakeInfluxQueryBuilder withExclusiveFilter(String field, String operator, List<?> values) {
     List<ConjunctionClause> or = new ArrayList<>();
     values.forEach(value -> or.add(new OrConjunction(new SimpleClause(field, operator, value))));
 
@@ -156,9 +146,7 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withInclusiveFilter(String field,
-                                                        String operator,
-                                                        List<?> values) {
+  public DataLakeInfluxQueryBuilder withInclusiveFilter(String field, String operator, List<?> values) {
     List<ConjunctionClause> and = new ArrayList<>();
     values.forEach(value -> and.add(new AndConjunction(new SimpleClause(field, operator, value))));
 
@@ -169,8 +157,8 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   @Override
   public IDataLakeQueryBuilder<Query> withInclusiveFilter(List<FilterCondition> filterConditions) {
     List<ConjunctionClause> and = new ArrayList<>();
-    filterConditions.forEach(c -> and
-        .add(new AndConjunction(new SimpleClause(c.field(), c.operator(), c.condition()))));
+    filterConditions
+            .forEach(c -> and.add(new AndConjunction(new SimpleClause(c.field(), c.operator(), c.condition()))));
 
     addNestedWhereClause(and);
 
@@ -186,14 +174,9 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withGroupByTime(String timeInterval,
-                                                    String offsetInterval) {
+  public DataLakeInfluxQueryBuilder withGroupByTime(String timeInterval, String offsetInterval) {
 
-    this.groupByClauses.add(new RawTextClause("time("
-        + timeInterval
-        + ","
-        + offsetInterval
-        + ")"));
+    this.groupByClauses.add(new RawTextClause("time(" + timeInterval + "," + offsetInterval + ")"));
 
     return this;
   }
@@ -240,8 +223,8 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
 
   @Override
   public Query build() {
-    var selectQuery =
-        this.selectionQuery.from(env.getTsStorageBucket().getValueOrDefault(), escapeIndex(measurementId));
+    var selectQuery = this.selectionQuery.from(env.getTsStorageBucket().getValueOrDefault(),
+            escapeIndex(measurementId));
     this.whereClauses.forEach(selectQuery::where);
 
     if (!this.groupByClauses.isEmpty()) {

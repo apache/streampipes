@@ -31,5 +31,4 @@ public interface RuntimeContext {
 
   IStreamPipesClient getStreamPipesClient();
 
-
 }

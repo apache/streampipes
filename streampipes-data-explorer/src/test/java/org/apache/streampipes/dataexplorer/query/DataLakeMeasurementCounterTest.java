@@ -15,20 +15,18 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.query;
-
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
+
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class DataLakeMeasurementCounterTest {
 

@@ -15,14 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.generic.model;
 
 import java.util.Map;
 
-public record Plc4xConnectionSettings(String connectionString,
-                                      int pollingInterval,
-                                      Map<String, String> nodes) {
-
+public record Plc4xConnectionSettings(String connectionString, int pollingInterval, Map<String, String> nodes) {
 
 }

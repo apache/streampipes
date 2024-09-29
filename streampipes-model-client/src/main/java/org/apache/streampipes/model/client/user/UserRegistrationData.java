@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.client.user;
 
 import java.util.List;
@@ -27,9 +26,7 @@ public class UserRegistrationData {
   private List<String> roles;
   private String provider;
 
-  public UserRegistrationData(String username,
-                              String password,
-                              List<String> roles) {
+  public UserRegistrationData(String username, String password, List<String> roles) {
     this.username = username;
     this.password = password;
     this.roles = roles;

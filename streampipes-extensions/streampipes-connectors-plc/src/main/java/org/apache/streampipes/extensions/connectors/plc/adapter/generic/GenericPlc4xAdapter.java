@@ -15,8 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.generic;
+
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.ADVANCED_GROUP_TRANSPORT;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.REQUIRED_GROUP_TRANSPORT;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.SUPPORTED_TRANSPORTS;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -41,18 +44,14 @@ import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticP
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 
+import java.util.List;
+import java.util.function.Function;
+
 import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.PlcDriver;
 import org.apache.plc4x.java.api.metadata.Option;
 import org.apache.plc4x.java.api.metadata.OptionMetadata;
 import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
-
-import java.util.List;
-import java.util.function.Function;
-
-import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.ADVANCED_GROUP_TRANSPORT;
-import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.REQUIRED_GROUP_TRANSPORT;
-import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.SUPPORTED_TRANSPORTS;
 
 public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeConfig {
 
@@ -63,8 +62,7 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
   private final PlcDriver driver;
   private final PlcConnectionManager connectionManager;
 
-  public GenericPlc4xAdapter(PlcDriver driver,
-                             PlcConnectionManager connectionManager) {
+  public GenericPlc4xAdapter(PlcDriver driver, PlcConnectionManager connectionManager) {
     this.requestProvider = new PlcRequestProvider();
     this.schemaProvider = new EventSchemaProvider();
     this.driver = driver;
@@ -77,31 +75,26 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) {
-    var settings = new Plc4xConnectionExtractor(
-        extractor.getStaticPropertyExtractor(), driver.getProtocolCode()
-    ).makeSettings();
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) {
+    var settings = new Plc4xConnectionExtractor(extractor.getStaticPropertyExtractor(), driver.getProtocolCode())
+            .makeSettings();
     var plcRequestReader = new ContinuousPlcRequestReader(connectionManager, settings, requestProvider, collector);
     this.pullAdapterScheduler = new PullAdapterScheduler();
     this.pullAdapterScheduler.schedule(plcRequestReader, extractor.getAdapterDescription().getElementId());
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext) {
     this.pullAdapterScheduler.shutdown();
   }
 
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     try {
-      var settings = new Plc4xConnectionExtractor(
-          extractor.getStaticPropertyExtractor(),
-          driver.getProtocolCode()
-      ).makeSettings();
+      var settings = new Plc4xConnectionExtractor(extractor.getStaticPropertyExtractor(), driver.getProtocolCode())
+              .makeSettings();
       var schemaBuilder = GuessSchemaBuilder.create();
       var allProperties = schemaProvider.makeSchema(settings.nodes());
 
@@ -117,19 +110,17 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
   }
 
   @Override
-  public StaticProperty resolveConfiguration(String staticPropertyInternalName,
-                                             IStaticPropertyExtractor extractor) throws SpConfigurationException {
+  public StaticProperty resolveConfiguration(String staticPropertyInternalName, IStaticPropertyExtractor extractor)
+          throws SpConfigurationException {
     Function<OptionMetadata, List<Option>> metadataOption = staticPropertyInternalName.equals(REQUIRED_GROUP_TRANSPORT)
-        ? OptionMetadata::getRequiredOptions
-        : OptionMetadata::getOptions;
+            ? OptionMetadata::getRequiredOptions
+            : OptionMetadata::getOptions;
 
     if (staticPropertyInternalName.equals(REQUIRED_GROUP_TRANSPORT)
-        || staticPropertyInternalName.equals(ADVANCED_GROUP_TRANSPORT)) {
+            || staticPropertyInternalName.equals(ADVANCED_GROUP_TRANSPORT)) {
       var selectedTransport = extractor.selectedSingleValue(SUPPORTED_TRANSPORTS, String.class);
-      var transportMetadataSelection = extractor.getStaticPropertyByName(
-          staticPropertyInternalName,
-          RuntimeResolvableGroupStaticProperty.class
-      );
+      var transportMetadataSelection = extractor.getStaticPropertyByName(staticPropertyInternalName,
+              RuntimeResolvableGroupStaticProperty.class);
       var driverMetadata = this.driver.getMetadata();
       var transportMetadata = driverMetadata.getTransportConfigurationOptionMetadata(selectedTransport);
       if (transportMetadata.isPresent()) {

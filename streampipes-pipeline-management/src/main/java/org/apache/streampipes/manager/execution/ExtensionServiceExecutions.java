@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution;
 
 import org.apache.streampipes.manager.util.AuthTokenUtils;
@@ -27,41 +26,24 @@ import org.apache.http.entity.ContentType;
 public class ExtensionServiceExecutions {
 
   public static Request extServiceGetRequest(String url) {
-    return Request
-        .Get(url)
-        .addHeader("Authorization", AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()))
-        .addHeader("Accept", "application/json")
-        .connectTimeout(10000)
-        .socketTimeout(10000);
+    return Request.Get(url).addHeader("Authorization", AuthTokenUtils.getAuthTokenForUser(getServiceAdminSid()))
+            .addHeader("Accept", "application/json").connectTimeout(10000).socketTimeout(10000);
   }
-
 
   private static String getServiceAdminSid() {
     return new SpResourceManager().manageUsers().getServiceAdmin().getPrincipalId();
   }
 
-  public static Request extServicePostRequest(String url,
-                                              String payload) {
+  public static Request extServicePostRequest(String url, String payload) {
     return authenticatedPostRequest(url, AuthTokenUtils.getAuthTokenForCurrentUser(), payload);
   }
 
-  public static Request extServicePostRequest(String url,
-                                             String elementId,
-                                             String payload) {
-    return authenticatedPostRequest(
-        url,
-        AuthTokenUtils.getAuthToken(elementId),
-        payload
-    );
+  public static Request extServicePostRequest(String url, String elementId, String payload) {
+    return authenticatedPostRequest(url, AuthTokenUtils.getAuthToken(elementId), payload);
   }
 
-  private static Request authenticatedPostRequest(String url,
-                                                  String token,
-                                                  String payload) {
-    return Request.Post(url)
-        .addHeader("Authorization", token)
-        .bodyString(payload, ContentType.APPLICATION_JSON)
-        .connectTimeout(1000)
-        .socketTimeout(100000);
+  private static Request authenticatedPostRequest(String url, String token, String payload) {
+    return Request.Post(url).addHeader("Authorization", token).bodyString(payload, ContentType.APPLICATION_JSON)
+            .connectTimeout(1000).socketTimeout(100000);
   }
 }

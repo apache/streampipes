@@ -15,27 +15,25 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.setup;
+
+import static org.apache.streampipes.manager.setup.design.DesignDocumentUtils.prepareDocument;
 
 import org.apache.streampipes.manager.setup.design.UserDesignDocument;
 import org.apache.streampipes.manager.setup.tasks.CreateAssetLinkTypeTask;
 import org.apache.streampipes.manager.setup.tasks.CreateDefaultAssetTask;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.lightcouch.DesignDocument;
 import org.lightcouch.DesignDocument.MapReduce;
 import org.lightcouch.Response;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.apache.streampipes.manager.setup.design.DesignDocumentUtils.prepareDocument;
-
 public class CouchDbInstallationStep extends InstallationStep {
 
-  private static final String PREPARING_NOTIFICATIONS_TEXT = "Preparing database "
-      + "'notifications'...";
+  private static final String PREPARING_NOTIFICATIONS_TEXT = "Preparing database " + "'notifications'...";
   private static final String PREPARING_USERS_TEXT = "Preparing database 'users'...";
 
   public CouchDbInstallationStep() {
@@ -82,8 +80,7 @@ public class CouchDbInstallationStep extends InstallationStep {
 
       Map<String, MapReduce> notificationTypeViews = new HashMap<>();
       MapReduce notificationTypeFunction = new MapReduce();
-      notificationTypeFunction.setMap(
-          "function (doc) { var vizName = doc.title.replace(/\\s/g, '-'); "
+      notificationTypeFunction.setMap("function (doc) { var vizName = doc.title.replace(/\\s/g, '-'); "
               + "var indexName = doc.correspondingPipelineId + '-' + vizName; "
               + "emit([indexName, doc.createdAtTimestamp], doc);}");
       notificationTypeViews.put("notificationtypes", notificationTypeFunction);
@@ -92,23 +89,13 @@ public class CouchDbInstallationStep extends InstallationStep {
 
       Map<String, MapReduce> notificationCountTypeViews = new HashMap<>();
       MapReduce countFunction = new MapReduce();
-      countFunction.setMap("function (doc) {\n"
-          + "  var user = doc.targetedAt; \n"
-          + "  if (!doc.read) {\n"
-          + "    emit(user, 1);\n"
-          + "  }\n"
-          + "}");
-      countFunction.setReduce("function (keys, values, rereduce) {\n"
-          + "  if (rereduce) {\n"
-          + "    return sum(values);\n"
-          + "  } else {\n"
-          + "    return values.length;\n"
-          + "  }\n"
-          + "}");
+      countFunction.setMap("function (doc) {\n" + "  var user = doc.targetedAt; \n" + "  if (!doc.read) {\n"
+              + "    emit(user, 1);\n" + "  }\n" + "}");
+      countFunction.setReduce("function (keys, values, rereduce) {\n" + "  if (rereduce) {\n"
+              + "    return sum(values);\n" + "  } else {\n" + "    return values.length;\n" + "  }\n" + "}");
       notificationCountTypeViews.put("unread", countFunction);
       notificationCountDocument.setViews(notificationCountTypeViews);
-      Response countResp =
-          Utils.getCouchDbNotificationClient().design().synchronizeWithDb(notificationCountDocument);
+      Response countResp = Utils.getCouchDbNotificationClient().design().synchronizeWithDb(notificationCountDocument);
 
       if (resp.getError() != null && countResp != null) {
         logFailure(PREPARING_NOTIFICATIONS_TEXT);
@@ -127,24 +114,16 @@ public class CouchDbInstallationStep extends InstallationStep {
     Map<String, MapReduce> pipelineViews = new HashMap<>();
 
     MapReduce adapterFunction = new MapReduce();
-    adapterFunction.setMap("function (doc) {\n"
-        + "  for(var i = 0; i < doc.streams.length; i++) {\n"
-        + "    var stream = doc.streams[i];\n"
-        + "    if (stream.correspondingAdapterId) {\n"
-        + "      emit(stream.correspondingAdapterId, doc._id);\n"
-        + "    }\n"
-        + "  }\n"
-        + "}");
+    adapterFunction.setMap("function (doc) {\n" + "  for(var i = 0; i < doc.streams.length; i++) {\n"
+            + "    var stream = doc.streams[i];\n" + "    if (stream.correspondingAdapterId) {\n"
+            + "      emit(stream.correspondingAdapterId, doc._id);\n" + "    }\n" + "  }\n" + "}");
 
     adapterViews.put("used-adapters", adapterFunction);
     pipelineDocument.setViews(adapterViews);
     Utils.getCouchDbPipelineClient().design().synchronizeWithDb(pipelineDocument);
 
-
     MapReduce allPipelinesFunction = new MapReduce();
-    allPipelinesFunction.setMap("function (doc) {\n"
-        + "  emit(doc._id, doc);\n"
-        + "}");
+    allPipelinesFunction.setMap("function (doc) {\n" + "  emit(doc._id, doc);\n" + "}");
     pipelineViews.put("all", allPipelinesFunction);
     allPipelinesDocument.setViews(pipelineViews);
     Utils.getCouchDbPipelineClient().design().synchronizeWithDb(allPipelinesDocument);

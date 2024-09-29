@@ -17,12 +17,12 @@
  */
 package org.apache.streampipes.model.runtime;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestSubset {
 
@@ -35,12 +35,9 @@ public class TestSubset {
 
     Event subset = event.getSubset(selectors);
 
-    Assertions.assertEquals(2,
-                            subset.getFields().size());
-    Assertions.assertEquals("timestamp",
-                            subset.getFieldBySelector("s0::timestamp").getFieldNameIn());
-    Assertions.assertEquals("sensor1",
-                            subset.getFieldBySelector("s0::sensor1").getFieldNameIn());
+    Assertions.assertEquals(2, subset.getFields().size());
+    Assertions.assertEquals("timestamp", subset.getFieldBySelector("s0::timestamp").getFieldNameIn());
+    Assertions.assertEquals("sensor1", subset.getFieldBySelector("s0::sensor1").getFieldNameIn());
 
   }
 
@@ -53,15 +50,10 @@ public class TestSubset {
 
     Event subset = event.getSubset(selectors);
 
-    Assertions.assertEquals(2,
-                            subset.getFields().size());
-    Assertions.assertEquals("timestamp",
-                            subset.getFieldBySelector("s0::timestamp").getFieldNameIn());
-    Assertions.assertEquals("timestamp2",
-                            subset.getFieldBySelector("s0::nested::timestamp2").getFieldNameIn
-                                ());
-    Assertions.assertEquals(1,
-                            subset.getFieldBySelector("s0::nested").getAsComposite().getRawValue().size());
+    Assertions.assertEquals(2, subset.getFields().size());
+    Assertions.assertEquals("timestamp", subset.getFieldBySelector("s0::timestamp").getFieldNameIn());
+    Assertions.assertEquals("timestamp2", subset.getFieldBySelector("s0::nested::timestamp2").getFieldNameIn());
+    Assertions.assertEquals(1, subset.getFieldBySelector("s0::nested").getAsComposite().getRawValue().size());
 
   }
 }

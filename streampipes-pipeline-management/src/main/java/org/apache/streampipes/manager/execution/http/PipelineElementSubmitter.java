@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.model.api.EndpointSelectable;

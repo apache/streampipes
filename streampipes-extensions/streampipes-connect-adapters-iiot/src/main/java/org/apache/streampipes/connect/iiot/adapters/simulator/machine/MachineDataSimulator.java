@@ -20,12 +20,12 @@ package org.apache.streampipes.connect.iiot.adapters.simulator.machine;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MachineDataSimulator implements Runnable {
 
@@ -38,9 +38,7 @@ public class MachineDataSimulator implements Runnable {
 
   private static final Logger LOG = LoggerFactory.getLogger(MachineDataSimulator.class);
 
-  public MachineDataSimulator(IEventCollector collector,
-                              Integer waitTimeMs,
-                              String selectedSimulatorOption) {
+  public MachineDataSimulator(IEventCollector collector, Integer waitTimeMs, String selectedSimulatorOption) {
     this.collector = collector;
     this.waitTimeMs = waitTimeMs;
     this.selectedSimulatorOption = selectedSimulatorOption;
@@ -58,7 +56,7 @@ public class MachineDataSimulator implements Runnable {
       long timeDeltaMs = currentTimeMs - startTimeMs;
 
       switch (this.selectedSimulatorOption) {
-        case "flowrate":
+        case "flowrate" :
           // 0 - 30s
           if (timeDeltaMs > 0 && timeDeltaMs <= 30000) {
             event = buildFlowrateEvent(0);
@@ -71,7 +69,7 @@ public class MachineDataSimulator implements Runnable {
             startTimeMs = currentTimeMs;
           }
           break;
-        case "pressure":
+        case "pressure" :
           // 0 - 30s
           if (timeDeltaMs > 0 && timeDeltaMs <= 30000) {
             event = buildPressureEvent(0);
@@ -84,7 +82,7 @@ public class MachineDataSimulator implements Runnable {
             startTimeMs = currentTimeMs;
           }
           break;
-        case "waterlevel":
+        case "waterlevel" :
           if (timeDeltaMs > 0 && timeDeltaMs <= 30000) {
             // 0 - 30s
             event = buildWaterlevelEvent(0);
@@ -97,7 +95,7 @@ public class MachineDataSimulator implements Runnable {
             startTimeMs = currentTimeMs;
           }
           break;
-        default:
+        default :
           try {
             throw new AdapterException("resource not found");
           } catch (AdapterException e) {

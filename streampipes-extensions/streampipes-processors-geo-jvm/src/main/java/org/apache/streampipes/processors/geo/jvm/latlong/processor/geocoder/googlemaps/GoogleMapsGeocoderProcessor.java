@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemaps;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -38,12 +37,12 @@ import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
+import java.io.IOException;
+
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.GeocodingResult;
-
-import java.io.IOException;
 
 public class GoogleMapsGeocoderProcessor extends StreamPipesDataProcessor {
   private static final String GEOCODER_REQUEST_KEY = "geocoder-request-key";
@@ -55,27 +54,21 @@ public class GoogleMapsGeocoderProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemaps", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                Labels.withId(GEOCODER_REQUEST_KEY),
-                PropertyScope.NONE)
-            .build()
-        )
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.doubleEp(Labels.empty(), LAT_RUNTIME_NAME, Geo.LAT),
-            EpProperties.stringEp(Labels.empty(), LONG_RUNTIME_NAME, Geo.LNG))
-        )
-        .build();
+            .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemaps", 0)
+            .category(DataProcessorType.GEO).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId(GEOCODER_REQUEST_KEY),
+                            PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), LAT_RUNTIME_NAME, Geo.LAT),
+                    EpProperties.stringEp(Labels.empty(), LONG_RUNTIME_NAME, Geo.LNG)))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
 
     this.geocoderRequest = parameters.extractor().mappingPropertyValue(GEOCODER_REQUEST_KEY);
 
@@ -84,14 +77,12 @@ public class GoogleMapsGeocoderProcessor extends StreamPipesDataProcessor {
     if (googleMapsApiKey == null || googleMapsApiKey.equals("")) {
       throw new SpRuntimeException("Could not start Geocoder. Did you forget to add a Google Maps API key?");
     } else {
-      this.apiContext = new GeoApiContext.Builder()
-          .apiKey(googleMapsApiKey)
-          .build();
+      this.apiContext = new GeoApiContext.Builder().apiKey(googleMapsApiKey).build();
     }
     // TODO: RequestDeniedException
-    //  You must enable Billing on the Google Cloud Project at
-    //  https://console.cloud.google.com/project/_/billing/enable
-    //  Learn more at https://developers.google.com/maps/gmp
+    // You must enable Billing on the Google Cloud Project at
+    // https://console.cloud.google.com/project/_/billing/enable
+    // Learn more at https://developers.google.com/maps/gmp
   }
 
   @Override

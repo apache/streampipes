@@ -17,10 +17,6 @@
  */
 package org.apache.streampipes.extensions.connectors.mqtt.sink.common;
 
-import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
-
-import org.fusesource.mqtt.client.QoS;
-
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_ALTERNATIVE;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.AUTH_MODE;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.CLEAN_SESSION_KEY;
@@ -41,6 +37,10 @@ import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublish
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_QOS;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_RETAIN;
 import static org.apache.streampipes.extensions.connectors.mqtt.sink.MqttPublisherSink.WILL_TOPIC;
+
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
+
+import org.fusesource.mqtt.client.QoS;
 
 public class MqttOptions {
 
@@ -75,8 +75,8 @@ public class MqttOptions {
     this.protocol = extract.selectedSingleValue(ENCRYPTION_MODE, String.class);
 
     this.qos = MqttUtils.extractQoSFromString(extract.selectedSingleValue(QOS_LEVEL_KEY, String.class));
-    this.reconnectDelayMaxInMs =
-        MqttUtils.fromSecToMs(extract.singleValueParameter(RECONNECT_PERIOD_IN_SEC, Long.class));
+    this.reconnectDelayMaxInMs = MqttUtils
+            .fromSecToMs(extract.singleValueParameter(RECONNECT_PERIOD_IN_SEC, Long.class));
     this.keepAliveInSec = extract.singleValueParameter(KEEP_ALIVE_IN_SEC, Short.class);
     this.cleanSession = MqttUtils.extractBoolean(extract.selectedSingleValue(CLEAN_SESSION_KEY, String.class));
     this.retain = MqttUtils.extractBoolean(extract.selectedSingleValue(RETAIN, String.class));

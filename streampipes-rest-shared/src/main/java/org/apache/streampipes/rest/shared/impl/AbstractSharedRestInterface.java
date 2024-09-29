@@ -23,8 +23,7 @@ import org.springframework.http.ResponseEntity;
 public abstract class AbstractSharedRestInterface {
 
   protected <T> ResponseEntity<T> ok(T entity) {
-    return ResponseEntity
-        .ok(entity);
+    return ResponseEntity.ok(entity);
   }
 
   protected <T> ResponseEntity<T> badRequest(T entity) {
@@ -44,9 +43,7 @@ public abstract class AbstractSharedRestInterface {
   }
 
   protected <T> ResponseEntity<T> error(T entity, Integer statusCode) {
-    return ResponseEntity
-        .status(statusCode)
-        .body(entity);
+    return ResponseEntity.status(statusCode).body(entity);
   }
 
   protected ResponseEntity<Void> badRequest() {

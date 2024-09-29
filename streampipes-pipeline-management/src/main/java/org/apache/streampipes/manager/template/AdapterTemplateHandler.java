@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.template;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -23,9 +22,8 @@ import org.apache.streampipes.model.template.PipelineElementTemplate;
 
 public class AdapterTemplateHandler extends AbstractTemplateHandler<AdapterDescription> {
 
-  public AdapterTemplateHandler(PipelineElementTemplate template,
-                                AdapterDescription adapterDescription,
-                                boolean overwriteNameAndDescription) {
+  public AdapterTemplateHandler(PipelineElementTemplate template, AdapterDescription adapterDescription,
+          boolean overwriteNameAndDescription) {
     super(template, adapterDescription, overwriteNameAndDescription);
   }
 

@@ -15,8 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.convert;
+
+import static org.apache.streampipes.connect.shared.preprocessing.utils.ConversionUtils.findPrimitiveProperty;
+import static org.apache.streampipes.connect.shared.preprocessing.utils.ConversionUtils.findProperty;
+import static org.apache.streampipes.connect.shared.preprocessing.utils.ConversionUtils.findPropertyHierarchy;
 
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
@@ -44,10 +47,6 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
-
-import static org.apache.streampipes.connect.shared.preprocessing.utils.ConversionUtils.findPrimitiveProperty;
-import static org.apache.streampipes.connect.shared.preprocessing.utils.ConversionUtils.findProperty;
-import static org.apache.streampipes.connect.shared.preprocessing.utils.ConversionUtils.findPropertyHierarchy;
 
 public class ToTransformedSchemaConverter implements ITransformationRuleVisitor, ProvidesConversionResult {
 

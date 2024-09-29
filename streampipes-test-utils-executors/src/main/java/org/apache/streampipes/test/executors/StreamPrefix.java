@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.test.executors;
 
 /**
- * Provides utility methods to append stream prefixes to property key values.
- * This class is used to be used in unit tests.
- * Consider integrating prefix configuration into the application's logic, possibly within the TestConfiguration class
+ * Provides utility methods to append stream prefixes to property key values. This class is used to be used in unit
+ * tests. Consider integrating prefix configuration into the application's logic, possibly within the TestConfiguration
+ * class
  */
 public class StreamPrefix {
   public static final String S0 = "s0";
@@ -30,7 +29,8 @@ public class StreamPrefix {
   /**
    * Appends the S0 prefix to a given property value.
    *
-   * @param propertyValue The value to which the S0 prefix will be appended.
+   * @param propertyValue
+   *          The value to which the S0 prefix will be appended.
    * @return A string with the S0 prefix followed by the property value.
    */
   public static String s0(String propertyValue) {
@@ -40,7 +40,8 @@ public class StreamPrefix {
   /**
    * Appends the S1 prefix to a given property value.
    *
-   * @param propertyValue The value to which the S1 prefix will be appended.
+   * @param propertyValue
+   *          The value to which the S1 prefix will be appended.
    * @return A string with the S1 prefix followed by the property value.
    */
   public static String s1(String propertyValue) {

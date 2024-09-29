@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.jms;
 
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
-
 import javax.jms.Connection;
 import javax.jms.JMSException;
+
+import org.apache.activemq.ActiveMQConnectionFactory;
 
 public abstract class ActiveMQConnectionProvider {
 

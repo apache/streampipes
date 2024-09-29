@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.params.generator;
 
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
@@ -29,27 +28,19 @@ import org.apache.streampipes.wrapper.params.DataProcessorParameters;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DataProcessorParameterGenerator
-    extends PipelineElementParameterGenerator<DataProcessorInvocation>
-    implements IParameterGenerator<DataProcessorInvocation,
-    IDataProcessorParameterExtractor, IDataProcessorParameters> {
+public class DataProcessorParameterGenerator extends PipelineElementParameterGenerator<DataProcessorInvocation>
+        implements
+          IParameterGenerator<DataProcessorInvocation, IDataProcessorParameterExtractor, IDataProcessorParameters> {
 
   @Override
   public IDataProcessorParameters makeParameters(DataProcessorInvocation pipelineElementInvocation) {
-    return new DataProcessorParameters(
-        pipelineElementInvocation,
-        ProcessingElementParameterExtractor.from(pipelineElementInvocation),
-        buildInputStreamParams(pipelineElementInvocation),
-        buildInEventTypes(pipelineElementInvocation)
-    );
+    return new DataProcessorParameters(pipelineElementInvocation,
+            ProcessingElementParameterExtractor.from(pipelineElementInvocation),
+            buildInputStreamParams(pipelineElementInvocation), buildInEventTypes(pipelineElementInvocation));
   }
 
-
   protected List<PropertyRenameRule> getRenameRules(DataProcessorInvocation pipelineElementInvocation) {
-    return pipelineElementInvocation
-        .getOutputStrategies()
-        .stream()
-        .flatMap(o -> o.getRenameRules().stream())
-        .collect(Collectors.toList());
+    return pipelineElementInvocation.getOutputStrategies().stream().flatMap(o -> o.getRenameRules().stream())
+            .collect(Collectors.toList());
   }
 }

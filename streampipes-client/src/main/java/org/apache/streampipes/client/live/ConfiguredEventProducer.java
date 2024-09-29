@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.client.live;
 
 import org.apache.streampipes.client.api.live.IConfiguredEventProducer;
@@ -30,8 +29,7 @@ public class ConfiguredEventProducer implements IConfiguredEventProducer {
   private final EventProducer internalProducer;
   private final SpDataFormatDefinition dataFormatDefinition;
 
-  public ConfiguredEventProducer(EventProducer internalProducer,
-                                 SpDataFormatDefinition definition) {
+  public ConfiguredEventProducer(EventProducer internalProducer, SpDataFormatDefinition definition) {
     this.internalProducer = internalProducer;
     this.dataFormatDefinition = definition;
   }

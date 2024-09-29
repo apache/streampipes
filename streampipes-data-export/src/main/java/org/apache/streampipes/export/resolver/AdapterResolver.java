@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.export.utils.SerializationUtils;
@@ -56,8 +54,7 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
     getNoSqlStore().getAdapterInstanceStorage().persist(deserializeDocument(document));
   }
 
-  public void writeDocument(String document,
-                            boolean overrideDocument) throws JsonProcessingException {
+  public void writeDocument(String document, boolean overrideDocument) throws JsonProcessingException {
     var adapterDescription = deserializeDocument(document);
     if (overrideDocument) {
       overrideProtocol(adapterDescription.getEventGrounding());

@@ -15,35 +15,31 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect;
-
-import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
-import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-
-import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
 public class AdapterWorkerManagementTest {
 
   @Test
   public void invokeAdapterNotPresent() throws AdapterException {
-    var adapterDescription = AdapterConfigurationBuilder
-        .create("id", 0,  null)
-        .build();
+    var adapterDescription = AdapterConfigurationBuilder.create("id", 0, null).build();
 
     var declarerSingleton = mock(IDeclarersSingleton.class);
     when(declarerSingleton.getAdapter(any())).thenReturn(Optional.empty());
 
-    var adapterWorkerManagement = new AdapterWorkerManagement(
-        null, declarerSingleton);
+    var adapterWorkerManagement = new AdapterWorkerManagement(null, declarerSingleton);
 
     assertThrows(AdapterException.class, () -> adapterWorkerManagement.invokeAdapter(adapterDescription));
 

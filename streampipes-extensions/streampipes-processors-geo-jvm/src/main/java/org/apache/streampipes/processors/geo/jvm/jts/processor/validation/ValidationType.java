@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.jts.processor.validation;
 public enum ValidationType {
   IsEmpty, IsValid, IsSimple;

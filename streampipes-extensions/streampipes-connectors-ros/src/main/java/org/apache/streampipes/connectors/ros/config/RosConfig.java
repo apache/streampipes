@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connectors.ros.config;
 
 import com.google.gson.JsonObject;
@@ -30,7 +29,6 @@ public class RosConfig {
   public static final String ROS_HOST_KEY = "ROS_HOST_KEY";
   public static final String ROS_PORT_KEY = "ROS_PORT_KEY";
   public static final String TOPIC_KEY = "TOPIC_KEY";
-
 
   public static String getMethodType(Ros ros, String topic) {
     Service addTwoInts = new Service(ros, "/rosapi/topic_type", "rosapi/TopicType");

@@ -15,8 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
@@ -26,16 +30,11 @@ import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.junit.jupiter.api.Test;
-
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import org.junit.jupiter.api.Test;
 
 public class JsonObjectParsersTest extends ParserTest {
 
@@ -43,29 +42,19 @@ public class JsonObjectParsersTest extends ParserTest {
 
   InputStream event = toStream("{\"k1\": \"v1\", \"k2\": 2}");
 
-
   @Test
   public void getGuessSchema() {
     var expected = GuessSchemaBuilder.create()
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.String, K1)
-            .description("")
-            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .property(PrimitivePropertyBuilder
-            .create(Datatypes.Float, K2)
-            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .description("")
-            .build())
-        .sample(K1, "v1")
-        .sample(K2, 2)
-        .build();
+            .property(PrimitivePropertyBuilder.create(Datatypes.String, K1).description("")
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY).build())
+            .property(PrimitivePropertyBuilder.create(Datatypes.Float, K2).scope(PropertyScope.MEASUREMENT_PROPERTY)
+                    .description("").build())
+            .sample(K1, "v1").sample(K2, 2).build();
 
     var result = parser.getGuessSchema(event);
 
     assertEquals(expected, result);
   }
-
 
   @Test
   public void parse() {

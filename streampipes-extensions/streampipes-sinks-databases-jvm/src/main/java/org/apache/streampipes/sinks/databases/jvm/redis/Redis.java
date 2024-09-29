@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.redis;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -90,8 +89,8 @@ public class Redis {
     config.setTestWhileIdle(false);
     config.setTestOnBorrow(false);
     config.setTestOnReturn(false);
-    jedisPool = new JedisPool(config, parameters.getRedisHost(),
-        parameters.getRedisPort(), parameters.getRedisPoolTimeout());
+    jedisPool = new JedisPool(config, parameters.getRedisHost(), parameters.getRedisPort(),
+            parameters.getRedisPoolTimeout());
   }
 
   private Jedis getJedis() throws SpRuntimeException {

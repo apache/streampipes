@@ -17,23 +17,6 @@
  */
 package org.apache.streampipes.manager.file;
 
-import org.apache.streampipes.commons.file.FileHasher;
-import org.apache.streampipes.model.file.FileMetadata;
-import org.apache.streampipes.storage.api.CRUDStorage;
-
-import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -47,13 +30,29 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.apache.streampipes.commons.file.FileHasher;
+import org.apache.streampipes.model.file.FileMetadata;
+import org.apache.streampipes.storage.api.CRUDStorage;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+
 public class TestFileManager {
 
   private FileManager fileManager;
   private CRUDStorage<FileMetadata> fileMetadataStorage;
   private FileHandler fileHandler;
   private FileHasher fileHasher;
-
 
   private static final String TEST_USER = "testUser";
 
@@ -138,8 +137,7 @@ public class TestFileManager {
   public void storeFile_throwsExceptionForInvalidFileType() {
     var filename = "testFile.invalid";
 
-    assertThrows(IllegalArgumentException.class, () ->
-        fileManager.storeFile("", filename, mock(InputStream.class)));
+    assertThrows(IllegalArgumentException.class, () -> fileManager.storeFile("", filename, mock(InputStream.class)));
   }
 
   @Test
@@ -174,8 +172,7 @@ public class TestFileManager {
   public void storeFile_removesBom() throws IOException {
     var expectedContent = "test content";
     // prepare input stream with BOM
-    var fileInputStream = new ByteArrayInputStream(("\uFEFF" + expectedContent)
-                                                       .getBytes(StandardCharsets.UTF_8));
+    var fileInputStream = new ByteArrayInputStream(("\uFEFF" + expectedContent).getBytes(StandardCharsets.UTF_8));
 
     fileManager.storeFile(TEST_USER, "testfile.csv", fileInputStream);
 
@@ -189,7 +186,6 @@ public class TestFileManager {
     // Assert that the captured content is equal to the expected content
     assertEquals(expectedContent, capturedContent);
   }
-
 
   @Test
   public void deleteFile_removesExistingFile() {

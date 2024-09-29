@@ -15,8 +15,13 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.notifications.jvm.migrations;
+
+import static org.apache.streampipes.sinks.notifications.jvm.msteams.MSTeamsSink.KEY_PROXY_ALTERNATIVES;
+import static org.apache.streampipes.sinks.notifications.jvm.msteams.MSTeamsSink.KEY_PROXY_DISABLED;
+import static org.apache.streampipes.sinks.notifications.jvm.msteams.MSTeamsSink.KEY_PROXY_ENABLED;
+import static org.apache.streampipes.sinks.notifications.jvm.msteams.MSTeamsSink.KEY_PROXY_GROUP;
+import static org.apache.streampipes.sinks.notifications.jvm.msteams.MSTeamsSink.KEY_PROXY_URL;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.extensions.api.migration.IDataSinkMigrator;
@@ -29,35 +34,20 @@ import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sinks.notifications.jvm.msteams.MSTeamsSink;
 
-import static org.apache.streampipes.sinks.notifications.jvm.msteams.MSTeamsSink.KEY_PROXY_ALTERNATIVES;
-import static org.apache.streampipes.sinks.notifications.jvm.msteams.MSTeamsSink.KEY_PROXY_DISABLED;
-import static org.apache.streampipes.sinks.notifications.jvm.msteams.MSTeamsSink.KEY_PROXY_ENABLED;
-import static org.apache.streampipes.sinks.notifications.jvm.msteams.MSTeamsSink.KEY_PROXY_GROUP;
-import static org.apache.streampipes.sinks.notifications.jvm.msteams.MSTeamsSink.KEY_PROXY_URL;
-
 public class MsTeamsSinkMigrationV1 implements IDataSinkMigrator {
 
   @Override
   public ModelMigratorConfig config() {
-    return new ModelMigratorConfig(
-        MSTeamsSink.ID,
-        SpServiceTagPrefix.DATA_SINK,
-        0,
-        1
-    );
+    return new ModelMigratorConfig(MSTeamsSink.ID, SpServiceTagPrefix.DATA_SINK, 0, 1);
   }
 
   @Override
-  public MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element,
-                                                     IDataSinkParameterExtractor extractor) throws RuntimeException {
-    var proxyConfiguration = StaticProperties.alternatives(
-        Labels.withId(KEY_PROXY_ALTERNATIVES),
-        Alternatives.from(Labels.withId(KEY_PROXY_DISABLED)),
-        Alternatives.from(Labels.withId(KEY_PROXY_ENABLED),
-            StaticProperties.group(Labels.withId(KEY_PROXY_GROUP),
-                StaticProperties.stringFreeTextProperty(Labels.withId(KEY_PROXY_URL))
-            )
-        ));
+  public MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element, IDataSinkParameterExtractor extractor)
+          throws RuntimeException {
+    var proxyConfiguration = StaticProperties.alternatives(Labels.withId(KEY_PROXY_ALTERNATIVES),
+            Alternatives.from(Labels.withId(KEY_PROXY_DISABLED)),
+            Alternatives.from(Labels.withId(KEY_PROXY_ENABLED), StaticProperties.group(Labels.withId(KEY_PROXY_GROUP),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(KEY_PROXY_URL)))));
     proxyConfiguration.getAlternatives().get(0).setSelected(true);
     element.getStaticProperties().add(1, proxyConfiguration);
     return MigrationResult.success(element);

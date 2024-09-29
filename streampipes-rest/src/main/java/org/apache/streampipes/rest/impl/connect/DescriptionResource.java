@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
@@ -27,6 +26,9 @@ import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpoi
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -36,9 +38,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v2/connect/master/description")

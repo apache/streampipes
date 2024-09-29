@@ -19,10 +19,10 @@ package org.apache.streampipes.storage.couchdb.dao;
 
 import org.apache.streampipes.model.Tuple2;
 
+import java.util.function.Supplier;
+
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.Response;
-
-import java.util.function.Supplier;
 
 public class PersistCommand<T> extends DbCommand<Tuple2<Boolean, String>, T> {
 

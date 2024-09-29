@@ -18,8 +18,7 @@
 package org.apache.streampipes.client.api.constants;
 
 public enum InputStreamIndex {
-  FIRST(0),
-  SECOND(1);
+  FIRST(0), SECOND(1);
 
   private Integer index;
 

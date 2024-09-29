@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.integration.adapters;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -32,15 +31,14 @@ import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
 
 public class MqttAdapterTester extends AdapterTesterBase {
 
@@ -70,27 +68,14 @@ public class MqttAdapterTester extends AdapterTesterBase {
 
     var template = new PipelineElementTemplate("name", "description", configs);
 
-    var desc =
-        new AdapterTemplateHandler(template,
-            configuration.getAdapterDescription(),
-            true)
+    var desc = new AdapterTemplateHandler(template, configuration.getAdapterDescription(), true)
             .applyTemplateOnPipelineElement();
 
     // Set authentication mode to unauthenticated
-    ((StaticPropertyAlternatives) desc
-        .getConfig()
-        .get(1))
-        .getAlternatives()
-        .get(0)
-        .setSelected(true);
+    ((StaticPropertyAlternatives) desc.getConfig().get(1)).getAlternatives().get(0).setSelected(true);
 
     // Set format to Json
-    ((StaticPropertyAlternatives) (desc)
-        .getConfig()
-        .get(3))
-        .getAlternatives()
-        .get(0)
-        .setSelected(true);
+    ((StaticPropertyAlternatives) (desc).getConfig().get(3)).getAlternatives().get(0).setSelected(true);
 
     return configuration;
   }
@@ -104,7 +89,6 @@ public class MqttAdapterTester extends AdapterTesterBase {
   public List<Map<String, Object>> getTestEvents() {
     return Utils.getSimpleTestEvents();
   }
-
 
   @Override
   public void publishEvents(List<Map<String, Object>> events) {
@@ -125,10 +109,8 @@ public class MqttAdapterTester extends AdapterTesterBase {
 
   @NotNull
   private MqttPublisher getMqttPublisher() {
-    MqttTransportProtocol mqttSettings = new MqttTransportProtocol(
-        mosquittoContainer.getBrokerHost(),
-        mosquittoContainer.getBrokerPort(),
-        TOPIC);
+    MqttTransportProtocol mqttSettings = new MqttTransportProtocol(mosquittoContainer.getBrokerHost(),
+            mosquittoContainer.getBrokerPort(), TOPIC);
     MqttPublisher publisher = new MqttPublisher(mqttSettings);
     publisher.connect();
     return publisher;

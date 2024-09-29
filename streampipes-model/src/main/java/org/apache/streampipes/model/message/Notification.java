@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.message;
 
 public class Notification {
@@ -34,20 +33,16 @@ public class Notification {
     this.description = description;
   }
 
-  public Notification(String title,
-                      String description,
-                      String additionalInformation) {
+  public Notification(String title, String description, String additionalInformation) {
     super();
     this.title = title;
     this.description = description;
     this.additionalInformation = additionalInformation;
   }
 
-  public Notification(NotificationType notificationType,
-                      String additionalInformation) {
+  public Notification(NotificationType notificationType, String additionalInformation) {
     this(notificationType.title(), notificationType.description(), additionalInformation);
   }
-
 
   public String getTitle() {
     return title;
@@ -74,9 +69,6 @@ public class Notification {
   }
 
   public String toString() {
-    return String.format("Notification '%s' - '%s'",
-            title,
-            description
-    );
+    return String.format("Notification '%s' - '%s'", title, description);
   }
 }

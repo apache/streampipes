@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.smp.extractor;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
@@ -27,35 +26,28 @@ import org.apache.streampipes.service.extensions.StreamPipesExtensionsServiceBas
 import org.apache.streampipes.smp.constants.PeType;
 import org.apache.streampipes.smp.model.AssetModel;
 
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
-
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
 
 public class ExtensionsFinder {
 
   private final ClassLoader loader;
   private final String initClass;
 
-  public ExtensionsFinder(
-      ClassLoader loader,
-      String initClass
-  ) {
+  public ExtensionsFinder(ClassLoader loader, String initClass) {
     this.loader = loader;
     this.initClass = initClass;
   }
 
-  public List<AssetModel> findExtensions()
-      throws MalformedURLException, DependencyResolutionRequiredException, ClassNotFoundException,
-             InstantiationException, IllegalAccessException {
+  public List<AssetModel> findExtensions() throws MalformedURLException, DependencyResolutionRequiredException,
+          ClassNotFoundException, InstantiationException, IllegalAccessException {
     var extensions = new ArrayList<AssetModel>();
-    var serviceDef = (
-        (StreamPipesExtensionsServiceBase) loader
-            .loadClass(initClass)
-            .newInstance()
-    ).provideServiceDefinition();
+    var serviceDef = ((StreamPipesExtensionsServiceBase) loader.loadClass(initClass).newInstance())
+            .provideServiceDefinition();
 
     extensions.addAll(findAdapters(serviceDef));
     extensions.addAll(findPipelineElements(serviceDef, IDataProcessorConfiguration.class, PeType.PROCESSOR));
@@ -64,28 +56,17 @@ public class ExtensionsFinder {
     return extensions;
   }
 
-  private List<AssetModel> findPipelineElements(
-      SpServiceDefinition serviceDef,
-      Class<? extends IPipelineElementConfiguration<?, ?>> configType,
-      PeType peType
-  ) {
-    return serviceDef.getDeclarers()
-                     .stream()
-                     .map(IStreamPipesPipelineElement::declareConfig)
-                     .filter(configType::isInstance)
-                     .map(config -> new AssetModel(config.getDescription()
-                                                         .getAppId(), peType))
-                     .toList();
+  private List<AssetModel> findPipelineElements(SpServiceDefinition serviceDef,
+          Class<? extends IPipelineElementConfiguration<?, ?>> configType, PeType peType) {
+    return serviceDef.getDeclarers().stream().map(IStreamPipesPipelineElement::declareConfig)
+            .filter(configType::isInstance).map(config -> new AssetModel(config.getDescription().getAppId(), peType))
+            .toList();
   }
 
   private Collection<? extends AssetModel> findAdapters(SpServiceDefinition serviceDef) {
-    return serviceDef.getAdapters()
-                     .stream()
-                     .map(adapter -> {
-                       var config = adapter.declareConfig();
-                       return new AssetModel(config.getAdapterDescription()
-                                                   .getAppId(), PeType.ADAPTER);
-                     })
-                     .toList();
+    return serviceDef.getAdapters().stream().map(adapter -> {
+      var config = adapter.declareConfig();
+      return new AssetModel(config.getAdapterDescription().getAppId(), PeType.ADAPTER);
+    }).toList();
   }
 }

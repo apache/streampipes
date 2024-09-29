@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.wrapper.siddhi.query.expression;
 
-import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
-
 import static org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils.prepareProperty;
+
+import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 
 public class PropertyRenameExpression extends Expression {
 
@@ -33,9 +33,7 @@ public class PropertyRenameExpression extends Expression {
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.WHITESPACE,
-        propertyExpression.toSiddhiEpl(),
-        SiddhiConstants.AS,
-        prepareProperty(newPropertyName));
+    return join(SiddhiConstants.WHITESPACE, propertyExpression.toSiddhiEpl(), SiddhiConstants.AS,
+            prepareProperty(newPropertyName));
   }
 }

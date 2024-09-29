@@ -15,11 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.GenericPlc4xAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.PlcDriverManager;
@@ -27,41 +30,28 @@ import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 public class GenericAdapterGenerator {
 
   private static final Logger LOG = LoggerFactory.getLogger(GenericAdapterGenerator.class);
 
-  private final List<String> excludedDrivers = List.of(
-      "simulated",
-      "c-bus",
-      "plc4x"
-  );
-
+  private final List<String> excludedDrivers = List.of("simulated", "c-bus", "plc4x");
 
   public List<StreamPipesAdapter> makeAvailableAdapters(PlcDriverManager driverManager,
-                                                        PlcConnectionManager connectionManager) {
+          PlcConnectionManager connectionManager) {
     var adapters = new ArrayList<StreamPipesAdapter>();
     var protocolCodes = getDrivers(driverManager);
-    protocolCodes
-        .stream()
-        .filter(pc -> !excludedDrivers.contains(pc))
-        .forEach(protocolCode -> {
-          try {
-            var driver = driverManager.getDriver(protocolCode);
-            adapters.add(new GenericPlc4xAdapter(driver, connectionManager));
-          } catch (PlcConnectionException e) {
-            LOG.error("Could not generate PLC adapter for protocol {}", protocolCode);
-          }
-        });
+    protocolCodes.stream().filter(pc -> !excludedDrivers.contains(pc)).forEach(protocolCode -> {
+      try {
+        var driver = driverManager.getDriver(protocolCode);
+        adapters.add(new GenericPlc4xAdapter(driver, connectionManager));
+      } catch (PlcConnectionException e) {
+        LOG.error("Could not generate PLC adapter for protocol {}", protocolCode);
+      }
+    });
     return adapters;
   }
 
   private Set<String> getDrivers(PlcDriverManager driverManager) {
-    return driverManager
-        .getProtocolCodes();
+    return driverManager.getProtocolCodes();
   }
 }

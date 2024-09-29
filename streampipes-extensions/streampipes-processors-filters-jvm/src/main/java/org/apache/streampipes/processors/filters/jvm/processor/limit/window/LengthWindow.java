@@ -30,9 +30,7 @@ public class LengthWindow implements Window {
   private SpOutputCollector outputCollector;
   private List<Event> events;
 
-  public LengthWindow(Integer windowSize,
-                      EventSelection eventSelection,
-                      SpOutputCollector outputCollector) {
+  public LengthWindow(Integer windowSize, EventSelection eventSelection, SpOutputCollector outputCollector) {
     this.windowSize = windowSize;
     this.eventSelection = eventSelection;
     this.outputCollector = outputCollector;

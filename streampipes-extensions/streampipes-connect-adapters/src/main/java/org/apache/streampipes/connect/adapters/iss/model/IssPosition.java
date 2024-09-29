@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.adapters.iss.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import jakarta.annotation.Generated;
+
+import com.google.gson.annotations.SerializedName;
 
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")

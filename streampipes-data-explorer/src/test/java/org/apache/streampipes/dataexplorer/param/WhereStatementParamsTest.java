@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.param;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.streampipes.dataexplorer.param.model.WhereClauseParams;
 import org.apache.streampipes.model.datalake.FilterCondition;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WhereStatementParamsTest {
   @Test
@@ -65,6 +64,5 @@ public class WhereStatementParamsTest {
     assertEquals(expected.operator(), resultingFilterCondition.operator());
     assertEquals(expected.condition(), resultingFilterCondition.condition());
   }
-
 
 }

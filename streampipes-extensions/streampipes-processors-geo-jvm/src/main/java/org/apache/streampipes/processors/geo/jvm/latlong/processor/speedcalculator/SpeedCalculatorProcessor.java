@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.latlong.processor.speedcalculator;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -40,9 +39,9 @@ import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-import org.apache.commons.collections.buffer.CircularFifoBuffer;
-
 import java.net.URI;
+
+import org.apache.commons.collections.buffer.CircularFifoBuffer;
 
 public class SpeedCalculatorProcessor extends StreamPipesDataProcessor {
   private static final String TIMESTAMP_KEY = "timestamp-key";
@@ -59,33 +58,27 @@ public class SpeedCalculatorProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.speedcalculator", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                Labels.withId(TIMESTAMP_KEY), PropertyScope.HEADER_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT)
-                , Labels.withId(LATITUDE_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG)
-                , Labels.withId(LONGITUDE_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .requiredIntegerParameter(Labels.withId(COUNT_WINDOW_KEY))
-        .outputStrategy(
-            OutputStrategies.append(PrimitivePropertyBuilder
-                .create(Datatypes.Float, SPEED_RUNTIME_NAME)
-                .domainProperty(SO.NUMBER)
-                .measurementUnit(URI.create("http://qudt.org/vocab/unit#KilometerPerHour"))
-                .build())
-        )
-        .build();
+            .create("org.apache.streampipes.processors.geo.jvm.latlong.processor.speedcalculator", 0)
+            .category(DataProcessorType.GEO).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.withId(TIMESTAMP_KEY),
+                            PropertyScope.HEADER_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT),
+                            Labels.withId(LATITUDE_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG),
+                            Labels.withId(LONGITUDE_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .requiredIntegerParameter(Labels.withId(COUNT_WINDOW_KEY))
+            .outputStrategy(OutputStrategies.append(
+                    PrimitivePropertyBuilder.create(Datatypes.Float, SPEED_RUNTIME_NAME).domainProperty(SO.NUMBER)
+                            .measurementUnit(URI.create("http://qudt.org/vocab/unit#KilometerPerHour")).build()))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.latitudeFieldMapper = parameters.extractor().mappingPropertyValue(LATITUDE_KEY);
     this.longitudeFieldMapper = parameters.extractor().mappingPropertyValue(LONGITUDE_KEY);
     this.timestampFieldMapper = parameters.extractor().mappingPropertyValue(TIMESTAMP_KEY);
@@ -118,8 +111,7 @@ public class SpeedCalculatorProcessor extends StreamPipesDataProcessor {
     Float currentLongitude = getFloat(currentEvent, this.longitudeFieldMapper);
     Long currentTimestamp = getLong(currentEvent, this.timestampFieldMapper);
 
-    Float distanceInKm = HaversineDistanceUtil.dist(firstLatitude, firstLongitude, currentLatitude,
-        currentLongitude);
+    Float distanceInKm = HaversineDistanceUtil.dist(firstLatitude, firstLongitude, currentLatitude, currentLongitude);
 
     Double durationInSeconds = Double.valueOf((currentTimestamp - firstTimestamp) / 1000.0);
 

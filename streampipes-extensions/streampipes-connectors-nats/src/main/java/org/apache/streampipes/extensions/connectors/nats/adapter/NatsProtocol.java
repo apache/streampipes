@@ -15,8 +15,21 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.nats.adapter;
+
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.ACCESS_MODE;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.ANONYMOUS_ACCESS;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.CONNECTION_PROPERTIES;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.CONNECTION_PROPERTIES_GROUP;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.CUSTOM_PROPERTIES;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.NONE_PROPERTIES;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.PASSWORD_KEY;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.PROPERTIES_KEY;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.SUBJECT_KEY;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.URLS_KEY;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.USERNAME_ACCESS;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.USERNAME_GROUP;
+import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.USERNAME_KEY;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -49,20 +62,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.ACCESS_MODE;
-import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.ANONYMOUS_ACCESS;
-import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.CONNECTION_PROPERTIES;
-import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.CONNECTION_PROPERTIES_GROUP;
-import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.CUSTOM_PROPERTIES;
-import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.NONE_PROPERTIES;
-import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.PASSWORD_KEY;
-import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.PROPERTIES_KEY;
-import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.SUBJECT_KEY;
-import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.URLS_KEY;
-import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.USERNAME_ACCESS;
-import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.USERNAME_GROUP;
-import static org.apache.streampipes.extensions.connectors.nats.shared.NatsConfigUtils.USERNAME_KEY;
-
 public class NatsProtocol implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.nats";
@@ -87,9 +86,9 @@ public class NatsProtocol implements StreamPipesAdapter {
 
   public static StaticPropertyAlternative getAccessModeAlternativesTwo() {
     return Alternatives.from(Labels.withId(USERNAME_ACCESS),
-        StaticProperties.group(Labels.withId(USERNAME_GROUP),
-            StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME_KEY)),
-            StaticProperties.secretValue(Labels.withId(PASSWORD_KEY))));
+            StaticProperties.group(Labels.withId(USERNAME_GROUP),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME_KEY)),
+                    StaticProperties.secretValue(Labels.withId(PASSWORD_KEY))));
 
   }
 
@@ -100,51 +99,46 @@ public class NatsProtocol implements StreamPipesAdapter {
 
   public static StaticPropertyAlternative getConnectionPropertiesAlternativesTwo() {
     return Alternatives.from(Labels.withId(CUSTOM_PROPERTIES),
-        StaticProperties.group(Labels.withId(CONNECTION_PROPERTIES_GROUP),
-            StaticProperties.stringFreeTextProperty(Labels.withId(PROPERTIES_KEY))));
+            StaticProperties.group(Labels.withId(CONNECTION_PROPERTIES_GROUP),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(PROPERTIES_KEY))));
 
   }
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder
-        .create(ID, 0, NatsProtocol::new)
-        .withSupportedParsers(Parsers.defaultParsers())
-        .withCategory(AdapterType.Generic)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredTextParameter(Labels.withId(URLS_KEY), false, false)
-        .requiredTextParameter(Labels.withId(SUBJECT_KEY), false, false)
-        .requiredAlternatives(Labels.withId(ACCESS_MODE), getAccessModeAlternativesOne(),
-            getAccessModeAlternativesTwo())
-        .requiredAlternatives(Labels.withId(CONNECTION_PROPERTIES), getConnectionPropertiesAlternativesOne(),
-            getConnectionPropertiesAlternativesTwo())
-        .buildConfiguration();
+    return AdapterConfigurationBuilder.create(ID, 0, NatsProtocol::new).withSupportedParsers(Parsers.defaultParsers())
+            .withCategory(AdapterType.Generic).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredTextParameter(Labels.withId(URLS_KEY), false, false)
+            .requiredTextParameter(Labels.withId(SUBJECT_KEY), false, false)
+            .requiredAlternatives(Labels.withId(ACCESS_MODE), getAccessModeAlternativesOne(),
+                    getAccessModeAlternativesTwo())
+            .requiredAlternatives(Labels.withId(CONNECTION_PROPERTIES), getConnectionPropertiesAlternativesOne(),
+                    getConnectionPropertiesAlternativesTwo())
+            .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     this.natsConsumer = new NatsConsumer(natsConfig);
     try {
       this.natsConsumer.connect(new BrokerEventProcessor(extractor.selectedParser(), collector));
     } catch (SpRuntimeException e) {
-      throw new AdapterException("Error when connecting to the Nats broker on "
-          + natsConfig.getNatsUrls() + " . ", e);
+      throw new AdapterException("Error when connecting to the Nats broker on " + natsConfig.getNatsUrls() + " . ", e);
     }
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
+          throws AdapterException {
     this.natsConsumer.disconnect();
   }
 
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     List<byte[]> elements = new ArrayList<>();
     this.natsConsumer = new NatsConsumer(natsConfig);
@@ -173,7 +167,7 @@ public class NatsProtocol implements StreamPipesAdapter {
       return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(elements.get(0)));
     } else {
       throw new ParseException("Did not receive any data within " + MAX_TIMEOUT / 1000
-          + " seconds, is this subjects currently providing data?");
+              + " seconds, is this subjects currently providing data?");
     }
   }
 }

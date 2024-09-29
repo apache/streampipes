@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.influx.shared;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -32,13 +31,10 @@ public abstract class SharedInfluxClient {
 
   protected InfluxDB influxDb = null;
 
-  public SharedInfluxClient(InfluxConnectionSettings connectionSettings,
-                            String measureName) {
+  public SharedInfluxClient(InfluxConnectionSettings connectionSettings, String measureName) {
     this.connectionSettings = connectionSettings;
     this.measureName = measureName;
   }
-
-
 
   protected void initClient() throws SpRuntimeException {
     InfluxClientProvider influxClientProvider = new InfluxClientProvider();

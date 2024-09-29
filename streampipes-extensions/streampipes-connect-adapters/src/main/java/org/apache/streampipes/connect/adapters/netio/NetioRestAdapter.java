@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.adapters.netio;
-
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.adapters.netio.model.NetioAllPowerOutputs;
@@ -40,16 +38,16 @@ import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import com.google.gson.Gson;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class NetioRestAdapter implements StreamPipesAdapter, IPullAdapter {
 
@@ -96,11 +94,9 @@ public class NetioRestAdapter implements StreamPipesAdapter, IPullAdapter {
   }
 
   private NetioAllPowerOutputs requestData() throws IOException {
-    Executor executor = Executor.newInstance()
-        .auth(new HttpHost(this.ip, 80), this.username, this.password);
+    Executor executor = Executor.newInstance().auth(new HttpHost(this.ip, 80), this.username, this.password);
 
-    String response = executor.execute(Request.Get("http://" + this.ip + "/netio.json"))
-        .returnContent().asString();
+    String response = executor.execute(Request.Get("http://" + this.ip + "/netio.json")).returnContent().asString();
 
     return new Gson().fromJson(response, NetioAllPowerOutputs.class);
   }
@@ -113,7 +109,8 @@ public class NetioRestAdapter implements StreamPipesAdapter, IPullAdapter {
   /**
    * Extracts the user configuration from the SpecificAdapterStreamDescription and sets the local variales
    *
-   * @param extractor StaticPropertyExtractor
+   * @param extractor
+   *          StaticPropertyExtractor
    */
   private void applyConfiguration(IParameterExtractor extractor) {
 
@@ -125,21 +122,17 @@ public class NetioRestAdapter implements StreamPipesAdapter, IPullAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 0, NetioRestAdapter::new)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withCategory(AdapterType.Energy)
-        .requiredTextParameter(Labels.withId(NETIO_IP))
-        .requiredIntegerParameter(Labels.withId(NETIO_POLLING_INTERVAL), 2)
-        .requiredTextParameter(Labels.withId(NETIO_USERNAME))
-        .requiredStaticProperty(StaticProperties.secretValue(Labels.withId(NETIO_PASSWORD)))
-        .buildConfiguration();
+    return AdapterConfigurationBuilder.create(ID, 0, NetioRestAdapter::new).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withCategory(AdapterType.Energy)
+            .requiredTextParameter(Labels.withId(NETIO_IP))
+            .requiredIntegerParameter(Labels.withId(NETIO_POLLING_INTERVAL), 2)
+            .requiredTextParameter(Labels.withId(NETIO_USERNAME))
+            .requiredStaticProperty(StaticProperties.secretValue(Labels.withId(NETIO_PASSWORD))).buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     this.collector = collector;
     this.scheduler = new PullAdapterScheduler();
@@ -147,27 +140,25 @@ public class NetioRestAdapter implements StreamPipesAdapter, IPullAdapter {
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext) {
     this.scheduler.shutdown();
   }
 
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     applyConfiguration(extractor.getStaticPropertyExtractor());
 
     try {
       requestData();
       return NetioUtils.getNetioSchema();
     } catch (IOException e) {
-      if (e instanceof HttpResponseException && ((HttpResponseException) e).getStatusCode()
-              == HttpStatus.SC_UNAUTHORIZED) {
+      if (e instanceof HttpResponseException
+              && ((HttpResponseException) e).getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
         throw new AdapterException(
-            "Unauthorized! Could not connect to NETIO sensor: " + this.ip + " with username " + this.username);
+                "Unauthorized! Could not connect to NETIO sensor: " + this.ip + " with username " + this.username);
       } else {
-        throw
-            new AdapterException("Could not connect to NETIO sensor: " + this.ip + " with username " + this.username);
+        throw new AdapterException("Could not connect to NETIO sensor: " + this.ip + " with username " + this.username);
       }
     }
   }

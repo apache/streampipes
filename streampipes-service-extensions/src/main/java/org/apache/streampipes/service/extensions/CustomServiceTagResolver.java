@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.commons.environment.Environment;
@@ -38,10 +37,9 @@ public class CustomServiceTagResolver {
   public Set<SpServiceTag> getCustomServiceTags() {
     if (env.getCustomServiceTags().exists()) {
       var serviceTags = env.getCustomServiceTags().getValue();
-      return Arrays.stream(
-              serviceTags.split(",")
-          ).map(serviceTagString -> SpServiceTag.create(SpServiceTagPrefix.CUSTOM, serviceTagString))
-          .collect(Collectors.toSet());
+      return Arrays.stream(serviceTags.split(","))
+              .map(serviceTagString -> SpServiceTag.create(SpServiceTagPrefix.CUSTOM, serviceTagString))
+              .collect(Collectors.toSet());
     } else {
       return Collections.emptySet();
     }

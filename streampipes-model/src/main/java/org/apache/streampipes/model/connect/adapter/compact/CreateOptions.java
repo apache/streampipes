@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.adapter.compact;
 
-public record CreateOptions(boolean persist,
-                            boolean start) {
+public record CreateOptions(boolean persist, boolean start) {
 }

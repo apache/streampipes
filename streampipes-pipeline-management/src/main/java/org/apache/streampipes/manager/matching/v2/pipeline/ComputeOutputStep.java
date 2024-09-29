@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
 import org.apache.streampipes.manager.matching.output.OutputSchemaFactory;
@@ -39,30 +38,25 @@ public class ComputeOutputStep extends AbstractPipelineValidationStep {
   private final Map<String, DataProcessorInvocation> relatedPes = new HashMap<>();
 
   @Override
-  public void apply(NamedStreamPipesEntity source,
-                    InvocableStreamPipesEntity target,
-                    Set<InvocableStreamPipesEntity> allTargets,
-                    List<PipelineElementValidationInfo> validationInfos) throws SpValidationException {
+  public void apply(NamedStreamPipesEntity source, InvocableStreamPipesEntity target,
+          Set<InvocableStreamPipesEntity> allTargets, List<PipelineElementValidationInfo> validationInfos)
+          throws SpValidationException {
 
     if (target instanceof DataProcessorInvocation) {
       DataProcessorInvocation pe = (DataProcessorInvocation) target;
       Tuple2<EventSchema, ? extends OutputStrategy> outputSettings;
-      OutputSchemaGenerator<?> schemaGenerator = new OutputSchemaFactory(pe)
-          .getOuputSchemaGenerator();
+      OutputSchemaGenerator<?> schemaGenerator = new OutputSchemaFactory(pe).getOuputSchemaGenerator();
 
       if (target.getInputStreams().size() == 1) {
-        outputSettings = schemaGenerator.buildFromOneStream(
-            pe.getInputStreams()
-                .get(0));
+        outputSettings = schemaGenerator.buildFromOneStream(pe.getInputStreams().get(0));
       } else if (relatedPes.containsKey(pe.getDom())) {
         DataProcessorInvocation existingInvocation = relatedPes.get(pe.getDom());
 
-        outputSettings = schemaGenerator.buildFromTwoStreams(existingInvocation
-            .getInputStreams().get(0), pe.getInputStreams().get(1));
+        outputSettings = schemaGenerator.buildFromTwoStreams(existingInvocation.getInputStreams().get(0),
+                pe.getInputStreams().get(1));
       } else {
         relatedPes.put(target.getDom(), pe);
-        outputSettings = new Tuple2<>(new EventSchema(), pe
-            .getOutputStrategies().get(0));
+        outputSettings = new Tuple2<>(new EventSchema(), pe.getOutputStrategies().get(0));
       }
 
       pe.setOutputStrategies(Collections.singletonList(outputSettings.v));

@@ -39,4 +39,3 @@ public class SpNatsProtocolFactory extends SpProtocolDefinitionFactory<NatsTrans
     return new SpNatsProtocol();
   }
 }
-

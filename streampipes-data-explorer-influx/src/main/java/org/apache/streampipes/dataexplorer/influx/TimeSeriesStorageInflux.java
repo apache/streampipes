@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.commons.environment.Environment;
@@ -27,10 +26,10 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
+import java.util.concurrent.TimeUnit;
+
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Point;
-
-import java.util.concurrent.TimeUnit;
 
 public class TimeSeriesStorageInflux extends TimeSeriesStorage {
 
@@ -38,12 +37,8 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
 
   private final PropertyHandler propertyHandler;
 
-
-  public TimeSeriesStorageInflux(
-      DataLakeMeasure measure,
-      Environment environment,
-      InfluxClientProvider influxClientProvider
-  ) throws SpRuntimeException {
+  public TimeSeriesStorageInflux(DataLakeMeasure measure, Environment environment,
+          InfluxClientProvider influxClientProvider) throws SpRuntimeException {
     super(measure);
     this.influxDb = influxClientProvider.getSetUpInfluxDBClient(environment);
     propertyHandler = new PropertyHandler();
@@ -55,10 +50,7 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
     influxDb.write(point.build());
   }
 
-  private void iterateOverallEventProperties(
-      Event event,
-      Point.Builder point
-  ) {
+  private void iterateOverallEventProperties(Event event, Point.Builder point) {
 
     allEventProperties.forEach(ep -> {
       var runtimeName = ep.getRuntimeName();
@@ -67,18 +59,10 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
 
       fieldOptional.ifPresent(field -> {
         if (ep instanceof EventPropertyPrimitive) {
-          propertyHandler.handlePrimitiveProperty(
-              point,
-              (EventPropertyPrimitive) ep,
-              field.getAsPrimitive(),
-              sanitizedRuntimeName
-          );
+          propertyHandler.handlePrimitiveProperty(point, (EventPropertyPrimitive) ep, field.getAsPrimitive(),
+                  sanitizedRuntimeName);
         } else {
-          propertyHandler.handleNonPrimitiveProperty(
-              point,
-              event,
-              sanitizedRuntimeName
-          );
+          propertyHandler.handleNonPrimitiveProperty(point, event, sanitizedRuntimeName);
         }
       });
     });
@@ -101,23 +85,16 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
    * Creates a point object which is later written to the influxDB and adds the value of the timestamp field
    */
   private Point.Builder initializePointWithTimestamp(Event event) {
-    var timestampValue = event.getFieldBySelector(measure.getTimestampField())
-        .getAsPrimitive()
-        .getAsLong();
-    return Point.measurement(measure.getMeasureName())
-        .time((long) timestampValue, TimeUnit.MILLISECONDS);
+    var timestampValue = event.getFieldBySelector(measure.getTimestampField()).getAsPrimitive().getAsLong();
+    return Point.measurement(measure.getMeasureName()).time((long) timestampValue, TimeUnit.MILLISECONDS);
   }
 
   /**
    * store sanitized target property runtime names in local variable
    */
   protected void storeSanitizedRuntimeNames() {
-    measure.getEventSchema()
-           .getEventProperties()
-           .forEach(ep -> sanitizedRuntimeNames.put(
-             ep.getRuntimeName(),
-             InfluxNameSanitizer.renameReservedKeywords(ep.getRuntimeName())
-           ));
+    measure.getEventSchema().getEventProperties().forEach(ep -> sanitizedRuntimeNames.put(ep.getRuntimeName(),
+            InfluxNameSanitizer.renameReservedKeywords(ep.getRuntimeName())));
   }
 
   /**
@@ -125,8 +102,7 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
    */
   protected void sanitizeRuntimeNamesInEvent(Event event) {
     // sanitize event
-    event.getRaw()
-         .keySet()
-         .forEach(key -> event.renameFieldByRuntimeName(key, InfluxNameSanitizer.renameReservedKeywords(key)));
+    event.getRaw().keySet()
+            .forEach(key -> event.renameFieldByRuntimeName(key, InfluxNameSanitizer.renameReservedKeywords(key)));
   }
 }

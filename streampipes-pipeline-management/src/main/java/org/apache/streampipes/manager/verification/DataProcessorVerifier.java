@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.verification;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
@@ -28,8 +27,7 @@ import java.io.IOException;
 
 public class DataProcessorVerifier extends ElementVerifier<DataProcessorDescription> {
 
-  public DataProcessorVerifier(String graphData)
-      throws SepaParseException {
+  public DataProcessorVerifier(String graphData) throws SepaParseException {
     super(graphData, DataProcessorDescription.class);
     // TODO Auto-generated constructor stub
   }

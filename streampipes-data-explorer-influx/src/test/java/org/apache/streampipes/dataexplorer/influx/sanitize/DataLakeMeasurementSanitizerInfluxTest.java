@@ -15,8 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx.sanitize;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.apache.streampipes.client.api.IDataLakeMeasureApi;
 import org.apache.streampipes.client.api.IStreamPipesClient;
@@ -25,15 +29,10 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.test.generator.EventPropertyPrimitiveTestBuilder;
 import org.apache.streampipes.test.generator.EventSchemaTestBuilder;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class DataLakeMeasurementSanitizerInfluxTest {
 
@@ -50,23 +49,12 @@ public class DataLakeMeasurementSanitizerInfluxTest {
 
   @Test
   public void cleanDataLakeMeasure() {
-    var measure = new DataLakeMeasure(
-      "test?Measurement",
-      "timestamp",
-      EventSchemaTestBuilder.create()
-                            .withEventProperties(List.of(
-                              EventPropertyPrimitiveTestBuilder.create()
-                                                               .withRuntimeName("timestamp")
-                                                               .build(),
-                              EventPropertyPrimitiveTestBuilder.create()
-                                                               .withRuntimeName("value")
-                                                               .build(),
-                              EventPropertyPrimitiveTestBuilder.create()
-                                                               .withRuntimeName("all")
-                                                               .build()
-                            ))
-                            .build()
-    );
+    var measure = new DataLakeMeasure("test?Measurement", "timestamp", EventSchemaTestBuilder.create()
+            .withEventProperties(
+                    List.of(EventPropertyPrimitiveTestBuilder.create().withRuntimeName("timestamp").build(),
+                            EventPropertyPrimitiveTestBuilder.create().withRuntimeName("value").build(),
+                            EventPropertyPrimitiveTestBuilder.create().withRuntimeName("all").build()))
+            .build());
 
     var result = new DataLakeMeasurementSanitizerInflux(clientMock, measure).sanitizeAndRegister();
 
@@ -78,16 +66,13 @@ public class DataLakeMeasurementSanitizerInfluxTest {
 
   @Test
   public void cleanDataLakeMeasureNoTimestampField() {
-    var measure = new DataLakeMeasure("test", EventSchemaTestBuilder.create()
-                                                                    .withEventProperties(List.of(
-                                                                      EventPropertyPrimitiveTestBuilder.create()
-                                                                                                       .withRuntimeName(
-                                                                                                         "value")
-                                                                                                       .build()
-                                                                    ))
-                                                                    .build());
+    var measure = new DataLakeMeasure("test",
+            EventSchemaTestBuilder.create()
+                    .withEventProperties(
+                            List.of(EventPropertyPrimitiveTestBuilder.create().withRuntimeName("value").build()))
+                    .build());
 
     assertThrows(SpRuntimeException.class,
-                 () -> new DataLakeMeasurementSanitizerInflux(clientMock, measure).sanitizeAndRegister());
+            () -> new DataLakeMeasurementSanitizerInflux(clientMock, measure).sanitizeAndRegister());
   }
 }

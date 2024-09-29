@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk;
 
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -55,8 +54,8 @@ public class StaticProperties {
   }
 
   public static StaticPropertyAlternatives alternatives(Label label, List<StaticPropertyAlternative> alternatives) {
-    StaticPropertyAlternatives alternativesContainer =
-        new StaticPropertyAlternatives(label.getInternalId(), label.getLabel(), label.getDescription());
+    StaticPropertyAlternatives alternativesContainer = new StaticPropertyAlternatives(label.getInternalId(),
+            label.getLabel(), label.getDescription());
 
     alternativesContainer.setAlternatives(alternatives);
 
@@ -64,11 +63,9 @@ public class StaticProperties {
   }
 
   public static MappingPropertyUnary mappingPropertyUnary(Label label, RequirementsSelector requirementsSelector,
-                                                          PropertyScope propertyScope) {
-    MappingPropertyUnary mp = new MappingPropertyUnary(label.getInternalId(), label
-        .getInternalId(),
-        label.getLabel(),
-        label.getDescription());
+          PropertyScope propertyScope) {
+    MappingPropertyUnary mp = new MappingPropertyUnary(label.getInternalId(), label.getInternalId(), label.getLabel(),
+            label.getDescription());
 
     mp.setRequirementSelector(requirementsSelector.toSelector(label.getInternalId()));
     mp.setPropertyScope(propertyScope.name());
@@ -89,16 +86,15 @@ public class StaticProperties {
   /**
    * Creates a FreeTextStaticProperty with the specified configuration options allowing only plaintext as input.
    *
-   * @param label                    The label for the FreeTextStaticProperty.
-   * @param isMultiLine              {@code true} if the FreeTextStaticProperty should support multiline text,
-   *                                 {@code false} otherwise.
-   * @param arePlaceholdersSupported {@code true} if the FreeTextStaticProperty should support placeholders,
-   *                                 {@code false} otherwise.
+   * @param label
+   *          The label for the FreeTextStaticProperty.
+   * @param isMultiLine
+   *          {@code true} if the FreeTextStaticProperty should support multiline text, {@code false} otherwise.
+   * @param arePlaceholdersSupported
+   *          {@code true} if the FreeTextStaticProperty should support placeholders, {@code false} otherwise.
    * @return A configured FreeTextStaticProperty instance.
    */
-  public static FreeTextStaticProperty stringFreeTextProperty(
-          Label label,
-          boolean isMultiLine,
+  public static FreeTextStaticProperty stringFreeTextProperty(Label label, boolean isMultiLine,
           boolean arePlaceholdersSupported) {
     var property = stringFreeTextProperty(label);
     property.setMultiLine(isMultiLine);
@@ -116,21 +112,19 @@ public class StaticProperties {
     return property;
   }
 
-
   public static FreeTextStaticProperty doubleFreeTextProperty(Label label) {
     return freeTextProperty(label, Datatypes.Double);
   }
 
   public static FreeTextStaticProperty freeTextProperty(Label label, Datatypes datatype) {
     FreeTextStaticProperty fsp = new FreeTextStaticProperty(label.getInternalId(), label.getLabel(),
-        label.getDescription());
+            label.getDescription());
     fsp.setRequiredDatatype(URI.create(datatype.toString()));
     return fsp;
   }
 
   public static FileStaticProperty fileProperty(Label label) {
-    FileStaticProperty fp = new FileStaticProperty(label.getInternalId(), label.getLabel(), label
-        .getDescription());
+    FileStaticProperty fp = new FileStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
 
     return fp;
   }
@@ -150,49 +144,41 @@ public class StaticProperties {
   }
 
   public static RuntimeResolvableOneOfStaticProperty singleValueSelectionFromContainer(Label label) {
-    return new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
-        .getLabel(), label.getDescription());
+    return new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
   }
 
   public static RuntimeResolvableOneOfStaticProperty singleValueSelectionFromContainer(Label label,
-                                                                                       List<String> dependsOn) {
-    RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
-        .getLabel(), label.getDescription());
+          List<String> dependsOn) {
+    RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(),
+            label.getLabel(), label.getDescription());
     rsp.setDependsOn(dependsOn);
     return rsp;
   }
 
   public static RuntimeResolvableAnyStaticProperty multiValueSelectionFromContainer(Label label) {
-    return new RuntimeResolvableAnyStaticProperty(label.getInternalId(), label
-        .getLabel(), label.getDescription());
+    return new RuntimeResolvableAnyStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
   }
 
   public static RuntimeResolvableGroupStaticProperty runtimeResolvableGroupStaticProperty(Label label,
-                                                                                          List<String> dependsOn) {
-    var property = new RuntimeResolvableGroupStaticProperty(label.getInternalId(), label
-        .getLabel(), label.getDescription(), dependsOn);
+          List<String> dependsOn) {
+    var property = new RuntimeResolvableGroupStaticProperty(label.getInternalId(), label.getLabel(),
+            label.getDescription(), dependsOn);
     property.setShowLabel(true);
     return property;
   }
 
   public static RuntimeResolvableAnyStaticProperty multiValueSelectionFromContainer(Label label,
-                                                                                    List<String> dependsOn) {
-    RuntimeResolvableAnyStaticProperty rsp =
-        new RuntimeResolvableAnyStaticProperty(label.getInternalId(), label
-            .getLabel(), label.getDescription());
+          List<String> dependsOn) {
+    RuntimeResolvableAnyStaticProperty rsp = new RuntimeResolvableAnyStaticProperty(label.getInternalId(),
+            label.getLabel(), label.getDescription());
     rsp.setDependsOn(dependsOn);
     return rsp;
   }
 
-
-  public static RuntimeResolvableTreeInputStaticProperty runtimeResolvableTreeInput(Label label,
-                                                                                    List<String> dependsOn,
-                                                                                    boolean resolveDynamically,
-                                                                                    boolean multiSelection) {
+  public static RuntimeResolvableTreeInputStaticProperty runtimeResolvableTreeInput(Label label, List<String> dependsOn,
+          boolean resolveDynamically, boolean multiSelection) {
     RuntimeResolvableTreeInputStaticProperty treeInput = new RuntimeResolvableTreeInputStaticProperty(
-        label.getInternalId(),
-        label.getLabel(),
-        label.getDescription());
+            label.getInternalId(), label.getLabel(), label.getDescription());
 
     treeInput.setDependsOn(dependsOn);
     treeInput.setResolveDynamically(resolveDynamically);
@@ -202,7 +188,7 @@ public class StaticProperties {
   }
 
   public static StaticProperty integerFreeTextProperty(Label label,
-                                                       PropertyValueSpecification propertyValueSpecification) {
+          PropertyValueSpecification propertyValueSpecification) {
     FreeTextStaticProperty fsp = integerFreeTextProperty(label);
     fsp.setValueSpecification(propertyValueSpecification);
     return fsp;
@@ -214,8 +200,7 @@ public class StaticProperties {
 
   public static StaticPropertyGroup group(Label label, StaticProperty... sp) {
     List<StaticProperty> staticProperties = Arrays.asList(sp);
-    return new StaticPropertyGroup(label.getInternalId(), label.getLabel(),
-        label.getDescription(), staticProperties);
+    return new StaticPropertyGroup(label.getInternalId(), label.getLabel(), label.getDescription(), staticProperties);
   }
 
   public static StaticPropertyGroup group(Label label, Boolean showLabels, StaticProperty... sp) {
@@ -226,16 +211,14 @@ public class StaticProperties {
   }
 
   public static OneOfStaticProperty singleValueSelection(Label label, List<Option> options) {
-    OneOfStaticProperty osp = new OneOfStaticProperty(label.getInternalId(), label.getLabel(),
-        label.getDescription());
+    OneOfStaticProperty osp = new OneOfStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
     osp.setOptions(options);
 
     return osp;
   }
 
   public static SecretStaticProperty secretValue(Label label) {
-    return new SecretStaticProperty(label.getInternalId(),
-        label.getLabel(), label.getDescription());
+    return new SecretStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
   }
 
   public static CollectionStaticProperty collection(Label label, boolean horizontalAlignment, StaticProperty... sp) {
@@ -245,11 +228,9 @@ public class StaticProperties {
       group.setHorizontalRendering(horizontalAlignment);
       group.setStaticProperties(Arrays.asList(sp));
 
-      return new CollectionStaticProperty(label.getInternalId(), label.getLabel(),
-          label.getDescription(), group);
+      return new CollectionStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription(), group);
     } else {
-      return new CollectionStaticProperty(label.getInternalId(), label.getLabel(),
-          label.getDescription(), sp[0]);
+      return new CollectionStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription(), sp[0]);
     }
   }
 
@@ -257,11 +238,10 @@ public class StaticProperties {
     return collection(label, true, sp);
   }
 
-  public static CodeInputStaticProperty codeStaticProperty(Label label,
-                                                           CodeLanguage codeLanguage,
-                                                           String defaultSkeleton) {
-    var codeInputStaticProperty = new CodeInputStaticProperty(label.getInternalId(),
-        label.getLabel(), label.getDescription());
+  public static CodeInputStaticProperty codeStaticProperty(Label label, CodeLanguage codeLanguage,
+          String defaultSkeleton) {
+    var codeInputStaticProperty = new CodeInputStaticProperty(label.getInternalId(), label.getLabel(),
+            label.getDescription());
     codeInputStaticProperty.setLanguage(codeLanguage.name());
     codeInputStaticProperty.setCodeTemplate(defaultSkeleton);
     return codeInputStaticProperty;

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.notifications.jvm.onesignal;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -31,6 +30,9 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -38,12 +40,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
 public class OneSignalSink extends StreamPipesNotificationSink {
-  public static final String ONE_SIGNAL_NOTIFICATION_SINK_ID =
-      "org.apache.streampipes.sinks.notifications.jvm.onesignal";
+  public static final String ONE_SIGNAL_NOTIFICATION_SINK_ID = "org.apache.streampipes.sinks.notifications.jvm.onesignal";
 
   private static final String CONTENT_KEY = "content";
   private static final String APP_ID = "app_id";
@@ -55,23 +53,15 @@ public class OneSignalSink extends StreamPipesNotificationSink {
 
   @Override
   public DataSinkBuilder declareModelWithoutSilentPeriod() {
-    return DataSinkBuilder
-        .create(ONE_SIGNAL_NOTIFICATION_SINK_ID, 1)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .category(DataSinkType.NOTIFICATION)
-        .requiredStream(StreamRequirementsBuilder
-                            .create()
-                            .requiredProperty(EpRequirements.anyProperty())
-                            .build())
-        .requiredHtmlInputParameter(Labels.withId(CONTENT_KEY))
-        .requiredTextParameter(Labels.withId(APP_ID))
-        .requiredTextParameter(Labels.withId(REST_API_KEY));
+    return DataSinkBuilder.create(ONE_SIGNAL_NOTIFICATION_SINK_ID, 1).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).category(DataSinkType.NOTIFICATION)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredHtmlInputParameter(Labels.withId(CONTENT_KEY)).requiredTextParameter(Labels.withId(APP_ID))
+            .requiredTextParameter(Labels.withId(REST_API_KEY));
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     super.onInvocation(parameters, runtimeContext);
     var extractor = parameters.extractor();
     content = extractor.singleValueParameter(CONTENT_KEY, String.class);
@@ -80,9 +70,9 @@ public class OneSignalSink extends StreamPipesNotificationSink {
   }
 
   @Override
-  public void onNotificationEvent(Event event) throws SpRuntimeException{
-    String jsondata =
-        "{\"app_id\": \"" + appId + "\",\"contents\": {\"en\": \"" + content + "\"}, \"included_segments\":[\"All\"]}";
+  public void onNotificationEvent(Event event) throws SpRuntimeException {
+    String jsondata = "{\"app_id\": \"" + appId + "\",\"contents\": {\"en\": \"" + content
+            + "\"}, \"included_segments\":[\"All\"]}";
 
     StringEntity jsonparam = null;
     try {

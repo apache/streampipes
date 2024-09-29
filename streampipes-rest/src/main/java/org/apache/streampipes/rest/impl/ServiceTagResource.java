@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
@@ -23,12 +22,12 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
+import java.util.Set;
+
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v2/service-tags")

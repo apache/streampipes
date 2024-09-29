@@ -15,25 +15,24 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.datetime;
+
+import static org.apache.streampipes.processors.transformation.jvm.processor.datetime.DateTimeFromStringProcessor.OUTPUT_TIMESTAMP_RUNTIME_NAME;
+import static org.apache.streampipes.processors.transformation.jvm.processor.datetime.DateTimeFromStringProcessor.OUTPUT_TIMEZONE_RUNTIME_NAME;
 
 import org.apache.streampipes.test.executors.PrefixStrategy;
 import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.StreamPrefix;
 import org.apache.streampipes.test.executors.TestConfiguration;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static org.apache.streampipes.processors.transformation.jvm.processor.datetime.DateTimeFromStringProcessor.OUTPUT_TIMESTAMP_RUNTIME_NAME;
-import static org.apache.streampipes.processors.transformation.jvm.processor.datetime.DateTimeFromStringProcessor.OUTPUT_TIMEZONE_RUNTIME_NAME;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class TestDateTimeFromStringProcessor {
 
@@ -47,37 +46,25 @@ public class TestDateTimeFromStringProcessor {
     processor = new DateTimeFromStringProcessor();
   }
 
-  private static final Map<String, Long> cases = Map.of(
-      "2020-11-13T21:07:38.146120+01:00", 1605298058146L,
-      "2023-11-14T16:17:01.286299-05:00", 1699996621286L,
-      "2023-11-14T14:05:57.519543100", 1699988757519L
-  );
+  private static final Map<String, Long> cases = Map.of("2020-11-13T21:07:38.146120+01:00", 1605298058146L,
+          "2023-11-14T16:17:01.286299-05:00", 1699996621286L, "2023-11-14T14:05:57.519543100", 1699988757519L);
 
   static Stream<Arguments> arguments() {
     return cases.entrySet().stream().map(entry -> {
       Map<String, Object> inputEvent = Map.of(KEY_1, entry.getKey());
-      Map<String, Object> outputEvent = Map.of(
-          KEY_1, entry.getKey(),
-          OUTPUT_TIMEZONE_RUNTIME_NAME, TIMEZONE,
-          OUTPUT_TIMESTAMP_RUNTIME_NAME, entry.getValue()
-      );
+      Map<String, Object> outputEvent = Map.of(KEY_1, entry.getKey(), OUTPUT_TIMEZONE_RUNTIME_NAME, TIMEZONE,
+              OUTPUT_TIMESTAMP_RUNTIME_NAME, entry.getValue());
       return Arguments.of(List.of(inputEvent), List.of(outputEvent));
     });
   }
 
   @ParameterizedTest
   @MethodSource("arguments")
-  public void testStringToState(
-      List<Map<String, Object>> intpuEvents,
-      List<Map<String, Object>> outputEvents
-  ) {
+  public void testStringToState(List<Map<String, Object>> intpuEvents, List<Map<String, Object>> outputEvents) {
 
-    var configuration = TestConfiguration
-        .builder()
-        .config(DateTimeFromStringProcessor.FIELD_ID, StreamPrefix.s0(KEY_1))
-        .config(DateTimeFromStringProcessor.INPUT_TIMEZONE_KEY, TIMEZONE)
-        .prefixStrategy(PrefixStrategy.SAME_PREFIX)
-        .build();
+    var configuration = TestConfiguration.builder().config(DateTimeFromStringProcessor.FIELD_ID, StreamPrefix.s0(KEY_1))
+            .config(DateTimeFromStringProcessor.INPUT_TIMEZONE_KEY, TIMEZONE).prefixStrategy(PrefixStrategy.SAME_PREFIX)
+            .build();
 
     var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 

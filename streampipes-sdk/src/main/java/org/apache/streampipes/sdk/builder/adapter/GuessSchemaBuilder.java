@@ -22,13 +22,13 @@ import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class GuessSchemaBuilder {
 
@@ -52,8 +52,7 @@ public class GuessSchemaBuilder {
     return new GuessSchemaBuilder();
   }
 
-  public GuessSchemaBuilder sample(String runtimeName,
-                                   Object sampleValue) {
+  public GuessSchemaBuilder sample(String runtimeName, Object sampleValue) {
     this.samples.put(runtimeName, sampleValue);
 
     return this;

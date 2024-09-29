@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.extensions.connectors.rocketmq.adapter;
 
+import java.util.Collections;
+
 import org.apache.rocketmq.client.apis.ClientConfiguration;
 import org.apache.rocketmq.client.apis.ClientException;
 import org.apache.rocketmq.client.apis.ClientServiceProvider;
@@ -25,24 +27,18 @@ import org.apache.rocketmq.client.apis.consumer.FilterExpressionType;
 import org.apache.rocketmq.client.apis.consumer.MessageListener;
 import org.apache.rocketmq.client.apis.consumer.PushConsumer;
 
-import java.util.Collections;
-
 public class RocketMQUtils {
 
   public static PushConsumer createConsumer(String endpoint, String topic, String consumerGroup,
-                                            MessageListener listener) throws ClientException {
+          MessageListener listener) throws ClientException {
     ClientServiceProvider provider = ClientServiceProvider.loadService();
-    ClientConfiguration clientConfiguration = ClientConfiguration.newBuilder()
-        .setEndpoints(endpoint)
-        .build();
+    ClientConfiguration clientConfiguration = ClientConfiguration.newBuilder().setEndpoints(endpoint).build();
 
     FilterExpression filterExpression = new FilterExpression("*", FilterExpressionType.TAG);
-    PushConsumer consumer = provider.newPushConsumerBuilder()
-        .setClientConfiguration(clientConfiguration)
-        .setConsumerGroup(consumerGroup)
-        .setSubscriptionExpressions(Collections.singletonMap(topic, filterExpression))
-        .setMessageListener(listener)
-        .build();
+    PushConsumer consumer = provider.newPushConsumerBuilder().setClientConfiguration(clientConfiguration)
+            .setConsumerGroup(consumerGroup)
+            .setSubscriptionExpressions(Collections.singletonMap(topic, filterExpression)).setMessageListener(listener)
+            .build();
     return consumer;
   }
 }

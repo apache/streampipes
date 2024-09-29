@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.client.setup;
 
 import org.apache.streampipes.commons.random.UUIDGenerator;

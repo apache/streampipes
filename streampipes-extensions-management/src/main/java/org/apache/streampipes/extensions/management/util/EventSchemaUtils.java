@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.util;
 
 import org.apache.streampipes.model.schema.EventProperty;
@@ -33,17 +32,19 @@ public class EventSchemaUtils {
   /**
    * Returns the timestamp property of an event schema as an {@code Optional}.
    *
-   * <p> The method checks all properties if they are of type {@code EventPropertyPrimitive} and if their domain
-   * properties contains the uri http://schema.org/DateTime </p>
+   * <p>
+   * The method checks all properties if they are of type {@code EventPropertyPrimitive} and if their domain properties
+   * contains the uri http://schema.org/DateTime
+   * </p>
    *
-   * @param eventSchema the event schema for which the timestamp property is to be returned
-   * @return an {@code Optional} containing the timestamp property, or an empty {@code Optional} if
-   * no such property was found
+   * @param eventSchema
+   *          the event schema for which the timestamp property is to be returned
+   * @return an {@code Optional} containing the timestamp property, or an empty {@code Optional} if no such property was
+   *         found
    */
   public static Optional<EventPropertyPrimitive> getTimestampProperty(EventSchema eventSchema) {
     return getTimstampProperty(eventSchema.getEventProperties());
   }
-
 
   private static Optional<EventPropertyPrimitive> getTimstampProperty(List<EventProperty> eventProperties) {
     for (EventProperty ep : eventProperties) {

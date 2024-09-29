@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.pulsar;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -32,16 +31,12 @@ public class PulsarConnectorsModuleExport implements IExtensionModuleExport {
 
   @Override
   public List<StreamPipesAdapter> adapters() {
-    return List.of(
-        new PulsarProtocol()
-    );
+    return List.of(new PulsarProtocol());
   }
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new PulsarPublisherSink()
-    );
+    return List.of(new PulsarPublisherSink());
   }
 
   @Override

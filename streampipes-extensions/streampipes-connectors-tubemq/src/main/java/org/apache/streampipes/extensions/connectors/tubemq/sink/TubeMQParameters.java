@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.tubemq.sink;
-
-import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 
 import static org.apache.streampipes.extensions.connectors.tubemq.sink.TubeMQPublisherSink.MASTER_HOST_AND_PORT_KEY;
 import static org.apache.streampipes.extensions.connectors.tubemq.sink.TubeMQPublisherSink.TOPIC_KEY;
+
+import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 
 public class TubeMQParameters {
 

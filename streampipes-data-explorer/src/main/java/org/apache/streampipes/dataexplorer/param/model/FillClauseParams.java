@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.param.model;
 
 import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;

@@ -15,25 +15,22 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.smp.generator;
 
 import org.apache.streampipes.smp.model.AssetModel;
 import org.apache.streampipes.smp.util.DirectoryManager;
 
-import com.google.common.base.Charsets;
-import org.apache.commons.io.FileUtils;
-
 import java.io.IOException;
 import java.nio.file.Path;
+
+import com.google.common.base.Charsets;
+import org.apache.commons.io.FileUtils;
 
 public class DocumentationResourceGenerator extends ResourceGenerator {
 
   public static final String DOCUMENTATION_FILE_NAME = "documentation.md";
 
-  public DocumentationResourceGenerator(ClassLoader loader,
-                                        AssetModel extensionsElement,
-                                        Path targetPath) {
+  public DocumentationResourceGenerator(ClassLoader loader, AssetModel extensionsElement, Path targetPath) {
     super(loader, extensionsElement, targetPath);
   }
 
@@ -44,19 +41,16 @@ public class DocumentationResourceGenerator extends ResourceGenerator {
       if (inputStream != null) {
         var originalDocumentationFileContents = new String(inputStream.readAllBytes());
         // modify docs for documentation page
-        String documentationFileContents =
-            new MarkdownTitleRemover(originalDocumentationFileContents).removeTitle();
+        String documentationFileContents = new MarkdownTitleRemover(originalDocumentationFileContents).removeTitle();
 
-        documentationFileContents =
-            new MarkdownHeaderGenerator(extensionsElement, documentationFileContents).createHeaders();
+        documentationFileContents = new MarkdownHeaderGenerator(extensionsElement, documentationFileContents)
+                .createHeaders();
 
-        documentationFileContents = new ImagePathReplacer(documentationFileContents,
-            extensionsElement.getAppId()).replaceContentForDocs();
+        documentationFileContents = new ImagePathReplacer(documentationFileContents, extensionsElement.getAppId())
+                .replaceContentForDocs();
 
-        FileUtils.writeStringToFile(
-            targetPath.resolve(extensionsElement.getAppId() + ".md").toFile(),
-            documentationFileContents,
-            Charsets.UTF_8);
+        FileUtils.writeStringToFile(targetPath.resolve(extensionsElement.getAppId() + ".md").toFile(),
+                documentationFileContents, Charsets.UTF_8);
       }
     }
   }

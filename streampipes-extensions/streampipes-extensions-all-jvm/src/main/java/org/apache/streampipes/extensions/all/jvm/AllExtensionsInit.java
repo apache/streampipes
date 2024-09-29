@@ -51,7 +51,6 @@ import org.apache.streampipes.sinks.internal.jvm.InternalSinksExtensionModuleExp
 import org.apache.streampipes.sinks.notifications.jvm.NotificationsExtensionModuleExport;
 import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
 
-
 public class AllExtensionsInit extends StreamPipesExtensionsServiceBase {
 
   public static void main(String[] args) {
@@ -60,45 +59,26 @@ public class AllExtensionsInit extends StreamPipesExtensionsServiceBase {
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
-    return SpServiceDefinitionBuilder.create("org.apache.streampipes.extensions.all.jvm",
-            "StreamPipes Extensions (JVM)",
-            "", 8090)
-        .registerModules(
-            new GeneralAdaptersExtensionModuleExport(),
-            new IIoTAdaptersExtensionModuleExport(),
+    return SpServiceDefinitionBuilder
+            .create("org.apache.streampipes.extensions.all.jvm", "StreamPipes Extensions (JVM)", "", 8090)
+            .registerModules(new GeneralAdaptersExtensionModuleExport(), new IIoTAdaptersExtensionModuleExport(),
 
-            new InfluxConnectorsModuleExport(),
-            new KafkaConnectorsModuleExport(),
-            new MqttConnectorsModuleExport(),
-            new NatsConnectorsModuleExport(),
-            new OpcUaConnectorsModuleExport(),
-            new PlcConnectorsModuleExport(),
-            new PulsarConnectorsModuleExport(),
-            new RocketMqConnectorsModuleExport(),
-            new RosConnectorsModuleExport(),
-            new TubeMQConnectorsModuleExport(),
+                    new InfluxConnectorsModuleExport(), new KafkaConnectorsModuleExport(),
+                    new MqttConnectorsModuleExport(), new NatsConnectorsModuleExport(),
+                    new OpcUaConnectorsModuleExport(), new PlcConnectorsModuleExport(),
+                    new PulsarConnectorsModuleExport(), new RocketMqConnectorsModuleExport(),
+                    new RosConnectorsModuleExport(), new TubeMQConnectorsModuleExport(),
 
-            new ChangeDetectionExtensionModuleExport(),
-            new EnricherExtensionModuleExport(),
-            new FilterExtensionModuleExport(),
-            new SiddhiFilterExtensionModuleExport(),
-            new FilterExtensionModuleExport(),
-            new GeoExtensionModuleExport(),
-            new ImageProcessingExtensionModuleExport(),
-            new TextMiningExtensionModuleExport(),
-            new TransformationExtensionModuleExport(),
-            new BrokerSinksExtensionModuleExport(),
-            new DatabaseSinksExtensionModuleExport(),
-            new InternalSinksExtensionModuleExports(),
-            new NotificationsExtensionModuleExport()
-        )
-        .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
-        .registerMessagingProtocols(
-            new SpKafkaProtocolFactory(),
-            new SpJmsProtocolFactory(),
-            new SpMqttProtocolFactory(),
-            new SpNatsProtocolFactory(),
-            new SpPulsarProtocolFactory())
-        .build();
+                    new ChangeDetectionExtensionModuleExport(), new EnricherExtensionModuleExport(),
+                    new FilterExtensionModuleExport(), new SiddhiFilterExtensionModuleExport(),
+                    new FilterExtensionModuleExport(), new GeoExtensionModuleExport(),
+                    new ImageProcessingExtensionModuleExport(), new TextMiningExtensionModuleExport(),
+                    new TransformationExtensionModuleExport(), new BrokerSinksExtensionModuleExport(),
+                    new DatabaseSinksExtensionModuleExport(), new InternalSinksExtensionModuleExports(),
+                    new NotificationsExtensionModuleExport())
+            .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
+            .registerMessagingProtocols(new SpKafkaProtocolFactory(), new SpJmsProtocolFactory(),
+                    new SpMqttProtocolFactory(), new SpNatsProtocolFactory(), new SpPulsarProtocolFactory())
+            .build();
   }
 }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.client.user;
 
 public record ChangePasswordRequest(String existingPassword, String newPassword) {

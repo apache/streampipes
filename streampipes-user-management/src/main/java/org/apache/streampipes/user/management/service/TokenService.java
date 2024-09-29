@@ -25,24 +25,19 @@ import org.apache.streampipes.user.management.util.TokenUtil;
 
 public class TokenService {
 
-  public RawUserApiToken createAndStoreNewToken(String email,
-                                                RawUserApiToken baseToken) {
+  public RawUserApiToken createAndStoreNewToken(String email, RawUserApiToken baseToken) {
     UserAccount user = getUserStorage().getUserAccount(email);
     RawUserApiToken generatedToken = TokenUtil.createToken(baseToken.tokenName());
     storeToken(user, generatedToken);
     return generatedToken;
   }
 
-  public boolean hasValidToken(String apiUser,
-                               String hashedToken) {
+  public boolean hasValidToken(String apiUser, String hashedToken) {
     UserAccount userAccount = getUserStorage().getUserAccount(apiUser);
     if (userAccount == null) {
       return false;
     } else {
-      return userAccount
-          .getUserApiTokens()
-          .stream()
-          .anyMatch(t -> t.getHashedToken().equals(hashedToken));
+      return userAccount.getUserApiTokens().stream().anyMatch(t -> t.getHashedToken().equals(hashedToken));
     }
   }
 
@@ -52,8 +47,6 @@ public class TokenService {
   }
 
   private IUserStorage getUserStorage() {
-    return StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getUserStorageAPI();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
   }
 }

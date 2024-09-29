@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.vocabulary;
 
 import java.util.Arrays;
@@ -37,7 +36,6 @@ public class SPSensor {
 
   public static final String TEMPERATURE = "http://streampipes.org/hmi/temperature";
 
-
   public static final String AMBIENT_LIGHT = "http://streampipes.org/hmi/ambientLight";
 
   public static final String IMAGE = "https://image.com";
@@ -45,15 +43,8 @@ public class SPSensor {
   public static final String STATE = "http://streampipes.org/process/state";
 
   public static List<String> getAll() {
-    return Arrays.asList(ACCELERATION_X,
-        ACCELERATION_Y,
-        ACCELERATION_Z,
-        GYROSCOPE_X,
-        GYROSCOPE_Y,
-        GYROSCOPE_Z,
-        AMBIENT_LIGHT,
-        IMAGE,
-        STATE);
+    return Arrays.asList(ACCELERATION_X, ACCELERATION_Y, ACCELERATION_Z, GYROSCOPE_X, GYROSCOPE_Y, GYROSCOPE_Z,
+            AMBIENT_LIGHT, IMAGE, STATE);
   }
 
 }

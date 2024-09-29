@@ -19,8 +19,7 @@ package org.apache.streampipes.wrapper.siddhi.constants;
 
 public enum SiddhiStreamSelector {
 
-  FIRST_INPUT_STREAM(SiddhiConstants.FIRST_STREAM_PREFIX),
-  SECOND_INPUT_STREAM(SiddhiConstants.SECOND_STREAM_PREFIX);
+  FIRST_INPUT_STREAM(SiddhiConstants.FIRST_STREAM_PREFIX), SECOND_INPUT_STREAM(SiddhiConstants.SECOND_STREAM_PREFIX);
 
   private String prefix;
 

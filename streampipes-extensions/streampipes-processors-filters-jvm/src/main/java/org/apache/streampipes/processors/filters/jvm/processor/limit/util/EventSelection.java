@@ -18,7 +18,5 @@
 package org.apache.streampipes.processors.filters.jvm.processor.limit.util;
 
 public enum EventSelection {
-  FIRST,
-  LAST,
-  ALL
+  FIRST, LAST, ALL
 }

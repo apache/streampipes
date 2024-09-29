@@ -15,17 +15,16 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing;
 
 import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 public class UtilsTest {
 

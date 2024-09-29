@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.message;
 
 import org.apache.streampipes.model.pipeline.PipelineModification;
@@ -28,16 +27,15 @@ import java.util.List;
 public class PipelineModificationMessage extends Message {
 
   /**
-   * Class that represents PipelineModification messages.
-   * Modifications are used to update a pipeline element within an already created pipeline
+   * Class that represents PipelineModification messages. Modifications are used to update a pipeline element within an
+   * already created pipeline
    */
 
   private List<PipelineModification> pipelineModifications;
   private boolean pipelineValid;
   private List<PipelineEdgeValidation> edgeValidations;
 
-  public PipelineModificationMessage(
-      List<PipelineModification> pipelineModifications) {
+  public PipelineModificationMessage(List<PipelineModification> pipelineModifications) {
     super(true);
     this.pipelineModifications = pipelineModifications;
     this.edgeValidations = new ArrayList<>();
@@ -52,8 +50,7 @@ public class PipelineModificationMessage extends Message {
     return pipelineModifications;
   }
 
-  public void setPipelineModifications(
-      List<PipelineModification> pipelineModifications) {
+  public void setPipelineModifications(List<PipelineModification> pipelineModifications) {
     this.pipelineModifications = pipelineModifications;
   }
 
@@ -89,6 +86,5 @@ public class PipelineModificationMessage extends Message {
     }
     return false;
   }
-
 
 }

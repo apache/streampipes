@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
@@ -34,7 +33,7 @@ public class MeasurementUnitMatch extends AbstractMatcher<URI, URI> {
   @Override
   public boolean match(URI offer, URI requirement, List<MatchingResultMessage> errorLog) {
     return requirement == null || (requirement.toString().equals(StreamPipes.ANYTHING) && offer != null)
-        || (offer != null && requirement.toString().equals(offer.toString()));
+            || (offer != null && requirement.toString().equals(offer.toString()));
   }
 
 }

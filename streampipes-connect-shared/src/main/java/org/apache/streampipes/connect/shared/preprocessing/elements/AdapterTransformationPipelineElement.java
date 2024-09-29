@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.elements;
 
 import org.apache.streampipes.connect.shared.preprocessing.generator.TransformationRuleGeneratorVisitor;
@@ -32,7 +31,7 @@ public class AdapterTransformationPipelineElement implements IAdapterPipelineEle
   private final List<TransformationRule> transformationRules;
 
   public AdapterTransformationPipelineElement(List<TransformationRuleDescription> transformationRules,
-                                              TransformationRuleGeneratorVisitor visitor) {
+          TransformationRuleGeneratorVisitor visitor) {
     var descriptions = Utils.sortByPriority(transformationRules);
 
     descriptions.forEach(d -> d.accept(visitor));

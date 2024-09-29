@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.shared.exception;
 
 import org.springframework.http.HttpStatus;

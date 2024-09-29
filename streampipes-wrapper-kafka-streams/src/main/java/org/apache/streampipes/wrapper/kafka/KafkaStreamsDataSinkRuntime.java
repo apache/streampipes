@@ -27,12 +27,11 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.wrapper.context.generator.DataSinkContextGenerator;
 import org.apache.streampipes.wrapper.params.generator.DataSinkParameterGenerator;
 
-public class KafkaStreamsDataSinkRuntime extends KafkaStreamsRuntime<
-    IStreamPipesDataSink,
-    DataSinkInvocation,
-    EventSinkRuntimeContext,
-    IDataSinkParameterExtractor,
-    IDataSinkParameters> implements IDataSinkRuntime {
+public class KafkaStreamsDataSinkRuntime
+        extends
+          KafkaStreamsRuntime<IStreamPipesDataSink, DataSinkInvocation, EventSinkRuntimeContext, IDataSinkParameterExtractor, IDataSinkParameters>
+        implements
+          IDataSinkRuntime {
 
   public KafkaStreamsDataSinkRuntime() {
     super(new DataSinkContextGenerator(), new DataSinkParameterGenerator());

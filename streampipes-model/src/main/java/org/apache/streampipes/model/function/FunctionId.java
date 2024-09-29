@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.function;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -29,14 +28,12 @@ public class FunctionId {
   public FunctionId() {
   }
 
-  private FunctionId(String id,
-                     int version) {
+  private FunctionId(String id, int version) {
     this.id = id;
     this.version = version;
   }
 
-  public static FunctionId from(String id,
-                                int version) {
+  public static FunctionId from(String id, int version) {
     return new FunctionId(id, version);
   }
 

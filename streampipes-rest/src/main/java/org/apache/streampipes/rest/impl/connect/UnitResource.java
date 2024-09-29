@@ -15,12 +15,13 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.UnitMasterManagement;
 import org.apache.streampipes.model.connect.unit.UnitDescription;
+
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +33,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v2/connect/master/unit")
 public class UnitResource extends AbstractAdapterResource<UnitMasterManagement> {
@@ -44,10 +43,7 @@ public class UnitResource extends AbstractAdapterResource<UnitMasterManagement> 
     super(UnitMasterManagement::new);
   }
 
-  @PostMapping(
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getFittingUnits(@RequestBody UnitDescription unitDescription) {
     try {
       String resultingJson = managementService.getFittingUnits(unitDescription);
@@ -58,9 +54,8 @@ public class UnitResource extends AbstractAdapterResource<UnitMasterManagement> 
     }
   }
 
-  @GetMapping(path = "/units",
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<UnitDescription>> getAllUnits(){
+  @GetMapping(path = "/units", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<UnitDescription>> getAllUnits() {
     List<UnitDescription> unitDescriptions = managementService.getAllUnitDescriptions();
     return ok(unitDescriptions);
   }

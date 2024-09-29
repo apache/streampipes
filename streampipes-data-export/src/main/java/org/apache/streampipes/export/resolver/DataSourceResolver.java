@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.export.utils.SerializationUtils;
@@ -52,8 +51,7 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
     getNoSqlStore().getDataStreamStorage().persist(deserializeDocument(document));
   }
 
-  public void writeDocument(String document,
-                            boolean overrideDocument) throws JsonProcessingException {
+  public void writeDocument(String document, boolean overrideDocument) throws JsonProcessingException {
     var dataStream = deserializeDocument(document);
     if (overrideDocument) {
       if (dataStream.getEventGrounding() != null) {

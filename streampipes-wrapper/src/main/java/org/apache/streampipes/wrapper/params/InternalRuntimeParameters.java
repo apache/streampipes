@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.params;
 
 import org.apache.streampipes.extensions.api.pe.param.IInternalRuntimeParameters;
@@ -27,13 +26,8 @@ import java.util.Map;
 
 public class InternalRuntimeParameters implements IInternalRuntimeParameters {
   @Override
-  public Event makeEvent(IPipelineElementParameters<?, ?> parameters,
-                         Map<String, Object> mapEvent,
-                         String sourceId) {
+  public Event makeEvent(IPipelineElementParameters<?, ?> parameters, Map<String, Object> mapEvent, String sourceId) {
     var index = parameters.getSourceIndex(sourceId);
-    return EventFactory.fromMap(
-        mapEvent,
-        parameters.getInputSourceInfo(index),
-        parameters.getInputSchemaInfo(index));
+    return EventFactory.fromMap(mapEvent, parameters.getInputSourceInfo(index), parameters.getInputSchemaInfo(index));
   }
 }

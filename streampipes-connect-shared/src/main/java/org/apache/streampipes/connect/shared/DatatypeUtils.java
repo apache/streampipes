@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared;
 
 import org.apache.streampipes.vocabulary.XSD;
@@ -29,20 +28,21 @@ public class DatatypeUtils {
   private static final Logger LOG = LoggerFactory.getLogger(DatatypeUtils.class);
 
   /**
-   * Converts the given value to a specified XSD datatype.
-   * This method attempts to convert the input value to the target datatype specified by the XSD string.
-   * It supports conversion to string, double, float, boolean, integer, and long types.
-   * If the conversion is not possible due to a format mismatch, the original value is returned.
-   * A number format exception during conversion is logged as an error.
+   * Converts the given value to a specified XSD datatype. This method attempts to convert the input value to the target
+   * datatype specified by the XSD string. It supports conversion to string, double, float, boolean, integer, and long
+   * types. If the conversion is not possible due to a format mismatch, the original value is returned. A number format
+   * exception during conversion is logged as an error.
    *
-   * @param value The value to be converted. It can be of any type.
-   * @param targetDatatypeXsd The target XSD datatype as a string. Supported types are XSD.STRING,
-   *                          XSD.DOUBLE, XSD.FLOAT, XSD.BOOLEAN, XSD.INTEGER, and XSD.LONG.
+   * @param value
+   *          The value to be converted. It can be of any type.
+   * @param targetDatatypeXsd
+   *          The target XSD datatype as a string. Supported types are XSD.STRING, XSD.DOUBLE, XSD.FLOAT, XSD.BOOLEAN,
+   *          XSD.INTEGER, and XSD.LONG.
    * @return The converted value as an Object. If conversion fails, the original value is returned.
-   * @throws NumberFormatException if the string does not contain a parsable number for numeric conversions.
+   * @throws NumberFormatException
+   *           if the string does not contain a parsable number for numeric conversions.
    */
-  public static Object convertValue(Object value,
-                                    String targetDatatypeXsd) {
+  public static Object convertValue(Object value, String targetDatatypeXsd) {
     var stringValue = String.valueOf(value);
     if (XSD.STRING.toString().equals(targetDatatypeXsd)) {
       return stringValue;
@@ -70,8 +70,7 @@ public class DatatypeUtils {
     return value;
   }
 
-  public static String getXsdDatatype(String value,
-                                      boolean preferFloat) {
+  public static String getXsdDatatype(String value, boolean preferFloat) {
     var clazz = getTypeClass(value, preferFloat);
     if (clazz.equals(Integer.class)) {
       return XSD.INTEGER.toString();
@@ -88,8 +87,7 @@ public class DatatypeUtils {
     }
   }
 
-  public static Class<?> getTypeClass(String value,
-                                      boolean preferFloatingPointNumber) {
+  public static Class<?> getTypeClass(String value, boolean preferFloatingPointNumber) {
     var targetClass = String.class;
     if (NumberUtils.isParsable(value)) {
       Class<?> numberClass;

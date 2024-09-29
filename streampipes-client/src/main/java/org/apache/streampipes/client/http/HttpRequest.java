@@ -25,15 +25,6 @@ import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.commons.exceptions.SpHttpErrorStatusCode;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.util.EntityUtils;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -45,6 +36,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.util.EntityUtils;
+
 public abstract class HttpRequest<K, V, T> {
 
   private final StreamPipesClientConfig clientConfig;
@@ -53,9 +53,7 @@ public abstract class HttpRequest<K, V, T> {
   private final ObjectMapper objectMapper;
   private final Serializer<K, V, T> serializer;
 
-  public HttpRequest(StreamPipesClientConfig clientConfig,
-                     StreamPipesApiPath apiPath,
-                     Serializer<K, V, T> serializer) {
+  public HttpRequest(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath, Serializer<K, V, T> serializer) {
     this.clientConfig = clientConfig;
     this.connectionConfig = clientConfig.getConnectionConfig();
     this.objectMapper = clientConfig.getSerializer();
@@ -103,18 +101,17 @@ public abstract class HttpRequest<K, V, T> {
       } else {
         switch (status.getStatusCode()) {
           case HttpStatus.SC_UNAUTHORIZED -> throw new SpHttpErrorStatusCode(
-              " 401 - Access to this resource is forbidden - did you provide a poper API key or client secret?",
-              HttpStatus.SC_UNAUTHORIZED);
-          case HttpStatus.SC_NOT_FOUND ->
-              throw new SpHttpErrorStatusCode(" 404 - The requested resource could not be found.",
-                      HttpStatus.SC_NOT_FOUND);
+                  " 401 - Access to this resource is forbidden - did you provide a poper API key or client secret?",
+                  HttpStatus.SC_UNAUTHORIZED);
+          case HttpStatus.SC_NOT_FOUND -> throw new SpHttpErrorStatusCode(
+                  " 404 - The requested resource could not be found.", HttpStatus.SC_NOT_FOUND);
           default -> throw new SpHttpErrorStatusCode(status.getStatusCode() + " - " + status.getReasonPhrase(),
-              status.getStatusCode());
+                  status.getStatusCode());
         }
       }
     } catch (IOException e) {
       throw new SpRuntimeException(
-          "Could not connect to the StreamPipes API - please check that StreamPipes is available", e);
+              "Could not connect to the StreamPipes API - please check that StreamPipes is available", e);
     }
   }
 
@@ -132,13 +129,12 @@ public abstract class HttpRequest<K, V, T> {
       URLConnection connection = url.openConnection();
 
       connection.setRequestProperty("Authorization",
-          connectionConfig.getCredentials().makeHeaders().get(0).getElements()[0].getName());
+              connectionConfig.getCredentials().makeHeaders().get(0).getElements()[0].getName());
 
       try {
         ReadableByteChannel readableByteChannel = Channels.newChannel(connection.getInputStream());
         FileOutputStream fileOutputStream = new FileOutputStream(fileLocation);
-        fileOutputStream.getChannel()
-            .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+        fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
       } catch (IOException e) {
         e.printStackTrace();
       }

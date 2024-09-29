@@ -32,7 +32,6 @@ public class CustomTransformOutputStrategy extends OutputStrategy {
     this.eventProperties = new ArrayList<>();
   }
 
-
   public CustomTransformOutputStrategy(CustomTransformOutputStrategy other) {
     super(other);
     this.eventProperties = new Cloner().properties(other.getEventProperties());

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.storage;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;

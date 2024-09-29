@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.api.extensions;
 
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;

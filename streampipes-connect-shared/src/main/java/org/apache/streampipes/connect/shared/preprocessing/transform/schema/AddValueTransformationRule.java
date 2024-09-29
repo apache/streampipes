@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
 
 import org.apache.streampipes.connect.shared.DatatypeUtils;
@@ -29,9 +28,7 @@ public class AddValueTransformationRule implements TransformationRule {
   private final String value;
   private final String datatype;
 
-  public AddValueTransformationRule(String runtimeKey,
-                                    String value,
-                                    String datatype) {
+  public AddValueTransformationRule(String runtimeKey, String value, String datatype) {
     this.runtimeKey = runtimeKey;
     this.value = value;
     this.datatype = datatype;

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.test.executors;
 
 import java.util.List;
@@ -27,8 +26,7 @@ public class TestConfiguration {
 
   private final List<String> prefixes;
 
-  public TestConfiguration(Map<String, Object> fieldConfiguration,
-                            List<String> eventPrefixes) {
+  public TestConfiguration(Map<String, Object> fieldConfiguration, List<String> eventPrefixes) {
     this.fieldConfiguration = fieldConfiguration;
     this.prefixes = eventPrefixes;
   }

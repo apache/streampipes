@@ -15,20 +15,18 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.migration;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 public class ModelMigratorConfigTest {
 
-  static ModelMigratorConfig config =
-      new ModelMigratorConfig("app-id", SpServiceTagPrefix.ADAPTER, 0, 1);
+  static ModelMigratorConfig config = new ModelMigratorConfig("app-id", SpServiceTagPrefix.ADAPTER, 0, 1);
 
   @Test
   public void compareToWithNullPointer() {
@@ -42,25 +40,9 @@ public class ModelMigratorConfigTest {
 
   @Test
   public void compareTo() {
-    assertEquals(
-        0,
-        config.compareTo(
-            new ModelMigratorConfig("other-app-id", SpServiceTagPrefix.ADAPTER, 0, 1))
-    );
-    assertEquals(
-        0,
-        config.compareTo(
-            new ModelMigratorConfig("app-id", SpServiceTagPrefix.ADAPTER, 0, 1))
-    );
-    assertEquals(
-        -1,
-        config.compareTo(
-            new ModelMigratorConfig("app-id", SpServiceTagPrefix.ADAPTER, 1, 2))
-    );
-    assertEquals(
-        0,
-        config.compareTo(
-            new ModelMigratorConfig("app-id", SpServiceTagPrefix.ADAPTER, 0, 3))
-    );
+    assertEquals(0, config.compareTo(new ModelMigratorConfig("other-app-id", SpServiceTagPrefix.ADAPTER, 0, 1)));
+    assertEquals(0, config.compareTo(new ModelMigratorConfig("app-id", SpServiceTagPrefix.ADAPTER, 0, 1)));
+    assertEquals(-1, config.compareTo(new ModelMigratorConfig("app-id", SpServiceTagPrefix.ADAPTER, 1, 2)));
+    assertEquals(0, config.compareTo(new ModelMigratorConfig("app-id", SpServiceTagPrefix.ADAPTER, 0, 3)));
   }
 }

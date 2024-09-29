@@ -15,8 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.generic.config;
+
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.PLC_CODE_BLOCK;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.PLC_IP;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.PLC_POLLING_INTERVAL;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.PROTOCOL_METADATA;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.SUPPORTED_TRANSPORTS;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.TRANSPORT_METADATA;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter.CODE_TEMPLATE;
 
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.GenericPlc4xAdapter;
@@ -32,54 +39,28 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.PlcDriver;
 
-import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.PLC_CODE_BLOCK;
-import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.PLC_IP;
-import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.PLC_POLLING_INTERVAL;
-import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.PROTOCOL_METADATA;
-import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.SUPPORTED_TRANSPORTS;
-import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.TRANSPORT_METADATA;
-import static org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter.CODE_TEMPLATE;
-
 public class AdapterConfigurationProvider {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.plc4x.generic.";
 
-
-  public IAdapterConfiguration makeConfig(PlcDriver driver,
-                                          PlcConnectionManager connectionManager) {
+  public IAdapterConfiguration makeConfig(PlcDriver driver, PlcConnectionManager connectionManager) {
     var driverMetadata = driver.getMetadata();
     var appId = getAdapterAppId(driver);
-    var adapterBuilder = AdapterConfigurationBuilder.create(
-            appId,
-            1,
-            () -> new GenericPlc4xAdapter(driver, connectionManager)
-        )
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withAssetResolver(
-            new PlcAdapterAssetResolver("org.apache.streampipes.connect.iiot.adapters.plc4x.generic", appId, driver)
-        )
-        .withCategory(AdapterType.Manufacturing)
-        .requiredTextParameter(Labels.withId(PLC_IP))
-        .requiredIntegerParameter(Labels.withId(PLC_POLLING_INTERVAL), 1000)
-        .requiredSingleValueSelection(
-            Labels.withId(SUPPORTED_TRANSPORTS),
-            driverMetadata.getSupportedTransportCodes().stream().map(Option::new).toList()
-        )
-        .requiredStaticProperty(
-            new MetadataOptionGenerator().makeRuntimeResolvableMetadata(
-                TRANSPORT_METADATA
-            )
-        );
+    var adapterBuilder = AdapterConfigurationBuilder
+            .create(appId, 1, () -> new GenericPlc4xAdapter(driver, connectionManager)).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withAssetResolver(new PlcAdapterAssetResolver("org.apache.streampipes.connect.iiot.adapters.plc4x.generic",
+                    appId, driver))
+            .withCategory(AdapterType.Manufacturing).requiredTextParameter(Labels.withId(PLC_IP))
+            .requiredIntegerParameter(Labels.withId(PLC_POLLING_INTERVAL), 1000)
+            .requiredSingleValueSelection(Labels.withId(SUPPORTED_TRANSPORTS),
+                    driverMetadata.getSupportedTransportCodes().stream().map(Option::new).toList())
+            .requiredStaticProperty(new MetadataOptionGenerator().makeRuntimeResolvableMetadata(TRANSPORT_METADATA));
     var protocolMetadata = driverMetadata.getProtocolConfigurationOptionMetadata();
 
-    protocolMetadata.ifPresent(optionMetadata -> adapterBuilder.requiredStaticProperty(
-        new MetadataOptionGenerator().makeMetadata(
-            PROTOCOL_METADATA,
-            optionMetadata
-        )));
-    adapterBuilder
-        .requiredCodeblock(Labels.withId(PLC_CODE_BLOCK), CodeLanguage.None, CODE_TEMPLATE);
+    protocolMetadata.ifPresent(optionMetadata -> adapterBuilder
+            .requiredStaticProperty(new MetadataOptionGenerator().makeMetadata(PROTOCOL_METADATA, optionMetadata)));
+    adapterBuilder.requiredCodeblock(Labels.withId(PLC_CODE_BLOCK), CodeLanguage.None, CODE_TEMPLATE);
 
     return adapterBuilder.buildConfiguration();
   }

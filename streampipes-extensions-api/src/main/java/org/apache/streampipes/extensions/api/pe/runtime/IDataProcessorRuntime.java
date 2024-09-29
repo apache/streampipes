@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe.runtime;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;

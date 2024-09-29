@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
-
-import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+
+import org.apache.commons.io.IOUtils;
 
 public class ParserTest {
 

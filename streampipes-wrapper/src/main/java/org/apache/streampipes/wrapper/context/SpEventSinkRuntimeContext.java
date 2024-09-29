@@ -24,13 +24,10 @@ import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 
 import java.io.Serializable;
 
-public class SpEventSinkRuntimeContext extends SpRuntimeContext implements
-    EventSinkRuntimeContext, Serializable {
+public class SpEventSinkRuntimeContext extends SpRuntimeContext implements EventSinkRuntimeContext, Serializable {
 
-  public SpEventSinkRuntimeContext(String correspondingUser,
-                                   IConfigExtractor configExtractor,
-                                   IStreamPipesClient streamPipesClient,
-                                   IExtensionsLogger extensionsLogger) {
+  public SpEventSinkRuntimeContext(String correspondingUser, IConfigExtractor configExtractor,
+          IStreamPipesClient streamPipesClient, IExtensionsLogger extensionsLogger) {
     super(correspondingUser, configExtractor, streamPipesClient, extensionsLogger);
   }
 }

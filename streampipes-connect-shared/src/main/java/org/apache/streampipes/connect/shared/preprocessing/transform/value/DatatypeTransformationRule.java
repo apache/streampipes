@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
-
 
 import org.apache.streampipes.connect.shared.DatatypeUtils;
 import org.apache.streampipes.extensions.api.connect.TransformationRule;
@@ -29,9 +27,7 @@ public class DatatypeTransformationRule implements TransformationRule {
   private final String eventKey;
   private String targetDatatypeXsd;
 
-  public DatatypeTransformationRule(String eventKey,
-                                    String originalDatatypeXsd,
-                                    String targetDatatypeXsd) {
+  public DatatypeTransformationRule(String eventKey, String originalDatatypeXsd, String targetDatatypeXsd) {
     this.eventKey = eventKey;
     this.targetDatatypeXsd = targetDatatypeXsd;
   }

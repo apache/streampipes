@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.couchdb.utils;
 
 import org.junit.jupiter.api.Assertions;

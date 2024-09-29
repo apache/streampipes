@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.integration.client;
 
 import org.junit.jupiter.api.Test;

@@ -62,14 +62,11 @@ public class EventTypeGenerator {
     return listOfEventKeys;
   }
 
-  private EventPropertyDef makeEventType(String propertyName,
-                                         Object propertyType) {
+  private EventPropertyDef makeEventType(String propertyName, Object propertyType) {
     return new EventPropertyDef(propertyName, toType((Class<?>) propertyType));
   }
 
-  private EventPropertyDef makeEventType(Integer currentStreamIndex,
-                                         String propertyName,
-                                         Object propertyType) {
+  private EventPropertyDef makeEventType(Integer currentStreamIndex, String propertyName, Object propertyType) {
     return new EventPropertyDef(toSelectorPrefix(currentStreamIndex), propertyName, toType((Class<?>) propertyType));
   }
 

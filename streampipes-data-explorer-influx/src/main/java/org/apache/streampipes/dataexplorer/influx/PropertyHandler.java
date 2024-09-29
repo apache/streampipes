@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -43,46 +42,25 @@ public class PropertyHandler {
   /**
    * Takes properties of type primitive and stores them as tags or fields to the given point
    */
-  public void handlePrimitiveProperty(
-      Point.Builder point,
-      EventPropertyPrimitive eventPropertyPrimitive,
-      PrimitiveField primitiveField,
-      String sanitizedRuntimeName
-  ) {
+  public void handlePrimitiveProperty(Point.Builder point, EventPropertyPrimitive eventPropertyPrimitive,
+          PrimitiveField primitiveField, String sanitizedRuntimeName) {
     if (primitiveField.getRawValue() != null) {
       // store property as tag when the field is a dimension property
-      if (PropertyScope.DIMENSION_PROPERTY.name()
-                                          .equals(eventPropertyPrimitive.getPropertyScope())) {
-        handleDimensionProperty(
-            point,
-            primitiveField,
-            sanitizedRuntimeName
-        );
+      if (PropertyScope.DIMENSION_PROPERTY.name().equals(eventPropertyPrimitive.getPropertyScope())) {
+        handleDimensionProperty(point, primitiveField, sanitizedRuntimeName);
       } else {
-        handleMeasurementProperty(
-            point,
-            eventPropertyPrimitive.getRuntimeType(),
-            sanitizedRuntimeName,
-            primitiveField
-        );
+        handleMeasurementProperty(point, eventPropertyPrimitive.getRuntimeType(), sanitizedRuntimeName, primitiveField);
       }
     }
   }
 
-
   /**
-   * Takes non-primitive properties of and stores them as strings to the given point
-   * Since InfluxDB can't store non-primitive types, store them as string
-   * and deserialize later in downstream processes
+   * Takes non-primitive properties of and stores them as strings to the given point Since InfluxDB can't store
+   * non-primitive types, store them as string and deserialize later in downstream processes
    */
-  public void handleNonPrimitiveProperty(
-      Point.Builder p,
-      Event event,
-      String preparedRuntimeName
-  ) {
+  public void handleNonPrimitiveProperty(Point.Builder p, Event event, String preparedRuntimeName) {
     try {
-      var json = rawFieldSerializer.serialize(event.getRaw()
-                                                   .get(preparedRuntimeName));
+      var json = rawFieldSerializer.serialize(event.getRaw().get(preparedRuntimeName));
       p.addField(preparedRuntimeName, json);
     } catch (SpRuntimeException e) {
       LOG.warn("Failed to serialize field {}, ignoring.", preparedRuntimeName);
@@ -92,38 +70,26 @@ public class PropertyHandler {
   /**
    * Add dimension properties as tags to point
    */
-  private void handleDimensionProperty(
-      Point.Builder point,
-      PrimitiveField primitiveField,
-      String sanitizedRuntimeName
-  ) {
+  private void handleDimensionProperty(Point.Builder point, PrimitiveField primitiveField,
+          String sanitizedRuntimeName) {
     point.tag(sanitizedRuntimeName, primitiveField.getAsString());
   }
 
   /**
    * Transforms the given primitive property to the corresponding InfluxDB data type and adds it to the point
    */
-  private void handleMeasurementProperty(
-      Point.Builder p,
-      String runtimeType,
-      String sanitizedRuntimeName,
-      PrimitiveField eventPropertyPrimitiveField
-  ) {
+  private void handleMeasurementProperty(Point.Builder p, String runtimeType, String sanitizedRuntimeName,
+          PrimitiveField eventPropertyPrimitiveField) {
     // Store property according to property type
-    if (XSD.INTEGER.toString()
-                   .equals(runtimeType)) {
+    if (XSD.INTEGER.toString().equals(runtimeType)) {
       handleIntegerProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
-    } else if (XSD.LONG.toString()
-                       .equals(runtimeType)) {
+    } else if (XSD.LONG.toString().equals(runtimeType)) {
       handleLongProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
-    } else if (XSD.FLOAT.toString()
-                        .equals(runtimeType)) {
+    } else if (XSD.FLOAT.toString().equals(runtimeType)) {
       handleFloatProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
-    } else if (XSD.DOUBLE.toString()
-                         .equals(runtimeType)) {
+    } else if (XSD.DOUBLE.toString().equals(runtimeType)) {
       handleDoubleProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
-    } else if (XSD.BOOLEAN.toString()
-                          .equals(runtimeType)) {
+    } else if (XSD.BOOLEAN.toString().equals(runtimeType)) {
       handleBooleanProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
     } else if (SO.NUMBER.equals(runtimeType)) {
       handleDoubleProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
@@ -132,44 +98,28 @@ public class PropertyHandler {
     }
   }
 
-
-  private void handleStringProperty(
-      Point.Builder p,
-      String sanitizedRuntimeName,
-      PrimitiveField eventPropertyPrimitiveField
-  ) {
+  private void handleStringProperty(Point.Builder p, String sanitizedRuntimeName,
+          PrimitiveField eventPropertyPrimitiveField) {
     p.addField(sanitizedRuntimeName, eventPropertyPrimitiveField.getAsString());
   }
 
-  private void handleBooleanProperty(
-      Point.Builder p,
-      String sanitizedRuntimeName,
-      PrimitiveField eventPropertyPrimitiveField
-  ) {
+  private void handleBooleanProperty(Point.Builder p, String sanitizedRuntimeName,
+          PrimitiveField eventPropertyPrimitiveField) {
     p.addField(sanitizedRuntimeName, eventPropertyPrimitiveField.getAsBoolean());
   }
 
-  private void handleDoubleProperty(
-      Point.Builder p,
-      String sanitizedRuntimeName,
-      PrimitiveField eventPropertyPrimitiveField
-  ) {
+  private void handleDoubleProperty(Point.Builder p, String sanitizedRuntimeName,
+          PrimitiveField eventPropertyPrimitiveField) {
     p.addField(sanitizedRuntimeName, eventPropertyPrimitiveField.getAsDouble());
   }
 
-  private void handleFloatProperty(
-      Point.Builder p,
-      String sanitizedRuntimeName,
-      PrimitiveField eventPropertyPrimitiveField
-  ) {
+  private void handleFloatProperty(Point.Builder p, String sanitizedRuntimeName,
+          PrimitiveField eventPropertyPrimitiveField) {
     p.addField(sanitizedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
   }
 
-  private void handleLongProperty(
-      Point.Builder p,
-      String sanitizedRuntimeName,
-      PrimitiveField eventPropertyPrimitiveField
-  ) {
+  private void handleLongProperty(Point.Builder p, String sanitizedRuntimeName,
+          PrimitiveField eventPropertyPrimitiveField) {
     try {
       p.addField(sanitizedRuntimeName, eventPropertyPrimitiveField.getAsLong());
     } catch (NumberFormatException ef) {
@@ -177,11 +127,8 @@ public class PropertyHandler {
     }
   }
 
-  private void handleIntegerProperty(
-      Point.Builder p,
-      String sanitizedRuntimeName,
-      PrimitiveField eventPropertyPrimitiveField
-  ) {
+  private void handleIntegerProperty(Point.Builder p, String sanitizedRuntimeName,
+          PrimitiveField eventPropertyPrimitiveField) {
     try {
       p.addField(sanitizedRuntimeName, eventPropertyPrimitiveField.getAsInt());
     } catch (NumberFormatException ef) {

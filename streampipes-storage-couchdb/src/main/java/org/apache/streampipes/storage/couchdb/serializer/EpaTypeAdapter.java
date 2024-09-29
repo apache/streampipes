@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.couchdb.serializer;
 
 import org.apache.streampipes.model.DataProcessorType;
 
+import java.io.IOException;
+
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
 
 public class EpaTypeAdapter extends PeTypeAdapter<DataProcessorType> {
 

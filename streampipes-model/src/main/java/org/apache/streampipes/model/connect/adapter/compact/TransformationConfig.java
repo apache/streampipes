@@ -15,11 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.adapter.compact;
 
 import java.util.Map;
 
-public record TransformationConfig(Map<String, String> rename,
-                                   Map<String, String> measurementUnit) {
+public record TransformationConfig(Map<String, String> rename, Map<String, String> measurementUnit) {
 }

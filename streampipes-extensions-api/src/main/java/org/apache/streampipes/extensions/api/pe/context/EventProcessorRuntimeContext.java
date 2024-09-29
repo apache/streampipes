@@ -19,6 +19,4 @@ package org.apache.streampipes.extensions.api.pe.context;
 
 public interface EventProcessorRuntimeContext extends RuntimeContext {
 
-
-
 }

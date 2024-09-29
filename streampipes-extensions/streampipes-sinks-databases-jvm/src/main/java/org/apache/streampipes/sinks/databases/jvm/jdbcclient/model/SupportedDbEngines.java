@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.jdbcclient.model;
 
 public enum SupportedDbEngines {
-  MY_SQL("mysql", "com.mysql.cj.jdbc.Driver", ".*"),
-  POSTGRESQL("postgresql", "org.postgresql.Driver", "^[a-zA-Z_][a-zA-Z0-9_]*$");
+  MY_SQL("mysql", "com.mysql.cj.jdbc.Driver", ".*"), POSTGRESQL("postgresql", "org.postgresql.Driver",
+          "^[a-zA-Z_][a-zA-Z0-9_]*$");
 
   private final String urlName;
   private final String driverName;

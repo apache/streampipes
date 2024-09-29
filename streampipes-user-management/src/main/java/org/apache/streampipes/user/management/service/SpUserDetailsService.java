@@ -33,7 +33,8 @@ public class SpUserDetailsService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
     Principal user = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().getUser(s);
-    return user instanceof UserAccount ? new UserAccountDetails((UserAccount) user) :
-        new ServiceAccountDetails((ServiceAccount) user);
+    return user instanceof UserAccount
+            ? new UserAccountDetails((UserAccount) user)
+            : new ServiceAccountDetails((ServiceAccount) user);
   }
 }

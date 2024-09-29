@@ -20,10 +20,10 @@ package org.apache.streampipes.wrapper.flink.converter;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventConverter;
 
+import java.util.Map;
+
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
-
-import java.util.Map;
 
 public class EventToMapConverter implements FlatMapFunction<Event, Map<String, Object>> {
 

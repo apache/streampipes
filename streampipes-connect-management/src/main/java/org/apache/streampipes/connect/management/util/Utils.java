@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.util;
 
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
@@ -24,9 +23,6 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 public class Utils {
 
   public static ISpCoreConfigurationStorage getCoreConfigStorage() {
-    return StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getSpCoreConfigurationStorage();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage();
   }
 }

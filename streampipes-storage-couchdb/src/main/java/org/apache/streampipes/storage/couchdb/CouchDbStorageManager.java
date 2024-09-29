@@ -92,11 +92,7 @@ public enum CouchDbStorageManager implements INoSqlStorage {
 
   @Override
   public CRUDStorage<Group> getUserGroupStorage() {
-    return new DefaultViewCrudStorage<>(
-        Utils::getCouchDbUserClient,
-        Group.class,
-        "users/groups"
-    );
+    return new DefaultViewCrudStorage<>(Utils::getCouchDbUserClient, Group.class, "users/groups");
   }
 
   @Override
@@ -116,50 +112,33 @@ public enum CouchDbStorageManager implements INoSqlStorage {
 
   @Override
   public CRUDStorage<DataLakeMeasure> getDataLakeStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("data-lake"),
-        DataLakeMeasure.class
-    );
+    return new DefaultCrudStorage<>(() -> Utils.getCouchDbGsonClient("data-lake"), DataLakeMeasure.class);
   }
 
   @Override
   public CRUDStorage<FileMetadata> getFileMetadataStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("filemetadata"),
-        FileMetadata.class
-    );
+    return new DefaultCrudStorage<>(() -> Utils.getCouchDbGsonClient("filemetadata"), FileMetadata.class);
   }
 
   @Override
   public CRUDStorage<DashboardModel> getDashboardStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("dashboard"),
-        DashboardModel.class
-    );
+    return new DefaultCrudStorage<>(() -> Utils.getCouchDbGsonClient("dashboard"), DashboardModel.class);
   }
 
   @Override
   public CRUDStorage<DashboardModel> getDataExplorerDashboardStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("dataexplorerdashboard"),
-        DashboardModel.class
-    );
+    return new DefaultCrudStorage<>(() -> Utils.getCouchDbGsonClient("dataexplorerdashboard"), DashboardModel.class);
   }
 
   @Override
   public CRUDStorage<DashboardWidgetModel> getDashboardWidgetStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("dashboardwidget"),
-        DashboardWidgetModel.class
-    );
+    return new DefaultCrudStorage<>(() -> Utils.getCouchDbGsonClient("dashboardwidget"), DashboardWidgetModel.class);
   }
 
   @Override
   public CRUDStorage<DataExplorerWidgetModel> getDataExplorerWidgetStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("dataexplorerwidget"),
-        DataExplorerWidgetModel.class
-    );
+    return new DefaultCrudStorage<>(() -> Utils.getCouchDbGsonClient("dataexplorerwidget"),
+            DataExplorerWidgetModel.class);
   }
 
   @Override
@@ -199,36 +178,26 @@ public enum CouchDbStorageManager implements INoSqlStorage {
 
   @Override
   public CRUDStorage<PasswordRecoveryToken> getPasswordRecoveryTokenStorage() {
-    return new DefaultViewCrudStorage<>(
-        Utils::getCouchDbUserClient,
-        PasswordRecoveryToken.class,
-        "users/password-recovery"
-    );
+    return new DefaultViewCrudStorage<>(Utils::getCouchDbUserClient, PasswordRecoveryToken.class,
+            "users/password-recovery");
   }
 
   @Override
   public CRUDStorage<UserActivationToken> getUserActivationTokenStorage() {
-    return new DefaultViewCrudStorage<>(
-        Utils::getCouchDbUserClient,
-        UserActivationToken.class,
-        "users/user-activation"
-    );
+    return new DefaultViewCrudStorage<>(Utils::getCouchDbUserClient, UserActivationToken.class,
+            "users/user-activation");
   }
 
   @Override
   public CRUDStorage<SpServiceRegistration> getExtensionsServiceStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("extensions-services"),
-        SpServiceRegistration.class
-    );
+    return new DefaultCrudStorage<>(() -> Utils.getCouchDbGsonClient("extensions-services"),
+            SpServiceRegistration.class);
   }
 
   @Override
   public CRUDStorage<SpServiceConfiguration> getExtensionsServiceConfigurationStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("extensions-services-configurations"),
-        SpServiceConfiguration.class
-    );
+    return new DefaultCrudStorage<>(() -> Utils.getCouchDbGsonClient("extensions-services-configurations"),
+            SpServiceConfiguration.class);
   }
 
   @Override

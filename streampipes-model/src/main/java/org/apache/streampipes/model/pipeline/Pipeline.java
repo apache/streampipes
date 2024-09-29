@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.pipeline;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -24,11 +23,11 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 @TsModel
 public class Pipeline implements Storable {
@@ -50,12 +49,10 @@ public class Pipeline implements Storable {
   private PipelineHealthStatus healthStatus;
 
   @JsonProperty("_id")
-  private @SerializedName("_id")
-  String pipelineId;
+  private @SerializedName("_id") String pipelineId;
 
   @JsonProperty("_rev")
-  private @SerializedName("_rev")
-  String rev;
+  private @SerializedName("_rev") String rev;
 
   protected List<DataProcessorInvocation> sepas;
 

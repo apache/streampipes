@@ -15,14 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.iotdb;
 
-import org.apache.iotdb.session.pool.SessionPool;
 import org.apache.streampipes.commons.environment.Environment;
 
+import org.apache.iotdb.session.pool.SessionPool;
+
 /**
- * This class provides a method to retrieve a session pool for IoT DB operations based on the given environment configuration.
+ * This class provides a method to retrieve a session pool for IoT DB operations based on the given environment
+ * configuration.
  */
 public class IotDbSessionProvider {
 
@@ -31,17 +32,16 @@ public class IotDbSessionProvider {
    * <p>
    * The session pool is configured by the StreamPipes environment and respective environment variables.
    *
-   * @param environment the environment configuration containing IoT DB connection details.
+   * @param environment
+   *          the environment configuration containing IoT DB connection details.
    * @return a SessionPool configured based on the provided environment.
    */
   public SessionPool getSessionPool(Environment environment) {
-    return new SessionPool.Builder()
-        .maxSize(environment.getIotDbSessionPoolSize().getValueOrDefault())
-        .enableCompression(environment.getIotDbSessionEnableCompression().getValueOrDefault())
-        .host(environment.getTsStorageHost().getValueOrDefault())
-        .port(environment.getTsStoragePort().getValueOrDefault())
-        .user(environment.getIotDbUser().getValueOrDefault())
-        .password(environment.getIotDbPassword().getValueOrDefault())
-        .build();
+    return new SessionPool.Builder().maxSize(environment.getIotDbSessionPoolSize().getValueOrDefault())
+            .enableCompression(environment.getIotDbSessionEnableCompression().getValueOrDefault())
+            .host(environment.getTsStorageHost().getValueOrDefault())
+            .port(environment.getTsStoragePort().getValueOrDefault())
+            .user(environment.getIotDbUser().getValueOrDefault())
+            .password(environment.getIotDbPassword().getValueOrDefault()).build();
   }
 }

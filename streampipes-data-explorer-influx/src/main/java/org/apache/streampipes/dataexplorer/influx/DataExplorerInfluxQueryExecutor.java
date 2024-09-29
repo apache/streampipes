@@ -15,21 +15,18 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx;
 
+import static org.apache.streampipes.commons.environment.Environments.getEnvironment;
+
+import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
-import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
-
-import org.influxdb.InfluxDB;
-import org.influxdb.dto.Query;
-import org.influxdb.dto.QueryResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,12 +38,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.commons.environment.Environments.getEnvironment;
+import org.influxdb.InfluxDB;
+import org.influxdb.dto.Query;
+import org.influxdb.dto.QueryResult;
 
 public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Query, QueryResult> {
 
-  protected DataSeries convertResult(QueryResult.Series series,
-                                     boolean ignoreMissingValues) {
+  protected DataSeries convertResult(QueryResult.Series series, boolean ignoreMissingValues) {
     List<String> columns = series.getColumns();
     List<List<Object>> values = series.getValues();
 
@@ -66,9 +64,8 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
     return new DataSeries(values.size(), resultingValues, columns, series.getTags());
   }
 
-  protected SpQueryResult postQuery(QueryResult queryResult,
-                                    Optional<String> forIdOpt,
-                                    boolean ignoreMissingValues) throws RuntimeException {
+  protected SpQueryResult postQuery(QueryResult queryResult, Optional<String> forIdOpt, boolean ignoreMissingValues)
+          throws RuntimeException {
     SpQueryResult result = new SpQueryResult();
     AtomicLong lastTimestamp = new AtomicLong();
 
@@ -110,10 +107,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   protected Query makeDeleteQuery(DeleteQueryParams params) {
     String query = "DELETE FROM \"" + params.measurementName() + "\"";
     if (params.timeRestricted()) {
-      query += "WHERE time > "
-          + params.startTime() * 1000000
-          + " AND time < "
-          + params.endTime() * 1000000;
+      query += "WHERE time > " + params.startTime() * 1000000 + " AND time < " + params.endTime() * 1000000;
     }
     return new Query(query, getDatabaseName());
   }
@@ -125,9 +119,8 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   }
 
   private boolean hasResult(QueryResult queryResult) {
-    return queryResult.getResults() != null
-        && !queryResult.getResults().isEmpty()
-        && queryResult.getResults().get(0).getSeries() != null;
+    return queryResult.getResults() != null && !queryResult.getResults().isEmpty()
+            && queryResult.getResults().get(0).getSeries() != null;
   }
 
   private Query getQueryWithDatabaseName(Query query) {
@@ -146,17 +139,16 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
       if (fields != null && !(fields.isEmpty())) {
         List<String> fieldList = Arrays.asList(fields.split(","));
         fieldList.forEach(f -> {
-          String q =
-              "SHOW TAG VALUES ON \"" + getDatabaseName() + "\" FROM \"" + measurementId
-              + "\" WITH KEY = \"" + f + "\"";
+          String q = "SHOW TAG VALUES ON \"" + getDatabaseName() + "\" FROM \"" + measurementId + "\" WITH KEY = \"" + f
+                  + "\"";
           Query query = new Query(q);
           QueryResult queryResult = influxDB.query(query);
           queryResult.getResults().forEach(res -> {
             res.getSeries().forEach(series -> {
               if (!series.getValues().isEmpty()) {
                 String field = series.getValues().get(0).get(0).toString();
-                List<String> values =
-                    series.getValues().stream().map(v -> v.get(1).toString()).collect(Collectors.toList());
+                List<String> values = series.getValues().stream().map(v -> v.get(1).toString())
+                        .collect(Collectors.toList());
                 tags.put(field, values);
               }
             });
@@ -172,9 +164,8 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   public boolean deleteData(DataLakeMeasure measure) {
     QueryResult queryResult = new DeleteDataQuery(measure).executeQuery();
 
-    return !queryResult.hasError() && (queryResult.getResults() == null || queryResult.getResults()
-                                                                                      .get(0)
-                                                                                      .getError() == null);
+    return !queryResult.hasError()
+            && (queryResult.getResults() == null || queryResult.getResults().get(0).getError() == null);
 
   }
 }

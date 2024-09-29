@@ -19,11 +19,11 @@ package org.apache.streampipes.extensions.connectors.rocketmq.adapter;
 
 import org.apache.streampipes.messaging.InternalEventProcessor;
 
+import java.io.IOException;
+
 import org.apache.rocketmq.client.apis.ClientException;
 import org.apache.rocketmq.client.apis.consumer.ConsumeResult;
 import org.apache.rocketmq.client.apis.consumer.PushConsumer;
-
-import java.io.IOException;
 
 public class RocketMQConsumer implements Runnable {
 
@@ -37,7 +37,7 @@ public class RocketMQConsumer implements Runnable {
   private PushConsumer consumer;
 
   public RocketMQConsumer(String brokerUrl, String topic, String consumerGroup,
-                          InternalEventProcessor<byte[]> eventProcessor) {
+          InternalEventProcessor<byte[]> eventProcessor) {
     this.brokerUrl = brokerUrl;
     this.topic = topic;
     this.consumerGroup = consumerGroup;

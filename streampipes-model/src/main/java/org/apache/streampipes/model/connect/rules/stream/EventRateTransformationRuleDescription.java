@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.rules.stream;
 
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
@@ -25,9 +24,8 @@ public class EventRateTransformationRuleDescription extends StreamTransformation
 
   private long aggregationTimeWindow;
 
-  //None (Values from last event), max, min, mean, sum (of the values in the time window)
+  // None (Values from last event), max, min, mean, sum (of the values in the time window)
   private String aggregationType;
-
 
   public EventRateTransformationRuleDescription() {
 

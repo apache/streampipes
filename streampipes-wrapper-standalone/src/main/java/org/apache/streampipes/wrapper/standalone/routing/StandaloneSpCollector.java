@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone.routing;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -28,8 +27,7 @@ import org.apache.streampipes.wrapper.standalone.manager.PManager;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class StandaloneSpCollector<T extends TransportProtocol, W> implements
-    PipelineElementCollector<W> {
+public abstract class StandaloneSpCollector<T extends TransportProtocol, W> implements PipelineElementCollector<W> {
 
   protected Map<String, W> consumers;
 
@@ -39,11 +37,10 @@ public abstract class StandaloneSpCollector<T extends TransportProtocol, W> impl
   protected SpDataFormatDefinition dataFormatDefinition;
   protected String topic;
 
-
   public StandaloneSpCollector(T protocol) throws SpRuntimeException {
     this.transportProtocol = protocol;
-    this.protocolDefinition = PManager.getProtocolDefinition(protocol).orElseThrow(() -> new
-        SpRuntimeException("Could not find protocol"));
+    this.protocolDefinition = PManager.getProtocolDefinition(protocol)
+            .orElseThrow(() -> new SpRuntimeException("Could not find protocol"));
     this.dataFormatDefinition = PManager.getDataFormat();
     this.consumers = new ConcurrentHashMap<>();
     this.topic = transportProtocol.getTopicDefinition().getActualTopicName();

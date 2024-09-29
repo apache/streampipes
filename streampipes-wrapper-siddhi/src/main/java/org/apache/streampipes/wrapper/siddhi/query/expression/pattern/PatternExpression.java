@@ -36,19 +36,16 @@ public abstract class PatternExpression extends Expression {
     this.streamExpressions = streamExpressions;
   }
 
-  public PatternExpression(String pattern,
-                           List<StreamExpression> streamExpressions,
-                           WithinExpression withinExpression) {
+  public PatternExpression(String pattern, List<StreamExpression> streamExpressions,
+          WithinExpression withinExpression) {
     this(pattern, streamExpressions);
     this.withinExpression = withinExpression;
   }
 
   @Override
   public String toSiddhiEpl() {
-    String patternExpression = joinWithParenthesis(SiddhiConstants.EMPTY, join(pattern, streamExpressions
-            .stream()
-            .map(StreamExpression::toSiddhiEpl)
-            .collect(Collectors.toList())));
+    String patternExpression = joinWithParenthesis(SiddhiConstants.EMPTY,
+            join(pattern, streamExpressions.stream().map(StreamExpression::toSiddhiEpl).collect(Collectors.toList())));
 
     if (this.withinExpression != null) {
       patternExpression = join(SiddhiConstants.EMPTY, patternExpression, this.withinExpression.toSiddhiEpl());

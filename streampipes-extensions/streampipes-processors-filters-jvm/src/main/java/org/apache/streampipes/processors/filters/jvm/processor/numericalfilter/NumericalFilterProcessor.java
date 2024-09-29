@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.filters.jvm.processor.numericalfilter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -49,30 +48,22 @@ public class NumericalFilterProcessor implements IStreamPipesDataProcessor {
 
   @Override
   public IDataProcessorConfiguration declareConfig() {
-    return DataProcessorConfiguration.create(
-        NumericalFilterProcessor::new,
-        ProcessingElementBuilder
+    return DataProcessorConfiguration.create(NumericalFilterProcessor::new, ProcessingElementBuilder
             .create("org.apache.streampipes.processors.filters.jvm.numericalfilter", 0)
-            .category(DataProcessorType.FILTER)
-            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .category(DataProcessorType.FILTER).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
             .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                .create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                    Labels.withId(NUMBER_MAPPING),
-                    PropertyScope.NONE).build())
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId(NUMBER_MAPPING),
+                            PropertyScope.NONE)
+                    .build())
             .outputStrategy(OutputStrategies.keep())
-            .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
-                ">=", "==", "!="))
-            .requiredFloatParameter(Labels.withId(VALUE))
-            .build()
-    );
+            .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">", ">=", "==", "!="))
+            .requiredFloatParameter(Labels.withId(VALUE)).build());
   }
 
   @Override
-  public void onPipelineStarted(IDataProcessorParameters params,
-                                SpOutputCollector collector,
-                                EventProcessorRuntimeContext runtimeContext) {
+  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector collector,
+          EventProcessorRuntimeContext runtimeContext) {
     this.threshold = params.extractor().singleValueParameter(VALUE, Double.class);
     String stringOperation = params.extractor().selectedSingleValue(OPERATION, String.class);
     String operation = "GT";
@@ -99,8 +90,7 @@ public class NumericalFilterProcessor implements IStreamPipesDataProcessor {
   public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
     Boolean satisfiesFilter = false;
 
-    Double value = event.getFieldBySelector(this.filterProperty).getAsPrimitive()
-        .getAsDouble();
+    Double value = event.getFieldBySelector(this.filterProperty).getAsPrimitive().getAsDouble();
 
     Double threshold = this.threshold;
 

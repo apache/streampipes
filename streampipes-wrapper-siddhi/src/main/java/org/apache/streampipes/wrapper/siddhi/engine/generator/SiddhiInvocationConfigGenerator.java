@@ -36,17 +36,15 @@ public class SiddhiInvocationConfigGenerator {
   private final SiddhiProcessorParams siddhiProcessorParams;
 
   public SiddhiInvocationConfigGenerator(IDataProcessorParameters params,
-                                         BiFunction<SiddhiProcessorParams,
-                                             String, SiddhiAppConfig> statementFunction) {
+          BiFunction<SiddhiProcessorParams, String, SiddhiAppConfig> statementFunction) {
     List<String> inputStreamNames = new InputStreamNameGenerator(params).generateInputStreamNames();
     Map<String, List<EventPropertyDef>> eventTypeInfo = new EventTypeGenerator(params).generateInEventTypes();
     List<EventPropertyDef> outTypeInfo = new EventTypeGenerator(params).generateOutEventTypes();
     List<String> outputEventKeys = new ArrayList<>(params.getOutEventType().keySet());
-    this.siddhiProcessorParams =
-        new SiddhiProcessorParams(params, inputStreamNames, eventTypeInfo, outputEventKeys, outTypeInfo);
+    this.siddhiProcessorParams = new SiddhiProcessorParams(params, inputStreamNames, eventTypeInfo, outputEventKeys,
+            outTypeInfo);
     this.siddhiAppConfig = statementFunction.apply(siddhiProcessorParams, getOutputStreamName());
-    this.siddhiAppString = new SiddhiAppGenerator(siddhiProcessorParams, siddhiAppConfig)
-        .generateSiddhiApp();
+    this.siddhiAppString = new SiddhiAppGenerator(siddhiProcessorParams, siddhiAppConfig).generateSiddhiApp();
   }
 
   private String getOutputStreamName() {

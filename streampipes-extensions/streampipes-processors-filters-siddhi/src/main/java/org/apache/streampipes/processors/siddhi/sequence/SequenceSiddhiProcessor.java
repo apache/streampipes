@@ -38,51 +38,30 @@ public class SequenceSiddhiProcessor extends StreamPipesSiddhiProcessor {
 
   private static final String Duration = "duration";
 
-
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.siddhi.sequence", 0)
-        .category(DataProcessorType.FILTER)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .outputStrategy(OutputStrategies.custom(true))
-        .requiredIntegerParameter(Labels.withId(Duration))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.sequence", 0)
+            .category(DataProcessorType.FILTER).withAssets(ExtensionAssetType.DOCUMENTATION).withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .outputStrategy(OutputStrategies.custom(true)).requiredIntegerParameter(Labels.withId(Duration)).build();
   }
 
   @Override
-  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
-                                        String finalInsertIntoStreamName) {
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams, String finalInsertIntoStreamName) {
     var extractor = siddhiParams.getParams().extractor();
     int duration = extractor.singleValueParameter(Duration, Integer.class);
 
     InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
-    return SiddhiAppConfigBuilder
-        .create()
-        .addQuery(SiddhiQueryBuilder
-            .create(fromStatement(siddhiParams, duration), insertIntoClause)
-            .withSelectClause(selectStatement(siddhiParams))
-            .build())
-        .build();
+    return SiddhiAppConfigBuilder.create()
+            .addQuery(SiddhiQueryBuilder.create(fromStatement(siddhiParams, duration), insertIntoClause)
+                    .withSelectClause(selectStatement(siddhiParams)).build())
+            .build();
   }
 
-  private String fromStatement(SiddhiProcessorParams siddhiParams,
-                               int duration) {
+  private String fromStatement(SiddhiProcessorParams siddhiParams, int duration) {
 
-    return "from every not "
-        + siddhiParams.getInputStreamNames().get(0)
-        + " for "
-        + duration
-        + " sec";
+    return "from every not " + siddhiParams.getInputStreamNames().get(0) + " for " + duration + " sec";
   }
 
   private SelectClause selectStatement(SiddhiProcessorParams siddhiParams) {

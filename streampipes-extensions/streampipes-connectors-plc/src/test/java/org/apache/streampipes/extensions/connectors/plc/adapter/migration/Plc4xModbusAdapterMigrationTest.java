@@ -15,21 +15,20 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.migration;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.plc.adapter.migration.config.Plc4xModbusAdapterVersionedConfig;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.vocabulary.XSD;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.net.URI;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class Plc4xModbusAdapterMigrationTest {
 
@@ -52,9 +51,7 @@ public class Plc4xModbusAdapterMigrationTest {
   }
 
   private URI getTypeOfPortProperty(AdapterDescription adapterDescription) {
-    return migrationV1
-        .extractPortProperty(adapterDescription)
-        .getRequiredDatatype();
+    return migrationV1.extractPortProperty(adapterDescription).getRequiredDatatype();
   }
 
 }

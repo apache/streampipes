@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.integration.containers;
 
 import org.testcontainers.containers.BindMode;
@@ -33,10 +32,7 @@ public class MosquittoContainer extends GenericContainer<MosquittoContainer> {
   public void start() {
     this.waitStrategy = Wait.forLogMessage(".*listen socket on port 1883.*", 1);
     this.withExposedPorts(MOSQUITTO_PORT);
-    this.withClasspathResourceMapping(
-        "mosquitto.conf",
-        "/mosquitto/config/mosquitto.conf",
-        BindMode.READ_ONLY);
+    this.withClasspathResourceMapping("mosquitto.conf", "/mosquitto/config/mosquitto.conf", BindMode.READ_ONLY);
     super.start();
   }
 

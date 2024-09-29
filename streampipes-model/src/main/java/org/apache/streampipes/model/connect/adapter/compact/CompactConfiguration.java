@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.adapter.compact;
 
 import java.util.Map;
 
-public record CompactConfiguration(Map<String, Object> values) {}
+public record CompactConfiguration(Map<String, Object> values) {
+}

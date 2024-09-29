@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.kafka.config;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-
 import java.util.Properties;
+
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 
 public class AutoOffsetResetConfig implements KafkaConfigAppender {
 
@@ -34,7 +33,6 @@ public class AutoOffsetResetConfig implements KafkaConfigAppender {
   public AutoOffsetResetConfig(String autoOffsetResetConfig) {
     this.autoOffsetResetConfig = autoOffsetResetConfig;
   }
-
 
   public String getAutoOffsetResetConfig() {
     return autoOffsetResetConfig;

@@ -19,11 +19,11 @@ package org.apache.streampipes.messaging.nats;
 
 import org.apache.streampipes.model.nats.NatsConfig;
 
+import java.util.Properties;
+
 import io.nats.client.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Properties;
 
 public class NatsUtils {
 
@@ -57,8 +57,7 @@ public class NatsUtils {
     return options;
   }
 
-  private static void splitNatsProperties(String propertiesAsString,
-                                          Properties properties) {
+  private static void splitNatsProperties(String propertiesAsString, Properties properties) {
 
     String[] optionalProperties = propertiesAsString.split(",");
     if (optionalProperties.length > 0) {

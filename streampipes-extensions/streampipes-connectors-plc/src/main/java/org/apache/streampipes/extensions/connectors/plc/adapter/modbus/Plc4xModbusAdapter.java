@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.modbus;
-
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
@@ -47,15 +45,6 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
-import org.apache.plc4x.java.api.PlcConnection;
-import org.apache.plc4x.java.api.PlcConnectionManager;
-import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
-import org.apache.plc4x.java.api.messages.PlcReadRequest;
-import org.apache.plc4x.java.api.messages.PlcReadResponse;
-import org.apache.plc4x.java.api.types.PlcResponseCode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,6 +53,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.plc4x.java.api.PlcConnection;
+import org.apache.plc4x.java.api.PlcConnectionManager;
+import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
+import org.apache.plc4x.java.api.messages.PlcReadRequest;
+import org.apache.plc4x.java.api.messages.PlcReadResponse;
+import org.apache.plc4x.java.api.types.PlcResponseCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
 
@@ -110,7 +108,8 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
   /**
    * Extracts the user configuration from the SpecificAdapterStreamDescription and sets the local variables
    *
-   * @param extractor static property extractor
+   * @param extractor
+   *          static property extractor
    * @throws AdapterException
    */
   private void getConfigurations(IStaticPropertyExtractor extractor) throws AdapterException {
@@ -124,12 +123,12 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
     Set<Integer> ids = new HashSet<>();
     Set<String> names = new HashSet<>();
     for (StaticProperty member : sp.getMembers()) {
-      StaticPropertyExtractor memberExtractor =
-          StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
+      StaticPropertyExtractor memberExtractor = StaticPropertyExtractor
+              .from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
 
       // ensure that NODE_ADDRESS and NODE_RUNTIME_TIME appear only once to prevent duplicates
       if (!ids.add(memberExtractor.singleValueParameter(PLC_NODE_ADDRESS, Integer.class))
-          || !names.add(memberExtractor.textParameter(PLC_NODE_RUNTIME_NAME))) {
+              || !names.add(memberExtractor.textParameter(PLC_NODE_RUNTIME_NAME))) {
 
         throw new AdapterException("NodeID or RuntimeName is specified twice." + "Please prevent duplicate names.");
       }
@@ -144,7 +143,6 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
 
   }
 
-
   /**
    * Transforms chosen data type to StreamPipes supported data type
    *
@@ -156,13 +154,13 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
     String type = plcType.substring(plcType.lastIndexOf(":") + 1);
 
     switch (type) {
-      case "DISCRETEINPUT":
-      case "COIL":
+      case "DISCRETEINPUT" :
+      case "COIL" :
         return Datatypes.Boolean;
-      case "INPUTREGISTER":
-      case "HOLDINGREGISTER":
+      case "INPUTREGISTER" :
+      case "HOLDINGREGISTER" :
         return Datatypes.Integer;
-      default:
+      default :
         throw new AdapterException("Datatype " + plcType + " is not supported");
     }
   }
@@ -178,8 +176,8 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
     getConfigurations(extractor);
 
     try {
-      this.plcConnection = connectionManager.getConnection(
-          "modbus-tcp:tcp://" + this.ip + ":" + this.port + "?unit-identifier=" + this.slaveID);
+      this.plcConnection = connectionManager
+              .getConnection("modbus-tcp:tcp://" + this.ip + ":" + this.port + "?unit-identifier=" + this.slaveID);
 
       if (!this.plcConnection.getMetadata().isReadSupported()) {
         throw new AdapterException("The Modbus device on IP: " + this.ip + " does not support reading data");
@@ -201,13 +199,13 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
 
       switch (node.get(PLC_NODE_TYPE)) {
         case "Coil" ->
-            builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME), "coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+          builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME), "coil:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
         case "HoldingRegister" -> builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME),
-            "holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+                "holding-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
         case "DiscreteInput" -> builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME),
-            "discrete-input:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+                "discrete-input:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
         case "InputRegister" -> builder.addTagAddress(node.get(PLC_NODE_RUNTIME_NAME),
-            "input-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
+                "input-register:" + String.valueOf(node.get(PLC_NODE_ADDRESS)));
       }
     }
     PlcReadRequest readRequest = builder.build();
@@ -228,22 +226,22 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
       if (response.getResponseCode(node.get(PLC_NODE_RUNTIME_NAME)) == PlcResponseCode.OK) {
 
         switch (node.get(PLC_NODE_TYPE)) {
-          case "Coil":
+          case "Coil" :
             event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getBoolean(node.get(PLC_NODE_RUNTIME_NAME)));
             break;
-          case "DiscreteInput":
+          case "DiscreteInput" :
             event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getBoolean(node.get(PLC_NODE_RUNTIME_NAME)));
             break;
-          case "InputRegister":
+          case "InputRegister" :
             event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getInteger(node.get(PLC_NODE_RUNTIME_NAME)));
             break;
-          case "HoldingRegister":
+          case "HoldingRegister" :
             event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getInteger(node.get(PLC_NODE_RUNTIME_NAME)));
             break;
         }
       } else {
         LOG.error("Error[" + node.get(PLC_NODE_RUNTIME_NAME) + "]: "
-                  + response.getResponseCode(node.get(PLC_NODE_RUNTIME_NAME)));
+                + response.getResponseCode(node.get(PLC_NODE_RUNTIME_NAME)));
       }
     }
 
@@ -262,30 +260,28 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
   }
 
   /**
-   * Describe the adapter and define what user inputs are required. Currently users can just select one node,
-   * this will be extended in the future
+   * Describe the adapter and define what user inputs are required. Currently users can just select one node, this will
+   * be extended in the future
    *
    * @return description of adapter
    */
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder.create(ID, 1, () -> new Plc4xModbusAdapter(connectionManager))
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withCategory(AdapterType.Manufacturing)
-        .requiredTextParameter(Labels.withId(PLC_IP)).requiredIntegerParameter(Labels.withId(PLC_PORT))
-        .requiredTextParameter(Labels.withId(PLC_NODE_ID)).requiredCollection(Labels.withId(PLC_NODES),
-            StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
-            StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ADDRESS)),
-            StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
-                Options.from("DiscreteInput", "Coil", "InputRegister", "HoldingRegister")))
-        .buildConfiguration();
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withCategory(AdapterType.Manufacturing).requiredTextParameter(Labels.withId(PLC_IP))
+            .requiredIntegerParameter(Labels.withId(PLC_PORT)).requiredTextParameter(Labels.withId(PLC_NODE_ID))
+            .requiredCollection(Labels.withId(PLC_NODES),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
+                    StaticProperties.integerFreeTextProperty(Labels.withId(PLC_NODE_ADDRESS)),
+                    StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
+                            Options.from("DiscreteInput", "Coil", "InputRegister", "HoldingRegister")))
+            .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     before(extractor.getStaticPropertyExtractor());
     this.collector = collector;
     this.pullAdapterScheduler = new PullAdapterScheduler();
@@ -303,7 +299,7 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
    */
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     getConfigurations(extractor.getStaticPropertyExtractor());
 
     GuessSchema guessSchema = new GuessSchema();
@@ -315,9 +311,10 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
       Datatypes datatype = getStreamPipesDataType(node.get(PLC_NODE_TYPE).toUpperCase());
 
       allProperties.add(PrimitivePropertyBuilder.create(datatype, node.get(PLC_NODE_RUNTIME_NAME))
-          .label(node.get(PLC_NODE_RUNTIME_NAME))
-          .description("FieldAddress: " + node.get(PLC_NODE_TYPE) + " " + String.valueOf(node.get(PLC_NODE_ADDRESS)))
-          .build());
+              .label(node.get(PLC_NODE_RUNTIME_NAME))
+              .description(
+                      "FieldAddress: " + node.get(PLC_NODE_TYPE) + " " + String.valueOf(node.get(PLC_NODE_ADDRESS)))
+              .build());
     }
 
     eventSchema.setEventProperties(allProperties);

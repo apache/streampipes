@@ -19,21 +19,17 @@ package org.apache.streampipes.model.staticproperty;
 
 import org.apache.streampipes.model.util.Cloner;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonSubTypes({
-    @JsonSubTypes.Type(AnyStaticProperty.class),
-    @JsonSubTypes.Type(OneOfStaticProperty.class)
-})
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
+@JsonSubTypes({@JsonSubTypes.Type(AnyStaticProperty.class), @JsonSubTypes.Type(OneOfStaticProperty.class)})
 public abstract class SelectionStaticProperty extends StaticProperty {
 
   private List<Option> options;
 
   private boolean horizontalRendering;
-
 
   public SelectionStaticProperty(StaticPropertyType staticPropertyType) {
     super(staticPropertyType);
@@ -46,14 +42,14 @@ public abstract class SelectionStaticProperty extends StaticProperty {
     this.horizontalRendering = other.horizontalRendering;
   }
 
-  public SelectionStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label, String
-      description) {
+  public SelectionStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label,
+          String description) {
     super(staticPropertyType, internalName, label, description);
     this.options = new ArrayList<>();
   }
 
-  public SelectionStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label, String
-      description, boolean horizontalRendering) {
+  public SelectionStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label,
+          String description, boolean horizontalRendering) {
     super(staticPropertyType, internalName, label, description);
     this.options = new ArrayList<>();
     this.horizontalRendering = horizontalRendering;

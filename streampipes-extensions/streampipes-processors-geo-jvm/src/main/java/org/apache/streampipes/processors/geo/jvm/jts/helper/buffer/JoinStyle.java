@@ -30,4 +30,3 @@ public enum JoinStyle {
     return number;
   }
 }
-

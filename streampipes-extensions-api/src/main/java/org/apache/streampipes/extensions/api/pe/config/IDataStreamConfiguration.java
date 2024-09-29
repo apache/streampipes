@@ -15,12 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe.config;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
 import org.apache.streampipes.model.SpDataStream;
 
-public interface IDataStreamConfiguration
-    extends IPipelineElementConfiguration<SpDataStream, IStreamPipesDataStream> {
+public interface IDataStreamConfiguration extends IPipelineElementConfiguration<SpDataStream, IStreamPipesDataStream> {
 }

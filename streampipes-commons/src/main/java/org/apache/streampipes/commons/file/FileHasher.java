@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.file;
-
-import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import org.apache.commons.codec.digest.DigestUtils;
 
 public class FileHasher {
 

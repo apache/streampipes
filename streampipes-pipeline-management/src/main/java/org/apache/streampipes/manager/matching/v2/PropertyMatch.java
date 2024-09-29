@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
@@ -42,7 +41,7 @@ public class PropertyMatch extends AbstractMatcher<EventProperty, EventProperty>
 
     if (!matchesType(offer, requirement)) {
       buildErrorMessage(errorLog, "The required type " + requirement.getClass().getSimpleName()
-          + " is not present in the connected stream.");
+              + " is not present in the connected stream.");
       return false;
     } else {
       if (isPrimitive(requirement)) {
@@ -58,10 +57,9 @@ public class PropertyMatch extends AbstractMatcher<EventProperty, EventProperty>
   }
 
   private boolean isAnyProperty(EventProperty eventProperty) {
-    return eventProperty instanceof EventPropertyPrimitive
-        && eventProperty.getDomainProperties() == null
-        && ((EventPropertyPrimitive) eventProperty).getMeasurementUnit() == null
-        && ((EventPropertyPrimitive) eventProperty).getRuntimeType() == null;
+    return eventProperty instanceof EventPropertyPrimitive && eventProperty.getDomainProperties() == null
+            && ((EventPropertyPrimitive) eventProperty).getMeasurementUnit() == null
+            && ((EventPropertyPrimitive) eventProperty).getRuntimeType() == null;
   }
 
   private EventPropertyNested toNested(EventProperty property) {
@@ -91,6 +89,5 @@ public class PropertyMatch extends AbstractMatcher<EventProperty, EventProperty>
   public boolean matchesType(EventProperty offer, EventProperty requirement) {
     return offer.getClass().getCanonicalName().equals(requirement.getClass().getCanonicalName());
   }
-
 
 }

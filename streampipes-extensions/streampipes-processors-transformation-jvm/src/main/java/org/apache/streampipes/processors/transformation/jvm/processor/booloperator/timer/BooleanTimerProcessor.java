@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timer;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -58,35 +57,25 @@ public class BooleanTimerProcessor extends StreamPipesDataProcessor {
 
   private double outputDivisor;
 
-
-
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.booloperator.timer", 0)
-        .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.TIME)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.booleanReq(),
-                Labels.withId(FIELD_ID),
-                PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(TIMER_FIELD_ID), Options.from(TRUE, FALSE))
-        .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.numberEp(Labels.withId(MEASURED_TIME_ID),
-                "measured_time",
-                "http://schema.org/Number")
-        ))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.timer", 0)
+            .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.TIME).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(), Labels.withId(FIELD_ID),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredSingleValueSelection(Labels.withId(TIMER_FIELD_ID), Options.from(TRUE, FALSE))
+            .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
+            .outputStrategy(OutputStrategies.append(EpProperties.numberEp(Labels.withId(MEASURED_TIME_ID),
+                    "measured_time", "http://schema.org/Number")))
+            .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
 
     var extractor = parameters.extractor();
     fieldName = extractor.mappingPropertyValue(FIELD_ID);
@@ -108,8 +97,7 @@ public class BooleanTimerProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onEvent(Event inputEvent,
-                      SpOutputCollector collector) throws SpRuntimeException {
+  public void onEvent(Event inputEvent, SpOutputCollector collector) throws SpRuntimeException {
     boolean field = inputEvent.getFieldBySelector(this.fieldName).getAsPrimitive().getAsBoolean();
 
     if (this.measureTrue == field) {

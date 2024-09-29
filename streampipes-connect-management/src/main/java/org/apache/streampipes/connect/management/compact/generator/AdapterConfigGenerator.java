@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.compact.generator;
 
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
@@ -26,15 +25,10 @@ import org.apache.streampipes.model.template.PipelineElementTemplate;
 public class AdapterConfigGenerator implements AdapterModelGenerator {
 
   @Override
-  public void apply(AdapterDescription adapterDescription,
-                    CompactAdapter compactAdapter) {
+  public void apply(AdapterDescription adapterDescription, CompactAdapter compactAdapter) {
     var adapterTemplate = new PipelineElementTemplate();
     adapterTemplate.setTemplateConfigs(compactAdapter.configuration());
 
-    new AdapterTemplateHandler(
-        adapterTemplate,
-        adapterDescription,
-        false
-    ).applyTemplateOnPipelineElement();
+    new AdapterTemplateHandler(adapterTemplate, adapterDescription, false).applyTemplateOnPipelineElement();
   }
 }

@@ -39,4 +39,3 @@ public class SpPulsarProtocolFactory extends SpProtocolDefinitionFactory<PulsarT
     return new SpPulsarProtocol();
   }
 }
-

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.output;
 
 import org.apache.streampipes.model.schema.EventProperty;
@@ -46,26 +45,25 @@ public class PropertyDuplicateRemover {
         if (newProperty instanceof EventPropertyPrimitive) {
           EventPropertyPrimitive primitive = (EventPropertyPrimitive) newProperty;
           newProperty = new EventPropertyPrimitive(primitive.getRuntimeType(), primitive.getRuntimeName() + i, "",
-              primitive.getDomainProperties());
+                  primitive.getDomainProperties());
         }
         if (newProperty instanceof EventPropertyNested) {
           EventPropertyNested nested = (EventPropertyNested) newProperty;
 
-          //TODO: hack
+          // TODO: hack
           List<EventProperty> nestedProperties = new ArrayList<>();
 
           for (EventProperty np : nested.getEventProperties()) {
             if (np instanceof EventPropertyPrimitive) {
               EventPropertyPrimitive thisPrimitive = (EventPropertyPrimitive) np;
-              EventProperty newNested =
-                  new EventPropertyPrimitive(thisPrimitive.getRuntimeType(), thisPrimitive.getRuntimeName(), "",
-                      thisPrimitive.getDomainProperties());
+              EventProperty newNested = new EventPropertyPrimitive(thisPrimitive.getRuntimeType(),
+                      thisPrimitive.getRuntimeName(), "", thisPrimitive.getDomainProperties());
               nestedProperties.add(newNested);
             }
 
           }
           newProperty = new EventPropertyNested(nested.getRuntimeName() + i, nestedProperties);
-          //newProperty = new EventPropertyNested(nested.getPropertyName() +i, nested.getEventProperties());
+          // newProperty = new EventPropertyNested(nested.getPropertyName() +i, nested.getEventProperties());
         }
         i++;
       }

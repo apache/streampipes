@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.enricher.jvm.processor.expression;
 
 import org.apache.streampipes.model.runtime.Event;
@@ -35,9 +34,7 @@ public class JexlContextGenerator {
   private MapContext makeInitialContext() {
     var ctx = new MapContext();
     ctx.set("Math", Math.class);
-    extractor.getInputProperties().forEach(ep ->
-        ctx.set(ep.getRuntimeName(), 0)
-    );
+    extractor.getInputProperties().forEach(ep -> ctx.set(ep.getRuntimeName(), 0));
     return ctx;
   }
 

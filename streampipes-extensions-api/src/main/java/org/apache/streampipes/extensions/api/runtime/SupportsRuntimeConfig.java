@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
@@ -24,7 +23,7 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 
 public interface SupportsRuntimeConfig {
 
-  StaticProperty resolveConfiguration(String staticPropertyInternalName,
-                                      IStaticPropertyExtractor extractor) throws SpConfigurationException;
+  StaticProperty resolveConfiguration(String staticPropertyInternalName, IStaticPropertyExtractor extractor)
+          throws SpConfigurationException;
 
 }

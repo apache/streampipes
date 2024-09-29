@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.flink;
 
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
@@ -37,27 +36,25 @@ import org.apache.streampipes.wrapper.flink.sink.JmsFlinkProducer;
 import org.apache.streampipes.wrapper.flink.sink.MqttFlinkProducer;
 import org.apache.streampipes.wrapper.params.generator.DataProcessorParameterGenerator;
 
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
-
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
-public class FlinkDataProcessorRuntime extends FlinkRuntime<
-    IStreamPipesDataProcessor,
-    DataProcessorInvocation,
-    EventProcessorRuntimeContext,
-    IDataProcessorParameterExtractor,
-    IDataProcessorParameters,
-    IDataProcessorProgram> implements IDataProcessorRuntime {
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
+
+public class FlinkDataProcessorRuntime
+        extends
+          FlinkRuntime<IStreamPipesDataProcessor, DataProcessorInvocation, EventProcessorRuntimeContext, IDataProcessorParameterExtractor, IDataProcessorParameters, IDataProcessorProgram>
+        implements
+          IDataProcessorRuntime {
 
   public FlinkDataProcessorRuntime() {
     super(new DataProcessorContextGenerator(), new DataProcessorParameterGenerator());
   }
 
   private SpDataStream getOutputStream() {
-    //return getGraph().getOutputStream();
+    // return getGraph().getOutputStream();
     return null;
   }
 
@@ -73,28 +70,21 @@ public class FlinkDataProcessorRuntime extends FlinkRuntime<
   }
 
   @Override
-  protected void appendExecutionConfig(IDataProcessorProgram program,
-                                       DataStream<Event>... convertedStream) {
+  protected void appendExecutionConfig(IDataProcessorProgram program, DataStream<Event>... convertedStream) {
     DataStream<Map<String, Object>> applicationLogic = program.getApplicationLogic(convertedStream)
-        .flatMap(new EventToMapConverter());
+            .flatMap(new EventToMapConverter());
 
     EventGrounding outputGrounding = getOutputStream().getEventGrounding();
-    SpDataFormatDefinition outputDataFormatDefinition =
-        getDataFormatDefinition();
+    SpDataFormatDefinition outputDataFormatDefinition = getDataFormatDefinition();
 
-    ByteArraySerializer serializer =
-        new ByteArraySerializer(outputDataFormatDefinition);
+    ByteArraySerializer serializer = new ByteArraySerializer(outputDataFormatDefinition);
     if (isKafkaProtocol(getOutputStream())) {
-      applicationLogic
-          .addSink(new FlinkKafkaProducer<>(getTopic(getOutputStream()),
-              serializer,
+      applicationLogic.addSink(new FlinkKafkaProducer<>(getTopic(getOutputStream()), serializer,
               getProducerProperties((KafkaTransportProtocol) outputGrounding.getTransportProtocol())));
     } else if (isJmsProtocol(getOutputStream())) {
-      applicationLogic
-          .addSink(new JmsFlinkProducer(getJmsProtocol(getOutputStream()), serializer));
+      applicationLogic.addSink(new JmsFlinkProducer(getJmsProtocol(getOutputStream()), serializer));
     } else if (isMqttProtocol(getOutputStream())) {
-      applicationLogic
-          .addSink(new MqttFlinkProducer(getMqttProtocol(getOutputStream()), serializer));
+      applicationLogic.addSink(new MqttFlinkProducer(getMqttProtocol(getOutputStream()), serializer));
     }
   }
 
@@ -103,11 +93,8 @@ public class FlinkDataProcessorRuntime extends FlinkRuntime<
     IDataProcessorProgram program;
 
     if (pipelineElement instanceof FlinkDataProcessorDeclarer<?>) {
-      program = ((FlinkDataProcessorDeclarer<?>) pipelineElement)
-          .getProgram(
-              runtimeParameters.getModel(),
-              ProcessingElementParameterExtractor.from(runtimeParameters.getModel())
-          );
+      program = ((FlinkDataProcessorDeclarer<?>) pipelineElement).getProgram(runtimeParameters.getModel(),
+              ProcessingElementParameterExtractor.from(runtimeParameters.getModel()));
     } else {
       program = new FlinkDataProcessorCompatProgram(pipelineElement);
     }

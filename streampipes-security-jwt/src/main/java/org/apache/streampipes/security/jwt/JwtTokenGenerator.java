@@ -15,12 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.security.jwt;
-
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
 
@@ -38,31 +33,28 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Date;
 import java.util.Map;
 
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+
 public class JwtTokenGenerator {
 
-  public static String makeJwtToken(String subject,
-                                    String tokenSecret,
-                                    Date expirationDate) {
+  public static String makeJwtToken(String subject, String tokenSecret, Date expirationDate) {
 
     return prepareJwtToken(subject, makeHmacKey(tokenSecret), expirationDate).compact();
 
   }
 
-  public static String makeJwtToken(String subject,
-                                    Path keyFilePath,
-                                    Map<String, Object> claims,
-                                    Date expirationDate)
-      throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+  public static String makeJwtToken(String subject, Path keyFilePath, Map<String, Object> claims, Date expirationDate)
+          throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
 
     JwtBuilder builder = prepareJwtToken(subject, makeRsaKey(keyFilePath), expirationDate);
 
     return builder.addClaims(claims).compact();
   }
 
-  public static String makeJwtToken(String subject,
-                                    String tokenSecret,
-                                    Map<String, Object> claims,
-                                    Date expirationDate) {
+  public static String makeJwtToken(String subject, String tokenSecret, Map<String, Object> claims,
+          Date expirationDate) {
 
     JwtBuilder builder = prepareJwtToken(subject, makeHmacKey(tokenSecret), expirationDate);
 
@@ -74,7 +66,7 @@ public class JwtTokenGenerator {
   }
 
   private static RSAPrivateKey makeRsaKey(Path keyFilePath)
-      throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+          throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
     String key = Files.readString(keyFilePath, Charset.defaultCharset());
 
     byte[] decoded = KeyUtils.extractPrivate(key);
@@ -84,14 +76,7 @@ public class JwtTokenGenerator {
     return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
   }
 
-  private static JwtBuilder prepareJwtToken(String subject,
-                                            Key key,
-                                            Date expirationDate) {
-    return Jwts
-        .builder()
-        .setSubject(subject)
-        .setIssuedAt(new Date())
-        .setExpiration(expirationDate)
-        .signWith(key);
+  private static JwtBuilder prepareJwtToken(String subject, Key key, Date expirationDate) {
+    return Jwts.builder().setSubject(subject).setIssuedAt(new Date()).setExpiration(expirationDate).signWith(key);
   }
 }

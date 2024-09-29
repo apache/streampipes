@@ -15,26 +15,22 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 public class DataLakeQueryBuilderTest {
 
   private static final String MEASUREMENT = "measurement";
   @Test
   public void withSimpleColumnsTest() {
-    var result = DataLakeInfluxQueryBuilder
-        .create(MEASUREMENT)
-        .withSimpleColumns(List.of("one", "two"))
-        .build();
+    var result = DataLakeInfluxQueryBuilder.create(MEASUREMENT).withSimpleColumns(List.of("one", "two")).build();
 
     var expected = String.format("SELECT one,two FROM \"%s\";", MEASUREMENT);
-    assertEquals(expected , result.getCommand());
+    assertEquals(expected, result.getCommand());
   }
 }

@@ -22,10 +22,10 @@ import org.apache.streampipes.dataexplorer.api.IQueryStatement;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
 import org.apache.streampipes.model.datalake.FilterCondition;
 
-import org.apache.commons.lang3.math.NumberUtils;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class WhereClauseParams implements IQueryStatement {
 
@@ -34,17 +34,14 @@ public class WhereClauseParams implements IQueryStatement {
 
   private final List<FilterCondition> filterConditions;
 
-  private WhereClauseParams(Long startTime,
-                            Long endTime,
-                            String whereConditions) {
+  private WhereClauseParams(Long startTime, Long endTime, String whereConditions) {
     this(startTime, endTime);
     if (whereConditions != null) {
       buildConditions(whereConditions);
     }
   }
 
-  private WhereClauseParams(Long startTime,
-                            Long endTime) {
+  private WhereClauseParams(Long startTime, Long endTime) {
     this.filterConditions = new ArrayList<>();
     this.buildTimeConditions(startTime, endTime);
   }
@@ -56,8 +53,7 @@ public class WhereClauseParams implements IQueryStatement {
     }
   }
 
-  public static WhereClauseParams from(Long startTime,
-                                       Long endTime) {
+  public static WhereClauseParams from(Long startTime, Long endTime) {
     return new WhereClauseParams(startTime, endTime);
   }
 
@@ -65,14 +61,11 @@ public class WhereClauseParams implements IQueryStatement {
     return new WhereClauseParams(whereConditions);
   }
 
-  public static WhereClauseParams from(Long startTime,
-                                       Long endTime,
-                                       String whereConditions) {
+  public static WhereClauseParams from(Long startTime, Long endTime, String whereConditions) {
     return new WhereClauseParams(startTime, endTime, whereConditions);
   }
 
-  private void buildTimeConditions(Long startTime,
-                                   Long endTime) {
+  private void buildTimeConditions(Long startTime, Long endTime) {
     if (startTime == null) {
       this.filterConditions.add(buildTimeBoundary(endTime, LT));
     } else if (endTime == null) {
@@ -93,7 +86,7 @@ public class WhereClauseParams implements IQueryStatement {
     whereParts.forEach(singleCondition -> {
 
       this.filterConditions.add(
-          new FilterCondition(singleCondition[0], singleCondition[1], this.returnCondition(singleCondition[2])));
+              new FilterCondition(singleCondition[0], singleCondition[1], this.returnCondition(singleCondition[2])));
     });
   }
 

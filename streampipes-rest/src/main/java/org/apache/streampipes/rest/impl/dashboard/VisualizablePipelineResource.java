@@ -15,13 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.dashboard.VisualizablePipeline;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.rest.security.AuthConstants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +33,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/dashboard/pipelines")
@@ -51,8 +50,7 @@ public class VisualizablePipelineResource extends AbstractPipelineExtractionReso
 
   @GetMapping(path = "{pipelineId}/{visualizationName}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getVisPipelineByIdAndVisualizationName(@PathVariable("pipelineId") String pipelineId,
-                                                                  @PathVariable("visualizationName")
-                                                                  String visualizationName) {
+          @PathVariable("visualizationName") String visualizationName) {
     return getPipelineByIdAndFieldValue(DashboardAppId, pipelineId, visualizationName);
   }
 
@@ -66,7 +64,7 @@ public class VisualizablePipelineResource extends AbstractPipelineExtractionReso
 
   @Override
   protected org.apache.streampipes.model.dashboard.VisualizablePipeline convert(Pipeline pipeline,
-                                                                                DataSinkInvocation sink) {
+          DataSinkInvocation sink) {
     VisualizablePipeline visualizablePipeline = new org.apache.streampipes.model.dashboard.VisualizablePipeline();
     visualizablePipeline.setPipelineId(pipeline.getPipelineId());
     visualizablePipeline.setPipelineName(pipeline.getName());
@@ -77,10 +75,7 @@ public class VisualizablePipelineResource extends AbstractPipelineExtractionReso
   }
 
   @Override
-  protected boolean matches(VisualizablePipeline pipeline,
-                            String pipelineId,
-                            String visualizationName) {
-    return pipeline.getPipelineId().equals(pipelineId)
-        && pipeline.getVisualizationName().equals(visualizationName);
+  protected boolean matches(VisualizablePipeline pipeline, String pipelineId, String visualizationName) {
+    return pipeline.getPipelineId().equals(pipelineId) && pipeline.getVisualizationName().equals(visualizationName);
   }
 }

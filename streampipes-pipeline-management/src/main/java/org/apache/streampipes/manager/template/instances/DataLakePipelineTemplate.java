@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.template.instances;
 
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
@@ -31,14 +30,10 @@ public class DataLakePipelineTemplate extends PipelineTemplateGenerator implemen
   @Override
   public PipelineTemplateDescription declareModel() throws ElementNotFoundException {
     return new PipelineTemplateDescription(
-        PipelineTemplateBuilder.create("http://streampipes.org/DataLakePipelineTemplate", "DataLake",
-                "")
-            .setAppId(ID)
-            .boundPipelineElementTemplate(
-                BoundPipelineElementBuilder
-                    .create(getSink("org.apache.streampipes.sinks.internal.jvm.datalake"))
-                    .build())
-            .build());
+            PipelineTemplateBuilder.create("http://streampipes.org/DataLakePipelineTemplate", "DataLake", "")
+                    .setAppId(ID).boundPipelineElementTemplate(BoundPipelineElementBuilder
+                            .create(getSink("org.apache.streampipes.sinks.internal.jvm.datalake")).build())
+                    .build());
 
   }
 }

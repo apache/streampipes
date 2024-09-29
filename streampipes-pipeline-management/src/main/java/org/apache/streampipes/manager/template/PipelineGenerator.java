@@ -43,9 +43,8 @@ public class PipelineGenerator {
 
   private int count = 0;
 
-  public PipelineGenerator(String datasetId,
-                           PipelineTemplateDescription pipelineTemplateDescription,
-                           String pipelineName) {
+  public PipelineGenerator(String datasetId, PipelineTemplateDescription pipelineTemplateDescription,
+          String pipelineName) {
     this.pipelineTemplateDescription = pipelineTemplateDescription;
     this.datasetId = datasetId;
     this.pipelineName = pipelineName;
@@ -72,8 +71,7 @@ public class PipelineGenerator {
     return stream;
   }
 
-  private void collectInvocations(String currentDomId,
-                                  List<BoundPipelineElement> boundPipelineElements) {
+  private void collectInvocations(String currentDomId, List<BoundPipelineElement> boundPipelineElements) {
     for (BoundPipelineElement pipelineElement : boundPipelineElements) {
       InvocableStreamPipesEntity entity = clonePe(pipelineElement.getPipelineElementTemplate());
       entity.setConnectedTo(Collections.singletonList(currentDomId));
@@ -108,13 +106,9 @@ public class PipelineGenerator {
     });
   }
 
-  private PipelineModification getModification(PipelineModificationMessage message,
-                                               String domId) {
-    return message.getPipelineModifications()
-        .stream()
-        .filter(pm -> pm.getDomId().equals(domId))
-        .findFirst()
-        .orElseThrow(IllegalArgumentException::new);
+  private PipelineModification getModification(PipelineModificationMessage message, String domId) {
+    return message.getPipelineModifications().stream().filter(pm -> pm.getDomId().equals(domId)).findFirst()
+            .orElseThrow(IllegalArgumentException::new);
   }
 
   private InvocableStreamPipesEntity clonePe(InvocableStreamPipesEntity pipelineElementTemplate) {
@@ -126,11 +120,9 @@ public class PipelineGenerator {
   }
 
   private SpDataStream getStream(String datasetId) {
-    return StorageDispatcher.INSTANCE.getNoSqlStore()
-                                     .getPipelineElementDescriptionStorage()
-                                     .getEventStreamById(datasetId);
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage()
+            .getEventStreamById(datasetId);
   }
-
 
   private String getDom() {
     count++;

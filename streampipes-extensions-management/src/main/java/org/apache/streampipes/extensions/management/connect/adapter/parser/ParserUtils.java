@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 import org.apache.streampipes.extensions.management.connect.adapter.parser.util.JsonEventProperty;
@@ -29,18 +28,10 @@ public class ParserUtils {
   public GuessSchema getGuessSchema(Map<String, Object> event) {
     var schemaBuilder = GuessSchemaBuilder.create();
 
-    event
-        .forEach((key, value) -> {
-          schemaBuilder.sample(
-              key,
-              value);
-          schemaBuilder
-              .property(
-                  JsonEventProperty.getEventProperty(
-                      key,
-                      value
-                  ));
-        });
+    event.forEach((key, value) -> {
+      schemaBuilder.sample(key, value);
+      schemaBuilder.property(JsonEventProperty.getEventProperty(key, value));
+    });
 
     return schemaBuilder.build();
   }

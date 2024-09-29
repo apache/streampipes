@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -31,17 +30,17 @@ import org.apache.streampipes.wrapper.context.generator.DataProcessorContextGene
 import org.apache.streampipes.wrapper.params.generator.DataProcessorParameterGenerator;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
-public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRuntime<
-    IStreamPipesDataProcessor,
-    DataProcessorInvocation,
-    EventProcessorRuntimeContext,
-    IDataProcessorParameterExtractor,
-    IDataProcessorParameters> implements IDataProcessorRuntime, RawDataProcessor {
+public class StandaloneEventProcessorRuntime
+        extends
+          StandalonePipelineElementRuntime<IStreamPipesDataProcessor, DataProcessorInvocation, EventProcessorRuntimeContext, IDataProcessorParameterExtractor, IDataProcessorParameters>
+        implements
+          IDataProcessorRuntime,
+          RawDataProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneEventProcessorRuntime.class);
 
@@ -53,12 +52,7 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
 
   public SpOutputCollector getOutputCollector() throws SpRuntimeException {
     return ProtocolManager.findOutputCollector(
-        runtimeParameters
-            .getModel()
-            .getOutputStream()
-            .getEventGrounding()
-            .getTransportProtocol(),
-        this.instanceId);
+            runtimeParameters.getModel().getOutputStream().getEventGrounding().getTransportProtocol(), this.instanceId);
   }
 
   @Override
@@ -66,8 +60,7 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
     try {
       monitoringManager.increaseInCounter(instanceId, sourceInfo, System.currentTimeMillis());
       var event = this.internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, sourceInfo);
-      pipelineElement
-          .onEvent(event, outputCollector);
+      pipelineElement.onEvent(event, outputCollector);
     } catch (RuntimeException e) {
       LOG.error("RuntimeException while processing event in {}", pipelineElement.getClass().getCanonicalName(), e);
       addLogEntry(e);

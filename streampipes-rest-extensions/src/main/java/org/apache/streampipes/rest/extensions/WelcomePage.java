@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -25,12 +24,12 @@ import org.apache.streampipes.rest.extensions.html.HTMLGenerator;
 import org.apache.streampipes.rest.extensions.html.JSONGenerator;
 import org.apache.streampipes.rest.extensions.html.page.WelcomePageGenerator;
 
+import java.util.Collection;
+
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collection;
 
 @RestController
 @RequestMapping("/")
@@ -51,22 +50,15 @@ public class WelcomePage {
   }
 
   private WelcomePageGenerator getWelcomePageGenerator() {
-    return new WelcomePageGenerator(
-        DeclarersSingleton.getInstance().getBaseUri(),
-        getPipelineElements(),
-        getAdapters());
+    return new WelcomePageGenerator(DeclarersSingleton.getInstance().getBaseUri(), getPipelineElements(),
+            getAdapters());
   }
 
   private Collection<IStreamPipesPipelineElement<?>> getPipelineElements() {
-    return DeclarersSingleton
-        .getInstance()
-        .getDeclarers()
-        .values();
+    return DeclarersSingleton.getInstance().getDeclarers().values();
   }
 
   private Collection<StreamPipesAdapter> getAdapters() {
-    return DeclarersSingleton
-        .getInstance()
-        .getAdapters();
+    return DeclarersSingleton.getInstance().getAdapters();
   }
 }

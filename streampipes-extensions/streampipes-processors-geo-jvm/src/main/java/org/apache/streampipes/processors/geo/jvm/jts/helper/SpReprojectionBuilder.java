@@ -15,10 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.jts.helper;
 
 import org.apache.streampipes.processors.geo.jvm.jts.exceptions.SpNotSupportedGeometryException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.sis.geometry.DirectPosition2D;
 import org.apache.sis.referencing.CRS;
@@ -40,14 +42,9 @@ import org.opengis.referencing.operation.CoordinateOperation;
 import org.opengis.referencing.operation.TransformException;
 import org.opengis.util.FactoryException;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-
 public class SpReprojectionBuilder {
 
-  public static Geometry reprojectSpGeometry(Geometry geom, Integer targetEPSG)
-      throws SpNotSupportedGeometryException {
+  public static Geometry reprojectSpGeometry(Geometry geom, Integer targetEPSG) throws SpNotSupportedGeometryException {
 
     Geometry output;
 
@@ -56,11 +53,10 @@ public class SpReprojectionBuilder {
     CoordinateOperation operator = getOperator(sourcerCRS, targetrCRS);
 
     CoordinateList geomCoordList = new CoordinateList(geom.getCoordinates());
-    List<Coordinate> projectedList =
-        geomCoordList.stream().map(coordinate -> transformCoordinate(coordinate, operator))
+    List<Coordinate> projectedList = geomCoordList.stream().map(coordinate -> transformCoordinate(coordinate, operator))
             .collect(Collectors.toList());
 
-    CoordinateSequence cs = new CoordinateArraySequence(projectedList.toArray(new Coordinate[]{}));
+    CoordinateSequence cs = new CoordinateArraySequence(projectedList.toArray(new Coordinate[] {}));
 
     output = createSimpleSPGeom(cs, geom.getGeometryType(), targetEPSG);
 
@@ -68,36 +64,36 @@ public class SpReprojectionBuilder {
   }
 
   public static Geometry createSimpleSPGeom(CoordinateSequence cs, String geometryType, Integer targetEPSG)
-      throws SpNotSupportedGeometryException {
+          throws SpNotSupportedGeometryException {
     Geometry output = null;
     PrecisionModel prec = SpGeometryBuilder.getPrecisionModel(targetEPSG);
     GeometryFactory geomFactory = new GeometryFactory(prec, targetEPSG);
 
     switch (geometryType) {
-      case "Point":
+      case "Point" :
         output = geomFactory.createPoint(cs);
         break;
-      case "LineString":
+      case "LineString" :
         output = geomFactory.createLineString(cs);
         break;
-      case "Polygon":
+      case "Polygon" :
         output = geomFactory.createPolygon(cs);
         break;
-      case "MulitPoint":
+      case "MulitPoint" :
         output = geomFactory.createMultiPoint(cs);
         break;
-      case "MultiLineString":
+      case "MultiLineString" :
         // output = geomFactory.createMultiLineString();
-        //        break;
+        // break;
         throw new SpNotSupportedGeometryException();
-      case "MultiPolygon":
-        //        output = geomFactory.createMultiPolygon(cs);
-        //        break;
+      case "MultiPolygon" :
+        // output = geomFactory.createMultiPolygon(cs);
+        // break;
         throw new SpNotSupportedGeometryException();
 
-      case "GeometryCpllection":
-        //        output = geomFactory.createGeometryCollection(cs);
-        //        break;
+      case "GeometryCpllection" :
+        // output = geomFactory.createGeometryCollection(cs);
+        // break;
         throw new SpNotSupportedGeometryException();
     }
 
@@ -113,7 +109,7 @@ public class SpReprojectionBuilder {
         output = AbstractCRS.castOrCopy(output).forConvention(AxesConvention.RIGHT_HANDED);
       }
     } catch (FactoryException e) {
-      //todo
+      // todo
       e.printStackTrace();
     }
     return output;
@@ -136,8 +132,7 @@ public class SpReprojectionBuilder {
     return output;
   }
 
-  protected static CoordinateOperation getOperator(CoordinateReferenceSystem source,
-                                                   CoordinateReferenceSystem target) {
+  protected static CoordinateOperation getOperator(CoordinateReferenceSystem source, CoordinateReferenceSystem target) {
 
     CoordinateOperation op = null;
 
@@ -165,7 +160,7 @@ public class SpReprojectionBuilder {
   }
 
   public static Geometry unifyEPSG(Geometry geomA, Geometry geomB, boolean useFirstGeomAsBase)
-      throws SpNotSupportedGeometryException {
+          throws SpNotSupportedGeometryException {
 
     Geometry tempGeomA = geomA;
     Geometry tempGeomB = geomB;
@@ -233,11 +228,10 @@ public class SpReprojectionBuilder {
       hemisphere = 6;
     }
 
-    //concatenate integer values
+    // concatenate integer values
     epsg = Integer.valueOf(String.valueOf(32) + hemisphere + zone);
     return epsg;
   }
-
 
   public enum SpCRSUnits {
     METRE("metre"), DEGREE("degree");
@@ -263,7 +257,6 @@ public class SpReprojectionBuilder {
     }
     return check;
   }
-
 
   private static CRSAuthorityFactory getFactory() throws FactoryException {
     CRSAuthorityFactory factory;

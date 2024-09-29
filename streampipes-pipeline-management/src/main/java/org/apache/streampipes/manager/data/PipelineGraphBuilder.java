@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.data;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -52,7 +51,6 @@ public class PipelineGraphBuilder {
     return allElements;
   }
 
-
   public PipelineGraph buildGraph() {
     PipelineGraph pipelineGraph = new PipelineGraph();
     allPipelineElements.forEach(pipelineGraph::addVertex);
@@ -66,14 +64,10 @@ public class PipelineGraphBuilder {
   }
 
   private List<InvocableStreamPipesEntity> findTargets(String domId) {
-    return invocableElements
-        .stream()
-        .filter(i -> i.getConnectedTo().contains(domId))
-        .collect(Collectors.toList());
+    return invocableElements.stream().filter(i -> i.getConnectedTo().contains(domId)).collect(Collectors.toList());
   }
 
-  private String createEdge(NamedStreamPipesEntity sourceVertex,
-                            NamedStreamPipesEntity targetVertex) {
+  private String createEdge(NamedStreamPipesEntity sourceVertex, NamedStreamPipesEntity targetVertex) {
     return sourceVertex.getDom() + "-" + targetVertex.getDom();
   }
 }

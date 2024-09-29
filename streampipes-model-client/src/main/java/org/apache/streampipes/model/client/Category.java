@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.client;
 
 public class Category {
@@ -23,7 +22,6 @@ public class Category {
   private String type;
   private String label;
   private String description;
-
 
   public Category(String type, String label, String description) {
     super();

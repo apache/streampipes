@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.security.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -31,18 +30,15 @@ public class JwtTokenValidator {
 
   private static final Logger LOG = LoggerFactory.getLogger(JwtTokenValidator.class);
 
-  public static boolean validateJwtToken(String jwtToken,
-                                         SigningKeyResolver resolver) {
+  public static boolean validateJwtToken(String jwtToken, SigningKeyResolver resolver) {
     return validateJwtToken(JwtTokenUtils.jwtParser(resolver), jwtToken);
   }
 
-  public static boolean validateJwtToken(String tokenSecret,
-                                         String jwtToken) {
+  public static boolean validateJwtToken(String tokenSecret, String jwtToken) {
     return validateJwtToken(JwtTokenUtils.jwtParser(tokenSecret), jwtToken);
   }
 
-  private static boolean validateJwtToken(JwtParser parser,
-                                          String jwtToken) {
+  private static boolean validateJwtToken(JwtParser parser, String jwtToken) {
     try {
       parser.parseClaimsJws(jwtToken);
       return true;

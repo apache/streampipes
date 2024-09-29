@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.transform.schema;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class RenameTransformationRuleTest {
 
@@ -39,8 +38,7 @@ public class RenameTransformationRuleTest {
 
     Map<String, Object> result = renameRule.apply(event);
 
-    Assertions.assertEquals(1,
-                            result.keySet().size());
+    Assertions.assertEquals(1, result.keySet().size());
     Assertions.assertEquals("test", result.get("new_key"));
   }
 
@@ -60,11 +58,9 @@ public class RenameTransformationRuleTest {
 
     Map<String, Object> result = renameRule.apply(event);
 
-    Assertions.assertEquals(1,
-                            result.keySet().size());
+    Assertions.assertEquals(1, result.keySet().size());
     Map<String, Object> resultNested = (Map<String, Object>) result.get("key");
-    Assertions.assertEquals(1,
-                            resultNested.keySet().size());
+    Assertions.assertEquals(1, resultNested.keySet().size());
     Assertions.assertEquals("test", resultNested.get("new_key"));
   }
 }

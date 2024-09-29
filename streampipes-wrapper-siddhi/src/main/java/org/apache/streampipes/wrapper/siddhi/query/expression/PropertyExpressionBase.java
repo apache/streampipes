@@ -19,5 +19,4 @@ package org.apache.streampipes.wrapper.siddhi.query.expression;
 
 public abstract class PropertyExpressionBase extends Expression {
 
-
 }

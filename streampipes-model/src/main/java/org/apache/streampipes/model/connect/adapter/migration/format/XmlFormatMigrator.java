@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.adapter.migration.format;
 
 import com.google.gson.JsonObject;
@@ -29,21 +28,10 @@ public class XmlFormatMigrator implements FormatMigrator {
 
   @Override
   public void migrate(JsonObject newFormatProperties) {
-    var tagValue = this.formatDescription.getAsJsonObject()
-        .get("config").getAsJsonArray()
-        .get(0).getAsJsonObject()
-        .get("properties").getAsJsonObject()
-        .get("value").getAsString();
-    newFormatProperties
-        .getAsJsonObject("properties")
-        .get("staticProperties")
-        .getAsJsonArray()
-        .get(0)
-        .getAsJsonObject()
-        .get("properties")
-        .getAsJsonObject()
-        .addProperty("value", tagValue);
-
+    var tagValue = this.formatDescription.getAsJsonObject().get("config").getAsJsonArray().get(0).getAsJsonObject()
+            .get("properties").getAsJsonObject().get("value").getAsString();
+    newFormatProperties.getAsJsonObject("properties").get("staticProperties").getAsJsonArray().get(0).getAsJsonObject()
+            .get("properties").getAsJsonObject().addProperty("value", tagValue);
 
   }
 }

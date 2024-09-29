@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.adapter.compact;
 
-public record EnrichmentConfig(String timestamp) {}
+public record EnrichmentConfig(String timestamp) {
+}

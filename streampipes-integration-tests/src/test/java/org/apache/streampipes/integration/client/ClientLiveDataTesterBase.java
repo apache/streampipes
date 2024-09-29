@@ -15,8 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.integration.client;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.client.api.IStreamPipesClient;
@@ -27,14 +29,11 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
-import org.testcontainers.shaded.com.google.common.collect.Maps;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.testcontainers.shaded.com.google.common.collect.Maps;
 
 public abstract class ClientLiveDataTesterBase<T extends TransportProtocol> implements AutoCloseable {
 
@@ -42,11 +41,7 @@ public abstract class ClientLiveDataTesterBase<T extends TransportProtocol> impl
   private int counter;
 
   public IStreamPipesClient makeStreamPipesClient() {
-    var client = StreamPipesClient.create(
-        "localhost",
-        new StreamPipesApiKeyCredentials("", ""),
-        true
-    );
+    var client = StreamPipesClient.create("localhost", new StreamPipesApiKeyCredentials("", ""), true);
     prepareClient(client);
 
     return client;
@@ -91,8 +86,7 @@ public abstract class ClientLiveDataTesterBase<T extends TransportProtocol> impl
     return grounding;
   }
 
-  public void publishEvents(IConfiguredEventProducer producer,
-                            List<Map<String, Object>> expectedEvents) {
+  public void publishEvents(IConfiguredEventProducer producer, List<Map<String, Object>> expectedEvents) {
     expectedEvents.forEach(producer::publish);
   }
 

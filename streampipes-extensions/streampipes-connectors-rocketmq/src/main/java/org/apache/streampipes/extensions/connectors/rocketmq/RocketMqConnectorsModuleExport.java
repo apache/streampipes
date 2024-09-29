@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.rocketmq;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -32,16 +31,12 @@ public class RocketMqConnectorsModuleExport implements IExtensionModuleExport {
 
   @Override
   public List<StreamPipesAdapter> adapters() {
-    return List.of(
-        new RocketMQProtocol()
-    );
+    return List.of(new RocketMQProtocol());
   }
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new RocketMQPublisherSink()
-    );
+    return List.of(new RocketMQPublisherSink());
   }
 
   @Override

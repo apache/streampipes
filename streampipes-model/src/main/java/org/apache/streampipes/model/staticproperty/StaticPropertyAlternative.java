@@ -34,9 +34,7 @@ public class StaticPropertyAlternative extends StaticProperty {
     this.elementId = ElementIdGenerator.makeElementId(StaticPropertyAlternative.class);
   }
 
-  public StaticPropertyAlternative(String internalName,
-                                   String label,
-                                   String description) {
+  public StaticPropertyAlternative(String internalName, String label, String description) {
     super(StaticPropertyType.StaticPropertyAlternative, internalName, label, description);
     this.elementId = ElementIdGenerator.makeElementId(StaticPropertyAlternative.class);
   }

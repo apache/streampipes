@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.template;
 
 import org.apache.streampipes.model.template.PipelineElementTemplate;
@@ -27,9 +26,7 @@ public abstract class AbstractTemplateHandler<T> {
 
   protected boolean overwriteNameAndDescription;
 
-  public AbstractTemplateHandler(PipelineElementTemplate template,
-                                 T element,
-                                 boolean overwriteNameAndDescription) {
+  public AbstractTemplateHandler(PipelineElementTemplate template, T element, boolean overwriteNameAndDescription) {
     this.template = template;
     this.element = element;
     this.overwriteNameAndDescription = overwriteNameAndDescription;

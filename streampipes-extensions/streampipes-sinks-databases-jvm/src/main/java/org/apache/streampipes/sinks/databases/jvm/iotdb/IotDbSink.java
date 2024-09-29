@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.iotdb;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -34,16 +33,16 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
 import org.apache.iotdb.session.pool.SessionPool;
 import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class IotDbSink extends StreamPipesDataSink {
 
@@ -73,28 +72,20 @@ public class IotDbSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.databases.jvm.iotdb", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).
-        category(DataSinkType.DATABASE)
-        .requiredStream(
-            StreamRequirementsBuilder.create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.withId(TIMESTAMP_MAPPING_KEY),
-                    PropertyScope.NONE).build()
-        )
-        .requiredTextParameter(Labels.withId(HOST_KEY))
-        .requiredIntegerParameter(Labels.withId(PORT_KEY), 6667)
-        .requiredTextParameter(Labels.withId(USER_KEY), "root")
-        .requiredSecret(Labels.withId(PASSWORD_KEY))
-        .requiredTextParameter(Labels.withId(DATABASE_KEY))
-        .requiredTextParameter(Labels.withId(DEVICE_KEY))
-        .build();
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.iotdb", 0).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).category(DataSinkType.DATABASE)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                            Labels.withId(TIMESTAMP_MAPPING_KEY), PropertyScope.NONE)
+                    .build())
+            .requiredTextParameter(Labels.withId(HOST_KEY)).requiredIntegerParameter(Labels.withId(PORT_KEY), 6667)
+            .requiredTextParameter(Labels.withId(USER_KEY), "root").requiredSecret(Labels.withId(PASSWORD_KEY))
+            .requiredTextParameter(Labels.withId(DATABASE_KEY)).requiredTextParameter(Labels.withId(DEVICE_KEY))
+            .build();
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     var extractor = parameters.extractor();
     final String host = extractor.singleValueParameter(HOST_KEY, String.class);
     final Integer port = extractor.singleValueParameter(PORT_KEY, Integer.class);
@@ -110,14 +101,8 @@ public class IotDbSink extends StreamPipesDataSink {
 
     // In our case, the pool size is set to 2.
     // One connection is for current requests, and the other is a backup for fast-recovery when connection dies.
-    sessionPool = new SessionPool.Builder()
-        .maxSize(2)
-        .enableCompression(false)
-        .host(host)
-        .port(port)
-        .user(user)
-        .password(password)
-        .build();
+    sessionPool = new SessionPool.Builder().maxSize(2).enableCompression(false).host(host).port(port).user(user)
+            .password(password).build();
   }
 
   @Override

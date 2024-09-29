@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.jdbcclient;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -28,15 +27,14 @@ import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.SupportedDbEn
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.TableDescription;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.utils.SQLStatementUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JdbcClient {
 
@@ -51,15 +49,14 @@ public class JdbcClient {
   protected StatementHandler statementHandler;
 
   /**
-   * A wrapper class for all supported SQL data types (INT, BIGINT, FLOAT, DOUBLE, VARCHAR(255)).
-   * If no matching type is found, it is interpreted as a String (VARCHAR(255))
+   * A wrapper class for all supported SQL data types (INT, BIGINT, FLOAT, DOUBLE, VARCHAR(255)). If no matching type is
+   * found, it is interpreted as a String (VARCHAR(255))
    */
   public JdbcClient() {
   }
 
-  protected void initializeJdbc(EventSchema eventSchema,
-                                JdbcConnectionParameters connectionParameters,
-                                SupportedDbEngines dbEngine) throws SpRuntimeException {
+  protected void initializeJdbc(EventSchema eventSchema, JdbcConnectionParameters connectionParameters,
+          SupportedDbEngines dbEngine) throws SpRuntimeException {
     this.dbDescription = new DbDescription(connectionParameters, dbEngine);
     this.tableDescription = new TableDescription(connectionParameters.getDbTable(), eventSchema);
     this.statementHandler = new StatementHandler(null, null);
@@ -70,33 +67,22 @@ public class JdbcClient {
     }
 
     if (this.dbDescription.isSslEnabled()) {
-      connectWithSSL(
-          this.dbDescription.getHost(),
-          this.dbDescription.getPort(),
-          this.dbDescription.getName()
-      );
+      connectWithSSL(this.dbDescription.getHost(), this.dbDescription.getPort(), this.dbDescription.getName());
     } else {
-      connect(
-          this.dbDescription.getHost(),
-          this.dbDescription.getPort(),
-          this.dbDescription.getName()
-      );
+      connect(this.dbDescription.getHost(), this.dbDescription.getPort(), this.dbDescription.getName());
     }
   }
-
 
   /**
    * Connects to the SQL database and initializes {@link JdbcClient#connection}
    *
-   * @throws SpRuntimeException When the connection could not be established (because of a
-   *                            wrong identification, missing database etc.)
+   * @throws SpRuntimeException
+   *           When the connection could not be established (because of a wrong identification, missing database etc.)
    */
   private void connect(String host, int port, String databaseName) throws SpRuntimeException {
     String url = "jdbc:" + this.dbDescription.getEngine().getUrlName() + "://" + host + ":" + port + "/";
     try {
-      connection = DriverManager.getConnection(
-          url, this.dbDescription.getUsername(),
-          this.dbDescription.getPassword());
+      connection = DriverManager.getConnection(url, this.dbDescription.getUsername(), this.dbDescription.getPassword());
       ensureDatabaseExists(databaseName);
       ensureTableExists(url, databaseName);
     } catch (SQLException e) {
@@ -113,11 +99,9 @@ public class JdbcClient {
    * @throws SpRuntimeException
    */
   private void connectWithSSL(String host, int port, String databaseName) throws SpRuntimeException {
-    String url =
-        "jdbc:" + this.dbDescription.getEngine().getUrlName() + "://" + host + ":" + port + "/" + databaseName
-        + "?user="
-        + this.dbDescription.getUsername() + "&password=" + this.dbDescription.getPassword()
-        + "&ssl=true&sslfactory=" + this.dbDescription.getSslFactory() + "&sslmode=require";
+    String url = "jdbc:" + this.dbDescription.getEngine().getUrlName() + "://" + host + ":" + port + "/" + databaseName
+            + "?user=" + this.dbDescription.getUsername() + "&password=" + this.dbDescription.getPassword()
+            + "&ssl=true&sslfactory=" + this.dbDescription.getSslFactory() + "&sslmode=require";
     try {
       connection = DriverManager.getConnection(url);
       ensureDatabaseExists(databaseName);
@@ -127,12 +111,13 @@ public class JdbcClient {
     }
   }
 
-
   /**
    * If this method returns successfully a database with the given name exists on the server, specified by the url.
    *
-   * @param databaseName The name of the database that should exist
-   * @throws SpRuntimeException If the database does not exists and could not be created
+   * @param databaseName
+   *          The name of the database that should exist
+   * @throws SpRuntimeException
+   *           If the database does not exists and could not be created
    */
   protected void ensureDatabaseExists(String databaseName) throws SpRuntimeException {
 
@@ -159,19 +144,21 @@ public class JdbcClient {
   }
 
   /**
-   * If this method returns successfully a table with the name in
-   * {@link JdbcConnectionParameters#getDbTable()} exists in the database
-   * with the given database name exists on the server, specified by the url.
+   * If this method returns successfully a table with the name in {@link JdbcConnectionParameters#getDbTable()} exists
+   * in the database with the given database name exists on the server, specified by the url.
    *
-   * @param url          The JDBC url containing the needed information (e.g. "jdbc:iotdb://127.0.0.1:6667/")
-   * @param databaseName The database in which the table should exist
-   * @throws SpRuntimeException If the table does not exist and could not be created
+   * @param url
+   *          The JDBC url containing the needed information (e.g. "jdbc:iotdb://127.0.0.1:6667/")
+   * @param databaseName
+   *          The database in which the table should exist
+   * @throws SpRuntimeException
+   *           If the table does not exist and could not be created
    */
   protected void ensureTableExists(String url, String databaseName) throws SpRuntimeException {
     try {
       // Database should exist by now so we can establish a connection
       connection = DriverManager.getConnection(url + databaseName, this.dbDescription.getUsername(),
-          this.dbDescription.getPassword());
+              this.dbDescription.getPassword());
       this.statementHandler.setStatement(connection.createStatement());
       ResultSet rs = connection.getMetaData().getTables(null, null, this.tableDescription.getName(), null);
       if (rs.next()) {
@@ -190,11 +177,13 @@ public class JdbcClient {
   /**
    * Prepares a statement for the insertion of values or the
    *
-   * @param event The event which should be saved to the Postgres table
-   * @throws SpRuntimeException When there was an error in the saving process
+   * @param event
+   *          The event which should be saved to the Postgres table
+   * @throws SpRuntimeException
+   *           When there was an error in the saving process
    */
   protected void save(final Event event) throws SpRuntimeException {
-    //TODO: Add batch support (https://stackoverflow.com/questions/3784197/efficient-way-to-do-batch-inserts-with-jdbc)
+    // TODO: Add batch support (https://stackoverflow.com/questions/3784197/efficient-way-to-do-batch-inserts-with-jdbc)
     checkConnected();
     Map<String, Object> eventMap = event.getRaw();
     if (event == null) {
@@ -207,9 +196,7 @@ public class JdbcClient {
     }
     try {
       checkConnected();
-      this.statementHandler.executePreparedStatement(
-          this.dbDescription, this.tableDescription,
-          connection, eventMap);
+      this.statementHandler.executePreparedStatement(this.dbDescription, this.tableDescription, connection, eventMap);
     } catch (SQLException e) {
       if (e.getSQLState().substring(0, 2).equals("42")) {
         // If the table does not exists (because it got deleted or something, will cause the error
@@ -221,9 +208,8 @@ public class JdbcClient {
 
         try {
           checkConnected();
-          this.statementHandler.executePreparedStatement(
-              this.dbDescription, this.tableDescription,
-              connection, eventMap);
+          this.statementHandler.executePreparedStatement(this.dbDescription, this.tableDescription, connection,
+                  eventMap);
         } catch (SQLException e1) {
           throw new SpRuntimeException(e1.getMessage());
         }
@@ -238,13 +224,12 @@ public class JdbcClient {
 
     checkConnected();
     this.tableDescription.createTable(createStatement, this.statementHandler, this.dbDescription,
-        this.tableDescription);
+            this.tableDescription);
   }
 
   protected void extractTableInformation() {
-    this.tableDescription.extractTableInformation(
-        this.statementHandler.preparedStatement, connection,
-        "", new String[]{});
+    this.tableDescription.extractTableInformation(this.statementHandler.preparedStatement, connection, "",
+            new String[] {});
   }
 
   protected void validateTable() throws SpRuntimeException {

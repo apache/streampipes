@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.dataexplorer.export.item;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -39,8 +37,7 @@ public class JsonItemGenerator extends ItemGenerator {
   }
 
   @Override
-  protected String makeItemString(String key,
-                                  Object value) {
+  protected String makeItemString(String key, Object value) {
     String valueJsonString = null;
     try {
       valueJsonString = value != null ? this.objectMapper.writeValueAsString(value) : null;

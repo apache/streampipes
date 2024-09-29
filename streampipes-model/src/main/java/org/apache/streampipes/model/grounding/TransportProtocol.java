@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.grounding;
 
 import org.apache.streampipes.model.util.Cloner;
@@ -24,13 +23,9 @@ import org.apache.streampipes.model.util.ElementIdGenerator;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-@JsonSubTypes({
-    @JsonSubTypes.Type(JmsTransportProtocol.class),
-    @JsonSubTypes.Type(KafkaTransportProtocol.class),
-    @JsonSubTypes.Type(MqttTransportProtocol.class),
-    @JsonSubTypes.Type(NatsTransportProtocol.class),
-    @JsonSubTypes.Type(PulsarTransportProtocol.class)
-})
+@JsonSubTypes({@JsonSubTypes.Type(JmsTransportProtocol.class), @JsonSubTypes.Type(KafkaTransportProtocol.class),
+    @JsonSubTypes.Type(MqttTransportProtocol.class), @JsonSubTypes.Type(NatsTransportProtocol.class),
+    @JsonSubTypes.Type(PulsarTransportProtocol.class)})
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 public abstract class TransportProtocol {
 

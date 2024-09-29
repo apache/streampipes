@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone.function;
 
 import org.apache.streampipes.extensions.api.declarer.IFunctionConfig;
@@ -43,8 +42,7 @@ public class FunctionConfig implements IFunctionConfig {
     return outputDataStreams;
   }
 
-  public void addOutputDataStream(String streamId,
-                                  SpDataStream stream) {
+  public void addOutputDataStream(String streamId, SpDataStream stream) {
     this.outputDataStreams.put(streamId, stream);
   }
 

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.iiot;
 
 import org.apache.streampipes.connect.iiot.adapters.iolink.IfmAlMqttAdapter;
@@ -35,14 +34,8 @@ import java.util.List;
 public class IIoTAdaptersExtensionModuleExport implements IExtensionModuleExport {
   @Override
   public List<StreamPipesAdapter> adapters() {
-    return List.of(
-        new MachineDataSimulatorAdapter(),
-        new FileReplayAdapter(),
-        new IfmAlMqttAdapter(),
-        new Oi4Adapter(),
-        new HttpStreamProtocol(),
-        new HttpServerProtocol()
-    );
+    return List.of(new MachineDataSimulatorAdapter(), new FileReplayAdapter(), new IfmAlMqttAdapter(), new Oi4Adapter(),
+            new HttpStreamProtocol(), new HttpServerProtocol());
   }
 
   @Override

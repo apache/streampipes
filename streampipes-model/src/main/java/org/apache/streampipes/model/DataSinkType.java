@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -28,16 +27,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum DataSinkType {
 
-  INTERNAL("_Internal", ""),
-  VISUALIZATION_CHART("Charts", ""),
-  VISUALIZATION_GEO("Geospatial Visualization", ""),
-  DATABASE("Database", ""),
-  STORAGE("Storage", ""),
-  FORWARD("Forward", ""),
-  NOTIFICATION("Notifications", ""),
-  ACTUATOR("Actuators", ""),
-  MESSAGING("Messaging Systems", ""),
-  UNCATEGORIZED("Uncategorized", "");
+  INTERNAL("_Internal", ""), VISUALIZATION_CHART("Charts", ""), VISUALIZATION_GEO("Geospatial Visualization",
+          ""), DATABASE("Database", ""), STORAGE("Storage", ""), FORWARD("Forward", ""), NOTIFICATION("Notifications",
+                  ""), ACTUATOR("Actuators",
+                          ""), MESSAGING("Messaging Systems", ""), UNCATEGORIZED("Uncategorized", "");
 
   private String label;
   private String description;

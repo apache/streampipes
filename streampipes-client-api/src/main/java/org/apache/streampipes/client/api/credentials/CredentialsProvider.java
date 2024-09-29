@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.client.api.credentials;
 
-import org.apache.http.Header;
-
 import java.util.List;
+
+import org.apache.http.Header;
 
 public interface CredentialsProvider {
 

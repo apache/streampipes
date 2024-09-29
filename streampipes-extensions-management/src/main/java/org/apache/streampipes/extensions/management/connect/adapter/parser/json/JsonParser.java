@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
@@ -23,10 +22,10 @@ import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.ParserUtils;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class JsonParser {
 
@@ -41,7 +40,6 @@ public abstract class JsonParser {
   public abstract GuessSchema getGuessSchema(InputStream inputStream);
 
   public abstract void parse(InputStream inputStream, IParserEventHandler handler) throws ParseException;
-
 
   protected <T> T toMap(InputStream inputStream, Class<T> clazz) throws ParseException {
     if (inputStream == null) {

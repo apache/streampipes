@@ -15,8 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -30,44 +33,28 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-
 @Configuration
 public class OpenApiConfiguration {
 
   @Bean
   public OpenAPI openApiDocsConfiguration(@Value("${app.version}") String appVersion) {
     return new OpenAPI()
-        .components(new Components()
-            .addSecuritySchemes("bearerAuth",
-                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer"))
-            .parameters(makeAuthParams()))
-        .info(new Info()
-            .title("Apache StreamPipes API")
-            .description("This is the documentation of the Apache StreamPipes developer API.")
-            .version(appVersion)
-            .contact(new Contact().email("dev@streampipes.apache.org"))
-            .license(new License()
-                .name("Apache 2.0")
-                .url("http://www.apache.org/licenses/LICENSE-2.0.html")
-            )
-        );
+            .components(new Components()
+                    .addSecuritySchemes("bearerAuth",
+                            new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer"))
+                    .parameters(makeAuthParams()))
+            .info(new Info().title("Apache StreamPipes API")
+                    .description("This is the documentation of the Apache StreamPipes developer API.")
+                    .version(appVersion).contact(new Contact().email("dev@streampipes.apache.org"))
+                    .license(new License().name("Apache 2.0").url("http://www.apache.org/licenses/LICENSE-2.0.html")));
   }
 
   private Map<String, Parameter> makeAuthParams() {
     var map = new HashMap<String, Parameter>();
-    map.put("usernameParam", new Parameter()
-        .in("path")
-        .name("username")
-        .required(true)
-        .schema(new Schema<String>()
-            .type("string")
-            .minimum(BigDecimal.valueOf(0))
-            .description("The username (currently the email address of the logged in user")
-        )
-    );
+    map.put("usernameParam",
+            new Parameter().in("path").name("username").required(true)
+                    .schema(new Schema<String>().type("string").minimum(BigDecimal.valueOf(0))
+                            .description("The username (currently the email address of the logged in user")));
 
     return map;
   }

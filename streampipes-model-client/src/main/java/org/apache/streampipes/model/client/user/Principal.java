@@ -15,14 +15,13 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.client.user;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.SerializedName;
 
 public abstract class Principal {
 
@@ -45,7 +44,6 @@ public abstract class Principal {
     this.groups = new HashSet<>();
     this.objectPermissions = new HashSet<>();
   }
-
 
   public String getRev() {
     return rev;

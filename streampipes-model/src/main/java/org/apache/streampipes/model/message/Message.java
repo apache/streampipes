@@ -15,23 +15,19 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.message;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
-
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
 @TsModel
-@JsonSubTypes({
-    @JsonSubTypes.Type(ErrorMessage.class),
-    @JsonSubTypes.Type(SuccessMessage.class),
-    @JsonSubTypes.Type(PipelineModificationMessage.class),
-})
+@JsonSubTypes({@JsonSubTypes.Type(ErrorMessage.class), @JsonSubTypes.Type(SuccessMessage.class),
+    @JsonSubTypes.Type(PipelineModificationMessage.class),})
 public abstract class Message {
 
   private boolean success;
@@ -58,7 +54,6 @@ public abstract class Message {
     this(success, notifications);
     this.elementName = elementName;
   }
-
 
   public Message(boolean success, Notification... notifications) {
     this.success = success;

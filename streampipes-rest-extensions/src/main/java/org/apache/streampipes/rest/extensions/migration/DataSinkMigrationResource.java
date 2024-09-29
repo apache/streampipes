@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
@@ -24,7 +23,6 @@ import org.apache.streampipes.model.extensions.migration.MigrationRequest;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
-
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,41 +39,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/migrations/sink")
-public class DataSinkMigrationResource extends MigrateExtensionsResource<
-    DataSinkInvocation,
-    IDataSinkParameterExtractor,
-    IDataSinkMigrator
-    > {
-  @PostMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
-  @Operation(
-      summary = "Execute the migration for a specific data sink instance", tags = {"Extensions", "Migration"},
-      responses = {
-          @ApiResponse(
-              responseCode = "" + HttpStatus.SC_OK,
-              description = "The migration was executed. It's result is described in the response. "
-                  + "The Response needs to be handled accordingly.",
-              content = @Content(
-                  examples = @ExampleObject(
-                      name = "Successful migration",
-                      value = "{\"success\": true,\"messages\": \"SUCCESS\", \"element\": {}}"
-                  ),
-                  mediaType = MediaType.APPLICATION_JSON_VALUE
-              )
-          )
-      }
-  )
+public class DataSinkMigrationResource
+        extends
+          MigrateExtensionsResource<DataSinkInvocation, IDataSinkParameterExtractor, IDataSinkMigrator> {
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Execute the migration for a specific data sink instance", tags = {"Extensions",
+      "Migration"}, responses = {@ApiResponse(responseCode = ""
+              + HttpStatus.SC_OK, description = "The migration was executed. It's result is described in the response. "
+                      + "The Response needs to be handled accordingly.", content = @Content(examples = @ExampleObject(name = "Successful migration", value = "{\"success\": true,\"messages\": \"SUCCESS\", \"element\": {}}"), mediaType = MediaType.APPLICATION_JSON_VALUE))})
   public ResponseEntity<MigrationResult<DataSinkInvocation>> migrateDataSink(
-      @Parameter(
-          description = "Request that encompasses the data sink description (DataSinkInvocation) and "
-              + "the configuration of the migration to be performed",
-          example = "{\"migrationElement\": {}, \"modelMigratorConfig\": {\"targetAppId\": \"app-id\", "
-              + "\"modelType\": \"dsink\", \"fromVersion\": 0, \"toVersion\": 1}}",
-          required = true
-      )
-      @RequestBody MigrationRequest<DataSinkInvocation> sinkMigrationRequest) {
+          @Parameter(description = "Request that encompasses the data sink description (DataSinkInvocation) and "
+                  + "the configuration of the migration to be performed", example = "{\"migrationElement\": {}, \"modelMigratorConfig\": {\"targetAppId\": \"app-id\", "
+                          + "\"modelType\": \"dsink\", \"fromVersion\": 0, \"toVersion\": 1}}", required = true) @RequestBody MigrationRequest<DataSinkInvocation> sinkMigrationRequest) {
     return ok(handleMigration(sinkMigrationRequest));
   }
 

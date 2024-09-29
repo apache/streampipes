@@ -42,15 +42,13 @@ public class SubscriptionManager {
   private IBrokerConfigOverride brokerConfigOverride;
   private boolean overrideSettings = false;
 
-  public SubscriptionManager(EventGrounding grounding,
-                             EventProcessor callback) {
+  public SubscriptionManager(EventGrounding grounding, EventProcessor callback) {
     this.grounding = grounding;
     this.callback = callback;
   }
 
-  public SubscriptionManager(IBrokerConfigOverride brokerConfigOverride,
-                             EventGrounding grounding,
-                             EventProcessor callback) {
+  public SubscriptionManager(IBrokerConfigOverride brokerConfigOverride, EventGrounding grounding,
+          EventProcessor callback) {
     this(grounding, callback);
     this.brokerConfigOverride = brokerConfigOverride;
     this.overrideSettings = true;
@@ -83,8 +81,7 @@ public class SubscriptionManager {
 
       return new Subscription(consumer);
     } catch (NoSuchElementException e) {
-      throw new SpRuntimeException(
-          "Could not find an implementation for messaging protocol "
+      throw new SpRuntimeException("Could not find an implementation for messaging protocol "
               + this.grounding.getTransportProtocol().getClass().getCanonicalName()
               + "- please add the corresponding module (streampipes-messaging-*) to your project dependencies.");
 

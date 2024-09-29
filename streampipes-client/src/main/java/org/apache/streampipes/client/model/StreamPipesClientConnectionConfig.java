@@ -27,10 +27,8 @@ public class StreamPipesClientConnectionConfig implements ClientConnectionConfig
   private Integer streamPipesPort;
   private boolean httpsDisabled;
 
-  public StreamPipesClientConnectionConfig(CredentialsProvider credentialsProvider,
-                                           String streamPipesHost,
-                                           Integer streamPipesPort,
-                                           boolean httpsDisabled) {
+  public StreamPipesClientConnectionConfig(CredentialsProvider credentialsProvider, String streamPipesHost,
+          Integer streamPipesPort, boolean httpsDisabled) {
     this.credentialsProvider = credentialsProvider;
     this.streamPipesHost = streamPipesHost;
     this.streamPipesPort = streamPipesPort;

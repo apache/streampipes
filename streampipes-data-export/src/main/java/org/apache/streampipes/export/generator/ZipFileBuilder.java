@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.export.generator;
 
 import org.apache.streampipes.export.constants.ExportConstants;
@@ -48,22 +47,19 @@ public class ZipFileBuilder {
     this.textEntries = new HashMap<>();
   }
 
-  public ZipFileBuilder addText(String filename,
-                                String content) {
+  public ZipFileBuilder addText(String filename, String content) {
     this.textEntries.put(filename, content);
 
     return this;
   }
 
-  public ZipFileBuilder addBinary(String filename,
-                                  byte[] content) {
+  public ZipFileBuilder addBinary(String filename, byte[] content) {
     this.binaryEntries.put(filename, content);
 
     return this;
   }
 
-  public ZipFileBuilder addFile(String filename,
-                                File file) {
+  public ZipFileBuilder addFile(String filename, File file) {
     this.fileEntries.put(filename, file);
 
     return this;
@@ -104,10 +100,7 @@ public class ZipFileBuilder {
     return document.getBytes(StandardCharsets.UTF_8);
   }
 
-  private void addZipEntry(String filename,
-                           byte[] document,
-                           ZipOutputStream out,
-                           byte[] buffer) throws IOException {
+  private void addZipEntry(String filename, byte[] document, ZipOutputStream out, byte[] buffer) throws IOException {
     ZipEntry ze = new ZipEntry(filename);
     out.putNextEntry(ze);
 

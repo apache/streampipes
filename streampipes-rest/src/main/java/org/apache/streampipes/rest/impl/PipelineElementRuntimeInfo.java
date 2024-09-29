@@ -22,6 +22,10 @@ import org.apache.streampipes.manager.runtime.RateLimitedRuntimeInfoProvider;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.util.Map;
+
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,20 +33,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import jakarta.servlet.http.HttpServletResponse;
-
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/v2/pipeline-element/runtime")
 public class PipelineElementRuntimeInfo extends AbstractRestResource {
 
-  @PostMapping(
-      produces = MediaType.APPLICATION_OCTET_STREAM_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
-  public StreamingResponseBody getRuntimeInfo(HttpServletResponse response,
-                                              @RequestBody SpDataStream spDataStream) {
+  @PostMapping(produces = MediaType.APPLICATION_OCTET_STREAM_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  public StreamingResponseBody getRuntimeInfo(HttpServletResponse response, @RequestBody SpDataStream spDataStream) {
     // deactivate nginx proxy buffering for better performance of streaming output
     response.addHeader("X-Accel-Buffering", "no");
     var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(Map.of("adapter", spDataStream));

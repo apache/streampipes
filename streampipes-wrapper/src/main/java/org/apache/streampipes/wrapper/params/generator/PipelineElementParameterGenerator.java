@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.params.generator;
 
 import org.apache.streampipes.extensions.api.pe.param.InputStreamParams;
@@ -32,23 +31,19 @@ public abstract class PipelineElementParameterGenerator<T extends InvocableStrea
 
   protected Map<String, Map<String, Object>> buildInEventTypes(T pipelineElementInvocation) {
     var inEventTypes = new HashMap<String, Map<String, Object>>();
-    pipelineElementInvocation
-        .getInputStreams()
-        .forEach(is ->
-            inEventTypes.put(is.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName(),
-                SchemaUtils
-                    .toRuntimeMap
-                        (is.getEventSchema().getEventProperties())));
+    pipelineElementInvocation.getInputStreams()
+            .forEach(is -> inEventTypes.put(
+                    is.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName(),
+                    SchemaUtils.toRuntimeMap(is.getEventSchema().getEventProperties())));
 
     return inEventTypes;
   }
-
 
   protected List<InputStreamParams> buildInputStreamParams(T pipelineElementInvocation) {
     var inputStreamParams = new ArrayList<InputStreamParams>();
     for (int i = 0; i < pipelineElementInvocation.getInputStreams().size(); i++) {
       inputStreamParams.add(new InputStreamParams(i, pipelineElementInvocation.getInputStreams().get(i),
-          getRenameRules(pipelineElementInvocation)));
+              getRenameRules(pipelineElementInvocation)));
     }
 
     return inputStreamParams;

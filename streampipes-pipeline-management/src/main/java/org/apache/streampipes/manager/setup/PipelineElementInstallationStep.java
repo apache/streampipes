@@ -31,9 +31,7 @@ public class PipelineElementInstallationStep extends InstallationStep {
   private final ExtensionItemDescription extensionItem;
   private final String principalSid;
 
-
-  public PipelineElementInstallationStep(ExtensionItemDescription extensionItem,
-                                         String principalSid) {
+  public PipelineElementInstallationStep(ExtensionItemDescription extensionItem, String principalSid) {
     this.extensionItem = extensionItem;
     this.principalSid = principalSid;
   }

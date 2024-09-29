@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.filters.jvm.processor.projection;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -41,22 +40,16 @@ public class ProjectionProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.project", 0)
-        .category(DataProcessorType.TRANSFORM)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .outputStrategy(OutputStrategies.custom())
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.project", 0)
+            .category(DataProcessorType.TRANSFORM).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .outputStrategy(OutputStrategies.custom()).build();
   }
 
   @Override
   public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
     this.outputKeys = processorParams.extractor().outputKeySelectors();
   }
 

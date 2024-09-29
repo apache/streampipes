@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.commons.environment.Environment;
@@ -26,12 +25,12 @@ import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StreamPipesEnvChecker {
 
@@ -47,10 +46,7 @@ public class StreamPipesEnvChecker {
   }
 
   public void updateEnvironmentVariables() {
-    this.configStorage = StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getSpCoreConfigurationStorage();
+    this.configStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage();
 
     if (configStorage.exists()) {
       this.coreConfig = configStorage.get();
@@ -89,21 +85,17 @@ public class StreamPipesEnvChecker {
     }
 
     if (!signingMode.exists()) {
-      LOG.info(
-          "No JWT signing mode provided (using default settings), "
+      LOG.info("No JWT signing mode provided (using default settings), "
               + "consult the docs to learn how to provide JWT settings");
     } else if (localAuthConfig.getJwtSigningMode() == JwtSigningMode.HMAC && !jwtSecret.exists()) {
-      LOG.warn(
-          "JWT signing mode set to HMAC but no secret provided (falling back to auto-generated secret), "
-              + "provide a {} variable",
-          jwtSecret.getEnvVariableName());
+      LOG.warn("JWT signing mode set to HMAC but no secret provided (falling back to auto-generated secret), "
+              + "provide a {} variable", jwtSecret.getEnvVariableName());
     } else if (localAuthConfig.getJwtSigningMode() == JwtSigningMode.RSA
-        && ((!publicKeyLoc.exists() || !privateKeyLoc.exists()) || incompleteConfig)) {
+            && ((!publicKeyLoc.exists() || !privateKeyLoc.exists()) || incompleteConfig)) {
       LOG.warn(
-          "JWT signing mode set to RSA but no public or private key location provided, "
-              + "do you provide {} and {} variables?",
-          privateKeyLoc.getEnvVariableName(),
-          publicKeyLoc.getEnvVariableName());
+              "JWT signing mode set to RSA but no public or private key location provided, "
+                      + "do you provide {} and {} variables?",
+              privateKeyLoc.getEnvVariableName(), publicKeyLoc.getEnvVariableName());
     }
     if (!incompleteConfig) {
       LOG.info("Updating local auth config with signing mode {}", localAuthConfig.getJwtSigningMode().name());

@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 
 public class AdaptersTest {
 
-
   @Test
   public void testPulsarAdapter() throws Exception {
     try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
@@ -35,7 +34,6 @@ public class AdaptersTest {
       mqttAdapterTester.run();
     }
   }
-
 
   @Test
   public void testKafkaAdapter() throws Exception {

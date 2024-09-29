@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -29,10 +28,8 @@ public class RawFieldSerializer {
 
   public RawFieldSerializer() {
     this.objectMapper = new ObjectMapper().activateDefaultTyping(
-        BasicPolymorphicTypeValidator.builder()
-            .allowIfBaseType(Object.class)
-            .build(),
-        ObjectMapper.DefaultTyping.EVERYTHING);
+            BasicPolymorphicTypeValidator.builder().allowIfBaseType(Object.class).build(),
+            ObjectMapper.DefaultTyping.EVERYTHING);
   }
 
   public String serialize(Object object) {

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging;
 
 import org.apache.streampipes.model.grounding.TransportProtocol;

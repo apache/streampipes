@@ -23,7 +23,6 @@ import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.iv.RandomIvGenerator;
 
-
 public class SecretEncryptionManager {
 
   public static String encrypt(String property) {

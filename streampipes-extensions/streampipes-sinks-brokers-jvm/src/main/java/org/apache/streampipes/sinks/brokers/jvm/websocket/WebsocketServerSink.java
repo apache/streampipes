@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.brokers.jvm.websocket;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -41,23 +40,15 @@ public class WebsocketServerSink implements IStreamPipesDataSink {
 
   @Override
   public IDataSinkConfiguration declareConfig() {
-    return DataSinkConfiguration.create(
-        WebsocketServerSink::new,
-        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.websocket", 0)
-        .category(DataSinkType.MESSAGING)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredIntegerParameter(Labels.withId(PORT_KEY))
-        .build());
+    return DataSinkConfiguration.create(WebsocketServerSink::new, DataSinkBuilder
+            .create("org.apache.streampipes.sinks.brokers.jvm.websocket", 0).category(DataSinkType.MESSAGING)
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredIntegerParameter(Labels.withId(PORT_KEY)).build());
   }
 
   @Override
-  public void onPipelineStarted(IDataSinkParameters params,
-                                EventSinkRuntimeContext runtimeContext) {
+  public void onPipelineStarted(IDataSinkParameters params, EventSinkRuntimeContext runtimeContext) {
     var port = params.extractor().singleValueParameter(PORT_KEY, Integer.class);
     server = new SocketServer(port);
     server.setReuseAddr(true);

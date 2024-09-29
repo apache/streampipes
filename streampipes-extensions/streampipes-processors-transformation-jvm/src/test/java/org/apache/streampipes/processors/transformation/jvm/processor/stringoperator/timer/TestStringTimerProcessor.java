@@ -15,23 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer;
-
-import org.apache.streampipes.test.executors.Approx;
-import org.apache.streampipes.test.executors.PrefixStrategy;
-import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
-import org.apache.streampipes.test.executors.StreamPrefix;
-import org.apache.streampipes.test.executors.TestConfiguration;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 
 import static org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor.FIELD_ID;
 import static org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor.FIELD_VALUE_RUNTIME_NAME;
@@ -40,6 +24,21 @@ import static org.apache.streampipes.processors.transformation.jvm.processor.str
 import static org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor.ON_INPUT_EVENT;
 import static org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor.OUTPUT_FREQUENCY;
 import static org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor.OUTPUT_UNIT_ID;
+
+import org.apache.streampipes.test.executors.Approx;
+import org.apache.streampipes.test.executors.PrefixStrategy;
+import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
+import org.apache.streampipes.test.executors.StreamPrefix;
+import org.apache.streampipes.test.executors.TestConfiguration;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class TestStringTimerProcessor {
   private static final String KEY_1 = "key1";
@@ -54,39 +53,20 @@ public class TestStringTimerProcessor {
   }
 
   static Stream<Arguments> arguments() {
-    return Stream.of(
-        Arguments.of(
-            List.of(Map.of(KEY_1, VALUE_1), Map.of(KEY_1, VALUE_1), Map.of(KEY_1, VALUE_2)),
-            List.of(
-                Map.of(
-                    FIELD_VALUE_RUNTIME_NAME, VALUE_1,
-                    MEASURED_TIME_FIELD_RUNTIME_NAME, new Approx(0.0, 2.0),
-                    KEY_1, VALUE_1
-                ),
-                Map.of(
-                    FIELD_VALUE_RUNTIME_NAME, VALUE_1,
-                    MEASURED_TIME_FIELD_RUNTIME_NAME,  new Approx(1.0, 2.0),
-                    KEY_1, VALUE_2
-                )
-            )
-        )
-    );
+    return Stream.of(Arguments.of(List.of(Map.of(KEY_1, VALUE_1), Map.of(KEY_1, VALUE_1), Map.of(KEY_1, VALUE_2)),
+            List.of(Map.of(FIELD_VALUE_RUNTIME_NAME, VALUE_1, MEASURED_TIME_FIELD_RUNTIME_NAME, new Approx(0.0, 2.0),
+                    KEY_1, VALUE_1),
+                    Map.of(FIELD_VALUE_RUNTIME_NAME, VALUE_1, MEASURED_TIME_FIELD_RUNTIME_NAME, new Approx(1.0, 2.0),
+                            KEY_1, VALUE_2))));
   }
 
   @ParameterizedTest
   @MethodSource("arguments")
-  public void testStringToState(
-      List<Map<String, Object>> intpuEvents,
-      List<Map<String, Object>> outputEvents
-  ) {
+  public void testStringToState(List<Map<String, Object>> intpuEvents, List<Map<String, Object>> outputEvents) {
 
-    var configuration = TestConfiguration
-        .builder()
-        .config(OUTPUT_FREQUENCY, ON_INPUT_EVENT)
-        .config(OUTPUT_UNIT_ID, MILLISECONDS)
-        .config(FIELD_ID, StreamPrefix.s0(KEY_1))
-        .prefixStrategy(PrefixStrategy.SAME_PREFIX)
-        .build();
+    var configuration = TestConfiguration.builder().config(OUTPUT_FREQUENCY, ON_INPUT_EVENT)
+            .config(OUTPUT_UNIT_ID, MILLISECONDS).config(FIELD_ID, StreamPrefix.s0(KEY_1))
+            .prefixStrategy(PrefixStrategy.SAME_PREFIX).build();
 
     var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 

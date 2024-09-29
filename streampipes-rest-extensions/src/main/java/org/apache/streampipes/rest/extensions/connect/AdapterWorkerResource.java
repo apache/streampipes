@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -29,6 +28,8 @@ import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.shared.exception.SpLogMessageException;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -40,8 +41,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
-
 @RestController
 @RequestMapping("/api/v1/worker")
 public class AdapterWorkerResource extends AbstractSharedRestInterface {
@@ -51,10 +50,7 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
   private AdapterWorkerManagement adapterManagement;
 
   public AdapterWorkerResource() {
-    adapterManagement = new AdapterWorkerManagement(
-        RunningAdapterInstances.INSTANCE,
-        DeclarersSingleton.getInstance()
-    );
+    adapterManagement = new AdapterWorkerManagement(RunningAdapterInstances.INSTANCE, DeclarersSingleton.getInstance());
   }
 
   public AdapterWorkerResource(AdapterWorkerManagement adapterManagement) {
@@ -66,17 +62,12 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
     return ok(adapterManagement.getAllRunningAdapterInstances());
   }
 
-
-  @PostMapping(
-      path = "/stream/invoke",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/stream/invoke", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SuccessMessage> invokeAdapter(@RequestBody AdapterDescription adapterStreamDescription) {
 
     try {
       adapterManagement.invokeAdapter(adapterStreamDescription);
-      String responseMessage = "Stream adapter with id "
-              + adapterStreamDescription.getElementId()
+      String responseMessage = "Stream adapter with id " + adapterStreamDescription.getElementId()
               + " successfully started";
       logger.info(responseMessage);
       return ok(Notifications.success(responseMessage));
@@ -86,10 +77,7 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
     }
   }
 
-  @PostMapping(
-      path = "/stream/stop",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/stream/stop", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SuccessMessage> stopAdapter(@RequestBody AdapterDescription adapterStreamDescription) {
 
     String responseMessage;
@@ -98,8 +86,8 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
         adapterManagement.stopAdapter(adapterStreamDescription);
         responseMessage = "Stream adapter with id " + adapterStreamDescription.getElementId() + " successfully stopped";
       } else {
-        responseMessage =
-            "Stream adapter with id " + adapterStreamDescription.getElementId() + " seems not to be running";
+        responseMessage = "Stream adapter with id " + adapterStreamDescription.getElementId()
+                + " seems not to be running";
       }
       logger.info(responseMessage);
       return ok(Notifications.success(responseMessage));

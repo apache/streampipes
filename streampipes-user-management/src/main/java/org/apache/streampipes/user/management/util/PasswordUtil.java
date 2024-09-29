@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.user.management.util;
 
 import javax.crypto.SecretKeyFactory;
@@ -38,8 +37,7 @@ public class PasswordUtil {
     return salt;
   }
 
-  public static String encryptPassword(String property) throws NoSuchAlgorithmException,
-      InvalidKeySpecException {
+  public static String encryptPassword(String property) throws NoSuchAlgorithmException, InvalidKeySpecException {
     int iterations = 1000;
     char[] chars = property.toCharArray();
     byte[] salt = createSalt();
@@ -61,15 +59,14 @@ public class PasswordUtil {
     }
   }
 
-  public static boolean validatePassword(String originalProperty, String storedProperty) throws
-      NoSuchAlgorithmException, InvalidKeySpecException {
+  public static boolean validatePassword(String originalProperty, String storedProperty)
+          throws NoSuchAlgorithmException, InvalidKeySpecException {
     String[] parts = storedProperty.split(":");
     int iterations = Integer.parseInt(parts[0]);
     byte[] salt = fromHex(parts[1]);
     byte[] hash = fromHex(parts[2]);
 
-    PBEKeySpec spec = new PBEKeySpec(originalProperty.toCharArray(), salt, iterations,
-        hash.length * 8);
+    PBEKeySpec spec = new PBEKeySpec(originalProperty.toCharArray(), salt, iterations, hash.length * 8);
     SecretKeyFactory skf = SecretKeyFactory.getInstance(SECRET_KEY_ALGORITHM_NAME);
     byte[] testHash = skf.generateSecret(spec).getEncoded();
 
@@ -80,7 +77,6 @@ public class PasswordUtil {
     return diff == 0;
   }
 
-
   private static byte[] fromHex(String hex) {
     byte[] bytes = new byte[hex.length() / 2];
     for (int i = 0; i < bytes.length; i++) {
@@ -88,7 +84,6 @@ public class PasswordUtil {
     }
     return bytes;
   }
-
 
   public static String generateRandomPassword() {
     return new SecureStringGenerator().generateSecureString(DEFAULT_PASSWORD_LENGTH);

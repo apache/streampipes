@@ -32,24 +32,16 @@ public class PermissionStorageImpl extends DefaultViewCrudStorage<Permission> im
   }
 
   public Set<String> getObjectPermissions(List<String> principalSids) {
-    List<Permission> objectInstanceSids = couchDbClientSupplier
-        .get()
-        .view("users/userpermissions")
-        .keys(principalSids)
-        .includeDocs(true)
-        .query(Permission.class);
+    List<Permission> objectInstanceSids = couchDbClientSupplier.get().view("users/userpermissions").keys(principalSids)
+            .includeDocs(true).query(Permission.class);
 
     return toPermissionSet(objectInstanceSids);
   }
 
   public List<Permission> getUserPermissionsForObject(String objectInstanceId) {
 
-    return couchDbClientSupplier
-        .get()
-        .view("users/objectpermissions")
-        .key(objectInstanceId)
-        .includeDocs(true)
-        .query(Permission.class);
+    return couchDbClientSupplier.get().view("users/objectpermissions").key(objectInstanceId).includeDocs(true)
+            .query(Permission.class);
   }
 
   private Set<String> toPermissionSet(List<Permission> permissions) {

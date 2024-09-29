@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connectors.ros.migrations;
 
 import org.apache.streampipes.connectors.ros.migrations.config.RosBridgeAdapterVersionedConfig;
@@ -23,13 +22,12 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.vocabulary.XSD;
 
+import java.net.URI;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import java.net.URI;
-
 
 public class RosBridgeAdapterMigrationV1Test {
 
@@ -41,20 +39,18 @@ public class RosBridgeAdapterMigrationV1Test {
   }
 
   @Test
-  public void testMigrationV1(){
+  public void testMigrationV1() {
     var rosBridgeAdapterDescriptionV0 = RosBridgeAdapterVersionedConfig.getRosBridgeAdapterDescriptionV0();
     var extractorMock = Mockito.mock(IStaticPropertyExtractor.class);
 
-    var rosBridgeAdapterDescriptionV1 = migrationV1.migrate(rosBridgeAdapterDescriptionV0 , extractorMock);
+    var rosBridgeAdapterDescriptionV1 = migrationV1.migrate(rosBridgeAdapterDescriptionV0, extractorMock);
 
     var typeOfPortProperty = getTypeOfPortProperty(rosBridgeAdapterDescriptionV1.element());
     Assertions.assertEquals(XSD.INTEGER, typeOfPortProperty);
   }
 
   private URI getTypeOfPortProperty(AdapterDescription adapterDescription) {
-    return migrationV1
-        .extractPortProperty(adapterDescription)
-        .getRequiredDatatype();
+    return migrationV1.extractPortProperty(adapterDescription).getRequiredDatatype();
   }
 
 }

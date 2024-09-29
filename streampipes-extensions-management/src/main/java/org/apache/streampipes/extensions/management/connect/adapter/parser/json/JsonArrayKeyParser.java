@@ -15,19 +15,18 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.parser.json;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JsonArrayKeyParser extends JsonParser {
   private String key;
@@ -70,12 +69,11 @@ public class JsonArrayKeyParser extends JsonParser {
             throw new ParseException("The content of the array must be a json object. It was: %s".formatted(list));
           }
         } else {
-          throw new ParseException("The selected array is empty."
-              .formatted(list));
+          throw new ParseException("The selected array is empty.".formatted(list));
         }
       } else {
-        throw new ParseException("Please select the key of an array field. The object: %s was selected instead"
-            .formatted(list));
+        throw new ParseException(
+                "Please select the key of an array field. The object: %s was selected instead".formatted(list));
       }
     } else {
       throw new ParseException("The selected key '%s' could not be found in the json object".formatted(key));

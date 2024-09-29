@@ -15,16 +15,16 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.iotdb;
 
-import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
+
+import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 
 /**
  * Converts StreamPipes {@link EventProperty} into {@link IotDbMeasurementRecord}s.
@@ -34,16 +34,16 @@ public class IotDbPropertyConverter {
   /**
    * Converts a {@link EventPropertyPrimitive } into an {@link IotDbMeasurementRecord}.
    *
-   * @param eventPropertyPrimitive The primitive event property to be converted
-   * @param primitiveField         The primitive field containing the property value
-   * @param sanitizedRuntimeName   The sanitized name of the property
+   * @param eventPropertyPrimitive
+   *          The primitive event property to be converted
+   * @param primitiveField
+   *          The primitive field containing the property value
+   * @param sanitizedRuntimeName
+   *          The sanitized name of the property
    * @return An IoTDB measurement record representing the converted property
    */
-  public IotDbMeasurementRecord convertPrimitiveProperty(
-      EventPropertyPrimitive eventPropertyPrimitive,
-      PrimitiveField primitiveField,
-      String sanitizedRuntimeName
-  ) {
+  public IotDbMeasurementRecord convertPrimitiveProperty(EventPropertyPrimitive eventPropertyPrimitive,
+          PrimitiveField primitiveField, String sanitizedRuntimeName) {
     var runtimeType = eventPropertyPrimitive.getRuntimeType();
     Object value;
     TSDataType iotDbType;
@@ -57,17 +57,18 @@ public class IotDbPropertyConverter {
     } else if (XSD.FLOAT.toString().equals(runtimeType)) {
       iotDbType = TSDataType.FLOAT;
       value = primitiveField.getAsFloat();
-     }else if (XSD.DOUBLE.toString().equals(runtimeType) || SO.NUMBER.equals(runtimeType)) {
+    } else if (XSD.DOUBLE.toString().equals(runtimeType) || SO.NUMBER.equals(runtimeType)) {
       iotDbType = TSDataType.DOUBLE;
       value = primitiveField.getAsDouble();
     } else if (XSD.BOOLEAN.toString().equals(runtimeType)) {
       iotDbType = TSDataType.BOOLEAN;
       value = primitiveField.getAsBoolean();
-    } else if (XSD.STRING.toString().equals(runtimeType)){
+    } else if (XSD.STRING.toString().equals(runtimeType)) {
       iotDbType = TSDataType.TEXT;
       value = primitiveField.getAsString();
     } else {
-      throw new SpRuntimeException("Unsupported runtime type '%s' - cannot be mapped to a IoTDB data type".formatted(runtimeType));
+      throw new SpRuntimeException(
+              "Unsupported runtime type '%s' - cannot be mapped to a IoTDB data type".formatted(runtimeType));
     }
 
     return new IotDbMeasurementRecord(sanitizedRuntimeName, iotDbType, value);
@@ -76,15 +77,17 @@ public class IotDbPropertyConverter {
   /**
    * Converts a non-primitive event property into an {@link IotDbMeasurementRecord}.
    *
-   * @param eventProperty       The non-primitive event property to be converted
-   * @param sanitizedRuntimeName The sanitized name of the property
+   * @param eventProperty
+   *          The non-primitive event property to be converted
+   * @param sanitizedRuntimeName
+   *          The sanitized name of the property
    * @return An IoTDB measurement record representing the converted property
-   * @throws SpRuntimeException If an error occurs during conversion
+   * @throws SpRuntimeException
+   *           If an error occurs during conversion
    */
-  public IotDbMeasurementRecord convertNonPrimitiveProperty(
-      EventProperty eventProperty,
-      String sanitizedRuntimeName) throws SpRuntimeException {
-    throw new SpRuntimeException("Handling non-primitive event properties is not yet supported " +
-        "when using IoTDB as time series store.");
+  public IotDbMeasurementRecord convertNonPrimitiveProperty(EventProperty eventProperty, String sanitizedRuntimeName)
+          throws SpRuntimeException {
+    throw new SpRuntimeException(
+            "Handling non-primitive event properties is not yet supported " + "when using IoTDB as time series store.");
   }
 }

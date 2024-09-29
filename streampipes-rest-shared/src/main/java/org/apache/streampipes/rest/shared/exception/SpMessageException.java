@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.shared.exception;
 
 import org.apache.streampipes.model.message.Message;
@@ -28,14 +27,12 @@ public class SpMessageException extends RuntimeException {
   private final Message message;
   private final HttpStatus status;
 
-  public SpMessageException(HttpStatus status,
-                            Message message) {
+  public SpMessageException(HttpStatus status, Message message) {
     this.status = status;
     this.message = message;
   }
 
-  public SpMessageException(HttpStatus status,
-                            Throwable throwable) {
+  public SpMessageException(HttpStatus status, Throwable throwable) {
     this.status = status;
     this.message = Notifications.error(throwable.getMessage());
   }

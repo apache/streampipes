@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.convert;
 
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;

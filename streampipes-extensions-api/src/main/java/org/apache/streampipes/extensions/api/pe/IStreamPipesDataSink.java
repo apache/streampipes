@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe;
 
 import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
@@ -23,11 +22,9 @@ import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.model.runtime.Event;
 
-public interface IStreamPipesDataSink
-    extends IStreamPipesPipelineElement<IDataSinkConfiguration> {
+public interface IStreamPipesDataSink extends IStreamPipesPipelineElement<IDataSinkConfiguration> {
 
-  void onPipelineStarted(IDataSinkParameters params,
-                         EventSinkRuntimeContext runtimeContext);
+  void onPipelineStarted(IDataSinkParameters params, EventSinkRuntimeContext runtimeContext);
 
   void onEvent(Event event);
 

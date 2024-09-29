@@ -19,8 +19,6 @@ package org.apache.streampipes.wrapper.siddhi.query.expression.pattern;
 
 public enum PatternCountOperator {
 
-  MIN_N,
-  MAX_N,
-  EXACTLY_N
+  MIN_N, MAX_N, EXACTLY_N
 
 }

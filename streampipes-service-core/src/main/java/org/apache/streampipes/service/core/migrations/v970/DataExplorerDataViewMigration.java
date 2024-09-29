@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.migrations.v970;
 
 import org.apache.streampipes.model.client.user.PermissionBuilder;
@@ -26,19 +25,17 @@ import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * Migrates data explorer dashboards and data views
- * Add permission object for each data view
- * Add time settings to data views
- * Add live settings to dashboards
+ * Migrates data explorer dashboards and data views Add permission object for each data view Add time settings to data
+ * views Add live settings to dashboards
  */
 public class DataExplorerDataViewMigration implements Migration {
 
@@ -67,21 +64,20 @@ public class DataExplorerDataViewMigration implements Migration {
 
     LOG.info("Migrating {} data explorer dashboards", allDashboards.size());
 
-    allDashboards
-        .forEach(dashboard -> {
-          var timeSettings = dashboard.getDashboardTimeSettings();
-          dashboard.getDashboardGeneralSettings().put("globalTimeEnabled", true);
-          dashboard.setDashboardLiveSettings(defaultLiveSettings);
-          dashboard.getWidgets().forEach(widget -> {
-            var dataView = dataViewStorage.getElementById(widget.getId());
-            if (dataView != null) {
-              dataView.setTimeSettings(timeSettings);
-              dataViewStorage.updateElement(dataView);
-              addPermissionsObject(dashboard, dataView);
-            }
-          });
-          dataExplorerDashboardStorage.updateElement(dashboard);
-        });
+    allDashboards.forEach(dashboard -> {
+      var timeSettings = dashboard.getDashboardTimeSettings();
+      dashboard.getDashboardGeneralSettings().put("globalTimeEnabled", true);
+      dashboard.setDashboardLiveSettings(defaultLiveSettings);
+      dashboard.getWidgets().forEach(widget -> {
+        var dataView = dataViewStorage.getElementById(widget.getId());
+        if (dataView != null) {
+          dataView.setTimeSettings(timeSettings);
+          dataViewStorage.updateElement(dataView);
+          addPermissionsObject(dashboard, dataView);
+        }
+      });
+      dataExplorerDashboardStorage.updateElement(dashboard);
+    });
   }
 
   @Override
@@ -90,11 +86,8 @@ public class DataExplorerDataViewMigration implements Migration {
   }
 
   private List<DashboardModel> findDashboardsToMigrate() {
-    return dataExplorerDashboardStorage
-        .findAll()
-        .stream()
-        .filter(dashboard -> !dashboard.getDashboardGeneralSettings().containsKey("globalTimeEnabled"))
-        .toList();
+    return dataExplorerDashboardStorage.findAll().stream()
+            .filter(dashboard -> !dashboard.getDashboardGeneralSettings().containsKey("globalTimeEnabled")).toList();
   }
 
   private Map<String, Object> makeDefaultLiveSettings() {
@@ -106,16 +99,14 @@ public class DataExplorerDataViewMigration implements Migration {
     return map;
   }
 
-  private void addPermissionsObject(DashboardModel dashboard,
-                                    DataExplorerWidgetModel dataView) {
+  private void addPermissionsObject(DashboardModel dashboard, DataExplorerWidgetModel dataView) {
     var dashboardPermissions = permissionResourceManager.findForObjectId(dashboard.getElementId());
     if (!dashboardPermissions.isEmpty()) {
       var dashboardPermission = dashboardPermissions.get(0);
       if (permissionResourceManager.find(dataView.getElementId()) == null) {
         var dataViewPermission = PermissionBuilder
-            .create(dataView.getElementId(), DataExplorerWidgetModel.class, dashboardPermission.getOwnerSid())
-            .publicElement(dashboardPermission.isPublicElement())
-            .build();
+                .create(dataView.getElementId(), DataExplorerWidgetModel.class, dashboardPermission.getOwnerSid())
+                .publicElement(dashboardPermission.isPublicElement()).build();
         dataViewPermission.setGrantedAuthorities(dashboardPermission.getGrantedAuthorities());
         permissionResourceManager.create(dataViewPermission);
       }

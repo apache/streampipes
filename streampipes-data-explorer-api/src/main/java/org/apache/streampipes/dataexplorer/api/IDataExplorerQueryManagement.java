@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.api;
 
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
@@ -28,14 +27,10 @@ import java.util.Map;
 
 public interface IDataExplorerQueryManagement {
 
-  SpQueryResult getData(
-    ProvidedRestQueryParams queryParams,
-    boolean ignoreMissingData) throws IllegalArgumentException;
+  SpQueryResult getData(ProvidedRestQueryParams queryParams, boolean ignoreMissingData) throws IllegalArgumentException;
 
-  void getDataAsStream(ProvidedRestQueryParams params,
-                       OutputFormat format,
-                       boolean ignoreMissingValues,
-                       OutputStream outputStream) throws IOException;
+  void getDataAsStream(ProvidedRestQueryParams params, OutputFormat format, boolean ignoreMissingValues,
+          OutputStream outputStream) throws IOException;
 
   boolean deleteData(String measurementID);
 
@@ -43,6 +38,5 @@ public interface IDataExplorerQueryManagement {
 
   boolean deleteAllData();
 
-  Map<String, Object> getTagValues(String measurementId,
-                                   String fields);
+  Map<String, Object> getTagValues(String measurementId, String fields);
 }

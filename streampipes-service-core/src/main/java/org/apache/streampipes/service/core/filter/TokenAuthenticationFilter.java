@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.filter;
 
 import org.apache.streampipes.commons.constants.HttpConstants;
@@ -33,17 +32,6 @@ import org.apache.streampipes.user.management.service.TokenService;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 import org.apache.streampipes.user.management.util.TokenUtil;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,14 +43,23 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
+
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider tokenProvider;
   private final IUserStorage userStorage;
 
-  private final List<String> supportedBasicAuthPaths = List.of(
-      "/actuator/prometheus"
-  );
+  private final List<String> supportedBasicAuthPaths = List.of("/actuator/prometheus");
 
   private RequestAttributeSecurityContextRepository repo = new RequestAttributeSecurityContextRepository();
 
@@ -74,9 +71,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
   }
 
   @Override
-  protected void doFilterInternal(HttpServletRequest request,
-                                  HttpServletResponse response,
-                                  FilterChain filterChain) throws ServletException, IOException {
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+          throws ServletException, IOException {
     try {
       String jwt = getJwtFromRequest(request);
 
@@ -120,7 +116,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
   }
 
   private boolean checkCredentials(Principal principal, String passphrase)
-      throws NoSuchAlgorithmException, InvalidKeySpecException {
+          throws NoSuchAlgorithmException, InvalidKeySpecException {
     if (principal instanceof UserAccount) {
       return PasswordUtil.validatePassword(passphrase, ((UserAccount) principal).getPassword());
     } else if (principal instanceof ServiceAccount) {
@@ -134,18 +130,17 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     return request.getHeader(HttpConstants.X_API_USER) != null && request.getHeader(HttpConstants.X_API_KEY) != null;
   }
 
-  private void applySuccessfulAuth(HttpServletRequest request,
-                                   String username) {
+  private void applySuccessfulAuth(HttpServletRequest request, String username) {
     Principal user = userStorage.getUser(username);
-    PrincipalUserDetails<?> userDetails = user instanceof UserAccount ? new UserAccountDetails((UserAccount) user) :
-        new ServiceAccountDetails((ServiceAccount) user);
-    UsernamePasswordAuthenticationToken authentication =
-        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    PrincipalUserDetails<?> userDetails = user instanceof UserAccount
+            ? new UserAccountDetails((UserAccount) user)
+            : new ServiceAccountDetails((ServiceAccount) user);
+    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+            userDetails.getAuthorities());
     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
   }
-
 
   private String getJwtFromRequest(HttpServletRequest request) {
     String bearerToken = request.getHeader(HttpConstants.AUTHORIZATION);

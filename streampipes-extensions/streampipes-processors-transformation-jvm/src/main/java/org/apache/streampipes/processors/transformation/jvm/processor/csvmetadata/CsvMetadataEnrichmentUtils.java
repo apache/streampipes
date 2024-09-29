@@ -17,31 +17,29 @@
  */
 package org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata;
 
+import static org.apache.commons.lang3.StringUtils.isNumeric;
+
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
+
+import java.io.IOException;
+import java.io.StringReader;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.BooleanUtils;
 
-import java.io.IOException;
-import java.io.StringReader;
-
-import static org.apache.commons.lang3.StringUtils.isNumeric;
-
 public class CsvMetadataEnrichmentUtils {
 
   public static CSVParser getCsvParser(String fileContents) throws IOException {
     return new CSVParser(new StringReader(fileContents),
-        CSVFormat.DEFAULT.withDelimiter(';').withFirstRecordAsHeader());
+            CSVFormat.DEFAULT.withDelimiter(';').withFirstRecordAsHeader());
   }
 
   public static EventProperty getGuessedEventProperty(String columnName, CSVRecord firstRecord) {
-    return PrimitivePropertyBuilder
-        .create(getGuessDatatype(columnName, firstRecord), columnName)
-        .build();
+    return PrimitivePropertyBuilder.create(getGuessDatatype(columnName, firstRecord), columnName).build();
   }
 
   public static Datatypes getGuessDatatype(String columnName, CSVRecord firstRecord) {

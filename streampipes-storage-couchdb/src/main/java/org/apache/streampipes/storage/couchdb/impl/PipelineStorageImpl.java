@@ -15,18 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.couchdb.impl;
 
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import com.google.gson.JsonObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.google.gson.JsonObject;
 
 public class PipelineStorageImpl extends DefaultCrudStorage<Pipeline> implements IPipelineStorage {
 
@@ -39,11 +38,7 @@ public class PipelineStorageImpl extends DefaultCrudStorage<Pipeline> implements
 
   @Override
   public List<String> getPipelinesUsingAdapter(String adapterId) {
-    List<JsonObject> pipelinesWithAdapter =
-        couchDbClientSupplier
-            .get()
-            .view(ADAPTER_VIEW)
-            .key(adapterId)
+    List<JsonObject> pipelinesWithAdapter = couchDbClientSupplier.get().view(ADAPTER_VIEW).key(adapterId)
             .query(JsonObject.class);
     return pipelinesWithAdapter.stream().map(p -> p.get("value").getAsString()).collect(Collectors.toList());
   }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions.pe;
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
@@ -30,19 +29,16 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping(SpServicePathPrefix.DATA_PROCESSOR)
-public class DataProcessorPipelineElementResource extends InvocablePipelineElementResource<
-    DataProcessorInvocation,
-    IStreamPipesDataProcessor,
-    IDataProcessorConfiguration,
-    IDataProcessorRuntime,
-    ProcessingElementParameterExtractor> {
+public class DataProcessorPipelineElementResource
+        extends
+          InvocablePipelineElementResource<DataProcessorInvocation, IStreamPipesDataProcessor, IDataProcessorConfiguration, IDataProcessorRuntime, ProcessingElementParameterExtractor> {
 
   public DataProcessorPipelineElementResource() {
 
@@ -80,9 +76,8 @@ public class DataProcessorPipelineElementResource extends InvocablePipelineEleme
   }
 
   @Override
-  protected Response invokeRuntime(String runningInstanceId,
-                                   IStreamPipesDataProcessor pipelineElement,
-                                   DataProcessorInvocation graph) {
+  protected Response invokeRuntime(String runningInstanceId, IStreamPipesDataProcessor pipelineElement,
+          DataProcessorInvocation graph) {
     var runtime = getRuntime();
     var response = runtime.onRuntimeInvoked(runningInstanceId, pipelineElement, graph);
     RunningInstances.INSTANCE.add(runningInstanceId, graph, runtime);

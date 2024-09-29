@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions;
 
 import org.apache.http.HttpStatus;
@@ -24,14 +23,10 @@ import org.springframework.http.ResponseEntity;
 public class AbstractExtensionsResource {
 
   protected <T> ResponseEntity<T> ok(T entity) {
-    return ResponseEntity
-        .ok()
-        .body(entity);
+    return ResponseEntity.ok().body(entity);
   }
 
   protected ResponseEntity<Void> serverError() {
-    return ResponseEntity
-        .status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
-        .build();
+    return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
   }
 }

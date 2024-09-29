@@ -30,16 +30,14 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import java.util.List;
 import java.util.Optional;
 
-public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvocation>
-    implements IDataProcessorApi {
+public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvocation> implements IDataProcessorApi {
 
   public DataProcessorApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, DataProcessorInvocation.class);
   }
 
   public StreamPipesApiPath getBaseResourcePath() {
-    return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("sepas");
+    return StreamPipesApiPath.fromBaseApiPath().addToPath("sepas");
   }
 
   @Override
@@ -73,62 +71,65 @@ public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvoca
   /**
    * Subscribe to the output stream of the processor
    *
-   * @param processor The data processor to subscribe to
-   * @param callback  The callback where events will be received
+   * @param processor
+   *          The data processor to subscribe to
+   * @param callback
+   *          The callback where events will be received
    */
   @Override
-  public ISubscription subscribe(DataProcessorInvocation processor,
-                                 EventProcessor callback) {
+  public ISubscription subscribe(DataProcessorInvocation processor, EventProcessor callback) {
     return new SubscriptionManager(processor.getOutputStream().getEventGrounding(), callback).subscribe();
   }
 
   /**
    * Subscribe to the output stream of the processor
    *
-   * @param processor            The data processor to subscribe to
-   * @param brokerConfigOverride Additional broker settings which will override the default value (see docs)
-   * @param callback             The callback where events will be received
+   * @param processor
+   *          The data processor to subscribe to
+   * @param brokerConfigOverride
+   *          Additional broker settings which will override the default value (see docs)
+   * @param callback
+   *          The callback where events will be received
    */
   @Override
-  public ISubscription subscribe(DataProcessorInvocation processor,
-                                 IBrokerConfigOverride brokerConfigOverride,
-                                 EventProcessor callback) {
+  public ISubscription subscribe(DataProcessorInvocation processor, IBrokerConfigOverride brokerConfigOverride,
+          EventProcessor callback) {
     return new SubscriptionManager(brokerConfigOverride, processor.getOutputStream().getEventGrounding(), callback)
-        .subscribe();
+            .subscribe();
   }
 
   /**
    * Subscribe to the input stream of the processor
    *
-   * @param processor The data processor to subscribe to
-   * @param index     The index of the input stream
-   * @param callback  The callback where events will be received
+   * @param processor
+   *          The data processor to subscribe to
+   * @param index
+   *          The index of the input stream
+   * @param callback
+   *          The callback where events will be received
    */
   @Override
-  public ISubscription subscribe(DataProcessorInvocation processor,
-                                 InputStreamIndex index,
-                                 EventProcessor callback) {
-    return new SubscriptionManager(
-        processor.getInputStreams().get(index.toIndex()).getEventGrounding(), callback)
-        .subscribe();
+  public ISubscription subscribe(DataProcessorInvocation processor, InputStreamIndex index, EventProcessor callback) {
+    return new SubscriptionManager(processor.getInputStreams().get(index.toIndex()).getEventGrounding(), callback)
+            .subscribe();
   }
 
   /**
    * Subscribe to the input stream of the sink
    *
-   * @param processor            The data processor to subscribe to
-   * @param index                The index of the input stream
-   * @param brokerConfigOverride Additional kafka settings which will override the default value (see docs)
-   * @param callback             The callback where events will be received
+   * @param processor
+   *          The data processor to subscribe to
+   * @param index
+   *          The index of the input stream
+   * @param brokerConfigOverride
+   *          Additional kafka settings which will override the default value (see docs)
+   * @param callback
+   *          The callback where events will be received
    */
   @Override
-  public ISubscription subscribe(DataProcessorInvocation processor,
-                                 InputStreamIndex index,
-                                 IBrokerConfigOverride brokerConfigOverride,
-                                 EventProcessor callback) {
-    return new SubscriptionManager(
-        brokerConfigOverride,
-        processor.getInputStreams().get(index.toIndex()).getEventGrounding(), callback)
-        .subscribe();
+  public ISubscription subscribe(DataProcessorInvocation processor, InputStreamIndex index,
+          IBrokerConfigOverride brokerConfigOverride, EventProcessor callback) {
+    return new SubscriptionManager(brokerConfigOverride,
+            processor.getInputStreams().get(index.toIndex()).getEventGrounding(), callback).subscribe();
   }
 }

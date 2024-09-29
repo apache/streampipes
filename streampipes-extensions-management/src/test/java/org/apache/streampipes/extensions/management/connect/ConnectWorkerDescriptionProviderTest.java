@@ -15,22 +15,21 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect;
-
-import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
-import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ConnectWorkerDescriptionProviderTest {
 
@@ -42,12 +41,8 @@ public class ConnectWorkerDescriptionProviderTest {
     provider = spy(new ConnectWorkerDescriptionProvider());
 
     var testAdapter = mock(StreamPipesAdapter.class);
-    doAnswer(invocation ->
-        AdapterConfigurationBuilder
-            .create(adapterId, 0, null)
-            .buildConfiguration())
-        .when(testAdapter)
-        .declareConfig();
+    doAnswer(invocation -> AdapterConfigurationBuilder.create(adapterId, 0, null).buildConfiguration())
+            .when(testAdapter).declareConfig();
 
     List<StreamPipesAdapter> adapters = List.of(testAdapter);
     doReturn(adapters).when(provider).getRegisteredAdapters();
@@ -58,10 +53,7 @@ public class ConnectWorkerDescriptionProviderTest {
     var result = provider.getAdapterDescription(adapterId);
 
     Assertions.assertTrue(result.isPresent());
-    Assertions.assertEquals(adapterId,
-                            result.get().getAppId()
-    );
+    Assertions.assertEquals(adapterId, result.get().getAppId());
   }
-
 
 }

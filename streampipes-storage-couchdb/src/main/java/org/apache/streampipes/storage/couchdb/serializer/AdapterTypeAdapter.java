@@ -19,10 +19,10 @@ package org.apache.streampipes.storage.couchdb.serializer;
 
 import org.apache.streampipes.model.AdapterType;
 
+import java.io.IOException;
+
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
 
 public class AdapterTypeAdapter extends PeTypeAdapter<AdapterType> {
 

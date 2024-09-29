@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.internal.jvm.datalake;
 
 import org.apache.streampipes.commons.environment.Environments;
@@ -51,29 +50,19 @@ public class DataLakeSink extends StreamPipesDataSink {
 
   private TimeSeriesStore timeSeriesStore;
 
-
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder
-      .create("org.apache.streampipes.sinks.internal.jvm.datalake", 1)
-      .withLocales(Locales.EN)
-      .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-      .category(DataSinkType.INTERNAL)
-      .requiredStream(StreamRequirementsBuilder
-                        .create()
-                        .requiredPropertyWithUnaryMapping(
-                          EpRequirements.timestampReq(),
-                          Labels.withId(TIMESTAMP_MAPPING_KEY),
-                          PropertyScope.NONE
-                        )
-                        .build())
-      .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
-      .requiredSingleValueSelection(
-        Labels.withId(SCHEMA_UPDATE_KEY),
-        Options.from(SCHEMA_UPDATE_OPTION, EXTEND_EXISTING_SCHEMA_OPTION)
-      )
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.internal.jvm.datalake", 1).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).category(DataSinkType.INTERNAL)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                            Labels.withId(TIMESTAMP_MAPPING_KEY), PropertyScope.NONE)
+                    .build())
+            .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
+            .requiredSingleValueSelection(Labels.withId(SCHEMA_UPDATE_KEY),
+                    Options.from(SCHEMA_UPDATE_OPTION, EXTEND_EXISTING_SCHEMA_OPTION))
 
-      .build();
+            .build();
   }
 
   @Override
@@ -81,10 +70,7 @@ public class DataLakeSink extends StreamPipesDataSink {
     var extractor = parameters.extractor();
     var timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
     var measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
-    var eventSchema = parameters.getInputSchemaInfos()
-                                .get(0)
-                                .getEventSchema();
-
+    var eventSchema = parameters.getInputSchemaInfos().get(0).getEventSchema();
 
     var measure = new DataLakeMeasure(measureName, timestampField, eventSchema);
 
@@ -97,15 +83,11 @@ public class DataLakeSink extends StreamPipesDataSink {
     }
 
     measure = new DataExplorerDispatcher().getDataExplorerManager()
-        .getMeasurementSanitizer(runtimeContext.getStreamPipesClient(), measure)
-        .sanitizeAndRegister();
+            .getMeasurementSanitizer(runtimeContext.getStreamPipesClient(), measure).sanitizeAndRegister();
 
     this.timeSeriesStore = new TimeSeriesStore(
-        new DataExplorerDispatcher().getDataExplorerManager().getTimeseriesStorage(measure),
-        measure,
-        Environments.getEnvironment(),
-        true
-    );
+            new DataExplorerDispatcher().getDataExplorerManager().getTimeseriesStorage(measure), measure,
+            Environments.getEnvironment(), true);
 
   }
 

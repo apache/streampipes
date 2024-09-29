@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.context;
 
 import org.apache.streampipes.client.StreamPipesClient;
@@ -26,13 +25,14 @@ import org.apache.streampipes.extensions.api.monitoring.IExtensionsLogger;
 import java.io.Serializable;
 
 public class SpAdapterRuntimeContext extends SpAdapterGuessSchemaContext
-    implements IAdapterRuntimeContext, Serializable {
+        implements
+          IAdapterRuntimeContext,
+          Serializable {
 
   private final IExtensionsLogger extensionsLogger;
 
-  public SpAdapterRuntimeContext(IExtensionsLogger extensionsLogger,
-                                 IConfigExtractor configExtractor,
-                                 StreamPipesClient streamPipesClient) {
+  public SpAdapterRuntimeContext(IExtensionsLogger extensionsLogger, IConfigExtractor configExtractor,
+          StreamPipesClient streamPipesClient) {
     super(configExtractor, streamPipesClient);
     this.extensionsLogger = extensionsLogger;
   }

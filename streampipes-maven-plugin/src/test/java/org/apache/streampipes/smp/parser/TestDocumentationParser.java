@@ -15,32 +15,27 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.smp.parser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.streampipes.smp.model.AssetModel;
+
+import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class TestDocumentationParser {
-
 
   @Test
   public void testPipelineElementNameReplacement() throws IOException {
     ClassLoader classLoader = this.getClass().getClassLoader();
-    AssetModel assetModel = new AssetModel("abc", "Numerical Filter",
-        "Numerical Filter Description");
+    AssetModel assetModel = new AssetModel("abc", "Numerical Filter", "Numerical Filter Description");
 
     String originalContent = IOUtils.toString(classLoader.getResourceAsStream("documentation.md"));
     String expectedContent = IOUtils.toString(classLoader.getResourceAsStream("expected.documentation.md"));
-    String content =
-        new DocumentationParser(assetModel)
-            .parseAndStoreDocumentation(originalContent);
+    String content = new DocumentationParser(assetModel).parseAndStoreDocumentation(originalContent);
 
     assertEquals(expectedContent, content);
   }

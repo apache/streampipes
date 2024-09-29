@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state;
 
 import org.apache.streampipes.test.executors.PrefixStrategy;
@@ -23,15 +22,15 @@ import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.StreamPrefix;
 import org.apache.streampipes.test.executors.TestConfiguration;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class TestStringToStateProcessor {
 
@@ -52,52 +51,23 @@ public class TestStringToStateProcessor {
 
   static Stream<Arguments> arguments() {
     return Stream.of(
-        Arguments.of(
-            Collections.emptyList(),
-            List.of(Map.of(KEY_1, VALUE_1)),
-            List.of(Map.of(
-                KEY_1, VALUE_1,
-                StringToStateProcessor.CURRENT_STATE, Collections.emptyList()
-            ))
-        ),
-        Arguments.of(
-            List.of(PREFIX_KEY_1),
-            List.of(Map.of(
-                KEY_1, VALUE_1
-            )),
-            List.of(Map.of(
-                KEY_1, VALUE_1,
-                StringToStateProcessor.CURRENT_STATE, List.of(VALUE_1)
-            ))
-        ),
-        Arguments.of(
-            List.of(PREFIX_KEY_1, PREFIX_KEY_2),
-            List.of(Map.of(
-                KEY_1, VALUE_1,
-                KEY_2, VALUE_2
-            )),
-            List.of(Map.of(
-                KEY_1, VALUE_1,
-                KEY_2, VALUE_2,
-                StringToStateProcessor.CURRENT_STATE, List.of(VALUE_1, VALUE_2)
-            ))
-        )
-    );
+            Arguments.of(Collections.emptyList(), List.of(Map.of(KEY_1, VALUE_1)),
+                    List.of(Map.of(KEY_1, VALUE_1, StringToStateProcessor.CURRENT_STATE, Collections.emptyList()))),
+            Arguments.of(List.of(PREFIX_KEY_1), List.of(Map.of(KEY_1, VALUE_1)),
+                    List.of(Map.of(KEY_1, VALUE_1, StringToStateProcessor.CURRENT_STATE, List.of(VALUE_1)))),
+            Arguments.of(List.of(PREFIX_KEY_1, PREFIX_KEY_2), List.of(Map.of(KEY_1, VALUE_1, KEY_2, VALUE_2)),
+                    List.of(Map.of(KEY_1, VALUE_1, KEY_2, VALUE_2, StringToStateProcessor.CURRENT_STATE,
+                            List.of(VALUE_1, VALUE_2)))));
   }
 
   @ParameterizedTest
   @MethodSource("arguments")
-  public void testStringToState(
-      List<String> selectedFieldNames,
-      List<Map<String, Object>> intpuEvents,
-      List<Map<String, Object>> outputEvents
-  ) {
+  public void testStringToState(List<String> selectedFieldNames, List<Map<String, Object>> intpuEvents,
+          List<Map<String, Object>> outputEvents) {
 
-    var configuration = TestConfiguration
-        .builder()
-        .config(StringToStateProcessor.STRING_STATE_FIELD, selectedFieldNames)
-        .prefixStrategy(PrefixStrategy.SAME_PREFIX)
-        .build();
+    var configuration = TestConfiguration.builder()
+            .config(StringToStateProcessor.STRING_STATE_FIELD, selectedFieldNames)
+            .prefixStrategy(PrefixStrategy.SAME_PREFIX).build();
 
     var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.compact.generator;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -23,6 +22,5 @@ import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 
 public interface AdapterModelGenerator {
 
-  void apply(AdapterDescription adapterDescription,
-             CompactAdapter compactAdapter) throws Exception;
+  void apply(AdapterDescription adapterDescription, CompactAdapter compactAdapter) throws Exception;
 }

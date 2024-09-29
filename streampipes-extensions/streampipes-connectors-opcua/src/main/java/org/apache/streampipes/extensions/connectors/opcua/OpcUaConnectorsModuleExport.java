@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.opcua;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -32,23 +31,16 @@ import java.util.List;
 public class OpcUaConnectorsModuleExport implements IExtensionModuleExport {
   @Override
   public List<StreamPipesAdapter> adapters() {
-    return List.of(
-        new OpcUaAdapter()
-    );
+    return List.of(new OpcUaAdapter());
   }
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new OpcUaSink()
-    );
+    return List.of(new OpcUaSink());
   }
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return List.of(
-        new OpcUaAdapterMigrationV1(),
-        new OpcUaAdapterMigrationV2()
-    );
+    return List.of(new OpcUaAdapterMigrationV1(), new OpcUaAdapterMigrationV2());
   }
 }

@@ -22,9 +22,8 @@ import org.apache.streampipes.model.template.PipelineElementTemplate;
 
 public class DataProcessorTemplateHandler extends PipelineElementTemplateHandler<DataProcessorInvocation> {
 
-  public DataProcessorTemplateHandler(PipelineElementTemplate template,
-                                      DataProcessorInvocation pipelineElement,
-                                      boolean overwriteNameAndDescription) {
+  public DataProcessorTemplateHandler(PipelineElementTemplate template, DataProcessorInvocation pipelineElement,
+          boolean overwriteNameAndDescription) {
     super(template, pipelineElement, overwriteNameAndDescription);
   }
 }

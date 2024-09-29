@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.processors.enricher.jvm.processor.math;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -58,49 +56,40 @@ public class MathOpProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.enricher.jvm.processor.math.mathop", 0)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .category(DataProcessorType.ALGORITHM)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(LEFT_OPERAND),
-                PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(RIGHT_OPERAND),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(
-            OutputStrategies.append(
-                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.NUMBER)))
-        .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("+", "-", "/",
-            "*", "%"))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.processor.math.mathop", 0)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .category(DataProcessorType.ALGORITHM)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId(LEFT_OPERAND),
+                            PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId(RIGHT_OPERAND),
+                            PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies.append(EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.NUMBER)))
+            .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("+", "-", "/", "*", "%")).build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.leftOperand = parameters.extractor().mappingPropertyValue(LEFT_OPERAND);
     this.rightOperand = parameters.extractor().mappingPropertyValue(RIGHT_OPERAND);
     String operation = parameters.extractor().selectedSingleValue(OPERATION, String.class);
 
     switch (operation) {
-      case "+":
+      case "+" :
         arithmeticOperation = new OperationAddition();
         break;
-      case "-":
+      case "-" :
         arithmeticOperation = new OperationSubtracting();
         break;
-      case "*":
+      case "*" :
         arithmeticOperation = new OperationMultiply();
         break;
-      case "/":
+      case "/" :
         arithmeticOperation = new OperationDivide();
         break;
-      case "%":
+      case "%" :
         arithmeticOperation = new OperationModulo();
     }
   }

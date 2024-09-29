@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core;
-
 
 import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
 

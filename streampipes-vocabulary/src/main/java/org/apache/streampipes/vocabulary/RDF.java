@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.vocabulary;
 
 public class RDF {
@@ -24,6 +23,5 @@ public class RDF {
   public static final String NS_PREFIX = "rdf";
 
   public static final String TYPE = NS + "type";
-
 
 }

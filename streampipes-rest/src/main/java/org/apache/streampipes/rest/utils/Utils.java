@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.utils;
 
 import org.apache.streampipes.model.client.user.Principal;

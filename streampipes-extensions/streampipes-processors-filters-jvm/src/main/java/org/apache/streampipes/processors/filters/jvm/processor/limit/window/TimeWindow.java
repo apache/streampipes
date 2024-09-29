@@ -27,9 +27,7 @@ import org.quartz.Trigger;
 public class TimeWindow extends ScheduleWindow {
   private Integer windowSize;
 
-  public TimeWindow(Integer windowSize,
-                    EventSelection eventSelection,
-                    SpOutputCollector outputCollector) {
+  public TimeWindow(Integer windowSize, EventSelection eventSelection, SpOutputCollector outputCollector) {
     super(eventSelection, outputCollector);
     this.windowSize = windowSize;
   }

@@ -39,6 +39,10 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.Optional;
+
 import boofcv.abst.fiducial.QrCodeDetector;
 import boofcv.alg.fiducial.qrcode.QrCode;
 import boofcv.factory.fiducial.FactoryFiducial;
@@ -46,10 +50,6 @@ import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayU8;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.Optional;
 
 public class QrCodeReaderProcessor extends StreamPipesDataProcessor {
 
@@ -63,26 +63,23 @@ public class QrCodeReaderProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processor.imageclassification.qrcode", 0)
-        .category(DataProcessorType.IMAGE_PROCESSING)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq("https://image.com"),
-                Labels.withId(RequiredBoxStream.IMAGE_PROPERTY), PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(SEND_IF_NO_RESULT), Options.from("Yes", "No"))
-        .requiredTextParameter(Labels.withId(PLACEHOLDER_VALUE))
-        .outputStrategy(OutputStrategies.fixed(
-            EpProperties.timestampProperty("timestamp"),
-            EpProperties.stringEp(Labels.withId(QR_VALUE), "qrvalue", "http://schema.org/text")))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processor.imageclassification.qrcode", 0)
+            .category(DataProcessorType.IMAGE_PROCESSING)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq("https://image.com"),
+                            Labels.withId(RequiredBoxStream.IMAGE_PROPERTY), PropertyScope.NONE)
+                    .build())
+            .requiredSingleValueSelection(Labels.withId(SEND_IF_NO_RESULT), Options.from("Yes", "No"))
+            .requiredTextParameter(Labels.withId(PLACEHOLDER_VALUE))
+            .outputStrategy(OutputStrategies.fixed(EpProperties.timestampProperty("timestamp"),
+                    EpProperties.stringEp(Labels.withId(QR_VALUE), "qrvalue", "http://schema.org/text")))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     ProcessingElementParameterExtractor extractor = parameters.extractor();
 
     imagePropertyName = extractor.mappingPropertyValue(RequiredBoxStream.IMAGE_PROPERTY);

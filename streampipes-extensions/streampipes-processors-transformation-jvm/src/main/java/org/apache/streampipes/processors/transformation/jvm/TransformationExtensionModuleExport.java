@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -61,34 +60,15 @@ public class TransformationExtensionModuleExport implements IExtensionModuleExpo
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
-    return List.of(
-        new CountArrayProcessor(),
-        new SplitArrayProcessor(),
-        new CalculateDurationProcessor(),
-        new ChangedValueDetectionProcessor(),
-        new TimestampExtractorProcessor(),
-        new BooleanCounterProcessor(),
-        new BooleanInverterProcessor(),
-        new DateTimeFromStringProcessor(),
-        new BooleanTimekeepingProcessor(),
-        new BooleanTimerProcessor(),
-        new CsvMetadataEnrichmentProcessor(),
-        new FieldHasherProcessor(),
-        new FieldMapperProcessor(),
-        new MeasurementUnitConverterProcessor(),
-        new TaskDurationProcessor(),
-        new TransformToBooleanProcessor(),
-        new StaticMetaDataEnrichmentProcessor(),
-        new StringTimerProcessor(),
-        new SignalEdgeFilterProcessor(),
-        new BooleanToStateProcessor(),
-        new NumberLabelerProcessor(),
-        new StringToStateProcessor(),
-        new StringCounterProcessor(),
-        new BooleanOperatorProcessor(),
-        new FiledRenameProcessor(),
-        new RoundProcessor()
-        );
+    return List.of(new CountArrayProcessor(), new SplitArrayProcessor(), new CalculateDurationProcessor(),
+            new ChangedValueDetectionProcessor(), new TimestampExtractorProcessor(), new BooleanCounterProcessor(),
+            new BooleanInverterProcessor(), new DateTimeFromStringProcessor(), new BooleanTimekeepingProcessor(),
+            new BooleanTimerProcessor(), new CsvMetadataEnrichmentProcessor(), new FieldHasherProcessor(),
+            new FieldMapperProcessor(), new MeasurementUnitConverterProcessor(), new TaskDurationProcessor(),
+            new TransformToBooleanProcessor(), new StaticMetaDataEnrichmentProcessor(), new StringTimerProcessor(),
+            new SignalEdgeFilterProcessor(), new BooleanToStateProcessor(), new NumberLabelerProcessor(),
+            new StringToStateProcessor(), new StringCounterProcessor(), new BooleanOperatorProcessor(),
+            new FiledRenameProcessor(), new RoundProcessor());
   }
 
   @Override

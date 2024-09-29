@@ -19,10 +19,10 @@ package org.apache.streampipes.model;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @TsModel

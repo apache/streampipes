@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection;
 
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
@@ -24,25 +23,22 @@ import org.apache.streampipes.extensions.api.connect.IPullAdapter;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionSettings;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 
+import java.util.concurrent.TimeUnit;
+
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.TimeUnit;
-
-public class ContinuousPlcRequestReader
-    extends OneTimePlcRequestReader implements IPullAdapter {
+public class ContinuousPlcRequestReader extends OneTimePlcRequestReader implements IPullAdapter {
 
   private static final Logger LOG = LoggerFactory.getLogger(ContinuousPlcRequestReader.class);
 
   private final IEventCollector collector;
 
-  public ContinuousPlcRequestReader(PlcConnectionManager connectionManager,
-                                    Plc4xConnectionSettings settings,
-                                    PlcRequestProvider requestProvider,
-                                    IEventCollector collector) {
+  public ContinuousPlcRequestReader(PlcConnectionManager connectionManager, Plc4xConnectionSettings settings,
+          PlcRequestProvider requestProvider, IEventCollector collector) {
     super(connectionManager, settings, requestProvider);
     this.collector = collector;
   }

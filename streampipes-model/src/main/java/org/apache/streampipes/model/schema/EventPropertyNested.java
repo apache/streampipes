@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.schema;
 
 import org.apache.streampipes.model.util.Cloner;

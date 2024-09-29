@@ -15,14 +15,12 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.service.core.migrations;
+
+import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class MigrationsHandler {
 

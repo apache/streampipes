@@ -15,17 +15,16 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.health;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.storage.api.CRUDStorage;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 public class ServiceRegistrationManager {
 
@@ -37,29 +36,24 @@ public class ServiceRegistrationManager {
     this.storage = storage;
   }
 
-  public void applyServiceStatus(String serviceId,
-                                 SpServiceStatus status,
-                                 long firstTimeSeenUnhealthy) {
+  public void applyServiceStatus(String serviceId, SpServiceStatus status, long firstTimeSeenUnhealthy) {
     var serviceRegistration = storage.getElementById(serviceId);
     serviceRegistration.setFirstTimeSeenUnhealthy(firstTimeSeenUnhealthy);
     applyServiceStatus(status, serviceRegistration);
   }
 
-  public void applyServiceStatus(String serviceId,
-                                 SpServiceStatus status) {
+  public void applyServiceStatus(String serviceId, SpServiceStatus status) {
     var serviceRegistration = storage.getElementById(serviceId);
     applyServiceStatus(status, serviceRegistration);
   }
 
-  private void applyServiceStatus(SpServiceStatus status,
-                                  SpServiceRegistration serviceRegistration) {
+  private void applyServiceStatus(SpServiceStatus status, SpServiceRegistration serviceRegistration) {
     serviceRegistration.setStatus(status);
     storage.updateElement(serviceRegistration);
     logService(serviceRegistration);
   }
 
-  public void addService(SpServiceRegistration serviceRegistration,
-                         SpServiceStatus status) {
+  public void addService(SpServiceRegistration serviceRegistration, SpServiceStatus status) {
     serviceRegistration.setStatus(status);
     storage.persist(serviceRegistration);
     logService(serviceRegistration);
@@ -74,19 +68,13 @@ public class ServiceRegistrationManager {
   }
 
   public boolean isAnyServiceMigrating() {
-    return storage.findAll()
-        .stream()
-        .anyMatch(service -> service.getStatus() == SpServiceStatus.MIGRATING);
+    return storage.findAll().stream().anyMatch(service -> service.getStatus() == SpServiceStatus.MIGRATING);
   }
 
   public void removeService(String serviceId) {
     var serviceRegistration = storage.getElementById(serviceId);
     storage.deleteElement(serviceRegistration);
-    LOG.info(
-        "Service {} (id={}) has been removed",
-        serviceRegistration.getSvcGroup(),
-        serviceRegistration.getSvcId())
-    ;
+    LOG.info("Service {} (id={}) has been removed", serviceRegistration.getSvcGroup(), serviceRegistration.getSvcId());
   }
 
   public SpServiceStatus getServiceStatus(String serviceId) {
@@ -94,11 +82,7 @@ public class ServiceRegistrationManager {
   }
 
   private void logService(SpServiceRegistration serviceRegistration) {
-    LOG.info(
-        "Service {} (id={}) is now in {} state",
-        serviceRegistration.getSvcGroup(),
-        serviceRegistration.getSvcId(),
-        serviceRegistration.getStatus()
-    );
+    LOG.info("Service {} (id={}) is now in {} state", serviceRegistration.getSvcGroup(), serviceRegistration.getSvcId(),
+            serviceRegistration.getStatus());
   }
 }

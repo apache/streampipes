@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.staticproperty;
 
 import java.util.List;
@@ -28,10 +27,8 @@ public class RuntimeResolvableGroupStaticProperty extends StaticPropertyGroup {
     super(StaticPropertyType.RuntimeResolvableGroupStaticProperty);
   }
 
-  public RuntimeResolvableGroupStaticProperty(String internalName,
-                                              String label,
-                                              String description,
-                                              List<String> dependsOn) {
+  public RuntimeResolvableGroupStaticProperty(String internalName, String label, String description,
+          List<String> dependsOn) {
     super(StaticPropertyType.RuntimeResolvableGroupStaticProperty, internalName, label, description);
     this.dependsOn = dependsOn;
   }

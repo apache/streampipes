@@ -15,22 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.assets;
 
 /**
  * Builder class for creating instances of {@link AssetLink}.
  * <p>
  * Example usage:
+ * 
  * <pre>
  * {@code
- * AssetLink assetLink = AssetLinkBuilder.create()
- *     .withResourceId("123")
- *     .withLinkType("type")
- *     .withLinkLabel("label")
- *     .withQueryHint("hint")
- *     .withEditingDisabled(false)
- *     .build();
+ * AssetLink assetLink = AssetLinkBuilder.create().withResourceId("123").withLinkType("type").withLinkLabel("label")
+ *         .withQueryHint("hint").withEditingDisabled(false).build();
  * }
  * </pre>
  */
@@ -56,7 +51,8 @@ public class AssetLinkBuilder {
   /**
    * Sets the resource ID for the AssetLink being built.
    *
-   * @param resourceId The resource ID to set.
+   * @param resourceId
+   *          The resource ID to set.
    * @return The AssetLinkBuilder instance for method chaining.
    */
   public AssetLinkBuilder withResourceId(String resourceId) {
@@ -67,7 +63,8 @@ public class AssetLinkBuilder {
   /**
    * Sets the link type for the AssetLink being built.
    *
-   * @param linkType The link type to set.
+   * @param linkType
+   *          The link type to set.
    * @return The AssetLinkBuilder instance for method chaining.
    */
   public AssetLinkBuilder withLinkType(String linkType) {
@@ -78,7 +75,8 @@ public class AssetLinkBuilder {
   /**
    * Sets the link label for the AssetLink being built.
    *
-   * @param linkLabel The link label to set.
+   * @param linkLabel
+   *          The link label to set.
    * @return The AssetLinkBuilder instance for method chaining.
    */
   public AssetLinkBuilder withLinkLabel(String linkLabel) {
@@ -89,7 +87,8 @@ public class AssetLinkBuilder {
   /**
    * Sets the query hint for the AssetLink being built.
    *
-   * @param queryHint The query hint to set.
+   * @param queryHint
+   *          The query hint to set.
    * @return The AssetLinkBuilder instance for method chaining.
    */
   public AssetLinkBuilder withQueryHint(String queryHint) {
@@ -100,7 +99,8 @@ public class AssetLinkBuilder {
   /**
    * Sets whether editing is disabled for the AssetLink being built.
    *
-   * @param editingDisabled Whether editing is disabled.
+   * @param editingDisabled
+   *          Whether editing is disabled.
    * @return The AssetLinkBuilder instance for method chaining.
    */
   public AssetLinkBuilder withEditingDisabled(boolean editingDisabled) {

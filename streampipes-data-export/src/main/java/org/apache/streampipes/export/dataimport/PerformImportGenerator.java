@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.export.dataimport;
 
 import org.apache.streampipes.export.model.PermissionInfo;
@@ -41,13 +40,13 @@ import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class PerformImportGenerator extends ImportGenerator<Void> {
 
@@ -56,8 +55,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   private Set<PermissionInfo> permissionsToStore = new HashSet<>();
   private String ownerSid;
 
-  public PerformImportGenerator(AssetExportConfiguration config,
-                                String ownerSid) {
+  public PerformImportGenerator(AssetExportConfiguration config, String ownerSid) {
     this.config = config;
     this.storage = StorageDispatcher.INSTANCE.getNoSqlStore();
     this.ownerSid = ownerSid;
@@ -128,14 +126,11 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   }
 
   @Override
-  protected void handleFile(String document,
-                            String fileMetadataId,
-                            Map<String, byte[]> zipContent) throws IOException {
+  protected void handleFile(String document, String fileMetadataId, Map<String, byte[]> zipContent) throws IOException {
     var resolver = new FileResolver();
     var fileMetadata = resolver.readDocument(document);
     resolver.writeDocument(document);
-    byte[] file = zipContent.get(
-        fileMetadata.getFilename().substring(0, fileMetadata.getFilename().lastIndexOf(".")));
+    byte[] file = zipContent.get(fileMetadata.getFilename().substring(0, fileMetadata.getFilename().lastIndexOf(".")));
     new FileHandler().storeFile(fileMetadata.getFilename(), new ByteArrayInputStream(file));
   }
 
@@ -147,20 +142,12 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void afterResourcesCreated() {
     var resourceManager = new PermissionResourceManager();
-    this.permissionsToStore
-        .forEach(info -> resourceManager.createDefault(
-            info.getInstanceId(),
-            info.getInstanceClass(),
-            this.ownerSid,
-            true));
+    this.permissionsToStore.forEach(
+            info -> resourceManager.createDefault(info.getInstanceId(), info.getInstanceClass(), this.ownerSid, true));
   }
 
-  private boolean shouldStore(String adapterId,
-                              Set<ExportItem> adapters) {
-    return adapters
-        .stream()
-        .filter(item -> item.getResourceId().equals(adapterId))
-        .allMatch(ExportItem::isSelected);
+  private boolean shouldStore(String adapterId, Set<ExportItem> adapters) {
+    return adapters.stream().filter(item -> item.getResourceId().equals(adapterId)).allMatch(ExportItem::isSelected);
   }
 
 }

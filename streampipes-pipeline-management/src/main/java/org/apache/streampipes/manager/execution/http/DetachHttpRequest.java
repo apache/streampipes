@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.model.api.EndpointSelectable;
@@ -23,7 +22,6 @@ import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class DetachHttpRequest extends PipelineElementHttpRequest {
 

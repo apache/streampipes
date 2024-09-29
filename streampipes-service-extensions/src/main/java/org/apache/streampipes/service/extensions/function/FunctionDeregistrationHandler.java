@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.extensions.function;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.model.function.FunctionDefinition;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 public class FunctionDeregistrationHandler extends RegistrationHandler {
 
@@ -36,9 +35,7 @@ public class FunctionDeregistrationHandler extends RegistrationHandler {
 
   @Override
   protected void performRequest(StreamPipesClient client) {
-    functions.forEach(fn ->
-        client.adminApi().deregisterFunction(fn.getFunctionId().getId())
-    );
+    functions.forEach(fn -> client.adminApi().deregisterFunction(fn.getFunctionId().getId()));
   }
 
   @Override

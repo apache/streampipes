@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical;
+
+import static org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical.enums.BooleanOperatorType.NOT;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
@@ -43,8 +44,6 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.List;
 
-import static org.apache.streampipes.processors.transformation.jvm.processor.booloperator.logical.enums.BooleanOperatorType.NOT;
-
 public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
 
   private static final String BOOLEAN_PROCESSOR_OUT_KEY = "boolean-operations-result";
@@ -55,37 +54,29 @@ public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.booloperator.logical", 0)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .withLocales(Locales.EN)
-        .category(DataProcessorType.BOOLEAN_OPERATOR)
-        .requiredStream(
-            StreamRequirementsBuilder
-                .create()
-                .requiredPropertyWithNaryMapping(EpRequirements.booleanReq(),
-                    Labels.withId(PROPERTIES_LIST), PropertyScope.NONE)
-                .build())
-        .requiredSingleValueSelection(Labels.withId(BOOLEAN_OPERATOR_TYPE), Options.from(
-            BooleanOperatorType.AND.operator(),
-            BooleanOperatorType.OR.operator(),
-            BooleanOperatorType.NOT.operator(),
-            BooleanOperatorType.XOR.operator(),
-            BooleanOperatorType.X_NOR.operator(),
-            BooleanOperatorType.NOR.operator()))
-        .outputStrategy(OutputStrategies.append(
-            PrimitivePropertyBuilder.create(
-                    Datatypes.String, BOOLEAN_PROCESSOR_OUT_KEY)
-                .build()))
-        .build();
+            .create("org.apache.streampipes.processors.transformation.jvm.booloperator.logical", 0)
+            .withAssets(ExtensionAssetType.DOCUMENTATION).withLocales(Locales.EN)
+            .category(DataProcessorType.BOOLEAN_OPERATOR)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithNaryMapping(EpRequirements.booleanReq(), Labels.withId(PROPERTIES_LIST),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredSingleValueSelection(Labels.withId(BOOLEAN_OPERATOR_TYPE),
+                    Options.from(BooleanOperatorType.AND.operator(), BooleanOperatorType.OR.operator(),
+                            BooleanOperatorType.NOT.operator(), BooleanOperatorType.XOR.operator(),
+                            BooleanOperatorType.X_NOR.operator(), BooleanOperatorType.NOR.operator()))
+            .outputStrategy(OutputStrategies
+                    .append(PrimitivePropertyBuilder.create(Datatypes.String, BOOLEAN_PROCESSOR_OUT_KEY).build()))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
     List<String> properties = processorParams.extractor().mappingPropertyValues(PROPERTIES_LIST);
     String operator = processorParams.extractor().selectedSingleValue(BOOLEAN_OPERATOR_TYPE, String.class);
-    BooleanOperationInputConfigs configs =
-        new BooleanOperationInputConfigs(properties, BooleanOperatorType.getBooleanOperatorType(operator));
+    BooleanOperationInputConfigs configs = new BooleanOperationInputConfigs(properties,
+            BooleanOperatorType.getBooleanOperatorType(operator));
     preChecks(configs);
     this.configs = configs;
   }
@@ -105,10 +96,10 @@ public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
       Boolean secondProperty = event.getFieldBySelector(properties.get(1)).getAsPrimitive().getAsBoolean();
       result = boolOperation.evaluate(firstProperty, secondProperty);
 
-      //loop through rest of the properties to get final result
+      // loop through rest of the properties to get final result
       for (int i = 2; i < properties.size(); i++) {
-        result =
-            boolOperation.evaluate(result, event.getFieldBySelector(properties.get(i)).getAsPrimitive().getAsBoolean());
+        result = boolOperation.evaluate(result,
+                event.getFieldBySelector(properties.get(i)).getAsPrimitive().getAsBoolean());
       }
 
     }

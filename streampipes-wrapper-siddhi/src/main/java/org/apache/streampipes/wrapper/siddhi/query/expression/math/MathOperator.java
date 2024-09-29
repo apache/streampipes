@@ -19,10 +19,7 @@ package org.apache.streampipes.wrapper.siddhi.query.expression.math;
 
 public enum MathOperator {
 
-  ADD("+"),
-  SUBTRACT("-"),
-  MULTIPLY("*"),
-  DIVIDE("/");
+  ADD("+"), SUBTRACT("-"), MULTIPLY("*"), DIVIDE("/");
 
   private final String operator;
 

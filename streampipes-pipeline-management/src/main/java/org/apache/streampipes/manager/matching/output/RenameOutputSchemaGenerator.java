@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.output;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -29,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RenameOutputSchemaGenerator extends OutputSchemaGenerator<KeepOutputStrategy> {
-
 
   public static RenameOutputSchemaGenerator from(OutputStrategy strategy) {
     return new RenameOutputSchemaGenerator((KeepOutputStrategy) strategy);
@@ -45,14 +43,13 @@ public class RenameOutputSchemaGenerator extends OutputSchemaGenerator<KeepOutpu
   }
 
   @Override
-  public Tuple2<EventSchema, KeepOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
-                                                                     SpDataStream stream2) {
+  public Tuple2<EventSchema, KeepOutputStrategy> buildFromTwoStreams(SpDataStream stream1, SpDataStream stream2) {
     EventSchema resultSchema = new EventSchema();
     List<EventProperty> properties = new ArrayList<>();
     properties.addAll(stream1.getEventSchema().getEventProperties());
     if (outputStrategy.isKeepBoth()) {
-      properties.addAll(new PropertyDuplicateRemover(properties,
-          stream2.getEventSchema().getEventProperties()).rename());
+      properties
+              .addAll(new PropertyDuplicateRemover(properties, stream2.getEventSchema().getEventProperties()).rename());
     }
 
     resultSchema.setEventProperties(properties);

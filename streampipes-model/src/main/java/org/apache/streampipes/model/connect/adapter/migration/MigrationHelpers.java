@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.adapter.migration;
 
 import org.apache.streampipes.model.connect.adapter.migration.utils.AdapterModels;
@@ -44,8 +43,7 @@ public class MigrationHelpers {
     return adapter.get("properties").getAsJsonObject().get(APP_ID).getAsString();
   }
 
-  public void updateType(JsonObject adapter,
-                         String typeFieldName) {
+  public void updateType(JsonObject adapter, String typeFieldName) {
     adapter.add(typeFieldName, new JsonPrimitive(AdapterModels.NEW_MODEL));
   }
 

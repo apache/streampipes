@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
@@ -38,10 +37,7 @@ public abstract class AbstractAdapterIncludedStream implements IStreamPipesDataS
 
   @Override
   public IDataStreamConfiguration declareConfig() {
-    return DataStreamConfiguration.create(
-            () -> this,
-            declareModel()
-    );
+    return DataStreamConfiguration.create(() -> this, declareModel());
   }
 
   public abstract SpDataStream declareModel();

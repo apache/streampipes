@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.management;
 
 import org.apache.streampipes.commons.environment.Environments;
@@ -29,9 +28,7 @@ public class DataExplorerDispatcher {
 
     // currently this SWITCH CASE statement is not necessary
     // but aims to give an idea how to deal with multiple data explorer storages
-    return switch (Environments.getEnvironment()
-                               .getTsStorage()
-                               .getValueOrDefault()) {
+    return switch (Environments.getEnvironment().getTsStorage().getValueOrDefault()) {
       case SupportedDataExplorerStorages.IOT_DB -> new DataExplorerManagerIotDb();
       default -> new DataExplorerManagerInflux();
     };

@@ -15,18 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.oauth2;
 
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.user.management.model.UserAccountDetails;
 
+import java.util.Map;
+
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-
-import java.util.Map;
 
 public class OidcUserAccountDetails extends UserAccountDetails implements OAuth2User, OidcUser {
 
@@ -34,18 +33,14 @@ public class OidcUserAccountDetails extends UserAccountDetails implements OAuth2
   private final OidcUserInfo userInfo;
   private Map<String, Object> attributes;
 
-  public OidcUserAccountDetails(UserAccount user,
-                                OidcIdToken idToken,
-                                OidcUserInfo userInfo) {
+  public OidcUserAccountDetails(UserAccount user, OidcIdToken idToken, OidcUserInfo userInfo) {
     super(user);
     this.idToken = idToken;
     this.userInfo = userInfo;
   }
 
-  public static OidcUserAccountDetails create(UserAccount user,
-                                              Map<String, Object> attributes,
-                                              OidcIdToken idToken,
-                                              OidcUserInfo userInfo) {
+  public static OidcUserAccountDetails create(UserAccount user, Map<String, Object> attributes, OidcIdToken idToken,
+          OidcUserInfo userInfo) {
     OidcUserAccountDetails localUser = new OidcUserAccountDetails(user, idToken, userInfo);
     localUser.setAttributes(attributes);
     return localUser;

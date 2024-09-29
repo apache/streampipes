@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.assets;
 
 import java.io.IOException;
@@ -48,26 +47,17 @@ public class DefaultAssetResolver implements AssetResolver {
   protected InputStream getResourceFile(String filename) throws IOException {
     if (existsFile(filename)) {
       var path = makePath(filename);
-      return this.getClass()
-          .getClassLoader()
-          .getResourceAsStream(path);
+      return this.getClass().getClassLoader().getResourceAsStream(path);
     } else {
       throw new IOException(String.format("Could not read file %s", filename));
     }
   }
 
   protected String makePath(String filename) {
-    return new StringJoiner("/")
-        .add(appId)
-        .add(filename)
-        .toString();
+    return new StringJoiner("/").add(appId).add(filename).toString();
   }
 
   protected boolean existsFile(String filename) {
-    return this.getClass()
-        .getClassLoader()
-        .getResource(
-            makePath(filename)
-        ) != null;
+    return this.getClass().getClassLoader().getResource(makePath(filename)) != null;
   }
 }

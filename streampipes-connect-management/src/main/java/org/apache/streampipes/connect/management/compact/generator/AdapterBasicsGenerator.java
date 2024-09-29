@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.compact.generator;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -25,8 +24,7 @@ import org.apache.streampipes.model.util.ElementIdGenerator;
 public class AdapterBasicsGenerator implements AdapterModelGenerator {
 
   @Override
-  public void apply(AdapterDescription adapterDescription,
-                    CompactAdapter compactAdapter) {
+  public void apply(AdapterDescription adapterDescription, CompactAdapter compactAdapter) {
     adapterDescription.setName(compactAdapter.name());
     adapterDescription.setDescription(compactAdapter.description());
     if (compactAdapter.id() != null) {

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.extractor;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;

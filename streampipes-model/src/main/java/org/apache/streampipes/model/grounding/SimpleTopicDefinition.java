@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.grounding;
 
 public class SimpleTopicDefinition extends TopicDefinition {

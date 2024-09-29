@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.notifications.jvm.slack;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -32,12 +31,12 @@ import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 
+import java.io.IOException;
+
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
-
-import java.io.IOException;
 
 public class SlackNotificationSink extends StreamPipesNotificationSink {
   public static final String SLACK_NOTIFICATION_SINK_ID = "org.apache.streampipes.sinks.notifications.jvm.slack";
@@ -57,25 +56,16 @@ public class SlackNotificationSink extends StreamPipesNotificationSink {
 
   @Override
   public DataSinkBuilder declareModelWithoutSilentPeriod() {
-    return DataSinkBuilder
-        .create(SLACK_NOTIFICATION_SINK_ID, 1)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .category(DataSinkType.NOTIFICATION)
-        .requiredStream(StreamRequirementsBuilder
-                            .create()
-                            .requiredProperty(EpRequirements.anyProperty())
-                            .build())
-        .requiredTextParameter(Labels.withId(RECEIVER))
-        .requiredTextParameter(Labels.withId(CONTENT), false, true)
-        .requiredSingleValueSelection(Labels.withId(CHANNEL_TYPE),
-                                      Options.from("User", "Channel"))
-        .requiredSecret(Labels.withId(AUTH_TOKEN));
+    return DataSinkBuilder.create(SLACK_NOTIFICATION_SINK_ID, 1).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).category(DataSinkType.NOTIFICATION)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredTextParameter(Labels.withId(RECEIVER)).requiredTextParameter(Labels.withId(CONTENT), false, true)
+            .requiredSingleValueSelection(Labels.withId(CHANNEL_TYPE), Options.from("User", "Channel"))
+            .requiredSecret(Labels.withId(AUTH_TOKEN));
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     super.onInvocation(parameters, runtimeContext);
     var extractor = parameters.extractor();
 
@@ -104,9 +94,8 @@ public class SlackNotificationSink extends StreamPipesNotificationSink {
     } else {
       SlackChannel channel = session.findChannelByName(userChannel);
       if (channel == null || channel.getId() == null) {
-        throw new SpRuntimeException("The channel: '" + userChannel + "' does not "
-                                         + "exists or "
-                                         + "the bot has no rights to access it");
+        throw new SpRuntimeException(
+                "The channel: '" + userChannel + "' does not " + "exists or " + "the bot has no rights to access it");
       }
     }
   }
@@ -115,8 +104,7 @@ public class SlackNotificationSink extends StreamPipesNotificationSink {
   public void onNotificationEvent(Event event) {
     String message = replacePlaceholders(event, originalMessage);
     if (this.sendToUser) {
-      this.session.sendMessageToUser(userChannel,
-                                     message, null);
+      this.session.sendMessageToUser(userChannel, message, null);
     } else {
       SlackChannel channel = this.session.findChannelByName(userChannel);
       this.session.sendMessage(channel, message);

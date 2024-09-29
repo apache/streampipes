@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.iotdb.sanitize;
 
 public class IotDbNameSanitizer {
@@ -23,16 +22,16 @@ public class IotDbNameSanitizer {
   private final IotDbReservedKeywords reservedKeywords = new IotDbReservedKeywords();
 
   /**
-   * Checks if a runtime name conflicts with any reserved keyword. If a conflict is found,
-   * the runtime name is suffixed with an underscore.
+   * Checks if a runtime name conflicts with any reserved keyword. If a conflict is found, the runtime name is suffixed
+   * with an underscore.
    *
-   * @param runtimeName the runtime name to be checked for conflicts with reserved keywords
-   * @return the modified runtime name with underscore suffix if conflict exists, otherwise returns the original runtime name
+   * @param runtimeName
+   *          the runtime name to be checked for conflicts with reserved keywords
+   * @return the modified runtime name with underscore suffix if conflict exists, otherwise returns the original runtime
+   *         name
    */
-  public String renameReservedKeywords(String runtimeName){
-    var containsKeyword = reservedKeywords.getAll()
-        .stream()
-        .anyMatch(keyword -> keyword.equalsIgnoreCase(runtimeName));
+  public String renameReservedKeywords(String runtimeName) {
+    var containsKeyword = reservedKeywords.getAll().stream().anyMatch(keyword -> keyword.equalsIgnoreCase(runtimeName));
 
     return containsKeyword ? runtimeName + "_" : runtimeName;
   }

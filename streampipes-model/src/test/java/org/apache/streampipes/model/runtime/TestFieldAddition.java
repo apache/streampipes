@@ -17,10 +17,10 @@
  */
 package org.apache.streampipes.model.runtime;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Map;
 
 public class TestFieldAddition {
 
@@ -31,11 +31,8 @@ public class TestFieldAddition {
 
     event.addField("append", 10);
 
-    Assertions.assertEquals(2,
-                            event.getFields().size()
-    );
-    Assertions.assertEquals("append",
-                            event.getFieldByRuntimeName("append").getFieldNameIn());
+    Assertions.assertEquals(2, event.getFields().size());
+    Assertions.assertEquals("append", event.getFieldByRuntimeName("append").getFieldNameIn());
 
     Map<String, Object> outMap = new EventConverter(event).toMap();
     Assertions.assertEquals(2, outMap.size());

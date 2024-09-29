@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.brokers.jvm.bufferrest.buffer;
 
 import java.util.ArrayList;

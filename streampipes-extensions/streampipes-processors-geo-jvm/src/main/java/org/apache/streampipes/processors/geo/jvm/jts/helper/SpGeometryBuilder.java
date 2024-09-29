@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.geo.jvm.jts.helper;
 
 import org.locationtech.jts.geom.Coordinate;
@@ -37,26 +36,28 @@ public class SpGeometryBuilder {
   static final double LATITUDE_MIN = -90;
   static final double LATITUDE_MAX = 90;
 
-
   /**
    * Creates a {@link org.locationtech.jts.geom.Point} from <code>Latitude</code> and <code> Longitude</code> values
    *
-   * @param lng  Longitude value in the range -180 &lt; Longitude &gt; 180
-   * @param lat  Latitude value in the range -90 &lt; LATITUDE &gt; 90
-   * @param epsg EPSG Code representing coordinate reference system
-   * @return a {@link org.locationtech.jts.geom.Point}. An empty point geometry is created if Latitude
-   * or Longitude values are out of range or has null values.
+   * @param lng
+   *          Longitude value in the range -180 &lt; Longitude &gt; 180
+   * @param lat
+   *          Latitude value in the range -90 &lt; LATITUDE &gt; 90
+   * @param epsg
+   *          EPSG Code representing coordinate reference system
+   * @return a {@link org.locationtech.jts.geom.Point}. An empty point geometry is created if Latitude or Longitude
+   *         values are out of range or has null values.
    */
   public static Point createSPGeom(Double lng, Double lat, Integer epsg) {
     Point point;
     PrecisionModel precisionModel = getPrecisionModel(epsg);
     GeometryFactory geomFactory = new GeometryFactory(precisionModel, epsg);
 
-    //check if value is not null due missing stream value
+    // check if value is not null due missing stream value
     if ((lng != null) && (lat != null)) {
-      //check if lat lng is in typical range
+      // check if lat lng is in typical range
       if (isInWGSCoordinateRange(lng, LONGITUDE_MIN, LONGITUDE_MAX)
-          || isInWGSCoordinateRange(lat, LATITUDE_MIN, LATITUDE_MAX)) {
+              || isInWGSCoordinateRange(lat, LATITUDE_MIN, LATITUDE_MAX)) {
 
         Coordinate coordinate = new Coordinate(lng, lat);
         point = geomFactory.createPoint(coordinate);
@@ -72,16 +73,17 @@ public class SpGeometryBuilder {
     return point;
   }
 
-
   /**
-   * creates a Geometry from a wkt_string. string has to be valid and is not be checked. If invalid, an empty point
-   * geom is returned. method calls getPrecision method and creates a jts geometry factory and a WKT-parser object.
-   * from the wktString the
+   * creates a Geometry from a wkt_string. string has to be valid and is not be checked. If invalid, an empty point geom
+   * is returned. method calls getPrecision method and creates a jts geometry factory and a WKT-parser object. from the
+   * wktString the
    *
-   * @param wktString Well-known text representation of the input geometry
-   * @param epsg      EPSG Code representing SRID
-   * @return {@link org.locationtech.jts.geom.Geometry}. An empty point geometry
-   * is created if {@link org.locationtech.jts.io.ParseException} due invalid WKT-String
+   * @param wktString
+   *          Well-known text representation of the input geometry
+   * @param epsg
+   *          EPSG Code representing SRID
+   * @return {@link org.locationtech.jts.geom.Geometry}. An empty point geometry is created if
+   *         {@link org.locationtech.jts.io.ParseException} due invalid WKT-String
    */
   public static Geometry createSPGeom(String wktString, Integer epsg) {
 
@@ -101,13 +103,12 @@ public class SpGeometryBuilder {
     return geom;
   }
 
-
   public static Geometry createSPGeom(Geometry geom, Integer epsgCode) {
 
     Geometry returnedGeom = null;
-    //gets precision model from getPrecisionModel method
+    // gets precision model from getPrecisionModel method
     PrecisionModel prec = getPrecisionModel(epsgCode);
-    //creates the factory object
+    // creates the factory object
     GeometryFactory geomFactory = new GeometryFactory(prec, epsgCode);
     // creates the new geom from the input geom.
     returnedGeom = geomFactory.createGeometry(geom);
@@ -115,27 +116,28 @@ public class SpGeometryBuilder {
     return returnedGeom;
   }
 
-
   /**
    * Is in wgs coordinate range boolean.
    *
-   * @param valueToCheck Any Value
-   * @param min          Min value to check
-   * @param max          max value to check
+   * @param valueToCheck
+   *          Any Value
+   * @param min
+   *          Min value to check
+   * @param max
+   *          max value to check
    * @return true if value is in min max range
    */
   private static boolean isInWGSCoordinateRange(double valueToCheck, double min, double max) {
     return valueToCheck > min && valueToCheck < max;
   }
 
-
   /**
-   * Creates a {@link org.locationtech.jts.geom.PrecisionModel} with a specific precision.
-   * WGS84/WGS84 will be created a {@link org.locationtech.jts.geom.PrecisionModel#FIXED} with
-   * 7 decimal positions (scale 1000000). Any other epsg code will create a precision
-   * with {@link org.locationtech.jts.geom.PrecisionModel#FLOATING}.
+   * Creates a {@link org.locationtech.jts.geom.PrecisionModel} with a specific precision. WGS84/WGS84 will be created a
+   * {@link org.locationtech.jts.geom.PrecisionModel#FIXED} with 7 decimal positions (scale 1000000). Any other epsg
+   * code will create a precision with {@link org.locationtech.jts.geom.PrecisionModel#FLOATING}.
    *
-   * @param epsg EPSG Code representing SRID
+   * @param epsg
+   *          EPSG Code representing SRID
    * @return {@link org.locationtech.jts.geom.PrecisionModel}
    */
   protected static PrecisionModel getPrecisionModel(Integer epsg) {
@@ -177,7 +179,7 @@ public class SpGeometryBuilder {
 
     if (geom instanceof Point) {
       // get y lng and x lat coords from point. has to be casted because input is basic geometry
-      returnedPoint =  (Point) geom;
+      returnedPoint = (Point) geom;
 
     } else if (geom instanceof LineString) {
       // cast geometry to line and calculates the centroid to get point

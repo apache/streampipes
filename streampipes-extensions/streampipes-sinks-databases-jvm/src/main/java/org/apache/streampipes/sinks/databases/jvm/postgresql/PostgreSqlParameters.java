@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.postgresql;
 
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -24,17 +23,8 @@ import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.JdbcConnectio
 public class PostgreSqlParameters extends JdbcConnectionParameters {
 
   public PostgreSqlParameters(DataSinkInvocation graph, String postgreSqlHost, Integer postgreSqlPort,
-                              String databaseName, String tableName, String user, String password, Boolean sslEnabled) {
-    super(
-        graph,
-        postgreSqlHost,
-        postgreSqlPort,
-        databaseName,
-        user,
-        password,
-        tableName,
-        sslEnabled,
-        "org.postgresql.ssl.NonValidatingFactory",
-        true);
+          String databaseName, String tableName, String user, String password, Boolean sslEnabled) {
+    super(graph, postgreSqlHost, postgreSqlPort, databaseName, user, password, tableName, sslEnabled,
+            "org.postgresql.ssl.NonValidatingFactory", true);
   }
 }

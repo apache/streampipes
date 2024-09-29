@@ -15,17 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe.param;
 
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 
-public interface IParameterGenerator<
-    IvT extends InvocableStreamPipesEntity,
-    PeT extends IParameterExtractor,
-    K extends IPipelineElementParameters<IvT, PeT>> {
-
+public interface IParameterGenerator<IvT extends InvocableStreamPipesEntity, PeT extends IParameterExtractor, K extends IPipelineElementParameters<IvT, PeT>> {
 
   K makeParameters(IvT invocation);
 }

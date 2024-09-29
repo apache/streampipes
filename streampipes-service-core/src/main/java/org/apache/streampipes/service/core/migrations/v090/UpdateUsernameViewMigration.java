@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.core.migrations.v090;
 
 import org.apache.streampipes.manager.setup.design.UserDesignDocument;

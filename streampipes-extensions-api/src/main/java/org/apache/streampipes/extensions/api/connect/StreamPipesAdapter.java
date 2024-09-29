@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -31,24 +30,28 @@ public interface StreamPipesAdapter {
   /**
    * Preprocesses the adapter description before the adapter is invoked.
    *
-   * <p>This method is designed to allow adapters to modify the adapter description prior to invocation.
-   * It is particularly useful for adapters that need to manipulate certain values internally,
-   * e.g. bypassing the adapter preprocessing pipeline. An example of such an adapter is the FileReplayAdapter,
-   * which manipulates timestamp values.</p>
+   * <p>
+   * This method is designed to allow adapters to modify the adapter description prior to invocation. It is particularly
+   * useful for adapters that need to manipulate certain values internally, e.g. bypassing the adapter preprocessing
+   * pipeline. An example of such an adapter is the FileReplayAdapter, which manipulates timestamp values.
+   * </p>
    *
-   * <p>This is a default method and does not need to be overridden unless specific preprocessing is required.</p>
+   * <p>
+   * This is a default method and does not need to be overridden unless specific preprocessing is required.
+   * </p>
    *
-   * @param adapterDescription The adapter description to be preprocessed.
+   * @param adapterDescription
+   *          The adapter description to be preprocessed.
    */
-  default void preprocessAdapterDescription(AdapterDescription adapterDescription) {};
+  default void preprocessAdapterDescription(AdapterDescription adapterDescription) {
+  };
 
-  void onAdapterStarted(IAdapterParameterExtractor extractor,
-                        IEventCollector collector,
-                        IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException;
+  void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException;
 
-  void onAdapterStopped(IAdapterParameterExtractor extractor,
-                        IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException;
+  void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
+          throws AdapterException;
 
   GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException;
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException;
 }

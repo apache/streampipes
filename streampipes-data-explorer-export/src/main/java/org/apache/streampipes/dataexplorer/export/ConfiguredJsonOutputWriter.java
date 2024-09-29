@@ -15,18 +15,17 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.export;
 
 import org.apache.streampipes.dataexplorer.export.item.ItemGenerator;
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.dataexplorer.export.item.JsonItemGenerator;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ConfiguredJsonOutputWriter extends ConfiguredOutputWriter {
 
@@ -40,8 +39,7 @@ public class ConfiguredJsonOutputWriter extends ConfiguredOutputWriter {
   }
 
   @Override
-  public void configure(ProvidedRestQueryParams params,
-                        boolean ignoreMissingValues) {
+  public void configure(ProvidedRestQueryParams params, boolean ignoreMissingValues) {
     // do nothing
   }
 
@@ -56,10 +54,8 @@ public class ConfiguredJsonOutputWriter extends ConfiguredOutputWriter {
   }
 
   @Override
-  public void writeItem(OutputStream outputStream,
-                        List<Object> row,
-                        List<String> columnNames,
-                        boolean firstObject) throws IOException {
+  public void writeItem(OutputStream outputStream, List<Object> row, List<String> columnNames, boolean firstObject)
+          throws IOException {
     if (!firstObject) {
       outputStream.write(toBytes(","));
     }

@@ -52,7 +52,6 @@ public class WildcardTopicDefinition extends TopicDefinition {
     this.wildcardTopicName = wildcardTopicName;
   }
 
-
   public List<WildcardTopicMapping> getWildcardTopicMappings() {
     return wildcardTopicMappings;
   }

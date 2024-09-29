@@ -15,22 +15,15 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.service.extensions.security;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-
 public class UnauthenticatedInterfaces {
 
   public static Collection<String> get() {
-    return Arrays.asList(
-        "/sec/*/assets/**",
-        "/sepa/*/assets/**",
-        "/stream/*/assets/**",
-        "/api/v1/worker/adapters/*/assets/**"
-    );
+    return Arrays.asList("/sec/*/assets/**", "/sepa/*/assets/**", "/stream/*/assets/**",
+            "/api/v1/worker/adapters/*/assets/**");
   }
 }

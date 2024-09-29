@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions.html;
 
 import org.apache.streampipes.rest.extensions.html.model.Description;
 
+import java.util.List;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-
-import java.util.List;
 
 public class JSONGenerator {
 

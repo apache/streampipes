@@ -34,6 +34,12 @@ import org.apache.streampipes.user.management.encryption.SecretEncryptionManager
 import org.apache.streampipes.user.management.service.TokenService;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,27 +54,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/api/v2/users")
 public class UserResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<ShortUserInfo>> listUsers() {
-    var users = getUserStorage()
-        .getAllUserAccounts()
-        .stream()
-        .map(u -> ShortUserInfo.create(u.getPrincipalId(), u.getUsername(), u.getFullName()))
-        .collect(Collectors.toList());
+    var users = getUserStorage().getAllUserAccounts().stream()
+            .map(u -> ShortUserInfo.create(u.getPrincipalId(), u.getUsername(), u.getFullName()))
+            .collect(Collectors.toList());
 
     return ok(users);
   }
-
 
   @GetMapping(path = "{principalId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getUserDetails(@PathVariable("principalId") String principalId) {
@@ -121,10 +118,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PostMapping(
-      path = "/user",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/user", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<?> registerUser(@RequestBody UserAccount userAccount) {
     try {
@@ -146,10 +140,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PostMapping(
-      path = "/service",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/service", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<?> registerService(@RequestBody ServiceAccount serviceAccount) {
     if (getUserStorage().getUser(serviceAccount.getUsername()) == null) {
@@ -162,12 +153,9 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PostMapping(
-      path = "{userId}/tokens",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "{userId}/tokens", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> createNewApiToken(@PathVariable("userId") String username,
-                                             @RequestBody RawUserApiToken rawToken) {
+          @RequestBody RawUserApiToken rawToken) {
     String authenticatedUserName = getAuthenticatedUsername();
     if (authenticatedUserName.equals(username)) {
       RawUserApiToken generatedToken = new TokenService().createAndStoreNewToken(username, rawToken);
@@ -177,12 +165,9 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PutMapping(
-      path = "user/{principalId}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "user/{principalId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> updateUserAccountDetails(@PathVariable("principalId") String principalId,
-                                                    @RequestBody UserAccount user) {
+          @RequestBody UserAccount user) {
     String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
@@ -195,12 +180,9 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PutMapping(
-      path = "user/{principalId}/username",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "user/{principalId}/username", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> updateUsername(@PathVariable("principalId") String principalId,
-                                 @RequestBody UserAccount user) {
+          @RequestBody UserAccount user) {
     String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
@@ -208,10 +190,8 @@ public class UserResource extends AbstractAuthGuardedRestResource {
         if (PasswordUtil.validatePassword(user.getPassword(), existingUser.getPassword())) {
           existingUser.setUsername(user.getUsername());
 
-          if (getUserStorage()
-              .getAllUserAccounts()
-              .stream()
-              .noneMatch(u -> u.getUsername().equalsIgnoreCase(user.getUsername()))) {
+          if (getUserStorage().getAllUserAccounts().stream()
+                  .noneMatch(u -> u.getUsername().equalsIgnoreCase(user.getUsername()))) {
             updateUser(existingUser, user, isAdmin(), existingUser.getPassword());
             getUserStorage().updateUser(existingUser);
             return ok();
@@ -229,11 +209,9 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).build();
   }
 
-  @PutMapping(path = "user/{principalId}/password",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "user/{principalId}/password", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> updatePassword(@PathVariable("principalId") String principalId,
-                                 @RequestBody ChangePasswordRequest passwordRequest) {
+          @RequestBody ChangePasswordRequest passwordRequest) {
     String authenticatedUserId = getAuthenticatedUserSid();
     UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
     if (principalId.equals(authenticatedUserId) || isAdmin()) {
@@ -256,12 +234,9 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @PutMapping(
-      path = "service/{principalId}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "service/{principalId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<? extends Message> updateServiceAccountDetails(@PathVariable("principalId") String principalId,
-                                              @RequestBody ServiceAccount user) {
+          @RequestBody ServiceAccount user) {
     String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       Principal existingUser = getPrincipalById(principalId);
@@ -281,18 +256,11 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   }
 
   private boolean isAdmin() {
-    return SecurityContextHolder
-        .getContext()
-        .getAuthentication()
-        .getAuthorities()
-        .stream()
-        .anyMatch(r -> r.getAuthority().equals(DefaultRole.ROLE_ADMIN.name()));
+    return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+            .anyMatch(r -> r.getAuthority().equals(DefaultRole.ROLE_ADMIN.name()));
   }
 
-  private void updateUser(UserAccount existingUser,
-                          UserAccount user,
-                          boolean adminPrivileges,
-                          String property) {
+  private void updateUser(UserAccount existingUser, UserAccount user, boolean adminPrivileges, String property) {
     user.setPassword(property);
     user.setProvider(existingUser.getProvider());
     if (!existingUser.getProvider().equals(UserAccount.LOCAL)) {
@@ -303,19 +271,14 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     if (!adminPrivileges) {
       replacePermissions(user, existingUser);
     }
-    user.setUserApiTokens(existingUser
-        .getUserApiTokens()
-        .stream()
-        .filter(existingToken -> user.getUserApiTokens()
-            .stream()
-            .anyMatch(updatedToken -> existingToken
-                .getTokenId()
-                .equals(updatedToken.getTokenId())))
-        .collect(Collectors.toList()));
+    user.setUserApiTokens(existingUser.getUserApiTokens().stream()
+            .filter(existingToken -> user.getUserApiTokens().stream()
+                    .anyMatch(updatedToken -> existingToken.getTokenId().equals(updatedToken.getTokenId())))
+            .collect(Collectors.toList()));
   }
 
-  private void encryptAndStore(UserAccount userAccount,
-                               String property) throws NoSuchAlgorithmException, InvalidKeySpecException {
+  private void encryptAndStore(UserAccount userAccount, String property)
+          throws NoSuchAlgorithmException, InvalidKeySpecException {
     String encryptedProperty = PasswordUtil.encryptPassword(property);
     userAccount.setPassword(encryptedProperty);
     getUserStorage().storeUser(userAccount);

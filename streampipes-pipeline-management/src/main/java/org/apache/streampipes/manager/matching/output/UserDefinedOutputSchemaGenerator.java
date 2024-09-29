@@ -46,7 +46,7 @@ public class UserDefinedOutputSchemaGenerator extends OutputSchemaGenerator<User
 
   @Override
   public Tuple2<EventSchema, UserDefinedOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
-                                                                            SpDataStream stream2) {
+          SpDataStream stream2) {
     return buildFromOneStream(stream1);
   }
 }

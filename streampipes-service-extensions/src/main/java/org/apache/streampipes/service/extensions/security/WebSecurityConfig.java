@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.service.extensions.security;
 
 import org.apache.streampipes.commons.environment.Environment;
@@ -62,34 +61,18 @@ public class WebSecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
     if (isAnonymousAccess()) {
-      http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-          .and()
-          .csrf().disable()
-          .formLogin().disable()
-          .httpBasic().disable()
-          .authorizeHttpRequests()
-          .requestMatchers(new AntPathRequestMatcher("/**")).permitAll();
+      http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable().formLogin()
+              .disable().httpBasic().disable().authorizeHttpRequests().requestMatchers(new AntPathRequestMatcher("/**"))
+              .permitAll();
     } else {
-      http
-          .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-          .and()
-          .csrf().disable()
-          .formLogin().disable()
-          .httpBasic().disable()
-          .exceptionHandling()
-          .authenticationEntryPoint(new UnauthorizedRequestEntryPoint())
-          .and()
-          .authorizeHttpRequests((authz) -> authz
-              .requestMatchers(UnauthenticatedInterfaces
-                  .get()
-                  .stream()
-                  .map(AntPathRequestMatcher::new)
-                  .toList()
-                  .toArray(new AntPathRequestMatcher[0]))
-              .permitAll()
-              .anyRequest().authenticated()
-              .and()
-              .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class));
+      http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable().formLogin()
+              .disable().httpBasic().disable().exceptionHandling()
+              .authenticationEntryPoint(new UnauthorizedRequestEntryPoint()).and()
+              .authorizeHttpRequests((authz) -> authz
+                      .requestMatchers(UnauthenticatedInterfaces.get().stream().map(AntPathRequestMatcher::new).toList()
+                              .toArray(new AntPathRequestMatcher[0]))
+                      .permitAll().anyRequest().authenticated().and()
+                      .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class));
     }
 
     return http.build();
@@ -103,8 +86,8 @@ public class WebSecurityConfig {
         return false;
       } else {
         LOG.warn(
-            "No env variable {} provided, which is required for authenticated access. Defaulting to anonymous access.",
-            env.getJwtPublicKeyLoc().getEnvVariableName());
+                "No env variable {} provided, which is required for authenticated access. Defaulting to anonymous access.",
+                env.getJwtPublicKeyLoc().getEnvVariableName());
         return true;
       }
     } else {

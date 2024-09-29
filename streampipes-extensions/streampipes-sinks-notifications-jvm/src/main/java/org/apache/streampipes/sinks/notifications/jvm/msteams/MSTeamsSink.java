@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.notifications.jvm.msteams;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -34,6 +33,10 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesNotificationSink;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHost;
@@ -44,10 +47,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class MSTeamsSink extends StreamPipesNotificationSink {
 
@@ -78,10 +77,7 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
   }
 
   @Override
-  public void onInvocation(
-      SinkParams parameters,
-      EventSinkRuntimeContext runtimeContext
-  ) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     super.onInvocation(parameters, runtimeContext);
 
     this.objectMapper = new ObjectMapper();
@@ -105,10 +101,7 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
       this.httpClient = HttpClients.createDefault();
     } else {
       var proxyUrl = extractor.singleValueParameter(KEY_PROXY_URL, String.class);
-      this.httpClient = HttpClientBuilder
-          .create()
-          .setProxy(HttpHost.create(proxyUrl))
-          .build();
+      this.httpClient = HttpClientBuilder.create().setProxy(HttpHost.create(proxyUrl)).build();
     }
   }
 
@@ -130,46 +123,22 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
 
   @Override
   public DataSinkBuilder declareModelWithoutSilentPeriod() {
-    return DataSinkBuilder
-        .create(ID, 1)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .category(DataSinkType.NOTIFICATION)
-        .requiredStream(
-            StreamRequirementsBuilder
-                .create()
-                .requiredProperty(EpRequirements.anyProperty())
-                .build()
-        )
-        .requiredSecret(Labels.withId(KEY_WEBHOOK_URL))
-        .requiredAlternatives(
-            Labels.withId(KEY_PROXY_ALTERNATIVES),
-            Alternatives.from(Labels.withId(KEY_PROXY_DISABLED)),
-            Alternatives.from(Labels.withId(KEY_PROXY_ENABLED),
-                StaticProperties.group(Labels.withId(KEY_PROXY_GROUP),
-                    StaticProperties.stringFreeTextProperty(Labels.withId(KEY_PROXY_URL))
-                )
-            ))
-        .requiredAlternatives(
-            Labels.withId(KEY_MESSAGE_TYPE_ALTERNATIVES),
-            Alternatives.from(
-                Labels.withId(KEY_MESSAGE_SIMPLE),
-                StaticProperties.stringFreeTextProperty(
-                    Labels.withId(KEY_MESSAGE_SIMPLE_CONTENT),
-                    true,
-                    true
-                ),
-                true
-            ),
-            Alternatives.from(
-                Labels.withId(KEY_MESSAGE_ADVANCED),
-                StaticProperties.stringFreeTextProperty(
-                    Labels.withId(KEY_MESSAGE_ADVANCED_CONTENT),
-                    true,
-                    true
-                )
-            )
-        );
+    return DataSinkBuilder.create(ID, 1).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).category(DataSinkType.NOTIFICATION)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredSecret(Labels.withId(KEY_WEBHOOK_URL))
+            .requiredAlternatives(Labels.withId(KEY_PROXY_ALTERNATIVES),
+                    Alternatives.from(Labels.withId(KEY_PROXY_DISABLED)),
+                    Alternatives.from(Labels.withId(KEY_PROXY_ENABLED),
+                            StaticProperties.group(Labels.withId(KEY_PROXY_GROUP),
+                                    StaticProperties.stringFreeTextProperty(Labels.withId(KEY_PROXY_URL)))))
+            .requiredAlternatives(Labels.withId(KEY_MESSAGE_TYPE_ALTERNATIVES),
+                    Alternatives.from(Labels.withId(KEY_MESSAGE_SIMPLE),
+                            StaticProperties.stringFreeTextProperty(Labels.withId(KEY_MESSAGE_SIMPLE_CONTENT), true,
+                                    true),
+                            true),
+                    Alternatives.from(Labels.withId(KEY_MESSAGE_ADVANCED), StaticProperties
+                            .stringFreeTextProperty(Labels.withId(KEY_MESSAGE_ADVANCED_CONTENT), true, true)));
   }
 
   @Override
@@ -180,12 +149,13 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
   /**
    * Creates a JSON string intended for the MS Teams Webhook URL based on the provided plain message content.
    * <p>
-   * This method utilizes a basic approach for constructing messages to be sent to MS Teams.
-   * If you intend to provide text in the form of Adaptive Cards, consider using
-   * {@link #createMessageFromAdvancedContent(String)} for a more advanced and interactive message format.
+   * This method utilizes a basic approach for constructing messages to be sent to MS Teams. If you intend to provide
+   * text in the form of Adaptive Cards, consider using {@link #createMessageFromAdvancedContent(String)} for a more
+   * advanced and interactive message format.
    * </p>
    *
-   * @param messageContent The plain message content to be included in the Teams message.
+   * @param messageContent
+   *          The plain message content to be included in the Teams message.
    * @return A JSON string formatted using a predefined template with the provided message content.
    */
   protected String createMessageFromSimpleContent(String messageContent) {
@@ -195,24 +165,24 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
   /**
    * Creates a message for MS Teams from a JSON string, specifically designed for use with Adaptive Cards.
    * <p>
-   * This method takes a JSON string as input, which is expected to represent the content of the message.
-   * The content is directly forwarded to MS Teams, allowing for the utilization of Adaptive Cards.
-   * Adaptive Cards provide a flexible and interactive way to present content in Microsoft Teams.
-   * Learn more about Adaptive Cards: <a href="https://learn.microsoft.com/en-us/adaptive-cards/">here</a>
+   * This method takes a JSON string as input, which is expected to represent the content of the message. The content is
+   * directly forwarded to MS Teams, allowing for the utilization of Adaptive Cards. Adaptive Cards provide a flexible
+   * and interactive way to present content in Microsoft Teams. Learn more about Adaptive Cards:
+   * <a href="https://learn.microsoft.com/en-us/adaptive-cards/">here</a>
    * </p>
    *
-   * @param messageContent The JSON string representing the content of the message.
+   * @param messageContent
+   *          The JSON string representing the content of the message.
    * @return The original JSON string, unchanged.
-   * @throws SpRuntimeException If the provided message is not a valid JSON string.
+   * @throws SpRuntimeException
+   *           If the provided message is not a valid JSON string.
    */
   protected String createMessageFromAdvancedContent(String messageContent) {
     try {
       objectMapper.readValue(messageContent, Object.class);
     } catch (JsonProcessingException e) {
       throw new SpRuntimeException(
-          "Advanced message content provided is not a valid JSON string: %s".formatted(messageContent),
-          e
-      );
+              "Advanced message content provided is not a valid JSON string: %s".formatted(messageContent), e);
     }
     return messageContent;
   }
@@ -220,11 +190,15 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
   /**
    * Sends a payload to a webhook using the provided HTTP client, payload, and webhook URL.
    *
-   * @param httpClient The HTTP client used to send the payload.
-   * @param payload    The payload to be sent to the webhook.
-   * @param webhookUrl The URL of the webhook to which the payload will be sent.
-   * @throws SpRuntimeException If an I/O error occurs while sending the payload to the webhook or
-   *                            the payload sent is not accepted by the API.
+   * @param httpClient
+   *          The HTTP client used to send the payload.
+   * @param payload
+   *          The payload to be sent to the webhook.
+   * @param webhookUrl
+   *          The URL of the webhook to which the payload will be sent.
+   * @throws SpRuntimeException
+   *           If an I/O error occurs while sending the payload to the webhook or the payload sent is not accepted by
+   *           the API.
    */
   protected void sendPayloadToWebhook(HttpClient httpClient, String payload, String webhookUrl) {
     try {
@@ -235,12 +209,9 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
       postRequest.setEntity(contentEntity);
 
       var result = httpClient.execute(postRequest);
-      if (result.getStatusLine()
-          .getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
+      if (result.getStatusLine().getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
         throw new SpRuntimeException(
-            "The provided message payload was not accepted by the MS Teams API: %s"
-                .formatted(payload)
-        );
+                "The provided message payload was not accepted by the MS Teams API: %s".formatted(payload));
       }
     } catch (IOException e) {
       throw new SpRuntimeException("Sending notification to MS Teams failed.", e);
@@ -250,8 +221,10 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
   /**
    * Validates a webhook URL to ensure it is not null, not empty, and has a valid URL format.
    *
-   * @param webhookUrl The webhook URL to be validated.
-   * @throws SpRuntimeException If the webhook URL is null or empty, or if it is not a valid URL.
+   * @param webhookUrl
+   *          The webhook URL to be validated.
+   * @throws SpRuntimeException
+   *           If the webhook URL is null or empty, or if it is not a valid URL.
    */
   protected void validateWebhookUrl(String webhookUrl) {
     if (webhookUrl == null || webhookUrl.isEmpty()) {

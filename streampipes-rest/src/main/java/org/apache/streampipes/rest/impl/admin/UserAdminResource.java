@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.client.user.Principal;
@@ -23,6 +22,9 @@ import org.apache.streampipes.model.client.user.PrincipalType;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +34,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v2/admin/users")
 public class UserAdminResource extends AbstractAuthGuardedRestResource {
@@ -42,7 +41,7 @@ public class UserAdminResource extends AbstractAuthGuardedRestResource {
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<List<Principal>> getAllUsers(
-      @RequestParam(value = "type", required = false) String principalType) {
+          @RequestParam(value = "type", required = false) String principalType) {
     List<Principal> allPrincipals = new ArrayList<>();
     if (principalType != null && principalType.equals(PrincipalType.USER_ACCOUNT.name())) {
       allPrincipals.addAll(getUserStorage().getAllUserAccounts());

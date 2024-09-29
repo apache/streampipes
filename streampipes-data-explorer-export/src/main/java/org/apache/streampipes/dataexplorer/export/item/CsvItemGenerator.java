@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.dataexplorer.export.item;
 
 public class CsvItemGenerator extends ItemGenerator {

@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.brokers.jvm.rest;
-
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
@@ -34,12 +32,12 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
+import java.io.IOException;
+
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class RestSink extends StreamPipesDataSink {
 
@@ -52,17 +50,10 @@ public class RestSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.rest", 0)
-        .category(DataSinkType.FORWARD)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredTextParameter(Labels.withId(URL_KEY),
-            false, false)
-        .build();
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.rest", 0).category(DataSinkType.FORWARD)
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredTextParameter(Labels.withId(URL_KEY), false, false).build();
   }
 
   @Override
@@ -71,8 +62,7 @@ public class RestSink extends StreamPipesDataSink {
   }
 
   @Override
-  public void onInvocation(SinkParams parameters,
-                           EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     jsonDataFormatDefinition = new JsonDataFormatDefinition();
     url = parameters.extractor().singleValueParameter(URL_KEY, String.class);
   }
@@ -83,16 +73,12 @@ public class RestSink extends StreamPipesDataSink {
     try {
       json = jsonDataFormatDefinition.fromMap(inputEvent.getRaw());
     } catch (SpRuntimeException e) {
-      LOG.error("Error while serializing event: " + inputEvent.getSourceInfo().getSourceId() + " Exception: "
-          + e);
+      LOG.error("Error while serializing event: " + inputEvent.getSourceInfo().getSourceId() + " Exception: " + e);
     }
 
     try {
-      Request.Post(url)
-          .bodyByteArray(json, ContentType.APPLICATION_JSON)
-          .connectTimeout(1000)
-          .socketTimeout(100000)
-          .execute().returnContent().asString();
+      Request.Post(url).bodyByteArray(json, ContentType.APPLICATION_JSON).connectTimeout(1000).socketTimeout(100000)
+              .execute().returnContent().asString();
     } catch (IOException e) {
       LOG.error("Error while sending data to endpoint: " + url + " Exception: " + e);
     }

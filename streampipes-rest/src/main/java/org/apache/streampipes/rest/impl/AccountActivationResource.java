@@ -33,9 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v2/activate-account")
 public class AccountActivationResource extends AbstractAuthGuardedRestResource {
 
-  @GetMapping(
-      path = "{recoveryCode}",
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "{recoveryCode}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> activateUserAccount(@PathVariable("recoveryCode") String recoveryCode) {
     try {
       getSpResourceManager().manageUsers().activateAccount(recoveryCode);

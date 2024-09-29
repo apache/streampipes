@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging;
 
 public interface InternalEventProcessor<T> {

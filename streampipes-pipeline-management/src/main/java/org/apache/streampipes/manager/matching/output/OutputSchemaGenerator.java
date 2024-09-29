@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.output;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -33,8 +32,7 @@ public abstract class OutputSchemaGenerator<T extends OutputStrategy> {
 
   public abstract Tuple2<EventSchema, T> buildFromOneStream(SpDataStream stream);
 
-  public abstract Tuple2<EventSchema, T> buildFromTwoStreams(SpDataStream stream1,
-                                                             SpDataStream stream2);
+  public abstract Tuple2<EventSchema, T> buildFromTwoStreams(SpDataStream stream1, SpDataStream stream2);
 
   public Tuple2<EventSchema, T> makeTuple(EventSchema eventSchema) {
     return new Tuple2<>(eventSchema, outputStrategy);

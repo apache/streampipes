@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.filters.jvm.processor.numericaltextfilter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -36,7 +35,6 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-
 public class NumericalTextFilterProcessor extends StreamPipesDataProcessor {
 
   // number
@@ -55,36 +53,29 @@ public class NumericalTextFilterProcessor extends StreamPipesDataProcessor {
   private StringOperator textOperator;
   private String textProperty;
 
-
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.numericaltextfilter", 0)
-        .category(DataProcessorType.FILTER, DataProcessorType.STRING_OPERATOR)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(NUMBER_MAPPING),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                Labels.withId(TEXT_MAPPING), PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(NUMBER_OPERATION), Options.from("<", "<=", ">",
-            ">=", "==", "!="))
-        .requiredFloatParameter(Labels.withId(NUMBER_VALUE), NUMBER_MAPPING)
-        .requiredSingleValueSelection(Labels.withId(TEXT_OPERATION), Options.from("MATCHES",
-            "CONTAINS"))
-        .requiredTextParameterWithLink(Labels.withId(TEXT_KEYWORD), "text")
-        .outputStrategy(OutputStrategies.keep())
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.numericaltextfilter", 0)
+            .category(DataProcessorType.FILTER, DataProcessorType.STRING_OPERATOR)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId(NUMBER_MAPPING),
+                            PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId(TEXT_MAPPING),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredSingleValueSelection(Labels.withId(NUMBER_OPERATION),
+                    Options.from("<", "<=", ">", ">=", "==", "!="))
+            .requiredFloatParameter(Labels.withId(NUMBER_VALUE), NUMBER_MAPPING)
+            .requiredSingleValueSelection(Labels.withId(TEXT_OPERATION), Options.from("MATCHES", "CONTAINS"))
+            .requiredTextParameterWithLink(Labels.withId(TEXT_KEYWORD), "text").outputStrategy(OutputStrategies.keep())
+            .build();
 
   }
 
   @Override
   public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
 
     // number
     this.numberProperty = processorParams.extractor().mappingPropertyValue(NUMBER_MAPPING);
@@ -94,8 +85,8 @@ public class NumericalTextFilterProcessor extends StreamPipesDataProcessor {
     // text
     this.textProperty = processorParams.extractor().mappingPropertyValue(TEXT_MAPPING);
     this.textKeyword = processorParams.extractor().singleValueParameter(TEXT_KEYWORD, String.class);
-    this.textOperator =
-        StringOperator.valueOf(processorParams.extractor().selectedSingleValue(TEXT_OPERATION, String.class));
+    this.textOperator = StringOperator
+            .valueOf(processorParams.extractor().selectedSingleValue(TEXT_OPERATION, String.class));
 
     String numOperation = "GT";
 
@@ -120,13 +111,9 @@ public class NumericalTextFilterProcessor extends StreamPipesDataProcessor {
     boolean satisfiesNumberFilter = false;
     boolean satisfiesTextFilter = false;
 
-    Double numbervalue = event.getFieldBySelector(this.numberProperty)
-        .getAsPrimitive()
-        .getAsDouble();
+    Double numbervalue = event.getFieldBySelector(this.numberProperty).getAsPrimitive().getAsDouble();
 
-    String value = event.getFieldBySelector(this.textProperty)
-        .getAsPrimitive()
-        .getAsString();
+    String value = event.getFieldBySelector(this.textProperty).getAsPrimitive().getAsString();
 
     Double threshold = this.numberThreshold;
 

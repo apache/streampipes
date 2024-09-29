@@ -15,23 +15,20 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.context;
+
+import static org.apache.streampipes.extensions.management.util.RuntimeContextUtils.makeConfigExtractor;
+import static org.apache.streampipes.extensions.management.util.RuntimeContextUtils.makeStreamPipesClient;
 
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.management.monitoring.ExtensionsLogger;
 
-import static org.apache.streampipes.extensions.management.util.RuntimeContextUtils.makeConfigExtractor;
-import static org.apache.streampipes.extensions.management.util.RuntimeContextUtils.makeStreamPipesClient;
-
 public class AdapterContextGenerator {
 
   public IAdapterRuntimeContext makeRuntimeContext(String adapterInstanceId) {
-    return new SpAdapterRuntimeContext(
-        new ExtensionsLogger(adapterInstanceId),
-        makeConfigExtractor(),
-        makeStreamPipesClient());
+    return new SpAdapterRuntimeContext(new ExtensionsLogger(adapterInstanceId), makeConfigExtractor(),
+            makeStreamPipesClient());
   }
 
   public IAdapterGuessSchemaContext makeGuessSchemaContext() {

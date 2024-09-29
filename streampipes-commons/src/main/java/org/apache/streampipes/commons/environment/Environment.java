@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.commons.environment;
 
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
@@ -75,7 +74,6 @@ public interface Environment {
 
   StringEnvironmentVariable getCouchDbPassword();
 
-
   // JWT & Authentication
 
   StringEnvironmentVariable getClientUser();
@@ -105,7 +103,6 @@ public interface Environment {
 
   StringEnvironmentVariable getPrioritizedProtocol();
 
-
   // Setup
   BooleanEnvironmentVariable getSetupInstallPipelineElements();
 
@@ -126,7 +123,7 @@ public interface Environment {
 
   IntEnvironmentVariable getFlinkJobmanagerPort();
 
-  //prometheus
+  // prometheus
   StringEnvironmentVariable getPrometheusEndpointInclude();
 
   BooleanEnvironmentVariable getSetupPrometheusEndpoint();

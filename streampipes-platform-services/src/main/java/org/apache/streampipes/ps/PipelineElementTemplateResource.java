@@ -26,6 +26,8 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
+import java.util.List;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -44,26 +46,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v2/pipeline-element-templates")
 public class PipelineElementTemplateResource extends AbstractRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(summary = "Get a list of all pipeline element templates",
-             tags = {"Pipeline Element Templates"},
-             responses = {
-                 @ApiResponse(content = {
-                     @Content(
-                         mediaType = "application/json",
-                         array = @ArraySchema(schema = @Schema(implementation = PipelineElementTemplate.class)))
-                 })
-             })
+  @Operation(summary = "Get a list of all pipeline element templates", tags = {
+      "Pipeline Element Templates"}, responses = {@ApiResponse(content = {
+          @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PipelineElementTemplate.class)))})})
   public ResponseEntity<List<PipelineElementTemplate>> getAll(
-      @Parameter(description = "Filter all templates by this appId")
-      @RequestParam("appId") String appId
-  ) {
+          @Parameter(description = "Filter all templates by this appId") @RequestParam("appId") String appId) {
     if (appId == null) {
       return ok(getPipelineElementTemplateStorage().findAll());
     } else {
@@ -71,21 +63,13 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
     }
   }
 
-  @GetMapping(path = "{id}", produces = { MediaType.APPLICATION_JSON_VALUE, "application/yaml" })
-  @Operation(summary = "Get a single pipeline element template by a given id",
-             tags = {"Pipeline Element Templates"},
-             responses = {
-                 @ApiResponse(content = {
-                     @Content(
-                         mediaType = "application/json",
-                         schema = @Schema(implementation = PipelineElementTemplate.class))
-                 }),
-                 @ApiResponse(responseCode = "400", description = "Template with given id not found")
-             })
+  @GetMapping(path = "{id}", produces = {MediaType.APPLICATION_JSON_VALUE, "application/yaml"})
+  @Operation(summary = "Get a single pipeline element template by a given id", tags = {
+      "Pipeline Element Templates"}, responses = {@ApiResponse(content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = PipelineElementTemplate.class))}),
+          @ApiResponse(responseCode = "400", description = "Template with given id not found")})
   public ResponseEntity<?> getById(
-      @Parameter(description = "The id of the pipeline element template", required = true)
-      @PathVariable("id") String s
-  ) {
+          @Parameter(description = "The id of the pipeline element template", required = true) @PathVariable("id") String s) {
     try {
       return ok(getPipelineElementTemplateStorage().getElementById(s));
     } catch (RuntimeException e) {
@@ -94,36 +78,22 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(summary = "Store a new pipeline element template",
-             tags = {"Pipeline Element Templates"},
-             responses = {
-                 @ApiResponse(responseCode = "200", description = "Template successfully stored")
-             })
+  @Operation(summary = "Store a new pipeline element template", tags = {"Pipeline Element Templates"}, responses = {
+      @ApiResponse(responseCode = "200", description = "Template successfully stored")})
   public ResponseEntity<Void> create(
-      @RequestBody(description = "The pipeline element template to be stored",
-                   content = @Content(schema = @Schema(implementation = PipelineElementTemplate.class)))
-      @org.springframework.web.bind.annotation.RequestBody PipelineElementTemplate entity
-  ) {
+          @RequestBody(description = "The pipeline element template to be stored", content = @Content(schema = @Schema(implementation = PipelineElementTemplate.class))) @org.springframework.web.bind.annotation.RequestBody PipelineElementTemplate entity) {
     getPipelineElementTemplateStorage().persist(entity);
     return ok();
   }
 
   @PutMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(summary = "Update a pipeline element template",
-             tags = {"Pipeline Element Templates"},
-             responses = {
-                 @ApiResponse(content = {
-                     @Content(
-                         mediaType = "application/json",
-                         schema = @Schema(implementation = PipelineElementTemplate.class))
-                 }, responseCode = "200", description = "Template successfully updated"),
-                 @ApiResponse(responseCode = "400", description = "Template with given id not found")
-             })
+  @Operation(summary = "Update a pipeline element template", tags = {"Pipeline Element Templates"}, responses = {
+      @ApiResponse(content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = PipelineElementTemplate.class))}, responseCode = "200", description = "Template successfully updated"),
+      @ApiResponse(responseCode = "400", description = "Template with given id not found")})
   public ResponseEntity<?> update(
-      @Parameter(description = "The id of the pipeline element template", required = true)
-      @PathVariable("id") String id,
-      @RequestBody PipelineElementTemplate entity
-  ) {
+          @Parameter(description = "The id of the pipeline element template", required = true) @PathVariable("id") String id,
+          @RequestBody PipelineElementTemplate entity) {
     try {
       if (id.equals(entity.getCouchDbId())) {
         return ok(getPipelineElementTemplateStorage().updateElement(entity));
@@ -136,113 +106,62 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
   }
 
   @DeleteMapping(path = "{id}")
-  @Operation(summary = "Delete a pipeline element template by a given id",
-             tags = {"Pipeline Element Templates"},
-             responses = {
-                 @ApiResponse(responseCode = "200", description = "Pipeline element template successfully deleted"),
-                 @ApiResponse(responseCode = "400", description = "Template with given id not found")
-             })
+  @Operation(summary = "Delete a pipeline element template by a given id", tags = {
+      "Pipeline Element Templates"}, responses = {
+          @ApiResponse(responseCode = "200", description = "Pipeline element template successfully deleted"),
+          @ApiResponse(responseCode = "400", description = "Template with given id not found")})
   public ResponseEntity<Void> delete(
-      @Parameter(description = "The id of the pipeline element template", required = true)
-      @PathVariable("id") String s
-  ) {
+          @Parameter(description = "The id of the pipeline element template", required = true) @PathVariable("id") String s) {
     PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(s);
     getPipelineElementTemplateStorage().deleteElement(template);
     return ok();
   }
 
-  @PostMapping(
-      path = "{id}/sink",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(summary = "Configure a data sink with a pipeline element template.",
-             tags = {"Pipeline Element Templates"},
-             responses = {
-                 @ApiResponse(content = {
-                     @Content(
-                         mediaType = "application/json",
-                         schema = @Schema(implementation = DataSinkInvocation.class))
-                 }, responseCode = "200", description = "The configured data sink invocation model"),
-             })
+  @PostMapping(path = "{id}/sink", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Configure a data sink with a pipeline element template.", tags = {
+      "Pipeline Element Templates"}, responses = {@ApiResponse(content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = DataSinkInvocation.class))}, responseCode = "200", description = "The configured data sink invocation model"),})
   public ResponseEntity<DataSinkInvocation> getPipelineElementForTemplate(
-      @Parameter(description = "The id of the pipeline element template", required = true)
-      @PathVariable("id") String id,
+          @Parameter(description = "The id of the pipeline element template", required = true) @PathVariable("id") String id,
 
-      @Parameter(
-          description = "Overwrite the name and description of the pipeline element"
-              + "with the labels given in the pipeline element template")
-      @RequestParam(value = "overwriteNames", defaultValue = "false", required = false)
-      String overwriteNameAndDescription,
-      @RequestBody(description = "The data sink invocation that should be configured with the template contents",
-                   content = @Content(schema = @Schema(implementation = DataSinkInvocation.class)))
-      @org.springframework.web.bind.annotation.RequestBody DataSinkInvocation invocation
-  ) {
+          @Parameter(description = "Overwrite the name and description of the pipeline element"
+                  + "with the labels given in the pipeline element template") @RequestParam(value = "overwriteNames", defaultValue = "false", required = false) String overwriteNameAndDescription,
+          @RequestBody(description = "The data sink invocation that should be configured with the template contents", content = @Content(schema = @Schema(implementation = DataSinkInvocation.class))) @org.springframework.web.bind.annotation.RequestBody DataSinkInvocation invocation) {
     PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
     return ok(new DataSinkTemplateHandler(template, invocation, Boolean.parseBoolean(overwriteNameAndDescription))
-                  .applyTemplateOnPipelineElement());
+            .applyTemplateOnPipelineElement());
   }
 
-  @PostMapping(
-      path = "{id}/processor",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(summary = "Configure a data processor with a pipeline element template.",
-             tags = {"Pipeline Element Templates"},
-             responses = {
-                 @ApiResponse(content = {
-                     @Content(
-                         mediaType = "application/json",
-                         schema = @Schema(implementation = DataProcessorInvocation.class))
-                 }, responseCode = "200", description = "The configured data processor invocation model"),
-             })
+  @PostMapping(path = "{id}/processor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Configure a data processor with a pipeline element template.", tags = {
+      "Pipeline Element Templates"}, responses = {@ApiResponse(content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = DataProcessorInvocation.class))}, responseCode = "200", description = "The configured data processor invocation model"),})
   public ResponseEntity<DataProcessorInvocation> getPipelineElementForTemplate(
-      @Parameter(description = "The id of the pipeline element template", required = true)
-      @PathVariable("id") String id,
+          @Parameter(description = "The id of the pipeline element template", required = true) @PathVariable("id") String id,
 
-      @Parameter(description = "Overwrite the name and description of the pipeline element with"
-          + "the labels given in the pipeline element template")
-      @RequestParam(value = "overwriteNames", defaultValue = "false", required = false)
-      String overwriteNameAndDescription,
+          @Parameter(description = "Overwrite the name and description of the pipeline element with"
+                  + "the labels given in the pipeline element template") @RequestParam(value = "overwriteNames", defaultValue = "false", required = false) String overwriteNameAndDescription,
 
-      @RequestBody(description = "The data processor invocation that should be configured with the template contents",
-                   content = @Content(schema = @Schema(implementation = DataProcessorInvocation.class)))
-      @org.springframework.web.bind.annotation.RequestBody DataProcessorInvocation invocation
-  ) {
+          @RequestBody(description = "The data processor invocation that should be configured with the template contents", content = @Content(schema = @Schema(implementation = DataProcessorInvocation.class))) @org.springframework.web.bind.annotation.RequestBody DataProcessorInvocation invocation) {
     PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
     return ok(new DataProcessorTemplateHandler(template, invocation, Boolean.parseBoolean(overwriteNameAndDescription))
-                  .applyTemplateOnPipelineElement());
+            .applyTemplateOnPipelineElement());
   }
 
-  @PostMapping(
-      path = "{id}/adapter",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(summary = "Configure an adapter with a pipeline element template.",
-             tags = {"Pipeline Element Templates"},
-             responses = {
-                 @ApiResponse(content = {
-                     @Content(
-                         mediaType = "application/json",
-                         schema = @Schema(implementation = AdapterDescription.class))
-                 }, responseCode = "200", description = "The configured adapter model"),
-             })
+  @PostMapping(path = "{id}/adapter", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Configure an adapter with a pipeline element template.", tags = {
+      "Pipeline Element Templates"}, responses = {@ApiResponse(content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = AdapterDescription.class))}, responseCode = "200", description = "The configured adapter model"),})
   public ResponseEntity<AdapterDescription> getPipelineElementForTemplate(
-      @Parameter(description = "The id of the pipeline element template", required = true)
-      @PathVariable("id") String id,
+          @Parameter(description = "The id of the pipeline element template", required = true) @PathVariable("id") String id,
 
-      @Parameter(description = "Overwrite the name and description of the pipeline element"
-          + "with the labels given in the pipeline element template")
-      @RequestParam(value = "overwriteNames", defaultValue = "false", required = false)
-      String overwriteNameAndDescription,
+          @Parameter(description = "Overwrite the name and description of the pipeline element"
+                  + "with the labels given in the pipeline element template") @RequestParam(value = "overwriteNames", defaultValue = "false", required = false) String overwriteNameAndDescription,
 
-      @RequestBody(description = "The adapter that should be configured with the template contents",
-                   content = @Content(schema = @Schema(implementation = AdapterDescription.class)))
-      @org.springframework.web.bind.annotation.RequestBody AdapterDescription adapterDescription
-  ) {
+          @RequestBody(description = "The adapter that should be configured with the template contents", content = @Content(schema = @Schema(implementation = AdapterDescription.class))) @org.springframework.web.bind.annotation.RequestBody AdapterDescription adapterDescription) {
     PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
-    var desc =
-        new AdapterTemplateHandler(template, adapterDescription, Boolean.parseBoolean(overwriteNameAndDescription))
-            .applyTemplateOnPipelineElement();
+    var desc = new AdapterTemplateHandler(template, adapterDescription,
+            Boolean.parseBoolean(overwriteNameAndDescription)).applyTemplateOnPipelineElement();
     return ok(desc);
   }
 }

@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.model.export;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.util;
 
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;

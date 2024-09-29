@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
@@ -30,20 +29,17 @@ public class ListPropertyMatch implements Matcher<EventPropertyList, EventProper
     if (requirement.getEventProperty() == null) {
       return true;
     } else {
-      return domainPropertyMatch(offer, requirement, errorLog) && listItemMatch(offer, requirement,
-          errorLog);
+      return domainPropertyMatch(offer, requirement, errorLog) && listItemMatch(offer, requirement, errorLog);
     }
   }
 
   private boolean domainPropertyMatch(EventPropertyList offer, EventPropertyList requirement,
-                                      List<MatchingResultMessage> errorLog) {
-    return new DomainPropertyMatch().match(offer.getDomainProperties(), requirement.getDomainProperties(),
-        errorLog);
+          List<MatchingResultMessage> errorLog) {
+    return new DomainPropertyMatch().match(offer.getDomainProperties(), requirement.getDomainProperties(), errorLog);
   }
 
   private boolean listItemMatch(EventPropertyList offer, EventPropertyList requirement,
-                                List<MatchingResultMessage> errorLog) {
-    return new PropertyMatch().match(offer.getEventProperty(), requirement.getEventProperty(),
-        errorLog);
+          List<MatchingResultMessage> errorLog) {
+    return new PropertyMatch().match(offer.getEventProperty(), requirement.getEventProperty(), errorLog);
   }
 }

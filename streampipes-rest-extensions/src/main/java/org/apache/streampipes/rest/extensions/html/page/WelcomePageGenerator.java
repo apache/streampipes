@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.extensions.html.page;
 
 import org.apache.streampipes.extensions.api.assets.AssetResolver;
@@ -34,14 +33,13 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.rest.extensions.html.model.Description;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WelcomePageGenerator {
 
@@ -52,9 +50,8 @@ public class WelcomePageGenerator {
   protected Collection<StreamPipesAdapter> adapters;
   protected String baseUri;
 
-  public WelcomePageGenerator(String baseUri,
-                              Collection<IStreamPipesPipelineElement<?>> pipelineElements,
-                              Collection<StreamPipesAdapter> adapters) {
+  public WelcomePageGenerator(String baseUri, Collection<IStreamPipesPipelineElement<?>> pipelineElements,
+          Collection<StreamPipesAdapter> adapters) {
     this.pipelineElements = pipelineElements;
     this.adapters = adapters;
     this.baseUri = baseUri;
@@ -72,26 +69,17 @@ public class WelcomePageGenerator {
 
   private Description getAdapterDescription(StreamPipesAdapter adapter) {
     var entity = adapter.declareConfig().getAdapterDescription();
-    return getDescription(
-        entity,
-        adapter.declareConfig().getAssetResolver(),
-        "adapter",
-        "api/v1/worker/adapters/"
-    );
+    return getDescription(entity, adapter.declareConfig().getAssetResolver(), "adapter", "api/v1/worker/adapters/");
   }
 
   private Description getPipelineElementDescription(IStreamPipesPipelineElement<?> declarer) {
     var entity = declarer.declareConfig().getDescription();
-    return getDescription(
-        entity,
-        new DefaultAssetResolver(entity.getAppId()), getType(declarer), getPathPrefix(declarer)
-    );
+    return getDescription(entity, new DefaultAssetResolver(entity.getAppId()), getType(declarer),
+            getPathPrefix(declarer));
   }
 
-  private Description getDescription(NamedStreamPipesEntity entity,
-                                     AssetResolver assetResolver,
-                                     String type,
-                                     String pathPrefix) {
+  private Description getDescription(NamedStreamPipesEntity entity, AssetResolver assetResolver, String type,
+          String pathPrefix) {
     Description desc = new Description();
     // TODO remove after full internationalization support has been implemented
     updateLabel(entity, desc, assetResolver);
@@ -99,10 +87,9 @@ public class WelcomePageGenerator {
     desc.setElementId(entity.getElementId());
     desc.setAppId(entity.getAppId());
     desc.setEditable(!(entity.isInternallyManaged()));
-    desc.setIncludesDocs(entity.isIncludesAssets()
-        && entity.getIncludedAssets().contains(ExtensionAssetType.DOCUMENTATION));
-    desc.setIncludesIcon(entity.isIncludesAssets()
-        && entity.getIncludedAssets().contains(ExtensionAssetType.ICON));
+    desc.setIncludesDocs(
+            entity.isIncludesAssets() && entity.getIncludedAssets().contains(ExtensionAssetType.DOCUMENTATION));
+    desc.setIncludesIcon(entity.isIncludesAssets() && entity.getIncludedAssets().contains(ExtensionAssetType.ICON));
     String uri = baseUri + pathPrefix;
     desc.setDescriptionUrl(uri + entity.getAppId());
     return desc;
@@ -135,9 +122,7 @@ public class WelcomePageGenerator {
     }
   }
 
-  private void updateLabel(NamedStreamPipesEntity entity,
-                           Description desc,
-                           AssetResolver assetResolver) {
+  private void updateLabel(NamedStreamPipesEntity entity, Description desc, AssetResolver assetResolver) {
     if (!entity.isIncludesLocales()) {
       desc.setName(entity.getName());
       desc.setDescription(entity.getDescription());

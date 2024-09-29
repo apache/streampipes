@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.pe.config;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
@@ -23,8 +22,7 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 
 import java.util.function.Supplier;
 
-public interface IPipelineElementConfiguration<NeT extends NamedStreamPipesEntity,
-    PeT extends IStreamPipesPipelineElement<?>> {
+public interface IPipelineElementConfiguration<NeT extends NamedStreamPipesEntity, PeT extends IStreamPipesPipelineElement<?>> {
 
   NeT getDescription();
 

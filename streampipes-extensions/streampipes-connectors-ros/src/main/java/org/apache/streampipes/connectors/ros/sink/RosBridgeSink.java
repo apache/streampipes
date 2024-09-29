@@ -15,11 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connectors.ros.sink;
 
-import org.apache.streampipes.dataformat.SpDataFormatDefinition;
+import static org.apache.streampipes.connectors.ros.config.RosConfig.ROS_HOST_KEY;
+import static org.apache.streampipes.connectors.ros.config.RosConfig.ROS_PORT_KEY;
+import static org.apache.streampipes.connectors.ros.config.RosConfig.TOPIC_KEY;
+
 import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
+import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
@@ -38,10 +41,6 @@ import edu.wpi.rail.jrosbridge.Ros;
 import edu.wpi.rail.jrosbridge.Topic;
 import edu.wpi.rail.jrosbridge.messages.Message;
 
-import static org.apache.streampipes.connectors.ros.config.RosConfig.ROS_HOST_KEY;
-import static org.apache.streampipes.connectors.ros.config.RosConfig.ROS_PORT_KEY;
-import static org.apache.streampipes.connectors.ros.config.RosConfig.TOPIC_KEY;
-
 public class RosBridgeSink implements IStreamPipesDataSink {
 
   public static final String ID = "org.apache.streampipes.connectors.ros.sink";
@@ -53,28 +52,16 @@ public class RosBridgeSink implements IStreamPipesDataSink {
 
   @Override
   public IDataSinkConfiguration declareConfig() {
-    return DataSinkConfiguration.create(
-        RosBridgeSink::new,
-        DataSinkBuilder.create(ID, 0)
-            .category(DataSinkType.MESSAGING)
-            .withLocales(Locales.EN)
+    return DataSinkConfiguration.create(RosBridgeSink::new, DataSinkBuilder.create(ID, 0)
+            .category(DataSinkType.MESSAGING).withLocales(Locales.EN)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-            .requiredStream(
-                StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build()
-            )
-            .requiredTextParameter(Labels.withId(ROS_HOST_KEY))
-            .requiredIntegerParameter(Labels.withId(ROS_PORT_KEY))
-            .requiredTextParameter(Labels.withId(TOPIC_KEY))
-            .build()
-    );
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredTextParameter(Labels.withId(ROS_HOST_KEY)).requiredIntegerParameter(Labels.withId(ROS_PORT_KEY))
+            .requiredTextParameter(Labels.withId(TOPIC_KEY)).build());
   }
 
   @Override
-  public void onPipelineStarted(IDataSinkParameters params,
-                                EventSinkRuntimeContext runtimeContext) {
+  public void onPipelineStarted(IDataSinkParameters params, EventSinkRuntimeContext runtimeContext) {
     var extractor = params.extractor();
     String rosHost = extractor.singleValueParameter(ROS_HOST_KEY, String.class);
     int rosPort = extractor.singleValueParameter(ROS_PORT_KEY, Integer.class);

@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.kafka.security;
+
+import java.util.Properties;
 
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.common.security.auth.SecurityProtocol;
-
-import java.util.Properties;
 
 public class KafkaSecurityUnauthenticatedSSLConfig extends KafkaSecurityConfig {
 

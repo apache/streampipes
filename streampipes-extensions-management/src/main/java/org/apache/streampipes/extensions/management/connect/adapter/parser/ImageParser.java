@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.parser;
 
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
@@ -28,13 +27,13 @@ import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.ParserDescriptionBuilder;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+
+import org.apache.commons.io.IOUtils;
 
 public class ImageParser implements IParser {
 
@@ -44,8 +43,7 @@ public class ImageParser implements IParser {
 
   @Override
   public ParserDescription declareDescription() {
-    return ParserDescriptionBuilder.create(ID, LABEL, DESCRIPTION)
-        .build();
+    return ParserDescriptionBuilder.create(ID, LABEL, DESCRIPTION).build();
   }
 
   @Override
@@ -58,10 +56,7 @@ public class ImageParser implements IParser {
     // validate that image can be parsed
     var image = parseImage(inputStream);
 
-    return GuessSchemaBuilder.create()
-        .property(EpProperties.imageProperty("image"))
-        .sample("image", image)
-        .build();
+    return GuessSchemaBuilder.create().property(EpProperties.imageProperty("image")).sample("image", image).build();
   }
 
   @Override
@@ -82,6 +77,5 @@ public class ImageParser implements IParser {
       throw new ParseException("Image could not be parsed", e);
     }
   }
-
 
 }

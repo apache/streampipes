@@ -23,26 +23,10 @@ import java.util.Collection;
 public class UnauthenticatedInterfaces {
 
   public static Collection<String> get() {
-    return Arrays.asList(
-        "/api/svchealth/*",
-        "/api/v2/setup/configured",
-        "/api/v2/auth/login",
-        "/api/v2/auth/register",
-        "/api/v2/auth/settings",
-        "/api/v2/auth/restore/*",
-        "/api/v2/restore-password/*",
-        "/api/v2/activate-account/*",
-        "/api/v2/pe/*/assets/icon",
-        "/api/v2/pe/*/assets/*.png",
-        "/api/v2/connect/master/description/*/assets/icon",
-        "/apidocs/**",
-        "/api/auth/**",
-        "/oauth2/**",
-        "/api/all",
-        "/error",
-        "/",
-        "/streampipes-backend/",
-        "/streampipes-backend/index.html"
-    );
+    return Arrays.asList("/api/svchealth/*", "/api/v2/setup/configured", "/api/v2/auth/login", "/api/v2/auth/register",
+            "/api/v2/auth/settings", "/api/v2/auth/restore/*", "/api/v2/restore-password/*",
+            "/api/v2/activate-account/*", "/api/v2/pe/*/assets/icon", "/api/v2/pe/*/assets/*.png",
+            "/api/v2/connect/master/description/*/assets/icon", "/apidocs/**", "/api/auth/**", "/oauth2/**", "/api/all",
+            "/error", "/", "/streampipes-backend/", "/streampipes-backend/index.html");
   }
 }

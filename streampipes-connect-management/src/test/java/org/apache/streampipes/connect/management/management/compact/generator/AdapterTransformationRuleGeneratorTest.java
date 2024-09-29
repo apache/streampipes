@@ -15,8 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.management.management.compact.generator;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.apache.streampipes.connect.management.compact.generator.AdapterTransformationRuleGenerator;
 import org.apache.streampipes.model.SpDataStream;
@@ -26,15 +29,11 @@ import org.apache.streampipes.model.connect.adapter.compact.TransformationConfig
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import org.junit.jupiter.api.Test;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Test;
 
 public class AdapterTransformationRuleGeneratorTest {
 
@@ -52,10 +51,7 @@ public class AdapterTransformationRuleGeneratorTest {
     when(compactAdapter.transform()).thenReturn(new TransformationConfig(rename, Map.of()));
 
     new AdapterTransformationRuleGenerator().apply(adapterDescription, compactAdapter);
-    assertEquals(
-        "b",
-        adapterDescription.getDataStream().getEventSchema().getEventProperties().get(0).getRuntimeName()
-    );
+    assertEquals("b", adapterDescription.getDataStream().getEventSchema().getEventProperties().get(0).getRuntimeName());
     assertEquals(1, adapterDescription.getRules().size());
   }
 
@@ -72,23 +68,13 @@ public class AdapterTransformationRuleGeneratorTest {
     stream.setEventSchema(schema);
     var adapterDescription = new AdapterDescription();
     adapterDescription.setDataStream(stream);
-    when(compactAdapter.transform()).thenReturn(
-        new TransformationConfig(
-            Map.of(),
-            Map.of("a", targetMeasurementUnit))
-    );
+    when(compactAdapter.transform()).thenReturn(new TransformationConfig(Map.of(), Map.of("a", targetMeasurementUnit)));
 
     new AdapterTransformationRuleGenerator().apply(adapterDescription, compactAdapter);
     var transformedEp = adapterDescription.getDataStream().getEventSchema().getEventProperties().get(0);
     assertEquals(EventPropertyPrimitive.class, transformedEp.getClass());
-    assertEquals(
-        "a",
-        transformedEp.getRuntimeName()
-    );
-    assertEquals(
-        targetMeasurementUnit,
-        ((EventPropertyPrimitive) transformedEp).getMeasurementUnit().toString()
-    );
+    assertEquals("a", transformedEp.getRuntimeName());
+    assertEquals(targetMeasurementUnit, ((EventPropertyPrimitive) transformedEp).getMeasurementUnit().toString());
     assertEquals(1, adapterDescription.getRules().size());
   }
 }

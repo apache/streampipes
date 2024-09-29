@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.state.buffer;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -59,40 +58,28 @@ public class StateBufferProcessor extends StreamPipesDataProcessor {
 
   private Map<String, List> stateBuffer;
 
-
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.processor.state.buffer", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.timestampReq(),
-                Labels.withId(TIMESTAMP_FIELD_ID),
-                PropertyScope.HEADER_PROPERTY)
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReqList(SPSensor.STATE),
-                Labels.withId(STATE_FIELD_ID),
-                PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.numberReq(),
-                Labels.withId(SENSOR_VALUE_FIELD_ID),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .build()
-        )
-        .outputStrategy(OutputStrategies.fixed(
-            EpProperties.timestampProperty(TIMESTAMP),
-            EpProperties.listDoubleEp(Labels.withId(VALUES), VALUES, SO.NUMBER),
-            EpProperties.listStringEp(Labels.withId(STATE), STATE, SPSensor.STATE)
-        ))
-        .build();
+            .create("org.apache.streampipes.processors.transformation.jvm.processor.state.buffer", 0)
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.withId(TIMESTAMP_FIELD_ID),
+                            PropertyScope.HEADER_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReqList(SPSensor.STATE),
+                            Labels.withId(STATE_FIELD_ID), PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId(SENSOR_VALUE_FIELD_ID),
+                            PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .outputStrategy(OutputStrategies.fixed(EpProperties.timestampProperty(TIMESTAMP),
+                    EpProperties.listDoubleEp(Labels.withId(VALUES), VALUES, SO.NUMBER),
+                    EpProperties.listStringEp(Labels.withId(STATE), STATE, SPSensor.STATE)))
+            .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     var extractor = parameters.extractor();
     timeProperty = extractor.mappingPropertyValue(TIMESTAMP_FIELD_ID);
     stateProperty = extractor.mappingPropertyValue(STATE_FIELD_ID);
@@ -101,8 +88,7 @@ public class StateBufferProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onEvent(Event inputEvent,
-                      SpOutputCollector collector) throws SpRuntimeException {
+  public void onEvent(Event inputEvent, SpOutputCollector collector) throws SpRuntimeException {
     long timestamp = inputEvent.getFieldBySelector(this.timeProperty).getAsPrimitive().getAsLong();
     List<String> states = inputEvent.getFieldBySelector(this.stateProperty).getAsList().parseAsSimpleType(String.class);
     double value = inputEvent.getFieldBySelector(this.sensorValueProperty).getAsPrimitive().getAsDouble();

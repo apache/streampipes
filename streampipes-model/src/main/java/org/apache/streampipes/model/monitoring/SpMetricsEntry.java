@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.monitoring;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -64,8 +63,7 @@ public class SpMetricsEntry {
     this.messagesOut.setCounter(this.messagesOut.getCounter() + 1);
   }
 
-  public void addInMetrics(String sourceInfo,
-                           long lastTimestamp) {
+  public void addInMetrics(String sourceInfo, long lastTimestamp) {
     if (!this.messagesIn.containsKey(sourceInfo)) {
       this.messagesIn.put(sourceInfo, new MessageCounter());
     }

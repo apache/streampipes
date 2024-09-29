@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.migration;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -25,6 +24,5 @@ import java.util.List;
 
 public interface IMigrationHandler {
 
-  void handleMigrations(SpServiceRegistration serviceRegistration,
-                       List<ModelMigratorConfig> migrationConfigs);
+  void handleMigrations(SpServiceRegistration serviceRegistration, List<ModelMigratorConfig> migrationConfigs);
 }

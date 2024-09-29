@@ -15,14 +15,13 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.flink.serializer;
+
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.streaming.util.serialization.SerializationSchema;
-
-import java.util.Map;
 
 public class SimpleJmsSerializer implements SerializationSchema<Map<String, Object>> {
 

@@ -29,20 +29,13 @@ public class TestJacksonSerializer {
   public static void assertions(PipelineElementTemplate template) {
     Assertions.assertEquals("name", template.getTemplateName());
     Assertions.assertEquals("description", template.getTemplateDescription());
-    Assertions.assertEquals(2,
-        template.getTemplateConfigs().size());
-    Assertions.assertEquals("test-string",
-        findValue(template, "test-key"));
+    Assertions.assertEquals(2, template.getTemplateConfigs().size());
+    Assertions.assertEquals("test-string", findValue(template, "test-key"));
   }
 
-  private static Object findValue(PipelineElementTemplate template,
-                                  String key) {
-    return template.getTemplateConfigs()
-        .stream()
-        .filter(t -> t.containsKey(key))
-        .map(t -> t.get(key))
-        .findFirst()
-        .orElseThrow(() -> new AssertionError("test-key not found"));
+  private static Object findValue(PipelineElementTemplate template, String key) {
+    return template.getTemplateConfigs().stream().filter(t -> t.containsKey(key)).map(t -> t.get(key)).findFirst()
+            .orElseThrow(() -> new AssertionError("test-key not found"));
   }
 
   @Test
@@ -51,11 +44,10 @@ public class TestJacksonSerializer {
 
     try {
       String json = JacksonSerializer.getObjectMapper().writeValueAsString(template);
-      PipelineElementTemplate template2 =
-          JacksonSerializer.getObjectMapper().readValue(json, PipelineElementTemplate.class);
+      PipelineElementTemplate template2 = JacksonSerializer.getObjectMapper().readValue(json,
+              PipelineElementTemplate.class);
       assertions(template2);
-      Assertions.assertEquals(2,
-          findValue(template2, "test-key-2"));
+      Assertions.assertEquals(2, findValue(template2, "test-key-2"));
     } catch (JsonProcessingException e) {
       e.printStackTrace();
     }

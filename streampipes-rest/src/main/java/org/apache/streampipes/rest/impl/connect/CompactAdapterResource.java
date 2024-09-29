@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -55,28 +54,16 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
   private final AdapterUpdateManagement adapterUpdateManagement;
 
   public CompactAdapterResource() {
-    super(() -> new AdapterMasterManagement(
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-            .getAdapterInstanceStorage(),
-        new SpResourceManager().manageAdapters(),
-        new SpResourceManager().manageDataStreams(),
-        AdapterMetricsManager.INSTANCE.getAdapterMetrics()
-    ));
+    super(() -> new AdapterMasterManagement(StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+            new SpResourceManager().manageAdapters(), new SpResourceManager().manageDataStreams(),
+            AdapterMetricsManager.INSTANCE.getAdapterMetrics()));
     this.adapterGenerationSteps = new AdapterGenerationSteps();
     this.adapterUpdateManagement = new AdapterUpdateManagement(managementService);
   }
 
-  @PostMapping(
-      consumes = {
-          MediaType.APPLICATION_JSON_VALUE,
-          "application/yaml",
-          "application/yml"
-      }
-  )
+  @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, "application/yaml", "application/yml"})
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
-  public ResponseEntity<?> addAdapterCompact(
-      @RequestBody CompactAdapter compactAdapter
-  ) throws Exception {
+  public ResponseEntity<?> addAdapterCompact(@RequestBody CompactAdapter compactAdapter) throws Exception {
 
     var adapterDescription = getGeneratedAdapterDescription(compactAdapter);
     var principalSid = getAuthenticatedUserSid();
@@ -87,10 +74,8 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
       if (compactAdapter.createOptions() != null) {
         if (compactAdapter.createOptions().persist()) {
           var storedAdapter = managementService.getAdapter(adapterId);
-          var status = new PersistPipelineHandler(
-              new PipelineTemplateManagement(),
-              getAuthenticatedUserSid()
-          ).createAndStartPersistPipeline(storedAdapter);
+          var status = new PersistPipelineHandler(new PipelineTemplateManagement(), getAuthenticatedUserSid())
+                  .createAndStartPersistPipeline(storedAdapter);
         }
         if (compactAdapter.createOptions().start()) {
           managementService.startStreamAdapter(adapterId);
@@ -103,19 +88,10 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     }
   }
 
-  @PutMapping(
-      path = "{id}",
-      consumes = {
-          MediaType.APPLICATION_JSON_VALUE,
-          "application/yaml",
-          "application/yml"
-      }
-  )
+  @PutMapping(path = "{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, "application/yaml", "application/yml"})
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
-  public ResponseEntity<?> updateAdapterCompact(
-      @PathVariable("id") String elementId,
-      @RequestBody CompactAdapter compactAdapter
-  ) throws Exception {
+  public ResponseEntity<?> updateAdapterCompact(@PathVariable("id") String elementId,
+          @RequestBody CompactAdapter compactAdapter) throws Exception {
 
     var existingAdapter = managementService.getAdapter(elementId);
     if (existingAdapter != null) {
@@ -140,7 +116,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
   }
 
   private AdapterDescription getGeneratedAdapterDescription(CompactAdapter compactAdapter,
-                                                            AdapterDescription existingAdapter) throws Exception {
+          AdapterDescription existingAdapter) throws Exception {
     var generators = adapterGenerationSteps.getGenerators();
     return new CompactAdapterManagement(generators).convertToAdapterDescription(compactAdapter, existingAdapter);
   }

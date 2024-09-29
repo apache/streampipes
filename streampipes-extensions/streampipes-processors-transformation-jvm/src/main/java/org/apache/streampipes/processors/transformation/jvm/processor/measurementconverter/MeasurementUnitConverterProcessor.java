@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.processors.transformation.jvm.processor.measurementconverter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -43,16 +41,17 @@ import org.apache.streampipes.units.UnitProvider;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-import com.github.jqudt.Quantity;
-import com.github.jqudt.Unit;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.jqudt.Quantity;
+import com.github.jqudt.Unit;
+
 public class MeasurementUnitConverterProcessor extends StreamPipesDataProcessor
-    implements ResolvesContainerProvidedOptions {
+        implements
+          ResolvesContainerProvidedOptions {
 
   private static final String CONVERT_PROPERTY = "convert-property";
   private static final String OUTPUT_UNIT = "output-unit";
@@ -65,40 +64,31 @@ public class MeasurementUnitConverterProcessor extends StreamPipesDataProcessor
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.measurementunitconverter", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(PropertyRequirementsBuilder
-                    .create()
-                    .measurementUnitPresence()
-                    .build(),
-                Labels.withId(CONVERT_PROPERTY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .requiredSingleValueSelectionFromContainer(Labels.withId(OUTPUT_UNIT))
-        .outputStrategy(OutputStrategies.transform(TransformOperations
-            .dynamicMeasurementUnitTransformation(CONVERT_PROPERTY, OUTPUT_UNIT)))
-        .build();
+            .create("org.apache.streampipes.processors.transformation.jvm.measurementunitconverter", 0)
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(
+                            PropertyRequirementsBuilder.create().measurementUnitPresence().build(),
+                            Labels.withId(CONVERT_PROPERTY), PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .requiredSingleValueSelectionFromContainer(Labels.withId(OUTPUT_UNIT))
+            .outputStrategy(OutputStrategies
+                    .transform(TransformOperations.dynamicMeasurementUnitTransformation(CONVERT_PROPERTY, OUTPUT_UNIT)))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     var extractor = parameters.extractor();
 
     this.convertProperty = extractor.mappingPropertyValue(CONVERT_PROPERTY);
     String runtimeName = extractor.getEventPropertyBySelector(this.convertProperty).getRuntimeName();
     String inputUnitId = extractor.measurementUnit(runtimeName, 0);
-    String outputUnitId = parameters.getGraph().getStaticProperties().stream().filter(sp -> sp
-            .getInternalName().equals(OUTPUT_UNIT))
-        .map(sp ->
-            (RuntimeResolvableOneOfStaticProperty) sp)
-        .findFirst()
-        .get().getOptions()
-        .stream
-            ().filter(Option::isSelected).map(Option::getInternalName).findFirst().get();
+    String outputUnitId = parameters.getGraph().getStaticProperties().stream()
+            .filter(sp -> sp.getInternalName().equals(OUTPUT_UNIT)).map(sp -> (RuntimeResolvableOneOfStaticProperty) sp)
+            .findFirst().get().getOptions().stream().filter(Option::isSelected).map(Option::getInternalName).findFirst()
+            .get();
 
     this.inputUnit = UnitProvider.INSTANCE.getUnit(inputUnitId);
     this.outputUnit = UnitProvider.INSTANCE.getUnit(outputUnitId);
@@ -125,22 +115,19 @@ public class MeasurementUnitConverterProcessor extends StreamPipesDataProcessor
   }
 
   @Override
-  public List<Option> resolveOptions(String staticPropertyInternalName,
-                                     IStaticPropertyExtractor parameterExtractor) {
+  public List<Option> resolveOptions(String staticPropertyInternalName, IStaticPropertyExtractor parameterExtractor) {
     try {
       String selector = parameterExtractor.mappingPropertyValue(CONVERT_PROPERTY);
       EventProperty linkedEventProperty = parameterExtractor.getEventPropertyBySelector(selector);
-      if (linkedEventProperty instanceof EventPropertyPrimitive && ((EventPropertyPrimitive) linkedEventProperty)
-          .getMeasurementUnit() != null) {
-        Unit measurementUnit = UnitProvider.INSTANCE.getUnit(((EventPropertyPrimitive) linkedEventProperty)
-            .getMeasurementUnit().toString());
+      if (linkedEventProperty instanceof EventPropertyPrimitive
+              && ((EventPropertyPrimitive) linkedEventProperty).getMeasurementUnit() != null) {
+        Unit measurementUnit = UnitProvider.INSTANCE
+                .getUnit(((EventPropertyPrimitive) linkedEventProperty).getMeasurementUnit().toString());
         URI type = measurementUnit.getType();
         List<Unit> availableUnits = UnitProvider.INSTANCE.getUnitsByType(type);
-        return availableUnits
-            .stream()
-            .filter(unit -> !(unit.getResource().toString().equals(measurementUnit.getResource().toString())))
-            .map(unit -> new Option(unit.getLabel(), unit.getResource().toString()))
-            .collect(Collectors.toList());
+        return availableUnits.stream()
+                .filter(unit -> !(unit.getResource().toString().equals(measurementUnit.getResource().toString())))
+                .map(unit -> new Option(unit.getLabel(), unit.getResource().toString())).collect(Collectors.toList());
       } else {
         return new ArrayList<>();
       }

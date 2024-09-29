@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.apache.streampipes.manager.recommender;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -32,12 +30,8 @@ public class AllElementsProvider {
   private final List<NamedStreamPipesEntity> allElements;
 
   public AllElementsProvider(Pipeline pipeline) {
-    this.allElements = Stream.of(
-            pipeline.getStreams(),
-            pipeline.getSepas(),
-            pipeline.getActions())
-        .flatMap(Collection::stream)
-        .collect(Collectors.toList());
+    this.allElements = Stream.of(pipeline.getStreams(), pipeline.getSepas(), pipeline.getActions())
+            .flatMap(Collection::stream).collect(Collectors.toList());
   }
 
   public List<NamedStreamPipesEntity> getAllElements() {
@@ -45,11 +39,8 @@ public class AllElementsProvider {
   }
 
   public NamedStreamPipesEntity findElement(String domId) {
-    return this.allElements
-        .stream()
-        .filter(p -> p.getDom().equals(domId))
-        .findFirst()
-        .orElseThrow(IllegalArgumentException::new);
+    return this.allElements.stream().filter(p -> p.getDom().equals(domId)).findFirst()
+            .orElseThrow(IllegalArgumentException::new);
   }
 
 }

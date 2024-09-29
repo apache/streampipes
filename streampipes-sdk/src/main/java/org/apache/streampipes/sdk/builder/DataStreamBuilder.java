@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.builder;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -47,10 +46,12 @@ public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStream
   /**
    * Creates a new data stream using the builder pattern.
    *
-   * @param id          A unique identifier of the new element, e.g., com.mycompany.stream.mynewdatastream
-   * @param label       A human-readable name of the element.
-   *                    Will later be shown as the element name in the StreamPipes UI.
-   * @param description A human-readable description of the element.
+   * @param id
+   *          A unique identifier of the new element, e.g., com.mycompany.stream.mynewdatastream
+   * @param label
+   *          A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
+   * @param description
+   *          A human-readable description of the element.
    * @return a new instance of {@link DataStreamBuilder}
    */
   public static DataStreamBuilder create(String id, String label, String description) {
@@ -60,7 +61,8 @@ public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStream
   /**
    * Creates a new data stream using the builder pattern.
    *
-   * @param id A unique identifier of the new element, e.g., com.mycompany.stream.mynewdatastream
+   * @param id
+   *          A unique identifier of the new element, e.g., com.mycompany.stream.mynewdatastream
    * @return a new instance of {@link DataStreamBuilder}
    */
   public static DataStreamBuilder create(String id) {
@@ -70,11 +72,10 @@ public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStream
   /**
    * Assigns a new event property to the stream's schema.
    *
-   * @param property The event property that should be added.
-   *                 Use {@link org.apache.streampipes.sdk.helpers.EpProperties}
-   *                 for defining simple property definitions or
-   *                 {@link org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder}
-   *                 for defining more complex definitions.
+   * @param property
+   *          The event property that should be added. Use {@link org.apache.streampipes.sdk.helpers.EpProperties} for
+   *          defining simple property definitions or
+   *          {@link org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder} for defining more complex definitions.
    * @return this
    */
   public DataStreamBuilder property(EventProperty property) {
@@ -85,7 +86,8 @@ public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStream
   /**
    * Assigns a list of new event properties to the stream's schema.
    *
-   * @param properties The event properties that should be added.
+   * @param properties
+   *          The event properties that should be added.
    * @return this
    */
   public DataStreamBuilder properties(List<EventProperty> properties) {
@@ -96,9 +98,10 @@ public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStream
   /**
    * Assigns a new {@link org.apache.streampipes.model.grounding.TransportProtocol} to the stream definition.
    *
-   * @param protocol The transport protocol of the stream at runtime (e.g., Kafka or MQTT).
-   *                 Use {@link org.apache.streampipes.sdk.helpers.Protocols} to use some pre-defined protocols
-   *                 (or create a new protocol as described in the developer guide).
+   * @param protocol
+   *          The transport protocol of the stream at runtime (e.g., Kafka or MQTT). Use
+   *          {@link org.apache.streampipes.sdk.helpers.Protocols} to use some pre-defined protocols (or create a new
+   *          protocol as described in the developer guide).
    * @return this
    */
   public DataStreamBuilder protocol(TransportProtocol protocol) {

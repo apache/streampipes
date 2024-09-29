@@ -33,7 +33,7 @@ public class SetupStatusMessage {
   }
 
   public SetupStatusMessage(Integer currentInstallationStep, Integer installationStepCount,
-                            List<Message> statusMessages, String nextTaskTitle) {
+          List<Message> statusMessages, String nextTaskTitle) {
     this.currentInstallationStep = currentInstallationStep;
     this.installationStepCount = installationStepCount;
     this.statusMessages = statusMessages;

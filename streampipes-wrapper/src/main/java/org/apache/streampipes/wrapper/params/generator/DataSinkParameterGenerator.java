@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.params.generator;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
@@ -29,19 +28,15 @@ import org.apache.streampipes.wrapper.params.DataSinkParameters;
 import java.util.Collections;
 import java.util.List;
 
-public class DataSinkParameterGenerator
-    extends PipelineElementParameterGenerator<DataSinkInvocation>
-    implements IParameterGenerator<DataSinkInvocation, IDataSinkParameterExtractor, IDataSinkParameters> {
+public class DataSinkParameterGenerator extends PipelineElementParameterGenerator<DataSinkInvocation>
+        implements
+          IParameterGenerator<DataSinkInvocation, IDataSinkParameterExtractor, IDataSinkParameters> {
 
   @Override
   public IDataSinkParameters makeParameters(DataSinkInvocation pipelineElement) {
 
-    return new DataSinkParameters(
-        pipelineElement,
-        DataSinkParameterExtractor.from(pipelineElement),
-        buildInputStreamParams(pipelineElement),
-        buildInEventTypes(pipelineElement)
-    );
+    return new DataSinkParameters(pipelineElement, DataSinkParameterExtractor.from(pipelineElement),
+            buildInputStreamParams(pipelineElement), buildInEventTypes(pipelineElement));
   }
 
   @Override

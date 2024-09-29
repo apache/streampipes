@@ -31,10 +31,7 @@ public class SumExpression extends PropertyExpressionBase {
 
   @Override
   public String toSiddhiEpl() {
-    return join(SiddhiConstants.EMPTY,
-        AggregationFunction.SUM.toAggregationFunction(),
-        SiddhiConstants.PARENTHESIS_OPEN,
-        propertyExpression.toSiddhiEpl(),
-        SiddhiConstants.PARENTHESIS_CLOSE);
+    return join(SiddhiConstants.EMPTY, AggregationFunction.SUM.toAggregationFunction(),
+            SiddhiConstants.PARENTHESIS_OPEN, propertyExpression.toSiddhiEpl(), SiddhiConstants.PARENTHESIS_CLOSE);
   }
 }

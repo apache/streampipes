@@ -29,23 +29,18 @@ public class PipelineEdgeValidation {
   public PipelineEdgeValidation() {
   }
 
-  public PipelineEdgeValidation(String sourceId,
-                                String targetId,
-                                EdgeValidationStatus edgeValidationStatus) {
+  public PipelineEdgeValidation(String sourceId, String targetId, EdgeValidationStatus edgeValidationStatus) {
     this.sourceId = sourceId;
     this.targetId = targetId;
     this.status = edgeValidationStatus;
   }
 
-  public static PipelineEdgeValidation complete(String sourceId,
-                                                String targetId) {
+  public static PipelineEdgeValidation complete(String sourceId, String targetId) {
     EdgeValidationStatus status = new EdgeValidationStatus(EdgeValidationStatusType.COMPLETE);
     return new PipelineEdgeValidation(sourceId, targetId, status);
   }
 
-  public static PipelineEdgeValidation invalid(String sourceId,
-                                               String targetId,
-                                               List<Notification> notifications) {
+  public static PipelineEdgeValidation invalid(String sourceId, String targetId, List<Notification> notifications) {
     EdgeValidationStatus status = new EdgeValidationStatus(EdgeValidationStatusType.INVALID, notifications);
     return new PipelineEdgeValidation(sourceId, targetId, status);
   }

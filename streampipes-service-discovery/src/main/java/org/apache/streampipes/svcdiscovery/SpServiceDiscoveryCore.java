@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.svcdiscovery;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -26,14 +25,14 @@ import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
 
@@ -49,27 +48,19 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   @Override
   public Set<SpServiceTag> getCustomServiceTags(boolean restrictToHealthy) {
     var activeServices = findServices(0);
-    return activeServices
-        .stream()
-        .filter(service -> !restrictToHealthy || service.getStatus() != SpServiceStatus.UNHEALTHY)
-        .flatMap(service -> service.getTags().stream())
-        .filter(serviceTag -> serviceTag.getPrefix() == SpServiceTagPrefix.CUSTOM)
-        .collect(Collectors.toSet());
+    return activeServices.stream()
+            .filter(service -> !restrictToHealthy || service.getStatus() != SpServiceStatus.UNHEALTHY)
+            .flatMap(service -> service.getTags().stream())
+            .filter(serviceTag -> serviceTag.getPrefix() == SpServiceTagPrefix.CUSTOM).collect(Collectors.toSet());
   }
 
   @Override
-  public List<String> getServiceEndpoints(String serviceGroup,
-                                          boolean restrictToHealthy,
-                                          List<String> filterByTags) {
+  public List<String> getServiceEndpoints(String serviceGroup, boolean restrictToHealthy, List<String> filterByTags) {
     List<SpServiceRegistration> activeServices = findServices(0);
 
-    return activeServices
-        .stream()
-        .filter(service -> allFiltersSupported(service, filterByTags))
-        .filter(service -> !restrictToHealthy
-            || service.getStatus() != SpServiceStatus.UNHEALTHY)
-        .map(this::makeServiceUrl)
-        .collect(Collectors.toList());
+    return activeServices.stream().filter(service -> allFiltersSupported(service, filterByTags))
+            .filter(service -> !restrictToHealthy || service.getStatus() != SpServiceStatus.UNHEALTHY)
+            .map(this::makeServiceUrl).collect(Collectors.toList());
   }
 
   private String makeServiceUrl(SpServiceRegistration service) {
@@ -77,17 +68,14 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   }
 
   /**
-  * Checks if all the tags specified in the filter are supported by the service.
-  */
-  private boolean allFiltersSupported(SpServiceRegistration service,
-                                      List<String> filterByTags) {
+   * Checks if all the tags specified in the filter are supported by the service.
+   */
+  private boolean allFiltersSupported(SpServiceRegistration service, List<String> filterByTags) {
     if (filterByTags.isEmpty()) {
       return true;
     }
 
-    Set<String> serviceTags = service.getTags().stream()
-        .map(SpServiceTag::asString)
-        .collect(Collectors.toSet());
+    Set<String> serviceTags = service.getTags().stream().map(SpServiceTag::asString).collect(Collectors.toSet());
     return serviceTags.containsAll(filterByTags);
   }
 

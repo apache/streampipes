@@ -41,9 +41,7 @@ public class SendToBrokerAdapterSink implements IAdapterPipelineElement {
 
   public SendToBrokerAdapterSink(AdapterDescription adapterDescription) {
     this.adapterDescription = adapterDescription;
-    this.protocol = adapterDescription
-        .getEventGrounding()
-        .getTransportProtocol();
+    this.protocol = adapterDescription.getEventGrounding().getTransportProtocol();
 
     if (getEnvironment().getSpDebug().getValueOrDefault()) {
       modifyProtocolForDebugging(this.protocol);
@@ -66,9 +64,7 @@ public class SendToBrokerAdapterSink implements IAdapterPipelineElement {
     try {
       if (event != null) {
         sendToBroker(dataFormatDefinition.fromMap(event));
-        SpMonitoringManager.INSTANCE.increaseOutCounter(
-            adapterDescription.getElementId(),
-            System.currentTimeMillis());
+        SpMonitoringManager.INSTANCE.increaseOutCounter(adapterDescription.getElementId(), System.currentTimeMillis());
       }
     } catch (RuntimeException e) {
       new ExtensionsLogger(adapterDescription.getElementId()).error(e);
@@ -92,5 +88,3 @@ public class SendToBrokerAdapterSink implements IAdapterPipelineElement {
   }
 
 }
-
-

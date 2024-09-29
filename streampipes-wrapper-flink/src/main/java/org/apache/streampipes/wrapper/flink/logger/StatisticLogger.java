@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.flink.logger;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -37,5 +36,3 @@ public class StatisticLogger implements FlatMapFunction<Event, Event> {
     out.collect(in);
   }
 }
-
-

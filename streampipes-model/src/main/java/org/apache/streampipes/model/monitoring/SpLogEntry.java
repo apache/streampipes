@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.monitoring;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -35,14 +34,12 @@ public class SpLogEntry {
     this.errorMessage = new SpLogMessage(other.getErrorMessage());
   }
 
-  private SpLogEntry(long timestamp,
-                     SpLogMessage errorMessage) {
+  private SpLogEntry(long timestamp, SpLogMessage errorMessage) {
     this.timestamp = timestamp;
     this.errorMessage = errorMessage;
   }
 
-  public static SpLogEntry from(long timestamp,
-                                SpLogMessage errorMessage) {
+  public static SpLogEntry from(long timestamp, SpLogMessage errorMessage) {
     return new SpLogEntry(timestamp, errorMessage);
   }
 

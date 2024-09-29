@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.adapter;
 
 import org.apache.streampipes.model.SpDataStream;
@@ -53,7 +52,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   private long createdAt;
 
-  //  Is used to store where the adapter is running to stop it
+  // Is used to store where the adapter is running to stop it
   private String selectedEndpointUrl;
 
   private ExtensionDeploymentConfiguration deploymentConfiguration;
@@ -213,8 +212,8 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
   }
 
   /**
-   * @deprecated check if the service group can be removed as a single pipeline element
-   * can correspond to different service groups
+   * @deprecated check if the service group can be removed as a single pipeline element can correspond to different
+   *             service groups
    */
   @Deprecated
   public String getCorrespondingServiceGroup() {
@@ -222,8 +221,8 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
   }
 
   /**
-   * @deprecated check if the service group can be removed as a single pipeline element
-   * can correspond to different service groups
+   * @deprecated check if the service group can be removed as a single pipeline element can correspond to different
+   *             service groups
    */
   @Deprecated
   public void setCorrespondingServiceGroup(String correspondingServiceGroup) {

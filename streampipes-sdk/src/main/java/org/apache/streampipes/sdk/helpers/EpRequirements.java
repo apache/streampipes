@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.helpers;
 
 import org.apache.streampipes.commons.Utils;
@@ -125,7 +124,7 @@ public class EpRequirements {
   }
 
   private static <T extends EventProperty> EventProperty domainPropertyReq(String domainProperty,
-                                                                           Class<T> eventProperty) {
+          Class<T> eventProperty) {
     EventProperty ep = null;
     try {
       ep = eventProperty.newInstance();

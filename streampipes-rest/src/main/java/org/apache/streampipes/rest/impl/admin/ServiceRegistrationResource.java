@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.manager.health.ServiceRegistrationManager;
@@ -26,6 +25,8 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.CRUDStorage;
+
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,15 +39,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v2/extensions-services")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource {
 
-  private final CRUDStorage<SpServiceRegistration> extensionsServiceStorage =
-      getNoSqlStorage().getExtensionsServiceStorage();
+  private final CRUDStorage<SpServiceRegistration> extensionsServiceStorage = getNoSqlStorage()
+          .getExtensionsServiceStorage();
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<SpServiceRegistration>> getRegisteredServices() {
@@ -55,8 +54,8 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> registerService(@RequestBody SpServiceRegistration serviceRegistration) {
-    new ServiceRegistrationManager(extensionsServiceStorage)
-        .addService(serviceRegistration, SpServiceStatus.REGISTERED);
+    new ServiceRegistrationManager(extensionsServiceStorage).addService(serviceRegistration,
+            SpServiceStatus.REGISTERED);
     return ok();
   }
 
@@ -66,9 +65,8 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource
       new ServiceRegistrationManager(extensionsServiceStorage).removeService(serviceId);
       return ok();
     } catch (IllegalArgumentException e) {
-      throw new SpMessageException(
-          HttpStatus.BAD_REQUEST,
-          Notifications.error("Could not find registered service with id " + serviceId));
+      throw new SpMessageException(HttpStatus.BAD_REQUEST,
+              Notifications.error("Could not find registered service with id " + serviceId));
     }
   }
 }

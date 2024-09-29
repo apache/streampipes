@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.context.generator;
 
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
@@ -29,10 +28,7 @@ public class DataSinkContextGenerator implements IContextGenerator<EventSinkRunt
 
   @Override
   public EventSinkRuntimeContext makeContext(DataSinkInvocation invocation) {
-    return new SpEventSinkRuntimeContext(
-        invocation.getCorrespondingUser(),
-        RuntimeContextUtils.makeConfigExtractor(),
-        RuntimeContextUtils.makeStreamPipesClient(),
-        new ExtensionsLogger(invocation.getElementId()));
+    return new SpEventSinkRuntimeContext(invocation.getCorrespondingUser(), RuntimeContextUtils.makeConfigExtractor(),
+            RuntimeContextUtils.makeStreamPipesClient(), new ExtensionsLogger(invocation.getElementId()));
   }
 }

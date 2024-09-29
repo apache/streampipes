@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.grounding;
 
 import org.apache.streampipes.model.util.Cloner;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class EventGrounding {
 

@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sdk.extractor;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 
-public class DataSinkParameterExtractor
-    extends AbstractParameterExtractor<DataSinkInvocation>
-    implements IDataSinkParameterExtractor {
+public class DataSinkParameterExtractor extends AbstractParameterExtractor<DataSinkInvocation>
+        implements
+          IDataSinkParameterExtractor {
 
   public DataSinkParameterExtractor(DataSinkInvocation pipelineElement) {
     super(pipelineElement);

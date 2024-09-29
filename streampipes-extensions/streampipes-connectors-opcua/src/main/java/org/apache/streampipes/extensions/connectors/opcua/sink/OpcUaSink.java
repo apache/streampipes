@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.opcua.sink;
+
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.MAPPING_PROPERY;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -41,35 +42,24 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.MAPPING_PROPERY;
-
 public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
 
   private OpcUa opcUa;
 
   @Override
   public IDataSinkConfiguration declareConfig() {
-    var builder = DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.opcua", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .category(DataSinkType.FORWARD)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                Labels.withId(MAPPING_PROPERY),
-                PropertyScope.NONE).build());
+    var builder = DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.opcua", 0).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).category(DataSinkType.FORWARD)
+            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
+                    EpRequirements.anyProperty(), Labels.withId(MAPPING_PROPERY), PropertyScope.NONE).build());
 
     SharedUserConfiguration.appendSharedOpcUaConfig(builder, false);
 
-    return DataSinkConfiguration.create(
-        OpcUaSink::new,
-        builder.build()
-    );
+    return DataSinkConfiguration.create(OpcUaSink::new, builder.build());
   }
 
   @Override
-  public void onPipelineStarted(IDataSinkParameters parameters,
-                                EventSinkRuntimeContext runtimeContext) {
+  public void onPipelineStarted(IDataSinkParameters parameters, EventSinkRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
     var config = SpOpcUaConfigExtractor.extractSinkConfig(extractor);
 
@@ -82,12 +72,8 @@ public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
       e.printStackTrace();
     }
 
-    OpcUaParameters params = new OpcUaParameters(
-        config,
-        mappingPropertySelector,
-        mappingPropertyType,
-        config.getSelectedNodeNames().get(0)
-    );
+    OpcUaParameters params = new OpcUaParameters(config, mappingPropertySelector, mappingPropertyType,
+            config.getSelectedNodeNames().get(0));
 
     this.opcUa = new OpcUa();
     this.opcUa.onInvocation(params);
@@ -104,8 +90,8 @@ public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
   }
 
   @Override
-  public StaticProperty resolveConfiguration(String staticPropertyInternalName,
-                                             IStaticPropertyExtractor extractor) throws SpConfigurationException {
+  public StaticProperty resolveConfiguration(String staticPropertyInternalName, IStaticPropertyExtractor extractor)
+          throws SpConfigurationException {
     return OpcUaUtil.resolveConfig(staticPropertyInternalName, extractor);
   }
 }

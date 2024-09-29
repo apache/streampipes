@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.smp.extractor;
 
 import org.apache.streampipes.smp.model.AssetModel;
 
-import org.apache.maven.plugin.logging.Log;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import org.apache.maven.plugin.logging.Log;
 
 public class LocalesExtractor {
 
@@ -36,8 +35,7 @@ public class LocalesExtractor {
   private final Log log;
   private final ClassLoader loader;
 
-  public LocalesExtractor(Log log,
-                          ClassLoader loader) {
+  public LocalesExtractor(Log log, ClassLoader loader) {
     this.log = log;
     this.loader = loader;
   }

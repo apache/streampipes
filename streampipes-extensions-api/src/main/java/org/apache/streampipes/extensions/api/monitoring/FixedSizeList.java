@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.api.monitoring;
 
 import java.util.ArrayList;
@@ -56,7 +55,3 @@ public class FixedSizeList<T> {
     this.list.clear();
   }
 }
-
-
-
-

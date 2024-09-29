@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.manager.health;
 
+import static org.apache.streampipes.manager.pipeline.PipelineManager.getPipeline;
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
@@ -31,9 +32,6 @@ import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -45,7 +43,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.manager.pipeline.PipelineManager.getPipeline;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PipelineHealthCheck implements Runnable {
 
@@ -79,9 +78,8 @@ public class PipelineHealthCheck implements Runnable {
         List<String> failedInstances = new ArrayList<>();
         List<String> recoveredInstances = new ArrayList<>();
         List<String> pipelineNotifications = new ArrayList<>();
-        List<InvocableStreamPipesEntity> graphs = RunningPipelineElementStorage
-            .runningProcessorsAndSinks
-            .get(pipeline.getPipelineId());
+        List<InvocableStreamPipesEntity> graphs = RunningPipelineElementStorage.runningProcessorsAndSinks
+                .get(pipeline.getPipelineId());
 
         graphs.forEach(graph -> {
           String instanceId = extractInstanceId(graph);
@@ -100,18 +98,15 @@ public class PipelineHealthCheck implements Runnable {
                 failedInstances.add(instanceId);
                 addFailedAttemptNotification(pipelineNotifications, graph);
                 increaseFailedAttempt(instanceId);
-                LOG.info("Could not restore pipeline element {} of pipeline {} ({}/{})",
-                    graph.getName(),
-                    pipeline.getName(),
-                    failedRestartAttempts.get(instanceId),
-                    MAX_FAILED_ATTEMPTS);
+                LOG.info("Could not restore pipeline element {} of pipeline {} ({}/{})", graph.getName(),
+                        pipeline.getName(), failedRestartAttempts.get(instanceId), MAX_FAILED_ATTEMPTS);
               } else {
                 recoveredInstances.add(instanceId);
                 addSuccessfulRestoreNotification(pipelineNotifications, graph);
                 resetFailedAttempts(instanceId);
                 graph.setSelectedEndpointUrl(endpointUrl);
                 LOG.info("Successfully restored pipeline element {} of pipeline {}", graph.getName(),
-                    pipeline.getName());
+                        pipeline.getName());
               }
             }
           }
@@ -130,7 +125,7 @@ public class PipelineHealthCheck implements Runnable {
         }
       });
       int healthNum = pipelinesStats.getRunningPipelines() - pipelinesStats.getFailedPipelines()
-          - pipelinesStats.getAttentionRequiredPipelines();
+              - pipelinesStats.getAttentionRequiredPipelines();
       pipelinesStats.setHealthyPipelines(healthNum);
       pipelinesStats.setElementCount(getElementsCount(allPipelines));
     }
@@ -163,20 +158,14 @@ public class PipelineHealthCheck implements Runnable {
     }
   }
 
-  private void addSuccessfulRestoreNotification(List<String> pipelineNotifications,
-                                                InvocableStreamPipesEntity graph) {
-    pipelineNotifications.add(getCurrentDatetime()
-        + "Pipeline element '"
-        + graph.getName()
-        + "' was not available and was successfully restored.");
+  private void addSuccessfulRestoreNotification(List<String> pipelineNotifications, InvocableStreamPipesEntity graph) {
+    pipelineNotifications.add(getCurrentDatetime() + "Pipeline element '" + graph.getName()
+            + "' was not available and was successfully restored.");
   }
 
-  private void addFailedAttemptNotification(List<String> pipelineNotifications,
-                                            InvocableStreamPipesEntity graph) {
-    pipelineNotifications.add(getCurrentDatetime()
-        + "Pipeline element '"
-        + graph.getName()
-        + "' was not available and could not be restored.");
+  private void addFailedAttemptNotification(List<String> pipelineNotifications, InvocableStreamPipesEntity graph) {
+    pipelineNotifications.add(getCurrentDatetime() + "Pipeline element '" + graph.getName()
+            + "' was not available and could not be restored.");
   }
 
   private String getCurrentDatetime() {
@@ -188,7 +177,6 @@ public class PipelineHealthCheck implements Runnable {
   private String extractInstanceId(InvocableStreamPipesEntity graph) {
     return InstanceIdExtractor.extractId(graph.getElementId());
   }
-
 
   private List<String> findRunningInstances(Set<String> endpoints) {
     List<String> allRunningInstances = new ArrayList<>();
@@ -205,14 +193,14 @@ public class PipelineHealthCheck implements Runnable {
 
   private Map<String, List<InvocableStreamPipesEntity>> generateEndpointMap() {
     Map<String, List<InvocableStreamPipesEntity>> endpointMap = new HashMap<>();
-    RunningPipelineElementStorage.runningProcessorsAndSinks.forEach((pipelineId, graphs) ->
-        graphs.forEach(graph -> addEndpoint(endpointMap, graph)));
+    RunningPipelineElementStorage.runningProcessorsAndSinks
+            .forEach((pipelineId, graphs) -> graphs.forEach(graph -> addEndpoint(endpointMap, graph)));
 
     return endpointMap;
   }
 
   private void addEndpoint(Map<String, List<InvocableStreamPipesEntity>> endpointMap,
-                           InvocableStreamPipesEntity graph) {
+          InvocableStreamPipesEntity graph) {
     String selectedEndpoint = graph.getSelectedEndpointUrl();
     if (!endpointMap.containsKey(selectedEndpoint)) {
       endpointMap.put(selectedEndpoint, new ArrayList<>());
@@ -228,26 +216,16 @@ public class PipelineHealthCheck implements Runnable {
   }
 
   private List<Pipeline> getRunningPipelines(List<Pipeline> allPipelines) {
-    return allPipelines
-        .stream()
-        .filter(Pipeline::isRunning)
-        .collect(Collectors.toList());
+    return allPipelines.stream().filter(Pipeline::isRunning).collect(Collectors.toList());
 
   }
 
   private List<Pipeline> getAllPipelines() {
-    return StorageDispatcher
-            .INSTANCE
-            .getNoSqlStore()
-            .getPipelineStorageAPI()
-            .findAll();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().findAll();
   }
 
-  private int getElementsCount(List<Pipeline> allPipelines){
-    return allPipelines
-        .stream()
-        .mapToInt(pipeline -> pipeline.getActions().size())
-        .sum();
+  private int getElementsCount(List<Pipeline> allPipelines) {
+    return allPipelines.stream().mapToInt(pipeline -> pipeline.getActions().size()).sum();
 
   }
 }

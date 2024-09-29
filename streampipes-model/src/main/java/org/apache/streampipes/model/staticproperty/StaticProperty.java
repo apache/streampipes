@@ -15,37 +15,26 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.staticproperty;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import java.util.Objects;
-
-@JsonSubTypes({
-    @JsonSubTypes.Type(AnyStaticProperty.class),
-    @JsonSubTypes.Type(CodeInputStaticProperty.class),
-    @JsonSubTypes.Type(CollectionStaticProperty.class),
-    @JsonSubTypes.Type(ColorPickerStaticProperty.class),
-    @JsonSubTypes.Type(FileStaticProperty.class),
-    @JsonSubTypes.Type(FreeTextStaticProperty.class),
-    @JsonSubTypes.Type(MappingPropertyUnary.class),
-    @JsonSubTypes.Type(MappingPropertyNary.class),
-    @JsonSubTypes.Type(MatchingStaticProperty.class),
-    @JsonSubTypes.Type(OneOfStaticProperty.class),
+@JsonSubTypes({@JsonSubTypes.Type(AnyStaticProperty.class), @JsonSubTypes.Type(CodeInputStaticProperty.class),
+    @JsonSubTypes.Type(CollectionStaticProperty.class), @JsonSubTypes.Type(ColorPickerStaticProperty.class),
+    @JsonSubTypes.Type(FileStaticProperty.class), @JsonSubTypes.Type(FreeTextStaticProperty.class),
+    @JsonSubTypes.Type(MappingPropertyUnary.class), @JsonSubTypes.Type(MappingPropertyNary.class),
+    @JsonSubTypes.Type(MatchingStaticProperty.class), @JsonSubTypes.Type(OneOfStaticProperty.class),
     @JsonSubTypes.Type(RuntimeResolvableAnyStaticProperty.class),
     @JsonSubTypes.Type(RuntimeResolvableOneOfStaticProperty.class),
-    @JsonSubTypes.Type(RuntimeResolvableTreeInputStaticProperty.class),
-    @JsonSubTypes.Type(SecretStaticProperty.class),
-    @JsonSubTypes.Type(StaticPropertyAlternative.class),
-    @JsonSubTypes.Type(StaticPropertyAlternatives.class),
-    @JsonSubTypes.Type(StaticPropertyGroup.class),
-    @JsonSubTypes.Type(SlideToggleStaticProperty.class),
-    @JsonSubTypes.Type(RuntimeResolvableGroupStaticProperty.class)
-})
+    @JsonSubTypes.Type(RuntimeResolvableTreeInputStaticProperty.class), @JsonSubTypes.Type(SecretStaticProperty.class),
+    @JsonSubTypes.Type(StaticPropertyAlternative.class), @JsonSubTypes.Type(StaticPropertyAlternatives.class),
+    @JsonSubTypes.Type(StaticPropertyGroup.class), @JsonSubTypes.Type(SlideToggleStaticProperty.class),
+    @JsonSubTypes.Type(RuntimeResolvableGroupStaticProperty.class)})
 @TsModel
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 public abstract class StaticProperty {
@@ -56,7 +45,6 @@ public abstract class StaticProperty {
   private String description;
   private String internalName;
   private boolean predefined;
-
 
   public StaticProperty() {
     super();
@@ -76,8 +64,7 @@ public abstract class StaticProperty {
     this.label = other.getLabel();
   }
 
-  public StaticProperty(StaticPropertyType type, String internalName, String label,
-                        String description) {
+  public StaticProperty(StaticPropertyType type, String internalName, String label, String description) {
     super();
     this.staticPropertyType = type;
     this.internalName = internalName;

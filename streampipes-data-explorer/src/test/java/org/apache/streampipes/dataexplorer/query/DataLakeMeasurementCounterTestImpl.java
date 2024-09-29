@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
@@ -24,9 +23,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class DataLakeMeasurementCounterTestImpl extends DataLakeMeasurementCounter {
-  public DataLakeMeasurementCounterTestImpl(
-      List<DataLakeMeasure> allMeasurements, List<String> measurementNames
-  ) {
+  public DataLakeMeasurementCounterTestImpl(List<DataLakeMeasure> allMeasurements, List<String> measurementNames) {
     super(allMeasurements, measurementNames);
   }
 

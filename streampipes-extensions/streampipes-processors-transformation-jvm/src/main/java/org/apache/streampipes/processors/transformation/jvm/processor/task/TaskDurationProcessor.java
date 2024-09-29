@@ -56,34 +56,27 @@ public class TaskDurationProcessor extends StreamPipesDataProcessor {
   private Long lastTimestamp;
   private Double outputDivisor;
 
-
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.taskduration", 0)
-        .category(DataProcessorType.TIME)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.anyProperty(),
-                Labels.withId(TASK_FIELD_KEY),
-                PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                Labels.withId(TIMESTAMP_FIELD_KEY), PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
-        .outputStrategy(OutputStrategies.fixed(EpProperties.stringEp(Labels.withId(TASK_ID),
-                "processId", "http://schema.org/taskId"),
-            EpProperties.integerEp(Labels.withId(DURATION_ID), "duration",
-                "http://schema.org/duration")))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.taskduration", 0)
+            .category(DataProcessorType.TIME).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId(TASK_FIELD_KEY),
+                            PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.withId(TIMESTAMP_FIELD_KEY),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
+            .outputStrategy(OutputStrategies.fixed(
+                    EpProperties.stringEp(Labels.withId(TASK_ID), "processId", "http://schema.org/taskId"),
+                    EpProperties.integerEp(Labels.withId(DURATION_ID), "duration", "http://schema.org/duration")))
+            .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     var extractor = parameters.extractor();
     taskFieldSelector = extractor.mappingPropertyValue(TASK_FIELD_KEY);
     timestampFieldSelector = extractor.mappingPropertyValue(TIMESTAMP_FIELD_KEY);
@@ -98,11 +91,9 @@ public class TaskDurationProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onEvent(Event event,
-                      SpOutputCollector collector) throws SpRuntimeException {
+  public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
     String taskValue = event.getFieldBySelector(taskFieldSelector).getAsPrimitive().getAsString();
-    Long timestampValue =
-        event.getFieldBySelector(timestampFieldSelector).getAsPrimitive().getAsLong();
+    Long timestampValue = event.getFieldBySelector(timestampFieldSelector).getAsPrimitive().getAsLong();
 
     if (lastValue == null) {
       this.lastValue = taskValue;
@@ -110,7 +101,6 @@ public class TaskDurationProcessor extends StreamPipesDataProcessor {
     } else {
       if (!this.lastValue.equals(taskValue)) {
         Long duration = timestampValue - this.lastTimestamp;
-
 
         double result = duration / this.outputDivisor;
 

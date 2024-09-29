@@ -25,15 +25,14 @@ import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PipelineTemplateGenerator {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class PipelineTemplateGenerator {
 
   Logger logger = LoggerFactory.getLogger(PipelineTemplateGenerator.class);
 
@@ -44,7 +43,6 @@ public class PipelineTemplateGenerator {
     List<PipelineTemplate> allPipelineTemplates = new ArrayList<>();
 
     allPipelineTemplates.add(new DataLakePipelineTemplate());
-
 
     for (PipelineTemplate pt : allPipelineTemplates) {
       try {
@@ -61,15 +59,13 @@ public class PipelineTemplateGenerator {
 
   protected DataSinkDescription getSink(String id) throws ElementNotFoundException {
     try {
-      return getStorage()
-          .getDataSinkByAppId(id);
+      return getStorage().getDataSinkByAppId(id);
     } catch (IllegalArgumentException e) {
       throw new ElementNotFoundException("Data stream " + id + " is not installed!");
     }
   }
 
   protected IPipelineElementDescriptionStorage getStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore()
-                                     .getPipelineElementDescriptionStorage();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage();
   }
 }

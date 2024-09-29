@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.client.http;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
@@ -26,8 +25,8 @@ import org.apache.http.HttpEntity;
 
 public class PostRequestWithoutPayload<K, V> extends PostRequest<K, V, Void> {
 
-  public PostRequestWithoutPayload(StreamPipesClientConfig clientConfig,
-                                   StreamPipesApiPath apiPath, Serializer<K, V, Void> serializer) {
+  public PostRequestWithoutPayload(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath,
+          Serializer<K, V, Void> serializer) {
     super(clientConfig, apiPath, serializer);
   }
 

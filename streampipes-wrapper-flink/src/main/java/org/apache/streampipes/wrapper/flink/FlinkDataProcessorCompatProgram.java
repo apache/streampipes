@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.flink;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -24,11 +23,11 @@ import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.runtime.Event;
 
+import java.util.Map;
+
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.util.Collector;
-
-import java.util.Map;
 
 public class FlinkDataProcessorCompatProgram implements IDataProcessorProgram {
 
@@ -40,37 +39,36 @@ public class FlinkDataProcessorCompatProgram implements IDataProcessorProgram {
 
   @Override
   public DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
-    return messageStream[0]
-        .flatMap(new FlatMapFunction<Event, Event>() {
+    return messageStream[0].flatMap(new FlatMapFunction<Event, Event>() {
+      @Override
+      public void flatMap(Event value, Collector<Event> out) throws Exception {
+        pipelineElement.onEvent(value, new SpOutputCollector() {
           @Override
-          public void flatMap(Event value, Collector<Event> out) throws Exception {
-            pipelineElement.onEvent(value, new SpOutputCollector() {
-              @Override
-              public void collect(Event event) {
-                out.collect(event);
-              }
+          public void collect(Event event) {
+            out.collect(event);
+          }
 
-              @Override
-              public void registerConsumer(String routeId, InternalEventProcessor<Map<String, Object>> consumer) {
+          @Override
+          public void registerConsumer(String routeId, InternalEventProcessor<Map<String, Object>> consumer) {
 
-              }
+          }
 
-              @Override
-              public void unregisterConsumer(String routeId) {
+          @Override
+          public void unregisterConsumer(String routeId) {
 
-              }
+          }
 
-              @Override
-              public void connect() throws SpRuntimeException {
+          @Override
+          public void connect() throws SpRuntimeException {
 
-              }
+          }
 
-              @Override
-              public void disconnect() throws SpRuntimeException {
+          @Override
+          public void disconnect() throws SpRuntimeException {
 
-              }
-            });
           }
         });
+      }
+    });
   }
 }

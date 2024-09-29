@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.pipeline;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,8 +23,7 @@ public class PipelineCacheManager {
 
   private static ConcurrentHashMap<String, String> cachedPipelines = new ConcurrentHashMap<>();
 
-  public static void updateCachedPipeline(String userName,
-                                          String rawPipelineModel) {
+  public static void updateCachedPipeline(String userName, String rawPipelineModel) {
     cachedPipelines.put(userName, rawPipelineModel);
   }
 

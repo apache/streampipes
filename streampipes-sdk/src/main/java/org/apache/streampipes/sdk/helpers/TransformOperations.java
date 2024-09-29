@@ -24,73 +24,69 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 public class TransformOperations {
 
   public static TransformOperation staticDatatypeTransformation(String mappingPropertyInternalName,
-                                                                Datatypes targetDatatype) {
+          Datatypes targetDatatype) {
     return staticTransformOperation(TransformOperationType.DATATYPE_TRANSFORMATION, mappingPropertyInternalName,
-        targetDatatype.toString());
+            targetDatatype.toString());
   }
 
-  public static TransformOperation dynamicDatatypeTransformation(String mappingPropertyInternalName, String
-      linkedStaticProperty) {
+  public static TransformOperation dynamicDatatypeTransformation(String mappingPropertyInternalName,
+          String linkedStaticProperty) {
     return dynamicTransformOperation(TransformOperationType.DATATYPE_TRANSFORMATION, mappingPropertyInternalName,
-        linkedStaticProperty);
+            linkedStaticProperty);
   }
 
-  public static TransformOperation staticDomainPropertyTransformation(String mappingPropertyInternalName, String
-      targetValue) {
+  public static TransformOperation staticDomainPropertyTransformation(String mappingPropertyInternalName,
+          String targetValue) {
     return staticTransformOperation(TransformOperationType.DOMAIN_PROPERTY_TRANSFORMATION, mappingPropertyInternalName,
-        targetValue);
+            targetValue);
   }
 
-  public static TransformOperation dynamicDomainPropertyTransformation(String mappingPropertyInternalName, String
-      linkedStaticProperty) {
+  public static TransformOperation dynamicDomainPropertyTransformation(String mappingPropertyInternalName,
+          String linkedStaticProperty) {
     return dynamicTransformOperation(TransformOperationType.DOMAIN_PROPERTY_TRANSFORMATION, mappingPropertyInternalName,
-        linkedStaticProperty);
+            linkedStaticProperty);
   }
 
-  public static TransformOperation staticRuntimeNameTransformation(String mappingPropertyInternalName, String
-      targetValue) {
+  public static TransformOperation staticRuntimeNameTransformation(String mappingPropertyInternalName,
+          String targetValue) {
     return staticTransformOperation(TransformOperationType.RUNTIME_NAME_TRANSFORMATION, mappingPropertyInternalName,
-        targetValue);
+            targetValue);
   }
 
-  public static TransformOperation dynamicRuntimeNameTransformation(String mappingPropertyInternalName, String
-      linkedStaticProperty) {
+  public static TransformOperation dynamicRuntimeNameTransformation(String mappingPropertyInternalName,
+          String linkedStaticProperty) {
     return dynamicTransformOperation(TransformOperationType.RUNTIME_NAME_TRANSFORMATION, mappingPropertyInternalName,
-        linkedStaticProperty);
+            linkedStaticProperty);
   }
 
-  public static TransformOperation staticMeasurementUnitTransformation(String mappingPropertyInternalName, String
-      targetValue) {
-    return staticTransformOperation(TransformOperationType.MEASUREMENT_UNIT_TRANSFORMATION
-        , mappingPropertyInternalName, targetValue);
+  public static TransformOperation staticMeasurementUnitTransformation(String mappingPropertyInternalName,
+          String targetValue) {
+    return staticTransformOperation(TransformOperationType.MEASUREMENT_UNIT_TRANSFORMATION, mappingPropertyInternalName,
+            targetValue);
   }
 
-  public static TransformOperation dynamicMeasurementUnitTransformation(String
-                                                                            mappingPropertyInternalName,
-                                                                        String sourceStaticPropertyInternalName) {
+  public static TransformOperation dynamicMeasurementUnitTransformation(String mappingPropertyInternalName,
+          String sourceStaticPropertyInternalName) {
     return dynamicTransformOperation(TransformOperationType.MEASUREMENT_UNIT_TRANSFORMATION,
-        mappingPropertyInternalName, sourceStaticPropertyInternalName);
+            mappingPropertyInternalName, sourceStaticPropertyInternalName);
   }
 
-
-  private static TransformOperation staticTransformOperation(TransformOperationType transformationScope, String
-      mappingPropertyInternalName, String targetValue) {
-    TransformOperation to = prepareTransformOperation(transformationScope.name()
-        , mappingPropertyInternalName);
+  private static TransformOperation staticTransformOperation(TransformOperationType transformationScope,
+          String mappingPropertyInternalName, String targetValue) {
+    TransformOperation to = prepareTransformOperation(transformationScope.name(), mappingPropertyInternalName);
     to.setTargetValue(targetValue);
     return to;
   }
 
-  private static TransformOperation dynamicTransformOperation(TransformOperationType transformationScope, String
-      mappingPropertyInternalName, String sourceStaticPropertyInternalName) {
-    TransformOperation to = prepareTransformOperation(transformationScope.name()
-        , mappingPropertyInternalName);
+  private static TransformOperation dynamicTransformOperation(TransformOperationType transformationScope,
+          String mappingPropertyInternalName, String sourceStaticPropertyInternalName) {
+    TransformOperation to = prepareTransformOperation(transformationScope.name(), mappingPropertyInternalName);
     to.setSourceStaticProperty(sourceStaticPropertyInternalName);
     return to;
   }
 
-  private static TransformOperation prepareTransformOperation(String transformationScope, String
-      mappingPropertyInternalName) {
+  private static TransformOperation prepareTransformOperation(String transformationScope,
+          String mappingPropertyInternalName) {
 
     return new TransformOperation(transformationScope, mappingPropertyInternalName);
 

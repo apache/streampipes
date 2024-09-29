@@ -15,10 +15,9 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.integration.containers;
 
-public class KafkaDevContainer  extends KafkaContainer{
+public class KafkaDevContainer extends KafkaContainer {
   @Override
   public void start() {
     // do nothing

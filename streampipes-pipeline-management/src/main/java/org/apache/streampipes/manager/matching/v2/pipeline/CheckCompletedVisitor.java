@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
@@ -72,21 +71,13 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
   @Override
   public void visit(MappingPropertyNary mappingPropertyNary) {
-    if (existsSelection(mappingPropertyNary) && mappingPropertyNary
-        .getSelectedProperties()
-        .stream()
-        .noneMatch((p -> mappingPropertyNary.getMapsFromOptions().contains(p)))) {
-      mappingPropertyNary.setSelectedProperties(mappingPropertyNary
-          .getSelectedProperties()
-          .stream()
-          .filter(p -> mappingPropertyNary.getMapsFromOptions().contains(p))
-          .collect(Collectors.toList()));
-      var info = PipelineElementValidationInfo.info(
-          String.format(
-              "Auto-updated invalid field selection: Fields updated to %s",
-              mappingPropertyNary.getSelectedProperties().toString()
-          )
-      );
+    if (existsSelection(mappingPropertyNary) && mappingPropertyNary.getSelectedProperties().stream()
+            .noneMatch((p -> mappingPropertyNary.getMapsFromOptions().contains(p)))) {
+      mappingPropertyNary.setSelectedProperties(mappingPropertyNary.getSelectedProperties().stream()
+              .filter(p -> mappingPropertyNary.getMapsFromOptions().contains(p)).collect(Collectors.toList()));
+      var info = PipelineElementValidationInfo
+              .info(String.format("Auto-updated invalid field selection: Fields updated to %s",
+                      mappingPropertyNary.getSelectedProperties().toString()));
       validationInfos.add(info);
     }
   }
@@ -99,18 +90,14 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
           String existingSelector = mappingPropertyUnary.getSelectedProperty();
           String firstSelector = mappingPropertyUnary.getMapsFromOptions().get(0);
           mappingPropertyUnary.setSelectedProperty(firstSelector);
-          var info = PipelineElementValidationInfo.info(
-              String.format(
-                  "Auto-updated invalid field selection: Selected field %s was changed to %s",
-                  existingSelector,
-                  firstSelector
-              )
-          );
+          var info = PipelineElementValidationInfo
+                  .info(String.format("Auto-updated invalid field selection: Selected field %s was changed to %s",
+                          existingSelector, firstSelector));
           validationInfos.add(info);
         }
       }
     } else {
-      if (!mappingPropertyUnary.getMapsFromOptions().isEmpty()){
+      if (!mappingPropertyUnary.getMapsFromOptions().isEmpty()) {
         String firstSelector = mappingPropertyUnary.getMapsFromOptions().get(0);
         mappingPropertyUnary.setSelectedProperty(firstSelector);
       }

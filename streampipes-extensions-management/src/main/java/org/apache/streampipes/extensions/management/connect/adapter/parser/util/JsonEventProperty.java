@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter.parser.util;
 
 import org.apache.streampipes.model.schema.EventProperty;
@@ -25,14 +24,14 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.vocabulary.XSD;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JsonEventProperty {
 
@@ -48,8 +47,8 @@ public class JsonEventProperty {
     } else if (o.getClass().equals(String.class)) {
       resultProperty = makePrimitiveProperty(key, XSD.STRING.toString());
     } else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)
-               || o.getClass().equals(Float.class) || o.getClass().equals(Long.class)
-               || o.getClass().equals(BigDecimal.class)) {
+            || o.getClass().equals(Float.class) || o.getClass().equals(Long.class)
+            || o.getClass().equals(BigDecimal.class)) {
       resultProperty = makePrimitiveProperty(key, XSD.FLOAT.toString());
     } else if (o.getClass().equals(LinkedHashMap.class)) {
       resultProperty = new EventPropertyNested();
@@ -69,7 +68,7 @@ public class JsonEventProperty {
       if (content.size() == 0) {
         arrayContent.setRuntimeType(XSD.STRING.toString());
       } else if (content.get(0) instanceof Integer || content.get(0) instanceof Double
-                 || content.get(0) instanceof Long) {
+              || content.get(0) instanceof Long) {
         arrayContent.setRuntimeType(XSD.FLOAT.toString());
       } else if (content.get(0) instanceof Boolean) {
         arrayContent.setRuntimeType(XSD.BOOLEAN.toString());
@@ -83,16 +82,15 @@ public class JsonEventProperty {
     }
 
     if (resultProperty == null) {
-      LOG.error("Property Type was not detected in JsonParser for the schema detection. "
-                + "This should never happen!");
+      LOG.error(
+              "Property Type was not detected in JsonParser for the schema detection. " + "This should never happen!");
     }
 
     resultProperty.setDescription("");
     return resultProperty;
   }
 
-  private static EventProperty makePrimitiveProperty(String key,
-                                                     String runtimeType) {
+  private static EventProperty makePrimitiveProperty(String key, String runtimeType) {
     var property = new EventPropertyPrimitive();
     property.setRuntimeName(key);
     property.setRuntimeType(runtimeType);

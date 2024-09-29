@@ -26,7 +26,6 @@ public class ExtensionsServiceShutdownHandler {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExtensionsServiceShutdownHandler.class);
 
-
   public void onShutdown() {
     LOG.info("Shutting down StreamPipes extensions service...");
     int runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();

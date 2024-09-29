@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.rules.schema;
 
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
@@ -69,4 +68,3 @@ public class MoveRuleDescription extends SchemaTransformationRuleDescription {
     return TransformationRulePriority.MOVE.getCode();
   }
 }
-

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.connect.shared.preprocessing.convert.SchemaConverter;
@@ -31,17 +30,14 @@ import java.util.Optional;
 
 public class SchemaUpdateManagement {
 
-  public void computeSchemaChanges(AdapterDescription adapterDescription,
-                                   GuessSchema schema) {
+  public void computeSchemaChanges(AdapterDescription adapterDescription, GuessSchema schema) {
     var actualFields = schema.getEventSchema().getEventProperties();
     var previousFields = adapterDescription.getEventSchema().getEventProperties();
     var transformationRules = adapterDescription.getRules();
 
     var removedFields = findRemovedFields(actualFields, previousFields);
-    var currentOriginalSchema = new SchemaConverter().toOriginalSchema(
-        adapterDescription.getEventSchema(),
-        transformationRules
-    );
+    var currentOriginalSchema = new SchemaConverter().toOriginalSchema(adapterDescription.getEventSchema(),
+            transformationRules);
     var guessedOriginalSchema = schema.getEventSchema();
     var modifiedSchema = modifySchema(currentOriginalSchema, guessedOriginalSchema);
     var modifiedRules = modifyTransformationRules(transformationRules, modifiedSchema);
@@ -53,64 +49,42 @@ public class SchemaUpdateManagement {
   }
 
   private List<TransformationRuleDescription> modifyTransformationRules(List<TransformationRuleDescription> rules,
-                                                                        EventSchema modifiedSchema) {
+          EventSchema modifiedSchema) {
     var properties = modifiedSchema.getEventProperties();
     var visitor = new TransformationRuleUpdateVisitor(properties, rules);
     rules.forEach(rule -> rule.accept(visitor));
     return visitor.getValidRules();
   }
 
-  private EventSchema modifySchema(EventSchema currentOriginalSchema,
-                                   EventSchema guessedOriginalSchema) {
-    return new EventSchema(
-        guessedOriginalSchema
-            .getEventProperties()
-            .stream()
-            .map(ep -> {
-              var currentEpOpt = getExistingEp(ep, currentOriginalSchema);
-              return currentEpOpt.orElse(ep);
-            })
-            .toList()
-    );
+  private EventSchema modifySchema(EventSchema currentOriginalSchema, EventSchema guessedOriginalSchema) {
+    return new EventSchema(guessedOriginalSchema.getEventProperties().stream().map(ep -> {
+      var currentEpOpt = getExistingEp(ep, currentOriginalSchema);
+      return currentEpOpt.orElse(ep);
+    }).toList());
   }
 
-  private Optional<EventProperty> getExistingEp(EventProperty ep,
-                                                EventSchema currentOriginalSchema) {
-    return currentOriginalSchema
-        .getEventProperties()
-        .stream()
-        .filter(currEp -> epExists(ep, currEp))
-        .findFirst();
+  private Optional<EventProperty> getExistingEp(EventProperty ep, EventSchema currentOriginalSchema) {
+    return currentOriginalSchema.getEventProperties().stream().filter(currEp -> epExists(ep, currEp)).findFirst();
   }
 
-  private boolean epExists(EventProperty ep,
-                           EventProperty currEp) {
-    return ep.getClass().equals(currEp.getClass())
-        && ep.getRuntimeName().equals(currEp.getRuntimeName())
-        && isSameDatatype(ep, currEp);
+  private boolean epExists(EventProperty ep, EventProperty currEp) {
+    return ep.getClass().equals(currEp.getClass()) && ep.getRuntimeName().equals(currEp.getRuntimeName())
+            && isSameDatatype(ep, currEp);
   }
 
   private boolean isSameDatatype(EventProperty ep, EventProperty currEp) {
     if (ep instanceof EventPropertyPrimitive && currEp instanceof EventPropertyPrimitive) {
-      return ((EventPropertyPrimitive) ep).getRuntimeType()
-          .equals(((EventPropertyPrimitive) currEp).getRuntimeType());
+      return ((EventPropertyPrimitive) ep).getRuntimeType().equals(((EventPropertyPrimitive) currEp).getRuntimeType());
     } else {
       return true;
     }
   }
 
-  private List<EventProperty> findRemovedFields(List<EventProperty> actualFields,
-                                                List<EventProperty> previousFields) {
-    return previousFields
-        .stream()
-        .filter(field -> !existsField(field, actualFields))
-        .toList();
+  private List<EventProperty> findRemovedFields(List<EventProperty> actualFields, List<EventProperty> previousFields) {
+    return previousFields.stream().filter(field -> !existsField(field, actualFields)).toList();
   }
 
-  private boolean existsField(EventProperty field,
-                              List<EventProperty> actualFields) {
-    return actualFields
-        .stream()
-        .anyMatch(currField -> field.getRuntimeName().equals(currField.getRuntimeName()));
+  private boolean existsField(EventProperty field, List<EventProperty> actualFields) {
+    return actualFields.stream().anyMatch(currField -> field.getRuntimeName().equals(currField.getRuntimeName()));
   }
 }

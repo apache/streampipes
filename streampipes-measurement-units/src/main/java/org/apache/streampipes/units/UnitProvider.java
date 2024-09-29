@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.units;
-
-import com.github.jqudt.Unit;
-import com.github.jqudt.onto.UnitFactory;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.github.jqudt.Unit;
+import com.github.jqudt.onto.UnitFactory;
 
 public enum UnitProvider {
 
@@ -55,9 +54,6 @@ public enum UnitProvider {
   }
 
   public List<Unit> getUnitsByType(URI type) {
-    return availableUnits
-        .stream()
-        .filter(u -> u.getType().equals(type))
-        .collect(Collectors.toList());
+    return availableUnits.stream().filter(u -> u.getType().equals(type)).collect(Collectors.toList());
   }
 }

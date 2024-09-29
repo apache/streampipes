@@ -29,14 +29,12 @@ public class RequiredBoxStream {
   public static final String BOX_ARRAY_PROPERTY = "box-array-property";
 
   public static CollectedStreamRequirements getBoxStream() {
-    return StreamRequirementsBuilder
-        .create()
-        .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq("https://image.com"), Labels
-                .withId(IMAGE_PROPERTY),
-            PropertyScope.NONE)
-        .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReqList("https://streampipes.org/boundingboxes"),
-            Labels.withId(BOX_ARRAY_PROPERTY),
-            PropertyScope.NONE)
-        .build();
+    return StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq("https://image.com"),
+                    Labels.withId(IMAGE_PROPERTY), PropertyScope.NONE)
+            .requiredPropertyWithUnaryMapping(
+                    EpRequirements.domainPropertyReqList("https://streampipes.org/boundingboxes"),
+                    Labels.withId(BOX_ARRAY_PROPERTY), PropertyScope.NONE)
+            .build();
   }
 }

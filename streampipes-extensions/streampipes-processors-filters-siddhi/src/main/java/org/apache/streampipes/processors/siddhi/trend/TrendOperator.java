@@ -15,12 +15,10 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.siddhi.trend;
 
 public enum TrendOperator {
-  INCREASE("Increase"),
-  DECREASE("Decrease");
+  INCREASE("Increase"), DECREASE("Decrease");
 
   private String label;
 

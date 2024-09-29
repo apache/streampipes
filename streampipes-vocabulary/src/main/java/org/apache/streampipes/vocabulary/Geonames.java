@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.vocabulary;
-
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,13 +31,7 @@ public class Geonames {
   public static String shortName = "http://www.geonames.org/ontology#shortName";
 
   public static List<String> getAll() {
-    return Arrays.asList(alternateName,
-        countryCode,
-        name,
-        officialName,
-        population,
-        postalCode,
-        shortName);
+    return Arrays.asList(alternateName, countryCode, name, officialName, population, postalCode, shortName);
   }
 
 }

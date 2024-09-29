@@ -23,7 +23,8 @@ import org.apache.streampipes.storage.api.IDataSinkStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class DataSinkResourceManager
-    extends AbstractPipelineElementResourceManager<IDataSinkStorage, DataSinkDescription, DataSinkInvocation> {
+        extends
+          AbstractPipelineElementResourceManager<IDataSinkStorage, DataSinkDescription, DataSinkInvocation> {
 
   public DataSinkResourceManager() {
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataSinkStorage());

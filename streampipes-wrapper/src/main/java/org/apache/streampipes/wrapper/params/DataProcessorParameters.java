@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.params;
 
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
@@ -35,26 +34,22 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DataProcessorParameters
-    extends PipelineElementParameters<DataProcessorInvocation, IDataProcessorParameterExtractor>
-    implements IDataProcessorParameters {
+        extends
+          PipelineElementParameters<DataProcessorInvocation, IDataProcessorParameterExtractor>
+        implements
+          IDataProcessorParameters {
 
   private final Map<String, Object> outEventType;
   private final SpDataStream outputStream;
   private final String outName;
   private final OutputStreamParams outputStreamParams;
 
-
   public DataProcessorParameters(DataProcessorInvocation pipelineElementInvocation,
-                                 IDataProcessorParameterExtractor parameterExtractor,
-                                 List<InputStreamParams> params,
-                                 Map<String, Map<String, Object>> inEventTypes) {
-    super(
-        pipelineElementInvocation,
-        parameterExtractor,
-        params,
-        inEventTypes);
+          IDataProcessorParameterExtractor parameterExtractor, List<InputStreamParams> params,
+          Map<String, Map<String, Object>> inEventTypes) {
+    super(pipelineElementInvocation, parameterExtractor, params, inEventTypes);
     this.outEventType = SchemaUtils
-        .toRuntimeMap(pipelineElementInvocation.getOutputStream().getEventSchema().getEventProperties());
+            .toRuntimeMap(pipelineElementInvocation.getOutputStream().getEventSchema().getEventProperties());
     this.outputStreamParams = new OutputStreamParams(pipelineElementInvocation.getOutputStream(), getRenameRules());
     outputStream = pipelineElementInvocation.getOutputStream();
     EventGrounding outputGrounding = outputStream.getEventGrounding();
@@ -82,17 +77,13 @@ public class DataProcessorParameters
 
   @Override
   public List<PropertyRenameRule> getRenameRules() {
-    return pipelineElementInvocation
-        .getOutputStrategies()
-        .stream()
-        .flatMap(o -> o.getRenameRules().stream())
-        .collect(Collectors.toList());
+    return pipelineElementInvocation.getOutputStrategies().stream().flatMap(o -> o.getRenameRules().stream())
+            .collect(Collectors.toList());
   }
 
   @Override
   public String getOutName() {
     return outName;
   }
-
 
 }

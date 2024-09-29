@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.redis;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -64,29 +63,24 @@ public class RedisSink extends StreamPipesDataSink {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder
-        .create("org.apache.streampipes.sinks.databases.jvm.redis", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .category(DataSinkType.DATABASE)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                Labels.withId(EVENT_PRIMARY_KEY),
-                PropertyScope.NONE).build())
-        .requiredSingleValueSelection(Labels.withId(EVENT_KEY_AUTO_INCREMENT), Options.from("False", "True"))
-        .requiredTextParameter(Labels.withId(REDIS_HOST_KEY))
-        .requiredIntegerParameter(Labels.withId(REDIS_PORT_KEY), 6379)
-        .requiredIntegerParameter(Labels.withId(EVENT_TTL_KEY), -1)
-        // TODO: Use this after optional parameters implementation
-        //  .requiredSecret(Labels.withId(REDIS_PASSWORD_KEY))
-        //  .requiredTextParameter(Labels.withId(REDIS_CLIENT_KEY))
-        .requiredIntegerParameter(Labels.withId(REDIS_INDEX_KEY), -1)
-        .requiredIntegerParameter(Labels.withId(REDIS_POOL_MAX_ACTIVE_KEY), 8)
-        .requiredIntegerParameter(Labels.withId(REDIS_POOL_MAX_IDLE_KEY), 8)
-        .requiredIntegerParameter(Labels.withId(REDIS_POOL_MAX_WAIT_KEY), -1)
-        .requiredIntegerParameter(Labels.withId(REDIS_POOL_TIMEOUT_KEY), 2000)
-        .build();
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.redis", 0).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON).category(DataSinkType.DATABASE)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId(EVENT_PRIMARY_KEY),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredSingleValueSelection(Labels.withId(EVENT_KEY_AUTO_INCREMENT), Options.from("False", "True"))
+            .requiredTextParameter(Labels.withId(REDIS_HOST_KEY))
+            .requiredIntegerParameter(Labels.withId(REDIS_PORT_KEY), 6379)
+            .requiredIntegerParameter(Labels.withId(EVENT_TTL_KEY), -1)
+            // TODO: Use this after optional parameters implementation
+            // .requiredSecret(Labels.withId(REDIS_PASSWORD_KEY))
+            // .requiredTextParameter(Labels.withId(REDIS_CLIENT_KEY))
+            .requiredIntegerParameter(Labels.withId(REDIS_INDEX_KEY), -1)
+            .requiredIntegerParameter(Labels.withId(REDIS_POOL_MAX_ACTIVE_KEY), 8)
+            .requiredIntegerParameter(Labels.withId(REDIS_POOL_MAX_IDLE_KEY), 8)
+            .requiredIntegerParameter(Labels.withId(REDIS_POOL_MAX_WAIT_KEY), -1)
+            .requiredIntegerParameter(Labels.withId(REDIS_POOL_TIMEOUT_KEY), 2000).build();
   }
 
   @Override
@@ -98,8 +92,8 @@ public class RedisSink extends StreamPipesDataSink {
     Boolean autoIncrement = Boolean.valueOf(extractor.selectedSingleValue(EVENT_KEY_AUTO_INCREMENT, String.class));
     Integer ttl = extractor.singleValueParameter(EVENT_TTL_KEY, Integer.class);
     // TODO: Use this after optional parameters implementation
-    //        String redisPassword = extractor.secretValue(REDIS_PASSWORD_KEY);
-    //        String redisClient = extractor.singleValueParameter(REDIS_CLIENT_KEY, String.class);
+    // String redisPassword = extractor.secretValue(REDIS_PASSWORD_KEY);
+    // String redisClient = extractor.singleValueParameter(REDIS_CLIENT_KEY, String.class);
     Integer redisIndex = extractor.singleValueParameter(REDIS_INDEX_KEY, Integer.class);
     Integer redisPoolMaxActive = extractor.singleValueParameter(REDIS_POOL_MAX_ACTIVE_KEY, Integer.class);
     Integer redisPoolMaxIdle = extractor.singleValueParameter(REDIS_POOL_MAX_IDLE_KEY, Integer.class);
@@ -108,10 +102,8 @@ public class RedisSink extends StreamPipesDataSink {
     String redisPassword = "";
     String redisClient = "";
 
-    RedisParameters
-        params = new RedisParameters(primaryKey, autoIncrement, ttl, redisHost,
-        redisPort, redisPassword, redisClient, redisIndex, redisPoolMaxActive, redisPoolMaxIdle,
-        redisPoolMaxWait, redisPoolTimeout);
+    RedisParameters params = new RedisParameters(primaryKey, autoIncrement, ttl, redisHost, redisPort, redisPassword,
+            redisClient, redisIndex, redisPoolMaxActive, redisPoolMaxIdle, redisPoolMaxWait, redisPoolTimeout);
 
     this.redis = new Redis();
     redis.onInvocation(params);

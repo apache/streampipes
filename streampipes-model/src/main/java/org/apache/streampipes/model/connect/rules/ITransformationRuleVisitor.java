@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.rules;
 
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;

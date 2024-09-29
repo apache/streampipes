@@ -15,9 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connectors.ros.adapter;
 
+import static org.apache.streampipes.connectors.ros.config.RosConfig.ROS_HOST_KEY;
+import static org.apache.streampipes.connectors.ros.config.RosConfig.ROS_PORT_KEY;
+import static org.apache.streampipes.connectors.ros.config.RosConfig.TOPIC_KEY;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connectors.ros.config.RosConfig;
@@ -38,6 +40,14 @@ import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
@@ -48,18 +58,6 @@ import edu.wpi.rail.jrosbridge.Service;
 import edu.wpi.rail.jrosbridge.Topic;
 import edu.wpi.rail.jrosbridge.services.ServiceRequest;
 import edu.wpi.rail.jrosbridge.services.ServiceResponse;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import static org.apache.streampipes.connectors.ros.config.RosConfig.ROS_HOST_KEY;
-import static org.apache.streampipes.connectors.ros.config.RosConfig.ROS_PORT_KEY;
-import static org.apache.streampipes.connectors.ros.config.RosConfig.TOPIC_KEY;
 
 public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerProvidedOptions {
 
@@ -77,8 +75,7 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
   }
 
   @Override
-  public List<Option> resolveOptions(String requestId,
-                                     IStaticPropertyExtractor extractor) {
+  public List<Option> resolveOptions(String requestId, IStaticPropertyExtractor extractor) {
     String rosBridgeHost = extractor.singleValueParameter(ROS_HOST_KEY, String.class);
     Integer rosBridgePort = extractor.singleValueParameter(ROS_PORT_KEY, Integer.class);
 
@@ -92,21 +89,17 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 1, RosBridgeAdapter::new)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withCategory(AdapterType.Manufacturing)
-        .requiredTextParameter(Labels.withId(ROS_HOST_KEY))
-        .requiredIntegerParameter(Labels.withId(ROS_PORT_KEY))
-        .requiredSingleValueSelectionFromContainer(
-            Labels.withId(TOPIC_KEY), Arrays.asList(ROS_HOST_KEY, ROS_PORT_KEY))
-        .buildConfiguration();
+    return AdapterConfigurationBuilder.create(ID, 1, RosBridgeAdapter::new).withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withCategory(AdapterType.Manufacturing).requiredTextParameter(Labels.withId(ROS_HOST_KEY))
+            .requiredIntegerParameter(Labels.withId(ROS_PORT_KEY)).requiredSingleValueSelectionFromContainer(
+                    Labels.withId(TOPIC_KEY), Arrays.asList(ROS_HOST_KEY, ROS_PORT_KEY))
+            .buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(IAdapterParameterExtractor extractor, IEventCollector collector,
+          IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     getConfigurations(extractor.getStaticPropertyExtractor());
     this.ros = new Ros(this.host, this.port);
     this.ros.connect();
@@ -125,16 +118,15 @@ public class RosBridgeAdapter implements StreamPipesAdapter, ResolvesContainerPr
   }
 
   @Override
-  public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStopped(IAdapterParameterExtractor extractor, IAdapterRuntimeContext adapterRuntimeContext)
+          throws AdapterException {
     this.ros.disconnect();
   }
 
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+          IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     getConfigurations(extractor.getStaticPropertyExtractor());
-
 
     Ros ros = new Ros(host, port);
 

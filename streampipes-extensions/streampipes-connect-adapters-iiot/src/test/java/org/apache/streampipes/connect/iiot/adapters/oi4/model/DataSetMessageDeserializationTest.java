@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.iiot.adapters.oi4.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,40 +25,38 @@ import org.junit.jupiter.api.Test;
 public class DataSetMessageDeserializationTest {
 
   private String datasetMessageObjectPayload = """
-      {
-        "DataSetWriterId": 1,
-        "SequenceNumber": 123,
-        "Timestamp": "2024-05-10T07:28:01.711Z",
-        "Filter": "processDataInput",
-        "Source": "ABC",
-        "Payload": {
-          "Device status": 0,
-          "Level": 163,
-          "OUT1": false,
-          "OUT2": false
-        }
-      }
-      """;
-
+          {
+            "DataSetWriterId": 1,
+            "SequenceNumber": 123,
+            "Timestamp": "2024-05-10T07:28:01.711Z",
+            "Filter": "processDataInput",
+            "Source": "ABC",
+            "Payload": {
+              "Device status": 0,
+              "Level": 163,
+              "OUT1": false,
+              "OUT2": false
+            }
+          }
+          """;
 
   private String datasetMessageArrayPayload = """
-      {
-        "DataSetWriterId": 1,
-        "SequenceNumber": 123,
-        "Timestamp": "2024-05-10T07:28:01.711Z",
-        "Filter": "processDataInput",
-        "Source": "ABC",
-        "Payload": [
           {
-            "Device status": 0,
-            "Level": 163,
-            "OUT1": false,
-            "OUT2": false
+            "DataSetWriterId": 1,
+            "SequenceNumber": 123,
+            "Timestamp": "2024-05-10T07:28:01.711Z",
+            "Filter": "processDataInput",
+            "Source": "ABC",
+            "Payload": [
+              {
+                "Device status": 0,
+                "Level": 163,
+                "OUT1": false,
+                "OUT2": false
+              }
+            ]
           }
-        ]
-      }
-      """;
-
+          """;
 
   @Test
   public void testObjectDeserialization() throws JsonProcessingException {

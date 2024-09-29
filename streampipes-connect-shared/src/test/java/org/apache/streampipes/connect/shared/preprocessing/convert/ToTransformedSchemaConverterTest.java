@@ -15,21 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.connect.shared.preprocessing.convert;
-
-import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventPropertyNested;
-import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.sdk.helpers.EpProperties;
-import org.apache.streampipes.sdk.helpers.Labels;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.apache.streampipes.connect.shared.preprocessing.convert.Helpers.getUnit;
 import static org.apache.streampipes.connect.shared.preprocessing.convert.Helpers.makeDeleteTransformationRule;
@@ -38,6 +24,19 @@ import static org.apache.streampipes.connect.shared.preprocessing.convert.Helper
 import static org.apache.streampipes.connect.shared.preprocessing.convert.Helpers.makeRenameTransformationRule;
 import static org.apache.streampipes.connect.shared.preprocessing.convert.Helpers.makeSimpleProperties;
 import static org.apache.streampipes.connect.shared.preprocessing.convert.Helpers.makeUnitTransformationRule;
+
+import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyNested;
+import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.Labels;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ToTransformedSchemaConverterTest {
 
@@ -55,7 +54,6 @@ public class ToTransformedSchemaConverterTest {
     Assertions.assertEquals("targetUnit", getUnit(resultProperties.get(0)));
   }
 
-
   @Test
   public void testSimpleRenameConversion() {
     List<EventProperty> properties = makeSimpleProperties(true);
@@ -65,8 +63,7 @@ public class ToTransformedSchemaConverterTest {
 
     var result = executeAndReturnResult(properties, rules);
     Assertions.assertEquals(3, result.size());
-    Assertions.assertEquals("newStringProp",
-                            result.get(0).getRuntimeName());
+    Assertions.assertEquals("newStringProp", result.get(0).getRuntimeName());
   }
 
   @Test
@@ -78,8 +75,7 @@ public class ToTransformedSchemaConverterTest {
 
     var result = executeAndReturnResult(properties, rules);
     Assertions.assertEquals(2, result.size());
-    Assertions.assertEquals("intProp",
-                            result.get(0).getRuntimeName());
+    Assertions.assertEquals("intProp", result.get(0).getRuntimeName());
   }
 
   @Test
@@ -93,10 +89,8 @@ public class ToTransformedSchemaConverterTest {
 
     var result = executeAndReturnResult(properties, rules);
     Assertions.assertEquals(2, result.size());
-    Assertions.assertEquals("timestamp",
-                            result.get(0).getRuntimeName());
-    Assertions.assertEquals(3,
-                            ((EventPropertyNested) result.get(1)).getEventProperties().size());
+    Assertions.assertEquals("timestamp", result.get(0).getRuntimeName());
+    Assertions.assertEquals(3, ((EventPropertyNested) result.get(1)).getEventProperties().size());
   }
 
   @Test
@@ -115,11 +109,9 @@ public class ToTransformedSchemaConverterTest {
   }
 
   private List<EventProperty> executeAndReturnResult(List<EventProperty> properties,
-                                                     List<TransformationRuleDescription> rules) {
+          List<TransformationRuleDescription> rules) {
     var result = new SchemaConverter().toTransformedSchema(new EventSchema(properties), rules);
     return result.getEventProperties();
   }
-
-
 
 }

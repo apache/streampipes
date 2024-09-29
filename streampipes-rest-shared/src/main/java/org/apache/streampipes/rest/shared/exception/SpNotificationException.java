@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.rest.shared.exception;
-
 
 import org.apache.streampipes.model.message.Notification;
 
@@ -28,8 +26,7 @@ public class SpNotificationException extends RuntimeException {
   private final Notification notification;
   private final HttpStatus status;
 
-  public SpNotificationException(HttpStatus status,
-                                 Notification notification) {
+  public SpNotificationException(HttpStatus status, Notification notification) {
     this.status = status;
     this.notification = notification;
   }

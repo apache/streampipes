@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.opcua.utils;
 
 import org.apache.streampipes.sdk.utils.Datatypes;
@@ -27,17 +26,14 @@ public class OpcUaTypes {
   /**
    * Maps OPC UA data types to internal StreamPipes data types
    *
-   * @param o data type id as UInteger
+   * @param o
+   *          data type id as UInteger
    * @return StreamPipes internal data type
    */
   public static Datatypes getType(UInteger o) {
-    if (UInteger.valueOf(4).equals(o)
-        | UInteger.valueOf(5).equals(o)
-        | UInteger.valueOf(6).equals(o)
-        | UInteger.valueOf(7).equals(o)
-        | UInteger.valueOf(8).equals(o)
-        | UInteger.valueOf(9).equals(o)
-        | UInteger.valueOf(27).equals(o)) {
+    if (UInteger.valueOf(4).equals(o) | UInteger.valueOf(5).equals(o) | UInteger.valueOf(6).equals(o)
+            | UInteger.valueOf(7).equals(o) | UInteger.valueOf(8).equals(o) | UInteger.valueOf(9).equals(o)
+            | UInteger.valueOf(27).equals(o)) {
       return Datatypes.Integer;
     } else if (UInteger.valueOf(8).equals(o)) {
       return Datatypes.Long;
@@ -55,4 +51,3 @@ public class OpcUaTypes {
   }
 
 }
-

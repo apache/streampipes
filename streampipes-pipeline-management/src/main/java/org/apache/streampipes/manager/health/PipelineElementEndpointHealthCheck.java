@@ -20,11 +20,11 @@ package org.apache.streampipes.manager.health;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class PipelineElementEndpointHealthCheck {
 

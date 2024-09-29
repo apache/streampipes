@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.connect.adapter;
 
 import org.apache.streampipes.connect.shared.AdapterPipelineGeneratorBase;
@@ -30,10 +29,8 @@ public class AdapterPipelineGenerator extends AdapterPipelineGeneratorBase {
     var pipelineElements = makeAdapterPipelineElements(adapterDescription.getRules(), true);
 
     if (hasValidGrounding(adapterDescription)) {
-      return new AdapterPipeline(
-          pipelineElements,
-          getAdapterSink(adapterDescription),
-          adapterDescription.getEventSchema());
+      return new AdapterPipeline(pipelineElements, getAdapterSink(adapterDescription),
+              adapterDescription.getEventSchema());
     } else {
       return new AdapterPipeline(pipelineElements, adapterDescription.getEventSchema());
     }
@@ -45,7 +42,7 @@ public class AdapterPipelineGenerator extends AdapterPipelineGeneratorBase {
 
   private boolean hasValidGrounding(AdapterDescription adapterDescription) {
     return adapterDescription.getEventGrounding() != null
-        && adapterDescription.getEventGrounding().getTransportProtocol() != null
-        && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null;
+            && adapterDescription.getEventGrounding().getTransportProtocol() != null
+            && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null;
   }
 }

@@ -43,50 +43,30 @@ public class StreamStopSiddhiProcessor extends StreamPipesSiddhiProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.siddhi.stop", 0)
-        .withLocales(Locales.EN)
-        .category(DataProcessorType.FILTER)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .outputStrategy(OutputStrategies.fixed(
-            Arrays.asList(
-                EpProperties.timestampProperty("timestamp"),
-                EpProperties.stringEp(Labels.withId(Message),
-                    "message", "http://schema.org/text")
-            )
-        ))
-        .requiredIntegerParameter(Labels.withId(Duration))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.stop", 0).withLocales(Locales.EN)
+            .category(DataProcessorType.FILTER).withAssets(ExtensionAssetType.DOCUMENTATION)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .outputStrategy(OutputStrategies.fixed(Arrays.asList(EpProperties.timestampProperty("timestamp"),
+                    EpProperties.stringEp(Labels.withId(Message), "message", "http://schema.org/text"))))
+            .requiredIntegerParameter(Labels.withId(Duration)).build();
   }
 
   @Override
-  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
-                                        String finalInsertIntoStreamName) {
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams, String finalInsertIntoStreamName) {
     var extractor = siddhiParams.getParams().extractor();
     int duration = extractor.singleValueParameter(Duration, Integer.class);
 
     InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
 
-    return SiddhiAppConfigBuilder
-        .create()
-        .addQuery(SiddhiQueryBuilder
-            .create(fromStatement(siddhiParams, duration), insertIntoClause)
-            .withSelectClause(selectStatement(siddhiParams))
-            .build())
-        .build();
+    return SiddhiAppConfigBuilder.create()
+            .addQuery(SiddhiQueryBuilder.create(fromStatement(siddhiParams, duration), insertIntoClause)
+                    .withSelectClause(selectStatement(siddhiParams)).build())
+            .build();
   }
 
-  private String fromStatement(SiddhiProcessorParams siddhiParams,
-                               int duration) {
-    return "define stream Test(timestamp LONG,message STRING);\n"
-        + "from every not "
-        + siddhiParams.getInputStreamNames().get(0)
-        + " for " + duration
-        + " sec";
+  private String fromStatement(SiddhiProcessorParams siddhiParams, int duration) {
+    return "define stream Test(timestamp LONG,message STRING);\n" + "from every not "
+            + siddhiParams.getInputStreamNames().get(0) + " for " + duration + " sec";
   }
 
   private String selectStatement(SiddhiProcessorParams siddhiParams) {

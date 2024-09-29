@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.storage.couchdb.serializer;
 
 import org.apache.streampipes.model.AdapterType;
@@ -46,10 +45,10 @@ import org.apache.streampipes.model.schema.ValueSpecification;
 import org.apache.streampipes.model.staticproperty.MappingProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 
+import java.net.URI;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import java.net.URI;
 
 public class GsonSerializer {
 
@@ -57,7 +56,7 @@ public class GsonSerializer {
     GsonBuilder builder = getGsonBuilder();
     builder.registerTypeHierarchyAdapter(AdapterDescription.class, new AdapterSerializer());
     builder.registerTypeAdapter(TransformationRuleDescription.class,
-        new CouchDbJsonSerializer<TransformationRuleDescription>());
+            new CouchDbJsonSerializer<TransformationRuleDescription>());
 
     return builder;
   }
@@ -88,30 +87,32 @@ public class GsonSerializer {
     builder.registerTypeAdapter(URI.class, new UriSerializer());
     builder.registerTypeAdapter(TopicDefinition.class, new CouchDbJsonSerializer<TopicDefinition>());
     builder.registerTypeAdapter(TransformationRuleDescription.class,
-        new CouchDbJsonSerializer<TransformationRuleDescription>());
+            new CouchDbJsonSerializer<TransformationRuleDescription>());
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
-        .registerSubtype(SpDataStream.class, "org.apache.streampipes.model.SpDataStream"));
+            .registerSubtype(SpDataStream.class, "org.apache.streampipes.model.SpDataStream"));
 
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(TransformationRuleDescription.class, "sourceType")
-        .registerSubtype(RenameRuleDescription.class, "org.apache.streampipes.model.RenameRuleDescription")
-        .registerSubtype(MoveRuleDescription.class, "org.apache.streampipes.model.MoveRuleDescription")
-        .registerSubtype(DeleteRuleDescription.class, "org.apache.streampipes.model.DeleteRuleDescription")
-        .registerSubtype(CreateNestedRuleDescription.class, "org.apache.streampipes.model.CreateNestedRuleDescription")
-        .registerSubtype(RemoveDuplicatesTransformationRuleDescription.class,
-            "org.apache.streampipes.model.RemoveDuplicatesRuleDescription")
-        .registerSubtype(AddTimestampRuleDescription.class, "org.apache.streampipes.model.AddTimestampRuleDescription")
-        .registerSubtype(AddValueTransformationRuleDescription.class,
-            "org.apache.streampipes.model.AddValueTransformationRuleDescription")
-        .registerSubtype(UnitTransformRuleDescription.class,
-            "org.apache.streampipes.model.UnitTransformRuleDescription")
-        .registerSubtype(TimestampTranfsformationRuleDescription.class,
-            "org.apache.streampipes.model.TimestampTranfsformationRuleDescription")
-        .registerSubtype(EventRateTransformationRuleDescription.class,
-            "org.apache.streampipes.model.EventRateTransformationRuleDescription")
-        .registerSubtype(ChangeDatatypeTransformationRuleDescription.class,
-            "org.apache.streampipes.model.ChangeDatatypeTransformationRuleDescription")
-        .registerSubtype(CorrectionValueTransformationRuleDescription.class,
-            "org.apache.streampipes.model.CorrectionValueTransformationRuleDescription"));
+            .registerSubtype(RenameRuleDescription.class, "org.apache.streampipes.model.RenameRuleDescription")
+            .registerSubtype(MoveRuleDescription.class, "org.apache.streampipes.model.MoveRuleDescription")
+            .registerSubtype(DeleteRuleDescription.class, "org.apache.streampipes.model.DeleteRuleDescription")
+            .registerSubtype(CreateNestedRuleDescription.class,
+                    "org.apache.streampipes.model.CreateNestedRuleDescription")
+            .registerSubtype(RemoveDuplicatesTransformationRuleDescription.class,
+                    "org.apache.streampipes.model.RemoveDuplicatesRuleDescription")
+            .registerSubtype(AddTimestampRuleDescription.class,
+                    "org.apache.streampipes.model.AddTimestampRuleDescription")
+            .registerSubtype(AddValueTransformationRuleDescription.class,
+                    "org.apache.streampipes.model.AddValueTransformationRuleDescription")
+            .registerSubtype(UnitTransformRuleDescription.class,
+                    "org.apache.streampipes.model.UnitTransformRuleDescription")
+            .registerSubtype(TimestampTranfsformationRuleDescription.class,
+                    "org.apache.streampipes.model.TimestampTranfsformationRuleDescription")
+            .registerSubtype(EventRateTransformationRuleDescription.class,
+                    "org.apache.streampipes.model.EventRateTransformationRuleDescription")
+            .registerSubtype(ChangeDatatypeTransformationRuleDescription.class,
+                    "org.apache.streampipes.model.ChangeDatatypeTransformationRuleDescription")
+            .registerSubtype(CorrectionValueTransformationRuleDescription.class,
+                    "org.apache.streampipes.model.CorrectionValueTransformationRuleDescription"));
 
     builder.setPrettyPrinting();
     return builder;

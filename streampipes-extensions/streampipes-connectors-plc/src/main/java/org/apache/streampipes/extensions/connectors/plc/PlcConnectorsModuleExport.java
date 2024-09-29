@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.plc;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -28,25 +27,21 @@ import org.apache.streampipes.extensions.connectors.plc.adapter.migration.Plc4xS
 import org.apache.streampipes.extensions.connectors.plc.adapter.modbus.Plc4xModbusAdapter;
 import org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter;
 
-import org.apache.plc4x.java.api.PlcDriverManager;
-import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.apache.plc4x.java.api.PlcDriverManager;
+import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 
 public class PlcConnectorsModuleExport implements IExtensionModuleExport {
 
   @Override
   public List<StreamPipesAdapter> adapters() {
     var driverManager = PlcDriverManager.getDefault();
-    var cachedConnectionManager =  CachedPlcConnectionManager
-        .getBuilder(driverManager.getConnectionManager())
-        .build();
-    var adapters = new ArrayList<>(List.of(
-        new Plc4xModbusAdapter(cachedConnectionManager),
-        new Plc4xS7Adapter(cachedConnectionManager)
-    ));
+    var cachedConnectionManager = CachedPlcConnectionManager.getBuilder(driverManager.getConnectionManager()).build();
+    var adapters = new ArrayList<>(
+            List.of(new Plc4xModbusAdapter(cachedConnectionManager), new Plc4xS7Adapter(cachedConnectionManager)));
     adapters.addAll(new GenericAdapterGenerator().makeAvailableAdapters(driverManager, cachedConnectionManager));
     return adapters;
   }
@@ -58,9 +53,6 @@ public class PlcConnectorsModuleExport implements IExtensionModuleExport {
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return List.of(
-        new Plc4xS7AdapterMigrationV1(),
-        new Plc4xModbusAdapterMigrationV1()
-    );
+    return List.of(new Plc4xS7AdapterMigrationV1(), new Plc4xModbusAdapterMigrationV1());
   }
 }

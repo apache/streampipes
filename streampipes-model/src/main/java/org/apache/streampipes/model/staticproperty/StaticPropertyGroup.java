@@ -51,8 +51,7 @@ public class StaticPropertyGroup extends StaticProperty {
     this.staticProperties = new ArrayList<>();
   }
 
-  public StaticPropertyGroup(StaticPropertyType type,
-                             String internalName, String label, String description) {
+  public StaticPropertyGroup(StaticPropertyType type, String internalName, String label, String description) {
     super(type, internalName, label, description);
     this.staticProperties = new ArrayList<>();
   }
@@ -64,7 +63,7 @@ public class StaticPropertyGroup extends StaticProperty {
   }
 
   public StaticPropertyGroup(String internalName, String label, String description,
-                             List<StaticProperty> staticProperties) {
+          List<StaticProperty> staticProperties) {
     this(internalName, label, description);
     this.staticProperties = staticProperties;
   }
@@ -118,8 +117,8 @@ public class StaticPropertyGroup extends StaticProperty {
       return false;
     }
 
-    for (var i = 0; i < staticProperties.size(); i++){
-      if (!staticProperties.get(i).equals(that.staticProperties.get(i))){
+    for (var i = 0; i < staticProperties.size(); i++) {
+      if (!staticProperties.get(i).equals(that.staticProperties.get(i))) {
         return false;
       }
     }

@@ -15,22 +15,21 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.locales;
-
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
-import java.io.IOException;
-import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
+
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+
+import java.io.IOException;
+import java.util.Properties;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 public class LabelGeneratorTest {
 
@@ -83,8 +82,7 @@ public class LabelGeneratorTest {
 
     var labelGenerator = new LabelGenerator(mockDescription);
     var labelGeneratorMock = spy(labelGenerator);
-    doReturn(properties).when(labelGeneratorMock)
-                        .loadResourceAndMakeProperties();
+    doReturn(properties).when(labelGeneratorMock).loadResourceAndMakeProperties();
     return labelGeneratorMock;
   }
 

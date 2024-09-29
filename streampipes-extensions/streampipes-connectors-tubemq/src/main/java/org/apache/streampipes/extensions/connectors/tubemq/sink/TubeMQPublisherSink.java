@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.tubemq.sink;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
+import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
@@ -35,14 +34,14 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
+import java.util.Map;
+
 import org.apache.inlong.tubemq.client.config.TubeClientConfig;
 import org.apache.inlong.tubemq.client.exception.TubeClientException;
 import org.apache.inlong.tubemq.client.factory.TubeSingleSessionFactory;
 import org.apache.inlong.tubemq.client.producer.MessageProducer;
 import org.apache.inlong.tubemq.client.producer.MessageSentResult;
 import org.apache.inlong.tubemq.corebase.Message;
-
-import java.util.Map;
 
 public class TubeMQPublisherSink implements IStreamPipesDataSink {
 
@@ -54,24 +53,18 @@ public class TubeMQPublisherSink implements IStreamPipesDataSink {
 
   private MessageProducer messageProducer;
 
-
   @Override
   public IDataSinkConfiguration declareConfig() {
-    return DataSinkConfiguration.create(
-        TubeMQPublisherSink::new,
-        DataSinkBuilder
-                .create("org.apache.streampipes.sinks.brokers.jvm.tubemq", 0)
-                .category(DataSinkType.MESSAGING)
-                .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-                .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
-                .requiredTextParameter(Labels.withId(MASTER_HOST_AND_PORT_KEY)).requiredTextParameter(Labels.withId(TOPIC_KEY))
-                .build()
-    );
+    return DataSinkConfiguration.create(TubeMQPublisherSink::new, DataSinkBuilder
+            .create("org.apache.streampipes.sinks.brokers.jvm.tubemq", 0).category(DataSinkType.MESSAGING)
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredTextParameter(Labels.withId(MASTER_HOST_AND_PORT_KEY))
+            .requiredTextParameter(Labels.withId(TOPIC_KEY)).build());
   }
 
   @Override
-  public void onPipelineStarted(IDataSinkParameters sinkParams,
-                                EventSinkRuntimeContext runtimeContext) {
+  public void onPipelineStarted(IDataSinkParameters sinkParams, EventSinkRuntimeContext runtimeContext) {
     final TubeMQParameters tubeMQParameters = new TubeMQParameters(sinkParams);
 
     spDataFormatDefinition = new JsonDataFormatDefinition();
@@ -96,7 +89,7 @@ public class TubeMQPublisherSink implements IStreamPipesDataSink {
       final MessageSentResult result = messageProducer.sendMessage(tubemqMessage);
       if (!result.isSuccess()) {
         throw new SpRuntimeException(
-            String.format("Failed to send message: %s, because: %s", tubemqMessage, result.getErrMsg()));
+                String.format("Failed to send message: %s, because: %s", tubemqMessage, result.getErrMsg()));
       }
     } catch (TubeClientException | InterruptedException e) {
       throw new SpRuntimeException(e);

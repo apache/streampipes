@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.fieldrename;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -46,25 +45,21 @@ public class FiledRenameProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.fieldrename", 0)
-        .category(DataProcessorType.TRANSFORM)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
-                (CONVERT_PROPERTY), PropertyScope.NONE)
-            .build())
-        .requiredTextParameter(Labels.withId(FIELD_NAME))
-        .outputStrategy(OutputStrategies.transform(TransformOperations
-            .dynamicRuntimeNameTransformation(CONVERT_PROPERTY, FIELD_NAME)))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.fieldrename", 0)
+            .category(DataProcessorType.TRANSFORM).withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId(CONVERT_PROPERTY),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredTextParameter(Labels.withId(FIELD_NAME))
+            .outputStrategy(OutputStrategies
+                    .transform(TransformOperations.dynamicRuntimeNameTransformation(CONVERT_PROPERTY, FIELD_NAME)))
+            .build();
   }
 
   @Override
   public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
 
     this.oldPropertyName = processorParams.extractor().mappingPropertyValue(CONVERT_PROPERTY);
     this.newPropertyName = processorParams.extractor().singleValueParameter(FIELD_NAME, String.class);

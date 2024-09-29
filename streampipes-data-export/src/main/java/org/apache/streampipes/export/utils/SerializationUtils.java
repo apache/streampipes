@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.export.utils;
 
 import org.apache.streampipes.serializers.json.JacksonSerializer;

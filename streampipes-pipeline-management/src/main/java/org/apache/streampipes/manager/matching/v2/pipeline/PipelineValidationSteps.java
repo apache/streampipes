@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
 import java.util.Arrays;
@@ -24,14 +23,8 @@ import java.util.List;
 public class PipelineValidationSteps {
 
   public List<IPipelineValidationStep> collect() {
-    return Arrays.asList(
-        new PrepareStep(),
-        new ApplyGroundingStep(),
-        new SchemaValidationStep(),
-        new UpdateStaticPropertiesStep(),
-        new UpdateOutputStrategiesStep(),
-        new ComputeOutputStep(),
-        new CheckCompletedStep()
-    );
+    return Arrays.asList(new PrepareStep(), new ApplyGroundingStep(), new SchemaValidationStep(),
+            new UpdateStaticPropertiesStep(), new UpdateOutputStrategiesStep(), new ComputeOutputStep(),
+            new CheckCompletedStep());
   }
 }

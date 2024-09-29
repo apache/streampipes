@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
@@ -25,8 +24,7 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import java.util.List;
 import java.util.Optional;
 
-public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
-    implements IDataLakeMeasureApi {
+public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure> implements IDataLakeMeasureApi {
 
   public DataLakeMeasureApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, DataLakeMeasure.class);
@@ -59,10 +57,7 @@ public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
 
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
-    return StreamPipesApiPath.fromStreamPipesBasePath()
-        .addToPath("api")
-        .addToPath("v4")
-        .addToPath("datalake")
-        .addToPath("measure");
+    return StreamPipesApiPath.fromStreamPipesBasePath().addToPath("api").addToPath("v4").addToPath("datalake")
+            .addToPath("measure");
   }
 }

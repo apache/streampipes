@@ -24,13 +24,11 @@ import org.apache.streampipes.storage.api.CRUDStorage;
 
 import java.util.List;
 
-public abstract class AbstractCRUDResourceManager<T extends Storable>
-    extends AbstractResourceManager<CRUDStorage<T>> {
+public abstract class AbstractCRUDResourceManager<T extends Storable> extends AbstractResourceManager<CRUDStorage<T>> {
 
   private final Class<T> elementClass;
 
-  public AbstractCRUDResourceManager(CRUDStorage<T> db,
-                                     Class<T> elementClass) {
+  public AbstractCRUDResourceManager(CRUDStorage<T> db, Class<T> elementClass) {
     super(db);
     this.elementClass = elementClass;
   }
@@ -48,14 +46,12 @@ public abstract class AbstractCRUDResourceManager<T extends Storable>
     deletePermissions(elementId);
   }
 
-  public T create(T element,
-                     String principalSid) {
+  public T create(T element, String principalSid) {
     if (element.getElementId() == null) {
       element.setElementId(ElementIdGenerator.makeElementId(elementClass));
     }
     db.persist(element);
-    new PermissionResourceManager().createDefault(element.getElementId(), elementClass, principalSid,
-        false);
+    new PermissionResourceManager().createDefault(element.getElementId(), elementClass, principalSid, false);
     return find(element.getElementId());
   }
 

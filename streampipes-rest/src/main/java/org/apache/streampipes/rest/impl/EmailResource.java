@@ -43,7 +43,7 @@ public class EmailResource extends AbstractAuthGuardedRestResource {
       }
     } else {
       return serverError(
-          "Could not send email - no valid mail configuration provided in StreamPipes (go to settings -> mail)");
+              "Could not send email - no valid mail configuration provided in StreamPipes (go to settings -> mail)");
     }
   }
 }

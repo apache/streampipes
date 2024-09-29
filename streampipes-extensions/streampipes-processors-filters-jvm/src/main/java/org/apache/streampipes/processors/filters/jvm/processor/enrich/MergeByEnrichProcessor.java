@@ -49,28 +49,18 @@ public class MergeByEnrichProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.enrich", 0)
-        .category(DataProcessorType.TRANSFORM)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredSingleValueSelection(Labels.withId(SELECT_STREAM),
-            Options.from("Stream 1", "Stream 2"))
-        .outputStrategy(OutputStrategies.custom(true))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.enrich", 0)
+            .category(DataProcessorType.TRANSFORM).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
+            .requiredSingleValueSelection(Labels.withId(SELECT_STREAM), Options.from("Stream 1", "Stream 2"))
+            .outputStrategy(OutputStrategies.custom(true)).build();
   }
 
   @Override
   public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+          EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
     this.outputKeySelectors = processorParams.extractor().outputKeySelectors();
 
     this.selectedStream = processorParams.extractor().selectedSingleValue(SELECT_STREAM, String.class);

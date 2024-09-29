@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.sinks.databases.jvm.jdbcclient.model;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -47,13 +46,15 @@ public class StatementHandler {
    * Initializes the variables {@link StatementHandler#eventParameterMap} and {@link StatementHandler#preparedStatement}
    * according to the parameter event.
    *
-   * @param event The event which is getting analyzed
-   * @throws SpRuntimeException When the tablename is not allowed
-   * @throws SQLException       When the prepareStatement cannot be evaluated
+   * @param event
+   *          The event which is getting analyzed
+   * @throws SpRuntimeException
+   *           When the tablename is not allowed
+   * @throws SQLException
+   *           When the prepareStatement cannot be evaluated
    */
   public void generatePreparedStatement(DbDescription dbDescription, TableDescription tableDescription,
-                                        Connection connection, final Map<String, Object> event)
-      throws SQLException, SpRuntimeException {
+          Connection connection, final Map<String, Object> event) throws SQLException, SpRuntimeException {
     // input: event
     // wanted: INSERT INTO test4321 ( randomString, randomValue ) VALUES ( ?,? );
     eventParameterMap.clear();
@@ -80,23 +81,17 @@ public class StatementHandler {
    * @param prefix
    * @return
    */
-  public int extendPreparedStatement(DbDescription dbDescription,
-                                     final Map<String, Object> event,
-                                     StringBuilder s1,
-                                     StringBuilder s2,
-                                     int index,
-                                     String preProperty,
-                                     String prefix)
-      throws SpRuntimeException {
+  public int extendPreparedStatement(DbDescription dbDescription, final Map<String, Object> event, StringBuilder s1,
+          StringBuilder s2, int index, String preProperty, String prefix) throws SpRuntimeException {
 
     for (Map.Entry<String, Object> pair : event.entrySet()) {
       if (pair.getValue() instanceof Map) {
         index = extendPreparedStatement(dbDescription, (Map<String, Object>) pair.getValue(), s1, s2, index,
-            pair.getKey() + "_", prefix);
+                pair.getKey() + "_", prefix);
       } else {
         SQLStatementUtils.checkRegEx(pair.getKey(), "Columnname", dbDescription);
         eventParameterMap.put(pair.getKey(), new ParameterInformation(index,
-            DbDataTypeFactory.getFromObject(pair.getValue(), dbDescription.getEngine())));
+                DbDataTypeFactory.getFromObject(pair.getValue(), dbDescription.getEngine())));
         if (dbDescription.isColumnNameQuoted()) {
           s1.append(prefix).append("\"").append(preProperty).append(pair.getKey()).append("\"");
         } else {
@@ -114,8 +109,8 @@ public class StatementHandler {
    * Fills a prepared statement with the actual values base on {@link StatementHandler#eventParameterMap}. If
    * {@link StatementHandler#eventParameterMap} is empty or not complete (which should only happen once in the
    * beginning), it calls
-   * {@link StatementHandler#generatePreparedStatement
-   * (DbDescription, TableDescription, Connection, Map)} to generate a new one.
+   * {@link StatementHandler#generatePreparedStatement (DbDescription, TableDescription, Connection, Map)} to generate a
+   * new one.
    *
    * @param event
    * @param pre
@@ -123,19 +118,18 @@ public class StatementHandler {
    * @throws SpRuntimeException
    */
   private void fillPreparedStatement(DbDescription dbDescription, TableDescription tableDescription,
-                                     Connection connection, final Map<String, Object> event, String pre)
-      throws SQLException, SpRuntimeException {
+          Connection connection, final Map<String, Object> event, String pre) throws SQLException, SpRuntimeException {
 
-    //TODO: Possible error: when the event does not contain all objects of the parameter list
+    // TODO: Possible error: when the event does not contain all objects of the parameter list
     for (Map.Entry<String, Object> pair : event.entrySet()) {
       String newKey = pre + pair.getKey();
       if (pair.getValue() instanceof Map) {
         // recursively extracts nested values
         fillPreparedStatement(dbDescription, tableDescription, connection, (Map<String, Object>) pair.getValue(),
-            newKey + "_");
+                newKey + "_");
       } else {
         if (!eventParameterMap.containsKey(newKey)) {
-          //TODO: start the for loop all over again
+          // TODO: start the for loop all over again
           generatePreparedStatement(dbDescription, tableDescription, connection, event);
         }
         ParameterInformation p = eventParameterMap.get(newKey);
@@ -145,19 +139,21 @@ public class StatementHandler {
   }
 
   /**
-   * Clears, fills and executes the saved prepared statement {@code ps} with the data found in
-   * event. To fill in the values it calls
+   * Clears, fills and executes the saved prepared statement {@code ps} with the data found in event. To fill in the
+   * values it calls
    * {@link StatementHandler#fillPreparedStatement(DbDescription, TableDescription, Connection, Map, String)}.
    *
-   * @param event Data to be saved in the SQL table
-   * @throws SQLException       When the statement cannot be executed
-   * @throws SpRuntimeException When the table name is not allowed or it is thrown
-   *                            by {@link org.apache.streampipes.sinks.databases.jvm.jdbcclient.utils.StatementUtils
-   *                            #setValue(ParameterInformation, Object, PreparedStatement)}
+   * @param event
+   *          Data to be saved in the SQL table
+   * @throws SQLException
+   *           When the statement cannot be executed
+   * @throws SpRuntimeException
+   *           When the table name is not allowed or it is thrown by
+   *           {@link org.apache.streampipes.sinks.databases.jvm.jdbcclient.utils.StatementUtils
+   *           #setValue(ParameterInformation, Object, PreparedStatement)}
    */
   public void executePreparedStatement(DbDescription dbDescription, TableDescription tableDescription,
-                                       Connection connection, final Map<String, Object> event)
-      throws SQLException, SpRuntimeException {
+          Connection connection, final Map<String, Object> event) throws SQLException, SpRuntimeException {
     if (this.getPreparedStatement() != null) {
       this.preparedStatement.clearParameters();
     }

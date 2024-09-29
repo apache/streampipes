@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.management.api;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
@@ -34,10 +33,8 @@ public class RuntimeResolvableRequestHandler {
 
   // for backwards compatibility
   public RuntimeOptionsResponse handleRuntimeResponse(ResolvesContainerProvidedOptions resolvesOptions,
-                                                      RuntimeOptionsRequest req) throws SpConfigurationException {
-    List<Option> availableOptions =
-        resolvesOptions.resolveOptions(req.getRequestId(),
-            makeExtractor(req));
+          RuntimeOptionsRequest req) throws SpConfigurationException {
+    List<Option> availableOptions = resolvesOptions.resolveOptions(req.getRequestId(), makeExtractor(req));
 
     SelectionStaticProperty sp = getConfiguredProperty(req);
     sp.setOptions(availableOptions);
@@ -45,27 +42,19 @@ public class RuntimeResolvableRequestHandler {
     return new RuntimeOptionsResponse(req, sp);
   }
 
-  public RuntimeOptionsResponse handleRuntimeResponse(SupportsRuntimeConfig declarer,
-                                                      RuntimeOptionsRequest req) throws SpConfigurationException {
-    StaticProperty result = declarer.resolveConfiguration(
-        req.getRequestId(),
-        makeExtractor(req));
+  public RuntimeOptionsResponse handleRuntimeResponse(SupportsRuntimeConfig declarer, RuntimeOptionsRequest req)
+          throws SpConfigurationException {
+    StaticProperty result = declarer.resolveConfiguration(req.getRequestId(), makeExtractor(req));
 
     return new RuntimeOptionsResponse(req, result);
   }
 
   private SelectionStaticProperty getConfiguredProperty(RuntimeOptionsRequest req) {
-    return req.getStaticProperties()
-        .stream()
-        .filter(p -> p.getInternalName().equals(req.getRequestId()))
-        .map(p -> (SelectionStaticProperty) p)
-        .findFirst()
-        .get();
+    return req.getStaticProperties().stream().filter(p -> p.getInternalName().equals(req.getRequestId()))
+            .map(p -> (SelectionStaticProperty) p).findFirst().get();
   }
 
   private StaticPropertyExtractor makeExtractor(RuntimeOptionsRequest req) {
-    return StaticPropertyExtractor.from(req.getStaticProperties(),
-        req.getInputStreams(),
-        req.getAppId());
+    return StaticPropertyExtractor.from(req.getStaticProperties(), req.getInputStreams(), req.getAppId());
   }
 }

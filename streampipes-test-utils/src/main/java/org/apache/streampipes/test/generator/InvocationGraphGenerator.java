@@ -37,7 +37,7 @@ public class InvocationGraphGenerator {
   }
 
   public static DataProcessorInvocation makeInvocationWithOutputProperties(DataProcessorDescription description,
-                                                                           List<String> runtimeNames) {
+          List<String> runtimeNames) {
     DataProcessorInvocation invocation = makeEmptyInvocation(description);
     invocation.setOutputStream(EventStreamGenerator.makeStreamWithProperties(runtimeNames));
 

@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.monitoring.pipeline;
-
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.commons.prometheus.pipelines.PipelineFlowStats;
@@ -30,13 +28,13 @@ import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 
+import java.io.IOException;
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.List;
 
 public class ExtensionsServiceLogExecutor implements Runnable {
 
@@ -67,27 +65,21 @@ public class ExtensionsServiceLogExecutor implements Runnable {
 
   private void updatePipelineFlow() {
     pipelineFlowStats.clear();
-    ExtensionsLogProvider.INSTANCE.getAllMetricsInfos().forEach(
-        (k, v) -> {
-        String className = InstanceIdExtractor.getSimpleName(k);
-        if (AdapterDescription.class.getSimpleName().toLowerCase().equals(className)) {
-          pipelineFlowStats.increaseReceivedTotalData(v.getMessagesOut().getCounter());
-        } else if (DataProcessorInvocation.class.getSimpleName().toLowerCase().equals(className)) {
-          v.getMessagesIn().forEach(
-              (k1, v1) -> {
-              pipelineFlowStats.increaseElementInputTotalData(v1.getCounter());
-            }
-          );
-          pipelineFlowStats.increaseElementOutputTotalData(v.getMessagesOut().getCounter());
-        } else if (DataSinkInvocation.class.getSimpleName().toLowerCase().equals(className)) {
-          v.getMessagesIn().forEach(
-              (k1, v1) -> {
-              pipelineFlowStats.increasePipelineProcessedData(v1.getCounter());
-            }
-          );
-        }
+    ExtensionsLogProvider.INSTANCE.getAllMetricsInfos().forEach((k, v) -> {
+      String className = InstanceIdExtractor.getSimpleName(k);
+      if (AdapterDescription.class.getSimpleName().toLowerCase().equals(className)) {
+        pipelineFlowStats.increaseReceivedTotalData(v.getMessagesOut().getCounter());
+      } else if (DataProcessorInvocation.class.getSimpleName().toLowerCase().equals(className)) {
+        v.getMessagesIn().forEach((k1, v1) -> {
+          pipelineFlowStats.increaseElementInputTotalData(v1.getCounter());
+        });
+        pipelineFlowStats.increaseElementOutputTotalData(v.getMessagesOut().getCounter());
+      } else if (DataSinkInvocation.class.getSimpleName().toLowerCase().equals(className)) {
+        v.getMessagesIn().forEach((k1, v1) -> {
+          pipelineFlowStats.increasePipelineProcessedData(v1.getCounter());
+        });
       }
-    );
+    });
     pipelineFlowStats.metrics();
   }
 
@@ -96,11 +88,7 @@ public class ExtensionsServiceLogExecutor implements Runnable {
   }
 
   private List<String> getActiveExtensionsEndpoints() {
-    return SpServiceDiscovery.getServiceDiscovery().getServiceEndpoints(
-        DefaultSpServiceTypes.EXT,
-        true,
-        List.of()
-    );
+    return SpServiceDiscovery.getServiceDiscovery().getServiceEndpoints(DefaultSpServiceTypes.EXT, true, List.of());
   }
 
   private String makeLogUrl(String baseUrl) {

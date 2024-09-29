@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.extensions.connectors.nats.sink;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -41,15 +40,15 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
+import java.time.Duration;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
+
 import io.nats.client.Connection;
 import io.nats.client.Nats;
 import io.nats.client.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.time.Duration;
-import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 public class NatsSink implements IStreamPipesDataSink {
 
@@ -77,24 +76,17 @@ public class NatsSink implements IStreamPipesDataSink {
 
   @Override
   public IDataSinkConfiguration declareConfig() {
-    return DataSinkConfiguration.create(
-        NatsSink::new,
-        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.nats", 0)
-            .category(DataSinkType.MESSAGING)
-            .withLocales(Locales.EN)
-            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-            .requiredStream(StreamRequirementsBuilder
-                .create()
-                .requiredProperty(EpRequirements.anyProperty())
-                .build())
+    return DataSinkConfiguration.create(NatsSink::new, DataSinkBuilder
+            .create("org.apache.streampipes.sinks.brokers.jvm.nats", 0).category(DataSinkType.MESSAGING)
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
             .requiredTextParameter(Labels.withId(SUBJECT_KEY), false, false)
             .requiredTextParameter(Labels.withId(URLS_KEY), false, false)
             .requiredAlternatives(Labels.withId(ACCESS_MODE), getAccessModeAlternativesOne(),
-                getAccessModeAlternativesTwo())
+                    getAccessModeAlternativesTwo())
             .requiredAlternatives(Labels.withId(CONNECTION_PROPERTIES), getConnectionPropertiesAlternativesOne(),
-                getConnectionPropertiesAlternativesTwo())
-            .build()
-    );
+                    getConnectionPropertiesAlternativesTwo())
+            .build());
   }
 
   public static StaticPropertyAlternative getAccessModeAlternativesOne() {
@@ -104,9 +96,9 @@ public class NatsSink implements IStreamPipesDataSink {
 
   public static StaticPropertyAlternative getAccessModeAlternativesTwo() {
     return Alternatives.from(Labels.withId(USERNAME_ACCESS),
-        StaticProperties.group(Labels.withId(USERNAME_GROUP),
-            StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME_KEY)),
-            StaticProperties.secretValue(Labels.withId(PASSWORD_KEY))));
+            StaticProperties.group(Labels.withId(USERNAME_GROUP),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME_KEY)),
+                    StaticProperties.secretValue(Labels.withId(PASSWORD_KEY))));
   }
 
   public static StaticPropertyAlternative getConnectionPropertiesAlternativesOne() {
@@ -116,16 +108,15 @@ public class NatsSink implements IStreamPipesDataSink {
 
   public static StaticPropertyAlternative getConnectionPropertiesAlternativesTwo() {
     return Alternatives.from(Labels.withId(CUSTOM_PROPERTIES),
-        StaticProperties.group(Labels.withId(CONNECTION_PROPERTIES_GROUP),
-            StaticProperties.stringFreeTextProperty(Labels.withId(PROPERTIES_KEY))));
+            StaticProperties.group(Labels.withId(CONNECTION_PROPERTIES_GROUP),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(PROPERTIES_KEY))));
 
   }
 
   @Override
   public void onPipelineStarted(IDataSinkParameters params, EventSinkRuntimeContext runtimeContext) {
     this.dataFormatDefinition = new JsonDataFormatDefinition();
-    NatsConfig natsConfig = NatsConfigUtils.from(
-        StaticPropertyExtractor.from(params.getModel().getStaticProperties()));
+    NatsConfig natsConfig = NatsConfigUtils.from(StaticPropertyExtractor.from(params.getModel().getStaticProperties()));
     this.subject = natsConfig.getSubject();
     Options options = NatsUtils.makeNatsOptions(natsConfig);
 

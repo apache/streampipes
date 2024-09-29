@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.verification.messages;
 
 import org.apache.streampipes.model.message.NotificationType;

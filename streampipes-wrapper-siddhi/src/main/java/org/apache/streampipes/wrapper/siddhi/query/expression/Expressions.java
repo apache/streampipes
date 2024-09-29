@@ -45,9 +45,9 @@ import org.apache.streampipes.wrapper.siddhi.query.expression.window.TimeBatchWi
 import org.apache.streampipes.wrapper.siddhi.query.expression.window.TimeWindowExpression;
 import org.apache.streampipes.wrapper.siddhi.query.expression.window.WindowExpression;
 
-import io.siddhi.query.api.execution.query.selection.OrderByAttribute;
-
 import java.util.Arrays;
+
+import io.siddhi.query.api.execution.query.selection.OrderByAttribute;
 
 public class Expressions {
 
@@ -132,11 +132,8 @@ public class Expressions {
   }
 
   public static StreamFilterExpression filter(StreamExpression streamExpression,
-                                              PatternCountExpression patternCountExpression,
-                                              Expression... filterExpressions) {
-    return new StreamFilterExpression(streamExpression,
-        Arrays.asList(filterExpressions),
-        patternCountExpression);
+          PatternCountExpression patternCountExpression, Expression... filterExpressions) {
+    return new StreamFilterExpression(streamExpression, Arrays.asList(filterExpressions), patternCountExpression);
   }
 
   public static RelationalOperatorExpression ge(PropertyExpressionBase exp1, PropertyExpressionBase exp2) {
@@ -191,9 +188,8 @@ public class Expressions {
     return new SequenceExpression(Arrays.asList(expression1, expression2));
   }
 
-  public static Expression sequence(StreamExpression expression1,
-                                    StreamExpression expression2,
-                                    WithinExpression withinExpression) {
+  public static Expression sequence(StreamExpression expression1, StreamExpression expression2,
+          WithinExpression withinExpression) {
     return new SequenceExpression(Arrays.asList(expression1, expression2), withinExpression);
   }
 

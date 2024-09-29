@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.connect.adapter.migration.utils;
 
 public class FormatIds {
@@ -27,8 +26,7 @@ public class FormatIds {
   public static final String JSON_OBJECT_NEW_KEY = "object";
   public static final String JSON_ARRAY_KEY_FORMAT_ID = "https://streampipes.org/vocabulary/v1/format/json/arraykey";
   public static final String JSON_ARRAY_KEY_NEW_KEY = "arrayField";
-  public static final String JSON_ARRAY_NO_KEY_FORMAT_ID =
-      "https://streampipes.org/vocabulary/v1/format/json/arraynokey";
+  public static final String JSON_ARRAY_NO_KEY_FORMAT_ID = "https://streampipes.org/vocabulary/v1/format/json/arraynokey";
   public static final String JSON_ARRAY_NO_KEY_NEW_KEY = "array";
   public static final String IMAGE_FORMAT_ID = "https://streampipes.org/vocabulary/v1/format/image";
   public static final String GEOJSON_FORMAT_ID = "https://streampipes.org/vocabulary/v1/format/geojson";

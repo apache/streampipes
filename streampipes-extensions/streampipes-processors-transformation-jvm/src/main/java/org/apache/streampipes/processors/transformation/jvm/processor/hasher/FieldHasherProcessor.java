@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.processors.transformation.jvm.processor.hasher;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -47,36 +46,30 @@ public class FieldHasherProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.fieldhasher", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId
-                (HASH_PROPERTIES), PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(HASH_ALGORITHM),
-            Options.from("SHA1", "SHA2", "MD5"))
-        .outputStrategy(OutputStrategies.keep())
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.fieldhasher", 0)
+            .withLocales(Locales.EN).withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId(HASH_PROPERTIES),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredSingleValueSelection(Labels.withId(HASH_ALGORITHM), Options.from("SHA1", "SHA2", "MD5"))
+            .outputStrategy(OutputStrategies.keep()).build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+          EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     var extractor = parameters.extractor();
     this.propertyName = extractor.mappingPropertyValue(HASH_PROPERTIES);
 
-    this.hashAlgorithm =
-        HashAlgorithmType.valueOf(extractor.selectedSingleValue(HASH_ALGORITHM, String.class)).hashAlgorithm();
+    this.hashAlgorithm = HashAlgorithmType.valueOf(extractor.selectedSingleValue(HASH_ALGORITHM, String.class))
+            .hashAlgorithm();
   }
 
   @Override
   public void onEvent(Event in, SpOutputCollector out) throws SpRuntimeException {
     in.updateFieldBySelector(propertyName,
-        hashAlgorithm.toHashValue(in.getFieldBySelector(propertyName).getAsPrimitive().getAsString()));
+            hashAlgorithm.toHashValue(in.getFieldBySelector(propertyName).getAsPrimitive().getAsString()));
     out.collect(in);
   }
 

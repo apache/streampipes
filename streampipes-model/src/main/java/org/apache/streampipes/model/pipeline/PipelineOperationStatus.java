@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.pipeline;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -33,10 +32,8 @@ public class PipelineOperationStatus {
 
   private List<PipelineElementStatus> elementStatus;
 
-  public PipelineOperationStatus(String pipelineId,
-                                 String pipelineName,
-                                 String title,
-                                 List<PipelineElementStatus> elementStatus) {
+  public PipelineOperationStatus(String pipelineId, String pipelineName, String title,
+          List<PipelineElementStatus> elementStatus) {
     super();
     this.title = title;
     this.pipelineName = pipelineName;
@@ -97,6 +94,5 @@ public class PipelineOperationStatus {
   public void setTitle(String title) {
     this.title = title;
   }
-
 
 }

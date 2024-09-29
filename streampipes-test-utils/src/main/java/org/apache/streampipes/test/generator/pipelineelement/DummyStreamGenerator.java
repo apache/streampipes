@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.test.generator.pipelineelement;
 
 import org.apache.streampipes.model.SpDataStream;

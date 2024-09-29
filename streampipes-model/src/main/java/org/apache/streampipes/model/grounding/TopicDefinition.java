@@ -15,16 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.grounding;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-@JsonSubTypes({
-    @JsonSubTypes.Type(SimpleTopicDefinition.class),
-    @JsonSubTypes.Type(WildcardTopicDefinition.class)
-})
+@JsonSubTypes({@JsonSubTypes.Type(SimpleTopicDefinition.class), @JsonSubTypes.Type(WildcardTopicDefinition.class)})
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 public abstract class TopicDefinition {
 

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.manager.execution.task;
 
 import org.apache.streampipes.commons.MD5;
@@ -27,20 +26,16 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 
 public class UpdateGroupIdTask implements PipelineExecutionTask {
   @Override
-  public void executeTask(Pipeline pipeline,
-                          PipelineExecutionInfo executionInfo) {
+  public void executeTask(Pipeline pipeline, PipelineExecutionInfo executionInfo) {
     var sanitizedPipelineName = Utils.filterSpecialChar(pipeline.getName());
     pipeline.getSepas().forEach(processor -> updateGroupIds(processor, sanitizedPipelineName));
     pipeline.getActions().forEach(sink -> updateGroupIds(sink, sanitizedPipelineName));
   }
 
-  private void updateGroupIds(InvocableStreamPipesEntity entity,
-                              String sanitizedPipelineName) {
-    entity.getInputStreams()
-        .stream()
-        .filter(is -> is.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol)
-        .map(is -> is.getEventGrounding().getTransportProtocol())
-        .map(KafkaTransportProtocol.class::cast)
-        .forEach(tp -> tp.setGroupId(sanitizedPipelineName + MD5.crypt(tp.getElementId())));
+  private void updateGroupIds(InvocableStreamPipesEntity entity, String sanitizedPipelineName) {
+    entity.getInputStreams().stream()
+            .filter(is -> is.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol)
+            .map(is -> is.getEventGrounding().getTransportProtocol()).map(KafkaTransportProtocol.class::cast)
+            .forEach(tp -> tp.setGroupId(sanitizedPipelineName + MD5.crypt(tp.getElementId())));
   }
 }

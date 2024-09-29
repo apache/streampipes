@@ -15,16 +15,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.messaging.jms;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-
-import org.apache.activemq.command.ActiveMQBytesMessage;
-import org.apache.activemq.util.ByteSequence;
 
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
@@ -33,9 +29,10 @@ import javax.jms.Session;
 
 import java.io.Serializable;
 
-public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
-    EventConsumer,
-    AutoCloseable, Serializable {
+import org.apache.activemq.command.ActiveMQBytesMessage;
+import org.apache.activemq.util.ByteSequence;
+
+public class ActiveMQConsumer extends ActiveMQConnectionProvider implements EventConsumer, AutoCloseable, Serializable {
 
   private Session session;
   private MessageConsumer consumer;
@@ -62,16 +59,13 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
   }
 
   @Override
-  public void connect(InternalEventProcessor<byte[]>
-      eventProcessor) throws SpRuntimeException {
+  public void connect(InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
     String url = ActiveMQUtils.makeActiveMqUrl(protocol);
 
     try {
       this.eventProcessor = eventProcessor;
       session = startJmsConnection(url).createSession(false, Session.AUTO_ACKNOWLEDGE);
-      consumer = session.createConsumer(session.createTopic(
-          protocol.getTopicDefinition().getActualTopicName())
-      );
+      consumer = session.createConsumer(session.createTopic(protocol.getTopicDefinition().getActualTopicName()));
       initListener();
       this.connected = true;
     } catch (JMSException e) {

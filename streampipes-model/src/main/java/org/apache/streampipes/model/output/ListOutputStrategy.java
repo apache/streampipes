@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.output;
 
 public class ListOutputStrategy extends OutputStrategy {
@@ -45,6 +44,5 @@ public class ListOutputStrategy extends OutputStrategy {
   public void setPropertyName(String propertyName) {
     this.propertyName = propertyName;
   }
-
 
 }

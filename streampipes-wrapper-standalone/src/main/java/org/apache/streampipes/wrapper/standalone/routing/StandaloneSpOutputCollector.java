@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.wrapper.standalone.routing;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -29,14 +28,16 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventConverter;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
-public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
-    StandaloneSpCollector<T, InternalEventProcessor<Map<String,
-        Object>>> implements SpOutputCollector {
+public class StandaloneSpOutputCollector<T extends TransportProtocol>
+        extends
+          StandaloneSpCollector<T, InternalEventProcessor<Map<String, Object>>>
+        implements
+          SpOutputCollector {
 
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneSpOutputCollector.class);
 
@@ -44,8 +45,7 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
   private final String resourceId;
   private final ExtensionsLogger extensionsLogger;
 
-  public StandaloneSpOutputCollector(T protocol,
-                                     String resourceId) throws SpRuntimeException {
+  public StandaloneSpOutputCollector(T protocol, String resourceId) throws SpRuntimeException {
     super(protocol);
     this.producer = protocolDefinition.getProducer(protocol);
     this.resourceId = resourceId;

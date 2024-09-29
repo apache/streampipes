@@ -47,9 +47,9 @@ import org.apache.streampipes.wrapper.siddhi.query.SelectClause;
 import org.apache.streampipes.wrapper.siddhi.query.expression.Expressions;
 import org.apache.streampipes.wrapper.siddhi.query.expression.SiddhiTimeUnit;
 
-import io.siddhi.query.api.execution.query.selection.OrderByAttribute;
-
 import java.util.Arrays;
+
+import io.siddhi.query.api.execution.query.selection.OrderByAttribute;
 
 public class TopK extends StreamPipesSiddhiProcessor {
 
@@ -67,53 +67,47 @@ public class TopK extends StreamPipesSiddhiProcessor {
   private static final String ORDER_ASCENDING_NAME = "ASC";
   private static final String ORDER_DESCENDING_NAME = "DESC";
 
-
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.siddhi.topk", 0)
-        .withLocales(Locales.EN)
-        .category(DataProcessorType.TRANSFORM)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId
-                (VALUE_KEY), PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.integerReq(), Labels.withId
-                (COUNT_KEY), PropertyScope.NONE)
-            .build())
-        .requiredIntegerParameter(Labels.withId(LIMIT_KEY))
-        .requiredIntegerParameter(Labels.withId(WINDOW_SIZE))
-        .requiredSingleValueSelection(Labels.withId(SCALE_KEY),
-            Options.from(new Tuple2<>("Hours", HOURS_INTERNAL_NAME),
-                new Tuple2<>("Minutes", MINUTES_INTERNAL_NAME),
-                new Tuple2<>("Seconds", SECONDS_INTERNAL_NAME)))
-        .requiredSingleValueSelection(Labels.withId(ORDER_KEY),
-            Options.from(new Tuple2<>("Ascending", ORDER_ASCENDING_NAME),
-                new Tuple2<>("Descending", ORDER_DESCENDING_NAME)))
-        .outputStrategy(OutputStrategies.fixed(EpProperties.listNestedEp(Labels.withId("top"), "top",
-            Arrays.asList(EpProperties.integerEp(Labels.withId("count"), "count", "http://schema.org/count"),
-                EpProperties.stringEp(Labels.withId("value"), "value", SO.TEXT)))))
-        .build();
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.topk", 0).withLocales(Locales.EN)
+            .category(DataProcessorType.TRANSFORM).withAssets(ExtensionAssetType.DOCUMENTATION)
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId(VALUE_KEY),
+                            PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.integerReq(), Labels.withId(COUNT_KEY),
+                            PropertyScope.NONE)
+                    .build())
+            .requiredIntegerParameter(Labels.withId(LIMIT_KEY)).requiredIntegerParameter(Labels.withId(WINDOW_SIZE))
+            .requiredSingleValueSelection(Labels.withId(SCALE_KEY),
+                    Options.from(new Tuple2<>("Hours", HOURS_INTERNAL_NAME),
+                            new Tuple2<>("Minutes", MINUTES_INTERNAL_NAME),
+                            new Tuple2<>("Seconds", SECONDS_INTERNAL_NAME)))
+            .requiredSingleValueSelection(Labels.withId(ORDER_KEY),
+                    Options.from(new Tuple2<>("Ascending", ORDER_ASCENDING_NAME),
+                            new Tuple2<>("Descending", ORDER_DESCENDING_NAME)))
+            .outputStrategy(OutputStrategies.fixed(EpProperties.listNestedEp(Labels.withId("top"), "top",
+                    Arrays.asList(EpProperties.integerEp(Labels.withId("count"), "count", "http://schema.org/count"),
+                            EpProperties.stringEp(Labels.withId("value"), "value", SO.TEXT)))))
+            .build();
   }
 
   @Override
-  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams,
-                                        String finalInsertIntoStreamName) {
+  public SiddhiAppConfig makeStatements(SiddhiProcessorParams siddhiParams, String finalInsertIntoStreamName) {
     IDataProcessorParameterExtractor extractor = siddhiParams.getParams().extractor();
     Integer windowSize = extractor.singleValueParameter(WINDOW_SIZE, Integer.class);
     String valueSelector = extractor.mappingPropertyValue(VALUE_KEY);
     String countSelector = extractor.mappingPropertyValue(COUNT_KEY);
     Integer limit = extractor.singleValueParameter(LIMIT_KEY, Integer.class);
     SiddhiTimeUnit scale = toTimeUnit(extractor.selectedSingleValueInternalName(SCALE_KEY, String.class));
-    OrderByAttribute.Order order =
-        OrderByAttribute.Order.valueOf(extractor.selectedSingleValueInternalName(ORDER_KEY, String.class));
+    OrderByAttribute.Order order = OrderByAttribute.Order
+            .valueOf(extractor.selectedSingleValueInternalName(ORDER_KEY, String.class));
 
     FromClause fromClause = FromClause.create();
     fromClause.add(
-        Expressions.stream(siddhiParams.getInputStreamNames().get(0), Expressions.timeBatch(windowSize, scale)));
+            Expressions.stream(siddhiParams.getInputStreamNames().get(0), Expressions.timeBatch(windowSize, scale)));
 
     SelectClause selectClause = SelectClause.create(Expressions.as(Expressions.property(valueSelector), "value"),
-        Expressions.as(Expressions.property(countSelector), "count"));
+            Expressions.as(Expressions.property(countSelector), "count"));
     GroupByClause groupByClause = GroupByClause.create(Expressions.property(valueSelector));
     OrderByClause orderByClause = OrderByClause.create(Expressions.orderBy(Expressions.property("count"), order));
 
@@ -121,14 +115,10 @@ public class TopK extends StreamPipesSiddhiProcessor {
     LimitClause limitClause = LimitClause.create(limit);
 
     return SiddhiAppConfigBuilder.create(new SiddhiListOutputConfig("top", true))
-        .addQuery(SiddhiQueryBuilder
-            .create(fromClause, insertIntoClause)
-            .withSelectClause(selectClause)
-            .withGroupByClause(groupByClause)
-            .withOrderByClause(orderByClause)
-            .withLimitClause(limitClause)
-            .build())
-        .build();
+            .addQuery(SiddhiQueryBuilder.create(fromClause, insertIntoClause).withSelectClause(selectClause)
+                    .withGroupByClause(groupByClause).withOrderByClause(orderByClause).withLimitClause(limitClause)
+                    .build())
+            .build();
   }
 
   private SiddhiTimeUnit toTimeUnit(String scale) {

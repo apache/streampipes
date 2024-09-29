@@ -33,8 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HttpServerAdapterResource {
 
   @PostMapping(path = "{endpointId}")
-  public ResponseEntity<Void> receiveEvent(@PathVariable("endpointId") String endpointId,
-                                        @RequestBody byte[] body) {
+  public ResponseEntity<Void> receiveEvent(@PathVariable("endpointId") String endpointId, @RequestBody byte[] body) {
 
     try {
       HttpServerAdapterManagement.INSTANCE.notify(endpointId, body);

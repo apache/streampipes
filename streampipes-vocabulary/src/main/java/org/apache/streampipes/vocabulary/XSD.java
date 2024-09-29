@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.vocabulary;
 
 import java.net.URI;
@@ -47,22 +46,17 @@ public class XSD {
 
   public static final URI SEQUENCE = toURI("sequence");
   /**
-   * As discussed in
-   * http://www.w3.org/2001/sw/BestPractices/XSCH/xsch-sw-20050127
-   * /#section-duration an standardised in
+   * As discussed in http://www.w3.org/2001/sw/BestPractices/XSCH/xsch-sw-20050127 /#section-duration an standardised in
    * http://www.w3.org/TR/xpath-datamodel/#notation
    * <p>
-   * Note: The XML namespace is 'http://www.w3.org/2001/XMLSchema', but RDF
-   * people seems to have agreed on using '#' atht eh end to create a
-   * URI-prefix
+   * Note: The XML namespace is 'http://www.w3.org/2001/XMLSchema', but RDF people seems to have agreed on using '#'
+   * atht eh end to create a URI-prefix
    */
   public static final String XS_URIPREFIX = "http://www.w3.org/2001/XMLSchema#";
 
   /**
-   * According to <a href=
-   * "http://www.w3.org/2001/sw/BestPractices/XSCH/xsch-sw-20050127/#section-duration"
-   * >this</a> SHOULD NOT be used: xsd:duration does not have a well-defined
-   * value space.
+   * According to <a href= "http://www.w3.org/2001/sw/BestPractices/XSCH/xsch-sw-20050127/#section-duration" >this</a>
+   * SHOULD NOT be used: xsd:duration does not have a well-defined value space.
    * <p>
    * Instead use _yearMonthDuration or _dayTimeDuration
    */
@@ -123,13 +117,11 @@ public class XSD {
 
   public static final URI LONG = toURI("long");
 
-
   /**
    * http://www.w3.org/TR/xmlschema-2/datatypes.html#int
    * <p>
-   * [Definition:] int is derived from long by setting the value of
-   * maxInclusive to be 2147483647 and minInclusive to be -2147483648. The
-   * base type of int is long.
+   * [Definition:] int is derived from long by setting the value of maxInclusive to be 2147483647 and minInclusive to be
+   * -2147483648. The base type of int is long.
    */
   public static final URI INT = toURI("int");
 
@@ -152,13 +144,11 @@ public class XSD {
   /**
    * For convenience: An array of all types in this interface
    */
-  public static final URI[] ALL = new URI[]{STRING, BOOLEAN, FLOAT, DOUBLE, DECIMAL,
-      DATE_TIME, TIME, DATE, G_YEAR_MONTH, G_YEAR, G_MONTH_DAY, G_DAY, G_MONTH,
-      HEX_BINARY, BASE_64_BINARY, ANY_URI, Q_NAME, NORMALIZED_STRING, TOKEN, LANGUAGE,
-      IDREFS, ENTITIES, NMTOKEN, NMTOKENS, NAME, NC_NAME, ID, IDREF, ENTITY,
-      INTEGER, NON_POSITIVE_INTEGER, NEGATIVE_INTEGER, LONG, INT, SHORT, BYTE,
-      NON_NEGATIVE_INTEGER, UNSIGNED_LONG, UNSIGNED_INT, UNSIGNED_SHORT, UNSIGNED_BYTE,
-      POSITIVE_INTEGER, ANY_TYPE, SEQUENCE
+  public static final URI[] ALL = new URI[] {STRING, BOOLEAN, FLOAT, DOUBLE, DECIMAL, DATE_TIME, TIME, DATE,
+      G_YEAR_MONTH, G_YEAR, G_MONTH_DAY, G_DAY, G_MONTH, HEX_BINARY, BASE_64_BINARY, ANY_URI, Q_NAME, NORMALIZED_STRING,
+      TOKEN, LANGUAGE, IDREFS, ENTITIES, NMTOKEN, NMTOKENS, NAME, NC_NAME, ID, IDREF, ENTITY, INTEGER,
+      NON_POSITIVE_INTEGER, NEGATIVE_INTEGER, LONG, INT, SHORT, BYTE, NON_NEGATIVE_INTEGER, UNSIGNED_LONG, UNSIGNED_INT,
+      UNSIGNED_SHORT, UNSIGNED_BYTE, POSITIVE_INTEGER, ANY_TYPE, SEQUENCE
 
   };
 
