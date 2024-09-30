@@ -77,7 +77,7 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
     } catch (IllegalArgumentException e) {
       return badRequest(Notifications.error(
           String.format(
-              "This file type is not supported. Allowed filetypes are %s.",
+              "This file type is not supported. Allowed file types are %s.",
               Filetypes.getAllFileExtensions().toString()
           )
       ));
