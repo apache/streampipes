@@ -23,12 +23,14 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.sdk.helpers.Filetypes;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.http.HttpStatus;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -72,6 +74,13 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
               fileDetail.getInputStream()
           );
       return ok(metadata);
+    } catch (IllegalArgumentException e) {
+      return badRequest(Notifications.error(
+          String.format(
+              "This file type is not supported. Allowed filetypes are %s.",
+              Filetypes.getAllFileExtensions().toString()
+          )
+      ));
     } catch (Exception e) {
       return fail();
     }
@@ -132,10 +141,10 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
   public ResponseEntity<List<String>> getAllOriginalFilenames() {
     return ok(fileManager.getAllFiles()
-                         .stream()
-                         .map(fileMetadata -> fileMetadata.getFilename()
-                                                          .toLowerCase())
-                         .toList());
+        .stream()
+        .map(fileMetadata -> fileMetadata.getFilename()
+            .toLowerCase())
+        .toList());
   }
 
   @GetMapping(
