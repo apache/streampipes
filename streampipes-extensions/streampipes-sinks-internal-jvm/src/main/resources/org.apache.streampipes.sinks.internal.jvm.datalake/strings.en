@@ -29,3 +29,6 @@ schema_update.description=Update existing schemas with the new one or extend the
 
 dimensions_selection.title=Dimensions
 dimensions_selection.description=Selected fields will be stored as dimensions.
+
+ignore_duplicates.title=Ignore duplicates
+ignore_duplicates.description=Fields having the same value than the previous event are not stored. This only affects measurements, not tags.

@@ -34,15 +34,19 @@ public interface IDataExplorerManager {
    * @return An instance of {@link IDataLakeMeasurementCounter} configured to count the sizes of the specified measurements.
    */
   IDataLakeMeasurementCounter getMeasurementCounter(
-    List<DataLakeMeasure> allMeasurements,
-    List<String> measurementsToCount
+      List<DataLakeMeasure> allMeasurements,
+      List<String> measurementsToCount
   );
 
   IDataExplorerQueryManagement getQueryManagement(IDataExplorerSchemaManagement dataExplorerSchemaManagement);
 
   IDataExplorerSchemaManagement getSchemaManagement();
 
-  ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure);
+  default ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure) {
+    return getTimeseriesStorage(measure, false);
+  }
+
+  ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure, boolean ignoreDuplicates);
 
   IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DataLakeMeasure measure);
 }

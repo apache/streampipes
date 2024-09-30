@@ -21,9 +21,9 @@ package org.apache.streampipes.dataexplorer.influx;
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
@@ -38,28 +38,33 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
 
   @Override
   public IDataLakeMeasurementCounter getMeasurementCounter(
-    List<DataLakeMeasure> allMeasurements,
-    List<String> measurementsToCount) {
+      List<DataLakeMeasure> allMeasurements,
+      List<String> measurementsToCount) {
     return new DataLakeMeasurementCounterInflux(allMeasurements, measurementsToCount);
   }
 
   @Override
   public IDataExplorerQueryManagement getQueryManagement(
-    IDataExplorerSchemaManagement dataExplorerSchemaManagement
-    ) {
+      IDataExplorerSchemaManagement dataExplorerSchemaManagement
+  ) {
     return new DataExplorerQueryManagementInflux(dataExplorerSchemaManagement);
   }
 
   @Override
   public IDataExplorerSchemaManagement getSchemaManagement() {
     return new DataExplorerSchemaManagement(StorageDispatcher.INSTANCE
-                                                             .getNoSqlStore()
-                                                             .getDataLakeStorage());
+        .getNoSqlStore()
+        .getDataLakeStorage());
   }
 
   @Override
-  public ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure) {
-    return new TimeSeriesStorageInflux(measure, Environments.getEnvironment(), new InfluxClientProvider());
+  public ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure, boolean ignoreDuplicates) {
+    return new TimeSeriesStorageInflux(
+        measure,
+        ignoreDuplicates,
+        Environments.getEnvironment(),
+        new InfluxClientProvider()
+    );
   }
 
   @Override

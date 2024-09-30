@@ -53,6 +53,7 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
   private static final String TIMESTAMP_MAPPING_KEY = "timestamp_mapping";
   public static final String SCHEMA_UPDATE_KEY = "schema_update";
   public static final String DIMENSIONS_KEY = "dimensions_selection";
+  public static final String IGNORE_DUPLICATES_KEY = "ignore_duplicates";
 
   public static final String SCHEMA_UPDATE_OPTION = "Update schema";
 
@@ -83,6 +84,7 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
             Options.from(SCHEMA_UPDATE_OPTION, EXTEND_EXISTING_SCHEMA_OPTION)
         )
         .requiredMultiValueSelectionFromContainer(Labels.withId(DIMENSIONS_KEY))
+        .requiredSlideToggle(Labels.withId(IGNORE_DUPLICATES_KEY), false)
         .build();
   }
 
@@ -92,6 +94,7 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
     var timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
     var measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
     var dimensions = extractor.selectedMultiValues(DIMENSIONS_KEY, String.class);
+    var ignoreDuplicates = extractor.slideToggleValue(IGNORE_DUPLICATES_KEY);
     var eventSchema = new EventSchema(parameters.getInputSchemaInfos()
         .get(0)
         .getEventSchema()
@@ -122,7 +125,7 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
         .sanitizeAndRegister();
 
     this.timeSeriesStore = new TimeSeriesStore(
-        new DataExplorerDispatcher().getDataExplorerManager().getTimeseriesStorage(measure),
+        new DataExplorerDispatcher().getDataExplorerManager().getTimeseriesStorage(measure, ignoreDuplicates),
         measure,
         Environments.getEnvironment(),
         true
