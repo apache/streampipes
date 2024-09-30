@@ -78,7 +78,7 @@ def create_data_stream(
             EventProperty(  # type: ignore
                 label="timestamp",
                 runtime_name="timestamp",
-                domain_properties=["http://schema.org/DateTime"],
+                semantic_type="http://schema.org/DateTime",
                 property_scope="HEADER_PROPERTY",
                 runtime_type="http://www.w3.org/2001/XMLSchema#long",
             )

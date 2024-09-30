@@ -211,7 +211,7 @@ export class EventSchemaComponent implements OnChanges {
 
         eventProperty.runtimeName = runtimeName;
         eventProperty.runtimeType = DataType.STRING;
-        eventProperty.domainProperties = [];
+        eventProperty.semanticType = undefined;
         eventProperty.propertyScope = 'DIMENSION_PROPERTY';
         eventProperty.additionalMetadata = {};
 
@@ -230,7 +230,7 @@ export class EventSchemaComponent implements OnChanges {
         eventProperty.runtimeName = 'timestamp';
         eventProperty.label = 'Timestamp';
         eventProperty.description = 'The current timestamp value';
-        eventProperty.domainProperties = [SemanticType.TIMESTAMP];
+        eventProperty.semanticType = SemanticType.TIMESTAMP;
         eventProperty.propertyScope = 'HEADER_PROPERTY';
         eventProperty.runtimeType = DataType.LONG;
         eventProperty.additionalMetadata = {};
@@ -280,7 +280,7 @@ export class EventSchemaComponent implements OnChanges {
     private checkIfValid(eventSchema: EventSchema): boolean {
         this.timestampPresent = false;
         eventSchema.eventProperties.forEach(p => {
-            if (p.domainProperties.indexOf('http://schema.org/DateTime') > -1) {
+            if (SemanticType.isTimestamp(p)) {
                 this.timestampPresent = true;
             }
         });

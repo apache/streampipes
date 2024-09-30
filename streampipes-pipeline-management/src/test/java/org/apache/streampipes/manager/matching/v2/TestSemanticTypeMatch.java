@@ -24,37 +24,32 @@ import org.apache.streampipes.vocabulary.Geo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestDomainPropertyMatch {
+public class TestSemanticTypeMatch {
 
   @Test
-  public void testPositiveDomainPropertyMatch() {
+  public void testPositiveSemanticTypeMatch() {
 
-    List<URI> offeredDomainProperty = buildDomainProperties(Geo.LAT);
-    List<URI> requiredDomainProperty = buildDomainProperties(Geo.LAT);
+    var offeredDomainProperty = Geo.LAT;
+    var requiredDomainProperty = Geo.LAT;
 
     List<MatchingResultMessage> resultMessage = new ArrayList<>();
 
-    boolean matches = new DomainPropertyMatch().match(offeredDomainProperty, requiredDomainProperty, resultMessage);
+    boolean matches = new SemanticTypeMatch().match(offeredDomainProperty, requiredDomainProperty, resultMessage);
     Assertions.assertTrue(matches);
   }
 
   @Test
-  public void testNegativeDomainPropertyMatch() {
+  public void testNegativeSemanticTypeMatch() {
 
-    List<URI> offeredDomainProperty = buildDomainProperties(Geo.LAT);
-    List<URI> requiredDomainProperty = buildDomainProperties(Geo.LNG);
+    var offeredDomainProperty = Geo.LAT;
+    var requiredDomainProperty = Geo.LNG;
 
     List<MatchingResultMessage> resultMessage = new ArrayList<>();
 
-    boolean matches = new DomainPropertyMatch().match(offeredDomainProperty, requiredDomainProperty, resultMessage);
+    boolean matches = new SemanticTypeMatch().match(offeredDomainProperty, requiredDomainProperty, resultMessage);
     Assertions.assertFalse(matches);
-  }
-
-  private List<URI> buildDomainProperties(String name) {
-    return List.of(URI.create(name));
   }
 }

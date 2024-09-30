@@ -159,10 +159,7 @@ export class EventPropertyRowComponent implements OnInit {
     }
 
     isTimestampProperty(node) {
-        if (
-            node.domainProperties &&
-            node.domainProperties.some(dp => dp === SemanticType.TIMESTAMP)
-        ) {
+        if (node.semanticType !== undefined && SemanticType.isTimestamp(node)) {
             node.runtimeType = DataType.LONG;
             return true;
         } else {

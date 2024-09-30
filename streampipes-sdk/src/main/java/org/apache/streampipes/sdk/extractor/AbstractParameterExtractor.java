@@ -62,7 +62,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     implements IParameterExtractor {
 
   protected T sepaElement;
-  private TypeParser typeParser;
+  private final TypeParser typeParser;
 
   public AbstractParameterExtractor(T sepaElement) {
     this.sepaElement = sepaElement;
@@ -242,6 +242,17 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
         .stream()
         .filter(Option::isSelected)
         .map(Option::getName)
+        .map(o -> typeParser.parse(o, targetClass))
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public <V> List<V> selectedMultiValuesInternalNames(String internalName, Class<V> targetClass) {
+    return getStaticPropertyByName(internalName, AnyStaticProperty.class)
+        .getOptions()
+        .stream()
+        .filter(Option::isSelected)
+        .map(Option::getInternalName)
         .map(o -> typeParser.parse(o, targetClass))
         .collect(Collectors.toList());
   }

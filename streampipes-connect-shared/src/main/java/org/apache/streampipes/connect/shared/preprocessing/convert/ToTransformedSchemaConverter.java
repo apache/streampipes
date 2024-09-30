@@ -127,7 +127,7 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
     property.setPropertyScope(rule.getPropertyScope().name());
 
     if (Objects.nonNull(rule.getSemanticType())) {
-      property.setDomainProperties(List.of(URI.create(rule.getSemanticType())));
+      property.setSemanticType(rule.getSemanticType());
     }
     if (Objects.nonNull(rule.getMeasurementUnit())) {
       property.setMeasurementUnit(URI.create(rule.getMeasurementUnit()));
@@ -152,7 +152,7 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
   @Override
   public void visit(TimestampTranfsformationRuleDescription rule) {
     var property = findPrimitiveProperty(properties, rule.getRuntimeKey());
-    property.setDomainProperties(List.of(URI.create("http://schema.org/DateTime")));
+    property.setSemanticType("http://schema.org/DateTime");
     property.setRuntimeType(Datatypes.Long.toString());
     property.setPropertyScope(PropertyScope.HEADER_PROPERTY.toString());
     var metadata = property.getAdditionalMetadata();
