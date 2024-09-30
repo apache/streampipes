@@ -83,6 +83,9 @@ export abstract class BaseDataExplorerWidgetDirective<
     @Input() dataViewDashboardItem: DashboardItem;
     @Input() dataExplorerWidget: T;
 
+    @Input()
+    widgetIndex: number;
+
     @HostBinding('class') className = 'h-100';
 
     public selectedProperties: string[];
@@ -193,16 +196,21 @@ export abstract class BaseDataExplorerWidgetDirective<
         }
         this.timeSelectionSub =
             this.timeSelectionService.timeSelectionChangeSubject.subscribe(
-                ts => {
-                    if (ts) {
-                        this.timeSettings = ts;
-                    } else {
-                        this.timeSelectionService.updateTimeSettings(
-                            this.timeSettings,
-                            new Date(),
-                        );
+                widgetTimeSettings => {
+                    if (
+                        widgetTimeSettings.widgetIndex === undefined ||
+                        widgetTimeSettings.widgetIndex === this.widgetIndex
+                    ) {
+                        if (widgetTimeSettings.timeSettings) {
+                            this.timeSettings = widgetTimeSettings.timeSettings;
+                        } else {
+                            this.timeSelectionService.updateTimeSettings(
+                                this.timeSettings,
+                                new Date(),
+                            );
+                        }
+                        this.updateData();
                     }
-                    this.updateData();
                 },
             );
         this.updateData();

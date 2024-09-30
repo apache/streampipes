@@ -1,4 +1,4 @@
 {
-  "src/**/*.ts": "prettier --write",
-  "src/**/*.ts": ["ng-lint-staged lint --fix"]
+  "*.*": "prettier --check",
+  "src/**/*.ts": ["ng-lint-staged lint --"]
 }

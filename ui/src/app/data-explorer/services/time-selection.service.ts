@@ -23,6 +23,7 @@ import {
     QuickTimeSelection,
     TimeSelectionId,
     TimeSettings,
+    WidgetTimeSettings,
 } from '@streampipes/platform-services';
 import {
     startOfDay,
@@ -178,10 +179,11 @@ export class TimeSelectionService {
         }
     }
 
-    public timeSelectionChangeSubject: Subject<TimeSettings | undefined> =
-        new Subject<TimeSettings | undefined>();
+    public timeSelectionChangeSubject: Subject<WidgetTimeSettings | undefined> =
+        new Subject<WidgetTimeSettings | undefined>();
 
-    public notify(timeSettings?: TimeSettings): void {
-        this.timeSelectionChangeSubject.next(timeSettings);
+    public notify(timeSettings?: TimeSettings, widgetIndex?: number): void {
+        const widgetTimeSettings = { timeSettings, widgetIndex };
+        this.timeSelectionChangeSubject.next(widgetTimeSettings);
     }
 }

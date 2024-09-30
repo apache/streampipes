@@ -25,6 +25,7 @@ export interface DashboardConfig extends GridsterConfig {}
 export interface ClientDashboardItem extends GridsterItem {
     widgetId: string;
     widgetType: string;
+    timeSettings?: TimeSettings;
     id: string;
 }
 
