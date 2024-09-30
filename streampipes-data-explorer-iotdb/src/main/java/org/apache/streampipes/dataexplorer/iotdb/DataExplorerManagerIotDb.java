@@ -56,7 +56,7 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
   }
 
   @Override
-  public ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure) {
+  public ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure, boolean ignoreDuplicates) {
     return new TimeSeriesStorageIotDb(measure, new IotDbPropertyConverter(), new IotDbSessionProvider());
   }
 
