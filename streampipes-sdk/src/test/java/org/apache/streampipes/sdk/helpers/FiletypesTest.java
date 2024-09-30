@@ -29,7 +29,7 @@ class FiletypesTest {
   public void getAllFileExtensions_returnsAllExtensions() {
     var actualExtensions = Filetypes.getAllFileExtensions();
 
-    assertEquals(8, actualExtensions.size());
+    assertEquals(10, actualExtensions.size());
     assertTrue(actualExtensions.contains("jpg"));
     assertTrue(actualExtensions.contains("jpeg"));
     assertTrue(actualExtensions.contains("csv"));
