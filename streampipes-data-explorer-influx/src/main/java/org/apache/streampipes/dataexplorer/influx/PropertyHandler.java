@@ -34,10 +34,13 @@ public class PropertyHandler {
 
   private static final Logger LOG = LoggerFactory.getLogger(PropertyHandler.class);
 
-  private RawFieldSerializer rawFieldSerializer;
+  private final RawFieldSerializer rawFieldSerializer;
+  private final PropertyDuplicateFilter duplicateFilter;
 
-  public PropertyHandler() {
+
+  public PropertyHandler(PropertyDuplicateFilter duplicateFilter) {
     rawFieldSerializer = new RawFieldSerializer();
+    this.duplicateFilter = duplicateFilter;
   }
 
   /**
@@ -109,29 +112,31 @@ public class PropertyHandler {
       String sanitizedRuntimeName,
       PrimitiveField eventPropertyPrimitiveField
   ) {
-    // Store property according to property type
-    if (XSD.INTEGER.toString()
-                   .equals(runtimeType)) {
-      handleIntegerProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
-    } else if (XSD.LONG.toString()
-                       .equals(runtimeType)) {
-      handleLongProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
-    } else if (XSD.FLOAT.toString()
-                        .equals(runtimeType)) {
-      handleFloatProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
-    } else if (XSD.DOUBLE.toString()
-                         .equals(runtimeType)) {
-      handleDoubleProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
-    } else if (XSD.BOOLEAN.toString()
-                          .equals(runtimeType)) {
-      handleBooleanProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
-    } else if (SO.NUMBER.equals(runtimeType)) {
-      handleDoubleProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
-    } else {
-      handleStringProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
+
+    if (!duplicateFilter.shouldIgnoreField(sanitizedRuntimeName, eventPropertyPrimitiveField)) {
+      // Store property according to property type
+      if (XSD.INTEGER.toString()
+          .equals(runtimeType)) {
+        handleIntegerProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
+      } else if (XSD.LONG.toString()
+          .equals(runtimeType)) {
+        handleLongProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
+      } else if (XSD.FLOAT.toString()
+          .equals(runtimeType)) {
+        handleFloatProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
+      } else if (XSD.DOUBLE.toString()
+          .equals(runtimeType)) {
+        handleDoubleProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
+      } else if (XSD.BOOLEAN.toString()
+          .equals(runtimeType)) {
+        handleBooleanProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
+      } else if (SO.NUMBER.equals(runtimeType)) {
+        handleDoubleProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
+      } else {
+        handleStringProperty(p, sanitizedRuntimeName, eventPropertyPrimitiveField);
+      }
     }
   }
-
 
   private void handleStringProperty(
       Point.Builder p,

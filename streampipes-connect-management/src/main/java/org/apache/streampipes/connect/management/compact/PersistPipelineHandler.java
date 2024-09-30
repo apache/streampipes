@@ -29,9 +29,6 @@ import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
 import org.apache.streampipes.vocabulary.SO;
 
-import java.net.URI;
-import java.util.List;
-
 public class PersistPipelineHandler {
 
   private static final String templateId = "org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate";
@@ -97,16 +94,13 @@ public class PersistPipelineHandler {
         .stream()
         .filter(ep -> ep instanceof EventPropertyPrimitive)
         .map(ep -> (EventPropertyPrimitive) ep)
-        .filter(ep -> hasTimestampType(ep.getDomainProperties()))
+        .filter(ep -> hasTimestampType(ep.getSemanticType()))
         .map(EventProperty::getRuntimeName)
         .findFirst()
         .orElseThrow(() -> new IllegalArgumentException("Could not find timestamp field in schema"));
   }
 
-  private boolean hasTimestampType(List<URI> semanticTypes) {
-    return semanticTypes
-        .stream()
-        .map(URI::toString)
-        .anyMatch(s -> s.equalsIgnoreCase(SO.DATE_TIME));
+  private boolean hasTimestampType(String semanticType) {
+    return SO.DATE_TIME.equalsIgnoreCase(semanticType);
   }
 }

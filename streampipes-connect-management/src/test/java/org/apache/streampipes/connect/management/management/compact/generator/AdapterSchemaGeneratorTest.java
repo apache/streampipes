@@ -72,6 +72,6 @@ public class AdapterSchemaGeneratorTest {
     );
     assertEquals("description", properties.get(0).getDescription());
     assertEquals(PropertyScope.DIMENSION_PROPERTY.name(), properties.get(0).getPropertyScope());
-    assertEquals("semanticType", properties.get(0).getDomainProperties().get(0).toString());
+    assertEquals("semanticType", properties.get(0).getSemanticType());
   }
 }

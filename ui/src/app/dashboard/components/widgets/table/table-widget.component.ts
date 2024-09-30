@@ -57,7 +57,7 @@ export class TableWidgetComponent
 
         this.widgetDataConfig.eventSchema.eventProperties.forEach(
             (key, index) => {
-                this.semanticTypes[key.runtimeName] = key.domainProperties[0];
+                this.semanticTypes[key.runtimeName] = key.semanticType;
             },
         );
         this.semanticTypes[BaseStreamPipesWidget.TIMESTAMP_KEY] =

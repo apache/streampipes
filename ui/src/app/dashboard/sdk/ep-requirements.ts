@@ -104,9 +104,9 @@ export class EpRequirements {
         return listEp;
     }
 
-    static domainPropertyReq(domainProperty: string): EventPropertyPrimitive {
+    static domainPropertyReq(semanticType: string): EventPropertyPrimitive {
         const eventProperty = EpRequirements.ep();
-        eventProperty.domainProperties = [domainProperty];
+        eventProperty.semanticType = semanticType;
         return eventProperty;
     }
 

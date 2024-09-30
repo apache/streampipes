@@ -24,9 +24,6 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.vocabulary.XSD;
 
-import java.net.URI;
-import java.util.List;
-
 public class SchemaMetadataEnricher {
 
   public void enrich(EventProperty property,
@@ -41,7 +38,7 @@ public class SchemaMetadataEnricher {
       property.setDescription(propertyDef.description());
     }
     if (property instanceof EventPropertyPrimitive && propertyDef.semanticType() != null) {
-      property.setDomainProperties(List.of(URI.create(propertyDef.semanticType())));
+      property.setSemanticType(propertyDef.semanticType());
     }
   }
 

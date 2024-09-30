@@ -125,7 +125,7 @@ public class ToOriginalSchemaConverter implements ITransformationRuleVisitor, Pr
   public void visit(TimestampTranfsformationRuleDescription rule) {
     var property = findPrimitiveProperty(properties, rule.getRuntimeKey());
     property.setRuntimeType(Datatypes.String.toString());
-    property.setDomainProperties(List.of());
+    property.setSemanticType(null);
   }
 
   @Override

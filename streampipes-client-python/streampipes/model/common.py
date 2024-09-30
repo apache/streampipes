@@ -109,7 +109,7 @@ class EventProperty(BasicModel):
     label: Optional[StrictStr]
     description: Optional[StrictStr]
     runtime_name: StrictStr
-    domain_properties: Optional[List[StrictStr]] = Field(default_factory=list)
+    semantic_type: Optional[StrictStr]
     property_scope: Optional[StrictStr] = Field(default="MEASUREMENT_PROPERTY")
     runtime_id: Optional[StrictStr]
     runtime_type: StrictStr = Field(default="http://www.w3.org/2001/XMLSchema#string")
