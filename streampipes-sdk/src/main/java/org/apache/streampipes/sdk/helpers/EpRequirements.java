@@ -124,7 +124,7 @@ public class EpRequirements {
   }
 
   private static <T extends EventProperty> EventProperty semanticTypeReq(String semanticType,
-                                                                           Class<T> eventProperty) {
+                                                                         Class<T> eventProperty) {
     EventProperty ep = null;
     try {
       ep = eventProperty.newInstance();
@@ -142,11 +142,11 @@ public class EpRequirements {
   public static EventPropertyList semanticTypeReqList(String semanticType) {
     return (EventPropertyList) semanticTypeReq(semanticType, EventPropertyList.class);
   }
-  
+
   /**
+   * @param domainProperty the semantic type
+   * @return EventPropertyPrimitive
    * @deprecated Use {@link EpRequirements#semanticTypeReq(String)} instead
-   * @param domainProperty
-   * @return
    */
   @Deprecated(forRemoval = true, since = "0.97.0")
   public static EventPropertyPrimitive domainPropertyReq(String domainProperty) {
@@ -154,9 +154,9 @@ public class EpRequirements {
   }
 
   /**
+   * @param domainProperty the semantic type
+   * @return EventPropertyList
    * @deprecated Use {@link EpRequirements#semanticTypeReqList(String)} instead
-   * @param domainProperty
-   * @return
    */
   @Deprecated(forRemoval = true, since = "0.97.0")
   public static EventPropertyList domainPropertyReqList(String domainProperty) {
