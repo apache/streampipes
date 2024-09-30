@@ -25,10 +25,10 @@ import org.apache.streampipes.model.client.matching.MatchingResultType;
 import java.util.List;
 import java.util.Objects;
 
-public class DomainPropertyMatch extends AbstractMatcher<String, String> {
+public class SemanticTypeMatch extends AbstractMatcher<String, String> {
 
-  public DomainPropertyMatch() {
-    super(MatchingResultType.DOMAIN_PROPERTY_MATCH);
+  public SemanticTypeMatch() {
+    super(MatchingResultType.SEMANTIC_TYPE_MATCH);
   }
 
   @Override

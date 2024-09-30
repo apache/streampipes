@@ -37,7 +37,7 @@ public class ListPropertyMatch implements Matcher<EventPropertyList, EventProper
 
   private boolean semanticTypeMatch(EventPropertyList offer, EventPropertyList requirement,
                                       List<MatchingResultMessage> errorLog) {
-    return new DomainPropertyMatch().match(offer.getSemanticType(), requirement.getSemanticType(),
+    return new SemanticTypeMatch().match(offer.getSemanticType(), requirement.getSemanticType(),
         errorLog);
   }
 

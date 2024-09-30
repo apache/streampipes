@@ -27,29 +27,29 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestDomainPropertyMatch {
+public class TestSemanticTypeMatch {
 
   @Test
-  public void testPositiveDomainPropertyMatch() {
+  public void testPositiveSemanticTypeMatch() {
 
     var offeredDomainProperty = Geo.LAT;
     var requiredDomainProperty = Geo.LAT;
 
     List<MatchingResultMessage> resultMessage = new ArrayList<>();
 
-    boolean matches = new DomainPropertyMatch().match(offeredDomainProperty, requiredDomainProperty, resultMessage);
+    boolean matches = new SemanticTypeMatch().match(offeredDomainProperty, requiredDomainProperty, resultMessage);
     Assertions.assertTrue(matches);
   }
 
   @Test
-  public void testNegativeDomainPropertyMatch() {
+  public void testNegativeSemanticTypeMatch() {
 
     var offeredDomainProperty = Geo.LAT;
     var requiredDomainProperty = Geo.LNG;
 
     List<MatchingResultMessage> resultMessage = new ArrayList<>();
 
-    boolean matches = new DomainPropertyMatch().match(offeredDomainProperty, requiredDomainProperty, resultMessage);
+    boolean matches = new SemanticTypeMatch().match(offeredDomainProperty, requiredDomainProperty, resultMessage);
     Assertions.assertFalse(matches);
   }
 }

@@ -47,7 +47,7 @@ public class PrimitivePropertyMatch extends AbstractMatcher<EventPropertyPrimiti
   private boolean semanticTypeMatch(String offer,
                                     String requirement,
                                     List<MatchingResultMessage> errorLog) {
-    return new DomainPropertyMatch().match(offer, requirement, errorLog);
+    return new SemanticTypeMatch().match(offer, requirement, errorLog);
   }
 
   private boolean datatypeMatch(String offer, String requirement,
