@@ -123,24 +123,44 @@ public class EpRequirements {
     return appendDomainProperty(datatypeReq(SO.NUMBER), domainProperty);
   }
 
-  private static <T extends EventProperty> EventProperty domainPropertyReq(String domainProperty,
+  private static <T extends EventProperty> EventProperty semanticTypeReq(String semanticType,
                                                                            Class<T> eventProperty) {
     EventProperty ep = null;
     try {
       ep = eventProperty.newInstance();
-      ep.setSemanticType(domainProperty);
+      ep.setSemanticType(semanticType);
     } catch (InstantiationException | IllegalAccessException e) {
       e.printStackTrace();
     }
     return ep;
   }
 
-  public static EventPropertyPrimitive domainPropertyReq(String domainProperty) {
-    return (EventPropertyPrimitive) domainPropertyReq(domainProperty, EventPropertyPrimitive.class);
+  public static EventPropertyPrimitive semanticTypeReq(String semanticType) {
+    return (EventPropertyPrimitive) semanticTypeReq(semanticType, EventPropertyPrimitive.class);
   }
 
+  public static EventPropertyList semanticTypeReqList(String semanticType) {
+    return (EventPropertyList) semanticTypeReq(semanticType, EventPropertyList.class);
+  }
+  
+  /**
+   * @deprecated Use {@link EpRequirements#semanticTypeReq(String)} instead
+   * @param domainProperty
+   * @return
+   */
+  @Deprecated(forRemoval = true, since = "0.97.0")
+  public static EventPropertyPrimitive domainPropertyReq(String domainProperty) {
+    return (EventPropertyPrimitive) semanticTypeReq(domainProperty, EventPropertyPrimitive.class);
+  }
+
+  /**
+   * @deprecated Use {@link EpRequirements#semanticTypeReqList(String)} instead
+   * @param domainProperty
+   * @return
+   */
+  @Deprecated(forRemoval = true, since = "0.97.0")
   public static EventPropertyList domainPropertyReqList(String domainProperty) {
-    return (EventPropertyList) domainPropertyReq(domainProperty, EventPropertyList.class);
+    return (EventPropertyList) semanticTypeReq(domainProperty, EventPropertyList.class);
   }
 
   private static EventPropertyPrimitive appendDomainProperty(EventPropertyPrimitive property, String semanticType) {

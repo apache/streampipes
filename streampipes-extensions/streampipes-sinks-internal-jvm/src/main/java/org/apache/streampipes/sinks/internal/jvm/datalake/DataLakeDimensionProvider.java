@@ -26,7 +26,6 @@ import org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticPro
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.SO;
 
-import java.net.URI;
 import java.util.List;
 
 public class DataLakeDimensionProvider {
@@ -50,7 +49,7 @@ public class DataLakeDimensionProvider {
 
   private boolean satisfiesFilter(EventPropertyPrimitive field) {
     return !field.getRuntimeType().equals(Datatypes.Float.toString())
-        &&  !(field.getDomainProperties().stream().map(URI::toString).toList().contains(SO.DATE_TIME));
+        &&  !(SO.DATE_TIME.equalsIgnoreCase(field.getSemanticType()));
   }
 
   private void addFieldIfNotExists(EventPropertyPrimitive field,
