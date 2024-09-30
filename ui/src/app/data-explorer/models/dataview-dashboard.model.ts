@@ -54,6 +54,7 @@ export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
     dataExplorerWidget: T;
     previewMode: boolean;
     gridMode: boolean;
+    widgetIndex?: number;
 
     cleanupSubscriptions(): void;
 }

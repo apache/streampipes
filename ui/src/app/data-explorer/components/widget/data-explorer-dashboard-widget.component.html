@@ -113,6 +113,34 @@
                 </button>
                 <button
                     mat-icon-button
+                    [matMenuTriggerFor]="optMenu"
+                    *ngIf="!globalTimeEnabled"
+                    aria-label="Options"
+                    data-cy="options-data-explorer"
+                    #menuTrigger="matMenuTrigger"
+                >
+                    <mat-icon
+                        [color]="timeSettingsModified ? 'primary' : 'default'"
+                        >alarm_clock</mat-icon
+                    >
+                </button>
+                <mat-menu #optMenu="matMenu" class="large-menu">
+                    <sp-time-selector-menu
+                        [timeSettings]="clonedTimeSettings"
+                        (timeSettingsEmitter)="modifyWidgetTimeSettings($event)"
+                        class="w-100"
+                    >
+                        <button
+                            mat-raised-button
+                            class="mat-basic"
+                            (click)="resetWidgetTimeSettings()"
+                        >
+                            Reset
+                        </button>
+                    </sp-time-selector-menu>
+                </mat-menu>
+                <button
+                    mat-icon-button
                     (click)="removeWidget()"
                     matTooltip="Delete widget"
                     *ngIf="editMode && hasDataExplorerWritePrivileges"

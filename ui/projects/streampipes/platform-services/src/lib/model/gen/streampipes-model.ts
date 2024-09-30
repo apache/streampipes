@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-09-26 19:56:05.
+// Generated using typescript-generator version 3.2.1263 on 2024-09-18 15:50:05.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -970,6 +970,7 @@ export class DashboardItem {
     name: string;
     rows: number;
     settings: string[];
+    timeSettings: { [index: string]: any };
     x: number;
     y: number;
 
@@ -988,6 +989,9 @@ export class DashboardItem {
         instance.rows = data.rows;
         instance.settings = __getCopyArrayFn(__identity<string>())(
             data.settings,
+        );
+        instance.timeSettings = __getCopyObjectFn(__identity<any>())(
+            data.timeSettings,
         );
         instance.x = data.x;
         instance.y = data.y;
@@ -1480,12 +1484,12 @@ export class EventProperty {
         | 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
     'additionalMetadata': { [index: string]: any };
     'description': string;
+    'domainProperties': string[];
     'elementId': string;
     'label': string;
     'propertyScope': string;
     'runtimeId': string;
     'runtimeName': string;
-    'semanticType': string;
 
     static 'fromData'(
         data: EventProperty,
@@ -1500,12 +1504,14 @@ export class EventProperty {
             data.additionalMetadata,
         );
         instance.description = data.description;
+        instance.domainProperties = __getCopyArrayFn(__identity<string>())(
+            data.domainProperties,
+        );
         instance.elementId = data.elementId;
         instance.label = data.label;
         instance.propertyScope = data.propertyScope;
         instance.runtimeId = data.runtimeId;
         instance.runtimeName = data.runtimeName;
-        instance.semanticType = data.semanticType;
         return instance;
     }
 
