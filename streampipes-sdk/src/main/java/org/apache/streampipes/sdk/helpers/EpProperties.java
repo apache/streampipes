@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.sdk.helpers;
 
-import org.apache.streampipes.commons.Utils;
 import org.apache.streampipes.model.schema.Enumeration;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyList;
@@ -190,9 +189,8 @@ public class EpProperties {
    * @return {@link org.apache.streampipes.model.schema.EventPropertyList}
    */
   public static EventPropertyList listEp(Label label, String runtimeName, EventProperty eventProperty,
-                                         String domainProperty) {
-    return getPreparedProperty(label, new EventPropertyList(runtimeName, eventProperty, Utils.createURI
-        (domainProperty)));
+                                         String semanticType) {
+    return getPreparedProperty(label, new EventPropertyList(runtimeName, eventProperty, semanticType));
   }
 
   /**
