@@ -21,7 +21,6 @@ package org.apache.streampipes.model.schema;
 import org.apache.streampipes.model.util.Cloner;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Objects;
 
 public class EventPropertyPrimitive extends EventProperty {
@@ -49,16 +48,6 @@ public class EventPropertyPrimitive extends EventProperty {
                                 String measurementUnit,
                                 String semanticType) {
     super(runtimeName, semanticType);
-    this.runtimeType = runtimeType;
-    //this.measurementUnit = measurementUnit;
-  }
-
-  @Deprecated(forRemoval = true, since = "0.97.0")
-  public EventPropertyPrimitive(String runtimeType,
-                                String runtimeName,
-                                String measurementUnit,
-                                List<URI> subClassOf) {
-    super(runtimeName, subClassOf);
     this.runtimeType = runtimeType;
     //this.measurementUnit = measurementUnit;
   }

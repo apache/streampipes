@@ -23,9 +23,7 @@ import org.apache.streampipes.model.util.ElementIdGenerator;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import java.net.URI;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -62,14 +60,6 @@ public abstract class EventProperty {
     this.runtimeId = other.getRuntimeId();
     this.additionalMetadata = other.getAdditionalMetadata();
     this.semanticType = other.getSemanticType();
-  }
-
-  public EventProperty(String propertyName, List<URI> semanticTypes) {
-    this();
-    this.runtimeName = propertyName;
-    if (!semanticTypes.isEmpty()) {
-      this.semanticType = semanticTypes.get(0).toString();
-    }
   }
 
   public EventProperty(String propertyName, String semanticType) {
