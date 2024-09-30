@@ -38,10 +38,10 @@ public class PrimitivePropertyMatch extends AbstractMatcher<EventPropertyPrimiti
 
     boolean matchesUnit = unitMatch(offer.getMeasurementUnit(), requirement.getMeasurementUnit(), errorLog);
     boolean matchesDatatype = datatypeMatch(offer.getRuntimeType(), requirement.getRuntimeType(), errorLog);
-    boolean matchesDomainProperty = semanticTypeMatch(offer.getSemanticType(), requirement.getSemanticType(), errorLog);
+    boolean matchesSemanticType = semanticTypeMatch(offer.getSemanticType(), requirement.getSemanticType(), errorLog);
 
     return MatchingUtils.nullCheck(offer, requirement)
-        || (matchesUnit && matchesDatatype && matchesDomainProperty);
+        || (matchesUnit && matchesDatatype && matchesSemanticType);
   }
 
   private boolean semanticTypeMatch(String offer,

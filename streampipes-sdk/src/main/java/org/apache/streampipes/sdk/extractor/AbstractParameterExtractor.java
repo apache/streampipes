@@ -62,7 +62,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     implements IParameterExtractor {
 
   protected T sepaElement;
-  private TypeParser typeParser;
+  private final TypeParser typeParser;
 
   public AbstractParameterExtractor(T sepaElement) {
     this.sepaElement = sepaElement;
