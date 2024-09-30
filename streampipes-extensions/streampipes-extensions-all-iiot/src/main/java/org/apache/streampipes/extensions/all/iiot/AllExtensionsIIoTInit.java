@@ -48,6 +48,9 @@ import org.apache.streampipes.sinks.internal.jvm.InternalSinksExtensionModuleExp
 import org.apache.streampipes.sinks.notifications.jvm.NotificationsExtensionModuleExport;
 import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
 
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
 public class AllExtensionsIIoTInit extends StreamPipesExtensionsServiceBase {
 
   public static void main(String[] args) {
