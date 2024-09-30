@@ -62,10 +62,18 @@
                     name="pipelineName"
                     (blur)="triggerTutorial()"
                 />
+                <mat-error
+                    >Pipeline name must have between 3 and 40
+                    characters.</mat-error
+                >
             </mat-form-field>
             <mat-form-field fxFlex color="accent">
                 <mat-label>Description</mat-label>
                 <input [formControlName]="'pipelineDescription'" matInput />
+                <mat-error
+                    >Pipeline description must not have more than 80
+                    characters.</mat-error
+                >
             </mat-form-field>
         </div>
     </form>
