@@ -45,7 +45,7 @@ func main() {
 ### Create a StreamPipes Adapter
 
 ```bash
-	  adapterData := adapter.AdapterDescription{} // Populate the pipeline data
+	  adapterData := adapter.AdapterDescription{} // Populate the adapter data
 	  err := streamPipesClient.Adapter().CreateAdapter(adapterData)
 ```
 
@@ -61,7 +61,7 @@ func main() {
 	err := streamPipesClient.Adapter().StartSingleAdapter("adapterId")
 ```
 
-### Stop a StreamPipes PAdapter
+### Stop a StreamPipes Adapter
 
 ```bash
 	err := streamPipesClient.Adapter().StopSingleAdapter("adapterId")
