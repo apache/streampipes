@@ -87,7 +87,12 @@ public class PipelineVerificationHandlerV2 {
         validationInfos.addAll(
             modification.getValidationInfos()
                 .stream()
-                .map(v -> new ExtendedPipelineElementValidationInfo(pipelineElement.getName(), pipelineElement.getDom(), v))
+                .map(v -> new ExtendedPipelineElementValidationInfo(
+                        pipelineElement.getName(),
+                        pipelineElement.getDom(),
+                        v
+                    )
+                )
                 .toList()
         );
         if (!ignoreUnconfigured || modification.isPipelineElementValid()) {

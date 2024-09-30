@@ -26,7 +26,8 @@ public class DataProcessorPipelineElementGenerator {
 
   private final InvocablePipelineElementGenerator<DataProcessorInvocation> basicGenerator;
 
-  public DataProcessorPipelineElementGenerator(InvocablePipelineElementGenerator<DataProcessorInvocation> basicGenerator) {
+  public DataProcessorPipelineElementGenerator(
+      InvocablePipelineElementGenerator<DataProcessorInvocation> basicGenerator) {
     this.basicGenerator = basicGenerator;
   }
 
