@@ -84,7 +84,7 @@ public class AdapterUpdateManagement {
       try {
         var modificationMessage = new PipelineVerificationHandlerV2(pipeline).verifyPipeline();
         var updateInfo = makeUpdateInfo(modificationMessage, pipeline);
-        var modifiedPipeline = new PipelineVerificationHandlerV2(pipeline).makeModifiedPipeline();
+        var modifiedPipeline = new PipelineVerificationHandlerV2(pipeline).makeModifiedPipeline().pipeline();
         var canAutoMigrate = canAutoMigrate(modificationMessage);
         if (!canAutoMigrate) {
           modifiedPipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);

@@ -34,6 +34,7 @@ import org.apache.streampipes.model.message.PipelineEdgeValidation;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 import org.apache.streampipes.model.pipeline.PipelineModification;
+import org.apache.streampipes.model.pipeline.ValidationInfoLevel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -99,7 +100,7 @@ public class PipelineModificationGenerator {
       modification.setElementId(t.getElementId());
       try {
         pipelineValidator.apply(source, t, targets, validationInfos);
-        buildModification(modification, t, t.getInputStreams(), true);
+        buildModification(modification, t, t.getInputStreams(), !hasValidationError(modification));
         edgeValidations.put(makeKey(source, t), PipelineEdgeValidation.complete(source.getDom(), t.getDom()));
       } catch (SpValidationException e) {
         e.getErrorLog().forEach(log -> validationInfos.add(PipelineElementValidationInfo.error(log.toString())));
@@ -112,6 +113,10 @@ public class PipelineModificationGenerator {
 
       addModification(t, getConnections(t));
     });
+  }
+
+  private boolean hasValidationError(PipelineModification modification) {
+    return modification.getValidationInfos().stream().anyMatch(v -> v.getLevel() == ValidationInfoLevel.ERROR);
   }
 
   private String makeKey(NamedStreamPipesEntity source,

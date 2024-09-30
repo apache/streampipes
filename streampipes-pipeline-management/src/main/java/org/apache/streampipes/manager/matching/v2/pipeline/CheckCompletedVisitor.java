@@ -29,18 +29,23 @@ import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
 import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
-  private List<PipelineElementValidationInfo> validationInfos;
+  private final List<PipelineElementValidationInfo> validationInfos;
 
   public CheckCompletedVisitor() {
     this.validationInfos = new ArrayList<>();
@@ -53,21 +58,30 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
   @Override
   public void visit(CodeInputStaticProperty codeInputStaticProperty) {
+    if (!codeInputStaticProperty.isOptional() && Objects.isNull(codeInputStaticProperty.getValue())) {
+      addMissingConfiguration(codeInputStaticProperty);
+    }
   }
 
   @Override
   public void visit(ColorPickerStaticProperty colorPickerStaticProperty) {
-
+    if (!colorPickerStaticProperty.isOptional() && Objects.isNull(colorPickerStaticProperty.getSelectedColor())) {
+      addMissingConfiguration(colorPickerStaticProperty);
+    }
   }
 
   @Override
   public void visit(FileStaticProperty fileStaticProperty) {
-
+    if (!fileStaticProperty.isOptional() && Objects.isNull(fileStaticProperty.getLocationPath())) {
+      addMissingConfiguration(fileStaticProperty);
+    }
   }
 
   @Override
   public void visit(FreeTextStaticProperty freeTextStaticProperty) {
-
+    if (!freeTextStaticProperty.isOptional() && Objects.isNull(freeTextStaticProperty.getValue())) {
+      addMissingConfiguration(freeTextStaticProperty);
+    }
   }
 
   @Override
@@ -110,7 +124,7 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
         }
       }
     } else {
-      if (!mappingPropertyUnary.getMapsFromOptions().isEmpty()){
+      if (!mappingPropertyUnary.getMapsFromOptions().isEmpty()) {
         String firstSelector = mappingPropertyUnary.getMapsFromOptions().get(0);
         mappingPropertyUnary.setSelectedProperty(firstSelector);
       }
@@ -124,12 +138,21 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
   @Override
   public void visit(OneOfStaticProperty oneOfStaticProperty) {
-
+    if (oneOfStaticProperty.getOptions().stream().noneMatch(Option::isSelected)) {
+      validationInfos.add(PipelineElementValidationInfo.error(
+          String.format(
+              "Configuration \"%s\" must have one selected option, but no option was selected.",
+              oneOfStaticProperty.getInternalName()
+          )
+      ));
+    }
   }
 
   @Override
   public void visit(SecretStaticProperty secretStaticProperty) {
-
+    if (!secretStaticProperty.isOptional() && Objects.isNull(secretStaticProperty.getValue())) {
+      addMissingConfiguration(secretStaticProperty);
+    }
   }
 
   @Override
@@ -139,12 +162,27 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
   @Override
   public void visit(RuntimeResolvableTreeInputStaticProperty treeInputStaticProperty) {
-
+    if (!treeInputStaticProperty.isOptional() && treeInputStaticProperty.getSelectedNodesInternalNames().isEmpty()) {
+      addMissingConfiguration(treeInputStaticProperty);
+    }
   }
 
   @Override
   public void visit(RuntimeResolvableGroupStaticProperty groupStaticProperty) {
+  }
 
+  @Override
+  public void visit(StaticPropertyAlternatives staticPropertyAlternatives) {
+    if (!staticPropertyAlternatives.isOptional()
+        && staticPropertyAlternatives.getAlternatives().stream().noneMatch(StaticPropertyAlternative::getSelected)) {
+      validationInfos.add(PipelineElementValidationInfo.error(
+          String.format(
+              "No alternative of configuration \"%s\" was selected, but at least one alternative must be chosen",
+              staticPropertyAlternatives.getInternalName()
+          )
+      ));
+    }
+    super.visit(staticPropertyAlternatives);
   }
 
   public List<PipelineElementValidationInfo> getValidationInfos() {
@@ -157,5 +195,16 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
   private boolean existsSelection(MappingPropertyNary mappingProperty) {
     return !(mappingProperty.getSelectedProperties() == null || mappingProperty.getSelectedProperties().isEmpty());
+  }
+
+  private void addMissingConfiguration(StaticProperty sp) {
+    validationInfos.add(
+        PipelineElementValidationInfo.error(
+            String.format(
+                "Configuration option \"%s\" as no value although it is marked as required",
+                sp.getInternalName()
+            )
+        )
+    );
   }
 }
