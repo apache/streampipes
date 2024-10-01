@@ -29,6 +29,7 @@ public enum Filetypes {
   XLS("xls"),
   XLSX("xlsx"),
   XML("xml"),
+  YAML("yaml", "yml"),
   ZIP("zip");
 
   private final List<String> fileExtensions;
