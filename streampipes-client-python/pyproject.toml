@@ -90,7 +90,7 @@ mkdocs-git-revision-date-localized-plugin = "1.2.6"
 mkdocs-jupyter = "0.24.0"
 mkdocs-literate-nav = "0.6.0"
 mkdocs-material = "9.3.2"
-mkdocstrings = { version = "0.25.0", extras = ["python"] }
+mkdocstrings = { version = "0.26.1", extras = ["python"] }
 numpydoc = "1.7.0"
 pytkdocs = { version = "0.16.1", extras = ["numpy-style"] }
 
