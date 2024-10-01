@@ -85,11 +85,7 @@ public class TransformToBooleanProcessor
     EventSchema eventSchema = new EventSchema();
     EventSchema oldEventSchema = processingElement.getInputStreams().get(0).getEventSchema();
     // Gotta remove the "s0::" in the beginning
-    Set<String> transformFields =
-        (parameterExtractor.mappingPropertyValues(TRANSFORM_FIELDS_ID))
-            .stream()
-            .map(s -> s.substring(4))
-            .collect(Collectors.toSet());
+    Set<String> transformFields = getTransformFieldNames(parameterExtractor);
 
     for (EventProperty eventProperty : oldEventSchema.getEventProperties()) {
       //TODO: Test, if eventProperty is a primitive type (string, number, ...)
@@ -122,13 +118,13 @@ public class TransformToBooleanProcessor
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector collector) throws SpRuntimeException {
     for (String transformField : transformFields) {
-      AbstractField field = inputEvent.getFieldBySelector(transformField);
+      AbstractField<?> field = inputEvent.getFieldBySelector(transformField);
       // Is the field a primitive (and no list/nested field)?
       if (field.isPrimitive()) {
         // Yes. So remove the element and replace it with a boolean (if possible)
         inputEvent.removeFieldBySelector(transformField);
         try {
-          inputEvent.addField(transformField, toBoolean(field.getRawValue()));
+          inputEvent.addField(removeFieldPrefix(transformField), toBoolean(field.getRawValue()));
         } catch (SpRuntimeException e) {
           LOG.info(e.getMessage());
           return;
@@ -153,5 +149,16 @@ public class TransformToBooleanProcessor
     } else {
       throw new SpRuntimeException("Value " + s + " not convertible to boolean");
     }
+  }
+
+  private Set<String> getTransformFieldNames(ProcessingElementParameterExtractor extractor) {
+    return extractor.mappingPropertyValues(TRANSFORM_FIELDS_ID)
+        .stream()
+        .map(this::removeFieldPrefix)
+        .collect(Collectors.toSet());
+  }
+
+  private String removeFieldPrefix(String fieldName) {
+    return fieldName.substring(4);
   }
 }
