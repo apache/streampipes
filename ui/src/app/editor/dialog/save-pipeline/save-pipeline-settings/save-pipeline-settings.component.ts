@@ -51,6 +51,7 @@ export class SavePipelineSettingsComponent implements OnInit {
             'pipelineName',
             new UntypedFormControl(this.pipeline.name, [
                 Validators.required,
+                Validators.minLength(3),
                 Validators.maxLength(40),
             ]),
         );
