@@ -88,7 +88,7 @@
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <jjwt.version>0.11.2</jjwt.version>
         <jts-core.version>1.19.0</jts-core.version>
-        <kafka.version>3.4.0</kafka.version>
+        <kafka.version>3.8.0</kafka.version>
         <lightcouch.version>0.2.0</lightcouch.version>
         <maven-plugin-annotations.version>3.13.0</maven-plugin-annotations.version>
         <mailapi.version>1.4.3</mailapi.version>
