@@ -16,18 +16,10 @@
  *
  */
 
-package org.apache.streampipes.model.pipeline.compact;
+package org.apache.streampipes.rest.shared.constants;
 
-import org.apache.streampipes.model.connect.adapter.compact.CreateOptions;
-import org.apache.streampipes.model.shared.annotation.TsModel;
+public class SpMediaType {
 
-import java.util.List;
-
-@TsModel
-public record CompactPipeline(
-    String id,
-    String name,
-    String description,
-    List<CompactPipelineElement> pipelineElements,
-    CreateOptions createOptions
-) {}
+  public static final String YAML = "application/yaml";
+  public static final String YML = "application/yml";
+}

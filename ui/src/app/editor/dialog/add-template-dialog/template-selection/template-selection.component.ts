@@ -16,18 +16,23 @@
  *
  */
 
-package org.apache.streampipes.model.pipeline.compact;
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CompactPipelineTemplate } from '@streampipes/platform-services';
 
-import org.apache.streampipes.model.connect.adapter.compact.CreateOptions;
-import org.apache.streampipes.model.shared.annotation.TsModel;
+@Component({
+    selector: 'sp-template-selection',
+    templateUrl: './template-selection.component.html',
+    styleUrls: ['./template-selection.component.scss'],
+})
+export class TemplateSelectionComponent {
+    @Input()
+    pipelineTemplates: CompactPipelineTemplate[] = [];
 
-import java.util.List;
+    @Output()
+    selectTemplateEmitter: EventEmitter<CompactPipelineTemplate> =
+        new EventEmitter();
 
-@TsModel
-public record CompactPipeline(
-    String id,
-    String name,
-    String description,
-    List<CompactPipelineElement> pipelineElements,
-    CreateOptions createOptions
-) {}
+    selectTemplate(template: CompactPipelineTemplate): void {
+        this.selectTemplateEmitter.emit(template);
+    }
+}

@@ -15,30 +15,29 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.template;
 
-import java.util.ArrayList;
-import java.util.List;
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import {
+    CompactPipeline,
+    PlatformServicesCommons,
+} from '@streampipes/platform-services';
+import { Observable } from 'rxjs';
 
-public class PipelineTemplateDescriptionContainer {
+@Injectable({
+    providedIn: 'root',
+})
+export class CompactPipelineService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  private List<PipelineTemplateDescription> list;
+    create(pipeline: CompactPipeline): Observable<any> {
+        return this.http.post(this.baseUrl, pipeline);
+    }
 
-  public PipelineTemplateDescriptionContainer() {
-    super();
-    this.list = new ArrayList<>();
-  }
-
-  public PipelineTemplateDescriptionContainer(List<PipelineTemplateDescription> dataStreams) {
-    super();
-    this.list = dataStreams;
-  }
-
-  public List<PipelineTemplateDescription> getList() {
-    return list;
-  }
-
-  public void setList(List<PipelineTemplateDescription> list) {
-    this.list = list;
-  }
+    get baseUrl(): string {
+        return `${this.platformServicesCommons.apiBasePath}/compact-pipelines`;
+    }
 }

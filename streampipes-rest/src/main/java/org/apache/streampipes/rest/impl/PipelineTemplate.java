@@ -15,79 +15,109 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.manager.template.PipelineTemplateManagement;
-import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.SpDataStreamContainer;
-import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.model.template.PipelineTemplateInvocation;
+import org.apache.streampipes.manager.template.compact.CompactPipelineTemplateManagement;
+import org.apache.streampipes.model.template.CompactPipelineTemplate;
+import org.apache.streampipes.model.template.PipelineTemplateGenerationRequest;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.constants.SpMediaType;
+import org.apache.streampipes.rest.shared.exception.BadRequestException;
+import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v2/pipeline-templates")
 public class PipelineTemplate extends AbstractAuthGuardedRestResource {
 
-  private final PipelineTemplateManagement pipelineTemplateManagement;
+  private final CRUDStorage<CompactPipelineTemplate> storage;
+  private final CompactPipelineTemplateManagement templateManagement;
 
   public PipelineTemplate() {
-    this.pipelineTemplateManagement = new PipelineTemplateManagement();
-  }
-
-  @GetMapping(path = "/streams", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<SpDataStreamContainer> getAvailableDataStreams() {
-    List<SpDataStream> sources = getPipelineElementRdfStorage().getAllDataStreams();
-    List<SpDataStream> datasets = new ArrayList<>();
-
-    sources.stream()
-        .map(SpDataStream::new)
-        .forEach(datasets::add);
-
-    return ok((new SpDataStreamContainer(datasets)));
+    storage = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineTemplateStorage();
+    templateManagement = new CompactPipelineTemplateManagement(
+        storage,
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage()
+    );
   }
 
   @GetMapping(
-      path = "/invocation",
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<PipelineTemplateInvocation> getPipelineTemplateInvocation(
-      @RequestParam(value = "streamId", required = false) String streamId,
-      @RequestParam(value = "templateId") String pipelineTemplateId) {
+      produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
+  public List<CompactPipelineTemplate> findAll() {
+    return storage.findAll()
+        .stream()
+        .sorted(Comparator.comparing(CompactPipelineTemplate::getName))
+        .toList();
+  }
+
+  @GetMapping(
+      path = "/{id}",
+      produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
+  public ResponseEntity<?> findById(@PathVariable("id") String id) {
+    return ok(storage.getElementById(id));
+  }
+
+
+  @PostMapping(
+      produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML},
+      consumes = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
+  public void create(@RequestBody CompactPipelineTemplate entity) {
+    storage.persist(entity);
+  }
+
+  @PutMapping(path = "/{id}",
+      produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML},
+      consumes = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
+  public void update(@PathVariable("id") String id, @RequestBody CompactPipelineTemplate entity) {
+    storage.updateElement(entity);
+  }
+
+  @DeleteMapping(path = "/{id}")
+  public void delete(@PathVariable("id") String id) {
+    storage.deleteElementById(id);
+  }
+
+
+  @PostMapping(path = "/{id}/pipeline",
+      produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML},
+      consumes = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
+  public ResponseEntity<?> makePipelineFromTemplate(@RequestBody PipelineTemplateGenerationRequest request) {
     try {
-      return ok(pipelineTemplateManagement.prepareInvocation(streamId, pipelineTemplateId));
+      return ok(templateManagement.makePipeline(request).pipeline());
     } catch (IllegalArgumentException e) {
-      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(
-          String.format(
-              "Could not create pipeline template %s - did you install all pipeline elements?",
-              pipelineTemplateId.substring(pipelineTemplateId.lastIndexOf(".") + 1))
-      ));
+      return badRequest(e.getMessage());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 
-  @PostMapping(
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<PipelineOperationStatus> generatePipeline(
-      @RequestBody PipelineTemplateInvocation pipelineTemplateInvocation) {
-
-    var status = pipelineTemplateManagement.createAndStartPipeline(
-        pipelineTemplateInvocation,
-        getAuthenticatedUserSid()
-    );
-    return ok(status);
+  @GetMapping(
+      path = "/{id}/streams",
+      produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
+  public ResponseEntity<Map<String, List<List<String>>>> getAvailableStreamsForTemplate(
+      @PathVariable("id") String pipelineTemplateId) {
+    try {
+      return ok(templateManagement.getStreamsForTemplate(pipelineTemplateId));
+    } catch (IllegalArgumentException e) {
+      throw new BadRequestException(e.getMessage());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 }

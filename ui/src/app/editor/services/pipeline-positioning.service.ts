@@ -165,6 +165,7 @@ export class PipelinePositioningService {
             elementRef.css('left', g.node(v).x + 'px');
             elementRef.css('top', g.node(v).y + 'px');
         });
+        jsPlumbBridge.repaintEverything();
     }
 
     layoutGraphFromCanvasMetadata(

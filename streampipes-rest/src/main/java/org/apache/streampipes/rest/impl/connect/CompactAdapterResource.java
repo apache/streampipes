@@ -25,7 +25,7 @@ import org.apache.streampipes.connect.management.compact.PersistPipelineHandler;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
 import org.apache.streampipes.connect.management.management.CompactAdapterManagement;
-import org.apache.streampipes.manager.template.PipelineTemplateManagement;
+import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Notifications;
@@ -88,7 +88,10 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
         if (compactAdapter.createOptions().persist()) {
           var storedAdapter = managementService.getAdapter(adapterId);
           var status = new PersistPipelineHandler(
-              new PipelineTemplateManagement(),
+              getNoSqlStorage().getPipelineTemplateStorage(),
+              new CompactPipelineManagement(
+                  getNoSqlStorage().getPipelineElementDescriptionStorage()
+              ),
               getAuthenticatedUserSid()
           ).createAndStartPersistPipeline(storedAdapter);
         }

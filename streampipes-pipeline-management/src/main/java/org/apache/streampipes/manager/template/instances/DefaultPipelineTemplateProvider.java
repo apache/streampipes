@@ -16,18 +16,11 @@
  *
  */
 
-package org.apache.streampipes.model.pipeline.compact;
+package org.apache.streampipes.manager.template.instances;
 
-import org.apache.streampipes.model.connect.adapter.compact.CreateOptions;
-import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.template.CompactPipelineTemplate;
 
-import java.util.List;
+public interface DefaultPipelineTemplateProvider {
 
-@TsModel
-public record CompactPipeline(
-    String id,
-    String name,
-    String description,
-    List<CompactPipelineElement> pipelineElements,
-    CreateOptions createOptions
-) {}
+  CompactPipelineTemplate getTemplate();
+}

@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-09-30 14:11:40.
+// Generated using typescript-generator version 3.2.1263 on 2024-10-02 14:54:56.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -773,6 +773,90 @@ export class ColorPickerStaticProperty extends StaticProperty {
     }
 }
 
+export class CompactPipeline {
+    createOptions: CreateOptions;
+    description: string;
+    id: string;
+    name: string;
+    pipelineElements: CompactPipelineElement[];
+
+    static fromData(
+        data: CompactPipeline,
+        target?: CompactPipeline,
+    ): CompactPipeline {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new CompactPipeline();
+        instance.createOptions = CreateOptions.fromData(data.createOptions);
+        instance.description = data.description;
+        instance.id = data.id;
+        instance.name = data.name;
+        instance.pipelineElements = __getCopyArrayFn(
+            CompactPipelineElement.fromData,
+        )(data.pipelineElements);
+        return instance;
+    }
+}
+
+export class CompactPipelineElement {
+    configuration: { [index: string]: any }[];
+    connectedTo: string[];
+    id: string;
+    ref: string;
+    type: string;
+
+    static fromData(
+        data: CompactPipelineElement,
+        target?: CompactPipelineElement,
+    ): CompactPipelineElement {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new CompactPipelineElement();
+        instance.configuration = __getCopyArrayFn(
+            __getCopyObjectFn(__identity<any>()),
+        )(data.configuration);
+        instance.connectedTo = __getCopyArrayFn(__identity<string>())(
+            data.connectedTo,
+        );
+        instance.id = data.id;
+        instance.ref = data.ref;
+        instance.type = data.type;
+        return instance;
+    }
+}
+
+export class CompactPipelineTemplate implements Storable {
+    description: string;
+    elementId: string;
+    name: string;
+    pipeline: CompactPipelineElement[];
+    placeholders: PipelinePlaceholders;
+    rev: string;
+
+    static fromData(
+        data: CompactPipelineTemplate,
+        target?: CompactPipelineTemplate,
+    ): CompactPipelineTemplate {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new CompactPipelineTemplate();
+        instance.description = data.description;
+        instance.elementId = data.elementId;
+        instance.name = data.name;
+        instance.pipeline = __getCopyArrayFn(CompactPipelineElement.fromData)(
+            data.pipeline,
+        );
+        instance.placeholders = PipelinePlaceholders.fromData(
+            data.placeholders,
+        );
+        instance.rev = data.rev;
+        return instance;
+    }
+}
+
 export class ConfigItem {
     configurationScope: ConfigurationScope;
     description: string;
@@ -895,6 +979,24 @@ export class CreateNestedRuleDescription extends SchemaTransformationRuleDescrip
         const instance = target || new CreateNestedRuleDescription();
         super.fromData(data, instance);
         instance.runtimeKey = data.runtimeKey;
+        return instance;
+    }
+}
+
+export class CreateOptions {
+    persist: boolean;
+    start: boolean;
+
+    static fromData(
+        data: CreateOptions,
+        target?: CreateOptions,
+    ): CreateOptions {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new CreateOptions();
+        instance.persist = data.persist;
+        instance.start = data.start;
         return instance;
     }
 }
@@ -2840,6 +2942,46 @@ export class PipelineOperationStatus {
     }
 }
 
+export class PipelinePlaceholderConfig {
+    id: string;
+    ref: string;
+
+    static fromData(
+        data: PipelinePlaceholderConfig,
+        target?: PipelinePlaceholderConfig,
+    ): PipelinePlaceholderConfig {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new PipelinePlaceholderConfig();
+        instance.id = data.id;
+        instance.ref = data.ref;
+        return instance;
+    }
+}
+
+export class PipelinePlaceholders {
+    requiredConfigs: PipelinePlaceholderConfig[];
+    requiredStreamInputs: string[];
+
+    static fromData(
+        data: PipelinePlaceholders,
+        target?: PipelinePlaceholders,
+    ): PipelinePlaceholders {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new PipelinePlaceholders();
+        instance.requiredConfigs = __getCopyArrayFn(
+            PipelinePlaceholderConfig.fromData,
+        )(data.requiredConfigs);
+        instance.requiredStreamInputs = __getCopyArrayFn(__identity<string>())(
+            data.requiredStreamInputs,
+        );
+        return instance;
+    }
+}
+
 export class PipelinePreviewModel {
     elementIdMappings: { [index: string]: string };
     previewId: string;
@@ -2904,6 +3046,30 @@ export class PipelineTemplateDescription extends NamedStreamPipesEntity {
         instance.pipelineTemplateDescription = data.pipelineTemplateDescription;
         instance.pipelineTemplateId = data.pipelineTemplateId;
         instance.pipelineTemplateName = data.pipelineTemplateName;
+        return instance;
+    }
+}
+
+export class PipelineTemplateGenerationRequest {
+    pipelineDescription: string;
+    pipelineName: string;
+    streams: { [index: string]: string };
+    template: CompactPipelineTemplate;
+
+    static fromData(
+        data: PipelineTemplateGenerationRequest,
+        target?: PipelineTemplateGenerationRequest,
+    ): PipelineTemplateGenerationRequest {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new PipelineTemplateGenerationRequest();
+        instance.pipelineDescription = data.pipelineDescription;
+        instance.pipelineName = data.pipelineName;
+        instance.streams = __getCopyObjectFn(__identity<string>())(
+            data.streams,
+        );
+        instance.template = CompactPipelineTemplate.fromData(data.template);
         return instance;
     }
 }

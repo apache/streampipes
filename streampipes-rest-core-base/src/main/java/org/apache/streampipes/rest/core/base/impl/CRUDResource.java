@@ -30,19 +30,38 @@ import java.util.List;
 
 public interface CRUDResource<T, ReT> {
 
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(produces = {
+      MediaType.APPLICATION_JSON_VALUE,
+      "application/yaml",
+      "application/yml"})
   List<T> findAll();
 
-  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/{id}", produces = {
+      MediaType.APPLICATION_JSON_VALUE,
+      "application/yaml",
+      "application/yml"})
   T findById(@PathVariable("id") String id);
 
   @PostMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE
+      produces = {
+          MediaType.APPLICATION_JSON_VALUE,
+          "application/yaml",
+          "application/yml"},
+      consumes = {
+          MediaType.APPLICATION_JSON_VALUE,
+          "application/yaml",
+          "application/yml"}
   )
   void create(@RequestBody T entity);
 
-  @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(path = "/{id}", produces = {
+      MediaType.APPLICATION_JSON_VALUE,
+      "application/yaml",
+      "application/yml"
+  }, consumes = {
+      MediaType.APPLICATION_JSON_VALUE,
+      "application/yaml",
+      "application/yml"})
   ReT update(@RequestBody T entity);
 
   @DeleteMapping(path = "/{id}")

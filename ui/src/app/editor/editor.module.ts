@@ -84,6 +84,8 @@ import { DroppedPipelineElementComponent } from './components/pipeline/dropped-p
 import { InputSchemaPanelComponent } from './dialog/customize/input-schema-panel/input-schema-panel.component';
 import { InputSchemaPropertyComponent } from './dialog/customize/input-schema-panel/input-schema-property/input-schema-property.component';
 import { SortByRuntimeNamePipe } from './pipes/sort-by-runtime-name.pipe';
+import { AddTemplateDialogComponent } from './dialog/add-template-dialog/add-template-dialog.component';
+import { TemplateSelectionComponent } from './dialog/add-template-dialog/template-selection/template-selection.component';
 
 @NgModule({
     imports: [
@@ -125,6 +127,7 @@ import { SortByRuntimeNamePipe } from './pipes/sort-by-runtime-name.pipe';
         PlatformServicesModule,
     ],
     declarations: [
+        AddTemplateDialogComponent,
         CompatibleElementsComponent,
         CustomizeComponent,
         CustomOutputStrategyComponent,
@@ -155,6 +158,7 @@ import { SortByRuntimeNamePipe } from './pipes/sort-by-runtime-name.pipe';
         PipelineElementTypeFilterPipe,
         PipelineComponent,
         PropertySelectionComponent,
+        TemplateSelectionComponent,
         SavePipelineComponent,
         SavePipelineSettingsComponent,
         SortByRuntimeNamePipe,

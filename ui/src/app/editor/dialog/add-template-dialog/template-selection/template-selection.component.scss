@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,15 +16,14 @@
  *
  */
 
-package org.apache.streampipes.manager.template.instances;
+.template-item {
+}
 
-import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
-import org.apache.streampipes.model.template.PipelineTemplateDescription;
+.template-item:nth-child(even) {
+    background: var(--color-bg-1);
+}
 
-import java.net.URISyntaxException;
-
-public interface PipelineTemplate {
-
-  PipelineTemplateDescription declareModel() throws URISyntaxException, ElementNotFoundException;
-
+.template-item:hover {
+    background: var(--color-bg-2);
+    cursor: pointer;
 }
