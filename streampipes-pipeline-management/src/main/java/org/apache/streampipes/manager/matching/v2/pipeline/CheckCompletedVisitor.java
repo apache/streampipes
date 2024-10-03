@@ -51,6 +51,11 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
     this.validationInfos = new ArrayList<>();
   }
 
+  public CheckCompletedVisitor(boolean ignoreValidation) {
+    this();
+    this.ignoreValidation = ignoreValidation;
+  }
+
   @Override
   public void visit(AnyStaticProperty property) {
 
@@ -58,30 +63,22 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
   @Override
   public void visit(CodeInputStaticProperty codeInputStaticProperty) {
-    if (!codeInputStaticProperty.isOptional() && Objects.isNull(codeInputStaticProperty.getValue())) {
-      addMissingConfiguration(codeInputStaticProperty);
-    }
+    validateNull(codeInputStaticProperty, codeInputStaticProperty.getValue());
   }
 
   @Override
   public void visit(ColorPickerStaticProperty colorPickerStaticProperty) {
-    if (!colorPickerStaticProperty.isOptional() && Objects.isNull(colorPickerStaticProperty.getSelectedColor())) {
-      addMissingConfiguration(colorPickerStaticProperty);
-    }
+    validateNull(colorPickerStaticProperty, colorPickerStaticProperty.getSelectedColor());
   }
 
   @Override
   public void visit(FileStaticProperty fileStaticProperty) {
-    if (!fileStaticProperty.isOptional() && Objects.isNull(fileStaticProperty.getLocationPath())) {
-      addMissingConfiguration(fileStaticProperty);
-    }
+    validateNull(fileStaticProperty, fileStaticProperty.getLocationPath());
   }
 
   @Override
   public void visit(FreeTextStaticProperty freeTextStaticProperty) {
-    if (!freeTextStaticProperty.isOptional() && Objects.isNull(freeTextStaticProperty.getValue())) {
-      addMissingConfiguration(freeTextStaticProperty);
-    }
+    validateNull(freeTextStaticProperty, freeTextStaticProperty.getValue());
   }
 
   @Override
@@ -138,7 +135,7 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
   @Override
   public void visit(OneOfStaticProperty oneOfStaticProperty) {
-    if (oneOfStaticProperty.getOptions().stream().noneMatch(Option::isSelected)) {
+    if (!ignoreValidation && oneOfStaticProperty.getOptions().stream().noneMatch(Option::isSelected)) {
       validationInfos.add(PipelineElementValidationInfo.error(
           String.format(
               "Configuration \"%s\" must have one selected option, but no option was selected.",
@@ -150,9 +147,7 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
   @Override
   public void visit(SecretStaticProperty secretStaticProperty) {
-    if (!secretStaticProperty.isOptional() && Objects.isNull(secretStaticProperty.getValue())) {
-      addMissingConfiguration(secretStaticProperty);
-    }
+    validateNull(secretStaticProperty, secretStaticProperty.getValue());
   }
 
   @Override
@@ -162,7 +157,9 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
   @Override
   public void visit(RuntimeResolvableTreeInputStaticProperty treeInputStaticProperty) {
-    if (!treeInputStaticProperty.isOptional() && treeInputStaticProperty.getSelectedNodesInternalNames().isEmpty()) {
+    if (!ignoreValidation
+        && !treeInputStaticProperty.isOptional()
+        && treeInputStaticProperty.getSelectedNodesInternalNames().isEmpty()) {
       addMissingConfiguration(treeInputStaticProperty);
     }
   }
@@ -173,7 +170,7 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
   @Override
   public void visit(StaticPropertyAlternatives staticPropertyAlternatives) {
-    if (!staticPropertyAlternatives.isOptional()
+    if (!ignoreValidation && !staticPropertyAlternatives.isOptional()
         && staticPropertyAlternatives.getAlternatives().stream().noneMatch(StaticPropertyAlternative::getSelected)) {
       validationInfos.add(PipelineElementValidationInfo.error(
           String.format(
@@ -182,11 +179,19 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
           )
       ));
     }
-    super.visit(staticPropertyAlternatives);
+    var visitor = new CheckCompletedVisitor(true);
+    staticPropertyAlternatives.getAlternatives().forEach(alternative -> alternative.accept(visitor));
+    validationInfos.addAll(visitor.getValidationInfos());
   }
 
   public List<PipelineElementValidationInfo> getValidationInfos() {
     return this.validationInfos;
+  }
+
+  private void validateNull(StaticProperty sp, Object value) {
+    if (!ignoreValidation && !sp.isOptional() && Objects.isNull(value)) {
+      addMissingConfiguration(sp);
+    }
   }
 
   private boolean existsSelection(MappingPropertyUnary mappingProperty) {
