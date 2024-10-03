@@ -27,7 +27,6 @@ import { DialogRef } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-add-template-dialog',
     templateUrl: './add-template-dialog.component.html',
-    styleUrls: ['./add-template-dialog.component.scss'],
 })
 export class AddTemplateDialogComponent implements OnInit {
     pipelineTemplates: CompactPipelineTemplate[] = [];
