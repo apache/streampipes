@@ -18,11 +18,9 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {
-    CompactPipeline,
-    PlatformServicesCommons,
-} from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
+import { PlatformServicesCommons } from './commons.service';
+import { CompactPipeline } from '../model/gen/streampipes-model';
 
 @Injectable({
     providedIn: 'root',
