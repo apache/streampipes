@@ -27,8 +27,11 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
+import org.apache.streampipes.model.pipeline.ExtendedPipelineElementValidationInfo;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineModification;
+import org.apache.streampipes.model.pipeline.PipelineModificationResult;
+import org.apache.streampipes.model.pipeline.PipelineVerificationResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,11 +52,12 @@ public class PipelineVerificationHandlerV2 {
     return new PipelineModificationGenerator(graph, steps).buildPipelineModificationMessage();
   }
 
-  public Pipeline makeModifiedPipeline() {
-    var allElements = verifyAndBuildGraphs(false);
+  public PipelineModificationResult makeModifiedPipeline() {
+    var result = verifyAndBuildGraphs(false);
+    var allElements = result.modifiedPipelineElements();
     pipeline.setSepas(filterAndConvert(allElements, DataProcessorInvocation.class));
     pipeline.setActions(filterAndConvert(allElements, DataSinkInvocation.class));
-    return pipeline;
+    return new PipelineModificationResult(pipeline, result.validationInfos());
   }
 
   private <T extends InvocableStreamPipesEntity> List<T> filterAndConvert(List<NamedStreamPipesEntity> elements,
@@ -65,10 +69,11 @@ public class PipelineVerificationHandlerV2 {
         .toList();
   }
 
-  public List<NamedStreamPipesEntity> verifyAndBuildGraphs(boolean ignoreUnconfigured) {
+  public PipelineVerificationResult verifyAndBuildGraphs(boolean ignoreUnconfigured) {
     var pipelineModifications = verifyPipeline().getPipelineModifications();
     var allElements = new AllElementsProvider(pipeline).getAllElements();
-    var result = new ArrayList<NamedStreamPipesEntity>();
+    var validationInfos = new ArrayList<ExtendedPipelineElementValidationInfo>();
+    var modifiedPipelineElements = new ArrayList<NamedStreamPipesEntity>();
     allElements.forEach(pipelineElement -> {
       var modificationOpt = getModification(pipelineElement.getDom(), pipelineModifications);
       if (modificationOpt.isPresent()) {
@@ -79,15 +84,26 @@ public class PipelineVerificationHandlerV2 {
             applyModificationsForDataProcessor((DataProcessorInvocation) pipelineElement, modification);
           }
         }
+        validationInfos.addAll(
+            modification.getValidationInfos()
+                .stream()
+                .map(v -> new ExtendedPipelineElementValidationInfo(
+                        pipelineElement.getName(),
+                        pipelineElement.getDom(),
+                        v
+                    )
+                )
+                .toList()
+        );
         if (!ignoreUnconfigured || modification.isPipelineElementValid()) {
-          result.add(pipelineElement);
+          modifiedPipelineElements.add(pipelineElement);
         }
       } else {
-        result.add(pipelineElement);
+        modifiedPipelineElements.add(pipelineElement);
       }
     });
 
-    return result;
+    return new PipelineVerificationResult(validationInfos, modifiedPipelineElements);
   }
 
   private void applyModificationsForDataProcessor(DataProcessorInvocation pipelineElement,

@@ -16,8 +16,14 @@
  *
  */
 
-package org.apache.streampipes.model.connect.adapter.compact;
+package org.apache.streampipes.model.pipeline.compact;
 
+import java.util.List;
 import java.util.Map;
 
-public record CompactConfiguration(Map<String, Object> values) {}
+public record CompactPipelineElement(String type,
+                                     String ref,
+                                     String id,
+                                     List<String> connectedTo,
+                                     List<Map<String, Object>> configuration) {
+}
