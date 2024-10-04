@@ -19,9 +19,11 @@
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.manager.setup.design.UserDesignDocument;
+import org.apache.streampipes.manager.setup.tasks.AddDefaultPipelineTemplatesTask;
 import org.apache.streampipes.manager.setup.tasks.CreateAssetLinkTypeTask;
 import org.apache.streampipes.manager.setup.tasks.CreateDefaultAssetTask;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.lightcouch.DesignDocument;
 import org.lightcouch.DesignDocument.MapReduce;
@@ -48,6 +50,9 @@ public class CouchDbInstallationStep extends InstallationStep {
     createViews();
     new CreateAssetLinkTypeTask().execute();
     new CreateDefaultAssetTask().execute();
+    new AddDefaultPipelineTemplatesTask(
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineTemplateStorage()
+    ).execute();
   }
 
   @Override
