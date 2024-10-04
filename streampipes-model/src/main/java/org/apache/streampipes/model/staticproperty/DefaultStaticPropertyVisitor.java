@@ -20,6 +20,16 @@ package org.apache.streampipes.model.staticproperty;
 
 public abstract class DefaultStaticPropertyVisitor implements StaticPropertyVisitor {
 
+  protected boolean ignoreValidation;
+
+  public DefaultStaticPropertyVisitor(boolean ignoreValidation) {
+    this.ignoreValidation = ignoreValidation;
+  }
+
+  public DefaultStaticPropertyVisitor() {
+    this(false);
+  }
+
   @Override
   public void visit(CollectionStaticProperty collectionStaticProperty) {
     collectionStaticProperty.getStaticPropertyTemplate().accept(this);
