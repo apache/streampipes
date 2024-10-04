@@ -28,6 +28,7 @@ import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescript
 import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 
@@ -40,6 +41,8 @@ public interface ITransformationRuleVisitor {
   void visit(MoveRuleDescription rule);
 
   void visit(RenameRuleDescription rule);
+
+  void visit(RegexTransformationRuleDescription rule);
 
   void visit(EventRateTransformationRuleDescription rule);
 
