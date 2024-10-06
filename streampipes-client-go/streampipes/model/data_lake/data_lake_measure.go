@@ -17,16 +17,16 @@
 
 package data_lake
 
-import "github.com/apache/streampipes/streampipes-client-go/streampipes/model/common"
+import "github.com/apache/streampipes/streampipes-client-go/streampipes/model"
 
 type DataLakeMeasure struct {
-	MeasureName          string             `json:"measureName"`
-	TimestampField       string             `json:"timestampField"`
-	EventSchema          common.EventSchema `json:"eventSchema,omitempty"`
-	PipelineId           string             `json:"pipelineId,omitempty"`
-	PipelineName         string             `json:"pipelineName,omitempty"`
-	PipelineIsRunning    bool               `json:"pipelineIsRunning"`
-	SchemaVersion        string             `json:"schemaVersion,omitempty"`
-	SchemaUpdateStrategy string             `json:"schemaUpdateStrategy,omitempty"`
-	ElementId            string             `json:"elementId"`
+	MeasureName          string            `json:"measureName"`
+	TimestampField       string            `json:"timestampField"`
+	EventSchema          model.EventSchema `json:"eventSchema,omitempty"`
+	PipelineId           string            `json:"pipelineId,omitempty"`
+	PipelineName         string            `json:"pipelineName,omitempty"`
+	PipelineIsRunning    bool              `json:"pipelineIsRunning"`
+	SchemaVersion        string            `json:"schemaVersion,omitempty"`
+	SchemaUpdateStrategy string            `json:"schemaUpdateStrategy,omitempty"`
+	ElementId            string            `json:"elementId"`
 }

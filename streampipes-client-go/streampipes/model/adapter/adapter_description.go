@@ -17,35 +17,35 @@
 
 package adapter
 
-import "github.com/apache/streampipes/streampipes-client-go/streampipes/model/common"
+import "github.com/apache/streampipes/streampipes-client-go/streampipes/model"
 
 type AdapterDescription struct {
-	ElementID                        string                                  `json:"elementId"`
-	Rev                              string                                  `json:"rev"`
-	DOM                              string                                  `json:"dom"`
-	ConnectedTo                      []string                                `json:"connectedTo"`
-	Name                             string                                  `json:"name"`
-	Description                      string                                  `json:"description"`
-	AppID                            string                                  `json:"appId"`
-	IncludesAssets                   bool                                    `json:"includesAssets"`
-	IncludesLocales                  bool                                    `json:"includesLocales"`
-	IncludedAssets                   []string                                `json:"includedAssets"`
-	IncludedLocales                  []string                                `json:"includedLocales"`
-	InternallyManaged                bool                                    `json:"internallyManaged"`
-	Version                          int32                                   `json:"version"`
-	DataStream                       common.SpDataStream                     `json:"dataStream"`
-	Running                          bool                                    `json:"running"`
-	EventGrounding                   common.EventGrounding                   `json:"eventGrounding"`
-	Icon                             string                                  `json:"icon"`
-	Config                           []common.StaticProperty                 `json:"config"`
-	Rules                            []common.TransformationRuleDescription  `json:"rules"`
-	Category                         []string                                `json:"category"`
-	CreatedAt                        int64                                   `json:"createdAt"`
-	SelectedEndpointURL              string                                  `json:"selectedEndpointUrl"`
-	DeploymentConfiguration          common.ExtensionDeploymentConfiguration `json:"deploymentConfiguration"`
-	CorrespondingDataStreamElementID string                                  `json:"correspondingDataStreamElementId"`
-	EventSchema                      common.EventSchema                      `json:"eventSchema"`
-	ValueRules                       []common.TransformationRuleDescription  `json:"valueRules"`
-	StreamRules                      []common.TransformationRuleDescription  `json:"streamRules"`
-	SchemaRules                      []common.TransformationRuleDescription  `json:"schemaRules"`
+	ElementID                        string                                 `json:"elementId"`
+	Rev                              string                                 `json:"rev"`
+	DOM                              string                                 `json:"dom"`
+	ConnectedTo                      []string                               `json:"connectedTo"`
+	Name                             string                                 `json:"name"`
+	Description                      string                                 `json:"description"`
+	AppID                            string                                 `json:"appId"`
+	IncludesAssets                   bool                                   `json:"includesAssets"`
+	IncludesLocales                  bool                                   `json:"includesLocales"`
+	IncludedAssets                   []string                               `json:"includedAssets"`
+	IncludedLocales                  []string                               `json:"includedLocales"`
+	InternallyManaged                bool                                   `json:"internallyManaged"`
+	Version                          int32                                  `json:"version"`
+	DataStream                       model.SpDataStream                     `json:"dataStream"`
+	Running                          bool                                   `json:"running"`
+	EventGrounding                   model.EventGrounding                   `json:"eventGrounding"`
+	Icon                             string                                 `json:"icon"`
+	Config                           []model.StaticProperty                 `json:"config"`
+	Rules                            []model.TransformationRuleDescription  `json:"rules"`
+	Category                         []string                               `json:"category"`
+	CreatedAt                        int64                                  `json:"createdAt"`
+	SelectedEndpointURL              string                                 `json:"selectedEndpointUrl"`
+	DeploymentConfiguration          model.ExtensionDeploymentConfiguration `json:"deploymentConfiguration"`
+	CorrespondingDataStreamElementID string                                 `json:"correspondingDataStreamElementId"`
+	EventSchema                      model.EventSchema                      `json:"eventSchema"`
+	ValueRules                       []model.TransformationRuleDescription  `json:"valueRules"`
+	StreamRules                      []model.TransformationRuleDescription  `json:"streamRules"`
+	SchemaRules                      []model.TransformationRuleDescription  `json:"schemaRules"`
 }

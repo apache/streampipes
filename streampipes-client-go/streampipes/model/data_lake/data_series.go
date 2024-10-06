@@ -22,15 +22,15 @@ import (
 	"log"
 	"strings"
 
-	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/common"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/model"
 )
 
 type DataSeries struct {
-	Total         int                 `json:"total"`
-	Headers       []string            `json:"http_headers"`
-	AllDataSeries []common.DataSeries `json:"allDataSeries"`
-	SPQueryStatus string              `alias:"spQueryStatus" default:"OK"`
-	ForId         interface{}         `json:"forId"`
+	Total         int                `json:"total"`
+	Headers       []string           `json:"http_headers"`
+	AllDataSeries []model.DataSeries `json:"allDataSeries"`
+	SPQueryStatus string             `alias:"spQueryStatus" default:"OK"`
+	ForId         interface{}        `json:"forId"`
 }
 
 func (d *DataSeries) Print() {

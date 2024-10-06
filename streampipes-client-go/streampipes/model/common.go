@@ -15,7 +15,7 @@
 // limitations under the License.
 //
 
-package common
+package model
 
 type ValueSpecification struct {
 	ElementID string  `json:"elementId,omitempty"`
