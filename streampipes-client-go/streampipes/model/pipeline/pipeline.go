@@ -18,7 +18,7 @@
 package pipeline
 
 import (
-	"github.com/apache/streampipes/streampipes-client-go/streampipes/model"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/common"
 )
 
 type PipelineHealthStatus string
@@ -31,7 +31,7 @@ const (
 
 type Pipeline struct {
 	Sepas                 []DataProcessorInvocation //`json:"sepas"`
-	Streams               []model.SpDataStream      //`json:"streams"`
+	Streams               []common.SpDataStream     //`json:"streams"`
 	Name                  string                    //`json:"name"`
 	Description           string                    //`json:"description,omitempty"`
 	Actions               []DataSinkInvocation      //`json:"actions"`
@@ -63,18 +63,18 @@ type DataProcessorInvocation struct {
 	IncludedLocales       []string                  `json:"includedLocales"`
 	InternallyManaged     bool                      `json:"internallyManaged"`
 	Version               int32                     `json:"version"`
-	InputStreams          []model.SpDataStream      `json:"inputStreams"`
-	StaticProperties      []model.StaticProperty    `json:"staticProperties"`
+	InputStreams          []common.SpDataStream     `json:"inputStreams"`
+	StaticProperties      []common.StaticProperty   `json:"staticProperties"`
 	BelongsTo             string                    `json:"belongsTo"`
 	StatusInfoSettings    ElementStatusInfoSettings `json:"statusInfoSettings"`
-	SupportedGrounding    model.EventGrounding      `json:"supportedGrounding"`
+	SupportedGrounding    common.EventGrounding     `json:"supportedGrounding"`
 	CorrespondingPipeline string                    `json:"correspondingPipeline"`
 	CorresponddingUser    string                    `json:"correspondingUser"`
-	StreamRequirements    []model.SpDataStream      `json:"streamRequirements"`
+	StreamRequirements    []common.SpDataStream     `json:"streamRequirements"`
 	Configured            bool                      `json:"configured"`
 	Uncompleted           bool                      `json:"uncompleted"`
 	SelectedEndpointUrl   string                    `json:"selectedEndpointUrl"`
-	OutputStream          model.SpDataStream        `json:"outputStream"`
+	OutputStream          common.SpDataStream       `json:"outputStream"`
 	OutputStrategies      []OutputStrategy          `json:"outputStrategies"`
 	PathName              string                    `json:"pathName"`
 	Category              []string                  `json:"category"`
@@ -114,14 +114,14 @@ type DataSinkInvocation struct {
 	IncludedLocales       []string                  `json:"includedLocales"`
 	InternallyManaged     bool                      `json:"internallyManaged"`
 	Version               int32                     `json:"version"`
-	InputStreams          []model.SpDataStream      `json:"inputStreams"`
-	StaticProperties      []model.StaticProperty    `json:"staticProperties"`
+	InputStreams          []common.SpDataStream     `json:"inputStreams"`
+	StaticProperties      []common.StaticProperty   `json:"staticProperties"`
 	BelongsTo             string                    `json:"belongsTo"`
 	StatusInfoSettings    ElementStatusInfoSettings `json:"statusInfoSettings"`
-	SupportedGrounding    model.EventGrounding      `json:"supportedGrounding"`
+	SupportedGrounding    common.EventGrounding     `json:"supportedGrounding"`
 	CorrespondingPipeline string                    `json:"correspondingPipeline"`
 	CorrespondingUser     string                    `json:"correspondingUser"`
-	StreamRequirements    []model.SpDataStream      `json:"streamRequirements"`
+	StreamRequirements    []common.SpDataStream     `json:"streamRequirements"`
 	Configured            bool                      `json:"configured"`
 	Uncompleted           bool                      `json:"uncompleted"`
 	SelectedEndpointUrl   string                    `json:"selectedEndpointUrl"`
