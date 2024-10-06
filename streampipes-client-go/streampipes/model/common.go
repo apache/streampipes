@@ -86,6 +86,51 @@ type StaticProperty struct {
 	Class              string `json:"@class"`
 }
 
+type MappingProperty struct {
+	StaticProperty
+	RequirementSelector string
+	MapsFromOptions     []string
+	PropertyScope       string
+}
+
+type MappingPropertyUnary struct {
+	MappingProperty
+	SelectedProperty string
+}
+
+type FreeTextStaticProperty struct {
+	StaticProperty
+	value                 string
+	MapsTo                string
+	MultiLine             bool
+	HtmlAllowed           bool
+	HtmlFontFormat        bool
+	PlaceholdersSupported bool
+}
+
+type SelectionStaticProperty struct {
+	HorizontalRendering bool
+}
+
+type OneOfStaticProperty struct {
+	SelectionStaticProperty
+}
+
+type AnyStaticProperty struct {
+	SelectionStaticProperty
+}
+
+type RuntimeResolvableAnyStaticProperty struct {
+	AnyStaticProperty
+	DependsOn []string
+}
+
+type SlideToggleStaticProperty struct {
+	StaticProperty
+	Selected     bool
+	DefaultValue bool
+}
+
 type SpDataStream struct {
 	ElementId              string         `json:"elementId"`
 	Dom                    string         `json:"dom"`
