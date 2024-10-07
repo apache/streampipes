@@ -60,4 +60,14 @@
             />
         </mat-form-field>
     </sp-ep-settings-section>
+    <sp-ep-settings-section
+        sectionTitle="Regex Value Transformation"
+        sectionDescription="Transforms the original field values using the provided regex"
+        fxLayout="column"
+        fxFlex="100"
+        *ngIf="isStringProperty"
+    >
+        <sp-edit-regex-transformation [cachedProperty]="cachedProperty">
+        </sp-edit-regex-transformation>
+    </sp-ep-settings-section>
 </div>
