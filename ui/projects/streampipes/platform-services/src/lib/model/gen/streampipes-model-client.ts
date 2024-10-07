@@ -21,7 +21,7 @@
 // @ts-nocheck
 // Generated using typescript-generator version 3.2.1263 on 2024-10-07 13:58:29.
 
-import { Storable } from '@streampipes/platform-services';
+import { Storable } from './streampipes-model';
 
 export class Group implements Storable {
     elementId: string;
