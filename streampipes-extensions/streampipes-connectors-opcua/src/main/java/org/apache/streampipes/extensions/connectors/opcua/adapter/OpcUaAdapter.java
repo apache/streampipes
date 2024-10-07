@@ -74,6 +74,7 @@ import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil
 public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsRuntimeConfig {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.opcua";
+  public static final String PULL_GROUP = "pull-mode-group";
   private static final Logger LOG = LoggerFactory.getLogger(OpcUaAdapter.class);
 
   private int pullingIntervalMilliSeconds;
@@ -154,15 +155,21 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
           this.event.put(this.allNodes.get(i).getLabel(), value);
         } else {
           badStatusCodeReceived = true;
-          LOG.warn("Received status code {} for node label: {} - event will not be sent",
+          LOG.warn("Received status code {} for node label: {}",
               status,
               this.allNodes.get(i).getLabel());
         }
       }
     }
-    if (!badStatusCodeReceived && !emptyValueReceived) {
+    if (!emptyValueReceived && !shouldSkipEvent(badStatusCodeReceived)) {
       collector.collect(this.event);
     }
+  }
+
+  private boolean shouldSkipEvent(boolean badStatusCodeReceived) {
+    return badStatusCodeReceived
+        && this.spOpcUaClient.getSpOpcConfig().getIncompleteEventStrategy()
+        .equalsIgnoreCase(SharedUserConfiguration.INCOMPLETE_OPTION_IGNORE);
   }
 
   public void onSubscriptionValue(UaMonitoredItem item,
@@ -231,14 +238,14 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    var builder = AdapterConfigurationBuilder.create(ID, 2, OpcUaAdapter::new)
+    var builder = AdapterConfigurationBuilder.create(ID, 3, OpcUaAdapter::new)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
         .requiredAlternatives(Labels.withId(ADAPTER_TYPE),
             Alternatives.from(Labels.withId(PULL_MODE),
-                StaticProperties.integerFreeTextProperty(
-                    Labels.withId(PULLING_INTERVAL))),
+                SharedUserConfiguration.getPullModeGroup()
+            ),
             Alternatives.from(Labels.withId(SUBSCRIPTION_MODE)));
     SharedUserConfiguration.appendSharedOpcUaConfig(builder, true);
     return builder.buildConfiguration();
