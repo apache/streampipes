@@ -35,6 +35,7 @@ import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescript
 import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.grounding.TopicDefinition;
@@ -94,6 +95,8 @@ public class GsonSerializer {
 
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(TransformationRuleDescription.class, "sourceType")
         .registerSubtype(RenameRuleDescription.class, "org.apache.streampipes.model.RenameRuleDescription")
+        .registerSubtype(RegexTransformationRuleDescription.class,
+                         "org.apache.streampipes.model.RegexTransformationRuleDescription")
         .registerSubtype(MoveRuleDescription.class, "org.apache.streampipes.model.MoveRuleDescription")
         .registerSubtype(DeleteRuleDescription.class, "org.apache.streampipes.model.DeleteRuleDescription")
         .registerSubtype(CreateNestedRuleDescription.class, "org.apache.streampipes.model.CreateNestedRuleDescription")

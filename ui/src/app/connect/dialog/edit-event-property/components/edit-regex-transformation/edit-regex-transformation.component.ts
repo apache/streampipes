@@ -16,34 +16,14 @@
  *
  */
 
-package org.apache.streampipes.model.connect.rules;
+import { Component, Input } from '@angular/core';
+import { EventPropertyUnion } from '@streampipes/platform-services';
 
-public enum TransformationRulePriority {
-
-  ADD_TIMESTAMP(100),
-  ADD_VALUE(110),
-
-  RENAME(210),
-  CREATE_NESTED(230),
-  MOVE(235),
-  DELETE(240),
-
-  CHANGE_UNIT(310),
-  TIMESTAMP_TRANSFORMATION(320),
-  CORRECTION_VALUE(330),
-  REGEX_TRANSFORMATION(331),
-  CHANGE_DATATYPE(340),
-
-  REMOVE_DUPLICATES(410),
-  EVENT_RATE(420);
-
-  private final int code;
-
-  TransformationRulePriority(int code) {
-    this.code = code;
-  }
-
-  public int getCode() {
-    return this.code;
-  }
+@Component({
+    selector: 'sp-edit-regex-transformation',
+    templateUrl: './edit-regex-transformation.component.html',
+    styleUrl: './edit-regex-transformation.component.scss',
+})
+export class EditRegexTransformationComponent {
+    @Input() cachedProperty: EventPropertyUnion;
 }

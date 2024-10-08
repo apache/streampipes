@@ -28,6 +28,7 @@ import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescript
 import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -47,6 +48,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(CreateNestedRuleDescription.class),
     @JsonSubTypes.Type(DeleteRuleDescription.class),
     @JsonSubTypes.Type(RenameRuleDescription.class),
+    @JsonSubTypes.Type(RegexTransformationRuleDescription.class),
     @JsonSubTypes.Type(MoveRuleDescription.class),
     @JsonSubTypes.Type(ChangeDatatypeTransformationRuleDescription.class),
     @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),

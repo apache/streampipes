@@ -26,6 +26,7 @@ import org.apache.streampipes.connect.shared.preprocessing.transform.schema.Rena
 import org.apache.streampipes.connect.shared.preprocessing.transform.value.AddTimestampTransformationRule;
 import org.apache.streampipes.connect.shared.preprocessing.transform.value.CorrectionValueTransformationRule;
 import org.apache.streampipes.connect.shared.preprocessing.transform.value.DatatypeTransformationRule;
+import org.apache.streampipes.connect.shared.preprocessing.transform.value.RegexTransformationRule;
 import org.apache.streampipes.connect.shared.preprocessing.transform.value.TimestampTranformationRuleMode;
 import org.apache.streampipes.connect.shared.preprocessing.transform.value.TimestampTransformationRule;
 import org.apache.streampipes.connect.shared.preprocessing.transform.value.UnitTransformationRule;
@@ -40,6 +41,7 @@ import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescript
 import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 
@@ -69,6 +71,15 @@ public class StatelessTransformationRuleGeneratorVisitor extends TransformationR
     rules.add(new RenameTransformationRule(
         Utils.toKeyArray(ruleDesc.getOldRuntimeKey()),
         Utils.getLastKey(ruleDesc.getNewRuntimeKey())));
+  }
+
+  @Override
+  public void visit(RegexTransformationRuleDescription rule) {
+    rules.add(new RegexTransformationRule(
+        Utils.toKeyArray(rule.getRuntimeKey()),
+        rule.getRegex(),
+        rule.getReplaceWith(),
+        rule.isReplaceAll()));
   }
 
   @Override
