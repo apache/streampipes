@@ -68,6 +68,16 @@ export abstract class BaseAssetDetailsDirective implements OnInit {
                 SpAssetRoutes.BASE,
                 { label: this.asset.assetName },
             ]);
+
+            if (!this.asset.assetSite.hasExactLocation) {
+                const matchingSite = this.sites.find(
+                    site => site._id === this.asset.assetSite.siteId,
+                );
+                if (matchingSite) {
+                    this.asset.assetSite.location = matchingSite.location;
+                }
+            }
+
             this.onAssetAvailable();
         });
     }
