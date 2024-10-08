@@ -16,15 +16,34 @@
  *
  */
 
-package org.apache.streampipes.model.connect.adapter.compact;
+import { Component, Input, OnInit } from '@angular/core';
+import {
+    AdapterDescription,
+    AdapterService,
+    CompactAdapter,
+} from '@streampipes/platform-services';
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+@Component({
+    selector: 'sp-adapter-code-panel',
+    templateUrl: './adapter-code-panel.component.html',
+    styleUrls: ['./adapter-code-panel.component.scss'],
+})
+export class AdapterCodePanelComponent implements OnInit {
+    @Input()
+    adapterDescription: AdapterDescription;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public record CompactEventProperty(
-    String label,
-    String description,
-    String propertyScope,
-    String semanticType
-) {
+    @Input()
+    maxHeight = '300px';
+
+    compactAdapter: CompactAdapter;
+
+    constructor(private adapterService: AdapterService) {}
+
+    ngOnInit(): void {
+        this.adapterService
+            .convertToCompactAdapter(this.adapterDescription)
+            .subscribe(res => {
+                this.compactAdapter = res;
+            });
+    }
 }

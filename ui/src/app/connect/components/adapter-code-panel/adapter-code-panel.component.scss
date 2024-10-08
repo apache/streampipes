@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,15 +16,15 @@
  *
  */
 
-package org.apache.streampipes.model.connect.adapter.compact;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public record CompactEventProperty(
-    String label,
-    String description,
-    String propertyScope,
-    String semanticType
-) {
+.preview-text {
+    background-color: black;
+    font:
+        9pt Inconsolata,
+        monospace;
+    text-shadow: 0 0 5px #c8c8c8;
+    color: white;
+    padding: 10px;
+    max-width: 100%;
+    overflow-y: scroll;
+    white-space: pre-wrap;
 }

@@ -22,11 +22,13 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
+import org.apache.streampipes.connect.management.management.CompactAdapterManagement;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
+import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
@@ -34,6 +36,7 @@ import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -66,7 +69,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   public AdapterResource() {
     super(() -> new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getAdapterInstanceStorage(),
+            .getAdapterInstanceStorage(),
         new SpResourceManager().manageAdapters(),
         new SpResourceManager().manageDataStreams(),
         AdapterMetricsManager.INSTANCE.getAdapterMetrics()
@@ -93,6 +96,16 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     return ok(Notifications.success(adapterId));
   }
 
+  @PostMapping(path = "compact", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+      MediaType.APPLICATION_JSON_VALUE,
+      SpMediaType.YAML,
+      SpMediaType.YML
+  })
+  @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
+  public ResponseEntity<?> convertToCompactAdapter(@RequestBody AdapterDescription adapterDescription) throws Exception {
+    return ok(new CompactAdapterManagement(List.of()).convertToCompactAdapter(adapterDescription));
+  }
+
   @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public ResponseEntity<? extends Message> updateAdapter(@RequestBody AdapterDescription adapterDescription) {
@@ -108,7 +121,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   }
 
   @PutMapping(path = "pipeline-migration-preflight", consumes = MediaType.APPLICATION_JSON_VALUE,
-              produces = MediaType.APPLICATION_JSON_VALUE)
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public ResponseEntity<List<PipelineUpdateInfo>> performPipelineMigrationPreflight(
       @RequestBody AdapterDescription adapterDescription
@@ -119,16 +132,25 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     return ok(migrations);
   }
 
-  @GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, "application/yaml" })
+  @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
   @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
-  public ResponseEntity<?> getAdapter(@PathVariable("id") String adapterId) {
+  public ResponseEntity<?> getAdapter(@PathVariable("id") String adapterId,
+                                      @RequestParam(value = "output",
+                                          defaultValue = "full",
+                                          required = false) String outputMode) {
 
     try {
       AdapterDescription adapterDescription = getAdapterDescription(adapterId);
-
-      return ok(adapterDescription);
+      if (outputMode.equalsIgnoreCase("compact")) {
+        return ok(toCompactAdapterDescription(adapterDescription));
+      } else {
+        return ok(adapterDescription);
+      }
     } catch (AdapterException e) {
       LOG.error("Error while getting adapter with id {}", adapterId, e);
+      return fail();
+    } catch (Exception e) {
+      LOG.error("Error while transforming adapter {}", adapterId, e);
       return fail();
     }
   }
@@ -164,7 +186,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
                                          boolean deleteAssociatedPipelines) {
     List<String> pipelinesUsingAdapter = getPipelinesUsingAdapter(elementId);
     IPipelineStorage pipelineStorageAPI = StorageDispatcher.INSTANCE.getNoSqlStore()
-                                                                    .getPipelineStorageAPI();
+        .getPipelineStorageAPI();
 
     if (pipelinesUsingAdapter.isEmpty()) {
       try {
@@ -178,11 +200,11 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
       List<String> namesOfPipelinesUsingAdapter = pipelinesUsingAdapter
           .stream()
           .map(pipelineId -> pipelineStorageAPI.getElementById(
-                                                   pipelineId)
-                                               .getName())
+                  pipelineId)
+              .getName())
           .collect(Collectors.toList());
       return ResponseEntity.status(HttpStatus.SC_CONFLICT)
-                           .body(String.join(", ", namesOfPipelinesUsingAdapter));
+          .body(String.join(", ", namesOfPipelinesUsingAdapter));
     } else {
       PermissionResourceManager permissionResourceManager = new PermissionResourceManager();
       // find out the names of pipelines that have an owner and the owner is not the current user
@@ -204,16 +226,16 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
           }
           managementService.deleteAdapter(elementId);
           return ok(Notifications.success("Adapter with id: " + elementId
-                                              + " and all pipelines using the adapter are deleted."));
+              + " and all pipelines using the adapter are deleted."));
         } catch (Exception e) {
           LOG.error("Error while deleting adapter with id "
-                        + elementId + " and all pipelines using the adapter", e);
+              + elementId + " and all pipelines using the adapter", e);
           return ok(Notifications.error(e.getMessage()));
         }
       } else {
         // otherwise, hint the user the names of pipelines using the adapter but not owned by the user
         return ResponseEntity.status(HttpStatus.SC_CONFLICT)
-                             .body(String.join(", ", namesOfPipelinesNotOwnedByUser));
+            .body(String.join(", ", namesOfPipelinesNotOwnedByUser));
       }
     }
   }
@@ -226,7 +248,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     } catch (AdapterException e) {
       LOG.error("Error while getting all adapters", e);
       return ResponseEntity.status(500)
-                           .build();
+          .build();
     }
   }
 
@@ -234,10 +256,14 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     return managementService.getAdapter(adapterId);
   }
 
+  private CompactAdapter toCompactAdapterDescription(AdapterDescription adapterDescription) throws Exception {
+    return new CompactAdapterManagement(List.of()).convertToCompactAdapter(adapterDescription);
+  }
+
   private List<String> getPipelinesUsingAdapter(String adapterId) {
     return StorageDispatcher.INSTANCE.getNoSqlStore()
-                                     .getPipelineStorageAPI()
-                                     .getPipelinesUsingAdapter(adapterId);
+        .getPipelineStorageAPI()
+        .getPipelinesUsingAdapter(adapterId);
   }
 
 }

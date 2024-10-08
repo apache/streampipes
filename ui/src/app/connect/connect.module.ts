@@ -104,6 +104,9 @@ import { AdapterStatusLightComponent } from './components/existing-adapters/adap
 import { SpAdapterDeploymentSettingsComponent } from './components/adapter-configuration/adapter-settings/adapter-deployment-settings/adapter-deployment-settings.component';
 import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-documentation/adapter-documentation-dialog.component';
 import { AdapterDetailsDataComponent } from './components/adapter-details/adapter-details-data/adapter-details-data.component';
+import { AdapterCodePanelComponent } from './components/adapter-code-panel/adapter-code-panel.component';
+import { YamlPrettyPrintPipe } from './filter/yaml-pretty-print.pipe';
+import { AdapterDetailsCodeComponent } from './components/adapter-details/adapter-details-code/adapter-details-code.component';
 
 @NgModule({
     imports: [
@@ -184,6 +187,10 @@ import { AdapterDetailsDataComponent } from './components/adapter-details/adapte
                                 path: 'logs',
                                 component: SpAdapterDetailsLogsComponent,
                             },
+                            {
+                                path: 'code',
+                                component: AdapterDetailsCodeComponent,
+                            },
                         ],
                     },
                 ],
@@ -193,9 +200,11 @@ import { AdapterDetailsDataComponent } from './components/adapter-details/adapte
     ],
     exports: [ErrorMessageComponent],
     declarations: [
+        AdapterCodePanelComponent,
         AdapterConfigurationHeaderComponent,
         AdapterConfigurationComponent,
         AdapterDescriptionComponent,
+        AdapterDetailsCodeComponent,
         AdapterDetailsDataComponent,
         AdapterStartedDialog,
         AdapterStatusLightComponent,
@@ -214,6 +223,7 @@ import { AdapterDetailsDataComponent } from './components/adapter-details/adapte
         ExistingAdaptersComponent,
         AdapterFilterPipe,
         JsonPrettyPrintPipe,
+        YamlPrettyPrintPipe,
         AdapterConfigurationComponent,
         TimestampPipe,
         EditCorrectionValueComponent,

@@ -16,15 +16,15 @@
  *
  */
 
-package org.apache.streampipes.model.connect.adapter.compact;
+import { Injectable, Pipe, PipeTransform } from '@angular/core';
+import { parse, stringify } from 'yaml';
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public record CompactEventProperty(
-    String label,
-    String description,
-    String propertyScope,
-    String semanticType
-) {
+@Pipe({
+    name: 'yamlpretty',
+})
+@Injectable({ providedIn: 'root' })
+export class YamlPrettyPrintPipe implements PipeTransform {
+    transform(obj: any) {
+        return stringify(obj).replace(/ /g, '&nbsp;').replace(/\n/g, '<br/>');
+    }
 }

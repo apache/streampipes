@@ -24,6 +24,7 @@ import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
 import {
     AdapterDescription,
+    CompactAdapter,
     Message,
     PipelineUpdateInfo,
 } from '../model/gen/streampipes-model';
@@ -53,6 +54,15 @@ export class AdapterService {
             .pipe(
                 map(response => AdapterDescription.fromData(response as any)),
             );
+    }
+
+    convertToCompactAdapter(
+        adapterDescription: AdapterDescription,
+    ): Observable<CompactAdapter> {
+        return this.http.post<CompactAdapter>(
+            this.connectPath + `/master/adapters/compact`,
+            adapterDescription,
+        );
     }
 
     requestAdapterDescriptions(path: string): Observable<AdapterDescription[]> {
