@@ -79,7 +79,11 @@ export class OpcUaUtils {
 
         if (pullMode) {
             builder.addInput('radio', 'adapter_type-pull_mode', '');
-            builder.addInput('input', 'undefined-PULLING_INTERVAL-0', '1000');
+            builder.addInput(
+                'input',
+                'undefined-pull-mode-group-0-PULLING_INTERVAL-0',
+                '1000',
+            );
         } else {
             builder.addInput('radio', 'adapter_type-subscription_mode', '');
         }
