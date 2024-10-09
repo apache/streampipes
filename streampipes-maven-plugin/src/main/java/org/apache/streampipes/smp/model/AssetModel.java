@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.smp.model;
 
+import org.apache.streampipes.extensions.api.assets.AssetResolver;
 import org.apache.streampipes.smp.constants.PeType;
 
 public class AssetModel implements Comparable<AssetModel> {
@@ -26,9 +27,16 @@ public class AssetModel implements Comparable<AssetModel> {
   private String pipelineElementName;
   private String pipelineElementDescription;
   private PeType peType = PeType.PROCESSOR;
+  private AssetResolver assetResolver;
 
   public AssetModel() {
 
+  }
+
+  public AssetModel(String appId, PeType peType, AssetResolver resolver) {
+    this.appId = appId;
+    this.peType = peType;
+    this.assetResolver = resolver;
   }
 
   public AssetModel(String appId, PeType peType) {
@@ -61,6 +69,10 @@ public class AssetModel implements Comparable<AssetModel> {
 
   public void setPipelineElementDescription(String pipelineElementDescription) {
     this.pipelineElementDescription = pipelineElementDescription;
+  }
+
+  public AssetResolver getAssetResolver() {
+    return assetResolver;
   }
 
   public PeType getPeType() {

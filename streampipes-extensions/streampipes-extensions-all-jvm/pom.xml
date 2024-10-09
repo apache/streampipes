@@ -270,6 +270,26 @@
                         <artifactId>rocketmq-client-java</artifactId>
                         <version>5.0.2</version>
                     </dependency>
+                    <dependency>
+                        <groupId>org.apache.plc4x</groupId>
+                        <artifactId>plc4j-driver-all</artifactId>
+                        <version>0.12.0</version>
+                        <type>pom</type>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>org.apache.plc4x</groupId>
+                                <artifactId>plc4j-driver-firmata</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>org.apache.plc4x</groupId>
+                                <artifactId>plc4j-driver-opcua</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>org.apache.plc4x</groupId>
+                                <artifactId>plc4j-driver-c-bus</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
                 </dependencies>
                 <configuration>
                     <initClass>org.apache.streampipes.extensions.all.jvm.AllExtensionsInit</initClass>
