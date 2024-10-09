@@ -209,8 +209,12 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
   }
 
   @Override
-  public void visit(RuntimeResolvableGroupStaticProperty groupStaticProperty) {
-    // TODO
+  public void visit(RuntimeResolvableGroupStaticProperty staticPropertyGroup) {
+    staticPropertyGroup.getStaticProperties().forEach(group -> {
+      PipelineElementTemplateVisitor visitor =
+          new PipelineElementTemplateVisitor(configs);
+      group.accept(visitor);
+    });
   }
 
 
@@ -225,10 +229,6 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
         .findFirst()
         .orElseThrow(() -> new IllegalArgumentException(String.format("No key found: %s", key)));
   }
-
-//  private List<Map<String, Object>> getConfigAsList(StaticProperty sp) {
-//    return getConfig(sp).
-//  }
 
   private boolean hasKeyCaseInsensitive(String internalName,
                                         Map<String, Object> templateConfig) {
