@@ -43,6 +43,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -102,7 +103,8 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
       SpMediaType.YML
   })
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
-  public ResponseEntity<?> convertToCompactAdapter(@RequestBody AdapterDescription adapterDescription) throws Exception {
+  public ResponseEntity<?> convertToCompactAdapter(@RequestBody AdapterDescription adapterDescription)
+      throws Exception {
     return ok(new CompactAdapterManagement(List.of()).convertToCompactAdapter(adapterDescription));
   }
 
