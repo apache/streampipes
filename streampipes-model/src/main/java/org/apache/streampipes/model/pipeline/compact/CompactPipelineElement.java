@@ -18,9 +18,12 @@
 
 package org.apache.streampipes.model.pipeline.compact;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 import java.util.Map;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record CompactPipelineElement(String type,
                                      String ref,
                                      String id,

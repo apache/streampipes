@@ -16,28 +16,36 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import {
+    CompactPipeline,
+    Pipeline,
+    PipelineService,
+} from '@streampipes/platform-services';
+import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
-    selector: 'sp-pipeline-details-toolbar',
-    templateUrl: './pipeline-details-toolbar.component.html',
+    selector: 'sp-pipeline-code-dialog',
+    templateUrl: './pipeline-code-dialog.component.html',
 })
-export class PipelineDetailsToolbarComponent {
+export class PipelineCodeDialogComponent implements OnInit {
     @Input()
-    autoRefresh: boolean;
+    pipeline: Pipeline;
 
-    @Input()
-    previewModeActive: boolean;
+    compactPipeline: CompactPipeline;
 
-    @Output()
-    autoRefreshChange = new EventEmitter<boolean>();
+    constructor(
+        private pipelineService: PipelineService,
+        private dialogRef: DialogRef<PipelineCodeDialogComponent>,
+    ) {}
 
-    @Output()
-    reloadMetricsEmitter: EventEmitter<void> = new EventEmitter();
+    ngOnInit() {
+        this.pipelineService
+            .convertToCompactPipeline(this.pipeline)
+            .subscribe(p => (this.compactPipeline = p));
+    }
 
-    @Output()
-    togglePreviewEmitter: EventEmitter<void> = new EventEmitter();
-
-    @Output()
-    openCodeDialogEmitter: EventEmitter<void> = new EventEmitter();
+    close() {
+        this.dialogRef.close();
+    }
 }

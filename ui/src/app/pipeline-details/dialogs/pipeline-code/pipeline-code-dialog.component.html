@@ -16,10 +16,25 @@
   ~
   -->
 
-<div fxFlex="100" *ngIf="compactAdapter" class="mt-10">
-    <sp-configuration-code-panel
-        [configuration]="compactAdapter"
-        [maxHeight]="maxHeight"
-    >
-    </sp-configuration-code-panel>
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content">
+        <div fxFlex="100" fxLayout="column" class="p-10">
+            <sp-configuration-code-panel
+                [configuration]="compactPipeline"
+                maxHeight="none"
+            >
+            </sp-configuration-code-panel>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close()"
+        >
+            Close
+        </button>
+    </div>
 </div>

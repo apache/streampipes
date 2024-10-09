@@ -21,6 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
 import {
+    CompactPipeline,
     Message,
     Pipeline,
     PipelineElementRecommendationMessage,
@@ -73,6 +74,13 @@ export class PipelineService {
         return this.http
             .get(`${this.apiBasePath}/pipelines/${pipelineId}`)
             .pipe(map(response => Pipeline.fromData(response as Pipeline)));
+    }
+
+    convertToCompactPipeline(pipeline: Pipeline): Observable<CompactPipeline> {
+        return this.http.post<CompactPipeline>(
+            `${this.apiBasePath}/pipelines/compact`,
+            pipeline,
+        );
     }
 
     storePipeline(pipeline: Pipeline): Observable<Message> {

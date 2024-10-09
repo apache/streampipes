@@ -16,10 +16,19 @@
   ~
   -->
 
-<div fxFlex="100" *ngIf="compactAdapter" class="mt-10">
-    <sp-configuration-code-panel
-        [configuration]="compactAdapter"
-        [maxHeight]="maxHeight"
-    >
-    </sp-configuration-code-panel>
-</div>
+<mat-tab-group color="accent" [mat-stretch-tabs]="false">
+    <mat-tab label="YAML">
+        <pre
+            [innerHTML]="configuration | yamlpretty"
+            class="preview-text"
+            [ngStyle]="{ maxHeight: maxHeight }"
+        ></pre>
+    </mat-tab>
+    <mat-tab label="JSON">
+        <pre
+            [innerHTML]="configuration | jsonpretty"
+            class="preview-text"
+            [ngStyle]="{ maxHeight: maxHeight }"
+        ></pre>
+    </mat-tab>
+</mat-tab-group>
