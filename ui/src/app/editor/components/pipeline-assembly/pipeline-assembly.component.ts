@@ -37,6 +37,7 @@ import { forkJoin } from 'rxjs';
 import { Router } from '@angular/router';
 import { PipelineAssemblyDrawingAreaComponent } from './pipeline-assembly-drawing-area/pipeline-assembly-drawing-area.component';
 import { PipelineAssemblyOptionsComponent } from './pipeline-assembly-options/pipeline-assembly-options.component';
+import { JsplumbService } from '../../services/jsplumb.service';
 
 @Component({
     selector: 'sp-pipeline-assembly',
@@ -77,6 +78,7 @@ export class PipelineAssemblyComponent implements AfterViewInit {
         public pipelineValidationService: PipelineValidationService,
         private dialogService: DialogService,
         private router: Router,
+        private jsplumbService: JsplumbService,
     ) {}
 
     ngAfterViewInit() {
@@ -110,7 +112,6 @@ export class PipelineAssemblyComponent implements AfterViewInit {
      * Sends the pipeline to the server
      */
     submit() {
-        //const pipelineModel = this.pipelineComponent.rawPipelineModel;
         const pipelineModel = this.rawPipelineModel;
         const pipeline = this.objectProvider.makePipeline(pipelineModel);
         this.pipelinePositioningService.collectPipelineElementPositions(
@@ -152,5 +153,17 @@ export class PipelineAssemblyComponent implements AfterViewInit {
 
     triggerCacheUpdate(): void {
         this.assemblyOptionsComponent.triggerCacheUpdate();
+    }
+
+    displayPipelineTemplate(pipeline: Pipeline) {
+        this.originalPipeline = pipeline;
+        this.rawPipelineModel = undefined;
+        setTimeout(() => {
+            this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
+                pipeline,
+                false,
+            );
+            this.drawingAreaComponent.displayPipelineInEditor(true, undefined);
+        });
     }
 }

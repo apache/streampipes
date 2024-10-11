@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.connect.management.compact.generator.AdapterModelGenerator;
+import org.apache.streampipes.connect.management.compact.generator.CompactAdapterGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.storage.api.IAdapterStorage;
@@ -43,6 +44,22 @@ public class CompactAdapterManagement {
     }
 
     return adapterDescription;
+  }
+
+  public CompactAdapter convertToCompactAdapter(AdapterDescription adapterDescription) throws Exception {
+    var generator = new CompactAdapterGenerator(adapterDescription);
+
+    return new CompactAdapter(
+        adapterDescription.getElementId(),
+        adapterDescription.getName(),
+        adapterDescription.getDescription(),
+        adapterDescription.getAppId(),
+        generator.getConfig(),
+        generator.getSchema(),
+        generator.getEnrichmentConfig(),
+        generator.getTransformationConfig(),
+        generator.getCreateOptions()
+    );
   }
 
   public AdapterDescription convertToAdapterDescription(CompactAdapter compactAdapter,

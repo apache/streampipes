@@ -15,30 +15,23 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.template;
 
-import java.util.ArrayList;
-import java.util.List;
+package org.apache.streampipes.manager.setup.tasks;
 
-public class PipelineTemplateDescriptionContainer {
+import org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate;
+import org.apache.streampipes.model.template.CompactPipelineTemplate;
+import org.apache.streampipes.storage.api.CRUDStorage;
 
-  private List<PipelineTemplateDescription> list;
+public class AddDefaultPipelineTemplatesTask implements InstallationTask {
 
-  public PipelineTemplateDescriptionContainer() {
-    super();
-    this.list = new ArrayList<>();
+  CRUDStorage<CompactPipelineTemplate> storage;
+
+  public AddDefaultPipelineTemplatesTask(CRUDStorage<CompactPipelineTemplate> storage) {
+    this.storage = storage;
   }
 
-  public PipelineTemplateDescriptionContainer(List<PipelineTemplateDescription> dataStreams) {
-    super();
-    this.list = dataStreams;
-  }
-
-  public List<PipelineTemplateDescription> getList() {
-    return list;
-  }
-
-  public void setList(List<PipelineTemplateDescription> list) {
-    this.list = list;
+  @Override
+  public void execute() {
+    storage.persist(new PersistDataLakePipelineTemplate().getTemplate());
   }
 }

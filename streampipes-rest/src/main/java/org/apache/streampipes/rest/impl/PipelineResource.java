@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableExcepti
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
+import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
 import org.apache.streampipes.manager.recommender.ElementRecommender;
 import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.model.message.ErrorMessage;
@@ -34,10 +35,12 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.rest.shared.exception.SpNotificationException;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.google.gson.JsonSyntaxException;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -76,6 +79,14 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineResource.class);
+
+  private final CompactPipelineManagement compactPipelineManagement;
+
+  public PipelineResource() {
+    this.compactPipelineManagement = new CompactPipelineManagement(
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage()
+    );
+  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get all pipelines of the current user", tags = {"Pipeline"}, responses = {
@@ -162,6 +173,16 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     SuccessMessage message = Notifications.success("Pipeline stored");
     message.addNotification(new Notification("id", pipelineId));
     return ok(message);
+  }
+
+  @PostMapping(
+      path = "compact",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Convert a pipeline to the compact model", tags = {"Pipeline"})
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
+  public ResponseEntity<CompactPipeline> convertToCompactPipeline(@RequestBody Pipeline pipeline) {
+    return ok(compactPipelineManagement.convertPipeline(pipeline));
   }
 
   @PostMapping(

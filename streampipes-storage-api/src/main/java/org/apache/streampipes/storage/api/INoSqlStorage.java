@@ -29,6 +29,7 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.file.FileMetadata;
+import org.apache.streampipes.model.template.CompactPipelineTemplate;
 
 public interface INoSqlStorage {
 
@@ -87,4 +88,6 @@ public interface INoSqlStorage {
   CRUDStorage<Role> getRoleStorage();
 
   CRUDStorage<Privilege> getPrivilegeStorage();
+
+  CRUDStorage<CompactPipelineTemplate> getPipelineTemplateStorage();
 }

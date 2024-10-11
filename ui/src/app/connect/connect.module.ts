@@ -62,7 +62,6 @@ import { EditValueTransformationComponent } from './dialog/edit-event-property/c
 import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/components/ep-settings-section/ep-settings-section.component';
 import { SpAdapterOptionsPanelComponent } from './components/adapter-configuration/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
 import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adapter-template-dialog.component';
-import { JsonPrettyPrintPipe } from './filter/json-pretty-print.pipe';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AdapterConfigurationHeaderComponent } from './components/adapter-configuration/adapter-configuration-header/adapter-configuration-header.component';
 import { NewAdapterComponent } from './components/new-adapter/new-adapter.component';
@@ -105,6 +104,8 @@ import { SpAdapterDeploymentSettingsComponent } from './components/adapter-confi
 import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-documentation/adapter-documentation-dialog.component';
 import { AdapterDetailsDataComponent } from './components/adapter-details/adapter-details-data/adapter-details-data.component';
 import { EditRegexTransformationComponent } from './dialog/edit-event-property/components/edit-regex-transformation/edit-regex-transformation.component';
+import { AdapterCodePanelComponent } from './components/adapter-code-panel/adapter-code-panel.component';
+import { AdapterDetailsCodeComponent } from './components/adapter-details/adapter-details-code/adapter-details-code.component';
 
 @NgModule({
     imports: [
@@ -185,6 +186,10 @@ import { EditRegexTransformationComponent } from './dialog/edit-event-property/c
                                 path: 'logs',
                                 component: SpAdapterDetailsLogsComponent,
                             },
+                            {
+                                path: 'code',
+                                component: AdapterDetailsCodeComponent,
+                            },
                         ],
                     },
                 ],
@@ -194,9 +199,11 @@ import { EditRegexTransformationComponent } from './dialog/edit-event-property/c
     ],
     exports: [ErrorMessageComponent],
     declarations: [
+        AdapterCodePanelComponent,
         AdapterConfigurationHeaderComponent,
         AdapterConfigurationComponent,
         AdapterDescriptionComponent,
+        AdapterDetailsCodeComponent,
         AdapterDetailsDataComponent,
         AdapterStartedDialog,
         AdapterStatusLightComponent,
@@ -215,7 +222,6 @@ import { EditRegexTransformationComponent } from './dialog/edit-event-property/c
         EventSchemaPreviewComponent,
         ExistingAdaptersComponent,
         AdapterFilterPipe,
-        JsonPrettyPrintPipe,
         AdapterConfigurationComponent,
         TimestampPipe,
         EditCorrectionValueComponent,

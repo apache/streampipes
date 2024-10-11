@@ -36,6 +36,11 @@ export class SpAdapterDetailsTabs {
                 itemTitle: 'Logs',
                 itemLink: ['connect', 'details', elementId, 'logs'],
             },
+            {
+                itemId: 'code',
+                itemTitle: 'Code',
+                itemLink: ['connect', 'details', elementId, 'code'],
+            },
         ];
     }
 }

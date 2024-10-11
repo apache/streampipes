@@ -39,7 +39,11 @@ import {
     PipelineElementUnion,
 } from '../../../model/editor.model';
 import { PipelineAssemblyOptionsPipelineCacheComponent } from './pipeline-assembly-options-pipeline-cache/pipeline-assembly-options-pipeline-cache.component';
-import { PipelineCanvasMetadata } from '@streampipes/platform-services';
+import {
+    Pipeline,
+    PipelineCanvasMetadata,
+} from '@streampipes/platform-services';
+import { AddTemplateDialogComponent } from '../../../dialog/add-template-dialog/add-template-dialog.component';
 
 @Component({
     selector: 'sp-pipeline-assembly-options',
@@ -71,6 +75,10 @@ export class PipelineAssemblyOptionsComponent {
     @Output()
     togglePreviewEmitter: EventEmitter<void> = new EventEmitter<void>();
 
+    @Output()
+    displayPipelineTemplateEmitter: EventEmitter<Pipeline> =
+        new EventEmitter<Pipeline>();
+
     @ViewChild('assemblyOptionsPipelineCacheComponent')
     assemblyOptionsCacheComponent: PipelineAssemblyOptionsPipelineCacheComponent;
 
@@ -101,6 +109,21 @@ export class PipelineAssemblyOptionsComponent {
                 currentElements: this.allElements,
                 rawPipelineModel: this.rawPipelineModel,
             },
+        });
+    }
+
+    openAddTemplateDialog() {
+        const dialogRef = this.dialogService.open(AddTemplateDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Add template',
+            width: '50vw',
+            data: {},
+        });
+        dialogRef.afterClosed().subscribe(pipeline => {
+            if (pipeline !== undefined) {
+                this.clearAssemblyEmitter.emit();
+                this.displayPipelineTemplateEmitter.emit(pipeline);
+            }
         });
     }
 

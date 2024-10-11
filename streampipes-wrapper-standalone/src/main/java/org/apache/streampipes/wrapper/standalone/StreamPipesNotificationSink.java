@@ -84,7 +84,7 @@ public abstract class StreamPipesNotificationSink extends StreamPipesDataSink {
     // convert input given in minutes to seconds
     // this is later used to determine if a notification should be sent
     this.silentPeriodInSeconds = parameters.extractor()
-                                           .singleValueParameter(KEY_SILENT_PERIOD, Long.class) * 60
+                                           .singleValueParameter(KEY_SILENT_PERIOD, Integer.class) * 60
     ;
   }
 

@@ -145,6 +145,21 @@
                 </mat-select>
             </mat-form-field>
         </sp-adapter-options-panel>
+
+        <sp-adapter-options-panel
+            optionTitle="Show code"
+            optionDescription="Show code to programmatically deploy this adapter over the API"
+            optionIcon="code"
+            (optionSelectedEmitter)="showCode = $event"
+        >
+            @if (showCode) {
+                <sp-adapter-code-panel
+                    [adapterDescription]="adapterDescription"
+                    class="w-100"
+                >
+                </sp-adapter-code-panel>
+            }
+        </sp-adapter-options-panel>
     </div>
 
     <div fxLayoutAlign="end" style="margin-top: 10px">

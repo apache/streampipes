@@ -37,4 +37,7 @@ export class PipelineDetailsToolbarComponent {
 
     @Output()
     togglePreviewEmitter: EventEmitter<void> = new EventEmitter();
+
+    @Output()
+    openCodeDialogEmitter: EventEmitter<void> = new EventEmitter();
 }

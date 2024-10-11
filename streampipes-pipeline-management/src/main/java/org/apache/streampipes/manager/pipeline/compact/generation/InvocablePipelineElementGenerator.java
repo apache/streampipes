@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class InvocablePipelineElementGenerator<T extends InvocableStreamPipesEntity> {
 
-  private static final String ID_PREFIX = "jsplumb_";
+  public static final String ID_PREFIX = "jsplumb_";
 
   public void apply(T element,
                     CompactPipelineElement compatPipelineElement) {
