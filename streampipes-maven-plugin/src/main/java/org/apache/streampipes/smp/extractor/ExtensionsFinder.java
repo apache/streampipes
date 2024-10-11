@@ -49,7 +49,7 @@ public class ExtensionsFinder {
 
   public List<AssetModel> findExtensions()
       throws MalformedURLException, DependencyResolutionRequiredException, ClassNotFoundException,
-             InstantiationException, IllegalAccessException {
+      InstantiationException, IllegalAccessException {
     var extensions = new ArrayList<AssetModel>();
     var serviceDef = (
         (StreamPipesExtensionsServiceBase) loader
@@ -70,22 +70,26 @@ public class ExtensionsFinder {
       PeType peType
   ) {
     return serviceDef.getDeclarers()
-                     .stream()
-                     .map(IStreamPipesPipelineElement::declareConfig)
-                     .filter(configType::isInstance)
-                     .map(config -> new AssetModel(config.getDescription()
-                                                         .getAppId(), peType))
-                     .toList();
+        .stream()
+        .map(IStreamPipesPipelineElement::declareConfig)
+        .filter(configType::isInstance)
+        .map(config -> new AssetModel(config.getDescription()
+            .getAppId(), peType))
+        .toList();
   }
 
   private Collection<? extends AssetModel> findAdapters(SpServiceDefinition serviceDef) {
     return serviceDef.getAdapters()
-                     .stream()
-                     .map(adapter -> {
-                       var config = adapter.declareConfig();
-                       return new AssetModel(config.getAdapterDescription()
-                                                   .getAppId(), PeType.ADAPTER);
-                     })
-                     .toList();
+        .stream()
+        .map(adapter -> {
+          var config = adapter.declareConfig();
+          var resolver = config.getAssetResolver();
+          return new AssetModel(
+              config.getAdapterDescription().getAppId(),
+              PeType.ADAPTER,
+              resolver
+          );
+        })
+        .toList();
   }
 }
