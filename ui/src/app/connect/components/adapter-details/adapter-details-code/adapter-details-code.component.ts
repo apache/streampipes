@@ -16,28 +16,20 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 
 @Component({
-    selector: 'sp-pipeline-details-toolbar',
-    templateUrl: './pipeline-details-toolbar.component.html',
+    selector: 'sp-adapter-details-code',
+    templateUrl: './adapter-details-code.component.html',
 })
-export class PipelineDetailsToolbarComponent {
-    @Input()
-    autoRefresh: boolean;
+export class AdapterDetailsCodeComponent
+    extends SpAbstractAdapterDetailsDirective
+    implements OnInit
+{
+    ngOnInit() {
+        super.onInit();
+    }
 
-    @Input()
-    previewModeActive: boolean;
-
-    @Output()
-    autoRefreshChange = new EventEmitter<boolean>();
-
-    @Output()
-    reloadMetricsEmitter: EventEmitter<void> = new EventEmitter();
-
-    @Output()
-    togglePreviewEmitter: EventEmitter<void> = new EventEmitter();
-
-    @Output()
-    openCodeDialogEmitter: EventEmitter<void> = new EventEmitter();
+    onAdapterLoaded(): void {}
 }

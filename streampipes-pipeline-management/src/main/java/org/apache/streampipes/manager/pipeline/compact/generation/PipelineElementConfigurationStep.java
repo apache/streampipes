@@ -28,9 +28,9 @@ import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 
 public class PipelineElementConfigurationStep implements CompactPipelineGenerator {
 
-  private static final String StreamType = "stream";
-  private static final String ProcessorType = "processor";
-  private static final String SinkType = "sink";
+  public static final String STREAM_TYPE = "stream";
+  public static final String PROCESSOR_TYPE = "processor";
+  public static final String SINK_TYPE = "sink";
 
   private final IPipelineElementDescriptionStorage storage;
 
@@ -42,11 +42,11 @@ public class PipelineElementConfigurationStep implements CompactPipelineGenerato
   public void apply(Pipeline pipeline,
                     CompactPipeline compactPipeline) throws Exception {
     compactPipeline.pipelineElements().forEach(pe -> {
-      if (pe.type().equalsIgnoreCase(StreamType)) {
+      if (pe.type().equalsIgnoreCase(STREAM_TYPE)) {
         pipeline.getStreams().add(makeStream(pe));
-      } else if (pe.type().equalsIgnoreCase(ProcessorType)) {
+      } else if (pe.type().equalsIgnoreCase(PROCESSOR_TYPE)) {
         pipeline.getSepas().add(makeProcessor(pe));
-      } else if (pe.type().equalsIgnoreCase(SinkType)) {
+      } else if (pe.type().equalsIgnoreCase(SINK_TYPE)) {
         pipeline.getActions().add(makeSink(pe));
       }
     });

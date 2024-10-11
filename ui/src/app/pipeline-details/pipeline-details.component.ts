@@ -31,6 +31,8 @@ import {
 import { PipelineElementUnion } from '../editor/model/editor.model';
 import {
     CurrentUserService,
+    DialogService,
+    PanelType,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { SpPipelineRoutes } from '../pipelines/pipelines.routes';
@@ -40,6 +42,7 @@ import { catchError, filter, switchMap } from 'rxjs/operators';
 import { PipelinePreviewComponent } from './components/preview/pipeline-preview.component';
 import { HttpContext } from '@angular/common/http';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
+import { PipelineCodeDialogComponent } from './dialogs/pipeline-code/pipeline-code-dialog.component';
 
 @Component({
     selector: 'sp-pipeline-details-overview-component',
@@ -75,6 +78,7 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
         private currentUserService: CurrentUserService,
         private breadcrumbService: SpBreadcrumbService,
         private pipelineMonitoringService: PipelineMonitoringService,
+        private dialogService: DialogService,
     ) {}
 
     ngOnInit(): void {
@@ -174,6 +178,17 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     toggleLivePreview(): void {
         this.previewModeActive = !this.previewModeActive;
         this.pipelinePreviewComponent?.toggleLivePreview();
+    }
+
+    openPipelineAsCodeDialog(): void {
+        this.dialogService.open(PipelineCodeDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            width: '50vw',
+            title: 'Pipeline code',
+            data: {
+                pipeline: this.pipeline,
+            },
+        });
     }
 
     ngOnDestroy() {

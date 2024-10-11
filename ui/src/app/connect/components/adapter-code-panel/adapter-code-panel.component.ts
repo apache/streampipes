@@ -16,28 +16,34 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import {
+    AdapterDescription,
+    AdapterService,
+    CompactAdapter,
+} from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-pipeline-details-toolbar',
-    templateUrl: './pipeline-details-toolbar.component.html',
+    selector: 'sp-adapter-code-panel',
+    templateUrl: './adapter-code-panel.component.html',
+    styleUrls: ['./adapter-code-panel.component.scss'],
 })
-export class PipelineDetailsToolbarComponent {
+export class AdapterCodePanelComponent implements OnInit {
     @Input()
-    autoRefresh: boolean;
+    adapterDescription: AdapterDescription;
 
     @Input()
-    previewModeActive: boolean;
+    maxHeight = '300px';
 
-    @Output()
-    autoRefreshChange = new EventEmitter<boolean>();
+    compactAdapter: CompactAdapter;
 
-    @Output()
-    reloadMetricsEmitter: EventEmitter<void> = new EventEmitter();
+    constructor(private adapterService: AdapterService) {}
 
-    @Output()
-    togglePreviewEmitter: EventEmitter<void> = new EventEmitter();
-
-    @Output()
-    openCodeDialogEmitter: EventEmitter<void> = new EventEmitter();
+    ngOnInit(): void {
+        this.adapterService
+            .convertToCompactAdapter(this.adapterDescription)
+            .subscribe(res => {
+                this.compactAdapter = res;
+            });
+    }
 }

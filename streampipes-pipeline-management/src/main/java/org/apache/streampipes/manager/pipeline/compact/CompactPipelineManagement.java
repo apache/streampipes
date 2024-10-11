@@ -19,11 +19,15 @@
 package org.apache.streampipes.manager.pipeline.compact;
 
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
+import org.apache.streampipes.manager.pipeline.compact.generation.CompactPipelineConverter;
 import org.apache.streampipes.manager.pipeline.compact.generation.PipelineElementConfigurationStep;
+import org.apache.streampipes.model.connect.adapter.compact.CreateOptions;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineModificationResult;
 import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
+
+import java.util.UUID;
 
 public class CompactPipelineManagement {
 
@@ -40,6 +44,16 @@ public class CompactPipelineManagement {
     new PipelineElementConfigurationStep(storage).apply(pipeline, compactPipeline);
 
     return new PipelineVerificationHandlerV2(pipeline).makeModifiedPipeline();
+  }
+
+  public CompactPipeline convertPipeline(Pipeline pipeline) {
+    return new CompactPipeline(
+        pipeline.getElementId() != null ? pipeline.getElementId() : UUID.randomUUID().toString(),
+        pipeline.getName(),
+        pipeline.getDescription(),
+        new CompactPipelineConverter().convert(pipeline),
+        new CreateOptions(null, false)
+    );
   }
 
   private void applyPipelineBasics(CompactPipeline compactPipeline,

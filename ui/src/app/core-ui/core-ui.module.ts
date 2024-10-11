@@ -116,6 +116,9 @@ import { SingleMarkerMapComponent } from './single-marker-map/single-marker-map.
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { StaticTreeInputTextEditorComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input-text-editor/static-tree-input-text-editor.component';
 import { PipelineElementTemplateConfigItemComponent } from './pipeline-element-template-config/pipeline-element-template-config-item/pipeline-element-template-config-item.component';
+import { ConfigurationCodePanelComponent } from './configuration-code-panel/configuration-code-panel.component';
+import { JsonPrettyPrintPipe } from './pipes/json-pretty-print.pipe';
+import { YamlPrettyPrintPipe } from './pipes/yaml-pretty-print.pipe';
 
 @NgModule({
     imports: [
@@ -168,6 +171,7 @@ import { PipelineElementTemplateConfigItemComponent } from './pipeline-element-t
         LeafletModule,
     ],
     declarations: [
+        ConfigurationCodePanelComponent,
         DataDownloadDialogComponent,
         DateInputComponent,
         DisplayRecommendedPipe,
@@ -220,9 +224,12 @@ import { PipelineElementTemplateConfigItemComponent } from './pipeline-element-t
         StatusIndicatorComponent,
         MultiStepStatusIndicatorComponent,
         PipelineOperationStatusComponent,
+        JsonPrettyPrintPipe,
+        YamlPrettyPrintPipe,
     ],
     providers: [MatDatepickerModule, DisplayRecommendedPipe],
     exports: [
+        ConfigurationCodePanelComponent,
         DataDownloadDialogComponent,
         DateInputComponent,
         PipelineElementTemplateConfigComponent,
@@ -255,6 +262,8 @@ import { PipelineElementTemplateConfigItemComponent } from './pipeline-element-t
         MultiStepStatusIndicatorComponent,
         PipelineOperationStatusComponent,
         SingleMarkerMapComponent,
+        JsonPrettyPrintPipe,
+        YamlPrettyPrintPipe,
     ],
 })
 export class CoreUiModule {}

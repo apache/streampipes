@@ -31,6 +31,7 @@ import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -69,8 +70,8 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
   @PostMapping(
       consumes = {
           MediaType.APPLICATION_JSON_VALUE,
-          "application/yaml",
-          "application/yml"
+          SpMediaType.YML,
+          SpMediaType.YAML
       }
   )
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)

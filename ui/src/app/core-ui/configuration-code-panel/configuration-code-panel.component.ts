@@ -16,28 +16,17 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'sp-pipeline-details-toolbar',
-    templateUrl: './pipeline-details-toolbar.component.html',
+    selector: 'sp-configuration-code-panel',
+    templateUrl: './configuration-code-panel.component.html',
+    styleUrls: ['./configuration-code-panel.component.scss'],
 })
-export class PipelineDetailsToolbarComponent {
+export class ConfigurationCodePanelComponent {
     @Input()
-    autoRefresh: boolean;
+    configuration: any;
 
     @Input()
-    previewModeActive: boolean;
-
-    @Output()
-    autoRefreshChange = new EventEmitter<boolean>();
-
-    @Output()
-    reloadMetricsEmitter: EventEmitter<void> = new EventEmitter();
-
-    @Output()
-    togglePreviewEmitter: EventEmitter<void> = new EventEmitter();
-
-    @Output()
-    openCodeDialogEmitter: EventEmitter<void> = new EventEmitter();
+    maxHeight = '300px';
 }

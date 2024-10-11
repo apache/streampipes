@@ -23,7 +23,11 @@ import {
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
-import { Pipeline } from '@streampipes/platform-services';
+import {
+    CompactPipeline,
+    Pipeline,
+    PipelineService,
+} from '@streampipes/platform-services';
 import { PipelineStorageOptions } from '../../../model/editor.model';
 
 @Component({
@@ -44,7 +48,12 @@ export class SavePipelineSettingsComponent implements OnInit {
     @Input()
     currentPipelineName: string;
 
-    constructor(private shepherdService: ShepherdService) {}
+    compactPipeline: CompactPipeline;
+
+    constructor(
+        private shepherdService: ShepherdService,
+        private pipelineService: PipelineService,
+    ) {}
 
     ngOnInit() {
         this.submitPipelineForm.addControl(
@@ -73,6 +82,9 @@ export class SavePipelineSettingsComponent implements OnInit {
         ].valueChanges.subscribe(value => {
             this.pipeline.description = value;
         });
+        this.pipelineService
+            .convertToCompactPipeline(this.pipeline)
+            .subscribe(p => (this.compactPipeline = p));
     }
 
     triggerTutorial() {

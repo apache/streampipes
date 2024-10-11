@@ -27,7 +27,9 @@ import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
 import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
@@ -132,6 +134,10 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
       String value = getConfigValueAsString(oneOfStaticProperty);
       oneOfStaticProperty.getOptions().forEach(option ->
           option.setSelected(option.getName().equals(value)));
+      if (oneOfStaticProperty instanceof RuntimeResolvableOneOfStaticProperty
+          && oneOfStaticProperty.getOptions().isEmpty()) {
+        oneOfStaticProperty.setOptions(List.of(new Option(value, true)));
+      }
     }
   }
 
@@ -203,8 +209,12 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
   }
 
   @Override
-  public void visit(RuntimeResolvableGroupStaticProperty groupStaticProperty) {
-    // TODO not yet supported
+  public void visit(RuntimeResolvableGroupStaticProperty staticPropertyGroup) {
+    staticPropertyGroup.getStaticProperties().forEach(group -> {
+      PipelineElementTemplateVisitor visitor =
+          new PipelineElementTemplateVisitor(configs);
+      group.accept(visitor);
+    });
   }
 
 
@@ -219,10 +229,6 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
         .findFirst()
         .orElseThrow(() -> new IllegalArgumentException(String.format("No key found: %s", key)));
   }
-
-//  private List<Map<String, Object>> getConfigAsList(StaticProperty sp) {
-//    return getConfig(sp).
-//  }
 
   private boolean hasKeyCaseInsensitive(String internalName,
                                         Map<String, Object> templateConfig) {
@@ -289,29 +295,4 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
     }
     throw new IllegalArgumentException("Key '" + key + "' not found");
   }
-
-
-//  private String getAsString(StaticProperty sp) {
-//    return configs.get(sp.getInternalName()).toString();
-//  }
-//
-//  private boolean getAsBoolean(StaticProperty sp) {
-//    return Boolean.parseBoolean(configs.get(sp.getInternalName()).toString());
-//  }
-//
-//  private Map<String, Object> getAsMap(StaticProperty sp) {
-//    return (Map<String, Object>) configs.get(sp.getInternalName());
-//  }
-//
-//  private Map<String, Object> getAsMap(StaticProperty sp, String subkey) {
-//    return (Map<String, Object>) getAsMap(sp).get(subkey);
-//  }
-//
-//  private Map<String, Object> getAsMap(Map<String, Object> map, String key) {
-//    return (Map<String, Object>) map.get(key);
-//  }
-//
-//  private List<Map<String, Object>> getAsList(StaticProperty sp, String key) {
-//    return (List<Map<String, Object>>) getAsMap(sp).get(key);
-//  }
 }

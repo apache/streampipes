@@ -16,28 +16,15 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Injectable, Pipe, PipeTransform } from '@angular/core';
+import { parse, stringify } from 'yaml';
 
-@Component({
-    selector: 'sp-pipeline-details-toolbar',
-    templateUrl: './pipeline-details-toolbar.component.html',
+@Pipe({
+    name: 'yamlpretty',
 })
-export class PipelineDetailsToolbarComponent {
-    @Input()
-    autoRefresh: boolean;
-
-    @Input()
-    previewModeActive: boolean;
-
-    @Output()
-    autoRefreshChange = new EventEmitter<boolean>();
-
-    @Output()
-    reloadMetricsEmitter: EventEmitter<void> = new EventEmitter();
-
-    @Output()
-    togglePreviewEmitter: EventEmitter<void> = new EventEmitter();
-
-    @Output()
-    openCodeDialogEmitter: EventEmitter<void> = new EventEmitter();
+@Injectable({ providedIn: 'root' })
+export class YamlPrettyPrintPipe implements PipeTransform {
+    transform(obj: any) {
+        return stringify(obj).replace(/ /g, '&nbsp;').replace(/\n/g, '<br/>');
+    }
 }

@@ -36,9 +36,12 @@
 
 package org.apache.streampipes.model.connect.adapter.compact;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
 import java.util.List;
 import java.util.Map;
 
+@TsModel
 public record CompactAdapter(
     String id,
     String name,
