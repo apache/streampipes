@@ -103,6 +103,7 @@ import { AdapterStatusLightComponent } from './components/existing-adapters/adap
 import { SpAdapterDeploymentSettingsComponent } from './components/adapter-configuration/adapter-settings/adapter-deployment-settings/adapter-deployment-settings.component';
 import { SpAdapterDocumentationDialogComponent } from './dialog/adapter-documentation/adapter-documentation-dialog.component';
 import { AdapterDetailsDataComponent } from './components/adapter-details/adapter-details-data/adapter-details-data.component';
+import { EditRegexTransformationComponent } from './dialog/edit-event-property/components/edit-regex-transformation/edit-regex-transformation.component';
 import { AdapterCodePanelComponent } from './components/adapter-code-panel/adapter-code-panel.component';
 import { AdapterDetailsCodeComponent } from './components/adapter-details/adapter-details-code/adapter-details-code.component';
 
@@ -211,6 +212,7 @@ import { AdapterDetailsCodeComponent } from './components/adapter-details/adapte
         DeleteAdapterDialogComponent,
         EventSchemaComponent,
         EditEventPropertyComponent,
+        EditRegexTransformationComponent,
         EventPropertyRowComponent,
         EditUnitTransformationComponent,
         EditSchemaTransformationComponent,

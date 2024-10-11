@@ -18,11 +18,6 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
-import org.apache.streampipes.model.schema.EventSchema;
-
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,126 +25,114 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CorrectionValueTest {
 
   private Map<String, Object> event;
 
-  private final String propertyNameBasicValue = "basicValue";
-  private final String propertyNameOtherValue = "otherValue";
+  private final String doubleProperty = "basicValue";
+  private final String stringProperty = "otherValue";
 
   @BeforeEach
   public void setUp() {
-
-    EventSchema eventSchema = new EventSchema();
-    EventProperty eventProperty = new EventPropertyPrimitive();
-    eventProperty.setLabel(propertyNameBasicValue);
-    eventProperty.setRuntimeName(propertyNameBasicValue);
-    eventSchema.addEventProperty(eventProperty);
-
-    EventProperty eventPropertyOther = new EventPropertyPrimitive();
-    eventPropertyOther.setLabel(propertyNameBasicValue);
-    eventPropertyOther.setRuntimeName(propertyNameBasicValue);
-    eventSchema.addEventProperty(eventPropertyOther);
-
     event = new HashMap<>();
-    event.put(propertyNameBasicValue, 100.0);
-    event.put(propertyNameOtherValue, "Hello");
+    event.put(doubleProperty, 100.0);
+    event.put(stringProperty, "Hello");
   }
 
   @Test
   public void testAdd() {
 
     var correctionRule = new CorrectionValueTransformationRule(
-         List.of(propertyNameBasicValue),
+         List.of(doubleProperty),
          10.0,
          "ADD"
      );
 
     var resultEvent = correctionRule.apply(event);
-    Assertions.assertNotNull(resultEvent);
-    Assertions.assertEquals(110.0, resultEvent.get(propertyNameBasicValue));
+    assertNotNull(resultEvent);
+    assertEquals(110.0, resultEvent.get(doubleProperty));
   }
 
   @Test
   public void testSubtract() {
 
     var correctionRule = new CorrectionValueTransformationRule(
-        List.of(propertyNameBasicValue),
+        List.of(doubleProperty),
         10.0,
         "SUBTRACT"
     );
     var resultEvent = correctionRule.apply(event);
-    Assertions.assertNotNull(resultEvent);
-    Assertions.assertEquals(90.0, resultEvent.get(propertyNameBasicValue));
+    assertNotNull(resultEvent);
+    assertEquals(90.0, resultEvent.get(doubleProperty));
   }
 
   @Test
   public void testMultiply() {
 
     var correctionRule = new CorrectionValueTransformationRule(
-        List.of(propertyNameBasicValue),
+        List.of(doubleProperty),
         1.5,
         "MULTIPLY"
     );
     var resultEvent = correctionRule.apply(event);
-    Assertions.assertNotNull(resultEvent);
-    Assertions.assertEquals(150.0, resultEvent.get(propertyNameBasicValue));
+    assertNotNull(resultEvent);
+    assertEquals(150.0, resultEvent.get(doubleProperty));
   }
 
   @Test
   public void testDivide() {
 
     var correctionRule = new CorrectionValueTransformationRule(
-        List.of(propertyNameBasicValue),
+        List.of(doubleProperty),
         5,
         "DIVIDE"
     );
     var resultEvent = correctionRule.apply(event);
-    Assertions.assertNotNull(resultEvent);
-    Assertions.assertEquals(20.0, resultEvent.get(propertyNameBasicValue));
+    assertNotNull(resultEvent);
+    assertEquals(20.0, resultEvent.get(doubleProperty));
   }
 
   @Test
   public void testDivideByZero() {
 
     var correctionRule = new CorrectionValueTransformationRule(
-        List.of(propertyNameBasicValue),
+        List.of(doubleProperty),
         0.0,
         "DIVIDE"
     );
     var resultEvent = correctionRule.apply(event);
-    Assertions.assertNotNull(resultEvent);
-    Assertions.assertEquals(Double.POSITIVE_INFINITY, resultEvent.get(propertyNameBasicValue));
+    assertNotNull(resultEvent);
+    assertEquals(Double.POSITIVE_INFINITY, resultEvent.get(doubleProperty));
   }
 
   @Test
   public void testNonNumericValue() {
 
     var correctionRule = new CorrectionValueTransformationRule(
-        List.of(propertyNameOtherValue),
+        List.of(stringProperty),
         10.0,
         "ADD"
     );
     assertThrows(
         RuntimeException.class,
-        () -> correctionRule.apply(event).get(propertyNameOtherValue)
+        () -> correctionRule.apply(event).get(stringProperty)
     );
-
-
   }
 
   @Test
   public void testUnsupportedOperation() {
 
     var correctionRule = new CorrectionValueTransformationRule(
-        List.of(propertyNameBasicValue),
+        List.of(doubleProperty),
         10.0,
         "TEST"
     );
     var resultEvent = correctionRule.apply(event);
-    Assertions.assertNotNull(resultEvent);
-    Assertions.assertEquals(100.0, resultEvent.get(propertyNameBasicValue));
+    assertNotNull(resultEvent);
+    assertEquals(100.0, resultEvent.get(doubleProperty));
   }
 }

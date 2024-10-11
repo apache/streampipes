@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-09-08 22:18:46.
+// Generated using typescript-generator version 3.2.1263 on 2024-10-07 13:58:29.
 
 import { Storable } from './streampipes-model';
 

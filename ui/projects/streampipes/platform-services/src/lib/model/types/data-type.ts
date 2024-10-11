@@ -41,4 +41,8 @@ export class DataType {
     public static isBooleanType(datatype: string): boolean {
         return datatype === DataType.BOOLEAN;
     }
+
+    public static isStringType(datatype: string): boolean {
+        return datatype === DataType.STRING;
+    }
 }

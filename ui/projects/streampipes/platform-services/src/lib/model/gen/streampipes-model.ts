@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-10-08 10:25:48.
+// Generated using typescript-generator version 3.2.1263 on 2024-10-11 10:41:46.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -208,6 +208,7 @@ export class TransformationRuleDescription {
         | 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription'
+        | 'org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription'
@@ -260,6 +261,8 @@ export class TransformationRuleDescription {
                 return DeleteRuleDescription.fromData(data);
             case 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription':
                 return RenameRuleDescription.fromData(data);
+            case 'org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription':
+                return RegexTransformationRuleDescription.fromData(data);
             case 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription':
                 return MoveRuleDescription.fromData(data);
             case 'org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription':
@@ -281,6 +284,7 @@ export class ValueTransformationRuleDescription extends TransformationRuleDescri
         | 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription'
+        | 'org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription';
 
@@ -315,6 +319,8 @@ export class ValueTransformationRuleDescription extends TransformationRuleDescri
                 return CorrectionValueTransformationRuleDescription.fromData(
                     data,
                 );
+            case 'org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription':
+                return RegexTransformationRuleDescription.fromData(data);
         }
     }
 }
@@ -3221,6 +3227,30 @@ export class QuantitativeValue extends ValueSpecification {
     }
 }
 
+export class RegexTransformationRuleDescription extends ValueTransformationRuleDescription {
+    '@class': 'org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription';
+    'regex': string;
+    'replaceAll': boolean;
+    'replaceWith': string;
+    'runtimeKey': string;
+
+    static 'fromData'(
+        data: RegexTransformationRuleDescription,
+        target?: RegexTransformationRuleDescription,
+    ): RegexTransformationRuleDescription {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new RegexTransformationRuleDescription();
+        super.fromData(data, instance);
+        instance.regex = data.regex;
+        instance.replaceAll = data.replaceAll;
+        instance.replaceWith = data.replaceWith;
+        instance.runtimeKey = data.runtimeKey;
+        return instance;
+    }
+}
+
 export class RemoveDuplicatesTransformationRuleDescription extends StreamTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription';
     'filterTimeWindow': string;
@@ -4260,6 +4290,7 @@ export type TransformationRuleDescriptionUnion =
     | CreateNestedRuleDescription
     | DeleteRuleDescription
     | RenameRuleDescription
+    | RegexTransformationRuleDescription
     | MoveRuleDescription
     | ChangeDatatypeTransformationRuleDescription
     | CorrectionValueTransformationRuleDescription;
@@ -4280,7 +4311,8 @@ export type ValueTransformationRuleDescriptionUnion =
     | AddValueTransformationRuleDescription
     | TimestampTranfsformationRuleDescription
     | UnitTransformRuleDescription
-    | CorrectionValueTransformationRuleDescription;
+    | CorrectionValueTransformationRuleDescription
+    | RegexTransformationRuleDescription;
 
 function __getCopyArrayFn<T>(itemCopyFn: (item: T) => T): (array: T[]) => T[] {
     return (array: T[]) => __copyArray(array, itemCopyFn);

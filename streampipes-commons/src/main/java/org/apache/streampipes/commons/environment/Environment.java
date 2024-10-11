@@ -156,4 +156,6 @@ public interface Environment {
 
   StringEnvironmentVariable getCustomServiceTags();
 
+  StringEnvironmentVariable getAllowedUploadFiletypes();
+
 }

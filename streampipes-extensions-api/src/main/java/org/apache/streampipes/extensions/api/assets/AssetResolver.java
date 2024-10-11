@@ -23,8 +23,18 @@ import java.util.Properties;
 
 public interface AssetResolver {
 
-  byte[] getAsset(String assetName) throws IOException;
+  default byte[] getAsset(String assetName) throws IOException {
+    return getAsset(this.getClass().getClassLoader(), assetName);
+  }
 
-  Properties getLocale(String localeName) throws IOException;
+  default Properties getLocale(String localeName) throws IOException {
+    return getLocale(this.getClass().getClassLoader(), localeName);
+  }
+
+  byte[] getAsset(ClassLoader classLoader,
+                  String assetName) throws IOException;
+
+  Properties getLocale(ClassLoader classLoader,
+                       String localeName) throws IOException;
 
 }

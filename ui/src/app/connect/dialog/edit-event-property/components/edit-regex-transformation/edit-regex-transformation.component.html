@@ -1,0 +1,52 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="column" fxLayoutAlign="start">
+    <div fxFlex="50" fxLayoutAlign="start center">
+        <mat-form-field class="w-100" color="accent">
+            <input
+                matInput
+                type="text"
+                name="regex"
+                placeholder="Regular expression"
+                data-cy="regex-value"
+                [(ngModel)]="cachedProperty.additionalMetadata.regex"
+            />
+        </mat-form-field>
+    </div>
+    <div fxFlex="50" fxLayoutAlign="start center">
+        <mat-form-field class="w-100" color="accent">
+            <input
+                matInput
+                type="text"
+                name="replaceWith"
+                placeholder="Replace with"
+                data-cy="regex-replace-with-value"
+                [(ngModel)]="cachedProperty.additionalMetadata.replaceWith"
+            />
+        </mat-form-field>
+    </div>
+    <div fxFlex="50" fxLayoutAlign="start center">
+        <mat-checkbox
+            data-cy="regex-replace-all-value"
+            [(ngModel)]="cachedProperty.additionalMetadata.replaceAll"
+        >
+            <span>Replace All Occurrences</span>
+        </mat-checkbox>
+    </div>
+</div>

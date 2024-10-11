@@ -18,8 +18,10 @@
 
 package org.apache.streampipes.smp.generator;
 
+import org.apache.streampipes.extensions.api.assets.DefaultAssetResolver;
 import org.apache.streampipes.smp.model.AssetModel;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -38,8 +40,13 @@ public abstract class ResourceGenerator {
     this.targetPath = targetPath;
   }
 
-  protected InputStream getResourceInputStream(String resourceName) {
-    return loader.getResourceAsStream(extensionsElement.getAppId() + "/" + resourceName);
+  protected InputStream getResourceInputStream(String resourceName) throws IOException {
+    if (extensionsElement.getAssetResolver() != null
+        && !(extensionsElement.getAssetResolver().getClass() == DefaultAssetResolver.class)) {
+      return new ByteArrayInputStream(extensionsElement.getAssetResolver().getAsset(loader, resourceName));
+    } else {
+      return loader.getResourceAsStream(extensionsElement.getAppId() + "/" + resourceName);
+    }
   }
 
   public abstract void generate() throws IOException;

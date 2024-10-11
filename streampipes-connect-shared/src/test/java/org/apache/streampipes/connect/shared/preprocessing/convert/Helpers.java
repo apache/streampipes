@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.shared.preprocessing.convert;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyNested;
@@ -34,7 +35,8 @@ import java.util.List;
 public class Helpers {
 
   public static String getUnit(EventProperty eventProperty) {
-    return ((EventPropertyPrimitive) eventProperty).getMeasurementUnit().toString();
+    return ((EventPropertyPrimitive) eventProperty).getMeasurementUnit()
+                                                   .toString();
   }
 
   public static List<EventProperty> makeSimpleProperties(boolean addTimestamp) {
@@ -67,16 +69,35 @@ public class Helpers {
     return rule;
   }
 
-  public static MoveRuleDescription makeMoveTransformationRule(String runtimeKey,
-                                                         String newRuntimeKey) {
+  public static RegexTransformationRuleDescription makeRegexTransformationRule(
+      String runtimeKey,
+      String regex,
+      String replaceWith,
+      boolean replaceAll
+  ) {
+    var rule = new RegexTransformationRuleDescription();
+    rule.setRuntimeKey(runtimeKey);
+    rule.setRegex(regex);
+    rule.setReplaceWith(replaceWith);
+    rule.setReplaceAll(replaceAll);
+
+    return rule;
+  }
+
+  public static MoveRuleDescription makeMoveTransformationRule(
+      String runtimeKey,
+      String newRuntimeKey
+  ) {
     var rule = new MoveRuleDescription();
     rule.setOldRuntimeKey(runtimeKey);
     rule.setNewRuntimeKey(newRuntimeKey);
     return rule;
   }
 
-  public static RenameRuleDescription makeRenameTransformationRule(String runtimeKey,
-                                                             String newRuntimeName) {
+  public static RenameRuleDescription makeRenameTransformationRule(
+      String runtimeKey,
+      String newRuntimeName
+  ) {
     var rule = new RenameRuleDescription();
     rule.setOldRuntimeKey(runtimeKey);
     rule.setNewRuntimeKey(newRuntimeName);

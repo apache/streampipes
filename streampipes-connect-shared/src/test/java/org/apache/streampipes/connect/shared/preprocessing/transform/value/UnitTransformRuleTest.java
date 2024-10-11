@@ -18,134 +18,122 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventPropertyList;
-import org.apache.streampipes.model.schema.EventPropertyNested;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
-import org.apache.streampipes.model.schema.EventSchema;
-
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("unchecked")
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class UnitTransformRuleTest {
+
+  private static final String PARENT_PROPERTY = "parentProperty";
+  private static final String CHILD_PROPERTY = "childProperty";
+  private static final String PROPERTY_ONE = "property1";
+  private static final String PROPERTY_TWO = "property2";
+
+  private static final String UNIT_DEGREE_CELSIUS = "http://qudt.org/vocab/unit#DegreeCelsius";
+  private static final String UNIT_KELVIN = "http://qudt.org/vocab/unit#Kelvin";
 
   @Test
   public void transformList() {
-    EventSchema eventSchema = new EventSchema();
-    EventPropertyList eventPropertyList = new EventPropertyList();
-    eventPropertyList.setRuntimeName("list");
-    EventProperty eventPropertyValue = new EventPropertyPrimitive();
-    eventPropertyValue.setLabel("value");
-    eventPropertyValue.setRuntimeName("value");
-    eventPropertyList.setEventProperty(eventPropertyValue);
-    eventSchema.setEventProperties(Collections.singletonList(eventPropertyList));
-
     Map<String, Object> event = new HashMap<>();
     Map<String, Object> subEvent = new HashMap<>();
-    subEvent.put("value", 0.0);
-    event.put("list", subEvent);
+    subEvent.put(CHILD_PROPERTY, 0.0);
+    event.put(PARENT_PROPERTY, subEvent);
 
-    List<String> keys = new ArrayList<>();
-    keys.add("list");
-    keys.add("value");
-
-    UnitTransformationRule unitTransformationRule = new UnitTransformationRule(keys,
-        "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
+    var unitTransformationRule = new UnitTransformationRule(
+        List.of(PARENT_PROPERTY, CHILD_PROPERTY),
+        UNIT_DEGREE_CELSIUS,
+        UNIT_KELVIN
+    );
 
     var result = unitTransformationRule.apply(event);
 
-    Assertions.assertEquals(1,
-                            result.keySet().size());
-    Assertions.assertEquals(273.15, ((Map<String, Object>) result.get(eventPropertyList.getRuntimeName()))
-        .get(eventPropertyValue.getRuntimeName()));
+    assertEquals(
+        1,
+        result.keySet()
+              .size()
+    );
+
+    assertEquals(273.15, ((Map<String, Object>) result.get(PARENT_PROPERTY))
+        .get(CHILD_PROPERTY));
   }
 
 
   @Test
   public void transformNested() {
-    EventSchema eventSchema = new EventSchema();
-    EventPropertyNested eventPropertyMainKey = new EventPropertyNested();
-    eventPropertyMainKey.setLabel("mainKey");
-    eventPropertyMainKey.setRuntimeName("mainKey");
-    EventProperty eventPropertyValue = new EventPropertyPrimitive();
-    eventPropertyValue.setLabel("value");
-    eventPropertyValue.setRuntimeName("value");
-    eventPropertyMainKey.setEventProperties(Collections.singletonList(eventPropertyValue));
-    eventSchema.setEventProperties(Collections.singletonList(eventPropertyMainKey));
-
     Map<String, Object> event = new HashMap<>();
     Map<String, Object> subEvent = new HashMap<>();
-    subEvent.put("value", 10.0);
-    event.put("mainKey", subEvent);
+    subEvent.put(CHILD_PROPERTY, 10.0);
+    event.put(PARENT_PROPERTY, subEvent);
 
-    List<String> keys = new ArrayList<>();
-    keys.add("mainKey");
-    keys.add("value");
-
-    UnitTransformationRule unitTransformationRule = new UnitTransformationRule(keys,
-        "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
+    var unitTransformationRule = new UnitTransformationRule(
+        List.of(PARENT_PROPERTY, CHILD_PROPERTY),
+        UNIT_DEGREE_CELSIUS,
+        UNIT_KELVIN
+    );
 
     var result = unitTransformationRule.apply(event);
 
-    Assertions.assertEquals(1,
-                            result.keySet().size());
-    Assertions.assertEquals(283.15, ((Map<String, Object>) result.get(eventPropertyMainKey.getRuntimeName()))
-        .get(eventPropertyValue.getRuntimeName()));
+    assertEquals(
+        1,
+        result.keySet()
+              .size()
+    );
+    assertEquals(283.15, ((Map<String, Object>) result.get(PARENT_PROPERTY))
+        .get(CHILD_PROPERTY));
   }
 
 
   @Test
   public void transformMultiEvent() {
-    EventSchema eventSchema = new EventSchema();
-    EventProperty eventPropertyValue1 = new EventPropertyPrimitive();
-    eventPropertyValue1.setLabel("value1");
-    eventPropertyValue1.setRuntimeName("value1");
-    EventProperty eventPropertyValue2 = new EventPropertyPrimitive();
-    eventPropertyValue2.setLabel("value2");
-    eventPropertyValue2.setRuntimeName("value2");
-    eventSchema.addEventProperty(eventPropertyValue1);
-    eventSchema.addEventProperty(eventPropertyValue2);
 
-    List<String> keys = new ArrayList<>();
-    keys.add("value2");
+    var unitTransformationRule = new UnitTransformationRule(
+        List.of(PROPERTY_TWO),
+        UNIT_DEGREE_CELSIUS,
+        UNIT_KELVIN
+    );
 
-    UnitTransformationRule unitTransformationRule = new UnitTransformationRule(keys,
-        "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
-    Map<String, Object> event = new HashMap<>();
-    event.put("value1", 0.0);
-    event.put("value2", 10.0);
+    Map<String, Object> event = getEventWithTwoProperties(0.0, 10.0);
 
     var result = unitTransformationRule.apply(event);
-    Assertions.assertEquals(2,
-                            result.keySet().size());
-    Assertions.assertEquals(283.15, result.get(eventPropertyValue2.getLabel()));
+    assertEquals(
+        2,
+        result.keySet()
+              .size()
+    );
+    assertEquals(283.15, result.get(PROPERTY_TWO));
 
 
-    event = new HashMap<>();
-    event.put("value1", 20.0);
-    event.put("value2", 20.0);
-
-    result = unitTransformationRule.apply(event);
-    Assertions.assertEquals(2,
-                            result.keySet().size());
-    Assertions.assertEquals(293.15, result.get(eventPropertyValue2.getRuntimeName()));
-
-
-    event = new HashMap<>();
-    event.put("value1", 0.0);
-    event.put("value2", 0.0);
+    event = getEventWithTwoProperties(20.0, 20.0);
 
     result = unitTransformationRule.apply(event);
-    Assertions.assertEquals(2,
-                            result.keySet().size());
-    Assertions.assertEquals(273.15, result.get(eventPropertyValue2.getRuntimeName()));
+    assertEquals(
+        2,
+        result.keySet()
+              .size()
+    );
+    assertEquals(293.15, result.get(PROPERTY_TWO));
+
+
+    event = getEventWithTwoProperties(0.0, 0.0);
+
+    result = unitTransformationRule.apply(event);
+    assertEquals(
+        2,
+        result.keySet()
+              .size()
+    );
+    assertEquals(273.15, result.get(PROPERTY_TWO));
+  }
+
+  private Map<String, Object> getEventWithTwoProperties(double value1, double value2) {
+    Map<String, Object> event = new HashMap<>();
+    event.put(PROPERTY_ONE, value1);
+    event.put(PROPERTY_TWO, value2);
+    return event;
   }
 
 }
