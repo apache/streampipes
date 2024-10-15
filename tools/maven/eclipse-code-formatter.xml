@@ -20,34 +20,65 @@
 <profiles version="12">
     <profile>
         <setting id="org.eclipse.jdt.core.formatter.tabulation.char" value="space"/>
+        <!-- Specifies whether tabs or spaces are used for indentation. "space" means spaces will be used. -->
         <setting id="org.eclipse.jdt.core.formatter.tabulation.size" value="2"/>
+        <!-- Sets the number of spaces for each indentation level. 2 spaces are used per indentation. -->
         <setting id="org.eclipse.jdt.core.formatter.lineSplit" value="120"/>
+        <!-- Maximum line length before the formatter wraps code. Lines longer than 120 characters will be split. -->
         <setting id="org.eclipse.jdt.core.formatter.comment.line_length" value="120"/>
+        <!-- Maximum line length for comments. Comments longer than 120 characters will be wrapped. -->
         <setting id="org.eclipse.jdt.core.formatter.use_on_off_tags" value="false"/>
+        <!-- Determines whether the formatter should recognize special on/off tags in the code. False disables this feature. -->
         <setting id="org.eclipse.jdt.core.formatter.brace_position_for_type_declaration" value="this_line"/>
+        <!-- Controls the position of braces for type declarations. "this_line" places the brace on the same line as the type declaration. -->
         <setting id="org.eclipse.jdt.core.formatter.brace_position_for_method_declaration" value="this_line"/>
+        <!-- Controls the position of braces for method declarations. "this_line" places the brace on the same line as the method declaration. -->
         <setting id="org.eclipse.jdt.core.formatter.brace_position_for_block" value="this_line"/>
+        <!-- Controls the position of braces for blocks of code. "this_line" places the brace on the same line as the block. -->
         <setting id="org.eclipse.jdt.core.formatter.brace_position_for_array_initializer" value="this_line"/>
+        <!-- Controls the position of braces for array initializers. "this_line" places the brace on the same line. -->
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_method_invocation_arguments" value="do not insert"/>
+        <!-- Specifies whether a space is inserted before commas in method invocation arguments. No space is inserted. -->
         <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_method_invocation_arguments" value="insert"/>
+        <!-- Specifies whether a space is inserted after commas in method invocation arguments. A space is inserted. -->
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_method_declaration" value="do not insert"/>
+        <!-- Specifies whether a space is inserted before the opening parenthesis in method declarations. No space is inserted. -->
         <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_method_declaration" value="do not insert"/>
+        <!-- Specifies whether a space is inserted after the opening parenthesis in method declarations. No space is inserted. -->
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_method_declaration" value="do not insert"/>
+        <!-- Specifies whether a space is inserted before the closing parenthesis in method declarations. No space is inserted. -->
         <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_constructor_declaration_parameters" value="insert"/>
+        <!-- Specifies whether a space is inserted after commas in constructor declaration parameters. A space is inserted. -->
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_array_initializer" value="insert"/>
+        <!-- Specifies whether a space is inserted before the opening brace in array initializers. A space is inserted. -->
         <setting id="org.eclipse.jdt.core.formatter.comment.format_javadoc_comments" value="true"/>
+        <!-- Enables formatting for Javadoc comments. If true, the formatter will reformat Javadoc comments. -->
         <setting id="org.eclipse.jdt.core.formatter.comment.format_block_comments" value="true"/>
+        <!-- Enables formatting for block comments. If true, the formatter will reformat block comments. -->
         <setting id="org.eclipse.jdt.core.formatter.comment.new_lines_at_javadoc_boundaries" value="true"/>
+        <!-- Specifies whether new lines should be inserted at the boundaries of Javadoc comments. -->
         <setting id="org.eclipse.jdt.core.formatter.indentation.size" value="2"/>
+        <!-- Defines the size of indentation. This value is set to 2 spaces. -->
         <setting id="org.eclipse.jdt.core.formatter.continuation_indentation" value="4"/>
+        <!-- Sets the number of spaces for continuation lines (lines that follow after a line break in long statements). -->
         <setting id="org.eclipse.jdt.core.formatter.array_initializer_indent" value="2"/>
+        <!-- Specifies the indentation level for array initializers. This is set to 2 spaces. -->
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_brace_in_array_initializer" value="do not insert"/>
+        <!-- Specifies whether a space is inserted before the closing brace in array initializers. No space is inserted. -->
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_type_declaration" value="insert"/>
+        <!-- Specifies whether a space is inserted before the opening brace in type declarations. A space is inserted. -->
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_lambda_arrow" value="insert"/>
+        <!-- Specifies whether a space is inserted before the lambda arrow (->). A space is inserted. -->
         <setting id="org.eclipse.jdt.core.formatter.insert_space_after_lambda_arrow" value="insert"/>
+        <!-- Specifies whether a space is inserted after the lambda arrow (->). A space is inserted. -->
         <setting id="org.eclipse.jdt.core.formatter.comment.format_line_comments" value="false"/>
+        <!-- Disables formatting for line comments. If false, line comments will not be reformatted. -->
         <setting id="org.eclipse.jdt.core.formatter.comment.format_block_comments" value="false"/>
+        <!-- Disables formatting for block comments. If false, block comments will not be reformatted. -->
         <setting id="org.eclipse.jdt.core.formatter.comment.format_javadoc_comments" value="false"/>
-        <setting id="org.eclipse.jdt.core.formatter.comment.line_length" value="999"/>
+        <!-- Disables formatting for Javadoc comments. If false, Javadoc comments will not be reformatted. -->
+        <setting id="org.eclipse.jdt.core.formatter.comment.clear_blank_lines_in_block_comment" value="false"/>
+        <!-- Specifies whether blank lines in block comments should be removed. False keeps the blank lines. -->
+
     </profile>
 </profiles>
