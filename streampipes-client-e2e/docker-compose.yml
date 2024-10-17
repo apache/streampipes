@@ -1,0 +1,148 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# ============================================================
+# NOTICE
+# ============================================================
+# This docker-compose file is for validating releases only. To use StreamPipes, use the installation instructions
+# provided on https://streampipes.apache.org/download
+#
+
+version: "3.8"
+
+# global logging
+x-logging: &default-logging
+  options:
+    max-size: "12m"
+    max-file: "5"
+  driver: json-file
+
+services:
+  #### apache/streampipes
+  backend:
+    build:
+      context: ../streampipes-service-core
+      dockerfile: Dockerfile
+    image: streampipes_backend:release-validation
+    ports:
+      - "8030:8030"
+    depends_on:
+      - couchdb
+    volumes:
+      - backend:/root/.streampipes
+      - files:/spImages
+    logging: *default-logging
+    networks:
+      spnet:
+
+  extensions-all-jvm:
+    build:
+      context: ../streampipes-extensions/streampipes-extensions-all-jvm
+      dockerfile: Dockerfile
+    image: streampipes_pipeline-elements-all-jvm:release-validation
+    volumes:
+      - files:/spImages
+    logging: *default-logging
+    networks:
+      spnet:
+
+  couchdb:
+    image: couchdb:2.3.1
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=admin
+    logging: *default-logging
+    volumes:
+      - couchdb:/opt/couchdb/data
+    networks:
+      spnet:
+
+  kafka:
+    image: fogsyio/kafka:2.2.0
+    hostname: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      # see: https://github.com/confluentinc/schema-registry/issues/648
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - kafka:/kafka
+      - /var/run/docker.sock:/var/run/docker.sock
+    logging: *default-logging
+    networks:
+      spnet:
+
+  zookeeper:
+    image: fogsyio/zookeeper:3.4.13
+    logging: *default-logging
+    volumes:
+      - zookeeper:/opt/zookeeper-3.4.13
+    networks:
+      spnet:
+
+  influxdb:
+    image: influxdb:2.6
+    environment:
+      - INFLUXDB_DATA_ENGINE=tsm1
+      - INFLUXDB_REPORTING_DISABLED=false
+      - INFLUXDB_ADMIN_ENABLED=true
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=sp-admin
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=sp-admin
+      - DOCKER_INFLUXDB_INIT_ORG=sp
+      - DOCKER_INFLUXDB_INIT_BUCKET=sp
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+    volumes:
+      - influxdb:/var/lib/influxdb
+      - influxdb2:/var/lib/influxdb2
+    logging: *default-logging
+    networks:
+      spnet:
+
+  mosquitto:
+    image: eclipse-mosquitto:1.5.4
+    logging: *default-logging
+    networks:
+      spnet:
+
+  opcua:
+    image: mcr.microsoft.com/iotedge/opc-plc
+    logging: *default-logging
+    command: --ut=true
+    networks:
+      spnet:
+
+volumes:
+  kafka:
+  files:
+  couchdb:
+  zookeeper:
+  influxdb:
+  influxdb2:
+  backend:
+  nginx:
+
+networks:
+  spnet:
+    name: spnet
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.31.0.0/16

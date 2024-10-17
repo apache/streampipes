@@ -126,7 +126,7 @@ func (a *Adapter) CreateAdapter(adapters adapter.AdapterDescription) error {
 	if err != nil {
 		return err
 	}
-	response, err := a.executeRequest("PUT", endPointUrl, body)
+	response, err := a.executeRequest("POST", endPointUrl, body)
 	if err != nil {
 		return err
 	}
