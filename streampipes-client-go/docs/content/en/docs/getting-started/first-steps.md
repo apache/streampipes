@@ -5,21 +5,21 @@ description: >
   First Steps to use StreamPipes Go.
 ---
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
+  // Licensed to the Apache Software Foundation (ASF) under one or more
+  // contributor license agreements.  See the NOTICE file distributed with
+  // this work for additional information regarding copyright ownership.
+  // The ASF licenses this file to You under the Apache License, Version 2.0
+  // (the "License"); you may not use this file except in compliance with
+  // the License.  You may obtain a copy of the License at
+  //
+  //    http://www.apache.org/licenses/LICENSE-2.0
+  //
+  // Unless required by applicable law or agreed to in writing, software
+  // distributed under the License is distributed on an "AS IS" BASIS,
+  // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  // See the License for the specific language governing permissions and
+  // limitations under the License.
+  //
   -->
 
 {{% pageinfo %}}
@@ -47,3 +47,14 @@ Access to a running instance of Apache StreamPipes is required.
 If you do not have it set up yet, please refer to the [Apache StreamPipes installation guide](https://streampipes.apache.org/docs/try-installation/) for detailed instructions on how to install and configure it on your system.
 
 Once these requirements are met, you are ready to proceed with the next step Quickstart in the setup process!
+
+## 3. Installation StreamPipes Go library
+
+The StreamPipes Go library is meant to work with Go 1.21 and above. You can install the latest development version from GitHub, as so:
+
+```bash
+go get https://github.com/apache/streampipes
+// if you want to have the current development state you can also execute
+go get https://github.com/apache/streampipes/streampipes-client-go
+// the corresponding documentation can be found here: https://streampipes.apache.org/docs/docs/python/dev/
+```
