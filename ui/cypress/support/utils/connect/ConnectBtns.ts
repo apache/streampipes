@@ -69,6 +69,10 @@ export class ConnectBtns {
         return cy.dataCy('stop-all-adapters-btn');
     }
 
+    public static showCodeCheckbox() {
+        return cy.dataCy('show-code-checkbox');
+    }
+
     // ========================================================================
 
     // =====================  Event Schema buttons  ==========================
