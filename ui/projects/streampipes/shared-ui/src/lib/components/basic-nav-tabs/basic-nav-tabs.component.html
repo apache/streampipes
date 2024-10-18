@@ -42,6 +42,7 @@
                     *ngFor="let item of spNavigationItems"
                     (click)="navigateTo(item)"
                     [active]="activeLink === item.itemId"
+                    [attr.data-cy]="'tab-' + item.itemTitle"
                 >
                     <span>{{ item.itemTitle }}</span>
                 </a>

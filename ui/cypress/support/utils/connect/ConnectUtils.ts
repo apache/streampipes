@@ -76,9 +76,11 @@ export class ConnectUtils {
             );
         }
 
-        ConnectEventSchemaUtils.markPropertyAsTimestamp(
-            adapterConfiguration.timestampProperty,
-        );
+        if (adapterConfiguration.timestampProperty) {
+            ConnectEventSchemaUtils.markPropertyAsTimestamp(
+                adapterConfiguration.timestampProperty,
+            );
+        }
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
     }

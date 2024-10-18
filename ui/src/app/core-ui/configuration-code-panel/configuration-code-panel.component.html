@@ -22,6 +22,7 @@
             [innerHTML]="configuration | yamlpretty"
             class="preview-text"
             [ngStyle]="{ maxHeight: maxHeight }"
+            data-cy="yaml-configuration"
         ></pre>
     </mat-tab>
     <mat-tab label="JSON">
@@ -29,6 +30,7 @@
             [innerHTML]="configuration | jsonpretty"
             class="preview-text"
             [ngStyle]="{ maxHeight: maxHeight }"
+            data-cy="json-configuration"
         ></pre>
     </mat-tab>
 </mat-tab-group>
