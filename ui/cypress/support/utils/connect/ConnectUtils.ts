@@ -417,4 +417,9 @@ export class ConnectUtils {
         ConnectBtns.startAdapter().should('have.length', 1);
         ConnectBtns.stopAdapter().should('have.length', 0);
     }
+
+    public static checkAmountOfAdapters(amount: number) {
+        ConnectUtils.goToConnect();
+        ConnectBtns.deleteAdapter().should('have.length', amount);
+    }
 }
