@@ -323,4 +323,9 @@ public class DefaultEnvironment implements Environment {
     return new StringEnvironmentVariable(Envs.SP_SERVICE_TAGS);
   }
 
+  @Override
+  public StringEnvironmentVariable getAllowedUploadFiletypes() {
+    return new StringEnvironmentVariable(Envs.SP_ALLOWED_UPLOAD_FILETYPES);
+  }
+
 }

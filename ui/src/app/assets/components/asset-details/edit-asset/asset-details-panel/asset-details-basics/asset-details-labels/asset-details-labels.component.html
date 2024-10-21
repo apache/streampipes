@@ -17,42 +17,67 @@
   -->
 
 <div *ngIf="editMode">
-    <mat-form-field class="w-100" *ngIf="labelsAvailable" color="accent">
-        <mat-chip-grid #chipGrid aria-label="Labels">
-            <mat-chip-row
-                (removed)="remove(label)"
-                *ngFor="let label of labels"
-                [ngStyle]="{ background: label.color }"
+    <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start center">
+        <div fxFlex fxLayoutAlign="start center">
+            <mat-form-field
+                class="w-100"
+                *ngIf="labelsAvailable"
+                color="accent"
+                subscriptSizing="dynamic"
+                [disabled]="allLabels.length === 0"
             >
-                <span [ngStyle]="{ color: labelTextColors[label._id] }">{{
-                    label.label
-                }}</span>
-                <button
-                    matChipRemove
-                    [ngStyle]="{ color: labelTextColors[label._id] }"
+                <mat-chip-grid #chipGrid aria-label="Labels">
+                    <mat-chip-row
+                        (removed)="remove(label)"
+                        *ngFor="let label of labels"
+                        [ngStyle]="{ background: label.color }"
+                    >
+                        <span
+                            [ngStyle]="{ color: labelTextColors[label._id] }"
+                            >{{ label.label }}</span
+                        >
+                        <button
+                            matChipRemove
+                            [ngStyle]="{ color: labelTextColors[label._id] }"
+                        >
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip-row>
+                </mat-chip-grid>
+                <input
+                    [placeholder]="
+                        allLabels.length === 0
+                            ? 'No labels available - Click \'Manage Labels\''
+                            : 'Click to add label'
+                    "
+                    #labelInput
+                    [formControl]="labelCtrl"
+                    [matChipInputFor]="chipGrid"
+                    [matAutocomplete]="auto"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="add($event)"
+                    [disabled]="allLabels.length === 0"
+                />
+                <mat-autocomplete
+                    #auto="matAutocomplete"
+                    (optionSelected)="selected($event)"
                 >
-                    <mat-icon>cancel</mat-icon>
-                </button>
-            </mat-chip-row>
-        </mat-chip-grid>
-        <input
-            placeholder="Click to add label"
-            #labelInput
-            [formControl]="labelCtrl"
-            [matChipInputFor]="chipGrid"
-            [matAutocomplete]="auto"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            (matChipInputTokenEnd)="add($event)"
-        />
-        <mat-autocomplete
-            #auto="matAutocomplete"
-            (optionSelected)="selected($event)"
-        >
-            @for (label of filteredLabels | async; track label) {
-                <mat-option [value]="label">{{ label }}</mat-option>
-            }
-        </mat-autocomplete>
-    </mat-form-field>
+                    @for (label of filteredLabels | async; track label) {
+                        <mat-option [value]="label">{{ label }}</mat-option>
+                    }
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div fxLayoutAlign="start center">
+            <button
+                mat-raised-button
+                color="accent"
+                [routerLink]="['/configuration/labels']"
+            >
+                Manage Labels
+            </button>
+        </div>
+    </div>
 </div>
 <div
     *ngIf="!editMode && labelsAvailable"

@@ -50,23 +50,37 @@
     </button>
     <span class="assembly-options-divider"></span>
     <button
+        mat-button
         color="accent"
-        mat-icon-button
         matTooltip="Auto Layout"
         [matTooltipPosition]="'above'"
         (click)="autoLayout()"
     >
         <i class="material-icons">settings_overscan</i>
+        <span>&nbsp;Auto Layout</span>
     </button>
+    <span class="assembly-options-divider"></span>
     <button
         color="accent"
-        mat-icon-button
+        mat-button
         matTooltip="Add pipeline element"
         [matTooltipPosition]="'above'"
         (click)="openDiscoverDialog()"
         data-cy="sp-editor-add-pipeline-element"
     >
         <i class="material-icons">add</i>
+        <span>&nbsp;Add element</span>
+    </button>
+    <button
+        color="accent"
+        mat-button
+        matTooltip="Add template"
+        [matTooltipPosition]="'above'"
+        (click)="openAddTemplateDialog()"
+        data-cy="sp-editor-add-template"
+    >
+        <i class="material-icons">add</i>
+        <span>&nbsp;Add template</span>
     </button>
     <sp-pipeline-assembly-options-pipeline-cache
         [rawPipelineModel]="rawPipelineModel"

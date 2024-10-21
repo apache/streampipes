@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.model.connect.adapter.compact;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record CompactEventProperty(
     String label,
     String description,

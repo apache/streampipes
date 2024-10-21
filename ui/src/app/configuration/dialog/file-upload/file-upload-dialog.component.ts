@@ -39,6 +39,9 @@ export class FileUploadDialogComponent {
 
     uploadStatus = 0;
 
+    uploadError = false;
+    uploadErrorMessage = '';
+
     constructor(
         private dialogRef: DialogRef<FileUploadDialogComponent>,
         private filesService: FilesService,
@@ -73,6 +76,7 @@ export class FileUploadDialogComponent {
     }
 
     uploadFile(index: number): void {
+        this.uploadError = false;
         this.filesService
             .uploadFile(this.selectedUploadFiles.item(index))
             .subscribe(
@@ -90,7 +94,15 @@ export class FileUploadDialogComponent {
                         }
                     }
                 },
-                error => {},
+                error => {
+                    this.uploadError = true;
+                    if (error.error?.notifications?.length > 0) {
+                        this.uploadErrorMessage =
+                            error.error.notifications[0].title;
+                    } else {
+                        this.uploadErrorMessage = error.error;
+                    }
+                },
             );
     }
 

@@ -25,6 +25,8 @@ import org.apache.streampipes.sdk.helpers.EpProperties;
 
 public class AdapterEnrichmentRuleGenerator implements AdapterModelGenerator {
 
+  public static final String TIMESTAMP_FIELD = "timestamp";
+
   @Override
   public void apply(AdapterDescription adapterDescription,
                     CompactAdapter compactAdapter) throws Exception {
@@ -33,7 +35,7 @@ public class AdapterEnrichmentRuleGenerator implements AdapterModelGenerator {
         var timestampRule = new AddTimestampRuleDescription(compactAdapter.enrich().timestamp());
         adapterDescription.getRules().add(timestampRule);
         adapterDescription.getEventSchema().addEventProperty(
-            EpProperties.timestampProperty("timestamp")
+            EpProperties.timestampProperty(TIMESTAMP_FIELD)
         );
       }
     }

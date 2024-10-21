@@ -31,6 +31,7 @@ import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescript
 import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -76,6 +77,13 @@ public class TransformationRuleUpdateVisitor implements ITransformationRuleVisit
   @Override
   public void visit(RenameRuleDescription rule) {
     if (containsKey(rule.getOldRuntimeKey())) {
+      validRules.add(rule);
+    }
+  }
+
+  @Override
+  public void visit(RegexTransformationRuleDescription rule) {
+    if (containsKey(rule.getRuntimeKey())) {
       validRules.add(rule);
     }
   }

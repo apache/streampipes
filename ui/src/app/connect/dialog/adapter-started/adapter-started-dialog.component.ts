@@ -21,6 +21,8 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     AdapterDescription,
     AdapterService,
+    CompactPipeline,
+    CompactPipelineElement,
     ErrorMessage,
     PipelineOperationStatus,
     PipelineTemplateService,
@@ -28,7 +30,7 @@ import {
     SpLogMessage,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
-import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
+import { CompactPipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/compact-pipeline.service';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -80,6 +82,7 @@ export class AdapterStartedDialog implements OnInit {
         private adapterService: AdapterService,
         private shepherdService: ShepherdService,
         private pipelineTemplateService: PipelineTemplateService,
+        private compactPipelineService: CompactPipelineService,
     ) {}
 
     ngOnInit() {
@@ -201,57 +204,68 @@ export class AdapterStartedDialog implements OnInit {
     private startSaveInDataLakePipeline(adapterElementId: string) {
         this.loadingText = 'Creating pipeline to persist data stream';
         this.adapterService.getAdapter(adapterElementId).subscribe(adapter => {
-            const pipelineId =
-                'org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate';
             this.pipelineTemplateService
-                .getPipelineTemplateInvocation(
-                    adapter.correspondingDataStreamElementId,
-                    pipelineId,
-                )
+                .findById('sp-internal-persist')
                 .subscribe(
-                    res => {
-                        const pipelineName = 'Persist ' + this.adapter.name;
-
-                        const indexName = this.adapter.name;
-
-                        const pipelineInvocation =
-                            PipelineInvocationBuilder.create(res)
-                                .setName(pipelineName)
-                                .setTemplateId(pipelineId)
-                                .setFreeTextStaticProperty(
-                                    'db_measurement',
-                                    indexName,
-                                )
-                                .setMappingPropertyUnary(
-                                    'timestamp_mapping',
-                                    's0::' + this.dataLakeTimestampField,
-                                )
-                                .setOneOfStaticProperty(
-                                    'schema_update',
-                                    'Update schema',
-                                )
-                                .build();
-
-                        this.pipelineTemplateService
-                            .createPipelineTemplateInvocation(
-                                pipelineInvocation,
-                            )
-                            .subscribe(
-                                pipelineOperationStatus => {
-                                    this.pipelineOperationStatus =
-                                        pipelineOperationStatus;
-                                    this.startAdapter(adapterElementId, true);
-                                },
-                                error => {
-                                    this.onAdapterFailure(error.error);
-                                },
-                            );
+                    template => {
+                        const pipeline: CompactPipeline = {
+                            id:
+                                'persist-' +
+                                this.adapter.name.replaceAll(' ', '-'),
+                            name: 'Persist ' + this.adapter.name,
+                            description: '',
+                            pipelineElements: this.makeTemplateConfigs(
+                                template.pipeline,
+                                adapter,
+                            ),
+                            createOptions: {
+                                persist: false,
+                                start: true,
+                            },
+                        };
+                        this.compactPipelineService.create(pipeline).subscribe(
+                            pipelineOperationStatus => {
+                                this.pipelineOperationStatus =
+                                    pipelineOperationStatus;
+                                this.startAdapter(adapterElementId, true);
+                            },
+                            error => {
+                                this.onAdapterFailure(error.error);
+                            },
+                        );
                     },
-                    res => {
-                        this.templateErrorMessage = res.error;
+                    error => {
+                        this.templateErrorMessage = error.error;
                         this.startAdapter(adapterElementId);
                     },
                 );
         });
+    }
+
+    makeTemplateConfigs(
+        template: CompactPipelineElement[],
+        adapter: AdapterDescription,
+    ): CompactPipelineElement[] {
+        template[0].configuration.push(
+            {
+                db_measurement: this.adapter.name,
+            },
+            {
+                timestamp_mapping: 's0::' + this.dataLakeTimestampField,
+            },
+            {
+                dimensions_selection: adapter.eventSchema.eventProperties
+                    .filter(ep => ep.propertyScope === 'DIMENSION_PROPERTY')
+                    .map(ep => ep.runtimeName),
+            },
+        );
+        template.push({
+            type: 'stream',
+            ref: 'stream1',
+            configuration: undefined,
+            id: adapter.correspondingDataStreamElementId,
+            connectedTo: undefined,
+        });
+        return template;
     }
 }

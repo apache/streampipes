@@ -51,9 +51,7 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class HttpServerProtocol implements StreamPipesAdapter {
 
@@ -86,8 +84,7 @@ public class HttpServerProtocol implements StreamPipesAdapter {
     primitive.setRuntimeName(memberExtractor.singleValueParameter(EP_RUNTIME_NAME, String.class));
     primitive.setRuntimeType(extractRuntimeType(memberExtractor.selectedSingleValue(EP_RUNTIME_TYPE, String.class)));
     primitive
-        .setDomainProperties(Collections
-            .singletonList(URI.create(memberExtractor.singleValueParameter(EP_DOMAIN_PROPERTY, String.class))));
+        .setSemanticType(memberExtractor.singleValueParameter(EP_DOMAIN_PROPERTY, String.class));
     return primitive;
   }
 

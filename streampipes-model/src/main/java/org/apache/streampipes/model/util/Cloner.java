@@ -73,7 +73,6 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.model.staticproperty.SupportedProperty;
-import org.apache.streampipes.model.template.BoundPipelineElement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -252,13 +251,6 @@ public class Cloner {
     } else {
       return new WildcardTopicDefinition((WildcardTopicDefinition) topicDefinition);
     }
-  }
-
-  public List<BoundPipelineElement> boundPipelineElements(List<BoundPipelineElement> boundPipelineElements) {
-    return boundPipelineElements
-        .stream()
-        .map(BoundPipelineElement::new)
-        .collect(Collectors.toList());
   }
 
   public List<NamedStreamPipesEntity> cloneDescriptions(List<NamedStreamPipesEntity> pipelineElementDescriptions) {

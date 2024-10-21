@@ -17,7 +17,10 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
+    <div class="sp-dialog-content p-15" fxLayout="column">
+        <sp-warning-box *ngIf="uploadError" style="font-size: smaller">
+            {{ uploadErrorMessage }}
+        </sp-warning-box>
         <div fxFlex="100" *ngIf="this.duplicateFileNames.length === 0">
             <div fxFlex="100" style="margin: 5px; width: 100%">
                 <mat-form-field
@@ -57,7 +60,7 @@
                         color="accent"
                         matSuffix
                         mat-button
-                        style="min-width: 0px"
+                        style="min-width: 0"
                     >
                         <mat-icon *ngIf="uploadStatus < 99"
                             >insert_drive_file</mat-icon

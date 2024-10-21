@@ -41,6 +41,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { PipelineDetailsToolbarComponent } from './components/pipeline-details-toolbar/pipeline-details-toolbar.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDivider } from '@angular/material/divider';
+import { PipelineCodeDialogComponent } from './dialogs/pipeline-code/pipeline-code-dialog.component';
 
 @NgModule({
     imports: [
@@ -64,6 +65,7 @@ import { MatDivider } from '@angular/material/divider';
     ],
     declarations: [
         PipelineActionsComponent,
+        PipelineCodeDialogComponent,
         PipelineElementsRowComponent,
         PipelineLogsDialogComponent,
         PipelineStatusComponent,

@@ -62,10 +62,16 @@
                     name="pipelineName"
                     (blur)="triggerTutorial()"
                 />
+                <mat-error
+                    >Pipeline name must have between 3 and 40 characters.
+                </mat-error>
             </mat-form-field>
             <mat-form-field fxFlex color="accent">
                 <mat-label>Description</mat-label>
                 <input [formControlName]="'pipelineDescription'" matInput />
+                <mat-error
+                    >Pipeline description must not have more than 80 characters.
+                </mat-error>
             </mat-form-field>
         </div>
     </form>
@@ -83,4 +89,16 @@
     >
         Navigate to pipeline overview afterwards
     </mat-checkbox>
+    <div class="mt-10">
+        <mat-expansion-panel class="mat-elevation-z0 border-1">
+            <mat-expansion-panel-header
+                >Show pipeline configuration as code</mat-expansion-panel-header
+            >
+            <sp-configuration-code-panel
+                [configuration]="compactPipeline"
+                maxHeight="none"
+            >
+            </sp-configuration-code-panel>
+        </mat-expansion-panel>
+    </div>
 </div>

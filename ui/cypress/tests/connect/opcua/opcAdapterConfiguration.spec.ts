@@ -155,7 +155,11 @@ const getAdapterBuilder = () => {
     return AdapterBuilder.create('OPC_UA')
         .setName('OPC UA Configuration Test')
         .addInput('radio', 'adapter_type-pull_mode', '')
-        .addInput('input', 'undefined-PULLING_INTERVAL-0', '1000')
+        .addInput(
+            'input',
+            'undefined-pull-mode-group-0-PULLING_INTERVAL-0',
+            '1000',
+        )
         .addInput('radio', 'access_mode-none', '')
         .addInput('radio', 'opc_host_or_url-url', '')
         .addInput(

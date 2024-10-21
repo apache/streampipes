@@ -42,14 +42,24 @@ export class SemanticType {
     }
 
     public static isTimestamp(property: EventProperty): boolean {
-        return property.domainProperties.includes(SemanticType.TIMESTAMP);
+        return this.equalsIgnoreCase(
+            SemanticType.TIMESTAMP,
+            property.semanticType,
+        );
     }
 
     public static isImage(property: EventProperty): boolean {
-        return property.domainProperties.includes(SemanticType.IMAGE);
+        return this.equalsIgnoreCase(SemanticType.IMAGE, property.semanticType);
     }
 
     public static isNumber(property: EventProperty): boolean {
-        return property.domainProperties.includes(SemanticType.SO_NUMBER);
+        return this.equalsIgnoreCase(
+            SemanticType.SO_NUMBER,
+            property.semanticType,
+        );
+    }
+
+    public static equalsIgnoreCase(str1: string, str2: string): boolean {
+        return str1?.toLowerCase() === str2?.toLowerCase();
     }
 }

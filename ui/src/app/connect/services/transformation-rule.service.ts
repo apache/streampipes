@@ -31,6 +31,7 @@ import {
     EventSchema,
     MoveRuleDescription,
     PropertyScope,
+    RegexTransformationRuleDescription,
     RenameRuleDescription,
     SemanticType,
     TimestampTranfsformationRuleDescription,
@@ -89,9 +90,7 @@ export class TransformationRuleService {
                 rule.label = ep.label;
                 rule.description = ep.description;
                 rule.propertyScope = ep.propertyScope as PropertyScope;
-                if (ep.domainProperties.length > 0) {
-                    rule.semanticType = ep.domainProperties[0];
-                }
+                rule.semanticType = ep.semanticType;
                 rule.measurementUnit = ep.measurementUnit;
                 rule.staticValue =
                     this.staticValueTransformService.getStaticValue(
@@ -102,6 +101,13 @@ export class TransformationRuleService {
 
             // Scale
             transformationRuleDescriptions = transformationRuleDescriptions
+                .concat(
+                    this.getRegexTransformationRules(
+                        targetSchema.eventProperties,
+                        originalSchema,
+                        targetSchema,
+                    ),
+                )
                 .concat(
                     this.getCorrectionValueRules(
                         targetSchema.eventProperties,
@@ -569,9 +575,7 @@ export class TransformationRuleService {
     }
 
     isTimestampProperty(property: EventPropertyPrimitive) {
-        return property.domainProperties.some(
-            dp => dp === SemanticType.TIMESTAMP,
-        );
+        return SemanticType.isTimestamp(property);
     }
 
     private getDatatypeTransformRules(
@@ -674,5 +678,60 @@ export class TransformationRuleService {
         }
 
         return filteredResult;
+    }
+
+    private getRegexTransformationRules(
+        eventProperties: EventPropertyUnion[],
+        oldEventSchema: EventSchema,
+        newEventSchema: EventSchema,
+    ) {
+        const result: RegexTransformationRuleDescription[] = [];
+
+        eventProperties.forEach(eventProperty => {
+            if (eventProperty instanceof EventPropertyPrimitive) {
+                const newRuntimeName = this.getCompleteRuntimeNameKey(
+                    newEventSchema.eventProperties,
+                    eventProperty.elementId,
+                );
+
+                if (
+                    eventProperty.additionalMetadata?.regex &&
+                    eventProperty.additionalMetadata?.regex != ''
+                ) {
+                    const rule =
+                        this.createRegexTransformationRuleDescriptionFromEventProperty(
+                            newRuntimeName,
+                            eventProperty,
+                        );
+
+                    result.push(rule);
+                }
+            } else if (eventProperty instanceof EventPropertyNested) {
+                result.push(
+                    ...this.getRegexTransformationRules(
+                        eventProperty.eventProperties,
+                        oldEventSchema,
+                        newEventSchema,
+                    ),
+                );
+            }
+        });
+
+        return result;
+    }
+
+    private createRegexTransformationRuleDescriptionFromEventProperty(
+        newRuntimeName: string,
+        eventProperty: EventPropertyPrimitive,
+    ) {
+        const rule: RegexTransformationRuleDescription =
+            new RegexTransformationRuleDescription();
+        rule['@class'] =
+            'org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription';
+        rule.runtimeKey = newRuntimeName;
+        rule.regex = eventProperty.additionalMetadata.regex;
+        rule.replaceWith = eventProperty.additionalMetadata.replaceWith ?? '';
+        rule.replaceAll = eventProperty.additionalMetadata.replaceAll ?? false;
+        return rule;
     }
 }

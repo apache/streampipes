@@ -18,46 +18,45 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 
-import org.apache.streampipes.extensions.api.connect.TransformationRule;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
-import org.apache.streampipes.model.schema.EventSchema;
-
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ValueEventTransformerTest {
 
+  private static final String UNIT_DEGREE_CELSIUS = "http://qudt.org/vocab/unit#DegreeCelsius";
+  private static final String UNIT_KELVIN = "http://qudt.org/vocab/unit#Kelvin";
+  private static final String EVENT_PROPEPRTY = "property";
+
   @Test
   public void transform() {
-    EventSchema eventSchema = new EventSchema();
-    EventProperty eventPropertyf = new EventPropertyPrimitive();
-    eventPropertyf.setLabel("a");
-    eventPropertyf.setRuntimeName("a");
-    eventSchema.addEventProperty(eventPropertyf);
 
     Map<String, Object> event = new HashMap<>();
-    event.put("a", 273.15);
+    event.put(EVENT_PROPEPRTY, 273.15);
 
-    List<String> keys = new ArrayList<>();
-    keys.add("a");
+    var unitTransformationRule = new UnitTransformationRule(
+        List.of(EVENT_PROPEPRTY),
+        UNIT_KELVIN,
+        UNIT_DEGREE_CELSIUS
+    );
 
-    List<TransformationRule> rules = new ArrayList<>();
-    rules.add(new UnitTransformationRule(keys,
-        "http://qudt.org/vocab/unit#Kelvin", "http://qudt.org/vocab/unit#DegreeCelsius"));
+    var correctionRule = new CorrectionValueTransformationRule(
+        List.of(EVENT_PROPEPRTY),
+        10.0,
+        "ADD"
+    );
 
-    for (var rule: rules) {
+    var rules = List.of(unitTransformationRule, correctionRule);
+
+    for (var rule : rules) {
       event = rule.apply(event);
     }
 
-    Assertions.assertEquals(0.0, event.get(eventPropertyf.getRuntimeName()));
-
+    assertEquals(10.0, event.get(EVENT_PROPEPRTY));
   }
 
 }

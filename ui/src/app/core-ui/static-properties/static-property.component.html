@@ -94,6 +94,7 @@
                 [parentForm]="parentForm"
                 [completedStaticProperty]="completedStaticProperty"
                 [adapterId]="adapterId"
+                (updateEmitter)="emitUpdate($event)"
             >
             </sp-app-static-runtime-resolvable-any-input>
 

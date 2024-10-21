@@ -83,16 +83,16 @@ public class ListCollector extends StreamPipesSiddhiProcessor
     List<EventProperty> selectedProperty = extractor
         .getInputStreamEventPropertySubset(Collections.singletonList(propertySelector));
 
-    if (selectedProperty.size() > 0) {
+    if (!selectedProperty.isEmpty()) {
       EventPropertyPrimitive prop = (EventPropertyPrimitive) selectedProperty.get(0);
       String newPropertyName = prop.getRuntimeName() + "_list";
       String newDatatype = prop.getRuntimeType();
-      String newDomainProperty = prop.getDomainProperties().get(0).toString();
+      String newSemanticType = prop.getSemanticType();
 
       EventPropertyList ep = EpProperties.listEp(Labels.from("list", "", ""),
           newPropertyName,
           Datatypes.fromDatatypeString(newDatatype),
-          newDomainProperty);
+          newSemanticType);
 
       inputSchema.addEventProperty(ep);
     }

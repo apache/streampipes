@@ -30,6 +30,18 @@
             <span *ngIf="previewModeActive">&nbsp;Disable live preview</span>
         </div>
     </button>
+    <button
+        mat-button
+        color="accent"
+        matTooltip="Pipeline as code"
+        [matTooltipPosition]="'above'"
+        (click)="openCodeDialogEmitter.emit()"
+    >
+        <div fxLayoutAlign="start center" fxLayout="row">
+            <i class="material-icons">code</i>
+            <span>&nbsp;View pipeline as code</span>
+        </div>
+    </button>
     <div fxFlex></div>
     <div fxLayoutAlign="end center">
         <button

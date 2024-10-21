@@ -53,6 +53,7 @@ public class PipelinePreview {
     List<NamedStreamPipesEntity> pipelineElements = new ArrayList<>(
         new PipelineVerificationHandlerV2(pipeline)
             .verifyAndBuildGraphs(true)
+            .modifiedPipelineElements()
     );
 
     rewriteElementIds(pipelineElements, elementIdMappings);

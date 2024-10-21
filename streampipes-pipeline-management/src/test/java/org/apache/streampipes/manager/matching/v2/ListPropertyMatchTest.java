@@ -24,7 +24,6 @@ import org.apache.streampipes.model.schema.EventPropertyList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,13 +32,12 @@ public class ListPropertyMatchTest {
 
   @Test
   public void matchSameDomainProperty() {
-    List<URI> domainProperties = new ArrayList<>();
-    domainProperties.add(URI.create("http://test.org/property"));
+    var semanticType = "http://test.org/property";
 
     EventPropertyList offer = new EventPropertyList();
-    offer.setDomainProperties(domainProperties);
+    offer.setSemanticType(semanticType);
     EventPropertyList requirement = new EventPropertyList();
-    requirement.setDomainProperties(domainProperties);
+    requirement.setSemanticType(semanticType);
 
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 

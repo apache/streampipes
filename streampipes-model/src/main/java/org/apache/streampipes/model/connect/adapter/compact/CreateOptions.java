@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.model.connect.adapter.compact;
 
-public record CreateOptions(boolean persist,
-                            boolean start) {
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record CreateOptions(Boolean persist,
+                            Boolean start) {
 }

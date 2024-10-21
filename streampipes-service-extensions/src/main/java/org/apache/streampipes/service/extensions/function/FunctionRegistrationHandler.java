@@ -26,6 +26,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * The {@code FunctionRegistrationHandler} class is responsible for registering
+ * a list of functions with the StreamPipes backend system.
+ *
+ * <p>Note: This class only handles the registration of the functions in the backend.
+ * The actual execution of the registered functions occurs in the extension service.
+ *
+ * <p>Once the registration is successful, a log entry is created to indicate
+ * the completion of the process.
+ */
 public class FunctionRegistrationHandler extends RegistrationHandler {
 
   private static final Logger LOG = LoggerFactory.getLogger(FunctionRegistrationHandler.class);
@@ -36,7 +46,8 @@ public class FunctionRegistrationHandler extends RegistrationHandler {
 
   @Override
   protected void performRequest(StreamPipesClient client) {
-    client.adminApi().registerFunctions(functions);
+    client.adminApi()
+          .registerFunctions(functions);
   }
 
   @Override

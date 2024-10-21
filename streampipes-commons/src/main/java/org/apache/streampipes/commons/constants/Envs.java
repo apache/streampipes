@@ -107,7 +107,8 @@ public enum Envs {
   SP_PULSAR_URL("SP_PULSAR_URL", "pulsar://localhost:6650"),
 
   // expects a comma separated string of service names
-  SP_SERVICE_TAGS("SP_SERVICE_TAGS", "");
+  SP_SERVICE_TAGS("SP_SERVICE_TAGS", ""),
+  SP_ALLOWED_UPLOAD_FILETYPES("SP_ALLOWED_UPLOAD_FILETYPES", "", "");
 
   private final String envVariableName;
   private String defaultValue;

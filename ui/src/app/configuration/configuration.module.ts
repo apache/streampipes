@@ -96,6 +96,7 @@ import { FileOverviewComponent } from './files/file-overview/file-overview.compo
 import { FileUploadDialogComponent } from './dialog/file-upload/file-upload-dialog.component';
 import { FileRenameDialogComponent } from './dialog/file-rename/file-rename-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
     imports: [
@@ -120,6 +121,7 @@ import { MatDialogModule } from '@angular/material/dialog';
         CoreUiModule,
         ReactiveFormsModule,
         PlatformServicesModule,
+        MatProgressBarModule,
         RouterModule.forChild([
             {
                 path: '',

@@ -67,3 +67,6 @@ PULL_MODE.description=
 
 SUBSCRIPTION_MODE.title=Subscription mode
 SUBSCRIPTION_MODE.description=
+
+incomplete-event-handling.title=Incomplete Events
+incomplete-event-handling.description=Select how events with missing values (e.g., due to bad status codes) are handled.

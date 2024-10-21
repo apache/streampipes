@@ -18,75 +18,93 @@
 
 package org.apache.streampipes.connect.management.compact;
 
-import org.apache.streampipes.manager.template.PipelineTemplateManagement;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
+import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.compact.CreateOptions;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
+import org.apache.streampipes.model.pipeline.compact.CompactPipelineElement;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
-import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.apache.streampipes.model.template.PipelineTemplateInvocation;
+import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.model.template.CompactPipelineTemplate;
+import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.vocabulary.SO;
 
-import java.net.URI;
 import java.util.List;
+import java.util.Map;
+
+import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_CONNECTOR_ID;
+import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_DIMENSIONS_FIELD;
+import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_MEASUREMENT_FIELD;
+import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_TEMPLATE_ID;
+import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_TIMESTAMP_FIELD;
 
 public class PersistPipelineHandler {
 
-  private static final String templateId = "org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate";
-  private static final String configPrefix = "jsplumb_domId2";
-
-  private final PipelineTemplateManagement pipelineTemplateManagement;
+  private final CRUDStorage<CompactPipelineTemplate> templateStorage;
+  private final CompactPipelineManagement pipelineManagement;
   private final String authenticatedUserSid;
 
-  public PersistPipelineHandler(PipelineTemplateManagement pipelineTemplateManagement,
+  public PersistPipelineHandler(CRUDStorage<CompactPipelineTemplate> templateStorage,
+                                CompactPipelineManagement pipelineManagement,
                                 String authenticatedUserSid) {
-    this.pipelineTemplateManagement = pipelineTemplateManagement;
+    this.templateStorage = templateStorage;
+    this.pipelineManagement = pipelineManagement;
     this.authenticatedUserSid = authenticatedUserSid;
   }
 
-  public PipelineOperationStatus createAndStartPersistPipeline(AdapterDescription adapterDescription) {
-    var pipelineTemplateInvocation = pipelineTemplateManagement.prepareInvocation(
-        adapterDescription.getCorrespondingDataStreamElementId(),
-        templateId
+  public PipelineOperationStatus createAndStartPersistPipeline(AdapterDescription adapterDescription) throws Exception {
+    var template = getTemplate();
+    if (template != null) {
+      var compactPipeline = new CompactPipeline(
+          String.format("persist-%s", adapterDescription.getName().replaceAll(" ", "-")),
+          String.format("Persist %s", adapterDescription.getName()),
+          null,
+          makeTemplateConfig(adapterDescription, template.getPipeline()),
+          new CreateOptions(false, true)
+      );
+      var pipelineGenerationResult = pipelineManagement.makePipeline(compactPipeline);
+      if (pipelineGenerationResult.allPipelineElementsValid()) {
+        String pipelineId = PipelineManager.addPipeline(authenticatedUserSid, pipelineGenerationResult.pipeline());
+        if (compactPipeline.createOptions().start()) {
+          return PipelineManager.startPipeline(pipelineId);
+        }
+      }
+    }
+    throw new IllegalArgumentException("Could not start persist pipeline");
+  }
+
+  private CompactPipelineTemplate getTemplate() {
+    return this.templateStorage.getElementById(DATA_LAKE_TEMPLATE_ID);
+  }
+
+  private List<CompactPipelineElement> makeTemplateConfig(AdapterDescription adapterDescription,
+                                                          List<CompactPipelineElement> pipelineElements) {
+    pipelineElements.get(0).configuration().addAll(
+        List.of(
+            Map.of(DATA_LAKE_MEASUREMENT_FIELD, adapterDescription.getName()),
+            Map.of(DATA_LAKE_TIMESTAMP_FIELD, String.format("s0::%s", getTimestampField(adapterDescription))),
+            Map.of(DATA_LAKE_DIMENSIONS_FIELD, getDimensions(adapterDescription))
+        )
     );
-
-    applyPipelineName(pipelineTemplateInvocation, adapterDescription.getName());
-    applyDataLakeConfig(pipelineTemplateInvocation, adapterDescription);
-
-    return pipelineTemplateManagement.createAndStartPipeline(pipelineTemplateInvocation, authenticatedUserSid);
+    pipelineElements.add(new CompactPipelineElement(
+        "stream",
+        DATA_LAKE_CONNECTOR_ID,
+        adapterDescription.getCorrespondingDataStreamElementId(),
+        null,
+        null
+    ));
+    return pipelineElements;
   }
 
-  private void applyPipelineName(PipelineTemplateInvocation pipelineTemplateInvocation,
-                                 String adapterName) {
-    pipelineTemplateInvocation.setPipelineTemplateId(templateId);
-    pipelineTemplateInvocation.setKviName(adapterName);
-  }
-
-  private void applyDataLakeConfig(PipelineTemplateInvocation pipelineTemplateInvocation,
-                                   AdapterDescription adapterDescription) {
-    pipelineTemplateInvocation.getStaticProperties().forEach(sp -> {
-      if (sp.getInternalName().equalsIgnoreCase(withPrefix("db_measurement"))) {
-        ((FreeTextStaticProperty) sp).setValue(adapterDescription.getName());
-      }
-      if (sp.getInternalName().equalsIgnoreCase(withPrefix("timestamp_mapping"))) {
-        ((MappingPropertyUnary) sp).setSelectedProperty(
-            String.format("s0::%s", getTimestampField(adapterDescription)
-        ));
-      }
-      if (sp.getInternalName().equalsIgnoreCase(withPrefix("schema_update"))) {
-        ((OneOfStaticProperty) sp).getOptions().forEach(o -> {
-          if (o.getName().equals("Update schema")) {
-            o.setSelected(true);
-          }
-        });
-      }
-    });
-  }
-
-  private String withPrefix(String config) {
-    return configPrefix + config;
+  private List<String> getDimensions(AdapterDescription adapterDescription) {
+    return adapterDescription.getEventSchema().getEventProperties()
+        .stream()
+        .filter(ep -> ep.getPropertyScope().equalsIgnoreCase(PropertyScope.DIMENSION_PROPERTY.name()))
+        .map(EventProperty::getRuntimeName)
+        .toList();
   }
 
   private String getTimestampField(AdapterDescription adapterDescription) {
@@ -97,16 +115,13 @@ public class PersistPipelineHandler {
         .stream()
         .filter(ep -> ep instanceof EventPropertyPrimitive)
         .map(ep -> (EventPropertyPrimitive) ep)
-        .filter(ep -> hasTimestampType(ep.getDomainProperties()))
+        .filter(ep -> hasTimestampType(ep.getSemanticType()))
         .map(EventProperty::getRuntimeName)
         .findFirst()
         .orElseThrow(() -> new IllegalArgumentException("Could not find timestamp field in schema"));
   }
 
-  private boolean hasTimestampType(List<URI> semanticTypes) {
-    return semanticTypes
-        .stream()
-        .map(URI::toString)
-        .anyMatch(s -> s.equalsIgnoreCase(SO.DATE_TIME));
+  private boolean hasTimestampType(String semanticType) {
+    return SO.DATE_TIME.equalsIgnoreCase(semanticType);
   }
 }

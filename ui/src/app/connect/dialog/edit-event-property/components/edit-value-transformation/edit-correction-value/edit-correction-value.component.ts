@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { EventPropertyUnion } from '@streampipes/platform-services';
 
 @Component({
@@ -27,27 +27,10 @@ import { EventPropertyUnion } from '@streampipes/platform-services';
 export class EditCorrectionValueComponent {
     @Input() cachedProperty: EventPropertyUnion;
 
-    @Output() correctionValueChanged = new EventEmitter<boolean>();
-
     operators = [
         { value: 'MULTIPLY', viewValue: 'Multiply' },
         { value: 'ADD', viewValue: 'Add' },
         { value: 'SUBTRACT', viewValue: 'Subtract' },
         { value: 'DIVIDE', viewValue: 'Divide' },
     ];
-
-    constructor() {}
-
-    valueChanged() {
-        if (this.cachedProperty.additionalMetadata.correctionValue) {
-            if (!this.cachedProperty.additionalMetadata.operator) {
-                this.correctionValueChanged.emit(true);
-            } else {
-                this.correctionValueChanged.emit(false);
-            }
-        } else {
-            this.correctionValueChanged.emit(false);
-            this.cachedProperty.additionalMetadata.operator = undefined;
-        }
-    }
 }

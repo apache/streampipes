@@ -55,8 +55,12 @@ public class SpOpcUaConfigExtractor {
     if (usePullMode) {
       Integer pullIntervalSeconds =
           extractor.singleValueParameter(PULLING_INTERVAL.name(), Integer.class);
+      var incompleteEventStrategy = extractor.selectedSingleValueInternalName(
+          SharedUserConfiguration.INCOMPLETE_EVENT_HANDLING_KEY, String.class
+      );
 
       config.setPullIntervalMilliSeconds(pullIntervalSeconds);
+      config.setIncompleteEventStrategy(incompleteEventStrategy);
     }
 
     return config;

@@ -60,6 +60,8 @@ public interface IParameterExtractor {
 
   <V> List<V> selectedMultiValues(String internalName, Class<V> targetClass);
 
+  <V> List<V> selectedMultiValuesInternalNames(String internalName, Class<V> targetClass);
+
   <V> List<V> selectedTreeNodesInternalNames(String internalName,
                                              Class<V> targetClass);
 
@@ -102,4 +104,6 @@ public interface IParameterExtractor {
   List<String> getEventPropertiesSelectorByScope(PropertyScope scope);
 
   List<EventProperty> getEventPropertiesByScope(PropertyScope scope);
+
+  List<EventProperty> getInputEventProperties(int streamIndex);
 }

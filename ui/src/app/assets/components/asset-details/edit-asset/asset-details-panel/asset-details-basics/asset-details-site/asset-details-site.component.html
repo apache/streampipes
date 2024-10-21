@@ -17,19 +17,36 @@
   -->
 
 <div fxLayout="column">
-    <mat-form-field color="accent" class="w-100">
-        <mat-label>Site</mat-label>
-        <mat-select
-            [disabled]="!editMode"
-            [(ngModel)]="asset.assetSite.siteId"
-            (selectionChange)="handleLocationChange($event)"
-        >
-            <mat-option *ngFor="let site of sites" [value]="site._id">
-                {{ site.label }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <mat-form-field color="accent" class="w-100" *ngIf="currentSite">
+    <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start center">
+        <div fxFlex fxLayoutAlign="start center">
+            <mat-form-field
+                color="accent"
+                class="w-100"
+                subscriptSizing="dynamic"
+            >
+                <mat-select
+                    [disabled]="!editMode"
+                    [(ngModel)]="asset.assetSite.siteId"
+                    (selectionChange)="handleLocationChange($event)"
+                >
+                    <mat-option *ngFor="let site of sites" [value]="site._id">
+                        {{ site.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div fxLayoutAlign="start center">
+            <button
+                mat-raised-button
+                color="accent"
+                [routerLink]="['/configuration/sites']"
+            >
+                Manage Sites
+            </button>
+        </div>
+    </div>
+
+    <mat-form-field color="accent" class="mt-10 w-100" *ngIf="currentSite">
         <mat-label>Area</mat-label>
         <mat-select [disabled]="!editMode" [(ngModel)]="asset.assetSite.area">
             <mat-option *ngFor="let area of currentSite.areas" [value]="area">

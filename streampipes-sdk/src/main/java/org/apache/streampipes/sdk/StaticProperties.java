@@ -19,6 +19,7 @@
 package org.apache.streampipes.sdk;
 
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.FileStaticProperty;
@@ -97,9 +98,9 @@ public class StaticProperties {
    * @return A configured FreeTextStaticProperty instance.
    */
   public static FreeTextStaticProperty stringFreeTextProperty(
-          Label label,
-          boolean isMultiLine,
-          boolean arePlaceholdersSupported) {
+      Label label,
+      boolean isMultiLine,
+      boolean arePlaceholdersSupported) {
     var property = stringFreeTextProperty(label);
     property.setMultiLine(isMultiLine);
     property.setPlaceholdersSupported(arePlaceholdersSupported);
@@ -228,6 +229,17 @@ public class StaticProperties {
   public static OneOfStaticProperty singleValueSelection(Label label, List<Option> options) {
     OneOfStaticProperty osp = new OneOfStaticProperty(label.getInternalId(), label.getLabel(),
         label.getDescription());
+    osp.setOptions(options);
+
+    return osp;
+  }
+
+  public static AnyStaticProperty multiValueSelection(Label label, List<Option> options) {
+    var osp = new AnyStaticProperty(
+        label.getInternalId(),
+        label.getLabel(),
+        label.getDescription()
+    );
     osp.setOptions(options);
 
     return osp;
