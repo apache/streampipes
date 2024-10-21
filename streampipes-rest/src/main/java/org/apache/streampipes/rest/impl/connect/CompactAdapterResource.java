@@ -88,8 +88,9 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     try {
       managementService.addAdapter(adapterDescription, adapterId, principalSid);
     } catch (AdapterException e) {
-      LOG.error("Error while storing the adapterDescription with appId {}. An adapter with the given id already exists.",
-                adapterDescription.getAppId(), e
+      LOG.error(
+          "Error while storing the adapterDescription with appId {}. An adapter with the given id already exists.",
+          adapterDescription.getAppId(), e
       );
       return ResponseEntity.status(HttpStatus.CONFLICT)
                            .body(Notifications.error(e.getMessage()));
