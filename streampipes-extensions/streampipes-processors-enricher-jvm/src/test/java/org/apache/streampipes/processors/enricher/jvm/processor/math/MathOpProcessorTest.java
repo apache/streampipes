@@ -326,8 +326,6 @@ public class MathOpProcessorTest {
         collector.getEvents().clear();
     }
 
-
-
     private Event createTestEvent(Integer value1, Integer value2) {
 
         var eventSchema = GuessSchemaBuilder.create()
@@ -347,9 +345,4 @@ public class MathOpProcessorTest {
 
         return EventFactory.fromMap(map, new SourceInfo("", "s0"), new SchemaInfo(eventSchema, new ArrayList<>()));
     }
-
-
 }
-
-
-
