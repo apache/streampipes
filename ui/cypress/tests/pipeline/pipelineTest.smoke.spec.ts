@@ -17,7 +17,7 @@
  */
 
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { PipelineUtils } from '../../support/utils/PipelineUtils';
+import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 
