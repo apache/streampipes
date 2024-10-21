@@ -23,7 +23,7 @@ import { DataLakeUtils } from '../datalake/DataLakeUtils';
 import { ConnectBtns } from './ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { UserUtils } from '../UserUtils';
-import { PipelineUtils } from '../PipelineUtils';
+import { PipelineUtils } from '../pipeline/PipelineUtils';
 
 export class ConnectUtils {
     public static testAdapter(
@@ -404,5 +404,17 @@ export class ConnectUtils {
         cy.wait(2000);
         // Close dialog
         cy.get('button').contains('Close').parent().click();
+    }
+
+    public static validateAdapterIsRunning() {
+        ConnectUtils.goToConnect();
+        ConnectBtns.startAdapter().should('have.length', 0);
+        ConnectBtns.stopAdapter().should('have.length', 1);
+    }
+
+    public static validateAdapterIsStopped() {
+        ConnectUtils.goToConnect();
+        ConnectBtns.startAdapter().should('have.length', 1);
+        ConnectBtns.stopAdapter().should('have.length', 0);
     }
 }

@@ -1,0 +1,9 @@
+id: sp:adapterdescription:4pxl2w
+name: Test
+appId: org.apache.streampipes.connect.iiot.adapters.simulator.machine
+configuration:
+    - wait-time-ms: '1000'
+    - selected-simulator-option: flowrate
+createOptions:
+    persist: false
+    start: false
