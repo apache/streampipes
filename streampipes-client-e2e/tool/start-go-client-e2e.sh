@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,8 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#!/bin/bash
-
 # Set environment variables
 HOST="localhost"
 PORT="8030"
@@ -23,8 +23,10 @@ LOGIN_URL="/streampipes-backend/api/v2/auth/login"
 SP_USERNAME="admin@streampipes.apache.org"
 SP_PASSWORD="admin"
 
+INSTALL_ELEMENT_URL="/streampipes-backend/api/v2/extension-installation"
+
 API_KEY_URL="/streampipes-backend/api/v2/users/$SP_USERNAME/tokens"
-API_KEY_USER_NAME="admin"
+API_KEY_USER_NAME="admin@streampipes.apache.org"
 
 loginRequestBody='{
   "username": "'"$SP_USERNAME"'",
@@ -66,6 +68,40 @@ if [ -z "$APIKEY" ]; then
     echo "Error: Failed to retrieve API key"
     exit 1
 fi
+
+
+installRequestBody='{
+  "appId":"org.apache.streampipes.connect.iiot.adapters.simulator.machine",
+  "publicElement":true,
+  "serviceTagPrefix":"ADAPTER"
+  }'
+
+curl -s -X POST "http://$HOST:$PORT$INSTALL_ELEMENT_URL" \
+   -H "Content-Type: application/json" \
+   -H "authorization: Bearer $accessToken" \
+   -d "$installRequestBody"
+
+installRequestBody='{
+  "appId":"org.apache.streampipes.processors.transformation.jvm.booloperator.inverter",
+  "publicElement":true,
+  "serviceTagPrefix":"DATA_PROCESSOR"
+  }'
+
+curl -s -X POST "http://$HOST:$PORT$INSTALL_ELEMENT_URL" \
+   -H "Content-Type: application/json" \
+   -H "authorization: Bearer $accessToken" \
+   -d "$installRequestBody"
+
+installRequestBody='{
+  "appId":"org.apache.streampipes.sinks.internal.jvm.datalake",
+  "publicElement":true,
+  "serviceTagPrefix":"DATA_SINK"
+  }'
+
+curl -s -X POST "http://$HOST:$PORT$INSTALL_ELEMENT_URL" \
+   -H "Content-Type: application/json" \
+   -H "authorization: Bearer $accessToken" \
+   -d "$installRequestBody"
 
 cd ../go-client-e2e || exit
 go test -v ../go-client-e2e/... -args "$HOST" "$PORT" "$APIKEY" "$API_KEY_USER_NAME"

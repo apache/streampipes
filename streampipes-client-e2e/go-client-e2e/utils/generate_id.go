@@ -15,9 +15,24 @@
 // limitations under the License.
 //
 
-module go-client-e2e
+package utils
 
-go 1.21.6
+import (
+	"crypto/rand"
+)
 
-require github.com/apache/streampipes/streampipes-client-go v0.0.0 // indirect
-replace "github.com/apache/streampipes/streampipes-client-go" => "../../streampipes-client-go"
+const (
+	letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+)
+
+func GenerateID(length int) string {
+	bytes := make([]byte, length)
+	if _, err := rand.Read(bytes); err != nil {
+		return ""
+	}
+
+	for i, b := range bytes {
+		bytes[i] = letters[b%byte(length)]
+	}
+	return string(bytes)
+}

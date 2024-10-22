@@ -18,67 +18,113 @@
 package go_client_e2e
 
 import (
-	"fmt"
-	"github.com/apache/streampipes/streampipes-client-go/streampipes"
-	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
-	"github.com/apache/streampipes/streampipes-client-go/streampipes/model"
-	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/adapter"
+	"go-client-e2e/utils"
 	"os"
 	"testing"
 )
 
-func TestAdapterCreate(t *testing.T) {
-	apiKey := os.Getenv("APIKEY")
-	userName := os.Getenv("API_KEY_USER_NAME")
-	clientConfig := config.StreamPipesClientConfig{
-		Url: "",
-		Credential: config.StreamPipesApiKeyCredentials{
-			UserName: apiKey,
-			ApiKey:   userName,
-		},
-	}
-	streamPipesClient, err := streampipes.NewStreamPipesClient(clientConfig)
+const (
+	E2E_ADAPTER_ID             = "e2e-adapter-id"
+	E2E_ADAPTER_NAME           = "e2e-adapter-name"
+	E2E_STREAM_REV             = "e2e-stream-rev"
+	E2E_HOST_NAME              = "e2e-host-name"
+	E2E_ADAPTER_OUT_TOPIC_NAME = "e2e-adapter-out-topic-name"
+	E2E_PORT                   = "\"e2e-port\""
+)
+
+func TestCreateAdapter(t *testing.T) {
+	TestDeleteAdapter(t)
+	streamPipesClient, err := utils.CreateStreamPipesClient()
 	if err != nil {
 		os.Exit(1)
 	}
-	adapterData := adapter.AdapterDescription{
-		ElementID:                        "",
-		Rev:                              "",
-		DOM:                              "",
-		ConnectedTo:                      nil,
-		Name:                             "",
-		Description:                      "",
-		AppID:                            "",
-		IncludesAssets:                   false,
-		IncludesLocales:                  false,
-		IncludedAssets:                   nil,
-		IncludedLocales:                  nil,
-		InternallyManaged:                false,
-		Version:                          0,
-		DataStream:                       model.SpDataStream{},
-		Running:                          false,
-		EventGrounding:                   model.EventGrounding{},
-		Icon:                             "",
-		Config:                           nil,
-		Rules:                            nil,
-		Category:                         nil,
-		CreatedAt:                        0,
-		SelectedEndpointURL:              "",
-		DeploymentConfiguration:          model.ExtensionDeploymentConfiguration{},
-		CorrespondingDataStreamElementID: "",
-		EventSchema:                      model.EventSchema{},
-		ValueRules:                       nil,
-		StreamRules:                      nil,
-		SchemaRules:                      nil,
-	}
-	err = streamPipesClient.Adapter().CreateAdapter(adapterData)
+	data := utils.CreateData("adapter/machine.json")
+	err = streamPipesClient.Adapter().CreateAdapter(data)
 	if err != nil {
 		os.Exit(1)
 	}
-	fmt.Println("create adapter success!")
-	err = streamPipesClient.Adapter().StartSingleAdapter("")
+}
+
+func TestGetAdapter(t *testing.T) {
+	streamPipesClient, err := utils.CreateStreamPipesClient()
 	if err != nil {
+		t.Error(err)
 		os.Exit(1)
 	}
-	fmt.Println("start adapter success!")
+	adapters, err1 := streamPipesClient.Adapter().GetAllAdapter()
+	if err1 != nil {
+		t.Error(err1)
+		os.Exit(1)
+	}
+	if len(adapters) == 0 {
+		os.Exit(1)
+	}
+}
+
+func TestStartAdapter(t *testing.T) {
+	streamPipesClient, err := utils.CreateStreamPipesClient()
+	if err != nil {
+		t.Error(err)
+		os.Exit(1)
+	}
+	adapters, err1 := streamPipesClient.Adapter().GetAllAdapter()
+	if err1 != nil {
+		t.Error(err1)
+		os.Exit(1)
+	}
+	if len(adapters) == 0 {
+		os.Exit(1)
+	}
+	err = streamPipesClient.Adapter().StartSingleAdapter(adapters[0].ElementID)
+	if err != nil {
+		t.Error(err1)
+		os.Exit(1)
+	}
+}
+
+func TestStopAdapter(t *testing.T) {
+	streamPipesClient, err := utils.CreateStreamPipesClient()
+	if err != nil {
+		t.Error(err)
+		os.Exit(1)
+	}
+	adapters, err1 := streamPipesClient.Adapter().GetAllAdapter()
+	if err1 != nil {
+		t.Error(err1)
+		os.Exit(1)
+	}
+	for _, adapter := range adapters {
+		err = streamPipesClient.Adapter().StopSingleAdapter(adapter.ElementID)
+		if err != nil {
+			t.Error(err)
+			os.Exit(1)
+		}
+		adapter, err = streamPipesClient.Adapter().GetSingleAdapter(adapter.ElementID)
+		if err != nil || adapter.Running {
+			t.Error(err)
+			os.Exit(1)
+		}
+	}
+
+}
+
+func TestDeleteAdapter(t *testing.T) {
+	streamPipesClient, err := utils.CreateStreamPipesClient()
+	if err != nil {
+		t.Error(err)
+		os.Exit(1)
+	}
+	adapters, err1 := streamPipesClient.Adapter().GetAllAdapter()
+	if err1 != nil {
+		t.Error(err1)
+		os.Exit(1)
+	}
+	for _, adapter := range adapters {
+		err = streamPipesClient.Adapter().DeleteSingleAdapter(adapter.ElementID)
+		if err != nil {
+			t.Error(err1)
+			os.Exit(1)
+		}
+	}
+
 }

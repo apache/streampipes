@@ -20,6 +20,8 @@ package serializer
 import (
 	"encoding/json"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/adapter"
+	"log"
+	"strings"
 
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/data_lake"
@@ -120,10 +122,15 @@ func NewPipelineCategoriesDeserializer() *PipelineCategoriesDeserializer {
 
 func (p PipelineCategoriesDeserializer) Unmarshal(data []byte) (interface{}, error) {
 	var pipelineCategory []pipeline.PipelineCategory
-	err := json.Unmarshal(data, &pipelineCategory)
-	if err != nil {
+
+	dec := json.NewDecoder(strings.NewReader(string(data)))
+	dec.DisallowUnknownFields()
+
+	if err := dec.Decode(&pipelineCategory); err != nil && !strings.Contains(err.Error(), "unknown field") {
+		log.Fatal(err)
 		return nil, err
 	}
+
 	return pipelineCategory, nil
 }
 
@@ -289,8 +296,11 @@ func NewPipelinesDeserializer() *PipelinesDeserializer {
 
 func (p PipelinesDeserializer) Unmarshal(data []byte) (interface{}, error) {
 	var pipelines []pipeline.Pipeline
-	err := json.Unmarshal(data, &pipelines)
-	if err != nil {
+
+	dec := json.NewDecoder(strings.NewReader(string(data)))
+	dec.DisallowUnknownFields()
+	if err := dec.Decode(&pipelines); err != nil && !strings.Contains(err.Error(), "unknown field") {
+		log.Println(err)
 		return nil, err
 	}
 	return pipelines, nil
@@ -335,8 +345,11 @@ func NewAdapterDeserializer() *AdapterDeserializer {
 
 func (a AdapterDeserializer) Unmarshal(data []byte) (interface{}, error) {
 	var adapterDescription adapter.AdapterDescription
-	err := json.Unmarshal(data, &adapterDescription)
-	if err != nil {
+	dec := json.NewDecoder(strings.NewReader(string(data)))
+	dec.DisallowUnknownFields()
+
+	if err := dec.Decode(&adapterDescription); err != nil && !strings.Contains(err.Error(), "unknown field") {
+		log.Fatal(err)
 		return nil, err
 	}
 	return adapterDescription, nil
@@ -351,8 +364,12 @@ func NewAdaptersDeserializer() *AdaptersDeserializer {
 
 func (a AdaptersDeserializer) Unmarshal(data []byte) (interface{}, error) {
 	var adapters []adapter.AdapterDescription
-	err := json.Unmarshal(data, &adapters)
-	if err != nil {
+
+	dec := json.NewDecoder(strings.NewReader(string(data)))
+	dec.DisallowUnknownFields()
+
+	if err := dec.Decode(&adapters); err != nil && !strings.Contains(err.Error(), "unknown field") {
+		log.Fatal(err)
 		return nil, err
 	}
 	return adapters, nil

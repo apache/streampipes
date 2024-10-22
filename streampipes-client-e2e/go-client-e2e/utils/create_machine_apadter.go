@@ -15,9 +15,23 @@
 // limitations under the License.
 //
 
-module go-client-e2e
+package utils
 
-go 1.21.6
+import (
+	"io/ioutil"
+	"os"
+)
 
-require github.com/apache/streampipes/streampipes-client-go v0.0.0 // indirect
-replace "github.com/apache/streampipes/streampipes-client-go" => "../../streampipes-client-go"
+func CreateData(jsonFilePath string) []byte {
+	jsonFile, err := os.Open(jsonFilePath)
+	if err != nil {
+		return nil
+	}
+	defer jsonFile.Close()
+
+	jsonData, err := ioutil.ReadAll(jsonFile)
+	if err != nil {
+		return nil
+	}
+	return jsonData
+}

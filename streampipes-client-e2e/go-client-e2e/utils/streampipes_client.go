@@ -15,9 +15,22 @@
 // limitations under the License.
 //
 
-module go-client-e2e
+package utils
 
-go 1.21.6
+import (
+	"github.com/apache/streampipes/streampipes-client-go/streampipes"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
+	"os"
+)
 
-require github.com/apache/streampipes/streampipes-client-go v0.0.0 // indirect
-replace "github.com/apache/streampipes/streampipes-client-go" => "../../streampipes-client-go"
+func CreateStreamPipesClient() (*streampipes.StreamPipesClient, error) {
+	length := len(os.Args)
+	clientConfig := config.StreamPipesClientConfig{
+		Url: "http://" + os.Args[length-4] + ":" + os.Args[length-3],
+		Credential: config.StreamPipesApiKeyCredentials{
+			UserName: os.Args[length-1],
+			ApiKey:   os.Args[length-2],
+		},
+	}
+	return streampipes.NewStreamPipesClient(clientConfig)
+}
