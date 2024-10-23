@@ -51,11 +51,8 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
-      - name: List files in the current directory
-          run: ls -la
-
       - name: Start streampipes
         run: docker compose -f ./streampipes-client-e2e/docker-compose.yml -p streampipes-client-e2e up -d
 
       - name: Start go client test
-        run: ./streampipe-client-e2e/tool/start-go-client-e2e.sh
+        run: ./streampipes-client-e2e/tool/start-go-client-e2e.sh
