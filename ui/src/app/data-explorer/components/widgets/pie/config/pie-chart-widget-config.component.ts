@@ -23,6 +23,9 @@ import {
     PieChartWidgetModel,
 } from '../model/pie-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { ColorMappingService } from '../../../../services/color-mapping.service';
+import { WidgetConfigurationService } from 'src/app/data-explorer/services/widget-configuration.service';
+import { DataExplorerFieldProviderService } from 'src/app/data-explorer/services/data-explorer-field-provider-service';
 
 @Component({
     selector: 'sp-pie-chart-widget-config',
@@ -32,6 +35,14 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
     PieChartWidgetModel,
     PieChartVisConfig
 > {
+    constructor(
+        private colorMappingService: ColorMappingService,
+        widgetConfigurationService: WidgetConfigurationService,
+        fieldService: DataExplorerFieldProviderService,
+    ) {
+        super(widgetConfigurationService, fieldService);
+    }
+
     setSelectedProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
             field;
@@ -46,6 +57,8 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
         );
         config.roundingValue ??= 0.1;
         config.selectedRadius ??= 0;
+        config.showCustomColorMapping ??= false;
+        config.colorMappings ??= [];
     }
 
     updateRoundingValue(selectedType: number) {
@@ -57,6 +70,52 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
     updateInnerRadius(selectedRadius: number) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedRadius =
             selectedRadius;
+        this.triggerViewRefresh();
+    }
+
+    showCustomColorMapping(showCustomColorMapping: boolean) {
+        this.currentlyConfiguredWidget.visualizationConfig.showCustomColorMapping =
+            showCustomColorMapping;
+
+        if (!showCustomColorMapping) {
+            this.resetColorMappings();
+        }
+
+        this.triggerViewRefresh();
+    }
+
+    resetColorMappings(): void {
+        this.currentlyConfiguredWidget.visualizationConfig.colorMappings = [];
+        this.triggerViewRefresh();
+    }
+
+    addMapping() {
+        this.colorMappingService.addMapping(
+            this.currentlyConfiguredWidget.visualizationConfig.colorMappings,
+        );
+        this.triggerViewRefresh();
+    }
+
+    removeMapping(index: number) {
+        this.currentlyConfiguredWidget.visualizationConfig.colorMappings =
+            this.colorMappingService.removeMapping(
+                this.currentlyConfiguredWidget.visualizationConfig
+                    .colorMappings,
+                index,
+            );
+        this.triggerViewRefresh();
+    }
+
+    updateColor(index: number, newColor: string) {
+        this.colorMappingService.updateColor(
+            this.currentlyConfiguredWidget.visualizationConfig.colorMappings,
+            index,
+            newColor,
+        );
+        this.triggerViewRefresh();
+    }
+
+    updateMapping() {
         this.triggerViewRefresh();
     }
 

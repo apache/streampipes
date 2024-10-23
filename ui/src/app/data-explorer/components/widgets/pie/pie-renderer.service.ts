@@ -22,12 +22,18 @@ import { SpBaseSingleFieldEchartsRenderer } from '../../../echarts-renderer/base
 import { Injectable } from '@angular/core';
 import { PieChartWidgetModel } from './model/pie-chart-widget.model';
 import { FieldUpdateInfo } from '../../../models/field-update.model';
+import { ZRColor } from 'echarts/types/dist/shared';
+import { ColorMappingService } from '../../../services/color-mapping.service';
 
 @Injectable({ providedIn: 'root' })
 export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
     PieChartWidgetModel,
     PieSeriesOption
 > {
+    constructor(private colorMappingService: ColorMappingService) {
+        super();
+    }
+
     addDatasetTransform(
         widgetConfig: PieChartWidgetModel,
     ): DataTransformOption {
@@ -65,6 +71,7 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
         _widgetConfig: PieChartWidgetModel,
     ): PieSeriesOption {
         const innerRadius = _widgetConfig.visualizationConfig.selectedRadius;
+        const colorMapping = _widgetConfig.visualizationConfig.colorMappings;
         return {
             name,
             type: 'pie',
@@ -82,6 +89,18 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
             },
             encode: { itemName: 'name', value: 'value' },
             radius: [innerRadius + '%', '90%'],
+            itemStyle: {
+                color: params => {
+                    const category = params.data[0];
+                    const color =
+                        colorMapping.find(c => c.value === category.toString())
+                            ?.color ||
+                        this.colorMappingService.getDefaultColor(
+                            params.dataIndex,
+                        );
+                    return color as ZRColor;
+                },
+            },
         };
     }
 
