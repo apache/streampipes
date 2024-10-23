@@ -19,10 +19,14 @@
 import { CompactAdapter } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 export class CompactAdapterUtils {
-    public static storeCompactAdapter(compactAdapter: CompactAdapter) {
+    public static storeCompactAdapter(
+        compactAdapter: CompactAdapter,
+        failOnStatusCode = true,
+    ) {
         return this.postCompactAdapterRequest(
             'application/json',
             compactAdapter,
+            failOnStatusCode,
         );
     }
 
@@ -30,12 +34,17 @@ export class CompactAdapterUtils {
         return this.postCompactAdapterRequest('application/yml', body);
     }
 
-    private static postCompactAdapterRequest(contentType: string, body: any) {
+    private static postCompactAdapterRequest(
+        contentType: string,
+        body: any,
+        failOnStatusCode = true,
+    ) {
         const token = window.localStorage.getItem('auth-token');
         return cy.request({
             method: 'POST',
             url: '/streampipes-backend/api/v2/connect/compact-adapters',
             body: body,
+            failOnStatusCode: failOnStatusCode,
             headers: {
                 'Accept': contentType,
                 'Content-Type': contentType,

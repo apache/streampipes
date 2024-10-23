@@ -73,6 +73,30 @@ describe('Add Compact Adapters', () => {
         });
     });
 
+    it('Ensure correct error code when adapter with the same id already exists', () => {
+        const compactAdapter = getBasicCompactMachineDataSimulator()
+            .setStart()
+            .setPersist()
+            .build();
+
+        CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(
+            response => {
+                expect(response.status).to.equal(200);
+                ConnectUtils.checkAmountOfAdapters(1);
+
+                // Store the same adapter a second time and validate that resource returns status of conflict
+                CompactAdapterUtils.storeCompactAdapter(
+                    compactAdapter,
+                    false,
+                ).then(response => {
+                    expect(response.status).to.equal(409);
+
+                    ConnectUtils.checkAmountOfAdapters(1);
+                });
+            },
+        );
+    });
+
     const getBasicCompactMachineDataSimulator = () => {
         return CompactAdapterBuilder.create(
             'org.apache.streampipes.connect.iiot.adapters.simulator.machine',
