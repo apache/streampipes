@@ -51,6 +51,9 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
+      - name: List files in the current directory
+          run: ls -la
+
       - name: Start streampipes
         run: docker compose -f ./streampipes-client-e2e/docker-compose.yml -p streampipes-client-e2e up -d
 
