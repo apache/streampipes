@@ -55,4 +55,6 @@ jobs:
         run: docker compose -f ./streampipes-client-e2e/docker-compose.yml -p streampipes-client-e2e up -d
 
       - name: Start go client test
-        run: ./streampipes-client-e2e/tool/start-go-client-e2e.sh
+        run: |
+          chmod +x ./streampipes-client-e2e/tool/start-go-client-e2e.sh
+          ./streampipes-client-e2e/tool/start-go-client-e2e.sh
