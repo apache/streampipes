@@ -18,6 +18,7 @@
 
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { CompactAdapterUtils } from '../../../support/utils/connect/CompactAdapterUtils';
+import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
 
 describe('Add Compact Adapters', () => {
     beforeEach('Setup Test', () => {
@@ -43,6 +44,30 @@ describe('Add Compact Adapters', () => {
             ];
 
             ConnectUtils.validateEventSchema(runtimeNames);
+        });
+    });
+
+    it('Add an adapter and change measurement unit', () => {
+        const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
+            .withMeasurementUnit(
+                'temperature',
+                'http://qudt.org/vocab/unit#DegreeFahrenheit',
+            )
+            .setStart()
+            .build();
+
+        CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(() => {
+            ConnectUtils.goToConnect();
+            ConnectBtns.detailsAdapter().click();
+
+            // This assertion works because the original value is below 100
+            // with the transformation the value is above 100
+            ConnectUtils.getLivePreviewValue('temperature')
+                .invoke('text')
+                .then(text => {
+                    const value = parseFloat(text.trim());
+                    expect(value).to.be.greaterThan(100);
+                });
         });
     });
 });

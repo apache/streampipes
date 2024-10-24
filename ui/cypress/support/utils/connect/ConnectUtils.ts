@@ -358,6 +358,12 @@ export class ConnectUtils {
         ConnectUtils.validateEventsInPreview(amountOfProperties);
     }
 
+    public static getLivePreviewValue(runtimeName: string) {
+        return cy.dataCy(`live-preview-value-${runtimeName}`, {
+            timeout: 10000,
+        });
+    }
+
     public static validateEventsInPreview(amountOfProperties: number) {
         // View data
         ConnectBtns.detailsAdapter().click();

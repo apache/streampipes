@@ -61,6 +61,11 @@ export class CompactAdapterBuilder {
         return this;
     }
 
+    public withMeasurementUnit(property: string, unit: string) {
+        this.compactAdapter.transform.measurementUnit[property] = unit;
+        return this;
+    }
+
     public addConfiguration(key: string, value: string) {
         const configuration = { [key]: value };
         this.compactAdapter.configuration.push(configuration);
