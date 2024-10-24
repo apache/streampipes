@@ -379,6 +379,22 @@ export class ConnectUtils {
             .then(text => expect(text).not.to.include('no data'));
     }
 
+    /**
+     * Validates the event schema for an adapter by checking the amount of properties
+     * and the runtime names of the event properties
+     * @param runtimeNames runtime names of the event properties
+     */
+    public static validateEventSchema(runtimeNames: string[]) {
+        ConnectUtils.goToConnect();
+        ConnectBtns.detailsAdapter().click();
+
+        cy.get('tr.mat-mdc-row').should('have.length', runtimeNames.length);
+
+        runtimeNames.forEach(name => {
+            cy.get('td.mat-column-runtimeName').contains(name).should('exist');
+        });
+    }
+
     public static tearDownPreprocessingRuleTest(
         adapterConfiguration: AdapterInput,
         expectedFile: string,

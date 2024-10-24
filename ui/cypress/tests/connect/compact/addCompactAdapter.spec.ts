@@ -18,7 +18,6 @@
 
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { CompactAdapterUtils } from '../../../support/utils/connect/CompactAdapterUtils';
-import { CompactAdapterBuilder } from '../../../support/builder/CompactAdapterBuilder';
 import { PipelineUtils } from '../../../support/utils/pipeline/PipelineUtils';
 
 describe('Add Compact Adapters', () => {
@@ -27,7 +26,8 @@ describe('Add Compact Adapters', () => {
     });
 
     it('Add an adapter via the compact API. Do not start', () => {
-        const compactAdapter = getBasicCompactMachineDataSimulator().build();
+        const compactAdapter =
+            CompactAdapterUtils.getMachineDataSimulator().build();
 
         CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(() => {
             ConnectUtils.validateAdapterIsStopped();
@@ -37,7 +37,7 @@ describe('Add Compact Adapters', () => {
     });
 
     it('Add an adapter via the compact API. Start Adapter', () => {
-        const compactAdapter = getBasicCompactMachineDataSimulator()
+        const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
             .setStart()
             .build();
 
@@ -49,7 +49,7 @@ describe('Add Compact Adapters', () => {
     });
 
     it('Add an adapter via the compact API. Start Adapter and start persist pipeline', () => {
-        const compactAdapter = getBasicCompactMachineDataSimulator()
+        const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
             .setStart()
             .setPersist()
             .build();
@@ -74,7 +74,7 @@ describe('Add Compact Adapters', () => {
     });
 
     it('Ensure correct error code when adapter with the same id already exists', () => {
-        const compactAdapter = getBasicCompactMachineDataSimulator()
+        const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
             .setStart()
             .setPersist()
             .build();
@@ -96,13 +96,4 @@ describe('Add Compact Adapters', () => {
             },
         );
     });
-
-    const getBasicCompactMachineDataSimulator = () => {
-        return CompactAdapterBuilder.create(
-            'org.apache.streampipes.connect.iiot.adapters.simulator.machine',
-        )
-            .setName('Test')
-            .addConfiguration('wait-time-ms', '1000')
-            .addConfiguration('selected-simulator-option', 'flowrate');
-    };
 });

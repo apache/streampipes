@@ -17,12 +17,20 @@
  */
 
 import { CompactAdapter } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { CompactAdapterBuilder } from '../../builder/CompactAdapterBuilder';
 
 export class CompactAdapterUtils {
+    /**
+     * Stores a compact adapter by sending a POST request to the backend.
+     *
+     * @param {CompactAdapter} compactAdapter - The compact adapter to be stored.
+     * @param {boolean} [failOnStatusCode=true] - Whether to fail the request on a non-2xx status code.
+     * @returns {Cypress.Chainable} - The Cypress chainable object representing the request.
+     */
     public static storeCompactAdapter(
         compactAdapter: CompactAdapter,
-        failOnStatusCode = true,
-    ) {
+        failOnStatusCode: boolean = true,
+    ): Cypress.Chainable {
         return this.postCompactAdapterRequest(
             'application/json',
             compactAdapter,
@@ -30,6 +38,12 @@ export class CompactAdapterUtils {
         );
     }
 
+    /**
+     * Stores a compact YAML adapter by sending a POST request to the backend.
+     *
+     * @param {string} body - The YAML string representing the compact adapter.
+     * @returns {Cypress.Chainable} - The Cypress chainable object representing the request.
+     */
     public static storeCompactYmlAdapter(body: string) {
         return this.postCompactAdapterRequest('application/yml', body);
     }
@@ -51,5 +65,17 @@ export class CompactAdapterUtils {
                 'Authorization': `Bearer ${token}`,
             },
         });
+    }
+
+    /**
+     * Creates a CompactAdapterBuilder instance configured for a machine data simulator.
+     */
+    public static getMachineDataSimulator(): CompactAdapterBuilder {
+        return CompactAdapterBuilder.create(
+            'org.apache.streampipes.connect.iiot.adapters.simulator.machine',
+        )
+            .setName('Test')
+            .addConfiguration('wait-time-ms', '1000')
+            .addConfiguration('selected-simulator-option', 'flowrate');
     }
 }

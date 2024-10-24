@@ -28,6 +28,10 @@ export class CompactAdapterBuilder {
             persist: false,
             start: false,
         };
+        this.compactAdapter.transform = {
+            rename: {},
+            measurementUnit: {},
+        };
     }
 
     public static create(appId: string) {
@@ -49,6 +53,11 @@ export class CompactAdapterBuilder {
 
     public setDescription(description: string) {
         this.compactAdapter.description = description;
+        return this;
+    }
+
+    public withRename(from: string, to: string) {
+        this.compactAdapter.transform.rename[from] = to;
         return this;
     }
 
