@@ -18,15 +18,14 @@
 package streampipes
 
 import (
-	"fmt"
-	"io"
-	"log"
-	"net/http"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/serializer"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/util"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/pipeline"
+	"io"
+	"log"
+	"net/http"
 )
 
 type Pipeline struct {
@@ -156,13 +155,9 @@ func (p *Pipeline) GetAllPipeline() ([]pipeline.Pipeline, error) {
 }
 
 // CreatePipeline store a new pipeline
-func (p *Pipeline) CreatePipeline(pp pipeline.Pipeline) (model.ResponseMessage, error) {
+func (p *Pipeline) CreatePipeline(body []byte) (model.ResponseMessage, error) {
 	endPointUrl := util.NewStreamPipesApiPath(p.config.Url, "streampipes-backend/api/v2/pipelines", nil)
 
-	body, err := serializer.NewPipelineSerializer().Marshal(pp)
-	if err != nil {
-		return model.ResponseMessage{}, err
-	}
 	response, err := p.executeRequest("POST", endPointUrl, body)
 	if err != nil {
 		return model.ResponseMessage{}, err
@@ -180,7 +175,6 @@ func (p *Pipeline) CreatePipeline(pp pipeline.Pipeline) (model.ResponseMessage, 
 
 	unmarshalData, err := serializer.NewResponseMessageDeserializer().Unmarshal(data)
 	if err != nil {
-		fmt.Println(err, 11)
 		return model.ResponseMessage{}, err
 	}
 	message := unmarshalData.(model.ResponseMessage)

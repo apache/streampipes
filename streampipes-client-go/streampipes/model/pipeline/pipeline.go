@@ -30,23 +30,23 @@ const (
 )
 
 type Pipeline struct {
-	Sepas                 []DataProcessorInvocation //`json:"sepas"`
-	Streams               []model.SpDataStream      //`json:"streams"`
-	Name                  string                    //`json:"name"`
-	Description           string                    //`json:"description,omitempty"`
-	Actions               []DataSinkInvocation      //`json:"actions"`
-	Running               bool                      //`json:"running"`
-	RestartOnSystemReboot bool                      //`json:"restartOnSystemReboot"`
-	Valid                 bool                      //`json:"valid"`
-	StartedAt             int64                     //`json:"startedAt,omitempty"`
-	CreatedAt             int64                     //`json:"createdAt"`
-	PublicElement         bool                      //`json:"publicElement"`
-	CreatedByUser         string                    //`json:"createdByUser"`
-	PipelineCategories    []string                  //`json:"pipelineCategories"`
-	PipelineNotifications []string                  //`json:"pipelineNotifications"`
-	HealthStatus          PipelineHealthStatus      //`json:"healthStatus"`
-	ID                    string                    //`json:"_id,omitempty"`
-	Rev                   string                    //`json:"_rev,omitempty"`
+	Sepas                 []DataProcessorInvocation `json:"sepas"`
+	Streams               []model.SpDataStream      `json:"streams"`
+	Name                  string                    `json:"name"`
+	Description           string                    `json:"description,omitempty"`
+	Actions               []DataSinkInvocation      `json:"actions"`
+	Running               bool                      `json:"running"`
+	RestartOnSystemReboot bool                      `json:"restartOnSystemReboot"`
+	Valid                 bool                      `json:"valid"`
+	StartedAt             int64                     `json:"startedAt,omitempty"`
+	CreatedAt             int64                     `json:"createdAt"`
+	PublicElement         bool                      `json:"publicElement"`
+	CreatedByUser         string                    `json:"createdByUser"`
+	PipelineCategories    []string                  `json:"pipelineCategories"`
+	PipelineNotifications []string                  `json:"pipelineNotifications"`
+	HealthStatus          PipelineHealthStatus      `json:"healthStatus"`
+	PipelineId            string                    `json:"_id"`
+	Rev                   string                    `json:"_rev"`
 }
 
 type DataProcessorInvocation struct {

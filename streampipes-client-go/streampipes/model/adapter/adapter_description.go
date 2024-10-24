@@ -20,6 +20,7 @@ package adapter
 import "github.com/apache/streampipes/streampipes-client-go/streampipes/model"
 
 type AdapterDescription struct {
+	Class                            string                                 `json:"@class"`
 	ElementID                        string                                 `json:"elementId"`
 	Rev                              string                                 `json:"rev"`
 	DOM                              string                                 `json:"dom"`
