@@ -75,7 +75,9 @@
                     </ng-container>
                     <ng-container *ngIf="element.hasNoDomainProperty">
                         <div
-                            data-cy="live-preview-table-value"
+                            [attr.data-cy]="
+                                'live-preview-value-' + element.runtimeName
+                            "
                             class="value"
                             [class.value-changed]="element.valueChanged"
                         >
