@@ -46,5 +46,9 @@ public class ListOutputStrategy extends OutputStrategy {
     this.propertyName = propertyName;
   }
 
+  @Override
+  public void accept(OutputStrategyVisitor visitor) {
+    visitor.visit(this);
+  }
 
 }
