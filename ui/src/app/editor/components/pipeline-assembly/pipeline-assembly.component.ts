@@ -92,8 +92,8 @@ export class PipelineAssemblyComponent implements AfterViewInit {
      */
     clearAssembly() {
         this.editorService.makePipelineAssemblyEmpty(true);
-        this.JsplumbBridge.deleteEveryEndpoint();
         this.rawPipelineModel = [];
+        this.JsplumbBridge.deleteEveryEndpoint();
         this.drawingAreaComponent.resetZoom();
         this.JsplumbBridge.repaintEverything();
 
@@ -157,7 +157,7 @@ export class PipelineAssemblyComponent implements AfterViewInit {
 
     displayPipelineTemplate(pipeline: Pipeline) {
         this.originalPipeline = pipeline;
-        this.rawPipelineModel = undefined;
+        this.rawPipelineModel = [];
         setTimeout(() => {
             this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
                 pipeline,
