@@ -45,10 +45,10 @@ import {
 } from '../../../models/dataview-dashboard.model';
 import { Observable, Subject, Subscription, zip } from 'rxjs';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
-import { TimeSelectionService } from '../../../services/time-selection.service';
 import { catchError, switchMap } from 'rxjs/operators';
 import { DataExplorerWidgetRegistry } from '../../../registry/data-explorer-widget-registry';
 import { SpFieldUpdateService } from '../../../services/field-update.service';
+import { TimeSelectionService } from 'projects/streampipes/shared-ui/src/lib/services/time-selection.service';
 
 @Directive()
 export abstract class BaseDataExplorerWidgetDirective<

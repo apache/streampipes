@@ -28,7 +28,6 @@ import {
     TimeSelectionId,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { TimeSelectionService } from '../../services/time-selection.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import {
@@ -48,6 +47,7 @@ import { SpDataExplorerRoutes } from '../../data-explorer.routes';
 import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
 import { DataExplorerDetectChangesService } from '../../services/data-explorer-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../models/dataview-dashboard.model';
+import { TimeSelectionService } from 'projects/streampipes/shared-ui/src/lib/services/time-selection.service';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-panel',

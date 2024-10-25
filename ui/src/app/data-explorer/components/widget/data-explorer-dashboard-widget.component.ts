@@ -47,8 +47,8 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { CurrentUserService } from '@streampipes/shared-ui';
 import { BaseWidgetData } from '../../models/dataview-dashboard.model';
 import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
-import { TimeSelectionService } from '../../services/time-selection.service';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { TimeSelectionService } from 'projects/streampipes/shared-ui/src/lib/services/time-selection.service';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-widget',

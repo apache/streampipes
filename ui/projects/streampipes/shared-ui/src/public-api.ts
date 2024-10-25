@@ -39,6 +39,8 @@ export * from './lib/components/sp-exception-message/exception-details/exception
 export * from './lib/components/sp-label/sp-label.component';
 export * from './lib/components/sp-table/sp-table.component';
 export * from './lib/components/warning-box/warning-box.component';
+export * from './lib/components/time-selector/time-range-selector.component';
+export * from './lib/components/time-selector/time-selector-menu/time-selector-menu.component';
 
 export * from './lib/models/sp-navigation.model';
 
@@ -47,4 +49,5 @@ export * from './lib/services/jwt-token-storage.service';
 export * from './lib/services/current-user.service';
 export * from './lib/services/echarts-toolbox.service';
 export * from './lib/services/colorization.service';
+export * from './lib/services/time-selection.service';
 export * from './lib/components/asset-browser/asset-browser.service';
