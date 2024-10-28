@@ -122,6 +122,7 @@ chmod +x ./install-element.sh
 ./install-element.sh -host "$HOST" -port "$PORT" -token "$accessToken"
 
 echo "get apikey"
+# Get APIKEY
 APIKEYRESP=$(curl -s -X POST "http://$HOST:$PORT$API_KEY_URL" \
    -H "Content-Type: application/json" \
    -H "authorization: Bearer $accessToken" \
@@ -130,10 +131,15 @@ if [ $? -ne 0 ]; then
     echo "Error: API Key request failed"
     exit 1
 fi
+APIKEY=$(echo "$APIKEYRESP" | sed 's/.*"rawToken":"\([^"]*\)".*/\1/')
+if [ -z "$APIKEY" ]; then
+    echo "Error: Failed to retrieve API key"
+    exit 1
+fi
 
 echo "start e2e test"
 chmod +x ./"$E2E_TEST"
-./"$E2E_TEST" -h "$HOST" -p "$PORT" -u "$API_KEY_USER_NAME" -k "$APIKEYRESP"
+./"$E2E_TEST" -h "$HOST" -p "$PORT" -u "$API_KEY_USER_NAME" -k "$APIKEY"
 if [ $? -ne 0 ]; then
     echo "start $E2E_TEST failed"
     exit 1
