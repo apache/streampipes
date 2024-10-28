@@ -51,24 +51,19 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
+      - name: Build Docker image
+        run: |
+          docker build -t streampipes_pipeline-elements-all-jvm:release-validation ./streampipes-extensions/streampipes-extensions-all-jvm
+          docker build -t streampipes_backend:release-validation ./streampipes-service-core
+
+      - name: build image
+        run: docker images
+
       - name: Start streampipes
         run: docker compose -f ./streampipes-client-e2e/docker-compose.yml -p streampipes-client-e2e up -d
 
-      - name: Check if streampipes services are running
-        run: |
-          echo "Checking if all services are up and running..."
-          services_status=0
-          while [ $services_status -ne 0 ]; do
-            sleep 5
-            services_status=$(docker compose -f ./streampipes-client-e2e/docker-compose.yml -p streampipes-client-e2e ps -q | xargs docker inspect --format '{{.State.Status}}' | grep -v "running")
-            if [ -z "$services_status" ]; then
-              echo "All services are running."
-            else
-              echo "Some services are not running yet. Retrying..."
-            fi
-          done
-
       - name: Start go client test
         run: |
-          chmod +x ./streampipes-client-e2e/tool/start-go-client-e2e.sh
-          ./streampipes-client-e2e/tool/start-go-client-e2e.sh
+          cd ./streampipes-client-e2e/tool
+          chmod +x ./start-streampipes-client-e2e.sh
+          ./start-streampipes-client-e2e.sh -t go-client-e2e.sh

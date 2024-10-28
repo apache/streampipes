@@ -13,13 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# ============================================================
-# NOTICE
-# ============================================================
-# This docker-compose file is for validating releases only. To use StreamPipes, use the installation instructions
-# provided on https://streampipes.apache.org/download
-#
-
 version: "3.8"
 
 # global logging
@@ -32,9 +25,6 @@ x-logging: &default-logging
 services:
   #### apache/streampipes
   backend:
-    build:
-      context: ../streampipes-service-core
-      dockerfile: Dockerfile
     image: streampipes_backend:release-validation
     ports:
       - "8030:8030"
@@ -48,9 +38,6 @@ services:
       spnet:
 
   extensions-all-jvm:
-    build:
-      context: ../streampipes-extensions/streampipes-extensions-all-jvm
-      dockerfile: Dockerfile
     image: streampipes_pipeline-elements-all-jvm:release-validation
     volumes:
       - files:/spImages
