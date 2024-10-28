@@ -48,7 +48,7 @@ import { DataExplorerFieldProviderService } from '../../../services/data-explore
 import { catchError, switchMap } from 'rxjs/operators';
 import { DataExplorerWidgetRegistry } from '../../../registry/data-explorer-widget-registry';
 import { SpFieldUpdateService } from '../../../services/field-update.service';
-import { TimeSelectionService } from 'projects/streampipes/shared-ui/src/lib/services/time-selection.service';
+import { TimeSelectionService } from '@streampipes/shared-ui';
 
 @Directive()
 export abstract class BaseDataExplorerWidgetDirective<

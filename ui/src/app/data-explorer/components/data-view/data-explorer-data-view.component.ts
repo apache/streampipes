@@ -37,7 +37,7 @@ import { SupportsUnsavedChangeDialog } from '../../models/dataview-dashboard.mod
 import { Observable, of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { map } from 'rxjs/operators';
-import { TimeSelectionService } from 'projects/streampipes/shared-ui/src/lib/services/time-selection.service';
+import { TimeSelectionService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-data-explorer-data-view',

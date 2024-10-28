@@ -47,7 +47,7 @@ import { SpDataExplorerRoutes } from '../../data-explorer.routes';
 import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
 import { DataExplorerDetectChangesService } from '../../services/data-explorer-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../models/dataview-dashboard.model';
-import { TimeSelectionService } from 'projects/streampipes/shared-ui/src/lib/services/time-selection.service';
+import { TimeSelectionService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-panel',
