@@ -133,7 +133,7 @@ fi
 
 echo "start e2e test"
 chmod +x ./"$E2E_TEST"
-./"$E2E_TEST" -h "$HOST" -p "$PORT" -u "$API_KEY_USER_NAME" -k "$API_KEY_USER_NAME"
+./"$E2E_TEST" -h "$HOST" -p "$PORT" -u "$API_KEY_USER_NAME" -k "$APIKEYRESP"
 if [ $? -ne 0 ]; then
     echo "start $E2E_TEST failed"
     exit 1
