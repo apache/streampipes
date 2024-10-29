@@ -45,8 +45,7 @@ func main() {
 ### Create a StreamPipes Pipeline
 
 ```bash
-      pipelineData := pipeline.Pipeline{} // Populate the pipeline data
-	  responseMsg,err := streamPipesClient.Pipeline().CreatePipeline(pipelineData)
+	  responseMsg,err := streamPipesClient.Pipeline().CreatePipeline(pipelineData) // Populate the pipeline data
 ```
 
 ### Get a StreamPipes Pipeline

@@ -45,8 +45,7 @@ func main() {
 ### Create a StreamPipes Adapter
 
 ```bash
-	  adapterData := adapter.AdapterDescription{} // Populate the adapter data
-	  err := streamPipesClient.Adapter().CreateAdapter(adapterData)
+	  err := streamPipesClient.Adapter().CreateAdapter(adapterData) // Populate the adapter data
 ```
 
 ### Get a StreamPipes Adapter
