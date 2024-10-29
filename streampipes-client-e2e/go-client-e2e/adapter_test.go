@@ -59,6 +59,7 @@ func TestGetAdapter(t *testing.T) {
 		os.Exit(1)
 	}
 	if len(adapters) == 0 {
+		t.Log("adapter is null")
 		os.Exit(1)
 	}
 }
@@ -75,6 +76,7 @@ func TestStartAdapter(t *testing.T) {
 		os.Exit(1)
 	}
 	if len(adapters) == 0 {
+		t.Log("adapter is null")
 		os.Exit(1)
 	}
 	err = streamPipesClient.Adapter().StartSingleAdapter(adapters[0].ElementID)

@@ -39,6 +39,7 @@ func TestCreatePipeline(t *testing.T) {
 		os.Exit(1)
 	}
 	if len(adapters) == 0 {
+		t.Log("adapter is null")
 		os.Exit(1)
 	}
 	adapter := adapters[0]
@@ -52,6 +53,7 @@ func TestCreatePipeline(t *testing.T) {
 
 	message, statusErr := streamPipesClient.Pipeline().CreatePipeline([]byte(pipeline))
 	if statusErr != nil || !message.Success {
+		t.Log(statusErr, !message.Success)
 		os.Exit(1)
 	}
 
@@ -69,6 +71,7 @@ func TestGetPipeline(t *testing.T) {
 		os.Exit(1)
 	}
 	if len(pipelines) == 0 {
+		t.Log("pipelines is null")
 		os.Exit(1)
 	}
 }
@@ -85,6 +88,7 @@ func TestStartPipeline(t *testing.T) {
 		os.Exit(1)
 	}
 	if len(pipelines) == 0 {
+		t.Log("pipelines is null")
 		os.Exit(1)
 	}
 
