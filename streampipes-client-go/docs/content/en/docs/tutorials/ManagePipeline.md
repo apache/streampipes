@@ -45,9 +45,10 @@ func main() {
 ### Create a StreamPipes Pipeline
 
 ```bash
+      // Populating go-model as a data source is not supported at this time,This is because the inheritance of the model has not been resolved for the time being.
       pipelineData = `json`
       pipeline = []byte(pipelineData) 
-	  responseMsg,err := streamPipesClient.Pipeline().CreatePipeline(pipelineData) // Populate the pipeline data
+	  responseMsg,err := streamPipesClient.Pipeline().CreatePipeline(pipelineData)
 ```
 
 ### Get a StreamPipes Pipeline

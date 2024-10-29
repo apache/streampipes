@@ -45,9 +45,10 @@ func main() {
 ### Create a StreamPipes Adapter
 
 ```bash
+      // Populating go-model as a data source is not supported at this time,This is because the inheritance of the model has not been resolved for the time being.
       adapterData = `json`
       adapter = []byte(adapterData) 
-	  err := streamPipesClient.Adapter().CreateAdapter(adapterData) // Populate the adapter data
+	  err := streamPipesClient.Adapter().CreateAdapter(adapterData) 
 ```
 
 ### Get a StreamPipes Adapter
