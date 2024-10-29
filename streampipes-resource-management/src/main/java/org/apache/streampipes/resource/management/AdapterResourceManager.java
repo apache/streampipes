@@ -31,7 +31,8 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
   }
 
   public AdapterResourceManager() {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage());
+    super(StorageDispatcher.INSTANCE.getNoSqlStore()
+                                    .getAdapterInstanceStorage());
   }
 
   /**
@@ -56,8 +57,15 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
    *
    * @param adapterDescription input adapter description
    */
-  public void encryptAndUpdate(AdapterDescription adapterDescription) {
-    db.updateElement(cloneAndEncrypt(adapterDescription));
+  public void encryptAndUpdate(AdapterDescription adapterDescription) throws AdapterException {
+    try {
+      db.updateElement(cloneAndEncrypt(adapterDescription));
+    } catch (org.lightcouch.DocumentConflictException e) {
+      throw new AdapterException(
+          "Conflict occurred while editing the adapter with id: %s".formatted(adapterDescription.getElementId()),
+          e
+      );
+    }
   }
 
   public void delete(String elementId) {
@@ -69,7 +77,8 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
    */
   private AdapterDescription cloneAndEncrypt(AdapterDescription adapterDescription) {
     AdapterDescription encryptedAdapterDescription = new Cloner().adapterDescription(adapterDescription);
-    SecretProvider.getEncryptionService().apply(encryptedAdapterDescription);
+    SecretProvider.getEncryptionService()
+                  .apply(encryptedAdapterDescription);
     return encryptedAdapterDescription;
   }
 

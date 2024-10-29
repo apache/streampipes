@@ -378,11 +378,9 @@ export class ConnectUtils {
             amountOfProperties,
         );
 
-        cy.wait(1000);
-
-        cy.dataCy('live-preview-table-value')
-            .invoke('text')
-            .then(text => expect(text).not.to.include('no data'));
+        cy.dataCy('live-preview-table-no-data', { timout: 1000 }).should(
+            'not.exist',
+        );
     }
 
     /**

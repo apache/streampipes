@@ -24,6 +24,7 @@ import {
     CompactPipeline,
     CompactPipelineElement,
     ErrorMessage,
+    Message,
     PipelineOperationStatus,
     PipelineTemplateService,
     PipelineUpdateInfo,
@@ -112,16 +113,22 @@ export class AdapterStartedDialog implements OnInit {
     updateAdapter(): void {
         this.loadingText = `Updating adapter ${this.adapter.name}`;
         this.loading = true;
-        this.adapterService.updateAdapter(this.adapter).subscribe(
-            res => {
-                this.onAdapterReady(
-                    `Adapter ${this.adapter.name} was successfully updated and is available in the pipeline editor.`,
-                );
+        this.adapterService.updateAdapter(this.adapter).subscribe({
+            next: status => {
+                if (status.success) {
+                    this.onAdapterReady(
+                        `Adapter ${this.adapter.name} was successfully updated and is available in the pipeline editor.`,
+                    );
+                } else {
+                    const errorLogMessage = this.getErrorLogMessage(status);
+
+                    this.onAdapterFailure(errorLogMessage);
+                }
             },
-            error => {
+            error: error => {
                 this.onAdapterFailure(error.error);
             },
-        );
+        });
     }
 
     addAdapter() {
@@ -137,16 +144,8 @@ export class AdapterStartedDialog implements OnInit {
                         this.startAdapter(adapterElementId, true);
                     }
                 } else {
-                    const errorMsg: SpLogMessage = {
-                        cause:
-                            status.notifications.length > 0
-                                ? status.notifications[0].title
-                                : 'Unknown Error',
-                        detail: '',
-                        fullStackTrace: '',
-                        level: 'ERROR',
-                        title: 'Unknown Error',
-                    };
+                    const errorMsg: SpLogMessage =
+                        this.getErrorLogMessage(status);
 
                     this.onAdapterFailure(errorMsg);
                 }
@@ -155,6 +154,20 @@ export class AdapterStartedDialog implements OnInit {
                 this.onAdapterFailure(error.error);
             },
         );
+    }
+
+    private getErrorLogMessage(status: Message): SpLogMessage {
+        const notification = status.notifications[0] || {
+            title: 'Unknown Error',
+            description: '',
+        };
+        return {
+            cause: notification.title,
+            detail: '',
+            fullStackTrace: notification.description,
+            level: 'ERROR',
+            title: 'Unknown Error',
+        };
     }
 
     startAdapter(adapterElementId: string, showPreview = false) {

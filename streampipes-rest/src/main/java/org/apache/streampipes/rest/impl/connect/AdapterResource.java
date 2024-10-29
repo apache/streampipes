@@ -40,6 +40,7 @@ import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,7 +116,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
       updateManager.updateAdapter(adapterDescription);
     } catch (AdapterException e) {
       LOG.error("Error while updating adapter with id {}", adapterDescription.getElementId(), e);
-      return ok(Notifications.error(e.getMessage()));
+      return ok(Notifications.error(e.getMessage(), ExceptionUtils.getStackTrace(e)));
     }
 
     return ok(Notifications.success(adapterDescription.getElementId()));

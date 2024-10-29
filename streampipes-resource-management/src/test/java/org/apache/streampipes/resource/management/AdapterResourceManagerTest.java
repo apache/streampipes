@@ -47,7 +47,7 @@ public class AdapterResourceManagerTest {
   }
 
   @Test
-  public void encryptAndUpdate_ValidateDescriptionStored() {
+  public void encryptAndUpdate_ValidateDescriptionStored() throws AdapterException {
 
     adapterResourceManager.encryptAndUpdate(new AdapterDescription());
 
