@@ -147,6 +147,7 @@ export class PipelineAssemblyOptionsComponent {
 
     isPipelineAssemblyEmpty() {
         return (
+            this.rawPipelineModel === undefined ||
             this.rawPipelineModel.length === 0 ||
             this.rawPipelineModel.every(pe => pe.settings.disabled)
         );
