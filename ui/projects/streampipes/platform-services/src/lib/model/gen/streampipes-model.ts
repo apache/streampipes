@@ -1,26 +1,7 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2024-10-11 10:41:46.
+// Generated using typescript-generator version 3.2.1263 on 2024-10-29 10:04:46.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -844,6 +825,7 @@ export class CompactPipelineElement {
     configuration: { [index: string]: any }[];
     connectedTo: string[];
     id: string;
+    output: OutputConfiguration;
     ref: string;
     type: string;
 
@@ -862,6 +844,7 @@ export class CompactPipelineElement {
             data.connectedTo,
         );
         instance.id = data.id;
+        instance.output = OutputConfiguration.fromData(data.output);
         instance.ref = data.ref;
         instance.type = data.type;
         return instance;
@@ -2605,6 +2588,26 @@ export class Option {
     }
 }
 
+export class OutputConfiguration {
+    keep: string[];
+    userDefined: UserDefinedOutput[];
+
+    static fromData(
+        data: OutputConfiguration,
+        target?: OutputConfiguration,
+    ): OutputConfiguration {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new OutputConfiguration();
+        instance.keep = __getCopyArrayFn(__identity<string>())(data.keep);
+        instance.userDefined = __getCopyArrayFn(UserDefinedOutput.fromData)(
+            data.userDefined,
+        );
+        return instance;
+    }
+}
+
 export class Pipeline implements Storable {
     _id: string;
     _rev: string;
@@ -4052,6 +4055,26 @@ export class UnitTransformRuleDescription extends ValueTransformationRuleDescrip
         instance.fromUnitRessourceURL = data.fromUnitRessourceURL;
         instance.runtimeKey = data.runtimeKey;
         instance.toUnitRessourceURL = data.toUnitRessourceURL;
+        return instance;
+    }
+}
+
+export class UserDefinedOutput {
+    fieldName: string;
+    runtimeType: string;
+    semanticType: string;
+
+    static fromData(
+        data: UserDefinedOutput,
+        target?: UserDefinedOutput,
+    ): UserDefinedOutput {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new UserDefinedOutput();
+        instance.fieldName = data.fieldName;
+        instance.runtimeType = data.runtimeType;
+        instance.semanticType = data.semanticType;
         return instance;
     }
 }

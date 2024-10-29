@@ -265,6 +265,7 @@ export class AdapterStartedDialog implements OnInit {
             configuration: undefined,
             id: adapter.correspondingDataStreamElementId,
             connectedTo: undefined,
+            output: undefined,
         });
         return template;
     }
