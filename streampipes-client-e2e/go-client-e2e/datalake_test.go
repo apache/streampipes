@@ -16,3 +16,37 @@
 //
 
 package go_client_e2e
+
+import (
+	"go-client-e2e/utils"
+	"os"
+	"testing"
+	"time"
+)
+
+func TestGetDataLake(t *testing.T) {
+	TestCreatePipeline(t)
+	TestStartPipeline(t)
+	streamPipesClient, err := utils.CreateStreamPipesClient()
+	if err != nil {
+		t.Error(err)
+		os.Exit(1)
+	}
+	dataLake := streamPipesClient.DataLakeMeasures()
+	measures, err := dataLake.GetAllDataLakeMeasure()
+	if err != nil {
+		t.Error(err)
+		os.Exit(1)
+	}
+
+	time.Sleep(10 * time.Second)
+
+	if len(measures) == 0 {
+		TestStopPipeline(t)
+		TestDeletePipeline(t)
+		t.Error("No data lake measures found")
+		os.Exit(1)
+	}
+	TestStopPipeline(t)
+	TestDeletePipeline(t)
+}
