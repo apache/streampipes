@@ -45,6 +45,8 @@ func main() {
 ### Create a StreamPipes Adapter
 
 ```bash
+      adapterData = `json`
+      adapter = []byte(adapterData) 
 	  err := streamPipesClient.Adapter().CreateAdapter(adapterData) // Populate the adapter data
 ```
 
