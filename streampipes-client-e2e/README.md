@@ -22,15 +22,14 @@
 Before running, ensure that StreamPipe is operational and the corresponding configuration is input into the `start-streampipes-client-e2e.sh` script.
 **Note**: This script must be executed from within the [tool](./tool) directory.
 ```shell
-./start-streampipes-client-e2e.sh -h 127.0.0.1 -p 8030 -u admin@streampipes.apache.org   -pw admin -t go-client-e2e.sh
+./start-streampipes-client-e2e.sh -h 127.0.0.1 -p 8030  admin@streampipes.apache.org   -pw admin -t go-client-e2e.sh
 ```
 
 ## Usage Instructions
 | Parameter | Default          | Required | Description                                                                                               |
 |-----------|-------------------|----------|-----------------------------------------------------------------------------------------------------------|
 | `-h`      | `127.0.0.1`       | No       | Host address                                                                                              |
-| `-p`      | `8030`            | No       | Backend port                                                                                              |
-| `-u`      | `admin@streampipes.apache.org` | Yes      | User                                                                                                      |
+| `-p`      | `8030`            | No       | Backend port                                                                                              |                                                                                                   |
 | `-pw`     | `admin`           | No       | Password                                                                                                  |
 | `-t`      | `""`              | Yes      | Name of the client's E2E test startup script (the script must be located in the [tool](./tool) directory) |
 
@@ -42,5 +41,4 @@ Before running, ensure that StreamPipe is operational and the corresponding conf
 |-----------|-------------|
 | `-h`      | Host        |
 | `-p`      | Backend port|
-| `-u`      | User        |
 | `-k`      | API Key     |

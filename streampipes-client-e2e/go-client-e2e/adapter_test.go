@@ -36,11 +36,13 @@ func TestCreateAdapter(t *testing.T) {
 	TestDeleteAdapter(t)
 	streamPipesClient, err := utils.CreateStreamPipesClient()
 	if err != nil {
+		t.Log(err)
 		os.Exit(1)
 	}
 	data := utils.CreateData("adapter/machine.json")
 	err = streamPipesClient.Adapter().CreateAdapter(data)
 	if err != nil {
+		t.Log(err)
 		os.Exit(1)
 	}
 }

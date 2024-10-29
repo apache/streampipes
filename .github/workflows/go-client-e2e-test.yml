@@ -56,9 +56,6 @@ jobs:
           docker build -t streampipes_pipeline-elements-all-jvm:release-validation ./streampipes-extensions/streampipes-extensions-all-jvm
           docker build -t streampipes_backend:release-validation ./streampipes-service-core
 
-      - name: build image
-        run: docker images
-
       - name: Start streampipes
         run: docker compose -f ./streampipes-client-e2e/docker-compose.yml -p streampipes-client-e2e up -d
 
