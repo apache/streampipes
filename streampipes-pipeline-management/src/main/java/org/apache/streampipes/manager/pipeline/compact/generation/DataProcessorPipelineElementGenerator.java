@@ -35,7 +35,13 @@ public class DataProcessorPipelineElementGenerator {
                                           CompactPipelineElement pipelineElement) {
     basicGenerator.apply(processor, pipelineElement);
     var template = basicGenerator.makeTemplate(processor, pipelineElement);
-    return new DataProcessorTemplateHandler(template, processor, false)
+    var element = new DataProcessorTemplateHandler(template, processor, false)
         .applyTemplateOnPipelineElement();
+
+    if (pipelineElement.output() != null) {
+      var outputStrategyGenerator = new OutputStrategyGenerator(pipelineElement.output());
+      element.getOutputStrategies().forEach(o -> o.accept(outputStrategyGenerator));
+    }
+    return element;
   }
 }

@@ -57,7 +57,8 @@ public class CompactPipelineTemplateManagement {
             key,
             stream.getElementId(),
             List.of(),
-            List.of()
+            List.of(),
+            null
         ));
       });
     }

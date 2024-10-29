@@ -28,5 +28,6 @@ public record CompactPipelineElement(String type,
                                      String ref,
                                      String id,
                                      List<String> connectedTo,
-                                     List<Map<String, Object>> configuration) {
+                                     List<Map<String, Object>> configuration,
+                                     OutputConfiguration output) {
 }

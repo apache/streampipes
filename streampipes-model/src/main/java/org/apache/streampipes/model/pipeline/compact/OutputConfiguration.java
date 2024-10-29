@@ -16,14 +16,13 @@
  *
  */
 
-@import '../../../scss/sp/sp-dialog.scss';
+package org.apache.streampipes.model.pipeline.compact;
 
-.element-id {
-    border-radius: 5px;
-    margin-right: 10px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-size: small;
-    display: inline-block;
-    padding: 5px;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.List;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record OutputConfiguration(List<String> keep,
+                                  List<UserDefinedOutput> userDefined) {
 }

@@ -16,14 +16,9 @@
  *
  */
 
-@import '../../../scss/sp/sp-dialog.scss';
+package org.apache.streampipes.model.pipeline.compact;
 
-.element-id {
-    border-radius: 5px;
-    margin-right: 10px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-size: small;
-    display: inline-block;
-    padding: 5px;
+public record UserDefinedOutput(String fieldName,
+                                String runtimeType,
+                                String semanticType) {
 }

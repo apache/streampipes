@@ -52,7 +52,8 @@ public class PersistDataLakePipelineTemplate implements DefaultPipelineTemplateP
                 List.of(
                     Map.of("schema_update", "Update schema"),
                     Map.of("ignore_duplicates", false)
-                )
+                ),
+                null
             )
         )
     );
