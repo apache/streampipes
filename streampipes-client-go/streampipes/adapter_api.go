@@ -120,13 +120,9 @@ func (a *Adapter) DeleteSingleAdapter(adapterId string) error {
 	return nil
 }
 
-func (a *Adapter) CreateAdapter(adapters adapter.AdapterDescription) error {
+func (a *Adapter) CreateAdapter(adapters []byte) error {
 	endPointUrl := util.NewStreamPipesApiPath(a.config.Url, "streampipes-backend/api/v2/connect/master/adapters", nil)
-	body, err := serializer.NewAdapterSerializer().Marshal(adapters)
-	if err != nil {
-		return err
-	}
-	response, err := a.executeRequest("PUT", endPointUrl, body)
+	response, err := a.executeRequest("POST", endPointUrl, adapters)
 	if err != nil {
 		return err
 	}
@@ -158,8 +154,7 @@ func (a *Adapter) StopSingleAdapter(adapterId string) error {
 }
 
 func (a *Adapter) StartSingleAdapter(adapterId string) error {
-	endPointUrl := util.NewStreamPipesApiPath(a.config.Url, "streampipes-backend/api/v2/pipelines", []string{adapterId, "start"})
-
+	endPointUrl := util.NewStreamPipesApiPath(a.config.Url, "streampipes-backend/api/v2/connect/master/adapters", []string{adapterId, "start"})
 	response, err := a.executeRequest("POST", endPointUrl, nil)
 	if err != nil {
 		return err
