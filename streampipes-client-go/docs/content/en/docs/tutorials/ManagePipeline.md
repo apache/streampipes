@@ -1,3 +1,8 @@
+---
+title: Manage Pipeline
+description: >
+  Manage Pipeline.
+---
 <!--
   // Licensed to the Apache Software Foundation (ASF) under one or more
   // contributor license agreements.  See the NOTICE file distributed with
@@ -16,10 +21,10 @@
   //
   -->
 
-###  Manage StreamPipes Pipeline
+#  Manage StreamPipes Pipeline
 ---
 ## Initialize Go-Client
-```bash
+```go
 import (
 	"log"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes"
@@ -33,7 +38,7 @@ func main() {
                 ApiKey:   "<Your-API-Key>",
             },
         }
-    
+
       streamPipesClient, err := streampipes.NewStreamPipesClient(clientConfig)
       if err != nil {
           log.Fatal(err)
@@ -44,29 +49,29 @@ func main() {
 
 ### Create a StreamPipes Pipeline
 
-```bash
+```go
       // Populating go-model as a data source is not supported at this time,This is because the inheritance of the model has not been resolved for the time being.
       pipelineData = `json`
-      pipeline = []byte(pipelineData) 
+      pipeline = []byte(pipelineData)
 	  responseMsg,err := streamPipesClient.Pipeline().CreatePipeline(pipelineData)
 ```
 
 ### Get a StreamPipes Pipeline
 
-```bash
+```go
 	streampipesPipeline, err := streamPipesClient.Pipeline().GetSinglePipelineStatus("pipelineId")
 ```
 
 ### Start a StreamPipes Pipeline
 
-```bash
+```go
 	operationStatus, err := streamPipesClient.Pipeline().StartSinglePipeline("pipelineId")
 ```
 
 ### Stop a StreamPipes Pipeline
 
-```bash
+```go
 	operationStatus, err := streamPipesClient.Pipeline().StopSinglePipeline("pipelineId")
 ```
 
-### ... 
+### ...
