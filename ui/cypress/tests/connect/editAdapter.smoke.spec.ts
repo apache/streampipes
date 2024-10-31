@@ -57,6 +57,8 @@ describe('Test Edit Adapter', () => {
 
         cy.dataCy('sp-adapter-name').clear().type(newAdapterName);
 
+        // This wait is required to ensure that there is no couch db update conflict
+        cy.wait(1000);
         ConnectBtns.storeEditAdapter().click();
 
         cy.dataCy('sp-connect-adapter-success-added', {

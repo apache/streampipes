@@ -23,7 +23,7 @@ import { DataLakeUtils } from '../datalake/DataLakeUtils';
 import { ConnectBtns } from './ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { UserUtils } from '../UserUtils';
-import { PipelineUtils } from '../PipelineUtils';
+import { PipelineUtils } from '../pipeline/PipelineUtils';
 
 export class ConnectUtils {
     public static testAdapter(
@@ -76,9 +76,11 @@ export class ConnectUtils {
             );
         }
 
-        ConnectEventSchemaUtils.markPropertyAsTimestamp(
-            adapterConfiguration.timestampProperty,
-        );
+        if (adapterConfiguration.timestampProperty) {
+            ConnectEventSchemaUtils.markPropertyAsTimestamp(
+                adapterConfiguration.timestampProperty,
+            );
+        }
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
     }
@@ -356,6 +358,12 @@ export class ConnectUtils {
         ConnectUtils.validateEventsInPreview(amountOfProperties);
     }
 
+    public static getLivePreviewValue(runtimeName: string) {
+        return cy.dataCy(`live-preview-value-${runtimeName}`, {
+            timeout: 10000,
+        });
+    }
+
     public static validateEventsInPreview(amountOfProperties: number) {
         // View data
         ConnectBtns.detailsAdapter().click();
@@ -370,11 +378,25 @@ export class ConnectUtils {
             amountOfProperties,
         );
 
-        cy.wait(1000);
+        cy.dataCy('live-preview-table-no-data', { timout: 1000 }).should(
+            'not.exist',
+        );
+    }
 
-        cy.dataCy('live-preview-table-value')
-            .invoke('text')
-            .then(text => expect(text).not.to.include('no data'));
+    /**
+     * Validates the event schema for an adapter by checking the amount of properties
+     * and the runtime names of the event properties
+     * @param runtimeNames runtime names of the event properties
+     */
+    public static validateEventSchema(runtimeNames: string[]) {
+        ConnectUtils.goToConnect();
+        ConnectBtns.detailsAdapter().click();
+
+        cy.get('tr.mat-mdc-row').should('have.length', runtimeNames.length);
+
+        runtimeNames.forEach(name => {
+            cy.get('td.mat-column-runtimeName').contains(name).should('exist');
+        });
     }
 
     public static tearDownPreprocessingRuleTest(
@@ -402,5 +424,22 @@ export class ConnectUtils {
         cy.wait(2000);
         // Close dialog
         cy.get('button').contains('Close').parent().click();
+    }
+
+    public static validateAdapterIsRunning() {
+        ConnectUtils.goToConnect();
+        ConnectBtns.startAdapter().should('have.length', 0);
+        ConnectBtns.stopAdapter().should('have.length', 1);
+    }
+
+    public static validateAdapterIsStopped() {
+        ConnectUtils.goToConnect();
+        ConnectBtns.startAdapter().should('have.length', 1);
+        ConnectBtns.stopAdapter().should('have.length', 0);
+    }
+
+    public static checkAmountOfAdapters(amount: number) {
+        ConnectUtils.goToConnect();
+        ConnectBtns.deleteAdapter().should('have.length', amount);
     }
 }

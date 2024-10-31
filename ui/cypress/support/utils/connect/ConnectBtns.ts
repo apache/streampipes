@@ -17,7 +17,11 @@
  */
 export class ConnectBtns {
     public static detailsAdapter() {
-        return cy.dataCy('details-adapter');
+        return cy.dataCy('details-adapter', { timeout: 10000 });
+    }
+
+    public static deleteAdapter() {
+        return cy.dataCy('delete-adapter', { timeout: 10000 });
     }
 
     public static editAdapter() {
@@ -67,6 +71,10 @@ export class ConnectBtns {
 
     public static stopAllAdapters() {
         return cy.dataCy('stop-all-adapters-btn');
+    }
+
+    public static showCodeCheckbox() {
+        return cy.dataCy('show-code-checkbox');
     }
 
     // ========================================================================

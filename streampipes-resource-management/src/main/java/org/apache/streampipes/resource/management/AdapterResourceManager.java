@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.resource.management;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
@@ -30,7 +31,8 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
   }
 
   public AdapterResourceManager() {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage());
+    super(StorageDispatcher.INSTANCE.getNoSqlStore()
+                                    .getAdapterInstanceStorage());
   }
 
   /**
@@ -39,10 +41,15 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
    * @param adapterDescription input adapter description
    * @return the id of the created adapter
    */
-  public String encryptAndCreate(AdapterDescription adapterDescription) {
-    AdapterDescription encryptedAdapterDescription = cloneAndEncrypt(adapterDescription);
+  public String encryptAndCreate(AdapterDescription adapterDescription) throws AdapterException {
+    var encryptedAdapterDescription = cloneAndEncrypt(adapterDescription);
     encryptedAdapterDescription.setRev(null);
-    return db.persist(encryptedAdapterDescription).v;
+
+    try {
+      return db.persist(encryptedAdapterDescription).v;
+    } catch (org.lightcouch.DocumentConflictException e) {
+      throw new AdapterException("Conflict occurred while creating the adapter", e);
+    }
   }
 
   /**
@@ -50,8 +57,15 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
    *
    * @param adapterDescription input adapter description
    */
-  public void encryptAndUpdate(AdapterDescription adapterDescription) {
-    db.updateElement(cloneAndEncrypt(adapterDescription));
+  public void encryptAndUpdate(AdapterDescription adapterDescription) throws AdapterException {
+    try {
+      db.updateElement(cloneAndEncrypt(adapterDescription));
+    } catch (org.lightcouch.DocumentConflictException e) {
+      throw new AdapterException(
+          "Conflict occurred while editing the adapter with id: %s".formatted(adapterDescription.getElementId()),
+          e
+      );
+    }
   }
 
   public void delete(String elementId) {
@@ -63,7 +77,8 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
    */
   private AdapterDescription cloneAndEncrypt(AdapterDescription adapterDescription) {
     AdapterDescription encryptedAdapterDescription = new Cloner().adapterDescription(adapterDescription);
-    SecretProvider.getEncryptionService().apply(encryptedAdapterDescription);
+    SecretProvider.getEncryptionService()
+                  .apply(encryptedAdapterDescription);
     return encryptedAdapterDescription;
   }
 
