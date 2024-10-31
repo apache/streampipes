@@ -94,7 +94,10 @@ public class CompactPipelineConverter {
     if (outputStrategy instanceof CustomOutputStrategy) {
       return new OutputConfiguration(((CustomOutputStrategy) outputStrategy).getSelectedPropertyKeys(), null);
     } else if (outputStrategy instanceof UserDefinedOutputStrategy) {
-      return new OutputConfiguration(null, toCustomConfig(((UserDefinedOutputStrategy) outputStrategy).getEventProperties()));
+      return new OutputConfiguration(
+          null,
+          toCustomConfig(((UserDefinedOutputStrategy) outputStrategy).getEventProperties())
+      );
     } else {
       return null;
     }
