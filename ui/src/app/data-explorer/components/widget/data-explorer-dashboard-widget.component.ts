@@ -162,7 +162,7 @@ export class DataExplorerDashboardWidgetComponent
             endTime: this.timeSettings.endTime,
             timeSelectionId: this.timeSettings.timeSelectionId,
         };
-        if (this.dashboardItem.timeSettings !== undefined) {
+        if (this.dashboardItem?.timeSettings !== undefined) {
             this.timeSettingsModified = true;
         }
     }

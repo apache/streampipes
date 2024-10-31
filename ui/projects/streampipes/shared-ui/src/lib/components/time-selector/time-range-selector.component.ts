@@ -28,7 +28,8 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import {
-    TimeSelectionId,
+    QuickTimeSelection,
+    TimeSelectionConstants,
     TimeSettings,
     TimeString,
 } from '@streampipes/platform-services';
@@ -55,6 +56,9 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     @Input()
     showTimeSelector = true;
 
+    @Input()
+    quickSelections: QuickTimeSelection[] = [];
+
     simpleTimeString: string = '';
     timeString: TimeString;
     timeStringMode: 'simple' | 'advanced' = 'simple';
@@ -62,6 +66,9 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     constructor(private timeSelectionService: TimeSelectionService) {}
 
     ngOnInit() {
+        this.timeSelectionService.initializeQuickTimeSelection(
+            this.quickSelections,
+        );
         this.createDateString();
     }
 
@@ -112,7 +119,7 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
 
         this.timeSettings.startTime = newStartTime;
         this.timeSettings.endTime = newEndTime;
-        this.timeSettings.timeSelectionId = TimeSelectionId.CUSTOM;
+        this.timeSettings.timeSelectionId = TimeSelectionConstants.CUSTOM;
         this.timeSelectorMenu.triggerDisplayUpdate();
         this.createDateString();
         this.reloadData();
@@ -126,7 +133,9 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     }
 
     createDateString(): void {
-        if (this.timeSettings.timeSelectionId !== TimeSelectionId.CUSTOM) {
+        if (
+            this.timeSettings.timeSelectionId !== TimeSelectionConstants.CUSTOM
+        ) {
             this.simpleTimeString = this.timeSelectionService.getTimeSelection(
                 this.timeSettings.timeSelectionId,
             ).label;

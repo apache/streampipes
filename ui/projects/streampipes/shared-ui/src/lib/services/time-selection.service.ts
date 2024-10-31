@@ -21,12 +21,13 @@ import { Subject } from 'rxjs';
 import {
     DateRange,
     QuickTimeSelection,
-    TimeSelectionId,
+    TimeSelectionConstants,
     TimeSettings,
     WidgetTimeSettings,
 } from '@streampipes/platform-services';
 import {
     startOfDay,
+    endOfDay,
     startOfHour,
     startOfMonth,
     startOfWeek,
@@ -41,83 +42,131 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class TimeSelectionService {
-    legacyMappings: Record<number, TimeSelectionId> = {
-        15: TimeSelectionId.LAST_15_MINUTES,
-        60: TimeSelectionId.LAST_HOUR,
-        1440: TimeSelectionId.LAST_DAY,
-        10080: TimeSelectionId.LAST_WEEK,
-        43200: TimeSelectionId.LAST_MONTH,
-        525600: TimeSelectionId.LAST_YEAR,
+    legacyMappings: Record<number, string> = {
+        15: TimeSelectionConstants.LAST_15_MINUTES,
+        60: TimeSelectionConstants.LAST_HOUR,
+        1440: TimeSelectionConstants.LAST_DAY,
+        10080: TimeSelectionConstants.LAST_WEEK,
+        43200: TimeSelectionConstants.LAST_MONTH,
+        525600: TimeSelectionConstants.LAST_YEAR,
     };
 
-    quickTimeSelections: QuickTimeSelection[] = [
+    defaultQuickTimeSelections: QuickTimeSelection[] = [
         {
             label: 'Last 15 min',
-            timeSelectionId: TimeSelectionId.LAST_15_MINUTES,
+            timeSelectionId: TimeSelectionConstants.LAST_15_MINUTES,
             startTime: now => subMinutes(now, 15),
             endTime: now => now,
         },
         {
             label: 'Last 1 hour',
-            timeSelectionId: TimeSelectionId.LAST_HOUR,
+            timeSelectionId: TimeSelectionConstants.LAST_HOUR,
             startTime: now => subHours(now, 1),
             endTime: now => now,
         },
         {
             label: 'Last 1 day',
-            timeSelectionId: TimeSelectionId.LAST_DAY,
+            timeSelectionId: TimeSelectionConstants.LAST_DAY,
             startTime: now => subDays(now, 1),
             endTime: now => now,
         },
         {
             label: 'Last 1 week',
-            timeSelectionId: TimeSelectionId.LAST_WEEK,
+            timeSelectionId: TimeSelectionConstants.LAST_WEEK,
             startTime: now => subWeeks(now, 1),
             endTime: now => now,
         },
         {
             label: 'Last 1 month',
-            timeSelectionId: TimeSelectionId.LAST_MONTH,
+            timeSelectionId: TimeSelectionConstants.LAST_MONTH,
             startTime: now => subMonths(now, 1),
             endTime: now => now,
         },
         {
             label: 'Last 1 year',
-            timeSelectionId: TimeSelectionId.LAST_YEAR,
+            timeSelectionId: TimeSelectionConstants.LAST_YEAR,
             startTime: now => subYears(now, 1),
             endTime: now => now,
         },
         {
             label: 'Current day',
-            timeSelectionId: TimeSelectionId.CURRENT_DAY,
+            timeSelectionId: TimeSelectionConstants.CURRENT_DAY,
             startTime: now => startOfDay(now),
             endTime: now => now,
         },
         {
             label: 'Current hour',
-            timeSelectionId: TimeSelectionId.CURRENT_HOUR,
+            timeSelectionId: TimeSelectionConstants.CURRENT_HOUR,
             startTime: now => startOfHour(now),
             endTime: now => now,
         },
         {
             label: 'Current week',
-            timeSelectionId: TimeSelectionId.CURRENT_WEEK,
+            timeSelectionId: TimeSelectionConstants.CURRENT_WEEK,
             startTime: now => startOfWeek(now),
             endTime: now => now,
         },
         {
             label: 'Current month',
-            timeSelectionId: TimeSelectionId.CURRENT_MONTH,
+            timeSelectionId: TimeSelectionConstants.CURRENT_MONTH,
             startTime: now => startOfMonth(now),
             endTime: now => now,
         },
         {
             label: 'Current year',
-            timeSelectionId: TimeSelectionId.CURRENT_YEAR,
+            timeSelectionId: TimeSelectionConstants.CURRENT_YEAR,
             startTime: now => startOfYear(now),
             endTime: now => now,
         },
     ];
+
+    quickTimeSelections: QuickTimeSelection[] =
+        this.defaultQuickTimeSelections.map(selection => ({
+            ...selection,
+        }));
+
+    public initializeQuickTimeSelection(
+        quickSelection: QuickTimeSelection[],
+    ): void {
+        const isDifferentFromCurrent = !this.areSelectionsEqual(
+            this.quickTimeSelections,
+            quickSelection,
+        );
+        const isDifferentFromDefault = !this.areSelectionsEqual(
+            this.defaultQuickTimeSelections,
+            quickSelection,
+        );
+
+        if (isDifferentFromCurrent && quickSelection.length !== 0) {
+            this.quickTimeSelections = quickSelection.map(selection => ({
+                ...selection,
+            }));
+        } else if (!isDifferentFromDefault) {
+            this.quickTimeSelections = this.defaultQuickTimeSelections.map(
+                selection => ({
+                    ...selection,
+                }),
+            );
+        }
+    }
+
+    public areSelectionsEqual(
+        defaultQuickTimeSelections: QuickTimeSelection[],
+        newQuickTimeSelections: QuickTimeSelection[],
+    ): boolean {
+        if (defaultQuickTimeSelections.length !== newQuickTimeSelections.length)
+            return false;
+
+        return defaultQuickTimeSelections.every((itemA, index) => {
+            const itemB = newQuickTimeSelections[index];
+            return (
+                itemA.label === itemB.label &&
+                itemA.timeSelectionId === itemB.timeSelectionId &&
+                itemA.startTime.toString() === itemB.startTime.toString() &&
+                itemA.endTime.toString() === itemB.endTime.toString()
+            );
+        });
+    }
 
     public getDateRange(quickSelection: QuickTimeSelection): DateRange {
         const now = new Date();
@@ -129,21 +178,18 @@ export class TimeSelectionService {
 
     public getDefaultTimeSettings(): TimeSettings {
         return this.getTimeSettings(
-            TimeSelectionId.LAST_15_MINUTES,
+            this.quickTimeSelections[0].timeSelectionId,
             new Date(),
         );
     }
 
-    public getTimeSettings(
-        timeSelectionId: TimeSelectionId,
-        now: Date,
-    ): TimeSettings {
+    public getTimeSettings(timeSelectionId: string, now: Date): TimeSettings {
         const selection = this.getTimeSelection(timeSelectionId);
         return {
             startTime: selection.startTime(now).getTime(),
             endTime: selection.endTime(now).getTime(),
             dynamicSelection: -1,
-            timeSelectionId: timeSelectionId,
+            timeSelectionId: selection.timeSelectionId,
         };
     }
 
@@ -152,8 +198,21 @@ export class TimeSelectionService {
         if (timeSettings.timeSelectionId === undefined) {
             timeSettings.timeSelectionId =
                 this.findLegacyTimeSelectionId(timeSettings);
+        } else if (typeof timeSettings.timeSelectionId === 'number') {
+            timeSettings.timeSelectionId =
+                TimeSelectionConstants.getLegacyTimeSelectionID(
+                    timeSettings.timeSelectionId,
+                );
         }
-        if (timeSettings.timeSelectionId !== TimeSelectionId.CUSTOM) {
+        if (timeSettings.timeSelectionId !== TimeSelectionConstants.CUSTOM) {
+            if (
+                this.quickTimeSelections.find(
+                    s => s.timeSelectionId === timeSettings.timeSelectionId,
+                ) === undefined
+            ) {
+                timeSettings.timeSelectionId =
+                    this.quickTimeSelections[0].timeSelectionId;
+            }
             const updatedTimeSettings = this.getTimeSettings(
                 timeSettings.timeSelectionId,
                 now,
@@ -163,19 +222,19 @@ export class TimeSelectionService {
         }
     }
 
-    public getTimeSelection(timeSelectionId: TimeSelectionId) {
-        return this.quickTimeSelections.find(
-            s => s.timeSelectionId === timeSelectionId,
+    public getTimeSelection(timeSelectionId: string): QuickTimeSelection {
+        return (
+            this.quickTimeSelections.find(
+                s => s.timeSelectionId === timeSelectionId,
+            ) || this.quickTimeSelections[0]
         );
     }
 
-    private findLegacyTimeSelectionId(
-        timeSettings: TimeSettings,
-    ): TimeSelectionId {
+    private findLegacyTimeSelectionId(timeSettings: TimeSettings): string {
         if (timeSettings.dynamicSelection in this.legacyMappings) {
             return this.legacyMappings[timeSettings.dynamicSelection];
         } else {
-            return TimeSelectionId.CUSTOM;
+            return TimeSelectionConstants.CUSTOM;
         }
     }
 

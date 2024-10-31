@@ -17,7 +17,10 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TimeSelectionId, TimeSettings } from '@streampipes/platform-services';
+import {
+    TimeSelectionConstants,
+    TimeSettings,
+} from '@streampipes/platform-services';
 import {
     DateRange,
     DefaultMatCalendarRangeStrategy,
@@ -31,6 +34,10 @@ import {
 })
 export class CustomTimeRangeSelectionComponent implements OnInit {
     @Input() timeSettings: TimeSettings;
+
+    @Input()
+    showTimeSelection: boolean = false;
+
     @Output() timeSettingsEmitter = new EventEmitter<TimeSettings>();
 
     currentStartDate: string;
@@ -39,6 +46,7 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
     currentEndTime: string;
     currentDateRange: DateRange<Date>;
     dateSelectionComplete = false;
+    dateRangeString: string;
 
     constructor(
         private readonly selectionModel: MatRangeDateSelectionModel<Date>,
@@ -75,10 +83,15 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
     updateDateStrings(): void {
         this.currentStartDate = this.formatDate(this.currentDateRange.start);
         this.currentEndDate = this.formatDate(this.currentDateRange.end);
+        this.dateRangeString = `${this.currentStartDate} - ${this.currentEndDate}`;
     }
 
     formatDate(date: Date): string {
-        return date?.toLocaleDateString() || '-';
+        if (this.showTimeSelection === true) {
+            return date?.toLocaleDateString() || '-';
+        } else {
+            return date?.toLocaleDateString() || ' ';
+        }
     }
 
     onDateChange(selectedDate: Date): void {
@@ -96,11 +109,20 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
     }
 
     saveSelection(): void {
-        this.updateDateTime(this.currentDateRange.start, this.currentStartTime);
-        this.updateDateTime(this.currentDateRange.end, this.currentEndTime);
+        if (this.showTimeSelection === true) {
+            this.updateDateTime(
+                this.currentDateRange.start,
+                this.currentStartTime,
+            );
+            this.updateDateTime(this.currentDateRange.end, this.currentEndTime);
+        } else {
+            this.updateDateTime(this.currentDateRange.start, '00:00:00');
+            this.updateDateTime(this.currentDateRange.end, '23:59:59');
+        }
+
         this.timeSettings.startTime = this.currentDateRange.start.getTime();
         this.timeSettings.endTime = this.currentDateRange.end.getTime();
-        this.timeSettings.timeSelectionId = TimeSelectionId.CUSTOM;
+        this.timeSettings.timeSelectionId = TimeSelectionConstants.CUSTOM;
         this.timeSettingsEmitter.emit(this.timeSettings);
     }
 

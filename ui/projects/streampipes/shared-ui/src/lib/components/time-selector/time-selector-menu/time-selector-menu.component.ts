@@ -44,6 +44,7 @@ export class TimeRangeSelectorMenuComponent implements OnInit {
     timeSettingsEmitter: EventEmitter<TimeSettings> =
         new EventEmitter<TimeSettings>();
 
+    @Input()
     quickSelections: QuickTimeSelection[] = [];
 
     @ViewChild('timeRangeSelection')

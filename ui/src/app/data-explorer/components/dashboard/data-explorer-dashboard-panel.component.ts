@@ -25,7 +25,7 @@ import {
     DataExplorerWidgetModel,
     DataLakeMeasure,
     DataViewDataExplorerService,
-    TimeSelectionId,
+    TimeSelectionConstants,
     TimeSettings,
 } from '@streampipes/platform-services';
 import { AuthService } from '../../../services/auth.service';
@@ -242,7 +242,7 @@ export class DataExplorerDashboardPanelComponent
             startTime,
             endTime,
             dynamicSelection: -1,
-            timeSelectionId: TimeSelectionId.CUSTOM,
+            timeSelectionId: TimeSelectionConstants.CUSTOM,
         };
     }
 
