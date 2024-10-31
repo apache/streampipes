@@ -94,6 +94,7 @@ public class PersistPipelineHandler {
         DATA_LAKE_CONNECTOR_ID,
         adapterDescription.getCorrespondingDataStreamElementId(),
         null,
+        null,
         null
     ));
     return pipelineElements;

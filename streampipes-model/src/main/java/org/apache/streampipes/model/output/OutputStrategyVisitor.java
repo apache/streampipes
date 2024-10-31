@@ -15,38 +15,24 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.model.output;
 
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.util.Cloner;
+public interface OutputStrategyVisitor {
 
-import java.util.ArrayList;
-import java.util.List;
+  void visit(AppendOutputStrategy appendOutputStrategy);
 
-public class CustomTransformOutputStrategy extends OutputStrategy {
+  void visit(CustomOutputStrategy customOutputStrategy);
 
-  private List<EventProperty> eventProperties;
+  void visit(CustomTransformOutputStrategy customTransformOutputStrategy);
 
-  public CustomTransformOutputStrategy() {
-    super();
-    this.eventProperties = new ArrayList<>();
-  }
+  void visit(FixedOutputStrategy fixedOutputStrategy);
 
-  public CustomTransformOutputStrategy(CustomTransformOutputStrategy other) {
-    super(other);
-    this.eventProperties = new Cloner().properties(other.getEventProperties());
-  }
+  void visit(KeepOutputStrategy keepOutputStrategy);
 
-  public List<EventProperty> getEventProperties() {
-    return eventProperties;
-  }
+  void visit(ListOutputStrategy listOutputStrategy);
 
-  public void setEventProperties(List<EventProperty> eventProperties) {
-    this.eventProperties = eventProperties;
-  }
+  void visit(TransformOutputStrategy transformOutputStrategy);
 
-  @Override
-  public void accept(OutputStrategyVisitor visitor) {
-    visitor.visit(this);
-  }
+  void visit(UserDefinedOutputStrategy userDefinedOutputStrategy);
 }

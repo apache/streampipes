@@ -63,4 +63,9 @@ public class KeepOutputStrategy extends OutputStrategy {
   public void setKeepBoth(boolean keepBoth) {
     this.keepBoth = keepBoth;
   }
+
+  @Override
+  public void accept(OutputStrategyVisitor visitor) {
+    visitor.visit(this);
+  }
 }

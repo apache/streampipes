@@ -75,4 +75,6 @@ public abstract class OutputStrategy {
   public void setRenameRules(List<PropertyRenameRule> renameRules) {
     this.renameRules = renameRules;
   }
+
+  public abstract void accept(OutputStrategyVisitor visitor);
 }

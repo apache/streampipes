@@ -19,8 +19,15 @@
 package org.apache.streampipes.manager.pipeline.compact.generation;
 
 import org.apache.streampipes.manager.template.CompactConfigGenerator;
+import org.apache.streampipes.model.output.CustomOutputStrategy;
+import org.apache.streampipes.model.output.OutputStrategy;
+import org.apache.streampipes.model.output.UserDefinedOutputStrategy;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.compact.CompactPipelineElement;
+import org.apache.streampipes.model.pipeline.compact.OutputConfiguration;
+import org.apache.streampipes.model.pipeline.compact.UserDefinedOutput;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 
 import java.util.ArrayList;
@@ -38,6 +45,7 @@ public class CompactPipelineConverter {
             stream.getDom(),
             stream.getElementId(),
             null,
+            null,
             null))
         .forEach(pipelineElements::add);
 
@@ -47,7 +55,8 @@ public class CompactPipelineConverter {
             processor.getDom(),
             processor.getAppId(),
             processor.getConnectedTo(),
-            getConfig(processor.getStaticProperties())))
+            getConfig(processor.getStaticProperties()),
+            getOutput(processor.getOutputStrategies().get(0))))
         .forEach(pipelineElements::add);
 
     pipeline.getActions().stream()
@@ -56,7 +65,8 @@ public class CompactPipelineConverter {
             sink.getDom(),
             sink.getAppId(),
             sink.getConnectedTo(),
-            getConfig(sink.getStaticProperties())))
+            getConfig(sink.getStaticProperties()),
+            null))
         .forEach(pipelineElements::add);
 
     return pipelineElements;
@@ -66,17 +76,38 @@ public class CompactPipelineConverter {
                                                String ref,
                                                String elementId,
                                                List<String> connectedTo,
-                                               List<Map<String, Object>> config) {
+                                               List<Map<String, Object>> config,
+                                               OutputConfiguration outputConfiguration) {
     var connections = connectedTo != null ? connectedTo.stream()
         .map(this::replaceId)
         .toList() : null;
-    return new CompactPipelineElement(type, replaceId(ref), elementId, connections, config);
+    return new CompactPipelineElement(type, replaceId(ref), elementId, connections, config, outputConfiguration);
   }
 
   public List<Map<String, Object>> getConfig(List<StaticProperty> staticProperties) {
     var configs = new ArrayList<Map<String, Object>>();
     staticProperties.forEach(c -> configs.add(new CompactConfigGenerator(c).toTemplateValue()));
     return configs;
+  }
+
+  public OutputConfiguration getOutput(OutputStrategy outputStrategy) {
+    if (outputStrategy instanceof CustomOutputStrategy) {
+      return new OutputConfiguration(((CustomOutputStrategy) outputStrategy).getSelectedPropertyKeys(), null);
+    } else if (outputStrategy instanceof UserDefinedOutputStrategy) {
+      return new OutputConfiguration(
+          null,
+          toCustomConfig(((UserDefinedOutputStrategy) outputStrategy).getEventProperties())
+      );
+    } else {
+      return null;
+    }
+  }
+
+  private List<UserDefinedOutput> toCustomConfig(List<EventProperty> eventProperties) {
+    return eventProperties.stream().map(ep -> new UserDefinedOutput(
+        ep.getRuntimeName(),
+        ((EventPropertyPrimitive) ep).getRuntimeType(),
+        ep.getSemanticType())).toList();
   }
 
   private String replaceId(String id) {

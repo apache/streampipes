@@ -16,35 +16,13 @@
  *
  */
 
-package org.apache.streampipes.model.output;
+package org.apache.streampipes.model.pipeline.compact;
 
-import org.apache.streampipes.model.schema.EventProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 
-public class UserDefinedOutputStrategy extends OutputStrategy {
-
-  private List<EventProperty> eventProperties;
-
-  public UserDefinedOutputStrategy() {
-    super();
-  }
-
-  public UserDefinedOutputStrategy(UserDefinedOutputStrategy other) {
-    super(other);
-    this.eventProperties = other.getEventProperties();
-  }
-
-  public List<EventProperty> getEventProperties() {
-    return eventProperties;
-  }
-
-  public void setEventProperties(List<EventProperty> eventProperties) {
-    this.eventProperties = eventProperties;
-  }
-
-  @Override
-  public void accept(OutputStrategyVisitor visitor) {
-    visitor.visit(this);
-  }
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record OutputConfiguration(List<String> keep,
+                                  List<UserDefinedOutput> userDefined) {
 }
