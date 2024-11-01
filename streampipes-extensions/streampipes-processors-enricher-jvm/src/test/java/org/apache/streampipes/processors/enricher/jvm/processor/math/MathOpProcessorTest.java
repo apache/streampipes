@@ -56,7 +56,7 @@ public class MathOpProcessorTest {
         rightOperand.setSelectedProperty("s0::value2");
         // choose operation to calculate
         OneOfStaticProperty operation = (OneOfStaticProperty)graph.getStaticProperties().get(2);
-        operation. setInternalName ("operation");
+        operation.setInternalName ("operation");
         for (Option option : operation.getOptions()) {
             if (option.getName().equals("+")) {
                 option.setSelected(true);
@@ -65,36 +65,36 @@ public class MathOpProcessorTest {
         }
 
         ProcessorParams params = new ProcessorParams(graph);
-        processor.onInvocation(params, null, null);
+        processor.onInvocation(params,null,null);
 
         StoreEventCollector collector = new StoreEventCollector();
 
         processor.onEvent(this.createTestEvent(1,2),collector);
-        Assertions.assertEquals(3.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(3.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(2,3),collector);
-        Assertions.assertEquals(5.,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(5.,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(3,4),collector);
-        Assertions.assertEquals(7.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(7.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(4,5),collector);
-        Assertions.assertEquals(9.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(9.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(5,6),collector);
-        Assertions.assertEquals(11.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(11.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(6,7),collector);
-        Assertions.assertEquals(13.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(13.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(7,8),collector);
-        Assertions.assertEquals(15.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(15.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
     }
 
@@ -113,7 +113,7 @@ public class MathOpProcessorTest {
         rightOperand.setSelectedProperty("s0::value2");
 
         OneOfStaticProperty operation = (OneOfStaticProperty)graph.getStaticProperties().get(2);
-        operation. setInternalName ("operation");
+        operation.setInternalName ("operation");
         for (Option option : operation.getOptions()) {
             if (option.getName().equals("-")) {
                 option.setSelected(true);
@@ -122,36 +122,36 @@ public class MathOpProcessorTest {
         }
 
         ProcessorParams params = new ProcessorParams(graph);
-        processor.onInvocation(params, null, null);
+        processor.onInvocation(params,null,null);
 
         StoreEventCollector collector = new StoreEventCollector();
 
         processor.onEvent(this.createTestEvent(4,1),collector);
-        Assertions.assertEquals(3.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(3.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(8,1),collector);
-        Assertions.assertEquals(7.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(7.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(9,4),collector);
-        Assertions.assertEquals(5.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(5.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(6,2),collector);
-        Assertions.assertEquals(4.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(4.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(10,3),collector);
-        Assertions.assertEquals(7.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(7.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(15,2),collector);
-        Assertions.assertEquals(13.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(13.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(19,17),collector);
-        Assertions.assertEquals(2.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(2.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
     }
 
@@ -170,7 +170,7 @@ public class MathOpProcessorTest {
         rightOperand.setSelectedProperty("s0::value2");
 
         OneOfStaticProperty operation = (OneOfStaticProperty)graph.getStaticProperties().get(2);
-        operation. setInternalName ("operation");
+        operation.setInternalName ("operation");
         for (Option option : operation.getOptions()) {
             if (option.getName().equals("*")) {
                 option.setSelected(true);
@@ -179,36 +179,36 @@ public class MathOpProcessorTest {
         }
 
         ProcessorParams params = new ProcessorParams(graph);
-        processor.onInvocation(params, null, null);
+        processor.onInvocation(params,null,null);
 
         StoreEventCollector collector = new StoreEventCollector();
 
         processor.onEvent(this.createTestEvent(4,1),collector);
-        Assertions.assertEquals(4.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(4.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(8,1),collector);
-        Assertions.assertEquals(8.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(8.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(9,4),collector);
-        Assertions.assertEquals(36.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(36.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(6,2),collector);
-        Assertions.assertEquals(12.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(12.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(10,3),collector);
-        Assertions.assertEquals(30.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(30.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(15,2),collector);
-        Assertions.assertEquals(30.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(30.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(19,17),collector);
-        Assertions.assertEquals(323.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(323.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
     }
 
@@ -227,7 +227,7 @@ public class MathOpProcessorTest {
         rightOperand.setSelectedProperty("s0::value2");
 
         OneOfStaticProperty operation = (OneOfStaticProperty)graph.getStaticProperties().get(2);
-        operation. setInternalName ("operation");
+        operation.setInternalName ("operation");
         for (Option option : operation.getOptions()) {
             if (option.getName().equals("/")) {
                 option.setSelected(true);
@@ -236,36 +236,36 @@ public class MathOpProcessorTest {
         }
 
         ProcessorParams params = new ProcessorParams(graph);
-        processor.onInvocation(params, null, null);
+        processor.onInvocation(params,null,null);
 
         StoreEventCollector collector = new StoreEventCollector();
 
         processor.onEvent(this.createTestEvent(4,1),collector);
-        Assertions.assertEquals(4.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(4.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(8,1),collector);
-        Assertions.assertEquals(8.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(8.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(16,4),collector);
-        Assertions.assertEquals(4.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(4.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(6,2),collector);
-        Assertions.assertEquals(3.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(3.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(12,3),collector);
-        Assertions.assertEquals(4.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(4.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(16,2),collector);
-        Assertions.assertEquals(8.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(8.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(34,17),collector);
-        Assertions.assertEquals(2.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(2.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
     }
 
@@ -284,7 +284,7 @@ public class MathOpProcessorTest {
         rightOperand.setSelectedProperty("s0::value2");
 
         OneOfStaticProperty operation = (OneOfStaticProperty)graph.getStaticProperties().get(2);
-        operation. setInternalName ("operation");
+        operation.setInternalName ("operation");
         for (Option option : operation.getOptions()) {
             if (option.getName().equals("%")) {
                 option.setSelected(true);
@@ -293,40 +293,40 @@ public class MathOpProcessorTest {
         }
 
         ProcessorParams params = new ProcessorParams(graph);
-        processor.onInvocation(params, null, null);
+        processor.onInvocation(params,null,null);
 
         StoreEventCollector collector = new StoreEventCollector();
 
         processor.onEvent(this.createTestEvent(4,1),collector);
-        Assertions.assertEquals(0.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(0.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(8,1),collector);
-        Assertions.assertEquals(0.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(0.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(9,4),collector);
-        Assertions.assertEquals(1.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(1.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(6,2),collector);
-        Assertions.assertEquals(0.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(0.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(10,3),collector);
-        Assertions.assertEquals(1.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(1.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(15,2),collector);
-        Assertions.assertEquals(1.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(1.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
 
         processor.onEvent(this.createTestEvent(19,17),collector);
-        Assertions.assertEquals(2.0,collector.getEvents() .get(0).getFieldBySelector("calculationResult").getRawValue());
+        Assertions.assertEquals(2.0,collector.getEvents().get(0).getFieldBySelector("calculationResult").getRawValue());
         collector.getEvents().clear();
     }
 
-    private Event createTestEvent(Integer value1, Integer value2) {
+    private Event createTestEvent(Integer value1,Integer value2) {
 
         var eventSchema = GuessSchemaBuilder.create()
                 .property(PrimitivePropertyBuilder
@@ -340,9 +340,9 @@ public class MathOpProcessorTest {
                 .build().eventSchema;
 
         Map<String, Object> map = new HashMap<>();
-        map.put("value1", value1);
-        map.put("value2", value2);
+        map.put("value1",value1);
+        map.put("value2",value2);
 
-        return EventFactory.fromMap(map, new SourceInfo("", "s0"), new SchemaInfo(eventSchema, new ArrayList<>()));
+        return EventFactory.fromMap(map,new SourceInfo("", "s0"),new SchemaInfo(eventSchema,new ArrayList<>()));
     }
 }
