@@ -1,3 +1,8 @@
+---
+title: Manage Adapter
+description: >
+  Manage Adapter.
+---
 <!--
   // Licensed to the Apache Software Foundation (ASF) under one or more
   // contributor license agreements.  See the NOTICE file distributed with
@@ -16,10 +21,10 @@
   //
   -->
 
-###  Manage StreamPipes Adapter
+#  Manage StreamPipes Adapter
 ---
 ## Initialize Go-Client
-```bash
+```go
 import (
 	"log"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes"
@@ -33,7 +38,7 @@ func main() {
                 ApiKey:   "<Your-API-Key>",
             },
         }
-    
+
       streamPipesClient, err := streampipes.NewStreamPipesClient(clientConfig)
       if err != nil {
           log.Fatal(err)
@@ -44,29 +49,29 @@ func main() {
 
 ### Create a StreamPipes Adapter
 
-```bash
+```go
       // Populating go-model as a data source is not supported at this time,This is because the inheritance of the model has not been resolved for the time being.
       adapterData = `json`
-      adapter = []byte(adapterData) 
-	  err := streamPipesClient.Adapter().CreateAdapter(adapterData) 
+      adapter = []byte(adapterData)
+	  err := streamPipesClient.Adapter().CreateAdapter(adapterData)
 ```
 
 ### Get a StreamPipes Adapter
 
-```bash
+```go
 	streampipesAdapter, err := streamPipesClient.Adapter().GetSingleAdapter("adapterId")
 ```
 
 ### Start a StreamPipes Adapter
 
-```bash
+```go
 	err := streamPipesClient.Adapter().StartSingleAdapter("adapterId")
 ```
 
 ### Stop a StreamPipes Adapter
 
-```bash
+```go
 	err := streamPipesClient.Adapter().StopSingleAdapter("adapterId")
 ```
 
-### ... 
+### ...
