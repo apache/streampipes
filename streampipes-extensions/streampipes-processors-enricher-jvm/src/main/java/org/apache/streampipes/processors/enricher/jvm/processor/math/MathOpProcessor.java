@@ -47,10 +47,10 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 public class MathOpProcessor extends StreamPipesDataProcessor {
 
-  private static final String RESULT_FIELD = "calculationResult";
-  private static final String LEFT_OPERAND = "leftOperand";
-  private static final String RIGHT_OPERAND = "rightOperand";
-  private static final String OPERATION = "operation";
+  protected static final String RESULT_FIELD = "calculationResult";
+  protected static final String LEFT_OPERAND = "leftOperand";
+  protected static final String RIGHT_OPERAND = "rightOperand";
+  protected static final String OPERATION = "operation";
 
   Operation arithmeticOperation = null;
   String leftOperand;
