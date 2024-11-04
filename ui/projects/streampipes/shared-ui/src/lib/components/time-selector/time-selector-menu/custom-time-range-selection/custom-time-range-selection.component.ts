@@ -26,6 +26,8 @@ import {
     DefaultMatCalendarRangeStrategy,
     MatRangeDateSelectionModel,
 } from '@angular/material/datepicker';
+import { differenceInDays } from 'date-fns';
+import { TimeSelectorLabel } from '../../time-selector.model';
 
 @Component({
     selector: 'sp-custom-time-range-selection',
@@ -35,8 +37,16 @@ import {
 export class CustomTimeRangeSelectionComponent implements OnInit {
     @Input() timeSettings: TimeSettings;
 
+    @Input() labels: TimeSelectorLabel;
+
     @Input()
-    showTimeSelection: boolean = false;
+    enableTimeChange = true;
+
+    @Input()
+    enableMaxDayRange: boolean = true;
+
+    @Input()
+    maxDayRange = 0;
 
     @Output() timeSettingsEmitter = new EventEmitter<TimeSettings>();
 
@@ -47,6 +57,8 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
     currentDateRange: DateRange<Date>;
     dateSelectionComplete = false;
     dateRangeString: string;
+
+    maxDateRangeError = false;
 
     constructor(
         private readonly selectionModel: MatRangeDateSelectionModel<Date>,
@@ -87,7 +99,7 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
     }
 
     formatDate(date: Date): string {
-        if (this.showTimeSelection === true) {
+        if (this.enableTimeChange === true) {
             return date?.toLocaleDateString() || '-';
         } else {
             return date?.toLocaleDateString() || ' ';
@@ -95,6 +107,7 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
     }
 
     onDateChange(selectedDate: Date): void {
+        this.maxDateRangeError = false;
         const newSelection = this.selectionStrategy.selectionFinished(
             selectedDate,
             this.selectionModel.selection,
@@ -104,12 +117,23 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
             newSelection.start,
             newSelection.end,
         );
-        this.dateSelectionComplete = this.selectionModel.isComplete();
         this.updateDateStrings();
+        const daysDiff = differenceInDays(newSelection.end, newSelection.start);
+        if (this.selectionModel.isComplete()) {
+            if (this.maxDayRange === 0 || daysDiff + 1 <= this.maxDayRange) {
+                this.dateSelectionComplete = true;
+                if (!this.enableTimeChange) {
+                    this.saveSelection();
+                }
+            } else {
+                this.maxDateRangeError = true;
+                this.dateSelectionComplete = false;
+            }
+        }
     }
 
     saveSelection(): void {
-        if (this.showTimeSelection === true) {
+        if (this.enableTimeChange === true) {
             this.updateDateTime(
                 this.currentDateRange.start,
                 this.currentStartTime,

@@ -36,6 +36,7 @@ import {
 import { MatMenuTrigger } from '@angular/material/menu';
 import { TimeSelectionService } from '../../services/time-selection.service';
 import { TimeRangeSelectorMenuComponent } from './time-selector-menu/time-selector-menu.component';
+import { TimeSelectorLabel } from './time-selector.model';
 
 @Component({
     selector: 'sp-time-range-selector',
@@ -57,7 +58,19 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     showTimeSelector = true;
 
     @Input()
+    enableTimeChange = true;
+
+    @Input()
     quickSelections: QuickTimeSelection[] = [];
+
+    @Input()
+    labels: TimeSelectorLabel = {
+        quickSelectionLabel: 'Quick Selection',
+        customLabel: 'Custom',
+        maxDayRangeErrorLabel:
+            'Maximum of ${this.maxDayRange} days can be displayed. Please select a smaller range.',
+        timeRangeSelectorTooltip: 'Modify time range',
+    };
 
     simpleTimeString: string = '';
     timeString: TimeString;
@@ -69,6 +82,7 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
         this.timeSelectionService.initializeQuickTimeSelection(
             this.quickSelections,
         );
+        this.quickSelections = this.timeSelectionService.quickTimeSelections;
         this.createDateString();
     }
 

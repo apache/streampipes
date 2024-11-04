@@ -30,6 +30,7 @@ import {
 } from '@streampipes/platform-services';
 import { TimeSelectionService } from '../../../services/time-selection.service';
 import { CustomTimeRangeSelectionComponent } from './custom-time-range-selection/custom-time-range-selection.component';
+import { TimeSelectorLabel } from '../time-selector.model';
 
 @Component({
     selector: 'sp-time-selector-menu',
@@ -40,21 +41,25 @@ export class TimeRangeSelectorMenuComponent implements OnInit {
     @Input()
     timeSettings: TimeSettings;
 
+    @Input()
+    labels: TimeSelectorLabel;
+
+    @Input()
+    enableTimeChange = true;
+
     @Output()
     timeSettingsEmitter: EventEmitter<TimeSettings> =
         new EventEmitter<TimeSettings>();
 
     @Input()
-    quickSelections: QuickTimeSelection[] = [];
+    quickSelections: QuickTimeSelection[];
 
     @ViewChild('timeRangeSelection')
     timeRangeSelection: CustomTimeRangeSelectionComponent;
 
     constructor(private timeSelectionService: TimeSelectionService) {}
 
-    ngOnInit(): void {
-        this.quickSelections = this.timeSelectionService.quickTimeSelections;
-    }
+    ngOnInit(): void {}
 
     applyQuickSelection(quickSelection: QuickTimeSelection): void {
         const selectedDateRange =

@@ -30,7 +30,7 @@
             color="accent"
             [matMenuTriggerFor]="menu"
             #menuTrigger="matMenuTrigger"
-            matTooltip="Modify time"
+            [matTooltip]="labels.timeRangeSelectorTooltip"
             data-cy="time-selector-menu"
             (menuClosed)="menuTrigger.closeMenu()"
         >
@@ -40,7 +40,7 @@
                         timeString.startDate
                     }}</span
                     >&nbsp;
-                    <span class="formatted-time">{{
+                    <span class="formatted-time" *ngIf="enableTimeChange">{{
                         timeString.startTime
                     }}</span>
                 </div>
@@ -48,7 +48,9 @@
                 <div class="formatted-datetime">
                     <span class="formatted-date">{{ timeString.endDate }}</span
                     >&nbsp;
-                    <span class="formatted-time">{{ timeString.endTime }}</span>
+                    <span class="formatted-time" *ngIf="enableTimeChange">{{
+                        timeString.endTime
+                    }}</span>
                 </div>
             </div>
             <div class="formatted-datetime" *ngIf="timeStringMode === 'simple'">
@@ -63,8 +65,10 @@
             <sp-time-selector-menu
                 #timeSelectorMenu
                 [timeSettings]="timeSettings"
+                [labels]="labels"
                 (timeSettingsEmitter)="applyCurrentDateRange($event)"
                 [quickSelections]="quickSelections"
+                [enableTimeChange]="enableTimeChange"
                 class="w-100"
             >
             </sp-time-selector-menu>

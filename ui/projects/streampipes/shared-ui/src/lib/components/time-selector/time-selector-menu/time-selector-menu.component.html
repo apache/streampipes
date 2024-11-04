@@ -16,11 +16,13 @@
   ~
   -->
 
-<div class="menu-content" (click)="$event.stopPropagation()">
+<div class="menu-content" (click)="$event.stopPropagation()" *ngIf="labels">
     <div fxLayout="column" fxLayoutGap="10px">
         <div fxLayout="row" fxFlex="100" fxLayoutGap="10px">
             <div fxLayout="column" fxFlex="50" fxLayoutGap="10px">
-                <div class="filter-header">Quick selection</div>
+                <div class="filter-header">
+                    {{ labels.quickSelectionLabel }}
+                </div>
                 <div fxLayout="column" fxLayoutGap="10px" fxFlex="100">
                     <div *ngFor="let quickSelection of quickSelections">
                         <span
@@ -39,11 +41,13 @@
                 </div>
             </div>
             <div fxLayout="column" fxFlex="50">
-                <div class="filter-header">Custom</div>
+                <div class="filter-header">{{ labels.customLabel }}</div>
                 <sp-custom-time-range-selection
                     #timeRangeSelection
                     [timeSettings]="timeSettings"
+                    [labels]="labels"
                     (timeSettingsEmitter)="timeSettingsEmitter.emit($event)"
+                    [enableTimeChange]="enableTimeChange"
                     class="w-100"
                 >
                     <ng-content> </ng-content>
