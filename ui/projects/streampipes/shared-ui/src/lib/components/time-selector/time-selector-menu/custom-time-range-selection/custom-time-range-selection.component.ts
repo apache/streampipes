@@ -40,13 +40,10 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
     @Input() labels: TimeSelectorLabel;
 
     @Input()
-    enableTimeChange = true;
+    enableTimeChange: boolean;
 
     @Input()
-    enableMaxDayRange: boolean = true;
-
-    @Input()
-    maxDayRange = 0;
+    maxDayRange: number;
 
     @Output() timeSettingsEmitter = new EventEmitter<TimeSettings>();
 

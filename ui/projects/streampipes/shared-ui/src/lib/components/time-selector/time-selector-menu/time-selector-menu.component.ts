@@ -45,7 +45,10 @@ export class TimeRangeSelectorMenuComponent implements OnInit {
     labels: TimeSelectorLabel;
 
     @Input()
-    enableTimeChange = true;
+    enableTimeChange: boolean;
+
+    @Input()
+    maxDayRange: number;
 
     @Output()
     timeSettingsEmitter: EventEmitter<TimeSettings> =

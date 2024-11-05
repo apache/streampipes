@@ -34,24 +34,23 @@
             data-cy="time-selector-menu"
             (menuClosed)="menuTrigger.closeMenu()"
         >
-            <div *ngIf="timeStringMode === 'advanced'">
-                <div class="formatted-datetime">
-                    <span class="formatted-date">{{
-                        timeString.startDate
-                    }}</span
-                    >&nbsp;
-                    <span class="formatted-time" *ngIf="enableTimeChange">{{
+            <div
+                *ngIf="timeStringMode === 'advanced'"
+                class="formatted-datetime"
+            >
+                <span class="formatted-date">{{ timeString.startDate }}</span>
+                <span *ngIf="enableTimeChange">
+                    &nbsp;<span class="formatted-time">{{
                         timeString.startTime
                     }}</span>
-                </div>
-                -
-                <div class="formatted-datetime">
-                    <span class="formatted-date">{{ timeString.endDate }}</span
-                    >&nbsp;
-                    <span class="formatted-time" *ngIf="enableTimeChange">{{
+                </span>
+                <span class="formatted-date">&nbsp;-&nbsp;</span>
+                <span class="formatted-date">{{ timeString.endDate }}</span>
+                <span *ngIf="enableTimeChange">
+                    &nbsp;<span class="formatted-time">{{
                         timeString.endTime
                     }}</span>
-                </div>
+                </span>
             </div>
             <div class="formatted-datetime" *ngIf="timeStringMode === 'simple'">
                 {{ simpleTimeString }}
@@ -69,6 +68,7 @@
                 (timeSettingsEmitter)="applyCurrentDateRange($event)"
                 [quickSelections]="quickSelections"
                 [enableTimeChange]="enableTimeChange"
+                [maxDayRange]="maxDayRange"
                 class="w-100"
             >
             </sp-time-selector-menu>

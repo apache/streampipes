@@ -61,6 +61,9 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     enableTimeChange = true;
 
     @Input()
+    maxDayRange = 0;
+
+    @Input()
     quickSelections: QuickTimeSelection[] = [];
 
     @Input()
@@ -75,6 +78,12 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     simpleTimeString: string = '';
     timeString: TimeString;
     timeStringMode: 'simple' | 'advanced' = 'simple';
+    dateFormat: Intl.DateTimeFormatOptions = {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+    };
 
     constructor(private timeSelectionService: TimeSelectionService) {}
 
@@ -158,12 +167,19 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
             const startDate = new Date(this.timeSettings.startTime);
             const endDate = new Date(this.timeSettings.endTime);
             this.timeString = {
-                startDate: startDate.toLocaleDateString(),
-                endDate: endDate.toLocaleDateString(),
+                startDate: this.formatDate(startDate),
+                endDate: this.formatDate(endDate),
                 startTime: startDate.toLocaleTimeString(),
                 endTime: endDate.toLocaleTimeString(),
             };
+
             this.timeStringMode = 'advanced';
         }
+    }
+
+    private formatDate(date: Date): string {
+        return this.enableTimeChange
+            ? date.toLocaleDateString()
+            : date.toLocaleDateString(navigator.language, this.dateFormat);
     }
 }
