@@ -42,10 +42,12 @@ public class MathOpProcessorTest {
                 .configWithDefaultPrefix(MathOpProcessor.RIGHT_OPERAND, "rightOperand")
                 .config(MathOpProcessor.OPERATION, "+").build();
 
-        List<Map<String, Object>> inputEvents = List.of(Map.of("leftOperand", 5.0d, "rightOperand", 5.0d));
-        List<Map<String, Object>> outputEvents = List
-                .of(Map.of("leftOperand", 5.0d, "rightOperand", 5.0d, "calculationResult", 10.0d));
-        ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, leftOperandConfiguration);
+        List<Map<String, Object>> inputEvents = List.of(
+                Map.of("leftOperand", 5.0d, "rightOperand", 5.0d));
+        List<Map<String, Object>> outputEvents = List.of(
+                Map.of("leftOperand", 5.0d, "rightOperand", 5.0d, "calculationResult", 10.0d));
+        ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(
+                processor, leftOperandConfiguration);
 
         testExecutor.run(inputEvents, outputEvents);
     }
@@ -57,10 +59,12 @@ public class MathOpProcessorTest {
                 .configWithDefaultPrefix(MathOpProcessor.RIGHT_OPERAND, "rightOperand")
                 .config(MathOpProcessor.OPERATION, "-").build();
 
-        List<Map<String, Object>> inputEvents = List.of(Map.of("leftOperand", 5.0d, "rightOperand", 5.0d));
-        List<Map<String, Object>> outputEvents = List
-                .of(Map.of("leftOperand", 5.0d, "rightOperand", 5.0d, "calculationResult", 0.0d));
-        ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, leftOperandConfiguration);
+        List<Map<String, Object>> inputEvents = List.of(
+                Map.of("leftOperand", 5.0d, "rightOperand", 5.0d));
+        List<Map<String, Object>> outputEvents = List.of(
+                Map.of("leftOperand", 5.0d, "rightOperand", 5.0d, "calculationResult", 0.0d));
+        ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(
+                processor, leftOperandConfiguration);
 
         testExecutor.run(inputEvents, outputEvents);
     }
@@ -72,10 +76,12 @@ public class MathOpProcessorTest {
                 .configWithDefaultPrefix(MathOpProcessor.RIGHT_OPERAND, "rightOperand")
                 .config(MathOpProcessor.OPERATION, "*").build();
 
-        List<Map<String, Object>> inputEvents = List.of(Map.of("leftOperand", 5.0d, "rightOperand", 5.0d));
-        List<Map<String, Object>> outputEvents = List
-                .of(Map.of("leftOperand", 5.0d, "rightOperand", 5.0d, "calculationResult", 25.0d));
-        ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, leftOperandConfiguration);
+        List<Map<String, Object>> inputEvents = List.of(
+                Map.of("leftOperand", 5.0d, "rightOperand", 5.0d));
+        List<Map<String, Object>> outputEvents = List.of(
+                Map.of("leftOperand", 5.0d, "rightOperand", 5.0d, "calculationResult", 25.0d));
+        ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(
+                processor, leftOperandConfiguration);
 
         testExecutor.run(inputEvents, outputEvents);
     }
@@ -87,10 +93,12 @@ public class MathOpProcessorTest {
                 .configWithDefaultPrefix(MathOpProcessor.RIGHT_OPERAND, "rightOperand")
                 .config(MathOpProcessor.OPERATION, "/").build();
 
-        List<Map<String, Object>> inputEvents = List.of(Map.of("leftOperand", 5.0d, "rightOperand", 5.0d));
-        List<Map<String, Object>> outputEvents = List
-                .of(Map.of("leftOperand", 5.0d, "rightOperand", 5.0d, "calculationResult", 1.0d));
-        ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, leftOperandConfiguration);
+        List<Map<String, Object>> inputEvents = List.of(
+                Map.of("leftOperand", 5.0d, "rightOperand", 5.0d));
+        List<Map<String, Object>> outputEvents = List.of(
+                Map.of("leftOperand", 5.0d, "rightOperand", 5.0d, "calculationResult", 1.0d));
+        ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(
+                processor, leftOperandConfiguration);
 
         testExecutor.run(inputEvents, outputEvents);
     }
@@ -102,10 +110,12 @@ public class MathOpProcessorTest {
                 .configWithDefaultPrefix(MathOpProcessor.RIGHT_OPERAND, "rightOperand")
                 .config(MathOpProcessor.OPERATION, "%").build();
 
-        List<Map<String, Object>> inputEvents = List.of(Map.of("leftOperand", 5.0d, "rightOperand", 5.0d));
-        List<Map<String, Object>> outputEvents = List
-                .of(Map.of("leftOperand", 5.0d, "rightOperand", 5.0d, "calculationResult", 0.0d));
-        ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, leftOperandConfiguration);
+        List<Map<String, Object>> inputEvents = List.of(
+                Map.of("leftOperand", 5.0d, "rightOperand", 5.0d));
+        List<Map<String, Object>> outputEvents = List.of(
+                Map.of("leftOperand", 5.0d, "rightOperand", 5.0d, "calculationResult", 0.0d));
+        ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(
+                processor, leftOperandConfiguration);
 
         testExecutor.run(inputEvents, outputEvents);
     }
