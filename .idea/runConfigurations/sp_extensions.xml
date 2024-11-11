@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="all-extensions-jvm" type="Application" factoryName="Application">
+  <configuration default="false" name="sp_extensions" type="Application" factoryName="Application">
     <envs>
       <env name="SP_COUCHDB_HOST" value="localhost" />
       <env name="SP_DATA_LAKE_HOST" value="localhost" />
@@ -13,16 +13,6 @@
     <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.extensions.all.jvm.AllExtensionsInit" />
     <module name="streampipes-extensions-all-jvm" />
     <shortenClasspath name="MANIFEST" />
-    <extension name="net.ashald.envfile">
-      <option name="IS_ENABLED" value="false" />
-      <option name="IS_SUBST" value="false" />
-      <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
-      <option name="IS_IGNORE_MISSING_FILES" value="false" />
-      <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
-      <ENTRIES>
-        <ENTRY IS_ENABLED="true" PARSER="runconfig" />
-      </ENTRIES>
-    </extension>
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
