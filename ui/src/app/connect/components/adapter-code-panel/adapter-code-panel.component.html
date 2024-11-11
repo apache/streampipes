@@ -18,6 +18,7 @@
 
 <div fxFlex="100" *ngIf="compactAdapter" class="mt-10">
     <sp-configuration-code-panel
+        *ngIf="compactAdapter"
         [configuration]="compactAdapter"
         [maxHeight]="maxHeight"
     >

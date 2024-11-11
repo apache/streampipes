@@ -73,6 +73,7 @@ import { IdGeneratorService } from '../../../core-services/id-generator/id-gener
 @Component({
     selector: 'sp-pipeline',
     templateUrl: './pipeline.component.html',
+    styleUrls: ['./pipeline.component.scss'],
 })
 export class PipelineComponent implements OnInit, OnDestroy {
     @Input()
@@ -80,6 +81,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     @Input()
     rawPipelineModel: PipelineElementConfig[];
+
+    @Input()
+    pipelineElement: PipelineElementConfig;
 
     @Input()
     allElements: PipelineElementUnion[];
@@ -585,5 +589,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
                         pm,
                     );
             });
+    }
+
+    openTopicsDialog(pipelineElementConfig: PipelineElementConfig) {
+        this.editorService.openTopicsDialog(pipelineElementConfig);
     }
 }

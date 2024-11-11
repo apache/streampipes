@@ -16,15 +16,14 @@
  *
  */
 
-import { Injectable, Pipe, PipeTransform } from '@angular/core';
-import { stringify } from 'yaml';
+@import '../../../scss/sp/sp-dialog.scss';
 
-@Pipe({
-    name: 'yamlpretty',
-})
-@Injectable({ providedIn: 'root' })
-export class YamlPrettyPrintPipe implements PipeTransform {
-    transform(obj: any) {
-        return stringify(obj).replace(/ /g, '&nbsp;').replace(/\n/g, '<br/>');
-    }
+.element-id {
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: small;
+    display: inline-block;
+    padding: 5px;
 }

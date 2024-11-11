@@ -16,15 +16,28 @@
  *
  */
 
-import { Injectable, Pipe, PipeTransform } from '@angular/core';
-import { stringify } from 'yaml';
+.topics-button {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 20%;
+    box-shadow: 0 0 3px var(--color-accent);
+    background-color: var(--color-accent);
+    color: rgba(255, 255, 255, 0.75);
+    position: absolute;
+    left: 35%;
+    top: 75%;
+    z-index: 50;
+    margin-top: 5px;
+}
 
-@Pipe({
-    name: 'yamlpretty',
-})
-@Injectable({ providedIn: 'root' })
-export class YamlPrettyPrintPipe implements PipeTransform {
-    transform(obj: any) {
-        return stringify(obj).replace(/ /g, '&nbsp;').replace(/\n/g, '<br/>');
-    }
+.topics-icon-button {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+
+.topics-icon-size {
+    font-size: 16px;
+    color: white;
 }

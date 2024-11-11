@@ -17,16 +17,37 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
+import { stringify } from 'yaml';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
     selector: 'sp-configuration-code-panel',
     templateUrl: './configuration-code-panel.component.html',
     styleUrls: ['./configuration-code-panel.component.scss'],
 })
-export class ConfigurationCodePanelComponent {
+export class ConfigurationCodePanelComponent implements OnInit {
     @Input()
     configuration: any;
 
     @Input()
     maxHeight = '300px';
+
+    configurationYaml: string;
+    configurationJson: string;
+
+    currentConfiguration: string;
+
+    ngOnInit() {
+        this.configurationYaml = stringify(this.configuration);
+        this.configurationJson = JSON.stringify(this.configuration);
+        this.currentConfiguration = this.configurationYaml;
+    }
+
+    onTabChanged(event: MatTabChangeEvent) {
+        if (event.index === 0) {
+            this.currentConfiguration = this.configurationYaml;
+        } else {
+            this.currentConfiguration = this.configurationJson;
+        }
+    }
 }

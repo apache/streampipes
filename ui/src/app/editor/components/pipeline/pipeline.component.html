@@ -26,6 +26,7 @@
     *ngFor="
         let pipelineElementConfig of rawPipelineModel | enabledPipelineElement
     "
+    style="position: relative"
 >
     <sp-dropped-pipeline-element
         [allElements]="allElements"
@@ -41,4 +42,15 @@
         (deleteEmitter)="handleDeleteOption($event)"
     >
     </sp-dropped-pipeline-element>
+    <div class="topics-button customize-button" *ngIf="readonly">
+        <button
+            class="topics-icon-button"
+            mat-icon-button
+            matTooltip="View Topics"
+            [matTooltipPosition]="'above'"
+            (click)="openTopicsDialog(pipelineElementConfig)"
+        >
+            <i class="material-icons topics-icon-size">code</i>
+        </button>
+    </div>
 </div>
