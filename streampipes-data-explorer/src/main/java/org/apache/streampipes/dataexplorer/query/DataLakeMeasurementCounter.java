@@ -42,8 +42,10 @@ public abstract class DataLakeMeasurementCounter implements IDataLakeMeasurement
   protected final List<DataLakeMeasure> allMeasurements;
   protected final List<String> measurementNames;
 
-  public DataLakeMeasurementCounter(List<DataLakeMeasure> allMeasurements,
-                                         List<String> measurementNames) {
+  public DataLakeMeasurementCounter(
+      List<DataLakeMeasure> allMeasurements,
+      List<String> measurementNames
+  ) {
     this.allMeasurements = allMeasurements;
     this.measurementNames = measurementNames;
   }
@@ -52,12 +54,14 @@ public abstract class DataLakeMeasurementCounter implements IDataLakeMeasurement
   public Map<String, Integer> countMeasurementSizes() {
 
     // create async futures so that count queries can be executed parallel
-    Map<String, CompletableFuture<Integer>> countQueriesFutures = measurementNames.stream()
+    Map<String, CompletableFuture<Integer>> countQueriesFutures = measurementNames
+        .stream()
         .map(this::getMeasure)
         .filter(Objects::nonNull)
         .collect(Collectors.toMap(
-            DataLakeMeasure::getMeasureName,
-            this::createQueryAsAsyncFuture)
+                     DataLakeMeasure::getMeasureName,
+                     this::createQueryAsAsyncFuture
+                 )
         );
 
     return getQueryResults(countQueriesFutures);
@@ -72,7 +76,8 @@ public abstract class DataLakeMeasurementCounter implements IDataLakeMeasurement
   private DataLakeMeasure getMeasure(String measureName) {
     return allMeasurements
         .stream()
-        .filter(m -> m.getMeasureName().equals(measureName))
+        .filter(m -> m.getMeasureName()
+                      .equals(measureName))
         .findFirst()
         .orElse(null);
   }
@@ -83,7 +88,7 @@ public abstract class DataLakeMeasurementCounter implements IDataLakeMeasurement
    * @param queryFutures A Map containing the futures of
    *                     asynchronous count queries mapped by their respective keys.
    * @return A Map representing the results of the queries, where each key corresponds to
-   *         a measure name and the value is the count result.
+   * a measure name and the value is the count result.
    */
   private Map<String, Integer> getQueryResults(Map<String, CompletableFuture<Integer>> queryFutures) {
     Map<String, Integer> resultPerMeasure = new HashMap<>();
@@ -106,18 +111,34 @@ public abstract class DataLakeMeasurementCounter implements IDataLakeMeasurement
    * @return The runtime name of the first measurement property, or null if no such property is found.
    */
   protected String getFirstMeasurementProperty(DataLakeMeasure measure) {
-    return measure.getEventSchema().getEventProperties()
+    var propertyRuntimeName = measure
+        .getEventSchema()
+        .getEventProperties()
         .stream()
         .filter(ep -> ep.getPropertyScope() != null
-            && ep.getPropertyScope().equals(PropertyScope.MEASUREMENT_PROPERTY.name()))
+            && ep.getPropertyScope()
+                 .equals(PropertyScope.MEASUREMENT_PROPERTY.name()))
         .map(EventProperty::getRuntimeName)
         .findFirst()
         .orElse(null);
+
+    if (propertyRuntimeName == null) {
+      LOG.error("No measurement property was found in the event schema found for measure {}", measure.getMeasureName());
+    }
+
+    return propertyRuntimeName;
   }
 
   protected Integer extractResult(SpQueryResult queryResult, String fieldName) {
-    return ((Double) (
-        queryResult.getAllDataSeries().get(0).getRows().get(0).get(queryResult.getHeaders().indexOf(fieldName)))
+    return (
+        (Double) (
+            queryResult.getAllDataSeries()
+                       .get(0)
+                       .getRows()
+                       .get(0)
+                       .get(queryResult.getHeaders()
+                                       .indexOf(fieldName))
+        )
     ).intValue();
   }
 

@@ -22,16 +22,23 @@ import org.apache.streampipes.dataexplorer.query.DataLakeMeasurementCounter;
 import org.apache.streampipes.model.datalake.AggregationFunction;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class DataLakeMeasurementCounterInflux extends DataLakeMeasurementCounter {
 
+  private static final Logger LOG = LoggerFactory.getLogger(DataLakeMeasurementCounterInflux.class);
+
   private static final String COUNT_FIELD = "count";
 
-  public DataLakeMeasurementCounterInflux(List<DataLakeMeasure> allMeasurements,
-                                          List<String> measurementNames) {
+  public DataLakeMeasurementCounterInflux(
+      List<DataLakeMeasure> allMeasurements,
+      List<String> measurementNames
+  ) {
     super(allMeasurements, measurementNames);
   }
 
@@ -39,15 +46,21 @@ public class DataLakeMeasurementCounterInflux extends DataLakeMeasurementCounter
   protected CompletableFuture<Integer> createQueryAsAsyncFuture(DataLakeMeasure measure) {
     return CompletableFuture.supplyAsync(() -> {
       var firstColumn = getFirstMeasurementProperty(measure);
-      var builder = DataLakeInfluxQueryBuilder
-          .create(measure.getMeasureName()).withEndTime(System.currentTimeMillis())
-          .withAggregatedColumn(firstColumn, AggregationFunction.COUNT);
-      var queryResult = new DataExplorerInfluxQueryExecutor().executeQuery(builder.build(), Optional.empty(), true);
-      if (queryResult.getTotal() > 0) {
-        return extractResult(queryResult, COUNT_FIELD);
-      } else {
+      if (firstColumn == null) {
+        LOG.error(
+            "Could not count events in measurement: {}, because no measurement property was found in event schema",
+            measure.getMeasureName()
+        );
         return 0;
       }
+
+      var builder = DataLakeInfluxQueryBuilder
+          .create(measure.getMeasureName())
+          .withEndTime(System.currentTimeMillis())
+          .withAggregatedColumn(firstColumn, AggregationFunction.COUNT);
+      var queryResult = new DataExplorerInfluxQueryExecutor().executeQuery(builder.build(), Optional.empty(), true);
+
+      return queryResult.getTotal() > 0 ? extractResult(queryResult, COUNT_FIELD) : 0;
     });
   }
 }
