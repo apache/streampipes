@@ -27,6 +27,7 @@ import org.apache.streampipes.processors.enricher.jvm.processor.jseval.JSEvalPro
 import org.apache.streampipes.processors.enricher.jvm.processor.limitsalert.SensorLimitAlertProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.limitsenrichment.QualityControlLimitsEnrichmentProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.math.MathOpProcessor;
+import org.apache.streampipes.processors.enricher.jvm.processor.math.SigmaOpProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.math.staticmathop.StaticMathOpProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.trigonometry.TrigonometryProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.valuechange.ValueChangeProcessor;
@@ -50,7 +51,9 @@ public class EnricherExtensionModuleExport implements IExtensionModuleExport {
         new StaticMathOpProcessor(),
         new TrigonometryProcessor(),
         new ValueChangeProcessor(),
-        new MathExpressionProcessor()
+        new MathExpressionProcessor(),
+        // New processor added to perform sigma operation
+        new SigmaOpProcessor()
     );
   }
 
