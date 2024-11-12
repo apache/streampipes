@@ -19,6 +19,7 @@
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { CompactAdapterUtils } from '../../../support/utils/connect/CompactAdapterUtils';
 import { PipelineUtils } from '../../../support/utils/pipeline/PipelineUtils';
+import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 
 describe('Add Compact Adapters', () => {
     beforeEach('Setup Test', () => {
@@ -93,6 +94,21 @@ describe('Add Compact Adapters', () => {
 
                     ConnectUtils.checkAmountOfAdapters(1);
                 });
+            },
+        );
+    });
+
+    it('Add file stream adapter via the compact API. Start Adapter with Pipeline', () => {
+        FileManagementUtils.addFile('connect/compact/compactTest.csv');
+
+        cy.readFile('cypress/fixtures/connect/compact/fileReplay.yml').then(
+            ymlDescription => {
+                CompactAdapterUtils.storeCompactYmlAdapter(ymlDescription).then(
+                    () => {
+                        ConnectUtils.validateAdapterIsRunning();
+                        PipelineUtils.checkAmountOfPipelinesPipeline(1);
+                    },
+                );
             },
         );
     });
