@@ -22,6 +22,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PipelinePreviewComponent } from './components/preview/pipeline-preview.component';
 import { EditorModule } from '../editor/editor.module';
@@ -62,6 +63,7 @@ import { PipelineCodeDialogComponent } from './dialogs/pipeline-code/pipeline-co
         MatExpansionModule,
         MatSlideToggleModule,
         MatDivider,
+        ClipboardModule,
     ],
     declarations: [
         PipelineActionsComponent,

@@ -40,6 +40,7 @@ import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { map } from 'rxjs/operators';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 import { HelpComponent } from '../../core-ui/help/help.component';
+import { TopicsComponent } from 'src/app/core-ui/topics/topics.component';
 
 @Injectable({ providedIn: 'root' })
 export class EditorService {
@@ -171,6 +172,17 @@ export class EditorService {
             width: '70vw',
             data: {
                 pipelineElement: pipelineElement,
+            },
+        });
+    }
+
+    openTopicsDialog(pipelineElementConfig: PipelineElementConfig) {
+        this.dialogService.open(TopicsComponent, {
+            panelType: PanelType.STANDARD_PANEL,
+            title: 'View Topics of ' + pipelineElementConfig.payload.name,
+            width: '70vw',
+            data: {
+                pipelineElement: pipelineElementConfig.payload,
             },
         });
     }

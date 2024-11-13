@@ -20,6 +20,7 @@
     <div class="sp-dialog-content">
         <div fxFlex="100" fxLayout="column" class="p-10">
             <sp-configuration-code-panel
+                *ngIf="compactPipeline"
                 [configuration]="compactPipeline"
                 maxHeight="none"
             >

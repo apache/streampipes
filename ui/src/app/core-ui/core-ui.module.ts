@@ -26,6 +26,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
@@ -119,6 +120,7 @@ import { PipelineElementTemplateConfigItemComponent } from './pipeline-element-t
 import { ConfigurationCodePanelComponent } from './configuration-code-panel/configuration-code-panel.component';
 import { JsonPrettyPrintPipe } from './pipes/json-pretty-print.pipe';
 import { YamlPrettyPrintPipe } from './pipes/yaml-pretty-print.pipe';
+import { TopicsComponent } from './topics/topics.component';
 
 @NgModule({
     imports: [
@@ -151,6 +153,7 @@ import { YamlPrettyPrintPipe } from './pipes/yaml-pretty-print.pipe';
         ReactiveFormsModule,
         FormsModule,
         CdkTableModule,
+        ClipboardModule,
         MatAutocompleteModule,
         MatSnackBarModule,
         MatProgressSpinnerModule,
@@ -182,6 +185,7 @@ import { YamlPrettyPrintPipe } from './pipes/yaml-pretty-print.pipe';
         PipelineElementRuntimeInfoComponent,
         PipelineElementDocumentationComponent,
         HelpComponent,
+        TopicsComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,
         StaticFreeInputComponent,
@@ -236,6 +240,7 @@ import { YamlPrettyPrintPipe } from './pipes/yaml-pretty-print.pipe';
         PipelineElementRuntimeInfoComponent,
         PipelineElementDocumentationComponent,
         HelpComponent,
+        TopicsComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,
         StaticFreeInputComponent,

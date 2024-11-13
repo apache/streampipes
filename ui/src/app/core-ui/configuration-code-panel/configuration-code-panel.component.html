@@ -16,8 +16,23 @@
   ~
   -->
 
-<mat-tab-group color="accent" [mat-stretch-tabs]="false">
+<mat-tab-group
+    color="accent"
+    [mat-stretch-tabs]="false"
+    (selectedTabChange)="onTabChanged($event)"
+>
     <mat-tab label="YAML">
+        <div class="container-copy-button-container">
+            <div class="copy-button-container">
+                <button
+                    mat-icon-button
+                    [cdkCopyToClipboard]="currentConfiguration"
+                    matTooltip="Copy"
+                >
+                    <mat-icon>content_copy</mat-icon>
+                </button>
+            </div>
+        </div>
         <pre
             [innerHTML]="configuration | yamlpretty"
             class="preview-text"
@@ -26,6 +41,17 @@
         ></pre>
     </mat-tab>
     <mat-tab label="JSON">
+        <div class="container-copy-button-container">
+            <div class="copy-button-container">
+                <button
+                    mat-icon-button
+                    [cdkCopyToClipboard]="currentConfiguration"
+                    matTooltip="Copy"
+                >
+                    <mat-icon>content_copy</mat-icon>
+                </button>
+            </div>
+        </div>
         <pre
             [innerHTML]="configuration | jsonpretty"
             class="preview-text"

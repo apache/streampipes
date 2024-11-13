@@ -28,3 +28,17 @@
     overflow-y: scroll;
     white-space: pre-wrap;
 }
+
+.mat-mdc-icon-button {
+    color: #fff;
+}
+
+.copy-button-container {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.container-copy-button-container {
+    position: relative;
+}

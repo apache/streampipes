@@ -95,6 +95,7 @@
                 >Show pipeline configuration as code</mat-expansion-panel-header
             >
             <sp-configuration-code-panel
+                *ngIf="compactPipeline"
                 [configuration]="compactPipeline"
                 maxHeight="none"
             >
