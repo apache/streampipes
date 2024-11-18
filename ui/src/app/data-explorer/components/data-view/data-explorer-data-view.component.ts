@@ -90,6 +90,7 @@ export class DataExplorerDataViewComponent
                 this.timeSettings = this.makeDefaultTimeSettings();
             } else {
                 this.timeSelectionService.updateTimeSettings(
+                    this.timeSelectionService.defaultQuickTimeSelections,
                     this.dataView.timeSettings as TimeSettings,
                     new Date(),
                 );

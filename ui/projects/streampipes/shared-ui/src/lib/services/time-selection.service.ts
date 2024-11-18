@@ -27,7 +27,6 @@ import {
 } from '@streampipes/platform-services';
 import {
     startOfDay,
-    endOfDay,
     startOfHour,
     startOfMonth,
     startOfWeek,
@@ -120,54 +119,6 @@ export class TimeSelectionService {
         },
     ];
 
-    quickTimeSelections: QuickTimeSelection[] =
-        this.defaultQuickTimeSelections.map(selection => ({
-            ...selection,
-        }));
-
-    public initializeQuickTimeSelection(
-        quickSelection: QuickTimeSelection[],
-    ): void {
-        const isDifferentFromCurrent = !this.areSelectionsEqual(
-            this.quickTimeSelections,
-            quickSelection,
-        );
-        const isDifferentFromDefault = !this.areSelectionsEqual(
-            this.defaultQuickTimeSelections,
-            quickSelection,
-        );
-
-        if (isDifferentFromCurrent && quickSelection.length !== 0) {
-            this.quickTimeSelections = quickSelection.map(selection => ({
-                ...selection,
-            }));
-        } else if (!isDifferentFromDefault) {
-            this.quickTimeSelections = this.defaultQuickTimeSelections.map(
-                selection => ({
-                    ...selection,
-                }),
-            );
-        }
-    }
-
-    public areSelectionsEqual(
-        defaultQuickTimeSelections: QuickTimeSelection[],
-        newQuickTimeSelections: QuickTimeSelection[],
-    ): boolean {
-        if (defaultQuickTimeSelections.length !== newQuickTimeSelections.length)
-            return false;
-
-        return defaultQuickTimeSelections.every((itemA, index) => {
-            const itemB = newQuickTimeSelections[index];
-            return (
-                itemA.label === itemB.label &&
-                itemA.timeSelectionId === itemB.timeSelectionId &&
-                itemA.startTime.toString() === itemB.startTime.toString() &&
-                itemA.endTime.toString() === itemB.endTime.toString()
-            );
-        });
-    }
-
     public getDateRange(quickSelection: QuickTimeSelection): DateRange {
         const now = new Date();
         return {
@@ -178,13 +129,21 @@ export class TimeSelectionService {
 
     public getDefaultTimeSettings(): TimeSettings {
         return this.getTimeSettings(
-            this.quickTimeSelections[0].timeSelectionId,
+            this.defaultQuickTimeSelections,
+            this.defaultQuickTimeSelections[0].timeSelectionId,
             new Date(),
         );
     }
 
-    public getTimeSettings(timeSelectionId: string, now: Date): TimeSettings {
-        const selection = this.getTimeSelection(timeSelectionId);
+    public getTimeSettings(
+        quickTimeSelections: QuickTimeSelection[],
+        timeSelectionId: string,
+        now: Date,
+    ): TimeSettings {
+        const selection = this.getTimeSelection(
+            quickTimeSelections,
+            timeSelectionId,
+        );
         return {
             startTime: selection.startTime(now).getTime(),
             endTime: selection.endTime(now).getTime(),
@@ -193,7 +152,11 @@ export class TimeSelectionService {
         };
     }
 
-    public updateTimeSettings(timeSettings: TimeSettings, now: Date): void {
+    public updateTimeSettings(
+        quickTimeSelections: QuickTimeSelection[],
+        timeSettings: TimeSettings,
+        now: Date,
+    ): void {
         // for backwards compatibility
         if (timeSettings.timeSelectionId === undefined) {
             timeSettings.timeSelectionId =
@@ -206,14 +169,15 @@ export class TimeSelectionService {
         }
         if (timeSettings.timeSelectionId !== TimeSelectionConstants.CUSTOM) {
             if (
-                this.quickTimeSelections.find(
+                quickTimeSelections.find(
                     s => s.timeSelectionId === timeSettings.timeSelectionId,
                 ) === undefined
             ) {
                 timeSettings.timeSelectionId =
-                    this.quickTimeSelections[0].timeSelectionId;
+                    quickTimeSelections[0].timeSelectionId;
             }
             const updatedTimeSettings = this.getTimeSettings(
+                quickTimeSelections,
                 timeSettings.timeSelectionId,
                 now,
             );
@@ -222,11 +186,14 @@ export class TimeSelectionService {
         }
     }
 
-    public getTimeSelection(timeSelectionId: string): QuickTimeSelection {
+    public getTimeSelection(
+        quickTimeSelections: QuickTimeSelection[],
+        timeSelectionId: string,
+    ): QuickTimeSelection {
         return (
-            this.quickTimeSelections.find(
+            quickTimeSelections.find(
                 s => s.timeSelectionId === timeSelectionId,
-            ) || this.quickTimeSelections[0]
+            ) || quickTimeSelections[0]
         );
     }
 

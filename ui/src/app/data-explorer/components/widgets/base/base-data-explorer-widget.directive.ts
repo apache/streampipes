@@ -205,6 +205,8 @@ export abstract class BaseDataExplorerWidgetDirective<
                             this.timeSettings = widgetTimeSettings.timeSettings;
                         } else {
                             this.timeSelectionService.updateTimeSettings(
+                                this.timeSelectionService
+                                    .defaultQuickTimeSelections,
                                 this.timeSettings,
                                 new Date(),
                             );

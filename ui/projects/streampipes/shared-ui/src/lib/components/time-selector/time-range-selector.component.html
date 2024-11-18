@@ -44,13 +44,15 @@
                         timeString.startTime
                     }}</span>
                 </span>
-                <span class="formatted-date">&nbsp;-&nbsp;</span>
-                <span class="formatted-date">{{ timeString.endDate }}</span>
-                <span *ngIf="enableTimeChange">
-                    &nbsp;<span class="formatted-time">{{
-                        timeString.endTime
-                    }}</span>
-                </span>
+                <div *ngIf="enableTimeChange || !timeString.sameDay">
+                    <span class="formatted-date">&nbsp;-&nbsp;</span>
+                    <span class="formatted-date">{{ timeString.endDate }}</span>
+                    <span *ngIf="enableTimeChange">
+                        &nbsp;<span class="formatted-time">{{
+                            timeString.endTime
+                        }}</span>
+                    </span>
+                </div>
             </div>
             <div class="formatted-datetime" *ngIf="timeStringMode === 'simple'">
                 {{ simpleTimeString }}
@@ -76,12 +78,12 @@
     </div>
     <div fxLayoutAlign="end center">
         <button
-            mat-button
+            mat-icon-button
+            matTooltip="Refresh"
             color="accent"
             (click)="updateTimeSettingsAndReload()"
         >
             <mat-icon>refresh</mat-icon>
-            Refresh
         </button>
     </div>
 </div>

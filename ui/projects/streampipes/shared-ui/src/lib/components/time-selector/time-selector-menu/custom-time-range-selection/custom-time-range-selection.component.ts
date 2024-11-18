@@ -26,7 +26,7 @@ import {
     DefaultMatCalendarRangeStrategy,
     MatRangeDateSelectionModel,
 } from '@angular/material/datepicker';
-import { differenceInDays } from 'date-fns';
+import { differenceInDays, endOfDay, startOfDay } from 'date-fns';
 import { TimeSelectorLabel } from '../../time-selector.model';
 
 @Component({
@@ -136,13 +136,17 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
                 this.currentStartTime,
             );
             this.updateDateTime(this.currentDateRange.end, this.currentEndTime);
+            this.timeSettings.startTime = this.currentDateRange.start.getTime();
+            this.timeSettings.endTime = this.currentDateRange.end.getTime();
         } else {
-            this.updateDateTime(this.currentDateRange.start, '00:00:00');
-            this.updateDateTime(this.currentDateRange.end, '23:59:59');
+            this.timeSettings.startTime = startOfDay(
+                this.currentDateRange.start,
+            ).getTime();
+            this.timeSettings.endTime = endOfDay(
+                this.currentDateRange.end,
+            ).getTime();
         }
 
-        this.timeSettings.startTime = this.currentDateRange.start.getTime();
-        this.timeSettings.endTime = this.currentDateRange.end.getTime();
         this.timeSettings.timeSelectionId = TimeSelectionConstants.CUSTOM;
         this.timeSettingsEmitter.emit(this.timeSettings);
     }

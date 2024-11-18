@@ -77,6 +77,7 @@ export interface TimeString {
     startTime: string;
     endDate: string;
     endTime: string;
+    sameDay: boolean;
 }
 
 export enum TimeSelectionId {

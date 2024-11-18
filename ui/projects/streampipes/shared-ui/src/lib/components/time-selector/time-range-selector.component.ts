@@ -37,6 +37,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { TimeSelectionService } from '../../services/time-selection.service';
 import { TimeRangeSelectorMenuComponent } from './time-selector-menu/time-selector-menu.component';
 import { TimeSelectorLabel } from './time-selector.model';
+import { differenceInMilliseconds, isSameDay } from 'date-fns';
 
 @Component({
     selector: 'sp-time-range-selector',
@@ -64,7 +65,7 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     maxDayRange = 0;
 
     @Input()
-    quickSelections: QuickTimeSelection[] = [];
+    quickSelections: QuickTimeSelection[];
 
     @Input()
     labels: TimeSelectorLabel = {
@@ -88,10 +89,10 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     constructor(private timeSelectionService: TimeSelectionService) {}
 
     ngOnInit() {
-        this.timeSelectionService.initializeQuickTimeSelection(
-            this.quickSelections,
-        );
-        this.quickSelections = this.timeSelectionService.quickTimeSelections;
+        if (!this.quickSelections) {
+            this.quickSelections =
+                this.timeSelectionService.defaultQuickTimeSelections;
+        }
         this.createDateString();
     }
 
@@ -125,6 +126,7 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
 
     updateTimeSettingsAndReload() {
         this.timeSelectionService.updateTimeSettings(
+            this.quickSelections,
             this.timeSettings,
             new Date(),
         );
@@ -135,10 +137,15 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     }
 
     private changeTimeByInterval(func: (a: number, b: number) => number) {
-        const difference =
-            this.timeSettings.endTime - this.timeSettings.startTime;
-        const newStartTime = func(this.timeSettings.startTime, difference);
-        const newEndTime = func(this.timeSettings.endTime, difference);
+        const timeDiff =
+            (differenceInMilliseconds(
+                this.timeSettings.startTime,
+                this.timeSettings.endTime,
+            ) -
+                1) *
+            -1;
+        const newStartTime = func(this.timeSettings.startTime, timeDiff);
+        const newEndTime = func(this.timeSettings.endTime, timeDiff);
 
         this.timeSettings.startTime = newStartTime;
         this.timeSettings.endTime = newEndTime;
@@ -160,6 +167,7 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
             this.timeSettings.timeSelectionId !== TimeSelectionConstants.CUSTOM
         ) {
             this.simpleTimeString = this.timeSelectionService.getTimeSelection(
+                this.quickSelections,
                 this.timeSettings.timeSelectionId,
             ).label;
             this.timeStringMode = 'simple';
@@ -171,6 +179,7 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
                 endDate: this.formatDate(endDate),
                 startTime: startDate.toLocaleTimeString(),
                 endTime: endDate.toLocaleTimeString(),
+                sameDay: isSameDay(startDate, endDate),
             };
 
             this.timeStringMode = 'advanced';

@@ -224,6 +224,7 @@ export class DataExplorerDashboardPanelComponent
                     this.timeSelectionService.getDefaultTimeSettings();
             } else {
                 this.timeSelectionService.updateTimeSettings(
+                    this.timeSelectionService.defaultQuickTimeSelections,
                     this.dashboard.dashboardTimeSettings,
                     new Date(),
                 );
@@ -301,6 +302,7 @@ export class DataExplorerDashboardPanelComponent
             .pipe(
                 switchMap(() => {
                     this.timeSelectionService.updateTimeSettings(
+                        this.timeSelectionService.defaultQuickTimeSelections,
                         this.timeSettings,
                         new Date(),
                     );
