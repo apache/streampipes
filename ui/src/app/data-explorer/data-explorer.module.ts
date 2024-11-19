@@ -123,7 +123,6 @@ import { DataExplorerDataViewSelectionComponent } from './components/dashboard/d
 import { DataExplorerDashboardWidgetSelectionPanelComponent } from './components/dashboard/dashboard-widget-selection-panel/dashboard-widget-selection-panel.component';
 import { DataExplorerDataViewPreviewComponent } from './components/dashboard/dashboard-widget-selection-panel/data-view-selection/data-view-preview/data-view-preview.component';
 import { DataExplorerDashboardToolbarComponent } from './components/dashboard/dashboard-toolbar/dashboard-toolbar.component';
-import { DataExplorerRefreshIntervalSettingsComponent } from './components/dashboard/dashboard-toolbar/refresh-interval-settings/refresh-interval-settings.component';
 import { OrderSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/order-selection-panel/order-selection-panel.component';
 import { GaugeWidgetConfigComponent } from './components/widgets/gauge/config/gauge-widget-config.component';
 
@@ -217,7 +216,6 @@ import { GaugeWidgetConfigComponent } from './components/widgets/gauge/config/ga
         DataExplorerDataViewSelectionComponent,
         DataExplorerDesignerPanelComponent,
         DataExplorerEditDashboardDialogComponent,
-        DataExplorerRefreshIntervalSettingsComponent,
         DataExplorerWidgetAppearanceSettingsComponent,
         DataExplorerWidgetDataSettingsComponent,
         DataExplorerDataViewComponent,

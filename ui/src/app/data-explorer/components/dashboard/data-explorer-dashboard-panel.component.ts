@@ -22,6 +22,7 @@ import { DataExplorerDashboardGridComponent } from '../widget-view/grid-view/dat
 import {
     ClientDashboardItem,
     Dashboard,
+    DashboardLiveSettings,
     DataExplorerWidgetModel,
     DataLakeMeasure,
     DataViewDataExplorerService,
@@ -234,7 +235,7 @@ export class DataExplorerDashboardPanelComponent
                     ? this.overrideTime(+startTime, +endTime)
                     : this.dashboard.dashboardTimeSettings;
             this.dashboardLoaded = true;
-            this.modifyRefreshInterval();
+            this.modifyRefreshInterval(this.dashboard.dashboardLiveSettings);
         });
     }
 
@@ -286,7 +287,8 @@ export class DataExplorerDashboardPanelComponent
         }
     }
 
-    modifyRefreshInterval(): void {
+    modifyRefreshInterval(liveSettings: DashboardLiveSettings): void {
+        this.dashboard.dashboardLiveSettings = liveSettings;
         this.refreshSubscription?.unsubscribe();
         if (this.dashboard.dashboardLiveSettings.refreshModeActive) {
             this.createQuerySubscription();

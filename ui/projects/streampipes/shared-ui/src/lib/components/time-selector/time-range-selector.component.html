@@ -86,4 +86,14 @@
             <mat-icon>refresh</mat-icon>
         </button>
     </div>
+    <div fxLayoutAlign="end center">
+        <sp-data-explorer-refresh-interval-settings-component
+            *ngIf="liveSettings"
+            [liveSettings]="liveSettings"
+            (intervalSettingsChangedEmitter)="
+                intervalSettingsChangedEmitter.emit($event)
+            "
+        >
+        </sp-data-explorer-refresh-interval-settings-component>
+    </div>
 </div>

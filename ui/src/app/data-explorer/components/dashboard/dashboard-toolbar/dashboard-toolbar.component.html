@@ -84,15 +84,12 @@
         "
         (dateRangeEmitter)="updateDateRangeEmitter.emit($event)"
         [timeSettings]="timeSettings"
+        [liveSettings]="dashboard.dashboardLiveSettings"
+        (intervalSettingsChangedEmitter)="
+            intervalSettingsChangedEmitter.emit($event)
+        "
     >
     </sp-time-range-selector>
-
-    <sp-data-explorer-refresh-interval-settings-component
-        [dashboard]="dashboard"
-        (intervalSettingsChangedEmitter)="intervalSettingsChangedEmitter.emit()"
-    >
-    </sp-data-explorer-refresh-interval-settings-component>
-
     <button
         mat-icon-button
         [matMenuTriggerFor]="optMenu"
