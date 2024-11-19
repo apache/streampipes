@@ -55,10 +55,13 @@ public class DataLakeDimensionProvider {
   private void addFieldIfNotExists(EventPropertyPrimitive field,
                                    List<Option> options) {
     if (options.stream().noneMatch(o -> o.getName().equals(field.getRuntimeName()))) {
-      options.add(new Option(
-          field.getRuntimeName(),
-          PropertyScope.valueOf(field.getPropertyScope()) == PropertyScope.DIMENSION_PROPERTY)
-      );
+      if (field.getPropertyScope() != null) {
+        options.add(new Option(
+                field.getRuntimeName(),
+                PropertyScope.valueOf(field.getPropertyScope()) == PropertyScope.DIMENSION_PROPERTY
+            )
+        );
+      }
     }
   }
 

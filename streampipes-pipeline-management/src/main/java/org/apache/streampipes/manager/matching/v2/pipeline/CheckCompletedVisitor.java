@@ -21,6 +21,7 @@ package org.apache.streampipes.manager.matching.v2.pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
+import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty;
 import org.apache.streampipes.model.staticproperty.DefaultStaticPropertyVisitor;
 import org.apache.streampipes.model.staticproperty.FileStaticProperty;
@@ -64,6 +65,11 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
   @Override
   public void visit(CodeInputStaticProperty codeInputStaticProperty) {
     validateNull(codeInputStaticProperty, codeInputStaticProperty.getValue());
+  }
+
+  @Override
+  public void visit(CollectionStaticProperty collectionStaticProperty) {
+    collectionStaticProperty.getMembers().forEach(sp -> sp.accept(this));
   }
 
   @Override
@@ -206,7 +212,7 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
     validationInfos.add(
         PipelineElementValidationInfo.error(
             String.format(
-                "Configuration option \"%s\" as no value although it is marked as required",
+                "Configuration option \"%s\" has no value although it is marked as required",
                 sp.getInternalName()
             )
         )
