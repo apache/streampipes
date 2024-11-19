@@ -17,47 +17,54 @@
   -->
 
 <div id="formWrapper" fxFlex="100" fxLayout="column">
-    <div *ngIf="!staticProperty.horizontalRendering" fxLayout="column">
-        <div fxFlex fxLayout="row">
-            <div fxLayout="column" style="margin-left: 10px">
-                <mat-radio-group class="radio-group" color="accent">
-                    <mat-radio-button
+    @if (
+        staticProperty.horizontalRendering && staticProperty.options.length < 5
+    ) {
+        <div fxLayout="column">
+            <div fxFlex fxLayout="row">
+                <div fxLayout="column" style="margin-left: 10px">
+                    <mat-radio-group class="radio-group" color="accent">
+                        <mat-radio-button
+                            *ngFor="let option of staticProperty.options"
+                            style="margin-top: -10px"
+                            [value]="option"
+                            (click)="select(option.elementId)"
+                            [checked]="option.selected"
+                            [attr.data-cy]="
+                                staticProperty.internalName
+                                    .split(' ')
+                                    .join('_')
+                                    .toLowerCase() +
+                                '-' +
+                                option.name.split(' ').join('_').toLowerCase()
+                            "
+                        >
+                            <label style="font-weight: normal">
+                                {{ option.name }}
+                            </label>
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </div>
+    } @else {
+        <div>
+            <mat-form-field style="width: 100%" color="accent">
+                <mat-select
+                    [(value)]="selectedOption"
+                    [attr.data-cy]="fieldName"
+                >
+                    <mat-option
                         *ngFor="let option of staticProperty.options"
-                        style="margin-top: -10px"
-                        [value]="option"
+                        [value]="option.elementId"
                         (click)="select(option.elementId)"
-                        [checked]="option.selected"
-                        [attr.data-cy]="
-                            staticProperty.internalName
-                                .split(' ')
-                                .join('_')
-                                .toLowerCase() +
-                            '-' +
-                            option.name.split(' ').join('_').toLowerCase()
-                        "
                     >
                         <label style="font-weight: normal">
                             {{ option.name }}
                         </label>
-                    </mat-radio-button>
-                </mat-radio-group>
-            </div>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
-    </div>
-
-    <div *ngIf="staticProperty.horizontalRendering">
-        <mat-form-field style="width: 100%" color="accent">
-            <mat-select [(value)]="selectedOption" [attr.data-cy]="fieldName">
-                <mat-option
-                    *ngFor="let option of staticProperty.options"
-                    [value]="option.elementId"
-                    (click)="select(option.elementId)"
-                >
-                    <label style="font-weight: normal">
-                        {{ option.name }}
-                    </label>
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+    }
 </div>

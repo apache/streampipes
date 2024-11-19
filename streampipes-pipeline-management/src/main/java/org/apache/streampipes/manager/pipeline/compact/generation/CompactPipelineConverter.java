@@ -111,6 +111,6 @@ public class CompactPipelineConverter {
   }
 
   private String replaceId(String id) {
-    return id.replaceAll(InvocablePipelineElementGenerator.ID_PREFIX, "");
+    return id != null ? id.replaceAll(InvocablePipelineElementGenerator.ID_PREFIX, "") : null;
   }
 }
