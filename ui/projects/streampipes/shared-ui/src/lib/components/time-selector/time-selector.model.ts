@@ -16,7 +16,9 @@
  *
  */
 
-.time-selector {
-    font-family: inherit;
-    font-size: 11pt;
+export interface TimeSelectorLabel {
+    quickSelectionLabel: string;
+    customLabel: string;
+    maxDayRangeErrorLabel: string;
+    timeRangeSelectorTooltip: string;
 }

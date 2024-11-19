@@ -23,11 +23,6 @@ import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatNativeDateModule } from '@angular/material/core';
-import {
-    DefaultMatCalendarRangeStrategy,
-    MatDatepickerModule,
-    MatRangeDateSelectionModel,
-} from '@angular/material/datepicker';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSliderModule } from '@angular/material/slider';
@@ -43,7 +38,6 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { DataExplorerDashboardGridComponent } from './components/widget-view/grid-view/data-explorer-dashboard-grid.component';
 import { DataExplorerOverviewComponent } from './components/overview/data-explorer-overview.component';
 import { DataExplorerDashboardPanelComponent } from './components/dashboard/data-explorer-dashboard-panel.component';
-import { TimeRangeSelectorComponent } from './components/time-selector/time-range-selector.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
 import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
 import { TrafficLightWidgetComponent } from './components/widgets/traffic-light/traffic-light-widget.component';
@@ -129,8 +123,6 @@ import { DataExplorerDataViewSelectionComponent } from './components/dashboard/d
 import { DataExplorerDashboardWidgetSelectionPanelComponent } from './components/dashboard/dashboard-widget-selection-panel/dashboard-widget-selection-panel.component';
 import { DataExplorerDataViewPreviewComponent } from './components/dashboard/dashboard-widget-selection-panel/data-view-selection/data-view-preview/data-view-preview.component';
 import { DataExplorerDashboardToolbarComponent } from './components/dashboard/dashboard-toolbar/dashboard-toolbar.component';
-import { TimeRangeSelectorMenuComponent } from './components/time-selector/time-selector-menu/time-selector-menu.component';
-import { CustomTimeRangeSelectionComponent } from './components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
 import { DataExplorerRefreshIntervalSettingsComponent } from './components/dashboard/dashboard-toolbar/refresh-interval-settings/refresh-interval-settings.component';
 import { OrderSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/order-selection-panel/order-selection-panel.component';
 import { GaugeWidgetConfigComponent } from './components/widgets/gauge/config/gauge-widget-config.component';
@@ -174,7 +166,6 @@ import { GaugeWidgetConfigComponent } from './components/widgets/gauge/config/ga
         MatProgressSpinnerModule,
         ReactiveFormsModule,
         CoreUiModule,
-        MatDatepickerModule,
         MatNativeDateModule,
         MatSliderModule,
         MatSlideToggleModule,
@@ -215,7 +206,6 @@ import { GaugeWidgetConfigComponent } from './components/widgets/gauge/config/ga
     ],
     declarations: [
         AggregateConfigurationComponent,
-        CustomTimeRangeSelectionComponent,
         DataExplorerDashboardGridComponent,
         DataExplorerOverviewComponent,
         DataExplorerDashboardPanelComponent,
@@ -259,8 +249,6 @@ import { GaugeWidgetConfigComponent } from './components/widgets/gauge/config/ga
         MapWidgetComponent,
         HeatmapWidgetConfigComponent,
         ImageViewerComponent,
-        TimeRangeSelectorComponent,
-        TimeRangeSelectorMenuComponent,
         DataExplorerVisualisationSettingsComponent,
         GroupSelectionPanelComponent,
         DataExplorerVisualisationSettingsComponent,
@@ -283,7 +271,6 @@ import { GaugeWidgetConfigComponent } from './components/widgets/gauge/config/ga
         SpTimeSeriesAppearanceConfigComponent,
         SpDataZoomConfigComponent,
     ],
-    providers: [DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel],
     exports: [],
 })
 export class DataExplorerModule {

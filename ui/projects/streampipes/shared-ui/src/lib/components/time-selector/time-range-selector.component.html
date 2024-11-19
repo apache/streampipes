@@ -30,25 +30,28 @@
             color="accent"
             [matMenuTriggerFor]="menu"
             #menuTrigger="matMenuTrigger"
-            matTooltip="Modify time"
+            [matTooltip]="labels.timeRangeSelectorTooltip"
             data-cy="time-selector-menu"
             (menuClosed)="menuTrigger.closeMenu()"
         >
-            <div *ngIf="timeStringMode === 'advanced'">
-                <div class="formatted-datetime">
-                    <span class="formatted-date">{{
-                        timeString.startDate
-                    }}</span
-                    >&nbsp;
-                    <span class="formatted-time">{{
+            <div
+                *ngIf="timeStringMode === 'advanced'"
+                class="formatted-datetime"
+            >
+                <span class="formatted-date">{{ timeString.startDate }}</span>
+                <span *ngIf="enableTimeChange">
+                    &nbsp;<span class="formatted-time">{{
                         timeString.startTime
                     }}</span>
-                </div>
-                -
-                <div class="formatted-datetime">
-                    <span class="formatted-date">{{ timeString.endDate }}</span
-                    >&nbsp;
-                    <span class="formatted-time">{{ timeString.endTime }}</span>
+                </span>
+                <div *ngIf="enableTimeChange || !timeString.sameDay">
+                    <span class="formatted-date">&nbsp;-&nbsp;</span>
+                    <span class="formatted-date">{{ timeString.endDate }}</span>
+                    <span *ngIf="enableTimeChange">
+                        &nbsp;<span class="formatted-time">{{
+                            timeString.endTime
+                        }}</span>
+                    </span>
                 </div>
             </div>
             <div class="formatted-datetime" *ngIf="timeStringMode === 'simple'">
@@ -63,7 +66,11 @@
             <sp-time-selector-menu
                 #timeSelectorMenu
                 [timeSettings]="timeSettings"
+                [labels]="labels"
                 (timeSettingsEmitter)="applyCurrentDateRange($event)"
+                [quickSelections]="quickSelections"
+                [enableTimeChange]="enableTimeChange"
+                [maxDayRange]="maxDayRange"
                 class="w-100"
             >
             </sp-time-selector-menu>
@@ -71,12 +78,12 @@
     </div>
     <div fxLayoutAlign="end center">
         <button
-            mat-button
+            mat-icon-button
+            matTooltip="Refresh"
             color="accent"
             (click)="updateTimeSettingsAndReload()"
         >
             <mat-icon>refresh</mat-icon>
-            Refresh
         </button>
     </div>
 </div>

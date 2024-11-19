@@ -30,7 +30,6 @@ import {
     RouterStateSnapshot,
 } from '@angular/router';
 import { ConfirmDialogComponent } from '@streampipes/shared-ui';
-import { TimeSelectionService } from '../../services/time-selection.service';
 import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
 import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
 import { DataExplorerDetectChangesService } from '../../services/data-explorer-detect-changes.service';
@@ -38,6 +37,7 @@ import { SupportsUnsavedChangeDialog } from '../../models/dataview-dashboard.mod
 import { Observable, of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { map } from 'rxjs/operators';
+import { TimeSelectionService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-data-explorer-data-view',
@@ -90,6 +90,7 @@ export class DataExplorerDataViewComponent
                 this.timeSettings = this.makeDefaultTimeSettings();
             } else {
                 this.timeSelectionService.updateTimeSettings(
+                    this.timeSelectionService.defaultQuickTimeSelections,
                     this.dataView.timeSettings as TimeSettings,
                     new Date(),
                 );

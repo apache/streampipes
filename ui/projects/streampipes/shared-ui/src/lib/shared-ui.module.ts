@@ -17,7 +17,13 @@
  */
 
 import { NgModule } from '@angular/core';
+import {
+    DefaultMatCalendarRangeStrategy,
+    MatDatepickerModule,
+    MatRangeDateSelectionModel,
+} from '@angular/material/datepicker';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
+import { MatCardModule } from '@angular/material/card';
 import { PanelDialogComponent } from './dialog/panel-dialog/panel-dialog.component';
 import { StandardDialogComponent } from './dialog/standard-dialog/standard-dialog.component';
 import { CommonModule } from '@angular/common';
@@ -55,6 +61,9 @@ import { AssetBrowserFilterTypeComponent } from './components/asset-browser/asse
 import { AssetBrowserHierarchyComponent } from './components/asset-browser/asset-browser-hierarchy/asset-browser-hierarchy.component';
 import { AssetBrowserNodeComponent } from './components/asset-browser/asset-browser-hierarchy/asset-browser-node/asset-browser-node.component';
 import { AssetBrowserNodeInfoComponent } from './components/asset-browser/asset-browser-hierarchy/asset-browser-node/asset-browser-node-info/asset-browser-node-info.component';
+import { TimeRangeSelectorComponent } from './components/time-selector/time-range-selector.component';
+import { TimeRangeSelectorMenuComponent } from './components/time-selector/time-selector-menu/time-selector-menu.component';
+import { CustomTimeRangeSelectionComponent } from './components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
@@ -74,6 +83,7 @@ import { MatTreeModule } from '@angular/material/tree';
         AssetBrowserNodeInfoComponent,
         AssetBrowserToolbarComponent,
         ConfirmDialogComponent,
+        CustomTimeRangeSelectionComponent,
         PanelDialogComponent,
         StandardDialogComponent,
         SpBasicFieldDescriptionComponent,
@@ -88,6 +98,8 @@ import { MatTreeModule } from '@angular/material/tree';
         SpTableComponent,
         SplitSectionComponent,
         SpWarningBoxComponent,
+        TimeRangeSelectorComponent,
+        TimeRangeSelectorMenuComponent,
     ],
     imports: [
         CommonModule,
@@ -102,6 +114,8 @@ import { MatTreeModule } from '@angular/material/tree';
         MatTabsModule,
         MatTooltipModule,
         MatTreeModule,
+        MatDatepickerModule,
+        MatCardModule,
         PortalModule,
         OverlayModule,
         MatDialogModule,
@@ -109,6 +123,7 @@ import { MatTreeModule } from '@angular/material/tree';
         MatPaginator,
         MatSort,
     ],
+    providers: [DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel],
     exports: [
         AssetBrowserComponent,
         ConfirmDialogComponent,
@@ -126,6 +141,9 @@ import { MatTreeModule } from '@angular/material/tree';
         SpTableComponent,
         SplitSectionComponent,
         SpWarningBoxComponent,
+        CustomTimeRangeSelectionComponent,
+        TimeRangeSelectorComponent,
+        TimeRangeSelectorMenuComponent,
     ],
 })
 export class SharedUiModule {}

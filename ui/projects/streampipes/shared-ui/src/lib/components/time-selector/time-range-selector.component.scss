@@ -16,8 +16,6 @@
  *
  */
 
-@import '../../../../scss/variables';
-
 .start-date-margin {
     margin-right: 5px;
 }
@@ -65,8 +63,9 @@
 }
 
 .formatted-datetime {
-    display: inline;
+    display: inline-flex;
     background: var(--color-bg-2);
     border-radius: 5px;
     padding: 5px;
+    white-space: nowrap;
 }

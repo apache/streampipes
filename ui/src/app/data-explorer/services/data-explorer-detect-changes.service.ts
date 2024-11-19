@@ -51,7 +51,7 @@ export class DataExplorerDetectChangesService {
         originalTimeSettings: TimeSettings,
         currentTimeSettings: TimeSettings,
     ): boolean {
-        if (originalTimeSettings.timeSelectionId == 0) {
+        if (originalTimeSettings.timeSelectionId === 'custom') {
             return this.hasCustomTimeSettingsChanged(
                 originalTimeSettings,
                 currentTimeSettings,

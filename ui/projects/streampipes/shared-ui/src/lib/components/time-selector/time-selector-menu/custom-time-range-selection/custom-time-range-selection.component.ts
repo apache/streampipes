@@ -17,12 +17,17 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TimeSelectionId, TimeSettings } from '@streampipes/platform-services';
+import {
+    TimeSelectionConstants,
+    TimeSettings,
+} from '@streampipes/platform-services';
 import {
     DateRange,
     DefaultMatCalendarRangeStrategy,
     MatRangeDateSelectionModel,
 } from '@angular/material/datepicker';
+import { differenceInDays, endOfDay, startOfDay } from 'date-fns';
+import { TimeSelectorLabel } from '../../time-selector.model';
 
 @Component({
     selector: 'sp-custom-time-range-selection',
@@ -31,6 +36,15 @@ import {
 })
 export class CustomTimeRangeSelectionComponent implements OnInit {
     @Input() timeSettings: TimeSettings;
+
+    @Input() labels: TimeSelectorLabel;
+
+    @Input()
+    enableTimeChange: boolean;
+
+    @Input()
+    maxDayRange: number;
+
     @Output() timeSettingsEmitter = new EventEmitter<TimeSettings>();
 
     currentStartDate: string;
@@ -39,6 +53,9 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
     currentEndTime: string;
     currentDateRange: DateRange<Date>;
     dateSelectionComplete = false;
+    dateRangeString: string;
+
+    maxDateRangeError = false;
 
     constructor(
         private readonly selectionModel: MatRangeDateSelectionModel<Date>,
@@ -75,13 +92,19 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
     updateDateStrings(): void {
         this.currentStartDate = this.formatDate(this.currentDateRange.start);
         this.currentEndDate = this.formatDate(this.currentDateRange.end);
+        this.dateRangeString = `${this.currentStartDate} - ${this.currentEndDate}`;
     }
 
     formatDate(date: Date): string {
-        return date?.toLocaleDateString() || '-';
+        if (this.enableTimeChange === true) {
+            return date?.toLocaleDateString() || '-';
+        } else {
+            return date?.toLocaleDateString() || ' ';
+        }
     }
 
     onDateChange(selectedDate: Date): void {
+        this.maxDateRangeError = false;
         const newSelection = this.selectionStrategy.selectionFinished(
             selectedDate,
             this.selectionModel.selection,
@@ -91,16 +114,40 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
             newSelection.start,
             newSelection.end,
         );
-        this.dateSelectionComplete = this.selectionModel.isComplete();
         this.updateDateStrings();
+        const daysDiff = differenceInDays(newSelection.end, newSelection.start);
+        if (this.selectionModel.isComplete()) {
+            if (this.maxDayRange === 0 || daysDiff + 1 <= this.maxDayRange) {
+                this.dateSelectionComplete = true;
+                if (!this.enableTimeChange) {
+                    this.saveSelection();
+                }
+            } else {
+                this.maxDateRangeError = true;
+                this.dateSelectionComplete = false;
+            }
+        }
     }
 
     saveSelection(): void {
-        this.updateDateTime(this.currentDateRange.start, this.currentStartTime);
-        this.updateDateTime(this.currentDateRange.end, this.currentEndTime);
-        this.timeSettings.startTime = this.currentDateRange.start.getTime();
-        this.timeSettings.endTime = this.currentDateRange.end.getTime();
-        this.timeSettings.timeSelectionId = TimeSelectionId.CUSTOM;
+        if (this.enableTimeChange === true) {
+            this.updateDateTime(
+                this.currentDateRange.start,
+                this.currentStartTime,
+            );
+            this.updateDateTime(this.currentDateRange.end, this.currentEndTime);
+            this.timeSettings.startTime = this.currentDateRange.start.getTime();
+            this.timeSettings.endTime = this.currentDateRange.end.getTime();
+        } else {
+            this.timeSettings.startTime = startOfDay(
+                this.currentDateRange.start,
+            ).getTime();
+            this.timeSettings.endTime = endOfDay(
+                this.currentDateRange.end,
+            ).getTime();
+        }
+
+        this.timeSettings.timeSelectionId = TimeSelectionConstants.CUSTOM;
         this.timeSettingsEmitter.emit(this.timeSettings);
     }
 

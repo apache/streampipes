@@ -47,8 +47,8 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { CurrentUserService } from '@streampipes/shared-ui';
 import { BaseWidgetData } from '../../models/dataview-dashboard.model';
 import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
-import { TimeSelectionService } from '../../services/time-selection.service';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { TimeSelectionService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-widget',
@@ -162,7 +162,7 @@ export class DataExplorerDashboardWidgetComponent
             endTime: this.timeSettings.endTime,
             timeSelectionId: this.timeSettings.timeSelectionId,
         };
-        if (this.dashboardItem.timeSettings !== undefined) {
+        if (this.dashboardItem?.timeSettings !== undefined) {
             this.timeSettingsModified = true;
         }
     }

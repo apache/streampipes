@@ -28,13 +28,16 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import {
-    TimeSelectionId,
+    QuickTimeSelection,
+    TimeSelectionConstants,
     TimeSettings,
     TimeString,
 } from '@streampipes/platform-services';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { TimeSelectionService } from '../../services/time-selection.service';
 import { TimeRangeSelectorMenuComponent } from './time-selector-menu/time-selector-menu.component';
+import { TimeSelectorLabel } from './time-selector.model';
+import { differenceInMilliseconds, isSameDay } from 'date-fns';
 
 @Component({
     selector: 'sp-time-range-selector',
@@ -55,13 +58,41 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     @Input()
     showTimeSelector = true;
 
+    @Input()
+    enableTimeChange = true;
+
+    @Input()
+    maxDayRange = 0;
+
+    @Input()
+    quickSelections: QuickTimeSelection[];
+
+    @Input()
+    labels: TimeSelectorLabel = {
+        quickSelectionLabel: 'Quick Selection',
+        customLabel: 'Custom',
+        maxDayRangeErrorLabel:
+            'Maximum of ${this.maxDayRange} days can be displayed. Please select a smaller range.',
+        timeRangeSelectorTooltip: 'Modify time range',
+    };
+
     simpleTimeString: string = '';
     timeString: TimeString;
     timeStringMode: 'simple' | 'advanced' = 'simple';
+    dateFormat: Intl.DateTimeFormatOptions = {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+    };
 
     constructor(private timeSelectionService: TimeSelectionService) {}
 
     ngOnInit() {
+        if (!this.quickSelections) {
+            this.quickSelections =
+                this.timeSelectionService.defaultQuickTimeSelections;
+        }
         this.createDateString();
     }
 
@@ -95,6 +126,7 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
 
     updateTimeSettingsAndReload() {
         this.timeSelectionService.updateTimeSettings(
+            this.quickSelections,
             this.timeSettings,
             new Date(),
         );
@@ -105,14 +137,19 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     }
 
     private changeTimeByInterval(func: (a: number, b: number) => number) {
-        const difference =
-            this.timeSettings.endTime - this.timeSettings.startTime;
-        const newStartTime = func(this.timeSettings.startTime, difference);
-        const newEndTime = func(this.timeSettings.endTime, difference);
+        const timeDiff =
+            (differenceInMilliseconds(
+                this.timeSettings.startTime,
+                this.timeSettings.endTime,
+            ) -
+                1) *
+            -1;
+        const newStartTime = func(this.timeSettings.startTime, timeDiff);
+        const newEndTime = func(this.timeSettings.endTime, timeDiff);
 
         this.timeSettings.startTime = newStartTime;
         this.timeSettings.endTime = newEndTime;
-        this.timeSettings.timeSelectionId = TimeSelectionId.CUSTOM;
+        this.timeSettings.timeSelectionId = TimeSelectionConstants.CUSTOM;
         this.timeSelectorMenu.triggerDisplayUpdate();
         this.createDateString();
         this.reloadData();
@@ -126,8 +163,11 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     }
 
     createDateString(): void {
-        if (this.timeSettings.timeSelectionId !== TimeSelectionId.CUSTOM) {
+        if (
+            this.timeSettings.timeSelectionId !== TimeSelectionConstants.CUSTOM
+        ) {
             this.simpleTimeString = this.timeSelectionService.getTimeSelection(
+                this.quickSelections,
                 this.timeSettings.timeSelectionId,
             ).label;
             this.timeStringMode = 'simple';
@@ -135,12 +175,20 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
             const startDate = new Date(this.timeSettings.startTime);
             const endDate = new Date(this.timeSettings.endTime);
             this.timeString = {
-                startDate: startDate.toLocaleDateString(),
-                endDate: endDate.toLocaleDateString(),
+                startDate: this.formatDate(startDate),
+                endDate: this.formatDate(endDate),
                 startTime: startDate.toLocaleTimeString(),
                 endTime: endDate.toLocaleTimeString(),
+                sameDay: isSameDay(startDate, endDate),
             };
+
             this.timeStringMode = 'advanced';
         }
+    }
+
+    private formatDate(date: Date): string {
+        return this.enableTimeChange
+            ? date.toLocaleDateString()
+            : date.toLocaleDateString(navigator.language, this.dateFormat);
     }
 }
