@@ -126,7 +126,10 @@
                 </button>
                 <mat-menu #optMenu="matMenu" class="large-menu">
                     <sp-time-selector-menu
+                        *ngIf="quickSelections"
                         [timeSettings]="clonedTimeSettings"
+                        [quickSelections]="quickSelections"
+                        [labels]="labels"
                         (timeSettingsEmitter)="modifyWidgetTimeSettings($event)"
                         class="w-100"
                     >

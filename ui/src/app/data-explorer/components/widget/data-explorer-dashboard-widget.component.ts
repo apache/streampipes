@@ -34,6 +34,7 @@ import {
     DashboardItem,
     DataExplorerWidgetModel,
     DataLakeMeasure,
+    QuickTimeSelection,
     SpLogMessage,
     TimeSettings,
 } from '@streampipes/platform-services';
@@ -49,6 +50,7 @@ import { BaseWidgetData } from '../../models/dataview-dashboard.model';
 import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { TimeSelectionService } from '@streampipes/shared-ui';
+import { TimeSelectorLabel } from 'projects/streampipes/shared-ui/src/lib/components/time-selector/time-selector.model';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-widget',
@@ -104,6 +106,8 @@ export class DataExplorerDashboardWidgetComponent
     timerActive = false;
     loadingTime = 0;
 
+    quickSelections: QuickTimeSelection[];
+    labels: TimeSelectorLabel;
     clonedTimeSettings: TimeSettings;
     timeSettingsModified: boolean = false;
 
@@ -137,6 +141,9 @@ export class DataExplorerDashboardWidgetComponent
     }
 
     ngOnInit(): void {
+        this.quickSelections =
+            this.timeSelectionService.defaultQuickTimeSelections;
+        this.labels = this.timeSelectionService.defaultLabels;
         this.authSubscription = this.currentUserService.user$.subscribe(
             user => {
                 this.hasDataExplorerWritePrivileges = this.authService.hasRole(
@@ -225,7 +232,10 @@ export class DataExplorerDashboardWidgetComponent
     getTimeSettings(): TimeSettings {
         if (this.globalTimeEnabled) {
             return this.timeSettings;
-        } else if (this.dashboardItem.timeSettings !== undefined) {
+        } else if (
+            this.dashboardItem.timeSettings !== undefined &&
+            this.dashboardItem.timeSettings !== null
+        ) {
             return this.dashboardItem.timeSettings as TimeSettings;
         } else {
             return this.configuredWidget.timeSettings as TimeSettings;

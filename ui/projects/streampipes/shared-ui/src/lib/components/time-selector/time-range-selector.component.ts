@@ -75,13 +75,7 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     quickSelections: QuickTimeSelection[];
 
     @Input()
-    labels: TimeSelectorLabel = {
-        quickSelectionLabel: 'Quick Selection',
-        customLabel: 'Custom',
-        maxDayRangeErrorLabel:
-            'Maximum of ${this.maxDayRange} days can be displayed. Please select a smaller range.',
-        timeRangeSelectorTooltip: 'Modify time range',
-    };
+    labels: TimeSelectorLabel;
 
     simpleTimeString: string = '';
     timeString: TimeString;
@@ -96,15 +90,14 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     constructor(private timeSelectionService: TimeSelectionService) {}
 
     ngOnInit() {
-        if (!this.quickSelections) {
-            this.quickSelections =
-                this.timeSelectionService.defaultQuickTimeSelections;
-        }
+        this.quickSelections ??=
+            this.timeSelectionService.defaultQuickTimeSelections;
+        this.labels ??= this.timeSelectionService.defaultLabels;
         this.createDateString();
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.timeSettings) {
+        if (changes.timeSettings && this.quickSelections !== undefined) {
             this.createDateString();
         }
     }
