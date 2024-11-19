@@ -17,22 +17,18 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-    Dashboard,
-    DashboardLiveSettings,
-} from '@streampipes/platform-services';
+import { DashboardLiveSettings } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-data-explorer-refresh-interval-settings-component',
     templateUrl: './refresh-interval-settings.component.html',
 })
 export class DataExplorerRefreshIntervalSettingsComponent implements OnInit {
-    @Input()
-    dashboard: Dashboard;
+    @Input() liveSettings: DashboardLiveSettings;
 
     @Output()
-    intervalSettingsChangedEmitter: EventEmitter<void> =
-        new EventEmitter<void>();
+    intervalSettingsChangedEmitter: EventEmitter<DashboardLiveSettings> =
+        new EventEmitter<DashboardLiveSettings>();
 
     availableOptions: DashboardLiveSettings[] = [
         {
@@ -82,13 +78,13 @@ export class DataExplorerRefreshIntervalSettingsComponent implements OnInit {
     ];
 
     ngOnInit() {
-        if (!this.dashboard.dashboardLiveSettings?.label) {
-            this.dashboard.dashboardLiveSettings = this.availableOptions[0];
+        if (!this.liveSettings?.label) {
+            this.liveSettings = this.availableOptions[0];
         }
     }
 
     modifyRefreshInterval(option: DashboardLiveSettings): void {
-        this.dashboard.dashboardLiveSettings = option;
-        this.intervalSettingsChangedEmitter.emit();
+        this.liveSettings = option;
+        this.intervalSettingsChangedEmitter.emit(option);
     }
 }

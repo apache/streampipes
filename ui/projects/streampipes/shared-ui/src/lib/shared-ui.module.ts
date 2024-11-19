@@ -64,6 +64,7 @@ import { AssetBrowserNodeInfoComponent } from './components/asset-browser/asset-
 import { TimeRangeSelectorComponent } from './components/time-selector/time-range-selector.component';
 import { TimeRangeSelectorMenuComponent } from './components/time-selector/time-selector-menu/time-selector-menu.component';
 import { CustomTimeRangeSelectionComponent } from './components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
+import { DataExplorerRefreshIntervalSettingsComponent } from './components/time-selector/refresh-interval-settings/refresh-interval-settings.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
@@ -100,6 +101,7 @@ import { MatTreeModule } from '@angular/material/tree';
         SpWarningBoxComponent,
         TimeRangeSelectorComponent,
         TimeRangeSelectorMenuComponent,
+        DataExplorerRefreshIntervalSettingsComponent,
     ],
     imports: [
         CommonModule,
@@ -144,6 +146,7 @@ import { MatTreeModule } from '@angular/material/tree';
         CustomTimeRangeSelectionComponent,
         TimeRangeSelectorComponent,
         TimeRangeSelectorMenuComponent,
+        DataExplorerRefreshIntervalSettingsComponent,
     ],
 })
 export class SharedUiModule {}

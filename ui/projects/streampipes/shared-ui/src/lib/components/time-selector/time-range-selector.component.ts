@@ -28,6 +28,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import {
+    DashboardLiveSettings,
     QuickTimeSelection,
     TimeSelectionConstants,
     TimeSettings,
@@ -52,8 +53,14 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
 
     @Output() dateRangeEmitter = new EventEmitter<TimeSettings>();
 
+    @Output()
+    intervalSettingsChangedEmitter = new EventEmitter<DashboardLiveSettings>();
+
     @Input()
     timeSettings: TimeSettings;
+
+    @Input()
+    liveSettings: DashboardLiveSettings;
 
     @Input()
     showTimeSelector = true;
