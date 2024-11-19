@@ -38,6 +38,7 @@ import {
     subWeeks,
     subYears,
 } from 'date-fns';
+import { TimeSelectorLabel } from '../components/time-selector/time-selector.model';
 
 @Injectable({ providedIn: 'root' })
 export class TimeSelectionService {
@@ -48,6 +49,14 @@ export class TimeSelectionService {
         10080: TimeSelectionConstants.LAST_WEEK,
         43200: TimeSelectionConstants.LAST_MONTH,
         525600: TimeSelectionConstants.LAST_YEAR,
+    };
+
+    defaultLabels: TimeSelectorLabel = {
+        quickSelectionLabel: 'Quick Selection',
+        customLabel: 'Custom',
+        maxDayRangeErrorLabel:
+            'Maximum of ${this.maxDayRange} days can be displayed. Please select a smaller range.',
+        timeRangeSelectorTooltip: 'Modify time range',
     };
 
     defaultQuickTimeSelections: QuickTimeSelection[] = [
