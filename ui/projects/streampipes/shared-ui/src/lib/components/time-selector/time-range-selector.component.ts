@@ -75,6 +75,9 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     quickSelections: QuickTimeSelection[];
 
     @Input()
+    availableOptions: DashboardLiveSettings[];
+
+    @Input()
     labels: TimeSelectorLabel;
 
     simpleTimeString: string = '';
@@ -93,6 +96,8 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
         this.quickSelections ??=
             this.timeSelectionService.defaultQuickTimeSelections;
         this.labels ??= this.timeSelectionService.defaultLabels;
+        this.availableOptions ??=
+            this.timeSelectionService.defaultAvailableLiveSettingsOptions;
         this.createDateString();
     }
 
