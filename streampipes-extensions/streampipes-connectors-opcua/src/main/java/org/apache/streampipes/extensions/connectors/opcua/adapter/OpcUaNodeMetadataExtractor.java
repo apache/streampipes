@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.adapter;
 
-import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
+import org.eclipse.milo.opcua.sdk.client.api.UaClient;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
 import org.eclipse.milo.opcua.stack.core.StatusCodes;
@@ -32,12 +32,12 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class OpcUaNodeMetadataExtractor {
-  private final OpcUaClient client;
+  private final UaClient client;
   private final UaNode node;
 
   private final Map<String, Object> metadata;
 
-  public OpcUaNodeMetadataExtractor(OpcUaClient client, UaNode node) {
+  public OpcUaNodeMetadataExtractor(UaClient client, UaNode node) {
     this.client = client;
     this.node = node;
     this.metadata = new HashMap<>();

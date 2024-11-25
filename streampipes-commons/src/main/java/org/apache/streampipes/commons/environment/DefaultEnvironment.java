@@ -328,4 +328,23 @@ public class DefaultEnvironment implements Environment {
     return new StringEnvironmentVariable(Envs.SP_ALLOWED_UPLOAD_FILETYPES);
   }
 
+  @Override
+  public StringEnvironmentVariable getOpcUaSecurityDir() {
+    return new StringEnvironmentVariable(Envs.SP_OPCUA_SECURITY_DIR);
+  }
+
+  @Override
+  public StringEnvironmentVariable getOpcUaKeystoreFile() {
+    return new StringEnvironmentVariable(Envs.SP_OPCUA_KEYSTORE_FILE);
+  }
+
+  @Override
+  public StringEnvironmentVariable getOpcUaKeystorePassword() {
+    return new StringEnvironmentVariable(Envs.SP_OPCUA_KEYSTORE_PASSWORD);
+  }
+
+  @Override
+  public StringEnvironmentVariable getOpcUaApplicationUri() {
+    return new StringEnvironmentVariable(Envs.SP_OPCUA_APPLICATION_URI);
+  }
 }

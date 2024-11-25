@@ -16,12 +16,11 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.sink;
+package org.apache.streampipes.extensions.connectors.opcua.config.identity;
 
-import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
+import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
 
-public record OpcUaParameters(OpcUaConfig config,
-                              String mappingPropertySelector,
-                              String mappingPropertyType,
-                              String selectedNode) {
+public interface IdentityConfig {
+
+  void configureIdentity(OpcUaClientConfigBuilder builder);
 }

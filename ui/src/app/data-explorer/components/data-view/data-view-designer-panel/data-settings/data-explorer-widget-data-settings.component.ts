@@ -83,7 +83,11 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
             this.dataExplorerService.getAllPersistedDataStreams(),
             this.datalakeRestService.getAllMeasurementSeries(),
         ).subscribe(response => {
-            this.availablePipelines = response[0];
+            this.availablePipelines = response[0].filter(
+                p =>
+                    response[1].find(m => m.measureName === p.measureName) !==
+                    undefined,
+            );
             this.availableMeasurements = response[1];
 
             // replace pipeline event schemas. Reason: Available measures do not contain field for timestamp

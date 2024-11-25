@@ -26,7 +26,40 @@
 
 ## Description
 
-Allows to write events to an OPC-UA server.
+This data sink can be used to write values to an OPC-UA server.
+The sink supports both signed/encrypted and unencrypted communication.
+
+Certificates must be provided directly to the service and cannot be added from the UI or REST APIs.
+To establish connections using a `Sign` or `Sign & Encrypt` security mode,
+the following environment variables must be provided to the extension service:
+
+* SP_OPCUA_SECURITY_DIR the directory where the keystore and trusted certificates are located
+* SP_OPCUA_KEYSTORE_FILE the keystore file (e.g., keystore.pfx, must be of type PKCS12)
+* SP_OPCUA_KEYSTORE_PASSWORD the password to the keystore
+* SP_OPCUA_APPLICATION_URI the application URI used by the client to identify itself
+
+Certificate requirements:
+
+The X509 certificate must provide the following extras:
+* Key Usage: Certificate Sign
+* Subject Alternative Name: Application URI
+* Basic Constraints: Must provide CA:FALSE when using a self-signed certificate
+* Extended Key Usage: TLS Web Server Authentication, TLS Web Client Authentication
+
+The directory layout of the `SP_OPCUA_SECURITY_DIR` look as follows:
+
+```
+SP_OPC_SECURITY_DIR/
+├─ pki/
+│  ├─ issuers/
+│  ├─ rejected/
+│  ├─ trusted/
+│  │  ├─ certs/
+│  │  ├─ crl/
+```
+
+Trusted certs need to be present in the `pki/trusted/certs` folder.
+Rejected certificates are stored in the `rejected` folder.
 
 ***
 
@@ -45,6 +78,21 @@ The hostname of the OPC-UA server.
 ### Port
 
 The port of the OPC-UA server.
+
+### Security Mode
+
+Can be either None, Signed or Signed & Encrypt
+
+### Security Policy
+
+Choose one of the OPC-UA security policies or `None`
+
+### User Authentication
+
+Choose whether you want to connect anonymously or authenticate using your credentials.
+
+&nbsp;&nbsp;&nbsp;&nbsp; **Anonymous**: No further information required <br/>
+&nbsp;&nbsp;&nbsp;&nbsp; **Username/Password**: Insert your `username` and `password` to access the OPC UA server
 
 ### Namespace Index
 

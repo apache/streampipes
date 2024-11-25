@@ -29,7 +29,8 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeCont
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
-import org.apache.streampipes.extensions.connectors.opcua.client.SpOpcUaClient;
+import org.apache.streampipes.extensions.connectors.opcua.client.ConnectedOpcUaClient;
+import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProvider;
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaAdapterConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
@@ -42,7 +43,6 @@ import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -66,7 +66,6 @@ import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ADAPTER_TYPE;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULLING_INTERVAL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULL_MODE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_MODE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil.getSchema;
@@ -78,7 +77,9 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   private static final Logger LOG = LoggerFactory.getLogger(OpcUaAdapter.class);
 
   private int pullingIntervalMilliSeconds;
-  private SpOpcUaClient<OpcUaAdapterConfig> spOpcUaClient;
+  private final OpcUaClientProvider clientProvider;
+  private ConnectedOpcUaClient connectedClient;
+  private OpcUaAdapterConfig opcUaAdapterConfig;
   private List<OpcNode> allNodes;
   private List<NodeId> allNodeIds;
   private int numberProperties;
@@ -92,15 +93,14 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
    */
   private final Map<String, String> nodeIdToLabelMapping;
 
-  public OpcUaAdapter() {
-    super();
+  public OpcUaAdapter(OpcUaClientProvider clientProvider) {
+    this.clientProvider = clientProvider;
     this.numberProperties = 0;
     this.event = new HashMap<>();
     this.nodeIdToLabelMapping = new HashMap<>();
   }
 
   private void prepareAdapter(IAdapterParameterExtractor extractor) throws AdapterException {
-
     this.allNodeIds = new ArrayList<>();
     List<String> deleteKeys = extractor
         .getAdapterDescription()
@@ -111,9 +111,9 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
         .collect(Collectors.toList());
 
     try {
-      this.spOpcUaClient.connect();
+      this.connectedClient = clientProvider.getClient(this.opcUaAdapterConfig);
       OpcUaNodeBrowser browserClient =
-          new OpcUaNodeBrowser(this.spOpcUaClient.getClient(), this.spOpcUaClient.getSpOpcConfig());
+          new OpcUaNodeBrowser(this.connectedClient.getClient(), this.opcUaAdapterConfig);
       this.allNodes = browserClient.findNodes(deleteKeys);
 
 
@@ -121,11 +121,11 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
         this.allNodeIds.add(node.getNodeId());
       }
 
-      if (spOpcUaClient.getSpOpcConfig().inPullMode()) {
-        this.pullingIntervalMilliSeconds = spOpcUaClient.getSpOpcConfig().getPullIntervalMilliSeconds();
+      if (opcUaAdapterConfig.inPullMode()) {
+        this.pullingIntervalMilliSeconds = opcUaAdapterConfig.getPullIntervalMilliSeconds();
       } else {
         this.numberProperties = this.allNodeIds.size();
-        this.spOpcUaClient.createListSubscription(this.allNodeIds, this);
+        this.connectedClient.createListSubscription(this.allNodeIds, this);
       }
 
       this.allNodes.forEach(node -> this.nodeIdToLabelMapping.put(node.getNodeId().toString(), node.getLabel()));
@@ -139,7 +139,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   @Override
   public void pullData() throws ExecutionException, RuntimeException, InterruptedException, TimeoutException {
     var response =
-        this.spOpcUaClient.getClient().readValues(0, TimestampsToReturn.Both, this.allNodeIds);
+        this.connectedClient.getClient().readValues(0, TimestampsToReturn.Both, this.allNodeIds);
     boolean badStatusCodeReceived = false;
     boolean emptyValueReceived = false;
     List<DataValue> returnValues =
@@ -168,7 +168,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
   private boolean shouldSkipEvent(boolean badStatusCodeReceived) {
     return badStatusCodeReceived
-        && this.spOpcUaClient.getSpOpcConfig().getIncompleteEventStrategy()
+        && this.opcUaAdapterConfig.getIncompleteEventStrategy()
         .equalsIgnoreCase(SharedUserConfiguration.INCOMPLETE_OPTION_IGNORE);
   }
 
@@ -208,13 +208,13 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   public void onAdapterStarted(IAdapterParameterExtractor extractor,
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
-    this.spOpcUaClient = new SpOpcUaClient<>(
-        SpOpcUaConfigExtractor.extractAdapterConfig(extractor.getStaticPropertyExtractor())
-    );
+    this.opcUaAdapterConfig =
+        SpOpcUaConfigExtractor.extractAdapterConfig(extractor.getStaticPropertyExtractor());
+    //this.connectedClient = clientProvider.getClient(this.opcUaAdapterConfig);
     this.collector = collector;
     this.prepareAdapter(extractor);
 
-    if (this.spOpcUaClient.getSpOpcConfig().inPullMode()) {
+    if (this.opcUaAdapterConfig.inPullMode()) {
       this.pullAdapterScheduler = new PullAdapterScheduler();
       this.pullAdapterScheduler.schedule(this, extractor.getAdapterDescription().getElementId());
     }
@@ -223,9 +223,9 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   @Override
   public void onAdapterStopped(IAdapterParameterExtractor extractor,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
-    this.spOpcUaClient.disconnect();
+    clientProvider.releaseClient(this.opcUaAdapterConfig);
 
-    if (this.spOpcUaClient.getSpOpcConfig().inPullMode()) {
+    if (this.opcUaAdapterConfig.inPullMode()) {
       this.pullAdapterScheduler.shutdown();
     }
   }
@@ -233,12 +233,12 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   @Override
   public StaticProperty resolveConfiguration(String staticPropertyInternalName,
                                              IStaticPropertyExtractor extractor) throws SpConfigurationException {
-    return OpcUaUtil.resolveConfig(staticPropertyInternalName, extractor);
+    return OpcUaUtil.resolveConfig(clientProvider, staticPropertyInternalName, extractor);
   }
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    var builder = AdapterConfigurationBuilder.create(ID, 3, OpcUaAdapter::new)
+    var builder = AdapterConfigurationBuilder.create(ID, 4, () -> new OpcUaAdapter(clientProvider))
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
@@ -255,6 +255,6 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
                                        IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    return getSchema(extractor);
+    return getSchema(clientProvider, extractor);
   }
 }

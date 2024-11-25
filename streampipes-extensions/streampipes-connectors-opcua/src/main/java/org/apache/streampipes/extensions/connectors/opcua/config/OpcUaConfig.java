@@ -18,15 +18,21 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.config;
 
+import org.apache.streampipes.extensions.connectors.opcua.config.identity.IdentityConfig;
+import org.apache.streampipes.extensions.connectors.opcua.config.security.SecurityConfig;
+
 import java.util.List;
 
 public class OpcUaConfig {
 
   private String opcServerURL;
-  private boolean unauthenticated;
-  private String username;
-  private String password;
   private List<String> selectedNodeNames;
+  private IdentityConfig identityConfig;
+  private SecurityConfig securityPolicyConfig;
+
+  public OpcUaConfig() {
+
+  }
 
   public String getOpcServerURL() {
     return opcServerURL;
@@ -36,35 +42,31 @@ public class OpcUaConfig {
     this.opcServerURL = opcServerURL;
   }
 
-  public boolean isUnauthenticated() {
-    return unauthenticated;
-  }
-
-  public void setUnauthenticated(boolean unauthenticated) {
-    this.unauthenticated = unauthenticated;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
   public List<String> getSelectedNodeNames() {
     return selectedNodeNames;
   }
 
   public void setSelectedNodeNames(List<String> selectedNodeNames) {
     this.selectedNodeNames = selectedNodeNames;
+  }
+
+  public IdentityConfig getIdentityConfig() {
+    return identityConfig;
+  }
+
+  public void setIdentityConfig(IdentityConfig identityConfig) {
+    this.identityConfig = identityConfig;
+  }
+
+  public SecurityConfig getSecurityConfig() {
+    return securityPolicyConfig;
+  }
+
+  public void setSecurityConfig(SecurityConfig securityPolicyConfig) {
+    this.securityPolicyConfig = securityPolicyConfig;
+  }
+
+  public String getUniqueServerId() {
+    return String.format("%s-%s-%s", opcServerURL, securityPolicyConfig, identityConfig);
   }
 }
