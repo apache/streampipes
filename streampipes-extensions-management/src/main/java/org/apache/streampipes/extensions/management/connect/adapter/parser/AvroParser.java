@@ -140,12 +140,10 @@ public class AvroParser implements IParser {
         inputStream.skipNBytes(5);
       }
       BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(inputStream, null);
-      GenericRecord avroRecord = datumReader.read(null, decoder);
-      LOG.info("Read record: {}", avroRecord);
-      return  avroRecord;
+      return datumReader.read(null, decoder);
     } catch (IOException e) {
       throw new ParseException(
-          "Error processing Kafka message: " + e.getMessage()
+          "Error decoding the avro message. Please check the schema."
       );
     }
   }
