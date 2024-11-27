@@ -176,8 +176,7 @@ public class AvroParser implements IParser {
     }
     if (fieldValue instanceof Map<?, ?>){
       Map<Object, Object> valueMap = new LinkedHashMap<>();
-      ((Map<Object, Object>) fieldValue).entrySet().forEach(
-              value -> valueMap.put(convertUTF8(value.getKey()), toMapHelper(value.getValue())));
+      ((Map<Object, Object>) fieldValue).forEach((key, value1) -> valueMap.put(convertUTF8(key), toMapHelper(value1)));
       return valueMap;
     }
     return convertUTF8(fieldValue);
