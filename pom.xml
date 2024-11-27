@@ -43,6 +43,7 @@
         <amqp-client.version>5.21.0</amqp-client.version>
         <apache-sis-referencing.version>1.2</apache-sis-referencing.version>
         <boofcv.version>1.1.0</boofcv.version>
+        <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
         <classindex.version>3.9</classindex.version>
         <checker-qual.version>3.43.0</checker-qual.version>
         <commons-codec.version>1.17.0</commons-codec.version>
@@ -397,6 +398,16 @@
                         <artifactId>servlet-api</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>${bcprov-jdk18on.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcutil-jdk18on</artifactId>
+                <version>${bcprov-jdk18on.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.rdf4j</groupId>

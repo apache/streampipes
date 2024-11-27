@@ -198,6 +198,14 @@
             <artifactId>classindex</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcutil-jdk18on</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>
         </dependency>
