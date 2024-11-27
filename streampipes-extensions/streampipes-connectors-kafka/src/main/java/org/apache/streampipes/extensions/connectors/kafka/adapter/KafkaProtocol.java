@@ -96,8 +96,7 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
         kafkaConfig.getKafkaHost() + ":" + kafkaConfig.getKafkaPort());
 
-    props.put(ConsumerConfig.GROUP_ID_CONFIG,
-        "KafkaExampleConsumer" + System.currentTimeMillis());
+    props.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaConfig.getGroupId());
 
     props.put(ConsumerConfig.DEFAULT_API_TIMEOUT_MS_CONFIG, 6000);
 
@@ -159,6 +158,10 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
 
         .requiredTextParameter(KafkaConnectUtils.getHostLabel())
         .requiredIntegerParameter(KafkaConnectUtils.getPortLabel())
+
+        .requiredAlternatives(KafkaConnectUtils.getConsumerGroupLabel(),
+            KafkaConnectUtils.getAlternativesRandomGroupId(),
+            KafkaConnectUtils.getAlternativesGroupId())
 
         .requiredSlideToggle(KafkaConnectUtils.getHideInternalTopicsLabel(), true)
 

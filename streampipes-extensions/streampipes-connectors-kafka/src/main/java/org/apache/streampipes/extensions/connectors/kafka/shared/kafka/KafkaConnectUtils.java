@@ -56,6 +56,11 @@ public class KafkaConnectUtils {
   public static final String USERNAME_KEY = "username";
   public static final String PASSWORD_KEY = "password";
 
+  public static final String CONSUMER_GROUP = "consumer-group";
+  public static final String RANDOM_GROUP_ID = "random-group-id";
+  public static final String GROUP_ID = "group-id";
+  public static final String GROUP_ID_INPUT = "group-id-input";
+
 
   private static final String HIDE_INTERNAL_TOPICS = "hide-internal-topics";
 
@@ -86,6 +91,10 @@ public class KafkaConnectUtils {
 
   public static Label getAccessModeLabel() {
     return Labels.withId(ACCESS_MODE);
+  }
+
+  public static Label getConsumerGroupLabel() {
+    return Labels.withId(CONSUMER_GROUP);
   }
 
   public static Label getAutoOffsetResetConfigLabel() {
@@ -124,6 +133,13 @@ public class KafkaConnectUtils {
           new KafkaSecurityUnauthenticatedPlainConfig();
     }
 
+    String groupId;
+    if (extractor.selectedAlternativeInternalId(CONSUMER_GROUP).equals(RANDOM_GROUP_ID)){
+      groupId = "KafkaExampleConsumer" + System.currentTimeMillis();
+    } else {
+      groupId = extractor.singleValueParameter(GROUP_ID_INPUT, String.class);
+    }
+
     StaticPropertyAlternatives alternatives = extractor.getStaticPropertyByName(AUTO_OFFSET_RESET_CONFIG,
             StaticPropertyAlternatives.class);
 
@@ -131,12 +147,12 @@ public class KafkaConnectUtils {
     if (alternatives == null) {
       AutoOffsetResetConfig autoOffsetResetConfig = new AutoOffsetResetConfig(KafkaConnectUtils.LATEST);
 
-      return new KafkaConfig(brokerUrl, port, topic, securityConfig, autoOffsetResetConfig);
+      return new KafkaConfig(brokerUrl, port, topic, groupId, securityConfig, autoOffsetResetConfig);
     } else {
       String auto = extractor.selectedAlternativeInternalId(AUTO_OFFSET_RESET_CONFIG);
       AutoOffsetResetConfig autoOffsetResetConfig = new AutoOffsetResetConfig(auto);
 
-      return new KafkaConfig(brokerUrl, port, topic, securityConfig, autoOffsetResetConfig);
+      return new KafkaConfig(brokerUrl, port, topic, groupId, securityConfig, autoOffsetResetConfig);
     }
   }
 
@@ -172,6 +188,14 @@ public class KafkaConnectUtils {
             StaticProperties.secretValue(Labels.withId(KafkaConnectUtils.PASSWORD_KEY))));
   }
 
+  public static StaticPropertyAlternative getAlternativesRandomGroupId(){
+    return Alternatives.from(Labels.withId(RANDOM_GROUP_ID));
+  }
+
+  public static StaticPropertyAlternative getAlternativesGroupId(){
+    return Alternatives.from(Labels.withId(KafkaConnectUtils.GROUP_ID),
+        StaticProperties.stringFreeTextProperty(Labels.withId(KafkaConnectUtils.GROUP_ID_INPUT)));
+  }
 
   public static StaticPropertyAlternative getAlternativesLatest() {
     return Alternatives.from(Labels.withId(LATEST));

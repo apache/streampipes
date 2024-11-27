@@ -26,6 +26,7 @@ public class KafkaConfig {
   private String kafkaHost;
   private Integer kafkaPort;
   private String topic;
+  private String groupId;
 
   KafkaSecurityConfig securityConfig;
   AutoOffsetResetConfig autoOffsetResetConfig;
@@ -33,11 +34,13 @@ public class KafkaConfig {
   public KafkaConfig(String kafkaHost,
                      Integer kafkaPort,
                      String topic,
+                     String groupId,
                      KafkaSecurityConfig securityConfig,
                      AutoOffsetResetConfig autoOffsetResetConfig) {
     this.kafkaHost = kafkaHost;
     this.kafkaPort = kafkaPort;
     this.topic = topic;
+    this.groupId = groupId;
     this.securityConfig = securityConfig;
     this.autoOffsetResetConfig = autoOffsetResetConfig;
   }
@@ -64,6 +67,14 @@ public class KafkaConfig {
 
   public void setTopic(String topic) {
     this.topic = topic;
+  }
+
+  public String getGroupId() {
+    return groupId;
+  }
+
+  public void setGroupId(String groupId) {
+    this.groupId = groupId;
   }
 
   public KafkaSecurityConfig getSecurityConfig() {

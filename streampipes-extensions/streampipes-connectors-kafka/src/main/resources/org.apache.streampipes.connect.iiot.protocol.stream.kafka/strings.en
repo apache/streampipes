@@ -51,6 +51,18 @@ sasl-ssl.description=Username and password, with ssl encryption
 
 username-group.title=Username and password
 
+consumer-group.title=Consumer Group
+consumer-group.description=Use random group id or insert a specific one
+
+random-group-id.title=Random group id
+random-group-id.description=StreamPipes generates a random group id
+
+group-id.title=Insert group id
+group-id.description=Insert the group id
+
+group-id-input.title=Group id
+group-id-input.description=
+
 key-deserialization.title=Key Deserializer
 key-deserialization.description=
 
