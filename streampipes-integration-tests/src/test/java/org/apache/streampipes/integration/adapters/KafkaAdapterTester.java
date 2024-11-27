@@ -66,7 +66,7 @@ public class KafkaAdapterTester extends AdapterTesterBase {
     list.add(new Option(TOPIC));
     ((RuntimeResolvableOneOfStaticProperty) configuration.getAdapterDescription()
             .getConfig()
-            .get(4))
+            .get(5))
             .setOptions(list);
     List<Map<String, Object>> configs = new ArrayList<>();
     configs.add(Map.of(KafkaConnectUtils.HOST_KEY, kafkaContainer.getBrokerHost()));
@@ -89,17 +89,25 @@ public class KafkaAdapterTester extends AdapterTesterBase {
         .get(0)
         .setSelected(true);
 
+    // Set consumer group to random group id
+    ((StaticPropertyAlternatives) (desc)
+        .getConfig()
+        .get(3))
+        .getAlternatives()
+        .get(0)
+        .setSelected(true);
+
     // Set AUTO_OFFSET_RESET_CONFIG configuration to Earliest option
     ((StaticPropertyAlternatives) (desc)
         .getConfig()
-        .get(5))
+        .get(6))
         .getAlternatives()
         .get(0)
         .setSelected(true);
 
     ((StaticPropertyAlternatives) (desc)
          .getConfig()
-         .get(5))
+         .get(6))
          .getAlternatives()
          .get(1)
          .setSelected(false);
@@ -107,7 +115,7 @@ public class KafkaAdapterTester extends AdapterTesterBase {
     // Set format to Json
     ((StaticPropertyAlternatives) (desc)
          .getConfig()
-         .get(6))
+         .get(7))
          .getAlternatives()
          .get(0)
          .setSelected(true);
