@@ -40,6 +40,11 @@ public class JsonEventProperty {
 
   public static EventProperty getEventProperty(String key, Object o) {
     EventProperty resultProperty = null;
+    String description = "";
+    if (o instanceof ParserDescriptionProvider) {
+      description = ((ParserDescriptionProvider) o).description();
+      o = ((ParserDescriptionProvider) o).value();
+    }
 
     if (o == null) {
       resultProperty = makePrimitiveProperty(key, XSD.STRING.toString());
@@ -87,7 +92,7 @@ public class JsonEventProperty {
                 + "This should never happen!");
     }
 
-    resultProperty.setDescription("");
+    resultProperty.setDescription(description);
     return resultProperty;
   }
 
