@@ -21,7 +21,6 @@ package org.apache.streampipes.extensions.management.connect.adapter.parser;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.connect.IParserEventHandler;
-import org.apache.streampipes.extensions.management.connect.adapter.parser.util.ParserDescriptionProvider;
 import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -159,7 +158,7 @@ public class AvroParser implements IParser {
         Map<String, Object> flatMap = unwrapNestedRecord((GenericRecord) fieldValue, fieldName);
         resultMap.putAll(flatMap);
       } else {
-        resultMap.put(fieldName, toMapHelper(fieldValue, field.doc()));
+        resultMap.put(fieldName, toMapHelper(fieldValue));
       }
     });
 
@@ -183,12 +182,6 @@ public class AvroParser implements IParser {
     return convertUTF8(fieldValue);
   }
 
-  private ParserDescriptionProvider toMapHelper(Object fieldValue, String fieldDoc) {
-    fieldValue = toMapHelper(fieldValue);
-    return new ParserDescriptionProvider(fieldValue, fieldDoc);
-  }
-
-
   private Map<String, Object> unwrapNestedRecord(GenericRecord nestedRecord, String prefix) {
     Map<String, Object> flatMap = new HashMap<>();
 
@@ -199,7 +192,7 @@ public class AvroParser implements IParser {
       if (fieldValue instanceof GenericRecord) {
         flatMap.putAll(unwrapNestedRecord((GenericRecord) fieldValue, newKey));
       } else {
-        flatMap.put(newKey, toMapHelper(fieldValue, field.doc()));
+        flatMap.put(newKey, toMapHelper(fieldValue));
       }
     });
 
