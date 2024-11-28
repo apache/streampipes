@@ -24,6 +24,11 @@ export interface TimeSettings {
     timeSelectionId?: string;
 }
 
+export interface ExtendedTimeSettings {
+    timeSettings: TimeSettings;
+    supportsLiveRefresh: boolean;
+}
+
 export class TimeSelectionConstants {
     static CUSTOM = 'custom';
     static LAST_15_MINUTES = 'last-15-minutes';
@@ -101,6 +106,7 @@ export interface QuickTimeSelection {
     startTime: (now: Date) => Date;
     endTime: (now: Date) => Date;
     addDividerAfter?: boolean;
+    supportsLiveRefresh?: boolean;
 }
 
 export class DateRange {

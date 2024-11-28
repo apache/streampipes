@@ -88,7 +88,8 @@
     </div>
     <div fxLayoutAlign="end center">
         <sp-data-explorer-refresh-interval-settings-component
-            *ngIf="liveSettings"
+            #refreshIntervalSettings
+            *ngIf="liveSettings && showTimeSelector && showIntervalSettings"
             [liveSettings]="liveSettings"
             (intervalSettingsChangedEmitter)="
                 intervalSettingsChangedEmitter.emit($event)

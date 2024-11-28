@@ -46,7 +46,12 @@
                     #timeRangeSelection
                     [timeSettings]="timeSettings"
                     [labels]="labels"
-                    (timeSettingsEmitter)="timeSettingsEmitter.emit($event)"
+                    (timeSettingsEmitter)="
+                        timeSettingsEmitter.emit({
+                            supportsLiveRefresh: false,
+                            timeSettings: $event
+                        })
+                    "
                     [enableTimeChange]="enableTimeChange"
                     [maxDayRange]="maxDayRange"
                     class="w-100"

@@ -23,6 +23,7 @@
         [matMenuTriggerFor]="menu"
         aria-label="Refresh interval"
         matTooltip="Refresh interval"
+        [disabled]="!liveRefreshEnabled"
     >
         <mat-icon>autorenew</mat-icon>
         {{ liveSettings.label }}

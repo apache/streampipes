@@ -27,6 +27,7 @@ import {
 import {
     QuickTimeSelection,
     TimeSettings,
+    ExtendedTimeSettings,
 } from '@streampipes/platform-services';
 import { TimeSelectionService } from '../../../services/time-selection.service';
 import { CustomTimeRangeSelectionComponent } from './custom-time-range-selection/custom-time-range-selection.component';
@@ -51,8 +52,8 @@ export class TimeRangeSelectorMenuComponent implements OnInit {
     maxDayRange: number;
 
     @Output()
-    timeSettingsEmitter: EventEmitter<TimeSettings> =
-        new EventEmitter<TimeSettings>();
+    timeSettingsEmitter: EventEmitter<ExtendedTimeSettings> =
+        new EventEmitter<ExtendedTimeSettings>();
 
     @Input()
     quickSelections: QuickTimeSelection[];
@@ -72,7 +73,10 @@ export class TimeRangeSelectorMenuComponent implements OnInit {
         this.timeSettings.endTime = selectedDateRange.endDate.getTime();
         this.timeRangeSelection.initializeDateRange();
         this.triggerDisplayUpdate();
-        this.timeSettingsEmitter.emit(this.timeSettings);
+        this.timeSettingsEmitter.emit({
+            supportsLiveRefresh: quickSelection.supportsLiveRefresh,
+            timeSettings: this.timeSettings,
+        });
     }
 
     triggerDisplayUpdate(): void {
