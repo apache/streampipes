@@ -80,6 +80,7 @@ public class OpcUa {
   public OpcUa(OpcUaClientProvider clientProvider,
                OpcUaParameters params) {
     this.clientProvider = clientProvider;
+    this.params = params;
     this.opcUaConfig = params.config();
   }
 
