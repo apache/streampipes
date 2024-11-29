@@ -51,7 +51,7 @@ export class StaticRuntimeResolvableAnyInputComponent
     selectAll(select: boolean): void {
         this.staticProperty.options.forEach(o => (o.selected = select));
         this.selectedOptions = select ? this.staticProperty.options : [];
-        this.emitUpdate(true);
+        this.applyCompletedConfiguration(true);
     }
 
     onSelectionChange(): void {
@@ -61,7 +61,7 @@ export class StaticRuntimeResolvableAnyInputComponent
     }
 
     checkEmitUpdate(): void {
-        this.emitUpdate(true);
+        this.applyCompletedConfiguration(true);
     }
 
     afterOptionsLoaded(staticProperty: RuntimeResolvableAnyStaticProperty) {

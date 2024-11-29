@@ -36,25 +36,19 @@ export class StaticSecretInputComponent
         super();
     }
 
-    @Output() updateEmitter: EventEmitter<ConfigurationInfo> =
-        new EventEmitter();
-
     ngOnInit() {
         this.addValidator(this.staticProperty.value, Validators.required);
         this.enableValidators();
     }
 
     emitUpdate() {
-        this.updateEmitter.emit(
-            new ConfigurationInfo(
-                this.staticProperty.internalName,
+        this.applyCompletedConfiguration(
+            this.staticPropertyUtil.asFreeTextStaticProperty(
+                this.staticProperty,
+            ).value &&
                 this.staticPropertyUtil.asFreeTextStaticProperty(
                     this.staticProperty,
-                ).value &&
-                    this.staticPropertyUtil.asFreeTextStaticProperty(
-                        this.staticProperty,
-                    ).value !== '',
-            ),
+                ).value !== '',
         );
     }
 

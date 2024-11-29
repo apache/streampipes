@@ -59,17 +59,8 @@ export class StaticPropertyComponent implements OnInit {
     @Input()
     adapterId: string;
 
-    @Output()
-    validateEmitter: EventEmitter<any> = new EventEmitter<any>();
-
-    @Output()
-    updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
-
     @Input()
     eventSchemas: EventSchema[];
-
-    @Input()
-    completedStaticProperty: ConfigurationInfo;
 
     @Input()
     parentForm: UntypedFormGroup;
@@ -85,6 +76,13 @@ export class StaticPropertyComponent implements OnInit {
 
     @Input()
     deploymentConfiguration: ExtensionDeploymentConfiguration;
+
+    @Input()
+    completedConfigurations: ConfigurationInfo[];
+
+    @Output()
+    completedConfigurationsEmitter: EventEmitter<ConfigurationInfo> =
+        new EventEmitter();
 
     showLabel = true;
 
@@ -166,13 +164,5 @@ export class StaticPropertyComponent implements OnInit {
 
     isTreeInputStaticProperty(val) {
         return val instanceof RuntimeResolvableTreeInputStaticProperty;
-    }
-
-    valueChange(hasInput) {
-        this.validateEmitter.emit();
-    }
-
-    emitUpdate(configurationInfo: ConfigurationInfo) {
-        this.updateEmitter.emit(configurationInfo);
     }
 }
