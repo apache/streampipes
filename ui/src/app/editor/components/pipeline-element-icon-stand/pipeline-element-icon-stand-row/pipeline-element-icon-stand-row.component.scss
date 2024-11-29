@@ -51,6 +51,19 @@
 .element-name {
     font-size: 11pt;
     font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    white-space: nowrap;
+    max-width: 170px;
+}
+
+.element-name-hover {
+    font-size: 11pt;
+    font-weight: 500;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .element-description {
