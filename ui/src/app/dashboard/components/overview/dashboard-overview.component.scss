@@ -35,3 +35,18 @@
     display: inline;
     margin-right: 10px;
 }
+
+.warning {
+    border: 1px solid #dea843;
+    background: #ececc9;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-sizing: border-box;
+}
+
+.warning-icon {
+    color: #dea843;
+    font-size: 24px;
+}
