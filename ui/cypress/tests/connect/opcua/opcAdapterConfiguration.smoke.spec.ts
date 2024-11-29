@@ -160,7 +160,7 @@ const getAdapterBuilder = () => {
             'undefined-pull-mode-group-0-PULLING_INTERVAL-0',
             '1000',
         )
-        .addInput('radio', 'securitymodemode-none', '')
+        .addInput('radio', 'securitymode-none', '')
         .addInput('radio', 'userauthentication-anonymous', '')
         .addInput('radio', 'opc_host_or_url-url', '')
         .addInput(
