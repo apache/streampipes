@@ -73,6 +73,7 @@
                         (click)="applyPlaceholder(property.runtimeName)"
                         color="accent"
                         *ngFor="let property of eventSchemas[0].eventProperties"
+                        style="margin-right: 5px; margin-bottom: 5px"
                         >#{{ property.runtimeName }}#
                     </mat-chip>
                 </mat-chip-list>
@@ -80,12 +81,14 @@
         </div>
         <div fxFlex="100" *ngIf="staticProperty.multiLine">
             <quill-editor
+                fxFlex="100"
                 *ngIf="staticProperty.htmlFontFormat"
                 #textEditor
                 formControlName="{{ fieldName }}"
                 [modules]="quillModulesFontFormat"
             ></quill-editor>
             <quill-editor
+                fxFlex="100"
                 *ngIf="!staticProperty.htmlFontFormat"
                 #textEditor
                 formControlName="{{ fieldName }}"

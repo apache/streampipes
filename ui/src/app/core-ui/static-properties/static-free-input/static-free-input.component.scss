@@ -29,6 +29,10 @@ form {
     float: left;
 }
 
+tags {
+    margin-bottom: 50px;
+}
+
 ::ng-deep.mat-accent ::ng-deep.mat-slider-track-fill,
 .mat-accent ::ng-deep.mat-slider-thumb,
 .mat-accent ::ng-deep.mat-slider-thumb-label {
