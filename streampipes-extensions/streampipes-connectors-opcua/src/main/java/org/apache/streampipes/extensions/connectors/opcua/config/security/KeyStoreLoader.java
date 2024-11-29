@@ -44,7 +44,7 @@ public class KeyStoreLoader {
   private X509Certificate clientCertificate;
   private KeyPair clientKeyPair;
 
-  KeyStoreLoader load(Environment env,
+  public KeyStoreLoader load(Environment env,
                       Path securityDir) throws Exception {
     var keyStore = KeyStore.getInstance("PKCS12");
     var keyStoreFile = env.getOpcUaKeystoreFile().getValueOrDefault();
@@ -73,7 +73,7 @@ public class KeyStoreLoader {
     return this;
   }
 
-  X509Certificate getClientCertificate() {
+  public X509Certificate getClientCertificate() {
     return clientCertificate;
   }
 
@@ -81,7 +81,7 @@ public class KeyStoreLoader {
     return clientCertificateChain;
   }
 
-  KeyPair getClientKeyPair() {
+  public KeyPair getClientKeyPair() {
     return clientKeyPair;
   }
 }

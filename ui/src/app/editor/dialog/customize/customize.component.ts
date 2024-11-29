@@ -91,14 +91,14 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
     ) {}
 
     ngOnInit(): void {
-        this.completedConfigurations =
-            this.staticPropertyUtils.initializeCompletedConfigurations(
-                this.cachedPipelineElement.staticProperties,
-            );
         this.originalDialogWidth = this.dialogRef.currentConfig().width;
         this.cachedPipelineElement = this.jsPlumbService.clone(
             this.pipelineElement.payload,
         ) as InvocablePipelineElementUnion;
+        this.completedConfigurations =
+            this.staticPropertyUtils.initializeCompletedConfigurations(
+                this.cachedPipelineElement.staticProperties,
+            );
         this.isDataProcessor =
             this.cachedPipelineElement instanceof DataProcessorInvocation;
         this.cachedPipelineElement.inputStreams.forEach(is => {
