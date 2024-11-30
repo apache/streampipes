@@ -110,10 +110,16 @@ public enum Envs {
   SP_SERVICE_TAGS("SP_SERVICE_TAGS", ""),
   SP_ALLOWED_UPLOAD_FILETYPES("SP_ALLOWED_UPLOAD_FILETYPES", "", ""),
 
-  SP_OPCUA_SECURITY_DIR("SP_OPCUA_SECURITY_DIR", "/opc-ua-security"),
+  // OPC-UA security
+  SP_OPCUA_SECURITY_DIR("SP_OPCUA_SECURITY_DIR", "/streampipes-security/opcua"),
   SP_OPCUA_KEYSTORE_FILE("SP_OPCUA_KEYSTORE_FILE", "keystore.pfx"),
   SP_OPCUA_KEYSTORE_PASSWORD("SP_OPCUA_KEYSTORE_PASSWORD", "password"),
-  SP_OPCUA_APPLICATION_URI("SP_OPCUA_APPLICATION_URI", "urn:org:apache:streampipes:opcua:client");
+  SP_OPCUA_KEYSTORE_TYPE("SP_OPCUA_KEYSTORE_TYPE", "PKCS12"),
+  SP_OPCUA_KEYSTORE_ALIAS("SP_OPCUA_KEYSTORE_ALIAS", "apache-streampipes"),
+  SP_OPCUA_APPLICATION_URI(
+      "SP_OPCUA_APPLICATION_URI",
+      "urn:org:apache:streampipes:opcua:client"
+  );
 
   private final String envVariableName;
   private String defaultValue;

@@ -347,4 +347,14 @@ public class DefaultEnvironment implements Environment {
   public StringEnvironmentVariable getOpcUaApplicationUri() {
     return new StringEnvironmentVariable(Envs.SP_OPCUA_APPLICATION_URI);
   }
+
+  @Override
+  public StringEnvironmentVariable getOPcUaKeystoreType() {
+    return new StringEnvironmentVariable(Envs.SP_OPCUA_KEYSTORE_TYPE);
+  }
+
+  @Override
+  public StringEnvironmentVariable getOpcUaKeystoreAlias() {
+    return new StringEnvironmentVariable(Envs.SP_OPCUA_KEYSTORE_ALIAS);
+  }
 }

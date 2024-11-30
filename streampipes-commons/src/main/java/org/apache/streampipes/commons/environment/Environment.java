@@ -171,4 +171,7 @@ public interface Environment {
 
   StringEnvironmentVariable getOpcUaApplicationUri();
 
+  StringEnvironmentVariable getOPcUaKeystoreType();
+
+  StringEnvironmentVariable getOpcUaKeystoreAlias();
 }

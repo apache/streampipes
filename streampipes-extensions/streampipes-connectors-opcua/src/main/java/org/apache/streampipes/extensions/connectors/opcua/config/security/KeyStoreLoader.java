@@ -36,8 +36,6 @@ import java.util.Arrays;
 
 public class KeyStoreLoader {
 
-  private static final String CLIENT_ALIAS = "apache-streampipes";
-
   private static final Logger LOG = LoggerFactory.getLogger(KeyStoreLoader.class);
 
   private X509Certificate[] clientCertificateChain;
@@ -45,24 +43,25 @@ public class KeyStoreLoader {
   private KeyPair clientKeyPair;
 
   public KeyStoreLoader load(Environment env,
-                      Path securityDir) throws Exception {
-    var keyStore = KeyStore.getInstance("PKCS12");
-    var keyStoreFile = env.getOpcUaKeystoreFile().getValueOrDefault();
-    var keyStorePassword = env.getOpcUaKeystorePassword().getValueOrDefault();
-    Path serverKeyStore = securityDir.resolve(keyStoreFile);
-    char[] serverKeyStorePassword = keyStorePassword.toCharArray();
+                             Path securityDir) throws Exception {
+    var keystore = KeyStore.getInstance(env.getOPcUaKeystoreType().getValueOrDefault());
+    var keystoreFile = env.getOpcUaKeystoreFile().getValueOrDefault();
+    var keystorePassword = env.getOpcUaKeystorePassword().getValueOrDefault();
+    var keystoreAlias = env.getOpcUaKeystoreAlias().getValueOrDefault();
+    Path serverKeystore = securityDir.resolve(keystoreFile);
+    char[] serverKeyStorePassword = keystorePassword.toCharArray();
 
-    LOG.info("Loading KeyStore at {}", serverKeyStore);
+    LOG.info("Loading KeyStore at {}", serverKeystore);
 
-    try (InputStream in = Files.newInputStream(serverKeyStore)) {
-      keyStore.load(in, serverKeyStorePassword);
+    try (InputStream in = Files.newInputStream(serverKeystore)) {
+      keystore.load(in, serverKeyStorePassword);
     }
 
-    Key clientPrivateKey = keyStore.getKey(CLIENT_ALIAS, serverKeyStorePassword);
+    Key clientPrivateKey = keystore.getKey(keystoreAlias, serverKeyStorePassword);
     if (clientPrivateKey instanceof PrivateKey) {
-      clientCertificate = (X509Certificate) keyStore.getCertificate(CLIENT_ALIAS);
+      clientCertificate = (X509Certificate) keystore.getCertificate(keystoreAlias);
 
-      clientCertificateChain = Arrays.stream(keyStore.getCertificateChain(CLIENT_ALIAS))
+      clientCertificateChain = Arrays.stream(keystore.getCertificateChain(keystoreAlias))
           .map(X509Certificate.class::cast)
           .toArray(X509Certificate[]::new);
 
