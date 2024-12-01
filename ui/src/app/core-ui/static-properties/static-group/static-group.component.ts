@@ -36,8 +36,6 @@ export class StaticGroupComponent
     @Input()
     deploymentConfiguration: ExtensionDeploymentConfiguration;
 
-    @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
-
     dependentStaticProperties: Map<string, boolean> = new Map<
         string,
         boolean
@@ -53,9 +51,9 @@ export class StaticGroupComponent
                 v => v === true,
             )
         ) {
-            this.emitUpdate(true);
+            this.applyCompletedConfiguration(true);
         } else {
-            this.emitUpdate(false);
+            this.applyCompletedConfiguration(false);
         }
     }
 

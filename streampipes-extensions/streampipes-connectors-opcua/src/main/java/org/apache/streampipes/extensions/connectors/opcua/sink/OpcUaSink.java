@@ -26,6 +26,7 @@ import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
+import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProvider;
 import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil;
@@ -45,11 +46,18 @@ import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabe
 
 public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
 
+  public static final String ID = "org.apache.streampipes.sinks.databases.jvm.opcua";
+
   private OpcUa opcUa;
+  private final OpcUaClientProvider clientProvider;
+
+  public OpcUaSink(OpcUaClientProvider clientProvider) {
+    this.clientProvider = clientProvider;
+  }
 
   @Override
   public IDataSinkConfiguration declareConfig() {
-    var builder = DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.opcua", 0)
+    var builder = DataSinkBuilder.create(ID, 0)
         .withLocales(Locales.EN)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .category(DataSinkType.FORWARD)
@@ -62,7 +70,7 @@ public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
     SharedUserConfiguration.appendSharedOpcUaConfig(builder, false);
 
     return DataSinkConfiguration.create(
-        OpcUaSink::new,
+        () -> new OpcUaSink(clientProvider),
         builder.build()
     );
   }
@@ -89,8 +97,8 @@ public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
         config.getSelectedNodeNames().get(0)
     );
 
-    this.opcUa = new OpcUa();
-    this.opcUa.onInvocation(params);
+    this.opcUa = new OpcUa(clientProvider, params);
+    this.opcUa.onInvocation();
   }
 
   @Override
@@ -106,6 +114,6 @@ public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
   @Override
   public StaticProperty resolveConfiguration(String staticPropertyInternalName,
                                              IStaticPropertyExtractor extractor) throws SpConfigurationException {
-    return OpcUaUtil.resolveConfig(staticPropertyInternalName, extractor);
+    return OpcUaUtil.resolveConfig(clientProvider, staticPropertyInternalName, extractor);
   }
 }

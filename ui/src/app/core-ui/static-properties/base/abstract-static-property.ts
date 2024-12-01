@@ -21,10 +21,11 @@ import {
     StaticProperty,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
-import { Directive, EventEmitter, Input, Output } from '@angular/core';
+import { Directive, EventEmitter, inject, Input, Output } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { InvocablePipelineElementUnion } from '../../../editor/model/editor.model';
+import { StaticPropertyUtilService } from '../static-property-util.service';
 
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
@@ -53,14 +54,21 @@ export abstract class AbstractStaticPropertyRenderer<T extends StaticProperty> {
     @Input()
     displayRecommended: boolean;
 
-    @Output() updateEmitter: EventEmitter<ConfigurationInfo> =
+    @Input()
+    completedConfigurations: ConfigurationInfo[];
+
+    @Output()
+    completedConfigurationsEmitter: EventEmitter<ConfigurationInfo> =
         new EventEmitter();
+
+    staticPropertyUtils = inject(StaticPropertyUtilService);
 
     constructor() {}
 
-    emitUpdate(valid?: boolean) {
-        this.updateEmitter.emit(
-            new ConfigurationInfo(this.staticProperty.internalName, valid),
-        );
+    applyCompletedConfiguration(valid?: boolean) {
+        this.completedConfigurationsEmitter.emit({
+            staticPropertyInternalName: this.staticProperty.internalName,
+            configured: valid,
+        });
     }
 }

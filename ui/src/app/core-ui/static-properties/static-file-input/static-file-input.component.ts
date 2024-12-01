@@ -38,8 +38,6 @@ export class StaticFileInputComponent
     extends AbstractValidatedStaticPropertyRenderer<FileStaticProperty>
     implements OnInit
 {
-    @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
-
     public chooseExistingFileControl = new UntypedFormControl();
 
     dialogRef: MatDialogRef<FileRenameDialogComponent>;
@@ -99,7 +97,7 @@ export class StaticFileInputComponent
                         fmi => fmi.filename === filenameToSelect,
                     );
                     this.selectOption(this.selectedFile);
-                    this.emitUpdate(true);
+                    this.applyCompletedConfiguration(true);
                     this.parentForm.controls[this.fieldName].setValue(
                         this.selectedFile,
                     );
@@ -114,7 +112,7 @@ export class StaticFileInputComponent
                     if (this.fileMetadata.length > 0) {
                         this.selectedFile = this.fileMetadata[0];
                         this.selectOption(this.selectedFile);
-                        this.emitUpdate(true);
+                        this.applyCompletedConfiguration(true);
                         this.parentForm.controls[this.fieldName].setValue(
                             this.selectedFile,
                         );
@@ -172,9 +170,7 @@ export class StaticFileInputComponent
         this.staticProperty.locationPath = fileMetadata.filename;
         const valid: boolean =
             fileMetadata.filename !== '' || fileMetadata.filename !== undefined;
-        this.updateEmitter.emit(
-            new ConfigurationInfo(this.staticProperty.internalName, valid),
-        );
+        this.applyCompletedConfiguration(valid);
     }
 
     displayFn(fileMetadata: FileMetadata) {

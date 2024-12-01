@@ -47,34 +47,18 @@ export abstract class BaseRuntimeResolvableInput<
     extends AbstractStaticPropertyRenderer<T>
     implements OnChanges
 {
-    @Input()
-    completedStaticProperty: ConfigurationInfo;
-
     @Input() deploymentConfiguration: ExtensionDeploymentConfiguration;
 
     showOptions = false;
     loading = false;
     error = false;
     errorMessage: SpLogMessage;
-    dependentStaticProperties: Map<string, boolean> = new Map<
-        string,
-        boolean
-    >();
 
     constructor(private runtimeResolvableService: RuntimeResolvableService) {
         super();
     }
 
-    onInit() {
-        if (
-            this.staticProperty.dependsOn &&
-            this.staticProperty.dependsOn.length > 0
-        ) {
-            this.staticProperty.dependsOn.forEach(dp => {
-                this.dependentStaticProperties.set(dp, false);
-            });
-        }
-    }
+    onInit() {}
 
     loadOptionsFromRestApi(node?: TreeInputNode) {
         const resolvableOptionsParameterRequest = new RuntimeOptionsRequest();
@@ -137,31 +121,14 @@ export abstract class BaseRuntimeResolvableInput<
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['completedStaticProperty']) {
+        if (changes['completedConfigurations']) {
             if (
-                this.completedStaticProperty !== undefined &&
-                !(
-                    this.completedStaticProperty.staticPropertyInternalName ===
-                    this.staticProperty.internalName
+                this.staticPropertyUtils.allDependenciesSatisfied(
+                    this.staticProperty.dependsOn,
+                    this.completedConfigurations,
                 )
             ) {
-                if (
-                    this.dependentStaticProperties.has(
-                        this.completedStaticProperty.staticPropertyInternalName,
-                    )
-                ) {
-                    this.dependentStaticProperties.set(
-                        this.completedStaticProperty.staticPropertyInternalName,
-                        this.completedStaticProperty.configured,
-                    );
-                }
-                if (
-                    Array.from(this.dependentStaticProperties.values()).every(
-                        v => v === true,
-                    )
-                ) {
-                    this.loadOptionsFromRestApi();
-                }
+                this.loadOptionsFromRestApi();
             }
         }
     }

@@ -89,7 +89,8 @@ export class OpcUaUtils {
         }
 
         builder
-            .addInput('radio', 'access_mode-none', '')
+            .addInput('radio', 'securitymode-none', '')
+            .addInput('radio', 'userauthentication-anonymous', '')
             .addInput('radio', 'opc_host_or_url-url', '')
             .addInput(
                 'input',

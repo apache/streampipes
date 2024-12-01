@@ -37,9 +37,7 @@ export class StaticSlideToggleComponent
     }
 
     emitUpdate() {
-        this.updateEmitter.emit(
-            new ConfigurationInfo(this.staticProperty.internalName, true),
-        );
+        this.applyCompletedConfiguration(true);
     }
 
     onStatusChange(status: any) {}

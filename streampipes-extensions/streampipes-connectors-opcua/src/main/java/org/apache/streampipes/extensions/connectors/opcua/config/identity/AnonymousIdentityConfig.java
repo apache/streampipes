@@ -16,12 +16,20 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.sink;
+package org.apache.streampipes.extensions.connectors.opcua.config.identity;
 
-import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
+import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
+import org.eclipse.milo.opcua.sdk.client.api.identity.AnonymousProvider;
 
-public record OpcUaParameters(OpcUaConfig config,
-                              String mappingPropertySelector,
-                              String mappingPropertyType,
-                              String selectedNode) {
+public class AnonymousIdentityConfig implements IdentityConfig {
+
+  @Override
+  public void configureIdentity(OpcUaClientConfigBuilder builder) {
+    builder.setIdentityProvider(new AnonymousProvider());
+  }
+
+  @Override
+  public String toString() {
+    return "anonymous";
+  }
 }

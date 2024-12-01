@@ -54,7 +54,6 @@ export class StaticRuntimeResolvableOneOfInputComponent
             this.staticProperty.options.length > 0
         ) {
             this.staticProperty.options[0].selected = true;
-            this.emitUpdate(true);
         }
     }
 
@@ -66,7 +65,7 @@ export class StaticRuntimeResolvableOneOfInputComponent
             option => option.elementId === id,
         ).selected = true;
         this.performValidation();
-        this.emitUpdate(true);
+        this.applyCompletedConfiguration(true);
     }
 
     parse(

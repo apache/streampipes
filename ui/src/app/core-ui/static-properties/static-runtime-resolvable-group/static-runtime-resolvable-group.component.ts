@@ -52,7 +52,7 @@ export class StaticRuntimeResolvableGroupComponent
         if (this.staticProperty.staticProperties.length === 0) {
             this.loadOptionsFromRestApi();
         }
-        this.emitUpdate(true);
+        this.applyCompletedConfiguration(true);
     }
 
     afterErrorReceived() {}
