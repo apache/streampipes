@@ -52,7 +52,7 @@ export class StaticOneOfInputComponent
             ).elementId;
         }
         this.inputEmitter.emit(true);
-        this.emitUpdate(true);
+        this.applyCompletedConfiguration(true);
         this.parentForm.updateValueAndValidity();
     }
 
@@ -71,6 +71,6 @@ export class StaticOneOfInputComponent
             option => option.elementId === id,
         ).selected = true;
         this.inputEmitter.emit(true);
-        this.emitUpdate(true);
+        this.applyCompletedConfiguration(true);
     }
 }

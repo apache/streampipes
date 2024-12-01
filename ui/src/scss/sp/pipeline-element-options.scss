@@ -41,6 +41,9 @@
     text-align: center;
     box-shadow: 0 0 2px #555;
     -webkit-animation: slidein 0.5s;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
 }
 
 @keyframes slidein {

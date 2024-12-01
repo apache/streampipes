@@ -21,9 +21,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.streampipes</groupId>
-        <artifactId>streampipes-parent</artifactId>
+        <artifactId>streampipes-extensions</artifactId>
         <version>0.97.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>streampipes-connectors-opcua</artifactId>

@@ -31,8 +31,10 @@
                 [adapterId]="adapterId"
                 [parentForm]="configurationGroup"
                 [fieldName]="config.internalName"
-                (updateEmitter)="triggerUpdate($event)"
-                [completedStaticProperty]="completedStaticProperty"
+                [completedConfigurations]="completedConfigurations"
+                (completedConfigurationsEmitter)="
+                    updateCompletedConfiguration($event)
+                "
             >
             </sp-app-static-property>
         </div>

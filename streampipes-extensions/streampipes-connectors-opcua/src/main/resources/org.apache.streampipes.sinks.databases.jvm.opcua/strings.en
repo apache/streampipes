@@ -56,3 +56,15 @@ AVAILABLE_NODES.description=Select the nodes that are relevant for you. Please e
 
 MAPPING_PROPERY.title=Field to write
 MAPPING_PROPERY.description=The field that should be written to the OPC-UA server
+
+securityMode.title=Security Mode
+securityMode.description=The OPC-UA security mode
+
+securityPolicy.title=Security Policy
+securityPolicy.description=The OPC-UA security policy. Choose "None" if security mode is "None"
+
+userAuthentication.title=User Authentication
+userAuthentication.description=Choose an authentication method for the user
+
+anonymous.title=Anonymous
+anonymous.description=

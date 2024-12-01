@@ -93,12 +93,11 @@
                                     [eventSchemas]="eventSchemas"
                                     [parentForm]="parentForm"
                                     [fieldName]="config.internalName"
-                                    [completedStaticProperty]="
-                                        completedStaticProperty
+                                    [completedConfigurations]="
+                                        completedConfigurations
                                     "
-                                    (updateEmitter)="triggerUpdate($event)"
-                                    (validateEmitter)="
-                                        validConfiguration($event)
+                                    (completedConfigurationsEmitter)="
+                                        updateCompletedConfiguration($event)
                                     "
                                 >
                                 </sp-app-static-property>

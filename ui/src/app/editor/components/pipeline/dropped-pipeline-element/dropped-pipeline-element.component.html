@@ -62,7 +62,11 @@
         [pipelineElement]="pipelineElementConfig.payload"
     ></sp-pipeline-element>
 </div>
-<div class="editor-pe-info" [ngClass]="'pe-info-' + pipelineElementConfig.type">
+<div
+    class="editor-pe-info"
+    [ngClass]="'pe-info-' + pipelineElementConfig.type"
+    matTooltip="{{ pipelineElementConfig.payload.name }}"
+>
     {{ pipelineElementConfig.payload.name }}
 </div>
 <sp-pipeline-element-statistics

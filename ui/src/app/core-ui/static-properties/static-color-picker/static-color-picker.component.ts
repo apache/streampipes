@@ -36,10 +36,6 @@ export class StaticColorPickerComponent
         super();
     }
 
-    inputValue: String;
-    hasInput: Boolean;
-    colorPickerForm: UntypedFormGroup;
-
     presetColors: any[] = [
         '#39B54A',
         '#1B1464',
@@ -58,17 +54,14 @@ export class StaticColorPickerComponent
         this.enableValidators();
     }
 
-    emitUpdate() {
-        this.updateEmitter.emit(
-            new ConfigurationInfo(
-                this.staticProperty.internalName,
+    checkCompleted() {
+        this.applyCompletedConfiguration(
+            this.staticPropertyUtil.asColorPickerStaticProperty(
+                this.staticProperty,
+            ).selectedColor &&
                 this.staticPropertyUtil.asColorPickerStaticProperty(
                     this.staticProperty,
-                ).selectedColor &&
-                    this.staticPropertyUtil.asColorPickerStaticProperty(
-                        this.staticProperty,
-                    ).selectedColor !== '',
-            ),
+                ).selectedColor !== '',
         );
     }
 

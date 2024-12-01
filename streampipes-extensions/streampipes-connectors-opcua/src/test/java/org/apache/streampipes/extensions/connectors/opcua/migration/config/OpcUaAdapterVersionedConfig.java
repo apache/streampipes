@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.connectors.opcua.migration.config;
 
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
+import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProvider;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
@@ -52,7 +53,7 @@ import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabe
 public class OpcUaAdapterVersionedConfig {
 
   public static AdapterDescription getOpcUaAdapterDescriptionV1(){
-    var builder = AdapterConfigurationBuilder.create(ID, 1, OpcUaAdapter::new)
+    var builder = AdapterConfigurationBuilder.create(ID, 1, () -> new OpcUaAdapter(new OpcUaClientProvider()))
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)

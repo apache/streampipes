@@ -42,6 +42,7 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { PipelineStyleService } from '../../services/pipeline-style.service';
+import { StaticPropertyUtilService } from '../../../core-ui/static-properties/static-property-util.service';
 
 @Component({
     selector: 'sp-customize-pipeline-element',
@@ -60,13 +61,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
     _showDocumentation = false;
 
     selection: any;
-    matchingSelectionLeft: any;
-    matchingSelectionRight: any;
     invalid: any;
-    helpDialogVisible: any;
-    validationErrors: any;
-
-    sourceEndpoint: any;
     sepa: any;
 
     parentForm: UntypedFormGroup;
@@ -82,6 +77,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
     templateMode = false;
     template: PipelineElementTemplate;
     templateConfigs: Map<string, any>[] = [];
+    completedConfigurations: ConfigurationInfo[] = [];
 
     constructor(
         private dialogRef: DialogRef<CustomizeComponent>,
@@ -91,6 +87,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
         private changeDetectorRef: ChangeDetectorRef,
         private pipelineElementTemplateService: PipelineElementTemplateService,
         private pipelineStyleService: PipelineStyleService,
+        private staticPropertyUtils: StaticPropertyUtilService,
     ) {}
 
     ngOnInit(): void {
@@ -98,6 +95,10 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
         this.cachedPipelineElement = this.jsPlumbService.clone(
             this.pipelineElement.payload,
         ) as InvocablePipelineElementUnion;
+        this.completedConfigurations =
+            this.staticPropertyUtils.initializeCompletedConfigurations(
+                this.cachedPipelineElement.staticProperties,
+            );
         this.isDataProcessor =
             this.cachedPipelineElement instanceof DataProcessorInvocation;
         this.cachedPipelineElement.inputStreams.forEach(is => {
@@ -147,8 +148,6 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
         this.dialogRef.close(this.pipelineElement);
     }
 
-    validConfiguration(event: any) {}
-
     set showDocumentation(value: boolean) {
         if (value) {
             this.dialogRef.changeDialogSize({ width: '90vw' });
@@ -172,6 +171,14 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
 
     triggerUpdate(configurationInfo: ConfigurationInfo) {
         this.completedStaticProperty = { ...configurationInfo };
+    }
+
+    updateCompletedConfiguration(configurationInfo: ConfigurationInfo) {
+        this.staticPropertyUtils.updateCompletedConfiguration(
+            configurationInfo,
+            this.completedConfigurations,
+        );
+        this.completedConfigurations = [...this.completedConfigurations];
     }
 
     triggerTemplateMode() {

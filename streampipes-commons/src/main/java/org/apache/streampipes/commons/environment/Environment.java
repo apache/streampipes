@@ -36,7 +36,9 @@ public interface Environment {
   IntEnvironmentVariable getServicePort();
 
   StringEnvironmentVariable getSpCoreScheme();
+
   StringEnvironmentVariable getSpCoreHost();
+
   IntEnvironmentVariable getSpCorePort();
 
   // Time series storage env variables
@@ -144,12 +146,15 @@ public interface Environment {
 
   // Broker defaults
   StringEnvironmentVariable getKafkaHost();
+
   IntEnvironmentVariable getKafkaPort();
 
   StringEnvironmentVariable getMqttHost();
+
   IntEnvironmentVariable getMqttPort();
 
   StringEnvironmentVariable getNatsHost();
+
   IntEnvironmentVariable getNatsPort();
 
   StringEnvironmentVariable getPulsarUrl();
@@ -158,4 +163,15 @@ public interface Environment {
 
   StringEnvironmentVariable getAllowedUploadFiletypes();
 
+  StringEnvironmentVariable getOpcUaSecurityDir();
+
+  StringEnvironmentVariable getOpcUaKeystoreFile();
+
+  StringEnvironmentVariable getOpcUaKeystorePassword();
+
+  StringEnvironmentVariable getOpcUaApplicationUri();
+
+  StringEnvironmentVariable getOPcUaKeystoreType();
+
+  StringEnvironmentVariable getOpcUaKeystoreAlias();
 }
