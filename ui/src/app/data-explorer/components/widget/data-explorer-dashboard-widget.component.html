@@ -65,7 +65,7 @@
                     [matMenuTriggerFor]="menu"
                     aria-label="More options"
                     matTooltip="More options"
-                    *ngIf="!editMode && !dataViewMode"
+                    *ngIf="!dataViewMode"
                     [attr.data-cy]="
                         'more-options-' +
                         configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
@@ -97,20 +97,6 @@
                         <span>Edit Widget</span>
                     </button>
                 </mat-menu>
-                <button
-                    mat-icon-button
-                    *ngIf="editMode"
-                    (click)="downloadDataAsFile()"
-                    [attr.data-cy]="
-                        'download-' +
-                        configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
-                            ' ',
-                            ''
-                        )
-                    "
-                >
-                    <mat-icon>get_app</mat-icon>
-                </button>
                 <button
                     mat-icon-button
                     [matMenuTriggerFor]="optMenu"

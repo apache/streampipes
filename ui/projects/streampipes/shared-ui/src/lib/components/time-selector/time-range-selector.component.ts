@@ -17,6 +17,7 @@
  */
 
 import {
+    AfterViewInit,
     Component,
     EventEmitter,
     Input,
@@ -33,12 +34,14 @@ import {
     TimeSelectionConstants,
     TimeSettings,
     TimeString,
+    ExtendedTimeSettings,
 } from '@streampipes/platform-services';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { TimeSelectionService } from '../../services/time-selection.service';
 import { TimeRangeSelectorMenuComponent } from './time-selector-menu/time-selector-menu.component';
 import { TimeSelectorLabel } from './time-selector.model';
 import { differenceInMilliseconds, isSameDay } from 'date-fns';
+import { DataExplorerRefreshIntervalSettingsComponent } from './refresh-interval-settings/refresh-interval-settings.component';
 
 @Component({
     selector: 'sp-time-range-selector',
@@ -46,10 +49,14 @@ import { differenceInMilliseconds, isSameDay } from 'date-fns';
     styleUrls: ['./time-range-selector.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class TimeRangeSelectorComponent implements OnInit, OnChanges {
+export class TimeRangeSelectorComponent
+    implements OnInit, OnChanges, AfterViewInit
+{
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
     @ViewChild('timeSelectorMenu')
     timeSelectorMenu: TimeRangeSelectorMenuComponent;
+    @ViewChild('refreshIntervalSettings')
+    refreshIntervalSettingsComponent: DataExplorerRefreshIntervalSettingsComponent;
 
     @Output() dateRangeEmitter = new EventEmitter<TimeSettings>();
 
@@ -69,10 +76,16 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
     enableTimeChange = true;
 
     @Input()
+    showIntervalSettings = true;
+
+    @Input()
     maxDayRange = 0;
 
     @Input()
     quickSelections: QuickTimeSelection[];
+
+    @Input()
+    availableOptions: DashboardLiveSettings[];
 
     @Input()
     labels: TimeSelectorLabel;
@@ -93,6 +106,8 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
         this.quickSelections ??=
             this.timeSelectionService.defaultQuickTimeSelections;
         this.labels ??= this.timeSelectionService.defaultLabels;
+        this.availableOptions ??=
+            this.timeSelectionService.defaultAvailableLiveSettingsOptions;
         this.createDateString();
     }
 
@@ -102,12 +117,44 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
         }
     }
 
+    ngAfterViewInit(): void {
+        this.changeLiveRefreshEnabled();
+    }
+
+    changeLiveRefreshEnabled(): void {
+        if (
+            this.timeSettings.timeSelectionId ===
+                TimeSelectionConstants.CUSTOM ||
+            this.hasLiveRefreshEnabled(this.timeSettings.timeSelectionId) ===
+                false
+        ) {
+            this.refreshIntervalSettingsComponent?.handleEnableLiveRefresh(
+                false,
+            );
+        } else {
+            this.refreshIntervalSettingsComponent?.handleEnableLiveRefresh(
+                true,
+            );
+        }
+    }
+
+    hasLiveRefreshEnabled(timeSelectionId: string) {
+        const selectedQuickTimeSelection = this.quickSelections.find(
+            qs => timeSelectionId === qs.timeSelectionId,
+        );
+        return selectedQuickTimeSelection.supportsLiveRefresh;
+    }
+
     applyPreviousInterval(): void {
+        this.timeSettings.timeSelectionId = TimeSelectionConstants.CUSTOM;
         this.changeTimeByInterval((a, b) => a - b);
+        this.changeLiveRefreshEnabled();
     }
 
     applyNextInterval(): void {
+        this.timeSettings.timeSelectionId = TimeSelectionConstants.CUSTOM;
         this.changeTimeByInterval((a, b) => a + b);
+        this.changeLiveRefreshEnabled();
     }
 
     compare(newDateRange: TimeSettings, oldDateRange: TimeSettings): boolean {
@@ -155,8 +202,11 @@ export class TimeRangeSelectorComponent implements OnInit, OnChanges {
         this.reloadData();
     }
 
-    applyCurrentDateRange(timeSettings: TimeSettings) {
-        this.timeSettings = timeSettings;
+    applyCurrentDateRange(extendedTimeSettings: ExtendedTimeSettings) {
+        this.timeSettings = extendedTimeSettings.timeSettings;
+        this.refreshIntervalSettingsComponent?.handleEnableLiveRefresh(
+            extendedTimeSettings.supportsLiveRefresh,
+        );
         this.createDateString();
         this.menu.closeMenu();
         this.reloadData();

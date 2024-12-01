@@ -19,6 +19,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
+    DashboardLiveSettings,
     DateRange,
     QuickTimeSelection,
     TimeSelectionConstants,
@@ -65,66 +66,124 @@ export class TimeSelectionService {
             timeSelectionId: TimeSelectionConstants.LAST_15_MINUTES,
             startTime: now => subMinutes(now, 15),
             endTime: now => now,
+            supportsLiveRefresh: true,
         },
         {
             label: 'Last 1 hour',
             timeSelectionId: TimeSelectionConstants.LAST_HOUR,
             startTime: now => subHours(now, 1),
             endTime: now => now,
+            supportsLiveRefresh: true,
         },
         {
             label: 'Last 1 day',
             timeSelectionId: TimeSelectionConstants.LAST_DAY,
             startTime: now => subDays(now, 1),
             endTime: now => now,
+            supportsLiveRefresh: true,
         },
         {
             label: 'Last 1 week',
             timeSelectionId: TimeSelectionConstants.LAST_WEEK,
             startTime: now => subWeeks(now, 1),
             endTime: now => now,
+            supportsLiveRefresh: true,
         },
         {
             label: 'Last 1 month',
             timeSelectionId: TimeSelectionConstants.LAST_MONTH,
             startTime: now => subMonths(now, 1),
             endTime: now => now,
+            supportsLiveRefresh: true,
         },
         {
             label: 'Last 1 year',
             timeSelectionId: TimeSelectionConstants.LAST_YEAR,
             startTime: now => subYears(now, 1),
             endTime: now => now,
+            supportsLiveRefresh: true,
         },
         {
             label: 'Current day',
             timeSelectionId: TimeSelectionConstants.CURRENT_DAY,
             startTime: now => startOfDay(now),
             endTime: now => now,
+            supportsLiveRefresh: true,
         },
         {
             label: 'Current hour',
             timeSelectionId: TimeSelectionConstants.CURRENT_HOUR,
             startTime: now => startOfHour(now),
             endTime: now => now,
+            supportsLiveRefresh: true,
         },
         {
             label: 'Current week',
             timeSelectionId: TimeSelectionConstants.CURRENT_WEEK,
             startTime: now => startOfWeek(now),
             endTime: now => now,
+            supportsLiveRefresh: true,
         },
         {
             label: 'Current month',
             timeSelectionId: TimeSelectionConstants.CURRENT_MONTH,
             startTime: now => startOfMonth(now),
             endTime: now => now,
+            supportsLiveRefresh: true,
         },
         {
             label: 'Current year',
             timeSelectionId: TimeSelectionConstants.CURRENT_YEAR,
             startTime: now => startOfYear(now),
             endTime: now => now,
+            supportsLiveRefresh: true,
+        },
+    ];
+
+    defaultAvailableLiveSettingsOptions: DashboardLiveSettings[] = [
+        {
+            label: 'Off',
+            refreshModeActive: false,
+        },
+        {
+            label: '1 sec',
+            refreshModeActive: true,
+            refreshIntervalInSeconds: 1,
+        },
+        {
+            label: '2 sec',
+            refreshModeActive: true,
+            refreshIntervalInSeconds: 2,
+        },
+        {
+            label: '5 sec',
+            refreshModeActive: true,
+            refreshIntervalInSeconds: 5,
+        },
+        {
+            label: '10 sec',
+            refreshModeActive: true,
+            refreshIntervalInSeconds: 10,
+        },
+        {
+            label: '30 sec',
+            refreshModeActive: true,
+            refreshIntervalInSeconds: 30,
+        },
+        {
+            label: '1 min',
+            refreshModeActive: true,
+            refreshIntervalInSeconds: 60,
+        },
+        {
+            label: '5 min',
+            refreshModeActive: true,
+            refreshIntervalInSeconds: 300,
+        },
+        {
+            label: '30 min',
+            refreshModeActive: true,
+            refreshIntervalInSeconds: 60 * 30,
         },
     ];
 

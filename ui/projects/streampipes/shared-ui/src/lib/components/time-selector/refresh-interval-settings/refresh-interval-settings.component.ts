@@ -30,52 +30,10 @@ export class DataExplorerRefreshIntervalSettingsComponent implements OnInit {
     intervalSettingsChangedEmitter: EventEmitter<DashboardLiveSettings> =
         new EventEmitter<DashboardLiveSettings>();
 
-    availableOptions: DashboardLiveSettings[] = [
-        {
-            label: 'Off',
-            refreshModeActive: false,
-        },
-        {
-            label: '1 sec',
-            refreshModeActive: true,
-            refreshIntervalInSeconds: 1,
-        },
-        {
-            label: '2 sec',
-            refreshModeActive: true,
-            refreshIntervalInSeconds: 2,
-        },
-        {
-            label: '5 sec',
-            refreshModeActive: true,
-            refreshIntervalInSeconds: 5,
-        },
-        {
-            label: '10 sec',
-            refreshModeActive: true,
-            refreshIntervalInSeconds: 10,
-        },
-        {
-            label: '30 sec',
-            refreshModeActive: true,
-            refreshIntervalInSeconds: 30,
-        },
-        {
-            label: '1 min',
-            refreshModeActive: true,
-            refreshIntervalInSeconds: 60,
-        },
-        {
-            label: '5 min',
-            refreshModeActive: true,
-            refreshIntervalInSeconds: 300,
-        },
-        {
-            label: '30 min',
-            refreshModeActive: true,
-            refreshIntervalInSeconds: 60 * 30,
-        },
-    ];
+    @Input()
+    availableOptions: DashboardLiveSettings[];
+
+    liveRefreshEnabled: boolean;
 
     ngOnInit() {
         if (!this.liveSettings?.label) {
@@ -86,5 +44,12 @@ export class DataExplorerRefreshIntervalSettingsComponent implements OnInit {
     modifyRefreshInterval(option: DashboardLiveSettings): void {
         this.liveSettings = option;
         this.intervalSettingsChangedEmitter.emit(option);
+    }
+
+    handleEnableLiveRefresh(liveRefreshEnabled: boolean) {
+        if (this.liveRefreshEnabled === true && liveRefreshEnabled === false) {
+            this.intervalSettingsChangedEmitter.emit(this.availableOptions[0]);
+        }
+        this.liveRefreshEnabled = liveRefreshEnabled;
     }
 }
