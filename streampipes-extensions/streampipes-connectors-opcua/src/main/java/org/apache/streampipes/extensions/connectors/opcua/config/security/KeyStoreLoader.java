@@ -44,7 +44,7 @@ public class KeyStoreLoader {
 
   public KeyStoreLoader load(Environment env,
                              Path securityDir) throws Exception {
-    var keystore = KeyStore.getInstance(env.getOPcUaKeystoreType().getValueOrDefault());
+    var keystore = KeyStore.getInstance(env.getOpcUaKeystoreType().getValueOrDefault());
     var keystoreFile = env.getOpcUaKeystoreFile().getValueOrDefault();
     var keystorePassword = env.getOpcUaKeystorePassword().getValueOrDefault();
     var keystoreAlias = env.getOpcUaKeystoreAlias().getValueOrDefault();

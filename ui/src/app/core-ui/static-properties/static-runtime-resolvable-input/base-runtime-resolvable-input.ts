@@ -122,6 +122,7 @@ export abstract class BaseRuntimeResolvableInput<
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['completedConfigurations']) {
+            console.log(changes['completedConfigurations']);
             if (
                 this.staticPropertyUtils.allDependenciesSatisfied(
                     this.staticProperty.dependsOn,

@@ -119,7 +119,21 @@ public enum Envs {
   SP_OPCUA_APPLICATION_URI(
       "SP_OPCUA_APPLICATION_URI",
       "urn:org:apache:streampipes:opcua:client"
-  );
+  ),
+
+  // Default keystore and truststore
+  SP_SECURITY_KEYSTORE_FILENAME(
+      "SP_SECURITY_KEYSTORE_FILENAME",
+      "/streampipes-security/keystore.pfx"),
+  SP_SECURITY_KEYSTORE_PASSWORD("SP_SECURITY_KEYSTORE_PASSWORD", ""),
+  SP_SECURITY_KEYSTORE_TYPE("SP_SECURITY_KEYSTORE_TYPE", "PKCS12"),
+  SP_SECURITY_KEY_PASSWORD("SP_SECURITY_KEY_PASSWORD", null),
+  SP_SECURITY_TRUSTSTORE_FILENAME(
+      "SP_SECURITY_TRUSTSTORE_FILENAME",
+      "/streampipes-security/truststore.pfx"),
+  SP_SECURITY_TRUSTSTORE_PASSWORD("SP_SECURITY_TRUSTSTORE_PASSWORD", ""),
+  SP_SECURITY_TRUSTSTORE_TYPE("SP_SECURITY_TRUSTSTORE_TYPE", "PKCS12"),
+  SP_SECURITY_ALLOW_SELFSIGNED("SP_SECURITY_ALLOW_SELFSIGNED", "false");
 
   private final String envVariableName;
   private String defaultValue;
