@@ -17,9 +17,7 @@
   -->
 
 <div id="formWrapper" fxFlex="100" fxLayout="column">
-    @if (
-        !staticProperty.horizontalRendering && staticProperty.options.length < 5
-    ) {
+    @if (!staticProperty.horizontalRendering) {
         <div fxLayout="column">
             <div fxFlex fxLayout="row">
                 <div fxLayout="column" style="margin-left: 10px">
