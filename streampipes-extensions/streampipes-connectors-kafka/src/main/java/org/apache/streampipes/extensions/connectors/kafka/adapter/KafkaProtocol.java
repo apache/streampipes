@@ -144,7 +144,7 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
     latestAlternative.setSelected(true);
 
     return AdapterConfigurationBuilder
-        .create(ID, 0, KafkaProtocol::new)
+        .create(ID, 1, KafkaProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

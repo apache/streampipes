@@ -24,7 +24,6 @@ import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
-import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaBaseConfig;
 import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigExtractor;
 import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
@@ -38,15 +37,19 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 
 public class KafkaPublishSink implements IStreamPipesDataSink {
 
+  public static final String ID = "org.apache.streampipes.sinks.brokers.jvm.kafka";
+  private static final Logger LOG = LoggerFactory.getLogger(KafkaPublishSink.class);
+
   private SpKafkaProducer producer;
 
   private JsonDataFormatDefinition dataFormatDefinition;
-
-  private KafkaBaseConfig kafkaConfig;
 
   public KafkaPublishSink() {
   }
@@ -55,7 +58,7 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
         KafkaPublishSink::new,
-        DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.kafka", 0)
+        DataSinkBuilder.create(ID, 1)
             .category(DataSinkType.MESSAGING)
             .withLocales(Locales.EN)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
@@ -80,7 +83,7 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
   @Override
   public void onPipelineStarted(IDataSinkParameters parameters,
                                 EventSinkRuntimeContext runtimeContext) {
-    this.kafkaConfig = new KafkaConfigExtractor().extractSinkConfig(parameters.extractor());
+    var kafkaConfig = new KafkaConfigExtractor().extractSinkConfig(parameters.extractor());
     this.dataFormatDefinition = new JsonDataFormatDefinition();
 
     this.producer = new SpKafkaProducer(
@@ -95,7 +98,7 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
       Map<String, Object> rawEvent = event.getRaw();
       this.producer.publish(dataFormatDefinition.fromMap(rawEvent));
     } catch (SpRuntimeException e) {
-      e.printStackTrace();
+      LOG.error(e.getMessage(), e);
     }
   }
 
