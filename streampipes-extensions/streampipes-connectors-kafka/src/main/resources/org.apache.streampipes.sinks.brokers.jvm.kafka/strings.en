@@ -39,13 +39,13 @@ password.description=The password to authenticate with the broker
 access-mode.title=Access Mode
 access-mode.description=Unauthenticated or SASL/PLAIN
 
-unauthenticated-plain.title=Unauthenticated Plain
+unauthenticated-plain.title=PLAINTEXT
 unauthenticated-plain.description=No authentication and plaintext
 
-unauthenticated-ssl.title=Unauthenticated SSL
+unauthenticated-ssl.title=SSL
 unauthenticated-ssl.description=Using SSL with no authentication
 
-sasl-plain.title=SASL/PLAIN
+sasl-plain.title=SASL/PLAINTEXT
 sasl-plain.description=Username and password, no encryption
 
 sasl-ssl.title=SASL/SSL
