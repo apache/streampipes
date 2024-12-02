@@ -30,6 +30,7 @@ import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -75,6 +76,7 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdm
           SpServiceUrlProvider.ADAPTER,
           runtimeOptionsRequest.getDeploymentConfiguration().getDesiredServiceTags()
       );
+      SecretProvider.getDecryptionService().applyConfig(runtimeOptionsRequest.getStaticProperties());
       RuntimeOptionsResponse result = WorkerRestClient.getConfiguration(baseUrl, appId, runtimeOptionsRequest);
 
       return ok(result);

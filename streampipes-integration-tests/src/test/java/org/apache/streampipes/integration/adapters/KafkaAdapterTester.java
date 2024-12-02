@@ -22,7 +22,7 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.connectors.kafka.adapter.KafkaProtocol;
-import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConnectUtils;
+import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider;
 import org.apache.streampipes.integration.containers.KafkaContainer;
 import org.apache.streampipes.integration.containers.KafkaDevContainer;
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
@@ -69,9 +69,9 @@ public class KafkaAdapterTester extends AdapterTesterBase {
             .get(5))
             .setOptions(list);
     List<Map<String, Object>> configs = new ArrayList<>();
-    configs.add(Map.of(KafkaConnectUtils.HOST_KEY, kafkaContainer.getBrokerHost()));
-    configs.add(Map.of(KafkaConnectUtils.PORT_KEY, kafkaContainer.getBrokerPort()));
-    configs.add(Map.of(KafkaConnectUtils.TOPIC_KEY, TOPIC));
+    configs.add(Map.of(KafkaConfigProvider.HOST_KEY, kafkaContainer.getBrokerHost()));
+    configs.add(Map.of(KafkaConfigProvider.PORT_KEY, kafkaContainer.getBrokerPort()));
+    configs.add(Map.of(KafkaConfigProvider.TOPIC_KEY, TOPIC));
     var template = new PipelineElementTemplate("name", "description", configs);
 
 

@@ -34,20 +34,23 @@ username.description=
 password.title=Password
 password.description=
 
-access-mode.title=Access Mode
-access-mode.description=Unauthenticated or SASL/PLAIN
+access-mode.title=Security protocol
+access-mode.description=Security protocol used to communicate with brokers. Corresponds to Kafka Client security.protocol property
 
-unauthenticated-plain.title=Unauthenticated Plain
+unauthenticated-plain.title=PLAINTEXT
 unauthenticated-plain.description=No authentication and plaintext
 
-unauthenticated-ssl.title=Unauthenticated SSL
+unauthenticated-ssl.title=SSL
 unauthenticated-ssl.description=Using SSL with no authentication
 
-sasl-plain.title=SASL/PLAIN
-sasl-plain.description=Username and password, no encryption
+security-mechanism.title=Security Mechanism
+security-mechanism.description=SASL mechanism used for authentication. Corresponds to Kafka Client sasl.mechanism property
+
+sasl-plain.title=SASL/PLAINTEXT
+sasl-plain.description=SASL authentication, no encryption
 
 sasl-ssl.title=SASL/SSL
-sasl-ssl.description=Username and password, with ssl encryption
+sasl-ssl.description=SASL authentication, with ssl encryption
 
 username-group.title=Username and password
 

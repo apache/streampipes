@@ -51,4 +51,7 @@ sasl-plain.description=Username and password, no encryption
 sasl-ssl.title=SASL/SSL
 sasl-ssl.description=Username and password, with ssl encryption
 
+security-mechanism.title=Security Mechanism
+security-mechanism.description=SASL mechanism used for authentication. Corresponds to Kafka Client sasl.mechanism property
+
 username-group.title=Username and password
