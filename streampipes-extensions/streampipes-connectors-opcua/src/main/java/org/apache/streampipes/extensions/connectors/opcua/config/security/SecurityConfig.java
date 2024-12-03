@@ -56,7 +56,12 @@ public class SecurityConfig {
         .filter(e -> e.getSecurityPolicyUri().equals(securityPolicy.getUri()))
         .findFirst()
         .orElseThrow(() ->
-            new SpConfigurationException("No endpoint available with security mode {} and security policy {}")
+            new SpConfigurationException(
+                String.format(
+                    "No endpoint available with security mode %s and security policy %s",
+                    securityMode,
+                    securityPolicy)
+            )
         );
 
     tmpEndpoint = updateEndpointUrl(tmpEndpoint, host);
