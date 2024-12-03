@@ -28,12 +28,15 @@ import {
 
 describe('Test Time Range Selectors in Data Explorer', () => {
     const periods = [
-        { selector: 1, start: (now: Date) => subMinutes(now, 15) },
-        { selector: 2, start: (now: Date) => subHours(now, 1) },
-        { selector: 4, start: (now: Date) => subDays(now, 1) },
-        { selector: 6, start: (now: Date) => subWeeks(now, 1) },
-        { selector: 8, start: (now: Date) => subMonths(now, 1) },
-        { selector: 10, start: (now: Date) => subYears(now, 1) },
+        {
+            selector: 'last-15-minutes',
+            start: (now: Date) => subMinutes(now, 15),
+        },
+        { selector: 'last-hour', start: (now: Date) => subHours(now, 1) },
+        { selector: 'last-day', start: (now: Date) => subDays(now, 1) },
+        { selector: 'last-week', start: (now: Date) => subWeeks(now, 1) },
+        { selector: 'last-month', start: (now: Date) => subMonths(now, 1) },
+        { selector: 'last-year', start: (now: Date) => subYears(now, 1) },
     ];
 
     const timeRangeFrom = 'time-selector-start-time';
