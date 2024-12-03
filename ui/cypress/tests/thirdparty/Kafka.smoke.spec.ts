@@ -35,7 +35,7 @@ describe('Test Kafka Integration', () => {
         const sink: PipelineElementInput = PipelineElementBuilder.create(
             'kafka_publisher',
         )
-            .addInput('radio', 'access-mode-unauthenticated_plain', '')
+            .addInput('radio', 'access-mode-plaintext', '')
             .addInput('input', 'host', host)
             .addInput(
                 'input',
@@ -48,7 +48,7 @@ describe('Test Kafka Integration', () => {
         const adapter = AdapterBuilder.create('Apache_Kafka')
             .setName('Kafka4')
             .setTimestampProperty('timestamp')
-            .addProtocolInput('radio', 'access-mode-unauthenticated_plain', '')
+            .addProtocolInput('radio', 'access-mode-plaintext', '')
             .addProtocolInput('input', 'host', host)
             .addProtocolInput('input', 'port', port)
             .addProtocolInput('click', 'sp-reload', '')

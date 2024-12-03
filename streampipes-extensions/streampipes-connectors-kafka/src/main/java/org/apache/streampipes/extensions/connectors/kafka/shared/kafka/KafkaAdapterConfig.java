@@ -16,14 +16,17 @@
  *
  */
 
-package org.apache.streampipes.messaging.kafka.security;
+package org.apache.streampipes.extensions.connectors.kafka.shared.kafka;
 
-import java.util.Properties;
+public class KafkaAdapterConfig extends KafkaBaseConfig {
 
-public class KafkaSecurityUnauthenticatedPlainConfig extends KafkaSecurityConfig {
+  private String groupId;
 
-  @Override
-  public void appendConfig(Properties props) {
+  public String getGroupId() {
+    return groupId;
+  }
 
+  public void setGroupId(String groupId) {
+    this.groupId = groupId;
   }
 }

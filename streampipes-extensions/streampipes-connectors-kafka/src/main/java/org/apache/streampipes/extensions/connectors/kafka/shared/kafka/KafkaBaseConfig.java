@@ -18,28 +18,20 @@
 
 package org.apache.streampipes.extensions.connectors.kafka.shared.kafka;
 
-import org.apache.streampipes.messaging.kafka.config.AutoOffsetResetConfig;
-import org.apache.streampipes.messaging.kafka.security.KafkaSecurityConfig;
+import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
 
-public class KafkaConfig {
+import java.util.ArrayList;
+import java.util.List;
+
+public class KafkaBaseConfig {
 
   private String kafkaHost;
   private Integer kafkaPort;
   private String topic;
+  private List<KafkaConfigAppender> configAppenders;
 
-  KafkaSecurityConfig securityConfig;
-  AutoOffsetResetConfig autoOffsetResetConfig;
-
-  public KafkaConfig(String kafkaHost,
-                     Integer kafkaPort,
-                     String topic,
-                     KafkaSecurityConfig securityConfig,
-                     AutoOffsetResetConfig autoOffsetResetConfig) {
-    this.kafkaHost = kafkaHost;
-    this.kafkaPort = kafkaPort;
-    this.topic = topic;
-    this.securityConfig = securityConfig;
-    this.autoOffsetResetConfig = autoOffsetResetConfig;
+  public KafkaBaseConfig() {
+    this.configAppenders = new ArrayList<>();
   }
 
   public String getKafkaHost() {
@@ -66,19 +58,11 @@ public class KafkaConfig {
     this.topic = topic;
   }
 
-  public KafkaSecurityConfig getSecurityConfig() {
-    return securityConfig;
+  public List<KafkaConfigAppender> getConfigAppenders() {
+    return configAppenders;
   }
 
-  public void setSecurityConfig(KafkaSecurityConfig securityConfig) {
-    this.securityConfig = securityConfig;
-  }
-
-  public AutoOffsetResetConfig getAutoOffsetResetConfig() {
-    return autoOffsetResetConfig;
-  }
-
-  public void setAutoOffsetResetConfig(AutoOffsetResetConfig autoOffsetResetConfig) {
-    this.autoOffsetResetConfig = autoOffsetResetConfig;
+  public void setConfigAppenders(List<KafkaConfigAppender> configAppenders) {
+    this.configAppenders = configAppenders;
   }
 }

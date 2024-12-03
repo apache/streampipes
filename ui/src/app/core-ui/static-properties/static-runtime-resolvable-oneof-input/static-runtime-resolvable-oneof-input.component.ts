@@ -18,6 +18,8 @@
 
 import { Component, OnChanges, OnInit } from '@angular/core';
 import {
+    Option,
+    RuntimeResolvableAnyStaticProperty,
     RuntimeResolvableOneOfStaticProperty,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
@@ -48,13 +50,39 @@ export class StaticRuntimeResolvableOneOfInputComponent
     }
 
     afterOptionsLoaded(staticProperty: RuntimeResolvableOneOfStaticProperty) {
-        this.staticProperty.options = staticProperty.options;
         if (
-            this.staticProperty.options &&
-            this.staticProperty.options.length > 0
+            this.staticProperty.options?.length > 0 &&
+            this.isOptionSelected()
         ) {
-            this.staticProperty.options[0].selected = true;
+            const selectedOption = this.staticProperty.options.find(
+                o => o.selected,
+            );
+            this.addSelectedOption(staticProperty, selectedOption);
+        } else {
+            if (staticProperty.options?.length > 0) {
+                staticProperty.options[0].selected = true;
+            }
         }
+        this.staticProperty.options = staticProperty.options;
+    }
+
+    isOptionSelected(): boolean {
+        return this.staticProperty.options.find(o => o.selected) !== undefined;
+    }
+
+    addSelectedOption(
+        staticProperty: RuntimeResolvableOneOfStaticProperty,
+        selectedOption: Option,
+    ): void {
+        staticProperty.options
+            .filter(o => {
+                return o.internalName !== null
+                    ? o.internalName === selectedOption.internalName
+                    : o.name === selectedOption.name;
+            })
+            .forEach(o => {
+                o.selected = true;
+            });
     }
 
     select(id) {
@@ -65,7 +93,6 @@ export class StaticRuntimeResolvableOneOfInputComponent
             option => option.elementId === id,
         ).selected = true;
         this.performValidation();
-        this.applyCompletedConfiguration(true);
     }
 
     parse(

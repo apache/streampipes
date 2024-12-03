@@ -32,79 +32,56 @@ public interface Environment {
   // Service base configuration
 
   StringEnvironmentVariable getServiceHost();
-
   IntEnvironmentVariable getServicePort();
 
   StringEnvironmentVariable getSpCoreScheme();
 
   StringEnvironmentVariable getSpCoreHost();
-
   IntEnvironmentVariable getSpCorePort();
 
   // Time series storage env variables
 
   StringEnvironmentVariable getTsStorage();
-
   StringEnvironmentVariable getTsStorageProtocol();
-
   StringEnvironmentVariable getTsStorageHost();
-
   IntEnvironmentVariable getTsStoragePort();
-
   StringEnvironmentVariable getTsStorageToken();
-
   StringEnvironmentVariable getTsStorageOrg();
-
   StringEnvironmentVariable getTsStorageBucket();
 
   IntEnvironmentVariable getIotDbSessionPoolSize();
-
   BooleanEnvironmentVariable getIotDbSessionEnableCompression();
-
   StringEnvironmentVariable getIotDbUser();
-
   StringEnvironmentVariable getIotDbPassword();
 
   // CouchDB env variables
 
   StringEnvironmentVariable getCouchDbProtocol();
-
   StringEnvironmentVariable getCouchDbHost();
-
   IntEnvironmentVariable getCouchDbPort();
-
   StringEnvironmentVariable getCouchDbUsername();
-
   StringEnvironmentVariable getCouchDbPassword();
 
 
   // JWT & Authentication
 
   StringEnvironmentVariable getClientUser();
-
   StringEnvironmentVariable getClientSecret();
 
   StringEnvironmentVariable getJwtSecret();
-
   StringEnvironmentVariable getJwtPublicKeyLoc();
-
   StringEnvironmentVariable getJwtPrivateKeyLoc();
-
   StringEnvironmentVariable getJwtSigningMode();
 
   StringEnvironmentVariable getExtensionsAuthMode();
-
   StringEnvironmentVariable getEncryptionPasscode();
 
   BooleanEnvironmentVariable getOAuthEnabled();
-
   StringEnvironmentVariable getOAuthRedirectUri();
-
   List<OAuthConfiguration> getOAuthConfigurations();
 
   // Messaging
   StringEnvironmentVariable getKafkaRetentionTimeMs();
-
   StringEnvironmentVariable getPrioritizedProtocol();
 
 
@@ -164,14 +141,18 @@ public interface Environment {
   StringEnvironmentVariable getAllowedUploadFiletypes();
 
   StringEnvironmentVariable getOpcUaSecurityDir();
-
   StringEnvironmentVariable getOpcUaKeystoreFile();
-
   StringEnvironmentVariable getOpcUaKeystorePassword();
-
   StringEnvironmentVariable getOpcUaApplicationUri();
-
-  StringEnvironmentVariable getOPcUaKeystoreType();
-
+  StringEnvironmentVariable getOpcUaKeystoreType();
   StringEnvironmentVariable getOpcUaKeystoreAlias();
+
+  StringEnvironmentVariable getKeystoreFilename();
+  StringEnvironmentVariable getKeystorePassword();
+  StringEnvironmentVariable getKeystoreType();
+  StringEnvironmentVariable getKeyPassword();
+  StringEnvironmentVariable getTruststoreFilename();
+  StringEnvironmentVariable getTruststorePassword();
+  StringEnvironmentVariable getTruststoreType();
+  BooleanEnvironmentVariable getAllowSelfSignedCertificates();
 }
