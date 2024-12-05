@@ -106,7 +106,7 @@ jobs:
           install: false
           wait-on: 'http://localhost/#/login'
           wait-on-timeout: 120
-          spec: cypress/tests/datalake/timeRangeSelectors.spec.ts
+          spec: cypress/tests/**/*.smoke.spec.ts
           working-directory: ui
 
   python-quality-checks:
