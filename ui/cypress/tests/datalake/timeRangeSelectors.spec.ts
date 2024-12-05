@@ -123,6 +123,7 @@ function getLocalizedDateString(date: Date) {
 }
 
 function getLocalizedTimeString(date: Date) {
+    // date.toISOString().substr(11, 8); // idea for fix of test
     return date.toLocaleTimeString().slice(0, 8);
 }
 

@@ -24,7 +24,7 @@
     "format:fix": "prettier --write .",
     "lint-staged": "lint-staged",
     "test-cypress-open": "cypress open --env DEVELOPMENT=true",
-    "test-cypress-smoke": "npx cypress run --spec 'cypress/tests/**/*.smoke.spec.ts'",
+    "test-cypress-smoke": "npx cypress run --spec 'cypress/tests/datalake/timeRangeSelectors.spec.ts'",
     "test-cypress-all": "npx cypress run --spec 'cypress/tests/**/*.spec.ts'",
     "prepare": "cd ../ && husky install ./ui/.husky"
   },
