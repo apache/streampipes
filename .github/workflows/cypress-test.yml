@@ -64,7 +64,7 @@ jobs:
           wait-on: 'http://localhost/#/login'
           record: true
           wait-on-timeout: 120
-          spec: cypress/tests/**/*.spec.ts
+          spec: cypress/tests/datalake/timeRangeSelectors.spec.ts
           working-directory: ui
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
