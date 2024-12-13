@@ -24,7 +24,6 @@ import { PipelineBtns } from './PipelineBtns';
 import { ConnectUtils } from '../connect/ConnectUtils';
 import { PipelineBuilder } from '../../builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../builder/PipelineElementBuilder';
-import { ConnectBtns } from '../connect/ConnectBtns';
 
 export class PipelineUtils {
     public static addPipeline(pipelineInput: PipelineInput) {
@@ -40,7 +39,7 @@ export class PipelineUtils {
     /**
      * This method adds a sample adapter and pipeline
      */
-    public static addSamplePipeline() {
+    public static addSampleAdapterAndPipeline() {
         const adapterName = 'simulator';
 
         ConnectUtils.addMachineDataSimulator(adapterName);

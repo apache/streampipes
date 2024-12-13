@@ -40,7 +40,7 @@ describe('Test Pipeline Multi User support', () => {
     function testPipelineNotShownForOtherUsers(userRole: UserRole) {
         const pipelineAdminUser = UserUtils.createUser('user1', userRole);
 
-        PipelineUtils.addSamplePipeline();
+        PipelineUtils.addSampleAdapterAndPipeline();
 
         UserUtils.switchUser(pipelineAdminUser);
 

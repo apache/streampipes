@@ -16,10 +16,7 @@
  *
  */
 
-import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
-import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 
 describe('Test update of running pipeline', () => {
     beforeEach('Setup Test', () => {
@@ -27,7 +24,7 @@ describe('Test update of running pipeline', () => {
     });
 
     it('Perform Test', () => {
-        PipelineUtils.addSamplePipeline();
+        PipelineUtils.addSampleAdapterAndPipeline();
         PipelineUtils.editPipeline();
         cy.wait(1000);
         PipelineUtils.startPipeline();

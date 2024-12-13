@@ -16,10 +16,7 @@
  *
  */
 
-import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
-import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 
 describe('Test Random Data Simulator Stream Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -27,7 +24,7 @@ describe('Test Random Data Simulator Stream Adapter', () => {
     });
 
     it('Perform Test', () => {
-        PipelineUtils.addSamplePipeline();
+        PipelineUtils.addSampleAdapterAndPipeline();
         PipelineUtils.deletePipeline();
     });
 });

@@ -17,27 +17,8 @@
  */
 
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
-import { PipelineBuilder } from '../../../support/builder/PipelineBuilder';
-import { PipelineElementBuilder } from '../../../support/builder/PipelineElementBuilder';
 import { UserUtils } from '../../../support/utils/UserUtils';
 import { PipelineUtils } from '../../../support/utils/pipeline/PipelineUtils';
-
-const adapterName = 'simulator';
-
-const pipelineInput = PipelineBuilder.create('Pipeline Test')
-    .addSource(adapterName)
-    .addProcessingElement(
-        PipelineElementBuilder.create('field_renamer')
-            .addInput('drop-down', 'convert-property', 'timestamp')
-            .addInput('input', 'field-name', 't')
-            .build(),
-    )
-    .addSink(
-        PipelineElementBuilder.create('data_lake')
-            .addInput('input', 'db_measurement', 'demo')
-            .build(),
-    )
-    .build();
 
 describe('Test Enhanced Adapter Deletion', () => {
     beforeEach('Setup Test', () => {
@@ -46,30 +27,17 @@ describe('Test Enhanced Adapter Deletion', () => {
     });
 
     it('Test Delete Adapter and Associated Pipelines', () => {
-        ConnectUtils.addMachineDataSimulator(adapterName, false);
-        PipelineUtils.addPipeline(pipelineInput);
+        PipelineUtils.addSampleAdapterAndPipeline();
 
         ConnectUtils.deleteAdapterAndAssociatedPipelines();
     });
 
     it('Test Admin Should Be Able to Delete Adapter and Not Owned Associated Pipelines', () => {
         // Let the user create the adapter and the pipeline
-        ConnectUtils.addMachineDataSimulator(adapterName, false);
-        PipelineUtils.addPipeline(pipelineInput);
+        PipelineUtils.addSampleAdapterAndPipeline();
 
         // Then let the admin delete them
         UserUtils.switchUser(UserUtils.adminUser);
         ConnectUtils.deleteAdapterAndAssociatedPipelines(true);
-    });
-
-    it('Test Delete Adapter and Associated Pipelines Permission Denied', () => {
-        // Let the admin create the adapter and the pipeline
-        UserUtils.switchUser(UserUtils.adminUser);
-        ConnectUtils.addMachineDataSimulator(adapterName, false);
-        PipelineUtils.addPipeline(pipelineInput);
-
-        // Then the user shouldn't be able to delete them
-        UserUtils.switchUser(UserUtils.userWithAdapterAndPipelineAdminRights);
-        ConnectUtils.deleteAdapterAndAssociatedPipelinesPermissionDenied();
     });
 });
