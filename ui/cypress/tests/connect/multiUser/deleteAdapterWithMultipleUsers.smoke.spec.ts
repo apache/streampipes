@@ -16,11 +16,11 @@
  *
  */
 
-import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
-import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { UserUtils } from '../../support/utils/UserUtils';
-import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
+import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
+import { PipelineBuilder } from '../../../support/builder/PipelineBuilder';
+import { PipelineElementBuilder } from '../../../support/builder/PipelineElementBuilder';
+import { UserUtils } from '../../../support/utils/UserUtils';
+import { PipelineUtils } from '../../../support/utils/pipeline/PipelineUtils';
 
 const adapterName = 'simulator';
 

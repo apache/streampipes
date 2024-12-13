@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   }
 
   @GetMapping(path = "/adapters", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<List<AdapterDescription>> getAdapters() {
     List<AdapterDescription> result = managementService.getAdapters();
 
@@ -60,6 +62,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   }
 
   @GetMapping(path = "/{id}/assets", produces = "application/zip")
+  @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<?> getAdapterAssets(@PathVariable("id") String id) {
     try {
       String result = null;
@@ -87,6 +90,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   }
 
   @GetMapping(path = "/{id}/assets/icon", produces = "image/png")
+  @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<?> getAdapterIconAsset(@PathVariable("id") String id) {
     try {
 
@@ -115,6 +119,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   }
 
   @GetMapping(path = "/{id}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<?> getAdapterDocumentationAsset(@PathVariable("id") String id) {
     try {
       String result = null;
@@ -142,6 +147,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   }
 
   @DeleteMapping(path = "{adapterId}")
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> deleteAdapter(@PathVariable("adapterId") String adapterId) {
     try {
       this.managementService.deleteAdapterDescription(adapterId);

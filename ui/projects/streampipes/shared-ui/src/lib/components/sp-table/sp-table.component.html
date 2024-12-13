@@ -24,7 +24,11 @@
         <tr mat-row *matRowDef="let row; columns: columns"></tr>
 
         <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" [colSpan]="columns.length">
+            <td
+                data-cy="no-table-entries"
+                class="mat-cell"
+                [colSpan]="columns.length"
+            >
                 No entries available.
             </td>
         </tr>

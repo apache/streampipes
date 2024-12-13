@@ -63,7 +63,7 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
   }
 
   @GetMapping(path = "/{widgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasReadAuthority() and hasPermission(#elementId, 'READ')")
+  @PreAuthorize("hasReadAuthority() and hasPermission(#elementId, 'READ')")
   public ResponseEntity<DataExplorerWidgetModel> getDataExplorerWidget(@PathVariable("widgetId") String elementId) {
     var widget = resourceManager.find(elementId);
     if (widget != null) {
@@ -77,7 +77,7 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
       path = "/{widgetId}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dataExplorerWidgetModel.elementId, 'WRITE')")
+  @PreAuthorize("hasWriteAuthority() and hasPermission(#dataExplorerWidgetModel.elementId, 'WRITE')")
   public ResponseEntity<DataExplorerWidgetModel> modifyDataExplorerWidget(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     resourceManager.update(dataExplorerWidgetModel);
@@ -85,7 +85,7 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
   }
 
   @DeleteMapping(path = "/{widgetId}")
-  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#elementId, 'WRITE')")
+  @PreAuthorize("hasWriteAuthority() and hasPermission(#elementId, 'WRITE')")
   public ResponseEntity<Void> deleteDataExplorerWidget(@PathVariable("widgetId") String elementId) {
     resourceManager.delete(elementId);
     return ok();
@@ -95,7 +95,7 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
-  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dataExplorerWidgetModel.elementId, 'WRITE')")
+  @PreAuthorize("hasWriteAuthority() and hasPermission(#dataExplorerWidgetModel.elementId, 'WRITE')")
   public ResponseEntity<DataExplorerWidgetModel> createDataExplorerWidget(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     return ok(resourceManager.create(dataExplorerWidgetModel, getAuthenticatedUserSid()));
