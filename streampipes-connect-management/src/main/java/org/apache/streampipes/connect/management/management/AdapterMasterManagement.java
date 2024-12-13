@@ -141,15 +141,8 @@ public class AdapterMasterManagement {
     LOG.info("Successfully deleted data stream: " + adapter.getCorrespondingDataStreamElementId());
   }
 
-  public List<AdapterDescription> getAllAdapterInstances() throws AdapterException {
-
-    List<AdapterDescription> allAdapters = adapterInstanceStorage.findAll();
-
-    if (allAdapters == null) {
-      throw new AdapterException("Could not get all adapters");
-    }
-
-    return allAdapters;
+  public List<AdapterDescription> getAllAdapterInstances() {
+    return adapterInstanceStorage.findAll();
   }
 
   public void stopStreamAdapter(String elementId) throws AdapterException {

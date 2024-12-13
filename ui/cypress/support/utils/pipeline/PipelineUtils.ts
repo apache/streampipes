@@ -21,6 +21,10 @@ import { StaticPropertyUtils } from '../userInput/StaticPropertyUtils';
 import { OutputStrategyUtils } from '../OutputStrategyUtils';
 import { PipelineElementInput } from '../../model/PipelineElementInput';
 import { PipelineBtns } from './PipelineBtns';
+import { ConnectUtils } from '../connect/ConnectUtils';
+import { PipelineBuilder } from '../../builder/PipelineBuilder';
+import { PipelineElementBuilder } from '../../builder/PipelineElementBuilder';
+import { ConnectBtns } from '../connect/ConnectBtns';
 
 export class PipelineUtils {
     public static addPipeline(pipelineInput: PipelineInput) {
@@ -31,6 +35,32 @@ export class PipelineUtils {
         PipelineUtils.configurePipeline(pipelineInput);
 
         PipelineUtils.startPipeline(pipelineInput);
+    }
+
+    /**
+     * This method adds a sample adapter and pipeline
+     */
+    public static addSamplePipeline() {
+        const adapterName = 'simulator';
+
+        ConnectUtils.addMachineDataSimulator(adapterName);
+
+        const pipelineInput = PipelineBuilder.create('Pipeline Test')
+            .addSource(adapterName)
+            .addProcessingElement(
+                PipelineElementBuilder.create('field_renamer')
+                    .addInput('drop-down', 'convert-property', 'timestamp')
+                    .addInput('input', 'field-name', 't')
+                    .build(),
+            )
+            .addSink(
+                PipelineElementBuilder.create('data_lake')
+                    .addInput('input', 'db_measurement', 'demo')
+                    .build(),
+            )
+            .build();
+
+        PipelineUtils.addPipeline(pipelineInput);
     }
 
     public static editPipeline() {
@@ -133,7 +163,15 @@ export class PipelineUtils {
 
     public static checkAmountOfPipelinesPipeline(amount: number) {
         PipelineUtils.goToPipelines();
-        PipelineBtns.deletePipeline().should('have.length', amount);
+
+        if (amount === 0) {
+            // The wait is needed because the default value is the no-table-entries element.
+            // It must be waited till the data is loaded. Once a better solution is found, this can be removed.
+            cy.wait(1000);
+            cy.dataCy('no-table-entries').should('be.visible');
+        } else {
+            PipelineBtns.deletePipeline().should('have.length', amount);
+        }
     }
 
     public static deletePipeline() {

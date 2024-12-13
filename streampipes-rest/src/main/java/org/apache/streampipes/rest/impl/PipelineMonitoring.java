@@ -19,11 +19,13 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
+import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,20 +39,43 @@ import java.util.Map;
 @RequestMapping("/api/v2/pipeline-monitoring")
 public class PipelineMonitoring extends AbstractMonitoringResource {
 
-  @GetMapping(value = "/pipeline/{pipelineId}/logs", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(
+      value = "/pipeline/{pipelineId}/logs",
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  @PreAuthorize("this.hasReadAuthority() and hasPermission('#pipelineId', 'READ')")
   public ResponseEntity<Map<String, List<SpLogEntry>>> getLogInfoForPipeline(
-      @PathVariable("pipelineId") String pipelineId) {
+      @PathVariable("pipelineId") String pipelineId
+  ) {
     return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForPipeline(pipelineId));
   }
 
-  @GetMapping(value = "/pipeline/{pipelineId}/metrics", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(
+      value = "/pipeline/{pipelineId}/metrics",
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  @PreAuthorize("this.hasReadAuthority() and hasPermission('#pipelineId', 'READ')")
   public ResponseEntity<Map<String, SpMetricsEntry>> getMetricsInfoForPipeline(
       @PathVariable("pipelineId") String pipelineId,
-      @RequestParam(value = "forceUpdate", required = false, defaultValue = "false") boolean forceUpdate) {
+      @RequestParam(value = "forceUpdate", required = false, defaultValue = "false") boolean forceUpdate
+  ) {
     if (forceUpdate) {
       new ExtensionsServiceLogExecutor().triggerUpdate();
     }
     return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForPipeline(pipelineId));
   }
 
+  /**
+   * required by Spring expression
+   */
+  public boolean hasReadAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_READ_PIPELINE_VALUE);
+  }
+
+  /**
+   * required by Spring expression
+   */
+  public boolean hasWriteAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE);
+  }
 }

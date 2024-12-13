@@ -62,6 +62,25 @@ export class UserUtils {
         cy.dataCy('sp-element-edit-user-save').click();
     }
 
+    /**
+     * Create a new user with the specified roles and a default password to the system.
+     *
+     * @param name - The name of the user to be added.
+     * @param roles - The roles to be assigned to the new user.
+     */
+    public static createUser(name: string, ...roles: UserRole[]): User {
+        const userBuilder = UserBuilder.create(`${name}@streampipes.apache.org`)
+            .setName(name)
+            .setPassword('default');
+
+        roles.forEach(role => userBuilder.addRole(role));
+
+        const user = userBuilder.build();
+
+        this.addUser(user);
+        return user;
+    }
+
     public static switchUser(user: User) {
         cy.logout();
         cy.visit('#/login');

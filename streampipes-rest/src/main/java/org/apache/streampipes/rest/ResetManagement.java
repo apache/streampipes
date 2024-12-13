@@ -108,24 +108,20 @@ public class ResetManagement {
   private static void stopAndDeleteAllAdapters() {
     AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
-            .getAdapterInstanceStorage(),
+                                  .getAdapterInstanceStorage(),
         new SpResourceManager().manageAdapters(),
         new SpResourceManager().manageDataStreams(),
         AdapterMetricsManager.INSTANCE.getAdapterMetrics()
     );
 
-    try {
-      List<AdapterDescription> allAdapters = adapterMasterManagement.getAllAdapterInstances();
-      allAdapters.forEach(adapterDescription -> {
-        try {
-          adapterMasterManagement.deleteAdapter(adapterDescription.getElementId());
-        } catch (AdapterException e) {
-          logger.error("Failed to delete adapter with id: " + adapterDescription.getElementId(), e);
-        }
-      });
-    } catch (AdapterException e) {
-      logger.error("Failed to load all adapter descriptions", e);
-    }
+    List<AdapterDescription> allAdapters = adapterMasterManagement.getAllAdapterInstances();
+    allAdapters.forEach(adapterDescription -> {
+      try {
+        adapterMasterManagement.deleteAdapter(adapterDescription.getElementId());
+      } catch (AdapterException e) {
+        logger.error("Failed to delete adapter with id: " + adapterDescription.getElementId(), e);
+      }
+    });
   }
 
   private static void deleteAllFiles() {
@@ -154,37 +150,37 @@ public class ResetManagement {
   private static void removeAllDataViewWidgets() {
     var widgetStorage =
         StorageDispatcher.INSTANCE.getNoSqlStore()
-            .getDataExplorerWidgetStorage();
+                                  .getDataExplorerWidgetStorage();
     widgetStorage.findAll()
-        .forEach(widget -> widgetStorage.deleteElementById(widget.getElementId()));
+                 .forEach(widget -> widgetStorage.deleteElementById(widget.getElementId()));
   }
 
   private static void removeAllDataViews() {
     var dataLakeDashboardStorage =
         StorageDispatcher.INSTANCE.getNoSqlStore()
-            .getDataExplorerDashboardStorage();
+                                  .getDataExplorerDashboardStorage();
     dataLakeDashboardStorage.findAll()
-        .forEach(dashboard -> dataLakeDashboardStorage.deleteElementById(dashboard.getElementId()));
+                            .forEach(dashboard -> dataLakeDashboardStorage.deleteElementById(dashboard.getElementId()));
   }
 
   private static void removeAllDashboardWidgets() {
     var dashboardWidgetStorage =
         StorageDispatcher.INSTANCE.getNoSqlStore()
-            .getDashboardWidgetStorage();
+                                  .getDashboardWidgetStorage();
     dashboardWidgetStorage.findAll()
-        .forEach(widget -> dashboardWidgetStorage.deleteElementById(widget.getElementId()));
+                          .forEach(widget -> dashboardWidgetStorage.deleteElementById(widget.getElementId()));
   }
 
   private static void removeAllDashboards() {
     var dashboardStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
-        .getDashboardStorage();
+                                                     .getDashboardStorage();
     dashboardStorage.findAll()
-        .forEach(dashboard -> dashboardStorage.deleteElementById(dashboard.getElementId()));
+                    .forEach(dashboard -> dashboardStorage.deleteElementById(dashboard.getElementId()));
   }
 
   private static void removeAllAssets(String username) {
     IGenericStorage genericStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
-        .getGenericStorage();
+                                                               .getGenericStorage();
     try {
       for (Map<String, Object> asset : genericStorage.findAll("asset-management")) {
         genericStorage.delete((String) asset.get("_id"), (String) asset.get("_rev"));
@@ -211,13 +207,19 @@ public class ResetManagement {
         "asset-management",
         "asset-sites"
     );
-    var genericStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage();
+    var genericStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
+                                                   .getGenericStorage();
 
     appDocTypesToDelete.forEach(docType -> {
       try {
         var allDocs = genericStorage.findAll(docType);
         for (var doc : allDocs) {
-          genericStorage.delete(doc.get("_id").toString(), doc.get("_rev").toString());
+          genericStorage.delete(
+              doc.get("_id")
+                 .toString(),
+              doc.get("_rev")
+                 .toString()
+          );
         }
       } catch (IOException e) {
         throw new RuntimeException(e);

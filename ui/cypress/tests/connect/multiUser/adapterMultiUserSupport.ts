@@ -16,18 +16,28 @@
  *
  */
 
-import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
-import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
+import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
+import { UserUtils } from '../../../support/utils/UserUtils';
+import { UserRole } from '../../../../src/app/_enums/user-role.enum';
 
-describe('Test Random Data Simulator Stream Adapter', () => {
+const adapterName = 'simulator';
+
+describe('Test Adapter Multi User support', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
     });
 
-    it('Perform Test', () => {
-        PipelineUtils.addSamplePipeline();
-        PipelineUtils.deletePipeline();
+    it('Test with connect admin account', () => {
+        const connectAdminUser = UserUtils.createUser(
+            'user1',
+            UserRole.ROLE_CONNECT_ADMIN,
+        );
+
+        ConnectUtils.addMachineDataSimulator(adapterName, false);
+
+        UserUtils.switchUser(connectAdminUser);
+
+        // Validate that no adapter is visible
+        ConnectUtils.checkAmountOfAdapters(0);
     });
 });
