@@ -37,6 +37,10 @@ import { zip } from 'rxjs';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 import { FieldSelectionPanelComponent } from './field-selection-panel/field-selection-panel.component';
 import { GroupSelectionPanelComponent } from './group-selection-panel/group-selection-panel.component';
+import { TableVisConfig } from '../../../widgets/table/model/table-widget.model';
+import { DataExplorerFieldProviderService } from 'src/app/data-explorer/services/data-explorer-field-provider-service';
+import { FieldProvider } from 'src/app/data-explorer/models/dataview-dashboard.model';
+import { WidgetTypeService } from 'src/app/data-explorer/services/widget-type.service';
 
 @Component({
     selector: 'sp-data-explorer-widget-data-settings',
@@ -48,6 +52,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     @Input() dataLakeMeasure: DataLakeMeasure;
     @Input() newWidgetMode: boolean;
     @Input() widgetId: string;
+    @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
 
     @Output() createWidgetEmitter: EventEmitter<
         Tuple2<DataLakeMeasure, DataExplorerWidgetModel>
@@ -72,6 +77,8 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
         private dataExplorerService: DataViewDataExplorerService,
         private datalakeRestService: DatalakeRestService,
         private widgetConfigService: WidgetConfigurationService,
+        private fieldProviderService: DataExplorerFieldProviderService,
+        private widgetTypeService: WidgetTypeService,
     ) {}
 
     ngOnInit(): void {
@@ -85,6 +92,13 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
         ).subscribe(response => {
             this.availablePipelines = response[0];
             this.availableMeasurements = response[1];
+
+            this.availablePipelines.sort((a, b) =>
+                a.pipelineName.localeCompare(b.pipelineName),
+            );
+            this.availableMeasurements.sort((a, b) =>
+                a.measureName.localeCompare(b.measureName),
+            );
 
             // replace pipeline event schemas. Reason: Available measures do not contain field for timestamp
             this.availablePipelines.forEach(p => {
@@ -210,6 +224,29 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
             queryType: 'raw',
             sourceType,
         };
+    }
+
+    makeVisualizationConfig(fields: FieldProvider): TableVisConfig {
+        return {
+            configurationValid: true,
+            searchValue: '',
+            selectedColumns: fields.allFields,
+        };
+    }
+
+    createDefaultWidget(): void {
+        if (this.dataConfig.sourceConfigs.length === 1) {
+            const fields = this.fieldProviderService.generateFieldLists(
+                this.dataConfig.sourceConfigs,
+            );
+            this.currentlyConfiguredWidget.visualizationConfig =
+                this.makeVisualizationConfig(fields);
+            this.currentlyConfiguredWidget.widgetType = 'table';
+            this.widgetTypeService.notify({
+                widgetId: this.currentlyConfiguredWidget.elementId,
+                newWidgetTypeId: this.currentlyConfiguredWidget.widgetType,
+            });
+        }
     }
 
     removeSourceConfig(index: number) {

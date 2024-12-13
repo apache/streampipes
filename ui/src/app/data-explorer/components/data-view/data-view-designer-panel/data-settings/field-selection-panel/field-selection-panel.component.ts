@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
     EventPropertyUnion,
     FieldConfig,
@@ -35,6 +35,9 @@ export class FieldSelectionPanelComponent implements OnInit {
 
     @Input() sourceConfig: SourceConfig;
 
+    @Output()
+    initialFieldSelectionEvent: EventEmitter<void> = new EventEmitter();
+
     expandFields = false;
 
     constructor(
@@ -44,6 +47,7 @@ export class FieldSelectionPanelComponent implements OnInit {
 
     ngOnInit() {
         this.applyDefaultFields();
+        this.initialFieldSelectionEvent.emit();
     }
 
     applyDefaultFields() {
