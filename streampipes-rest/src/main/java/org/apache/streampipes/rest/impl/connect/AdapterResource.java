@@ -36,6 +36,7 @@ import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -136,7 +137,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   }
 
   @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
-  @PreAuthorize("this.hasReadAuthority() and hasPermission('#elementId', 'READ')")
+  @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<?> getAdapter(
       @PathVariable("id") String elementId,
       @RequestParam(value = "output",
@@ -145,7 +146,16 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   ) {
 
     try {
-      AdapterDescription adapterDescription = getAdapterDescription(elementId);
+      var adapterDescription = getAdapterDescription(elementId);
+
+      // This check is done here because the adapter permission is checked based on the corresponding data stream
+      // and not based on the element id
+      if (!checkAdapterReadPermission(adapterDescription)) {
+        LOG.error("User is not allowed to read adapter {}", elementId);
+        return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED)
+                             .build();
+      }
+
       if (outputMode.equalsIgnoreCase("compact")) {
         return ok(toCompactAdapterDescription(adapterDescription));
       } else {
@@ -158,6 +168,20 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
       LOG.error("Error while transforming adapter {}", elementId, e);
       return fail();
     }
+  }
+
+  /**
+   * Checks if the current user has the permission to read the adapter
+   */
+  private boolean checkAdapterReadPermission(AdapterDescription adapterDescription) {
+    var spPermissionEvaluator = new SpPermissionEvaluator();
+    var authentication = SecurityContextHolder.getContext()
+                                              .getAuthentication();
+    return spPermissionEvaluator.hasPermission(
+        authentication,
+        adapterDescription.getCorrespondingDataStreamElementId(),
+        "READ"
+    );
   }
 
   @PostMapping(path = "/{id}/stop", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -269,7 +293,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
-  @PostFilter("hasPermission(filterObject.elementId, 'READ')")
+  @PostFilter("hasPermission(filterObject.correspondingDataStreamElementId, 'READ')")
   public List<AdapterDescription> getAllAdapters() {
     return managementService.getAllAdapterInstances();
   }

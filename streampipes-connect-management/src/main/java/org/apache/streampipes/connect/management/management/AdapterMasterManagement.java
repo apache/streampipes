@@ -97,7 +97,7 @@ public class AdapterMasterManagement {
     var storedDescription = new SourcesManagement()
         .createAdapterDataStream(adapterDescription, streamId);
     storedDescription.setCorrespondingAdapterId(adapterId);
-    installDataSource(storedDescription, principalSid, true);
+    installDataSource(storedDescription, principalSid);
     LOG.info("Install source (source URL: {} in backend", adapterDescription.getElementId());
   }
 
@@ -191,11 +191,10 @@ public class AdapterMasterManagement {
 
   private void installDataSource(
       SpDataStream stream,
-      String principalSid,
-      boolean publicElement
+      String principalSid
   ) throws AdapterException {
     try {
-      new DataStreamVerifier(stream).verifyAndAdd(principalSid, publicElement);
+      new DataStreamVerifier(stream).verifyAndAdd(principalSid, false);
     } catch (SepaParseException e) {
       LOG.error("Error while installing data source: {}", stream.getElementId(), e);
       throw new AdapterException();
