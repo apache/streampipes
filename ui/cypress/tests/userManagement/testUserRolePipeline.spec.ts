@@ -23,6 +23,7 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
+import { GeneralUtils } from '../../support/utils/GeneralUtils';
 
 describe('Test User Roles for Pipelines', () => {
     beforeEach('Setup Test', () => {
@@ -81,10 +82,7 @@ describe('Test User Roles for Pipelines', () => {
         // Login as user and check if pipeline is visible to user
         UserUtils.switchUser(user);
 
-        cy.dataCy('navigation-icon', { timeout: 10000 }).should(
-            'have.length',
-            3,
-        );
+        GeneralUtils.validateAmountOfNavigationIcons(3);
 
         PipelineUtils.goToPipelines();
         cy.dataCy('all-pipelines-table', { timeout: 10000 }).should(

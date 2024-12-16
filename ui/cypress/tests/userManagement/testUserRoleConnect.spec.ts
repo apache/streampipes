@@ -20,6 +20,7 @@ import { UserRole } from '../../../src/app/_enums/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
+import { GeneralUtils } from '../../support/utils/GeneralUtils';
 
 describe('Test User Roles for Connect', () => {
     beforeEach('Setup Test', () => {
@@ -39,20 +40,11 @@ describe('Test User Roles for Connect', () => {
         // Login as user and check if connect is visible to user
         UserUtils.switchUser(connect_admin);
 
-        cy.dataCy('navigation-icon', { timeout: 10000 }).should(
-            'have.length',
-            3,
-        );
+        GeneralUtils.validateAmountOfNavigationIcons(3);
 
         ConnectUtils.goToConnect();
-        cy.dataCy('all-adapters-table', { timeout: 10000 }).should(
-            'have.length',
-            1,
-        );
-        cy.dataCy('all-adapters-table', { timeout: 10000 }).should(
-            'contain',
-            'simulator',
-        );
+
+        ConnectUtils.checkAmountOfAdapters(1);
 
         // validate that adapter can be stopped and edited
         ConnectBtns.stopAdapter().click();

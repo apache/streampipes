@@ -20,4 +20,11 @@ export class GeneralUtils {
     public static tab(identifier: string) {
         return cy.dataCy(`tab-${identifier}`).click();
     }
+
+    public static validateAmountOfNavigationIcons(expected: number) {
+        cy.dataCy('navigation-icon', { timeout: 10000 }).should(
+            'have.length',
+            expected,
+        );
+    }
 }
