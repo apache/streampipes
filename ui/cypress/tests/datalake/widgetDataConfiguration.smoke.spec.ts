@@ -84,10 +84,10 @@ describe('Test Table View in Data Explorer', () => {
         DataLakeUtils.clickGroupBy('randomtext');
         cy.wait(1000);
         cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 })
-            .first({ timeout: 10000 })
+            .last({ timeout: 10000 })
             .contains('a', { timeout: 10000 });
         cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 })
-            .last({ timeout: 10000 })
+            .first({ timeout: 10000 })
             .contains('c', { timeout: 10000 });
         DataLakeWidgetTableUtils.checkRows(10);
         DataLakeUtils.saveAndReEditWidget('NewWidget');
