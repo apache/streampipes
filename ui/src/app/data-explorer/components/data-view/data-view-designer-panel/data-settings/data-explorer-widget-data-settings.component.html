@@ -226,6 +226,7 @@
                     <sp-field-selection-panel
                         #fieldSelectionPanel
                         [sourceConfig]="sourceConfig"
+                        (initialFieldSelectionEvent)="createDefaultWidget()"
                     ></sp-field-selection-panel>
 
                     <sp-filter-selection-panel
