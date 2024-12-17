@@ -19,6 +19,7 @@
 package org.apache.streampipes.messaging.kafka.security;
 
 import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.variable.EnvironmentVariable;
 import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
 
 import org.apache.kafka.clients.CommonClientConfigs;
@@ -43,20 +44,13 @@ public class KafkaSecurityProtocolConfigAppender implements KafkaConfigAppender 
     props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, securityProtocol.toString());
 
     if (isSslProtocol()) {
-      props.put(SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, env.getKeystoreType().getValueOrDefault());
-      props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, env.getKeystoreFilename().getValueOrDefault());
-      props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, env.getKeystorePassword().getValueOrDefault());
-
-      if (env.getKeyPassword().exists()) {
-        props.put(SslConfigs.SSL_KEY_PASSWORD_CONFIG, env.getKeyPassword().getValueOrDefault());
-      }
-
-      props.put(SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, env.getTruststoreType().getValueOrDefault());
-      props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, env.getTruststoreFilename().getValueOrDefault());
-
-      if (env.getTruststorePassword().exists()) {
-        props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, env.getTruststorePassword().getValueOrDefault());
-      }
+      addConfigIfPresent(props, SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, env.getKeystoreType());
+      addConfigIfPresent(props, SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, env.getKeystoreFilename());
+      addConfigIfPresent(props, SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, env.getKeystorePassword());
+      addConfigIfPresent(props, SslConfigs.SSL_KEY_PASSWORD_CONFIG, env.getKeyPassword());
+      addConfigIfPresent(props, SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, env.getTruststoreType());
+      addConfigIfPresent(props, SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, env.getTruststoreFilename());
+      addConfigIfPresent(props, SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, env.getTruststorePassword());
 
       if (env.getAllowSelfSignedCertificates().getValueOrDefault()) {
         props.put(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG, "");
@@ -66,5 +60,13 @@ public class KafkaSecurityProtocolConfigAppender implements KafkaConfigAppender 
 
   private boolean isSslProtocol() {
     return securityProtocol == SecurityProtocol.SSL || securityProtocol == SecurityProtocol.SASL_SSL;
+  }
+
+  private void addConfigIfPresent(Properties props,
+                                  String configKey,
+                                  EnvironmentVariable<?> environmentVariable) {
+    if (environmentVariable.exists()) {
+      props.put(configKey, environmentVariable.getValueOrDefault());
+    }
   }
 }

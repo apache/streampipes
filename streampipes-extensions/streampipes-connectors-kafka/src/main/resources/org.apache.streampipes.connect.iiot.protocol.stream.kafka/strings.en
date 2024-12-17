@@ -86,3 +86,6 @@ latest.description=Offsets are initialized to the Latest
 
 none.title=None
 none.description=Consumer throws exceptions
+
+additional-properties.title=Additional configurations
+additional-properties.description=Additional Kafka consumer configurations in the form key=value

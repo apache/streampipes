@@ -28,6 +28,9 @@ import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +43,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/worker/resolvable")
 public class RuntimeResolvableResource extends AbstractSharedRestInterface {
+
+  private static final Logger LOG = LoggerFactory.getLogger(RuntimeResolvableResource.class);
 
   @PostMapping(
       path = "{id}/configurations",
@@ -64,6 +69,7 @@ public class RuntimeResolvableResource extends AbstractSharedRestInterface {
             "This element does not support dynamic options - is the pipeline element description up to date?");
       }
     } catch (SpConfigurationException e) {
+      LOG.warn("Error when fetching runtime configurations: {}", e.getMessage(), e);
       return ResponseEntity
           .status(HttpStatus.BAD_REQUEST)
           .body(e);
