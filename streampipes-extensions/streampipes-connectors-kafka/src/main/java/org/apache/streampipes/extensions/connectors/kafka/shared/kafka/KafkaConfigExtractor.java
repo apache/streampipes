@@ -129,16 +129,20 @@ public class KafkaConfigExtractor {
   }
 
   public static Map<String, String> parseAdditionalProperties(String text) {
-    return Arrays.stream(text.split("\\R"))
-        .map(String::trim)
-        .filter(line -> !line.isEmpty() && !line.startsWith("#"))
-        .filter(line -> line.contains("="))
-        .map(line -> line.split("=", 2))
-        .collect(Collectors.toMap(
-            parts -> parts[0].trim(),
-            parts -> parts[1].trim(),
-            (existing, replacement) -> replacement,
-            LinkedHashMap::new
-        ));
+    if (text == null || text.isEmpty()) {
+      return Map.of();
+    } else {
+      return Arrays.stream(text.split("\\R"))
+          .map(String::trim)
+          .filter(line -> !line.isEmpty() && !line.startsWith("#"))
+          .filter(line -> line.contains("="))
+          .map(line -> line.split("=", 2))
+          .collect(Collectors.toMap(
+              parts -> parts[0].trim(),
+              parts -> parts[1].trim(),
+              (existing, replacement) -> replacement,
+              LinkedHashMap::new
+          ));
+    }
   }
 }
