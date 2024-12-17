@@ -26,6 +26,19 @@ export class PermissionUtils {
     public static markElementAsPublic() {
         PermissionUtils.openManagePermissions();
         StaticPropertyUtils.clickCheckbox('permission-public-element');
+        PermissionUtils.save();
+    }
+
+    public static authorizeUser(email: string) {
+        PermissionUtils.openManagePermissions();
+
+        cy.dataCy('authorized-user').type(email);
+        cy.get(`[data-cy="user-option-${email}"]`).click();
+
+        PermissionUtils.save();
+    }
+
+    public static save() {
         cy.dataCy('sp-manage-permissions-save').click();
     }
 }

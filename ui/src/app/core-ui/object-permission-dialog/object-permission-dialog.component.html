@@ -80,6 +80,7 @@
                             <mat-option
                                 *ngFor="let user of filteredUsers | async"
                                 [value]="user"
+                                [attr.data-cy]="'user-option-' + user.username"
                             >
                                 {{ user.username }}
                             </mat-option>
