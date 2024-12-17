@@ -23,9 +23,9 @@
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "lint-staged": "lint-staged",
-    "test-cypress-open": "cypress open --env DEVELOPMENT=true",
-    "test-cypress-smoke": "npx cypress run --spec 'cypress/tests/**/*.smoke.spec.ts'",
-    "test-cypress-all": "npx cypress run --spec 'cypress/tests/**/*.spec.ts'",
+    "test-cypress-open": "cypress open --config baseUrl=http://localhost:8082 --env DEVELOPMENT=true",
+    "test-cypress-smoke": "npx cypress run --spec 'cypress/tests/**/*.smoke.spec.ts' --config baseUrl=http://localhost:8082",
+    "test-cypress-all": "npx cypress run --spec 'cypress/tests/**/*.spec.ts' --config baseUrl=http://localhost:8082",
     "prepare": "cd ../ && husky install ./ui/.husky"
   },
   "dependencies": {

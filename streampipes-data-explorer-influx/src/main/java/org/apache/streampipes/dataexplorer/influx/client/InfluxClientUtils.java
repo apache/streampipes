@@ -20,11 +20,14 @@ package org.apache.streampipes.dataexplorer.influx.client;
 
 import org.apache.streampipes.dataexplorer.influx.auth.AuthInterceptor;
 
+import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
 
 public class InfluxClientUtils {
+
+  private static final ConnectionPool connectionPool = new ConnectionPool(10, 10, TimeUnit.MINUTES);
 
   public static OkHttpClient.Builder getHttpClientBuilder(String authToken) {
     var builder = getHttpClientBuilder()
@@ -35,6 +38,7 @@ public class InfluxClientUtils {
 
   public static OkHttpClient.Builder getHttpClientBuilder() {
     return new OkHttpClient().newBuilder()
+        .connectionPool(connectionPool)
         .connectTimeout(120, TimeUnit.SECONDS)
         .readTimeout(120, TimeUnit.SECONDS)
         .writeTimeout(120, TimeUnit.SECONDS);

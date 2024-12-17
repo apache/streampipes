@@ -31,7 +31,7 @@ export class OrderSelectionPanelComponent implements OnInit {
     constructor(private widgetConfigService: WidgetConfigurationService) {}
 
     ngOnInit(): void {
-        this.sourceConfig.queryConfig.order ??= 'ASC';
+        this.sourceConfig.queryConfig.order ??= 'DESC';
     }
 
     triggerConfigurationUpdate() {

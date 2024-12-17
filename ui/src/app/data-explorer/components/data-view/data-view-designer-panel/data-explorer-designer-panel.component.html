@@ -37,6 +37,9 @@
                             #dataSettingsPanel
                             [(dataLakeMeasure)]="dataLakeMeasure"
                             [dataConfig]="currentlyConfiguredWidget.dataConfig"
+                            [currentlyConfiguredWidget]="
+                                currentlyConfiguredWidget
+                            "
                             [newWidgetMode]="newWidgetMode"
                             [widgetId]="currentlyConfiguredWidget.elementId"
                             (createWidgetEmitter)="createNewWidget()"
@@ -55,6 +58,7 @@
                 >
                     <div class="scroll-tab-content">
                         <sp-explorer-visualisation-settings
+                            *ngIf="currentlyConfiguredWidget.widgetType"
                             fxFlex="100"
                             fxLayout="column"
                             [currentlyConfiguredWidget]="
