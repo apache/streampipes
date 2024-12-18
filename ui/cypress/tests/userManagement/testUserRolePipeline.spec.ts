@@ -22,6 +22,7 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
+import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
 
 describe('Test User Roles for Pipelines', () => {
     beforeEach('Setup Test', () => {
@@ -78,5 +79,27 @@ describe('Test User Roles for Pipelines', () => {
 
         PipelineUtils.goToPipelines();
         PipelineUtils.checkAmountOfPipelinesPipeline(1);
+    });
+
+    it(' Pipeline user should see shared pipelines of other users but not be able to edit them', () => {
+        const newUser = UserUtils.createUser(
+            'user',
+            UserRole.ROLE_PIPELINE_USER,
+        );
+
+        // Add new authorized user to pipeline
+        PipelineUtils.goToPipelines();
+        // PermissionUtils.markElementAsPublic();
+        PermissionUtils.authorizeUser(newUser.email);
+
+        // Login as user and check if pipeline is visible to user
+        UserUtils.switchUser(newUser);
+
+        PipelineUtils.goToPipelines();
+        PipelineUtils.checkAmountOfPipelinesPipeline(1);
+
+        // A pipeline user should not be able to stop the pipeline or delete it
+        PipelineBtns.deletePipeline().should('not.exist');
+        PipelineBtns.stopPipeline().should('be.disabled');
     });
 });

@@ -169,7 +169,7 @@ export class PipelineUtils {
             cy.wait(1000);
             cy.dataCy('no-table-entries').should('be.visible');
         } else {
-            PipelineBtns.deletePipeline().should('have.length', amount);
+            PipelineBtns.statusPipeline().should('have.length', amount);
         }
     }
 

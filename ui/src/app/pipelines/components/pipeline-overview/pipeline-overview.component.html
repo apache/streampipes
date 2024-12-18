@@ -28,6 +28,7 @@
             <div>
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="150px">
                     <div
+                        data-cy="status-pipeline-green"
                         *ngIf="
                             pipeline.running && pipeline.healthStatus === 'OK'
                         "
@@ -116,6 +117,7 @@
                 mat-icon-button
                 matTooltip="Stop pipeline"
                 matTooltipPosition="above"
+                data-cy="stop-pipeline-button"
                 (click)="
                     pipelineOperationsService.stopPipeline(
                         pipeline._id,
