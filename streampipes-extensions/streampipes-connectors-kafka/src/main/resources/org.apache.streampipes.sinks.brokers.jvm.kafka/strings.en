@@ -55,3 +55,6 @@ security-mechanism.title=Security Mechanism
 security-mechanism.description=SASL mechanism used for authentication. Corresponds to Kafka Client sasl.mechanism property
 
 username-group.title=Username and password
+
+additional-properties.title=Additional configurations
+additional-properties.description=Additional Kafka producer configurations in the form key=value

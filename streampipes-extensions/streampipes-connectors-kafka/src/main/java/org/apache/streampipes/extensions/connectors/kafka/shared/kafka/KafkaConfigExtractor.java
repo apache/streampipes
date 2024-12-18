@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.messaging.kafka.config.AutoOffsetResetConfig;
 import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
+import org.apache.streampipes.messaging.kafka.config.SimpleConfigAppender;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityProtocolConfigAppender;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslConfigAppender;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
@@ -30,8 +31,13 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.kafka.common.security.auth.SecurityProtocol;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.ACCESS_MODE;
+import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.ADDITIONAL_PROPERTIES;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.AUTO_OFFSET_RESET_CONFIG;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.CONSUMER_GROUP;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.GROUP_ID_INPUT;
@@ -101,6 +107,9 @@ public class KafkaConfigExtractor {
 
       configAppenders.add(new KafkaSecuritySaslConfigAppender(mechanism, username, password));
     }
+    configAppenders.add(new SimpleConfigAppender(
+        parseAdditionalProperties(extractor.codeblockValue(ADDITIONAL_PROPERTIES)))
+    );
     config.setConfigAppenders(configAppenders);
 
     return config;
@@ -117,5 +126,23 @@ public class KafkaConfigExtractor {
       case "sasl-ssl" -> SecurityProtocol.SASL_SSL;
       default -> SecurityProtocol.PLAINTEXT;
     };
+  }
+
+  public static Map<String, String> parseAdditionalProperties(String text) {
+    if (text == null || text.isEmpty()) {
+      return Map.of();
+    } else {
+      return Arrays.stream(text.split("\\R"))
+          .map(String::trim)
+          .filter(line -> !line.isEmpty() && !line.startsWith("#"))
+          .filter(line -> line.contains("="))
+          .map(line -> line.split("=", 2))
+          .collect(Collectors.toMap(
+              parts -> parts[0].trim(),
+              parts -> parts[1].trim(),
+              (existing, replacement) -> replacement,
+              LinkedHashMap::new
+          ));
+    }
   }
 }

@@ -33,6 +33,7 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
+import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
@@ -58,7 +59,7 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
         KafkaPublishSink::new,
-        DataSinkBuilder.create(ID, 1)
+        DataSinkBuilder.create(ID, 2)
             .category(DataSinkType.MESSAGING)
             .withLocales(Locales.EN)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
@@ -76,6 +77,11 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
                 KafkaConfigProvider.getAlternativeUnauthenticatedSSL(),
                 KafkaConfigProvider.getAlternativesSaslPlain(),
                 KafkaConfigProvider.getAlternativesSaslSSL())
+            .requiredCodeblock(Labels.withId(
+                    KafkaConfigProvider.ADDITIONAL_PROPERTIES),
+                CodeLanguage.None,
+                "# key=value, comments are ignored"
+            )
             .build()
     );
   }
