@@ -16,86 +16,67 @@
  *
  */
 
-import { UserBuilder } from '../../support/builder/UserBuilder';
 import { UserRole } from '../../../src/app/_enums/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
-import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
+import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 
 describe('Test User Roles for Pipelines', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        ConnectUtils.addMachineDataSimulator('simulator');
-        const pipelineInput = PipelineBuilder.create('Pipeline Test')
-            .addSource('simulator')
-            .addProcessingElement(
-                PipelineElementBuilder.create('field_renamer')
-                    .addInput('drop-down', 'convert-property', 'timestamp')
-                    .addInput('input', 'field-name', 't')
-                    .build(),
-            )
-            .addSink(
-                PipelineElementBuilder.create('data_lake')
-                    .addInput('input', 'db_measurement', 'demo')
-                    .build(),
-            )
-            .build();
-
-        PipelineUtils.addPipeline(pipelineInput);
+        // Create a machine data simulator with a sample pipeline for the tests
+        ConnectUtils.addMachineDataSimulator('simulator', true);
     });
 
-    it('Perform Test', () => {
-        // Add new user
-        UserUtils.goToUserConfiguration();
-
-        cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should(
-            'have.length',
-            1,
+    it('Pipeline admin should not see pipelines of other users', () => {
+        const newUser = UserUtils.createUser(
+            'user',
+            UserRole.ROLE_PIPELINE_ADMIN,
         );
 
-        const email = 'user@streampipes.apache.org';
-        const name = 'test_user';
-        const user = UserBuilder.create(email)
-            .setName(name)
-            .setPassword(name)
-            .addRole(UserRole.ROLE_PIPELINE_USER)
-            .build();
+        // Login as user and check if pipeline is visible to user
+        UserUtils.switchUser(newUser);
 
-        UserUtils.addUser(user);
+        GeneralUtils.validateAmountOfNavigationIcons(4);
 
-        // Check if user is added successfully
-        cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should(
-            'have.length',
-            2,
+        PipelineUtils.goToPipelines();
+        PipelineUtils.checkAmountOfPipelinesPipeline(0);
+    });
+
+    it('Pipeline admin should see public pipelines of other users', () => {
+        const newUser = UserUtils.createUser(
+            'user',
+            UserRole.ROLE_PIPELINE_ADMIN,
         );
 
         // Add new authorized user to pipeline
         PipelineUtils.goToPipelines();
-        cy.dataCy('share').click();
-        cy.get('label').contains('Authorized Users').click();
-        cy.get('mat-option').contains(email).click();
-        cy.dataCy('sp-element-edit-user-save').click();
+        PermissionUtils.markElementAsPublic();
 
         // Login as user and check if pipeline is visible to user
-        UserUtils.switchUser(user);
-
-        GeneralUtils.validateAmountOfNavigationIcons(3);
+        UserUtils.switchUser(newUser);
 
         PipelineUtils.goToPipelines();
-        cy.dataCy('all-pipelines-table', { timeout: 10000 }).should(
-            'have.length',
-            1,
-        );
-        cy.dataCy('all-pipelines-table', { timeout: 10000 }).should(
-            'contain',
-            'Pipeline Test',
+        PipelineUtils.checkAmountOfPipelinesPipeline(1);
+    });
+
+    it(' Pipeline admin should see shared pipelines of other users', () => {
+        const newUser = UserUtils.createUser(
+            'user',
+            UserRole.ROLE_PIPELINE_ADMIN,
         );
 
-        // Delete user
-        UserUtils.switchUser(UserUtils.adminUser);
-        UserUtils.deleteUser(user);
+        // Add new authorized user to pipeline
+        PipelineUtils.goToPipelines();
+        PermissionUtils.markElementAsPublic();
+        PermissionUtils.authorizeUser(newUser.email);
+
+        // Login as user and check if pipeline is visible to user
+        UserUtils.switchUser(newUser);
+
+        PipelineUtils.goToPipelines();
+        PipelineUtils.checkAmountOfPipelinesPipeline(1);
     });
 });

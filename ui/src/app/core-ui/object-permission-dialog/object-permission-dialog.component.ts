@@ -231,7 +231,7 @@ export class ObjectPermissionDialogComponent implements OnInit {
 
     private addUserToSelection(authority: PermissionEntry) {
         const user = this.allUsers.find(u => u.principalId === authority.sid);
-        this.grantedUserAuthorities.push(user);
+        user && this.grantedUserAuthorities.push(user);
     }
 
     private addGroupToSelection(authority: PermissionEntry) {
