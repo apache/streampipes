@@ -172,6 +172,7 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
     if (hasConfig(staticPropertyAlternatives)) {
       Map<String, Object> values = getConfig(staticPropertyAlternatives);
       var selectedId = getConfigValueAsString(staticPropertyAlternatives);
+      staticPropertyAlternatives.getAlternatives().forEach(a -> a.setSelected(false));
       staticPropertyAlternatives
           .getAlternatives()
           .stream()
