@@ -239,7 +239,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     }
 
     createDefaultWidget(): void {
-        if (this.dataConfig.sourceConfigs.length === 1) {
+        if (this.checkIfDefaultTableShouldBeShown()) {
             const fields = this.fieldProviderService.generateFieldLists(
                 this.dataConfig.sourceConfigs,
             );
@@ -251,6 +251,16 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
                 newWidgetTypeId: this.currentlyConfiguredWidget.widgetType,
             });
         }
+    }
+
+    /**
+     * This method checks if there is at least one data source and that no widget type is already configured.
+     */
+    checkIfDefaultTableShouldBeShown(): boolean {
+        return (
+            this.dataConfig.sourceConfigs.length === 1 &&
+            !this.currentlyConfiguredWidget.widgetType
+        );
     }
 
     removeSourceConfig(index: number) {
