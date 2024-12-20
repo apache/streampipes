@@ -24,7 +24,7 @@ export class StaticPropertyUtils {
         // Configure Properties
         configs.forEach(config => {
             if (config.type === 'checkbox') {
-                this.clickCheckbox(config);
+                this.clickCheckbox(config.selector);
             } else if (config.type === 'button') {
                 cy.dataCy(config.selector, { timeout: 2000 }).click();
             } else if (config.type === 'drop-down') {
@@ -65,8 +65,12 @@ export class StaticPropertyUtils {
         });
     }
 
-    private static clickCheckbox(input: UserInput) {
-        this.clickSelectionInput(input.selector, '.mdc-checkbox');
+    /**
+     * This method can be used to check a mat checkbox
+     * @param selector
+     */
+    public static clickCheckbox(selector: string) {
+        this.clickSelectionInput(selector, '.mdc-checkbox');
     }
 
     private static clickRadio(input: UserInput) {

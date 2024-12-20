@@ -17,6 +17,14 @@
  */
 
 export class PipelineBtns {
+    public static statusPipeline() {
+        return cy.dataCy('status-pipeline-green', { timeout: 10000 });
+    }
+
+    public static stopPipeline() {
+        return cy.dataCy('stop-pipeline-button', { timeout: 10000 });
+    }
+
     public static deletePipeline() {
         return cy.dataCy('delete-pipeline', { timeout: 10000 });
     }

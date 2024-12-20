@@ -440,6 +440,13 @@ export class ConnectUtils {
 
     public static checkAmountOfAdapters(amount: number) {
         ConnectUtils.goToConnect();
-        ConnectBtns.deleteAdapter().should('have.length', amount);
+        if (amount === 0) {
+            // The wait is needed because the default value is the no-table-entries element.
+            // It must be waited till the data is loaded. Once a better solution is found, this can be removed.
+            cy.wait(1000);
+            cy.dataCy('no-table-entries').should('be.visible');
+        } else {
+            ConnectBtns.deleteAdapter().should('have.length', amount);
+        }
     }
 }

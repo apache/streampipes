@@ -30,7 +30,6 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -75,7 +74,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
           SpMediaType.YAML
       }
   )
-  @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> addAdapterCompact(
       @RequestBody CompactAdapter compactAdapter
   ) throws Exception {
@@ -129,7 +128,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
           "application/yml"
       }
   )
-  @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission('#elementId', 'WRITE')")
   public ResponseEntity<?> updateAdapterCompact(
       @PathVariable("id") String elementId,
       @RequestBody CompactAdapter compactAdapter
@@ -164,4 +163,5 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     var generators = adapterGenerationSteps.getGenerators();
     return new CompactAdapterManagement(generators).convertToAdapterDescription(compactAdapter, existingAdapter);
   }
+
 }

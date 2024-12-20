@@ -16,15 +16,29 @@
  *
  */
 
-export class GeneralUtils {
-    public static tab(identifier: string) {
-        return cy.dataCy(`tab-${identifier}`).click();
+import { StaticPropertyUtils } from '../userInput/StaticPropertyUtils';
+
+export class PermissionUtils {
+    public static openManagePermissions() {
+        cy.dataCy('open-manage-permissions').click();
     }
 
-    public static validateAmountOfNavigationIcons(expected: number) {
-        cy.dataCy('navigation-icon', { timeout: 10000 }).should(
-            'have.length',
-            expected,
-        );
+    public static markElementAsPublic() {
+        PermissionUtils.openManagePermissions();
+        StaticPropertyUtils.clickCheckbox('permission-public-element');
+        PermissionUtils.save();
+    }
+
+    public static authorizeUser(email: string) {
+        PermissionUtils.openManagePermissions();
+
+        cy.dataCy('authorized-user').type(email);
+        cy.get(`[data-cy="user-option-${email}"]`).click();
+
+        PermissionUtils.save();
+    }
+
+    public static save() {
+        cy.dataCy('sp-manage-permissions-save').click();
     }
 }

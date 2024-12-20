@@ -19,6 +19,7 @@
 import { UserBuilder } from '../../support/builder/UserBuilder';
 import { UserRole } from '../../../src/app/_enums/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
+import { GeneralUtils } from '../../support/utils/GeneralUtils';
 
 const testedRoles = [
     UserRole.ROLE_PIPELINE_ADMIN,
@@ -38,10 +39,7 @@ for (var i = 0; i < testedRoles.length; i++) {
         it('Perform Test', () => {
             // Add new user
             UserUtils.goToUserConfiguration();
-            cy.dataCy('navigation-icon', { timeout: 10000 }).should(
-                'have.length',
-                8,
-            );
+            GeneralUtils.validateAmountOfNavigationIcons(8);
 
             cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should(
                 'have.length',
@@ -68,30 +66,15 @@ for (var i = 0; i < testedRoles.length; i++) {
 
             // Check if every role displays correct navigation menu
             if (testRole == UserRole.ROLE_PIPELINE_ADMIN) {
-                cy.dataCy('navigation-icon', { timeout: 10000 }).should(
-                    'have.length',
-                    4,
-                );
+                GeneralUtils.validateAmountOfNavigationIcons(4);
             } else if (testRole == UserRole.ROLE_DASHBOARD_ADMIN) {
-                cy.dataCy('navigation-icon', { timeout: 10000 }).should(
-                    'have.length',
-                    4,
-                );
+                GeneralUtils.validateAmountOfNavigationIcons(4);
             } else if (testRole == UserRole.ROLE_DATA_EXPLORER_ADMIN) {
-                cy.dataCy('navigation-icon', { timeout: 10000 }).should(
-                    'have.length',
-                    4,
-                );
+                GeneralUtils.validateAmountOfNavigationIcons(4);
             } else if (testRole == UserRole.ROLE_CONNECT_ADMIN) {
-                cy.dataCy('navigation-icon', { timeout: 10000 }).should(
-                    'have.length',
-                    3,
-                );
+                GeneralUtils.validateAmountOfNavigationIcons(3);
             } else if (testRole == UserRole.ROLE_ASSET_ADMIN) {
-                cy.dataCy('navigation-icon', { timeout: 10000 }).should(
-                    'have.length',
-                    3,
-                );
+                GeneralUtils.validateAmountOfNavigationIcons(3);
             }
 
             // Login as admin and delete user

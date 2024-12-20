@@ -16,36 +16,15 @@
  *
  */
 
-import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
-import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
-
-const adapterName = 'simulator';
 
 describe('Test update of running pipeline', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        ConnectUtils.addMachineDataSimulator(adapterName);
     });
 
     it('Perform Test', () => {
-        const pipelineInput = PipelineBuilder.create('Pipeline Test')
-            .addSource(adapterName)
-            .addProcessingElement(
-                PipelineElementBuilder.create('field_renamer')
-                    .addInput('drop-down', 'convert-property', 'timestamp')
-                    .addInput('input', 'field-name', 't')
-                    .build(),
-            )
-            .addSink(
-                PipelineElementBuilder.create('data_lake')
-                    .addInput('input', 'db_measurement', 'demo')
-                    .build(),
-            )
-            .build();
-
-        PipelineUtils.addPipeline(pipelineInput);
+        PipelineUtils.addSampleAdapterAndPipeline();
         PipelineUtils.editPipeline();
         cy.wait(1000);
         PipelineUtils.startPipeline();

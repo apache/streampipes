@@ -35,39 +35,71 @@ import java.util.function.Predicate;
 @Configuration
 public class SpPermissionEvaluator implements PermissionEvaluator {
 
+  /**
+   * Evaluates whether the user has the necessary permissions for a given resource.
+   *
+   * @param authentication     The authentication object containing the user's credentials.
+   * @param targetDomainObject The resource being accessed, which can be an instance of
+   *                           PipelineElementRecommendationMessage or a String representing the resource ID.
+   * @param permission         Is not used in this implementation.
+   * @return true if the user has the necessary permissions, false otherwise.
+   */
   @Override
-  public boolean hasPermission(Authentication auth, Object o, Object permission) {
-    PrincipalUserDetails<?> userDetails = getUserDetails(auth);
-    if (o instanceof PipelineElementRecommendationMessage) {
-      return isAdmin(userDetails) || filterRecommendation(auth, (PipelineElementRecommendationMessage) o);
+  public boolean hasPermission(
+      Authentication authentication,
+      Object targetDomainObject,
+      Object permission
+  ) {
+    PrincipalUserDetails<?> userDetails = getUserDetails(authentication);
+    if (targetDomainObject instanceof PipelineElementRecommendationMessage) {
+      return isAdmin(userDetails) || filterRecommendation(
+          authentication,
+          (PipelineElementRecommendationMessage) targetDomainObject
+      );
     } else {
-      String objectInstanceId = (String) o;
+      String objectInstanceId = (String) targetDomainObject;
       if (isAdmin(userDetails)) {
         return true;
       }
-      return hasPermission(auth, objectInstanceId);
+      return hasPermission(authentication, objectInstanceId);
     }
+  }
+
+  /**
+   * Evaluates whether the user has the necessary permissions for a given resource.
+   *
+   * @param authentication The authentication object containing the user's credentials.
+   * @param targetId       The ID of the resource being accessed.
+   * @param targetType     Is not used in this implementation.
+   * @param permission     Is not used in this implementation.
+   * @return true if the user has the necessary permissions, false otherwise.
+   */
+  @Override
+  public boolean hasPermission(
+      Authentication authentication,
+      Serializable targetId,
+      String targetType,
+      Object permission
+  ) {
+    PrincipalUserDetails<?> userDetails = getUserDetails(authentication);
+    if (isAdmin(userDetails)) {
+      return true;
+    }
+    return hasPermission(authentication, targetId.toString());
   }
 
   private boolean filterRecommendation(Authentication auth, PipelineElementRecommendationMessage message) {
     Predicate<PipelineElementRecommendation> isForbidden = r -> !hasPermission(auth, r.getElementId());
-    message.getPossibleElements().removeIf(isForbidden);
+    message.getPossibleElements()
+           .removeIf(isForbidden);
 
     return true;
   }
 
-  @Override
-  public boolean hasPermission(Authentication auth, Serializable serializable, String s, Object permission) {
-    PrincipalUserDetails<?> userDetails = getUserDetails(auth);
-    if (isAdmin(userDetails)) {
-      return true;
-    }
-    return hasPermission(auth, serializable.toString());
-  }
-
   private boolean hasPermission(Authentication auth, String objectInstanceId) {
     return isPublicElement(objectInstanceId)
-        || getUserDetails(auth).getAllObjectPermissions().contains(objectInstanceId);
+        || getUserDetails(auth).getAllObjectPermissions()
+                               .contains(objectInstanceId);
   }
 
   private PrincipalUserDetails<?> getUserDetails(Authentication authentication) {
@@ -76,14 +108,18 @@ public class SpPermissionEvaluator implements PermissionEvaluator {
 
   private boolean isPublicElement(String objectInstanceId) {
     List<Permission> permissions =
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage().getUserPermissionsForObject(objectInstanceId);
-    return permissions.size() > 0 && permissions.get(0).isPublicElement();
+        StorageDispatcher.INSTANCE.getNoSqlStore()
+                                  .getPermissionStorage()
+                                  .getUserPermissionsForObject(objectInstanceId);
+    return permissions.size() > 0 && permissions.get(0)
+                                                .isPublicElement();
   }
 
   private boolean isAdmin(PrincipalUserDetails<?> userDetails) {
     return userDetails
         .getAuthorities()
         .stream()
-        .anyMatch(a -> a.getAuthority().equals(DefaultRole.Constants.ROLE_ADMIN_VALUE));
+        .anyMatch(a -> a.getAuthority()
+                        .equals(DefaultRole.Constants.ROLE_ADMIN_VALUE));
   }
 }
