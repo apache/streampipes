@@ -25,13 +25,67 @@
 }
 
 .selection-radio-group {
+    vertical-align: top;
     display: flex;
-    flex-direction: row;
-    margin: 5px 0;
+    flex-direction: column;
+    margin: 0 0;
+}
+
+.selection-form-field {
+    margin: 0 0 10px 44px;
+}
+
+.radio-option-box {
+    border: 1px solid var(--color-bg-3);
+    padding: 5px 15px 5px 5px;
+    margin: 5px;
+    background-color: #f9f9f9;
+}
+
+.radio-option-box-accent {
+    border: 2px solid var(--color-accent);
+}
+
+.pull-btn-right {
+    margin-right: 10px;
+}
+
+.header-container {
+    float: right;
+    margin-left: 50px;
+}
+
+.aggregate-config {
+    margin-bottom: -20px;
+    margin-right: -5px;
+    margin-top: 10px;
+}
+
+.description {
+    margin: 0 0 10px 44px;
+    color: #6c757d;
+    font-size: 0.75rem;
+    line-height: 1.2;
 }
 
 .selection-radio-button {
-    margin: 5px;
+    margin: 0 0 -5px 0;
+}
+
+.warning {
+    border: 1px solid #dea843;
+    background: #f1f1e6;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-sizing: border-box;
+    font-size: 10pt;
+}
+
+.warning-icon {
+    color: #dea843;
+    font-size: 18px;
 }
 
 .mat-accordion .mat-expansion-panel-header.expansion-panel-header {
