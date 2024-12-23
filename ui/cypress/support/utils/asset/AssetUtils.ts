@@ -17,6 +17,7 @@
  */
 
 import { AssetBtns } from './AssetBtns';
+import { ConnectUtils } from '../connect/ConnectUtils';
 
 export class AssetUtils {
     public static goToAssets() {
@@ -55,5 +56,35 @@ export class AssetUtils {
         cy.dataCy('linked-resources-list')
             .children()
             .should('have.length', amount);
+    }
+
+    public static editAsset(assetName: string) {
+        AssetBtns.editAssetBtn(assetName).click();
+    }
+
+    public static addAssetWithOneAdapter(assetName: string) {
+        const adapterName = 'Machine_Data_Simulator';
+        ConnectUtils.addMachineDataSimulator(adapterName);
+
+        // Create new asset from adapters
+        AssetUtils.goToAssets();
+
+        AssetUtils.addNewAsset(assetName);
+
+        AssetBtns.assetLinksTab().click();
+        AssetUtils.openManageAssetLinks();
+
+        AssetUtils.selectAdapterAssetLink(adapterName);
+        AssetUtils.selectDataStreamAssetLink(adapterName);
+        AssetBtns.updateAssetLinksBtn().click();
+
+        AssetUtils.checkAmountOfLinkedResources(2);
+        AssetBtns.saveAssetBtn().click();
+        AssetUtils.goBackToOverview();
+    }
+
+    public static deleteAsset(assetName: string) {
+        AssetBtns.deleteAssetBtn(assetName).click();
+        cy.dataCy('confirm-delete').click();
     }
 }

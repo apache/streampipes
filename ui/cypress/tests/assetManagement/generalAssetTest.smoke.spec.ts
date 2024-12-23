@@ -16,39 +16,34 @@
  *
  */
 
-import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
 import { AssetBtns } from '../../support/utils/asset/AssetBtns';
 
 describe('Creates a new adapter, add to assets', () => {
-    const adapterName = 'Machine_Data_Simulator';
-
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        ConnectUtils.addMachineDataSimulator(adapterName);
     });
 
     it('Perform Test', () => {
-        // Create new asset from adapters
-        AssetUtils.goToAssets();
+        const assetName = 'TestAsset';
 
-        AssetUtils.addNewAsset('Test Asset');
-
-        AssetBtns.assetLinksTab().click();
-        AssetUtils.openManageAssetLinks();
-
-        AssetUtils.selectAdapterAssetLink(adapterName);
-        AssetUtils.selectDataStreamAssetLink(adapterName);
-        AssetBtns.updateAssetLinksBtn().click();
-
-        AssetUtils.checkAmountOfLinkedResources(2);
-        AssetBtns.saveAssetBtn().click();
-        AssetUtils.goBackToOverview();
+        AssetUtils.addAssetWithOneAdapter(assetName);
 
         // // Leave and navigate back to Assets
         DashboardUtils.goToDashboard();
         AssetUtils.goToAssets();
         AssetUtils.checkAmountOfAssets(1);
+
+        // Check that everything was stored correctly
+        AssetUtils.editAsset(assetName);
+        AssetBtns.assetLinksTab().click();
+        AssetUtils.checkAmountOfLinkedResources(2);
+
+        // Check that deletion of asset works
+        AssetUtils.goToAssets();
+        AssetUtils.checkAmountOfAssets(1);
+        AssetUtils.deleteAsset(assetName);
+        AssetUtils.checkAmountOfAssets(0);
     });
 });

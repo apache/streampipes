@@ -29,6 +29,14 @@ export class AssetBtns {
         return cy.dataCy('save-asset', { timeout: 10000 });
     }
 
+    public static editAssetBtn(assetName: string) {
+        return cy.dataCy('edit-asset-' + assetName, { timeout: 10000 });
+    }
+
+    public static deleteAssetBtn(assetName: string) {
+        return cy.dataCy('delete-asset-' + assetName, { timeout: 10000 });
+    }
+
     public static basicTab() {
         return cy.dataCy('basic-tab', { timeout: 10000 });
     }
