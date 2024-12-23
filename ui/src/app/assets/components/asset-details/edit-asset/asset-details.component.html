@@ -40,7 +40,7 @@
                     <button
                         mat-button
                         mat-raised-button
-                        data-cy="save-asset-button"
+                        data-cy="save-asset"
                         color="accent"
                         (click)="saveAsset()"
                     >
@@ -56,12 +56,14 @@
                     <nav mat-tab-nav-bar color="accent">
                         <a
                             mat-tab-link
+                            data-cy="basic-tab"
                             [active]="activeTab === 'basic'"
                             (click)="activeTab = 'basic'"
                             >Basics</a
                         >
                         <a
                             mat-tab-link
+                            data-cy="asset-links-tab"
                             [active]="activeTab === 'asset-links'"
                             (click)="activeTab = 'asset-links'"
                             >Asset Links</a

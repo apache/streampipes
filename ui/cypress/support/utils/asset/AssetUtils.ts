@@ -16,8 +16,44 @@
  *
  */
 
+import { AssetBtns } from './AssetBtns';
+
 export class AssetUtils {
     public static goToAssets() {
         cy.visit('#/assets/overview');
+    }
+
+    public static goBackToOverview() {
+        AssetBtns.goBackToOverviewBtn().click();
+    }
+
+    public static addNewAsset(assetName: string) {
+        AssetBtns.createAssetBtn().click();
+        AssetBtns.assetNameInput().clear();
+        AssetBtns.assetNameInput().type(assetName);
+        AssetBtns.saveAssetBtn().click();
+    }
+
+    public static openManageAssetLinks() {
+        AssetBtns.manageLinksBtn().should('be.enabled');
+        AssetBtns.manageLinksBtn().click();
+    }
+
+    public static selectAdapterAssetLink(adapterName: string) {
+        AssetBtns.adapterCheckbox(adapterName).click();
+    }
+
+    public static selectDataStreamAssetLink(adapterName: string) {
+        AssetBtns.dataStreamCheckbox(adapterName).click();
+    }
+
+    public static checkAmountOfAssets(amount: number) {
+        cy.dataCy('assets-table').should('have.length', amount);
+    }
+
+    public static checkAmountOfLinkedResources(amount: number) {
+        cy.dataCy('linked-resources-list')
+            .children()
+            .should('have.length', amount);
     }
 }
