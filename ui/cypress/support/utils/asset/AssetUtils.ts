@@ -53,9 +53,14 @@ export class AssetUtils {
     }
 
     public static checkAmountOfLinkedResources(amount: number) {
-        cy.dataCy('linked-resources-list')
-            .children()
-            .should('have.length', amount);
+        if (amount === 0) {
+            cy.wait(1000);
+            cy.dataCy('linked-resources-list').should('not.exist');
+        } else {
+            cy.dataCy('linked-resources-list')
+                .children()
+                .should('have.length', amount);
+        }
     }
 
     public static editAsset(assetName: string) {

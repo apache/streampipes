@@ -205,4 +205,5 @@ class AssetModelManagementTest {
     assertThrows(IOException.class, () -> assetModelManagement.delete(SAMPLE_ASSET_MODEL_ID, REV));
   }
 
+
 }

@@ -29,6 +29,9 @@ public class SpAsset {
 
   private AssetType assetType;
   private List<AssetLink> assetLinks;
+  private List<String> labelIds;
+
+  private AssetSite assetSite;
 
   private List<SpAsset> assets;
 
@@ -83,5 +86,21 @@ public class SpAsset {
 
   public void setAssets(List<SpAsset> assets) {
     this.assets = assets;
+  }
+
+  public List<String> getLabelIds() {
+    return labelIds;
+  }
+
+  public void setLabelIds(List<String> labelIds) {
+    this.labelIds = labelIds;
+  }
+
+  public AssetSite getAssetSite() {
+    return assetSite;
+  }
+
+  public void setAssetSite(AssetSite assetSite) {
+    this.assetSite = assetSite;
   }
 }

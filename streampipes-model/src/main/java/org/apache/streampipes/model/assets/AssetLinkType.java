@@ -26,6 +26,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class AssetLinkType {
 
   public final String appDocType = GenericDocTypes.DOC_ASSET_LINK_TYPE;

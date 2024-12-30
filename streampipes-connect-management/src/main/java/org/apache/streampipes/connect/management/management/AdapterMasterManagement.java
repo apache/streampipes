@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.management.management;
 
+import org.apache.streampipes.assetmodel.management.AssetModelHelper;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
@@ -37,6 +38,7 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -50,6 +52,7 @@ public class AdapterMasterManagement {
   private final IAdapterStorage adapterInstanceStorage;
   private final AdapterMetrics adapterMetrics;
   private final AdapterResourceManager adapterResourceManager;
+  private final AssetModelHelper assetModelHelper;
 
   private final DataStreamResourceManager dataStreamResourceManager;
 
@@ -63,6 +66,7 @@ public class AdapterMasterManagement {
     this.adapterMetrics = adapterMetrics;
     this.adapterResourceManager = adapterResourceManager;
     this.dataStreamResourceManager = dataStreamResourceManager;
+    this.assetModelHelper = new AssetModelHelper();
   }
 
   public void addAdapter(
@@ -127,10 +131,12 @@ public class AdapterMasterManagement {
 
     stopAdapterWithLogging(elementId);
 
-    deleteAdaterFromCouchDbAndFromLoggingService(elementId);
+    deleteAdaterFromCouchDbLoggingServiceAndAssetLinks(elementId);
 
     deleteCorrespondingDataStream(adapterDescription);
+
   }
+
 
   private void stopAdapterWithLogging(String elementId) {
     LOG.info("Attempting to stop adapter: {}", elementId);
@@ -142,15 +148,25 @@ public class AdapterMasterManagement {
     }
   }
 
-  private void deleteAdaterFromCouchDbAndFromLoggingService(String elementId) {
+  private void deleteAdaterFromCouchDbLoggingServiceAndAssetLinks(String elementId) {
     adapterResourceManager.delete(elementId);
     ExtensionsLogProvider.INSTANCE.remove(elementId);
+    removeAdapterFromAllAssetLinks(elementId);
     LOG.info("Successfully deleted adapter in couchdb: {}", elementId);
+  }
+
+  private void removeAdapterFromAllAssetLinks(String elementId) {
+    try {
+      assetModelHelper.removeAssetLinkFromAllAssets(elementId);
+    } catch (IOException e) {
+      LOG.error("Failed to remove adapter from asset models: {}", elementId, e);
+    }
   }
 
   private void deleteCorrespondingDataStream(AdapterDescription adapterDescription) {
     var correspondingDataStreamElementId = adapterDescription.getCorrespondingDataStreamElementId();
     dataStreamResourceManager.delete(correspondingDataStreamElementId);
+    removeAdapterFromAllAssetLinks(correspondingDataStreamElementId);
     LOG.info("Successfully deleted data stream in couchdb: {}", correspondingDataStreamElementId);
   }
 

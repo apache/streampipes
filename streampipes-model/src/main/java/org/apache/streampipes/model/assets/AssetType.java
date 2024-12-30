@@ -24,6 +24,7 @@ public class AssetType {
   private String assetIconColor;
   private String assetTypeCategory;
   private String assetTypeLabel;
+  private Isa95Type isa95AssetType;
 
   public AssetType() {
   }
@@ -58,5 +59,13 @@ public class AssetType {
 
   public void setAssetTypeLabel(String assetTypeLabel) {
     this.assetTypeLabel = assetTypeLabel;
+  }
+
+  public Isa95Type getIsa95AssetType() {
+    return isa95AssetType;
+  }
+
+  public void setIsa95AssetType(Isa95Type isa95AssetType) {
+    this.isa95AssetType = isa95AssetType;
   }
 }
