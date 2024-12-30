@@ -188,7 +188,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @PreAuthorize("this.hasWriteAuthority() and hasPermission('#elementId', 'WRITE')")
   public ResponseEntity<?> stopAdapter(@PathVariable("id") String elementId) {
     try {
-      managementService.stopStreamAdapter(elementId);
+      managementService.stopAdapter(elementId);
       return ok(Notifications.success("Adapter started"));
     } catch (AdapterException e) {
       LOG.error("Could not stop adapter with id {}", elementId, e);
@@ -220,13 +220,8 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
                                                                     .getPipelineStorageAPI();
 
     if (pipelinesUsingAdapter.isEmpty()) {
-      try {
-        managementService.deleteAdapter(elementId);
-        return ok(Notifications.success("Adapter with id: " + elementId + " is deleted."));
-      } catch (AdapterException e) {
-        LOG.error("Error while deleting adapter with id {}", elementId, e);
-        return ok(Notifications.error(e.getMessage()));
-      }
+      managementService.deleteAdapter(elementId);
+      return ok(Notifications.success("Adapter with id: " + elementId + " is deleted."));
     } else if (!deleteAssociatedPipelines) {
       List<String> namesOfPipelinesUsingAdapter = pipelinesUsingAdapter
           .stream()

@@ -872,6 +872,7 @@
         <module>streampipes-wrapper-kafka-streams</module>
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-standalone</module>
+      <module>asset-model-management</module>
     </modules>
 
     <profiles>

@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.assetmodel.management.AssetModelManagement;
+import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.storage.api.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
@@ -41,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/v2/assets")
@@ -49,12 +50,18 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(AssetManagementResource.class);
 
-  private static final String APP_DOC_TYPE = "asset-management";
+  private final AssetModelManagement assetModelManagement;
+
+  public AssetManagementResource() {
+    var genericStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
+                                                   .getGenericStorage();
+    assetModelManagement = new AssetModelManagement(genericStorage);
+  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_ASSETS_PRIVILEGE)
-  public List<Map<String, Object>> getAll() throws IOException {
-    return getGenericStorage().findAll(APP_DOC_TYPE);
+  public List<SpAssetModel> getAll() throws IOException {
+    return assetModelManagement.findAll();
   }
 
   @PostMapping(
@@ -62,10 +69,10 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
-  public ResponseEntity<?> create(@RequestBody String asset) {
+  public ResponseEntity<?> create(@RequestBody String assetModel) {
     try {
-      Map<String, Object> obj = getGenericStorage().create(asset);
-      return ok(obj);
+      var updatedAssetModel = assetModelManagement.create(assetModel);
+      return ok(updatedAssetModel);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
       return fail();
@@ -74,10 +81,13 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_ASSETS_PRIVILEGE)
-  public ResponseEntity<Map<String, Object>> getCategory(@PathVariable("id") String assetId) {
+  public ResponseEntity<SpAssetModel> getCategory(@PathVariable("id") String assetId) {
     try {
-      Map<String, Object> obj = getGenericStorage().findOne(assetId);
-      return ok(obj);
+      var assetModel = assetModelManagement.findOne(assetId);
+      return ok(assetModel);
+    } catch (NoSuchElementException e) {
+      LOG.error("Asset model not found", e);
+      throw new SpMessageException(HttpStatus.NOT_FOUND, e);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
       throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
@@ -89,11 +99,13 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
-  public ResponseEntity<Map<String, Object>> update(@PathVariable("id") String assetId,
-                                                    @RequestBody String asset) {
+  public ResponseEntity<SpAssetModel> update(
+      @PathVariable("id") String assetId,
+      @RequestBody String assetModel
+  ) {
     try {
-      Map<String, Object> obj = getGenericStorage().update(assetId, asset);
-      return ok(obj);
+      var updatedAssetModel = assetModelManagement.update(assetId, assetModel);
+      return ok(updatedAssetModel);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
       throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
@@ -102,19 +114,17 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
   @DeleteMapping(path = "/{id}/{rev}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
-  public ResponseEntity<Void> delete(@PathVariable("id") String assetId,
-                                     @PathVariable("rev") String rev) {
+  public ResponseEntity<Void> delete(
+      @PathVariable("id") String assetId,
+      @PathVariable("rev") String rev
+  ) {
     try {
-      getGenericStorage().delete(assetId, rev);
+      assetModelManagement.delete(assetId, rev);
       return ok();
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
       throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
-  }
-
-  private IGenericStorage getGenericStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage();
   }
 
 }

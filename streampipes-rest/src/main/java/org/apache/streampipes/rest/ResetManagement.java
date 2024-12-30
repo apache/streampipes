@@ -19,7 +19,6 @@
 package org.apache.streampipes.rest;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
@@ -116,11 +115,7 @@ public class ResetManagement {
 
     List<AdapterDescription> allAdapters = adapterMasterManagement.getAllAdapterInstances();
     allAdapters.forEach(adapterDescription -> {
-      try {
-        adapterMasterManagement.deleteAdapter(adapterDescription.getElementId());
-      } catch (AdapterException e) {
-        logger.error("Failed to delete adapter with id: " + adapterDescription.getElementId(), e);
-      }
+      adapterMasterManagement.deleteAdapter(adapterDescription.getElementId());
     });
   }
 

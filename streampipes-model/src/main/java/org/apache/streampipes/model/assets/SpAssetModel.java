@@ -20,15 +20,20 @@ package org.apache.streampipes.model.assets;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SpAssetModel extends SpAsset {
 
   public static final String APP_DOC_TYPE = GenericDocTypes.DOC_ASSET_MANGEMENT;
 
   @JsonProperty("_id")
   private @SerializedName("_id") String id;
+
+  @JsonProperty("_rev")
+  private @SerializedName("_rev") String rev;
 
   private boolean removable;
 
@@ -46,6 +51,14 @@ public class SpAssetModel extends SpAsset {
 
   public boolean isRemovable() {
     return removable;
+  }
+
+  public String getRev() {
+    return rev;
+  }
+
+  public void setRev(String rev) {
+    this.rev = rev;
   }
 
   public void setRemovable(boolean removable) {

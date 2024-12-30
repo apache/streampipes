@@ -65,7 +65,7 @@ public class AdapterUpdateManagement {
     boolean shouldRestart = ad.isRunning();
 
     if (ad.isRunning()) {
-      this.adapterMasterManagement.stopStreamAdapter(ad.getElementId());
+      this.adapterMasterManagement.stopAdapter(ad.getElementId());
     }
 
     // update data source in database
