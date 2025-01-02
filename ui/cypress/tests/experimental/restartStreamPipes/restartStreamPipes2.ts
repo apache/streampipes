@@ -18,6 +18,7 @@
 
 import { DashboardUtils } from '../../../support/utils/DashboardUtils';
 import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
+import { MeasurementUtils } from '../../../support/utils/datalake/MeasurementUtils';
 
 describe('Validate StreamPipes after restart', () => {
     beforeEach('Setup Test', () => {
@@ -26,7 +27,7 @@ describe('Validate StreamPipes after restart', () => {
 
     it('Perform Test', () => {
         // Truncate data in db
-        DataLakeUtils.goToDatalakeConfiguration();
+        MeasurementUtils.goToDatalakeConfiguration();
         cy.dataCy('datalake-truncate-btn').should('be.visible').click();
         cy.dataCy('confirm-truncate-data-btn', { timeout: 10000 })
             .should('be.visible')

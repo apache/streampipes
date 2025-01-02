@@ -20,15 +20,17 @@ import { AssetBtns } from '../../../support/utils/asset/AssetBtns';
 import { AssetUtils } from '../../../support/utils/asset/AssetUtils';
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../../support/utils/pipeline/PipelineUtils';
+import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
+import { MeasurementUtils } from '../../../support/utils/datalake/MeasurementUtils';
 
-describe('Delete pipeline and auto remove asset links', () => {
+describe('Delete pipeline and measurements and auto remove asset links', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
     });
 
     it('Perform Test', () => {
         const assetName = 'TestAsset';
-        ConnectUtils.addMachineDataSimulator('Sample', true);
+        ConnectUtils.addMachineDataSimulator('sample', true);
 
         // Add asset with pipeline
         AssetUtils.goToAssets();
@@ -36,13 +38,16 @@ describe('Delete pipeline and auto remove asset links', () => {
         AssetBtns.assetLinksTab().click();
         AssetUtils.openManageAssetLinks();
         AssetUtils.selectPipelineAssetLink('persist_sample');
+        AssetUtils.selectMeasurementAssetLink('sample');
         AssetBtns.updateAssetLinksBtn().click();
         AssetBtns.saveAssetBtn().click();
 
-        // delete pipeline
+        // delete resources that should remove also asset links
         cy.wait(1000);
-        // PipelineUtils.goToPipelines();
         PipelineUtils.deletePipeline();
+
+        MeasurementUtils.goToDatalakeConfiguration();
+        MeasurementUtils.deleteMeasurement();
 
         // Check that asset link is removed
         AssetUtils.goToAssets();

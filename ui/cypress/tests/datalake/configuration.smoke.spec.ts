@@ -18,6 +18,7 @@
 
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
+import { MeasurementUtils } from '../../support/utils/datalake/MeasurementUtils';
 
 describe('Test Truncate data in datalake', () => {
     beforeEach('Setup Test', () => {
@@ -26,7 +27,7 @@ describe('Test Truncate data in datalake', () => {
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.goToDatalakeConfiguration();
+        MeasurementUtils.goToDatalakeConfiguration();
 
         // Check if amount of events is correct
         cy.dataCy('datalake-number-of-events', { timeout: 10000 })
@@ -57,7 +58,7 @@ describe('Delete data in datalake', () => {
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.goToDatalakeConfiguration();
+        MeasurementUtils.goToDatalakeConfiguration();
 
         // Check if amount of events is correct
         cy.dataCy('datalake-number-of-events', { timeout: 10000 })
@@ -65,10 +66,7 @@ describe('Delete data in datalake', () => {
             .contains('10');
 
         // Delete data
-        cy.dataCy('datalake-delete-btn').should('be.visible').click();
-        cy.dataCy('confirm-delete-data-btn', { timeout: 10000 })
-            .should('be.visible')
-            .click();
+        MeasurementUtils.deleteMeasurement();
 
         // Check if amount of events is zero
         cy.dataCy('datalake-number-of-events', { timeout: 10000 }).should(

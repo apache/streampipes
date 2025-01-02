@@ -22,6 +22,7 @@ import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
 import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
 import { DataLakeBtns } from '../../support/utils/datalake/DataLakeBtns';
+import { MeasurementUtils } from '../../support/utils/datalake/MeasurementUtils';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -94,21 +95,21 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.storeAndStartEditedAdapter();
 
         // Validate that the data is further persisted in the database by checking if the amount of events in the data lake changes
-        DataLakeUtils.goToDatalakeConfiguration();
+        MeasurementUtils.goToDatalakeConfiguration();
 
-        DataLakeUtils.waitForCountingResults();
+        MeasurementUtils.waitForCountingResults();
 
         let initialValue;
 
-        DataLakeUtils.getDatalakeNumberOfEvents().then(value => {
+        MeasurementUtils.getDatalakeNumberOfEvents().then(value => {
             initialValue = value;
         });
 
         DataLakeBtns.refreshDataLakeMeasures().click();
 
-        DataLakeUtils.waitForCountingResults();
+        MeasurementUtils.waitForCountingResults();
 
-        DataLakeUtils.getDatalakeNumberOfEvents().then(newValue => {
+        MeasurementUtils.getDatalakeNumberOfEvents().then(newValue => {
             // IMPORTANT: Currently we implemented a workaround by showing the user a warning message when the data type is changed.
             // In the future, we need a migration mechanism to automatically change all the StreamPipes resources that are effected
             // by the change. Once this is implemented the following line must be changed to .not.equal.

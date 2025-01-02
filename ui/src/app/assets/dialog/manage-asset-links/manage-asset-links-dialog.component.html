@@ -175,6 +175,12 @@
                     <mat-checkbox
                         color="accent"
                         [checked]="linkSelected(element.elementId)"
+                        [attr.data-cy]="
+                            'select-measurement-checkbox-' +
+                            element.measureName
+                                .toLowerCase()
+                                .replaceAll(' ', '_')
+                        "
                         (change)="
                             selectLink(
                                 $event.checked,

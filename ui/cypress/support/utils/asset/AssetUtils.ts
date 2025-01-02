@@ -52,6 +52,10 @@ export class AssetUtils {
         AssetBtns.pipelineCheckbox(pipelineName).click();
     }
 
+    public static selectMeasurementAssetLink(measurementName: string) {
+        AssetBtns.measurementCheckbox(measurementName).click();
+    }
+
     public static checkAmountOfAssets(amount: number) {
         cy.dataCy('assets-table').should('have.length', amount);
     }

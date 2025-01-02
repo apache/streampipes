@@ -67,6 +67,12 @@ export class AssetBtns {
         });
     }
 
+    public static measurementCheckbox(measurementName: string) {
+        return cy.dataCy('select-measurement-checkbox-' + measurementName, {
+            timeout: 10000,
+        });
+    }
+
     public static updateAssetLinksBtn() {
         return cy.dataCy('assets-update-links-button', { timeout: 10000 });
     }
