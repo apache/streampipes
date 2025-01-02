@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.pipeline;
 
+import org.apache.streampipes.assetmodel.management.AssetModelHelper;
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.permission.PermissionManager;
@@ -31,6 +32,10 @@ import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +44,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PipelineManager {
+
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineManager.class);
 
   /**
    * Returns all pipelines
@@ -119,6 +126,16 @@ public class PipelineManager {
       getPipelineStorage().deleteElementById(pipelineId);
       new NotificationsResourceManager().deleteNotificationsForPipeline(pipeline);
     }
+
+    removePipelineFromAllAssetLinks(pipelineId);
+  }
+
+  private static void removePipelineFromAllAssetLinks(String pipelineId) {
+    try {
+      getAssetModelHelper().removeAssetLinkFromAllAssets(pipelineId);
+    } catch (IOException e) {
+      LOG.error("Could not remove asset link from pipeline:{} from all assets", pipelineId, e);
+    }
   }
 
   public static List<PipelineOperationStatus> stopAllPipelines(boolean forceStop) {
@@ -177,4 +194,9 @@ public class PipelineManager {
   private static IPermissionStorage getPermissionStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage();
   }
+
+  private static AssetModelHelper getAssetModelHelper() {
+    return new AssetModelHelper();
+  }
+
 }

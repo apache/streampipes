@@ -61,6 +61,12 @@ export class AssetBtns {
         });
     }
 
+    public static pipelineCheckbox(pipelineName: string) {
+        return cy.dataCy('select-pipeline-checkbox-' + pipelineName, {
+            timeout: 10000,
+        });
+    }
+
     public static updateAssetLinksBtn() {
         return cy.dataCy('assets-update-links-button', { timeout: 10000 });
     }

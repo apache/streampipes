@@ -390,6 +390,10 @@
                     <mat-checkbox
                         color="accent"
                         [checked]="linkSelected(pipeline.elementId)"
+                        [attr.data-cy]="
+                            'select-pipeline-checkbox-' +
+                            pipeline.name.toLowerCase().replaceAll(' ', '_')
+                        "
                         (change)="
                             selectLink(
                                 $event.checked,

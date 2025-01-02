@@ -813,6 +813,7 @@
         <module>archetypes/streampipes-archetype-extensions-jvm</module>
         <module>archetypes/streampipes-archetype-pe-sinks-flink</module>
         <module>archetypes/streampipes-archetype-pe-processors-flink</module>
+        <module>streampipes-asset-model-management</module>
         <module>streampipes-client</module>
         <module>streampipes-client-api</module>
         <module>streampipes-commons</module>
@@ -872,7 +873,6 @@
         <module>streampipes-wrapper-kafka-streams</module>
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-standalone</module>
-      <module>streampipes-asset-model-management</module>
     </modules>
 
     <profiles>

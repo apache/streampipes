@@ -48,6 +48,10 @@ export class AssetUtils {
         AssetBtns.dataStreamCheckbox(adapterName).click();
     }
 
+    public static selectPipelineAssetLink(pipelineName: string) {
+        AssetBtns.pipelineCheckbox(pipelineName).click();
+    }
+
     public static checkAmountOfAssets(amount: number) {
         cy.dataCy('assets-table').should('have.length', amount);
     }
