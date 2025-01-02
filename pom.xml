@@ -1292,7 +1292,7 @@
         <developerConnection>scm:git:ssh://git@github.com/apache/streampipes.git</developerConnection>
         <connection>scm:git:ssh://git@github.com/apache/streampipes.git</connection>
         <url>https://github.com/apache/streampipes</url>
-      <tag>HEAD</tag>
+      <tag>rel/0.97.0</tag>
   </scm>
 
     <issueManagement>
