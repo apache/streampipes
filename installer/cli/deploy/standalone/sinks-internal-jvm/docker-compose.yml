@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-version: "3.4"
 services:
   sinks-internal-jvm:
     image: ${SP_DOCKER_REGISTRY}/sinks-internal-jvm:${SP_VERSION}

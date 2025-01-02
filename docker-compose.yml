@@ -20,8 +20,6 @@
 # provided on https://streampipes.apache.org/download
 #
 
-version: "3.8"
-
 # global logging
 x-logging: &default-logging
   options:
