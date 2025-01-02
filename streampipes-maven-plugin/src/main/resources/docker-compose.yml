@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-version: "2"
 services:
   processors-text-mining-flink:
     image: ${SP_DOCKER_REGISTRY}/streampipes/streampipes-pipeline-elements/processors-text-mining-flink:${SP_PE_VERSION}
