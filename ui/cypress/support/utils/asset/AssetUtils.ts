@@ -25,7 +25,10 @@ export class AssetUtils {
     }
 
     public static goBackToOverview() {
-        AssetBtns.goBackToOverviewBtn().click();
+        AssetBtns.goBackToOverviewBtn()
+            .should('be.visible')
+            .should('not.be.disabled')
+            .click();
     }
 
     public static addNewAsset(assetName: string) {
