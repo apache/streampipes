@@ -1,6 +1,6 @@
 {
   "name": "apache-streampipes",
-  "version": "0.97.0-SNAPSHOT",
+  "version": "0.98.0-SNAPSHOT",
   "description": "Apache StreamPipes user interface",
   "homepage": "http://streampipes.apache.org",
   "repository": {
