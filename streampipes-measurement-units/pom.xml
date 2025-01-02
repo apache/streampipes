@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.97.0-SNAPSHOT</version>
+        <version>0.98.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>streampipes-measurement-units</artifactId>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-commons</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.98.0-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
