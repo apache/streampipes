@@ -40,12 +40,7 @@ for (let i = 0; i < testedRoles.length; i++) {
             UserUtils.goToUserConfiguration();
 
             // validate navigation bar shows all modules
-            NavigationUtils.pipelinesIsDisplayed();
-            NavigationUtils.connectIsDisplayed();
-            NavigationUtils.dashboardIsDisplayed();
-            NavigationUtils.dataExplorerIsDisplayed();
-            NavigationUtils.assetManagementIsDisplayed();
-            NavigationUtils.configurationIsDisplayed();
+            NavigationUtils.validateActiveModules(NavigationUtils.ALL_MODULES);
 
             // Add new user
             cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should(
@@ -73,15 +68,30 @@ for (let i = 0; i < testedRoles.length; i++) {
 
             // Check if every role displays correct navigation menu
             if (testRole == UserRole.ROLE_PIPELINE_ADMIN) {
-                NavigationUtils.pipelinesIsDisplayed();
+                NavigationUtils.validateActiveModules([
+                    NavigationUtils.PIPELINES,
+                    NavigationUtils.CONFIGURATION,
+                ]);
             } else if (testRole == UserRole.ROLE_DASHBOARD_ADMIN) {
-                NavigationUtils.dashboardIsDisplayed();
+                NavigationUtils.validateActiveModules([
+                    NavigationUtils.PIPELINES,
+                    NavigationUtils.DASHBOARD,
+                ]);
             } else if (testRole == UserRole.ROLE_DATA_EXPLORER_ADMIN) {
-                NavigationUtils.dataExplorerIsDisplayed();
+                NavigationUtils.validateActiveModules([
+                    NavigationUtils.PIPELINES,
+                    NavigationUtils.DATA_EXPLORER,
+                ]);
             } else if (testRole == UserRole.ROLE_CONNECT_ADMIN) {
-                NavigationUtils.connectIsDisplayed();
+                NavigationUtils.validateActiveModules([
+                    NavigationUtils.CONNECT,
+                    NavigationUtils.CONFIGURATION,
+                ]);
             } else if (testRole == UserRole.ROLE_ASSET_ADMIN) {
-                NavigationUtils.assetManagementIsDisplayed();
+                NavigationUtils.validateActiveModules([
+                    NavigationUtils.ASSET_MANAGEMENT,
+                    NavigationUtils.CONFIGURATION,
+                ]);
             }
 
             // Login as admin and delete user

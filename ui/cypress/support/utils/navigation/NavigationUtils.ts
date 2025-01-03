@@ -16,88 +16,32 @@
  *
  */
 export class NavigationUtils {
-    /**
-     * Validates that the Pipelines navigation icon is displayed.
-     */
-    public static pipelinesIsDisplayed() {
-        this.validateNavigationIcon('pipelines', true);
-    }
+    // Static variables for module names
+    public static readonly PIPELINES = 'pipelines';
+    public static readonly CONNECT = 'connect';
+    public static readonly DASHBOARD = 'dashboard';
+    public static readonly DATA_EXPLORER = 'dataexplorer';
+    public static readonly ASSET_MANAGEMENT = 'assets';
+    public static readonly CONFIGURATION = 'configuration';
+
+    public static readonly ALL_MODULES = [
+        NavigationUtils.PIPELINES,
+        NavigationUtils.CONNECT,
+        NavigationUtils.DASHBOARD,
+        NavigationUtils.DATA_EXPLORER,
+        NavigationUtils.ASSET_MANAGEMENT,
+        NavigationUtils.CONFIGURATION,
+    ];
 
     /**
-     * Validates that the Pipelines navigation icon is not displayed.
+     * Validates that only the specified navigation icons are displayed.
+     * @param displayedModules List of module names that should be visible.
      */
-    public static pipelinesNotDisplayed() {
-        this.validateNavigationIcon('pipelines', false);
-    }
-
-    /**
-     * Validates that the Connect navigation icon is displayed.
-     */
-    public static connectIsDisplayed() {
-        this.validateNavigationIcon('connect', true);
-    }
-
-    /**
-     * Validates that the Connect navigation icon is not displayed.
-     */
-    public static connectNotDisplayed() {
-        this.validateNavigationIcon('connect', false);
-    }
-
-    /**
-     * Validates that the Dashboard navigation icon is displayed.
-     */
-    public static dashboardIsDisplayed() {
-        this.validateNavigationIcon('dashboard', true);
-    }
-
-    /**
-     * Validates that the Dashboard navigation icon is not displayed.
-     */
-    public static dashboardNotDisplayed() {
-        this.validateNavigationIcon('dashboard', false);
-    }
-
-    /**
-     * Validates that the Data Explorer navigation icon is displayed.
-     */
-    public static dataExplorerIsDisplayed() {
-        this.validateNavigationIcon('dataexplorer', true);
-    }
-
-    /**
-     * Validates that the Data Explorer navigation icon is not displayed.
-     */
-    public static dataExplorerNotDisplayed() {
-        this.validateNavigationIcon('dataexplorer', false);
-    }
-
-    /**
-     * Validates that the Asset Management navigation icon is displayed.
-     */
-    public static assetManagementIsDisplayed() {
-        this.validateNavigationIcon('assets', true);
-    }
-
-    /**
-     * Validates that the Asset Management navigation icon is not displayed.
-     */
-    public static assetManagementNotDisplayed() {
-        this.validateNavigationIcon('assets', false);
-    }
-
-    /**
-     * Validates that the Configuration navigation icon is displayed.
-     */
-    public static configurationIsDisplayed() {
-        this.validateNavigationIcon('configuration', true);
-    }
-
-    /**
-     * Validates that the Configuration navigation icon is not displayed.
-     */
-    public static configurationNotDisplayed() {
-        this.validateNavigationIcon('configuration', false);
+    public static validateActiveModules(displayedModules: string[]) {
+        NavigationUtils.ALL_MODULES.forEach(module => {
+            const shouldBeDisplayed = displayedModules.includes(module);
+            this.validateNavigationIcon(module, shouldBeDisplayed);
+        });
     }
 
     /**

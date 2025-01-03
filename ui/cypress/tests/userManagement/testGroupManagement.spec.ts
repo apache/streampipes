@@ -104,8 +104,10 @@ describe('Test Group Management for Pipelines', () => {
         // Login as first user which belongs to user group with pipeline admin role
         UserUtils.switchUser(user);
 
-        NavigationUtils.pipelinesIsDisplayed();
-        NavigationUtils.configurationIsDisplayed();
+        NavigationUtils.validateActiveModules([
+            NavigationUtils.PIPELINES,
+            NavigationUtils.CONFIGURATION,
+        ]);
 
         // Check if pipeline is visible
         PipelineUtils.goToPipelines();
@@ -120,8 +122,7 @@ describe('Test Group Management for Pipelines', () => {
 
         // Login as user2
         UserUtils.switchUser(user2);
-        NavigationUtils.pipelinesIsDisplayed();
-        NavigationUtils.configurationNotDisplayed();
+        NavigationUtils.validateActiveModules([NavigationUtils.PIPELINES]);
 
         // Check if pipeline is invisible to user2
         PipelineUtils.goToPipelines();

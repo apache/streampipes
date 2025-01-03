@@ -40,7 +40,10 @@ describe('Test User Roles for Pipelines', () => {
         // Login as user and check if pipeline is visible to user
         UserUtils.switchUser(newUser);
 
-        NavigationUtils.pipelinesIsDisplayed();
+        NavigationUtils.validateActiveModules([
+            NavigationUtils.PIPELINES,
+            NavigationUtils.CONFIGURATION,
+        ]);
 
         PipelineUtils.goToPipelines();
         PipelineUtils.checkAmountOfPipelinesPipeline(0);

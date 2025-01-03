@@ -44,7 +44,7 @@ export class UserUtils {
         this.goToUserConfiguration();
 
         // user configuration
-        cy.dataCy('add-new-user').click();
+        cy.dataCy('add-new-user', { timeout: 10000 }).click();
         cy.dataCy('new-user-email').type(user.email);
         cy.dataCy('new-user-full-name').type(user.name);
         cy.dataCy('new-user-password').type(user.password);

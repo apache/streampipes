@@ -20,9 +20,10 @@ import { UserUtils } from '../../support/utils/UserUtils';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 import { NavigationUtils } from '../../support/utils/navigation/NavigationUtils';
+import { User } from '../../support/model/User';
 
 describe('Test User Roles for Connect', () => {
-    var connectAdminUser;
+    let connectAdminUser: User;
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         connectAdminUser = UserUtils.createUser(
@@ -33,9 +34,7 @@ describe('Test User Roles for Connect', () => {
     });
 
     it('Connect admin should not see adapters of other users', () => {
-        UserUtils.switchUser(connectAdminUser);
-
-        NavigationUtils.connectIsDisplayed();
+        switchUserAndValidateConnectModuleIsShown();
 
         // Validate that no adapter is visible
         ConnectUtils.checkAmountOfAdapters(0);
@@ -45,9 +44,7 @@ describe('Test User Roles for Connect', () => {
         // Set adapter to public
         PermissionUtils.markElementAsPublic();
 
-        UserUtils.switchUser(connectAdminUser);
-
-        NavigationUtils.connectIsDisplayed();
+        switchUserAndValidateConnectModuleIsShown();
 
         // Validate that adapter is visible
         ConnectUtils.checkAmountOfAdapters(1);
@@ -57,11 +54,18 @@ describe('Test User Roles for Connect', () => {
         // Share adapter with user
         PermissionUtils.authorizeUser(connectAdminUser.email);
 
-        UserUtils.switchUser(connectAdminUser);
-
-        NavigationUtils.connectIsDisplayed();
+        switchUserAndValidateConnectModuleIsShown();
 
         // Validate that adapter is visible
         ConnectUtils.checkAmountOfAdapters(1);
     });
+
+    function switchUserAndValidateConnectModuleIsShown() {
+        UserUtils.switchUser(connectAdminUser);
+
+        NavigationUtils.validateActiveModules([
+            NavigationUtils.CONNECT,
+            NavigationUtils.CONFIGURATION,
+        ]);
+    }
 });
