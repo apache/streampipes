@@ -29,7 +29,7 @@ const testedRoles = [
     UserRole.ROLE_ASSET_ADMIN,
 ];
 
-for (var i = 0; i < testedRoles.length; i++) {
+for (let i = 0; i < testedRoles.length; i++) {
     const testRole = testedRoles[i];
     describe('Test User Role ' + testedRoles[i], () => {
         beforeEach('Setup Test', () => {
@@ -37,6 +37,8 @@ for (var i = 0; i < testedRoles.length; i++) {
         });
 
         it('Perform Test', () => {
+            UserUtils.goToUserConfiguration();
+
             // validate navigation bar shows all modules
             NavigationUtils.pipelinesIsDisplayed();
             NavigationUtils.connectIsDisplayed();
@@ -46,7 +48,6 @@ for (var i = 0; i < testedRoles.length; i++) {
             NavigationUtils.configurationIsDisplayed();
 
             // Add new user
-            UserUtils.goToUserConfiguration();
             cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should(
                 'have.length',
                 1,
