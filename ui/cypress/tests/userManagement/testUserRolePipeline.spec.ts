@@ -20,9 +20,9 @@ import { UserRole } from '../../../src/app/_enums/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
-import { GeneralUtils } from '../../support/utils/GeneralUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
+import { NavigationUtils } from '../../support/utils/navigation/NavigationUtils';
 
 describe('Test User Roles for Pipelines', () => {
     beforeEach('Setup Test', () => {
@@ -40,7 +40,7 @@ describe('Test User Roles for Pipelines', () => {
         // Login as user and check if pipeline is visible to user
         UserUtils.switchUser(newUser);
 
-        GeneralUtils.validateAmountOfNavigationIcons(4);
+        NavigationUtils.pipelinesIsDisplayed();
 
         PipelineUtils.goToPipelines();
         PipelineUtils.checkAmountOfPipelinesPipeline(0);

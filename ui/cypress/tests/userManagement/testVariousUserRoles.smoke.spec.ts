@@ -19,7 +19,7 @@
 import { UserBuilder } from '../../support/builder/UserBuilder';
 import { UserRole } from '../../../src/app/_enums/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
-import { GeneralUtils } from '../../support/utils/GeneralUtils';
+import { NavigationUtils } from '../../support/utils/navigation/NavigationUtils';
 
 const testedRoles = [
     UserRole.ROLE_PIPELINE_ADMIN,
@@ -37,10 +37,16 @@ for (var i = 0; i < testedRoles.length; i++) {
         });
 
         it('Perform Test', () => {
+            // validate navigation bar shows all modules
+            NavigationUtils.pipelinesIsDisplayed();
+            NavigationUtils.connectIsDisplayed();
+            NavigationUtils.dashboardIsDisplayed();
+            NavigationUtils.dataExplorerIsDisplayed();
+            NavigationUtils.assetManagementIsDisplayed();
+            NavigationUtils.configurationIsDisplayed();
+
             // Add new user
             UserUtils.goToUserConfiguration();
-            GeneralUtils.validateAmountOfNavigationIcons(8);
-
             cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should(
                 'have.length',
                 1,
@@ -66,15 +72,15 @@ for (var i = 0; i < testedRoles.length; i++) {
 
             // Check if every role displays correct navigation menu
             if (testRole == UserRole.ROLE_PIPELINE_ADMIN) {
-                GeneralUtils.validateAmountOfNavigationIcons(4);
+                NavigationUtils.pipelinesIsDisplayed();
             } else if (testRole == UserRole.ROLE_DASHBOARD_ADMIN) {
-                GeneralUtils.validateAmountOfNavigationIcons(4);
+                NavigationUtils.dashboardIsDisplayed();
             } else if (testRole == UserRole.ROLE_DATA_EXPLORER_ADMIN) {
-                GeneralUtils.validateAmountOfNavigationIcons(4);
+                NavigationUtils.dataExplorerIsDisplayed();
             } else if (testRole == UserRole.ROLE_CONNECT_ADMIN) {
-                GeneralUtils.validateAmountOfNavigationIcons(3);
+                NavigationUtils.connectIsDisplayed();
             } else if (testRole == UserRole.ROLE_ASSET_ADMIN) {
-                GeneralUtils.validateAmountOfNavigationIcons(3);
+                NavigationUtils.assetManagementIsDisplayed();
             }
 
             // Login as admin and delete user
