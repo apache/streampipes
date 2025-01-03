@@ -28,6 +28,8 @@ public interface IDataExplorerSchemaManagement {
 
   DataLakeMeasure getById(String elementId);
 
+  DataLakeMeasure getByMeasureName(String measureName);
+
   DataLakeMeasure createOrUpdateMeasurement(DataLakeMeasure measure);
 
   void deleteMeasurement(String elementId);

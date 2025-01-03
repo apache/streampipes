@@ -50,6 +50,11 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
     return dataLakeStorage.getElementById(elementId);
   }
 
+  @Override
+  public DataLakeMeasure getByMeasureName(String measureName) {
+    return this.getExistingMeasureByName(measureName).orElse(null);
+  }
+
   /**
    * For new measurements an entry is generated in the database. For existing measurements the schema is updated
    * according to the update strategy defined by the measurement.

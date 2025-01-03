@@ -35,6 +35,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -47,22 +48,49 @@ public class DataExplorerSchemaManagementTest {
   public static final String OLD_PROPERTY = "oldProperty";
 
   private CRUDStorage<DataLakeMeasure> dataLakeStorageMock;
+  private DataExplorerSchemaManagement dataExplorerSchemaManagement;
 
   @BeforeEach
   public void setUp() {
     dataLakeStorageMock = mock(CRUDStorage.class);
+    dataExplorerSchemaManagement = new DataExplorerSchemaManagement(dataLakeStorageMock);
+  }
+
+
+  @Test
+  public void getByMeasureName_ReturnsMeasureWhenMeasureExists() {
+    var measureName = "existingMeasure";
+    var existingMeasure = new DataLakeMeasure();
+    existingMeasure.setMeasureName(measureName);
+
+    when(dataLakeStorageMock.findAll()).thenReturn(List.of(existingMeasure));
+
+    var result = dataExplorerSchemaManagement.getByMeasureName(measureName);
+
+    assertEquals(existingMeasure, result);
   }
 
   @Test
-  public void createMeasurementThatNotExisted() {
+  public void getByMeasureName_ReturnsNullWhenMeasureDoesNotExist() {
+    var measureName = "nonExistingMeasure";
+
     when(dataLakeStorageMock.findAll()).thenReturn(List.of());
-    var schemaManagement = new DataExplorerSchemaManagement(dataLakeStorageMock);
+
+    var result = dataExplorerSchemaManagement.getByMeasureName(measureName);
+
+    assertNull(result);
+  }
+
+
+  @Test
+  public void createOrUpdateMeasuremente_ThatNotExisted() {
+    when(dataLakeStorageMock.findAll()).thenReturn(List.of());
 
     var oldMeasure = getSampleMeasure(
         DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA,
         List.of()
     );
-    var resultingMeasure = schemaManagement.createOrUpdateMeasurement(oldMeasure);
+    var resultingMeasure = dataExplorerSchemaManagement.createOrUpdateMeasurement(oldMeasure);
 
     assertEquals(oldMeasure.getMeasureName(), resultingMeasure.getMeasureName());
     verify(dataLakeStorageMock, Mockito.times(1))
@@ -71,7 +99,7 @@ public class DataExplorerSchemaManagementTest {
 
 
   @Test
-  public void createMeasurementWithUpdateStrategy() {
+  public void createOrUpdateMeasuremente_WithUpdateStrategy() {
 
     var oldMeasure = getSampleMeasure(
         DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA,
@@ -82,11 +110,10 @@ public class DataExplorerSchemaManagementTest {
 
     when(dataLakeStorageMock.findAll()).thenReturn(List.of(oldMeasure));
     when(dataLakeStorageMock.getElementById(any())).thenReturn(oldMeasure);
-    var schemaManagement = new DataExplorerSchemaManagement(dataLakeStorageMock);
 
     var newMeasure = getNewMeasure(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
 
-    var resultMeasure = schemaManagement.createOrUpdateMeasurement(newMeasure);
+    var resultMeasure = dataExplorerSchemaManagement.createOrUpdateMeasurement(newMeasure);
 
     assertEquals(newMeasure.getMeasureName(), resultMeasure.getMeasureName());
     verify(dataLakeStorageMock, Mockito.times(1))
@@ -98,7 +125,7 @@ public class DataExplorerSchemaManagementTest {
 
 
   @Test
-  public void createMeasurementWithExtendSchemaStrategy() {
+  public void createOrUpdateMeasuremente_WithExtendSchemaStrategy() {
 
     var oldMeasure = getSampleMeasure(
         DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA,
@@ -108,10 +135,9 @@ public class DataExplorerSchemaManagementTest {
     );
     when(dataLakeStorageMock.findAll()).thenReturn(List.of(oldMeasure));
     when(dataLakeStorageMock.getElementById(any())).thenReturn(oldMeasure);
-    var schemaManagement = new DataExplorerSchemaManagement(dataLakeStorageMock);
     var newMeasure = getNewMeasure(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
 
-    var resultMeasure = schemaManagement.createOrUpdateMeasurement(newMeasure);
+    var resultMeasure = dataExplorerSchemaManagement.createOrUpdateMeasurement(newMeasure);
 
     assertEquals(newMeasure.getMeasureName(), resultMeasure.getMeasureName());
     verify(dataLakeStorageMock, Mockito.times(1)).updateElement(any());
@@ -121,7 +147,7 @@ public class DataExplorerSchemaManagementTest {
 
 
   @Test
-  public void createMeasurementWithExtendSchemaStrategyAndDifferentPropertyTypes() {
+  public void createOrUpdateMeasuremente_WithExtendSchemaStrategyAndDifferentPropertyTypes() {
     var oldMeasure = getSampleMeasure(
         DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA,
         List.of(
@@ -133,11 +159,9 @@ public class DataExplorerSchemaManagementTest {
     when(dataLakeStorageMock.findAll()).thenReturn(List.of(oldMeasure));
     when(dataLakeStorageMock.getElementById(any())).thenReturn(oldMeasure);
 
-    var schemaManagement = new DataExplorerSchemaManagement(dataLakeStorageMock);
-
     var newMeasure = getNewMeasure(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
 
-    var resultMeasure = schemaManagement.createOrUpdateMeasurement(newMeasure);
+    var resultMeasure = dataExplorerSchemaManagement.createOrUpdateMeasurement(newMeasure);
     assertEquals(newMeasure.getMeasureName(), resultMeasure.getMeasureName());
     verify(dataLakeStorageMock, Mockito.times(1)).updateElement(any());
     assertEquals(

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.ps;
 
+import org.apache.streampipes.assetmodel.management.AssetModelHelper;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
@@ -38,6 +39,8 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -52,6 +55,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +87,8 @@ public class DataLakeResourceV4 extends AbstractRestResource {
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
 
+  private static final Logger LOG = LoggerFactory.getLogger(DataLakeResourceV4.class);
+
   public DataLakeResourceV4() {
     this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
@@ -101,18 +107,20 @@ public class DataLakeResourceV4 extends AbstractRestResource {
 
   @DeleteMapping(path = "/measurements/{measurementID}")
   @Operation(summary = "Remove data from a single measurement series with given id", tags = {"Data Lake"},
-      responses = {
-          @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
-          @ApiResponse(responseCode = "400", description = "Measurement series with given id not found")})
+             responses = {
+                 @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
+                 @ApiResponse(responseCode = "400", description = "Measurement series with given id not found")
+             })
   public ResponseEntity<?> deleteData(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
       @PathVariable("measurementID") String measurementID
       , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation")
       @RequestParam(value = "startDate", required = false) Long startDate
       , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation")
-      @RequestParam(value = "endDate", required = false) Long endDate) {
+      @RequestParam(value = "endDate", required = false) Long endDate
+  ) {
 
-    if (this.dataExplorerQueryManagement.deleteData(measurementID, startDate, endDate)){
+    if (this.dataExplorerQueryManagement.deleteData(measurementID, startDate, endDate)) {
       return ok();
     } else {
       return ResponseEntity
@@ -124,23 +132,29 @@ public class DataLakeResourceV4 extends AbstractRestResource {
   @DeleteMapping(path = "/measurements/{measurementID}/drop")
   @Operation(summary = "Drop a single measurement series with given id from Data Lake and "
       + "remove related event property",
-      tags = {
-          "Data Lake"},
-      responses = {
-          @ApiResponse(
-              responseCode = "200",
-              description = "Measurement series successfully dropped from Data Lake"),
-          @ApiResponse(
-              responseCode = "400",
-              description = "Measurement series with given id or related event property not found")})
+             tags = {
+                 "Data Lake"
+             },
+             responses = {
+                 @ApiResponse(
+                     responseCode = "200",
+                     description = "Measurement series successfully dropped from Data Lake"),
+                 @ApiResponse(
+                     responseCode = "400",
+                     description = "Measurement series with given id or related event property not found")
+             })
   public ResponseEntity<?> dropMeasurementSeries(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
-      @PathVariable("measurementID") String measurementID) {
+      @PathVariable("measurementID") String measureName
+  ) {
+    // Note: The measuremendID is not the measurmentId here, it is the measureName. See Issue #3400
 
-    boolean isSuccessDataLake = this.dataExplorerQueryManagement.deleteData(measurementID);
+    removeMeasurementFromAllAssetModels(measureName);
+
+    boolean isSuccessDataLake = this.dataExplorerQueryManagement.deleteData(measureName);
 
     if (isSuccessDataLake) {
-      boolean isSuccessEventProperty = this.dataExplorerSchemaManagement.deleteMeasurementByName(measurementID);
+      boolean isSuccessEventProperty = this.dataExplorerSchemaManagement.deleteMeasurementByName(measureName);
       if (isSuccessEventProperty) {
         return ok();
       } else {
@@ -155,21 +169,44 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     }
   }
 
+  /**
+   * This method removes the asset link from all asset models that are linked to the given measurement
+   * @param measureName of the measurement to be removed from the asset models
+   */
+  private void removeMeasurementFromAllAssetModels(String measureName) {
+    try {
+      var assetModelHelper = new AssetModelHelper();
+
+      var measureToDelete = this.dataExplorerSchemaManagement.getByMeasureName(measureName);
+      if (measureToDelete != null) {
+        assetModelHelper.removeAssetLinkFromAllAssets(measureToDelete.getElementId());
+      } else {
+        LOG.error("Measue with measureName {} not found", measureName);
+      }
+
+    } catch (IOException e) {
+      LOG.error("Could not remove asset link from measurement series: {}", measureName, e);
+    }
+  }
+
   @GetMapping(path = "/measurements", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all measurement series", tags = {"Data Lake"},
-      responses = {
-          @ApiResponse(
-              responseCode = "200",
-              description = "array of stored measurement series",
-              content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class))))})
+             responses = {
+                 @ApiResponse(
+                     responseCode = "200",
+                     description = "array of stored measurement series",
+                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class))))
+             })
   public ResponseEntity<List<DataLakeMeasure>> getAll() {
     List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
     return ok(allMeasurements);
   }
 
   @GetMapping(path = "/measurements/{measurementId}/tags", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Map<String, Object>> getTagValues(@PathVariable("measurementId") String measurementId,
-                                                          @RequestParam("fields") String fields) {
+  public ResponseEntity<Map<String, Object>> getTagValues(
+      @PathVariable("measurementId") String measurementId,
+      @RequestParam("fields") String fields
+  ) {
     Map<String, Object> tagValues = dataExplorerQueryManagement.getTagValues(measurementId, fields);
     return ok(tagValues);
   }
@@ -177,13 +214,15 @@ public class DataLakeResourceV4 extends AbstractRestResource {
 
   @GetMapping(path = "/measurements/{measurementID}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get data from a single measurement series by a given id", tags = {"Data Lake"},
-      responses = {
-          @ApiResponse(
-              responseCode = "400",
-              description = "Measurement series with given id and requested query specification not found"),
-          @ApiResponse(
-              responseCode = "200",
-              description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class)))})
+             responses = {
+                 @ApiResponse(
+                     responseCode = "400",
+                     description = "Measurement series with given id and requested query specification not found"),
+                 @ApiResponse(
+                     responseCode = "200",
+                     description = "requested data",
+                     content = @Content(schema = @Schema(implementation = DataSeries.class)))
+             })
   public ResponseEntity<?> getData(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
       @PathVariable("measurementID") String measurementID
@@ -232,7 +271,8 @@ public class DataLakeResourceV4 extends AbstractRestResource {
           description = "the maximum amount of resulting events,"
               + "when too high the query status is set to TOO_MUCH_DATA")
       @RequestParam(value = QP_MAXIMUM_AMOUNT_OF_EVENTS, required = false) Integer maximumAmountOfResults,
-      @RequestParam Map<String, String> queryParams) {
+      @RequestParam Map<String, String> queryParams
+  ) {
 
     if (!(checkProvidedQueryParams(queryParams))) {
       return badRequest();
@@ -264,13 +304,15 @@ public class DataLakeResourceV4 extends AbstractRestResource {
 
   @GetMapping(path = "/measurements/{measurementID}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
   @Operation(summary = "Download data from a single measurement series by a given id", tags = {"Data Lake"},
-      responses = {
-          @ApiResponse(
-              responseCode = "400",
-              description = "Measurement series with given id and requested query specification not found"),
-          @ApiResponse(
-              responseCode = "200",
-              description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class)))})
+             responses = {
+                 @ApiResponse(
+                     responseCode = "400",
+                     description = "Measurement series with given id and requested query specification not found"),
+                 @ApiResponse(
+                     responseCode = "200",
+                     description = "requested data",
+                     content = @Content(schema = @Schema(implementation = DataSeries.class)))
+             })
   public ResponseEntity<StreamingResponseBody> downloadData(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
       @PathVariable("measurementID") String measurementID
@@ -315,7 +357,8 @@ public class DataLakeResourceV4 extends AbstractRestResource {
           description = "filter conditions (a comma-separated list of filter conditions"
               + "such as [field,operator,condition])")
       @RequestParam(value = QP_FILTER, required = false) String filter,
-      @RequestParam Map<String, String> queryParams) {
+      @RequestParam Map<String, String> queryParams
+  ) {
 
 
     if (!(checkProvidedQueryParams(queryParams))) {
@@ -331,22 +374,24 @@ public class DataLakeResourceV4 extends AbstractRestResource {
           sanitizedParams,
           outputFormat,
           isIgnoreMissingValues(missingValueBehaviour),
-          output);
+          output
+      );
 
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
       headers.setContentDispositionFormData("attachment", "datalake." + outputFormat);
 
       return ResponseEntity.ok()
-          .headers(headers)
-          .body(streamingOutput);
+                           .headers(headers)
+                           .body(streamingOutput);
     }
   }
 
   @DeleteMapping(path = "/measurements")
   @Operation(summary = "Remove all stored measurement series from Data Lake", tags = {"Data Lake"},
-      responses = {
-          @ApiResponse(responseCode = "200", description = "All measurement series successfully removed")})
+             responses = {
+                 @ApiResponse(responseCode = "200", description = "All measurement series successfully removed")
+             })
   public ResponseEntity<?> removeAll() {
     boolean isSuccess = this.dataExplorerQueryManagement.deleteAllData();
     return ResponseEntity.ok(isSuccess);
