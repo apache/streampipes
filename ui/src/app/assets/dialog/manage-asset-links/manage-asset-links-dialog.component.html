@@ -343,6 +343,10 @@
                     <mat-checkbox
                         color="accent"
                         [checked]="linkSelected(element.fileId)"
+                        [attr.data-cy]="
+                            'select-file-checkbox-' +
+                            element.filename.replaceAll('.', '_')
+                        "
                         (change)="
                             selectLink(
                                 $event.checked,

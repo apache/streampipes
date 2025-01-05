@@ -51,6 +51,10 @@ export class AssetUtils {
         AssetBtns.dataStreamCheckbox(adapterName).click();
     }
 
+    public static selectFileAssetLink(fileName: string) {
+        AssetBtns.fileCheckbox(fileName).click();
+    }
+
     public static selectPipelineAssetLink(pipelineName: string) {
         AssetBtns.pipelineCheckbox(pipelineName).click();
     }
