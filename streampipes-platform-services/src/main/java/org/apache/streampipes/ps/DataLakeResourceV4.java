@@ -135,12 +135,12 @@ public class DataLakeResourceV4 extends AbstractRestResource {
               description = "Measurement series with given id or related event property not found")})
   public ResponseEntity<?> dropMeasurementSeries(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
-      @PathVariable("measurementID") String measurementID) {
+      @PathVariable("measureName") String measureName) {
 
-    boolean isSuccessDataLake = this.dataExplorerQueryManagement.deleteData(measurementID);
+    boolean isSuccessDataLake = this.dataExplorerQueryManagement.deleteData(measureName);
 
     if (isSuccessDataLake) {
-      boolean isSuccessEventProperty = this.dataExplorerSchemaManagement.deleteMeasurementByName(measurementID);
+      boolean isSuccessEventProperty = this.dataExplorerSchemaManagement.deleteMeasurementByName(measureName);
       if (isSuccessEventProperty) {
         return ok();
       } else {
