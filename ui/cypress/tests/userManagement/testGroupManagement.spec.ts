@@ -23,8 +23,8 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
-import { GeneralUtils } from '../../support/utils/GeneralUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
+import { NavigationUtils } from '../../support/utils/navigation/NavigationUtils';
 
 describe('Test Group Management for Pipelines', () => {
     beforeEach('Setup Test', () => {
@@ -104,7 +104,10 @@ describe('Test Group Management for Pipelines', () => {
         // Login as first user which belongs to user group with pipeline admin role
         UserUtils.switchUser(user);
 
-        GeneralUtils.validateAmountOfNavigationIcons(4);
+        NavigationUtils.validateActiveModules([
+            NavigationUtils.PIPELINES,
+            NavigationUtils.CONFIGURATION,
+        ]);
 
         // Check if pipeline is visible
         PipelineUtils.goToPipelines();
@@ -119,8 +122,7 @@ describe('Test Group Management for Pipelines', () => {
 
         // Login as user2
         UserUtils.switchUser(user2);
-
-        GeneralUtils.validateAmountOfNavigationIcons(3);
+        NavigationUtils.validateActiveModules([NavigationUtils.PIPELINES]);
 
         // Check if pipeline is invisible to user2
         PipelineUtils.goToPipelines();
