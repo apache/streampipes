@@ -43,12 +43,30 @@ export class AssetUtils {
         AssetBtns.manageLinksBtn().click();
     }
 
+    public static addNewAssetWithLink(
+        assetName: string,
+        selectLinkFunction: () => void,
+    ) {
+        AssetUtils.goToAssets();
+        AssetUtils.addNewAsset(assetName);
+        AssetBtns.assetLinksTab().click();
+        AssetUtils.openManageAssetLinks();
+        selectLinkFunction();
+        AssetBtns.updateAssetLinksBtn().click();
+        AssetBtns.saveAssetBtn().click();
+        cy.wait(1000);
+    }
+
     public static selectAdapterAssetLink(adapterName: string) {
         AssetBtns.adapterCheckbox(adapterName).click();
     }
 
     public static selectDataStreamAssetLink(adapterName: string) {
         AssetBtns.dataStreamCheckbox(adapterName).click();
+    }
+
+    public static selectDataViewAssetLink(adapterName: string) {
+        AssetBtns.dataViewCheckbox(adapterName).click();
     }
 
     public static selectFileAssetLink(fileName: string) {

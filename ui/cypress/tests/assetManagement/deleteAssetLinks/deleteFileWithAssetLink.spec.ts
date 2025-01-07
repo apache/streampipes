@@ -16,7 +16,6 @@
  *
  */
 
-import { AssetBtns } from '../../../support/utils/asset/AssetBtns';
 import { AssetUtils } from '../../../support/utils/asset/AssetUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 
@@ -28,16 +27,11 @@ describe('Delete file and auto remove asset links of file', () => {
     it('Perform Test', () => {
         FileManagementUtils.addFile('fileTest/random.csv');
 
-        // Add asset with pipeline
         const assetName = 'TestAsset';
-        AssetUtils.goToAssets();
-        AssetUtils.addNewAsset(assetName);
-        AssetBtns.assetLinksTab().click();
-        AssetUtils.openManageAssetLinks();
-        AssetUtils.selectFileAssetLink('random.csv');
-        AssetBtns.updateAssetLinksBtn().click();
-        AssetBtns.saveAssetBtn().click();
-        cy.wait(1000);
+
+        AssetUtils.addNewAssetWithLink(assetName, () => {
+            AssetUtils.selectFileAssetLink('random.csv');
+        });
 
         // delete resources that should remove also asset links
         FileManagementUtils.deleteFile();

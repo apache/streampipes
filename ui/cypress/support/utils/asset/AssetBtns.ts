@@ -61,6 +61,12 @@ export class AssetBtns {
         });
     }
 
+    public static dataViewCheckbox(adapterName: string) {
+        return cy.dataCy('select-data-view-checkbox-' + adapterName, {
+            timeout: 10000,
+        });
+    }
+
     public static fileCheckbox(fileName: string) {
         return cy.dataCy(`select-file-checkbox-${fileName.replace('.', '_')}`, {
             timeout: 10000,

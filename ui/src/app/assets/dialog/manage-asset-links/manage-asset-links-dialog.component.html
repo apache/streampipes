@@ -292,6 +292,9 @@
                     <mat-checkbox
                         color="accent"
                         [checked]="linkSelected(element.elementId)"
+                        [attr.data-cy]="
+                            'select-data-view-checkbox-' + element.name
+                        "
                         (change)="
                             selectLink(
                                 $event.checked,

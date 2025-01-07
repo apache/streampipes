@@ -136,14 +136,16 @@ export class DataLakeUtils {
         PrepareTestDataUtils.loadDataIntoDataLake('fileTest/random.csv');
     }
 
-    public static createAndEditDashboard(name: string) {
+    public static createDashboard(name: string) {
         // Create new data view
         cy.dataCy('open-new-dashboard-dialog').click();
 
         // Configure data view
         cy.dataCy('data-view-name').type(name);
         cy.dataCy('save-data-view').click();
+    }
 
+    public static createAndEditDashboard(name: string) {
         this.editDashboard(name);
     }
 

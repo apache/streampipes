@@ -17,30 +17,26 @@
  */
 
 import { AssetUtils } from '../../../support/utils/asset/AssetUtils';
-import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
-import { PipelineUtils } from '../../../support/utils/pipeline/PipelineUtils';
-import { MeasurementUtils } from '../../../support/utils/datalake/MeasurementUtils';
+import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
-describe('Delete pipeline and measurements and auto remove asset links', () => {
+describe('Delete data view and auto remove asset links of data view', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
     });
 
     it('Perform Test', () => {
+        const dashboardName = 'TestDashboard';
         const assetName = 'TestAsset';
-        ConnectUtils.addMachineDataSimulator('sample', true);
+
+        DataLakeUtils.goToDatalake();
+        DataLakeUtils.createDashboard(dashboardName);
 
         AssetUtils.addNewAssetWithLink(assetName, () => {
-            AssetUtils.selectPipelineAssetLink('persist_sample');
-            AssetUtils.selectMeasurementAssetLink('sample');
+            AssetUtils.selectDataViewAssetLink(dashboardName);
         });
 
-        // delete resources that should remove also asset links
-        cy.wait(1000);
-        PipelineUtils.deletePipeline();
-
-        MeasurementUtils.goToDatalakeConfiguration();
-        MeasurementUtils.deleteMeasurement();
+        DataLakeUtils.goToDatalake();
+        DataLakeUtils.deleteDashboard(dashboardName);
 
         AssetUtils.validateOneAssetWithNoAssetLinks(assetName);
     });
