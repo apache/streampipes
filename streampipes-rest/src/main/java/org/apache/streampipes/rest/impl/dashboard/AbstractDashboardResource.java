@@ -18,10 +18,13 @@
 
 package org.apache.streampipes.rest.impl.dashboard;
 
+import org.apache.streampipes.assetmodel.management.AssetModelHelper;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.resource.management.AbstractCRUDResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
@@ -33,9 +36,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.io.IOException;
 import java.util.List;
 
 public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestResource {
+
+  private static final Logger LOG = LoggerFactory.getLogger(AbstractDashboardResource.class);
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
@@ -61,7 +67,17 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dashboardId, 'WRITE')")
   public ResponseEntity<Void> deleteDashboard(@PathVariable("dashboardId") String dashboardId) {
     getResourceManager().delete(dashboardId);
+    removeDashboardFromAllAssetLinks(dashboardId);
     return ok();
+  }
+
+  private static void removeDashboardFromAllAssetLinks(String elementId) {
+    var assetModelHelper = new AssetModelHelper();
+    try {
+      assetModelHelper.removeAssetLinkFromAllAssets(elementId);
+    } catch (IOException e) {
+      LOG.error("Could not remove dashboard from asset links", e);
+    }
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
