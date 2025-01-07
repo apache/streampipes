@@ -20,7 +20,6 @@ import { AssetBtns } from '../../../support/utils/asset/AssetBtns';
 import { AssetUtils } from '../../../support/utils/asset/AssetUtils';
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../../support/utils/pipeline/PipelineUtils';
-import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 import { MeasurementUtils } from '../../../support/utils/datalake/MeasurementUtils';
 
 describe('Delete pipeline and measurements and auto remove asset links', () => {
@@ -49,11 +48,6 @@ describe('Delete pipeline and measurements and auto remove asset links', () => {
         MeasurementUtils.goToDatalakeConfiguration();
         MeasurementUtils.deleteMeasurement();
 
-        // Check that asset link is removed
-        AssetUtils.goToAssets();
-        AssetUtils.checkAmountOfAssets(1);
-        AssetUtils.editAsset(assetName);
-        AssetBtns.assetLinksTab().click();
-        AssetUtils.checkAmountOfLinkedResources(0);
+        AssetUtils.validateOneAssetWithNoAssetLinks(assetName);
     });
 });

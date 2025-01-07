@@ -103,6 +103,14 @@ export class AssetUtils {
         AssetUtils.goBackToOverview();
     }
 
+    public static validateOneAssetWithNoAssetLinks(assetName: string) {
+        AssetUtils.goToAssets();
+        AssetUtils.checkAmountOfAssets(1);
+        AssetUtils.editAsset(assetName);
+        AssetBtns.assetLinksTab().click();
+        AssetUtils.checkAmountOfLinkedResources(0);
+    }
+
     public static deleteAsset(assetName: string) {
         AssetBtns.deleteAssetBtn(assetName).click();
         cy.dataCy('confirm-delete').click();

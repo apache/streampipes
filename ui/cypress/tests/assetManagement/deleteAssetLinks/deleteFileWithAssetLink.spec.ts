@@ -42,11 +42,6 @@ describe('Delete file and auto remove asset links of file', () => {
         // delete resources that should remove also asset links
         FileManagementUtils.deleteFile();
 
-        // Check that asset link is removed
-        AssetUtils.goToAssets();
-        AssetUtils.checkAmountOfAssets(1);
-        AssetUtils.editAsset(assetName);
-        AssetBtns.assetLinksTab().click();
-        AssetUtils.checkAmountOfLinkedResources(0);
+        AssetUtils.validateOneAssetWithNoAssetLinks(assetName);
     });
 });

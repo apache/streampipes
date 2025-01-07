@@ -16,7 +16,6 @@
  *
  */
 
-import { AssetBtns } from '../../../support/utils/asset/AssetBtns';
 import { AssetUtils } from '../../../support/utils/asset/AssetUtils';
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 
@@ -32,12 +31,6 @@ describe('Delete adapter and auto remove asset links of adapter and data stream'
 
         ConnectUtils.deleteAdapter();
 
-        // Check that asset is still there and asset links of adapter and
-        // data stream are removed
-        AssetUtils.goToAssets();
-        AssetUtils.checkAmountOfAssets(1);
-        AssetUtils.editAsset(assetName);
-        AssetBtns.assetLinksTab().click();
-        AssetUtils.checkAmountOfLinkedResources(0);
+        AssetUtils.validateOneAssetWithNoAssetLinks(assetName);
     });
 });
