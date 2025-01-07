@@ -146,6 +146,7 @@ export class DataLakeUtils {
     }
 
     public static createAndEditDashboard(name: string) {
+        this.createDashboard(name);
         this.editDashboard(name);
     }
 
