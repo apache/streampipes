@@ -99,20 +99,20 @@ public class DataLakeResourceV4 extends AbstractRestResource {
         .getSchemaManagement();
   }
 
-  @DeleteMapping(path = "/measurements/{measurementID}")
+  @DeleteMapping(path = "/measurements/{measureName}")
   @Operation(summary = "Remove data from a single measurement series with given id", tags = {"Data Lake"},
       responses = {
           @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
           @ApiResponse(responseCode = "400", description = "Measurement series with given id not found")})
   public ResponseEntity<?> deleteData(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
-      @PathVariable("measurementID") String measurementID
+      @PathVariable("measureName") String measureName 
       , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation")
       @RequestParam(value = "startDate", required = false) Long startDate
       , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation")
       @RequestParam(value = "endDate", required = false) Long endDate) {
 
-    if (this.dataExplorerQueryManagement.deleteData(measurementID, startDate, endDate)){
+    if (this.dataExplorerQueryManagement.deleteData(measureName, startDate, endDate)){
       return ok();
     } else {
       return ResponseEntity
@@ -121,7 +121,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     }
   }
 
-  @DeleteMapping(path = "/measurements/{measurementID}/drop")
+  @DeleteMapping(path = "/measurements/{measureName}/drop")
   @Operation(summary = "Drop a single measurement series with given id from Data Lake and "
       + "remove related event property",
       tags = {
@@ -167,15 +167,15 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     return ok(allMeasurements);
   }
 
-  @GetMapping(path = "/measurements/{measurementId}/tags", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Map<String, Object>> getTagValues(@PathVariable("measurementId") String measurementId,
+  @GetMapping(path = "/measurements/{measureName}/tags", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, Object>> getTagValues(@PathVariable("measureName") String measureName,
                                                           @RequestParam("fields") String fields) {
-    Map<String, Object> tagValues = dataExplorerQueryManagement.getTagValues(measurementId, fields);
+    Map<String, Object> tagValues = dataExplorerQueryManagement.getTagValues(measureName, fields);
     return ok(tagValues);
   }
 
 
-  @GetMapping(path = "/measurements/{measurementID}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/measurements/{measureName}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get data from a single measurement series by a given id", tags = {"Data Lake"},
       responses = {
           @ApiResponse(
@@ -186,7 +186,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
               description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class)))})
   public ResponseEntity<?> getData(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
-      @PathVariable("measurementID") String measurementID
+      @PathVariable("measureName") String measureName
       , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)")
       @RequestParam(value = QP_COLUMNS, required = false) String columns
       , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation")
@@ -237,7 +237,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     if (!(checkProvidedQueryParams(queryParams))) {
       return badRequest();
     } else {
-      ProvidedRestQueryParams sanitizedParams = populate(measurementID, queryParams);
+      ProvidedRestQueryParams sanitizedParams = populate(measureName, queryParams);
       try {
         SpQueryResult result =
             this.dataExplorerQueryManagement.getData(sanitizedParams, isIgnoreMissingValues(missingValueBehaviour));
@@ -262,7 +262,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     return ok(results);
   }
 
-  @GetMapping(path = "/measurements/{measurementID}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+  @GetMapping(path = "/measurements/{measureName}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
   @Operation(summary = "Download data from a single measurement series by a given id", tags = {"Data Lake"},
       responses = {
           @ApiResponse(
@@ -273,7 +273,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
               description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class)))})
   public ResponseEntity<StreamingResponseBody> downloadData(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
-      @PathVariable("measurementID") String measurementID
+      @PathVariable("measureName") String measureName
       , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)")
       @RequestParam(value = QP_COLUMNS, required = false) String columns
       , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation")
@@ -321,7 +321,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     if (!(checkProvidedQueryParams(queryParams))) {
       throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error("Wrong query parameters provided"));
     } else {
-      ProvidedRestQueryParams sanitizedParams = populate(measurementID, queryParams);
+      ProvidedRestQueryParams sanitizedParams = populate(measureName, queryParams);
       if (format == null) {
         format = "csv";
       }
@@ -356,11 +356,11 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     return SUPPORTED_PARAMS.containsAll(providedParams.keySet());
   }
 
-  private ProvidedRestQueryParams populate(String measurementId, Map<String, String> rawParams) {
+  private ProvidedRestQueryParams populate(String measureName, Map<String, String> rawParams) {
     Map<String, String> queryParamMap = new HashMap<>();
     rawParams.forEach((key, value) -> queryParamMap.put(key, String.join(",", value)));
 
-    return new ProvidedRestQueryParams(measurementId, queryParamMap);
+    return new ProvidedRestQueryParams(measureName, queryParamMap);
   }
 
   // Checks if the parameter for missing value behaviour is set
