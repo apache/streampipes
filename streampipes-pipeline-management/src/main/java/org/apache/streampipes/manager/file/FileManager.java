@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.manager.file;
 
+import org.apache.streampipes.assetmodel.management.AssetModelHelper;
 import org.apache.streampipes.commons.file.FileHasher;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.sdk.helpers.Filetypes;
@@ -24,6 +25,8 @@ import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.commons.io.input.BOMInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +36,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FileManager {
+
+  private static final Logger LOG = LoggerFactory.getLogger(FileManager.class);
 
   private final CRUDStorage<FileMetadata> fileMetadataStorage;
   private final FileHandler fileHandler;
@@ -93,11 +98,22 @@ public class FileManager {
   }
 
 
-  public void deleteFile(String id) {
-    var fileMetadata = fileMetadataStorage.getElementById(id);
+  public void deleteFile(String elementId) {
+    var fileMetadata = fileMetadataStorage.getElementById(elementId);
     if (fileMetadata != null) {
       fileHandler.deleteFile(fileMetadata.getFilename());
-      fileMetadataStorage.deleteElementById(id);
+      fileMetadataStorage.deleteElementById(elementId);
+
+      removeFileFromAllAssetLinks(elementId);
+    }
+  }
+
+  private static void removeFileFromAllAssetLinks(String elementId) {
+    var assetModelHelper = new AssetModelHelper();
+    try {
+      assetModelHelper.removeAssetLinkFromAllAssets(elementId);
+    } catch (IOException e) {
+      LOG.error("Could not remove asset link from file: {}", elementId, e);
     }
   }
 
