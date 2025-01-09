@@ -32,13 +32,19 @@ public interface INotificationDataSinkMigrator extends IDataSinkMigrator  {
   @Override
   default MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element,
                                                       IDataSinkParameterExtractor extractor) throws RuntimeException {
-    var fsp = new FreeTextStaticProperty(KEY_SILENT_PERIOD,
-        "Silent Period [min]",
-        "The minimum number of minutes between two consecutive notifications that are sent",
-        XSD.INTEGER);
-    fsp.setValue(String.valueOf(DEFAULT_WAITING_TIME_MINUTES));
-    element.getStaticProperties().add(fsp);
+    if (!isSilentPeriodPresent(element)) {
+      var fsp = new FreeTextStaticProperty(KEY_SILENT_PERIOD,
+          "Silent Period [min]",
+          "The minimum number of minutes between two consecutive notifications that are sent",
+          XSD.INTEGER);
+      fsp.setValue(String.valueOf(DEFAULT_WAITING_TIME_MINUTES));
+      element.getStaticProperties().add(fsp);
+    }
 
     return MigrationResult.success(element);
+  }
+
+  default boolean isSilentPeriodPresent(DataSinkInvocation element) {
+    return element.getStaticProperties().stream().anyMatch(e -> e.getInternalName().equals(KEY_SILENT_PERIOD));
   }
 }
