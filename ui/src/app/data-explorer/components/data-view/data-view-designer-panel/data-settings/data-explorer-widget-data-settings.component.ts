@@ -34,6 +34,7 @@ import {
 } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../../../core-model/base/Tuple2';
 import { zip } from 'rxjs';
+import { Router } from '@angular/router';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 import { FieldSelectionPanelComponent } from './field-selection-panel/field-selection-panel.component';
 import { GroupSelectionPanelComponent } from './group-selection-panel/group-selection-panel.component';
@@ -73,12 +74,16 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
 
     step = 0;
 
+    expandFieldsDataSource = true;
+    expandFieldsQuery = true;
+
     constructor(
         private dataExplorerService: DataViewDataExplorerService,
         private datalakeRestService: DatalakeRestService,
         private widgetConfigService: WidgetConfigurationService,
         private fieldProviderService: DataExplorerFieldProviderService,
         private widgetTypeService: WidgetTypeService,
+        private router: Router,
     ) {}
 
     ngOnInit(): void {
@@ -279,6 +284,22 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
             refreshData: true,
             refreshView: true,
         });
+    }
+
+    toggleExpandFieldsDataSource() {
+        this.expandFieldsDataSource = !this.expandFieldsDataSource;
+    }
+
+    toggleExpandFieldsQuery() {
+        this.expandFieldsQuery = !this.expandFieldsQuery;
+    }
+
+    navigateToConnect(): void {
+        this.router.navigate(['connect']);
+    }
+
+    navigateToPipelines(): void {
+        this.router.navigate(['pipelines']);
     }
 
     deepCopy(obj) {
