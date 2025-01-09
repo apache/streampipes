@@ -48,6 +48,6 @@ public abstract class AbstractConfigFactory {
     Properties props = makeDefaultProperties();
     appenders.forEach(appender -> appender.appendConfig(props));
 
-    return  props;
+    return props;
   }
 }

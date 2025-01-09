@@ -31,7 +31,7 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeCont
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
-import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaAdapterConfig;
+import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaBaseConfig;
 import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigExtractor;
 import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider;
 import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventProcessor;
@@ -74,7 +74,7 @@ import java.util.stream.Collectors;
 public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig {
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaProtocol.class);
-  private KafkaAdapterConfig config;
+  private KafkaBaseConfig config;
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.kafka";
 
@@ -88,15 +88,13 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
     this.config = new KafkaConfigExtractor().extractAdapterConfig(extractor, true);
   }
 
-  private Consumer<byte[], byte[]> createConsumer(KafkaAdapterConfig kafkaConfig) throws KafkaException {
+  private Consumer<byte[], byte[]> createConsumer(KafkaBaseConfig kafkaConfig) throws KafkaException {
     final Properties props = new Properties();
 
     kafkaConfig.getConfigAppenders().forEach(c -> c.appendConfig(props));
 
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
         kafkaConfig.getKafkaHost() + ":" + kafkaConfig.getKafkaPort());
-
-    props.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaConfig.getGroupId());
 
     props.put(ConsumerConfig.DEFAULT_API_TIMEOUT_MS_CONFIG, 6000);
 
