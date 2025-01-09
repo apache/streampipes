@@ -51,6 +51,7 @@ public class ${classNamePrefix}GenericAdapter implements StreamPipesAdapter {
   public IAdapterConfiguration declareConfig() {
       return AdapterConfigurationBuilder.create(
         "${package}.pe.${packageName}.genericadapter",
+          0,
           ${classNamePrefix}GenericAdapter::new
         )
         .withCategory(AdapterType.Manufacturing)

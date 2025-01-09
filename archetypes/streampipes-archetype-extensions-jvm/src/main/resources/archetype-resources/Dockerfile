@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre-focal
 
 COPY ./target/${artifactId}.jar  /streampipes-extensions-service.jar
 
