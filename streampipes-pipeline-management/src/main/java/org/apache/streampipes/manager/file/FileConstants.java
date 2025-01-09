@@ -25,6 +25,7 @@ public class FileConstants {
       .getNoSqlStore()
       .getSpCoreConfigurationStorage()
       .get()
+      .getGeneralConfig()
       .getFilesDir();
 
 }

@@ -22,8 +22,6 @@ import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.random.TokenGenerator;
 
-import java.io.File;
-
 public class DefaultSpCoreConfiguration {
 
   public SpCoreConfiguration make() {
@@ -33,31 +31,9 @@ public class DefaultSpCoreConfiguration {
     coreCfg.setMessagingSettings(new DefaultMessagingSettings().make());
     coreCfg.setEmailConfig(EmailConfig.fromDefaults());
     coreCfg.setEmailTemplateConfig(new DefaultEmailTemplateConfiguration().getDefaultTemplates());
-    coreCfg.setFilesDir(makeFileLocation());
-    coreCfg.setAssetDir(makeAssetLocation());
     coreCfg.setLocalAuthConfig(LocalAuthConfig.fromDefaults(getJwtSecret()));
 
     return coreCfg;
-  }
-
-  private String makeAssetLocation() {
-    return makeStreamPipesHomeLocation()
-        + "assets";
-  }
-
-  private String makeFileLocation() {
-    return makeStreamPipesHomeLocation()
-        + "files";
-  }
-
-  private String makeStreamPipesHomeLocation() {
-    var userDefinedAssetDir = getEnvironment().getCoreAssetBaseDir();
-    var assetDirAppendix = getSpAssetDirAppendix();
-    if (userDefinedAssetDir.exists()) {
-      return userDefinedAssetDir.getValue() + assetDirAppendix;
-    } else {
-      return System.getProperty("user.home") + assetDirAppendix;
-    }
   }
 
   private String getJwtSecret() {
@@ -71,10 +47,6 @@ public class DefaultSpCoreConfiguration {
 
   private Environment getEnvironment() {
     return Environments.getEnvironment();
-  }
-
-  private String getSpAssetDirAppendix() {
-    return File.separator + ".streampipes" + File.separator;
   }
 
 }

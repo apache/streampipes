@@ -34,11 +34,11 @@ public class SpCoreConfiguration {
   private GeneralConfig generalConfig;
   private LocationConfig locationConfig;
 
-  private boolean isConfigured;
-  private SpCoreConfigurationStatus serviceStatus;
-
   private String assetDir;
   private String filesDir;
+
+  private boolean isConfigured;
+  private SpCoreConfigurationStatus serviceStatus;
 
   public SpCoreConfiguration() {
     this.locationConfig = new LocationConfig(false, "", "");
@@ -100,22 +100,6 @@ public class SpCoreConfiguration {
     isConfigured = configured;
   }
 
-  public String getAssetDir() {
-    return assetDir;
-  }
-
-  public void setAssetDir(String assetDir) {
-    this.assetDir = assetDir;
-  }
-
-  public String getFilesDir() {
-    return filesDir;
-  }
-
-  public void setFilesDir(String filesDir) {
-    this.filesDir = filesDir;
-  }
-
   public EmailTemplateConfig getEmailTemplateConfig() {
     return this.emailTemplateConfig;
   }
@@ -138,5 +122,21 @@ public class SpCoreConfiguration {
 
   public void setLocationConfig(LocationConfig locationConfig) {
     this.locationConfig = locationConfig;
+  }
+
+  public String getAssetDir() {
+    return assetDir;
+  }
+
+  public void setAssetDir(String assetDir) {
+    this.assetDir = assetDir;
+  }
+
+  public String getFilesDir() {
+    return filesDir;
+  }
+
+  public void setFilesDir(String filesDir) {
+    this.filesDir = filesDir;
   }
 }

@@ -82,6 +82,34 @@
                             </mat-form-field>
                         </div>
                     </div>
+                    <div class="subsection-title">Asset Directory</div>
+                    <div class="warning mb-10">
+                        Modification of the asset directory will be only applied
+                        after restarting the core service.
+                    </div>
+                    <mat-form-field color="accent">
+                        <input
+                            formControlName="assetDir"
+                            fxFlex
+                            matInput
+                            required
+                            data-cy="general-config-asset-dir"
+                        />
+                    </mat-form-field>
+                    <div class="subsection-title">File Directory</div>
+                    <div class="warning mb-10">
+                        Modification of the file directory will be only applied
+                        after restarting the core service.
+                    </div>
+                    <mat-form-field color="accent">
+                        <input
+                            formControlName="filesDir"
+                            fxFlex
+                            matInput
+                            required
+                            data-cy="general-config-files-dir"
+                        />
+                    </mat-form-field>
                 </sp-split-section>
                 <sp-split-section
                     title="Registration"

@@ -96,6 +96,8 @@ export class GeneralConfigurationComponent implements OnInit {
                     defaultUserRoles: [UserRole.ROLE_PIPELINE_USER],
                     appName: this.appConstants.APP_NAME,
                     linkSettings: configs[0].linkSettings,
+                    filesDir: configs[0].filesDir,
+                    assetDir: configs[0].assetDir,
                 };
             }
             this.mailConfig = configs[1];
@@ -125,6 +127,20 @@ export class GeneralConfigurationComponent implements OnInit {
                 'hostname',
                 new UntypedFormControl(
                     this.generalConfig.hostname,
+                    Validators.required,
+                ),
+            );
+            this.parentForm.addControl(
+                'assetDir',
+                new UntypedFormControl(
+                    this.generalConfig.assetDir,
+                    Validators.required,
+                ),
+            );
+            this.parentForm.addControl(
+                'filesDir',
+                new UntypedFormControl(
+                    this.generalConfig.filesDir,
                     Validators.required,
                 ),
             );
@@ -190,6 +206,8 @@ export class GeneralConfigurationComponent implements OnInit {
                 this.generalConfig.protocol = v.protocol;
                 this.generalConfig.port = v.port;
                 this.generalConfig.hostname = v.hostname;
+                this.generalConfig.assetDir = v.assetDir;
+                this.generalConfig.filesDir = v.filesDir;
                 this.generalConfig.allowPasswordRecovery =
                     v.allowPasswordRecovery;
                 this.generalConfig.allowSelfRegistration =

@@ -31,6 +31,7 @@ import org.apache.streampipes.service.core.migrations.v970.AddLinkSettingsMigrat
 import org.apache.streampipes.service.core.migrations.v970.AddRolesToUserDbMigration;
 import org.apache.streampipes.service.core.migrations.v970.DataExplorerDataViewMigration;
 import org.apache.streampipes.service.core.migrations.v970.ModifyAssetLinkTypeMigration;
+import org.apache.streampipes.service.core.migrations.v970.MoveDirectoryConfigurationMigration;
 import org.apache.streampipes.service.core.migrations.v970.RemoveNodesFromOpcUaAdaptersMigration;
 
 import java.util.Arrays;
@@ -52,7 +53,8 @@ public class AvailableMigrations {
         new ModifyAssetLinkTypeMigration(),
         new RemoveNodesFromOpcUaAdaptersMigration(),
         new AddRolesToUserDbMigration(),
-        new AddDataLakePipelineTemplateMigration()
+        new AddDataLakePipelineTemplateMigration(),
+        new MoveDirectoryConfigurationMigration()
     );
   }
 }

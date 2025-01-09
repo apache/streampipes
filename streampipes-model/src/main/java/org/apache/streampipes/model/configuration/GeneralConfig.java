@@ -33,6 +33,9 @@ public class GeneralConfig {
   private List<String> defaultUserRoles;
   private LinkSettings linkSettings;
 
+  private String assetDir;
+  private String filesDir;
+
   public GeneralConfig() {
   }
 
@@ -112,5 +115,21 @@ public class GeneralConfig {
 
   public void setLinkSettings(LinkSettings linkSettings) {
     this.linkSettings = linkSettings;
+  }
+
+  public String getAssetDir() {
+    return assetDir;
+  }
+
+  public void setAssetDir(String assetDir) {
+    this.assetDir = assetDir;
+  }
+
+  public String getFilesDir() {
+    return filesDir;
+  }
+
+  public void setFilesDir(String filesDir) {
+    this.filesDir = filesDir;
   }
 }

@@ -28,4 +28,6 @@ export interface GeneralConfigModel {
     defaultUserRoles: string[];
     appName: string;
     linkSettings: LinkSettings;
+    assetDir: string;
+    filesDir: string;
 }

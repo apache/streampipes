@@ -18,11 +18,46 @@
 
 package org.apache.streampipes.model.configuration;
 
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
+
+import java.io.File;
+
 public class DefaultGeneralConfig {
 
   public GeneralConfig make() {
     var generalConfig = new GeneralConfig();
     generalConfig.setLinkSettings(new DefaultLinkSettings().make());
+    generalConfig.setAssetDir(makeAssetLocation());
+    generalConfig.setFilesDir(makeFileLocation());
     return generalConfig;
+  }
+
+  public String makeAssetLocation() {
+    return makeStreamPipesHomeLocation()
+        + "assets";
+  }
+
+  public String makeFileLocation() {
+    return makeStreamPipesHomeLocation()
+        + "files";
+  }
+
+  private String makeStreamPipesHomeLocation() {
+    var userDefinedAssetDir = getEnvironment().getCoreAssetBaseDir();
+    var assetDirAppendix = getSpAssetDirAppendix();
+    if (userDefinedAssetDir.exists()) {
+      return userDefinedAssetDir.getValue() + assetDirAppendix;
+    } else {
+      return System.getProperty("user.home") + assetDirAppendix;
+    }
+  }
+
+  private String getSpAssetDirAppendix() {
+    return File.separator + ".streampipes" + File.separator;
+  }
+
+  private Environment getEnvironment() {
+    return Environments.getEnvironment();
   }
 }
