@@ -16,26 +16,22 @@
  *
  */
 
+import { ConfigurationUtils } from '../../../support/utils/configuration/ConfigurationUtils';
+
 describe('Add and Delete Label', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
     });
 
     it('Perform Test', () => {
-        cy.visit('#/configuration/labels');
+        const labelName = 'test';
 
-        // Add new label
-        cy.dataCy('new-label-button').click();
-        cy.dataCy('label-name').type('test');
-        cy.dataCy('label-description').type('test test');
-        cy.dataCy('save-label-button').click();
+        ConfigurationUtils.goToLabelConfiguration();
 
-        // Check label
-        cy.dataCy('available-labels-list').should('have.length', 1);
-        cy.dataCy('label-text').should('have.text', ' test\n');
+        ConfigurationUtils.addNewLabel(labelName, 'test test');
 
-        // Delete label
-        cy.dataCy('delete-label-button').click();
-        cy.dataCy('available-labels-list').should('have.length', 0);
+        ConfigurationUtils.checkLabel(labelName);
+
+        ConfigurationUtils.deleteLabel();
     });
 });
