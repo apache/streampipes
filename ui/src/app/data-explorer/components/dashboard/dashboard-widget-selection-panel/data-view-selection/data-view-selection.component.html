@@ -17,11 +17,28 @@
   -->
 
 <div fxFlex="100" class="m-10" fxLayoutGap="10px" fxLayout="column">
-    <div *ngFor="let dataView of dataViews">
-        <sp-data-explorer-data-view-preview
-            [dataView]="dataView"
-            (addDataViewEmitter)="addDataViewEmitter.emit($event)"
-        >
-        </sp-data-explorer-data-view-preview>
-    </div>
+    @if (dataViews.length > 0) {
+        <div *ngFor="let dataView of dataViews">
+            <sp-data-explorer-data-view-preview
+                [dataView]="dataView"
+                (addDataViewEmitter)="addDataViewEmitter.emit($event)"
+            >
+            </sp-data-explorer-data-view-preview>
+        </div>
+    } @else {
+        <div fxLayoutAlign="center center" fxLayout="column" fxFlex="100">
+            <span class="no-widget-hint"
+                >No data views found - create a new data view first to add it to
+                this dashboard.</span
+            >
+            <button
+                mat-button
+                color="accent"
+                class="mt-10"
+                (click)="navigateToDataViewCreation()"
+            >
+                Create Data View
+            </button>
+        </div>
+    }
 </div>

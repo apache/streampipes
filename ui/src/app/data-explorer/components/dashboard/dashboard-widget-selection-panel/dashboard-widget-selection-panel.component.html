@@ -32,12 +32,10 @@
                 <div class="scroll-tab-content">
                     <sp-data-explorer-data-view-selection
                         (addDataViewEmitter)="addDataViewEmitter.emit($event)"
+                        fxFlex="100"
                     >
                     </sp-data-explorer-data-view-selection>
                 </div>
-            </mat-tab>
-            <mat-tab data-cy="designer-panel-data-config" label="Layout">
-                <div class="scroll-tab-content">Layout</div>
             </mat-tab>
         </mat-tab-group>
     </div>
