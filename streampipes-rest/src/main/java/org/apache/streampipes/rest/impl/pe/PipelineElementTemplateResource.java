@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.ps;
+
+package org.apache.streampipes.rest.impl.pe;
 
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
 import org.apache.streampipes.manager.template.DataProcessorTemplateHandler;

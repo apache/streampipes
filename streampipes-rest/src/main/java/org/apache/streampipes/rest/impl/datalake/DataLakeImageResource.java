@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.ps;
+package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;

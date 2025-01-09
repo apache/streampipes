@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.ps;
+package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
@@ -78,12 +78,12 @@ import static org.apache.streampipes.model.datalake.param.SupportedRestQueryPara
 
 @RestController
 @RequestMapping("/api/v4/datalake")
-public class DataLakeResourceV4 extends AbstractRestResource {
+public class DataLakeResource extends AbstractRestResource {
 
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
 
-  public DataLakeResourceV4() {
+  public DataLakeResource() {
     this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getSchemaManagement();
@@ -92,7 +92,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
         .getQueryManagement(this.dataExplorerSchemaManagement);
   }
 
-  public DataLakeResourceV4(IDataExplorerQueryManagement dataExplorerQueryManagement) {
+  public DataLakeResource(IDataExplorerQueryManagement dataExplorerQueryManagement) {
     this.dataExplorerQueryManagement = dataExplorerQueryManagement;
     this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
