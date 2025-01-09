@@ -50,7 +50,7 @@ public class ${classNamePrefix}DataProcessor implements IStreamPipesDataProcesso
   public IDataProcessorConfiguration declareConfig() {
     return DataProcessorConfiguration.create(
       ${classNamePrefix}DataProcessor::new,
-      ProcessingElementBuilder.create("${package}.pe.${packageName}.processor")
+      ProcessingElementBuilder.create("${package}.pe.${packageName}.processor", 0)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .category(DataProcessorType.AGGREGATE)

@@ -49,7 +49,7 @@ public class ${classNamePrefix}DataSink implements IStreamPipesDataSink {
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
       ${classNamePrefix}DataSink::new,
-      DataSinkBuilder.create("${package}.pe.${packageName}.sink")
+      DataSinkBuilder.create("${package}.pe.${packageName}.sink", 0)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .category(DataSinkType.UNCATEGORIZED)
