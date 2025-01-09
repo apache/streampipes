@@ -21,6 +21,7 @@ import {
     DataExplorerWidgetModel,
     DataViewDataExplorerService,
 } from '@streampipes/platform-services';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'sp-data-explorer-data-view-selection',
@@ -33,7 +34,10 @@ export class DataExplorerDataViewSelectionComponent implements OnInit {
 
     dataViews: DataExplorerWidgetModel[] = [];
 
-    constructor(private dataViewService: DataViewDataExplorerService) {}
+    constructor(
+        private dataViewService: DataViewDataExplorerService,
+        private router: Router,
+    ) {}
 
     ngOnInit() {
         this.dataViewService.getAllWidgets().subscribe(dataViews => {
@@ -42,6 +46,13 @@ export class DataExplorerDataViewSelectionComponent implements OnInit {
                     b.baseAppearanceConfig.widgetTitle,
                 ),
             );
+        });
+    }
+
+    navigateToDataViewCreation(): void {
+        this.router.navigate(['dataexplorer', 'data-view'], {
+            queryParams: { editMode: true },
+            state: { omitConfirm: true },
         });
     }
 }
