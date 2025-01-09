@@ -55,6 +55,8 @@ public class StaticMetaDataEnrichmentProcessor
     implements IStreamPipesDataProcessor,
                ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
+  public static final String ID = "org.apache.streampipes.processors.transformation.jvm.processor.staticmetadata";
+
   protected static final String STATIC_METADATA_INPUT = "static-metadata-input";
   protected static final String STATIC_METADATA_INPUT_RUNTIME_NAME = "static-metadata-input-runtime-name";
   protected static final String STATIC_METADATA_INPUT_VALUE = "static-metadata-input-value";
@@ -73,7 +75,7 @@ public class StaticMetaDataEnrichmentProcessor
     return DataProcessorConfiguration.create(
         StaticMetaDataEnrichmentProcessor::new,
         ProcessingElementBuilder.create(
-                                    "org.apache.streampipes.processors.transformation.jvm.processor.staticmetadata",
+                                    ID,
                                     1
                                 )
                                 .category(

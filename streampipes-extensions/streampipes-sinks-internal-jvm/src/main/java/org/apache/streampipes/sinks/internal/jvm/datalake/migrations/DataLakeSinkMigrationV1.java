@@ -50,12 +50,20 @@ public class DataLakeSinkMigrationV1 implements IDataSinkMigrator {
       DataSinkInvocation element,
       IDataSinkParameterExtractor extractor
   ) throws RuntimeException {
-    var oneOfStaticProperty = createDefaultSchemaUpdateStrategy();
+    if (!isSchemaUpdateStrategyPresent(element)) {
+      var oneOfStaticProperty = createDefaultSchemaUpdateStrategy();
 
-    element.getStaticProperties()
-           .add(oneOfStaticProperty);
+      element.getStaticProperties()
+          .add(oneOfStaticProperty);
+    }
 
     return MigrationResult.success(element);
+  }
+
+  private boolean isSchemaUpdateStrategyPresent(DataSinkInvocation element) {
+    return element.getStaticProperties()
+        .stream()
+        .anyMatch(sp -> sp.getInternalName().equals(DataLakeSink.SCHEMA_UPDATE_KEY));
   }
 
   private static OneOfStaticProperty createDefaultSchemaUpdateStrategy() {
