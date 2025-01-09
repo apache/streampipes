@@ -28,6 +28,7 @@ import org.apache.streampipes.messaging.kafka.security.KafkaSecurityProtocolConf
 import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslConfigAppender;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.security.auth.SecurityProtocol;
 
 import java.util.ArrayList;
@@ -51,10 +52,10 @@ import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.Ka
 
 public class KafkaConfigExtractor {
 
-  public KafkaAdapterConfig extractAdapterConfig(IStaticPropertyExtractor extractor,
+  public KafkaBaseConfig extractAdapterConfig(IStaticPropertyExtractor extractor,
                                                  boolean containsTopic) {
 
-    var config = extractCommonConfigs(extractor, new KafkaAdapterConfig());
+    var config = extractCommonConfigs(extractor, new KafkaBaseConfig());
 
     var topic = "";
     if (containsTopic) {
@@ -62,11 +63,13 @@ public class KafkaConfigExtractor {
     }
     config.setTopic(topic);
 
+    var groupId = "";
     if (extractor.selectedAlternativeInternalId(CONSUMER_GROUP).equals(RANDOM_GROUP_ID)) {
-      config.setGroupId("StreamPipesKafkaConsumer" + System.currentTimeMillis());
+      groupId = "StreamPipesKafkaConsumer" + System.currentTimeMillis();
     } else {
-      config.setGroupId(extractor.singleValueParameter(GROUP_ID_INPUT, String.class));
+      groupId = extractor.singleValueParameter(GROUP_ID_INPUT, String.class);
     }
+    config.getConfigAppenders().add(new SimpleConfigAppender(Map.of(ConsumerConfig.GROUP_ID_CONFIG, groupId)));
 
     StaticPropertyAlternatives alternatives = extractor.getStaticPropertyByName(AUTO_OFFSET_RESET_CONFIG,
         StaticPropertyAlternatives.class);

@@ -82,6 +82,7 @@ public class SpKafkaConsumer implements EventConsumer, Runnable,
 
     Properties props = makeProperties(protocol, appenders);
 
+    LOG.info("Using kafka properties: {}", props.toString());
     KafkaConsumer<byte[], byte[]> consumer = new KafkaConsumer<>(props);
     if (!patternTopic) {
       consumer.subscribe(Collections.singletonList(topic));
