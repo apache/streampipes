@@ -40,12 +40,12 @@ public class DefaultSpCoreConfiguration {
     return coreCfg;
   }
 
-  private String makeAssetLocation() {
+  public String makeAssetLocation() {
     return makeStreamPipesHomeLocation()
         + "assets";
   }
 
-  private String makeFileLocation() {
+  public String makeFileLocation() {
     return makeStreamPipesHomeLocation()
         + "files";
   }
