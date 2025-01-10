@@ -20,10 +20,10 @@ package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.model.configuration.DefaultSpCoreConfiguration;
 import org.apache.streampipes.model.configuration.JwtSigningMode;
 import org.apache.streampipes.model.configuration.LocalAuthConfig;
 import org.apache.streampipes.model.configuration.SpCoreConfiguration;
-import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
@@ -37,7 +37,6 @@ public class StreamPipesEnvChecker {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesEnvChecker.class);
 
-  private ISpCoreConfigurationStorage configStorage;
   private SpCoreConfiguration coreConfig;
 
   private final Environment env;
@@ -47,7 +46,7 @@ public class StreamPipesEnvChecker {
   }
 
   public void updateEnvironmentVariables() {
-    this.configStorage = StorageDispatcher
+    var configStorage = StorageDispatcher
         .INSTANCE
         .getNoSqlStore()
         .getSpCoreConfigurationStorage();
@@ -56,11 +55,29 @@ public class StreamPipesEnvChecker {
       this.coreConfig = configStorage.get();
 
       LOG.info("Checking and updating environment variables...");
-      updateJwtSettings();
+      var shouldUpdateJwtConfig = updateJwtSettings();
+      var shouldUpdateDirectoryConfig = updateDirectorySettings();
+
+      if (shouldUpdateJwtConfig || shouldUpdateDirectoryConfig) {
+        configStorage.updateElement(coreConfig);
+      }
     }
   }
 
-  private void updateJwtSettings() {
+  private boolean updateDirectorySettings() {
+    if (env.getCoreAssetBaseDir().exists()) {
+      LOG.info("Using asset directory provided by environment variable {}",
+          env.getCoreAssetBaseDir().getEnvVariableName());
+      var defaultCoreConfig = new DefaultSpCoreConfiguration();
+      coreConfig.setFilesDir(defaultCoreConfig.makeFileLocation());
+      coreConfig.setAssetDir(defaultCoreConfig.makeAssetLocation());
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private boolean updateJwtSettings() {
     LocalAuthConfig localAuthConfig = coreConfig.getLocalAuthConfig();
     boolean incompleteConfig = false;
     var signingMode = env.getJwtSigningMode();
@@ -108,7 +125,9 @@ public class StreamPipesEnvChecker {
     if (!incompleteConfig) {
       LOG.info("Updating local auth config with signing mode {}", localAuthConfig.getJwtSigningMode().name());
       coreConfig.setLocalAuthConfig(localAuthConfig);
-      configStorage.updateElement(coreConfig);
+      return true;
+    } else {
+      return false;
     }
   }
 
