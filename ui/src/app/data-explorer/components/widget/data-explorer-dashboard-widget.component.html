@@ -104,6 +104,8 @@
                     aria-label="Options"
                     data-cy="options-data-explorer"
                     #menuTrigger="matMenuTrigger"
+                    [matTooltip]="tooltipText"
+                    matTooltipClass="no-wrap-tooltip"
                 >
                     <mat-icon
                         [color]="timeSettingsModified ? 'primary' : 'default'"
@@ -112,9 +114,12 @@
                 </button>
                 <mat-menu #optMenu="matMenu" class="large-menu">
                     <sp-time-selector-menu
+                        #timeSelectorMenu
                         *ngIf="quickSelections"
                         [timeSettings]="clonedTimeSettings"
                         [quickSelections]="quickSelections"
+                        [enableTimePicker]="enableTimePicker"
+                        [maxDayRange]="maxDayRange"
                         [labels]="labels"
                         (timeSettingsEmitter)="modifyWidgetTimeSettings($event)"
                         class="w-100"

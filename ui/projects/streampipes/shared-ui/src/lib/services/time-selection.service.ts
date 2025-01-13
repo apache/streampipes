@@ -39,7 +39,7 @@ import {
     subWeeks,
     subYears,
 } from 'date-fns';
-import { TimeSelectorLabel } from '../components/time-selector/time-selector.model';
+import { TimeSelectorLabel } from '@streampipes/shared-ui';
 
 @Injectable({ providedIn: 'root' })
 export class TimeSelectionService {
@@ -279,5 +279,15 @@ export class TimeSelectionService {
     public notify(timeSettings?: TimeSettings, widgetIndex?: number): void {
         const widgetTimeSettings = { timeSettings, widgetIndex };
         this.timeSelectionChangeSubject.next(widgetTimeSettings);
+    }
+
+    public formatDate(
+        date: Date,
+        enableTimePicker: boolean,
+        dateFormat: Intl.DateTimeFormatOptions,
+    ): string {
+        return enableTimePicker
+            ? date.toLocaleDateString()
+            : date.toLocaleDateString(navigator.language, dateFormat);
     }
 }
