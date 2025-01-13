@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.ps;
+package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
@@ -43,11 +43,11 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v4/datalake/measure")
-public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
+public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
 
   private final IDataExplorerSchemaManagement dataLakeMeasureManagement;
 
-  public DataLakeMeasureResourceV4() {
+  public DataLakeMeasureResource() {
     this.dataLakeMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
                                                                  .getSchemaManagement();
   }

@@ -47,7 +47,6 @@ import java.util.List;
 })
 @ComponentScan({
     "org.apache.streampipes.rest.*",
-    "org.apache.streampipes.ps",
     "org.apache.streampipes.service.core.oauth2"})
 public class StreamPipesCoreApplicationMinimal extends StreamPipesCoreApplication {
 

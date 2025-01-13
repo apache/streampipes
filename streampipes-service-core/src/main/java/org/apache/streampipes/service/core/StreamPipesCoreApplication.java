@@ -77,7 +77,6 @@ import java.util.concurrent.TimeUnit;
 })
 @ComponentScan({
     "org.apache.streampipes.rest.*",
-    "org.apache.streampipes.ps",
     "org.apache.streampipes.service.core.oauth2"
 })
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {
