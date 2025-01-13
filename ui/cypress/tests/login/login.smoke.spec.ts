@@ -20,7 +20,7 @@ import { UserUtils } from '../../support/utils/UserUtils';
 
 describe('Login and logout of StreamPipes', () => {
     it('Perform Test', () => {
-        cy.visit('#/login');
+        UserUtils.goToLogin();
         cy.dataCy('login-email').type(UserUtils.adminUser.email);
         cy.dataCy('login-password').type(UserUtils.adminUser.password);
         cy.dataCy('login-button').click();

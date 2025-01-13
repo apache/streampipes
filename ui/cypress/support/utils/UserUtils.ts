@@ -36,6 +36,10 @@ export class UserUtils {
         .addRole(UserRole.ROLE_CONNECT_ADMIN)
         .build();
 
+    public static goToLogin() {
+        cy.visit('#/login');
+    }
+
     public static goToUserConfiguration() {
         cy.visit('#/configuration/security');
     }
@@ -83,7 +87,7 @@ export class UserUtils {
 
     public static switchUser(user: User) {
         cy.logout();
-        cy.visit('#/login');
+        UserUtils.goToLogin();
         cy.dataCy('login-email').type(user.email);
         cy.dataCy('login-password').type(user.password);
         cy.dataCy('login-button').click();
