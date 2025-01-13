@@ -50,14 +50,12 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import {
     CurrentUserService,
     TimeRangeSelectorMenuComponent,
+    TimeSelectionService,
+    TimeSelectorLabel,
 } from '@streampipes/shared-ui';
 import { BaseWidgetData } from '../../models/dataview-dashboard.model';
 import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
 import { MatMenuTrigger } from '@angular/material/menu';
-import {
-    TimeSelectionService,
-    TimeSelectorLabel,
-} from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-widget',

@@ -39,7 +39,7 @@ import {
     subWeeks,
     subYears,
 } from 'date-fns';
-import { TimeSelectorLabel } from '@streampipes/shared-ui';
+import { TimeSelectorLabel } from '../components/time-selector/time-selector.model';
 
 @Injectable({ providedIn: 'root' })
 export class TimeSelectionService {
