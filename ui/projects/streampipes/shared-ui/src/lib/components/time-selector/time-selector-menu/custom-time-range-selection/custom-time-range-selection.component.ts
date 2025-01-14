@@ -40,7 +40,7 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
     @Input() labels: TimeSelectorLabel;
 
     @Input()
-    enableTimeChange: boolean;
+    enableTimePicker: boolean;
 
     @Input()
     maxDayRange: number;
@@ -96,7 +96,7 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
     }
 
     formatDate(date: Date): string {
-        if (this.enableTimeChange === true) {
+        if (this.enableTimePicker === true) {
             return date?.toLocaleDateString() || '-';
         } else {
             return date?.toLocaleDateString() || ' ';
@@ -119,7 +119,7 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
         if (this.selectionModel.isComplete()) {
             if (this.maxDayRange === 0 || daysDiff + 1 <= this.maxDayRange) {
                 this.dateSelectionComplete = true;
-                if (!this.enableTimeChange) {
+                if (!this.enableTimePicker) {
                     this.saveSelection();
                 }
             } else {
@@ -130,7 +130,7 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
     }
 
     saveSelection(): void {
-        if (this.enableTimeChange === true) {
+        if (this.enableTimePicker === true) {
             this.updateDateTime(
                 this.currentDateRange.start,
                 this.currentStartTime,

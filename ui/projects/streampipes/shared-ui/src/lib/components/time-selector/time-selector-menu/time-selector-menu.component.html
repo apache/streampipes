@@ -27,6 +27,12 @@
                     <div *ngFor="let quickSelection of quickSelections">
                         <span
                             class="quick-link"
+                            [ngClass]="{
+                                selected:
+                                    quickSelection.timeSelectionId ===
+                                        timeSettings?.timeSelectionId &&
+                                    timeSettings?.timeSelectionId !== 'custom'
+                            }"
                             [attr.data-cy]="
                                 'time-selector-quick-' +
                                 quickSelection.timeSelectionId
@@ -52,7 +58,7 @@
                             timeSettings: $event
                         })
                     "
-                    [enableTimeChange]="enableTimeChange"
+                    [enableTimePicker]="enableTimePicker"
                     [maxDayRange]="maxDayRange"
                     class="w-100"
                 >

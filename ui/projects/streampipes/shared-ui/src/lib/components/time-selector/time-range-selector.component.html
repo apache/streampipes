@@ -39,15 +39,15 @@
                 class="formatted-datetime"
             >
                 <span class="formatted-date">{{ timeString.startDate }}</span>
-                <span *ngIf="enableTimeChange">
+                <span *ngIf="enableTimePicker">
                     &nbsp;<span class="formatted-time">{{
                         timeString.startTime
                     }}</span>
                 </span>
-                <div *ngIf="enableTimeChange || !timeString.sameDay">
+                <div *ngIf="enableTimePicker || !timeString.sameDay">
                     <span class="formatted-date">&nbsp;-&nbsp;</span>
                     <span class="formatted-date">{{ timeString.endDate }}</span>
-                    <span *ngIf="enableTimeChange">
+                    <span *ngIf="enableTimePicker">
                         &nbsp;<span class="formatted-time">{{
                             timeString.endTime
                         }}</span>
@@ -69,7 +69,7 @@
                 [labels]="labels"
                 (timeSettingsEmitter)="applyCurrentDateRange($event)"
                 [quickSelections]="quickSelections"
-                [enableTimeChange]="enableTimeChange"
+                [enableTimePicker]="enableTimePicker"
                 [maxDayRange]="maxDayRange"
                 class="w-100"
             >
@@ -89,7 +89,7 @@
     <div fxLayoutAlign="end center">
         <sp-data-explorer-refresh-interval-settings-component
             #refreshIntervalSettings
-            *ngIf="liveSettings && showTimeSelector && showIntervalSettings"
+            *ngIf="liveSettings && showIntervalSettings"
             [liveSettings]="liveSettings"
             (intervalSettingsChangedEmitter)="
                 intervalSettingsChangedEmitter.emit($event)
