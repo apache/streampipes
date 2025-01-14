@@ -26,7 +26,7 @@
             </mat-calendar>
         </mat-card>
 
-        <div *ngIf="enableTimeChange" fxLayout="column" class="mt-10 mr-5">
+        <div *ngIf="enableTimePicker" fxLayout="column" class="mt-10 mr-5">
             <div fxLayout="row" fxLayoutGap="10px">
                 <div fxFlex="30">
                     <span
@@ -73,7 +73,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="!enableTimeChange" fxLayout="row" class="mt-10 date-preview">
+    <div *ngIf="!enableTimePicker" fxLayout="row" class="mt-10 date-preview">
         {{ dateRangeString }}
     </div>
     <div
@@ -96,7 +96,7 @@
             data-cy="apply-custom-time"
             (click)="saveSelection()"
             [disabled]="!dateSelectionComplete"
-            *ngIf="enableTimeChange"
+            *ngIf="enableTimePicker"
         >
             Apply
         </button>

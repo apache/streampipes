@@ -73,7 +73,7 @@ export class TimeRangeSelectorComponent
     showTimeSelector = true;
 
     @Input()
-    enableTimeChange = true;
+    enableTimePicker = true;
 
     @Input()
     showIntervalSettings = true;
@@ -225,8 +225,16 @@ export class TimeRangeSelectorComponent
             const startDate = new Date(this.timeSettings.startTime);
             const endDate = new Date(this.timeSettings.endTime);
             this.timeString = {
-                startDate: this.formatDate(startDate),
-                endDate: this.formatDate(endDate),
+                startDate: this.timeSelectionService.formatDate(
+                    startDate,
+                    this.enableTimePicker,
+                    this.dateFormat,
+                ),
+                endDate: this.timeSelectionService.formatDate(
+                    endDate,
+                    this.enableTimePicker,
+                    this.dateFormat,
+                ),
                 startTime: startDate.toLocaleTimeString(),
                 endTime: endDate.toLocaleTimeString(),
                 sameDay: isSameDay(startDate, endDate),
@@ -234,11 +242,5 @@ export class TimeRangeSelectorComponent
 
             this.timeStringMode = 'advanced';
         }
-    }
-
-    private formatDate(date: Date): string {
-        return this.enableTimeChange
-            ? date.toLocaleDateString()
-            : date.toLocaleDateString(navigator.language, this.dateFormat);
     }
 }

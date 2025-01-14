@@ -280,4 +280,14 @@ export class TimeSelectionService {
         const widgetTimeSettings = { timeSettings, widgetIndex };
         this.timeSelectionChangeSubject.next(widgetTimeSettings);
     }
+
+    public formatDate(
+        date: Date,
+        enableTimePicker: boolean,
+        dateFormat: Intl.DateTimeFormatOptions,
+    ): string {
+        return enableTimePicker
+            ? date.toLocaleDateString()
+            : date.toLocaleDateString(navigator.language, dateFormat);
+    }
 }

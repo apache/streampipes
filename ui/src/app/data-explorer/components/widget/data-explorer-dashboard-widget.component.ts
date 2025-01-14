@@ -34,8 +34,10 @@ import {
     DashboardItem,
     DataExplorerWidgetModel,
     DataLakeMeasure,
+    ExtendedTimeSettings,
     QuickTimeSelection,
     SpLogMessage,
+    TimeSelectionConstants,
     TimeSettings,
 } from '@streampipes/platform-services';
 import { interval, Subscription } from 'rxjs';
@@ -45,12 +47,15 @@ import { WidgetDirective } from './widget.directive';
 import { WidgetTypeService } from '../../services/widget-type.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
-import { CurrentUserService } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    TimeRangeSelectorMenuComponent,
+    TimeSelectionService,
+    TimeSelectorLabel,
+} from '@streampipes/shared-ui';
 import { BaseWidgetData } from '../../models/dataview-dashboard.model';
 import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { TimeSelectionService } from '@streampipes/shared-ui';
-import { TimeSelectorLabel } from 'projects/streampipes/shared-ui/src/lib/components/time-selector/time-selector.model';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-widget',
@@ -61,6 +66,8 @@ export class DataExplorerDashboardWidgetComponent
     implements OnInit, OnDestroy, OnChanges
 {
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
+    @ViewChild('timeSelectorMenu')
+    timeSelectorMenu: TimeRangeSelectorMenuComponent;
     @Input()
     dashboardItem: DashboardItem;
 
@@ -110,6 +117,15 @@ export class DataExplorerDashboardWidgetComponent
     labels: TimeSelectorLabel;
     clonedTimeSettings: TimeSettings;
     timeSettingsModified: boolean = false;
+    enableTimePicker: boolean = true;
+    maxDayRange: number = 0;
+    tooltipText: string;
+    dateFormat: Intl.DateTimeFormatOptions = {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+    };
 
     hasDataExplorerWritePrivileges = false;
 
@@ -141,9 +157,9 @@ export class DataExplorerDashboardWidgetComponent
     }
 
     ngOnInit(): void {
-        this.quickSelections =
+        this.quickSelections ??=
             this.timeSelectionService.defaultQuickTimeSelections;
-        this.labels = this.timeSelectionService.defaultLabels;
+        this.labels ??= this.timeSelectionService.defaultLabels;
         this.authSubscription = this.currentUserService.user$.subscribe(
             user => {
                 this.hasDataExplorerWritePrivileges = this.authService.hasRole(
@@ -164,14 +180,39 @@ export class DataExplorerDashboardWidgetComponent
                 },
             );
         this.chooseWidget(this.configuredWidget.widgetType);
-        this.clonedTimeSettings = {
-            startTime: this.timeSettings.startTime,
-            endTime: this.timeSettings.endTime,
-            timeSelectionId: this.timeSettings.timeSelectionId,
-        };
-        if (this.dashboardItem?.timeSettings !== undefined) {
+        this.timeSelectionService.updateTimeSettings(
+            this.quickSelections,
+            this.getTimeSettings(),
+            new Date(),
+        );
+        if (
+            this.dashboardItem?.timeSettings !== undefined &&
+            this.dashboardItem?.timeSettings !== null
+        ) {
+            this.clonedTimeSettings = {
+                startTime: this.dashboardItem?.timeSettings.startTime,
+                endTime: this.dashboardItem?.timeSettings.endTime,
+                timeSelectionId:
+                    this.dashboardItem?.timeSettings.timeSelectionId,
+            };
+        } else {
+            this.clonedTimeSettings = {
+                startTime: this.configuredWidget.timeSettings.startTime,
+                endTime: this.configuredWidget.timeSettings.endTime,
+                timeSelectionId:
+                    this.configuredWidget.timeSettings.timeSelectionId,
+            };
+        }
+
+        if (
+            this.dashboardItem?.timeSettings !== undefined &&
+            this.dashboardItem?.timeSettings !== null &&
+            this.dashboardItem?.timeSettings?.timeSelectionId !==
+                this.configuredWidget.timeSettings.timeSelectionId
+        ) {
             this.timeSettingsModified = true;
         }
+        this.createDateStringToolTip(this.getTimeSettings());
     }
 
     ngOnDestroy() {
@@ -201,6 +242,11 @@ export class DataExplorerDashboardWidgetComponent
             );
         this.componentRef.instance.dataExplorerWidget = this.configuredWidget;
         this.componentRef.instance.timeSettings = this.getTimeSettings();
+        this.timeSelectionService.updateTimeSettings(
+            this.quickSelections,
+            this.getTimeSettings(),
+            new Date(),
+        );
         this.componentRef.instance.gridsterItem = this.dashboardItem;
         this.componentRef.instance.gridsterItemComponent =
             this.gridsterItemComponent;
@@ -275,19 +321,28 @@ export class DataExplorerDashboardWidgetComponent
         );
     }
 
-    modifyWidgetTimeSettings(timeSettings: TimeSettings): void {
-        this.dashboardItem.timeSettings = timeSettings;
-        this.timeSelectionService.notify(timeSettings, this.widgetIndex);
+    modifyWidgetTimeSettings(extendedTimeSettings: ExtendedTimeSettings): void {
+        this.dashboardItem.timeSettings = extendedTimeSettings.timeSettings;
+        this.timeSelectionService.notify(
+            extendedTimeSettings.timeSettings,
+            this.widgetIndex,
+        );
         this.menu.closeMenu();
         this.timeSettingsModified = true;
+        this.createDateStringToolTip(this.getTimeSettings());
     }
 
     resetWidgetTimeSettings(): void {
         this.dashboardItem.timeSettings = undefined;
+        this.timeSelectionService.updateTimeSettings(
+            this.quickSelections,
+            this.getTimeSettings(),
+            new Date(),
+        );
         this.clonedTimeSettings = {
-            startTime: this.timeSettings.startTime,
-            endTime: this.timeSettings.endTime,
-            timeSelectionId: this.timeSettings.timeSelectionId,
+            startTime: this.configuredWidget.timeSettings.startTime,
+            endTime: this.configuredWidget.timeSettings.endTime,
+            timeSelectionId: this.configuredWidget.timeSettings.timeSelectionId,
         };
         this.timeSelectionService.notify(
             this.getTimeSettings(),
@@ -295,5 +350,35 @@ export class DataExplorerDashboardWidgetComponent
         );
         this.menu.closeMenu();
         this.timeSettingsModified = false;
+        this.createDateStringToolTip(this.getTimeSettings());
+        setTimeout(() => this.timeSelectorMenu.triggerDisplayUpdate());
+    }
+
+    createDateStringToolTip(timeSettings: TimeSettings): void {
+        if (timeSettings.timeSelectionId !== TimeSelectionConstants.CUSTOM) {
+            this.tooltipText = this.timeSelectionService.getTimeSelection(
+                this.quickSelections,
+                timeSettings.timeSelectionId,
+            ).label;
+        } else {
+            const startDate = new Date(timeSettings.startTime);
+            const endDate = new Date(timeSettings.endTime);
+            const timeString = {
+                startDate: this.timeSelectionService.formatDate(
+                    startDate,
+                    this.enableTimePicker,
+                    this.dateFormat,
+                ),
+                endDate: this.timeSelectionService.formatDate(
+                    endDate,
+                    this.enableTimePicker,
+                    this.dateFormat,
+                ),
+                startTime: startDate.toLocaleTimeString(),
+                endTime: endDate.toLocaleTimeString(),
+            };
+
+            this.tooltipText = `${timeString.startDate} ${timeString.startTime} - ${timeString.endDate} ${timeString.endTime}`;
+        }
     }
 }

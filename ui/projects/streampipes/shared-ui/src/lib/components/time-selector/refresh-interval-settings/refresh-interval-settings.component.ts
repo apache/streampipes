@@ -33,7 +33,7 @@ export class DataExplorerRefreshIntervalSettingsComponent implements OnInit {
     @Input()
     availableOptions: DashboardLiveSettings[];
 
-    liveRefreshEnabled: boolean;
+    liveRefreshEnabled: boolean = true;
 
     ngOnInit() {
         if (!this.liveSettings?.label) {

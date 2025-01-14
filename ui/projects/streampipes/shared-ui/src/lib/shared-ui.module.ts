@@ -146,6 +146,7 @@ import { MatTreeModule } from '@angular/material/tree';
         CustomTimeRangeSelectionComponent,
         TimeRangeSelectorComponent,
         TimeRangeSelectorMenuComponent,
+        DataExplorerRefreshIntervalSettingsComponent,
     ],
 })
 export class SharedUiModule {}
