@@ -20,7 +20,7 @@ import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
 describe('Test Deletion of Data View and Dashboard', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv', false);
+        DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
     });
 
     it('Perform Test', () => {

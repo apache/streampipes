@@ -69,7 +69,6 @@ export class DataLakeUtils {
 
     public static loadDataIntoDataLake(
         dataSet: string,
-        wait = true,
         format: 'csv' | 'json_array' = 'csv',
     ) {
         // Create adapter with dataset

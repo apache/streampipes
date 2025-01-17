@@ -46,7 +46,7 @@ describe('Test Time Range Selectors in Data Explorer', () => {
 
     before('Setup Tests', () => {
         cy.initStreamPipesTest();
-        DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv', false);
+        DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
     });
 
     it('Perform Test', () => {
