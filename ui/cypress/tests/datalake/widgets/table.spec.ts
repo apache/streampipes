@@ -17,6 +17,7 @@
  */
 
 import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
+import { DataLakeWidgetTableUtils } from '../../../support/utils/datalake/DataLakeWidgetTableUtils';
 
 describe('Test Table View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
@@ -27,8 +28,6 @@ describe('Test Table View in Data Explorer', () => {
         DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Table');
 
         // Check if table is displayed correctly
-        cy.dataCy('data-explorer-table-row-timestamp', {
-            timeout: 10000,
-        }).should('have.length', 10);
+        DataLakeWidgetTableUtils.checkAmountOfRows(10);
     });
 });
