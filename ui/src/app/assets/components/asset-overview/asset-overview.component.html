@@ -107,6 +107,9 @@
                                     matTooltip="Edit asset"
                                     matTooltipPosition="above"
                                     data-cy="edit-asset-button"
+                                    [attr.data-cy]="
+                                        'edit-asset-' + asset.assetName
+                                    "
                                     (click)="goToDetailsView(asset, true)"
                                 >
                                     <i class="material-icons">edit</i>
@@ -119,6 +122,9 @@
                                     matTooltip="Delete asset"
                                     data-cy="delete"
                                     matTooltipPosition="above"
+                                    [attr.data-cy]="
+                                        'delete-asset-' + asset.assetName
+                                    "
                                     (click)="deleteAsset(asset)"
                                 >
                                     <i class="material-icons">delete</i>
