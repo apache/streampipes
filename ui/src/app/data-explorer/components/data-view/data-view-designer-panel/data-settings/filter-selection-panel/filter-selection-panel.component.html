@@ -31,134 +31,19 @@
         </button>
     </div>
     <div fxLayout="column">
-        <div
-            *ngFor="
-                let filter of sourceConfig.queryConfig.selectedFilters;
-                let i = index
-            "
-            fxFlex="100"
-            fxLayout="column"
-        >
-            <div fxFlex="100" fxLayout="column" class="form-field-small">
-                <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-                    <mat-form-field
-                        color="accent"
-                        class="w-140-px mr-5"
-                        appearance="outline"
-                    >
-                        <mat-label>Field</mat-label>
-                        <mat-select
-                            [(value)]="filter.field"
-                            (selectionChange)="updateWidget()"
-                            [compareWith]="compare"
-                            panelClass="form-field-small min-w-200"
-                            data-cy="design-panel-data-settings-filter-field"
-                        >
-                            <mat-option
-                                *ngFor="
-                                    let field of sourceConfig.queryConfig.fields
-                                "
-                                [value]="field"
-                                >{{ field.runtimeName }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field
-                        color="accent"
-                        class="w-80-px mr-5"
-                        appearance="outline"
-                    >
-                        <mat-select
-                            [(value)]="filter.operator"
-                            panelClass="form-field-small min-w-100"
-                            (selectionChange)="updateWidget()"
-                            data-cy="design-panel-data-settings-filter-operator"
-                        >
-                            <mat-option [value]="'='">
-                                <span class="pipeline-name">=</span>
-                            </mat-option>
-                            <mat-option [value]="'<'">
-                                <span class="pipeline-name"><</span>
-                            </mat-option>
-                            <mat-option [value]="'<='">
-                                <span class="pipeline-name"><=</span>
-                            </mat-option>
-                            <mat-option [value]="'>='">
-                                <span class="pipeline-name">>=</span>
-                            </mat-option>
-                            <mat-option [value]="'>'">
-                                <span class="pipeline-name">></span>
-                            </mat-option>
-                            <mat-option [value]="'!='">
-                                <span class="pipeline-name">!=</span>
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field
-                        color="accent"
-                        appearance="outline"
-                        class="w-140-px mr-5"
-                        *ngIf="
-                            !filter.field ||
-                            !tagValues.has(filter.field.runtimeName)
-                        "
-                    >
-                        <mat-label>Value</mat-label>
-                        <input
-                            type="text"
-                            placeholder="Value"
-                            aria-label="Number"
-                            matInput
-                            [(ngModel)]="filter.value"
-                            (change)="updateWidget()"
-                            data-cy="design-panel-data-settings-filter-value"
-                        />
-                    </mat-form-field>
-                    <mat-form-field
-                        color="accent"
-                        appearance="outline"
-                        class="w-140-px mr-5"
-                        *ngIf="
-                            filter.field &&
-                            tagValues.has(filter.field.runtimeName)
-                        "
-                    >
-                        <input
-                            type="text"
-                            placeholder="Value"
-                            aria-label="Number"
-                            matInput
-                            [(ngModel)]="filter.value"
-                            (change)="updateWidget()"
-                            data-cy="design-panel-data-settings-filter-value"
-                            [matAutocomplete]="auto"
-                        />
-                        <mat-autocomplete
-                            #auto="matAutocomplete"
-                            (optionSelected)="updateWidget()"
-                        >
-                            <mat-option
-                                *ngFor="
-                                    let value of tagValues.get(
-                                        filter.field.runtimeName
-                                    )
-                                "
-                                [value]="value"
-                            >
-                                {{ value }}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                    <button
-                        mat-icon-button
-                        color="accent"
-                        (click)="remove(sourceConfig, i)"
-                        data-cy="design-panel-data-settings-remove-filter"
-                    >
-                        <i class="material-icons">remove</i>
-                    </button>
-                </div>
-            </div>
-        </div>
+        @for (
+            filter of sourceConfig.queryConfig.selectedFilters;
+            track filter;
+            let i = $index
+        ) {
+            <sp-filter-selection-panel-row
+                [filter]="filter"
+                [possibleFields]="sourceConfig.queryConfig.fields"
+                [tagValues]="tagValues"
+                (update)="updateWidget()"
+                (removeFilter)="remove(i)"
+            >
+            </sp-filter-selection-panel-row>
+        }
     </div>
 </sp-configuration-box>

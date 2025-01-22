@@ -98,13 +98,19 @@ public class WhereClauseParams implements IQueryStatement {
   }
 
   private Object returnCondition(String inputCondition) {
-    if (NumberUtils.isParsable(inputCondition)) {
+    if (isQuotedString(inputCondition)) {
+      return inputCondition.substring(1, inputCondition.length() - 1);
+    } else if (NumberUtils.isParsable(inputCondition)) {
       return Double.parseDouble(inputCondition);
     } else if (isBoolean(inputCondition)) {
       return Boolean.parseBoolean(inputCondition);
     } else {
       return inputCondition;
     }
+  }
+
+  private boolean isQuotedString(String input) {
+    return input.startsWith("\"") && input.endsWith("\"");
   }
 
   private boolean isBoolean(String input) {

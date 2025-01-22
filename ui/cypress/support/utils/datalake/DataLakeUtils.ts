@@ -181,7 +181,9 @@ export class DataLakeUtils {
     }
 
     public static saveDataViewConfiguration() {
-        cy.dataCy('save-data-view-btn', { timeout: 10000 }).click();
+        cy.dataCy('save-data-view-btn', { timeout: 10000 }).click({
+            force: true,
+        });
     }
 
     public static saveDashboardConfiguration() {
@@ -279,6 +281,43 @@ export class DataLakeUtils {
     }
 
     /**
+     * This method validates that the defined filter options are available in the UI
+     * @param expectedFilterOptions
+     */
+    public static validateFilterOptions(
+        expectedFilterOptions: ('=' | '<' | '<=' | '>=' | '>' | '!=')[],
+    ) {
+        cy.dataCy('design-panel-data-settings-filter-operator')
+            .click()
+            .dataCy('operator-', {}, true)
+            .should('have.length', expectedFilterOptions.length);
+
+        expectedFilterOptions.forEach(option => {
+            const escapedOption = option.replace(/([=<>!])/g, '\\$1');
+            cy.dataCy('operator-' + escapedOption).should('be.visible');
+        });
+
+        cy.dataCy('design-panel-data-settings-filter-operator').click({
+            force: true,
+        });
+    }
+
+    public static validateAutoCompleteOptions(options: string[]) {
+        cy.dataCy('design-panel-data-settings-filter-value')
+            .click({ force: true })
+            .dataCy('autocomplete-value-', {}, true)
+            .should('have.length', options.length);
+
+        options.forEach(option => {
+            cy.dataCy('autocomplete-value-' + option).should('be.visible');
+        });
+
+        cy.dataCy('design-panel-data-settings-filter-value').click({
+            force: true,
+        });
+    }
+
+    /**
      * In the data set panel select all property fields
      */
     public static dataConfigSelectAllFields() {
@@ -309,7 +348,9 @@ export class DataLakeUtils {
     }
 
     public static dataConfigRemoveFilter() {
-        cy.dataCy('design-panel-data-settings-remove-filter').first().click();
+        cy.dataCy('design-panel-data-settings-remove-filter')
+            .first()
+            .click({ force: true });
     }
 
     public static clickGroupBy(propertyName: string) {

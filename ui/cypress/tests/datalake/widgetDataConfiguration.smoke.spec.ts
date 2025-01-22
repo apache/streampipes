@@ -45,6 +45,7 @@ describe('Test Table View in Data Explorer', () => {
         let filterConfig = new DataLakeFilterConfig('randomnumber', '22', '=');
         DataLakeUtils.dataConfigAddFilter(filterConfig);
         DataLakeWidgetTableUtils.checkAmountOfRows(2);
+        DataLakeUtils.validateFilterOptions(['=', '<', '<=', '>=', '>', '!=']);
         DataLakeUtils.dataConfigRemoveFilter();
         DataLakeWidgetTableUtils.checkAmountOfRows(10);
 
@@ -52,6 +53,7 @@ describe('Test Table View in Data Explorer', () => {
         filterConfig = new DataLakeFilterConfig('randomnumber', '50', '>');
         DataLakeUtils.dataConfigAddFilter(filterConfig);
         DataLakeWidgetTableUtils.checkAmountOfRows(5);
+        DataLakeUtils.validateFilterOptions(['=', '<', '<=', '>=', '>', '!=']);
         DataLakeUtils.dataConfigRemoveFilter();
 
         // Test number smaller then
@@ -64,6 +66,8 @@ describe('Test Table View in Data Explorer', () => {
         filterConfig = new DataLakeFilterConfig('randombool', 'true', '=');
         DataLakeUtils.dataConfigAddFilter(filterConfig);
         DataLakeWidgetTableUtils.checkAmountOfRows(6);
+        DataLakeUtils.validateFilterOptions(['=', '!=']);
+        DataLakeUtils.validateAutoCompleteOptions(['true', 'false']);
         DataLakeUtils.dataConfigRemoveFilter();
 
         // Test string & if filter is persisted correctly
@@ -72,6 +76,8 @@ describe('Test Table View in Data Explorer', () => {
         DataLakeUtils.dataConfigAddFilter(filterConfig);
         DataLakeUtils.checkIfFilterIsSet(1);
         DataLakeWidgetTableUtils.checkAmountOfRows(4);
+        DataLakeUtils.validateFilterOptions(['=', '!=']);
+        DataLakeUtils.validateAutoCompleteOptions(['a', 'b', 'c']);
         DataLakeUtils.saveAndReEditWidget('NewWidget');
         DataLakeUtils.checkIfFilterIsSet(1);
         DataLakeWidgetTableUtils.checkAmountOfRows(4);

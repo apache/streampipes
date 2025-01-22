@@ -189,7 +189,8 @@
   },
   "schematics": {
     "@schematics/angular:component": {
-      "style": "scss"
+      "style": "scss",
+      "standalone": false
     }
   },
   "cli": {
