@@ -126,10 +126,10 @@ import { DataExplorerDashboardToolbarComponent } from './components/dashboard/da
 import { OrderSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/order-selection-panel/order-selection-panel.component';
 import { GaugeWidgetConfigComponent } from './components/widgets/gauge/config/gauge-widget-config.component';
 import { FilterSelectionPanelRowComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/filter-selection-panel-row.component';
-import { FilterSelectionPanelRowPropertySelectionComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/filter-selection-panel-row-property-selection/filter-selection-panel-row-property-selection.component';
-import { FilterSelectionPanelRowOperationSelectionComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/filter-selection-panel-row-operation-selection/filter-selection-panel-row-operation-selection.component';
-import { FilterSelectionPanelRowValueInputComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/filter-selection-panel-row-value-input/filter-selection-panel-row-value-input.component';
-import { FilterSelectionPanelRowValueInputAutocompleteComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/filter-selection-panel-row-value-input-autocomplete/filter-selection-panel-row-value-input-autocomplete.component';
+import { FilterSelectionPanelRowPropertySelectionComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-property-selection/filter-selection-panel-row-property-selection.component';
+import { FilterSelectionPanelRowOperationSelectionComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-operation-selection/filter-selection-panel-row-operation-selection.component';
+import { FilterSelectionPanelRowValueInputComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-value-input/filter-selection-panel-row-value-input.component';
+import { FilterSelectionPanelRowValueInputAutocompleteComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-value-input-autocomplete/filter-selection-panel-row-value-input-autocomplete.component';
 
 @NgModule({
     imports: [
