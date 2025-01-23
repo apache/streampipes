@@ -18,6 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import {
+    AdapterDescription,
     AddTimestampRuleDescription,
     AddValueTransformationRuleDescription,
     ChangeDatatypeTransformationRuleDescription,
@@ -49,7 +50,7 @@ export class TransformationRuleService {
 
     private delimiter = '<-=>';
 
-    public getTransformationRuleDescriptions(
+    public makeTransformationRuleDescriptions(
         originalSchema: EventSchema,
         targetSchema: EventSchema,
     ): TransformationRuleDescriptionUnion[] {
@@ -733,5 +734,14 @@ export class TransformationRuleService {
         rule.replaceWith = eventProperty.additionalMetadata.replaceWith ?? '';
         rule.replaceAll = eventProperty.additionalMetadata.replaceAll ?? false;
         return rule;
+    }
+
+    public getExistingTransformationRule<T>(
+        adapterDescription: AdapterDescription,
+        transformationRuleType: string,
+    ): T {
+        return adapterDescription.rules.find(
+            r => r['@class'] === transformationRuleType,
+        ) as T;
     }
 }

@@ -64,9 +64,14 @@
             optionDescription="Avoid duplicated events within a certain time interval"
             optionIcon="cleaning_services"
             dataCy="connect-remove-duplicates-box"
+            [isChecked]="removeDuplicates"
             (optionSelectedEmitter)="removeDuplicates = $event"
         >
-            <mat-form-field *ngIf="removeDuplicates" color="accent">
+            <mat-form-field
+                *ngIf="removeDuplicates"
+                color="accent"
+                class="mt-10"
+            >
                 <input
                     matInput
                     id="input-removeDuplicatesTime"
@@ -83,9 +88,14 @@
             optionDescription="Send maximum one event in the specified time window"
             optionIcon="speed"
             dataCy="connect-reduce-event-rate-box"
+            [isChecked]="eventRateReduction"
             (optionSelectedEmitter)="eventRateReduction = $event"
         >
-            <mat-form-field *ngIf="eventRateReduction" color="accent">
+            <mat-form-field
+                *ngIf="eventRateReduction"
+                color="accent"
+                class="mt-10"
+            >
                 <input
                     type="number"
                     matInput

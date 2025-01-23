@@ -76,7 +76,7 @@ export class PipelineUtils {
         cy.dataCy('pipelines-navigate-to-editor').click();
     }
 
-    private static selectDataStream(pipelineInput: PipelineInput) {
+    public static selectDataStream(pipelineInput: PipelineInput) {
         // Select a stream
         cy.dataCy('sp-pipeline-element-selection', { timeout: 10000 }).should(
             'be.visible',

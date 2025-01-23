@@ -80,7 +80,7 @@ export class AdapterConfigurationComponent implements OnInit {
         this.adapter.dataStream.eventSchema = targetSchema;
 
         this.adapter.rules =
-            this.transformationRuleService.getTransformationRuleDescriptions(
+            this.transformationRuleService.makeTransformationRuleDescriptions(
                 originalSchema,
                 targetSchema,
             );
