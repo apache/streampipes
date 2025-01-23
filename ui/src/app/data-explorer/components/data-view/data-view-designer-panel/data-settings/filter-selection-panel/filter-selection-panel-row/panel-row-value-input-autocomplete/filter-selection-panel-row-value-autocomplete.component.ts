@@ -20,11 +20,11 @@ import { SelectedFilter } from '@streampipes/platform-services';
 import { EscapeNumberFilterService } from '../escape-number-filter.service';
 
 @Component({
-    selector: 'sp-filter-selection-panel-row-value-input-autocomplete',
+    selector: 'sp-filter-selection-panel-row-value-autocomplete',
     templateUrl:
-        './filter-selection-panel-row-value-input-autocomplete.component.html',
+        './filter-selection-panel-row-value-autocomplete.component.html',
 })
-export class FilterSelectionPanelRowValueInputAutocompleteComponent
+export class FilterSelectionPanelRowValueAutocompleteComponent
     implements OnInit
 {
     @Input()

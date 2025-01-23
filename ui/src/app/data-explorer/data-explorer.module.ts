@@ -129,7 +129,7 @@ import { FilterSelectionPanelRowComponent } from './components/data-view/data-vi
 import { FilterSelectionPanelRowPropertySelectionComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-property-selection/filter-selection-panel-row-property-selection.component';
 import { FilterSelectionPanelRowOperationSelectionComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-operation-selection/filter-selection-panel-row-operation-selection.component';
 import { FilterSelectionPanelRowValueInputComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-value-input/filter-selection-panel-row-value-input.component';
-import { FilterSelectionPanelRowValueInputAutocompleteComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-value-input-autocomplete/filter-selection-panel-row-value-input-autocomplete.component';
+import { FilterSelectionPanelRowValueAutocompleteComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-value-input-autocomplete/filter-selection-panel-row-value-autocomplete.component';
 
 @NgModule({
     imports: [
@@ -277,7 +277,7 @@ import { FilterSelectionPanelRowValueInputAutocompleteComponent } from './compon
         FilterSelectionPanelRowPropertySelectionComponent,
         FilterSelectionPanelRowOperationSelectionComponent,
         FilterSelectionPanelRowValueInputComponent,
-        FilterSelectionPanelRowValueInputAutocompleteComponent,
+        FilterSelectionPanelRowValueAutocompleteComponent,
     ],
     exports: [],
 })
