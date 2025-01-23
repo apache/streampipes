@@ -15,21 +15,41 @@
  * limitations under the License.
  *
  */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectedFilter } from '@streampipes/platform-services';
+import { EscapeNumberFilterService } from '../escape-number-filter.service';
 
 @Component({
     selector: 'sp-filter-selection-panel-row-value-input',
     templateUrl: './filter-selection-panel-row-value-input.component.html',
 })
-export class FilterSelectionPanelRowValueInputComponent {
+export class FilterSelectionPanelRowValueInputComponent implements OnInit {
     @Input()
     public filter: SelectedFilter;
+
+    // This is only required to correctly escape numbers
+    @Input()
+    public tagValues: Map<string, string[]>;
 
     @Output()
     public update = new EventEmitter<void>();
 
+    public value: string;
+
+    constructor(private escapeNumberFilterService: EscapeNumberFilterService) {}
+
+    ngOnInit(): void {
+        this.value = this.escapeNumberFilterService.removeEnclosingQuotes(
+            this.filter.value,
+        );
+    }
+
     updateParentComponent() {
+        this.filter.value = this.escapeNumberFilterService.escapeIfNumberValue(
+            this.filter,
+            this.value,
+            this.tagValues,
+        );
         this.update.emit();
     }
 }

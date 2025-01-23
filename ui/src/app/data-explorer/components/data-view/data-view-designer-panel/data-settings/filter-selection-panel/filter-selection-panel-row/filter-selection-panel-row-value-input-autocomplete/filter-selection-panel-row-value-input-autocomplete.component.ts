@@ -15,15 +15,18 @@
  * limitations under the License.
  *
  */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectedFilter } from '@streampipes/platform-services';
+import { EscapeNumberFilterService } from '../escape-number-filter.service';
 
 @Component({
     selector: 'sp-filter-selection-panel-row-value-input-autocomplete',
     templateUrl:
         './filter-selection-panel-row-value-input-autocomplete.component.html',
 })
-export class FilterSelectionPanelRowValueInputAutocompleteComponent {
+export class FilterSelectionPanelRowValueInputAutocompleteComponent
+    implements OnInit
+{
     @Input()
     public filter: SelectedFilter;
 
@@ -33,7 +36,22 @@ export class FilterSelectionPanelRowValueInputAutocompleteComponent {
     @Output()
     public update = new EventEmitter<void>();
 
+    public value: string;
+
+    constructor(private escapeNumberFilterService: EscapeNumberFilterService) {}
+
+    ngOnInit(): void {
+        this.value = this.escapeNumberFilterService.removeEnclosingQuotes(
+            this.filter.value,
+        );
+    }
+
     updateParentComponent() {
+        this.filter.value = this.escapeNumberFilterService.escapeIfNumberValue(
+            this.filter,
+            this.value,
+            this.tagValues,
+        );
         this.update.emit();
     }
 }
