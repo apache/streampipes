@@ -36,6 +36,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
+      - name: Enable long paths in Git
+        run: git config --system core.longpaths true
+
       - name: Set up Go 1.21
         uses: actions/setup-go@v5
         with:

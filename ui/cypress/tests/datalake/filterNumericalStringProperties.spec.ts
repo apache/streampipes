@@ -28,7 +28,9 @@ describe('Validate that filter works for numerical dimension property', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
 
-        FileManagementUtils.addFile('datalake/filterDimensionProperties.csv');
+        FileManagementUtils.addFile(
+            'datalake/filterNumericalStringProperties.csv',
+        );
         const adapterInput = AdapterBuilder.create('File_Stream')
             .setName('Test Adapter')
             .setTimestampProperty('timestamp')
@@ -61,11 +63,18 @@ describe('Validate that filter works for numerical dimension property', () => {
 
         // select filter for tag
         DataLakeUtils.selectDataConfig();
-        const filterConfig = new DataLakeFilterConfig(
-            'dimensionKey',
-            '1.0',
-            '=',
-        );
+        var filterConfig = new DataLakeFilterConfig('dimensionKey', '1.0', '=');
+        DataLakeUtils.dataConfigAddFilter(filterConfig);
+
+        // validate data in table is filtered
+        DataLakeWidgetTableUtils.checkAmountOfRows(1);
+
+        // remove filter
+        DataLakeUtils.dataConfigRemoveFilter();
+
+        DataLakeUtils.selectDataConfig();
+
+        filterConfig = new DataLakeFilterConfig('v1', '20', '=');
         DataLakeUtils.dataConfigAddFilter(filterConfig);
 
         // validate data in table is filtered

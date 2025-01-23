@@ -21,7 +21,7 @@
         placeholder="Value"
         aria-label="Number"
         matInput
-        [(ngModel)]="filter.value"
+        [(ngModel)]="value"
         (change)="updateParentComponent()"
         data-cy="design-panel-data-settings-filter-value"
         [matAutocomplete]="auto"
@@ -30,12 +30,12 @@
         #auto="matAutocomplete"
         (optionSelected)="updateParentComponent()"
     >
-        @for (value of tagValues.get(filter.field.runtimeName); track value) {
+        @for (option of tagValues.get(filter.field.runtimeName); track option) {
             <mat-option
-                [attr.data-cy]="'autocomplete-value-' + value"
-                [value]="value"
+                [attr.data-cy]="'autocomplete-value-' + option"
+                [value]="option"
             >
-                {{ value }}
+                {{ option }}
             </mat-option>
         }
     </mat-autocomplete>

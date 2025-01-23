@@ -34,17 +34,21 @@ public class WhereClauseParams implements IQueryStatement {
 
   private final List<FilterCondition> filterConditions;
 
-  private WhereClauseParams(Long startTime,
-                            Long endTime,
-                            String whereConditions) {
+  private WhereClauseParams(
+      Long startTime,
+      Long endTime,
+      String whereConditions
+  ) {
     this(startTime, endTime);
     if (whereConditions != null) {
       buildConditions(whereConditions);
     }
   }
 
-  private WhereClauseParams(Long startTime,
-                            Long endTime) {
+  private WhereClauseParams(
+      Long startTime,
+      Long endTime
+  ) {
     this.filterConditions = new ArrayList<>();
     this.buildTimeConditions(startTime, endTime);
   }
@@ -56,8 +60,10 @@ public class WhereClauseParams implements IQueryStatement {
     }
   }
 
-  public static WhereClauseParams from(Long startTime,
-                                       Long endTime) {
+  public static WhereClauseParams from(
+      Long startTime,
+      Long endTime
+  ) {
     return new WhereClauseParams(startTime, endTime);
   }
 
@@ -65,14 +71,18 @@ public class WhereClauseParams implements IQueryStatement {
     return new WhereClauseParams(whereConditions);
   }
 
-  public static WhereClauseParams from(Long startTime,
-                                       Long endTime,
-                                       String whereConditions) {
+  public static WhereClauseParams from(
+      Long startTime,
+      Long endTime,
+      String whereConditions
+  ) {
     return new WhereClauseParams(startTime, endTime, whereConditions);
   }
 
-  private void buildTimeConditions(Long startTime,
-                                   Long endTime) {
+  private void buildTimeConditions(
+      Long startTime,
+      Long endTime
+  ) {
     if (startTime == null) {
       this.filterConditions.add(buildTimeBoundary(endTime, LT));
     } else if (endTime == null) {
@@ -99,7 +109,7 @@ public class WhereClauseParams implements IQueryStatement {
 
   private Object returnCondition(String inputCondition) {
     if (isQuotedString(inputCondition)) {
-      return inputCondition.substring(1, inputCondition.length() - 1);
+      return removeQuotes(inputCondition);
     } else if (NumberUtils.isParsable(inputCondition)) {
       return Double.parseDouble(inputCondition);
     } else if (isBoolean(inputCondition)) {
@@ -110,7 +120,15 @@ public class WhereClauseParams implements IQueryStatement {
   }
 
   private boolean isQuotedString(String input) {
-    return input.startsWith("\"") && input.endsWith("\"");
+    if (input.startsWith("\"") && input.endsWith("\"")) {
+      String content = removeQuotes(input);
+      return NumberUtils.isParsable(content);
+    }
+    return false;
+  }
+
+  private String removeQuotes(String input) {
+    return input.substring(1, input.length() - 1);
   }
 
   private boolean isBoolean(String input) {
