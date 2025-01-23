@@ -19,7 +19,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
     DatalakeRestService,
-    FieldConfig,
     SelectedFilter,
     SourceConfig,
 } from '@streampipes/platform-services';
@@ -88,8 +87,8 @@ export class FilterSelectionPanelComponent implements OnInit {
         this.updateWidget();
     }
 
-    remove(sourceConfig: any, index: number) {
-        sourceConfig.queryConfig.selectedFilters.splice(index, 1);
+    remove(index: number) {
+        this.sourceConfig.queryConfig.selectedFilters.splice(index, 1);
 
         this.widgetConfigService.notify({
             refreshData: true,
@@ -112,9 +111,5 @@ export class FilterSelectionPanelComponent implements OnInit {
                 refreshView: true,
             });
         }
-    }
-
-    compare(available: FieldConfig, selected: FieldConfig) {
-        return available.runtimeName === selected.runtimeName;
     }
 }

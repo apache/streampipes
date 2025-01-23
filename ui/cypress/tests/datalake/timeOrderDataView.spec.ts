@@ -22,7 +22,7 @@ import { DataLakeBtns } from '../../support/utils/datalake/DataLakeBtns';
 describe('Test Time Order in Data Explorer', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv', false);
+        DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
         DataLakeUtils.goToDatalake();
         DataLakeUtils.createAndEditDataView();
     });

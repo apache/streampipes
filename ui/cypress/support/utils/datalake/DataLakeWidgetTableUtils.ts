@@ -17,13 +17,17 @@
  */
 
 export class DataLakeWidgetTableUtils {
+    public static dataExplorerTableRowTimestamp() {
+        return cy.dataCy('data-explorer-table-row-timestamp', {
+            timeout: 10000,
+        });
+    }
+
     /**
      * Checks how many rows are visible within the table widget in the data explorer
      * @param amount of expected rows
      */
-    public static checkRows(amount: number) {
-        cy.dataCy('data-explorer-table-row-timestamp', {
-            timeout: 10000,
-        }).should('have.length', amount);
+    public static checkAmountOfRows(amount: number) {
+        this.dataExplorerTableRowTimestamp().should('have.length', amount);
     }
 }

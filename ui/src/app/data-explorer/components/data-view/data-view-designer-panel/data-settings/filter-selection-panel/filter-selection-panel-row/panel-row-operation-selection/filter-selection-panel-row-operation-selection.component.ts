@@ -15,19 +15,22 @@
  * limitations under the License.
  *
  */
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { SelectedFilter } from '@streampipes/platform-services';
 
-import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
-import { DataLakeWidgetTableUtils } from '../../../support/utils/datalake/DataLakeWidgetTableUtils';
+@Component({
+    selector: 'sp-filter-selection-panel-row-operation-selection',
+    templateUrl:
+        './filter-selection-panel-row-operation-selection.component.html',
+})
+export class FilterSelectionPanelRowOperationSelectionComponent {
+    @Input()
+    public filter: SelectedFilter;
 
-describe('Test Table View in Data Explorer', () => {
-    beforeEach('Setup Test', () => {
-        DataLakeUtils.initDataLakeTests();
-    });
+    @Output()
+    public update = new EventEmitter<void>();
 
-    it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Table');
-
-        // Check if table is displayed correctly
-        DataLakeWidgetTableUtils.checkAmountOfRows(10);
-    });
-});
+    updateParentComponent() {
+        this.update.emit();
+    }
+}

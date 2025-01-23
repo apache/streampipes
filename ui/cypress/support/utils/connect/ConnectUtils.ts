@@ -48,6 +48,8 @@ export class ConnectUtils {
             ConnectEventSchemaUtils.addTimestampProperty();
         }
 
+        ConnectUtils.configureDimensionProperties(adapterConfiguration);
+
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
         ConnectUtils.startAdapter(
@@ -66,6 +68,20 @@ export class ConnectUtils {
 
         ConnectUtils.configureAdapter(adapterConfiguration);
 
+        ConnectUtils.configureDimensionProperties(adapterConfiguration);
+
+        if (adapterConfiguration.timestampProperty) {
+            ConnectEventSchemaUtils.markPropertyAsTimestamp(
+                adapterConfiguration.timestampProperty,
+            );
+        }
+
+        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+    }
+
+    private static configureDimensionProperties(
+        adapterConfiguration: AdapterInput,
+    ) {
         if (adapterConfiguration.dimensionProperties.length > 0) {
             adapterConfiguration.dimensionProperties.forEach(
                 dimensionPropertyName => {
@@ -75,14 +91,6 @@ export class ConnectUtils {
                 },
             );
         }
-
-        if (adapterConfiguration.timestampProperty) {
-            ConnectEventSchemaUtils.markPropertyAsTimestamp(
-                adapterConfiguration.timestampProperty,
-            );
-        }
-
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
     }
 
     public static addMachineDataSimulator(

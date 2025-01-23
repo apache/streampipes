@@ -16,18 +16,36 @@
  *
  */
 
-import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
-import { DataLakeWidgetTableUtils } from '../../../support/utils/datalake/DataLakeWidgetTableUtils';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { FieldConfig, SelectedFilter } from '@streampipes/platform-services';
 
-describe('Test Table View in Data Explorer', () => {
-    beforeEach('Setup Test', () => {
-        DataLakeUtils.initDataLakeTests();
-    });
+@Component({
+    selector: 'sp-filter-selection-panel-row',
+    templateUrl: './filter-selection-panel-row.component.html',
+})
+export class FilterSelectionPanelRowComponent {
+    @Input()
+    public filter: SelectedFilter;
 
-    it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Table');
+    @Input()
+    public possibleFields: FieldConfig[];
 
-        // Check if table is displayed correctly
-        DataLakeWidgetTableUtils.checkAmountOfRows(10);
-    });
-});
+    @Input()
+    public tagValues: Map<string, string[]>;
+
+    @Output()
+    public update = new EventEmitter<void>();
+
+    @Output()
+    public removeFilter = new EventEmitter<number>();
+
+    constructor() {}
+
+    updateParentComponent() {
+        this.update.emit();
+    }
+
+    remove() {
+        this.removeFilter.emit();
+    }
+}
