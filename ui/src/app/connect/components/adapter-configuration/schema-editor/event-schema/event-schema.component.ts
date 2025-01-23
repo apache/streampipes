@@ -242,7 +242,7 @@ export class EventSchemaComponent implements OnChanges {
     public updatePreview(): void {
         this.isPreviewEnabled = false;
         const ruleDescriptions =
-            this.transformationRuleService.getTransformationRuleDescriptions(
+            this.transformationRuleService.makeTransformationRuleDescriptions(
                 this.originalSchema,
                 this.targetSchema,
             );

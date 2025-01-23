@@ -29,7 +29,7 @@ import { EventPropertyPrimitive } from '@streampipes/platform-services';
     templateUrl: './edit-unit-transformation.component.html',
     styleUrls: ['./edit-unit-transformation.component.scss'],
 })
-export class EditUnitTransformationComponent implements OnInit {
+export class EditUnitTransformationComponent {
     @Input() cachedProperty: EventPropertyPrimitive;
     @Input() originalProperty: EventPropertyPrimitive;
 
@@ -64,6 +64,7 @@ export class EditUnitTransformationComponent implements OnInit {
                                 : this.allUnits.slice(),
                         ),
                     );
+                this.applySelectedUnits();
             });
 
         this.currentUnitStateCtrl.valueChanges.subscribe(val => {
@@ -79,7 +80,7 @@ export class EditUnitTransformationComponent implements OnInit {
 
     protected open = false;
 
-    ngOnInit() {
+    applySelectedUnits(): void {
         if (this.cachedProperty.measurementUnit) {
             const sourceUnit = this.cachedProperty.additionalMetadata
                 .toMeasurementUnit
