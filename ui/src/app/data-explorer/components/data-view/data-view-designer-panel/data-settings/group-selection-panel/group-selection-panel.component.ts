@@ -17,8 +17,8 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DataExplorerFieldProviderService } from '../../../../../services/data-explorer-field-provider-service';
-import { WidgetConfigurationService } from '../../../../../services/widget-configuration.service';
+import { DataExplorerFieldProviderService } from '../../../../../../data-explorer-shared/services/data-explorer-field-provider-service';
+import { WidgetConfigurationService } from '../../../../../../data-explorer-shared/services/widget-configuration.service';
 import {
     EventPropertyUnion,
     FieldConfig,

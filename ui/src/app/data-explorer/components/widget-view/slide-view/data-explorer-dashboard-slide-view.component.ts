@@ -18,14 +18,14 @@
 
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractWidgetViewDirective } from '../abstract-widget-view.directive';
-import { ResizeService } from '../../../services/resize.service';
+import { ResizeService } from '../../../../data-explorer-shared/services/resize.service';
 import {
     DashboardItem,
     DataExplorerWidgetModel,
     DataLakeMeasure,
     DataViewDataExplorerService,
 } from '@streampipes/platform-services';
-import { DataExplorerWidgetRegistry } from '../../../registry/data-explorer-widget-registry';
+import { DataExplorerWidgetRegistry } from '../../../../data-explorer-shared/registry/data-explorer-widget-registry';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-slide-view',

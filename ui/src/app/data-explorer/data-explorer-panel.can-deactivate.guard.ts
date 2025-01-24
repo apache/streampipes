@@ -23,7 +23,7 @@ import {
     RouterStateSnapshot,
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { SupportsUnsavedChangeDialog } from './models/dataview-dashboard.model';
+import { SupportsUnsavedChangeDialog } from '../data-explorer-shared/models/dataview-dashboard.model';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerPanelCanDeactivateGuard {

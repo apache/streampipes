@@ -31,9 +31,9 @@ import {
 } from '@angular/router';
 import { ConfirmDialogComponent } from '@streampipes/shared-ui';
 import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
-import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
+import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
 import { DataExplorerDetectChangesService } from '../../services/data-explorer-detect-changes.service';
-import { SupportsUnsavedChangeDialog } from '../../models/dataview-dashboard.model';
+import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 import { Observable, of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { map } from 'rxjs/operators';
@@ -59,7 +59,7 @@ export class DataExplorerDataViewComponent
     @ViewChild('panel', { static: false }) outerPanel: ElementRef;
 
     constructor(
-        private dashboardService: DataExplorerDashboardService,
+        private dashboardService: DataExplorerSharedService,
         private detectChangesService: DataExplorerDetectChangesService,
         private route: ActivatedRoute,
         private dialog: MatDialog,

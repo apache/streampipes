@@ -26,11 +26,11 @@ import {
 } from '@angular/core';
 import { GridsterItemComponent, GridType } from 'angular-gridster2';
 import { GridsterInfo } from '../../../../dashboard/models/gridster-info.model';
-import { IDataViewDashboardConfig } from '../../../models/dataview-dashboard.model';
-import { ResizeService } from '../../../services/resize.service';
+import { IDataViewDashboardConfig } from '../../../../data-explorer-shared/models/dataview-dashboard.model';
+import { ResizeService } from '../../../../data-explorer-shared/services/resize.service';
 import { DataViewDataExplorerService } from '@streampipes/platform-services';
 import { AbstractWidgetViewDirective } from '../abstract-widget-view.directive';
-import { DataExplorerWidgetRegistry } from '../../../registry/data-explorer-widget-registry';
+import { DataExplorerWidgetRegistry } from '../../../../data-explorer-shared/registry/data-explorer-widget-registry';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-grid',

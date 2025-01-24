@@ -31,7 +31,7 @@ import {
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../../services/auth.service';
 import { DataExplorerRoutingService } from '../../../services/data-explorer-routing.service';
-import { DataExplorerDashboardService } from '../../../services/data-explorer-dashboard.service';
+import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -46,7 +46,7 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
 
     constructor(
         private dataViewService: DataViewDataExplorerService,
-        private dataExplorerDashboardService: DataExplorerDashboardService,
+        private dataExplorerDashboardService: DataExplorerSharedService,
         public dialogService: DialogService,
         authService: AuthService,
         currentUserService: CurrentUserService,

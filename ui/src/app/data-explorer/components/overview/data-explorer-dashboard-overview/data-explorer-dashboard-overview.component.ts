@@ -29,9 +29,10 @@ import {
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../../services/auth.service';
 import { SpDataExplorerOverviewDirective } from '../data-explorer-overview.directive';
-import { DataExplorerDashboardService } from '../../../services/data-explorer-dashboard.service';
 import { DataExplorerRoutingService } from '../../../services/data-explorer-routing.service';
 import { MatDialog } from '@angular/material/dialog';
+import { DataExplorerDashboardService } from '../../../services/dashboard.service';
+import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-overview',
@@ -51,6 +52,7 @@ export class SpDataExplorerDashboardOverviewComponent extends SpDataExplorerOver
         private dataViewService: DataViewDataExplorerService,
         private dashboardService: DataViewDataExplorerService,
         private dataExplorerDashboardService: DataExplorerDashboardService,
+        private dataExplorerSharedService: DataExplorerSharedService,
         public dialogService: DialogService,
         routingService: DataExplorerRoutingService,
         authService: AuthService,
@@ -66,11 +68,10 @@ export class SpDataExplorerDashboardOverviewComponent extends SpDataExplorerOver
     }
 
     showPermissionsDialog(dashboard: Dashboard) {
-        const dialogRef =
-            this.dataExplorerDashboardService.openPermissionsDialog(
-                dashboard.elementId,
-                `Manage permissions for dashboard ${dashboard.name}`,
-            );
+        const dialogRef = this.dataExplorerSharedService.openPermissionsDialog(
+            dashboard.elementId,
+            `Manage permissions for dashboard ${dashboard.name}`,
+        );
 
         dialogRef.afterClosed().subscribe(refresh => {
             if (refresh) {

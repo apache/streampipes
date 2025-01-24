@@ -35,13 +35,13 @@ import {
 import { Tuple2 } from '../../../../../core-model/base/Tuple2';
 import { zip } from 'rxjs';
 import { Router } from '@angular/router';
-import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
+import { WidgetConfigurationService } from '../../../../../data-explorer-shared/services/widget-configuration.service';
 import { FieldSelectionPanelComponent } from './field-selection-panel/field-selection-panel.component';
 import { GroupSelectionPanelComponent } from './group-selection-panel/group-selection-panel.component';
-import { TableVisConfig } from '../../../widgets/table/model/table-widget.model';
-import { DataExplorerFieldProviderService } from 'src/app/data-explorer/services/data-explorer-field-provider-service';
-import { FieldProvider } from 'src/app/data-explorer/models/dataview-dashboard.model';
-import { WidgetTypeService } from 'src/app/data-explorer/services/widget-type.service';
+import { TableVisConfig } from '../../../../../data-explorer-shared/components/widgets/table/model/table-widget.model';
+import { DataExplorerFieldProviderService } from '../../../../../data-explorer-shared/services/data-explorer-field-provider-service';
+import { FieldProvider } from '../../../../../data-explorer-shared/models/dataview-dashboard.model';
+import { WidgetTypeService } from '../../../../../data-explorer-shared/services/widget-type.service';
 
 @Component({
     selector: 'sp-data-explorer-widget-data-settings',

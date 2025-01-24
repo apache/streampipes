@@ -47,7 +47,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { SpDataExplorerRoutes } from '../../data-explorer.routes';
 import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
 import { DataExplorerDetectChangesService } from '../../services/data-explorer-detect-changes.service';
-import { SupportsUnsavedChangeDialog } from '../../models/dataview-dashboard.model';
+import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 import { TimeSelectionService } from '@streampipes/shared-ui';
 
 @Component({

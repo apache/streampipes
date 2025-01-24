@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
-import { DataExplorerWidgetRegistry } from '../../../../../registry/data-explorer-widget-registry';
+import { DataExplorerWidgetRegistry } from '../../../../../../data-explorer-shared/registry/data-explorer-widget-registry';
 
 @Component({
     selector: 'sp-data-explorer-data-view-preview',

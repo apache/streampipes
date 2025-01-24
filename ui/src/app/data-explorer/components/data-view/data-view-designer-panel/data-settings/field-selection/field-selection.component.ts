@@ -22,7 +22,7 @@ import {
     FieldConfig,
     SourceConfig,
 } from '@streampipes/platform-services';
-import { WidgetConfigurationService } from '../../../../../services/widget-configuration.service';
+import { WidgetConfigurationService } from '../../../../../../data-explorer-shared/services/widget-configuration.service';
 
 @Component({
     selector: 'sp-field-selection',

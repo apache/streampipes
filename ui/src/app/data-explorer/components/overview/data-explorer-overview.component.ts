@@ -25,10 +25,10 @@ import {
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
 import { SpDataExplorerRoutes } from '../../data-explorer.routes';
-import { DataExplorerDashboardService } from '../../services/data-explorer-dashboard.service';
 import { SpDataExplorerDashboardOverviewComponent } from './data-explorer-dashboard-overview/data-explorer-dashboard-overview.component';
 import { SpDataExplorerOverviewDirective } from './data-explorer-overview.directive';
 import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
+import { DataExplorerDashboardService } from '../../services/dashboard.service';
 
 @Component({
     selector: 'sp-data-explorer-overview',

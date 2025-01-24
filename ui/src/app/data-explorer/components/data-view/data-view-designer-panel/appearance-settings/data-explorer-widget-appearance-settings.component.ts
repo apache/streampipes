@@ -17,10 +17,10 @@
  */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
+import { WidgetConfigurationService } from '../../../../../data-explorer-shared/services/widget-configuration.service';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
-import { WidgetTypeService } from '../../../../services/widget-type.service';
-import { DataExplorerWidgetRegistry } from '../../../../registry/data-explorer-widget-registry';
+import { WidgetTypeService } from '../../../../../data-explorer-shared/services/widget-type.service';
+import { DataExplorerWidgetRegistry } from '../../../../../data-explorer-shared/registry/data-explorer-widget-registry';
 import { Subscription } from 'rxjs';
 
 @Component({
