@@ -51,6 +51,7 @@ export class EscapeNumberFilterService {
         tagValues: Map<string, string[]>,
     ): boolean {
         return (
+            tagValues &&
             tagValues.has(filter?.field?.runtimeName) &&
             tagValues.get(filter.field.runtimeName)?.length > 0
         );
