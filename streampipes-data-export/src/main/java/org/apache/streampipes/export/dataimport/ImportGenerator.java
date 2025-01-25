@@ -67,14 +67,6 @@ public abstract class ImportGenerator<T> {
       }
     }
 
-    for (String dashboardId : manifest.getDashboards()) {
-      try {
-        handleDashboard(asString(previewFiles.get(dashboardId)), dashboardId);
-      } catch (DocumentConflictException e) {
-        LOG.warn("Skipping import of dashboard {} (already present with the same id)", dashboardId);
-      }
-    }
-
     for (String dataViewId : manifest.getDataViews()) {
       try {
         handleDataView(asString(previewFiles.get(dataViewId)), dataViewId);
@@ -104,14 +96,6 @@ public abstract class ImportGenerator<T> {
         handleDataLakeMeasure(asString(previewFiles.get(measurementId)), measurementId);
       } catch (DocumentConflictException e) {
         LOG.warn("Skipping import of data lake measure {} (already present with the same id)", measurementId);
-      }
-    }
-
-    for (String dashboardWidgetId : manifest.getDashboardWidgets()) {
-      try {
-        handleDashboardWidget(asString(previewFiles.get(dashboardWidgetId)), dashboardWidgetId);
-      } catch (DocumentConflictException e) {
-        LOG.warn("Skipping import of dashboard widget {} (already present with the same id)", dashboardWidgetId);
       }
     }
 
@@ -149,8 +133,6 @@ public abstract class ImportGenerator<T> {
 
   protected abstract void handleAdapter(String document, String adapterId) throws JsonProcessingException;
 
-  protected abstract void handleDashboard(String document, String dashboardId) throws JsonProcessingException;
-
   protected abstract void handleDataView(String document, String dataViewId) throws JsonProcessingException;
 
   protected abstract void handleDataSource(String document, String dataSourceId) throws JsonProcessingException;
@@ -158,9 +140,6 @@ public abstract class ImportGenerator<T> {
   protected abstract void handlePipeline(String document, String pipelineId) throws JsonProcessingException;
 
   protected abstract void handleDataLakeMeasure(String document, String dataLakeMeasureId)
-      throws JsonProcessingException;
-
-  protected abstract void handleDashboardWidget(String document, String dashboardWidgetId)
       throws JsonProcessingException;
 
   protected abstract void handleDataViewWidget(String document, String dataViewWidgetId) throws JsonProcessingException;

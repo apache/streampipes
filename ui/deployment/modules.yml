@@ -118,7 +118,7 @@ spDashboard:
         createLinks: "['dashboard']"
         title: 'Dashboards'
         createTitle: 'New dashboard'
-        dataFns: '[this.dashboardService.getDashboards()]'
+        dataFns: '[this.dataViewService.getDataViews()]'
         viewRoles: '[UserPrivilege.PRIVILEGE_READ_DASHBOARD, UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
 spDataExplorer:
@@ -140,6 +140,6 @@ spDataExplorer:
         createLinks: "['dataexplorer']"
         title: 'Data Views'
         createTitle: 'New data view'
-        dataFns: '[this.dataViewService.getDataViews()]'
+        dataFns: '[this.dataViewService.getAllWidgets()]'
         viewRoles: '[UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'

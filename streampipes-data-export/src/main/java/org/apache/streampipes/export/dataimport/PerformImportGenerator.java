@@ -20,8 +20,6 @@ package org.apache.streampipes.export.dataimport;
 
 import org.apache.streampipes.export.model.PermissionInfo;
 import org.apache.streampipes.export.resolver.AdapterResolver;
-import org.apache.streampipes.export.resolver.DashboardResolver;
-import org.apache.streampipes.export.resolver.DashboardWidgetResolver;
 import org.apache.streampipes.export.resolver.DataSourceResolver;
 import org.apache.streampipes.export.resolver.DataViewResolver;
 import org.apache.streampipes.export.resolver.DataViewWidgetResolver;
@@ -78,14 +76,6 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   }
 
   @Override
-  protected void handleDashboard(String document, String dashboardId) throws JsonProcessingException {
-    if (shouldStore(dashboardId, config.getDashboards())) {
-      new DashboardResolver().writeDocument(document);
-      permissionsToStore.add(new PermissionInfo(dashboardId, DashboardModel.class));
-    }
-  }
-
-  @Override
   protected void handleDataView(String document, String dataViewId) throws JsonProcessingException {
     if (shouldStore(dataViewId, config.getDataViews())) {
       new DataViewResolver().writeDocument(document);
@@ -115,11 +105,6 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
       new MeasurementResolver().writeDocument(document);
       permissionsToStore.add(new PermissionInfo(dataLakeMeasureId, DataLakeMeasure.class));
     }
-  }
-
-  @Override
-  protected void handleDashboardWidget(String document, String dashboardWidgetId) throws JsonProcessingException {
-    new DashboardWidgetResolver().writeDocument(document);
   }
 
   @Override

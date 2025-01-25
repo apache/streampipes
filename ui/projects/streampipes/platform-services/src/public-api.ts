@@ -29,7 +29,6 @@ export * from './lib/apis/asset-management.service';
 export * from './lib/apis/compact-pipeline.service';
 export * from './lib/apis/data-view-data-explorer.service';
 export * from './lib/apis/datalake-rest.service';
-export * from './lib/apis/dashboard.service';
 export * from './lib/apis/files.service';
 export * from './lib/apis/functions.service';
 export * from './lib/apis/general-config.service';

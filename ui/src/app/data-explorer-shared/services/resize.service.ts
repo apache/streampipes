@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { GridsterInfo } from '../../dashboard/models/gridster-info.model';
+import { GridsterInfo } from '../models/gridster-info.model';
 
 @Injectable({ providedIn: 'root' })
 export class ResizeService {

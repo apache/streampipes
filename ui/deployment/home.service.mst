@@ -22,7 +22,6 @@ import { AuthService } from '../services/auth.service';
 import { ServiceLink } from './models/home.model';
 import {
     AdapterService,
-    DashboardService,
     DataViewDataExplorerService, PipelineElementService,
     PipelineService
 } from '@streampipes/platform-services';
@@ -33,7 +32,6 @@ export class HomeService {
 
     constructor(private authService: AuthService,
                 private adapterService: AdapterService,
-                private dashboardService: DashboardService,
                 private dataViewService: DataViewDataExplorerService,
                 private pipelineService: PipelineService,
                 private pipelineElementService: PipelineElementService) {

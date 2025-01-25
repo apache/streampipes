@@ -25,7 +25,7 @@ import {
     ViewChildren,
 } from '@angular/core';
 import { GridsterItemComponent, GridType } from 'angular-gridster2';
-import { GridsterInfo } from '../../../../dashboard/models/gridster-info.model';
+import { GridsterInfo } from '../../../../data-explorer-shared/models/gridster-info.model';
 import { IDataViewDashboardConfig } from '../../../../data-explorer-shared/models/dataview-dashboard.model';
 import { ResizeService } from '../../../../data-explorer-shared/services/resize.service';
 import { DataViewDataExplorerService } from '@streampipes/platform-services';
