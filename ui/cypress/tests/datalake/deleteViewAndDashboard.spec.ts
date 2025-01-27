@@ -33,6 +33,10 @@ describe('Test Deletion of Data View and Dashboard', () => {
 
         DataLakeUtils.saveDataViewConfiguration();
 
+        DataLakeUtils.checkRowsViewsTable(1);
+
+        DataLakeUtils.goToDashboard();
+
         DataLakeUtils.createAndEditDashboard(dashboard);
 
         DataLakeUtils.addDataViewToDashboard(dataView, true);
@@ -41,12 +45,12 @@ describe('Test Deletion of Data View and Dashboard', () => {
 
         DataLakeUtils.checkRowsDashboardTable(1);
 
-        DataLakeUtils.checkRowsViewsTable(1);
-
         // Click "Delete" but cancel action and check if dashboard and view are still displayed
         DataLakeUtils.cancelDeleteDashboard(dashboard);
 
         DataLakeUtils.checkRowsDashboardTable(1);
+
+        DataLakeUtils.goToDatalake();
 
         DataLakeUtils.cancelDeleteDataView(dataView);
 
@@ -55,6 +59,8 @@ describe('Test Deletion of Data View and Dashboard', () => {
         DataLakeUtils.deleteDataView(dataView);
 
         DataLakeUtils.checkRowsViewsTable(0);
+
+        DataLakeUtils.goToDashboard();
 
         DataLakeUtils.editDashboard(dashboard);
 
