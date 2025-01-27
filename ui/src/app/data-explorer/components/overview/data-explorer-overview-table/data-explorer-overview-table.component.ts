@@ -16,10 +16,11 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { SpDataExplorerOverviewDirective } from '../data-explorer-overview.directive';
 import { MatTableDataSource } from '@angular/material/table';
 import {
+    Dashboard,
     DataExplorerWidgetModel,
     DataViewDataExplorerService,
 } from '@streampipes/platform-services';
@@ -41,6 +42,11 @@ import { MatDialog } from '@angular/material/dialog';
 export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverviewDirective {
     dataSource = new MatTableDataSource<DataExplorerWidgetModel>();
     displayedColumns: string[] = [];
+    charts: DataExplorerWidgetModel[] = [];
+    filteredCharts: DataExplorerWidgetModel[] = [];
+
+    @Output()
+    resourceCountEmitter: EventEmitter<number> = new EventEmitter();
 
     constructor(
         private dataViewService: DataViewDataExplorerService,
@@ -61,12 +67,13 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
 
     getDataViews(): void {
         this.dataViewService.getAllWidgets().subscribe(widgets => {
-            widgets = widgets.sort((a, b) =>
+            this.charts = widgets.sort((a, b) =>
                 a.baseAppearanceConfig.widgetTitle.localeCompare(
                     b.baseAppearanceConfig.widgetTitle,
                 ),
             );
-            this.dataSource.data = widgets;
+            this.resourceCountEmitter.emit(this.charts.length);
+            this.applyChartFilters();
         });
     }
 
@@ -109,5 +116,16 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
                     });
             }
         });
+    }
+
+    applyChartFilters(elementIds: Set<string> = new Set<string>()): void {
+        this.filteredCharts = this.charts.filter(a => {
+            if (elementIds.size === 0) {
+                return true;
+            } else {
+                return elementIds.has(a.elementId);
+            }
+        });
+        this.dataSource.data = this.filteredCharts;
     }
 }

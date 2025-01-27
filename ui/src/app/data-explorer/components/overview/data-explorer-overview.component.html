@@ -17,7 +17,7 @@
   -->
 
 <sp-asset-browser
-    filteredAssetLinkType="data-view"
+    filteredAssetLinkType="chart"
     allResourcesAlias="Charts"
     [resourceCount]="resourceCount"
     (filterIdsEmitter)="applyChartFilters($event)"
@@ -44,7 +44,9 @@
             </button>
         </div>
         <div fxFlex="100" fxLayout="column">
-            <sp-data-explorer-overview-table></sp-data-explorer-overview-table>
+            <sp-data-explorer-overview-table
+                (resourceCountEmitter)="resourceCount = $event"
+            ></sp-data-explorer-overview-table>
         </div>
     </sp-basic-view>
 </sp-asset-browser>
