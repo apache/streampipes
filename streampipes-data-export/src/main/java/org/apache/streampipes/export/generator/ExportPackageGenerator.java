@@ -21,9 +21,9 @@ package org.apache.streampipes.export.generator;
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
 import org.apache.streampipes.export.resolver.AbstractResolver;
 import org.apache.streampipes.export.resolver.AdapterResolver;
+import org.apache.streampipes.export.resolver.ChartResolver;
+import org.apache.streampipes.export.resolver.DashboardResolver;
 import org.apache.streampipes.export.resolver.DataSourceResolver;
-import org.apache.streampipes.export.resolver.DataViewResolver;
-import org.apache.streampipes.export.resolver.DataViewWidgetResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
@@ -70,7 +70,6 @@ public class ExportPackageGenerator {
         .collect(Collectors.toList()), manifest);
 
     this.exportConfiguration.getAssetExportConfiguration().forEach(config -> {
-
       config.getAdapters().forEach(item -> addDoc(builder,
           item,
           new AdapterResolver(),
@@ -91,16 +90,22 @@ public class ExportPackageGenerator {
           new PipelineResolver(),
           manifest::addPipeline));
 
-      config.getDataViews().forEach(item -> {
-        var resolver = new DataViewResolver();
+      config.getDashboards().forEach(item -> {
+        var resolver = new DashboardResolver();
         addDoc(builder,
             item,
-            resolver,
-            manifest::addDataView);
+            new DashboardResolver(),
+            manifest::addDashboard);
+        var charts = resolver.getCharts(item.getResourceId());
+        var chartResolver = new ChartResolver();
+        charts.forEach(widgetId -> addDoc(builder, widgetId, chartResolver, manifest::addDataViewWidget));
+      });
 
-        var widgets = resolver.getWidgets(item.getResourceId());
-        var widgetResolver = new DataViewWidgetResolver();
-        widgets.forEach(widgetId -> addDoc(builder, widgetId, widgetResolver, manifest::addDataViewWidget));
+      config.getDataViews().forEach(item -> {
+        addDoc(builder,
+            item,
+            new ChartResolver(),
+            manifest::addDataView);
       });
 
       config.getFiles().forEach(item -> {

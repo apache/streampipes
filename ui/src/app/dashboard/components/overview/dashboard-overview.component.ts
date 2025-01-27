@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
     CurrentUserService,
@@ -26,6 +26,9 @@ import { UserRole } from '../../../_enums/user-role.enum';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { SpDashboardRoutes } from '../../dashboard.routes';
+import { Dashboard } from '@streampipes/platform-services';
+import { DataExplorerDashboardService } from '../../services/dashboard.service';
+import { DashboardOverviewTableComponent } from './dashboard-overview-table/dashboard-overview-table.component';
 
 @Component({
     selector: 'sp-dashboard-overview',
@@ -37,9 +40,14 @@ export class DashboardOverviewComponent implements OnInit {
 
     isAdmin = false;
     hasDashboardWritePrivileges = false;
+    resourceCount = 0;
+
+    @ViewChild(DashboardOverviewTableComponent)
+    dashboardOverview: DashboardOverviewTableComponent;
 
     constructor(
         public dialog: MatDialog,
+        private dataExplorerDashboardService: DataExplorerDashboardService,
         private authService: AuthService,
         private currentUserService: CurrentUserService,
         private breadcrumbService: SpBreadcrumbService,
@@ -58,5 +66,34 @@ export class DashboardOverviewComponent implements OnInit {
         });
     }
 
-    applyDashboardFilters(elements: Set<string>): void {}
+    openNewDashboardDialog() {
+        const dataViewDashboard: Dashboard = {
+            dashboardGeneralSettings: {},
+            widgets: [],
+            name: '',
+            dashboardLiveSettings: {
+                refreshModeActive: false,
+                refreshIntervalInSeconds: 10,
+                label: 'Off',
+            },
+        };
+
+        this.openDashboardModificationDialog(true, dataViewDashboard);
+    }
+
+    openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
+        const dialogRef =
+            this.dataExplorerDashboardService.openDashboardModificationDialog(
+                createMode,
+                dashboard,
+            );
+
+        dialogRef.afterClosed().subscribe(() => {
+            this.dashboardOverview.getDashboards();
+        });
+    }
+
+    applyDashboardFilters(elementIds: Set<string> = new Set<string>()): void {
+        this.dashboardOverview.applyDashboardFilters(elementIds);
+    }
 }

@@ -35,23 +35,19 @@ import { GridsterModule } from 'angular-gridster2';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
-import { DataExplorerDashboardGridComponent } from './components/widget-view/grid-view/data-explorer-dashboard-grid.component';
 import { DataExplorerOverviewComponent } from './components/overview/data-explorer-overview.component';
-import { DataExplorerDashboardPanelComponent } from './components/dashboard/data-explorer-dashboard-panel.component';
-import { DataExplorerEditDashboardDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-dashboard-dialog.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { DataExplorerDesignerPanelComponent } from './components/data-view/data-view-designer-panel/data-explorer-designer-panel.component';
-import { DataExplorerWidgetAppearanceSettingsComponent } from './components/data-view/data-view-designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component';
-import { DataExplorerWidgetDataSettingsComponent } from './components/data-view/data-view-designer-panel/data-settings/data-explorer-widget-data-settings.component';
-import { FieldSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/field-selection-panel/field-selection-panel.component';
-import { FieldSelectionComponent } from './components/data-view/data-view-designer-panel/data-settings/field-selection/field-selection.component';
-import { FilterSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel.component';
-import { DataExplorerVisualisationSettingsComponent } from './components/data-view/data-view-designer-panel/visualisation-settings/data-explorer-visualisation-settings.component';
-import { GroupSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/group-selection-panel/group-selection-panel.component';
+import { DataExplorerDesignerPanelComponent } from './components/chart-view/chart-view-designer-panel/data-explorer-designer-panel.component';
+import { DataExplorerWidgetAppearanceSettingsComponent } from './components/chart-view/chart-view-designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component';
+import { DataExplorerWidgetDataSettingsComponent } from './components/chart-view/chart-view-designer-panel/data-settings/data-explorer-widget-data-settings.component';
+import { FieldSelectionPanelComponent } from './components/chart-view/chart-view-designer-panel/data-settings/field-selection-panel/field-selection-panel.component';
+import { FieldSelectionComponent } from './components/chart-view/chart-view-designer-panel/data-settings/field-selection/field-selection.component';
+import { FilterSelectionPanelComponent } from './components/chart-view/chart-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel.component';
+import { DataExplorerVisualisationSettingsComponent } from './components/chart-view/chart-view-designer-panel/visualisation-settings/data-explorer-visualisation-settings.component';
+import { GroupSelectionPanelComponent } from './components/chart-view/chart-view-designer-panel/data-settings/group-selection-panel/group-selection-panel.component';
 import { RouterModule } from '@angular/router';
-import { DataExplorerDashboardSlideViewComponent } from './components/widget-view/slide-view/data-explorer-dashboard-slide-view.component';
 import { SharedUiModule } from '@streampipes/shared-ui';
-import { DataExplorerPanelCanDeactivateGuard } from './data-explorer-panel.can-deactivate.guard';
+import { DataExplorerPanelCanDeactivateGuard } from '../data-explorer-shared/services/data-explorer-panel.can-deactivate.guard';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -75,22 +71,17 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { SpDataExplorerDataViewOverviewComponent } from './components/overview/data-explorer-data-view-overview/data-explorer-data-view-overview.component';
-import { SpDataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview/data-explorer-dashboard-overview.component';
-import { DataExplorerDataViewComponent } from './components/data-view/data-explorer-data-view.component';
-import { DataExplorerDataViewToolbarComponent } from './components/data-view/data-view-toolbar/data-explorer-data-view-toolbar.component';
-import { DataExplorerDataViewSelectionComponent } from './components/dashboard/dashboard-widget-selection-panel/data-view-selection/data-view-selection.component';
-import { DataExplorerDashboardWidgetSelectionPanelComponent } from './components/dashboard/dashboard-widget-selection-panel/dashboard-widget-selection-panel.component';
-import { DataExplorerDataViewPreviewComponent } from './components/dashboard/dashboard-widget-selection-panel/data-view-selection/data-view-preview/data-view-preview.component';
-import { DataExplorerDashboardToolbarComponent } from './components/dashboard/dashboard-toolbar/dashboard-toolbar.component';
-import { OrderSelectionPanelComponent } from './components/data-view/data-view-designer-panel/data-settings/order-selection-panel/order-selection-panel.component';
-import { FilterSelectionPanelRowComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/filter-selection-panel-row.component';
-import { FilterSelectionPanelRowPropertySelectionComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-property-selection/filter-selection-panel-row-property-selection.component';
-import { FilterSelectionPanelRowOperationSelectionComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-operation-selection/filter-selection-panel-row-operation-selection.component';
-import { FilterSelectionPanelRowValueInputComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-value-input/filter-selection-panel-row-value-input.component';
-import { FilterSelectionPanelRowValueAutocompleteComponent } from './components/data-view/data-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-value-input-autocomplete/filter-selection-panel-row-value-autocomplete.component';
+import { SpDataExplorerDataViewOverviewComponent } from './components/overview/data-explorer-overview-table/data-explorer-overview-table.component';
+import { DataExplorerChartViewComponent } from './components/chart-view/data-explorer-chart-view.component';
+import { DataExplorerChartViewToolbarComponent } from './components/chart-view/chart-view-toolbar/data-explorer-chart-view-toolbar.component';
+import { OrderSelectionPanelComponent } from './components/chart-view/chart-view-designer-panel/data-settings/order-selection-panel/order-selection-panel.component';
+import { FilterSelectionPanelRowComponent } from './components/chart-view/chart-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/filter-selection-panel-row.component';
+import { FilterSelectionPanelRowPropertySelectionComponent } from './components/chart-view/chart-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-property-selection/filter-selection-panel-row-property-selection.component';
+import { FilterSelectionPanelRowOperationSelectionComponent } from './components/chart-view/chart-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-operation-selection/filter-selection-panel-row-operation-selection.component';
+import { FilterSelectionPanelRowValueInputComponent } from './components/chart-view/chart-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-value-input/filter-selection-panel-row-value-input.component';
+import { FilterSelectionPanelRowValueAutocompleteComponent } from './components/chart-view/chart-view-designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-value-input-autocomplete/filter-selection-panel-row-value-autocomplete.component';
 import { DataExplorerSharedModule } from '../data-explorer-shared/data-explorer-shared.module';
-import { AggregateConfigurationComponent } from './components/data-view/data-view-designer-panel/data-settings/aggregate-configuration/aggregate-configuration.component';
+import { AggregateConfigurationComponent } from './components/chart-view/chart-view-designer-panel/data-settings/aggregate-configuration/aggregate-configuration.component';
 
 @NgModule({
     imports: [
@@ -147,22 +138,12 @@ import { AggregateConfigurationComponent } from './components/data-view/data-vie
                         component: DataExplorerOverviewComponent,
                     },
                     {
-                        path: 'data-view',
-                        component: DataExplorerDataViewComponent,
+                        path: 'chart',
+                        component: DataExplorerChartViewComponent,
                     },
                     {
-                        path: 'data-view/:id',
-                        component: DataExplorerDataViewComponent,
-                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
-                    },
-                    {
-                        path: 'dashboard/:id',
-                        component: DataExplorerDashboardPanelComponent,
-                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
-                    },
-                    {
-                        path: 'dashboard/:id/:startTime/:endTime',
-                        component: DataExplorerDashboardPanelComponent,
+                        path: 'chart/:id',
+                        component: DataExplorerChartViewComponent,
                         canDeactivate: [DataExplorerPanelCanDeactivateGuard],
                     },
                 ],
@@ -172,20 +153,12 @@ import { AggregateConfigurationComponent } from './components/data-view/data-vie
     ],
     declarations: [
         AggregateConfigurationComponent,
-        DataExplorerDashboardGridComponent,
         DataExplorerOverviewComponent,
-        DataExplorerDashboardPanelComponent,
-        DataExplorerDashboardSlideViewComponent,
-        DataExplorerDashboardToolbarComponent,
-        DataExplorerDashboardWidgetSelectionPanelComponent,
-        DataExplorerDataViewPreviewComponent,
-        DataExplorerDataViewSelectionComponent,
         DataExplorerDesignerPanelComponent,
-        DataExplorerEditDashboardDialogComponent,
         DataExplorerWidgetAppearanceSettingsComponent,
         DataExplorerWidgetDataSettingsComponent,
-        DataExplorerDataViewComponent,
-        DataExplorerDataViewToolbarComponent,
+        DataExplorerChartViewComponent,
+        DataExplorerChartViewToolbarComponent,
         FieldSelectionPanelComponent,
         FieldSelectionComponent,
         FilterSelectionPanelComponent,
@@ -195,7 +168,6 @@ import { AggregateConfigurationComponent } from './components/data-view/data-vie
         DataExplorerVisualisationSettingsComponent,
         OrderSelectionPanelComponent,
         SpDataExplorerDataViewOverviewComponent,
-        SpDataExplorerDashboardOverviewComponent,
         FilterSelectionPanelRowPropertySelectionComponent,
         FilterSelectionPanelRowOperationSelectionComponent,
         FilterSelectionPanelRowValueInputComponent,

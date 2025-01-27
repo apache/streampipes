@@ -32,15 +32,15 @@ public class CreateAssetLinkTypeTask implements InstallationTask {
 
   private final List<AssetLinkType> defaultLinkTypes = Arrays.asList(
       new AssetLinkType(
-          "data-view",
-          "Data View",
+          "chart",
+          "Chart",
           "var(--color-data-view)",
-          "search",
-          "data-view",
-          List.of("dataexplorer", "dashboard"),
+          "query_stats",
+          "chart",
+          List.of("dataexplorer", "chart"),
           true
       ),
-      new AssetLinkType("dashboard", "Dashboard", "var(--color-dashboard)", "insert_chart", "dashboard",
+      new AssetLinkType("dashboard", "Dashboard", "var(--color-dashboard)", "dashboard", "dashboard",
           List.of("dashboard"), true),
       new AssetLinkType(
           "adapter",

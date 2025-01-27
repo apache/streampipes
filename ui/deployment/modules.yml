@@ -109,7 +109,7 @@ spDashboard:
     url: '/dashboard'
     title: 'Dashboard'
     description: 'The live dashboard visualizes data in real-time.'
-    icon: 'insert_chart'
+    icon: 'dashboard'
     pageNames: 'PageName.DASHBOARD'
     privileges: '[UserPrivilege.PRIVILEGE_READ_DASHBOARD, UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
     showStatusBox: true
@@ -131,7 +131,7 @@ spDataExplorer:
     url: '/dataexplorer'
     title: 'Data Explorer'
     description: 'The data explorer lets you visually inspect historical data from your connected sources.'
-    icon: 'search'
+    icon: 'query_stats'
     pageNames: 'PageName.DATA_EXPLORER'
     privileges: '[UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
     showStatusBox: true

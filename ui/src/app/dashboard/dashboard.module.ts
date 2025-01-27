@@ -59,6 +59,17 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
+import { DataExplorerSharedModule } from '../data-explorer-shared/data-explorer-shared.module';
+import { DashboardPanelComponent } from './components/panel/dashboard-panel.component';
+import { DataExplorerPanelCanDeactivateGuard } from '../data-explorer-shared/services/data-explorer-panel.can-deactivate.guard';
+import { DashboardGridViewComponent } from './components/chart-view/grid-view/dashboard-grid-view.component';
+import { DashboardSlideViewComponent } from './components/chart-view/slide-view/dashboard-slide-view.component';
+import { DashboardToolbarComponent } from './components/panel/dashboard-toolbar/dashboard-toolbar.component';
+import { ChartSelectionPanelComponent } from './components/panel/chart-selection-panel/chart-selection-panel.component';
+import { ChartPreviewComponent } from './components/panel/chart-selection-panel/chart-selection/chart-preview/chart-preview.component';
+import { ChartSelectionComponent } from './components/panel/chart-selection-panel/chart-selection/chart-selection.component';
+import { EditDashboardDialogComponent } from './dialogs/edit-dashboard/edit-dashboard-dialog.component';
+import { DashboardOverviewTableComponent } from './components/overview/dashboard-overview-table/dashboard-overview-table.component';
 
 @NgModule({
     imports: [
@@ -102,6 +113,7 @@ import { MatSliderModule } from '@angular/material/slider';
         PlatformServicesModule,
         ServicesModule,
         SharedUiModule,
+        DataExplorerSharedModule,
         RouterModule.forChild([
             {
                 path: '',
@@ -110,11 +122,32 @@ import { MatSliderModule } from '@angular/material/slider';
                         path: '',
                         component: DashboardOverviewComponent,
                     },
+                    {
+                        path: ':id',
+                        component: DashboardPanelComponent,
+                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
+                    },
+                    {
+                        path: ':id/:startTime/:endTime',
+                        component: DashboardPanelComponent,
+                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
+                    },
                 ],
             },
         ]),
     ],
-    declarations: [DashboardOverviewComponent],
+    declarations: [
+        DashboardOverviewComponent,
+        DashboardGridViewComponent,
+        DashboardPanelComponent,
+        DashboardSlideViewComponent,
+        DashboardToolbarComponent,
+        ChartSelectionPanelComponent,
+        ChartPreviewComponent,
+        ChartSelectionComponent,
+        EditDashboardDialogComponent,
+        DashboardOverviewTableComponent,
+    ],
     providers: [],
     exports: [],
 })

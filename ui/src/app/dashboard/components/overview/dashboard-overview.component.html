@@ -19,8 +19,34 @@
 <sp-asset-browser
     filteredAssetLinkType="dashboard"
     allResourcesAlias="Dashboards"
-    [resourceCount]="0"
+    [resourceCount]="resourceCount"
     (filterIdsEmitter)="applyDashboardFilters($event)"
 >
-    <sp-basic-view [showBackLink]="false" [padding]="true"> </sp-basic-view>
+    <sp-basic-view [showBackLink]="false" [padding]="true">
+        <div
+            nav
+            fxFlex="100"
+            fxLayoutAlign="start center"
+            fxLayout="row"
+            class="pl-10"
+        >
+            <button
+                mat-button
+                mat-raised-button
+                color="accent"
+                data-cy="open-new-dashboard-dialog"
+                (click)="openNewDashboardDialog()"
+                class="mr-10"
+                *ngIf="hasDashboardWritePrivileges"
+            >
+                <i class="material-icons">add</i>
+                <span>New dashboard</span>
+            </button>
+        </div>
+        <div fxFlex="100" fxLayout="column">
+            <sp-dashboard-overview-table
+                (resourceCountEmitter)="resourceCount = $event"
+            ></sp-dashboard-overview-table>
+        </div>
+    </sp-basic-view>
 </sp-asset-browser>

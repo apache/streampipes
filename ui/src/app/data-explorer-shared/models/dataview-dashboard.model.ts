@@ -108,7 +108,7 @@ export interface WidgetBaseAppearanceConfig {
     widgetTitle: string;
 }
 
-export interface WidgetTypeChangeMessage {
+export interface ChartTypeChangeMessage {
     widgetId: string;
     newWidgetTypeId: string;
 }

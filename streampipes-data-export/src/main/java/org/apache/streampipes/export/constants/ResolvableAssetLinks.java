@@ -20,7 +20,7 @@ package org.apache.streampipes.export.constants;
 
 public class ResolvableAssetLinks {
 
-  public static final String DATA_VIEW = "data-view";
+  public static final String CHART = "chart";
   public static final String DASHBOARD = "dashboard";
   public static final String MEASUREMENT = "measurement";
   public static final String ADAPTER = "adapter";
