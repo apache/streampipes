@@ -20,8 +20,9 @@ package org.apache.streampipes.export;
 
 import org.apache.streampipes.export.constants.ResolvableAssetLinks;
 import org.apache.streampipes.export.resolver.AdapterResolver;
+import org.apache.streampipes.export.resolver.ChartResolver;
 import org.apache.streampipes.export.resolver.DataSourceResolver;
-import org.apache.streampipes.export.resolver.DataViewResolver;
+import org.apache.streampipes.export.resolver.DashboardResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
@@ -57,7 +58,8 @@ public class AssetLinkResolver {
       exportConfig.setAssetId(this.assetId);
       exportConfig.setAssetName(asset.getAssetName());
       exportConfig.setAdapters(new AdapterResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.ADAPTER)));
-      exportConfig.setDataViews(new DataViewResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DATA_VIEW)));
+      exportConfig.setDataViews(new ChartResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.CHART)));
+      exportConfig.setDashboards(new DashboardResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DASHBOARD)));
       exportConfig.setDataSources(
           new DataSourceResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DATA_SOURCE)));
       exportConfig.setPipelines(new PipelineResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.PIPELINE)));

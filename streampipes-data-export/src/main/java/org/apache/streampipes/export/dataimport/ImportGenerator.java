@@ -67,11 +67,11 @@ public abstract class ImportGenerator<T> {
       }
     }
 
-    for (String dataViewId : manifest.getDataViews()) {
+    for (String chartId : manifest.getDataViewWidgets()) {
       try {
-        handleDataView(asString(previewFiles.get(dataViewId)), dataViewId);
+        handleChart(asString(previewFiles.get(chartId)), chartId);
       } catch (DocumentConflictException e) {
-        LOG.warn("Skipping import of data view {} (already present with the same id)", dataViewId);
+        LOG.warn("Skipping import of chart {} (already present with the same id)", chartId);
       }
     }
 
@@ -99,11 +99,11 @@ public abstract class ImportGenerator<T> {
       }
     }
 
-    for (String dataViewWidgetId : manifest.getDataViewWidgets()) {
+    for (String dashboardId : manifest.getDashboards()) {
       try {
-        handleDataViewWidget(asString(previewFiles.get(dataViewWidgetId)), dataViewWidgetId);
+        handleDashboard(asString(previewFiles.get(dashboardId)), dashboardId);
       } catch (DocumentConflictException e) {
-        LOG.warn("Skipping import of data view widget {} (already present with the same id)", dataViewWidgetId);
+        LOG.warn("Skipping import of dashboard {} (already present with the same id)", dashboardId);
       }
     }
 
@@ -133,7 +133,9 @@ public abstract class ImportGenerator<T> {
 
   protected abstract void handleAdapter(String document, String adapterId) throws JsonProcessingException;
 
-  protected abstract void handleDataView(String document, String dataViewId) throws JsonProcessingException;
+  protected abstract void handleChart(String document, String dataViewId) throws JsonProcessingException;
+
+  protected abstract void handleDashboard(String document, String dashboardId) throws JsonProcessingException;
 
   protected abstract void handleDataSource(String document, String dataSourceId) throws JsonProcessingException;
 
@@ -141,8 +143,6 @@ public abstract class ImportGenerator<T> {
 
   protected abstract void handleDataLakeMeasure(String document, String dataLakeMeasureId)
       throws JsonProcessingException;
-
-  protected abstract void handleDataViewWidget(String document, String dataViewWidgetId) throws JsonProcessingException;
 
   protected abstract void handleFile(String document, String fileMetadataId, Map<String, byte[]> zipContent)
       throws IOException;

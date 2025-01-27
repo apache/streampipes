@@ -138,11 +138,11 @@ import { AggregateConfigurationComponent } from './components/chart-view/chart-v
                         component: DataExplorerOverviewComponent,
                     },
                     {
-                        path: 'data-view',
+                        path: 'chart',
                         component: DataExplorerChartViewComponent,
                     },
                     {
-                        path: 'data-view/:id',
+                        path: 'chart/:id',
                         component: DataExplorerChartViewComponent,
                         canDeactivate: [DataExplorerPanelCanDeactivateGuard],
                     },

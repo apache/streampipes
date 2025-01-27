@@ -43,7 +43,7 @@ export class DataExplorerRoutingService {
         dataViewElementId?: string,
         newTab = false,
     ) {
-        const path = [...this.dataViewPath, 'data-view'];
+        const path = [...this.dataViewPath, 'chart'];
         return this.navigate(editMode, path, dataViewElementId, newTab);
     }
 

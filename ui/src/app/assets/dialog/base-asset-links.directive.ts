@@ -39,7 +39,7 @@ import { zip } from 'rxjs';
 export abstract class BaseAssetLinksDirective {
     // Resources
     pipelines: Pipeline[];
-    dataViews: DataExplorerWidgetModel[];
+    charts: DataExplorerWidgetModel[];
     dashboards: Dashboard[];
     dataLakeMeasures: DataLakeMeasure[];
     dataSources: SpDataStream[];
@@ -74,7 +74,7 @@ export abstract class BaseAssetLinksDirective {
         ).subscribe(
             ([
                 pipelines,
-                dataViews,
+                charts,
                 dashboards,
                 streams,
                 measurements,
@@ -84,7 +84,7 @@ export abstract class BaseAssetLinksDirective {
                 this.pipelines = pipelines.sort((a, b) =>
                     a.name.localeCompare(b.name),
                 );
-                this.dataViews = dataViews.sort((a, b) =>
+                this.charts = charts.sort((a, b) =>
                     a.baseAppearanceConfig.name.localeCompare(
                         b.baseAppearanceConfig.name,
                     ),
@@ -107,7 +107,7 @@ export abstract class BaseAssetLinksDirective {
 
                 this.allResources = [
                     ...this.pipelines,
-                    ...this.dataViews,
+                    ...this.charts,
                     ...this.dashboards,
                     ...this.dataSources,
                     ...this.dataLakeMeasures,

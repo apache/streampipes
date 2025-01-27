@@ -24,7 +24,7 @@ import org.apache.streampipes.model.export.ExportItem;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public class DataViewWidgetResolver extends AbstractResolver<DataExplorerWidgetModel> {
+public class ChartResolver extends AbstractResolver<DataExplorerWidgetModel> {
 
   @Override
   public DataExplorerWidgetModel findDocument(String resourceId) {
@@ -39,12 +39,15 @@ public class DataViewWidgetResolver extends AbstractResolver<DataExplorerWidgetM
 
   @Override
   public DataExplorerWidgetModel readDocument(String serializedDoc) throws JsonProcessingException {
-    return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, DataExplorerWidgetModel.class);
+    return SerializationUtils.getDefaultObjectMapper().readValue(serializedDoc, DataExplorerWidgetModel.class);
   }
 
   @Override
   public ExportItem convert(DataExplorerWidgetModel document) {
-    return new ExportItem(document.getElementId(), document.getWidgetId(), true);
+    return new ExportItem(
+        document.getElementId(),
+        document.getBaseAppearanceConfig().get("widgetTitle").toString(), true
+    );
   }
 
   @Override

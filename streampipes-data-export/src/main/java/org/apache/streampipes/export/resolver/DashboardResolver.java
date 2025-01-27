@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class DataViewResolver extends AbstractResolver<DashboardModel> {
+public class DashboardResolver extends AbstractResolver<DashboardModel> {
 
   @Override
   public DashboardModel findDocument(String resourceId) {
@@ -68,7 +68,7 @@ public class DataViewResolver extends AbstractResolver<DashboardModel> {
     return this.spMapper.readValue(document, DashboardModel.class);
   }
 
-  public List<String> getWidgets(String resourceId) {
+  public List<String> getCharts(String resourceId) {
     var document = findDocument(resourceId);
     return document.getWidgets().stream().map(DashboardItem::getId).collect(Collectors.toList());
   }
