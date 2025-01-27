@@ -23,7 +23,6 @@ import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
@@ -132,26 +131,10 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<DashboardModel> getDashboardStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("dashboard"),
-        DashboardModel.class
-    );
-  }
-
-  @Override
   public CRUDStorage<DashboardModel> getDataExplorerDashboardStorage() {
     return new DefaultCrudStorage<>(
         () -> Utils.getCouchDbGsonClient("dataexplorerdashboard"),
         DashboardModel.class
-    );
-  }
-
-  @Override
-  public CRUDStorage<DashboardWidgetModel> getDashboardWidgetStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("dashboardwidget"),
-        DashboardWidgetModel.class
     );
   }
 

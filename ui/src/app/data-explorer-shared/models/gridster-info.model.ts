@@ -16,18 +16,9 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
-import { DashboardPanelComponent } from './components/panel/dashboard-panel.component';
+import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 
-@Injectable({ providedIn: 'root' })
-export class DashboardPanelCanDeactivateGuard {
-    canDeactivate(
-        component: DashboardPanelComponent,
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Observable<boolean> | boolean {
-        return component.confirmLeaveDashboard(route, state);
-    }
+export interface GridsterInfo {
+    gridsterItem: GridsterItem;
+    gridsterItemComponent: GridsterItemComponent;
 }

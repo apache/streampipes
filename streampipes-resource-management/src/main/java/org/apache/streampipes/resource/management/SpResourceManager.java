@@ -30,10 +30,6 @@ public class SpResourceManager {
     return new AdapterDescriptionResourceManager();
   }
 
-  public DashboardResourceManager manageDashboards() {
-    return new DashboardResourceManager();
-  }
-
   public DataExplorerResourceManager manageDataExplorer() {
     return new DataExplorerResourceManager();
   }

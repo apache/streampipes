@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.google.gson.annotations.SerializedName;
 
 @JsonSubTypes({
-    @JsonSubTypes.Type(DashboardWidgetModel.class),
     @JsonSubTypes.Type(DataExplorerWidgetModel.class)
 })
 public abstract class DashboardEntity implements Storable {

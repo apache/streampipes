@@ -21,8 +21,6 @@ package org.apache.streampipes.export.generator;
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
 import org.apache.streampipes.export.resolver.AbstractResolver;
 import org.apache.streampipes.export.resolver.AdapterResolver;
-import org.apache.streampipes.export.resolver.DashboardResolver;
-import org.apache.streampipes.export.resolver.DashboardWidgetResolver;
 import org.apache.streampipes.export.resolver.DataSourceResolver;
 import org.apache.streampipes.export.resolver.DataViewResolver;
 import org.apache.streampipes.export.resolver.DataViewWidgetResolver;
@@ -55,12 +53,10 @@ public class ExportPackageGenerator {
 
   private final ExportConfiguration exportConfiguration;
   private ObjectMapper defaultMapper;
-  private ObjectMapper spMapper;
 
   public ExportPackageGenerator(ExportConfiguration exportConfiguration) {
     this.exportConfiguration = exportConfiguration;
     this.defaultMapper = SerializationUtils.getDefaultObjectMapper();
-    this.spMapper = SerializationUtils.getSpObjectMapper();
   }
 
   public byte[] generateExportPackage() throws IOException {
@@ -79,18 +75,6 @@ public class ExportPackageGenerator {
           item,
           new AdapterResolver(),
           manifest::addAdapter));
-
-      config.getDashboards().forEach(item -> {
-        var resolver = new DashboardResolver();
-        addDoc(builder,
-            item,
-            resolver,
-            manifest::addDashboard);
-
-        var widgets = resolver.getWidgets(item.getResourceId());
-        var widgetResolver = new DashboardWidgetResolver();
-        widgets.forEach(widgetId -> addDoc(builder, widgetId, widgetResolver, manifest::addDashboardWidget));
-      });
 
       config.getDataSources().forEach(item -> addDoc(builder,
           item,

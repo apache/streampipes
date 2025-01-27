@@ -21,7 +21,7 @@ import {
     AdapterDescription,
     AdapterService,
     Dashboard,
-    DashboardService,
+    DataExplorerWidgetModel,
     DataLakeMeasure,
     DatalakeRestService,
     DataViewDataExplorerService,
@@ -39,7 +39,7 @@ import { zip } from 'rxjs';
 export abstract class BaseAssetLinksDirective {
     // Resources
     pipelines: Pipeline[];
-    dataViews: Dashboard[];
+    dataViews: DataExplorerWidgetModel[];
     dashboards: Dashboard[];
     dataLakeMeasures: DataLakeMeasure[];
     dataSources: SpDataStream[];
@@ -52,7 +52,6 @@ export abstract class BaseAssetLinksDirective {
         protected genericStorageService: GenericStorageService,
         protected pipelineService: PipelineService,
         protected dataViewService: DataViewDataExplorerService,
-        protected dashboardService: DashboardService,
         protected dataLakeService: DatalakeRestService,
         protected pipelineElementService: PipelineElementService,
         protected adapterService: AdapterService,
@@ -66,8 +65,8 @@ export abstract class BaseAssetLinksDirective {
     getAllResources() {
         zip(
             this.pipelineService.getPipelines(),
+            this.dataViewService.getAllWidgets(),
             this.dataViewService.getDataViews(),
-            this.dashboardService.getDashboards(),
             this.pipelineElementService.getDataStreams(),
             this.dataLakeService.getAllMeasurementSeries(),
             this.filesService.getFileMetadata(),
@@ -86,7 +85,9 @@ export abstract class BaseAssetLinksDirective {
                     a.name.localeCompare(b.name),
                 );
                 this.dataViews = dataViews.sort((a, b) =>
-                    a.name.localeCompare(b.name),
+                    a.baseAppearanceConfig.name.localeCompare(
+                        b.baseAppearanceConfig.name,
+                    ),
                 );
                 this.dashboards = dashboards.sort((a, b) =>
                     a.name.localeCompare(b.name),

@@ -75,10 +75,6 @@ public class ResetManagement {
 
     removeAllDataViews();
 
-    removeAllDashboardWidgets();
-
-    removeAllDashboards();
-
     removeAllAssets(username);
 
     removeAllPipelineTemplates();
@@ -161,21 +157,6 @@ public class ResetManagement {
                                   .getDataExplorerDashboardStorage();
     dataLakeDashboardStorage.findAll()
                             .forEach(dashboard -> dataLakeDashboardStorage.deleteElementById(dashboard.getElementId()));
-  }
-
-  private static void removeAllDashboardWidgets() {
-    var dashboardWidgetStorage =
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getDashboardWidgetStorage();
-    dashboardWidgetStorage.findAll()
-                          .forEach(widget -> dashboardWidgetStorage.deleteElementById(widget.getElementId()));
-  }
-
-  private static void removeAllDashboards() {
-    var dashboardStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
-                                                     .getDashboardStorage();
-    dashboardStorage.findAll()
-                    .forEach(dashboard -> dashboardStorage.deleteElementById(dashboard.getElementId()));
   }
 
   private static void removeAllAssets(String username) {

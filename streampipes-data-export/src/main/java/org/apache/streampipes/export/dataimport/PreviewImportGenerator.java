@@ -20,7 +20,6 @@ package org.apache.streampipes.export.dataimport;
 
 
 import org.apache.streampipes.export.resolver.AdapterResolver;
-import org.apache.streampipes.export.resolver.DashboardResolver;
 import org.apache.streampipes.export.resolver.DataSourceResolver;
 import org.apache.streampipes.export.resolver.DataViewResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
@@ -77,11 +76,6 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   }
 
   @Override
-  protected void handleDashboard(String document, String dashboardId) throws JsonProcessingException {
-    addExportItem(dashboardId, new DashboardResolver().readDocument(document).getName(), importConfig::addDashboard);
-  }
-
-  @Override
   protected void handleDataView(String document, String dataViewId) throws JsonProcessingException {
     addExportItem(dataViewId, new DataViewResolver().readDocument(document).getName(), importConfig::addDataView);
   }
@@ -100,11 +94,6 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   protected void handleDataLakeMeasure(String document, String measurementId) throws JsonProcessingException {
     addExportItem(measurementId, new MeasurementResolver().readDocument(document).getMeasureName(),
         importConfig::addDataLakeMeasure);
-  }
-
-  @Override
-  protected void handleDashboardWidget(String document, String dashboardWidgetId) {
-
   }
 
   @Override
