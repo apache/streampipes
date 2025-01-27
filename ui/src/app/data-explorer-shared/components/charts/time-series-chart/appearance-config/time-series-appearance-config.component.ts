@@ -16,24 +16,26 @@
  *
  */
 
-import { Dashboard } from '@streampipes/platform-services';
-import { EditDashboardDialogComponent } from '../dialogs/edit-dashboard/edit-dashboard-dialog.component';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { Injectable } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { TimeSeriesAppearanceConfig } from '../../../../models/dataview-dashboard.model';
+import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 
-@Injectable({ providedIn: 'root' })
-export class DataExplorerDashboardService {
-    constructor(private dialogService: DialogService) {}
+@Component({
+    selector: 'sp-time-series-appearance-config',
+    templateUrl: './time-series-appearance-config.component.html',
+})
+export class SpTimeSeriesAppearanceConfigComponent {
+    @Input()
+    appearanceConfig: TimeSeriesAppearanceConfig;
 
-    openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
-        return this.dialogService.open(EditDashboardDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: createMode ? 'New Dashboard' : 'Edit Dashboard',
-            width: '60vw',
-            data: {
-                createMode: createMode,
-                dashboard: dashboard,
-            },
+    constructor(
+        private widgetConfigurationService: ChartConfigurationService,
+    ) {}
+
+    triggerViewUpdate() {
+        this.widgetConfigurationService.notify({
+            refreshView: true,
+            refreshData: false,
         });
     }
 }

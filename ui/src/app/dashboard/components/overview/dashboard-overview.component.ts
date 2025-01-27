@@ -28,7 +28,7 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { SpDashboardRoutes } from '../../dashboard.routes';
 import { Dashboard } from '@streampipes/platform-services';
 import { DataExplorerDashboardService } from '../../services/dashboard.service';
-import { SpDataExplorerDashboardOverviewComponent } from './data-explorer-dashboard-overview/data-explorer-dashboard-overview.component';
+import { DashboardOverviewTableComponent } from './dashboard-overview-table/dashboard-overview-table.component';
 
 @Component({
     selector: 'sp-dashboard-overview',
@@ -42,8 +42,8 @@ export class DashboardOverviewComponent implements OnInit {
     hasDashboardWritePrivileges = false;
     resourceCount = 0;
 
-    @ViewChild(SpDataExplorerDashboardOverviewComponent)
-    dashboardOverview: SpDataExplorerDashboardOverviewComponent;
+    @ViewChild(DashboardOverviewTableComponent)
+    dashboardOverview: DashboardOverviewTableComponent;
 
     constructor(
         public dialog: MatDialog,

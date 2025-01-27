@@ -16,24 +16,18 @@
  *
  */
 
-import { Dashboard } from '@streampipes/platform-services';
-import { EditDashboardDialogComponent } from '../dialogs/edit-dashboard/edit-dashboard-dialog.component';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { ChartTypeChangeMessage } from '../models/dataview-dashboard.model';
 
-@Injectable({ providedIn: 'root' })
-export class DataExplorerDashboardService {
-    constructor(private dialogService: DialogService) {}
+@Injectable({
+    providedIn: 'root',
+})
+export class ChartTypeService {
+    public chartTypeChangeSubject: Subject<ChartTypeChangeMessage> =
+        new Subject<ChartTypeChangeMessage>();
 
-    openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
-        return this.dialogService.open(EditDashboardDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: createMode ? 'New Dashboard' : 'Edit Dashboard',
-            width: '60vw',
-            data: {
-                createMode: createMode,
-                dashboard: dashboard,
-            },
-        });
+    public notify(widgetTypeChangeMessage: ChartTypeChangeMessage): void {
+        this.chartTypeChangeSubject.next(widgetTypeChangeMessage);
     }
 }

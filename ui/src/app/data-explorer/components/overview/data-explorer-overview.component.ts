@@ -55,7 +55,7 @@ export class DataExplorerOverviewComponent extends SpDataExplorerOverviewDirecti
         this.routingService.navigateToDataView(true);
     }
 
-    applyDashboardFilters(elementIds: Set<string> = new Set<string>()): void {
+    applyChartFilters(elementIds: Set<string> = new Set<string>()): void {
         //this.da.applyDashboardFilters(elementIds);
     }
 }

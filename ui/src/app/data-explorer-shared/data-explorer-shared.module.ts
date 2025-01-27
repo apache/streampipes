@@ -59,43 +59,43 @@ import { MatChipsModule } from '@angular/material/chips';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
-import { CorrelationWidgetConfigComponent } from './components/widgets/correlation-chart/config/correlation-chart-widget-config.component';
-import { GaugeWidgetConfigComponent } from './components/widgets/gauge/config/gauge-widget-config.component';
-import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
-import { ImageBarComponent } from './components/widgets/image/image-bar/image-bar.component';
-import { ImageBarPreviewComponent } from './components/widgets/image/image-bar/image-bar-preview/image-bar-preview.component';
-import { ImageWidgetConfigComponent } from './components/widgets/image/config/image-widget-config.component';
-import { IndicatorWidgetConfigComponent } from './components/widgets/indicator/config/indicator-chart-widget-config.component';
-import { TimeSeriesChartWidgetConfigComponent } from './components/widgets/time-series-chart/config/time-series-chart-widget-config.component';
-import { NoDataInDateRangeComponent } from './components/widgets/base/no-data/no-data-in-date-range.component';
-import { SelectMultiplePropertiesConfigComponent } from './components/widget-config/select-multiple-properties-config/select-multiple-properties-config.component';
-import { SelectColorPropertiesConfigComponent } from './components/widget-config/select-color-properties-config/select-color-properties-config.component';
-import { SelectSinglePropertyConfigComponent } from './components/widget-config/select-single-property-config/select-single-property-config.component';
-import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
-import { TableWidgetConfigComponent } from './components/widgets/table/config/table-widget-config.component';
-import { TrafficLightWidgetComponent } from './components/widgets/traffic-light/traffic-light-widget.component';
-import { TrafficLightWidgetConfigComponent } from './components/widgets/traffic-light/config/traffic-light-widget-config.component';
-import { StatusWidgetComponent } from './components/widgets/status/status-widget.component';
-import { StatusWidgetConfigComponent } from './components/widgets/status/config/status-widget-config.component';
-import { MapWidgetConfigComponent } from './components/widgets/map/config/map-widget-config.component';
-import { MapWidgetComponent } from './components/widgets/map/map-widget.component';
-import { HeatmapWidgetConfigComponent } from './components/widgets/heatmap/config/heatmap-widget-config.component';
-import { ImageViewerComponent } from './components/widgets/image/image-viewer/image-viewer.component';
-import { WidgetDirective } from './components/widget/widget.directive';
-import { TooMuchDataComponent } from './components/widgets/base/too-much-data/too-much-data.component';
-import { SpEchartsWidgetComponent } from './components/widgets/base/echarts-widget.component';
-import { SpValueHeatmapWidgetConfigComponent } from './components/widgets/value-heatmap/config/value-heatmap-chart-widget-config.component';
-import { SpHistogramChartWidgetConfigComponent } from './components/widgets/histogram/config/histogram-chart-widget-config.component';
-import { SpPieChartWidgetConfigComponent } from './components/widgets/pie/config/pie-chart-widget-config.component';
-import { SpImageContainerComponent } from './components/widgets/image/image-container/image-container.component';
-import { SpInvalidConfigurationComponent } from './components/widgets/base/invalid-configuration/invalid-configuration.component';
-import { SpVisualizationConfigOuterComponent } from './components/widget-config/visualization-config-outer/visualization-config-outer.component';
-import { SpSelectAxisOptionsConfigComponent } from './components/widget-config/select-axis-options-config/select-axis-options-config.component';
-import { SpTimeseriesItemConfigComponent } from './components/widget-config/select-color-properties-config/time-series-item-config/time-series-item-config.component';
-import { SpEchartsWidgetAppearanceConfigComponent } from './components/widget-config/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
-import { SpTimeSeriesAppearanceConfigComponent } from './components/widgets/time-series-chart/appearance-config/time-series-appearance-config.component';
-import { SpDataZoomConfigComponent } from './components/widget-config/data-zoom-config/data-zoom-config.component';
+import { DataExplorerChartContainerComponent } from './components/chart-container/data-explorer-chart-container.component';
+import { CorrelationWidgetConfigComponent } from './components/charts/correlation-chart/config/correlation-chart-widget-config.component';
+import { GaugeWidgetConfigComponent } from './components/charts/gauge/config/gauge-widget-config.component';
+import { ImageWidgetComponent } from './components/charts/image/image-widget.component';
+import { ImageBarComponent } from './components/charts/image/image-bar/image-bar.component';
+import { ImageBarPreviewComponent } from './components/charts/image/image-bar/image-bar-preview/image-bar-preview.component';
+import { ImageWidgetConfigComponent } from './components/charts/image/config/image-widget-config.component';
+import { IndicatorWidgetConfigComponent } from './components/charts/indicator/config/indicator-chart-widget-config.component';
+import { TimeSeriesChartWidgetConfigComponent } from './components/charts/time-series-chart/config/time-series-chart-widget-config.component';
+import { NoDataInDateRangeComponent } from './components/charts/base/no-data/no-data-in-date-range.component';
+import { SelectMultiplePropertiesConfigComponent } from './components/chart-config/select-multiple-properties-config/select-multiple-properties-config.component';
+import { SelectColorPropertiesConfigComponent } from './components/chart-config/select-color-properties-config/select-color-properties-config.component';
+import { SelectSinglePropertyConfigComponent } from './components/chart-config/select-single-property-config/select-single-property-config.component';
+import { TableWidgetComponent } from './components/charts/table/table-widget.component';
+import { TableWidgetConfigComponent } from './components/charts/table/config/table-widget-config.component';
+import { TrafficLightWidgetComponent } from './components/charts/traffic-light/traffic-light-widget.component';
+import { TrafficLightWidgetConfigComponent } from './components/charts/traffic-light/config/traffic-light-widget-config.component';
+import { StatusWidgetComponent } from './components/charts/status/status-widget.component';
+import { StatusWidgetConfigComponent } from './components/charts/status/config/status-widget-config.component';
+import { MapWidgetConfigComponent } from './components/charts/map/config/map-widget-config.component';
+import { MapWidgetComponent } from './components/charts/map/map-widget.component';
+import { HeatmapWidgetConfigComponent } from './components/charts/heatmap/config/heatmap-widget-config.component';
+import { ImageViewerComponent } from './components/charts/image/image-viewer/image-viewer.component';
+import { ChartDirective } from './components/chart-container/chart.directive';
+import { TooMuchDataComponent } from './components/charts/base/too-much-data/too-much-data.component';
+import { SpEchartsWidgetComponent } from './components/charts/base/echarts-widget.component';
+import { SpValueHeatmapWidgetConfigComponent } from './components/charts/value-heatmap/config/value-heatmap-chart-widget-config.component';
+import { SpHistogramChartWidgetConfigComponent } from './components/charts/histogram/config/histogram-chart-widget-config.component';
+import { SpPieChartWidgetConfigComponent } from './components/charts/pie/config/pie-chart-widget-config.component';
+import { SpImageContainerComponent } from './components/charts/image/image-container/image-container.component';
+import { SpInvalidConfigurationComponent } from './components/charts/base/invalid-configuration/invalid-configuration.component';
+import { SpVisualizationConfigOuterComponent } from './components/chart-config/visualization-config-outer/visualization-config-outer.component';
+import { SpSelectAxisOptionsConfigComponent } from './components/chart-config/select-axis-options-config/select-axis-options-config.component';
+import { SpTimeseriesItemConfigComponent } from './components/chart-config/select-color-properties-config/time-series-item-config/time-series-item-config.component';
+import { SpEchartsWidgetAppearanceConfigComponent } from './components/chart-config/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
+import { SpTimeSeriesAppearanceConfigComponent } from './components/charts/time-series-chart/appearance-config/time-series-appearance-config.component';
+import { SpDataZoomConfigComponent } from './components/chart-config/data-zoom-config/data-zoom-config.component';
 
 @NgModule({
     imports: [
@@ -145,7 +145,7 @@ import { SpDataZoomConfigComponent } from './components/widget-config/data-zoom-
         NgxEchartsModule.forChild(),
     ],
     declarations: [
-        DataExplorerDashboardWidgetComponent,
+        DataExplorerChartContainerComponent,
         CorrelationWidgetConfigComponent,
         GaugeWidgetConfigComponent,
         ImageWidgetComponent,
@@ -168,7 +168,7 @@ import { SpDataZoomConfigComponent } from './components/widget-config/data-zoom-
         MapWidgetComponent,
         HeatmapWidgetConfigComponent,
         ImageViewerComponent,
-        WidgetDirective,
+        ChartDirective,
         TooMuchDataComponent,
         SpEchartsWidgetComponent,
         SpValueHeatmapWidgetConfigComponent,
@@ -183,7 +183,7 @@ import { SpDataZoomConfigComponent } from './components/widget-config/data-zoom-
         SpTimeSeriesAppearanceConfigComponent,
         SpDataZoomConfigComponent,
     ],
-    exports: [DataExplorerDashboardWidgetComponent],
+    exports: [DataExplorerChartContainerComponent],
 })
 export class DataExplorerSharedModule {
     constructor() {}

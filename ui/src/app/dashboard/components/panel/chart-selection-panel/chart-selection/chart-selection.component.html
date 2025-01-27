@@ -16,35 +16,29 @@
   ~
   -->
 
-<sp-asset-browser
-    filteredAssetLinkType="data-view"
-    allResourcesAlias="Charts"
-    [resourceCount]="resourceCount"
-    (filterIdsEmitter)="applyChartFilters($event)"
->
-    <sp-basic-view [showBackLink]="false" [padding]="true">
-        <div
-            nav
-            fxFlex="100"
-            fxLayoutAlign="start center"
-            fxLayout="row"
-            class="pl-10"
-        >
+<div fxFlex="100" class="m-10" fxLayoutGap="10px" fxLayout="column">
+    @if (charts.length > 0) {
+        <div *ngFor="let chart of charts">
+            <sp-chart-preview
+                [chart]="chart"
+                (addChartEmitter)="addChartEmitter.emit($event)"
+            >
+            </sp-chart-preview>
+        </div>
+    } @else {
+        <div fxLayoutAlign="center center" fxLayout="column" fxFlex="100">
+            <span class="no-widget-hint"
+                >No charts found - create a new chart first to add it to this
+                dashboard.</span
+            >
             <button
                 mat-button
-                mat-raised-button
                 color="accent"
-                data-cy="open-new-data-view"
-                (click)="createNewDataView()"
-                class="mr-10"
-                *ngIf="hasDataExplorerWritePrivileges"
+                class="mt-10"
+                (click)="navigateToDataViewCreation()"
             >
-                <i class="material-icons">add</i>
-                <span>New chart</span>
+                Create Data View
             </button>
         </div>
-        <div fxFlex="100" fxLayout="column">
-            <sp-data-explorer-overview-table></sp-data-explorer-overview-table>
-        </div>
-    </sp-basic-view>
-</sp-asset-browser>
+    }
+</div>

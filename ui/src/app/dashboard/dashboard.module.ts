@@ -60,16 +60,16 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 import { DataExplorerSharedModule } from '../data-explorer-shared/data-explorer-shared.module';
-import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
+import { DashboardPanelComponent } from './components/panel/dashboard-panel.component';
 import { DataExplorerPanelCanDeactivateGuard } from '../data-explorer-shared/services/data-explorer-panel.can-deactivate.guard';
-import { DataExplorerDashboardGridComponent } from './components/widget-view/grid-view/data-explorer-dashboard-grid.component';
-import { DataExplorerDashboardSlideViewComponent } from './components/widget-view/slide-view/data-explorer-dashboard-slide-view.component';
-import { DataExplorerDashboardToolbarComponent } from './components/panel/dashboard-toolbar/dashboard-toolbar.component';
-import { DataExplorerDashboardWidgetSelectionPanelComponent } from './components/panel/dashboard-widget-selection-panel/dashboard-widget-selection-panel.component';
-import { DataExplorerDataViewPreviewComponent } from './components/panel/dashboard-widget-selection-panel/data-view-selection/data-view-preview/data-view-preview.component';
-import { DataExplorerDataViewSelectionComponent } from './components/panel/dashboard-widget-selection-panel/data-view-selection/data-view-selection.component';
-import { DataExplorerEditDashboardDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-dashboard-dialog.component';
-import { SpDataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview/data-explorer-dashboard-overview.component';
+import { DashboardGridViewComponent } from './components/chart-view/grid-view/dashboard-grid-view.component';
+import { DashboardSlideViewComponent } from './components/chart-view/slide-view/dashboard-slide-view.component';
+import { DashboardToolbarComponent } from './components/panel/dashboard-toolbar/dashboard-toolbar.component';
+import { ChartSelectionPanelComponent } from './components/panel/chart-selection-panel/chart-selection-panel.component';
+import { ChartPreviewComponent } from './components/panel/chart-selection-panel/chart-selection/chart-preview/chart-preview.component';
+import { ChartSelectionComponent } from './components/panel/chart-selection-panel/chart-selection/chart-selection.component';
+import { EditDashboardDialogComponent } from './dialogs/edit-dashboard/edit-dashboard-dialog.component';
+import { DashboardOverviewTableComponent } from './components/overview/dashboard-overview-table/dashboard-overview-table.component';
 
 @NgModule({
     imports: [
@@ -124,12 +124,12 @@ import { SpDataExplorerDashboardOverviewComponent } from './components/overview/
                     },
                     {
                         path: ':id',
-                        component: DataExplorerDashboardPanelComponent,
+                        component: DashboardPanelComponent,
                         canDeactivate: [DataExplorerPanelCanDeactivateGuard],
                     },
                     {
                         path: ':id/:startTime/:endTime',
-                        component: DataExplorerDashboardPanelComponent,
+                        component: DashboardPanelComponent,
                         canDeactivate: [DataExplorerPanelCanDeactivateGuard],
                     },
                 ],
@@ -138,15 +138,15 @@ import { SpDataExplorerDashboardOverviewComponent } from './components/overview/
     ],
     declarations: [
         DashboardOverviewComponent,
-        DataExplorerDashboardGridComponent,
-        DataExplorerDashboardPanelComponent,
-        DataExplorerDashboardSlideViewComponent,
-        DataExplorerDashboardToolbarComponent,
-        DataExplorerDashboardWidgetSelectionPanelComponent,
-        DataExplorerDataViewPreviewComponent,
-        DataExplorerDataViewSelectionComponent,
-        DataExplorerEditDashboardDialogComponent,
-        SpDataExplorerDashboardOverviewComponent,
+        DashboardGridViewComponent,
+        DashboardPanelComponent,
+        DashboardSlideViewComponent,
+        DashboardToolbarComponent,
+        ChartSelectionPanelComponent,
+        ChartPreviewComponent,
+        ChartSelectionComponent,
+        EditDashboardDialogComponent,
+        DashboardOverviewTableComponent,
     ],
     providers: [],
     exports: [],

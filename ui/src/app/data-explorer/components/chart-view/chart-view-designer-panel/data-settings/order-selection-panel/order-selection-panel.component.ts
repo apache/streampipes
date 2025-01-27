@@ -16,24 +16,28 @@
  *
  */
 
-import { Dashboard } from '@streampipes/platform-services';
-import { EditDashboardDialogComponent } from '../dialogs/edit-dashboard/edit-dashboard-dialog.component';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { Injectable } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { SourceConfig } from '@streampipes/platform-services';
+import { ChartConfigurationService } from '../../../../../../data-explorer-shared/services/chart-configuration.service';
 
-@Injectable({ providedIn: 'root' })
-export class DataExplorerDashboardService {
-    constructor(private dialogService: DialogService) {}
+@Component({
+    selector: 'sp-order-selection-panel',
+    templateUrl: './order-selection-panel.component.html',
+    styleUrls: ['./order-selection-panel.component.scss'],
+})
+export class OrderSelectionPanelComponent implements OnInit {
+    @Input() sourceConfig: SourceConfig;
 
-    openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
-        return this.dialogService.open(EditDashboardDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: createMode ? 'New Dashboard' : 'Edit Dashboard',
-            width: '60vw',
-            data: {
-                createMode: createMode,
-                dashboard: dashboard,
-            },
+    constructor(private widgetConfigService: ChartConfigurationService) {}
+
+    ngOnInit(): void {
+        this.sourceConfig.queryConfig.order ??= 'DESC';
+    }
+
+    triggerConfigurationUpdate() {
+        this.widgetConfigService.notify({
+            refreshData: true,
+            refreshView: true,
         });
     }
 }
