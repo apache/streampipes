@@ -28,8 +28,8 @@ import {
     DialogService,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../../services/auth.service';
-import { SpDataExplorerOverviewDirective } from '../data-explorer-overview.directive';
-import { DataExplorerRoutingService } from '../../../services/data-explorer-routing.service';
+import { SpDataExplorerOverviewDirective } from '../../../../data-explorer/components/overview/data-explorer-overview.directive';
+import { DataExplorerRoutingService } from '../../../../data-explorer-shared/services/data-explorer-routing.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DataExplorerDashboardService } from '../../../services/dashboard.service';
 import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
@@ -37,7 +37,9 @@ import { DataExplorerSharedService } from '../../../../data-explorer-shared/serv
 @Component({
     selector: 'sp-data-explorer-dashboard-overview',
     templateUrl: './data-explorer-dashboard-overview.component.html',
-    styleUrls: ['../data-explorer-overview.component.scss'],
+    styleUrls: [
+        '../../../../data-explorer/components/overview/data-explorer-overview.component.scss',
+    ],
 })
 export class SpDataExplorerDashboardOverviewComponent extends SpDataExplorerOverviewDirective {
     dataSource = new MatTableDataSource<Dashboard>();

@@ -16,28 +16,27 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog.scss';
+import { Injectable } from '@angular/core';
+import {
+    ActivatedRouteSnapshot,
+    Router,
+    RouterStateSnapshot,
+} from '@angular/router';
+import { Observable } from 'rxjs';
+import { SupportsUnsavedChangeDialog } from '../models/dataview-dashboard.model';
 
-.element-margin {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.mat-radio-button {
-    padding: 10px;
-}
-
-.mr-10 {
-    margin-right: 10px;
-}
-
-.view-radio-group {
-    display: flex;
-    flex-direction: column;
-    margin: 15px 0;
-    align-items: flex-start;
-}
-
-.view-radio-button {
-    margin: 5px;
+@Injectable({ providedIn: 'root' })
+export class DataExplorerPanelCanDeactivateGuard {
+    constructor(private router: Router) {}
+    canDeactivate(
+        component: SupportsUnsavedChangeDialog,
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot,
+    ): Observable<boolean> | boolean {
+        if (!this.router.getCurrentNavigation().extras?.state?.omitConfirm) {
+            return component.confirmLeaveDialog(route, state);
+        } else {
+            return true;
+        }
+    }
 }

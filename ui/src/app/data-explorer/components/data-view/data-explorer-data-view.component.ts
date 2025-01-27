@@ -30,7 +30,7 @@ import {
     RouterStateSnapshot,
 } from '@angular/router';
 import { ConfirmDialogComponent } from '@streampipes/shared-ui';
-import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
+import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
 import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
 import { DataExplorerDetectChangesService } from '../../services/data-explorer-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
@@ -153,7 +153,7 @@ export class DataExplorerDataViewComponent
                 ? this.dataViewService.updateWidget(this.dataView)
                 : this.dataViewService.saveWidget(this.dataView);
         observable.subscribe(() => {
-            this.routingService.navigateToOverview(true);
+            this.routingService.navigateToDataViewOverview(true);
         });
     }
 
@@ -198,7 +198,7 @@ export class DataExplorerDataViewComponent
     }
 
     discardChanges() {
-        this.routingService.navigateToOverview(true);
+        this.routingService.navigateToDataViewOverview(true);
     }
 
     updateDateRange(timeSettings: TimeSettings) {

@@ -34,18 +34,6 @@
                 mat-button
                 mat-raised-button
                 color="accent"
-                data-cy="open-new-dashboard-dialog"
-                (click)="openNewDashboardDialog()"
-                class="mr-10"
-                *ngIf="hasDataExplorerWritePrivileges"
-            >
-                <i class="material-icons">add</i>
-                <span>New Dashboard</span>
-            </button>
-            <button
-                mat-button
-                mat-raised-button
-                color="accent"
                 data-cy="open-new-data-view"
                 (click)="createNewDataView()"
                 class="mr-10"
@@ -56,9 +44,6 @@
             </button>
         </div>
         <div fxFlex="100" fxLayout="column">
-            <sp-data-explorer-dashboard-overview
-                (resourceCountEmitter)="resourceCount = $event"
-            ></sp-data-explorer-dashboard-overview>
             <sp-data-explorer-data-view-overview></sp-data-explorer-data-view-overview>
         </div>
     </sp-basic-view>

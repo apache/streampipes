@@ -16,17 +16,26 @@
  *
  */
 
-import { Component, EventEmitter, Output } from '@angular/core';
+.element-margin {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 
-@Component({
-    selector: 'sp-data-explorer-dashboard-widget-selection-panel',
-    templateUrl: './dashboard-widget-selection-panel.component.html',
-    styleUrls: [
-        './dashboard-widget-selection-panel.component.scss',
-        '../../data-view/data-view-designer-panel/data-explorer-designer-panel.component.scss',
-    ],
-})
-export class DataExplorerDashboardWidgetSelectionPanelComponent {
-    @Output()
-    addDataViewEmitter: EventEmitter<string> = new EventEmitter<string>();
+.mat-radio-button {
+    padding: 10px;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
+.view-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+    align-items: flex-start;
+}
+
+.view-radio-button {
+    margin: 5px;
 }

@@ -16,27 +16,17 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    Router,
-    RouterStateSnapshot,
-} from '@angular/router';
-import { Observable } from 'rxjs';
-import { SupportsUnsavedChangeDialog } from '../data-explorer-shared/models/dataview-dashboard.model';
+import { Component, EventEmitter, Output } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
-export class DataExplorerPanelCanDeactivateGuard {
-    constructor(private router: Router) {}
-    canDeactivate(
-        component: SupportsUnsavedChangeDialog,
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Observable<boolean> | boolean {
-        if (!this.router.getCurrentNavigation().extras?.state?.omitConfirm) {
-            return component.confirmLeaveDialog(route, state);
-        } else {
-            return true;
-        }
-    }
+@Component({
+    selector: 'sp-data-explorer-dashboard-widget-selection-panel',
+    templateUrl: './dashboard-widget-selection-panel.component.html',
+    styleUrls: [
+        './dashboard-widget-selection-panel.component.scss',
+        '../../../../data-explorer/components/data-view/data-view-designer-panel/data-explorer-designer-panel.component.scss',
+    ],
+})
+export class DataExplorerDashboardWidgetSelectionPanelComponent {
+    @Output()
+    addDataViewEmitter: EventEmitter<string> = new EventEmitter<string>();
 }

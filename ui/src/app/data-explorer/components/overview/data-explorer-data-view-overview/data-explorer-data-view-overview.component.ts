@@ -30,7 +30,7 @@ import {
     ConfirmDialogComponent,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../../services/auth.service';
-import { DataExplorerRoutingService } from '../../../services/data-explorer-routing.service';
+import { DataExplorerRoutingService } from '../../../../data-explorer-shared/services/data-explorer-routing.service';
 import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
 import { MatDialog } from '@angular/material/dialog';
 

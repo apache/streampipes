@@ -44,9 +44,9 @@ import {
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { map, switchMap } from 'rxjs/operators';
-import { SpDataExplorerRoutes } from '../../data-explorer.routes';
-import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
-import { DataExplorerDetectChangesService } from '../../services/data-explorer-detect-changes.service';
+import { SpDataExplorerRoutes } from '../../../data-explorer/data-explorer.routes';
+import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
+import { DataExplorerDetectChangesService } from '../../../data-explorer/services/data-explorer-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 import { TimeSelectionService } from '@streampipes/shared-ui';
 
@@ -160,7 +160,7 @@ export class DataExplorerDashboardPanelComponent
         this.dataViewDataExplorerService
             .updateDashboard(this.dashboard)
             .subscribe(result => {
-                this.routingService.navigateToOverview(true);
+                this.routingService.navigateToDashboardOverview(true);
             });
     }
 
@@ -187,7 +187,7 @@ export class DataExplorerDashboardPanelComponent
     }
 
     discardChanges() {
-        this.routingService.navigateToOverview(true);
+        this.routingService.navigateToDataViewOverview(true);
     }
 
     triggerEditMode() {
@@ -249,7 +249,7 @@ export class DataExplorerDashboardPanelComponent
     }
 
     goBackToOverview() {
-        this.routingService.navigateToOverview();
+        this.routingService.navigateToDataViewOverview();
     }
 
     confirmLeaveDialog(
