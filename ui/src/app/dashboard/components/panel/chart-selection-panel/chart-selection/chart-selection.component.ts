@@ -50,7 +50,7 @@ export class ChartSelectionComponent implements OnInit {
     }
 
     navigateToDataViewCreation(): void {
-        this.router.navigate(['dataexplorer', 'data-view'], {
+        this.router.navigate(['dataexplorer', 'chart'], {
             queryParams: { editMode: true },
             state: { omitConfirm: true },
         });
