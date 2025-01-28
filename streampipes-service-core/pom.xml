@@ -89,11 +89,7 @@
             <artifactId>streampipes-connect-management</artifactId>
             <version>0.98.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-platform-services</artifactId>
-            <version>0.98.0-SNAPSHOT</version>
-        </dependency>
+
         <!-- External dependencies -->
         <dependency>
             <groupId>org.springframework.security</groupId>
