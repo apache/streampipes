@@ -17,13 +17,11 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import {
-    Dashboard,
-    SharedDatalakeRestService,
-} from '@streampipes/platform-services';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { SharedDatalakeRestService } from './shared-dashboard.service';
+import { Dashboard } from '../model/dashboard/dashboard.model';
 
 @Injectable({
     providedIn: 'root',
