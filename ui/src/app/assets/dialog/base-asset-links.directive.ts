@@ -20,11 +20,12 @@ import { Directive } from '@angular/core';
 import {
     AdapterDescription,
     AdapterService,
+    ChartService,
     Dashboard,
+    DashboardService,
     DataExplorerWidgetModel,
     DataLakeMeasure,
     DatalakeRestService,
-    DataViewDataExplorerService,
     FileMetadata,
     FilesService,
     GenericStorageService,
@@ -51,7 +52,8 @@ export abstract class BaseAssetLinksDirective {
     constructor(
         protected genericStorageService: GenericStorageService,
         protected pipelineService: PipelineService,
-        protected dataViewService: DataViewDataExplorerService,
+        protected chartService: ChartService,
+        protected dashboardService: DashboardService,
         protected dataLakeService: DatalakeRestService,
         protected pipelineElementService: PipelineElementService,
         protected adapterService: AdapterService,
@@ -65,8 +67,8 @@ export abstract class BaseAssetLinksDirective {
     getAllResources() {
         zip(
             this.pipelineService.getPipelines(),
-            this.dataViewService.getAllWidgets(),
-            this.dataViewService.getDataViews(),
+            this.chartService.getAllCharts(),
+            this.dashboardService.getDashboards(),
             this.pipelineElementService.getDataStreams(),
             this.dataLakeService.getAllMeasurementSeries(),
             this.filesService.getFileMetadata(),

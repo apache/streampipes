@@ -18,10 +18,10 @@
 
 import { Directive, EventEmitter, Input, Output } from '@angular/core';
 import {
+    ChartService,
     Dashboard,
     DataExplorerWidgetModel,
     DataLakeMeasure,
-    DataViewDataExplorerService,
     TimeSettings,
 } from '@streampipes/platform-services';
 import { ResizeService } from '../../../data-explorer-shared/services/resize.service';
@@ -63,7 +63,7 @@ export abstract class AbstractChartViewDirective {
 
     constructor(
         protected resizeService: ResizeService,
-        protected dataViewDataExplorerService: DataViewDataExplorerService,
+        protected dataViewDataExplorerService: ChartService,
         protected widgetRegistryService: DataExplorerChartRegistry,
     ) {}
 
@@ -84,7 +84,7 @@ export abstract class AbstractChartViewDirective {
     loadWidgetConfigs() {
         const observables = this.dashboard.widgets.map(w =>
             this.dataViewDataExplorerService
-                .getWidget(w.id)
+                .getChart(w.id)
                 .pipe(catchError(() => of(undefined))),
         );
         zip(...observables).subscribe(results => {
@@ -101,7 +101,7 @@ export abstract class AbstractChartViewDirective {
             this.widgetsVisible = false;
         }
         this.dataViewDataExplorerService
-            .getWidget(widgetId)
+            .getChart(widgetId)
             .subscribe(response => {
                 this.processWidget(response);
                 if (setCurrentlyConfigured) {

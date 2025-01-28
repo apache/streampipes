@@ -20,9 +20,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { SpDataExplorerOverviewDirective } from '../data-explorer-overview.directive';
 import { MatTableDataSource } from '@angular/material/table';
 import {
-    Dashboard,
+    ChartService,
     DataExplorerWidgetModel,
-    DataViewDataExplorerService,
 } from '@streampipes/platform-services';
 import {
     ConfirmDialogComponent,
@@ -49,7 +48,7 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
     resourceCountEmitter: EventEmitter<number> = new EventEmitter();
 
     constructor(
-        private dataViewService: DataViewDataExplorerService,
+        private dataViewService: ChartService,
         private dataExplorerDashboardService: DataExplorerSharedService,
         public dialogService: DialogService,
         authService: AuthService,
@@ -66,7 +65,7 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
     }
 
     getDataViews(): void {
-        this.dataViewService.getAllWidgets().subscribe(widgets => {
+        this.dataViewService.getAllCharts().subscribe(widgets => {
             this.charts = widgets.sort((a, b) =>
                 a.baseAppearanceConfig.widgetTitle.localeCompare(
                     b.baseAppearanceConfig.widgetTitle,
@@ -110,7 +109,7 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.dataViewService
-                    .deleteWidget(dataView.elementId)
+                    .deleteChart(dataView.elementId)
                     .subscribe(() => {
                         this.getDataViews();
                     });

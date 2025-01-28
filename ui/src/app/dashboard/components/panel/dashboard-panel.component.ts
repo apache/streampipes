@@ -23,9 +23,9 @@ import {
     ClientDashboardItem,
     Dashboard,
     DashboardLiveSettings,
+    DashboardService,
     DataExplorerWidgetModel,
     DataLakeMeasure,
-    DataViewDataExplorerService,
     TimeSelectionConstants,
     TimeSettings,
 } from '@streampipes/platform-services';
@@ -86,15 +86,13 @@ export class DashboardPanelComponent
     refreshSubscription: Subscription;
 
     constructor(
-        private dataViewDataExplorerService: DataViewDataExplorerService,
         private detectChangesService: DataExplorerDetectChangesService,
         private dialog: MatDialog,
         private timeSelectionService: TimeSelectionService,
         private authService: AuthService,
         private currentUserService: CurrentUserService,
-        private dashboardService: DataViewDataExplorerService,
+        private dashboardService: DashboardService,
         private route: ActivatedRoute,
-        private dataViewService: DataViewDataExplorerService,
         private routingService: DataExplorerRoutingService,
         private breadcrumbService: SpBreadcrumbService,
     ) {}
@@ -157,7 +155,7 @@ export class DashboardPanelComponent
 
     persistDashboardChanges() {
         this.dashboard.dashboardGeneralSettings.defaultViewMode = this.viewMode;
-        this.dataViewDataExplorerService
+        this.dashboardService
             .updateDashboard(this.dashboard)
             .subscribe(result => {
                 this.routingService.navigateToDashboardOverview(true);
@@ -201,7 +199,7 @@ export class DashboardPanelComponent
     }
 
     getDashboard(dashboardId: string, startTime: number, endTime: number) {
-        this.dataViewService.getDashboard(dashboardId).subscribe(dashboard => {
+        this.dashboardService.getDashboard(dashboardId).subscribe(dashboard => {
             this.dashboard = dashboard;
             this.originalDashboard = JSON.parse(JSON.stringify(dashboard));
             this.breadcrumbService.updateBreadcrumb(
@@ -273,7 +271,7 @@ export class DashboardPanelComponent
                     if (shouldUpdate) {
                         this.dashboard.dashboardGeneralSettings.defaultViewMode =
                             this.viewMode;
-                        this.dataViewDataExplorerService
+                        this.dashboardService
                             .updateDashboard(this.dashboard)
                             .subscribe(result => {
                                 return true;

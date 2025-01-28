@@ -28,7 +28,7 @@ import { GridsterItemComponent, GridType } from 'angular-gridster2';
 import { GridsterInfo } from '../../../../data-explorer-shared/models/gridster-info.model';
 import { IDataViewDashboardConfig } from '../../../../data-explorer-shared/models/dataview-dashboard.model';
 import { ResizeService } from '../../../../data-explorer-shared/services/resize.service';
-import { DataViewDataExplorerService } from '@streampipes/platform-services';
+import { ChartService } from '@streampipes/platform-services';
 import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
 import { DataExplorerChartRegistry } from '../../../../data-explorer-shared/registry/data-explorer-chart-registry';
 
@@ -49,7 +49,7 @@ export class DashboardGridViewComponent
 
     constructor(
         protected resizeService: ResizeService,
-        protected dataViewDataExplorerService: DataViewDataExplorerService,
+        protected dataViewDataExplorerService: ChartService,
         protected widgetRegistryService: DataExplorerChartRegistry,
     ) {
         super(

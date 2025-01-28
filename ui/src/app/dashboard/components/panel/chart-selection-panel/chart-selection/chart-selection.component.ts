@@ -18,8 +18,8 @@
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
+    ChartService,
     DataExplorerWidgetModel,
-    DataViewDataExplorerService,
 } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
 
@@ -35,12 +35,12 @@ export class ChartSelectionComponent implements OnInit {
     charts: DataExplorerWidgetModel[] = [];
 
     constructor(
-        private dataViewService: DataViewDataExplorerService,
+        private dataViewService: ChartService,
         private router: Router,
     ) {}
 
     ngOnInit() {
-        this.dataViewService.getAllWidgets().subscribe(charts => {
+        this.dataViewService.getAllCharts().subscribe(charts => {
             this.charts = charts.sort((a, b) =>
                 a.baseAppearanceConfig.widgetTitle.localeCompare(
                     b.baseAppearanceConfig.widgetTitle,

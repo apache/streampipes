@@ -17,10 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import {
-    Dashboard,
-    DataViewDataExplorerService,
-} from '@streampipes/platform-services';
+import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
@@ -34,7 +31,7 @@ export class EditDashboardDialogComponent implements OnInit {
 
     constructor(
         private dialogRef: DialogRef<EditDashboardDialogComponent>,
-        private dashboardService: DataViewDataExplorerService,
+        private dashboardService: DashboardService,
     ) {}
 
     ngOnInit() {
@@ -55,9 +52,11 @@ export class EditDashboardDialogComponent implements OnInit {
 
     onSave(): void {
         if (this.createMode) {
-            this.dashboardService.saveDataView(this.dashboard).subscribe(() => {
-                this.dialogRef.close();
-            });
+            this.dashboardService
+                .saveDashboard(this.dashboard)
+                .subscribe(() => {
+                    this.dialogRef.close();
+                });
         } else {
             this.dashboardService
                 .updateDashboard(this.dashboard)

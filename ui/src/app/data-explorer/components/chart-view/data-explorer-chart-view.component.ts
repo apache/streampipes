@@ -18,9 +18,9 @@
 
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
+    ChartService,
     DataExplorerWidgetModel,
     DataLakeMeasure,
-    DataViewDataExplorerService,
     TimeSettings,
 } from '@streampipes/platform-services';
 import {
@@ -65,7 +65,7 @@ export class DataExplorerChartViewComponent
         private route: ActivatedRoute,
         private dialog: MatDialog,
         private routingService: DataExplorerRoutingService,
-        private dataViewService: DataViewDataExplorerService,
+        private dataViewService: ChartService,
         private timeSelectionService: TimeSelectionService,
     ) {}
 
@@ -84,7 +84,7 @@ export class DataExplorerChartViewComponent
 
     loadDataView(dataViewId: string): void {
         this.dataViewLoaded = false;
-        this.dataViewService.getWidget(dataViewId).subscribe(res => {
+        this.dataViewService.getChart(dataViewId).subscribe(res => {
             this.dataView = res;
             this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
             if (!this.dataView.timeSettings?.startTime) {
@@ -151,8 +151,8 @@ export class DataExplorerChartViewComponent
         this.dataView.timeSettings = this.timeSettings;
         const observable =
             this.dataView.elementId !== undefined
-                ? this.dataViewService.updateWidget(this.dataView)
-                : this.dataViewService.saveWidget(this.dataView);
+                ? this.dataViewService.updateChart(this.dataView)
+                : this.dataViewService.saveChart(this.dataView);
         observable.subscribe(() => {
             this.routingService.navigateToDataViewOverview(true);
         });
@@ -180,12 +180,10 @@ export class DataExplorerChartViewComponent
                         this.dataView.timeSettings = this.timeSettings;
                         const observable =
                             this.dataView.elementId !== undefined
-                                ? this.dataViewService.updateWidget(
+                                ? this.dataViewService.updateChart(
                                       this.dataView,
                                   )
-                                : this.dataViewService.saveWidget(
-                                      this.dataView,
-                                  );
+                                : this.dataViewService.saveChart(this.dataView);
                         observable.subscribe(() => {
                             return true;
                         });

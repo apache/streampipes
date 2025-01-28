@@ -22,12 +22,13 @@ import {
     AdapterService,
     AssetLink,
     AssetLinkType,
+    ChartService,
+    DashboardService,
     DatalakeRestService,
-    DataViewDataExplorerService,
-    GenericStorageService,
-    PipelineService,
-    PipelineElementService,
     FilesService,
+    GenericStorageService,
+    PipelineElementService,
+    PipelineService,
 } from '@streampipes/platform-services';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
@@ -63,7 +64,8 @@ export class EditAssetLinkDialogComponent
         private dialogRef: DialogRef<EditAssetLinkDialogComponent>,
         protected genericStorageService: GenericStorageService,
         protected pipelineService: PipelineService,
-        protected dataViewService: DataViewDataExplorerService,
+        protected chartService: ChartService,
+        protected dashboardService: DashboardService,
         protected dataLakeService: DatalakeRestService,
         protected pipelineElementService: PipelineElementService,
         protected adapterService: AdapterService,
@@ -72,7 +74,8 @@ export class EditAssetLinkDialogComponent
         super(
             genericStorageService,
             pipelineService,
-            dataViewService,
+            chartService,
+            dashboardService,
             dataLakeService,
             pipelineElementService,
             adapterService,

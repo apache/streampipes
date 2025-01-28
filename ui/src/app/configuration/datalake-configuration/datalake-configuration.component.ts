@@ -20,8 +20,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
 import {
+    ChartService,
     DatalakeRestService,
-    DataViewDataExplorerService,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -64,7 +64,7 @@ export class DatalakeConfigurationComponent implements OnInit {
 
     constructor(
         private datalakeRestService: DatalakeRestService,
-        private dataViewDataExplorerService: DataViewDataExplorerService,
+        private dataViewDataExplorerService: ChartService,
         private dialogService: DialogService,
         private breadcrumbService: SpBreadcrumbService,
         private tabService: SpConfigurationTabsService,

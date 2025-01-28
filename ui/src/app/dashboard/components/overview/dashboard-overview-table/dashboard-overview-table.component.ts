@@ -18,10 +18,7 @@
 
 import { Component, EventEmitter, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import {
-    Dashboard,
-    DataViewDataExplorerService,
-} from '@streampipes/platform-services';
+import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import {
     ConfirmDialogComponent,
     CurrentUserService,
@@ -51,8 +48,7 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
     resourceCountEmitter: EventEmitter<number> = new EventEmitter();
 
     constructor(
-        private dataViewService: DataViewDataExplorerService,
-        private dashboardService: DataViewDataExplorerService,
+        private dashboardService: DashboardService,
         private dataExplorerDashboardService: DataExplorerDashboardService,
         private dataExplorerSharedService: DataExplorerSharedService,
         public dialogService: DialogService,
@@ -125,7 +121,7 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
     }
 
     getDashboards() {
-        this.dataViewService.getDataViews().subscribe(data => {
+        this.dashboardService.getDashboards().subscribe(data => {
             this.dashboards = data.sort((a, b) => a.name.localeCompare(b.name));
             this.resourceCountEmitter.emit(this.dashboards.length);
             this.applyDashboardFilters();

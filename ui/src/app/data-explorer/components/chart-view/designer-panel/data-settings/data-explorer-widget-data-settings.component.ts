@@ -25,11 +25,11 @@ import {
     ViewChild,
 } from '@angular/core';
 import {
+    ChartService,
     DataExplorerDataConfig,
     DataExplorerWidgetModel,
     DataLakeMeasure,
     DatalakeRestService,
-    DataViewDataExplorerService,
     SourceConfig,
 } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../../../core-model/base/Tuple2';
@@ -78,7 +78,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     expandFieldsQuery = true;
 
     constructor(
-        private dataExplorerService: DataViewDataExplorerService,
+        private dataExplorerService: ChartService,
         private datalakeRestService: DatalakeRestService,
         private widgetConfigService: ChartConfigurationService,
         private fieldProviderService: DataExplorerFieldProviderService,

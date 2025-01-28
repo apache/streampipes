@@ -20,10 +20,10 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
 import { ResizeService } from '../../../../data-explorer-shared/services/resize.service';
 import {
+    ChartService,
     DashboardItem,
     DataExplorerWidgetModel,
     DataLakeMeasure,
-    DataViewDataExplorerService,
 } from '@streampipes/platform-services';
 import { DataExplorerChartRegistry } from '../../../../data-explorer-shared/registry/data-explorer-chart-registry';
 
@@ -50,7 +50,7 @@ export class DashboardSlideViewComponent
 
     constructor(
         protected resizeService: ResizeService,
-        protected dataViewDataExplorerService: DataViewDataExplorerService,
+        protected dataViewDataExplorerService: ChartService,
         protected widgetRegistryService: DataExplorerChartRegistry,
     ) {
         super(
