@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.rest.impl.dashboard;
 
+
+import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.resource.management.AbstractCRUDResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
@@ -32,10 +34,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestResource {
+@RestController
+@RequestMapping("/api/v3/datalake/dashboard")
+public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
@@ -71,14 +77,15 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
     return ok();
   }
 
-  protected abstract AbstractCRUDResourceManager<DashboardModel> getResourceManager();
+  private AbstractCRUDResourceManager<DashboardModel> getResourceManager() {
+    return getSpResourceManager().manageDataExplorer();
+  }
 
-  /**
-   * Do not delete these abstract methods below - required by Spring SPEL (see above)
-   */
+  public boolean hasReadAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE);
+  }
 
-  public abstract boolean hasReadAuthority();
-
-  public abstract boolean hasWriteAuthority();
-
+  public boolean hasWriteAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE);
+  }
 }

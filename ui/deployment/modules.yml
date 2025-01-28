@@ -138,8 +138,8 @@ spDataExplorer:
     statusBox:
         link: "['dataexplorer']"
         createLinks: "['dataexplorer']"
-        title: 'Data Views'
-        createTitle: 'New data view'
+        title: 'Charts'
+        createTitle: 'New chart'
         dataFns: '[this.dataViewService.getAllWidgets()]'
         viewRoles: '[UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
