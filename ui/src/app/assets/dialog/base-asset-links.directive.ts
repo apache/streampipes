@@ -87,8 +87,8 @@ export abstract class BaseAssetLinksDirective {
                     a.name.localeCompare(b.name),
                 );
                 this.charts = charts.sort((a, b) =>
-                    a.baseAppearanceConfig.name.localeCompare(
-                        b.baseAppearanceConfig.name,
+                    a.baseAppearanceConfig.widgetTitle.localeCompare(
+                        b.baseAppearanceConfig.widgetTitle,
                     ),
                 );
                 this.dashboards = dashboards.sort((a, b) =>

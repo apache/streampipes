@@ -26,9 +26,11 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ModifyAssetLinksMigration implements Migration {
 
@@ -59,12 +61,13 @@ public class ModifyAssetLinksMigration implements Migration {
     if (asset.containsKey("assetLinks")) {
       List<Map<String, Object>> assetLinks = castToListOfMaps(asset.get("assetLinks"));
 
+      assetLinks.removeIf(assetLink -> "dashboard".equals(assetLink.get("linkType")));
       assetLinks.forEach(assetLink -> {
         Optional.ofNullable(assetLink.get("linkType"))
             .filter(linkType -> linkType.equals("data-view"))
             .ifPresent(linkType -> {
-              assetLink.put("linkType", "chart");
-              assetLink.put("queryHint", "chart");
+              assetLink.put("linkType", "dashboard");
+              assetLink.put("queryHint", "dashboard");
             });
       });
     }
@@ -82,7 +85,7 @@ public class ModifyAssetLinksMigration implements Migration {
       return ((List<?>) obj).stream()
           .filter(item -> item instanceof Map<?, ?>)
           .map(item -> (Map<String, Object>) item)
-          .toList();
+          .collect(Collectors.toCollection(ArrayList::new));
     } else {
       throw new IllegalArgumentException("Expected a List of Maps but got: " + obj);
     }
