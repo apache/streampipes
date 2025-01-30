@@ -72,7 +72,7 @@ public class GenericImageClassificationProcessor extends StreamPipesDataProcesso
         .requiredStream(StreamRequirementsBuilder
             .create()
             .requiredPropertyWithUnaryMapping(EpRequirements
-                .domainPropertyReq("https://image.com"), Labels.withId(
+                .semanticTypeReq("https://image.com"), Labels.withId(
                 ImagePropertyConstants.IMAGE_MAPPING.getProperty()), PropertyScope.NONE)
             .build())
         .outputStrategy(OutputStrategies.append(

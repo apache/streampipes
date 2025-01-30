@@ -69,7 +69,7 @@ public class QrCodeReaderProcessor extends StreamPipesDataProcessor {
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq("https://image.com"),
+            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq("https://image.com"),
                 Labels.withId(RequiredBoxStream.IMAGE_PROPERTY), PropertyScope.NONE)
             .build())
         .requiredSingleValueSelection(Labels.withId(SEND_IF_NO_RESULT), Options.from("Yes", "No"))

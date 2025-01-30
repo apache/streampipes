@@ -94,7 +94,7 @@ public class StateBufferLabelerProcessor extends StreamPipesDataProcessor
                 Labels.withId(SENSOR_VALUE_ID),
                 PropertyScope.NONE)
             .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReqList(SPSensor.STATE),
+                EpRequirements.semanticTypeReqList(SPSensor.STATE),
                 Labels.withId(STATE_FIELD_ID),
                 PropertyScope.NONE)
             .build())

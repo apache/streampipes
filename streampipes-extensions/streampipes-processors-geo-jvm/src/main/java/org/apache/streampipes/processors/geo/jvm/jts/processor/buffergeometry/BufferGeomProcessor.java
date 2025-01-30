@@ -81,11 +81,11 @@ public class BufferGeomProcessor extends StreamPipesDataProcessor {
         .requiredStream(StreamRequirementsBuilder
             .create()
             .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReq("http://www.opengis.net/ont/geosparql#Geometry"),
+                EpRequirements.semanticTypeReq("http://www.opengis.net/ont/geosparql#Geometry"),
                 Labels.withId(GEOM_KEY),
                 PropertyScope.MEASUREMENT_PROPERTY)
             .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
+                EpRequirements.semanticTypeReq("http://data.ign.fr/def/ignf#CartesianCS"),
                 Labels.withId(EPSG_KEY),
                 PropertyScope.MEASUREMENT_PROPERTY)
             .build())

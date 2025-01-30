@@ -62,20 +62,6 @@ public class PrimitivePropertyBuilder {
   }
 
   /**
-   * @deprecated use {@link PrimitivePropertyBuilder#semanticType(String)} instead.
-   * Specifies the semantics of the property (e.g., whether a double value stands for a latitude coordinate).
-   *
-   * @param semanticType The semantic type as a String. Use some
-   *                       existing vocabulary from {@link org.apache.streampipes.vocabulary} or create your own.
-   * @return PrimitivePropertyBuilder
-   */
-  @Deprecated(forRemoval = true, since = "0.97.0")
-  public PrimitivePropertyBuilder domainProperty(String semanticType) {
-    this.eventProperty.setSemanticType(semanticType);
-    return this;
-  }
-
-  /**
    * Defines the measurement unit (e.g., tons) of the event property.
    *
    * @param measurementUnit The measurement unit as a URI from a vocabulary (e.g., QUDT).

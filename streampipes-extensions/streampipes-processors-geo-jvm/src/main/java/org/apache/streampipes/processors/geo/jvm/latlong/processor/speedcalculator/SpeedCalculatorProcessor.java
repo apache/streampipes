@@ -67,16 +67,16 @@ public class SpeedCalculatorProcessor extends StreamPipesDataProcessor {
             .create()
             .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
                 Labels.withId(TIMESTAMP_KEY), PropertyScope.HEADER_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT)
+            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LAT)
                 , Labels.withId(LATITUDE_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG)
+            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LNG)
                 , Labels.withId(LONGITUDE_KEY), PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .requiredIntegerParameter(Labels.withId(COUNT_WINDOW_KEY))
         .outputStrategy(
             OutputStrategies.append(PrimitivePropertyBuilder
                 .create(Datatypes.Float, SPEED_RUNTIME_NAME)
-                .domainProperty(SO.NUMBER)
+                .semanticType(SO.NUMBER)
                 .measurementUnit(URI.create("http://qudt.org/vocab/unit#KilometerPerHour"))
                 .build())
         )

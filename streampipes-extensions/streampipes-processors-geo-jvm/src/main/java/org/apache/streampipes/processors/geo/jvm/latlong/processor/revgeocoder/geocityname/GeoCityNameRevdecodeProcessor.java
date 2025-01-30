@@ -65,10 +65,10 @@ public class GeoCityNameRevdecodeProcessor extends StreamPipesDataProcessor {
         .withLocales(Locales.EN)
         .requiredStream(StreamRequirementsBuilder
             .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT),
+            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LAT),
                 Labels.withId(LATITUDE_MAPPING_KEY),
                 PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG),
+            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LNG),
                 Labels.withId(LONGITUDE_MAPPING_KEY),
                 PropertyScope.NONE)
             .build())

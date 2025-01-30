@@ -138,9 +138,9 @@ public class InfluxDbClient extends SharedInfluxClient {
       PrimitivePropertyBuilder property = PrimitivePropertyBuilder
           .create(column.getDatatypes(), column.getName())
           .label(column.getName());
-      // Setting the timestamp field to the correct domainProperty
+      // Setting the timestamp field to the correct semantic type
       if (column.getName().equals("time")) {
-        property.domainProperty(DATE_TIME);
+        property.semanticType(DATE_TIME);
       }
       allProperties.add(property.build());
     }

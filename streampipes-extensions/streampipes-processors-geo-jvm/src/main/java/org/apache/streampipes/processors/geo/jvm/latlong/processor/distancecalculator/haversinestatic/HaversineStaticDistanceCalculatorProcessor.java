@@ -65,11 +65,11 @@ public class HaversineStaticDistanceCalculatorProcessor extends StreamPipesDataP
         .requiredStream(StreamRequirementsBuilder
             .create()
             .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReq(Geo.LAT),
+                EpRequirements.semanticTypeReq(Geo.LAT),
                 Labels.withId(LATITUDE_KEY),
                 PropertyScope.MEASUREMENT_PROPERTY)
             .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReq(Geo.LNG),
+                EpRequirements.semanticTypeReq(Geo.LNG),
                 Labels.withId(LONGITUDE_KEY),
                 PropertyScope.MEASUREMENT_PROPERTY)
             .build()
@@ -78,7 +78,7 @@ public class HaversineStaticDistanceCalculatorProcessor extends StreamPipesDataP
         .requiredFloatParameter(Labels.withId(SELECTED_LONGITUDE_KEY))
         .outputStrategy(OutputStrategies.append(PrimitivePropertyBuilder
             .create(Datatypes.Float, DISTANCE_RUNTIME_NAME)
-            .domainProperty(SO.NUMBER)
+            .semanticType(SO.NUMBER)
             .measurementUnit(URI.create("http://qudt.org/vocab/unit#Kilometer"))
             .build())
         )

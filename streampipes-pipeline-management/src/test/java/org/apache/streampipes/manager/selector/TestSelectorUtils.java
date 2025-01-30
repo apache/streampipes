@@ -35,12 +35,12 @@ public class TestSelectorUtils {
         .property(EpProperties.timestampProperty("timestamp"))
         .property(PrimitivePropertyBuilder
             .create(Datatypes.Integer, "testMeasurement")
-            .domainProperty(SO.NUMBER)
+            .semanticType(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .property(PrimitivePropertyBuilder
             .create(Datatypes.Integer, "testDimension")
-            .domainProperty(SO.NUMBER)
+            .semanticType(SO.NUMBER)
             .scope(PropertyScope.DIMENSION_PROPERTY)
             .build())
         .property(EpProperties.stringEp(Labels.from("", "string", "string description"), "testString",

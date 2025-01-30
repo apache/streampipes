@@ -63,13 +63,13 @@ public class LatLngToJtsPointProcessor extends StreamPipesDataProcessor {
         .requiredStream(
             StreamRequirementsBuilder
                 .create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT),
+                .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LAT),
                     Labels.withId(LAT_KEY), PropertyScope.MEASUREMENT_PROPERTY)
                 .requiredPropertyWithUnaryMapping(
-                    EpRequirements.domainPropertyReq(Geo.LNG),
+                    EpRequirements.semanticTypeReq(Geo.LNG),
                     Labels.withId(LNG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
                 .requiredPropertyWithUnaryMapping(
-                    EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
+                    EpRequirements.semanticTypeReq("http://data.ign.fr/def/ignf#CartesianCS"),
                     Labels.withId(EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
                 .build()
         )
@@ -77,7 +77,7 @@ public class LatLngToJtsPointProcessor extends StreamPipesDataProcessor {
             OutputStrategies.append(
                 PrimitivePropertyBuilder
                     .create(Datatypes.String, GEOMETRY_RUNTIME)
-                    .domainProperty("http://www.opengis.net/ont/geosparql#Geometry")
+                    .semanticType("http://www.opengis.net/ont/geosparql#Geometry")
                     .build()
             )
         )

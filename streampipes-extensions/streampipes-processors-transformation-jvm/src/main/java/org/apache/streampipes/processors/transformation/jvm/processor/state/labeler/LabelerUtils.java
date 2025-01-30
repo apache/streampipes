@@ -43,7 +43,7 @@ public class LabelerUtils {
     properties.add(PrimitivePropertyBuilder
         .create(Datatypes.String, labelName)
         .valueSpecification(labelName, "possible label values", labelStrings)
-        .domainProperty(SPSensor.STATE)
+        .semanticType(SPSensor.STATE)
         .scope(PropertyScope.DIMENSION_PROPERTY)
         .build());
 

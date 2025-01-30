@@ -78,7 +78,7 @@ public class TestSchemaMatch {
     EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
     EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LNG);
 
-    EventPropertyPrimitive requirement1 = EpRequirements.domainPropertyReq(Geo.LAT);
+    EventPropertyPrimitive requirement1 = EpRequirements.semanticTypeReq(Geo.LAT);
     EventPropertyPrimitive requirement2 = EpRequirements.stringReq();
 
     EventSchema offeredSchema = new EventSchema(Arrays.asList(offer1, offer2));
@@ -96,7 +96,7 @@ public class TestSchemaMatch {
     EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
     EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LNG);
 
-    EventPropertyPrimitive requirement1 = EpRequirements.domainPropertyReq(Geo.LAT);
+    EventPropertyPrimitive requirement1 = EpRequirements.semanticTypeReq(Geo.LAT);
     EventPropertyPrimitive requirement2 = EpRequirements.integerReq();
 
     EventSchema offeredSchema = new EventSchema(Arrays.asList(offer1, offer2));
