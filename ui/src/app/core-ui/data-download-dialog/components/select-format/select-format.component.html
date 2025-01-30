@@ -21,7 +21,7 @@
     <h5>Download Format</h5>
     <mat-radio-group
         class="sp-radio-group"
-        [(ngModel)]="formatExportConfig.exportFormat"
+        [(ngModel)]="formatExportConfig.format"
     >
         <mat-radio-button
             value="json"
@@ -37,9 +37,16 @@
         >
             CSV
         </mat-radio-button>
+        <mat-radio-button
+            value="xlsx"
+            class="sp-radio-button"
+            data-cy="download-configuration-xlsx"
+        >
+            Excel
+        </mat-radio-button>
     </mat-radio-group>
 </div>
-<div *ngIf="formatExportConfig.exportFormat === 'csv'" class="mt-10">
+<div *ngIf="formatExportConfig.format === 'csv'" class="mt-10">
     <h5>Delimiter</h5>
     <mat-radio-group
         [(ngModel)]="formatExportConfig.delimiter"
@@ -49,13 +56,72 @@
             value="comma"
             class="sp-radio-button"
             data-cy="download-configuration-delimiter-comma"
-            >&nbsp;,</mat-radio-button
-        >
+            >&nbsp;,
+        </mat-radio-button>
         <mat-radio-button
             value="semicolon"
             class="sp-radio-button"
             data-cy="download-configuration-delimiter-semicolon"
-            >&nbsp;;</mat-radio-button
-        >
+            >&nbsp;;
+        </mat-radio-button>
+    </mat-radio-group>
+</div>
+<div
+    *ngIf="formatExportConfig.format === 'xlsx' && hasReadFilePrivilege"
+    fxLayout="column"
+>
+    <mat-checkbox
+        [(ngModel)]="formatExportConfig.useTemplate"
+        [disabled]="excelTemplates.length === 0"
+    >
+        Use uploaded file template
+    </mat-checkbox>
+    @if (formatExportConfig.useTemplate && excelTemplates.length > 0) {
+        <mat-form-field class="mt-10" color="accent">
+            <mat-select
+                [(ngModel)]="formatExportConfig.templateId"
+                placeholder="Choose template"
+            >
+                <mat-option
+                    *ngFor="let template of excelTemplates"
+                    [value]="template.fileId"
+                >
+                    {{ template.filename }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field color="accent">
+            <mat-label>First row index to append data</mat-label>
+            <input
+                matInput
+                [(ngModel)]="formatExportConfig.startRow"
+                type="number"
+            />
+        </mat-form-field>
+    }
+</div>
+<div
+    *ngIf="
+        formatExportConfig.format === 'xlsx' ||
+        formatExportConfig.format === 'csv'
+    "
+>
+    <h5>Header column name</h5>
+    <mat-radio-group
+        [(ngModel)]="formatExportConfig.headerColumnName"
+        class="sp-radio-group"
+    >
+        <mat-radio-button
+            value="key"
+            class="sp-radio-button"
+            data-cy="download-configuration-column-name-key"
+            >Use field key (runtime name) as header column
+        </mat-radio-button>
+        <mat-radio-button
+            value="label"
+            class="sp-radio-button"
+            data-cy="download-configuration-column-name-label"
+            >Use field label as header column if available
+        </mat-radio-button>
     </mat-radio-group>
 </div>

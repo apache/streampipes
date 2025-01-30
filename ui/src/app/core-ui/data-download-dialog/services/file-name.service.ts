@@ -30,7 +30,7 @@ export class FileNameService {
         const dataRangeOption =
             exportConfig.dataExportConfig.dataRangeConfiguration;
         let dateRange = '';
-        const fileExtension = `.${exportConfig.formatExportConfig.exportFormat}`;
+        const fileExtension = `.${exportConfig.formatExportConfig.format}`;
 
         if (
             exportConfig.dataExportConfig.dateRange !== undefined &&

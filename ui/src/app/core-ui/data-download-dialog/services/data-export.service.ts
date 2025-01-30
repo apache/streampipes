@@ -52,8 +52,7 @@ export class DataExportService {
         ) {
             downloadRequest = this.dataLakeRestService.downloadQueriedData(
                 exportConfig.dataExportConfig.measurement,
-                exportConfig.formatExportConfig.exportFormat,
-                exportConfig.formatExportConfig['delimiter'],
+                exportConfig.formatExportConfig,
                 exportConfig.dataExportConfig.missingValueBehaviour,
                 this.generateQueryRequest(
                     exportConfig,
@@ -75,8 +74,7 @@ export class DataExportService {
             }
             downloadRequest = this.dataLakeRestService.downloadRawData(
                 exportConfig.dataExportConfig.measurement,
-                exportConfig.formatExportConfig.exportFormat,
-                exportConfig.formatExportConfig['delimiter'],
+                exportConfig.formatExportConfig,
                 exportConfig.dataExportConfig.missingValueBehaviour,
                 startTime,
                 endTime,
@@ -139,12 +137,9 @@ export class DataExportService {
             exportConfig,
             new Date(),
         );
+        const blob = new Blob([data]);
 
-        const url = window.URL.createObjectURL(
-            new Blob([String(data)], {
-                type: `data:text/${exportConfig.formatExportConfig.exportFormat};charset=utf-8`,
-            }),
-        );
+        const url = window.URL.createObjectURL(blob);
         a.href = url;
         a.download = name;
         a.click();

@@ -34,13 +34,25 @@
  *
  */
 
-export type FormatExportConfig = JsonFormatExportConfig | CsvFormatExportConfig;
+export type FormatExportConfig =
+    | JsonFormatExportConfig
+    | CsvFormatExportConfig
+    | ExcelFormatConfig;
 
 export interface JsonFormatExportConfig {
-    exportFormat: 'json';
+    format: 'json';
 }
 
 export interface CsvFormatExportConfig {
-    exportFormat: 'csv';
+    format: 'csv';
     delimiter: 'comma' | 'semicolon';
+    headerColumnName: 'key' | 'label';
+}
+
+export interface ExcelFormatConfig {
+    format: 'xlsx';
+    templateId: string;
+    startRow: number;
+    useTemplate: boolean;
+    headerColumnName: 'key' | 'label';
 }

@@ -52,11 +52,11 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
 @RequestMapping("/api/v2/files")
-public class PipelineElementFile extends AbstractAuthGuardedRestResource {
+public class FileResource extends AbstractAuthGuardedRestResource {
 
   private final FileManager fileManager;
 
-  public PipelineElementFile() {
+  public FileResource() {
     this.fileManager = new FileManager();
   }
 

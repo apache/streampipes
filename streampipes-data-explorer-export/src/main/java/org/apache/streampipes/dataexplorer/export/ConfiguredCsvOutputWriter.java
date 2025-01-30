@@ -19,6 +19,7 @@
 package org.apache.streampipes.dataexplorer.export;
 
 import org.apache.streampipes.dataexplorer.export.item.CsvItemGenerator;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 
@@ -35,10 +36,18 @@ public class ConfiguredCsvOutputWriter extends ConfiguredOutputWriter {
 
   private CsvItemGenerator itemGenerator;
   private String delimiter = COMMA;
+  private DataLakeMeasure schema;
+  private String headerColumnNameStrategy;
 
   @Override
-  public void configure(ProvidedRestQueryParams params,
+  public void configure(DataLakeMeasure schema,
+                        ProvidedRestQueryParams params,
                         boolean ignoreMissingValues) {
+    this.schema = schema;
+    this.headerColumnNameStrategy = params
+        .getProvidedParams()
+        .getOrDefault(SupportedRestQueryParams.QP_HEADER_COLUMN_NAME, "key");
+
     if (params.has(SupportedRestQueryParams.QP_CSV_DELIMITER)) {
       delimiter = params.getAsString(SupportedRestQueryParams.QP_CSV_DELIMITER).equals("comma") ? COMMA : SEMICOLON;
     }
@@ -69,7 +78,7 @@ public class ConfiguredCsvOutputWriter extends ConfiguredOutputWriter {
 
   private String makeHeaderLine(List<String> columns) {
     StringJoiner joiner = new StringJoiner(this.delimiter);
-    columns.forEach(joiner::add);
+    columns.forEach(c -> joiner.add(getHeaderName(schema, c, headerColumnNameStrategy)));
     return joiner + LINE_SEPARATOR;
   }
 }

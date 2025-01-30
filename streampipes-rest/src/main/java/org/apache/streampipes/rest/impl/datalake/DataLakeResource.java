@@ -66,6 +66,7 @@ import static org.apache.streampipes.model.datalake.param.SupportedRestQueryPara
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_FILTER;
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_FORMAT;
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_GROUP_BY;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_HEADER_COLUMN_NAME;
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_LIMIT;
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS;
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
@@ -74,6 +75,9 @@ import static org.apache.streampipes.model.datalake.param.SupportedRestQueryPara
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_PAGE;
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_START_DATE;
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_TIME_INTERVAL;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_XLSX_START_ROW;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_XLSX_TEMPLATE_ID;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_XLSX_USE_TEMPLATE;
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.SUPPORTED_PARAMS;
 
 @RestController
@@ -315,6 +319,14 @@ public class DataLakeResource extends AbstractRestResource {
           description = "filter conditions (a comma-separated list of filter conditions"
               + "such as [field,operator,condition])")
       @RequestParam(value = QP_FILTER, required = false) String filter,
+      @Parameter(in = ParameterIn.QUERY, description = "Excel export with template")
+      @RequestParam(value = QP_XLSX_USE_TEMPLATE, required = false) boolean useTemplate
+      , @Parameter(in = ParameterIn.QUERY, description = "ID of the excel template file to use")
+      @RequestParam(value = QP_XLSX_TEMPLATE_ID, required = false) String templateId
+      , @Parameter(in = ParameterIn.QUERY, description = "The first row in the excel file where data should be written")
+      @RequestParam(value = QP_XLSX_START_ROW, required = false) Integer startRow,
+      @Parameter(in = ParameterIn.QUERY, description = "Use either label or key as the column header")
+      @RequestParam(value = QP_HEADER_COLUMN_NAME, required = false) String headerColumnName,
       @RequestParam Map<String, String> queryParams) {
 
 
@@ -326,7 +338,7 @@ public class DataLakeResource extends AbstractRestResource {
         format = "csv";
       }
 
-      OutputFormat outputFormat = format.equals("csv") ? OutputFormat.CSV : OutputFormat.JSON;
+      var outputFormat = OutputFormat.fromString(format);
       StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
           sanitizedParams,
           outputFormat,
@@ -335,7 +347,8 @@ public class DataLakeResource extends AbstractRestResource {
 
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-      headers.setContentDispositionFormData("attachment", "datalake." + outputFormat);
+      headers.setContentDispositionFormData("attachment",
+          "datalake." + outputFormat.toString().toLowerCase());
 
       return ResponseEntity.ok()
           .headers(headers)

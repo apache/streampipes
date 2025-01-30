@@ -55,8 +55,9 @@ export class DataDownloadDialogComponent implements OnInit {
                 measurement: measurementName,
             },
             formatExportConfig: {
-                exportFormat: 'csv',
+                format: 'csv',
                 delimiter: 'comma',
+                headerColumnName: 'key',
             },
         };
     }

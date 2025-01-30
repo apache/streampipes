@@ -40,7 +40,7 @@ describe('FileNameService', () => {
                 measurement: 'measurement',
             },
             formatExportConfig: {
-                exportFormat: 'csv',
+                format: 'csv',
                 delimiter: 'comma',
             },
         };
@@ -55,7 +55,7 @@ describe('FileNameService', () => {
     });
 
     it('Name for all data json', () => {
-        defaultExportConfig.formatExportConfig.exportFormat = 'json';
+        defaultExportConfig.formatExportConfig.format = 'json';
         const result = service.generateName(
             defaultExportConfig,
             defaultExportDate,
@@ -78,7 +78,7 @@ describe('FileNameService', () => {
     });
 
     it('Name for custom visible json', () => {
-        defaultExportConfig.formatExportConfig.exportFormat = 'json';
+        defaultExportConfig.formatExportConfig.format = 'json';
         defaultExportConfig.dataExportConfig.dataRangeConfiguration = 'visible';
         defaultExportConfig.dataExportConfig.dateRange = defaultDateRange;
 
