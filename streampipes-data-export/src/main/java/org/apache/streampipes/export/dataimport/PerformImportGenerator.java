@@ -20,11 +20,9 @@ package org.apache.streampipes.export.dataimport;
 
 import org.apache.streampipes.export.model.PermissionInfo;
 import org.apache.streampipes.export.resolver.AdapterResolver;
+import org.apache.streampipes.export.resolver.ChartResolver;
 import org.apache.streampipes.export.resolver.DashboardResolver;
-import org.apache.streampipes.export.resolver.DashboardWidgetResolver;
 import org.apache.streampipes.export.resolver.DataSourceResolver;
-import org.apache.streampipes.export.resolver.DataViewResolver;
-import org.apache.streampipes.export.resolver.DataViewWidgetResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
@@ -33,6 +31,7 @@ import org.apache.streampipes.manager.file.FileHandler;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.dashboard.DashboardModel;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
@@ -51,10 +50,10 @@ import java.util.Set;
 
 public class PerformImportGenerator extends ImportGenerator<Void> {
 
-  private AssetExportConfiguration config;
-  private INoSqlStorage storage;
-  private Set<PermissionInfo> permissionsToStore = new HashSet<>();
-  private String ownerSid;
+  private final AssetExportConfiguration config;
+  private final INoSqlStorage storage;
+  private final Set<PermissionInfo> permissionsToStore = new HashSet<>();
+  private final String ownerSid;
 
   public PerformImportGenerator(AssetExportConfiguration config,
                                 String ownerSid) {
@@ -78,18 +77,18 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   }
 
   @Override
-  protected void handleDashboard(String document, String dashboardId) throws JsonProcessingException {
-    if (shouldStore(dashboardId, config.getDashboards())) {
-      new DashboardResolver().writeDocument(document);
-      permissionsToStore.add(new PermissionInfo(dashboardId, DashboardModel.class));
+  protected void handleChart(String document, String chartId) throws JsonProcessingException {
+    if (shouldStore(chartId, config.getDataViews())) {
+      new ChartResolver().writeDocument(document);
+      permissionsToStore.add(new PermissionInfo(chartId, DataExplorerWidgetModel.class));
     }
   }
 
   @Override
-  protected void handleDataView(String document, String dataViewId) throws JsonProcessingException {
-    if (shouldStore(dataViewId, config.getDataViews())) {
-      new DataViewResolver().writeDocument(document);
-      permissionsToStore.add(new PermissionInfo(dataViewId, DashboardModel.class));
+  protected void handleDashboard(String document, String dashboardId) throws JsonProcessingException {
+    if (shouldStore(dashboardId, config.getDashboards())) {
+      new DashboardResolver().writeDocument(document);
+      permissionsToStore.add(new PermissionInfo(dashboardId, DashboardModel.class));
     }
   }
 
@@ -115,16 +114,6 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
       new MeasurementResolver().writeDocument(document);
       permissionsToStore.add(new PermissionInfo(dataLakeMeasureId, DataLakeMeasure.class));
     }
-  }
-
-  @Override
-  protected void handleDashboardWidget(String document, String dashboardWidgetId) throws JsonProcessingException {
-    new DashboardWidgetResolver().writeDocument(document);
-  }
-
-  @Override
-  protected void handleDataViewWidget(String document, String dataViewWidget) throws JsonProcessingException {
-    new DataViewWidgetResolver().writeDocument(document);
   }
 
   @Override

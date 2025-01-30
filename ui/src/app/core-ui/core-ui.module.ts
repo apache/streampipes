@@ -121,6 +121,7 @@ import { ConfigurationCodePanelComponent } from './configuration-code-panel/conf
 import { JsonPrettyPrintPipe } from './pipes/json-pretty-print.pipe';
 import { YamlPrettyPrintPipe } from './pipes/yaml-pretty-print.pipe';
 import { TopicsComponent } from './topics/topics.component';
+import { SpConfigurationBoxComponent } from './configuration-box/configuration-box.component';
 
 @NgModule({
     imports: [
@@ -218,6 +219,7 @@ import { TopicsComponent } from './topics/topics.component';
         DownloadComponent,
         SelectDataRangeComponent,
         SelectDataMissingValuesComponent,
+        SpConfigurationBoxComponent,
         SpSimpleLogsComponent,
         SpSimpleMetricsComponent,
         StatusWidgetComponent,
@@ -259,6 +261,7 @@ import { TopicsComponent } from './topics/topics.component';
         StaticSlideToggleComponent,
         ErrorHintComponent,
         PipelineStartedStatusComponent,
+        SpConfigurationBoxComponent,
         SpSimpleLogsComponent,
         SpSimpleMetricsComponent,
         StatusWidgetComponent,

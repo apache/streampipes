@@ -22,7 +22,6 @@ import {HomeComponent} from "./home/home.component";
 import {LoginComponent} from "./login/components/login/login.component";
 import {SetupComponent} from "./login/components/setup/setup.component";
 import {StreampipesComponent} from "./core/components/streampipes/streampipes.component";
-import {StandaloneDashboardComponent} from "./dashboard/components/standalone/standalone-dashboard.component";
 import {AuthCanActivateChildrenGuard} from "./_guards/auth.can-activate-children.guard";
 import {ConfiguredCanActivateGuard} from "./_guards/configured.can-activate.guard";
 import {StartupComponent} from "./login/components/startup/startup.component";
@@ -56,7 +55,6 @@ const routes: Routes = [
   { path: 'restore-password', component: RestorePasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
   { path: 'set-new-password', component: SetNewPasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
   { path: 'startup', component: StartupComponent },
-  { path: 'standalone/:dashboardId', component: StandaloneDashboardComponent },
   { path: '', component: StreampipesComponent, children: [
       { path: '', component: HomeComponent, canActivate: [ConfiguredCanActivateGuard] },
       {{#modulesActive}}

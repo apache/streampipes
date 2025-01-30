@@ -29,6 +29,7 @@ describe('Test Table View in Data Explorer', () => {
          */
         DataLakeUtils.addDataViewAndTableWidget('TestView', 'Persist');
         DataLakeUtils.saveDataViewConfiguration();
+        DataLakeUtils.goToDashboard();
         DataLakeUtils.createAndEditDashboard('TestDashboard');
         DataLakeUtils.addDataViewToDashboard('TestView');
 

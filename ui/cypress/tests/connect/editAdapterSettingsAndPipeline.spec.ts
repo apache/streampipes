@@ -23,6 +23,7 @@ import { PipelineElementBuilder } from '../../support/builder/PipelineElementBui
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
+import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
 
 describe('Test Edit Adapter and Pipeline', () => {
     beforeEach('Setup Test', () => {
@@ -96,19 +97,16 @@ describe('Test Edit Adapter and Pipeline', () => {
 
         // Visit dashboard
         cy.wait(1000);
-        DashboardUtils.goToDashboard();
+        DataLakeUtils.goToDatalake();
+        DataLakeUtils.createAndEditDataView();
 
-        // Add new dashboard widget and check if edited adapter appears
-        const dashboardName = 'testDashboard';
-        DashboardUtils.addAndEditDashboard(dashboardName);
-        cy.dataCy('dashboard-add-widget').click();
-        cy.dataCy('dashboard-visualize-pipeline-Pipeline_Test').click();
-        cy.dataCy('dashboard-select-widget-table').click();
-        cy.get('[type="checkbox"]').check();
-        cy.dataCy('dashboard-new-widget-next-btn').click();
-        cy.dataCy('dashboard-save-edit-mode').click();
-        cy.get('.main-panel').should('include.text', 'pressure');
-        cy.get('.main-panel').should('include.text', 'sensorId');
-        cy.get('.main-panel').should('include.text', 'time');
+        cy.dataCy('data-explorer-field-selection-panel').should(
+            'include.text',
+            'pressure',
+        );
+        cy.dataCy('data-explorer-field-selection-panel').should(
+            'include.text',
+            'sensorId',
+        );
     });
 });

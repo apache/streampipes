@@ -24,47 +24,54 @@
                 fxLayout="column"
                 style="margin: 5px; width: 100%"
             >
-                <mat-form-field class="full-width" color="accent">
-                    <mat-label>Dashboard Name</mat-label>
+                <mat-form-field class="w-100" floatLabel="auto" color="accent">
+                    <mat-label>Data View Name</mat-label>
                     <input
-                        matInput
+                        id="dvname"
+                        #dvname="ngModel"
                         required
+                        matInput
+                        data-cy="data-view-name"
                         [(ngModel)]="dashboard.name"
-                        data-cy="dashboard-name-input"
                     />
+                    <mat-error>Name must not be empty</mat-error>
                 </mat-form-field>
-                <mat-form-field class="full-width" color="accent">
+                <mat-form-field class="w-100" color="accent">
                     <mat-label>Description</mat-label>
                     <input matInput [(ngModel)]="dashboard.description" />
                 </mat-form-field>
-                <mat-checkbox [(ngModel)]="dashboard.displayHeader"
-                    >Show name and description in dashboard
-                </mat-checkbox>
-                <div fxLayout="column" class="mt-10">
-                    <mat-checkbox
+                <div class="mt-10" fxLayout="column">
+                    <label>Default view mode</label>
+                    <mat-radio-group
                         [(ngModel)]="
-                            dashboard.dashboardGeneralSettings.globalRefresh
+                            dashboard.dashboardGeneralSettings.defaultViewMode
                         "
                     >
-                        Use same update frequency for all widgets (will override
-                        widget-specific intervals)
-                    </mat-checkbox>
-
-                    <mat-form-field
-                        class="full-width mt-10"
-                        color="accent"
-                        *ngIf="dashboard.dashboardGeneralSettings.globalRefresh"
-                    >
-                        <mat-label>Refresh interval (seconds)</mat-label>
-                        <input
-                            matInput
-                            [(ngModel)]="
-                                dashboard.dashboardGeneralSettings
-                                    .refreshIntervalInSeconds
-                            "
-                        />
-                    </mat-form-field>
+                        <mat-radio-button
+                            class="view-radio-button"
+                            [value]="'grid'"
+                        >
+                            Grid View
+                        </mat-radio-button>
+                        <mat-radio-button
+                            class="view-radio-button"
+                            [value]="'slide'"
+                        >
+                            Slide View
+                        </mat-radio-button>
+                    </mat-radio-group>
                 </div>
+                <div class="mt-10" fxLayout="column">
+                    <label>Time Settings</label>
+                    <mat-checkbox
+                        [(ngModel)]="
+                            dashboard.dashboardGeneralSettings.globalTimeEnabled
+                        "
+                        >Use global time settings instead of widget time
+                        settings
+                    </mat-checkbox>
+                </div>
+                <!--<mat-checkbox [(ngModel)]="dashboard.displayHeader">Show name and description in dashboard</mat-checkbox>-->
             </div>
         </div>
     </div>
@@ -76,15 +83,15 @@
             class="mat-basic mr-10"
             (click)="onCancel()"
         >
-            Cancel
+            Close
         </button>
         <button
+            [disabled]="dvname.invalid"
             mat-button
             mat-raised-button
             color="accent"
-            [disabled]="dashboard.name === '' || dashboard.name === undefined"
+            data-cy="save-data-view"
             (click)="onSave()"
-            data-cy="dashboard-save-btn"
         >
             {{ createMode ? 'Create' : 'Save' }}
         </button>

@@ -17,70 +17,81 @@
   -->
 
 <sp-basic-view
-    [showBackLink]="true"
-    [padding]="false"
     [backLinkTarget]="['dashboard']"
+    [showBackLink]="true"
+    *ngIf="dashboardLoaded"
 >
-    <div
-        nav
-        fxFlex="100"
-        fxLayoutAlign="start center"
-        fxLayout="row"
-        class="pl-10"
-    >
-        <div
-            fxLayout="row"
-            fxFlex="100"
-            *ngIf="editMode"
-            fxLayoutAlign="start center"
-        >
-            <button
-                mat-button
-                mat-raised-button
-                color="accent"
-                (click)="updateDashboardAndCloseEditMode()"
-                class="mr-10"
-                data-cy="dashboard-save-edit-mode"
-            >
-                <i class="material-icons">save</i>
-                <span>&nbsp;&nbsp;Save</span>
-            </button>
-            <button
-                mat-button
-                mat-raised-button
-                class="mat-basic mr-10"
-                (click)="discardChanges()"
-            >
-                <i class="material-icons">clear</i>
-                <span>&nbsp;Discard</span>
-            </button>
-            <button
-                mat-button
-                mat-raised-button
-                color="accent"
-                (click)="addWidget()"
-                [disabled]="!editMode"
-                data-cy="dashboard-add-widget"
-            >
-                <i class="material-icons">add</i>
-                <span> Add visualization</span>
-            </button>
-            <span fxFlex></span>
-            <mat-slide-toggle color="accent" [(ngModel)]="headerVisible">
-                Show widget controls
-            </mat-slide-toggle>
-        </div>
-    </div>
-    <div fxFlex="100" fxLayout="column">
-        <sp-dashboard-grid
-            [editMode]="editMode"
+    <div nav fxFlex="100" class="ml-10">
+        <sp-dashboard-toolbar
             [dashboard]="dashboard"
-            [headerVisible]="headerVisible"
-            [allMeasurements]="allMeasurements"
-            (updateCallback)="updateAndQueueItemForDeletion($event)"
-            (deleteCallback)="removeAndQueueItemForDeletion($event)"
-            *ngIf="dashboard && allMeasurements"
-            class="h-100 dashboard-grid"
-        ></sp-dashboard-grid>
+            [editMode]="editMode"
+            [(viewMode)]="viewMode"
+            [hasDataExplorerWritePrivileges]="hasDataExplorerWritePrivileges"
+            [timeRangeVisible]="timeRangeVisible"
+            [timeSettings]="timeSettings"
+            (saveDashboardEmitter)="persistDashboardChanges()"
+            (discardDashboardEmitter)="discardChanges()"
+            (deleteDashboardEmitter)="deleteDashboard()"
+            (triggerEditModeEmitter)="triggerEditMode()"
+            (updateDateRangeEmitter)="updateDateRange($event)"
+            (intervalSettingsChangedEmitter)="modifyRefreshInterval($event)"
+        >
+        </sp-dashboard-toolbar>
+    </div>
+
+    <div fxFlex="100" fxLayout="column">
+        <mat-drawer-container
+            class="designer-panel-container h-100 dashboard-grid"
+        >
+            <mat-drawer
+                [opened]="editMode"
+                mode="side"
+                position="end"
+                class="designer-panel"
+            >
+                <div fxLayout="column" fxFlex="100">
+                    <sp-dashboard-chart-selection-panel
+                        (addChartEmitter)="addChartToDashboard($event)"
+                        fxFlex="100"
+                    >
+                    </sp-dashboard-chart-selection-panel>
+                </div>
+            </mat-drawer>
+            <mat-drawer-content class="h-100 dashboard-grid">
+                <div
+                    *ngIf="dashboard.widgets.length === 0"
+                    fxFlex="100"
+                    fxLayout="column"
+                    fxLayoutAlign="center center"
+                    data-cy="empty-dashboard"
+                >
+                    <h4>
+                        This dashboard is empty and doesn't contain any widgets.
+                    </h4>
+                </div>
+                <sp-dashboard-grid-view
+                    #dashboardGrid
+                    *ngIf="dashboard.widgets.length > 0 && viewMode === 'grid'"
+                    [editMode]="editMode"
+                    [dashboard]="dashboard"
+                    [timeSettings]="timeSettings"
+                    (deleteCallback)="removeChartFromDashboard($event)"
+                    (startEditModeEmitter)="startEditMode($event)"
+                    class="h-100 dashboard-grid"
+                >
+                </sp-dashboard-grid-view>
+                <sp-dashboard-slide-view
+                    class="h-100 dashboard-grid"
+                    #dashboardSlide
+                    [editMode]="editMode"
+                    [dashboard]="dashboard"
+                    [timeSettings]="timeSettings"
+                    (deleteCallback)="removeChartFromDashboard($event)"
+                    (startEditModeEmitter)="startEditMode($event)"
+                    *ngIf="dashboard.widgets.length > 0 && viewMode === 'slide'"
+                >
+                </sp-dashboard-slide-view>
+            </mat-drawer-content>
+        </mat-drawer-container>
     </div>
 </sp-basic-view>

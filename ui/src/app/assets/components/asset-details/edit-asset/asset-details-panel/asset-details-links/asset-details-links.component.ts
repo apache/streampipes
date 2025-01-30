@@ -115,11 +115,11 @@ export class AssetDetailsLinksComponent implements OnInit {
     openCreateAssetLinkDialog(): void {
         const assetLink: AssetLink = {
             linkLabel: '',
-            linkType: 'data-view',
+            linkType: 'chart',
             editingDisabled: false,
             resourceId: '',
             navigationActive: true,
-            queryHint: 'data-view',
+            queryHint: 'chart',
         };
         this.openEditAssetLinkDialog(assetLink, true);
     }

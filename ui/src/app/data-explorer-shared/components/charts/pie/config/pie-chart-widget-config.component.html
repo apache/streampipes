@@ -1,0 +1,184 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-visualization-config-outer
+    [configurationValid]="
+        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    "
+>
+    <sp-configuration-box title="Field">
+        <sp-select-single-property-config
+            [availableProperties]="fieldProvider.allFields"
+            [selectedProperty]="
+                currentlyConfiguredWidget.visualizationConfig.selectedProperty
+            "
+            (changeSelectedProperty)="setSelectedProperty($event)"
+        >
+        </sp-select-single-property-config>
+    </sp-configuration-box>
+
+    <sp-configuration-box title="Settings">
+        <div fxLayout="column" fxLayoutGap="10px">
+            <div
+                fxFlex="100"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="10px"
+                *ngIf="
+                    currentlyConfiguredWidget.visualizationConfig
+                        .selectedProperty?.fieldCharacteristics.numeric
+                "
+            >
+                <small>Rounding</small>
+                <mat-form-field
+                    appearance="outline"
+                    class="marginColorField"
+                    color="accent"
+                    fxFlex
+                >
+                    <mat-select
+                        [(value)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .roundingValue
+                        "
+                        (selectionChange)="updateRoundingValue($event.value)"
+                    >
+                        <mat-option [value]="100">100</mat-option>
+                        <mat-option [value]="10">10</mat-option>
+                        <mat-option [value]="1">1</mat-option>
+                        <mat-option [value]="0.1">0.1</mat-option>
+                        <mat-option [value]="0.01">0.01</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div
+                fxFlex="100"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="10px"
+            >
+                <small>Inner Radius</small>
+                <mat-slider min="0" max="80" step="1" fxFlex="65">
+                    <input
+                        matSliderThumb
+                        [ngModel]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .selectedRadius
+                        "
+                        (ngModelChange)="updateInnerRadius($event)"
+                        #slider
+                    />
+                </mat-slider>
+                <small>{{ slider.value }}% </small>
+            </div>
+            <div
+                fxLayout="row"
+                fxLayoutGap="10px"
+                fxLayoutAlign="start center"
+                fxFlex="100"
+                class="checkbox-container"
+            >
+                <mat-checkbox
+                    color="accent"
+                    [(ngModel)]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .showCustomColorMapping
+                    "
+                    (ngModelChange)="showCustomColorMapping($event)"
+                >
+                </mat-checkbox>
+                <small>Add custom color mapping</small>
+            </div>
+
+            <div
+                *ngIf="
+                    currentlyConfiguredWidget.visualizationConfig
+                        .showCustomColorMapping
+                "
+            >
+                <button mat-raised-button color="accent" (click)="addMapping()">
+                    <i class="material-icons">add</i
+                    ><span>&nbsp;Add Mapping</span>
+                </button>
+            </div>
+
+            <div
+                *ngIf="
+                    currentlyConfiguredWidget.visualizationConfig
+                        .showCustomColorMapping
+                "
+            >
+                <div fxLayout="column" fxLayoutGap="10px">
+                    <div
+                        *ngFor="
+                            let mapping of currentlyConfiguredWidget
+                                .visualizationConfig.colorMappings;
+                            let i = index
+                        "
+                        fxLayout="row"
+                        fxLayoutGap="10px"
+                        fxLayoutAlign="start center"
+                        fxFlex="100"
+                        style="margin-top: 10px; align-items: center"
+                    >
+                        <div fxFlex>
+                            <mat-form-field
+                                class="w-100"
+                                color="accent"
+                                appearance="outline"
+                            >
+                                <mat-label>Value</mat-label>
+                                <input
+                                    matInput
+                                    [(ngModel)]="mapping.value"
+                                    (ngModelChange)="updateMapping()"
+                                />
+                            </mat-form-field>
+                        </div>
+                        <div fxFlex="70px">
+                            <input
+                                [(colorPicker)]="mapping.color"
+                                [style.background]="mapping.color"
+                                style="
+                                    height: 50%;
+                                    width: 100%;
+                                    border: none;
+                                    border-radius: 10%;
+                                    cursor: pointer;
+                                "
+                                (colorPickerChange)="updateColor(i, $event)"
+                                readonly
+                            />
+                        </div>
+                        <div fxLayoutAlign="end center">
+                            <button
+                                mat-icon-button
+                                matTooltip="Remove Mapping"
+                                color="accent"
+                                (click)="removeMapping(i)"
+                            >
+                                <i class="material-icons">delete</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </sp-configuration-box>
+</sp-visualization-config-outer>

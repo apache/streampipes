@@ -16,6 +16,7 @@
  *
  */
 
+
 package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.export.utils.SerializationUtils;
@@ -33,7 +34,7 @@ public class DashboardResolver extends AbstractResolver<DashboardModel> {
 
   @Override
   public DashboardModel findDocument(String resourceId) {
-    return getNoSqlStore().getDashboardStorage().getElementById(resourceId);
+    return getNoSqlStore().getDataExplorerDashboardStorage().getElementById(resourceId);
   }
 
   @Override
@@ -59,7 +60,7 @@ public class DashboardResolver extends AbstractResolver<DashboardModel> {
 
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getDashboardStorage().persist(deserializeDocument(document));
+    getNoSqlStore().getDataExplorerDashboardStorage().persist(deserializeDocument(document));
   }
 
   @Override
@@ -67,7 +68,7 @@ public class DashboardResolver extends AbstractResolver<DashboardModel> {
     return this.spMapper.readValue(document, DashboardModel.class);
   }
 
-  public List<String> getWidgets(String resourceId) {
+  public List<String> getCharts(String resourceId) {
     var document = findDocument(resourceId);
     return document.getWidgets().stream().map(DashboardItem::getId).collect(Collectors.toList());
   }

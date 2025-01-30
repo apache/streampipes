@@ -20,9 +20,9 @@ package org.apache.streampipes.export.dataimport;
 
 
 import org.apache.streampipes.export.resolver.AdapterResolver;
+import org.apache.streampipes.export.resolver.ChartResolver;
 import org.apache.streampipes.export.resolver.DashboardResolver;
 import org.apache.streampipes.export.resolver.DataSourceResolver;
-import org.apache.streampipes.export.resolver.DataViewResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
@@ -77,13 +77,17 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   }
 
   @Override
-  protected void handleDashboard(String document, String dashboardId) throws JsonProcessingException {
-    addExportItem(dashboardId, new DashboardResolver().readDocument(document).getName(), importConfig::addDashboard);
+  protected void handleChart(String document, String dataViewId) throws JsonProcessingException {
+    addExportItem(
+        dataViewId,
+        new ChartResolver().readDocument(document).getBaseAppearanceConfig().get("widgetTitle").toString(),
+        importConfig::addDataView
+    );
   }
 
   @Override
-  protected void handleDataView(String document, String dataViewId) throws JsonProcessingException {
-    addExportItem(dataViewId, new DataViewResolver().readDocument(document).getName(), importConfig::addDataView);
+  protected void handleDashboard(String document, String dashboardId) throws JsonProcessingException {
+    addExportItem(dashboardId, new DashboardResolver().readDocument(document).getName(), importConfig::addDashboard);
   }
 
   @Override
@@ -100,16 +104,6 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   protected void handleDataLakeMeasure(String document, String measurementId) throws JsonProcessingException {
     addExportItem(measurementId, new MeasurementResolver().readDocument(document).getMeasureName(),
         importConfig::addDataLakeMeasure);
-  }
-
-  @Override
-  protected void handleDashboardWidget(String document, String dashboardWidgetId) {
-
-  }
-
-  @Override
-  protected void handleDataViewWidget(String document, String dataViewWidget) {
-
   }
 
   @Override

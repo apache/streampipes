@@ -20,11 +20,12 @@ import { Directive } from '@angular/core';
 import {
     AdapterDescription,
     AdapterService,
+    ChartService,
     Dashboard,
     DashboardService,
+    DataExplorerWidgetModel,
     DataLakeMeasure,
     DatalakeRestService,
-    DataViewDataExplorerService,
     FileMetadata,
     FilesService,
     GenericStorageService,
@@ -39,7 +40,7 @@ import { zip } from 'rxjs';
 export abstract class BaseAssetLinksDirective {
     // Resources
     pipelines: Pipeline[];
-    dataViews: Dashboard[];
+    charts: DataExplorerWidgetModel[];
     dashboards: Dashboard[];
     dataLakeMeasures: DataLakeMeasure[];
     dataSources: SpDataStream[];
@@ -51,7 +52,7 @@ export abstract class BaseAssetLinksDirective {
     constructor(
         protected genericStorageService: GenericStorageService,
         protected pipelineService: PipelineService,
-        protected dataViewService: DataViewDataExplorerService,
+        protected chartService: ChartService,
         protected dashboardService: DashboardService,
         protected dataLakeService: DatalakeRestService,
         protected pipelineElementService: PipelineElementService,
@@ -66,7 +67,7 @@ export abstract class BaseAssetLinksDirective {
     getAllResources() {
         zip(
             this.pipelineService.getPipelines(),
-            this.dataViewService.getDataViews(),
+            this.chartService.getAllCharts(),
             this.dashboardService.getDashboards(),
             this.pipelineElementService.getDataStreams(),
             this.dataLakeService.getAllMeasurementSeries(),
@@ -75,7 +76,7 @@ export abstract class BaseAssetLinksDirective {
         ).subscribe(
             ([
                 pipelines,
-                dataViews,
+                charts,
                 dashboards,
                 streams,
                 measurements,
@@ -85,8 +86,10 @@ export abstract class BaseAssetLinksDirective {
                 this.pipelines = pipelines.sort((a, b) =>
                     a.name.localeCompare(b.name),
                 );
-                this.dataViews = dataViews.sort((a, b) =>
-                    a.name.localeCompare(b.name),
+                this.charts = charts.sort((a, b) =>
+                    a.baseAppearanceConfig.widgetTitle.localeCompare(
+                        b.baseAppearanceConfig.widgetTitle,
+                    ),
                 );
                 this.dashboards = dashboards.sort((a, b) =>
                     a.name.localeCompare(b.name),
@@ -106,7 +109,7 @@ export abstract class BaseAssetLinksDirective {
 
                 this.allResources = [
                     ...this.pipelines,
-                    ...this.dataViews,
+                    ...this.charts,
                     ...this.dashboards,
                     ...this.dataSources,
                     ...this.dataLakeMeasures,
