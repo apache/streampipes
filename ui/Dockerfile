@@ -17,14 +17,6 @@ FROM nginx:mainline-alpine3.18
 
 COPY dist/streampipes/ui/browser/ /usr/share/nginx/html/
 
-#Store a copy to have a version if the other is hidden in the volume. Required for migration from 0.93.0 to 0.95.0. Could be removed after the release of 0.95.0.
-RUN mkdir -p /etc/opt/nginx/
-RUN chown -R nginx:nginx /etc/opt/nginx/
-COPY nginx_config/default.conf.template /etc/opt/nginx/default.conf.template
-RUN chown -R nginx:nginx  /etc/opt/nginx/default.conf.template
-
-
-
 RUN chown -R nginx:nginx /usr/share/nginx/html && chmod -R 755 /usr/share/nginx/html && \
         chown -R nginx:nginx /var/cache/nginx && \
         chown -R nginx:nginx /var/log/nginx && \

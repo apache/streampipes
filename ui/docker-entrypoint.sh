@@ -27,13 +27,6 @@ elif [ ! -z "$SP_HTTP_SERVER_ADAPTER_ENDPOINT" ]; then
         cp /etc/nginx/conf.d/default.conf $DEFAULT_CONF_BACKUP
     fi
 
-    # Required for migration from 0.93.0 to 0.95.0. Could be removed after the release of 0.95.0.
-    if [ ! -f /etc/nginx/conf.d/default.conf.template ]
-    then
-        echo "Migrate to new nginx template"
-        cp /etc/opt/nginx/default.conf.template /etc/nginx/conf.d/default.conf.template
-    fi
-
     rm  -f /etc/nginx/conf.d/default.conf
     envsubst '\$SP_HTTP_SERVER_ADAPTER_ENDPOINT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 fi
