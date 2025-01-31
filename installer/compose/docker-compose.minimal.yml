@@ -93,7 +93,6 @@ services:
 
   extensions-iiot-minimal:
     image: "${SP_DOCKER_REGISTRY}/extensions-iiot-minimal:${SP_VERSION}"
-    depends_on:
     logging: *default-logging
     restart: unless-stopped
     networks:
@@ -110,7 +109,4 @@ volumes:
 networks:
   spnet:
     driver: bridge
-    ipam:
-      config:
-        - subnet: ${SP_SUBNET}
 
