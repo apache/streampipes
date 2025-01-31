@@ -55,7 +55,7 @@ export class DataDownloadDialogUtils {
 
         // Format
         cy.dataCy(
-            `download-configuration-${exportConfig.formatExportConfig.exportFormat}`,
+            `download-configuration-${exportConfig.formatExportConfig.format}`,
         ).within(() => {
             cy.get('.mdc-radio').click();
         });

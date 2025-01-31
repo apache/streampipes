@@ -35,7 +35,7 @@ export class DateInputComponent {
     dateChanged = new EventEmitter<void>();
 
     get formattedDate(): string {
-        return this.date ? format(this.date, "yyyy-MM-dd'T'HH:mm") : '';
+        return this.date ? format(this.date, "yyyy-MM-dd'T'HH:mm:ss") : '';
     }
 
     onDateChange(value: string): void {

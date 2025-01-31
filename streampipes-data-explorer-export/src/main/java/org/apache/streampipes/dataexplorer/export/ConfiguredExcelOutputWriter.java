@@ -110,6 +110,8 @@ public class ConfiguredExcelOutputWriter extends ConfiguredOutputWriter {
         columnIndex++;
       }
       startRow++;
+      excelRow = ws.createRow(startRow);
+      columnIndex = 0;
     }
     for (Object column : row) {
       var cell = excelRow.createCell(columnIndex);
