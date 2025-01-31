@@ -19,8 +19,7 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormatExportConfig } from '../../model/format-export-config.model';
 import { FileMetadata, FilesService } from '@streampipes/platform-services';
-import { UserPrivilege } from '../../../../_enums/user-privilege.enum';
-import { CurrentUserService } from '@streampipes/shared-ui';
+import { CurrentUserService } from '../../../../services/current-user.service';
 
 @Component({
     selector: 'sp-select-format',
@@ -43,14 +42,13 @@ export class SelectFormatComponent implements OnInit {
 
     ngOnInit() {
         this.hasReadFilePrivilege = this.currentUserService.hasRole(
-            UserPrivilege.PRIVILEGE_READ_FILES,
+            'PRIVILEGE_READ_FILES',
         );
         if (this.hasReadFilePrivilege) {
             this.fileService
                 .getFileMetadata(['xlsx'])
                 .subscribe(excelTemplates => {
                     this.excelTemplates = excelTemplates;
-                    console.log(this.excelTemplates);
                 });
         }
     }

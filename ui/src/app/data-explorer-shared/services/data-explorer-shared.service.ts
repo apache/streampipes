@@ -23,8 +23,11 @@ import {
     DateRange,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { DataDownloadDialogComponent } from '../../core-ui/data-download-dialog/data-download-dialog.component';
+import {
+    DataDownloadDialogComponent,
+    DialogService,
+    PanelType,
+} from '@streampipes/shared-ui';
 import { ObjectPermissionDialogComponent } from '../../core-ui/object-permission-dialog/object-permission-dialog.component';
 
 @Injectable({ providedIn: 'root' })

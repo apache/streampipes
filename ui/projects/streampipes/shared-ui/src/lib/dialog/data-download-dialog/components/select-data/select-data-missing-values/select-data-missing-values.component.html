@@ -16,23 +16,24 @@
   ~
   -->
 
-<h5>Behaviour in case of missing values</h5>
-<mat-radio-group
-    class="sp-radio-group"
-    [(ngModel)]="dataExportConfig.missingValueBehaviour"
->
-    <mat-radio-button
-        value="ignore"
-        class="sp-radio-button"
-        data-cy="download-configuration-ignore"
+<sp-configuration-box title="Behaviour in case of missing values">
+    <mat-radio-group
+        class="sp-radio-group"
+        [(ngModel)]="dataExportConfig.missingValueBehaviour"
     >
-        Ignore lines with missing value
-    </mat-radio-button>
-    <mat-radio-button
-        value="empty"
-        class="sp-radio-button"
-        data-cy="download-configuration-empty"
-    >
-        Leave entry empty
-    </mat-radio-button>
-</mat-radio-group>
+        <mat-radio-button
+            value="ignore"
+            class="sp-radio-button"
+            data-cy="download-configuration-ignore"
+        >
+            Ignore lines with missing value
+        </mat-radio-button>
+        <mat-radio-button
+            value="empty"
+            class="sp-radio-button"
+            data-cy="download-configuration-empty"
+        >
+            Leave entry empty
+        </mat-radio-button>
+    </mat-radio-group>
+</sp-configuration-box>

@@ -26,6 +26,7 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import {
+    DataDownloadDialogComponent,
     DialogRef,
     DialogService,
     PanelType,
@@ -35,7 +36,6 @@ import {
 import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpConfigurationRoutes } from '../configuration.routes';
-import { DataDownloadDialogComponent } from '../../core-ui/data-download-dialog/data-download-dialog.component';
 
 @Component({
     selector: 'sp-datalake-configuration',

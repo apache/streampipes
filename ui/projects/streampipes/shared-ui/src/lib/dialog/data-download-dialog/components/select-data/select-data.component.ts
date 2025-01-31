@@ -1,4 +1,4 @@
-/*!
+/*
  *  Licensed to the Apache Software Foundation (ASF) under one or more
  *  contributor license agreements.  See the NOTICE file distributed with
  *  this work for additional information regarding copyright ownership.
@@ -16,20 +16,25 @@
  *
  */
 
-@import '../../../../../scss/sp/sp-dialog';
+import { Component, Input } from '@angular/core';
 
-.sp-radio-group {
-    display: flex;
-    flex-direction: column;
-    margin: 15px 0;
-}
+import { DataExportConfig } from '../../model/data-export-config.model';
+import { DataExplorerDataConfig } from '@streampipes/platform-services';
 
-.sp-radio-button {
-    margin: 5px;
-    width: 100%;
-}
+@Component({
+    selector: 'sp-select-data',
+    templateUrl: './select-data.component.html',
+    styleUrls: ['./select-data.component.scss'],
+})
+export class SelectDataComponent {
+    /**
+     * Contains the measurement and date range for a selected data widget
+     * This value is not required
+     */
+    @Input() dataExplorerDataConfig: DataExplorerDataConfig;
 
-.form-field-date {
-    top: -10px;
-    width: 300px;
+    /**
+     * Represents the user configurations for the download
+     */
+    @Input() dataExportConfig: DataExportConfig;
 }
