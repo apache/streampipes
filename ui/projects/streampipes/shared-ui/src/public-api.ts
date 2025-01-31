@@ -21,6 +21,7 @@ export * from './lib/shared-ui.module';
 export * from './lib/dialog/base-dialog/base-dialog.model';
 export * from './lib/dialog/base-dialog/base-dialog.service';
 export * from './lib/dialog/base-dialog/dialog-ref';
+export * from './lib/dialog/data-download-dialog/data-download-dialog.component';
 
 export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
 export * from './lib/dialog/panel-dialog/panel-dialog.component';
@@ -32,6 +33,8 @@ export * from './lib/components/basic-inner-panel/basic-inner-panel.component';
 export * from './lib/components/basic-field-description/basic-field-description.component';
 export * from './lib/components/basic-view/basic-view.component';
 export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
+export * from './lib/components/configuration-box/configuration-box.component';
+export * from './lib/components/date-input/date-input.component';
 export * from './lib/components/split-section/split-section.component';
 export * from './lib/components/sp-exception-message/sp-exception-message.component';
 export * from './lib/components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';

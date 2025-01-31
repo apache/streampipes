@@ -1,0 +1,65 @@
+<!--
+  ~  Licensed to the Apache Software Foundation (ASF) under one or more
+  ~  contributor license agreements.  See the NOTICE file distributed with
+  ~  this work for additional information regarding copyright ownership.
+  ~  The ASF licenses this file to You under the Apache License, Version 2.0
+  ~  (the "License"); you may not use this file except in compliance with
+  ~  the License.  You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  ~
+  -->
+
+<sp-configuration-box title="Data Range">
+    <mat-radio-group
+        class="sp-radio-group"
+        [(ngModel)]="dataExportConfig.dataRangeConfiguration"
+    >
+        <mat-radio-button
+            value="visible"
+            class="sp-radio-button"
+            data-cy="download-configuration-visible"
+            *ngIf="dataExplorerDataConfig"
+        >
+            Currently configured query
+        </mat-radio-button>
+        <mat-radio-button
+            value="all"
+            class="sp-radio-button"
+            data-cy="download-configuration-all"
+        >
+            All data in database
+        </mat-radio-button>
+        <mat-radio-button
+            value="customInterval"
+            class="sp-radio-button"
+            data-cy="download-configuration-customInterval"
+        >
+            All data in custom time interval
+        </mat-radio-button>
+
+        <div
+            fxLayout="row"
+            fxLayoutGap="10px"
+            class="ml-35"
+            *ngIf="dataExportConfig.dataRangeConfiguration === 'customInterval'"
+        >
+            <div>
+                <h5>From&nbsp;</h5>
+                <sp-date-input [(date)]="dataExportConfig.dateRange.startDate">
+                </sp-date-input>
+            </div>
+            <div>
+                <h5>To&nbsp;</h5>
+                <sp-date-input [(date)]="dataExportConfig.dateRange.endDate">
+                </sp-date-input>
+            </div>
+        </div>
+    </mat-radio-group>
+</sp-configuration-box>

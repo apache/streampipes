@@ -16,8 +16,10 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormatExportConfig } from '../../model/format-export-config.model';
+import { FileMetadata, FilesService } from '@streampipes/platform-services';
+import { CurrentUserService } from '../../../../services/current-user.service';
 
 @Component({
     selector: 'sp-select-format',
@@ -27,8 +29,27 @@ import { FormatExportConfig } from '../../model/format-export-config.model';
         '../../data-download-dialog.component.scss',
     ],
 })
-export class SelectFormatComponent {
+export class SelectFormatComponent implements OnInit {
     @Input() formatExportConfig: FormatExportConfig;
 
+    hasReadFilePrivilege = false;
+    excelTemplates: FileMetadata[] = [];
+
+    private fileService = inject(FilesService);
+    private currentUserService = inject(CurrentUserService);
+
     constructor() {}
+
+    ngOnInit() {
+        this.hasReadFilePrivilege = this.currentUserService.hasRole(
+            'PRIVILEGE_READ_FILES',
+        );
+        if (this.hasReadFilePrivilege) {
+            this.fileService
+                .getFileMetadata(['xlsx'])
+                .subscribe(excelTemplates => {
+                    this.excelTemplates = excelTemplates;
+                });
+        }
+    }
 }

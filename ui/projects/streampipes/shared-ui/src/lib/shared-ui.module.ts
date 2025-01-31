@@ -70,6 +70,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
 import { FormsModule } from '@angular/forms';
 import { MatTreeModule } from '@angular/material/tree';
+import { DataDownloadDialogComponent } from './dialog/data-download-dialog/data-download-dialog.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { SelectDataComponent } from './dialog/data-download-dialog/components/select-data/select-data.component';
+import { SelectFormatComponent } from './dialog/data-download-dialog/components/select-format/select-format.component';
+import { DownloadComponent } from './dialog/data-download-dialog/components/download/download.component';
+import { SelectDataRangeComponent } from './dialog/data-download-dialog/components/select-data/select-data-range/select-data-range.component';
+import { SelectDataMissingValuesComponent } from './dialog/data-download-dialog/components/select-data/select-data-missing-values/select-data-missing-values.component';
+import { MatRadioModule } from '@angular/material/radio';
+import { SpConfigurationBoxComponent } from './components/configuration-box/configuration-box.component';
+import { DateInputComponent } from './components/date-input/date-input.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
     declarations: [
@@ -85,6 +97,8 @@ import { MatTreeModule } from '@angular/material/tree';
         AssetBrowserToolbarComponent,
         ConfirmDialogComponent,
         CustomTimeRangeSelectionComponent,
+        DataDownloadDialogComponent,
+        DateInputComponent,
         PanelDialogComponent,
         StandardDialogComponent,
         SpBasicFieldDescriptionComponent,
@@ -102,15 +116,23 @@ import { MatTreeModule } from '@angular/material/tree';
         TimeRangeSelectorComponent,
         TimeRangeSelectorMenuComponent,
         DataExplorerRefreshIntervalSettingsComponent,
+        SelectDataComponent,
+        SelectFormatComponent,
+        DownloadComponent,
+        SpConfigurationBoxComponent,
+        SelectDataRangeComponent,
+        SelectDataMissingValuesComponent,
     ],
     imports: [
         CommonModule,
         FlexLayoutModule,
         FormsModule,
         MatButtonModule,
+        MatCheckboxModule,
         MatDividerModule,
         MatFormFieldModule,
         MatIconModule,
+        MatInputModule,
         MatMenuModule,
         MatSelectModule,
         MatTabsModule,
@@ -121,14 +143,18 @@ import { MatTreeModule } from '@angular/material/tree';
         PortalModule,
         OverlayModule,
         MatDialogModule,
+        MatStepperModule,
         MatTableModule,
         MatPaginator,
+        MatRadioModule,
         MatSort,
     ],
     providers: [DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel],
     exports: [
         AssetBrowserComponent,
         ConfirmDialogComponent,
+        DataDownloadDialogComponent,
+        DateInputComponent,
         PanelDialogComponent,
         StandardDialogComponent,
         SpBasicFieldDescriptionComponent,
@@ -136,6 +162,7 @@ import { MatTreeModule } from '@angular/material/tree';
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
         SpBasicNavTabsComponent,
+        SpConfigurationBoxComponent,
         SpExceptionDetailsComponent,
         SpExceptionMessageComponent,
         SpExceptionDetailsDialogComponent,

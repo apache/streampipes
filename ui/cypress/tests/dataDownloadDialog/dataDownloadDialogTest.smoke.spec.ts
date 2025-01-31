@@ -16,7 +16,7 @@
  *
  */
 
-import { ExportConfig } from '../../../src/app/core-ui/data-download-dialog/model/export-config.model';
+import { ExportConfig } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/model/export-config.model';
 import { DataDownloadDialogUtils } from '../../support/utils/DataDownloadDialogUtils';
 import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
 import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
@@ -51,8 +51,9 @@ describe('Test data explorer data download dialog', () => {
 
     it('Test csv export with semicolon', () => {
         formatTestsExportConfig.formatExportConfig = {
-            exportFormat: 'csv',
+            format: 'csv',
             delimiter: 'semicolon',
+            headerColumnName: 'key',
         };
         const resultFile = 'testCsvSemicolon.csv';
 
@@ -65,8 +66,9 @@ describe('Test data explorer data download dialog', () => {
 
     it('Test csv export with comma', () => {
         formatTestsExportConfig.formatExportConfig = {
-            exportFormat: 'csv',
+            format: 'csv',
             delimiter: 'comma',
+            headerColumnName: 'key',
         };
         const resultFile = 'testCsvComma.csv';
 
@@ -79,7 +81,7 @@ describe('Test data explorer data download dialog', () => {
 
     it('Test json export', () => {
         formatTestsExportConfig.formatExportConfig = {
-            exportFormat: 'json',
+            format: 'json',
         };
 
         const resultFile = 'testJson.json';
@@ -92,8 +94,9 @@ describe('Test data explorer data download dialog', () => {
 
     it('Test csv export with semicolon and remove missing values', () => {
         formatTestsExportConfig.formatExportConfig = {
-            exportFormat: 'csv',
+            format: 'csv',
             delimiter: 'semicolon',
+            headerColumnName: 'key',
         };
         formatTestsExportConfig.dataExportConfig.missingValueBehaviour =
             'ignore';

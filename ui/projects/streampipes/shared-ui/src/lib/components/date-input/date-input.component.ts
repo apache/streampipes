@@ -16,24 +16,32 @@
  *
  */
 
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { format } from 'date-fns';
 
-package org.apache.streampipes.dataexplorer.export.item;
+@Component({
+    selector: 'sp-date-input',
+    templateUrl: './date-input.component.html',
+    styleUrls: ['./date-input.component.scss'],
+})
+export class DateInputComponent {
+    @Input()
+    date: Date;
 
-import org.apache.streampipes.dataexplorer.export.ExportUtils;
+    @Output()
+    dateChange: EventEmitter<Date> = new EventEmitter<Date>();
 
-public class CsvItemGenerator extends ItemGenerator {
+    @Output()
+    dateChanged = new EventEmitter<void>();
 
-  public CsvItemGenerator(String delimiter) {
-    super(delimiter);
-  }
+    get formattedDate(): string {
+        return this.date ? format(this.date, "yyyy-MM-dd'T'HH:mm:ss") : '';
+    }
 
-  @Override
-  protected String makeItemString(String key, Object value) {
-    return value != null ? ExportUtils.formatValue(value) : "";
-  }
-
-  @Override
-  protected String finalizeItem(String item) {
-    return item;
-  }
+    onDateChange(value: string): void {
+        const updatedDate = new Date(value);
+        this.date = updatedDate;
+        this.dateChange.emit(updatedDate);
+        this.dateChanged.emit();
+    }
 }

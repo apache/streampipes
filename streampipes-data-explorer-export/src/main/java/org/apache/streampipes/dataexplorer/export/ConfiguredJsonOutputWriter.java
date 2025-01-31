@@ -19,8 +19,9 @@
 package org.apache.streampipes.dataexplorer.export;
 
 import org.apache.streampipes.dataexplorer.export.item.ItemGenerator;
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.dataexplorer.export.item.JsonItemGenerator;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -40,7 +41,8 @@ public class ConfiguredJsonOutputWriter extends ConfiguredOutputWriter {
   }
 
   @Override
-  public void configure(ProvidedRestQueryParams params,
+  public void configure(DataLakeMeasure schema,
+                        ProvidedRestQueryParams params,
                         boolean ignoreMissingValues) {
     // do nothing
   }

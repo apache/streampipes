@@ -16,10 +16,10 @@
  *
  */
 
-import { ExportConfig } from '../../../src/app/core-ui/data-download-dialog/model/export-config.model';
+import { ExportConfig } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/model/export-config.model';
 import { DataLakeUtils } from './datalake/DataLakeUtils';
-import { FileNameService } from '../../../src/app/core-ui/data-download-dialog/services/file-name.service';
-import { CsvFormatExportConfig } from '../../../src/app/core-ui/data-download-dialog/model/format-export-config.model';
+import { FileNameService } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/services/file-name.service';
+import { CsvFormatExportConfig } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/model/format-export-config.model';
 
 export class DataDownloadDialogUtils {
     public static testDownload(
@@ -55,7 +55,7 @@ export class DataDownloadDialogUtils {
 
         // Format
         cy.dataCy(
-            `download-configuration-${exportConfig.formatExportConfig.exportFormat}`,
+            `download-configuration-${exportConfig.formatExportConfig.format}`,
         ).within(() => {
             cy.get('.mdc-radio').click();
         });

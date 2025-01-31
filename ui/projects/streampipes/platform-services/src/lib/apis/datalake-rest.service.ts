@@ -120,18 +120,16 @@ export class DatalakeRestService {
 
     downloadRawData(
         index: string,
-        format: string,
-        delimiter: string,
+        formatConfig: Record<string, any>,
         missingValueBehaviour: string,
         startTime?: number,
         endTime?: number,
     ) {
         const queryParams =
             startTime && endTime
-                ? { format, delimiter, startDate: startTime, endDate: endTime }
+                ? { ...formatConfig, startDate: startTime, endDate: endTime }
                 : {
-                      format,
-                      delimiter,
+                      ...formatConfig,
                       missingValueBehaviour,
                   };
         return this.buildDownloadRequest(index, queryParams);
@@ -139,23 +137,20 @@ export class DatalakeRestService {
 
     downloadQueriedData(
         index: string,
-        format: string,
-        delimiter: string,
+        formatConfig: Record<string, any>,
         missingValueBehaviour: string,
         queryParams: DatalakeQueryParameters,
     ) {
-        (queryParams as any).format = format;
-        (queryParams as any).delimiter = delimiter;
-        (queryParams as any).missingValueBehaviour = missingValueBehaviour;
+        const qp = { ...formatConfig, ...queryParams, missingValueBehaviour };
 
-        return this.buildDownloadRequest(index, queryParams);
+        return this.buildDownloadRequest(index, qp);
     }
 
     buildDownloadRequest(index: string, queryParams: any) {
         const url = this.dataLakeUrl + '/measurements/' + index + '/download';
         const request = new HttpRequest('GET', url, {
             reportProgress: true,
-            responseType: 'text',
+            responseType: 'blob',
             params: this.toHttpParams(queryParams),
         });
 

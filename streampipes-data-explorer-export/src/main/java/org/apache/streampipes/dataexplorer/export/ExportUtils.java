@@ -16,32 +16,20 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { format } from 'date-fns';
+package org.apache.streampipes.dataexplorer.export;
 
-@Component({
-    selector: 'sp-date-input',
-    templateUrl: './date-input.component.html',
-    styleUrls: ['./date-input.component.scss'],
-})
-export class DateInputComponent {
-    @Input()
-    date: Date;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
-    @Output()
-    dateChange: EventEmitter<Date> = new EventEmitter<Date>();
+public class ExportUtils {
 
-    @Output()
-    dateChanged = new EventEmitter<void>();
+  private static final DecimalFormat df = new DecimalFormat("#");
 
-    get formattedDate(): string {
-        return this.date ? format(this.date, "yyyy-MM-dd'T'HH:mm") : '';
+  public static String formatValue(Object value) {
+    if (value instanceof Double) {
+      return BigDecimal.valueOf((Double) value).toPlainString();
+    } else {
+      return String.valueOf(value);
     }
-
-    onDateChange(value: string): void {
-        const updatedDate = new Date(value);
-        this.date = updatedDate;
-        this.dateChange.emit(updatedDate);
-        this.dateChanged.emit();
-    }
+  }
 }

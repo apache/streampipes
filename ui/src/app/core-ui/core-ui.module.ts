@@ -65,16 +65,9 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { PipelineElementTemplateConfigComponent } from './pipeline-element-template-config/pipeline-element-template-config.component';
 import { PipelineElementTemplatePipe } from './pipeline-element-template-config/pipeline-element-template.pipe';
-import { DataDownloadDialogComponent } from './data-download-dialog/data-download-dialog.component';
-import { SelectDataComponent } from './data-download-dialog/components/select-data/select-data.component';
-import { SelectFormatComponent } from './data-download-dialog/components/select-format/select-format.component';
-import { DownloadComponent } from './data-download-dialog/components/download/download.component';
-import { SelectDataRangeComponent } from './data-download-dialog/components/select-data/select-data-range/select-data-range.component';
-import { SelectDataMissingValuesComponent } from './data-download-dialog/components/select-data/select-data-missing-values/select-data-missing-values.component';
 import { StatusWidgetComponent } from './status/status-widget.component';
 import { SpSimpleMetricsComponent } from './monitoring/simple-metrics/simple-metrics.component';
 import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.component';
-import { DateInputComponent } from './date-input/date-input.component';
 import { HelpComponent } from './help/help.component';
 import { PipelineElementRuntimeInfoComponent } from './pipeline-element-runtime-info/pipeline-element-runtime-info.component';
 import { PipelineElementDocumentationComponent } from './pipeline-element-documentation/pipeline-element-documentation.component';
@@ -121,7 +114,6 @@ import { ConfigurationCodePanelComponent } from './configuration-code-panel/conf
 import { JsonPrettyPrintPipe } from './pipes/json-pretty-print.pipe';
 import { YamlPrettyPrintPipe } from './pipes/yaml-pretty-print.pipe';
 import { TopicsComponent } from './topics/topics.component';
-import { SpConfigurationBoxComponent } from './configuration-box/configuration-box.component';
 
 @NgModule({
     imports: [
@@ -176,8 +168,6 @@ import { SpConfigurationBoxComponent } from './configuration-box/configuration-b
     ],
     declarations: [
         ConfigurationCodePanelComponent,
-        DataDownloadDialogComponent,
-        DateInputComponent,
         DisplayRecommendedPipe,
         ObjectPermissionDialogComponent,
         PipelineElementTemplateConfigComponent,
@@ -214,12 +204,6 @@ import { SpConfigurationBoxComponent } from './configuration-box/configuration-b
         ErrorHintComponent,
         AddToCollectionComponent,
         PipelineStartedStatusComponent,
-        SelectDataComponent,
-        SelectFormatComponent,
-        DownloadComponent,
-        SelectDataRangeComponent,
-        SelectDataMissingValuesComponent,
-        SpConfigurationBoxComponent,
         SpSimpleLogsComponent,
         SpSimpleMetricsComponent,
         StatusWidgetComponent,
@@ -236,8 +220,6 @@ import { SpConfigurationBoxComponent } from './configuration-box/configuration-b
     providers: [MatDatepickerModule, DisplayRecommendedPipe],
     exports: [
         ConfigurationCodePanelComponent,
-        DataDownloadDialogComponent,
-        DateInputComponent,
         PipelineElementTemplateConfigComponent,
         PipelineElementRuntimeInfoComponent,
         PipelineElementDocumentationComponent,
@@ -261,7 +243,6 @@ import { SpConfigurationBoxComponent } from './configuration-box/configuration-b
         StaticSlideToggleComponent,
         ErrorHintComponent,
         PipelineStartedStatusComponent,
-        SpConfigurationBoxComponent,
         SpSimpleLogsComponent,
         SpSimpleMetricsComponent,
         StatusWidgetComponent,

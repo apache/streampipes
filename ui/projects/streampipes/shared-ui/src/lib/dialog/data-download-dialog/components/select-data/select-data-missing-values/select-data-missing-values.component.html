@@ -16,46 +16,24 @@
   ~
   -->
 
-<ng-template matStepLabel>Select Format</ng-template>
-<div>
-    <h5>Download Format</h5>
+<sp-configuration-box title="Behaviour in case of missing values">
     <mat-radio-group
         class="sp-radio-group"
-        [(ngModel)]="formatExportConfig.exportFormat"
+        [(ngModel)]="dataExportConfig.missingValueBehaviour"
     >
         <mat-radio-button
-            value="json"
+            value="ignore"
             class="sp-radio-button"
-            data-cy="download-configuration-json"
+            data-cy="download-configuration-ignore"
         >
-            JSON
+            Ignore lines with missing value
         </mat-radio-button>
         <mat-radio-button
-            value="csv"
+            value="empty"
             class="sp-radio-button"
-            data-cy="download-configuration-csv"
+            data-cy="download-configuration-empty"
         >
-            CSV
+            Leave entry empty
         </mat-radio-button>
     </mat-radio-group>
-</div>
-<div *ngIf="formatExportConfig.exportFormat === 'csv'" class="mt-10">
-    <h5>Delimiter</h5>
-    <mat-radio-group
-        [(ngModel)]="formatExportConfig.delimiter"
-        class="sp-radio-group"
-    >
-        <mat-radio-button
-            value="comma"
-            class="sp-radio-button"
-            data-cy="download-configuration-delimiter-comma"
-            >&nbsp;,</mat-radio-button
-        >
-        <mat-radio-button
-            value="semicolon"
-            class="sp-radio-button"
-            data-cy="download-configuration-delimiter-semicolon"
-            >&nbsp;;</mat-radio-button
-        >
-    </mat-radio-group>
-</div>
+</sp-configuration-box>

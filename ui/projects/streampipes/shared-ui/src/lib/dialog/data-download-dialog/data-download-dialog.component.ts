@@ -18,7 +18,7 @@
 
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
-import { DialogRef } from '@streampipes/shared-ui';
+import { DialogRef } from '../base-dialog/dialog-ref';
 import { ExportConfig } from './model/export-config.model';
 import { DataDownloadDialogModel } from './model/data-download-dialog.model';
 import { DataExportService } from './services/data-export.service';
@@ -34,6 +34,7 @@ export class DataDownloadDialogComponent implements OnInit {
     @ViewChild('downloadDialogStepper', { static: true })
     downloadDialogStepper: MatStepper;
 
+    @Input()
     exportConfig: ExportConfig;
 
     constructor(
@@ -48,17 +49,19 @@ export class DataDownloadDialogComponent implements OnInit {
                 : this.dataDownloadDialogModel.dataExplorerDataConfig
                       .sourceConfigs[0].measureName;
 
-        this.exportConfig = {
+        this.exportConfig ??= {
             dataExportConfig: {
                 dataRangeConfiguration: 'all',
                 missingValueBehaviour: 'ignore',
                 measurement: measurementName,
             },
             formatExportConfig: {
-                exportFormat: 'csv',
+                format: 'csv',
                 delimiter: 'comma',
+                headerColumnName: 'key',
             },
         };
+        console.log(this.exportConfig);
     }
 
     exitDialog() {

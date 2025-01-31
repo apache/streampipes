@@ -20,12 +20,11 @@
     fxLayout="column"
     fxFlex="100"
     class="panel-outer"
-    [ngStyle]="{ margin: outerMargin }"
+    [ngStyle]="{ margin: outerMargin, height: '100%' }"
 >
     <div
         class="general-panel-header"
         fxLayout="row"
-        fxFlex="100"
         fxLayoutAlign="start center"
         *ngIf="!hideToolbar"
     >
@@ -35,11 +34,14 @@
                     {{ panelTitle }}
                 </div>
             </div>
-            <ng-content select="[header]" fxFlex class="pr-5"></ng-content>
+            <ng-content select="[header]" class="pr-5"></ng-content>
         </div>
     </div>
 
-    <div class="general-panel" [ngStyle]="{ padding: innerPadding }">
+    <div
+        class="general-panel"
+        [ngStyle]="{ padding: innerPadding, height: '100%' }"
+    >
         <ng-content fxFlex="100"></ng-content>
     </div>
 </div>
