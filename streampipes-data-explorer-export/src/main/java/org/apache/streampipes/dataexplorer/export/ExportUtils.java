@@ -16,24 +16,19 @@
  *
  */
 
+package org.apache.streampipes.dataexplorer.export;
 
-package org.apache.streampipes.dataexplorer.export.item;
+import java.text.DecimalFormat;
 
-import org.apache.streampipes.dataexplorer.export.ExportUtils;
+public class ExportUtils {
 
-public class CsvItemGenerator extends ItemGenerator {
+  private static final DecimalFormat df = new DecimalFormat("#");
 
-  public CsvItemGenerator(String delimiter) {
-    super(delimiter);
-  }
-
-  @Override
-  protected String makeItemString(String key, Object value) {
-    return value != null ? ExportUtils.formatValue(value) : "";
-  }
-
-  @Override
-  protected String finalizeItem(String item) {
-    return item;
+  public static String formatValue(Object value) {
+    if (value instanceof Double) {
+      return df.format(value);
+    } else {
+      return String.valueOf(value);
+    }
   }
 }

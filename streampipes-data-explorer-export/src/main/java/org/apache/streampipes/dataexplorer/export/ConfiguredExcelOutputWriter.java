@@ -48,7 +48,6 @@ public class ConfiguredExcelOutputWriter extends ConfiguredOutputWriter {
   private DataLakeMeasure schema;
   private String headerColumnNameStrategy;
 
-
   public ConfiguredExcelOutputWriter(CRUDStorage<FileMetadata> fileMetadataStorage) {
     this.storage = fileMetadataStorage;
   }
@@ -103,19 +102,20 @@ public class ConfiguredExcelOutputWriter extends ConfiguredOutputWriter {
                         List<String> columnNames, boolean firstObject) throws IOException {
     var excelRow = ws.createRow(startRow);
     int columnIndex = 0;
-    if (!firstObject) {
-      for (Object column : row) {
-        var cell = excelRow.createCell(columnIndex);
-        cell.setCellValue(String.valueOf(column));
-        columnIndex++;
-      }
-    } else {
+    if (firstObject) {
       for (String column : columnNames) {
         var cell = excelRow.createCell(columnIndex);
         var headerName = getHeaderName(schema, String.valueOf(column), headerColumnNameStrategy);
         cell.setCellValue(headerName);
         columnIndex++;
       }
+      startRow++;
+    }
+    for (Object column : row) {
+      var cell = excelRow.createCell(columnIndex);
+      String entry = ExportUtils.formatValue(column);
+      cell.setCellValue(entry);
+      columnIndex++;
     }
     startRow++;
   }

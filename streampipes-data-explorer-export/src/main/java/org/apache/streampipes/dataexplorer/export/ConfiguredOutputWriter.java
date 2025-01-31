@@ -24,10 +24,13 @@ import org.apache.streampipes.model.schema.EventProperty;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Objects;
 
 public abstract class ConfiguredOutputWriter {
+
+  private final DecimalFormat df = new DecimalFormat("#");
 
   public static ConfiguredOutputWriter getConfiguredWriter(DataLakeMeasure schema,
                                                            OutputFormat format,
