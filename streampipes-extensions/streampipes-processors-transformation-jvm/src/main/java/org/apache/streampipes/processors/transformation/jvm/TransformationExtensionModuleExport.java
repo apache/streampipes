@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.processors.transformation.jvm.migrations.StaticMetadataEnrichmentProcessorMigrationV1;
+import org.apache.streampipes.processors.transformation.jvm.migrations.StaticMetadataEnrichmentProcessorMigrationV2;
 import org.apache.streampipes.processors.transformation.jvm.processor.array.count.CountArrayProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.counter.BooleanCounterProcessor;
@@ -94,6 +95,8 @@ public class TransformationExtensionModuleExport implements IExtensionModuleExpo
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return List.of(new StaticMetadataEnrichmentProcessorMigrationV1());
+    return List.of(
+        new StaticMetadataEnrichmentProcessorMigrationV1(),
+        new StaticMetadataEnrichmentProcessorMigrationV2());
   }
 }
