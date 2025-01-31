@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.export;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 public class ExportUtils {
@@ -26,7 +27,7 @@ public class ExportUtils {
 
   public static String formatValue(Object value) {
     if (value instanceof Double) {
-      return df.format(value);
+      return BigDecimal.valueOf((Double) value).toPlainString();
     } else {
       return String.valueOf(value);
     }
