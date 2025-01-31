@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 
@@ -25,17 +25,26 @@ import { DialogRef } from '@streampipes/shared-ui';
     templateUrl: './edit-dashboard-dialog.component.html',
     styleUrls: ['./edit-dashboard-dialog.component.scss'],
 })
-export class EditDashboardDialogComponent {
-    @Input()
-    createMode: boolean;
-
-    @Input()
-    dashboard: Dashboard;
+export class EditDashboardDialogComponent implements OnInit {
+    @Input() createMode: boolean;
+    @Input() dashboard: Dashboard;
 
     constructor(
-        public dialogRef: DialogRef<EditDashboardDialogComponent>,
+        private dialogRef: DialogRef<EditDashboardDialogComponent>,
         private dashboardService: DashboardService,
     ) {}
+
+    ngOnInit() {
+        if (!this.dashboard.dashboardGeneralSettings.defaultViewMode) {
+            this.dashboard.dashboardGeneralSettings.defaultViewMode = 'grid';
+        }
+        if (
+            this.dashboard.dashboardGeneralSettings.globalTimeEnabled ===
+            undefined
+        ) {
+            this.dashboard.dashboardGeneralSettings.globalTimeEnabled = true;
+        }
+    }
 
     onCancel(): void {
         this.dialogRef.close();
@@ -45,11 +54,15 @@ export class EditDashboardDialogComponent {
         if (this.createMode) {
             this.dashboardService
                 .saveDashboard(this.dashboard)
-                .subscribe(result => this.onCancel());
+                .subscribe(() => {
+                    this.dialogRef.close();
+                });
         } else {
             this.dashboardService
                 .updateDashboard(this.dashboard)
-                .subscribe(result => this.onCancel());
+                .subscribe(() => {
+                    this.dialogRef.close();
+                });
         }
     }
 }

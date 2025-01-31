@@ -31,6 +31,11 @@ export class DataLakeUtils {
         cy.visit('#/dataexplorer');
     }
 
+    public static goToDashboard() {
+        cy.wait(1000);
+        cy.visit('#/dashboard');
+    }
+
     public static initDataLakeTests() {
         cy.initStreamPipesTest();
         DataLakeUtils.loadRandomDataSetIntoDataLake();

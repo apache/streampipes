@@ -52,7 +52,7 @@ describe('Test Time Order in Data Explorer', () => {
 
         // Save and leave view, edit view again and check ascending order
         DataLakeBtns.saveDataViewButton();
-        DataLakeBtns.editDataViewButton('NewWidget');
+        DataLakeBtns.editDataViewButton('Newchart');
         DataLakeUtils.clickOrderBy('ascending');
         DataLakeUtils.openVisualizationConfig();
         DataLakeUtils.selectVisualizationType('Table');

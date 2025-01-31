@@ -22,13 +22,13 @@ import {
     AdapterService,
     AssetLink,
     AssetLinkType,
+    ChartService,
     DashboardService,
     DatalakeRestService,
-    DataViewDataExplorerService,
-    GenericStorageService,
-    PipelineService,
-    PipelineElementService,
     FilesService,
+    GenericStorageService,
+    PipelineElementService,
+    PipelineService,
 } from '@streampipes/platform-services';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
 
@@ -59,7 +59,7 @@ export class SpManageAssetLinksDialogComponent
         private dialogRef: DialogRef<SpManageAssetLinksDialogComponent>,
         protected genericStorageService: GenericStorageService,
         protected pipelineService: PipelineService,
-        protected dataViewService: DataViewDataExplorerService,
+        protected chartService: ChartService,
         protected dashboardService: DashboardService,
         protected dataLakeService: DatalakeRestService,
         protected pipelineElementService: PipelineElementService,
@@ -69,7 +69,7 @@ export class SpManageAssetLinksDialogComponent
         super(
             genericStorageService,
             pipelineService,
-            dataViewService,
+            chartService,
             dashboardService,
             dataLakeService,
             pipelineElementService,

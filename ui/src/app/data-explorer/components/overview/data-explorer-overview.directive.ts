@@ -22,7 +22,7 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { CurrentUserService, DialogService } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
-import { DataExplorerRoutingService } from '../../services/data-explorer-routing.service';
+import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
 
 @Directive()
 export abstract class SpDataExplorerOverviewDirective

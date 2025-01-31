@@ -19,7 +19,6 @@
 import { Component, Input } from '@angular/core';
 import {
     AssetManagementService,
-    DataViewDataExplorerService,
     SpAssetModel,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
