@@ -111,7 +111,4 @@ volumes:
 networks:
   spnet:
     driver: bridge
-    ipam:
-      config:
-        - subnet: ${SP_SUBNET}
 

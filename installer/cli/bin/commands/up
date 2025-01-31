@@ -70,8 +70,7 @@ configure(){
 create_external_docker_network() {
 	if [ ! "$(docker network ls | grep spnet)" ]; then
 	  info "Creating docker network 'spnet'"
-    subnet=$(sed -n 's/^SP_SUBNET=//p' $STREAMPIPES_WORKDIR/.env)
-	  run "docker network create --driver=bridge --subnet=$subnet spnet" > /dev/null 2>&1
+	  run "docker network create --driver=bridge spnet" > /dev/null 2>&1
 	else
 	  info "Docker network 'spnet' already exists. Continuing"
 	fi
