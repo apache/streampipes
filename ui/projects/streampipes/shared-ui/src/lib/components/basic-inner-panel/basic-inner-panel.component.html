@@ -20,7 +20,7 @@
     fxLayout="column"
     fxFlex="100"
     class="panel-outer"
-    [ngStyle]="{ margin: outerMargin, height: '100%' }"
+    [ngStyle]="{ margin: outerMargin }"
 >
     <div
         class="general-panel-header"
@@ -40,7 +40,8 @@
 
     <div
         class="general-panel"
-        [ngStyle]="{ padding: innerPadding, height: '100%' }"
+        fxFlex="100"
+        [ngStyle]="{ padding: innerPadding }"
     >
         <ng-content fxFlex="100"></ng-content>
     </div>
