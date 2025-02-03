@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.97.0</version>
+        <version>0.97.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>streampipes-archetype-pe-processors-flink</artifactId>
