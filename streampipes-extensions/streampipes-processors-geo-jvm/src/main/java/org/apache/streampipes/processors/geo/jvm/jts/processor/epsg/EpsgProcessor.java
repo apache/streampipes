@@ -53,7 +53,7 @@ public class EpsgProcessor extends StreamPipesDataProcessor {
             .build())
         .outputStrategy(OutputStrategies.append(PrimitivePropertyBuilder
             .create(Datatypes.Integer, EPSG_RUNTIME)
-            .domainProperty("http://data.ign.fr/def/ignf#CartesianCS")
+            .semanticType("http://data.ign.fr/def/ignf#CartesianCS")
             .build())
         )
         .requiredIntegerParameter(Labels.withId(EPSG_KEY), 4326)

@@ -72,7 +72,7 @@ public class StateBufferProcessor extends StreamPipesDataProcessor {
                 Labels.withId(TIMESTAMP_FIELD_ID),
                 PropertyScope.HEADER_PROPERTY)
             .requiredPropertyWithUnaryMapping(
-                EpRequirements.domainPropertyReqList(SPSensor.STATE),
+                EpRequirements.semanticTypeReqList(SPSensor.STATE),
                 Labels.withId(STATE_FIELD_ID),
                 PropertyScope.NONE)
             .requiredPropertyWithUnaryMapping(

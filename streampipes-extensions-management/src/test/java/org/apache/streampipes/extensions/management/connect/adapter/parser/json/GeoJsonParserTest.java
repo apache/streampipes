@@ -60,13 +60,13 @@ public class GeoJsonParserTest {
     var expected = GuessSchemaBuilder.create()
         .property(PrimitivePropertyBuilder
             .create(Datatypes.Float, "longitude")
-            .domainProperty(Geo.LNG)
+            .semanticType(Geo.LNG)
             .description("")
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .property(PrimitivePropertyBuilder
             .create(Datatypes.Float, "latitude")
-            .domainProperty(Geo.LAT)
+            .semanticType(Geo.LAT)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
             .description("")
             .build())

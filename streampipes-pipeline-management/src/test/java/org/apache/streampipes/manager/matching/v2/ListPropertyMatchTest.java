@@ -31,7 +31,7 @@ public class ListPropertyMatchTest {
 
 
   @Test
-  public void matchSameDomainProperty() {
+  public void matchSameSemanticType() {
     var semanticType = "http://test.org/property";
 
     EventPropertyList offer = new EventPropertyList();

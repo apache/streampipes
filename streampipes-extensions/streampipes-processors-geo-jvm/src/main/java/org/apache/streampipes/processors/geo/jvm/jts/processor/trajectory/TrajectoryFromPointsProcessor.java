@@ -72,11 +72,11 @@ public class TrajectoryFromPointsProcessor extends StreamPipesDataProcessor {
         .requiredStream(
             StreamRequirementsBuilder
                 .create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq
+                .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq
                         ("http://www.opengis.net/ont/geosparql#Geometry"),
                     Labels.withId(POINT_KEY), PropertyScope.MEASUREMENT_PROPERTY)
                 .requiredPropertyWithUnaryMapping(
-                    EpRequirements.domainPropertyReq
+                    EpRequirements.semanticTypeReq
                         ("http://data.ign.fr/def/ignf#CartesianCS"),
                     Labels.withId(EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
                 .requiredPropertyWithUnaryMapping(

@@ -62,19 +62,19 @@ public class HaversineDistanceCalculatorProcessor extends StreamPipesDataProcess
         .withLocales(Locales.EN)
         .requiredStream(StreamRequirementsBuilder
             .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT),
+            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LAT),
                 Labels.withId(LAT_1_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG),
+            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LNG),
                 Labels.withId(LONG_1_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT),
+            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LAT),
                 Labels.withId(LAT_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG),
+            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LNG),
                 Labels.withId(LONG_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
             .build()
         )
         .outputStrategy(OutputStrategies.append(PrimitivePropertyBuilder
                 .create(Datatypes.Float, DISTANCE_RUNTIME_NAME)
-                .domainProperty(SO.NUMBER)
+                .semanticType(SO.NUMBER)
                 .measurementUnit(URI.create("http://qudt.org/vocab/unit#Kilometer"))
                 .build())
             )
