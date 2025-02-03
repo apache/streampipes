@@ -60,7 +60,7 @@ class VersionEndpoint(APIEndpoint):
     >>> client = StreamPipesClient.create(client_config=client_config)
 
     >>> client.versionApi.get(identifier="").to_dict(use_source_names=False)
-    {'backend_version': '0.92.0-SNAPSHOT'}
+    {'backend_version': '0.92.0'}
     """
 
     @property
