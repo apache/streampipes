@@ -63,7 +63,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
 
     });
 
-    return new DataSeries(values.size(), resultingValues, columns, series.getTags());
+    return new DataSeries(resultingValues.size(), resultingValues, columns, series.getTags());
   }
 
   protected SpQueryResult postQuery(QueryResult queryResult,

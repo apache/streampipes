@@ -33,6 +33,7 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.StaticProperties;
@@ -109,12 +110,8 @@ public class StaticMetaDataEnrichmentProcessor
                             OPTION_INTEGER
                         )
                     ),
-                    StaticProperties.stringFreeTextProperty(
-                        Labels.withId(
-                            STATIC_METADATA_INPUT_LABEL)),
-                    StaticProperties.stringFreeTextProperty(
-                        Labels.withId(
-                            STATIC_METADATA_INPUT_DESCRIPTION))
+                    makeFreeTextInput(STATIC_METADATA_INPUT_LABEL, true),
+                    makeFreeTextInput(STATIC_METADATA_INPUT_DESCRIPTION, true)
                 )
             )
             .requiredStream(
@@ -123,6 +120,15 @@ public class StaticMetaDataEnrichmentProcessor
                 OutputStrategies.customTransformation())
             .build()
     );
+  }
+
+  private FreeTextStaticProperty makeFreeTextInput(String label,
+                                                   boolean optional) {
+    var sp = StaticProperties.stringFreeTextProperty(
+        Labels.withId(
+            label));
+    sp.setOptional(optional);
+    return sp;
   }
 
   @Override
