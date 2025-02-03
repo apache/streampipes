@@ -28,8 +28,8 @@ describe('Test Time Order in Data Explorer', () => {
     });
 
     it('Perform Test with ascending and descending order', () => {
-        const startDate = new Date(1653871499055);
-        const endDate = new Date(1653871608093);
+        const startDate = new Date('2022-04-01T00:00:00Z');
+        const endDate = new Date('2022-07-01T23:59:59Z');
 
         DataLakeUtils.clickOrderBy('descending');
 
