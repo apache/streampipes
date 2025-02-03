@@ -65,14 +65,6 @@ public interface IParameterExtractor {
   <V> List<V> selectedTreeNodesInternalNames(String internalName,
                                              Class<V> targetClass);
 
-  /**
-   * @deprecated use {@link #selectedTreeNodesInternalNames(String, Class)} instead
-   */
-  @Deprecated(since = "0.97.0", forRemoval = true)
-  <V> List<V> selectedTreeNodesInternalNames(String internalName,
-                                             Class<V> targetClass,
-                                             boolean onlyDataNodes);
-
   <W extends StaticProperty> W getStaticPropertyByName(String internalName, Class<W>
       spType);
 
