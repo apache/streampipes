@@ -21,16 +21,12 @@ package org.apache.streampipes.client.api;
 import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.api.config.IStreamPipesClientConfig;
 import org.apache.streampipes.client.api.credentials.CredentialsProvider;
-import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.model.mail.SpEmail;
 
 import java.io.Serializable;
 
 public interface IStreamPipesClient extends Serializable {
-
-  @Deprecated(since = "0.97.0", forRemoval = true)
-  void registerDataFormat(SpDataFormatFactory spDataFormatFactory);
 
   void registerProtocol(SpProtocolDefinitionFactory<?> spProtocolDefinitionFactory);
 

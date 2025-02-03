@@ -36,7 +36,6 @@ import org.apache.streampipes.client.api.credentials.CredentialsProvider;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.model.StreamPipesClientConnectionConfig;
 import org.apache.streampipes.client.paths.ApiPath;
-import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.model.mail.SpEmail;
 
@@ -117,17 +116,6 @@ public class StreamPipesClient implements
                                          CredentialsProvider credentials,
                                          boolean httpsDisabled) {
     return new StreamPipesClient(streamPipesHost, streamPipesPort, credentials, httpsDisabled);
-  }
-
-  /**
-   * Register a new data format that is used by the live API
-   *
-   * @deprecated
-   * @param spDataFormatFactory The data format factory
-   */
-  @Deprecated(forRemoval = true, since = "0.97.0")
-  @Override
-  public void registerDataFormat(SpDataFormatFactory spDataFormatFactory) {
   }
 
   @Override
