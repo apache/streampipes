@@ -121,7 +121,6 @@ export class PipelineAssemblyOptionsComponent {
         });
         dialogRef.afterClosed().subscribe(pipeline => {
             if (pipeline !== undefined) {
-                this.clearAssemblyEmitter.emit();
                 this.displayPipelineTemplateEmitter.emit(pipeline);
             }
         });
