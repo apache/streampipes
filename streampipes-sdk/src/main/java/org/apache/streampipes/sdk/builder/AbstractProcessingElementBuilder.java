@@ -22,7 +22,6 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -138,36 +137,6 @@ public abstract class AbstractProcessingElementBuilder<K extends
     MappingPropertyUnary mp = new MappingPropertyUnary(label.getInternalId(), label.getLabel(), label.getDescription());
     mp.setPropertyScope(propertyScope.name());
     this.staticProperties.add(mp);
-    return me();
-  }
-
-  /**
-   * Assigns supported transport formats to the pipeline elements that can be handled at runtime (e.g.,
-   * JSON or XMl).
-   *
-   * @deprecated format assignment is no longer necessary
-   * @param format An arbitrary number of supported {@link org.apache.streampipes.model.grounding.TransportFormat}s. Use
-   *               {@link org.apache.streampipes.sdk.helpers.SupportedFormats} to assign formats from some pre-defined
-   *               ones or create your own by following the developer guide.
-   * @return this
-   */
-  @Deprecated(forRemoval = true, since = "0.97.0")
-  public K supportedFormats(TransportFormat... format) {
-    return supportedFormats(Arrays.asList(format));
-  }
-
-  /**
-   * Assigns supported transport formats to the pipeline elements that can be handled at runtime (e.g.,
-   * JSON or XMl).
-   *
-   * @deprecated format assignment is no longer necessary
-   * @param formats A list of supported {@link org.apache.streampipes.model.grounding.TransportFormat}s. Use
-   *                {@link org.apache.streampipes.sdk.helpers.SupportedFormats} to assign formats from some pre-defined
-   *                ones or create your own by following the developer guide.
-   * @return this
-   */
-  @Deprecated(forRemoval = true, since = "0.97.0")
-  public K supportedFormats(List<TransportFormat> formats) {
     return me();
   }
 

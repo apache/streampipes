@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.extensions.management.model;
 
-import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
@@ -113,23 +112,6 @@ public class SpServiceDefinitionBuilder {
 
   public SpServiceDefinitionBuilder registerAdapter(StreamPipesAdapter adapter) {
     this.serviceDefinition.addAdapter(adapter);
-    return this;
-  }
-
-
-  /**
-   * @deprecated data format registration is no longer required
-   */
-  @Deprecated(since = "0.97.0", forRemoval = true)
-  public SpServiceDefinitionBuilder registerMessagingFormat(SpDataFormatFactory dataFormatDefinition) {
-    return this;
-  }
-
-  /**
-   * @deprecated data format registration is no longer required
-   */
-  @Deprecated(since = "0.97.0", forRemoval = true)
-  public SpServiceDefinitionBuilder registerMessagingFormats(SpDataFormatFactory... dataFormatDefinitions) {
     return this;
   }
 
