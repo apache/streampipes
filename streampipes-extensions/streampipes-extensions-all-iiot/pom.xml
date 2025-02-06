@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-extensions</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.97.0-SNAPSHOT</version>
+        <version>0.97.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-service-extensions</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.graalvm.nativeimage</groupId>
@@ -48,7 +48,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-filters-jvm</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.graalvm.nativeimage</groupId>
@@ -59,37 +59,37 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connectors-influx</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connectors-kafka</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connectors-mqtt</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connectors-nats</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connectors-opcua</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connectors-plc</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connectors-pulsar</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.bouncycastle</groupId>
@@ -104,32 +104,32 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connectors-rocketmq</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connectors-ros</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connectors-tubemq</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-mqtt</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-pulsar</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-filters-siddhi</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.logging.log4j</groupId>
@@ -144,17 +144,17 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-transformation-jvm</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-brokers-jvm</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-databases-jvm</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>ch.qos.logback</groupId>
@@ -169,27 +169,27 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-internal-jvm</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-notifications-jvm</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-enricher-jvm</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-change-detection-jvm</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connect-adapters-iiot</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
 
         <!-- dependency convergence -->

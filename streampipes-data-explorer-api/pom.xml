@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.97.0-SNAPSHOT</version>
+        <version>0.97.0</version>
     </parent>
 
     <artifactId>streampipes-data-explorer-api</artifactId>
@@ -35,17 +35,17 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-client-api</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-data-explorer-export</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
-            <version>0.97.0-SNAPSHOT</version>
+            <version>0.97.0</version>
         </dependency>
 
         <!-- External Dependencies -->
