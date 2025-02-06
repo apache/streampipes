@@ -63,7 +63,7 @@ export class PipelineAssemblyComponent implements AfterViewInit {
     previewModeActive = false;
     readonly: boolean;
 
-    JsplumbBridge: JsplumbBridge;
+    jsplumbBridge: JsplumbBridge;
 
     @ViewChild('assemblyOptionsComponent')
     assemblyOptionsComponent: PipelineAssemblyOptionsComponent;
@@ -82,7 +82,7 @@ export class PipelineAssemblyComponent implements AfterViewInit {
     ) {}
 
     ngAfterViewInit() {
-        this.JsplumbBridge = this.jsPlumbFactoryService.getJsplumbBridge(
+        this.jsplumbBridge = this.jsPlumbFactoryService.getJsplumbBridge(
             this.readonly,
         );
     }
@@ -93,9 +93,9 @@ export class PipelineAssemblyComponent implements AfterViewInit {
     clearAssembly() {
         this.editorService.makePipelineAssemblyEmpty(true);
         this.rawPipelineModel = [];
-        this.JsplumbBridge.deleteEveryEndpoint();
+        this.jsplumbBridge.deleteEveryEndpoint();
         this.drawingAreaComponent.resetZoom();
-        this.JsplumbBridge.repaintEverything();
+        this.jsplumbBridge.repaintEverything();
 
         forkJoin([
             this.editorService.removePipelineFromCache(),
@@ -156,14 +156,25 @@ export class PipelineAssemblyComponent implements AfterViewInit {
     }
 
     displayPipelineTemplate(pipeline: Pipeline) {
+        // Clears old pipeline before new elements are added
+        this.clearAssembly();
+        this.jsplumbBridge.reset();
+        this.pipelineCanvasMetadata = new PipelineCanvasMetadata();
+        this.pipelineCanvasMetadataAvailable = false;
+
         this.originalPipeline = pipeline;
         this.rawPipelineModel = [];
+        this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
+            pipeline,
+            false,
+        );
         setTimeout(() => {
-            this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
-                pipeline,
-                false,
+            this.drawingAreaComponent.displayPipelineInEditor(
+                true,
+                this.pipelineCanvasMetadata,
             );
-            this.drawingAreaComponent.displayPipelineInEditor(true, undefined);
+
+            this.triggerCacheUpdate();
         });
     }
 }
