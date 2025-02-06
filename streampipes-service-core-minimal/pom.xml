@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.97.1-SNAPSHOT</version>
+        <version>0.97.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>streampipes-service-core-minimal</artifactId>
@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-service-core</artifactId>
-            <version>0.97.1-SNAPSHOT</version>
+            <version>0.97.0-SNAPSHOT</version>
             <classifier>embed</classifier>
             <exclusions>
                 <exclusion>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-mqtt</artifactId>
-            <version>0.97.1-SNAPSHOT</version>
+            <version>0.97.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
