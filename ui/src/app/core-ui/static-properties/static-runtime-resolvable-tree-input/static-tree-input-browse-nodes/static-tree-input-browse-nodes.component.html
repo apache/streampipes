@@ -34,7 +34,7 @@
 
 <mat-tree
     [dataSource]="dataSource"
-    [treeControl]="treeControl"
+    [childrenAccessor]="childrenAccessor"
     #tree
     class="sp-tree"
     [ngClass]="largeView ? 'tree-large-height' : 'tree-normal-height'"
@@ -86,32 +86,28 @@
                 matTreeNodeToggle
                 [attr.data-cy]="'expand-' + node.nodeName"
                 [attr.aria-label]="'Toggle ' + node.nodeName"
-                (click)="loadChildren(node, treeControl.isExpanded(node))"
+                (click)="loadChildren(node, tree.isExpanded(node))"
             >
                 <mat-icon class="mat-icon-rtl-mirror">
                     {{
-                        treeControl.isExpanded(node)
-                            ? 'expand_more'
-                            : 'chevron_right'
+                        tree.isExpanded(node) ? 'expand_more' : 'chevron_right'
                     }}
                 </mat-icon>
             </button>
             <div fxLayoutAlign="start center">
                 <i
                     class="material-icons color-primary pr-5"
-                    *ngIf="!treeControl.isExpanded(node)"
+                    *ngIf="!tree.isExpanded(node)"
                     >folder</i
                 >
                 <i
                     class="material-icons color-primary pr-5"
-                    *ngIf="treeControl.isExpanded(node)"
+                    *ngIf="tree.isExpanded(node)"
                     >folder_open</i
                 >
                 <i
                     class="material-icons pr-5 icon-button"
-                    *ngIf="
-                        treeControl.isExpanded(node) && hasDataChildren(node)
-                    "
+                    *ngIf="tree.isExpanded(node) && hasDataChildren(node)"
                     matTooltip="Add all direct children"
                     (click)="addAllDirectChildren(node)"
                     >add_circle</i
@@ -135,7 +131,7 @@
                 <span class="node-name pr-5">&nbsp;{{ node.nodeName }}</span>
             </div>
         </div>
-        <div *ngIf="treeControl.isExpanded(node)" role="group">
+        <div *ngIf="tree.isExpanded(node)" role="group">
             <ng-container matTreeNodeOutlet></ng-container>
         </div>
     </mat-nested-tree-node>

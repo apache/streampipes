@@ -58,7 +58,7 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
     tree: MatTree<TreeInputNode>;
 
     largeView = false;
-    treeControl = new NestedTreeControl<TreeInputNode>(node => node.children);
+    childrenAccessor = node => node.children;
     dataSource = new MatTreeNestedDataSource<TreeInputNode>();
 
     selectedNodeId: string;
@@ -70,10 +70,6 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.treeControl = new NestedTreeControl<TreeInputNode>(
-            node => node.children,
-        );
-
         this.dataSource = new MatTreeNestedDataSource<TreeInputNode>();
         this.dataSource.data = [];
     }
