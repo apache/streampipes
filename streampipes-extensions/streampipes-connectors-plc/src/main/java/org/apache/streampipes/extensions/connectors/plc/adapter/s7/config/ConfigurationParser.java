@@ -72,12 +72,30 @@ public class ConfigurationParser {
    * @return Datatypes
    */
   public Datatypes getStreamPipesDataType(String plcType) throws AdapterException {
+    var type = extractType(plcType);
 
-    String type = plcType.substring(plcType.lastIndexOf(":") + 1);
+    type = removeArrayInformation(type);
 
-    // replace array information from type
-    type = type.replaceAll("\\[.*?\\]", "");
+    if (isStringWithLengthLimit(type)) {
+      return Datatypes.String;
+    }
 
+    return mapTypeToDatatype(type, plcType);
+  }
+
+  private String extractType(String plcType) {
+    return plcType.substring(plcType.lastIndexOf(":") + 1);
+  }
+
+  private String removeArrayInformation(String type) {
+    return type.replaceAll("\\[.*?\\]", "");
+  }
+
+  private boolean isStringWithLengthLimit(String type) {
+    return type.startsWith("STRING(");
+  }
+
+  private Datatypes mapTypeToDatatype(String type, String plcType) throws AdapterException {
     return switch (type) {
       case "BOOL" -> Datatypes.Boolean;
       case "BYTE", "REAL" -> Datatypes.Float;
