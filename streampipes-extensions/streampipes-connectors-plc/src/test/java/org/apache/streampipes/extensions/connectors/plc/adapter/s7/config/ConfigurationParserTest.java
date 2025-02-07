@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ConfigurationParserTest {
 
   @Test
-  public void testGetNodeInformationFromCodePropertyWithComments() {
+  public void getNodeInformationFromCodeProperty_WithComments() {
     var configBlock = """
         // This code block can be used to manually specify the addresses of the PLC registers.
         // The syntax is based on the PLC4X syntax, see [1].
@@ -52,38 +52,25 @@ public class ConfigurationParserTest {
   }
 
   @Test
-  public void testGetNodeInformationFromCodePropertyMultipleEntries() {
+  public void getNodeInformationFromCodeProperty_MultipleEntries() {
     var configBlock = """
         v1=%I0.0:INT
-        v2=%I0.0:BOOL
+        v2=%I0.1:BOOL
+        v3=%I0.2:STRING(10)
+        v4=%I0.3:STRING(10)[100]
         """;
     var result = new ConfigurationParser().getNodeInformationFromCodeProperty(configBlock);
 
-    assertEquals(2, result.size());
-    assertEquals(Set.of("v1", "v2"), result.keySet());
+    assertEquals(4, result.size());
+    assertEquals(Set.of("v1", "v2", "v3", "v4"), result.keySet());
     assertEquals("%I0.0:INT", result.get("v1"));
-    assertEquals("%I0.0:BOOL", result.get("v2"));
+    assertEquals("%I0.1:BOOL", result.get("v2"));
+    assertEquals("%I0.2:STRING(10)", result.get("v3"));
+    assertEquals("%I0.3:STRING(10)[100]", result.get("v4"));
   }
 
   @Test
-  public void testGetStreamPipesDataTypeArray() throws AdapterException {
-    var plcType = "INT[100]";
-    var result = new ConfigurationParser().getStreamPipesDataType(plcType);
-
-    assertEquals(Datatypes.Integer, result);
-  }
-
-  @Test
-  public void testGetStreamPipesDataTypeBasic() throws AdapterException {
-    var plcType = "INT";
-    var result = new ConfigurationParser().getStreamPipesDataType(plcType);
-
-    assertEquals(Datatypes.Integer, result);
-  }
-
-
-  @Test
-  public void testGetNodeInformationFromCodePropertyNoEntries() {
+  public void getNodeInformationFromCodeProperty_NoEntries() {
     var configBlock = "";
     var result = new ConfigurationParser().getNodeInformationFromCodeProperty(configBlock);
 
@@ -91,14 +78,46 @@ public class ConfigurationParserTest {
   }
 
   @Test
-  public void testIsPLCArray() {
+  public void getStreamPipesDataType_Array() throws AdapterException {
+    var plcType = "INT[100]";
+    var result = new ConfigurationParser().getStreamPipesDataType(plcType);
+
+    assertEquals(Datatypes.Integer, result);
+  }
+
+  @Test
+  public void getStreamPipesDataType_Basic() throws AdapterException {
+    var plcType = "INT";
+    var result = new ConfigurationParser().getStreamPipesDataType(plcType);
+
+    assertEquals(Datatypes.Integer, result);
+  }
+
+  @Test
+  public void getStreamPipesDataType_StringWithLenghtLimit() throws AdapterException {
+    var plcType = "STRING(10)";
+    var result = new ConfigurationParser().getStreamPipesDataType(plcType);
+
+    assertEquals(Datatypes.String, result);
+  }
+
+  @Test
+  public void getStreamPipesDataType_ArrayOfStringsWithLenghtLimit() throws AdapterException {
+    var plcType = "STRING(10)[100]";
+    var result = new ConfigurationParser().getStreamPipesDataType(plcType);
+
+    assertEquals(Datatypes.String, result);
+  }
+
+  @Test
+  public void isPLCArray_True() {
     var result = new ConfigurationParser().isPLCArray("%DB3.DB0:BOOL[100]");
     Assertions.assertTrue(result);
   }
 
 
   @Test
-  public void testIsNoPLCArray() {
+  public void isNoPLCArray_False() {
     var result = new ConfigurationParser().isPLCArray("%DB3.DB0:BOOL");
     Assertions.assertFalse(result);
   }
