@@ -103,13 +103,15 @@ export class ObjectProvider {
                         payload.connectedTo.push(connections[i].sourceId);
                     }
                     if (payload.connectedTo && payload.connectedTo.length > 0) {
-                        pipelineElementConfig.type === 'action'
-                            ? pipeline.actions.push(
-                                  payload as DataSinkInvocation,
-                              )
-                            : pipeline.sepas.push(
-                                  payload as DataProcessorInvocation,
-                              );
+                        if (pipelineElementConfig.type === 'action') {
+                            pipeline.actions.push(
+                                payload as DataSinkInvocation,
+                            );
+                        } else {
+                            pipeline.sepas.push(
+                                payload as DataProcessorInvocation,
+                            );
+                        }
                     }
                 } else {
                     pipeline.streams.push(

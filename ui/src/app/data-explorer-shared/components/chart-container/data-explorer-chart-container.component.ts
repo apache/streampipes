@@ -311,7 +311,11 @@ export class DataExplorerChartContainerComponent
     }
 
     handleTimer(start: boolean) {
-        start ? this.startLoadingTimer() : this.stopLoadingTimer();
+        if (start) {
+            this.startLoadingTimer();
+        } else {
+            this.stopLoadingTimer();
+        }
     }
 
     downloadDataAsFile(): void {

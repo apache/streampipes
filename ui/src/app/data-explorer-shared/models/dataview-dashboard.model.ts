@@ -37,7 +37,7 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface IDataViewDashboardConfig extends GridsterConfig {}
+export type IDataViewDashboardConfig = GridsterConfig;
 
 export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
     removeWidgetCallback: EventEmitter<boolean>;
