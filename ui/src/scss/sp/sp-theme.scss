@@ -131,16 +131,16 @@ $mat-streampipes-accent-dark: (
     ),
 );
 
-$custom-theme-primary: mat.define-palette($mat-streampipes-primary);
-$custom-theme-accent-dark: mat.define-palette($mat-streampipes-accent-dark);
-$custom-theme-accent: mat.define-palette($mat-streampipes-accent);
-$custom-theme-warn: mat.define-palette(mat.$red-palette);
+$custom-theme-primary: mat.m2-define-palette($mat-streampipes-primary);
+$custom-theme-accent-dark: mat.m2-define-palette($mat-streampipes-accent-dark);
+$custom-theme-accent: mat.m2-define-palette($mat-streampipes-accent);
+$custom-theme-warn: mat.m2-define-palette(mat.$m2-red-palette);
 
-$custom-typography: mat.define-typography-config(
+$custom-typography: mat.m2-define-typography-config(
     $font-family: 'Roboto-Regular, Arial',
 );
 
-$custom-theme-light: mat.define-light-theme(
+$custom-theme-light: mat.m2-define-light-theme(
     (
         color: (
             primary: $custom-theme-primary,
@@ -152,7 +152,7 @@ $custom-theme-light: mat.define-light-theme(
     )
 );
 
-$custom-theme-dark: mat.define-light-theme(
+$custom-theme-dark: mat.m2-define-light-theme(
     (
         color: (
             primary: $custom-theme-primary,
