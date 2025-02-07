@@ -75,16 +75,16 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
         );
 
         this.dataSource = new MatTreeNestedDataSource<TreeInputNode>();
+        this.dataSource.data = [];
     }
 
     updateNodes(nodes: TreeInputNode[]) {
-        this.dataSource.data = nodes;
+        this.dataSource.data = nodes || [];
     }
 
     refreshTree() {
         const data = this.dataSource.data.slice();
-        this.dataSource.data = null;
-        this.dataSource = new MatTreeNestedDataSource<TreeInputNode>();
+        this.dataSource.data = [];
         this.dataSource.data = [...data];
     }
 
