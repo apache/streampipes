@@ -27,7 +27,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { DashboardOverviewComponent } from './components/overview/dashboard-overview.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CdkTableModule } from '@angular/cdk/table';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { ServicesModule } from '../services/services.module';

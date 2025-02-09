@@ -233,7 +233,7 @@ export class SavePipelineComponent implements OnInit {
         }
     }
 
-    getPipelineCanvasMetadata$(pipelineId: string): Observable<Object> {
+    getPipelineCanvasMetadata$(pipelineId: string): Observable<object> {
         let request;
         this.pipelineCanvasMetadata.pipelineId = pipelineId;
         if (this.storageOptions.updateModeActive) {

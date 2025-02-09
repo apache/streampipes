@@ -101,7 +101,7 @@ export class StaticRuntimeResolvableTreeInputComponent
     ) {
         if (
             staticProperty.latestFetchedNodes &&
-            staticProperty.latestFetchedNodes.length > 0
+            staticProperty.nextBaseNodeToResolve !== null
         ) {
             this.latestFetchedNodes = staticProperty.latestFetchedNodes;
             if (node) {

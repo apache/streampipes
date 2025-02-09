@@ -19,10 +19,14 @@
 import { TestBed } from '@angular/core/testing';
 import { PipelineService } from './pipeline.service';
 import {
-    HttpClientTestingModule,
     HttpTestingController,
+    provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { Pipeline } from '../model/gen/streampipes-model';
+import {
+    provideHttpClient,
+    withInterceptorsFromDi,
+} from '@angular/common/http';
 
 describe('PipelineService', () => {
     const mockPath = 'mock';
@@ -31,7 +35,11 @@ describe('PipelineService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
+            imports: [],
+            providers: [
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
         });
         httpMock = TestBed.inject(HttpTestingController);
         pipelineService = TestBed.inject(PipelineService);

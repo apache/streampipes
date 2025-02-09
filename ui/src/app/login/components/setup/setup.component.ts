@@ -69,18 +69,17 @@ export class SetupComponent {
                     this.scrollContainer.nativeElement.scrollHeight;
                 const nextInstallationStep = currentInstallationStep + 1;
                 if (nextInstallationStep > data.installationStepCount - 1) {
-                    // eslint-disable-next-line no-sequences
-                    this.restApi.configured().subscribe(res => {
-                        if (res.configured) {
-                            this.installationFinished = true;
-                            this.loading = false;
-                        }
-                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                    }),
+                    this.restApi.configured().subscribe(
+                        res => {
+                            if (res.configured) {
+                                this.installationFinished = true;
+                                this.loading = false;
+                            }
+                        },
                         () => {
                             this.loading = false;
-                            // this.showToast("Fatal error, contact administrator");
-                        };
+                        },
+                    );
                 } else {
                     this.configure(nextInstallationStep);
                 }

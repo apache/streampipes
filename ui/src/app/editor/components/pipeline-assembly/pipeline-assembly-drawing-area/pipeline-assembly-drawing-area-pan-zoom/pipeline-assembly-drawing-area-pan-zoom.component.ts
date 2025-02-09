@@ -93,8 +93,12 @@ export class PipelineAssemblyDrawingAreaPanZoomComponent
         this.doZoom(false);
     }
 
-    doZoom(zoomOut) {
-        zoomOut ? this.panzoom.zoomOut() : this.panzoom.zoomIn();
+    doZoom(zoomOut: boolean) {
+        if (zoomOut) {
+            this.panzoom.zoomOut();
+        } else {
+            this.panzoom.zoomIn();
+        }
         this.currentZoomLevel = this.panzoom.getScale();
         this.jsplumbBridge.setZoom(this.currentZoomLevel);
         this.jsplumbBridge.repaintEverything();

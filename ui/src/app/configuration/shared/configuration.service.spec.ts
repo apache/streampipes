@@ -18,11 +18,15 @@
 
 import { getTestBed, TestBed } from '@angular/core/testing';
 import {
-    HttpClientTestingModule,
     HttpTestingController,
+    provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { ConfigurationService } from './configuration.service';
 import { SpServiceConfiguration } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import {
+    provideHttpClient,
+    withInterceptorsFromDi,
+} from '@angular/common/http';
 
 describe('ConfigurationService', () => {
     let injector: TestBed;
@@ -31,8 +35,12 @@ describe('ConfigurationService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [ConfigurationService],
+            imports: [],
+            providers: [
+                ConfigurationService,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
         });
         injector = getTestBed();
         service = injector.get(ConfigurationService);

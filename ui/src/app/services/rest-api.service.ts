@@ -24,8 +24,6 @@ import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({ providedIn: 'root' })
 export class RestApi {
-    encodeURIComponent: any;
-
     constructor(
         private platformServicesCommons: PlatformServicesCommons,
         private $http: HttpClient,
@@ -55,58 +53,11 @@ export class RestApi {
         });
     }
 
-    getDomainKnowledgeItems(query) {
-        return this.$http.post(
-            this.getServerUrl() + '/autocomplete/domain',
-            query,
-        );
-    }
-
-    getAllUnits() {
-        return this.$http.get(this.getServerUrl() + '/units/instances');
-    }
-
-    getAllUnitTypes() {
-        return this.$http.get(this.getServerUrl() + '/units/types');
-    }
-
-    getUnit(resource) {
-        return this.$http.get(
-            this.getServerUrl() +
-                '/units/instances/' +
-                encodeURIComponent(resource),
-        );
-    }
-
-    getEpaCategories() {
-        return this.$http.get(this.getServerUrl() + '/categories/epa');
-    }
-
-    getAdapterCategories() {
-        return this.$http.get(this.getServerUrl() + '/categories/adapter');
-    }
-
-    getApplicationLinks() {
-        return this.$http.get(this.getServerUrl() + '/applink');
-    }
-
-    getFileMetadata() {
-        return this.$http.get(this.urlApiBase() + '/files');
-    }
-
-    getCachedPipeline() {
-        return this.$http.get(this.urlApiBase() + '/pipeline-cache');
-    }
-
     updateCachedPipeline(rawPipelineModel: any) {
         return this.$http.post(
             this.urlApiBase() + '/pipeline-cache',
             rawPipelineModel,
         );
-    }
-
-    removePipelineFromCache() {
-        return this.$http.delete(this.urlApiBase() + '/pipeline-cache');
     }
 
     getVersionInfo() {

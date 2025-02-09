@@ -64,10 +64,12 @@ export class StaticCodeInputComponent
     }
 
     applyLanguage() {
-        this.staticProperty.language === 'None'
-            ? (this.editorOptions.mode = '')
-            : (this.editorOptions.mode =
-                  this.staticProperty.language.toLowerCase());
+        if (this.staticProperty.language === 'None') {
+            this.editorOptions.mode = '';
+        } else {
+            this.editorOptions.mode =
+                this.staticProperty.language.toLowerCase();
+        }
     }
 
     ngAfterViewInit() {
