@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@ali-hm/angular-tree-component": "18.0.5",
-    "@angular-architects/native-federation": "^18.2.7",
+    "@angular-architects/native-federation": "^19.0.9",
     "@angular/animations": "^18.2.13",
     "@angular/cdk": "^18.2.14",
     "@angular/common": "^18.2.13",
