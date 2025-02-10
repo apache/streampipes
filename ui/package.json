@@ -65,7 +65,6 @@
     "jquery": "^3.7.0",
     "jquery-ui-dist": "1.13.2",
     "jshint": "^2.13.6",
-    "konva": "9.3.6",
     "leaflet": "1.9.3",
     "lodash.clonedeep": "^4.5.0",
     "marked": "^9.0.0",
