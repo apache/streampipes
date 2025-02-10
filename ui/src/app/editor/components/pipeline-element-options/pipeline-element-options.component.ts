@@ -39,7 +39,7 @@ import {
     SpDataStream,
     WildcardTopicDefinition,
 } from '@streampipes/platform-services';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash.clonedeep';
 import { EditorService } from '../../services/editor.service';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { CompatibleElementsComponent } from '../../dialog/compatible-elements/compatible-elements.component';
