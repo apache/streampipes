@@ -52,7 +52,6 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { QuillModule } from 'ngx-quill';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ErrorHintComponent } from './error-hint/error-hint.component';
 import { AddToCollectionComponent } from './static-properties/static-collection/add-to-collection/add-to-collection.component';
 import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-status/pipeline-started-status.component';
@@ -152,7 +151,6 @@ import { TopicsComponent } from './topics/topics.component';
         MatProgressSpinnerModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        NgxChartsModule,
         MatSliderModule,
         MatSlideToggleModule,
         MatChipsModule,

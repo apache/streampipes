@@ -48,7 +48,6 @@ import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -130,7 +129,6 @@ import { SpDataZoomConfigComponent } from './components/chart-config/data-zoom-c
         FormsModule,
         ColorPickerModule,
         MatGridListModule,
-        NgxChartsModule,
         CdkTableModule,
         MatSnackBarModule,
         MatProgressSpinnerModule,
