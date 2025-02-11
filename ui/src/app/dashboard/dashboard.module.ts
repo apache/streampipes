@@ -25,7 +25,6 @@ import { FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { DashboardOverviewComponent } from './components/overview/dashboard-overview.component';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CdkTableModule } from '@angular/cdk/table';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { CoreUiModule } from '../core-ui/core-ui.module';
@@ -107,7 +106,6 @@ import { DashboardOverviewTableComponent } from './components/overview/dashboard
         MatFormFieldModule,
         MatTableModule,
         MatButtonModule,
-        NgxChartsModule,
         CdkTableModule,
         LeafletModule,
         PlatformServicesModule,

@@ -24,38 +24,13 @@ import { Component, Input } from '@angular/core';
     styleUrls: ['./status-widget.component.scss'],
 })
 export class StatusWidgetComponent {
-    @Input() color = 'rgb(156, 156, 156)';
-    @Input() bandColor = 'rgb(27, 20, 100)';
-    @Input() textColor = 'rgb(96,96,96)';
+    @Input() widgetHeight = '150px';
 
-    @Input() widgetWidth = 400;
-    @Input() widgetHeight = 150;
+    @Input()
+    label: string;
 
-    _label: string;
-    _statusValue: string | number;
-
-    chartData: any;
+    @Input()
+    statusValue: string | number;
 
     constructor() {}
-
-    @Input()
-    set statusValue(statusValue: string | number) {
-        this._statusValue = statusValue;
-        this.updateChartData();
-    }
-
-    @Input()
-    set label(label: string) {
-        this._label = label;
-        this.updateChartData();
-    }
-
-    updateChartData() {
-        this.chartData = [];
-        this.chartData = [{ name: this._label, value: this._statusValue }];
-    }
-
-    getBackground() {
-        return { background: this.color };
-    }
 }

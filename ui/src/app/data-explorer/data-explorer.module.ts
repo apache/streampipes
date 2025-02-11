@@ -30,7 +30,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GridsterModule } from 'angular-gridster2';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { PlatformServicesModule } from '@streampipes/platform-services';
@@ -116,7 +115,6 @@ import { AggregateConfigurationComponent } from './components/chart-view/designe
         FormsModule,
         ColorPickerModule,
         MatGridListModule,
-        NgxChartsModule,
         CdkTableModule,
         MatSnackBarModule,
         MatProgressSpinnerModule,
