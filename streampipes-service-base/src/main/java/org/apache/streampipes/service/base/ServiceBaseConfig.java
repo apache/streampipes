@@ -26,22 +26,22 @@ public class ServiceBaseConfig {
 
   private static final String ENDPOINT_INCLUDE_KEY = "management.endpoints.web.exposure.include";
 
-  private static final String ENDPOINTS_ENABLED_BY_DEFAULT = "management.endpoints.enabled-by-default";
+  private static final String ENDPOINTS_ACCESS_DEFAULT = "management.endpoints.access.default";
 
   private static final String SERVER_PORT_KEY = "server.port";
 
   public static void addPrometheusConfig(Properties properties) {
+    var env = Environments.getEnvironment();
+    String endpointAccessLevel = env.getSetupPrometheusEndpoint().getValueOrDefault()
+        ? "read-only"
+        : "none";
 
-    properties.setProperty(ENDPOINTS_ENABLED_BY_DEFAULT, Environments
-                                                .getEnvironment()
-                                                .getSetupPrometheusEndpoint()
-                                                .getValueOrDefault()
-                                                .toString());
+    properties.setProperty(ENDPOINTS_ACCESS_DEFAULT, endpointAccessLevel);
 
     properties.setProperty(ENDPOINT_INCLUDE_KEY, Environments
-                                                  .getEnvironment()
-                                                  .getPrometheusEndpointInclude()
-                                                  .getValueOrDefault());
+        .getEnvironment()
+        .getPrometheusEndpointInclude()
+        .getValueOrDefault());
   }
 
   public static void addPortConfig(Integer port, Properties properties) {

@@ -62,12 +62,12 @@
         <geojson-jackson.version>1.14</geojson-jackson.version>
         <google-maps-services.version>2.2.0</google-maps-services.version>
         <graalvm.js.version>23.0.0</graalvm.js.version>
-        <gson.version>2.10</gson.version>
-        <guava.version>33.2.0-jre</guava.version>
+        <gson.version>2.12.1</gson.version>
+        <guava.version>33.4.0-jre</guava.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
         <influxdb.version>2.24</influxdb.version>
-        <inlong.version>1.12.0</inlong.version>
+        <inlong.version>1.13.0</inlong.version>
         <iotdb.version>1.3.0</iotdb.version>
         <jackson.version>2.17.0</jackson.version>
         <jackson.databind.version>2.17.0</jackson.databind.version>
@@ -86,6 +86,7 @@
         <jedis.version>5.1.4</jedis.version>
         <jersey.version>3.1.3</jersey.version>
         <jgrapht.version>1.5.1</jgrapht.version>
+        <json-smart.version>2.4.10</json-smart.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <jjwt.version>0.11.2</jjwt.version>
         <jts-core.version>1.19.0</jts-core.version>
@@ -93,11 +94,11 @@
         <lightcouch.version>0.2.0</lightcouch.version>
         <maven-plugin-annotations.version>3.13.0</maven-plugin-annotations.version>
         <mailapi.version>1.4.3</mailapi.version>
-        <micrometer-prometheus.version>1.12.0</micrometer-prometheus.version>
-        <micrometer-observation.version>1.12.0</micrometer-observation.version>
+        <micrometer-prometheus.version>1.14.3</micrometer-prometheus.version>
+        <micrometer-observation.version>1.14.3</micrometer-observation.version>
         <mqtt-client.version>1.12</mqtt-client.version>
         <nats.version>2.19.1</nats.version>
-        <netty.version>4.1.72.Final</netty.version>
+        <netty.version>4.1.118.Final</netty.version>
         <okhttp.version>3.13.1</okhttp.version>
         <opencsv.version>5.9</opencsv.version>
         <opennlp.version>2.3.1</opennlp.version>
@@ -118,10 +119,10 @@
         <slack-api.version>1.4.0</slack-api.version>
         <slf4j.version>2.0.6</slf4j.version>
         <snakeyaml.version>2.2</snakeyaml.version>
-        <springdoc.version>2.3.0</springdoc.version>
-        <spring.version>6.1.1</spring.version>
-        <spring-boot.version>3.2.0</spring-boot.version>
-        <spring-security.version>6.3.0</spring-security.version>
+        <springdoc.version>2.8.4</springdoc.version>
+        <spring.version>6.2.2</spring.version>
+        <spring-boot.version>3.4.2</spring-boot.version>
+        <spring-security.version>6.4.2</spring-security.version>
         <swagger.version>2.2.19</swagger.version>
         <type-parser.version>0.8.1</type-parser.version>
         <hawtbuf.version>1.11</hawtbuf.version>
@@ -260,7 +261,7 @@
             </dependency>
             <dependency>
                 <groupId>io.micrometer</groupId>
-                <artifactId>micrometer-registry-prometheus</artifactId>
+                <artifactId>micrometer-registry-prometheus-simpleclient</artifactId>
                 <version>${micrometer-prometheus.version}</version>
             </dependency>
             <dependency>
@@ -327,6 +328,11 @@
                 <groupId>jakarta.xml.bind</groupId>
                 <artifactId>jakarta.xml.bind-api</artifactId>
                 <version>${jakarta-xml-bind-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.minidev</groupId>
+                <artifactId>json-smart</artifactId>
+                <version>${json-smart.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.activemq</groupId>
@@ -794,6 +800,11 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-transport</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport-native-epoll</artifactId>
                 <version>${netty.version}</version>
             </dependency>
             <dependency>
