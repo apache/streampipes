@@ -120,7 +120,7 @@
         <snakeyaml.version>2.2</snakeyaml.version>
         <springdoc.version>2.3.0</springdoc.version>
         <spring.version>6.1.1</spring.version>
-        <spring-boot.version>3.2.0</spring-boot.version>
+        <spring-boot.version>3.4.2</spring-boot.version>
         <spring-security.version>6.3.0</spring-security.version>
         <swagger.version>2.2.19</swagger.version>
         <type-parser.version>0.8.1</type-parser.version>
