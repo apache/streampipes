@@ -129,7 +129,7 @@
         <woodstox.version>7.0.0</woodstox.version>
 
         <!-- Test dependencies -->
-        <junit.version>5.10.1</junit.version>
+        <junit.version>5.11.4</junit.version>
         <mockito.version>5.12.0</mockito.version>
 
         <!-- Maven settings & dependencies -->
