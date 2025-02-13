@@ -1,5 +1,6 @@
 {
-	"New Pipeline": null,
-	"Start All Pipelines": null,
-	"Stop all pipelines": null
+  "New Pipeline": "Neue Pipeline",
+  "Start All Pipelines": "Alle Pipelines starten",
+  "Stop all pipelines": "Alle Pipelines stoppen",
+  "Last modified": "Zuletzt geändert"
 }

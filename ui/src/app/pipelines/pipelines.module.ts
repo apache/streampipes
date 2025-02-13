@@ -49,7 +49,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 
-
 @NgModule({
     imports: [
         FlexLayoutModule,
@@ -69,8 +68,7 @@ import { TranslateModule } from '@ngx-translate/core';
         EditorModule,
         PipelineDetailsModule,
         SharedUiModule,
-        TranslateModule.forChild({
-        }),
+        TranslateModule.forChild({}),
         RouterModule.forChild([
             {
                 path: '',

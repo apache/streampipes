@@ -37,8 +37,8 @@ module.exports = withNativeFederation({
                 '@angular/material',
                 'echarts',
                 'ngx-echarts',
-                "@ngx-translate/core",
-                "@ngx-translate/http-loader",
+                '@ngx-translate/core',
+                '@ngx-translate/http-loader',
                 'rxjs',
             ].reduce(
                 (acc, name) => ({

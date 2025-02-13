@@ -21,7 +21,7 @@ import { RouterOutlet } from '@angular/router';
 import { slideInAnimation } from './animation';
 import { Title } from '@angular/platform-browser';
 import { AppConstants } from './services/app.constants';
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-app-root',
@@ -32,17 +32,19 @@ export class AppComponent implements OnInit {
     constructor(
         private titleService: Title,
         private appConstants: AppConstants,
-        private translate: TranslateService
+        private translate: TranslateService,
     ) {
         const supportedLanguages = ['de', 'en'];
         const defaultLanguage = 'en';
         this.translate.addLangs(supportedLanguages);
         this.translate.setDefaultLang(defaultLanguage);
         const browserLang = translate.getBrowserLang();
-        
-        this.translate.use(supportedLanguages.includes(browserLang) ? browserLang : defaultLanguage);
-            
-        
+
+        this.translate.use(
+            supportedLanguages.includes(browserLang)
+                ? browserLang
+                : defaultLanguage,
+        );
     }
 
     ngOnInit(): void {
