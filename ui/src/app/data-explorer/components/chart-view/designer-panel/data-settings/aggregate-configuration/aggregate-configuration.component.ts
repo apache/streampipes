@@ -16,9 +16,10 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { QueryConfig } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../../../data-explorer-shared/services/chart-configuration.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-aggregate-configuration',
@@ -29,13 +30,15 @@ export class AggregateConfigurationComponent {
     @Input() queryConfig: QueryConfig;
     @Input() widgetId: string;
 
+    translateService: TranslateService = inject(TranslateService);
+
     availableAggregations = [
-        { value: 'ms', label: 'Millisecond' },
-        { value: 's', label: 'Second' },
-        { value: 'm', label: 'Minute' },
-        { value: 'h', label: 'Hour' },
-        { value: 'd', label: 'Day' },
-        { value: 'w', label: 'Week' },
+        { value: 'ms', label: this.translateService.instant('Millisecond') },
+        { value: 's', label: this.translateService.instant('Second') },
+        { value: 'm', label: this.translateService.instant('Minute') },
+        { value: 'h', label: this.translateService.instant('Hour') },
+        { value: 'd', label: this.translateService.instant('Day') },
+        { value: 'w', label: this.translateService.instant('Week') },
     ];
 
     constructor(private widgetConfigService: ChartConfigurationService) {}
