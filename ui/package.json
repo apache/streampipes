@@ -26,7 +26,8 @@
     "test-cypress-open": "cypress open --config baseUrl=http://localhost:8082 --env DEVELOPMENT=true",
     "test-cypress-smoke": "npx cypress run --spec 'cypress/tests/**/*.smoke.spec.ts' --config baseUrl=http://localhost:8082",
     "test-cypress-all": "npx cypress run --spec 'cypress/tests/**/*.spec.ts' --config baseUrl=http://localhost:8082",
-    "prepare": "cd ../ && husky install ./ui/.husky"
+    "prepare": "cd ../ && husky install ./ui/.husky",
+    "i18n:extract": "ngx-translate-extract --input ./src --output ./deployment/i18n/{en,de}.json -n --clean --format json"
   },
   "dependencies": {
     "@ali-hm/angular-tree-component": "18.0.5",
@@ -49,6 +50,8 @@
     "@ngbracket/ngx-layout": "^18.0.0",
     "@ngx-loading-bar/core": "6.0.2",
     "@ngx-loading-bar/http-client": "6.0.2",
+    "@ngx-translate/core": "^16.0.4",
+    "@ngx-translate/http-loader": "^16.0.1",
     "@panzoom/panzoom": "^4.5.1",
     "angular-gridster2": "^18.0.1",
     "codemirror": "^5.65.11",
@@ -100,6 +103,7 @@
     "@types/showdown": "2.0.6",
     "@typescript-eslint/eslint-plugin": "8.15.0",
     "@typescript-eslint/parser": "8.15.0",
+    "@vendure/ngx-translate-extract": "^9.4.0",
     "ajv-keywords": "^5.1.0",
     "assert": "^2.1.0",
     "csv-string": "^4.1.1",
