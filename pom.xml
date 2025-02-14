@@ -111,7 +111,7 @@
         <pulsar.version>3.2.2</pulsar.version>
         <quartz.version>2.3.2</quartz.version>
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
-        <rdf4j.version>3.7.7</rdf4j.version>
+        <rdf4j.version>5.1.2</rdf4j.version>
         <rendersnake.version>1.9.0</rendersnake.version>
         <rocketmq.version>5.0.2</rocketmq.version>
         <siddhi.version>5.1.27</siddhi.version>
