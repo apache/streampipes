@@ -16,10 +16,10 @@
   ~
   -->
 
-<sp-configuration-box title="Color">
+<sp-configuration-box [title]="'Color' | translate">
     <div fxLayout="column" class="mt-10">
         <div fxFlex="100" fxLayout="row" class="mb-10">
-            <span>Background</span>
+            <span>{{ 'Background' | translate }}</span>
             <span fxFlex></span>
             <input
                 [(colorPicker)]="
@@ -39,7 +39,7 @@
         </div>
 
         <div fxFlex="100" fxLayout="row" class="mb-10">
-            <span>Text</span>
+            <span>{{ 'Text' | translate }}</span>
             <span fxFlex></span>
             <input
                 [(colorPicker)]="

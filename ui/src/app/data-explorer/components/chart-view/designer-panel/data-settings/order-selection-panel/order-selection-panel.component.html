@@ -16,7 +16,7 @@
   ~
   -->
 
-<sp-configuration-box title="Order" marginTop="5px">
+<sp-configuration-box [title]="'Order' | translate" marginTop="5px">
     <mat-radio-group
         class="selection-radio-group"
         (change)="triggerConfigurationUpdate()"
@@ -26,13 +26,13 @@
             class="selection-radio-button"
             [value]="'DESC'"
             data-cy="descending-radio-button"
-            >Newest (descending)
+            >{{ 'Newest (descending)' | translate }}
         </mat-radio-button>
         <mat-radio-button
             class="selection-radio-button"
             [value]="'ASC'"
             data-cy="ascending-radio-button"
-            >Oldest (ascending)
+            >{{ 'Oldest (ascending)' | translate }}
         </mat-radio-button>
     </mat-radio-group>
 </sp-configuration-box>

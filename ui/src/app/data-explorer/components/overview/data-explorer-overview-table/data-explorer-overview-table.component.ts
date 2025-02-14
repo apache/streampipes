@@ -32,6 +32,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { DataExplorerRoutingService } from '../../../../data-explorer-shared/services/data-explorer-routing.service';
 import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
 import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-overview-table',
@@ -55,6 +56,7 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
         currentUserService: CurrentUserService,
         routingService: DataExplorerRoutingService,
         private dialog: MatDialog,
+        private translateService: TranslateService,
     ) {
         super(dialogService, authService, currentUserService, routingService);
     }
@@ -84,7 +86,9 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
         const dialogRef =
             this.dataExplorerDashboardService.openPermissionsDialog(
                 chart.elementId,
-                `Manage permissions for chart ${chart.baseAppearanceConfig.widgetTitle}`,
+                this.translateService.instant(
+                    `Manage permissions for chart ${chart.baseAppearanceConfig.widgetTitle}`,
+                ),
             );
 
         dialogRef.afterClosed().subscribe(refresh => {
@@ -98,11 +102,14 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '600px',
             data: {
-                title: 'Are you sure you want to delete this data view?',
-                subtitle:
-                    'The data view will be removed from all dashboards as well. This action cannot be undone!',
-                cancelTitle: 'Cancel',
-                okTitle: 'Delete Data View',
+                title: this.translateService.instant(
+                    'Are you sure you want to delete this chart?',
+                ),
+                subtitle: this.translateService.instant(
+                    'The chart will be removed from all dashboards as well. This action cannot be undone!',
+                ),
+                cancelTitle: this.translateService.instant('Cancel'),
+                okTitle: this.translateService.instant('Delete chart'),
                 confirmAndCancel: true,
             },
         });

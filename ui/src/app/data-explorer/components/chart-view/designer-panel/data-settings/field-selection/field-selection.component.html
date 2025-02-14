@@ -40,28 +40,28 @@
                 (ngModelChange)="triggerConfigurationUpdate()"
             >
                 <mat-option [value]="'MEAN'" *ngIf="field.numeric">
-                    <span class="pipeline-name">Mean</span>
+                    <span class="pipeline-name">{{ 'Mean' | translate }}</span>
                 </mat-option>
                 <mat-option [value]="'FIRST'">
-                    <span class="pipeline-name">First</span>
+                    <span class="pipeline-name">{{ 'First' | translate }}</span>
                 </mat-option>
                 <mat-option [value]="'LAST'">
-                    <span class="pipeline-name">Last</span>
+                    <span class="pipeline-name">{{ 'Last' | translate }}</span>
                 </mat-option>
                 <mat-option [value]="'MIN'" *ngIf="field.numeric">
-                    <span class="pipeline-name">Min</span>
+                    <span class="pipeline-name">{{ 'Min' | translate }}</span>
                 </mat-option>
                 <mat-option [value]="'MAX'" *ngIf="field.numeric">
-                    <span class="pipeline-name">Max</span>
+                    <span class="pipeline-name">{{ 'Max' | translate }}</span>
                 </mat-option>
                 <mat-option [value]="'MODE'">
-                    <span class="pipeline-name">Mode</span>
+                    <span class="pipeline-name">{{ 'Mode' | translate }}</span>
                 </mat-option>
                 <mat-option [value]="'COUNT'">
-                    <span class="pipeline-name">Count</span>
+                    <span class="pipeline-name">{{ 'Count' | translate }}</span>
                 </mat-option>
                 <mat-option [value]="'SUM'">
-                    <span class="pipeline-name">Sum</span>
+                    <span class="pipeline-name">{{ 'Sum' | translate }}</span>
                 </mat-option>
             </mat-select>
         </mat-form-field>

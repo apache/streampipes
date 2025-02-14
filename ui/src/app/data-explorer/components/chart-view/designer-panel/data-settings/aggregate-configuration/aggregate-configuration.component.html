@@ -40,7 +40,7 @@
                     >{{ agg.label }}</mat-option
                 >
             </mat-select>
-            <mat-label>Unit</mat-label>
+            <mat-label> {{ 'Unit' | translate }}</mat-label>
         </mat-form-field>
         <mat-form-field
             appearance="outline"
@@ -54,7 +54,7 @@
                 [(ngModel)]="queryConfig.aggregationValue"
                 (ngModelChange)="triggerDataRefresh()"
             />
-            <mat-label>Value</mat-label>
+            <mat-label>{{ 'Value' | translate }}</mat-label>
         </mat-form-field>
     </div>
 </div>
