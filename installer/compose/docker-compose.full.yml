@@ -65,32 +65,22 @@ services:
       spnet:
 
   kafka:
-    image: fogsyio/kafka:2.2.0
+    image: bitnami/kafka:3.9.0
     hostname: kafka
-    depends_on:
-      - zookeeper
     environment:
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092,OUTSIDE://localhost:9094 #  Replace localhost with your external address if Kafka should be reachable from external systems.
-      KAFKA_LISTENERS: PLAINTEXT://:9092,OUTSIDE://:9094
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_ADVERTISED_HOST_NAME: kafka
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_MESSAGE_MAX_BYTES: 5000012
-      KAFKA_FETCH_MESSAGE_MAX_BYTES: 5000012
-      KAFKA_REPLICA_FETCH_MAX_BYTES: 10000000
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,OUTSIDE://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,OUTSIDE://localhost:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_MESSAGE_MAX_BYTES=5000012
+      - KAFKA_CFG_FETCH_MESSAGE_MAX_BYTES=5000012
+      - KAFKA_CFG_REPLICA_FETCH_MAX_BYTES=10000000
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
     volumes:
-      - kafka:/kafka
-      - /var/run/docker.sock:/var/run/docker.sock
-    logging: *default-logging
-    restart: unless-stopped
-    networks:
-      spnet:
-
-  zookeeper:
-    image: fogsyio/zookeeper:3.4.13
-    volumes:
-      - zookeeper:/opt/zookeeper-3.4.13
+      - kafka3:/bitnami
     logging: *default-logging
     restart: unless-stopped
     networks:
@@ -155,14 +145,11 @@ volumes:
   backend:
   connect:
   couchdb:
-  kafka:
-  zookeeper:
+  kafka3:
   influxdb:
   influxdb2:
   files:
   nginx:
-  
-
 
 networks:
   spnet:

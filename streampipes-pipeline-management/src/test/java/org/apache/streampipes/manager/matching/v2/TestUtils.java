@@ -25,7 +25,7 @@ import org.apache.streampipes.model.grounding.TransportProtocol;
 public class TestUtils {
 
   public static TransportProtocol kafkaProtocol() {
-    return new KafkaTransportProtocol("localhost", 9092, "abc", "localhost", 2181);
+    return new KafkaTransportProtocol("localhost", 9092, "abc");
   }
 
   public static TransportProtocol jmsProtocol() {
