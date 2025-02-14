@@ -18,7 +18,7 @@
 <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
     <div fxLayout="row" fxLayoutAlign="center center">
         <i class="material-icons" style="margin-top: 8px">warning</i>
-        <h2>&nbsp;Warning</h2>
+        <h2>&nbsp;{{ 'Warning' | translate }}</h2>
     </div>
     <div
         fxLayout="column"
@@ -26,11 +26,14 @@
         style="margin-top: 10px"
     >
         <div class="default-text">
-            This widget tries to load too much data (#Events:
+            {{ 'This chart tries to load too much data (#Events:' | translate }}
             {{ amountOfEvents }})
         </div>
         <div class="default-text date-range-text">
-            Please change the widget settings or decrease the time range
+            {{
+                'Please change the chart settings or decrease the time range'
+                    | translate
+            }}
         </div>
 
         <button
@@ -39,10 +42,10 @@
             style="margin-top: 30px"
             (click)="loadDataWithTooManyEvents()"
         >
-            <label>Load anyway</label>
+            <label>{{ 'Load anyway' | translate }}</label>
         </button>
         <div class="default-text warning-text">
-            (This might crash the browser)
+            {{ '(This might crash the browser)' | translate }}
         </div>
     </div>
 </div>

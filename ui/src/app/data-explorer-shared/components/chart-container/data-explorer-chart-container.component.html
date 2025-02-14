@@ -63,8 +63,8 @@
                 <button
                     mat-icon-button
                     [matMenuTriggerFor]="menu"
-                    aria-label="More options"
-                    matTooltip="More options"
+                    [aria-label]="'More options' | translate"
+                    [matTooltip]="'More options' | translate"
                     *ngIf="!dataViewMode"
                     [attr.data-cy]="
                         'more-options-' +
@@ -79,7 +79,7 @@
                 <mat-menu #menu="matMenu">
                     <button mat-menu-item (click)="downloadDataAsFile()">
                         <mat-icon>get_app</mat-icon>
-                        <span>Download data</span>
+                        <span>{{ 'Download data' | translate }}</span>
                     </button>
                     <button
                         mat-menu-item
@@ -94,14 +94,14 @@
                         "
                     >
                         <mat-icon>edit</mat-icon>
-                        <span>Edit Widget</span>
+                        <span>{{ 'Edit Chart' | translate }}</span>
                     </button>
                 </mat-menu>
                 <button
                     mat-icon-button
                     [matMenuTriggerFor]="optMenu"
                     *ngIf="!globalTimeEnabled"
-                    aria-label="Options"
+                    [aria-label]="'Options' | translate"
                     data-cy="options-data-explorer"
                     #menuTrigger="matMenuTrigger"
                     [matTooltip]="tooltipText"
@@ -129,14 +129,14 @@
                             class="mat-basic"
                             (click)="resetWidgetTimeSettings()"
                         >
-                            Reset
+                            {{ 'Reset' | translate }}
                         </button>
                     </sp-time-selector-menu>
                 </mat-menu>
                 <button
                     mat-icon-button
                     (click)="removeWidget()"
-                    matTooltip="Delete widget"
+                    [matTooltip]="'Delete Chart' | translate"
                     *ngIf="editMode && hasDataExplorerWritePrivileges"
                     [attr.data-cy]="
                         'remove-' +

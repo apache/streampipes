@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box title="Field">
+    <sp-configuration-box [title]="'Field' | translate">
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.numericFields"
             [selectedProperty]="
@@ -32,13 +32,13 @@
         >
         </sp-select-single-property-config>
     </sp-configuration-box>
-    <sp-configuration-box title="Settings">
+    <sp-configuration-box [title]="'Settings' | translate">
         <mat-checkbox
             [(ngModel)]="
                 currentlyConfiguredWidget.visualizationConfig.showLabelsProperty
             "
             (change)="setShowLabelsProperty($event)"
-            >Show values as labels
+            >{{ 'Show values as labels' | translate }}
         </mat-checkbox>
     </sp-configuration-box>
 </sp-visualization-config-outer>

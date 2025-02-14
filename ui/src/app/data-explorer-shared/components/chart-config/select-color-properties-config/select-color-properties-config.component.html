@@ -16,7 +16,7 @@
   ~
   -->
 
-<sp-configuration-box title="Fields" marginTop="5px">
+<sp-configuration-box [title]="'Fields' | translate" marginTop="5px">
     <div header>
         <button
             mat-button
@@ -26,7 +26,7 @@
             style="margin-right: 10px"
             (click)="selectAllFields()"
         >
-            Select all
+            {{ 'Select all' | translate }}
         </button>
         <button
             mat-button
@@ -35,7 +35,7 @@
             style="margin-right: 10px"
             (click)="deselectAllFields()"
         >
-            Deselect all
+            {{ 'Deselect all' | translate }}
         </button>
     </div>
     <div

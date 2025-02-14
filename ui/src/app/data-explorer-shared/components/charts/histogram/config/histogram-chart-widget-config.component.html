@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box title="Field">
+    <sp-configuration-box [title]="'Field' | translate">
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.allFields"
             [selectedProperty]="
@@ -31,7 +31,7 @@
         >
         </sp-select-single-property-config>
     </sp-configuration-box>
-    <sp-configuration-box title="Settings">
+    <sp-configuration-box [title]="'Settings' | translate">
         <div fxLayoutGap="10px" fxLayout="column">
             <mat-checkbox
                 [(ngModel)]="
@@ -39,7 +39,7 @@
                 "
                 (change)="triggerViewRefresh()"
             >
-                Auto-compute number of bins
+                {{ 'Auto-compute number of bins' | translate }}
             </mat-checkbox>
             <mat-form-field
                 fxFlex="100"
@@ -47,7 +47,9 @@
                 appearance="outline"
                 *ngIf="!currentlyConfiguredWidget.visualizationConfig.autoBin"
             >
-                <mat-label><span>Number of bins</span></mat-label>
+                <mat-label
+                    ><span>{{ 'Number of bins' | translate }}</span></mat-label
+                >
                 <input
                     [(ngModel)]="
                         currentlyConfiguredWidget.visualizationConfig
@@ -63,7 +65,7 @@
                 "
                 (change)="triggerViewRefresh()"
             >
-                All values
+                {{ 'All values' | translate }}
             </mat-checkbox>
             <mat-form-field
                 fxFlex="100"
@@ -73,7 +75,9 @@
                     !currentlyConfiguredWidget.visualizationConfig.autoDomain
                 "
             >
-                <mat-label><span>Minimum value</span></mat-label>
+                <mat-label
+                    ><span>{{ 'Minimum value' | translate }}</span></mat-label
+                >
                 <input
                     [(ngModel)]="
                         currentlyConfiguredWidget.visualizationConfig.domainMin
@@ -90,7 +94,9 @@
                     !currentlyConfiguredWidget.visualizationConfig.autoDomain
                 "
             >
-                <mat-label><span>Maximum value</span></mat-label>
+                <mat-label
+                    ><span>{{ 'Maximum value' | translate }}</span></mat-label
+                >
                 <input
                     [(ngModel)]="
                         currentlyConfiguredWidget.visualizationConfig.domainMax

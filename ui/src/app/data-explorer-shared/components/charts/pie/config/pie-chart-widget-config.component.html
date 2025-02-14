@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box title="Field">
+    <sp-configuration-box [title]="'Field' | translate">
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.allFields"
             [selectedProperty]="
@@ -32,7 +32,7 @@
         </sp-select-single-property-config>
     </sp-configuration-box>
 
-    <sp-configuration-box title="Settings">
+    <sp-configuration-box [title]="'Settings' | translate">
         <div fxLayout="column" fxLayoutGap="10px">
             <div
                 fxFlex="100"
@@ -44,7 +44,7 @@
                         .selectedProperty?.fieldCharacteristics.numeric
                 "
             >
-                <small>Rounding</small>
+                <small>{{ 'Rounding' | translate }}</small>
                 <mat-form-field
                     appearance="outline"
                     class="marginColorField"
@@ -73,7 +73,7 @@
                 fxLayoutAlign="start center"
                 fxLayoutGap="10px"
             >
-                <small>Inner Radius</small>
+                <small>{{ 'Inner Radius' | translate }}</small>
                 <mat-slider min="0" max="80" step="1" fxFlex="65">
                     <input
                         matSliderThumb
@@ -103,7 +103,7 @@
                     (ngModelChange)="showCustomColorMapping($event)"
                 >
                 </mat-checkbox>
-                <small>Add custom color mapping</small>
+                <small>{{ 'Add custom color mapping' | translate }}</small>
             </div>
 
             <div
@@ -114,7 +114,7 @@
             >
                 <button mat-raised-button color="accent" (click)="addMapping()">
                     <i class="material-icons">add</i
-                    ><span>&nbsp;Add Mapping</span>
+                    ><span>&nbsp;{{ 'Add Mapping' | translate }}</span>
                 </button>
             </div>
 
@@ -143,7 +143,7 @@
                                 color="accent"
                                 appearance="outline"
                             >
-                                <mat-label>Value</mat-label>
+                                <mat-label>{{ 'Value' | translate }}</mat-label>
                                 <input
                                     matInput
                                     [(ngModel)]="mapping.value"
@@ -169,7 +169,7 @@
                         <div fxLayoutAlign="end center">
                             <button
                                 mat-icon-button
-                                matTooltip="Remove Mapping"
+                                [matTooltip]="'Remove Mapping' | translate"
                                 color="accent"
                                 (click)="removeMapping(i)"
                             >
