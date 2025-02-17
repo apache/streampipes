@@ -24,7 +24,7 @@ doc:
 
 .PHONY: lint
 lint:
-	poetry run flake8 streampipes --max-line-length 120
+	poetry run flake8 streampipes tests --max-line-length 120
 
 .PHONY: livedoc
 livedoc: doc
@@ -32,7 +32,7 @@ livedoc: doc
 
 .PHONY: mypy
 mypy:
-	poetry run mypy streampipes --config-file pyproject.toml
+	poetry run mypy streampipes tests --config-file pyproject.toml
 
 .PHONY: rebase
 rebase:
@@ -47,7 +47,12 @@ reformat-all:
 
 .PHONY: pre-commit
 pre-commit:
-	git ls-files -- 'streampipes/**/*' | xargs poetry run pre-commit run --verbose --files
+	@CHANGED_FILES_PYTHON=$$(git diff --name-only HEAD~1 HEAD -- 'streampipes/**/*' 'tests/**/*'); \
+	if [ -n "$$CHANGED_FILES_PYTHON" ]; then \
+		poetry run pre-commit run --verbose --files $$CHANGED_FILES_PYTHON; \
+	else \
+		echo "No files changed in 'streampipes' or 'tests' directories."; \
+	fi
 
 .PHONY: unit-tests
 unit-tests:

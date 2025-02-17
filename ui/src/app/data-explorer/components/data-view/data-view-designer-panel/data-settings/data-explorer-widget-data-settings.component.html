@@ -1,0 +1,492 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxFlex="100" fxLayout="column" class="form-field-small">
+    <mat-accordion fxFlex="100" class="data-source-selection-panel">
+        <mat-expansion-panel
+            [expanded]="step === 0"
+            hideToggle
+            class="expansion-panel"
+            *ngFor="let sourceConfig of dataConfig.sourceConfigs; let i = index"
+        >
+            <mat-expansion-panel-header class="expansion-panel-header">
+                <div fxFlex="100" fxLayout="row">
+                    <div fxFlex fxLayoutAlign="start center">
+                        {{
+                            sourceConfig.measureName
+                                ? sourceConfig.measureName
+                                : 'New Data Source'
+                        }}
+                    </div>
+                    <div fxFlex fxLayoutAlign="end center">
+                        <button
+                            mat-icon-button
+                            color="accent"
+                            matTooltip="Clone Data Source"
+                        >
+                            <i
+                                class="material-icons plus-icon align-btn"
+                                (click)="cloneSourceConfig(i)"
+                                >flip_to_front</i
+                            >
+                        </button>
+                        <button
+                            mat-icon-button
+                            color="accent"
+                            matTooltip="Delete Data Source"
+                            (click)="removeSourceConfig(i)"
+                        >
+                            <i class="material-icons align-btn">delete</i>
+                        </button>
+                    </div>
+                </div>
+            </mat-expansion-panel-header>
+            <div fxFlex="100" fxLayout="column" class="mt-10">
+                <sp-configuration-box title="Data Source">
+                    <div header fxFlex class="header-container">
+                        <span fxFlex></span>
+                        <button
+                            mat-icon-button
+                            class="pull-btn-right"
+                            matTooltip="{{
+                                expandFieldsDataSource
+                                    ? 'Expand Less'
+                                    : 'Expand More'
+                            }}"
+                            (click)="toggleExpandFieldsDataSource()"
+                            [disabled]="
+                                availablePipelines.length === 0 &&
+                                availableMeasurements.length === 0
+                            "
+                        >
+                            <mat-icon>{{
+                                expandFieldsDataSource
+                                    ? 'expand_less'
+                                    : 'expand_more'
+                            }}</mat-icon>
+                        </button>
+                    </div>
+                    <div
+                        *ngIf="
+                            availablePipelines.length === 0 &&
+                            availableMeasurements.length === 0
+                        "
+                        class="warning-container"
+                        fxLayout="column"
+                        fxLayoutAlign="start stretch"
+                    >
+                        <div
+                            class="warning"
+                            fxLayout="row"
+                            fxLayoutAlign="start center"
+                        >
+                            <i class="material-icons warning-icon">warning</i>
+                            <b>
+                                No data available! Please connect an adapter or
+                                verify your pipeline is running.
+                            </b>
+                        </div>
+                        <div
+                            fxFlex
+                            fxLayout="row"
+                            fxLayoutAlign="end end"
+                            class="mt-10"
+                        >
+                            <button
+                                mat-button
+                                mat-raised-button
+                                color="accent"
+                                class="small-button"
+                                (click)="navigateToConnect()"
+                            >
+                                Connect Adapter
+                            </button>
+                            <button
+                                mat-button
+                                mat-raised-button
+                                color="accent"
+                                class="small-button"
+                                (click)="navigateToPipelines()"
+                            >
+                                Start Pipeline
+                            </button>
+                        </div>
+                    </div>
+
+                    <div
+                        *ngIf="
+                            availablePipelines.length !== 0 ||
+                            availableMeasurements.length !== 0
+                        "
+                    >
+                        <mat-radio-group
+                            class="selection-radio-group"
+                            [(ngModel)]="sourceConfig.sourceType"
+                        >
+                            <div
+                                class="radio-option-box"
+                                fxLayout="column"
+                                [ngClass]="{
+                                    'radio-option-box-accent':
+                                        sourceConfig.sourceType === 'pipeline'
+                                }"
+                                *ngIf="
+                                    expandFieldsDataSource ||
+                                    sourceConfig.sourceType === 'pipeline'
+                                "
+                            >
+                                <mat-radio-button
+                                    class="selection-radio-button"
+                                    [value]="'pipeline'"
+                                    [disabled]="availablePipelines.length === 0"
+                                >
+                                    <b>Pipeline</b>
+                                </mat-radio-button>
+                                <p class="description">
+                                    Select this option if you want to use data
+                                    from one of your pipelines.
+                                </p>
+                                <div
+                                    class="selection-form-field"
+                                    *ngIf="
+                                        sourceConfig.sourceType ===
+                                            'pipeline' &&
+                                        availablePipelines.length !== 0
+                                    "
+                                >
+                                    <mat-form-field
+                                        color="accent"
+                                        fxFlex="100"
+                                        appearance="outline"
+                                    >
+                                        <mat-select
+                                            [panelClass]="'form-field-small'"
+                                            [(value)]="sourceConfig.measureName"
+                                            (selectionChange)="
+                                                updateMeasure(
+                                                    sourceConfig,
+                                                    $event.value
+                                                )
+                                            "
+                                            data-cy="data-explorer-select-data-set"
+                                        >
+                                            <mat-option
+                                                *ngFor="
+                                                    let pipeline of availablePipelines
+                                                "
+                                                [value]="pipeline.measureName"
+                                            >
+                                                <span class="pipeline-name">{{
+                                                    pipeline.pipelineName
+                                                }}</span
+                                                ><br />
+                                                {{ pipeline.measureName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div
+                                class="radio-option-box"
+                                fxLayout="column"
+                                [ngClass]="{
+                                    'radio-option-box-accent':
+                                        sourceConfig.sourceType ===
+                                        'measurement'
+                                }"
+                                *ngIf="
+                                    expandFieldsDataSource ||
+                                    sourceConfig.sourceType === 'measurement'
+                                "
+                            >
+                                <mat-radio-button
+                                    class="selection-radio-button"
+                                    [value]="'measurement'"
+                                    [disabled]="
+                                        availableMeasurements.length === 0
+                                    "
+                                >
+                                    <b>Database Identifier</b>
+                                </mat-radio-button>
+                                <p class="description">
+                                    Choose this option to work with individual
+                                    measurements from a Data Lake.
+                                </p>
+                                <div
+                                    class="selection-form-field"
+                                    *ngIf="
+                                        sourceConfig.sourceType ===
+                                            'measurement' &&
+                                        availableMeasurements.length !== 0
+                                    "
+                                >
+                                    <mat-form-field
+                                        color="accent"
+                                        fxFlex="100"
+                                        appearance="outline"
+                                    >
+                                        <mat-select
+                                            [(value)]="sourceConfig.measureName"
+                                            (selectionChange)="
+                                                updateMeasure(
+                                                    sourceConfig,
+                                                    $event.value
+                                                )
+                                            "
+                                        >
+                                            <mat-option
+                                                [value]="
+                                                    measurement.measureName
+                                                "
+                                                *ngFor="
+                                                    let measurement of availableMeasurements
+                                                "
+                                            >
+                                                <span class="pipeline-name">{{
+                                                    measurement.measureName
+                                                }}</span>
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </mat-radio-group>
+                    </div>
+                </sp-configuration-box>
+
+                <sp-configuration-box
+                    title="Query"
+                    *ngIf="sourceConfig.measureName"
+                >
+                    <div header fxFlex class="header-container">
+                        <span fxFlex></span>
+                        <button
+                            mat-icon-button
+                            class="pull-btn-right"
+                            matTooltip="{{
+                                expandFieldsQuery
+                                    ? 'Expand Less'
+                                    : 'Expand More'
+                            }}"
+                            (click)="toggleExpandFieldsQuery()"
+                        >
+                            <mat-icon>{{
+                                expandFieldsQuery
+                                    ? 'expand_less'
+                                    : 'expand_more'
+                            }}</mat-icon>
+                        </button>
+                    </div>
+                    <div>
+                        <mat-radio-group
+                            class="selection-radio-group"
+                            [(ngModel)]="sourceConfig.queryType"
+                            (change)="changeDataAggregation()"
+                        >
+                            <div
+                                class="radio-option-box"
+                                *ngIf="
+                                    expandFieldsQuery ||
+                                    sourceConfig.queryType === 'raw'
+                                "
+                                fxLayout="column"
+                                [ngClass]="{
+                                    'radio-option-box-accent':
+                                        sourceConfig.queryType === 'raw'
+                                }"
+                            >
+                                <mat-radio-button
+                                    class="selection-radio-button"
+                                    [value]="'raw'"
+                                    >Raw
+                                </mat-radio-button>
+                                <p class="description">
+                                    Show raw data from your data source.
+                                </p>
+                                <div
+                                    fxLayout="column"
+                                    class="selection-form-field"
+                                    fxFlex="100"
+                                    *ngIf="sourceConfig.queryType === 'raw'"
+                                >
+                                    <div class="form-field-small mt-10">
+                                        <mat-form-field
+                                            fxFlex="100"
+                                            color="accent"
+                                            appearance="outline"
+                                        >
+                                            <mat-label>
+                                                <span>&nbsp;Limit</span>
+                                            </mat-label>
+                                            <input
+                                                [(ngModel)]="
+                                                    sourceConfig.queryConfig
+                                                        .limit
+                                                "
+                                                matInput
+                                                (change)="triggerDataRefresh()"
+                                            />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="form-field-small mt-20 mb-20">
+                                        <mat-form-field
+                                            fxFlex="100"
+                                            color="accent"
+                                            appearance="outline"
+                                        >
+                                            <mat-label>
+                                                <span>&nbsp;Page</span>
+                                            </mat-label>
+                                            <input
+                                                [(ngModel)]="
+                                                    sourceConfig.queryConfig
+                                                        .page
+                                                "
+                                                matInput
+                                                (change)="triggerDataRefresh()"
+                                            />
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="radio-option-box"
+                                *ngIf="
+                                    expandFieldsQuery ||
+                                    sourceConfig.queryType === 'aggregated'
+                                "
+                                fxLayout="column"
+                                [ngClass]="{
+                                    'radio-option-box-accent':
+                                        sourceConfig.queryType === 'aggregated'
+                                }"
+                            >
+                                <mat-radio-button
+                                    class="selection-radio-button"
+                                    [value]="'aggregated'"
+                                    >Aggregated
+                                </mat-radio-button>
+                                <p class="description">
+                                    Aggregate raw data by time unit or value.
+                                </p>
+                                <div
+                                    fxLayout="column"
+                                    class="selection-form-field"
+                                    fxFlex="100"
+                                    *ngIf="
+                                        sourceConfig.queryType === 'aggregated'
+                                    "
+                                >
+                                    <div>
+                                        <mat-checkbox
+                                            color="accent"
+                                            [(ngModel)]="
+                                                sourceConfig.queryConfig
+                                                    .autoAggregate
+                                            "
+                                            (change)="triggerDataRefresh()"
+                                        >
+                                            Auto-Aggregate
+                                        </mat-checkbox>
+                                    </div>
+                                    <sp-aggregate-configuration
+                                        class="aggregate-config"
+                                        *ngIf="
+                                            !sourceConfig.queryConfig
+                                                .autoAggregate
+                                        "
+                                        [queryConfig]="sourceConfig.queryConfig"
+                                        [widgetId]="widgetId"
+                                    >
+                                    </sp-aggregate-configuration>
+                                </div>
+                            </div>
+                            <div
+                                class="radio-option-box"
+                                *ngIf="
+                                    expandFieldsQuery ||
+                                    sourceConfig.queryType === 'single'
+                                "
+                                fxLayout="column"
+                                [ngClass]="{
+                                    'radio-option-box-accent':
+                                        sourceConfig.queryType === 'single'
+                                }"
+                            >
+                                <mat-radio-button
+                                    class="selection-radio-button"
+                                    [value]="'single'"
+                                    >Single
+                                </mat-radio-button>
+                                <p class="description">
+                                    Show single data entry.
+                                </p>
+                            </div>
+                        </mat-radio-group>
+                    </div>
+                </sp-configuration-box>
+                <div
+                    *ngIf="sourceConfig.queryType && sourceConfig.measure"
+                    fxLayout="column"
+                >
+                    <sp-field-selection-panel
+                        #fieldSelectionPanel
+                        [sourceConfig]="sourceConfig"
+                        (initialFieldSelectionEvent)="createDefaultWidget()"
+                    ></sp-field-selection-panel>
+
+                    <sp-filter-selection-panel
+                        [sourceConfig]="sourceConfig"
+                    ></sp-filter-selection-panel>
+
+                    <sp-group-selection-panel
+                        #groupSelectionPanel
+                        [sourceConfig]="sourceConfig"
+                    ></sp-group-selection-panel>
+
+                    <sp-order-selection-panel [sourceConfig]="sourceConfig">
+                    </sp-order-selection-panel>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <div class="p-10">
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            class="small-button"
+            (click)="addDataSource()"
+            style="margin-right: 10px; margin-bottom: 15px"
+        >
+            Add Data Source
+        </button>
+    </div>
+    <div class="p-10">
+        <mat-checkbox [(ngModel)]="dataConfig.ignoreTooMuchDataWarning">
+            Deactivate browser overload warning
+        </mat-checkbox>
+        <mat-checkbox
+            [(ngModel)]="dataConfig.ignoreMissingValues"
+            (change)="triggerDataRefresh()"
+            data-cy="data-explorer-ignore-missing-values-checkbox"
+        >
+            Ignore Events with missing values
+        </mat-checkbox>
+    </div>
+</div>

@@ -19,10 +19,7 @@ package org.apache.streampipes.extensions.all.jvm;
 
 import org.apache.streampipes.connect.GeneralAdaptersExtensionModuleExport;
 import org.apache.streampipes.connect.iiot.IIoTAdaptersExtensionModuleExport;
-import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
-import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
-import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
-import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.connectors.ros.RosConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.influx.InfluxConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.kafka.KafkaConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.mqtt.MqttConnectorsModuleExport;
@@ -47,7 +44,7 @@ import org.apache.streampipes.processors.imageprocessing.jvm.ImageProcessingExte
 import org.apache.streampipes.processors.siddhi.SiddhiFilterExtensionModuleExport;
 import org.apache.streampipes.processors.textmining.jvm.TextMiningExtensionModuleExport;
 import org.apache.streampipes.processors.transformation.jvm.TransformationExtensionModuleExport;
-import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.StreamPipesExtensionsServiceBase;
 import org.apache.streampipes.sinks.brokers.jvm.BrokerSinksExtensionModuleExport;
 import org.apache.streampipes.sinks.databases.jvm.DatabaseSinksExtensionModuleExport;
 import org.apache.streampipes.sinks.internal.jvm.InternalSinksExtensionModuleExports;
@@ -55,7 +52,7 @@ import org.apache.streampipes.sinks.notifications.jvm.NotificationsExtensionModu
 import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
 
 
-public class AllExtensionsInit extends ExtensionsModelSubmitter {
+public class AllExtensionsInit extends StreamPipesExtensionsServiceBase {
 
   public static void main(String[] args) {
     new AllExtensionsInit().init();
@@ -78,6 +75,7 @@ public class AllExtensionsInit extends ExtensionsModelSubmitter {
             new PlcConnectorsModuleExport(),
             new PulsarConnectorsModuleExport(),
             new RocketMqConnectorsModuleExport(),
+            new RosConnectorsModuleExport(),
             new TubeMQConnectorsModuleExport(),
 
             new ChangeDetectionExtensionModuleExport(),
@@ -95,11 +93,6 @@ public class AllExtensionsInit extends ExtensionsModelSubmitter {
             new NotificationsExtensionModuleExport()
         )
         .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
-        .registerMessagingFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory())
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
             new SpJmsProtocolFactory(),

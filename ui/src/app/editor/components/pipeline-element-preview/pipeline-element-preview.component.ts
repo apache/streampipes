@@ -16,53 +16,55 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { EditorService } from '../../services/editor.service';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { KeyValue } from '@angular/common';
+import { LivePreviewService } from '../../../services/live-preview.service';
+import { PipelinePreviewModel } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-pipeline-element-preview',
     templateUrl: './pipeline-element-preview.component.html',
     styleUrls: ['./pipeline-element-preview.component.scss'],
 })
-export class PipelineElementPreviewComponent implements OnInit {
+export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
     @Input()
-    previewId: string;
+    pipelinePreview: PipelinePreviewModel;
 
     @Input()
-    pipelineElementDomId: string;
+    elementId: string;
 
-    runtimeData: ReadonlyMap<string, unknown>;
-
+    runtimeData: Record<string, any>;
     runtimeDataError = false;
-    timer: any;
+    previewSub: Subscription;
 
-    constructor(private editorService: EditorService) {}
+    constructor(private livePreviewService: LivePreviewService) {}
 
     ngOnInit(): void {
         this.getLatestRuntimeInfo();
     }
 
-    getLatestRuntimeInfo() {
-        this.editorService
-            .getPipelinePreviewResult(this.previewId, this.pipelineElementDomId)
-            .subscribe(data => {
-                if (data) {
-                    this.runtimeDataError = false;
-                    if (
-                        !(
-                            Object.keys(data).length === 0 &&
-                            data.constructor === Object
-                        )
-                    ) {
-                        this.runtimeData = data;
-                    }
+    keyValueCompareFn = (
+        a: KeyValue<string, any>,
+        b: KeyValue<string, any>,
+    ): number => {
+        return a.key.localeCompare(b.key);
+    };
 
-                    this.timer = setTimeout(() => {
-                        this.getLatestRuntimeInfo();
-                    }, 1000);
-                } else {
-                    this.runtimeDataError = true;
-                }
-            });
+    getLatestRuntimeInfo() {
+        this.previewSub = this.livePreviewService.eventSub.subscribe(event => {
+            if (event) {
+                this.runtimeData =
+                    event[
+                        this.pipelinePreview.elementIdMappings[this.elementId]
+                    ];
+            } else {
+                this.runtimeDataError = true;
+            }
+        });
+    }
+
+    ngOnDestroy() {
+        this.previewSub?.unsubscribe();
     }
 }

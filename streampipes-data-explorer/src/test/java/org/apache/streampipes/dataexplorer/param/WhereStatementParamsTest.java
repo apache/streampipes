@@ -19,7 +19,7 @@
 package org.apache.streampipes.dataexplorer.param;
 
 import org.apache.streampipes.dataexplorer.param.model.WhereClauseParams;
-import org.apache.streampipes.dataexplorer.querybuilder.FilterCondition;
+import org.apache.streampipes.model.datalake.FilterCondition;
 
 import org.junit.jupiter.api.Test;
 
@@ -50,12 +50,20 @@ public class WhereStatementParamsTest {
     assertWhereCondition(result, expected);
   }
 
+  @Test
+  public void filterString2() {
+    WhereClauseParams result = WhereClauseParams.from("[fieldName;=;3312476503F]");
+    FilterCondition expected = new FilterCondition("fieldName", "=", "3312476503F");
+
+    assertWhereCondition(result, expected);
+  }
+
   private void assertWhereCondition(WhereClauseParams result, FilterCondition expected) {
     assertEquals(1, result.getWhereConditions().size());
     FilterCondition resultingFilterCondition = result.getWhereConditions().get(0);
-    assertEquals(expected.getField(), resultingFilterCondition.getField());
-    assertEquals(expected.getOperator(), resultingFilterCondition.getOperator());
-    assertEquals(expected.getCondition(), resultingFilterCondition.getCondition());
+    assertEquals(expected.field(), resultingFilterCondition.field());
+    assertEquals(expected.operator(), resultingFilterCondition.operator());
+    assertEquals(expected.condition(), resultingFilterCondition.condition());
   }
 
 

@@ -24,9 +24,9 @@ import {
     Validators,
 } from '@angular/forms';
 import { EmailConfig, MailConfigService } from '@streampipes/platform-services';
-import { SpConfigurationTabs } from '../configuration-tabs';
+import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpConfigurationRoutes } from '../configuration.routes';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-email-configuration',
@@ -34,7 +34,7 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
     styleUrls: ['./email-configuration.component.scss'],
 })
 export class EmailConfigurationComponent implements OnInit {
-    tabs = SpConfigurationTabs.getTabs();
+    tabs: SpNavigationItem[] = [];
 
     parentForm: UntypedFormGroup;
 
@@ -51,12 +51,14 @@ export class EmailConfigurationComponent implements OnInit {
         private fb: UntypedFormBuilder,
         private mailConfigService: MailConfigService,
         private breadcrumbService: SpBreadcrumbService,
+        private tabService: SpConfigurationTabsService,
     ) {}
 
     ngOnInit(): void {
+        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
-            { label: SpConfigurationTabs.getTabs()[5].itemTitle },
+            { label: this.tabService.getTabTitle('email') },
         ]);
         this.loadMailConfig(true);
     }

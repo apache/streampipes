@@ -16,17 +16,20 @@
  *
  */
 
-import { StaticPropertyUtils } from '../StaticPropertyUtils';
+import { StaticPropertyUtils } from '../userInput/StaticPropertyUtils';
 import { AdapterInput } from '../../model/AdapterInput';
-import { ConnectEventSchemaUtils } from '../ConnectEventSchemaUtils';
+import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
 import { DataLakeUtils } from '../datalake/DataLakeUtils';
 import { ConnectBtns } from './ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { UserUtils } from '../UserUtils';
-import { PipelineUtils } from '../PipelineUtils';
+import { PipelineUtils } from '../pipeline/PipelineUtils';
 
 export class ConnectUtils {
-    public static testAdapter(adapterConfiguration: AdapterInput) {
+    public static testAdapter(
+        adapterConfiguration: AdapterInput,
+        adapterStartFails = false,
+    ) {
         ConnectUtils.goToConnect();
 
         ConnectUtils.goToNewAdapterPage();
@@ -47,7 +50,11 @@ export class ConnectUtils {
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.startStreamAdapter(adapterConfiguration);
+        ConnectUtils.startAdapter(
+            adapterConfiguration,
+            false,
+            adapterStartFails,
+        );
     }
 
     public static addAdapter(adapterConfiguration: AdapterInput) {
@@ -69,9 +76,11 @@ export class ConnectUtils {
             );
         }
 
-        ConnectEventSchemaUtils.markPropertyAsTimestamp(
-            adapterConfiguration.timestampProperty,
-        );
+        if (adapterConfiguration.timestampProperty) {
+            ConnectEventSchemaUtils.markPropertyAsTimestamp(
+                adapterConfiguration.timestampProperty,
+            );
+        }
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
     }
@@ -100,7 +109,7 @@ export class ConnectUtils {
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.startStreamAdapter(configuration);
+        ConnectUtils.startAdapter(configuration);
     }
 
     public static goToConnect() {
@@ -111,17 +120,23 @@ export class ConnectUtils {
         cy.dataCy('connect-create-new-adapter-button').click();
     }
 
-    public static selectAdapter(name) {
+    public static selectAdapter(name: string) {
         // Select adapter
         cy.get('#' + name).click();
     }
 
     public static configureAdapter(adapterInput: AdapterInput) {
-        cy.wait(2000);
         StaticPropertyUtils.input(adapterInput.adapterConfiguration);
 
         this.configureFormat(adapterInput);
 
+        ConnectUtils.finishAdapterSettings();
+    }
+
+    /**
+     * Clicks next on the adapter settings page
+     */
+    public static finishAdapterSettings() {
         // Next Button should not be disabled
         cy.get('button').contains('Next').parent().should('not.be.disabled');
 
@@ -148,19 +163,21 @@ export class ConnectUtils {
         cy.get('#event-schema-next-button').click();
     }
 
-    public static startStreamAdapter(adapterInput: AdapterInput) {
-        ConnectUtils.startAdapter(adapterInput);
-    }
-
     public static startAdapter(
         adapterInput: AdapterInput,
         noLiveDataView = false,
+        adapterStartFails = false,
     ) {
         // Set adapter name
         cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
 
         if (adapterInput.storeInDataLake) {
-            cy.dataCy('sp-store-in-datalake').children().click();
+            cy.dataCy('sp-store-in-datalake', {
+                timeout: 5000,
+            })
+                .should('be.visible')
+                .children()
+                .click();
             cy.dataCy('sp-store-in-datalake-timestamp')
                 .click()
                 .get('mat-option')
@@ -175,14 +192,20 @@ export class ConnectUtils {
 
         ConnectBtns.adapterSettingsStartAdapter().click();
 
-        if (adapterInput.startAdapter && !noLiveDataView) {
-            cy.dataCy('sp-connect-adapter-success-live-preview', {
+        if (adapterStartFails) {
+            cy.dataCy('sp-exception-details', {
                 timeout: 60000,
             }).should('be.visible');
         } else {
-            cy.dataCy('sp-connect-adapter-success-added', {
-                timeout: 60000,
-            }).should('be.visible');
+            if (adapterInput.startAdapter && !noLiveDataView) {
+                cy.dataCy('sp-connect-adapter-success-live-preview', {
+                    timeout: 60000,
+                }).should('be.visible');
+            } else {
+                cy.dataCy('sp-connect-adapter-success-added', {
+                    timeout: 60000,
+                }).should('be.visible');
+            }
         }
 
         this.closeAdapterPreview();
@@ -208,6 +231,14 @@ export class ConnectUtils {
         );
     }
 
+    public static storeAndStartEditedAdapter() {
+        ConnectUtils.finishEventSchemaConfiguration();
+        ConnectBtns.storeEditAdapter().click();
+        ConnectBtns.updateAndMigratePipelines().click();
+        ConnectUtils.closeAdapterPreview();
+        ConnectBtns.startAdapter().click();
+    }
+
     public static deleteAdapterAndAssociatedPipelines(switchUserCheck = false) {
         // Delete adapter and associated pipelines
         this.goToConnect();
@@ -223,7 +254,9 @@ export class ConnectUtils {
             'be.visible',
         );
         if (switchUserCheck) {
-            cy.switchUser(UserUtils.adapterAndPipelineAdminUser);
+            UserUtils.switchUser(
+                UserUtils.userWithAdapterAndPipelineAdminRights,
+            );
         }
         this.checkAdapterAndAssociatedPipelinesDeleted();
     }
@@ -322,20 +355,48 @@ export class ConnectUtils {
 
         ConnectBtns.startAdapter().click();
 
+        ConnectUtils.validateEventsInPreview(amountOfProperties);
+    }
+
+    public static getLivePreviewValue(runtimeName: string) {
+        return cy.dataCy(`live-preview-value-${runtimeName}`, {
+            timeout: 10000,
+        });
+    }
+
+    public static validateEventsInPreview(amountOfProperties: number) {
         // View data
-        ConnectBtns.infoAdapter().click();
-        cy.get('div').contains('Values').parent().click();
+        ConnectBtns.detailsAdapter().click();
 
         // Validate resulting event
         cy.dataCy('sp-connect-adapter-success-live-preview', {
-            timeout: 10000,
+            timeout: 20000,
         }).should('be.visible');
 
-        // validate that X event properties. The +1 is for the header row
         cy.get('tr.mat-mdc-row', { timeout: 10000 }).should(
             'have.length',
-            amountOfProperties + 1,
+            amountOfProperties,
         );
+
+        cy.dataCy('live-preview-table-no-data', { timout: 1000 }).should(
+            'not.exist',
+        );
+    }
+
+    /**
+     * Validates the event schema for an adapter by checking the amount of properties
+     * and the runtime names of the event properties
+     * @param runtimeNames runtime names of the event properties
+     */
+    public static validateEventSchema(runtimeNames: string[]) {
+        ConnectUtils.goToConnect();
+        ConnectBtns.detailsAdapter().click();
+
+        cy.get('tr.mat-mdc-row').should('have.length', runtimeNames.length);
+
+        runtimeNames.forEach(name => {
+            cy.get('td.mat-column-runtimeName').contains(name).should('exist');
+        });
     }
 
     public static tearDownPreprocessingRuleTest(
@@ -363,5 +424,29 @@ export class ConnectUtils {
         cy.wait(2000);
         // Close dialog
         cy.get('button').contains('Close').parent().click();
+    }
+
+    public static validateAdapterIsRunning() {
+        ConnectUtils.goToConnect();
+        ConnectBtns.startAdapter().should('have.length', 0);
+        ConnectBtns.stopAdapter().should('have.length', 1);
+    }
+
+    public static validateAdapterIsStopped() {
+        ConnectUtils.goToConnect();
+        ConnectBtns.startAdapter().should('have.length', 1);
+        ConnectBtns.stopAdapter().should('have.length', 0);
+    }
+
+    public static checkAmountOfAdapters(amount: number) {
+        ConnectUtils.goToConnect();
+        if (amount === 0) {
+            // The wait is needed because the default value is the no-table-entries element.
+            // It must be waited till the data is loaded. Once a better solution is found, this can be removed.
+            cy.wait(1000);
+            cy.dataCy('no-table-entries').should('be.visible');
+        } else {
+            ConnectBtns.deleteAdapter().should('have.length', amount);
+        }
     }
 }

@@ -25,7 +25,10 @@
         data-cy="sp-pipeline-started-dialog"
     >
         <div fxLayout="row">
-            <mat-icon color="accent" *ngIf="pipelineOperationStatus.success"
+            <mat-icon
+                data-cy="sp-pipeline-started-success"
+                color="accent"
+                *ngIf="pipelineOperationStatus.success"
                 >done</mat-icon
             >
             <mat-icon
@@ -36,7 +39,11 @@
             <span>&nbsp;{{ pipelineOperationStatus.title }}.</span>
         </div>
         <span
-            *ngIf="action === 1 && !pipelineOperationStatus.success"
+            *ngIf="
+                action === 1 &&
+                !pipelineOperationStatus.success &&
+                !forceStopDisabled
+            "
             class="message-small"
             >You can perform a forced stop, which will stop and reset the
             pipeline status.</span
@@ -58,7 +65,11 @@
             class="ml-10"
             color="accent"
             (click)="forceStopPipeline()"
-            *ngIf="action === 1 && !pipelineOperationStatus.success"
+            *ngIf="
+                action === 1 &&
+                !pipelineOperationStatus.success &&
+                !forceStopDisabled
+            "
         >
             <div>Force stop</div>
         </button>
@@ -70,43 +81,10 @@
         *ngIf="statusDetailsVisible"
         class="w-100"
     >
-        <div
-            fxFlex="100"
+        <sp-pipeline-operation-status
             fxLayout="column"
-            class="mat-elevation-z1 mt-10"
-            *ngFor="let msg of pipelineOperationStatus.elementStatus"
+            [pipelineOperationStatus]="pipelineOperationStatus"
         >
-            <div fxFlex="100" fxLayout="column" class="p-15">
-                <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-                    <mat-icon color="accent" *ngIf="msg.success">done</mat-icon>
-                    <mat-icon style="color: red" *ngIf="!msg.success"
-                        >warning</mat-icon
-                    >
-                    <div fxFlex="100" fxLayout="column" class="ml-5">
-                        <span
-                            ><b>{{ msg.elementName }}</b></span
-                        >
-                        <small>{{
-                            msg.elementId.substr(
-                                0,
-                                msg.elementId.lastIndexOf('/')
-                            )
-                        }}</small>
-                    </div>
-                </div>
-                <div>
-                    <div
-                        fxFlex="100"
-                        fxLayout="column"
-                        *ngIf="msg.optionalMessage"
-                        class="mt-10"
-                    >
-                        <div class="error-message">
-                            {{ msg.optionalMessage }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </sp-pipeline-operation-status>
     </div>
 </div>

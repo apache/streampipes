@@ -18,7 +18,7 @@
 
 ## Contributing to StreamPipes
 
-*Before opening a pull request*, review the [Get Involved](https://streampipes.apache.org/getinvolved.html) page.
+*Before opening a pull request*, review the [Get Involved](https://streampipes.apache.org/community/get-involved/) page.
 It lists information that is required for contributing to StreamPipes.
 
 When you contribute code, you affirm that the contribution is your original work and that you

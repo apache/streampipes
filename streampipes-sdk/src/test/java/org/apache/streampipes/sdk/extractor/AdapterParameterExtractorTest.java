@@ -24,11 +24,11 @@ import org.apache.streampipes.model.connect.grounding.ParserDescription;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -38,25 +38,33 @@ public class AdapterParameterExtractorTest {
   @Test
   public void selectedParser() throws AdapterException {
     var parserInstance = mock(IParser.class);
-    var parserDescription = new ParserDescription("", "parserName", "");
+    var parserDescription = new ParserDescription();
+    parserDescription.setName("parserName");
     when(parserInstance.declareDescription()).thenReturn(parserDescription);
     when(parserInstance.fromDescription(any())).thenReturn(parserInstance);
 
-    var adapterConfiguration = AdapterConfigurationBuilder.create("test", null)
-        .withSupportedParsers(parserInstance)
-        .buildConfiguration();
+    var adapterConfiguration = AdapterConfigurationBuilder.create("test", 0, null)
+                                                          .withSupportedParsers(parserInstance)
+                                                          .buildConfiguration();
 
     var adapterDescription = adapterConfiguration.getAdapterDescription();
 
     // set the selected boolean for our parser configuration
-    ((StaticPropertyAlternatives) (adapterDescription.getConfig().get(0)))
+    (
+        (StaticPropertyAlternatives) (
+            adapterDescription.getConfig()
+                              .get(0)
+        )
+    )
         .getAlternatives()
         .get(0)
         .setSelected(true);
     var adapterParameterExtractor = AdapterParameterExtractor.from(
         adapterConfiguration.getAdapterDescription(),
-        List.of(parserInstance));
+        List.of(parserInstance)
+    );
 
-    Assertions.assertEquals(parserInstance, adapterParameterExtractor.selectedParser());
+    assertEquals(parserInstance, adapterParameterExtractor.selectedParser());
   }
+
 }

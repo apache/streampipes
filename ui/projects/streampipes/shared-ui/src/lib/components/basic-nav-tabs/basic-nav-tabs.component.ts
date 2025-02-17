@@ -38,6 +38,9 @@ export class SpBasicNavTabsComponent {
     @Input()
     backLinkTarget: string[] = [];
 
+    @Input()
+    padding = '10px';
+
     constructor(private router: Router) {}
 
     navigateTo(spNavigationItem: SpNavigationItem) {

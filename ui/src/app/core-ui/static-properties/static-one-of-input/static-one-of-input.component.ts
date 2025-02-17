@@ -24,7 +24,7 @@ import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 @Component({
     selector: 'sp-static-one-of-input',
     templateUrl: './static-one-of-input.component.html',
-    styleUrls: ['./static-one-of-input.component.css'],
+    styleUrls: ['./static-one-of-input.component.scss'],
 })
 export class StaticOneOfInputComponent
     extends AbstractStaticPropertyRenderer<OneOfStaticProperty>
@@ -52,7 +52,7 @@ export class StaticOneOfInputComponent
             ).elementId;
         }
         this.inputEmitter.emit(true);
-        this.emitUpdate(true);
+        this.applyCompletedConfiguration(true);
         this.parentForm.updateValueAndValidity();
     }
 
@@ -71,6 +71,6 @@ export class StaticOneOfInputComponent
             option => option.elementId === id,
         ).selected = true;
         this.inputEmitter.emit(true);
-        this.emitUpdate(true);
+        this.applyCompletedConfiguration(true);
     }
 }

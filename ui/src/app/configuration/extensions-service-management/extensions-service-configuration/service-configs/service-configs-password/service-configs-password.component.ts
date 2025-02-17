@@ -25,7 +25,7 @@ const hiddenPasswordString = '*****';
 @Component({
     selector: 'sp-service-configs-password',
     templateUrl: './service-configs-password.component.html',
-    styleUrls: ['./service-configs-password.component.css'],
+    styleUrls: ['./service-configs-password.component.scss'],
     providers: [ConfigurationService],
 })
 export class ServiceConfigsPasswordComponent {

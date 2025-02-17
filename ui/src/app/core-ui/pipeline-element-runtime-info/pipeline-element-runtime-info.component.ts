@@ -16,9 +16,27 @@
  *
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { SpDataStream } from '@streampipes/platform-services';
+import {
+    Component,
+    HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+} from '@angular/core';
+import {
+    DataType,
+    EventPropertyList,
+    EventPropertyPrimitive,
+    EventPropertyUnion,
+    SemanticType,
+    SpDataStream,
+} from '@streampipes/platform-services';
 import { RestService } from '../../connect/services/rest.service';
+import { Subscription } from 'rxjs';
+import { HttpDownloadProgressEvent, HttpEventType } from '@angular/common/http';
+import { LivePreviewService } from '../../services/live-preview.service';
+import { RuntimeInfo } from './pipeline-element-runtime-info.model';
+import { PipelineElementSchemaService } from './pipeline-element-schema.service';
 
 @Component({
     selector: 'sp-pipeline-element-runtime-info',
@@ -29,55 +47,82 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     @Input()
     streamDescription: SpDataStream;
 
-    _pollingActive: boolean;
+    @Input()
+    showTitle = true;
 
     runtimeData: { runtimeName: string; value: any }[];
+    runtimeInfo: RuntimeInfo[];
     timer: any;
     runtimeDataError = false;
+    runtimeSub: Subscription;
 
-    constructor(private restService: RestService) {}
+    constructor(
+        private restService: RestService,
+        private livePreviewService: LivePreviewService,
+        private pipelineELementSchemaService: PipelineElementSchemaService,
+    ) {}
 
     ngOnInit(): void {
-        this.checkPollingStart();
+        this.runtimeInfo = this.makeRuntimeInfo();
+        this.getLatestRuntimeInfo();
     }
 
-    checkPollingStart() {
-        if (this._pollingActive) {
-            this.getLatestRuntimeInfo();
-        }
+    makeRuntimeInfo(): RuntimeInfo[] {
+        return this.streamDescription.eventSchema.eventProperties
+            .map(ep => {
+                return {
+                    label: ep.label || 'n/a',
+                    description: ep.description || 'n/a',
+                    runtimeType:
+                        this.pipelineELementSchemaService.getFriendlyRuntimeType(
+                            ep,
+                        ),
+                    runtimeName: ep.runtimeName,
+                    value: undefined,
+                    isTimestamp:
+                        this.pipelineELementSchemaService.isTimestamp(ep),
+                    isImage: this.pipelineELementSchemaService.isImage(ep),
+                    hasNoDomainProperty:
+                        this.pipelineELementSchemaService.hasNoDomainProperty(
+                            ep,
+                        ),
+                    valueChanged: false,
+                };
+            })
+            .sort((a, b) => a.runtimeName.localeCompare(b.runtimeName));
     }
 
     getLatestRuntimeInfo() {
-        this.restService
+        this.runtimeSub = this.restService
             .getRuntimeInfo(this.streamDescription)
-            .subscribe(data => {
-                this.runtimeDataError = !data;
-
-                this.runtimeData = Object.entries(data).map(
-                    ([runtimeName, value]) => ({ runtimeName, value }),
-                );
-
-                if (this._pollingActive) {
-                    this.timer = setTimeout(
-                        () => this.getLatestRuntimeInfo(),
-                        1000,
-                    );
+            .subscribe(event => {
+                if (event.type === HttpEventType.DownloadProgress) {
+                    try {
+                        const responseJson = this.livePreviewService.convert(
+                            event as HttpDownloadProgressEvent,
+                        );
+                        const [firstKey] = Object.keys(responseJson);
+                        const json = responseJson[firstKey];
+                        this.runtimeDataError = !json;
+                        this.runtimeInfo.forEach(r => {
+                            const previousValue = r.value;
+                            r.value = json[r.runtimeName];
+                            r.valueChanged = r.value !== previousValue;
+                        });
+                    } catch (error) {
+                        this.runtimeDataError = true;
+                        this.runtimeData = [];
+                    }
                 }
             });
     }
 
-    @Input()
-    set pollingActive(pollingActive: boolean) {
-        this._pollingActive = pollingActive;
-        this.checkPollingStart();
-    }
-
-    get pollingActive(): boolean {
-        return this._pollingActive;
-    }
-
     ngOnDestroy(): void {
-        this.pollingActive = false;
-        clearTimeout(this.timer);
+        this.runtimeSub?.unsubscribe();
+    }
+
+    @HostListener('window:beforeunload')
+    closeSubscription() {
+        this.runtimeSub?.unsubscribe();
     }
 }

@@ -17,22 +17,17 @@
  */
 
 export class DomainPropertyMatch {
-    match(
-        domainPropertyRequirements: string[],
-        domainPropertyOffers: string[],
-    ) {
+    match(domainPropertyRequirement: string, domainPropertyOffer: string) {
         if (
-            domainPropertyRequirements === undefined ||
-            domainPropertyRequirements.length === 0
+            domainPropertyRequirement === undefined ||
+            domainPropertyRequirement === ''
         ) {
             return true;
         } else {
-            if (!domainPropertyOffers) {
+            if (!domainPropertyOffer) {
                 return false;
             } else {
-                return (
-                    domainPropertyRequirements[0] === domainPropertyOffers[0]
-                );
+                return domainPropertyRequirement === domainPropertyOffer;
             }
         }
     }

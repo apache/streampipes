@@ -20,9 +20,7 @@ package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.vocabulary.MessageFormat;
 
 public class TestUtils {
 
@@ -33,13 +31,4 @@ public class TestUtils {
   public static TransportProtocol jmsProtocol() {
     return new JmsTransportProtocol("localhost", 61616, "abc");
   }
-
-  public static TransportFormat jsonFormat() {
-    return new TransportFormat(MessageFormat.JSON);
-  }
-
-  public static TransportFormat thriftFormat() {
-    return new TransportFormat(MessageFormat.THRIFT);
-  }
-
 }

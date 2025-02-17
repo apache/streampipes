@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-extensions</artifactId>
-        <version>0.95.1</version>
+        <version>0.97.0</version>
     </parent>
     <artifactId>streampipes-connect-adapters-iiot</artifactId>
 
@@ -37,29 +37,25 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connectors-mqtt</artifactId>
-            <version>0.95.1</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-pipeline-elements-shared</artifactId>
-            <version>0.95.1</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-client</artifactId>
-            <version>0.95.1</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-service-extensions</artifactId>
-            <version>0.95.1</version>
+            <version>0.97.0</version>
         </dependency>
 
         <!-- External dependencies -->
-        <dependency>
-            <groupId>edu.wpi.rail</groupId>
-            <artifactId>jrosbridge</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>fluent-hc</artifactId>

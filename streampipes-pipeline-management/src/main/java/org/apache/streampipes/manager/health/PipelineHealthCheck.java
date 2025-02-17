@@ -126,7 +126,7 @@ public class PipelineHealthCheck implements Runnable {
             pipelinesStats.attentionRequiredIncrease();
           }
           currentPipeline.setPipelineNotifications(pipelineNotifications);
-          StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(currentPipeline);
+          StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(currentPipeline);
         }
       });
       int healthNum = pipelinesStats.getRunningPipelines() - pipelinesStats.getFailedPipelines()
@@ -139,7 +139,7 @@ public class PipelineHealthCheck implements Runnable {
 
   private String findEndpointUrl(InvocableStreamPipesEntity graph) throws NoServiceEndpointsAvailableException {
     SpServiceUrlProvider serviceUrlProvider = ExtensionsServiceEndpointUtils.getPipelineElementType(graph);
-    return new ExtensionsServiceEndpointGenerator(graph.getAppId(), serviceUrlProvider).getEndpointResourceUrl();
+    return new ExtensionsServiceEndpointGenerator().getEndpointResourceUrl(graph.getAppId(), serviceUrlProvider);
   }
 
   private boolean shouldRetry(String instanceId) {
@@ -240,7 +240,7 @@ public class PipelineHealthCheck implements Runnable {
             .INSTANCE
             .getNoSqlStore()
             .getPipelineStorageAPI()
-            .getAllPipelines();
+            .findAll();
   }
 
   private int getElementsCount(List<Pipeline> allPipelines){

@@ -19,10 +19,11 @@ package streampipes
 
 import (
 	"errors"
-	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
-	"github.com/apache/streampipes/streampipes-client-go/streampipes/utils"
 	"net/url"
 	"strings"
+
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
+	"github.com/apache/streampipes/streampipes-client-go/streampipes/utils"
 )
 
 // This is the central point of contact with StreamPipes and provides all the functionalities to interact with it.
@@ -70,4 +71,35 @@ func (s *StreamPipesClient) DataLakeMeasures() *DataLakeMeasure {
 func (s *StreamPipesClient) StreamPipesVersion() *Versions {
 
 	return NewVersions(s.config)
+}
+
+func (s *StreamPipesClient) Pipeline() *Pipeline {
+
+	return NewPipeline(s.config)
+}
+
+func (s *StreamPipesClient) Adapter() *Adapter {
+	return NewAdapter(s.config)
+}
+
+func (s *StreamPipesClient) DataLakeDashboard() *DataLakeDashboard {
+
+	return NewDataLakeDashborad(s.config)
+}
+
+func (s *StreamPipesClient) DataLakeWidget() *DataLakeWidget {
+
+	return NewDataLakeWidget(s.config)
+}
+
+func (s *StreamPipesClient) Function() *Functions {
+
+	return NewFunctions(s.config)
+
+}
+
+func (s *StreamPipesClient) UserInfo() *StreamPipesUserInfo {
+
+	return NewStreamPipesUserInfo(s.config)
+
 }

@@ -21,7 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
-import { GeneralConfigModel } from '../model/general-config.model';
+import { GeneralConfigModel } from '../model/config/general-config.model';
 
 @Injectable({
     providedIn: 'root',

@@ -24,6 +24,7 @@ import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
 import {
     AdapterDescription,
+    CompactAdapter,
     Message,
     PipelineUpdateInfo,
 } from '../model/gen/streampipes-model';
@@ -55,9 +56,12 @@ export class AdapterService {
             );
     }
 
-    deleteAdapterDescription(adapterId: string): Observable<any> {
-        return this.http.delete(
-            `${this.connectPath}/master/description/${adapterId}`,
+    convertToCompactAdapter(
+        adapterDescription: AdapterDescription,
+    ): Observable<CompactAdapter> {
+        return this.http.post<CompactAdapter>(
+            this.connectPath + `/master/adapters/compact`,
+            adapterDescription,
         );
     }
 
@@ -146,10 +150,6 @@ export class AdapterService {
         return this.http.delete(
             `${this.connectPath}/${url}/${adapter.elementId}${queryString}`,
         );
-    }
-
-    getAssetUrl(appId) {
-        return `${this.connectPath}/master/description/${appId}/assets`;
     }
 
     private get baseUrl() {

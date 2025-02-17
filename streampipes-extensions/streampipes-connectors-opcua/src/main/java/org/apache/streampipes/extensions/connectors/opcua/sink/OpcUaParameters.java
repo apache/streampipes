@@ -20,36 +20,8 @@ package org.apache.streampipes.extensions.connectors.opcua.sink;
 
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
 
-public final class OpcUaParameters {
-  private final String selectedNode;
-  private final String mappingPropertySelector;
-  private final String mappingPropertyType;
-
-  private final OpcUaConfig config;
-
-  public OpcUaParameters(OpcUaConfig config,
-                         String mappingPropertySelector,
-                         String mappingPropertyType,
-                         String selectedNode) {
-    this.config = config;
-    this.mappingPropertySelector = mappingPropertySelector;
-    this.mappingPropertyType = mappingPropertyType;
-    this.selectedNode = selectedNode;
-  }
-
-  public String getSelectedNode() {
-    return selectedNode;
-  }
-
-  public String getMappingPropertySelector() {
-    return mappingPropertySelector;
-  }
-
-  public String getMappingPropertyType() {
-    return mappingPropertyType;
-  }
-
-  public OpcUaConfig getConfig() {
-    return config;
-  }
+public record OpcUaParameters(OpcUaConfig config,
+                              String mappingPropertySelector,
+                              String mappingPropertyType,
+                              String selectedNode) {
 }

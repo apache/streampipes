@@ -40,6 +40,7 @@ export class EditValueTransformationComponent implements OnInit {
     @Input() isListProperty: boolean;
     @Input() isPrimitiveProperty: boolean;
     @Input() isNumericProperty: boolean;
+    @Input() isStringProperty: boolean;
 
     addedByUser: boolean;
     staticValue: string;

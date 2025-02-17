@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.95.1</version>
+        <version>0.97.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -30,28 +30,38 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-data-explorer</artifactId>
-            <version>0.95.1</version>
+            <artifactId>streampipes-data-explorer-export</artifactId>
+            <version>0.97.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-data-explorer-influx</artifactId>
+            <version>0.97.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-data-explorer-management</artifactId>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
-            <version>0.95.1</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-rest-shared</artifactId>
-            <version>0.95.1</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-storage-api</artifactId>
-            <version>0.95.1</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-rest</artifactId>
-            <version>0.95.1</version>
+            <version>0.97.0</version>
         </dependency>
 
         <dependency>

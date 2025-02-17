@@ -1,0 +1,81 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+<div [formGroup]="parentForm" id="formWrapper" fxFlex="100" fxLayout="column">
+    <sp-static-tree-input-button-menu
+        [showOptions]="showOptions"
+        [loading]="loading"
+        [editorMode]="editorMode"
+        (selectedEditorModeEmitter)="changeEditorMode($event)"
+        (resetOptionsAndReload)="resetOptionsAndReload()"
+        (reload)="reload()"
+    >
+    </sp-static-tree-input-button-menu>
+
+    <div fxLayout="column" *ngIf="error" class="mt-10">
+        <sp-exception-message [message]="errorMessage"></sp-exception-message>
+    </div>
+
+    <div
+        fxLayout="row"
+        fxLayoutGap="15px"
+        data-cy="tree-editor"
+        *ngIf="editorMode === 'tree'"
+    >
+        <div fxFlex="30" class="tree-input-section" fxLayout="column">
+            <sp-static-tree-input-browse-nodes
+                #staticTreeInputBrowseNodesComponent
+                [staticProperty]="staticProperty"
+                (showNodeDetailsEmitter)="showNodeDetails($event)"
+                (loadOptionsFromRestApiEmitter)="loadOptionsFromRestApi($event)"
+                (performValidationEmitter)="performValidation()"
+            >
+            </sp-static-tree-input-browse-nodes>
+        </div>
+        <div fxFlex="40" class="tree-input-section" fxLayout="column">
+            <sp-static-tree-input-node-details
+                [nodeMetadata]="nodeDetails?.nodeMetadata"
+            >
+            </sp-static-tree-input-node-details>
+        </div>
+
+        <div class="tree-input-section" fxLayout="column" fxFlex="30">
+            <sp-static-tree-input-selected-nodes
+                [selectedNodesInternalNames]="
+                    staticProperty.selectedNodesInternalNames
+                "
+                (removeSelectedNode)="removeSelectedNode($event)"
+            >
+            </sp-static-tree-input-selected-nodes>
+        </div>
+    </div>
+
+    <div
+        fxLayout="row"
+        fxFlex="100"
+        class="mt-10"
+        data-cy="text-editor"
+        *ngIf="editorMode === 'text'"
+    >
+        <sp-static-tree-input-text-editor
+            fxFlex="100"
+            [staticProperty]="staticProperty"
+            (performValidationEmitter)="performValidation()"
+        >
+        </sp-static-tree-input-text-editor>
+    </div>
+</div>

@@ -19,8 +19,8 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
-import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -77,23 +77,23 @@ public class AdapterUpdateManagement {
     affectedPipelines.forEach(p -> {
       var shouldRestartPipeline = p.isRunning();
       if (shouldRestartPipeline) {
-        Operations.stopPipeline(p, true);
+        new PipelineExecutor(p).stopPipeline(true);
       }
       var storedPipeline = PipelineManager.getPipeline(p.getPipelineId());
       var pipeline = applyUpdatedDataStream(storedPipeline, ad);
       try {
-        var modificationMessage = Operations.validatePipeline(pipeline);
+        var modificationMessage = new PipelineVerificationHandlerV2(pipeline).verifyPipeline();
         var updateInfo = makeUpdateInfo(modificationMessage, pipeline);
-        var modifiedPipeline = new PipelineVerificationHandlerV2(pipeline).makeModifiedPipeline();
+        var modifiedPipeline = new PipelineVerificationHandlerV2(pipeline).makeModifiedPipeline().pipeline();
         var canAutoMigrate = canAutoMigrate(modificationMessage);
         if (!canAutoMigrate) {
           modifiedPipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
           modifiedPipeline.setPipelineNotifications(toNotification(updateInfo));
           modifiedPipeline.setValid(false);
         }
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(modifiedPipeline);
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(modifiedPipeline);
         if (shouldRestartPipeline && canAutoMigrate) {
-          Operations.startPipeline(PipelineManager.getPipeline(p.getPipelineId()));
+          new PipelineExecutor(PipelineManager.getPipeline(p.getPipelineId())).startPipeline();
         }
       } catch (Exception e) {
         LOG.error("Could not update pipeline {}", pipeline.getName(), e);
@@ -113,7 +113,7 @@ public class AdapterUpdateManagement {
     affectedPipelines.forEach(pipeline -> {
       var updatedPipeline = applyUpdatedDataStream(pipeline, adapterDescription);
       try {
-        var modificationMessage = Operations.validatePipeline(updatedPipeline);
+        var modificationMessage = new PipelineVerificationHandlerV2(updatedPipeline).verifyPipeline();
         var updateInfo = makeUpdateInfo(modificationMessage, updatedPipeline);
         updateInfos.add(updateInfo);
       } catch (Exception e) {

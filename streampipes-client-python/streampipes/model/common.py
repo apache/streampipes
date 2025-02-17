@@ -24,7 +24,7 @@ import string
 from typing import List, Optional
 from uuid import uuid4
 
-from pydantic.v1 import BaseModel, Field, StrictBool, StrictInt, StrictStr
+from pydantic.v1 import BaseModel, Field, StrictInt, StrictStr
 
 __all__ = [
     "BaseElement",
@@ -82,14 +82,14 @@ class BasicModel(BaseModel):
 
 
 class BaseElement(BasicModel):
-    """Structure of a basic element in the StreamPipes backend"""
+    """Structure of a basic element in the StreamPipes Backend."""
 
     element_id: Optional[StrictStr]
 
 
 class ValueSpecification(BasicModel):
     """
-    Data model of an `ValueSpecification` in compliance to the StreamPipes Backend.
+    Data model of an `ValueSpecification` in compliance with the StreamPipes Backend.
     """
 
     class_name: Optional[StrictStr] = Field(alias="@class")
@@ -101,7 +101,7 @@ class ValueSpecification(BasicModel):
 
 class EventProperty(BasicModel):
     """
-    Data model of an `EventProperty` in compliance to the StreamPipes Backend.
+    Data model of an `EventProperty` in compliance with the StreamPipes Backend.
     """
 
     class_name: StrictStr = Field(alias="@class", default="org.apache.streampipes.model.schema.EventPropertyPrimitive")
@@ -109,10 +109,8 @@ class EventProperty(BasicModel):
     label: Optional[StrictStr]
     description: Optional[StrictStr]
     runtime_name: StrictStr
-    required: StrictBool = Field(default=False)
-    domain_properties: Optional[List[StrictStr]] = Field(default_factory=list)
+    semantic_type: Optional[StrictStr]
     property_scope: Optional[StrictStr] = Field(default="MEASUREMENT_PROPERTY")
-    index: StrictInt = Field(default=0)
     runtime_id: Optional[StrictStr]
     runtime_type: StrictStr = Field(default="http://www.w3.org/2001/XMLSchema#string")
     measurement_unit: Optional[StrictStr]
@@ -121,7 +119,7 @@ class EventProperty(BasicModel):
 
 class EventSchema(BasicModel):
     """
-    Data model of an `EventSchema` in compliance to the StreamPipes Backend.
+    Data model of an `EventSchema` in compliance with the StreamPipes Backend.
     """
 
     event_properties: List[EventProperty]
@@ -129,7 +127,7 @@ class EventSchema(BasicModel):
 
 class ApplicationLink(BasicModel):
     """
-    Data model of an `ApplicationLink` in compliance to the StreamPipes Backend.
+    Data model of an `ApplicationLink` in compliance with the StreamPipes Backend.
     """
 
     class_name: Optional[StrictStr] = Field(alias="@class")
@@ -143,7 +141,7 @@ class ApplicationLink(BasicModel):
 
 class TopicDefinition(BasicModel):
     """
-    Data model of a `TopicDefinition` in compliance to the StreamPipes Backend.
+    Data model of a `TopicDefinition` in compliance with the StreamPipes Backend.
     """
 
     class_name: Optional[StrictStr] = Field(
@@ -154,7 +152,7 @@ class TopicDefinition(BasicModel):
 
 class TransportProtocol(BasicModel):
     """
-    Data model of a `TransportProtocol` in compliance to the StreamPipes Backend.
+    Data model of a `TransportProtocol` in compliance with the StreamPipes Backend.
     """
 
     class_name: StrictStr = Field(
@@ -168,7 +166,7 @@ class TransportProtocol(BasicModel):
 
 class TransportFormat(BasicModel):
     """
-    Data model of a `TransportFormat` in compliance to the StreamPipes Backend.
+    Data model of a `TransportFormat` in compliance with the StreamPipes Backend.
     """
 
     rdf_type: List[StrictStr] = Field(default=["http://sepa.event-processing.org/sepa#json"])
@@ -176,7 +174,7 @@ class TransportFormat(BasicModel):
 
 class EventGrounding(BasicModel):
     """
-    Data model of an `EventGrounding` in compliance to the StreamPipes Backend.
+    Data model of an `EventGrounding` in compliance to with StreamPipes Backend.
     """
 
     transport_protocols: List[TransportProtocol] = Field(default_factory=lambda: [TransportProtocol()])
@@ -185,7 +183,7 @@ class EventGrounding(BasicModel):
 
 class MeasurementCapability(BasicModel):
     """
-    Data model of a `MeasurementCapability` in compliance to the StreamPipes Backend.
+    Data model of a `MeasurementCapability` in compliance with the StreamPipes Backend.
     """
 
     capability: Optional[StrictStr]
@@ -194,7 +192,7 @@ class MeasurementCapability(BasicModel):
 
 class MeasurementObject(BasicModel):
     """
-    Data model of a `MeasurementObject` in compliance to the StreamPipes Backend.
+    Data model of a `MeasurementObject` in compliance with the StreamPipes Backend.
     """
 
     element_id: Optional[StrictStr]

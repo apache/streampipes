@@ -26,7 +26,7 @@ import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-valida
 @Component({
     selector: 'sp-app-static-color-picker',
     templateUrl: './static-color-picker.component.html',
-    styleUrls: ['./static-color-picker.component.css'],
+    styleUrls: ['./static-color-picker.component.scss'],
 })
 export class StaticColorPickerComponent
     extends AbstractValidatedStaticPropertyRenderer<ColorPickerStaticProperty>
@@ -35,10 +35,6 @@ export class StaticColorPickerComponent
     constructor(public staticPropertyUtil: StaticPropertyUtilService) {
         super();
     }
-
-    inputValue: String;
-    hasInput: Boolean;
-    colorPickerForm: UntypedFormGroup;
 
     presetColors: any[] = [
         '#39B54A',
@@ -58,17 +54,14 @@ export class StaticColorPickerComponent
         this.enableValidators();
     }
 
-    emitUpdate() {
-        this.updateEmitter.emit(
-            new ConfigurationInfo(
-                this.staticProperty.internalName,
+    checkCompleted() {
+        this.applyCompletedConfiguration(
+            this.staticPropertyUtil.asColorPickerStaticProperty(
+                this.staticProperty,
+            ).selectedColor &&
                 this.staticPropertyUtil.asColorPickerStaticProperty(
                     this.staticProperty,
-                ).selectedColor &&
-                    this.staticPropertyUtil.asColorPickerStaticProperty(
-                        this.staticProperty,
-                    ).selectedColor !== '',
-            ),
+                ).selectedColor !== '',
         );
     }
 

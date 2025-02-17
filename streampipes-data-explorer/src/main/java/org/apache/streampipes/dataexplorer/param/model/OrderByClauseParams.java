@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.dataexplorer.param.model;
 
+import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
 import org.apache.streampipes.dataexplorer.api.IQueryStatement;
-import org.apache.streampipes.dataexplorer.querybuilder.DataLakeQueryOrdering;
-import org.apache.streampipes.dataexplorer.querybuilder.IDataLakeQueryBuilder;
+import org.apache.streampipes.model.datalake.DataLakeQueryOrdering;
 
 public class OrderByClauseParams implements IQueryStatement {
   private final String ordering;

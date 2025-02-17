@@ -22,11 +22,7 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { MeasurementUnit } from '../model/measurement-unit/MeasurementUnit';
 import { PlatformServicesCommons } from './commons.service';
-import {
-    DashboardWidgetModel,
-    Pipeline,
-    VisualizablePipeline,
-} from '../model/gen/streampipes-model';
+import { DashboardWidgetModel, Pipeline } from '../model/gen/streampipes-model';
 import { Dashboard } from '../model/dashboard/dashboard.model';
 
 @Injectable({
@@ -44,37 +40,6 @@ export class DashboardService {
                 return Pipeline.fromData(data as any);
             }),
         );
-    }
-
-    getVisualizablePipelines(): Observable<VisualizablePipeline[]> {
-        return this.http.get(this.visualizablePipelineUrl).pipe(
-            map(data => {
-                return (data as []).map(p =>
-                    VisualizablePipeline.fromData(p as VisualizablePipeline),
-                );
-            }),
-        );
-    }
-
-    getVisualizablePipelineByPipelineIdAndVisualizationName(
-        pipelineId: string,
-        visualizationName: string,
-    ): Observable<VisualizablePipeline> {
-        return this.http
-            .get(
-                this.visualizablePipelineUrl +
-                    '/' +
-                    pipelineId +
-                    '/' +
-                    visualizationName,
-            )
-            .pipe(
-                map(data => {
-                    return VisualizablePipeline.fromData(
-                        data as VisualizablePipeline,
-                    );
-                }),
-            );
     }
 
     getDashboards(): Observable<Dashboard[]> {
@@ -111,7 +76,7 @@ export class DashboardService {
 
     updateDashboard(dashboard: Dashboard): Observable<Dashboard> {
         return this.http
-            .put(this.dashboardUrl + '/' + dashboard._id, dashboard)
+            .put(this.dashboardUrl + '/' + dashboard.elementId, dashboard)
             .pipe(
                 map(data => {
                     return data as Dashboard;
@@ -120,7 +85,7 @@ export class DashboardService {
     }
 
     deleteDashboard(dashboard: Dashboard): Observable<any> {
-        return this.http.delete(this.dashboardUrl + '/' + dashboard._id);
+        return this.http.delete(this.dashboardUrl + '/' + dashboard.elementId);
     }
 
     saveDashboard(dashboard: Dashboard): Observable<any> {
@@ -147,10 +112,6 @@ export class DashboardService {
         return this.baseUrl + '/dashboard/widgets';
     }
 
-    private get visualizablePipelineUrl() {
-        return this.baseUrl + '/dashboard/pipelines';
-    }
-
     getWidget(widgetId: string): Observable<DashboardWidgetModel> {
         return this.http.get(this.dashboardWidgetUrl + '/' + widgetId).pipe(
             map(d => {
@@ -175,7 +136,7 @@ export class DashboardService {
 
     updateWidget(widget: DashboardWidgetModel): Observable<any> {
         return this.http.put(
-            this.dashboardWidgetUrl + '/' + widget._id,
+            this.dashboardWidgetUrl + '/' + widget.elementId,
             widget,
         );
     }

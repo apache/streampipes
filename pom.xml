@@ -24,12 +24,12 @@
     <parent>
         <groupId>org.apache</groupId>
         <artifactId>apache</artifactId>
-        <version>31</version>
+        <version>32</version>
     </parent>
 
     <groupId>org.apache.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.95.1</version>
+    <version>0.97.0</version>
     <packaging>pom</packaging>
 
     <name>Apache StreamPipes</name>
@@ -43,37 +43,38 @@
         <amqp-client.version>5.21.0</amqp-client.version>
         <apache-sis-referencing.version>1.2</apache-sis-referencing.version>
         <boofcv.version>1.1.0</boofcv.version>
+        <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
         <classindex.version>3.9</classindex.version>
-        <checker-qual.version>3.42.0</checker-qual.version>
-        <commons-codec.version>1.16.0</commons-codec.version>
+        <checker-qual.version>3.43.0</checker-qual.version>
+        <commons-codec.version>1.17.0</commons-codec.version>
         <commons-collections.version>3.2.2</commons-collections.version>
-        <commons-compress.version>1.26.0</commons-compress.version>
-        <commons-io.version>2.15.1</commons-io.version>
+        <commons-compress.version>1.27.1</commons-compress.version>
+        <commons-io.version>2.17.0</commons-io.version>
         <commons-lang3.version>3.14.0</commons-lang3.version>
+        <commons-logging.version>1.3.2</commons-logging.version>
         <commons-pool2.version>2.12.0</commons-pool2.version>
-        <commons-text.version>1.11.0</commons-text.version>
+        <commons-text.version>1.12.0</commons-text.version>
         <ditto-client.version>1.0.0</ditto-client.version>
-        <eclipse.milo.version>0.6.9</eclipse.milo.version>
+        <eclipse.milo.version>0.6.14</eclipse.milo.version>
         <file-management.version>3.1.0</file-management.version>
         <flink.version>1.13.5</flink.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
-        <fst.version>2.57</fst.version>
         <geojson-jackson.version>1.14</geojson-jackson.version>
         <google-maps-services.version>2.2.0</google-maps-services.version>
         <graalvm.js.version>23.0.0</graalvm.js.version>
         <gson.version>2.10</gson.version>
-        <guava.version>33.1.0-jre</guava.version>
+        <guava.version>33.2.0-jre</guava.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
         <influxdb.version>2.24</influxdb.version>
-        <inlong.version>1.11.0</inlong.version>
+        <inlong.version>1.12.0</inlong.version>
+        <iotdb.version>1.3.0</iotdb.version>
         <jackson.version>2.17.0</jackson.version>
         <jackson.databind.version>2.17.0</jackson.databind.version>
         <jakarta-annotation.version>3.0.0</jakarta-annotation.version>
         <jakarta-activation-api.version>2.1.3</jakarta-activation-api.version>
         <jakarta-inject-api.version>2.0.1</jakarta-inject-api.version>
         <jakarta-servlet-api.version>6.0.0</jakarta-servlet-api.version>
-        <jakarta-validation.version>3.0.2</jakarta-validation.version>
         <jakarta-xml-bind-api.version>4.0.0</jakarta-xml-bind-api.version>
         <javax.xml.bind.version>2.4.0-b180725.0427</javax.xml.bind.version>
         <java-websocket.version>1.5.6</java-websocket.version>
@@ -82,20 +83,20 @@
         <jakarta-persistence-api.version>3.0.1</jakarta-persistence-api.version>
         <javassist.version>3.30.1-GA</javassist.version>
         <jboss-logging.version>3.5.2.Final</jboss-logging.version>
-        <jedis.version>4.4.3</jedis.version>
+        <jedis.version>5.1.4</jedis.version>
         <jersey.version>3.1.3</jersey.version>
         <jgrapht.version>1.5.1</jgrapht.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <jjwt.version>0.11.2</jjwt.version>
         <jts-core.version>1.19.0</jts-core.version>
-        <kafka.version>3.4.0</kafka.version>
+        <kafka.version>3.7.1</kafka.version>
         <lightcouch.version>0.2.0</lightcouch.version>
-        <maven-plugin-annotations.version>3.12.0</maven-plugin-annotations.version>
+        <maven-plugin-annotations.version>3.13.0</maven-plugin-annotations.version>
         <mailapi.version>1.4.3</mailapi.version>
         <micrometer-prometheus.version>1.12.0</micrometer-prometheus.version>
         <micrometer-observation.version>1.12.0</micrometer-observation.version>
         <mqtt-client.version>1.12</mqtt-client.version>
-        <nats.version>2.17.0</nats.version>
+        <nats.version>2.19.1</nats.version>
         <netty.version>4.1.72.Final</netty.version>
         <okhttp.version>3.13.1</okhttp.version>
         <opencsv.version>5.9</opencsv.version>
@@ -105,7 +106,7 @@
         <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
         <plexus-utils.version>4.0.0</plexus-utils.version>
         <postgresql.version>42.7.2</postgresql.version>
-        <protobuf.version>4.26.1</protobuf.version>
+        <protobuf.version>4.28.2</protobuf.version>
         <pulsar.version>3.2.2</pulsar.version>
         <quartz.version>2.3.2</quartz.version>
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
@@ -113,41 +114,39 @@
         <rendersnake.version>1.9.0</rendersnake.version>
         <rocketmq.version>5.0.2</rocketmq.version>
         <siddhi.version>5.1.27</siddhi.version>
-        <simple-java-mail.version>8.8.0</simple-java-mail.version>
+        <simple-java-mail.version>8.10.0</simple-java-mail.version>
         <slack-api.version>1.4.0</slack-api.version>
         <slf4j.version>2.0.6</slf4j.version>
         <snakeyaml.version>2.2</snakeyaml.version>
         <springdoc.version>2.3.0</springdoc.version>
         <spring.version>6.1.1</spring.version>
         <spring-boot.version>3.2.0</spring-boot.version>
-        <spring-security.version>6.2.3</spring-security.version>
+        <spring-security.version>6.3.0</spring-security.version>
         <swagger.version>2.2.19</swagger.version>
         <type-parser.version>0.8.1</type-parser.version>
         <hawtbuf.version>1.11</hawtbuf.version>
-        <woodstox.version>6.6.1</woodstox.version>
+        <woodstox.version>7.0.0</woodstox.version>
 
         <!-- Test dependencies -->
         <junit.version>5.10.1</junit.version>
-        <mockito.version>5.11.0</mockito.version>
+        <mockito.version>5.12.0</mockito.version>
 
         <!-- Maven settings & dependencies -->
         <apache-rat-plugin.version>0.13</apache-rat-plugin.version>
         <checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
-        <checkstyle.version>10.12.1</checkstyle.version>
+        <checkstyle.version>10.17.0</checkstyle.version>
         <extra-enforcer-rules.version>1.8.0</extra-enforcer-rules.version>
         <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
-        <maven.dependency.check.plugin.version>9.0.9</maven.dependency.check.plugin.version>
-        <maven-shade-plugin.version>3.5.1</maven-shade-plugin.version>
+        <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
         <maven.version>3.8.7</maven.version>
         <typescript-generator-maven-plugin.version>3.2.1263</typescript-generator-maven-plugin.version>
 
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
-        <owasp.check.skip>true</owasp.check.skip>
     </properties>
 
     <dependencyManagement>
@@ -175,6 +174,11 @@
                 <version>${commons-io.version}</version>
             </dependency>
             <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>${commons-logging.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
                 <version>${jackson.version}</version>
@@ -191,17 +195,12 @@
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-cbor</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-smile</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-xml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
@@ -230,11 +229,6 @@
                 <version>${opencsv.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
                 <version>${okhttp.version}</version>
@@ -243,11 +237,6 @@
                 <groupId>de.grundid.opendatalab</groupId>
                 <artifactId>geojson-jackson</artifactId>
                 <version>${geojson-jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.ruedigermoeller</groupId>
-                <artifactId>fst</artifactId>
-                <version>${fst.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.fogsy</groupId>
@@ -330,11 +319,6 @@
                 <version>${jakarta-inject-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>jakarta.validation</groupId>
-                <artifactId>jakarta.validation-api</artifactId>
-                <version>${jakarta-validation.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>jakarta.servlet</groupId>
                 <artifactId>jakarta.servlet-api</artifactId>
                 <version>${jakarta-servlet-api.version}</version>
@@ -390,6 +374,11 @@
                 <version>${httpcore.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.iotdb</groupId>
+                <artifactId>iotdb-session</artifactId>
+                <version>${iotdb.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.kafka</groupId>
                 <artifactId>kafka-clients</artifactId>
                 <version>${kafka.version}</version>
@@ -409,6 +398,16 @@
                         <artifactId>servlet-api</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>${bcprov-jdk18on.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcutil-jdk18on</artifactId>
+                <version>${bcprov-jdk18on.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.rdf4j</groupId>
@@ -822,13 +821,13 @@
         <module>streampipes-extensions-api</module>
         <module>streampipes-extensions-management</module>
         <module>streampipes-data-explorer</module>
-        <module>streampipes-data-explorer-commons</module>
+        <module>streampipes-data-explorer-api</module>
+        <module>streampipes-data-explorer-export</module>
+        <module>streampipes-data-explorer-influx</module>
+        <module>streampipes-data-explorer-iotdb</module>
+        <module>streampipes-data-explorer-management</module>
         <module>streampipes-data-export</module>
         <module>streampipes-dataformat</module>
-        <module>streampipes-dataformat-cbor</module>
-        <module>streampipes-dataformat-fst</module>
-        <module>streampipes-dataformat-json</module>
-        <module>streampipes-dataformat-smile</module>
         <module>streampipes-extensions</module>
         <module>streampipes-integration-tests</module>
         <module>streampipes-mail</module>
@@ -861,9 +860,10 @@
         <module>streampipes-service-discovery-api</module>
         <module>streampipes-service-extensions</module>
         <module>streampipes-storage-api</module>
-        <module>streampipes-storage-management</module>
         <module>streampipes-storage-couchdb</module>
+        <module>streampipes-storage-management</module>
         <module>streampipes-test-utils</module>
+        <module>streampipes-test-utils-executors</module>
         <module>streampipes-user-management</module>
         <module>streampipes-vocabulary</module>
         <module>streampipes-wrapper</module>
@@ -1021,11 +1021,6 @@
                         <logViolationsToConsole>true</logViolationsToConsole>
                         <failOnViolation>true</failOnViolation>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.owasp</groupId>
-                    <artifactId>dependency-check-maven</artifactId>
-                    <version>${maven.dependency.check.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
@@ -1238,6 +1233,9 @@
                         <!-- Exclude Husky which defines its own gitignore and is not detected by rat -->
                         <exclude>ui/.husky/**</exclude>
 
+                        <!-- Exclude GO -->
+                        <exclude>**/go.sum</exclude>
+
                     </excludes>
                 </configuration>
             </plugin>
@@ -1277,28 +1275,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <configuration>
-                    <!-- use -Dowasp.check.skip=true to skip dependency check -->
-                    <skip>${owasp.check.skip}</skip>
-                    <format>HTML</format>
-                    <bundleAuditAnalyzerEnabled>false</bundleAuditAnalyzerEnabled>
-                    <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
-                    <failOnError>false</failOnError>
-                    <suppressionFile>tools/maven/owasp-dependency-check-suppression.xml</suppressionFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <!-- generates aggregated reports in target/ -->
-                            <goal>check</goal>
-                            <goal>aggregate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>
@@ -1316,7 +1292,7 @@
         <developerConnection>scm:git:ssh://git@github.com/apache/streampipes.git</developerConnection>
         <connection>scm:git:ssh://git@github.com/apache/streampipes.git</connection>
         <url>https://github.com/apache/streampipes</url>
-      <tag>release/0.95.1</tag>
+      <tag>release/0.97.0</tag>
   </scm>
 
     <issueManagement>

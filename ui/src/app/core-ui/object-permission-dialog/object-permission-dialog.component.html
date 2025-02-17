@@ -33,7 +33,10 @@
                             >
                         </mat-select>
                     </mat-form-field>
-                    <mat-checkbox formControlName="publicElement">
+                    <mat-checkbox
+                        data-cy="permission-public-element"
+                        formControlName="publicElement"
+                    >
                         Public Element
                     </mat-checkbox>
                 </div>
@@ -66,6 +69,7 @@
                                 [matChipInputSeparatorKeyCodes]="
                                     separatorKeysCodes
                                 "
+                                data-cy="authorized-user"
                                 (matChipInputTokenEnd)="addUser($event)"
                             />
                         </mat-chip-grid>
@@ -76,6 +80,7 @@
                             <mat-option
                                 *ngFor="let user of filteredUsers | async"
                                 [value]="user"
+                                [attr.data-cy]="'user-option-' + user.username"
                             >
                                 {{ user.username }}
                             </mat-option>
@@ -140,7 +145,7 @@
                 (click)="save()"
                 style="margin-right: 10px"
                 [disabled]="!parentForm.valid"
-                data-cy="sp-element-edit-user-save"
+                data-cy="sp-manage-permissions-save"
             >
                 <i class="material-icons">save</i><span>&nbsp;Save</span>
             </button>

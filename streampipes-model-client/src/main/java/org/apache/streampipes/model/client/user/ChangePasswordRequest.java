@@ -18,28 +18,5 @@
 
 package org.apache.streampipes.model.client.user;
 
-public class ChangePasswordRequest {
-
-  private String existingPassword;
-  private String newPassword;
-
-  public ChangePasswordRequest() {
-
-  }
-
-  public String getNewPassword() {
-    return newPassword;
-  }
-
-  public void setNewPassword(String newPassword) {
-    this.newPassword = newPassword;
-  }
-
-  public String getExistingPassword() {
-    return existingPassword;
-  }
-
-  public void setExistingPassword(String existingPassword) {
-    this.existingPassword = existingPassword;
-  }
+public record ChangePasswordRequest(String existingPassword, String newPassword) {
 }

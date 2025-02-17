@@ -18,35 +18,41 @@
 package org.apache.streampipes.model.template;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.shared.api.Storable;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @TsModel
-public class PipelineElementTemplate {
+public class PipelineElementTemplate implements Storable {
 
-  Map<String, PipelineElementTemplateConfig> templateConfigs;
-  @JsonProperty("_id")
-  private @SerializedName("_id") String couchDbId;
-  @JsonProperty("_rev")
-  private @SerializedName("_rev") String couchDbRev;
+  List<Map<String, Object>> templateConfigs;
+
+  @JsonAlias("_id")
+  private @SerializedName("_id") String elementId;
+
+  @JsonAlias("_rev")
+  private @SerializedName("_rev") String rev;
   private String templateName;
   private String templateDescription;
   private String basePipelineElementAppId;
 
   public PipelineElementTemplate(String templateName,
                                  String templateDescription,
-                                 Map<String, PipelineElementTemplateConfig> templateConfigs) {
+                                 List<Map<String, Object>> templateConfigs) {
     this.templateName = templateName;
     this.templateDescription = templateDescription;
     this.templateConfigs = templateConfigs;
   }
 
   public PipelineElementTemplate() {
-    this.couchDbId = UUID.randomUUID().toString();
+    this.elementId = UUID.randomUUID().toString();
+    this.templateConfigs = new ArrayList<>();
   }
 
   public String getTemplateName() {
@@ -65,11 +71,11 @@ public class PipelineElementTemplate {
     this.templateDescription = templateDescription;
   }
 
-  public Map<String, PipelineElementTemplateConfig> getTemplateConfigs() {
+  public List<Map<String, Object>> getTemplateConfigs() {
     return templateConfigs;
   }
 
-  public void setTemplateConfigs(Map<String, PipelineElementTemplateConfig> templateConfigs) {
+  public void setTemplateConfigs(List<Map<String, Object>> templateConfigs) {
     this.templateConfigs = templateConfigs;
   }
 
@@ -82,19 +88,32 @@ public class PipelineElementTemplate {
   }
 
   public String getCouchDbId() {
-    return couchDbId;
-  }
-
-  public void setCouchDbId(String couchDbId) {
-    this.couchDbId = couchDbId;
+    return elementId;
   }
 
   public String getCouchDbRev() {
-    return couchDbRev;
+    return rev;
   }
 
-  public void setCouchDbRev(String couchDbRev) {
-    this.couchDbRev = couchDbRev;
+
+  @Override
+  public String getRev() {
+    return rev;
+  }
+
+  @Override
+  public void setRev(String rev) {
+    this.rev = rev;
+  }
+
+  @Override
+  public String getElementId() {
+    return elementId;
+  }
+
+  @Override
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
   }
 }
 

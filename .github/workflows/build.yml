@@ -63,7 +63,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and Push Docker Backend Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./streampipes-service-core
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
@@ -71,7 +71,7 @@ jobs:
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:${{ env.MVN_VERSION }}
 
       - name: Build and Push Docker Core Minimal Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./streampipes-service-core-minimal
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
@@ -85,7 +85,7 @@ jobs:
           npm run build
 
       - name: Build and Push Docker UI Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./ui
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
@@ -93,7 +93,7 @@ jobs:
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:${{ env.MVN_VERSION }}
 
       - name: Build and Push Docker Image extensions-all-jvm
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./streampipes-extensions/streampipes-extensions-all-jvm
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
@@ -101,7 +101,7 @@ jobs:
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-all-jvm:${{ env.MVN_VERSION }}
 
 #      - name: Build and Push Docker Image pipeline-elements-experimental-flink
-#        uses: docker/build-push-action@v5
+#        uses: docker/build-push-action@v6
 #        with:
 #          context: ./streampipes-extensions/streampipes-pipeline-elements-experimental-flink
 #          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
@@ -109,7 +109,7 @@ jobs:
 #          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-experimental-flink:${{ env.MVN_VERSION }}
 
       - name: Build and Push Docker Image extensions-all-iiot
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./streampipes-extensions/streampipes-extensions-all-iiot
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
@@ -117,7 +117,7 @@ jobs:
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-all-iiot:${{ env.MVN_VERSION }}
 
       - name: Build and Push Docker Image extensions-iiot-minimal
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./streampipes-extensions/streampipes-extensions-iiot-minimal
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7

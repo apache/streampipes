@@ -27,7 +27,7 @@ failureThreshold: 30
 hostPath: ""
 
 streampipes:
-  version: "0.95.1"
+  version: "0.97.0"
   registry: "apachestreampipes"
   auth:
     secretName: "sp-secrets"

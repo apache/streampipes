@@ -17,48 +17,65 @@
   -->
 
 <div id="formWrapper" fxFlex="100" fxLayout="column">
-    <div>
+    <div fxLayout="row" class="mb-10">
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            class="small-button"
+            (click)="selectAll(true)"
+            [disabled]="!showOptions"
+        >
+            <span>Select all</span>
+        </button>
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic small-button"
+            (click)="selectAll(false)"
+            [disabled]="!showOptions"
+        >
+            <span>Select none</span>
+        </button>
         <button
             mat-button
             mat-raised-button
             color="accent"
             class="small-button"
             (click)="loadOptionsFromRestApi()"
-            style="margin-right: 10px; margin-left: 10px"
             [disabled]="!showOptions"
         >
             <span>Reload</span>
         </button>
+        <mat-spinner
+            *ngIf="loading"
+            color="accent"
+            [mode]="'indeterminate'"
+            [diameter]="15"
+        ></mat-spinner>
     </div>
-    <div
-        *ngIf="!staticProperty.horizontalRendering"
-        fxLayout="column"
-        style="margin-top: 10px"
-    >
+    <div *ngIf="!staticProperty.horizontalRendering" fxLayout="column">
         <mat-checkbox
             style="padding-left: 10px"
             color="accent"
             *ngFor="let option of staticProperty.options"
             [(ngModel)]="option.selected"
+            (ngModelChange)="checkEmitUpdate()"
         >
             {{ option.name }}
         </mat-checkbox>
     </div>
-    <div fxLayout="column" *ngIf="!showOptions && !loading" class="mt-10">
+    <div fxLayout="column" *ngIf="!showOptions && !loading" class="mb-10">
         <span>(waiting for input)</span>
     </div>
-    <div fxLayout="column" *ngIf="loading">
-        <mat-spinner
-            color="accent"
-            [mode]="'indeterminate'"
-            [diameter]="20"
-        ></mat-spinner>
-    </div>
 
-    <div *ngIf="staticProperty.horizontalRendering">
+    <div *ngIf="staticProperty.horizontalRendering && showOptions">
         <mat-form-field style="width: 100%" color="accent">
-            <mat-label>{{ staticProperty.label }}</mat-label>
-            <mat-select multiple [(ngModel)]="option.selected">
+            <mat-select
+                multiple
+                [(ngModel)]="selectedOptions"
+                (selectionChange)="onSelectionChange()"
+            >
                 <mat-option
                     *ngFor="let option of staticProperty.options"
                     [value]="option"
@@ -66,7 +83,6 @@
                     {{ option.name }}
                 </mat-option>
             </mat-select>
-            <mat-hint>{{ staticProperty.description }}</mat-hint>
         </mat-form-field>
     </div>
 </div>

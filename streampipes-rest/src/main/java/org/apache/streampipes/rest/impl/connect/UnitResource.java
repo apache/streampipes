@@ -26,10 +26,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/connect/master/unit")
@@ -45,6 +49,7 @@ public class UnitResource extends AbstractAdapterResource<UnitMasterManagement> 
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE
   )
+  @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<?> getFittingUnits(@RequestBody UnitDescription unitDescription) {
     try {
       String resultingJson = managementService.getFittingUnits(unitDescription);
@@ -53,6 +58,14 @@ public class UnitResource extends AbstractAdapterResource<UnitMasterManagement> 
       logger.error("Error while getting all adapter descriptions", e);
       return fail();
     }
+  }
+
+  @GetMapping(path = "/units",
+              produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
+  public ResponseEntity<List<UnitDescription>> getAllUnits() {
+    List<UnitDescription> unitDescriptions = managementService.getAllUnitDescriptions();
+    return ok(unitDescriptions);
   }
 
 }

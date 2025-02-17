@@ -22,10 +22,25 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
 public interface StreamPipesAdapter {
   IAdapterConfiguration declareConfig();
+
+  /**
+   * Preprocesses the adapter description before the adapter is invoked.
+   *
+   * <p>This method is designed to allow adapters to modify the adapter description prior to invocation.
+   * It is particularly useful for adapters that need to manipulate certain values internally,
+   * e.g. bypassing the adapter preprocessing pipeline. An example of such an adapter is the FileReplayAdapter,
+   * which manipulates timestamp values.</p>
+   *
+   * <p>This is a default method and does not need to be overridden unless specific preprocessing is required.</p>
+   *
+   * @param adapterDescription The adapter description to be preprocessed.
+   */
+  default void preprocessAdapterDescription(AdapterDescription adapterDescription) {};
 
   void onAdapterStarted(IAdapterParameterExtractor extractor,
                         IEventCollector collector,

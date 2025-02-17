@@ -65,13 +65,13 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
       @RequestParam("appId") String appId
   ) {
     if (appId == null) {
-      return ok(getPipelineElementTemplateStorage().getAll());
+      return ok(getPipelineElementTemplateStorage().findAll());
     } else {
       return ok(getPipelineElementTemplateStorage().getPipelineElementTemplatesforAppId(appId));
     }
   }
 
-  @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "{id}", produces = { MediaType.APPLICATION_JSON_VALUE, "application/yaml" })
   @Operation(summary = "Get a single pipeline element template by a given id",
              tags = {"Pipeline Element Templates"},
              responses = {
@@ -104,7 +104,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
                    content = @Content(schema = @Schema(implementation = PipelineElementTemplate.class)))
       @org.springframework.web.bind.annotation.RequestBody PipelineElementTemplate entity
   ) {
-    getPipelineElementTemplateStorage().createElement(entity);
+    getPipelineElementTemplateStorage().persist(entity);
     return ok();
   }
 

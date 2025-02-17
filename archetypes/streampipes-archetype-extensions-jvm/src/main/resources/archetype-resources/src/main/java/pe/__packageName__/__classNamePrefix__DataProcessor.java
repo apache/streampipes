@@ -27,6 +27,7 @@ import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeCon
 import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -36,7 +37,6 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 
@@ -50,8 +50,8 @@ public class ${classNamePrefix}DataProcessor implements IStreamPipesDataProcesso
   public IDataProcessorConfiguration declareConfig() {
     return DataProcessorConfiguration.create(
       ${classNamePrefix}DataProcessor::new,
-      ProcessingElementBuilder.create("${package}.pe.${packageName}.processor")
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+      ProcessingElementBuilder.create("${package}.pe.${packageName}.processor", 0)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .category(DataProcessorType.AGGREGATE)
         .requiredStream(StreamRequirementsBuilder

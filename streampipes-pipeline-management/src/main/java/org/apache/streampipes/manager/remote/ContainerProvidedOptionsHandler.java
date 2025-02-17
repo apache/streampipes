@@ -30,6 +30,7 @@ import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Response;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class ContainerProvidedOptionsHandler {
 
@@ -49,12 +50,12 @@ public class ContainerProvidedOptionsHandler {
   }
 
   private RuntimeOptionsResponse handleResponse(Response httpResp) throws JsonSyntaxException, IOException {
-    String resp = httpResp.returnContent().asString();
+    String resp = httpResp.returnContent().asString(StandardCharsets.UTF_8);
     return JacksonSerializer.getObjectMapper().readValue(resp, RuntimeOptionsResponse.class);
   }
 
   private String getEndpointUrl(String appId) throws NoServiceEndpointsAvailableException {
     SpServiceUrlProvider provider = ExtensionsServiceEndpointUtils.getPipelineElementType(appId);
-    return new ExtensionsServiceEndpointGenerator(appId, provider).getEndpointResourceUrl() + "/configurations";
+    return new ExtensionsServiceEndpointGenerator().getEndpointResourceUrl(appId, provider) + "/configurations";
   }
 }

@@ -1,0 +1,55 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<mat-accordion>
+    <mat-expansion-panel [(expanded)]="expanded">
+        <mat-expansion-panel-header class="expansion-panel-header">
+            Logs
+        </mat-expansion-panel-header>
+        <div fxLayout="column" fxFlex="100" class="p-10">
+            <div
+                *ngFor="let element of allPipelineElements"
+                class="details-row"
+            >
+                <sp-pipeline-element-details-row
+                    [pipelineElement]="element"
+                    [logInfo]="logInfo[element.elementId] || []"
+                    [pipelineRunning]="pipeline.running"
+                >
+                </sp-pipeline-element-details-row>
+            </div>
+        </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header class="expansion-panel-header">
+            Status
+        </mat-expansion-panel-header>
+        <sp-pipeline-status [pipeline]="pipeline"> </sp-pipeline-status>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header class="expansion-panel-header">
+            Actions
+        </mat-expansion-panel-header>
+        <sp-pipeline-actions
+            (reloadPipelineEmitter)="reloadPipelineEmitter.emit()"
+            [pipeline]="pipeline"
+            [hasWritePipelinePrivileges]="hasWritePipelinePrivileges"
+        >
+        </sp-pipeline-actions>
+    </mat-expansion-panel>
+</mat-accordion>

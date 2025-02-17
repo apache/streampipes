@@ -17,8 +17,10 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { SpConfigurationTabs } from '../configuration-tabs';
+import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { LabelsService, SpLabel } from '@streampipes/platform-services';
+import { SpConfigurationRoutes } from '../configuration.routes';
+import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-label-configuration',
@@ -26,16 +28,25 @@ import { LabelsService, SpLabel } from '@streampipes/platform-services';
     styleUrls: ['./label-configuration.component.scss'],
 })
 export class SpLabelConfigurationComponent implements OnInit {
-    tabs = SpConfigurationTabs.getTabs();
+    tabs: SpNavigationItem[] = [];
 
     allLabels: SpLabel[] = [];
     createLabelMode = false;
 
     editedLabels: string[] = [];
 
-    constructor(private labelsService: LabelsService) {}
+    constructor(
+        private breadcrumbService: SpBreadcrumbService,
+        private labelsService: LabelsService,
+        private tabService: SpConfigurationTabsService,
+    ) {}
 
     ngOnInit(): void {
+        this.tabs = this.tabService.getTabs();
+        this.breadcrumbService.updateBreadcrumb([
+            SpConfigurationRoutes.BASE,
+            { label: this.tabService.getTabTitle('labels') },
+        ]);
         this.reloadLabels();
     }
 

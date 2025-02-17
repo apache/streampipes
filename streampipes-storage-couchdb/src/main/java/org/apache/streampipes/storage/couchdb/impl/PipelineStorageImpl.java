@@ -18,22 +18,18 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import org.apache.streampipes.model.VirtualSensor;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.api.IPipelineStorage;
-import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import com.google.gson.JsonObject;
-import org.lightcouch.CouchDbClient;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PipelineStorageImpl extends AbstractDao<Pipeline> implements IPipelineStorage {
+public class PipelineStorageImpl extends DefaultCrudStorage<Pipeline> implements IPipelineStorage {
 
-  private static final String SYSTEM_USER = "system";
   private static final String ADAPTER_VIEW = "adapters/used-adapters";
   private static final String ALL_PIPELINES_VIEW = "pipelines/all";
 
@@ -53,7 +49,7 @@ public class PipelineStorageImpl extends AbstractDao<Pipeline> implements IPipel
   }
 
   @Override
-  public List<Pipeline> getAllPipelines() {
+  public List<Pipeline> findAll() {
     List<Pipeline> pipelines = findAll(ALL_PIPELINES_VIEW);
 
     List<Pipeline> result = new ArrayList<>();
@@ -64,56 +60,4 @@ public class PipelineStorageImpl extends AbstractDao<Pipeline> implements IPipel
     }
     return result;
   }
-
-  @Override
-  public List<Pipeline> getSystemPipelines() {
-    List<Pipeline> pipelines = getAllPipelines();
-    return pipelines
-        .stream()
-        .filter(p -> p.getCreatedByUser().equals(SYSTEM_USER))
-        .collect(Collectors.toList());
-  }
-
-  @Override
-  public void storePipeline(Pipeline pipeline) {
-    persist(pipeline);
-  }
-
-  @Override
-  public void updatePipeline(Pipeline pipeline) {
-    update(pipeline);
-  }
-
-  @Override
-  public Pipeline getPipeline(String pipelineId) {
-    return findWithNullIfEmpty(pipelineId);
-  }
-
-  @Override
-  public void deletePipeline(String pipelineId) {
-    delete(pipelineId);
-  }
-
-  @Override
-  public void store(Pipeline object) {
-    persist(object);
-  }
-
-  @Override
-  public void storeVirtualSensor(String username, VirtualSensor virtualSensor) {
-    CouchDbClient couchDbClient = couchDbClientSupplier.get();
-    couchDbClient.save(virtualSensor);
-    couchDbClient.shutdown();
-  }
-
-  @Override
-  public List<VirtualSensor> getVirtualSensors(String username) {
-    CouchDbClient couchDbClient = couchDbClientSupplier.get();
-    List<VirtualSensor> virtualSensors = couchDbClient.view("_all_docs")
-        .includeDocs(true)
-        .query(VirtualSensor.class);
-    couchDbClient.shutdown();
-    return virtualSensors;
-  }
-
 }

@@ -1,0 +1,110 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { MatIconModule } from '@angular/material/icon';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
+
+import { CoreModule } from './core/core.module';
+import { LoginModule } from './login/login.module';
+import { HomeModule } from './home/home.module';
+import { NgxEchartsModule } from 'ngx-echarts';
+import { InfoModule } from './info/info.module';
+import {ProfileModule} from './profile/profile.module';
+import { PipelineDetailsModule } from './pipeline-details/pipeline-details.module';
+import { NotificationCountService } from './services/notification-count-service';
+import { AuthService } from './services/auth.service';
+import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
+import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
+
+{{#modulesActive}}
+import { {{{moduleName}}} } from '{{{path}}}';
+{{/modulesActive}}
+
+import { NotificationModule } from './notifications/notifications.module';
+
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { ServicesModule } from './services/services.module';
+import { ApidocsModule } from './apidocs/apidocs.module';
+import { HttpInterceptorProvider } from './http-interceptor';
+import { AvailableRolesService } from './services/available-roles.service';
+
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+
+import { ValueDistributionTransform } from './core-ui/echarts-transform/value-distribution.transform';
+import { HistogramTransform } from './core-ui/echarts-transform/histogram.transform';
+import { RoundValuesTransform} from './core-ui/echarts-transform/round-values.transform';
+import { MapTransform } from './core-ui/echarts-transform/map.transform';
+
+import * as echarts from 'echarts';
+import * as transform from 'echarts-simple-transform';
+
+echarts.registerTransform(transform.aggregate);
+echarts.registerTransform(ValueDistributionTransform);
+echarts.registerTransform(HistogramTransform);
+echarts.registerTransform(RoundValuesTransform);
+echarts.registerTransform(MapTransform);
+
+
+import * as $ from 'jquery';
+
+@NgModule({
+    declarations: [
+        AppComponent
+    ],
+    imports: [
+        ApidocsModule,
+        AppRoutingModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        CoreModule,
+        MatGridListModule,
+        MatIconModule,
+        FlexLayoutModule,
+        HttpClientModule,
+        FormsModule,
+        LoginModule,
+        LoadingBarHttpClientModule,
+        InfoModule,
+        NotificationModule,
+        PipelineDetailsModule,
+        ServicesModule,
+        ProfileModule,
+        NgxEchartsModule.forRoot({
+            echarts: () => import('echarts'),
+        }),
+    ],
+    providers: [
+        AuthService,
+        AvailableRolesService,
+        NotificationCountService,
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' }},
+        { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorProvider, multi: true },
+        { provide: LOADING_BAR_CONFIG, useValue: { latencyThreshold: 100 }},
+    ],
+    bootstrap: [AppComponent]
+})
+export class AppModule {
+
+}

@@ -19,10 +19,6 @@
 package org.apache.streampipes.extensions.iiot.minimal;
 
 import org.apache.streampipes.connect.iiot.IIoTAdaptersExtensionModuleExport;
-import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
-import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
-import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
-import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.extensions.connectors.influx.InfluxConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.mqtt.MqttConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.nats.NatsConnectorsModuleExport;
@@ -37,14 +33,14 @@ import org.apache.streampipes.processors.enricher.jvm.EnricherExtensionModuleExp
 import org.apache.streampipes.processors.filters.jvm.FilterExtensionModuleExport;
 import org.apache.streampipes.processors.siddhi.SiddhiFilterExtensionModuleExport;
 import org.apache.streampipes.processors.transformation.jvm.TransformationExtensionModuleExport;
-import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.StreamPipesExtensionsServiceBase;
 import org.apache.streampipes.sinks.brokers.jvm.BrokerSinksExtensionModuleExport;
 import org.apache.streampipes.sinks.databases.jvm.DatabaseSinksExtensionModuleExport;
 import org.apache.streampipes.sinks.internal.jvm.InternalSinksExtensionModuleExports;
 import org.apache.streampipes.sinks.notifications.jvm.NotificationsExtensionModuleExport;
 import org.apache.streampipes.wrapper.standalone.runtime.StandaloneStreamPipesRuntimeProvider;
 
-public class ExtensionsIIoTMinimalInit extends ExtensionsModelSubmitter {
+public class ExtensionsIIoTMinimalInit extends StreamPipesExtensionsServiceBase {
 
   public static void main(String[] args) {
     new ExtensionsIIoTMinimalInit().init();
@@ -74,11 +70,6 @@ public class ExtensionsIIoTMinimalInit extends ExtensionsModelSubmitter {
             new InternalSinksExtensionModuleExports(),
             new NotificationsExtensionModuleExport())
         .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
-        .registerMessagingFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory())
         .registerMessagingProtocols(
             new SpNatsProtocolFactory(),
             new SpMqttProtocolFactory()

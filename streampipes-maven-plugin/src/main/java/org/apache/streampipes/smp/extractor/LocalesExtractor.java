@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.smp.extractor;
 
+import org.apache.streampipes.extensions.api.assets.DefaultAssetResolver;
 import org.apache.streampipes.smp.model.AssetModel;
 
 import org.apache.maven.plugin.logging.Log;
@@ -45,7 +46,14 @@ public class LocalesExtractor {
   public void applyLocales(AssetModel assetModel) {
     var localeFile = loader.getResourceAsStream(assetModel.getAppId() + "/" + LOCALES_FILE_EN);
     try {
-      var props = loadProperties(localeFile);
+      Properties props;
+      if (assetModel.getAssetResolver() != null
+          && !(assetModel.getAssetResolver().getClass() == DefaultAssetResolver.class)) {
+        props = assetModel.getAssetResolver().getLocale(loader, LOCALES_FILE_EN);
+      } else {
+        props = loadProperties(localeFile);
+      }
+
       assetModel.setPipelineElementName(extractKey(props, assetModel, TITLE));
       assetModel.setPipelineElementDescription(extractKey(props, assetModel, DESCRIPTION));
     } catch (IOException e) {

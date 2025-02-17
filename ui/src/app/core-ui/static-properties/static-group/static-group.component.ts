@@ -16,21 +16,25 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
-import { StaticPropertyGroup } from '@streampipes/platform-services';
+import {
+    ExtensionDeploymentConfiguration,
+    StaticPropertyGroup,
+} from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 
 @Component({
     selector: 'sp-app-static-group',
     templateUrl: './static-group.component.html',
-    styleUrls: ['./static-group.component.css'],
+    styleUrls: ['./static-group.component.scss'],
 })
 export class StaticGroupComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyGroup>
     implements OnInit
 {
-    @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Input()
+    deploymentConfiguration: ExtensionDeploymentConfiguration;
 
     dependentStaticProperties: Map<string, boolean> = new Map<
         string,
@@ -47,9 +51,9 @@ export class StaticGroupComponent
                 v => v === true,
             )
         ) {
-            this.emitUpdate(true);
+            this.applyCompletedConfiguration(true);
         } else {
-            this.emitUpdate(false);
+            this.applyCompletedConfiguration(false);
         }
     }
 

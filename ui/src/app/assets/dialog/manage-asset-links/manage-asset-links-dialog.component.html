@@ -94,7 +94,7 @@
                             (click)="
                                 selectAll(
                                     dashboards,
-                                    idFunction,
+                                    elementIdFunction,
                                     nameFunction,
                                     'dashboard'
                                 )
@@ -107,7 +107,7 @@
                             mat-button
                             mat-raised-button
                             class="mat-basic small-button"
-                            (click)="deselectAll(dashboards, idFunction)"
+                            (click)="deselectAll(dashboards, elementIdFunction)"
                             style="margin-right: 10px; margin-left: 5px"
                         >
                             <span>Deselect All</span>
@@ -117,11 +117,11 @@
                 <div *ngFor="let element of dashboards" fxLayout="row">
                     <mat-checkbox
                         color="accent"
-                        [checked]="linkSelected(element._id)"
+                        [checked]="linkSelected(element.elementId)"
                         (change)="
                             selectLink(
                                 $event.checked,
-                                element._id,
+                                element.elementId,
                                 element.name,
                                 'dashboard'
                             )
@@ -258,7 +258,7 @@
                             (click)="
                                 selectAll(
                                     dataViews,
-                                    idFunction,
+                                    elementIdFunction,
                                     nameFunction,
                                     'data-view'
                                 )
@@ -271,7 +271,7 @@
                             mat-button
                             mat-raised-button
                             class="mat-basic small-button"
-                            (click)="deselectAll(dataViews, idFunction)"
+                            (click)="deselectAll(dataViews, elementIdFunction)"
                             style="margin-right: 10px; margin-left: 5px"
                         >
                             <span>Deselect All</span>
@@ -281,11 +281,11 @@
                 <div *ngFor="let element of dataViews" fxLayout="row">
                     <mat-checkbox
                         color="accent"
-                        [checked]="linkSelected(element._id)"
+                        [checked]="linkSelected(element.elementId)"
                         (change)="
                             selectLink(
                                 $event.checked,
-                                element._id,
+                                element.elementId,
                                 element.name,
                                 'data-view'
                             )
@@ -342,7 +342,7 @@
                             )
                         "
                     >
-                        {{ element.originalFilename }}
+                        {{ element.filename }}
                     </mat-checkbox>
                 </div>
             </div>
@@ -362,7 +362,7 @@
                             (click)="
                                 selectAll(
                                     pipelines,
-                                    idFunction,
+                                    elementIdFunction,
                                     nameFunction,
                                     'pipeline'
                                 )
@@ -375,7 +375,7 @@
                             mat-button
                             mat-raised-button
                             class="mat-basic small-button"
-                            (click)="deselectAll(pipelines, idFunction)"
+                            (click)="deselectAll(pipelines, elementIdFunction)"
                             style="margin-right: 10px; margin-left: 5px"
                         >
                             <span>Deselect All</span>
@@ -385,11 +385,11 @@
                 <div *ngFor="let pipeline of pipelines" fxLayout="row">
                     <mat-checkbox
                         color="accent"
-                        [checked]="linkSelected(pipeline._id)"
+                        [checked]="linkSelected(pipeline.elementId)"
                         (change)="
                             selectLink(
                                 $event.checked,
-                                pipeline._id,
+                                pipeline.elementId,
                                 pipeline.name,
                                 'pipeline'
                             )

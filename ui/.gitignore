@@ -22,7 +22,7 @@ src/assets/lib/apps/*
 # prebuild
 src/app/app-routing.module.ts
 src/app/app-overview/apps.ts
-src/app/appng5.module.ts
+src/app/app.module.ts
 src/app/home/home.service.ts
 src/app/services/version/version.service.ts
 src/app/services/app.constants.ts

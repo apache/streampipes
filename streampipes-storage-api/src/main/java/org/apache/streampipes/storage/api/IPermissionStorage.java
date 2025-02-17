@@ -22,17 +22,7 @@ import org.apache.streampipes.model.client.user.Permission;
 import java.util.List;
 import java.util.Set;
 
-public interface IPermissionStorage {
-
-  List<Permission> getAllPermissions();
-
-  Permission getPermissionById(String permissionId);
-
-  void addPermission(Permission permission);
-
-  void updatePermission(Permission permission);
-
-  void deletePermission(String permissionId);
+public interface IPermissionStorage extends CRUDStorage<Permission> {
 
   Set<String> getObjectPermissions(List<String> sids);
 

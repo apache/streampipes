@@ -17,31 +17,37 @@
   -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
-        <h4>{{ pipelineElement.name }}</h4>
-        <p>
-            {{ pipelineElement.description }}
-        </p>
-
+    <div class="sp-dialog-content p-15" fxLayout="column">
+        <div fxLayout="row" fxFlex="100">
+            <div fxLayout="column" fxFlex>
+                <h4>{{ pipelineElement.name }}</h4>
+                <small>
+                    {{ pipelineElement.description }}
+                </small>
+            </div>
+            <div class="element-id" fxLayoutAlign="end start">
+                <span>ID</span>&nbsp;<b>{{
+                    isDataStream
+                        ? pipelineElement.elementId
+                        : pipelineElement.appId
+                }}</b>
+            </div>
+        </div>
         <mat-tab-group
             color="accent"
             [selectedIndex]="selectedTabIndex"
             (selectedIndexChange)="selectedTabIndex = $event"
         >
-            <mat-tab *ngFor="let tab of tabs" label="{{ tab }}"> </mat-tab>
+            <mat-tab *ngFor="let tab of tabs" label="{{ tab }}"></mat-tab>
         </mat-tab-group>
 
-        <sp-field-names-table
-            *ngIf="selectedTabIndex === 0"
-            [eventSchema]="pipelineElement.eventSchema"
-        ></sp-field-names-table>
         <sp-pipeline-element-runtime-info
-            *ngIf="selectedTabIndex === 1"
+            *ngIf="selectedTabIndex === 0"
+            [showTitle]="false"
             [streamDescription]="pipelineElement"
-            [pollingActive]="pollingActive"
         ></sp-pipeline-element-runtime-info>
         <sp-pipeline-element-documentation
-            *ngIf="selectedTabIndex === 2"
+            *ngIf="selectedTabIndex === 1"
             [useStyling]="false"
             [appId]="pipelineElement.appId"
         ></sp-pipeline-element-documentation>

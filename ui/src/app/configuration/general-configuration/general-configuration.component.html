@@ -52,11 +52,11 @@
                                     formControlName="protocol"
                                 >
                                     <mat-button-toggle value="http"
-                                        >http</mat-button-toggle
-                                    >
+                                        >http
+                                    </mat-button-toggle>
                                     <mat-button-toggle value="https"
-                                        >https</mat-button-toggle
-                                    >
+                                        >https
+                                    </mat-button-toggle>
                                 </mat-button-toggle-group>
                             </div>
                             <mat-form-field color="accent" class="ml-10">
@@ -82,22 +82,7 @@
                             </mat-form-field>
                         </div>
                     </div>
-                    <div class="mt-10">
-                        <button
-                            mat-button
-                            mat-raised-button
-                            color="accent"
-                            (click)="updateConfig()"
-                            style="margin-right: 10px"
-                            [disabled]="!parentForm.valid"
-                            data-cy="sp-element-general-config-save"
-                        >
-                            <i class="material-icons">save</i
-                            ><span>&nbsp;Save</span>
-                        </button>
-                    </div>
                 </sp-split-section>
-                <mat-divider></mat-divider>
                 <sp-split-section
                     title="Registration"
                     subtitle="Registration process"
@@ -133,9 +118,11 @@
                                     [multiple]="true"
                                 >
                                     <mat-option
-                                        *ngFor="let role of availableRoles"
-                                        [value]="role.role"
-                                        >{{ role.roleTitle }}
+                                        *ngFor="
+                                            let role of availableRoles$ | async
+                                        "
+                                        [value]="role.elementId"
+                                        >{{ role.label }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -143,20 +130,24 @@
                         <mat-checkbox formControlName="allowPasswordRecovery"
                             >Allow self-service password recovery
                         </mat-checkbox>
-
-                        <div class="mt-10">
-                            <button
-                                mat-button
-                                mat-raised-button
-                                color="accent"
-                                (click)="updateConfig()"
-                                style="margin-right: 10px"
-                                data-cy="sp-element-general-registration-config-save"
-                            >
-                                <i class="material-icons">save</i
-                                ><span>&nbsp;Save</span>
-                            </button>
-                        </div>
+                    </div>
+                </sp-split-section>
+                <sp-configuration-link-settings [parentForm]="parentForm">
+                </sp-configuration-link-settings>
+                <sp-split-section>
+                    <div class="mt-10">
+                        <button
+                            mat-button
+                            mat-raised-button
+                            color="accent"
+                            (click)="updateConfig()"
+                            style="margin-right: 10px"
+                            [disabled]="!parentForm.valid"
+                            data-cy="sp-element-general-config-save"
+                        >
+                            <i class="material-icons">save</i
+                            ><span>&nbsp;Save</span>
+                        </button>
                     </div>
                 </sp-split-section>
             </form>

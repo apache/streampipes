@@ -67,7 +67,7 @@ export class EpRequirements {
     }
 
     static numberReq(): EventPropertyUnion {
-        return EpRequirements.datatypeReq(DataType.NUMBER);
+        return EpRequirements.datatypeReq(SemanticType.SO_NUMBER);
     }
 
     static stringReq(): EventPropertyUnion {
@@ -104,9 +104,9 @@ export class EpRequirements {
         return listEp;
     }
 
-    static domainPropertyReq(domainProperty: string): EventPropertyPrimitive {
+    static domainPropertyReq(semanticType: string): EventPropertyPrimitive {
         const eventProperty = EpRequirements.ep();
-        eventProperty.domainProperties = [domainProperty];
+        eventProperty.semanticType = semanticType;
         return eventProperty;
     }
 

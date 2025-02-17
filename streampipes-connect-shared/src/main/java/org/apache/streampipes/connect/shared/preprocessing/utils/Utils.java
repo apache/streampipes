@@ -26,8 +26,10 @@ import java.util.List;
 
 public class Utils {
 
+  public static final String DELIMITER = "<-=>";
+
   public static String getLastKey(String s) {
-    String[] list = s.split("\\.");
+    String[] list = s.split(DELIMITER);
     if (list.length == 0) {
       return s;
     } else {
@@ -36,7 +38,7 @@ public class Utils {
   }
 
   public static List<String> toKeyArray(String s) {
-    String[] split = s.split("\\.");
+    String[] split = s.split(DELIMITER);
     if (split.length == 0) {
       return List.of(s);
     } else {

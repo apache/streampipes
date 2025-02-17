@@ -18,25 +18,59 @@
 
 package org.apache.streampipes.resource.management;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.model.Tuple2;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class AdapterResourceManagerTest {
 
-  @Test
-  public void encryptAndUpdateValidateDescriptionStored() {
+  private IAdapterStorage storage;
+  private AdapterResourceManager adapterResourceManager;
 
-    IAdapterStorage storage = mock(IAdapterStorage.class);
-    AdapterResourceManager adapterResourceManager = new AdapterResourceManager(storage);
+  @BeforeEach
+  void setUp() {
+    storage = mock(IAdapterStorage.class);
+    adapterResourceManager = new AdapterResourceManager(storage);
+  }
+
+  @Test
+  public void encryptAndUpdate_ValidateDescriptionStored() throws AdapterException {
+
     adapterResourceManager.encryptAndUpdate(new AdapterDescription());
 
-    verify(storage, times(1)).updateAdapter(any());
+    verify(storage, times(1)).updateElement(any());
   }
+
+  @Test
+  void encryptAndCreate_ReturnsIdOnSuccess() throws AdapterException {
+    var id = "adapterId";
+
+    when(storage.persist(any())).thenReturn(new Tuple2<>(true, id));
+    var result = adapterResourceManager.encryptAndCreate(new AdapterDescription());
+
+    verify(storage, times(1)).persist(any());
+    assertEquals(id, result);
+  }
+
+  @Test
+  void encryptAndCreate_ThrowsAdapterExceptionOnConflict() {
+
+    doThrow(new org.lightcouch.DocumentConflictException("Conflict")).when(storage).persist(any());
+
+    assertThrows(AdapterException.class, () -> adapterResourceManager.encryptAndCreate(new AdapterDescription()));
+  }
+
 }

@@ -17,22 +17,22 @@
   -->
 
 <div style="width: 100%; height: 100%">
-    <div fxLayout="column" fxLayoutAlign="space-between ">
-        <div fxLayout="row" fxLayoutAlign="space-around start">
-            <div fxLayout="column" fxLayoutAlign="space-between ">
-                <sp-image-container
-                    *ngIf="imagesRoutes.length > 0"
-                    [imageSrc]="imagesRoutes[imagesIndex]"
-                    [canvasWidth]="canvasWidth"
-                    [canvasHeight]="canvasHeight"
-                >
-                </sp-image-container>
-            </div>
-        </div>
-        <br />
-
+    <div [ngStyle]="{ width: canvasWidth, height: canvasHeight + 'px' }">
+        <sp-image-container
+            fxFlex="100"
+            *ngIf="imagesRoutes.length > 0"
+            [imageSrc]="imagesRoutes[imagesIndex]"
+            [canvasWidth]="canvasWidth"
+            [canvasHeight]="canvasHeight"
+        >
+        </sp-image-container>
+    </div>
+    <div
+        [ngStyle]="{ width: '100%', height: imagePreviewHeight + 'px' }"
+        fxLayout="row"
+    >
         <sp-image-bar
-            style="width: 100%"
+            fxFlex="100"
             [imagesRoutes]="imagesRoutes"
             [selectedIndex]="imagesIndex"
             [enableShortCuts]="true"

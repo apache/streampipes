@@ -43,7 +43,6 @@ public enum SpProtocolManager {
   }
 
   public <T extends TransportProtocol> Optional<SpProtocolDefinition<T>> findDefinition(T transportProtocol) {
-    // TODO add RDF URI for protocol in model
     return this.availableProtocols
         .stream()
         .filter

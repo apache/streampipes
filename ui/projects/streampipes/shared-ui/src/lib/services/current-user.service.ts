@@ -41,4 +41,21 @@ export class CurrentUserService {
     public getCurrentUser(): UserInfo {
         return this.user$.getValue() || this.jwtTokenStorageService.getUser();
     }
+
+    public hasRole(role: string): boolean {
+        const roles = this.getCurrentUser().roles;
+        return roles.includes('ROLE_ADMIN') || roles.includes(role);
+    }
+
+    public hasAnyRole(roles: string[]): boolean {
+        if (Array.isArray(roles)) {
+            return roles.reduce(
+                (aggregator: false, role: string) =>
+                    aggregator || this.hasRole(role),
+                false,
+            );
+        }
+
+        return false;
+    }
 }

@@ -67,7 +67,7 @@
                     class="dmainProperty"
                     name="domainproperty"
                     id="domainproperty"
-                    [(ngModel)]="cachedProperty.domainProperties[0]"
+                    [(ngModel)]="cachedProperty.semanticType"
                     [matAutocomplete]="st"
                     [disabled]="isTimestampProperty"
                     [matAutocompleteDisabled]="isTimestampProperty"
@@ -92,6 +92,21 @@
         sectionDescription="The data type of the field values"
         *ngIf="!isTimestampProperty && !isNestedProperty"
     >
+        <div *ngIf="adapterIsInEditMode" class="warning-message">
+            <p data-cy="warning-change-data-type" class="text-center">
+                Changing the data type can result in pipelines no longer writing
+                the data correctly to the data lake.
+                <br />
+                <br />
+                To resolve this problem, you can:
+                <br />
+                - Rename the property.
+                <br />
+                - Truncate the old data.
+                <br />
+                - Write the data to a new measurement.
+            </p>
+        </div>
         <sp-edit-data-type
             [cachedProperty]="cachedProperty"
             (dataTypeChanged)="dataTypeChanged.emit($event)"

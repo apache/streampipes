@@ -21,7 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
-import { EmailConfig, EmailTemplate } from '../model/email-config.model';
+import { EmailConfig, EmailTemplate } from '../model/config/email-config.model';
 
 @Injectable({
     providedIn: 'root',

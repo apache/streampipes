@@ -48,11 +48,11 @@ CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 ...            ...       ...       ...       ...       ...       ...
 ```
 Otherwise, you need to start docker first.
-Please read the full guide on how to start StreamPipes with `docker compose` [here](https://streampipes.apache.org/docs/docs/deploy-docker.html).
+Please read the full guide on how to start StreamPipes with `docker compose` [here](https://streampipes.apache.org/docs/deploy-docker/).
 
 #### Setup StreamPipes with NATS as message broker
 The following shows how you can set up a StreamPipes instance that uses [NATS](https://docs.nats.io/) as messaging layer.
-So in this scenario, we will go with `docker-compose.nats.yml`. 
+So in this scenario, we will go with `docker-compose.nats.yml`.
 Thereby, when running locally, we need to add the following port mapping entry to `services.nats.ports`:
 ```yaml
 - 4222:4222
@@ -85,6 +85,6 @@ docker-compose -f docker-compose.yml up -d
 Once all services are started, you can access StreamPipes via `http://localhost`.
 
 In case you want to have more control over your StreamPipes setup,
-you might take a look at our [deployment CLI](https://streampipes.apache.org/docs/docs/extend-cli.html).
+you might take a look at our [deployment CLI](https://streampipes.apache.org/docs/extend-cli/).
 
 Have fun discovering StreamPipes and our Python library 🚀

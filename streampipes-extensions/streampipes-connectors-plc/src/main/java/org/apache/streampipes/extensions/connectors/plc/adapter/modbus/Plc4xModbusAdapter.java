@@ -101,9 +101,10 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
    * Connection to the PLC
    */
   private PlcConnection plcConnection;
-  private PlcConnectionManager connectionManager;
+  private final PlcConnectionManager connectionManager;
 
   public Plc4xModbusAdapter(PlcConnectionManager connectionManager) {
+    this.connectionManager = connectionManager;
   }
 
   /**

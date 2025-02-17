@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.manager.setup;
 
+import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -38,7 +38,7 @@ public class UserRegistrationInstallationStep extends InstallationStep {
   private final String initialServiceAccountName;
   private final String initialServiceAccountSecret;
   private final String initialAdminUserSid;
-  private final Set<Role> roles;
+  private final Set<String> roles;
 
   public UserRegistrationInstallationStep(String adminEmail,
                                           String adminPassword,
@@ -51,7 +51,7 @@ public class UserRegistrationInstallationStep extends InstallationStep {
     this.initialServiceAccountSecret = initialServiceAccountSecret;
     this.initialAdminUserSid = initialAdminUserSid;
     roles = new HashSet<>();
-    roles.add(Role.ROLE_ADMIN);
+    roles.add(DefaultRole.ROLE_ADMIN.toString());
   }
 
   @Override

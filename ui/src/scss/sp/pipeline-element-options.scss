@@ -36,11 +36,14 @@
     left: 0%;
     top: 50%;
     width: 104%;
-    padding: 65px 0px 10px;
+    padding: 60px 0 10px;
     font-size: smaller;
     text-align: center;
     box-shadow: 0 0 2px #555;
     -webkit-animation: slidein 0.5s;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
 }
 
 @keyframes slidein {

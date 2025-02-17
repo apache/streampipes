@@ -19,6 +19,7 @@
 import { Injectable } from '@angular/core';
 import {
     AnyStaticProperty,
+    CodeInputStaticProperty,
     CollectionStaticProperty,
     ColorPickerStaticProperty,
     FileStaticProperty,
@@ -36,10 +37,52 @@ import {
     StaticPropertyGroup,
 } from '@streampipes/platform-services';
 import { IdGeneratorService } from '../../core-services/id-generator/id-generator.service';
+import { ConfigurationInfo } from '../../connect/model/ConfigurationInfo';
 
 @Injectable({ providedIn: 'root' })
 export class StaticPropertyUtilService {
     constructor(private idGeneratorService: IdGeneratorService) {}
+
+    public initializeCompletedConfigurations(
+        configs: StaticProperty[],
+    ): ConfigurationInfo[] {
+        return configs
+            .filter(config => !config.optional)
+            .map(config => {
+                return {
+                    staticPropertyInternalName: config.internalName,
+                    configured: false,
+                };
+            });
+    }
+
+    public allDependenciesSatisfied(
+        dependsOn: string[],
+        completedConfigs: ConfigurationInfo[],
+    ) {
+        if (dependsOn?.length > 0) {
+            return dependsOn.every(dependency =>
+                completedConfigs.some(
+                    config =>
+                        config.staticPropertyInternalName === dependency &&
+                        config.configured,
+                ),
+            );
+        } else {
+            return true;
+        }
+    }
+
+    public updateCompletedConfiguration(
+        completedConfig: ConfigurationInfo,
+        completedConfigs: ConfigurationInfo[],
+    ) {
+        completedConfigs.find(
+            c =>
+                c.staticPropertyInternalName ===
+                completedConfig.staticPropertyInternalName,
+        ).configured = completedConfig.configured;
+    }
 
     public clone(val: StaticProperty) {
         let clone;
@@ -77,6 +120,12 @@ export class StaticPropertyUtilService {
             clone = new ColorPickerStaticProperty();
             clone.id = id;
             clone.selectedProperty = val.selectedColor;
+        } else if (val instanceof CodeInputStaticProperty) {
+            clone = new CodeInputStaticProperty();
+            clone.elementId = id;
+            clone.codeTemplate = val.codeTemplate;
+            clone.value = val.value;
+            clone.language = val.language;
         } else if (val instanceof StaticPropertyGroup) {
             clone = new StaticPropertyGroup();
             clone.elementId = id;
@@ -138,7 +187,6 @@ export class StaticPropertyUtilService {
         dst.label = src.label;
         dst.description = src.description;
         dst.internalName = src.internalName;
-        dst.index = src.index;
         return dst;
     }
 

@@ -19,7 +19,7 @@
 StreamPipes Compose is a simple collection of user-friendly `docker-compose` files that easily lets gain first-hand experience with Apache StreamPipes.
 
 <!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
-**Current version:** 0.95.1
+**Current version:** 0.97.0
 <!-- END do not edit -->
 
 > **NOTE**: We recommend StreamPipes Compose to only use for initial try-out and testing. If you are a developer and want to develop new pipeline elements or core feature, use the [StreamPipes CLI](../cli).
@@ -29,7 +29,7 @@ StreamPipes Compose is a simple collection of user-friendly `docker-compose` fil
 ```bash
 docker-compose up -d
 ```
-Go to http://localhost to finish the installation in the browser. Once finished, switch to the pipeline editor and start the interactive tour or check the [online tour](https://streampipes.apache.org/docs/docs/user-guide-tour/) to learn how to create your first pipeline!
+Go to http://localhost to finish the installation in the browser. Once finished, switch to the pipeline editor and start the interactive tour or check the [online tour](https://streampipes.apache.org/docs/user-guide-tour/) to learn how to create your first pipeline!
 
 ## Prerequisite
 * Docker >= 17.06.0
@@ -50,7 +50,7 @@ We provide three options to get you going:
 - **full**:  contains experimental Flink wrappers
 - **quickstart**:  contains pre-configured sample assets, including pipelines, dashboards, and data views. We recommend first-time StreamPipes users to use the Quickstart mode to experience the convenience of StreamPipes in IIoT! （Recommended for first-time users)
 
-The ``nats`` version will become the default version in a later release. You can already try it for new installations, 
+The ``nats`` version will become the default version in a later release. You can already try it for new installations,
 but there's not yet an automatic migration from current Kafka-based installations to Nats.
 
 **Starting** the **default** option is as easy as simply running:
@@ -60,7 +60,7 @@ but there's not yet an automatic migration from current Kafka-based installation
 docker-compose up -d
 # go to `http://localhost` after all services are started
 ```
-After all containers are successfully started just got to your browser and visit http://localhost to finish the installation. Once finished, switch to the pipeline editor and start the interactive tour or check the [documentation](https://streampipes.apache.org/docs/docs/user-guide-introduction.html) to learn more about StreamPipes!
+After all containers are successfully started just got to your browser and visit http://localhost to finish the installation. Once finished, switch to the pipeline editor and start the interactive tour or check the [documentation](https://streampipes.apache.org/docs/user-guide-introduction/) to learn more about StreamPipes!
 
 **Stopping** the **default** option is similarly easy:
 ```bash
@@ -123,7 +123,7 @@ Since we purely levarage Docker Compose, please see their [documentation](https:
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our community channels:
 
 - [Slack](https://slack.streampipes.org)
-- [Mailing Lists](https://streampipes.apache.org/mailinglists.html)
+- [Mailing Lists](https://streampipes.apache.org/community/mailing-lists/)
 
 And don't forget to follow us on [Twitter](https://twitter.com/streampipes)!
 

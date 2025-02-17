@@ -27,6 +27,8 @@ import java.util.Set;
 @TsModel
 public class UserAccount extends Principal {
 
+  public static final String LOCAL = "local";
+
   protected String fullName;
   protected String password;
 
@@ -39,6 +41,11 @@ public class UserAccount extends Principal {
   protected boolean hideTutorial;
   protected boolean darkMode = false;
 
+  /**
+   * The authentication provider (LOCAL or one of the configured OAuth providers
+   */
+  protected String provider;
+
   public UserAccount() {
     super(PrincipalType.USER_ACCOUNT);
     this.hideTutorial = false;
@@ -46,11 +53,12 @@ public class UserAccount extends Principal {
     this.preferredDataProcessors = new ArrayList<>();
     this.preferredDataSinks = new ArrayList<>();
     this.preferredDataStreams = new ArrayList<>();
+    this.provider = UserAccount.LOCAL;
   }
 
   public static UserAccount from(String username,
                                  String encryptedPassword,
-                                 Set<Role> roles) {
+                                 Set<String> roles) {
     UserAccount account = new UserAccount();
     account.setUsername(username);
     account.setPassword(encryptedPassword);
@@ -61,11 +69,11 @@ public class UserAccount extends Principal {
     return account;
   }
 
-  public Set<Role> getRoles() {
+  public Set<String> getRoles() {
     return roles;
   }
 
-  public void setRoles(Set<Role> roles) {
+  public void setRoles(Set<String> roles) {
     this.roles = roles;
   }
 
@@ -155,5 +163,13 @@ public class UserAccount extends Principal {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public String getProvider() {
+    return provider;
+  }
+
+  public void setProvider(String provider) {
+    this.provider = provider;
   }
 }

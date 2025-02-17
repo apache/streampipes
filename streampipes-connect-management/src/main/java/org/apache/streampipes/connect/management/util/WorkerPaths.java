@@ -17,13 +17,6 @@
  */
 package org.apache.streampipes.connect.management.util;
 
-import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-
 public class WorkerPaths {
 
   private static final String WorkerMainPath = "/api/v1/worker";
@@ -34,14 +27,6 @@ public class WorkerPaths {
 
   public static String getStreamStopPath() {
     return WorkerMainPath + "/stream/stop";
-  }
-
-  public static String getSetInvokePath() {
-    return WorkerMainPath + "/set/invoke";
-  }
-
-  public static String getSetStopPath() {
-    return WorkerMainPath + "/set/stop";
   }
 
   public static String getRunningAdaptersPath() {
@@ -55,13 +40,5 @@ public class WorkerPaths {
   public static String getGuessSchemaPath() {
     return WorkerMainPath + "/guess/schema";
   }
-
-  public static String findEndpointUrl(String appId) throws NoServiceEndpointsAvailableException, URISyntaxException {
-    SpServiceUrlProvider serviceUrlProvider = SpServiceUrlProvider.ADAPTER;
-    String endpointUrl = new ExtensionsServiceEndpointGenerator(appId, serviceUrlProvider).getEndpointResourceUrl();
-    URI uri = new URI(endpointUrl);
-    return uri.getScheme() + "://" + uri.getAuthority();
-  }
-
 
 }

@@ -29,11 +29,13 @@
                 mat-button
                 (click)="onCancel()"
                 *ngIf="data.confirmAndCancel"
+                data-cy="cancel-delete"
             >
                 {{ data.cancelTitle }}
             </button>
             <button
-                mat-button
+                mat-raised-button
+                color="accent"
                 (click)="onOk()"
                 cdkFocusInitial
                 data-cy="confirm-delete"

@@ -16,8 +16,7 @@
 version: "3.4"
 services:
   iotdb:
-    # 0.13.3 is the only recommended production ready version for edge side (standalone) deployment
-    image: apache/iotdb:0.13.3-node
+    image: apache/iotdb:1.3.0-standalone
     ports:
       # rpc port
       - "6667:6667"

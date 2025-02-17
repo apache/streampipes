@@ -38,10 +38,22 @@ OPC_SERVER_HOST.description=Example: test-server.com, opc.tcp://test-server.com)
 OPC_SERVER_PORT.title=Port
 OPC_SERVER_PORT.description=Example: 4840
 
+securityMode.title=Security Mode
+securityMode.description=The OPC-UA security mode
+
+securityPolicy.title=Security Policy
+securityPolicy.description=The OPC-UA security policy. Choose "None" if security mode is "None"
+
+userAuthentication.title=User Authentication
+userAuthentication.description=Choose an authentication method for the user
+
+anonymous.title=Anonymous
+anonymous.description=
+
 ACCESS_MODE.title=Security Level
 ACCESS_MODE.description=Select the OPC UA security level for the connection
 
-USERNAME_GROUP.title=Sign (username & password)
+USERNAME_GROUP.title=Username & Password
 USERNAME_GROUP.description=
 
 UNAUTHENTICATED.title=None
@@ -67,3 +79,6 @@ PULL_MODE.description=
 
 SUBSCRIPTION_MODE.title=Subscription mode
 SUBSCRIPTION_MODE.description=
+
+incomplete-event-handling.title=Incomplete Events
+incomplete-event-handling.description=Select how events with missing values (e.g., due to bad status codes) are handled.

@@ -18,6 +18,10 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.config;
 
+import org.apache.streampipes.extensions.connectors.opcua.utils.SecurityUtils;
+import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
 import org.apache.streampipes.sdk.helpers.Alternatives;
@@ -25,7 +29,7 @@ import org.apache.streampipes.sdk.helpers.Labels;
 
 import java.util.List;
 
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ACCESS_MODE;
+import static org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter.PULL_GROUP;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ADAPTER_TYPE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.AVAILABLE_NODES;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.HOST_PORT;
@@ -36,11 +40,20 @@ import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabe
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_SERVER_URL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_URL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PASSWORD;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.UNAUTHENTICATED;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULLING_INTERVAL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME_GROUP;
 
 public class SharedUserConfiguration {
+
+  public static final String INCOMPLETE_EVENT_HANDLING_KEY = "incomplete-event-handling";
+  public static final String INCOMPLETE_OPTION_IGNORE = "ignore-event";
+  public static final String INCOMPLETE_OPTION_SEND = "send-event";
+
+  public static final String SECURITY_MODE = "securityMode";
+  public static final String SECURITY_POLICY = "securityPolicy";
+  public static final String USER_AUTHENTICATION = "userAuthentication";
+  public static final String USER_AUTHENTICATION_ANONYMOUS = "anonymous";
 
   public static void appendSharedOpcUaConfig(AbstractConfigurablePipelineElementBuilder<?, ?> builder,
                                              boolean adapterConfig) {
@@ -48,8 +61,16 @@ public class SharedUserConfiguration {
     var dependsOn = getDependsOn(adapterConfig);
 
     builder
-        .requiredAlternatives(Labels.withId(ACCESS_MODE),
-            Alternatives.from(Labels.withId(UNAUTHENTICATED)),
+        .requiredSingleValueSelection(
+            Labels.withId(SECURITY_MODE),
+            SecurityUtils.getAvailableSecurityModes().stream().map(mode -> new Option(mode.k, mode.v)).toList()
+        )
+        .requiredSingleValueSelection(
+            Labels.withId(SECURITY_POLICY),
+            SecurityUtils.getAvailableSecurityPolicies().stream().map(p -> new Option(p.name())).toList()
+        )
+        .requiredAlternatives(Labels.withId(USER_AUTHENTICATION),
+            Alternatives.from(Labels.withId(USER_AUTHENTICATION_ANONYMOUS)),
             Alternatives.from(Labels.withId(USERNAME_GROUP),
                 StaticProperties.group(
                     Labels.withId(USERNAME_GROUP),
@@ -81,13 +102,37 @@ public class SharedUserConfiguration {
         );
   }
 
+  public static StaticPropertyGroup getPullModeGroup() {
+    var group = StaticProperties.group(
+        Labels.withId(PULL_GROUP),
+        false,
+        StaticProperties.integerFreeTextProperty(
+            Labels.withId(PULLING_INTERVAL)),
+        getIncompleteEventConfig()
+    );
+    group.setHorizontalRendering(false);
+    return group;
+  }
+
+  public static OneOfStaticProperty getIncompleteEventConfig() {
+    return StaticProperties.singleValueSelection(
+        Labels.withId(INCOMPLETE_EVENT_HANDLING_KEY),
+        List.of(
+            new Option("Ignore (only complete messages are sent)", INCOMPLETE_OPTION_IGNORE),
+            new Option("Send (incomplete messages are sent)", INCOMPLETE_OPTION_SEND)
+        )
+    );
+  }
+
   public static List<String> getDependsOn(boolean adapterConfig) {
     return adapterConfig ? List.of(
         ADAPTER_TYPE.name(),
-        ACCESS_MODE.name(),
+        SECURITY_MODE,
+        SECURITY_POLICY,
         OPC_HOST_OR_URL.name()
     ) : List.of(
-        ACCESS_MODE.name(),
+        SECURITY_MODE,
+        SECURITY_POLICY,
         OPC_HOST_OR_URL.name());
   }
 }

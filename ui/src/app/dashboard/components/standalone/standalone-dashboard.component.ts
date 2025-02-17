@@ -27,7 +27,7 @@ import { zip } from 'rxjs';
 
 @Component({
     templateUrl: './standalone-dashboard.component.html',
-    styleUrls: ['./standalone-dashboard.component.css'],
+    styleUrls: ['./standalone-dashboard.component.scss'],
 })
 export class StandaloneDashboardComponent implements OnInit {
     dashboard: Dashboard;

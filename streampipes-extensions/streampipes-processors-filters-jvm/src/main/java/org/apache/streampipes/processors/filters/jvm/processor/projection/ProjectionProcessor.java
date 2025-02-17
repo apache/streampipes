@@ -41,7 +41,8 @@ public class ProjectionProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.project")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.filters.jvm.project", 0)
         .category(DataProcessorType.TRANSFORM)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)

@@ -23,24 +23,35 @@ import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
+import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProvider;
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV1;
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV2;
+import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV3;
+import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV4;
+import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaSinkMigrationV1;
 import org.apache.streampipes.extensions.connectors.opcua.sink.OpcUaSink;
 
 import java.util.List;
 
 public class OpcUaConnectorsModuleExport implements IExtensionModuleExport {
+
+  private final OpcUaClientProvider clientProvider;
+
+  public OpcUaConnectorsModuleExport() {
+    this.clientProvider = new OpcUaClientProvider();
+  }
+
   @Override
   public List<StreamPipesAdapter> adapters() {
     return List.of(
-        new OpcUaAdapter()
+        new OpcUaAdapter(clientProvider)
     );
   }
 
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
     return List.of(
-        new OpcUaSink()
+        new OpcUaSink(clientProvider)
     );
   }
 
@@ -48,7 +59,10 @@ public class OpcUaConnectorsModuleExport implements IExtensionModuleExport {
   public List<IModelMigrator<?, ?>> migrators() {
     return List.of(
         new OpcUaAdapterMigrationV1(),
-        new OpcUaAdapterMigrationV2()
+        new OpcUaAdapterMigrationV2(),
+        new OpcUaAdapterMigrationV3(),
+        new OpcUaAdapterMigrationV4(),
+        new OpcUaSinkMigrationV1()
     );
   }
 }

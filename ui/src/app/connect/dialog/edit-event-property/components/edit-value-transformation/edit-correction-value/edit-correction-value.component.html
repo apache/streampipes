@@ -39,7 +39,6 @@
                     [(ngModel)]="
                         cachedProperty.additionalMetadata.correctionValue
                     "
-                    (change)="valueChanged()"
                     data-cy="connect-schema-correction-value"
                 />
             </mat-form-field>
@@ -50,7 +49,6 @@
                     required
                     placeholder="Math Operator"
                     [(ngModel)]="cachedProperty.additionalMetadata.operator"
-                    (selectionChange)="valueChanged()"
                     [disabled]="
                         !cachedProperty.additionalMetadata.correctionValue
                     "

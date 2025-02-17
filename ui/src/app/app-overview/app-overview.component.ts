@@ -25,7 +25,7 @@ import { SpAppRoutes } from './apps.routes';
 
 @Component({
     templateUrl: './app-overview.component.html',
-    styleUrls: ['./app-overview.component.css'],
+    styleUrls: ['./app-overview.component.scss'],
 })
 export class AppOverviewComponent implements OnInit {
     apps: App[] = [];

@@ -25,7 +25,6 @@ import org.apache.streampipes.model.schema.QuantitativeValue;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 
 public class PrimitivePropertyBuilder {
@@ -53,12 +52,26 @@ public class PrimitivePropertyBuilder {
   /**
    * Specifies the semantics of the property (e.g., whether a double value stands for a latitude coordinate).
    *
-   * @param domainProperty The domain property as a String. The domain property should reflect an URI. Use some
+   * @param semanticType The semantic type as a String. Use some
    *                       existing vocabulary from {@link org.apache.streampipes.vocabulary} or create your own.
-   * @return
+   * @return PrimitivePropertyBuilder
    */
-  public PrimitivePropertyBuilder domainProperty(String domainProperty) {
-    this.eventProperty.setDomainProperties(Collections.singletonList(URI.create(domainProperty)));
+  public PrimitivePropertyBuilder semanticType(String semanticType) {
+    this.eventProperty.setSemanticType(semanticType);
+    return this;
+  }
+
+  /**
+   * @deprecated use {@link PrimitivePropertyBuilder#semanticType(String)} instead.
+   * Specifies the semantics of the property (e.g., whether a double value stands for a latitude coordinate).
+   *
+   * @param semanticType The semantic type as a String. Use some
+   *                       existing vocabulary from {@link org.apache.streampipes.vocabulary} or create your own.
+   * @return PrimitivePropertyBuilder
+   */
+  @Deprecated(forRemoval = true, since = "0.97.0")
+  public PrimitivePropertyBuilder domainProperty(String semanticType) {
+    this.eventProperty.setSemanticType(semanticType);
     return this;
   }
 

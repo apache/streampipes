@@ -18,13 +18,14 @@
 package streampipes
 
 import (
+	"io"
+	"log"
+	"net/http"
+
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/serializer"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/util"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/streampipes_version"
-	"io"
-	"log"
-	"net/http"
 )
 
 type Versions struct {
@@ -44,7 +45,7 @@ func (d *Versions) GetStreamPipesVersion() (streampipes_version.Versions, error)
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v2/info/versions", nil)
 	log.Printf("Get data from: %s", endPointUrl)
 
-	response, err := d.executeRequest("GET", endPointUrl)
+	response, err := d.executeRequest("GET", endPointUrl, nil)
 	if err != nil {
 		return streampipes_version.Versions{}, err
 	}

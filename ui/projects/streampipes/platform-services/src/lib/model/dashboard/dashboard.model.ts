@@ -25,7 +25,14 @@ export interface DashboardConfig extends GridsterConfig {}
 export interface ClientDashboardItem extends GridsterItem {
     widgetId: string;
     widgetType: string;
+    timeSettings?: TimeSettings;
     id: string;
+}
+
+export interface DashboardLiveSettings {
+    refreshModeActive: boolean;
+    refreshIntervalInSeconds?: number;
+    label: string;
 }
 
 export interface Dashboard {
@@ -36,6 +43,7 @@ export interface Dashboard {
     widgets?: ClientDashboardItem[];
     dashboardTimeSettings?: TimeSettings;
     dashboardGeneralSettings?: any;
-    _id?: string;
-    _rev?: string;
+    dashboardLiveSettings: DashboardLiveSettings;
+    elementId?: string;
+    rev?: string;
 }

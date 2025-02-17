@@ -30,6 +30,7 @@ import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescript
 import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 
@@ -52,6 +53,11 @@ public class StatefulTransformationRuleGeneratorVisitor extends TransformationRu
 
   @Override
   public void visit(RenameRuleDescription rule) {
+    // skip (not a stateful transformation)
+  }
+
+  @Override
+  public void visit(RegexTransformationRuleDescription rule) {
     // skip (not a stateful transformation)
   }
 

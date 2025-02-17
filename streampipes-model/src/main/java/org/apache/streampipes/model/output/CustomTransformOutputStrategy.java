@@ -32,7 +32,6 @@ public class CustomTransformOutputStrategy extends OutputStrategy {
     this.eventProperties = new ArrayList<>();
   }
 
-
   public CustomTransformOutputStrategy(CustomTransformOutputStrategy other) {
     super(other);
     this.eventProperties = new Cloner().properties(other.getEventProperties());
@@ -44,5 +43,10 @@ public class CustomTransformOutputStrategy extends OutputStrategy {
 
   public void setEventProperties(List<EventProperty> eventProperties) {
     this.eventProperties = eventProperties;
+  }
+
+  @Override
+  public void accept(OutputStrategyVisitor visitor) {
+    visitor.visit(this);
   }
 }

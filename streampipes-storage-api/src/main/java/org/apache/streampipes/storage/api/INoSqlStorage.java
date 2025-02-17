@@ -17,8 +17,19 @@
  */
 package org.apache.streampipes.storage.api;
 
+import org.apache.streampipes.model.client.user.Group;
+import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
+import org.apache.streampipes.model.client.user.Privilege;
+import org.apache.streampipes.model.client.user.Role;
+import org.apache.streampipes.model.client.user.UserActivationToken;
+import org.apache.streampipes.model.dashboard.DashboardModel;
+import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.file.FileMetadata;
+import org.apache.streampipes.model.template.CompactPipelineTemplate;
 
 public interface INoSqlStorage {
 
@@ -30,31 +41,25 @@ public interface INoSqlStorage {
 
   IImageStorage getImageStorage();
 
-  IUserGroupStorage getUserGroupStorage();
+  CRUDStorage<Group> getUserGroupStorage();
 
   IPipelineStorage getPipelineStorageAPI();
-
-  IPipelineElementConnectionStorage getConnectionStorageApi();
 
   IUserStorage getUserStorageAPI();
 
   INotificationStorage getNotificationStorageApi();
 
-  IPipelineCategoryStorage getPipelineCategoryStorageApi();
+  CRUDStorage<DataLakeMeasure> getDataLakeStorage();
 
-  IAssetDashboardStorage getAssetDashboardStorage();
+  CRUDStorage<FileMetadata> getFileMetadataStorage();
 
-  IDataLakeStorage getDataLakeStorage();
+  CRUDStorage<DashboardModel> getDashboardStorage();
 
-  IFileMetadataStorage getFileMetadataStorage();
+  CRUDStorage<DashboardModel> getDataExplorerDashboardStorage();
 
-  IDashboardStorage getDashboardStorage();
+  CRUDStorage<DashboardWidgetModel> getDashboardWidgetStorage();
 
-  IDashboardStorage getDataExplorerDashboardStorage();
-
-  IDashboardWidgetStorage getDashboardWidgetStorage();
-
-  IDataExplorerWidgetStorage getDataExplorerWidgetStorage();
+  CRUDStorage<DataExplorerWidgetModel> getDataExplorerWidgetStorage();
 
   IPipelineElementTemplateStorage getPipelineElementTemplateStorage();
 
@@ -70,13 +75,19 @@ public interface INoSqlStorage {
 
   IDataStreamStorage getDataStreamStorage();
 
-  IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage();
+  CRUDStorage<PasswordRecoveryToken> getPasswordRecoveryTokenStorage();
 
-  IUserActivationTokenStorage getUserActivationTokenStorage();
+  CRUDStorage<UserActivationToken> getUserActivationTokenStorage();
 
-  CRUDStorage<String, SpServiceRegistration> getExtensionsServiceStorage();
+  CRUDStorage<SpServiceRegistration> getExtensionsServiceStorage();
 
-  CRUDStorage<String, SpServiceConfiguration> getExtensionsServiceConfigurationStorage();
+  CRUDStorage<SpServiceConfiguration> getExtensionsServiceConfigurationStorage();
 
   ISpCoreConfigurationStorage getSpCoreConfigurationStorage();
+
+  CRUDStorage<Role> getRoleStorage();
+
+  CRUDStorage<Privilege> getPrivilegeStorage();
+
+  CRUDStorage<CompactPipelineTemplate> getPipelineTemplateStorage();
 }

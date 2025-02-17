@@ -24,14 +24,12 @@ import { MappingPropertyUnary } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-app-static-mapping-unary',
     templateUrl: './static-mapping-unary.component.html',
-    styleUrls: ['./static-mapping-unary.component.css'],
+    styleUrls: ['./static-mapping-unary.component.scss'],
 })
 export class StaticMappingUnaryComponent
     extends StaticMappingComponent<MappingPropertyUnary>
     implements OnInit
 {
-    @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
-
     constructor() {
         super();
     }
@@ -41,7 +39,7 @@ export class StaticMappingUnaryComponent
         if (!this.staticProperty.selectedProperty) {
             this.staticProperty.selectedProperty =
                 this.availableProperties[0].propertySelector;
-            this.emitUpdate(true);
+            this.applyCompletedConfiguration(true);
         }
         this.addValidator(
             this.staticProperty.selectedProperty,
@@ -54,6 +52,6 @@ export class StaticMappingUnaryComponent
 
     onValueChange(value: any) {
         this.staticProperty.selectedProperty = value;
-        this.emitUpdate(true);
+        this.applyCompletedConfiguration(true);
     }
 }

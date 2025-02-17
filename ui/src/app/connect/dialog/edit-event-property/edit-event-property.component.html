@@ -82,6 +82,7 @@
                         [isNestedProperty]="isEventPropertyNested"
                         [isListProperty]="isEventPropertyList"
                         [isPrimitiveProperty]="isEventPropertyPrimitive"
+                        [isStringProperty]="isStringProperty"
                         #valueTransformationComponent
                     >
                     </sp-edit-value-transformation>
@@ -98,17 +99,6 @@
                     </sp-edit-unit-transformation>
                 </div>
             </form>
-
-            <!--            <sp-edit-event-property-primitive-->
-            <!--                    *ngIf="isEventPropertyPrimitive"-->
-            <!--                    [isTimestampProperty]="isTimestampProperty"-->
-            <!--                    [cachedProperty]="cachedProperty"-->
-            <!--                    (isNumericDataType)="isNumericDataType($event)">-->
-            <!--            </sp-edit-event-property-primitive>-->
-            <!--            <sp-edit-event-property-list-->
-            <!--                    *ngIf="isEventPropertyList"-->
-            <!--                    [cachedProperty]="cachedProperty">-->
-            <!--            </sp-edit-event-property-list>-->
         </div>
     </div>
     <mat-divider></mat-divider>

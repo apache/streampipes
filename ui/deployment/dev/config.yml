@@ -23,7 +23,5 @@ modules:
     - spConnect
     - spDashboard
     - spDataExplorer
-    - spAdd
     - spAssets
-    - spFiles
     - spConfiguration

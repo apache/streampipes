@@ -33,3 +33,10 @@ messageAdvanced.title=Advanced Message Format
 
 webhookUrl.title=Webhook URL
 webhookUrl.description=URL of the Webhook that allows to notifications to a dedicated channel in MS Teams.
+
+proxy.title=Proxy Settings
+proxy.description=Additional proxy server settings
+proxyDisabled.title=No proxy
+proxyEnabled.title=Use Proxy
+proxyUrl.title=URL
+proxyUrl.description=The URL of the proxy, e.g., http://proxy.com:80

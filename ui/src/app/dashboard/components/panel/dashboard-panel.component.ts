@@ -49,7 +49,7 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
     selector: 'sp-dashboard-panel',
     templateUrl: './dashboard-panel.component.html',
-    styleUrls: ['./dashboard-panel.component.css'],
+    styleUrls: ['./dashboard-panel.component.scss'],
 })
 export class DashboardPanelComponent implements OnInit {
     dashboard: Dashboard;
@@ -137,8 +137,8 @@ export class DashboardPanelComponent implements OnInit {
 
     addWidgetToDashboard(widget: DashboardWidgetModel) {
         const dashboardItem = {} as ClientDashboardItem;
-        dashboardItem.widgetId = widget._id;
-        dashboardItem.id = widget._id;
+        dashboardItem.widgetId = widget.elementId;
+        dashboardItem.id = widget.elementId;
         // TODO there should be a widget type DashboardWidget
         dashboardItem.widgetType = widget.dashboardWidgetSettings.widgetName;
         dashboardItem.cols = 4;
@@ -165,7 +165,7 @@ export class DashboardPanelComponent implements OnInit {
 
     closeEditModeAndReloadDashboard() {
         this.editMode = !this.editMode;
-        this.getDashboard(this.dashboard._id);
+        this.getDashboard(this.dashboard.elementId);
     }
 
     prepareWidgetUpdates(): Observable<any>[] {
@@ -179,7 +179,7 @@ export class DashboardPanelComponent implements OnInit {
 
     discardChanges() {
         this.editModeChange.emit(!this.editMode);
-        this.refreshDashboardService.notify(this.dashboard._id);
+        this.refreshDashboardService.notify(this.dashboard.elementId);
     }
 
     removeAndQueueItemForDeletion(widget: ClientDashboardItem) {
@@ -191,7 +191,7 @@ export class DashboardPanelComponent implements OnInit {
     }
 
     updateAndQueueItemForDeletion(dashboardWidget: DashboardWidgetModel) {
-        this.widgetsToUpdate.set(dashboardWidget._id, dashboardWidget);
+        this.widgetsToUpdate.set(dashboardWidget.elementId, dashboardWidget);
     }
 
     deleteWidgets() {

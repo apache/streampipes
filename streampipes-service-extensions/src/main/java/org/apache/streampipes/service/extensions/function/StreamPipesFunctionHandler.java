@@ -62,27 +62,32 @@ public enum StreamPipesFunctionHandler {
     var client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
     functions.forEach(function -> {
       function.getFunctionConfig().getOutputDataStreams().values().forEach(ds -> {
-        DeclarersSingleton.getInstance().add(new IStreamPipesDataStream() {
-          @Override
-          public IDataStreamConfiguration declareConfig() {
-            return DataStreamConfiguration.create(
-                () -> this,
-                ds
-            );
+        if (!DeclarersSingleton.getInstance().getDataStreams().containsKey(ds.getAppId())) {
+          DeclarersSingleton.getInstance().add(new IStreamPipesDataStream() {
+            @Override
+            public IDataStreamConfiguration declareConfig() {
+              return DataStreamConfiguration.create(
+                  () -> this,
+                  ds
+              );
+            }
+
+            @Override
+            public void executeStream() {
+
+            }
+
+            @Override
+            public boolean isExecutable() {
+              return false;
+            }
+          });
+          if (client.streams().get(ds.getElementId()).isEmpty()) {
+            client.streams().create(ds);
+          } else {
+            client.streams().update(ds);
           }
-
-          @Override
-          public void executeStream() {
-
-          }
-
-          @Override
-          public boolean isExecutable() {
-            return false;
-          }
-        });
-
-        client.streams().create(ds);
+        }
       });
     });
   }
@@ -91,7 +96,7 @@ public enum StreamPipesFunctionHandler {
     this.runningInstances.forEach((key, value) -> {
       value.discardRuntime();
     });
-    new Thread(new FunctionDeregistrationHandler(getFunctionDefinitions())).start();
+    new FunctionDeregistrationHandler(getFunctionDefinitions()).run();
   }
 
   private List<FunctionDefinition> getFunctionDefinitions() {

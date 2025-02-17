@@ -16,13 +16,11 @@
  *
  */
 
-import * as FileSaver from 'file-saver';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
     FunctionId,
     FunctionsService,
     Pipeline,
-    PipelineCategory,
     PipelineService,
 } from '@streampipes/platform-services';
 import {
@@ -32,10 +30,8 @@ import {
     PanelType,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
-import { ImportPipelineDialogComponent } from './dialog/import-pipeline/import-pipeline-dialog.component';
 import { StartAllPipelinesDialogComponent } from './dialog/start-all-pipelines/start-all-pipelines-dialog.component';
-import { PipelineCategoriesDialogComponent } from './dialog/pipeline-categories/pipeline-categories-dialog.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
 import { SpPipelineRoutes } from './pipelines.routes';
@@ -51,15 +47,9 @@ import { Subscription } from 'rxjs';
 export class PipelinesComponent implements OnInit, OnDestroy {
     pipeline: Pipeline;
     pipelines: Pipeline[] = [];
-    systemPipelines: Pipeline[] = [];
+    filteredPipelines: Pipeline[] = [];
     starting: boolean;
     stopping: boolean;
-    pipelineCategories: PipelineCategory[];
-    activeCategoryId: string;
-
-    pipelineIdToStart: string;
-
-    pipelineToStart: Pipeline;
 
     pipelinesReady = false;
     hasPipelineWritePrivileges = false;
@@ -69,15 +59,12 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     isAdminRole = false;
 
     tutorialActive = false;
-
-    activatedRouteSubscription: Subscription;
     tutorialActiveSubscription: Subscription;
     userSubscription: Subscription;
 
     constructor(
         private pipelineService: PipelineService,
         private dialogService: DialogService,
-        private activatedRoute: ActivatedRoute,
         private authService: AuthService,
         private currentUserService: CurrentUserService,
         private router: Router,
@@ -85,7 +72,6 @@ export class PipelinesComponent implements OnInit, OnDestroy {
         private breadcrumbService: SpBreadcrumbService,
         private shepherdService: ShepherdService,
     ) {
-        this.pipelineCategories = [];
         this.starting = false;
         this.stopping = false;
     }
@@ -104,34 +90,15 @@ export class PipelinesComponent implements OnInit, OnDestroy {
                 );
             },
         );
-        this.activatedRouteSubscription =
-            this.activatedRoute.queryParams.subscribe(params => {
-                if (params['pipeline']) {
-                    this.pipelineIdToStart = params['pipeline'];
-                }
-                if (params.startTutorial) {
-                    this.startPipelineTour();
-                }
-                this.getPipelineCategories();
-                this.getPipelines();
-                this.getFunctions();
-            });
+        if (this.shepherdService.isTourActive()) {
+            this.shepherdService.trigger('pipeline-started');
+        }
+        this.getPipelines();
+        this.getFunctions();
         this.tutorialActiveSubscription =
             this.shepherdService.tutorialActive$.subscribe(tutorialActive => {
                 this.tutorialActive = tutorialActive;
             });
-    }
-
-    setSelectedTab(index) {
-        this.activeCategoryId =
-            index === 0 ? undefined : this.pipelineCategories[index - 1]._id;
-    }
-
-    exportPipelines() {
-        const blob = new Blob([JSON.stringify(this.pipelines)], {
-            type: 'application/json',
-        });
-        FileSaver.saveAs(blob, 'pipelines.json');
     }
 
     getFunctions() {
@@ -145,65 +112,29 @@ export class PipelinesComponent implements OnInit, OnDestroy {
         this.pipelines = [];
         this.pipelineService.getPipelines().subscribe(pipelines => {
             this.pipelines = pipelines;
-            this.checkForImmediateStart(pipelines);
-            this.pipelinesReady = true;
+            this.applyPipelineFilters(new Set<string>());
         });
     }
 
-    checkForImmediateStart(pipelines: Pipeline[]) {
-        this.pipelineToStart = undefined;
-        pipelines.forEach(pipeline => {
-            if (pipeline._id === this.pipelineIdToStart) {
-                this.pipelineToStart = pipeline;
-            }
-        });
-        this.pipelineIdToStart = undefined;
-    }
-
-    getPipelineCategories() {
-        this.pipelineService
-            .getPipelineCategories()
-            .subscribe(pipelineCategories => {
-                this.pipelineCategories = pipelineCategories;
-            });
-    }
-
-    activeClass(pipeline) {
-        return 'active-pipeline';
+    applyPipelineFilters(elementIds: Set<string>) {
+        if (elementIds.size == 0) {
+            this.filteredPipelines = this.pipelines;
+        } else {
+            this.filteredPipelines = this.pipelines.filter(p =>
+                elementIds.has(p.elementId),
+            );
+        }
+        this.pipelinesReady = true;
     }
 
     checkCurrentSelectionStatus(status) {
         let active = true;
-        this.pipelines.forEach(pipeline => {
-            if (
-                !this.activeCategoryId ||
-                pipeline.pipelineCategories.some(
-                    pc => pc === this.activeCategoryId,
-                )
-            ) {
-                if (pipeline.running === status) {
-                    active = false;
-                }
+        this.filteredPipelines.forEach(pipeline => {
+            if (pipeline.running === status) {
+                active = false;
             }
         });
         return active;
-    }
-
-    openImportPipelinesDialog() {
-        const dialogRef: DialogRef<ImportPipelineDialogComponent> =
-            this.dialogService.open(ImportPipelineDialogComponent, {
-                panelType: PanelType.STANDARD_PANEL,
-                title: 'Import Pipeline',
-                width: '70vw',
-                data: {
-                    pipelines: this.pipelines,
-                },
-            });
-        dialogRef.afterClosed().subscribe(data => {
-            if (data) {
-                this.refreshPipelines();
-            }
-        });
     }
 
     startAllPipelines(action) {
@@ -213,39 +144,16 @@ export class PipelinesComponent implements OnInit, OnDestroy {
                 title: (action ? 'Start' : 'Stop') + ' all pipelines',
                 width: '70vw',
                 data: {
-                    pipelines: this.pipelines,
+                    pipelines: this.filteredPipelines,
                     action: action,
-                    activeCategoryId: this.activeCategoryId,
                 },
             });
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-                this.refreshPipelines();
+                this.getPipelines();
             }
         });
-    }
-
-    showPipelineCategoriesDialog() {
-        const dialogRef: DialogRef<PipelineCategoriesDialogComponent> =
-            this.dialogService.open(PipelineCategoriesDialogComponent, {
-                panelType: PanelType.STANDARD_PANEL,
-                title: 'Pipeline Categories',
-                width: '70vw',
-                data: {
-                    pipelines: this.pipelines,
-                    systemPipelines: this.systemPipelines,
-                },
-            });
-
-        dialogRef.afterClosed().subscribe(data => {
-            this.getPipelineCategories();
-            this.refreshPipelines();
-        });
-    }
-
-    refreshPipelines() {
-        this.getPipelines();
     }
 
     startPipelineTour(): void {
@@ -261,7 +169,6 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.activatedRouteSubscription?.unsubscribe();
         this.userSubscription?.unsubscribe();
         this.tutorialActiveSubscription?.unsubscribe();
     }

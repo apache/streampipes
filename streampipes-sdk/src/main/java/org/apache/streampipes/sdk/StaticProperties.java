@@ -19,6 +19,7 @@
 package org.apache.streampipes.sdk;
 
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.FileStaticProperty;
@@ -32,7 +33,6 @@ import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticP
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
-import org.apache.streampipes.model.staticproperty.SelectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
@@ -58,10 +58,6 @@ public class StaticProperties {
   public static StaticPropertyAlternatives alternatives(Label label, List<StaticPropertyAlternative> alternatives) {
     StaticPropertyAlternatives alternativesContainer =
         new StaticPropertyAlternatives(label.getInternalId(), label.getLabel(), label.getDescription());
-
-    for (int i = 0; i < alternatives.size(); i++) {
-      alternatives.get(i).setIndex(i);
-    }
 
     alternativesContainer.setAlternatives(alternatives);
 
@@ -102,9 +98,9 @@ public class StaticProperties {
    * @return A configured FreeTextStaticProperty instance.
    */
   public static FreeTextStaticProperty stringFreeTextProperty(
-          Label label,
-          boolean isMultiLine,
-          boolean arePlaceholdersSupported) {
+      Label label,
+      boolean isMultiLine,
+      boolean arePlaceholdersSupported) {
     var property = stringFreeTextProperty(label);
     property.setMultiLine(isMultiLine);
     property.setPlaceholdersSupported(arePlaceholdersSupported);
@@ -219,9 +215,6 @@ public class StaticProperties {
 
   public static StaticPropertyGroup group(Label label, StaticProperty... sp) {
     List<StaticProperty> staticProperties = Arrays.asList(sp);
-    for (int i = 0; i < staticProperties.size(); i++) {
-      staticProperties.get(i).setIndex(i);
-    }
     return new StaticPropertyGroup(label.getInternalId(), label.getLabel(),
         label.getDescription(), staticProperties);
   }
@@ -241,19 +234,27 @@ public class StaticProperties {
     return osp;
   }
 
+  public static AnyStaticProperty multiValueSelection(Label label, List<Option> options) {
+    var osp = new AnyStaticProperty(
+        label.getInternalId(),
+        label.getLabel(),
+        label.getDescription()
+    );
+    osp.setOptions(options);
+
+    return osp;
+  }
+
   public static SecretStaticProperty secretValue(Label label) {
     return new SecretStaticProperty(label.getInternalId(),
         label.getLabel(), label.getDescription());
   }
 
-  public static CollectionStaticProperty collection(Label label, StaticProperty... sp) {
-    for (StaticProperty staticProperty : sp) {
-      setHorizontalRendering(staticProperty);
-    }
+  public static CollectionStaticProperty collection(Label label, boolean horizontalAlignment, StaticProperty... sp) {
 
     if (sp.length > 1) {
       StaticPropertyGroup group = StaticProperties.group(label);
-      group.setHorizontalRendering(true);
+      group.setHorizontalRendering(horizontalAlignment);
       group.setStaticProperties(Arrays.asList(sp));
 
       return new CollectionStaticProperty(label.getInternalId(), label.getLabel(),
@@ -262,6 +263,10 @@ public class StaticProperties {
       return new CollectionStaticProperty(label.getInternalId(), label.getLabel(),
           label.getDescription(), sp[0]);
     }
+  }
+
+  public static CollectionStaticProperty collection(Label label, StaticProperty... sp) {
+    return collection(label, true, sp);
   }
 
   public static CodeInputStaticProperty codeStaticProperty(Label label,
@@ -273,21 +278,4 @@ public class StaticProperties {
     codeInputStaticProperty.setCodeTemplate(defaultSkeleton);
     return codeInputStaticProperty;
   }
-
-  private static StaticProperty setHorizontalRendering(StaticProperty sp) {
-    if (sp instanceof StaticPropertyGroup) {
-      ((StaticPropertyGroup) sp).setHorizontalRendering(true);
-      ((StaticPropertyGroup) sp).getStaticProperties().stream()
-          .forEach(property -> setHorizontalRendering(property));
-    } else if (sp instanceof SelectionStaticProperty) {
-      ((SelectionStaticProperty) sp).setHorizontalRendering(true);
-    } else if (sp instanceof StaticPropertyAlternatives) {
-      ((StaticPropertyAlternatives) sp).getAlternatives().stream()
-          .forEach(property -> setHorizontalRendering(property.getStaticProperty()));
-
-    }
-
-    return sp;
-  }
-
 }

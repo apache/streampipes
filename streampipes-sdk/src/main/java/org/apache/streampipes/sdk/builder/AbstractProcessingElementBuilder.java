@@ -106,21 +106,6 @@ public abstract class AbstractProcessingElementBuilder<K extends
   }
 
   /**
-   * @deprecated Use {@link #naryMappingPropertyWithoutRequirement(Label, PropertyScope)} instead.
-   * @param internalName
-   * @param label
-   * @param description
-   * @return
-   *
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K naryMappingPropertyWithoutRequirement(String internalName, String label, String
-      description) {
-    this.staticProperties.add(new MappingPropertyNary(internalName, label, description));
-    return me();
-  }
-
-  /**
    * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyNary}
    * to the pipeline element definition which is not linked to a specific input property.
    * Use this method if you want to present users a selection (in form of a Checkbox Group)
@@ -135,42 +120,6 @@ public abstract class AbstractProcessingElementBuilder<K extends
     MappingPropertyNary mp = new MappingPropertyNary(label.getInternalId(), label.getLabel(), label.getDescription());
     mp.setPropertyScope(propertyScope.name());
     this.staticProperties.add(mp);
-    return me();
-  }
-
-  /**
-   * @deprecated Use {@link #unaryMappingPropertyWithoutRequirement(Label)} instead.
-   * Use this method if you want to present users a single-value selection of all available input
-   * event properties.
-   *
-   * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyUnary}
-   * to the pipeline element definition which is not linked to a specific input property.
-   *
-   * @param label A human-readable label
-   * @return this
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K unaryMappingPropertyWithoutRequirement(String internalName, String label, String
-      description) {
-    this.staticProperties.add(new MappingPropertyUnary(internalName, label, description));
-    return me();
-  }
-
-  /**
-   * @deprecated Use this method if you want to present users a single-value selection of all available input
-   * event properties.
-   *
-   * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyUnary}
-   * to the pipeline element definition which is not linked to a specific input property.
-   *
-   * @param label
-   * @return this
-   *
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K unaryMappingPropertyWithoutRequirement(Label label) {
-    this.staticProperties.add(
-        new MappingPropertyUnary(label.getInternalId(), label.getLabel(), label.getDescription()));
     return me();
   }
 
@@ -196,11 +145,13 @@ public abstract class AbstractProcessingElementBuilder<K extends
    * Assigns supported transport formats to the pipeline elements that can be handled at runtime (e.g.,
    * JSON or XMl).
    *
+   * @deprecated format assignment is no longer necessary
    * @param format An arbitrary number of supported {@link org.apache.streampipes.model.grounding.TransportFormat}s. Use
    *               {@link org.apache.streampipes.sdk.helpers.SupportedFormats} to assign formats from some pre-defined
    *               ones or create your own by following the developer guide.
    * @return this
    */
+  @Deprecated(forRemoval = true, since = "0.97.0")
   public K supportedFormats(TransportFormat... format) {
     return supportedFormats(Arrays.asList(format));
   }
@@ -209,13 +160,14 @@ public abstract class AbstractProcessingElementBuilder<K extends
    * Assigns supported transport formats to the pipeline elements that can be handled at runtime (e.g.,
    * JSON or XMl).
    *
+   * @deprecated format assignment is no longer necessary
    * @param formats A list of supported {@link org.apache.streampipes.model.grounding.TransportFormat}s. Use
    *                {@link org.apache.streampipes.sdk.helpers.SupportedFormats} to assign formats from some pre-defined
    *                ones or create your own by following the developer guide.
    * @return this
    */
+  @Deprecated(forRemoval = true, since = "0.97.0")
   public K supportedFormats(List<TransportFormat> formats) {
-    this.supportedGrounding.setTransportFormats(formats);
     return me();
   }
 
@@ -247,28 +199,10 @@ public abstract class AbstractProcessingElementBuilder<K extends
     return me();
   }
 
-  /**
-   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K setStream1() {
-    stream1 = true;
-    return me();
-  }
-
-  /**
-   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
-   */
-  @Deprecated(since = "0.90.0", forRemoval = true)
-  public K setStream2() {
-    stream2 = true;
-    return me();
-  }
   public K withVersion(int version) {
     this.elementDescription.setVersion(version);
     return me();
   }
-
 
   @Override
   public void prepareBuild() {

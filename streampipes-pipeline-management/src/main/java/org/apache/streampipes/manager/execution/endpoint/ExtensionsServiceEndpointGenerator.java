@@ -18,7 +18,8 @@
 package org.apache.streampipes.manager.execution.endpoint;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
@@ -26,59 +27,66 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
-public class ExtensionsServiceEndpointGenerator {
+public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEndpointGenerator {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExtensionsServiceEndpointGenerator.class);
 
-  private final String appId;
-  private final SpServiceUrlProvider spServiceUrlProvider;
-
-  public ExtensionsServiceEndpointGenerator(String appId,
-                                            SpServiceUrlProvider spServiceUrlProvider) {
-    this.appId = appId;
-    this.spServiceUrlProvider = spServiceUrlProvider;
+  public ExtensionsServiceEndpointGenerator() {
   }
 
-  public ExtensionsServiceEndpointGenerator(NamedStreamPipesEntity entity) {
-    this.appId = entity.getAppId();
-    this.spServiceUrlProvider = ExtensionsServiceEndpointUtils.getPipelineElementType(entity);
+  public String getEndpointResourceUrl(String appId,
+                                       SpServiceUrlProvider spServiceUrlProvider,
+                                       Set<SpServiceTag> customServiceTags)
+      throws NoServiceEndpointsAvailableException {
+    return spServiceUrlProvider.getInvocationUrl(selectService(appId, spServiceUrlProvider, customServiceTags), appId);
   }
 
-  public String getEndpointResourceUrl() throws NoServiceEndpointsAvailableException {
-    return spServiceUrlProvider.getInvocationUrl(selectService(), appId);
+  public String getEndpointBaseUrl(String appId,
+                                   SpServiceUrlProvider spServiceUrlProvider,
+                                   Set<SpServiceTag> customServiceTags) throws NoServiceEndpointsAvailableException {
+    return selectService(appId, spServiceUrlProvider, customServiceTags);
   }
 
-  public String getEndpointBaseUrl() throws NoServiceEndpointsAvailableException {
-    return selectService();
+  private String selectService(String appId,
+                               SpServiceUrlProvider spServiceUrlProvider,
+                               Set<SpServiceTag> customServiceTags) throws NoServiceEndpointsAvailableException {
+    List<String> serviceEndpoints = getServiceEndpoints(appId, spServiceUrlProvider, customServiceTags);
+    if (!serviceEndpoints.isEmpty()) {
+      return serviceEndpoints.get(0);
+    } else {
+      LOG.error("Could not find any service endpoints for appId {}, serviceTag {}", appId,
+          spServiceUrlProvider.getServiceTag(appId).asString());
+      throw new NoServiceEndpointsAvailableException(
+          "Could not find any matching service endpoints - are all software components running?");
+    }
   }
 
-  private List<String> getServiceEndpoints() {
+  private List<String> getServiceEndpoints(String appId,
+                                           SpServiceUrlProvider spServiceUrlProvider,
+                                           Set<SpServiceTag> customServiceTags) {
     return SpServiceDiscovery
         .getServiceDiscovery()
         .getServiceEndpoints(
             DefaultSpServiceTypes.EXT,
             true,
-            Collections
-                .singletonList(
-                    this.spServiceUrlProvider
-                        .getServiceTag(appId)
-                        .asString()
-                )
+            getDesiredServiceTags(appId, spServiceUrlProvider, customServiceTags)
         );
   }
 
-  private String selectService() throws NoServiceEndpointsAvailableException {
-    List<String> serviceEndpoints = getServiceEndpoints();
-    if (!serviceEndpoints.isEmpty()) {
-      return getServiceEndpoints().get(0);
-    } else {
-      LOG.error("Could not find any service endpoints for appId {}, serviceTag {}", appId,
-          this.spServiceUrlProvider.getServiceTag(appId).asString());
-      throw new NoServiceEndpointsAvailableException(
-          "Could not find any matching service endpoints - are all software components running?");
-    }
+  private List<String> getDesiredServiceTags(String appId,
+                                             SpServiceUrlProvider serviceUrlProvider,
+                                             Set<SpServiceTag> customServiceTags) {
+    return Stream.concat(
+            Stream.of(
+                serviceUrlProvider.getServiceTag(appId)
+            ),
+            customServiceTags.stream()
+        )
+        .map(SpServiceTag::asString)
+        .toList();
   }
 }

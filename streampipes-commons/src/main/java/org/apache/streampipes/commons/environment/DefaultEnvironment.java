@@ -19,9 +19,13 @@
 package org.apache.streampipes.commons.environment;
 
 import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
+import org.apache.streampipes.commons.environment.parser.OAuthConfigurationParser;
 import org.apache.streampipes.commons.environment.variable.BooleanEnvironmentVariable;
 import org.apache.streampipes.commons.environment.variable.IntEnvironmentVariable;
 import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
+
+import java.util.List;
 
 public class DefaultEnvironment implements Environment {
 
@@ -56,6 +60,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getTsStorage() {
+    return new StringEnvironmentVariable(Envs.SP_TS_STORAGE);
+  }
+
+  @Override
   public StringEnvironmentVariable getTsStorageProtocol() {
     return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_PROTOCOL);
   }
@@ -83,6 +92,26 @@ public class DefaultEnvironment implements Environment {
   @Override
   public StringEnvironmentVariable getTsStorageBucket() {
     return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_BUCKET);
+  }
+
+  @Override
+  public IntEnvironmentVariable getIotDbSessionPoolSize(){
+    return new IntEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_SESSION_POOL_SIZE);
+  }
+
+  @Override
+  public BooleanEnvironmentVariable getIotDbSessionEnableCompression(){
+    return new BooleanEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_SESSION_POOL_ENABLE_COMPRESSION);
+  }
+
+  @Override
+  public StringEnvironmentVariable getIotDbUser(){
+    return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_USER);
+  }
+
+  @Override
+  public StringEnvironmentVariable getIotDbPassword(){
+    return new StringEnvironmentVariable(Envs.SP_TS_STORAGE_IOT_DB_PASSWORD);
   }
 
   @Override
@@ -147,6 +176,21 @@ public class DefaultEnvironment implements Environment {
   @Override
   public StringEnvironmentVariable getEncryptionPasscode() {
     return new StringEnvironmentVariable(Envs.SP_ENCRYPTION_PASSCODE);
+  }
+
+  @Override
+  public BooleanEnvironmentVariable getOAuthEnabled() {
+    return new BooleanEnvironmentVariable(Envs.SP_OAUTH_ENABLED);
+  }
+
+  @Override
+  public StringEnvironmentVariable getOAuthRedirectUri() {
+    return new StringEnvironmentVariable(Envs.SP_OAUTH_REDIRECT_URI);
+  }
+
+  @Override
+  public List<OAuthConfiguration> getOAuthConfigurations() {
+    return new OAuthConfigurationParser().parse(System.getenv());
   }
 
   @Override
@@ -274,4 +318,83 @@ public class DefaultEnvironment implements Environment {
     return new StringEnvironmentVariable(Envs.SP_PULSAR_URL);
   }
 
+  @Override
+  public StringEnvironmentVariable getCustomServiceTags() {
+    return new StringEnvironmentVariable(Envs.SP_SERVICE_TAGS);
+  }
+
+  @Override
+  public StringEnvironmentVariable getAllowedUploadFiletypes() {
+    return new StringEnvironmentVariable(Envs.SP_ALLOWED_UPLOAD_FILETYPES);
+  }
+
+  @Override
+  public StringEnvironmentVariable getOpcUaSecurityDir() {
+    return new StringEnvironmentVariable(Envs.SP_OPCUA_SECURITY_DIR);
+  }
+
+  @Override
+  public StringEnvironmentVariable getOpcUaKeystoreFile() {
+    return new StringEnvironmentVariable(Envs.SP_OPCUA_KEYSTORE_FILE);
+  }
+
+  @Override
+  public StringEnvironmentVariable getOpcUaKeystorePassword() {
+    return new StringEnvironmentVariable(Envs.SP_OPCUA_KEYSTORE_PASSWORD);
+  }
+
+  @Override
+  public StringEnvironmentVariable getOpcUaApplicationUri() {
+    return new StringEnvironmentVariable(Envs.SP_OPCUA_APPLICATION_URI);
+  }
+
+  @Override
+  public StringEnvironmentVariable getOpcUaKeystoreType() {
+    return new StringEnvironmentVariable(Envs.SP_OPCUA_KEYSTORE_TYPE);
+  }
+
+  @Override
+  public StringEnvironmentVariable getOpcUaKeystoreAlias() {
+    return new StringEnvironmentVariable(Envs.SP_OPCUA_KEYSTORE_ALIAS);
+  }
+
+  @Override
+  public StringEnvironmentVariable getKeystoreFilename() {
+    return new StringEnvironmentVariable(Envs.SP_SECURITY_KEYSTORE_FILENAME);
+  }
+
+  @Override
+  public StringEnvironmentVariable getKeystorePassword() {
+    return new StringEnvironmentVariable(Envs.SP_SECURITY_KEYSTORE_PASSWORD);
+  }
+
+  @Override
+  public StringEnvironmentVariable getKeystoreType() {
+    return new StringEnvironmentVariable(Envs.SP_SECURITY_KEYSTORE_TYPE);
+  }
+
+  @Override
+  public StringEnvironmentVariable getKeyPassword() {
+    return new StringEnvironmentVariable(Envs.SP_SECURITY_KEY_PASSWORD);
+  }
+
+  @Override
+  public StringEnvironmentVariable getTruststoreFilename() {
+    return new StringEnvironmentVariable(Envs.SP_SECURITY_TRUSTSTORE_FILENAME);
+  }
+
+  @Override
+  public StringEnvironmentVariable getTruststorePassword() {
+    return new StringEnvironmentVariable(Envs.SP_SECURITY_TRUSTSTORE_PASSWORD);
+  }
+
+  @Override
+  public StringEnvironmentVariable getTruststoreType() {
+    return new StringEnvironmentVariable(Envs.SP_SECURITY_TRUSTSTORE_TYPE);
+  }
+
+  @Override
+  public BooleanEnvironmentVariable getAllowSelfSignedCertificates() {
+    return new BooleanEnvironmentVariable(Envs.SP_SECURITY_ALLOW_SELFSIGNED);
+  }
 }

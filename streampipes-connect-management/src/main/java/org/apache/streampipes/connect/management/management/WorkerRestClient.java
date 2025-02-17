@@ -52,10 +52,10 @@ public class WorkerRestClient {
 
   private static final Logger LOG = LoggerFactory.getLogger(WorkerRestClient.class);
 
-  public static void invokeStreamAdapter(String endpointUrl,
+  public static void invokeStreamAdapter(String baseUrl,
                                          String elementId) throws AdapterException {
     var adapterStreamDescription = getAndDecryptAdapter(elementId);
-    var url = endpointUrl + WorkerPaths.getStreamInvokePath();
+    var url = baseUrl + WorkerPaths.getStreamInvokePath();
 
     startAdapter(url, adapterStreamDescription);
     updateStreamAdapterStatus(adapterStreamDescription.getElementId(), true);
@@ -127,11 +127,11 @@ public class WorkerRestClient {
     return request.execute().returnResponse();
   }
 
-  public static RuntimeOptionsResponse getConfiguration(String workerEndpoint,
+  public static RuntimeOptionsResponse getConfiguration(String baseUrl,
                                                         String appId,
                                                         RuntimeOptionsRequest runtimeOptionsRequest)
           throws AdapterException, SpConfigurationException {
-    String url = workerEndpoint + WorkerPaths.getRuntimeResolvablePath(appId);
+    String url = baseUrl + WorkerPaths.getRuntimeResolvablePath(appId);
 
     try {
       String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);
@@ -199,7 +199,7 @@ public class WorkerRestClient {
 
   private static AdapterDescription getAdapterDescriptionById(AdapterInstanceStorageImpl adapterStorage, String id) {
     AdapterDescription adapterDescription = null;
-    List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
+    List<AdapterDescription> allAdapters = adapterStorage.findAll();
     for (AdapterDescription a : allAdapters) {
       if (a.getElementId().endsWith(id)) {
         adapterDescription = a;
@@ -219,11 +219,11 @@ public class WorkerRestClient {
   private static void encryptAndUpdateAdapter(AdapterDescription adapter) {
     AdapterDescription encryptedDescription = new Cloner().adapterDescription(adapter);
     SecretProvider.getEncryptionService().apply(encryptedDescription);
-    getAdapterStorage().updateAdapter(encryptedDescription);
+    getAdapterStorage().updateElement(encryptedDescription);
   }
 
   private static AdapterDescription getAndDecryptAdapter(String adapterId) {
-    AdapterDescription adapter = getAdapterStorage().getAdapter(adapterId);
+    AdapterDescription adapter = getAdapterStorage().getElementById(adapterId);
     SecretProvider.getDecryptionService().apply(adapter);
     return adapter;
   }

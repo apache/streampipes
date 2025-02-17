@@ -34,6 +34,7 @@ import { AdapterStartedDialog } from '../../../dialog/adapter-started/adapter-st
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
+import { TransformationRuleService } from '../../../services/transformation-rule.service';
 
 @Component({
     selector: 'sp-start-adapter-configuration',
@@ -41,6 +42,11 @@ import { TimestampPipe } from '../../../filter/timestamp.pipe';
     styleUrls: ['./start-adapter-configuration.component.scss'],
 })
 export class StartAdapterConfigurationComponent implements OnInit {
+    static EventRateTransformationRuleId =
+        'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription' as const;
+    static RemoveDuplicatesTransformationRuleId =
+        'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription' as const;
+
     /**
      * Adapter description the selected format is added to
      */
@@ -48,7 +54,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     @Input() eventSchema: EventSchema;
 
-    @Input() isEditMode;
+    @Input() isEditMode: boolean;
 
     /**
      * Cancels the adapter configuration process
@@ -89,12 +95,14 @@ export class StartAdapterConfigurationComponent implements OnInit {
     dataLakeTimestampField: string;
 
     startAdapterNow = true;
+    showCode = false;
 
     constructor(
         private dialogService: DialogService,
         private shepherdService: ShepherdService,
         private _formBuilder: UntypedFormBuilder,
         private timestampPipe: TimestampPipe,
+        private transformationRuleService: TransformationRuleService,
     ) {}
 
     ngOnInit(): void {
@@ -114,6 +122,34 @@ export class StartAdapterConfigurationComponent implements OnInit {
             this.startAdapterSettingsFormValid = this.startAdapterForm.valid;
         });
         this.startAdapterSettingsFormValid = this.startAdapterForm.valid;
+
+        this.applySelectedEventRateReduction();
+        this.applySelectedRemoveDuplicates();
+    }
+
+    applySelectedEventRateReduction(): void {
+        const eventRateRule =
+            this.transformationRuleService.getExistingTransformationRule<EventRateTransformationRuleDescription>(
+                this.adapterDescription,
+                StartAdapterConfigurationComponent.EventRateTransformationRuleId,
+            );
+        if (eventRateRule !== undefined) {
+            this.eventRateReduction = true;
+            this.eventRateTime = eventRateRule.aggregationTimeWindow;
+            this.eventRateMode = eventRateRule.aggregationType;
+        }
+    }
+
+    applySelectedRemoveDuplicates(): void {
+        const removeDuplicatesRule =
+            this.transformationRuleService.getExistingTransformationRule<RemoveDuplicatesTransformationRuleDescription>(
+                this.adapterDescription,
+                StartAdapterConfigurationComponent.RemoveDuplicatesTransformationRuleId,
+            );
+        if (removeDuplicatesRule !== undefined) {
+            this.removeDuplicates = true;
+            this.removeDuplicatesTime = +removeDuplicatesRule.filterTimeWindow;
+        }
     }
 
     findDefaultTimestamp(selected: boolean) {
@@ -130,6 +166,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     public editAdapter() {
+        this.checkAndApplyStreamRules();
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
             title: 'Adapter edit',
@@ -146,24 +183,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     public startAdapter() {
-        if (this.removeDuplicates) {
-            const removeDuplicates: RemoveDuplicatesTransformationRuleDescription =
-                new RemoveDuplicatesTransformationRuleDescription();
-            removeDuplicates['@class'] =
-                'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription';
-            removeDuplicates.filterTimeWindow = this
-                .removeDuplicatesTime as any;
-            this.adapterDescription.rules.push(removeDuplicates);
-        }
-        if (this.eventRateReduction) {
-            const eventRate: EventRateTransformationRuleDescription =
-                new EventRateTransformationRuleDescription();
-            eventRate['@class'] =
-                'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription';
-            eventRate.aggregationTimeWindow = this.eventRateTime;
-            eventRate.aggregationType = this.eventRateMode;
-            this.adapterDescription.rules.push(eventRate);
-        }
+        this.checkAndApplyStreamRules();
 
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
@@ -182,6 +202,27 @@ export class StartAdapterConfigurationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(() => {
             this.adapterStartedEmitter.emit();
         });
+    }
+
+    private checkAndApplyStreamRules(): void {
+        if (this.removeDuplicates) {
+            const removeDuplicates: RemoveDuplicatesTransformationRuleDescription =
+                new RemoveDuplicatesTransformationRuleDescription();
+            removeDuplicates['@class'] =
+                StartAdapterConfigurationComponent.RemoveDuplicatesTransformationRuleId;
+            removeDuplicates.filterTimeWindow = this
+                .removeDuplicatesTime as any;
+            this.adapterDescription.rules.push(removeDuplicates);
+        }
+        if (this.eventRateReduction) {
+            const eventRate: EventRateTransformationRuleDescription =
+                new EventRateTransformationRuleDescription();
+            eventRate['@class'] =
+                StartAdapterConfigurationComponent.EventRateTransformationRuleId;
+            eventRate.aggregationTimeWindow = this.eventRateTime;
+            eventRate.aggregationType = this.eventRateMode;
+            this.adapterDescription.rules.push(eventRate);
+        }
     }
 
     public removeSelection() {

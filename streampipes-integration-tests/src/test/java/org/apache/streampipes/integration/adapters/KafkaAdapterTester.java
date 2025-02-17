@@ -22,7 +22,7 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.connectors.kafka.adapter.KafkaProtocol;
-import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConnectUtils;
+import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider;
 import org.apache.streampipes.integration.containers.KafkaContainer;
 import org.apache.streampipes.integration.containers.KafkaDevContainer;
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
@@ -32,14 +32,12 @@ import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
-import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -68,15 +66,12 @@ public class KafkaAdapterTester extends AdapterTesterBase {
     list.add(new Option(TOPIC));
     ((RuntimeResolvableOneOfStaticProperty) configuration.getAdapterDescription()
             .getConfig()
-            .get(4))
+            .get(5))
             .setOptions(list);
-    Map<String, PipelineElementTemplateConfig> configs = new HashMap<>();
-    configs.put(KafkaConnectUtils.HOST_KEY,
-      new PipelineElementTemplateConfig(true, false, kafkaContainer.getBrokerHost()));
-    configs.put(KafkaConnectUtils.PORT_KEY,
-      new PipelineElementTemplateConfig(true, false, kafkaContainer.getBrokerPort()));
-    configs.put(KafkaConnectUtils.TOPIC_KEY,
-      new PipelineElementTemplateConfig(true, true, TOPIC));
+    List<Map<String, Object>> configs = new ArrayList<>();
+    configs.add(Map.of(KafkaConfigProvider.HOST_KEY, kafkaContainer.getBrokerHost()));
+    configs.add(Map.of(KafkaConfigProvider.PORT_KEY, kafkaContainer.getBrokerPort()));
+    configs.add(Map.of(KafkaConfigProvider.TOPIC_KEY, TOPIC));
     var template = new PipelineElementTemplate("name", "description", configs);
 
 
@@ -94,17 +89,25 @@ public class KafkaAdapterTester extends AdapterTesterBase {
         .get(0)
         .setSelected(true);
 
+    // Set consumer group to random group id
+    ((StaticPropertyAlternatives) (desc)
+        .getConfig()
+        .get(3))
+        .getAlternatives()
+        .get(0)
+        .setSelected(true);
+
     // Set AUTO_OFFSET_RESET_CONFIG configuration to Earliest option
     ((StaticPropertyAlternatives) (desc)
         .getConfig()
-        .get(5))
+        .get(6))
         .getAlternatives()
         .get(0)
         .setSelected(true);
 
     ((StaticPropertyAlternatives) (desc)
          .getConfig()
-         .get(5))
+         .get(6))
          .getAlternatives()
          .get(1)
          .setSelected(false);
@@ -112,7 +115,7 @@ public class KafkaAdapterTester extends AdapterTesterBase {
     // Set format to Json
     ((StaticPropertyAlternatives) (desc)
          .getConfig()
-         .get(6))
+         .get(8))
          .getAlternatives()
          .get(0)
          .setSelected(true);

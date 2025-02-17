@@ -25,10 +25,6 @@ import ${package}.config.ConfigKeys;
 
 import ${package}.pe.processor.${packageName}.${classNamePrefix}Controller;
 
-import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
-import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
-import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
-import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
@@ -36,9 +32,9 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
-import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.StreamPipesExtensionsServiceBase;
 
-public class Init extends ExtensionsModelSubmitter {
+public class Init extends StreamPipesExtensionsServiceBase {
 
   public static void main(String[] args) throws Exception {
 	  new Init().init();
@@ -51,11 +47,6 @@ public class Init extends ExtensionsModelSubmitter {
               "",
               8090)
 	  .registerPipelineElement(new ${classNamePrefix}Controller())
-      .registerMessagingFormats(
-              new JsonDataFormatFactory(),
-              new CborDataFormatFactory(),
-              new SmileDataFormatFactory(),
-              new FstDataFormatFactory())
       .registerMessagingProtocols(
               new SpKafkaProtocolFactory(),
               new SpJmsProtocolFactory(),

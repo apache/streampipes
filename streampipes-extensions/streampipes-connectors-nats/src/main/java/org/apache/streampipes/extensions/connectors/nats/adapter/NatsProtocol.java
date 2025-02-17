@@ -35,6 +35,7 @@ import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.nats.NatsConsumer;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.nats.NatsConfig;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.sdk.StaticProperties;
@@ -42,7 +43,6 @@ import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -112,7 +112,7 @@ public class NatsProtocol implements StreamPipesAdapter {
         .withSupportedParsers(Parsers.defaultParsers())
         .withCategory(AdapterType.Generic)
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredTextParameter(Labels.withId(URLS_KEY), false, false)
         .requiredTextParameter(Labels.withId(SUBJECT_KEY), false, false)
         .requiredAlternatives(Labels.withId(ACCESS_MODE), getAccessModeAlternativesOne(),

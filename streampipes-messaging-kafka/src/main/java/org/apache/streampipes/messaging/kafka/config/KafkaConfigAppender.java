@@ -18,9 +18,11 @@
 
 package org.apache.streampipes.messaging.kafka.config;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+
 import java.util.Properties;
 
 public interface KafkaConfigAppender {
 
-  void appendConfig(Properties props);
+  void appendConfig(Properties props) throws SpRuntimeException;
 }

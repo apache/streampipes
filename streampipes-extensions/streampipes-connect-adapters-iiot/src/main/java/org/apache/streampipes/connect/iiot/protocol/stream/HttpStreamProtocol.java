@@ -34,10 +34,10 @@ import org.apache.streampipes.extensions.management.connect.adapter.parser.Parse
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
@@ -108,7 +108,7 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
     return AdapterConfigurationBuilder
         .create(ID, 0, HttpStreamProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic)
         .requiredTextParameter(Labels.withId(URL_PROPERTY))

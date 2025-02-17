@@ -18,18 +18,18 @@
 
 package org.apache.streampipes.ps;
 
-import org.apache.streampipes.dataexplorer.DataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParams;
-import org.apache.streampipes.dataexplorer.query.writer.OutputFormat;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
+import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.export.OutputFormat;
+import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -57,46 +57,46 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_AGGREGATION_FUNCTION;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_AUTO_AGGREGATE;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_COLUMNS;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_COUNT_ONLY;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_CSV_DELIMITER;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_END_DATE;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_FILTER;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_FORMAT;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_GROUP_BY;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_LIMIT;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_OFFSET;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_ORDER;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_PAGE;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_START_DATE;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.QP_TIME_INTERVAL;
-import static org.apache.streampipes.dataexplorer.param.SupportedRestQueryParams.SUPPORTED_PARAMS;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_AGGREGATION_FUNCTION;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_AUTO_AGGREGATE;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_COLUMNS;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_COUNT_ONLY;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_CSV_DELIMITER;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_END_DATE;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_FILTER;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_FORMAT;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_GROUP_BY;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_LIMIT;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_OFFSET;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_ORDER;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_PAGE;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_START_DATE;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_TIME_INTERVAL;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.SUPPORTED_PARAMS;
 
 @RestController
 @RequestMapping("/api/v4/datalake")
 public class DataLakeResourceV4 extends AbstractRestResource {
 
-  private final DataExplorerQueryManagement dataLakeManagement;
-  private final DataExplorerSchemaManagement dataExplorerSchemaManagement;
+  private final IDataExplorerQueryManagement dataExplorerQueryManagement;
+  private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
 
   public DataLakeResourceV4() {
-    var dataLakeStorage = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getDataLakeStorage();
-    this.dataExplorerSchemaManagement = new DataExplorerSchemaManagement(dataLakeStorage);
-    this.dataLakeManagement = new DataExplorerQueryManagement(dataExplorerSchemaManagement);
+    this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
+        .getDataExplorerManager()
+        .getSchemaManagement();
+    this.dataExplorerQueryManagement = new DataExplorerDispatcher()
+        .getDataExplorerManager()
+        .getQueryManagement(this.dataExplorerSchemaManagement);
   }
 
-  public DataLakeResourceV4(DataExplorerQueryManagement dataLakeManagement) {
-    var dataLakeStorage = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getDataLakeStorage();
-    this.dataLakeManagement = dataLakeManagement;
-    this.dataExplorerSchemaManagement = new DataExplorerSchemaManagement(dataLakeStorage);
+  public DataLakeResourceV4(IDataExplorerQueryManagement dataExplorerQueryManagement) {
+    this.dataExplorerQueryManagement = dataExplorerQueryManagement;
+    this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
+        .getDataExplorerManager()
+        .getSchemaManagement();
   }
 
   @DeleteMapping(path = "/measurements/{measurementID}")
@@ -104,7 +104,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
       responses = {
           @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
           @ApiResponse(responseCode = "400", description = "Measurement series with given id not found")})
-  public ResponseEntity<Void> deleteData(
+  public ResponseEntity<?> deleteData(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
       @PathVariable("measurementID") String measurementID
       , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation")
@@ -112,8 +112,13 @@ public class DataLakeResourceV4 extends AbstractRestResource {
       , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation")
       @RequestParam(value = "endDate", required = false) Long endDate) {
 
-    SpQueryResult result = this.dataLakeManagement.deleteData(measurementID, startDate, endDate);
-    return ok();
+    if (this.dataExplorerQueryManagement.deleteData(measurementID, startDate, endDate)){
+      return ok();
+    } else {
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body("Given measurement could not be found");
+    }
   }
 
   @DeleteMapping(path = "/measurements/{measurementID}/drop")
@@ -132,7 +137,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true)
       @PathVariable("measurementID") String measurementID) {
 
-    boolean isSuccessDataLake = this.dataLakeManagement.deleteData(measurementID);
+    boolean isSuccessDataLake = this.dataExplorerQueryManagement.deleteData(measurementID);
 
     if (isSuccessDataLake) {
       boolean isSuccessEventProperty = this.dataExplorerSchemaManagement.deleteMeasurementByName(measurementID);
@@ -165,7 +170,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
   @GetMapping(path = "/measurements/{measurementId}/tags", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> getTagValues(@PathVariable("measurementId") String measurementId,
                                                           @RequestParam("fields") String fields) {
-    Map<String, Object> tagValues = dataLakeManagement.getTagValues(measurementId, fields);
+    Map<String, Object> tagValues = dataExplorerQueryManagement.getTagValues(measurementId, fields);
     return ok(tagValues);
   }
 
@@ -235,7 +240,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
       ProvidedRestQueryParams sanitizedParams = populate(measurementID, queryParams);
       try {
         SpQueryResult result =
-            this.dataLakeManagement.getData(sanitizedParams, isIgnoreMissingValues(missingValueBehaviour));
+            this.dataExplorerQueryManagement.getData(sanitizedParams, isIgnoreMissingValues(missingValueBehaviour));
         return ok(result);
       } catch (RuntimeException e) {
         return badRequest(SpLogMessage.from(e));
@@ -251,7 +256,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     var results = queryParams
         .stream()
         .map(qp -> new ProvidedRestQueryParams(qp.get("measureName"), qp))
-        .map(params -> this.dataLakeManagement.getData(params, true))
+        .map(params -> this.dataExplorerQueryManagement.getData(params, true))
         .collect(Collectors.toList());
 
     return ok(results);
@@ -322,7 +327,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
       }
 
       OutputFormat outputFormat = format.equals("csv") ? OutputFormat.CSV : OutputFormat.JSON;
-      StreamingResponseBody streamingOutput = output -> dataLakeManagement.getDataAsStream(
+      StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
           sanitizedParams,
           outputFormat,
           isIgnoreMissingValues(missingValueBehaviour),
@@ -343,7 +348,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
       responses = {
           @ApiResponse(responseCode = "200", description = "All measurement series successfully removed")})
   public ResponseEntity<?> removeAll() {
-    boolean isSuccess = this.dataLakeManagement.deleteAllData();
+    boolean isSuccess = this.dataExplorerQueryManagement.deleteAllData();
     return ResponseEntity.ok(isSuccess);
   }
 
@@ -360,13 +365,6 @@ public class DataLakeResourceV4 extends AbstractRestResource {
 
   // Checks if the parameter for missing value behaviour is set
   private boolean isIgnoreMissingValues(String missingValueBehaviour) {
-    boolean ignoreMissingValues;
-    if ("ignore".equals(missingValueBehaviour)) {
-      ignoreMissingValues = true;
-    } else {
-      ignoreMissingValues = false;
-    }
-    return ignoreMissingValues;
+    return "ignore".equals(missingValueBehaviour);
   }
-
 }

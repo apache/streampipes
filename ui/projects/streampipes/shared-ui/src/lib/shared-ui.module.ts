@@ -17,7 +17,13 @@
  */
 
 import { NgModule } from '@angular/core';
+import {
+    DefaultMatCalendarRangeStrategy,
+    MatDatepickerModule,
+    MatRangeDateSelectionModel,
+} from '@angular/material/datepicker';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
+import { MatCardModule } from '@angular/material/card';
 import { PanelDialogComponent } from './dialog/panel-dialog/panel-dialog.component';
 import { StandardDialogComponent } from './dialog/standard-dialog/standard-dialog.component';
 import { CommonModule } from '@angular/common';
@@ -38,45 +44,109 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SplitSectionComponent } from './components/split-section/split-section.component';
 import { SpLabelComponent } from './components/sp-label/sp-label.component';
+import { SpTableComponent } from './components/sp-table/sp-table.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { SpExceptionDetailsComponent } from './components/sp-exception-message/exception-details/exception-details.component';
+import { SpWarningBoxComponent } from './components/warning-box/warning-box.component';
+import { SpBasicFieldDescriptionComponent } from './components/basic-field-description/basic-field-description.component';
+import { AssetBrowserToolbarComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-toolbar.component';
+import { AssetBrowserFilterComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter.component';
+import { AssetBrowserComponent } from './components/asset-browser/asset-browser.component';
+import { AssetBrowserFilterLabelsComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter-labels/asset-browser-filter-labels.component';
+import { AssetBrowserFilterOuterComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter-outer/asset-browser-filter-outer.component';
+import { AssetBrowserFilterSitesComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter-sites/asset-browser-filter-sites.component';
+import { AssetBrowserFilterTypeComponent } from './components/asset-browser/asset-browser-toolbar/asset-browser-filter/asset-browser-filter-type/asset-browser-filter-type.component';
+import { AssetBrowserHierarchyComponent } from './components/asset-browser/asset-browser-hierarchy/asset-browser-hierarchy.component';
+import { AssetBrowserNodeComponent } from './components/asset-browser/asset-browser-hierarchy/asset-browser-node/asset-browser-node.component';
+import { AssetBrowserNodeInfoComponent } from './components/asset-browser/asset-browser-hierarchy/asset-browser-node/asset-browser-node-info/asset-browser-node-info.component';
+import { TimeRangeSelectorComponent } from './components/time-selector/time-range-selector.component';
+import { TimeRangeSelectorMenuComponent } from './components/time-selector/time-selector-menu/time-selector-menu.component';
+import { CustomTimeRangeSelectionComponent } from './components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
+import { DataExplorerRefreshIntervalSettingsComponent } from './components/time-selector/refresh-interval-settings/refresh-interval-settings.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatMenuModule } from '@angular/material/menu';
+import { FormsModule } from '@angular/forms';
+import { MatTreeModule } from '@angular/material/tree';
 
 @NgModule({
     declarations: [
+        AssetBrowserComponent,
+        AssetBrowserFilterComponent,
+        AssetBrowserFilterLabelsComponent,
+        AssetBrowserFilterOuterComponent,
+        AssetBrowserFilterSitesComponent,
+        AssetBrowserFilterTypeComponent,
+        AssetBrowserHierarchyComponent,
+        AssetBrowserNodeComponent,
+        AssetBrowserNodeInfoComponent,
+        AssetBrowserToolbarComponent,
         ConfirmDialogComponent,
+        CustomTimeRangeSelectionComponent,
         PanelDialogComponent,
         StandardDialogComponent,
+        SpBasicFieldDescriptionComponent,
         SpBasicInnerPanelComponent,
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
         SpBasicNavTabsComponent,
         SpExceptionMessageComponent,
+        SpExceptionDetailsComponent,
         SpExceptionDetailsDialogComponent,
         SpLabelComponent,
+        SpTableComponent,
         SplitSectionComponent,
+        SpWarningBoxComponent,
+        TimeRangeSelectorComponent,
+        TimeRangeSelectorMenuComponent,
+        DataExplorerRefreshIntervalSettingsComponent,
     ],
     imports: [
         CommonModule,
         FlexLayoutModule,
+        FormsModule,
         MatButtonModule,
         MatDividerModule,
+        MatFormFieldModule,
         MatIconModule,
+        MatMenuModule,
+        MatSelectModule,
         MatTabsModule,
         MatTooltipModule,
+        MatTreeModule,
+        MatDatepickerModule,
+        MatCardModule,
         PortalModule,
         OverlayModule,
         MatDialogModule,
+        MatTableModule,
+        MatPaginator,
+        MatSort,
     ],
+    providers: [DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel],
     exports: [
+        AssetBrowserComponent,
         ConfirmDialogComponent,
         PanelDialogComponent,
         StandardDialogComponent,
+        SpBasicFieldDescriptionComponent,
         SpBasicInnerPanelComponent,
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
         SpBasicNavTabsComponent,
+        SpExceptionDetailsComponent,
         SpExceptionMessageComponent,
         SpExceptionDetailsDialogComponent,
         SpLabelComponent,
+        SpTableComponent,
         SplitSectionComponent,
+        SpWarningBoxComponent,
+        CustomTimeRangeSelectionComponent,
+        TimeRangeSelectorComponent,
+        TimeRangeSelectorMenuComponent,
+        DataExplorerRefreshIntervalSettingsComponent,
     ],
 })
 export class SharedUiModule {}

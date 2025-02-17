@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.extensions.management.model;
 
-import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
@@ -41,7 +40,6 @@ public class SpServiceDefinition {
   private Integer defaultPort;
 
   private List<IStreamPipesPipelineElement<?>> pipelineElements;
-  private List<SpDataFormatFactory> dataFormatFactories;
   private List<SpProtocolDefinitionFactory<?>> protocolDefinitionFactories;
   private List<IStreamPipesFunctionDeclarer> functions;
 
@@ -55,7 +53,6 @@ public class SpServiceDefinition {
   public SpServiceDefinition() {
     this.serviceId = UUID.randomUUID().toString();
     this.pipelineElements = new ArrayList<>();
-    this.dataFormatFactories = new ArrayList<>();
     this.protocolDefinitionFactories = new ArrayList<>();
     this.kvConfigs = new ArrayList<>();
     this.functions = new ArrayList<>();
@@ -120,14 +117,6 @@ public class SpServiceDefinition {
     this.pipelineElements = pipelineElements;
   }
 
-  public void addDataFormatFactory(SpDataFormatFactory factory) {
-    this.dataFormatFactories.add(factory);
-  }
-
-  public void addDataFormatFactories(List<SpDataFormatFactory> factories) {
-    this.dataFormatFactories.addAll(factories);
-  }
-
   public void addConfig(ConfigItem configItem) {
     this.kvConfigs.add(configItem);
   }
@@ -138,14 +127,6 @@ public class SpServiceDefinition {
 
   public void addAdapters(List<StreamPipesAdapter> adapters) {
     this.adapters.addAll(adapters);
-  }
-
-  public List<SpDataFormatFactory> getDataFormatFactories() {
-    return dataFormatFactories;
-  }
-
-  public void setDataFormatFactories(List<SpDataFormatFactory> dataFormatFactories) {
-    this.dataFormatFactories = dataFormatFactories;
   }
 
   public void addProtocolDefinitionFactory(SpProtocolDefinitionFactory<?> factory) {

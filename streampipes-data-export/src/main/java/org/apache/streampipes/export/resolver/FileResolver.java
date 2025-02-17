@@ -28,7 +28,7 @@ public class FileResolver extends AbstractResolver<FileMetadata> {
 
   @Override
   public FileMetadata findDocument(String resourceId) {
-    return getNoSqlStore().getFileMetadataStorage().getMetadataById(resourceId);
+    return getNoSqlStore().getFileMetadataStorage().getElementById(resourceId);
   }
 
   @Override
@@ -49,7 +49,7 @@ public class FileResolver extends AbstractResolver<FileMetadata> {
 
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getFileMetadataStorage().addFileMetadata(deserializeDocument(document));
+    getNoSqlStore().getFileMetadataStorage().persist(deserializeDocument(document));
   }
 
   @Override

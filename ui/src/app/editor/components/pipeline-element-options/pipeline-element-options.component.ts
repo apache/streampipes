@@ -49,14 +49,11 @@ import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 @Component({
     selector: 'sp-pipeline-element-options',
     templateUrl: './pipeline-element-options.component.html',
-    styleUrls: ['./pipeline-element-options.component.css'],
+    styleUrls: ['./pipeline-element-options.component.scss'],
 })
 export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     recommendationsAvailable: any = false;
     possibleElements: PipelineElementUnion[];
-    recommendedElements: PipelineElementUnion[];
-    recommendationsShown: any = false;
-    pipelineElementCssType: string;
     isDataSource: boolean;
 
     @Input()
@@ -102,8 +99,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     ) {
         this.recommendationsAvailable = false;
         this.possibleElements = [];
-        this.recommendedElements = [];
-        this.recommendationsShown = false;
         this.jsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(false);
     }
 
@@ -124,7 +119,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
                     }
                 },
             );
-        this.pipelineElementCssType = this.pipelineElement.type;
 
         this.isDataSource = this.pipelineElement.type === 'stream';
 
@@ -169,12 +163,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
                             result.possibleElements,
                         ),
                     );
-                    this.recommendedElements = cloneDeep(
-                        this.pipelineElementRecommendationService.populateRecommendedList(
-                            this.allElements,
-                            result.recommendedElements,
-                        ),
-                    );
                     this.recommendationsAvailable = true;
                 }
             });
@@ -191,12 +179,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
             },
         });
 
-        dialogRef.afterClosed().subscribe(c => {});
-    }
-
-    showRecommendations(e) {
-        this.recommendationsShown = !this.recommendationsShown;
-        e.stopPropagation();
+        dialogRef.afterClosed().subscribe(() => {});
     }
 
     isWildcardTopic() {
@@ -208,6 +191,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.pipelineElementConfiguredObservable.unsubscribe();
+        this.pipelineElementConfiguredObservable?.unsubscribe();
     }
 }

@@ -20,8 +20,8 @@ package org.apache.streampipes.extensions.connectors.influx.adapter;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.dataexplorer.commons.influx.InfluxClientProvider;
-import org.apache.streampipes.dataexplorer.commons.influx.InfluxConnectionSettings;
+import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
+import org.apache.streampipes.dataexplorer.influx.client.InfluxConnectionSettings;
 import org.apache.streampipes.extensions.connectors.influx.shared.SharedInfluxClient;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -109,7 +109,7 @@ public class InfluxDbClient extends SharedInfluxClient {
 
   public void disconnect() {
     if (connected) {
-      influxDb.close();
+      super.disconnect();
       connected = false;
     }
   }

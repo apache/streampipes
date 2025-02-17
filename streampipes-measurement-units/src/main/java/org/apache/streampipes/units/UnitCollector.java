@@ -98,8 +98,8 @@ public class UnitCollector {
       "AngularVelocityUnit"
   };
 
-  private Set<Unit> availableUnits = new HashSet<>();
-  private Set<Unit> availableUnitTypes = new HashSet<>();
+  private final Set<Unit> availableUnits = new HashSet<>();
+  private final Set<Unit> availableUnitTypes = new HashSet<>();
 
   public UnitCollector() {
     collect();

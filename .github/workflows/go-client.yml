@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name : go-client
+name: go-client
 on:
   pull_request:
 jobs:
@@ -22,13 +22,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version: [ '1.21.x' ]
+        go-version: ["1.21.x"]
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
+      - name: GoImports check
+        working-directory: ./streampipes-client-go
+        run: |
+          go install golang.org/x/tools/cmd/goimports@latest
+          goimports -l .
       - name: Run unit-tests
         working-directory: ./streampipes-client-go
         run: |

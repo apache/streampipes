@@ -51,7 +51,7 @@ jobs:
         run: mvn clean package
 
       - name: Build and run streampipes
-        run: docker-compose up --build -d
+        run: docker compose up --build -d
 
       - name: Wait 70 seconds
         working-directory: ./installer/compose

@@ -32,7 +32,7 @@ public class DescriptionManagement {
 
   public List<AdapterDescription> getAdapters() {
     IAdapterStorage adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
-    return adapterStorage.getAllAdapters();
+    return adapterStorage.findAll();
   }
 
   public Optional<AdapterDescription> getAdapter(String id) {
@@ -43,9 +43,9 @@ public class DescriptionManagement {
 
   public void deleteAdapterDescription(String id) throws SpRuntimeException {
     var adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
-    var adapter = adapterStorage.getAdapter(id);
+    var adapter = adapterStorage.getElementById(id);
     if (!isAdapterUsed(adapter)) {
-      adapterStorage.deleteAdapter(id);
+      adapterStorage.deleteElementById(id);
     } else {
       throw new SpRuntimeException("This adapter is used by an existing instance and cannot be deleted");
     }
@@ -64,7 +64,7 @@ public class DescriptionManagement {
   }
 
   private boolean isAdapterUsed(AdapterDescription adapter) {
-    var allAdapters = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage().getAllAdapters();
+    var allAdapters = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage().findAll();
 
     return allAdapters
         .stream()

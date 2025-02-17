@@ -24,10 +24,8 @@
             color: configuredWidget.baseAppearanceConfig.textColor,
             height: gridsterItemComponent.height - 13 + 'px',
             border:
-                editMode && currentlyConfiguredWidgetId === configuredWidget._id
-                    ? '4px solid var(--color-accent)'
-                    : '2px solid ' +
-                      configuredWidget.baseAppearanceConfig.backgroundColor
+                '2px solid ' +
+                configuredWidget.baseAppearanceConfig.backgroundColor
         }"
         [attr.data-cy]="
             'widget-' + configuredWidget.baseAppearanceConfig.widgetTitle
@@ -67,7 +65,7 @@
                     [matMenuTriggerFor]="menu"
                     aria-label="More options"
                     matTooltip="More options"
-                    *ngIf="!editMode"
+                    *ngIf="!dataViewMode"
                     [attr.data-cy]="
                         'more-options-' +
                         configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
@@ -101,38 +99,40 @@
                 </mat-menu>
                 <button
                     mat-icon-button
-                    *ngIf="editMode"
-                    (click)="downloadDataAsFile()"
-                    [attr.data-cy]="
-                        'download-' +
-                        configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
-                            ' ',
-                            ''
-                        )
-                    "
+                    [matMenuTriggerFor]="optMenu"
+                    *ngIf="!globalTimeEnabled"
+                    aria-label="Options"
+                    data-cy="options-data-explorer"
+                    #menuTrigger="matMenuTrigger"
+                    [matTooltip]="tooltipText"
+                    matTooltipClass="no-wrap-tooltip"
                 >
-                    <mat-icon>get_app</mat-icon>
+                    <mat-icon
+                        [color]="timeSettingsModified ? 'primary' : 'default'"
+                        >alarm_clock</mat-icon
+                    >
                 </button>
-                <button
-                    mat-icon-button
-                    [class.mat-raised-button]="
-                        currentlyConfiguredWidgetId === configuredWidget._id
-                    "
-                    (click)="triggerWidgetEditMode()"
-                    *ngIf="editMode"
-                    [color]="
-                        currentlyConfiguredWidgetId === configuredWidget._id
-                            ? 'accent'
-                            : ''
-                    "
-                    matTooltip="Edit widget"
-                    [attr.data-cy]="
-                        'edit-' +
-                        configuredWidget.baseAppearanceConfig.widgetTitle
-                    "
-                >
-                    <mat-icon>edit</mat-icon>
-                </button>
+                <mat-menu #optMenu="matMenu" class="large-menu">
+                    <sp-time-selector-menu
+                        #timeSelectorMenu
+                        *ngIf="quickSelections"
+                        [timeSettings]="clonedTimeSettings"
+                        [quickSelections]="quickSelections"
+                        [enableTimePicker]="enableTimePicker"
+                        [maxDayRange]="maxDayRange"
+                        [labels]="labels"
+                        (timeSettingsEmitter)="modifyWidgetTimeSettings($event)"
+                        class="w-100"
+                    >
+                        <button
+                            mat-raised-button
+                            class="mat-basic"
+                            (click)="resetWidgetTimeSettings()"
+                        >
+                            Reset
+                        </button>
+                    </sp-time-selector-menu>
+                </mat-menu>
                 <button
                     mat-icon-button
                     (click)="removeWidget()"

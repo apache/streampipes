@@ -43,4 +43,9 @@ public class TransformOutputStrategy extends OutputStrategy {
   public void setTransformOperations(List<TransformOperation> transformOperations) {
     this.transformOperations = transformOperations;
   }
+
+  @Override
+  public void accept(OutputStrategyVisitor visitor) {
+    visitor.visit(this);
+  }
 }

@@ -21,7 +21,7 @@ import org.apache.streampipes.model.template.PipelineElementTemplate;
 
 import java.util.List;
 
-public interface IPipelineElementTemplateStorage extends CRUDStorage<String, PipelineElementTemplate> {
+public interface IPipelineElementTemplateStorage extends CRUDStorage<PipelineElementTemplate> {
 
   List<PipelineElementTemplate> getPipelineElementTemplatesforAppId(String appId);
 }

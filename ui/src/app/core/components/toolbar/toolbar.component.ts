@@ -30,6 +30,7 @@ import { Subscription, timer } from 'rxjs';
 import { exhaustMap } from 'rxjs/operators';
 import { NotificationCountService } from '../../../services/notification-count-service';
 import { CurrentUserService } from '@streampipes/shared-ui';
+import { LoginService } from '../../../login/services/login.service';
 
 @Component({
     selector: 'sp-toolbar',
@@ -51,9 +52,13 @@ export class ToolbarComponent
     unreadNotificationCount = 0;
     unreadNotificationsSubscription: Subscription;
 
+    documentationLinkActive = false;
+    documentationLink = '';
+
     constructor(
         router: Router,
         authService: AuthService,
+        private loginService: LoginService,
         private profileService: ProfileService,
         private restApi: RestApi,
         private overlay: OverlayContainer,
@@ -93,6 +98,11 @@ export class ToolbarComponent
                     this.modifyAppearance(userInfo.darkMode);
                 });
         });
+        this.loginService.fetchLoginSettings().subscribe(res => {
+            this.documentationLinkActive =
+                res.linkSettings?.showDocumentationLinkInProfileMenu;
+            this.documentationLink = res.linkSettings?.documentationUrl || '';
+        });
 
         this.appearanceControl = new UntypedFormControl(
             this.currentUserService.darkMode$.getValue(),
@@ -115,7 +125,7 @@ export class ToolbarComponent
     }
 
     openDocumentation() {
-        window.open('https://streampipes.apache.org/docs', '_blank');
+        window.open(this.documentationLink, '_blank');
     }
 
     openInfo() {

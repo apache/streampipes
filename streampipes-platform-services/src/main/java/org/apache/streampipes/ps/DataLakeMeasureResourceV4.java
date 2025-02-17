@@ -18,13 +18,13 @@
 
 package org.apache.streampipes.ps;
 
-import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.influx.DataLakeMeasurementCount;
+import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,10 +48,8 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
   private final IDataExplorerSchemaManagement dataLakeMeasureManagement;
 
   public DataLakeMeasureResourceV4() {
-    var dataLakeStorage = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getDataLakeStorage();
-    this.dataLakeMeasureManagement = new DataExplorerSchemaManagement(dataLakeStorage);
+    this.dataLakeMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
+                                                                 .getSchemaManagement();
   }
 
   @PostMapping(
@@ -63,11 +61,32 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
     return ok(result);
   }
 
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Map<String, Integer>> getDataLakeInfos(
-      @RequestParam(value = "filter", required = false) List<String> measurementNames) {
+  /**
+   * Handles HTTP GET requests to retrieve the entry counts of specified measurements.
+   *
+   * @param measurementNames A list of measurement names to return the count.
+   * @return A ResponseEntity containing a map of measurement names and their corresponding entry counts.
+   */
+  @Operation(
+      summary = "Retrieve measurement counts",
+      description = "Retrieves the entry counts for the specified measurements from the data lake.")
+  @GetMapping(
+      path = "/count",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, Integer>> getEntryCountsOfMeasurments(
+      @Parameter(description = "A list of measurement names to return the count.")
+      @RequestParam(value = "measurementNames")
+      List<String> measurementNames
+  ) {
     var allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
-    return ok(new DataLakeMeasurementCount(allMeasurements, measurementNames).countMeasurementSizes());
+    var result = new DataExplorerDispatcher()
+        .getDataExplorerManager()
+        .getMeasurementCounter(
+            allMeasurements,
+            measurementNames
+        )
+        .countMeasurementSizes();
+    return ok(result);
   }
 
   @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -81,8 +100,10 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
   }
 
   @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> updateDataLakeMeasure(@PathVariable("id") String elementId,
-                                                 @RequestBody DataLakeMeasure measure) {
+  public ResponseEntity<?> updateDataLakeMeasure(
+      @PathVariable("id") String elementId,
+      @RequestBody DataLakeMeasure measure
+  ) {
     if (elementId.equals(measure.getElementId())) {
       try {
         this.dataLakeMeasureManagement.updateMeasurement(measure);

@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeCon
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
 import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.runtime.Event;
@@ -38,7 +39,6 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
@@ -62,10 +62,11 @@ public class TransformToBooleanProcessor
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.transform-to-boolean")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.transformation.jvm.transform-to-boolean", 0)
         .category(DataProcessorType.BOOLEAN_OPERATOR)
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredStream(StreamRequirementsBuilder.create()
             .requiredPropertyWithNaryMapping(
                 EpRequirements.anyProperty(),   // anyProperty? Would be nice, to exclude
@@ -84,11 +85,7 @@ public class TransformToBooleanProcessor
     EventSchema eventSchema = new EventSchema();
     EventSchema oldEventSchema = processingElement.getInputStreams().get(0).getEventSchema();
     // Gotta remove the "s0::" in the beginning
-    Set<String> transformFields =
-        (parameterExtractor.mappingPropertyValues(TRANSFORM_FIELDS_ID))
-            .stream()
-            .map(s -> s.substring(4))
-            .collect(Collectors.toSet());
+    Set<String> transformFields = getTransformFieldNames(parameterExtractor);
 
     for (EventProperty eventProperty : oldEventSchema.getEventProperties()) {
       //TODO: Test, if eventProperty is a primitive type (string, number, ...)
@@ -121,13 +118,13 @@ public class TransformToBooleanProcessor
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector collector) throws SpRuntimeException {
     for (String transformField : transformFields) {
-      AbstractField field = inputEvent.getFieldBySelector(transformField);
+      AbstractField<?> field = inputEvent.getFieldBySelector(transformField);
       // Is the field a primitive (and no list/nested field)?
       if (field.isPrimitive()) {
         // Yes. So remove the element and replace it with a boolean (if possible)
         inputEvent.removeFieldBySelector(transformField);
         try {
-          inputEvent.addField(transformField, toBoolean(field.getRawValue()));
+          inputEvent.addField(removeFieldPrefix(transformField), toBoolean(field.getRawValue()));
         } catch (SpRuntimeException e) {
           LOG.info(e.getMessage());
           return;
@@ -152,5 +149,16 @@ public class TransformToBooleanProcessor
     } else {
       throw new SpRuntimeException("Value " + s + " not convertible to boolean");
     }
+  }
+
+  private Set<String> getTransformFieldNames(ProcessingElementParameterExtractor extractor) {
+    return extractor.mappingPropertyValues(TRANSFORM_FIELDS_ID)
+        .stream()
+        .map(this::removeFieldPrefix)
+        .collect(Collectors.toSet());
+  }
+
+  private String removeFieldPrefix(String fieldName) {
+    return fieldName.substring(4);
   }
 }

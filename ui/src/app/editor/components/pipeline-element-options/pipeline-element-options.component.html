@@ -92,26 +92,6 @@
                     <i class="material-icons options-icon-size">account_tree</i>
                 </button>
             </span>
-            <span
-                class="options-button recommended-button"
-                *ngIf="
-                    pipelineElement.type !== 'action' &&
-                    recommendationsAvailable &&
-                    recommendedElements.length > 0
-                "
-                style="z-index: 10"
-            >
-                <button
-                    class="options-icon-button"
-                    mat-icon-button
-                    matTooltip="Recommended Elements"
-                    [matTooltipPosition]="'below'"
-                    (click)="showRecommendations($event)"
-                    [disabled]="!recommendationsAvailable"
-                >
-                    <i class="material-icons options-icon-size">add</i>
-                </button>
-            </span>
             <span class="options-button help-button" style="z-index: 10">
                 <button
                     class="options-icon-button"
@@ -124,18 +104,5 @@
                 </button>
             </span>
         </div>
-        <div
-            class="editor-pe-info"
-            [ngClass]="'pe-info-' + pipelineElementCssType"
-        >
-            {{ pipelineElement.payload.name }}
-        </div>
     </div>
-    <sp-pipeline-element-recommendation
-        [rawPipelineModel]="rawPipelineModel"
-        [pipelineElementDomId]="pipelineElement.payload.dom"
-        [recommendedElements]="recommendedElements"
-        [recommendationsShown]="recommendationsShown"
-        *ngIf="recommendationsAvailable"
-    ></sp-pipeline-element-recommendation>
 </div>

@@ -21,21 +21,22 @@ package org.apache.streampipes.ps;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import java.io.InputStream;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v4/datalake/images")
 public class DataLakeImageResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "{imageId}", produces = "image/jpeg")
-  public ResponseEntity<InputStream> getImage(@PathVariable("imageId") String imageId) {
-    return ok(StorageDispatcher.INSTANCE.getNoSqlStore().getImageStorage().getImageBytes(imageId));
+  public ResponseEntity<byte[]> getImage(@PathVariable("imageId") String imageId) throws IOException {
+    var image = StorageDispatcher.INSTANCE.getNoSqlStore().getImageStorage().getImageBytes(imageId);
+    return ok(IOUtils.toByteArray(image));
   }
 }

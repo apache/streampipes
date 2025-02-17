@@ -32,11 +32,11 @@ import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventP
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 
 import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.Message;
@@ -96,7 +96,7 @@ public class PulsarProtocol implements StreamPipesAdapter, SupportsRuntimeConfig
     return AdapterConfigurationBuilder
         .create(ID, 0, PulsarProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic)
         .requiredTextParameter(Labels.withId(PULSAR_BROKER_HOST))

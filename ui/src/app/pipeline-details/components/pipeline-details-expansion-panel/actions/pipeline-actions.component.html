@@ -1,0 +1,83 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div
+    fxFlex="100"
+    fxLayoutAlign="start start"
+    fxLayout="column"
+    style="padding: 10px"
+>
+    <div fxLayout="row" *ngIf="!pipeline.running" fxLayoutAlign="start center">
+        <button
+            mat-icon-button
+            color="accent"
+            matTooltip="Start Pipeline"
+            matTooltipPosition="above"
+            (click)="startPipeline()"
+            [disabled]="starting || !hasWritePipelinePrivileges"
+        >
+            <mat-icon>play_arrow</mat-icon>
+        </button>
+        <span>&nbsp;Start pipeline</span>
+    </div>
+    <div fxLayout="row" *ngIf="pipeline.running" fxLayoutAlign="start center">
+        <button
+            mat-icon-button
+            color="accent"
+            matTooltip="Stop Pipeline"
+            matTooltipPosition="above"
+            (click)="stopPipeline()"
+            [disabled]="stopping || !hasWritePipelinePrivileges"
+        >
+            <mat-icon>stop</mat-icon>
+        </button>
+        <span>&nbsp;Stop pipeline</span>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center">
+        <button
+            mat-icon-button
+            color="accent"
+            matTooltip="Modify Pipeline"
+            matTooltipPosition="above"
+            [disabled]="!hasWritePipelinePrivileges"
+            (click)="pipelineOperationsService.modifyPipeline(pipeline._id)"
+        >
+            <mat-icon>mode_edit</mat-icon>
+        </button>
+        <span>&nbsp;Modify pipeline</span>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center">
+        <button
+            mat-icon-button
+            color="accent"
+            matTooltip="Delete Pipeline"
+            matTooltipPosition="above"
+            [disabled]="!hasWritePipelinePrivileges"
+            (click)="
+                pipelineOperationsService.showDeleteDialog(
+                    pipeline,
+                    reloadPipelineEmitter,
+                    this.switchToPipelineView
+                )
+            "
+        >
+            <mat-icon>delete</mat-icon>
+        </button>
+        <span>&nbsp;Delete pipeline</span>
+    </div>
+</div>

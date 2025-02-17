@@ -22,13 +22,16 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.DescriptionManagement;
-import org.apache.streampipes.connect.management.management.WorkerUrlProvider;
+import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,14 +46,15 @@ import java.util.Optional;
 public class DescriptionResource extends AbstractAdapterResource<DescriptionManagement> {
 
   private static final Logger LOG = LoggerFactory.getLogger(DescriptionResource.class);
-  private final WorkerUrlProvider workerUrlProvider;
+  private final IExtensionsServiceEndpointGenerator endpointGenerator;
 
   public DescriptionResource() {
     super(DescriptionManagement::new);
-    workerUrlProvider = new WorkerUrlProvider();
+    endpointGenerator = new ExtensionsServiceEndpointGenerator();
   }
 
   @GetMapping(path = "/adapters", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<List<AdapterDescription>> getAdapters() {
     List<AdapterDescription> result = managementService.getAdapters();
 
@@ -58,6 +62,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   }
 
   @GetMapping(path = "/{id}/assets", produces = "application/zip")
+  @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<?> getAdapterAssets(@PathVariable("id") String id) {
     try {
       String result = null;
@@ -65,7 +70,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
       Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
       if (adapterDescriptionOptional.isPresent()) {
         AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-        String workerUrl = workerUrlProvider.getWorkerUrl(adapterDescription.getAppId());
+        String workerUrl = getServiceResourceUrl(adapterDescription.getAppId());
 
         result = managementService.getAssets(workerUrl);
       }
@@ -85,6 +90,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   }
 
   @GetMapping(path = "/{id}/assets/icon", produces = "image/png")
+  @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<?> getAdapterIconAsset(@PathVariable("id") String id) {
     try {
 
@@ -93,7 +99,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
       Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
       if (adapterDescriptionOptional.isPresent()) {
         AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-        String workerUrl = workerUrlProvider.getWorkerUrl(adapterDescription.getAppId());
+        String workerUrl = getServiceResourceUrl(adapterDescription.getAppId());
 
         result = managementService.getIconAsset(workerUrl);
       }
@@ -113,6 +119,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   }
 
   @GetMapping(path = "/{id}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<?> getAdapterDocumentationAsset(@PathVariable("id") String id) {
     try {
       String result = null;
@@ -120,7 +127,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
       Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
       if (adapterDescriptionOptional.isPresent()) {
         AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-        String workerUrl = workerUrlProvider.getWorkerUrl(adapterDescription.getAppId());
+        String workerUrl = getServiceResourceUrl(adapterDescription.getAppId());
 
         result = managementService.getDocumentationAsset(workerUrl);
       }
@@ -140,6 +147,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   }
 
   @DeleteMapping(path = "{adapterId}")
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> deleteAdapter(@PathVariable("adapterId") String adapterId) {
     try {
       this.managementService.deleteAdapterDescription(adapterId);
@@ -147,5 +155,9 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
     } catch (SpRuntimeException e) {
       return badRequest(e);
     }
+  }
+
+  private String getServiceResourceUrl(String appId) throws NoServiceEndpointsAvailableException {
+    return endpointGenerator.getEndpointResourceUrl(appId, SpServiceUrlProvider.ADAPTER);
   }
 }

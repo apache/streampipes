@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.rest.impl.connect;
 
+import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import java.util.function.Supplier;
@@ -27,5 +28,19 @@ public class AbstractAdapterResource<T> extends AbstractAuthGuardedRestResource 
 
   public AbstractAdapterResource(Supplier<T> managementServiceSupplier) {
     this.managementService = managementServiceSupplier.get();
+  }
+
+  /**
+   * required by Spring expression
+   */
+  public boolean hasReadAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_READ_ADAPTER_VALUE);
+  }
+
+  /**
+   * required by Spring expression
+   */
+  public boolean hasWriteAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ADAPTER_VALUE);
   }
 }

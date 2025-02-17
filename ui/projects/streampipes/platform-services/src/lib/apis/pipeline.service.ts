@@ -21,9 +21,9 @@ import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
 import {
+    CompactPipeline,
     Message,
     Pipeline,
-    PipelineCategory,
     PipelineElementRecommendationMessage,
     PipelineModificationMessage,
     PipelineOperationStatus,
@@ -40,30 +40,7 @@ export class PipelineService {
         private platformServicesCommons: PlatformServicesCommons,
     ) {}
 
-    getPipelineCategories(): Observable<PipelineCategory[]> {
-        return this.http.get(`${this.apiBasePath}/pipelinecategories`).pipe(
-            map(response => {
-                return (response as any[]).map(p =>
-                    PipelineCategory.fromData(p),
-                );
-            }),
-        );
-    }
-
-    storePipelineCategory(pipelineCategory: PipelineCategory) {
-        return this.http.post(
-            `${this.apiBasePath}/pipelinecategories`,
-            pipelineCategory,
-        );
-    }
-
-    deletePipelineCategory(categoryId: string) {
-        return this.http.delete(
-            `${this.apiBasePath}/pipelinecategories/${categoryId}`,
-        );
-    }
-
-    startPipeline(pipelineId): Observable<PipelineOperationStatus> {
+    startPipeline(pipelineId: string): Observable<PipelineOperationStatus> {
         return this.http
             .get(`${this.apiBasePath}/pipelines/${pipelineId}/start`)
             .pipe(
@@ -97,6 +74,13 @@ export class PipelineService {
         return this.http
             .get(`${this.apiBasePath}/pipelines/${pipelineId}`)
             .pipe(map(response => Pipeline.fromData(response as Pipeline)));
+    }
+
+    convertToCompactPipeline(pipeline: Pipeline): Observable<CompactPipeline> {
+        return this.http.post<CompactPipeline>(
+            `${this.apiBasePath}/pipelines/compact`,
+            pipeline,
+        );
     }
 
     storePipeline(pipeline: Pipeline): Observable<Message> {

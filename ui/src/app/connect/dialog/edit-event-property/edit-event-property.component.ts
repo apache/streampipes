@@ -30,13 +30,13 @@ import {
     Validators,
 } from '@angular/forms';
 import {
+    DataType,
     EventPropertyList,
     EventPropertyNested,
     EventPropertyPrimitive,
     EventPropertyUnion,
     SemanticType,
 } from '@streampipes/platform-services';
-import { DataTypesService } from '../../services/data-type.service';
 import { DialogRef } from '@streampipes/shared-ui';
 import { EditSchemaTransformationComponent } from './components/edit-schema-transformation/edit-schema-transformation.component';
 import { EditValueTransformationComponent } from './components/edit-value-transformation/edit-value-transformation.component';
@@ -66,6 +66,7 @@ export class EditEventPropertyComponent implements OnInit {
     isEventPropertyNested: boolean;
     isEventPropertyList: boolean;
     isNumericProperty: boolean;
+    isStringProperty: boolean;
     isSaveBtnEnabled: boolean;
 
     private propertyForm: UntypedFormGroup;
@@ -73,7 +74,6 @@ export class EditEventPropertyComponent implements OnInit {
     constructor(
         public dialogRef: DialogRef<EditEventPropertyComponent>,
         private formBuilder: UntypedFormBuilder,
-        private dataTypeService: DataTypesService,
         private shepherdService: ShepherdService,
     ) {}
 
@@ -89,9 +89,10 @@ export class EditEventPropertyComponent implements OnInit {
             this.property instanceof EventPropertyNested;
         this.isNumericProperty =
             SemanticType.isNumber(this.cachedProperty) ||
-            this.dataTypeService.isNumeric(
-                (this.cachedProperty as any).runtimeType,
-            );
+            DataType.isNumberType((this.cachedProperty as any).runtimeType);
+        this.isStringProperty = DataType.isStringType(
+            (this.cachedProperty as any).runtimeType,
+        );
         this.createForm();
     }
 
@@ -119,6 +120,13 @@ export class EditEventPropertyComponent implements OnInit {
                     ep.additionalMetadata.formatString;
                 result.additionalMetadata.multiplier =
                     ep.additionalMetadata.multiplier;
+
+                result.additionalMetadata.regex =
+                    ep.additionalMetadata.regex || undefined;
+                result.additionalMetadata.replaceWith =
+                    ep.additionalMetadata.replaceWith || undefined;
+                result.additionalMetadata.replaceAll =
+                    ep.additionalMetadata.replaceAll || undefined;
             }
 
             (result as any).staticValue = (ep as any).staticValue;
@@ -152,9 +160,7 @@ export class EditEventPropertyComponent implements OnInit {
         this.property.description = this.cachedProperty.description;
         this.property.elementId = this.cachedProperty.elementId;
 
-        // remove undefined from domain properties array
-        this.property.domainProperties =
-            this.cachedProperty.domainProperties.filter(n => n);
+        this.property.semanticType = this.cachedProperty.semanticType;
         this.property.runtimeName = this.cachedProperty.runtimeName;
         this.property.propertyScope = this.cachedProperty.propertyScope;
 
@@ -182,13 +188,20 @@ export class EditEventPropertyComponent implements OnInit {
                 this.cachedProperty.additionalMetadata.correctionValue;
             this.property.additionalMetadata.operator =
                 this.cachedProperty.additionalMetadata.operator;
+
+            this.property.additionalMetadata.regex =
+                this.cachedProperty.additionalMetadata.regex;
+            this.property.additionalMetadata.replaceWith =
+                this.cachedProperty.additionalMetadata.replaceWith;
+            this.property.additionalMetadata.replaceAll =
+                this.cachedProperty.additionalMetadata.replaceAll;
         }
         this.dialogRef.close({ data: this.property });
         this.shepherdService.trigger('adapter-field-changed');
     }
 
     handleDataTypeChange(changed: boolean) {
-        this.isNumericProperty = this.dataTypeService.isNumeric(
+        this.isNumericProperty = DataType.isNumberType(
             (this.cachedProperty as any).runtimeType,
         );
     }

@@ -23,13 +23,17 @@ import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.connect.management.AdapterEventPreviewPipeline;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
+import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,22 +44,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Set;
 
 public class GuessManagement {
 
   private static final Logger LOG = LoggerFactory.getLogger(GuessManagement.class);
-  private final WorkerUrlProvider workerUrlProvider;
+  private final IExtensionsServiceEndpointGenerator endpointGenerator;
   private final ObjectMapper objectMapper;
 
   public GuessManagement() {
-    this.workerUrlProvider = new WorkerUrlProvider();
+    this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
     this.objectMapper = JacksonSerializer.getObjectMapper();
   }
 
   public GuessSchema guessSchema(AdapterDescription adapterDescription)
       throws ParseException, WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
-    var workerUrl = getWorkerUrl(adapterDescription.getAppId());
     SecretProvider.getDecryptionService().apply(adapterDescription);
+    var workerUrl = getWorkerUrl(
+        adapterDescription.getAppId(),
+        adapterDescription.getDeploymentConfiguration().getDesiredServiceTags()
+    );
     var description = objectMapper.writeValueAsString(adapterDescription);
 
     LOG.info("Guess schema at: " + workerUrl);
@@ -74,8 +82,9 @@ public class GuessManagement {
     }
   }
 
-  private String getWorkerUrl(String appId) throws NoServiceEndpointsAvailableException {
-    var baseUrl = workerUrlProvider.getWorkerBaseUrl(appId);
+  private String getWorkerUrl(String appId,
+                              Set<SpServiceTag> customServiceTags) throws NoServiceEndpointsAvailableException {
+    var baseUrl = endpointGenerator.getEndpointBaseUrl(appId, SpServiceUrlProvider.ADAPTER, customServiceTags);
     return baseUrl + WorkerPaths.getGuessSchemaPath();
   }
 

@@ -15,141 +15,131 @@
 
 spAssets:
     componentImport: False
-    ng5_moduleName: 'AssetsModule'
-    ng5_component: 'EditorComponent'
-    ng5_componentPath: './editor/editor.component'
+    moduleName: 'AssetsModule'
+    component: 'EditorComponent'
+    componentPath: './editor/editor.component'
     path: './assets/assets.module'
     link: 'assets'
     url: '/editor/:pipeline'
     title: 'Asset Management'
     description: 'Manage assets which help assigning pipelines, dashboards and adapters to real-world objects such as machines and plants.'
     icon: 'precision_manufacturing'
-    homeImage: ''
-    admin: true
+    privileges: '[UserPrivilege.PRIVILEGE_READ_ASSETS, UserPrivilege.PRIVILEGE_WRITE_ASSETS]'
     pageNames: 'PageName.ASSETS'
-spEditor:
-    componentImport: True
-    ng5_moduleName: 'EditorModule'
-    ng5_component: 'EditorComponent'
-    ng5_componentPath: './editor/editor.component'
-    path: './editor/editor.module'
-    link: 'editor'
-    url: '/editor/:pipeline'
-    title: 'Pipeline Editor'
-    description: 'The pipeline editor lets you create flexible data pipelines based on installed data streams, data processors, and data sinks.'
-    icon: 'dashboard'
-    homeImage: '/assets/img/home/editor.png'
-    admin: false
-    pageNames: 'PageName.PIPELINE_EDITOR'
+    showStatusBox: false
 spConnect:
     componentImport: False
-    ng5_moduleName: 'ConnectModule'
-    ng5_component: 'ConnectComponent'
-    ng5_componentPath: './connect/connect.component'
+    moduleName: 'ConnectModule'
+    component: 'ConnectComponent'
+    componentPath: './connect/connect.component'
     path: './connect/connect.module'
     link: 'connect'
     url: '/connect'
     title: 'Connect'
     description: 'StreamPipes Connect lets you easily connect new data sources for a variety of data formats and protocols.'
     icon: 'power'
-    homeImage: '/assets/img/home/editor.png'
-    admin: False
+    privileges: '[UserPrivilege.PRIVILEGE_READ_ADAPTER, UserPrivilege.PRIVILEGE_WRITE_ADAPTER]'
     pageNames: 'PageName.CONNECT'
+    showStatusBox: true
+    statusBox:
+        link: "['connect']"
+        createLinks: "['connect', 'create']"
+        title: 'Adapters'
+        createTitle: 'New adapter'
+        dataFns: '[this.adapterService.getAdapters()]'
+        viewRoles: '[UserPrivilege.PRIVILEGE_READ_ADAPTER, UserPrivilege.PRIVILEGE_WRITE_ADAPTER]'
+        createRoles: '[UserPrivilege.PRIVILEGE_WRITE_ADAPTER]'
 spPipelines:
     componentImport: False
-    ng5_moduleName: 'PipelinesModule'
-    ng5_component: 'PipelinesComponent'
-    ng5_componentPath: './pipelines/pipelines.component'
+    moduleName: 'PipelinesModule'
+    component: 'PipelinesComponent'
+    componentPath: './pipelines/pipelines.component'
     path: './pipelines/pipelines.module'
     link: 'pipelines'
     url: '/pipelines/:pipeline'
     title: 'Pipelines'
     description: 'All created pipelines are available in the pipeline view, where you can also start and stop pipelines.'
     icon: 'play_arrow'
-    homeImage: '/assets/img/home/pipelines.png'
-    admin: False
     pageNames: 'PageName.PIPELINE_OVERVIEW'
-spAdd:
-    componentImport: False
-    ng5_moduleName: 'AddModule'
-    ng5_component: 'AddComponent'
-    ng5_componentPath: './add/add.component'
-    path: './add/add.module'
-    link: 'add'
-    url: '/add'
-    title: 'Install Extensions'
-    description: 'The extension installation module can be used to install additional adapters, data streams, data processors, and sinks.'
-    icon: 'cloud_download'
-    homeImage: '/assets/img/home/add.png'
-    admin: True
-    pageNames: 'PageName.INSTALL_PIPELINE_ELEMENTS'
+    privileges: '[UserPrivilege.PRIVILEGE_READ_PIPELINE, UserPrivilege.PRIVILEGE_WRITE_PIPELINE]'
+    showStatusBox: true
+    statusBox:
+        link: "['pipelines']"
+        createLinks: "['pipelines', 'create']"
+        title: 'Pipelines'
+        createTitle: 'New pipeline'
+        dataFns: '[this.pipelineService.getPipelines()]'
+        viewRoles: '[UserPrivilege.PRIVILEGE_READ_PIPELINE, UserPrivilege.PRIVILEGE_WRITE_PIPELINE]'
+        createRoles: '[UserPrivilege.PRIVILEGE_WRITE_PIPELINE]'
 spConfiguration:
     componentImport: False
-    ng5_moduleName: 'ConfigurationModule'
-    ng5_component: 'GeneralConfigurationComponent'
-    ng5_componentPath: './configuration/general-configuration/general-configuration.component'
+    moduleName: 'ConfigurationModule'
+    component: 'GeneralConfigurationComponent'
+    componentPath: './configuration/general-configuration/general-configuration.component'
     path: './configuration/configuration.module'
     link: 'configuration'
     url: '/configuration'
     title: 'Configuration'
     description: 'In the configuration module, basic StreamPipes settings and services can be configured.'
     icon: 'settings'
-    homeImage: '/assets/img/home/configuration.png'
     pageNames: 'PageName.SETTINGS'
-    admin: True
+    privileges: '[UserPrivilege.PRIVILEGE_WRITE_ASSETS, UserPrivilege.PRIVILEGE_WRITE_LABELS, UserPrivilege.PRIVILEGE_WRITE_FILES]'
+    showStatusBox: false
 spAppOverview:
     componentImport: False
-    ng5_moduleName: 'AppOverviewModule'
-    ng5_component: 'AppOverviewComponent'
-    ng5_componentPath: './app-overview/app-overview.component'
+    moduleName: 'AppOverviewModule'
+    component: 'AppOverviewComponent'
+    componentPath: './app-overview/app-overview.component'
     path: './app-overview/app-overview.module'
     link: 'apps'
     url: '/apps'
     title: 'Apps'
     description: 'The app overview lets you access additional plugins.'
     icon: 'apps'
-    homeImage: '/assets/img/home/configuration.png'
-    admin: false
     pageNames: 'PageName.APPS'
+    privileges: '[UserPrivilege.PRIVILEGE_READ_APPS, UserPrivilege.PRIVILEGE_WRITE_APPS]'
+    showStatusBox: false
 spDashboard:
     componentImport: False
-    ng5_moduleName: 'DashboardModule'
-    ng5_component: 'DashboardComponent'
-    ng5_componentPath: './dashboard/dashboard.component'
+    moduleName: 'DashboardModule'
+    component: 'DashboardComponent'
+    componentPath: './dashboard/dashboard.component'
     path: './dashboard/dashboard.module'
     link: 'dashboard'
     url: '/dashboard'
     title: 'Dashboard'
     description: 'The live dashboard visualizes data in real-time.'
     icon: 'insert_chart'
-    homeImage: '/assets/img/home/configuration.png'
-    admin: false
     pageNames: 'PageName.DASHBOARD'
+    privileges: '[UserPrivilege.PRIVILEGE_READ_DASHBOARD, UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
+    showStatusBox: true
+    statusBox:
+        link: "['dashboard']"
+        createLinks: "['dashboard']"
+        title: 'Dashboards'
+        createTitle: 'New dashboard'
+        dataFns: '[this.dashboardService.getDashboards()]'
+        viewRoles: '[UserPrivilege.PRIVILEGE_READ_DASHBOARD, UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
+        createRoles: '[UserPrivilege.PRIVILEGE_WRITE_DASHBOARD]'
 spDataExplorer:
     componentImport: False
-    ng5_moduleName: 'DataExplorerModule'
-    ng5_component: 'DataExplorerComponent'
-    ng5_componentPath: './data-explorer/data-explorer.component'
+    moduleName: 'DataExplorerModule'
+    component: 'DataExplorerComponent'
+    componentPath: './data-explorer/data-explorer.component'
     path: './data-explorer/data-explorer.module'
     link: 'dataexplorer'
     url: '/dataexplorer'
     title: 'Data Explorer'
     description: 'The data explorer lets you visually inspect historical data from your connected sources.'
     icon: 'search'
-    homeImage: '/assets/img/home/configuration.png'
-    admin: false
     pageNames: 'PageName.DATA_EXPLORER'
-spFiles:
-    componentImport: False
-    ng5_moduleName: 'FilesModule'
-    ng5_component: 'FilesComponent'
-    ng5_componentPath: './files/files.component'
-    path: './files/files.module'
-    link: 'files'
-    url: '/files'
-    title: 'File Management'
-    description: 'The file management module lets you upload and manage files that are used by adapters or pipeline elements.'
-    icon: 'folder'
-    homeImage: '/assets/img/home/configuration.png'
-    admin: true
-    pageNames: 'PageName.FILE_UPLOAD'
+    privileges: '[UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
+    showStatusBox: true
+    statusBox:
+        link: "['dataexplorer']"
+        createLinks: "['dataexplorer']"
+        title: 'Data Views'
+        createTitle: 'New data view'
+        dataFns: '[this.dataViewService.getDataViews()]'
+        viewRoles: '[UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
+        createRoles: '[UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'

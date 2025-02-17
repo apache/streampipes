@@ -31,7 +31,7 @@ import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 @Component({
     selector: 'sp-table-widget',
     templateUrl: './table-widget.component.html',
-    styleUrls: ['./table-widget.component.css'],
+    styleUrls: ['./table-widget.component.scss'],
 })
 export class TableWidgetComponent
     extends BaseStreamPipesWidget
@@ -57,7 +57,7 @@ export class TableWidgetComponent
 
         this.widgetDataConfig.eventSchema.eventProperties.forEach(
             (key, index) => {
-                this.semanticTypes[key.runtimeName] = key.domainProperties[0];
+                this.semanticTypes[key.runtimeName] = key.semanticType;
             },
         );
         this.semanticTypes[BaseStreamPipesWidget.TIMESTAMP_KEY] =

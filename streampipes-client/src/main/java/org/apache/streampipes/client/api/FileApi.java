@@ -29,16 +29,6 @@ public class FileApi extends AbstractClientApi implements IFileApi {
     super(clientConfig);
   }
 
-
-  /**
-   * @deprecated As of release 0.95.0, replaced by {@link #getFileContent(String)}.
-   * The parameter isOriginalFileName is not used anymore.
-   */
-  @Deprecated(since = "0.95.0", forRemoval = true)
-  public byte[] getFileContent(String filename, boolean isOriginalFileName) {
-    return this.getFileContent(filename);
-  }
-
   @Override
   public byte[] getFileContent(String filename) {
     return new BinaryGetRequest(

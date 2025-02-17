@@ -68,4 +68,22 @@ public class UnitMasterManagement {
     return gson.toJson(unitDescriptionList);
   }
 
+  public List<UnitDescription> getAllUnitDescriptions(){
+    List<UnitDescription> unitDescriptionList = new LinkedList<>();
+
+    List<Unit> units = UnitProvider.INSTANCE.getAvailableUnits();
+
+    for (Unit unit : units) {
+      try {
+        UnitDescription unitDescriptionTmp =
+            new UnitDescription(unit.getResource().toString(), unit.getLabel());
+        unitDescriptionList.add(unitDescriptionTmp);
+      } catch (NullPointerException e) {
+        logger.error("Unit has no resource and/or Label");
+      }
+    }
+
+    return unitDescriptionList;
+  }
+
 }

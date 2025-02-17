@@ -21,6 +21,10 @@ package org.apache.streampipes.sdk.helpers;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.vocabulary.MessageFormat;
 
+/**
+ * @deprecated formats are no longer necessary
+ */
+@Deprecated(forRemoval = true, since = "0.97.0")
 public class SupportedFormats {
 
   /**

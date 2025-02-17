@@ -36,12 +36,12 @@ import static org.mockito.Mockito.when;
 public class AdapterMasterManagementTest {
 
   @Test
-  public void getAdapterFailNull() {
-    AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
-    AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
-    when(adapterStorage.getAllAdapters()).thenReturn(null);
+  public void getAdapter_FailNull() {
+    var adapterStorage = mock(AdapterInstanceStorageImpl.class);
+    var resourceManager = mock(AdapterResourceManager.class);
+    when(adapterStorage.findAll()).thenReturn(null);
 
-    AdapterMasterManagement adapterMasterManagement =
+    var adapterMasterManagement =
         new AdapterMasterManagement(
             adapterStorage,
             resourceManager,
@@ -53,13 +53,13 @@ public class AdapterMasterManagementTest {
   }
 
   @Test
-  public void getAdapterFail() {
-    List<AdapterDescription> adapterDescriptions = List.of(new AdapterDescription());
-    AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
-    AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
-    when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
+  public void getAdapter_Fail() {
+    var adapterDescriptions = List.of(new AdapterDescription());
+    var adapterStorage = mock(AdapterInstanceStorageImpl.class);
+    var resourceManager = mock(AdapterResourceManager.class);
+    when(adapterStorage.findAll()).thenReturn(adapterDescriptions);
 
-    AdapterMasterManagement adapterMasterManagement =
+    var adapterMasterManagement =
         new AdapterMasterManagement(
             adapterStorage,
             resourceManager,
@@ -71,11 +71,11 @@ public class AdapterMasterManagementTest {
   }
 
   @Test
-  public void getAllAdaptersSuccess() throws AdapterException {
-    List<AdapterDescription> adapterDescriptions = List.of(new AdapterDescription());
-    AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
-    AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
-    when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
+  public void getAllAdapters_Success() {
+    var adapterDescriptions = List.of(new AdapterDescription());
+    var adapterStorage = mock(AdapterInstanceStorageImpl.class);
+    var resourceManager = mock(AdapterResourceManager.class);
+    when(adapterStorage.findAll()).thenReturn(adapterDescriptions);
 
     AdapterMasterManagement adapterMasterManagement =
         new AdapterMasterManagement(
@@ -90,21 +90,4 @@ public class AdapterMasterManagementTest {
     Assertions.assertEquals(1, result.size());
   }
 
-  @Test
-  public void getAllAdaptersFail() {
-    AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
-    AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
-    when(adapterStorage.getAllAdapters()).thenReturn(null);
-
-    AdapterMasterManagement adapterMasterManagement =
-        new AdapterMasterManagement(
-            adapterStorage,
-            resourceManager,
-            null,
-            AdapterMetricsManager.INSTANCE.getAdapterMetrics()
-        );
-
-    assertThrows(AdapterException.class, adapterMasterManagement::getAllAdapterInstances);
-
-  }
 }

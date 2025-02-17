@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
     @JsonSubTypes.Type(TimestampTranfsformationRuleDescription.class),
     @JsonSubTypes.Type(UnitTransformRuleDescription.class),
     @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),
+    @JsonSubTypes.Type(RegexTransformationRuleDescription.class),
 })
 public abstract class ValueTransformationRuleDescription extends TransformationRuleDescription {
 

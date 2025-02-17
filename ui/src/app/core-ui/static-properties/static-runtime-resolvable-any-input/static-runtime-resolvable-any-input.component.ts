@@ -18,40 +18,57 @@
 
 import { Component, OnInit } from '@angular/core';
 import {
+    Option,
     RuntimeResolvableAnyStaticProperty,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
     selector: 'sp-app-static-runtime-resolvable-any-input',
     templateUrl: './static-runtime-resolvable-any-input.component.html',
-    styleUrls: ['./static-runtime-resolvable-any-input.component.css'],
+    styleUrls: ['./static-runtime-resolvable-any-input.component.scss'],
 })
 export class StaticRuntimeResolvableAnyInputComponent
     extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableAnyStaticProperty>
     implements OnInit
 {
+    selectedOptions: Option[] = [];
+
     constructor(runtimeResolvableService: RuntimeResolvableService) {
         super(runtimeResolvableService);
     }
 
     ngOnInit() {
         super.onInit();
+        this.selectedOptions = this.staticProperty.options.filter(
+            o => o.selected,
+        );
     }
 
-    select(id) {
-        for (const option of this.staticProperty.options) {
-            option.selected = false;
-        }
-        this.staticProperty.options.find(
-            option => option.elementId === id,
-        ).selected = true;
+    selectAll(select: boolean): void {
+        this.staticProperty.options.forEach(o => (o.selected = select));
+        this.selectedOptions = select ? this.staticProperty.options : [];
+        this.applyCompletedConfiguration(true);
+    }
+
+    onSelectionChange(): void {
+        this.staticProperty.options.forEach(option => {
+            option.selected = this.selectedOptions.includes(option);
+        });
+    }
+
+    checkEmitUpdate(): void {
+        this.applyCompletedConfiguration(true);
     }
 
     afterOptionsLoaded(staticProperty: RuntimeResolvableAnyStaticProperty) {
         this.staticProperty.options = staticProperty.options;
+        this.selectedOptions = this.staticProperty.options.filter(
+            o => o.selected,
+        );
     }
 
     parse(

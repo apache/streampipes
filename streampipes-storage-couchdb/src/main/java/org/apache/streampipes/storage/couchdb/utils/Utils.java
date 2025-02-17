@@ -55,7 +55,7 @@ public class Utils {
   }
 
   public static CouchDbClient getCouchDbPipelineElementTemplateClient() {
-    return getCouchDbGsonClient("pipelineelementtemplate");
+    return getCouchDbGsonClient("pipelineelementtemplate-v2");
   }
 
   public static CouchDbClient getCouchDbPipelineCanvasMetadataClient() {
@@ -66,28 +66,8 @@ public class Utils {
     return getCouchDbGsonClient("general-configuration");
   }
 
-  public static CouchDbClient getCouchDbCategoryClient() {
-    return getCouchDbGsonClient("category");
-  }
-
-  public static CouchDbClient getCouchDbServiceConfigStorage() {
-    return getCouchDbGsonClient("extensions-services-configurations");
-  }
-
-  public static CouchDbClient getCouchDbExtensionsStorage() {
-    return getCouchDbGsonClient("extensions-services");
-  }
-
-  public static CouchDbClient getCouchDbLabelClient() {
-    return getCouchDbGsonClient("label");
-  }
-
   public static CouchDbClient getCouchDbFileMetadataClient() {
     return getCouchDbGsonClient("filemetadata");
-  }
-
-  public static CouchDbClient getCouchDbAssetDashboardClient() {
-    return getCouchDbGsonClient("assetdashboard");
   }
 
   public static CouchDbClient getCouchDbAdapterInstanceClient() {
@@ -106,48 +86,8 @@ public class Utils {
     return getCouchDbGsonClient("pipeline");
   }
 
-  public static CouchDbClient getCouchDbConnectionClient() {
-    return getCouchDbStandardSerializerClient("connection");
-  }
-
-  public static CouchDbClient getCouchDbVisualizationClient() {
-    return getCouchDbStandardSerializerClient("visualizations");
-  }
-
-  public static CouchDbClient getCouchDbDataExplorerDashboardClient() {
-    return getCouchDbGsonClient("dataexplorerdashboard");
-  }
-
-  public static CouchDbClient getCouchDbDataExplorerWidgetClient() {
-    return getCouchDbGsonClient("dataexplorerwidget");
-  }
-
-  public static CouchDbClient getCouchDbDashboardClient() {
-    return getCouchDbGsonClient("dashboard");
-  }
-
-  public static CouchDbClient getCouchDbDashboardWidgetClient() {
-    return getCouchDbGsonClient("dashboardwidget");
-  }
-
   public static CouchDbClient getCouchDbUserClient() {
     return getCouchDbPrincipalClient(USER_DB_NAME);
-  }
-
-  public static CouchDbClient getCouchDbInternalUsersClient() {
-    return getCouchDbStandardSerializerClient("_users");
-  }
-
-  public static CouchDbClient getCouchDbReplicatorClient() {
-    return getCouchDbStandardSerializerClient("_replicator");
-  }
-
-  public static CouchDbClient getCouchDbGlobalChangesClient() {
-    return getCouchDbStandardSerializerClient("_global_changes");
-  }
-
-  public static CouchDbClient getCouchDbMonitoringClient() {
-    return getCouchDbStandardSerializerClient("monitoring");
   }
 
   public static CouchDbClient getCouchDbNotificationClient() {
@@ -158,11 +98,7 @@ public class Utils {
     return getCouchDbStandardSerializerClient("pipelinecategories");
   }
 
-  public static CouchDbClient getCouchDbDataLakeClient() {
-    return getCouchDbGsonClient("data-lake");
-  }
-
-  private static CouchDbClient getCouchDbGsonClient(String dbname) {
+  public static CouchDbClient getCouchDbGsonClient(String dbname) {
     CouchDbClient dbClient = new CouchDbClient(props(dbname));
     dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
     return dbClient;
@@ -186,10 +122,6 @@ public class Utils {
 
   public static CouchDbClient getCouchDbClient(String database, boolean createIfNotExists) {
     return new CouchDbClient(props(database, createIfNotExists));
-  }
-
-  public static CouchDbClient getCouchDbClient(String database) {
-    return new CouchDbClient(props(database));
   }
 
   private static CouchDbProperties props(String dbname,

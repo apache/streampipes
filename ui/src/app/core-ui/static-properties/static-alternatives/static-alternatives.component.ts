@@ -20,33 +20,36 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
+    Input,
     OnInit,
     Output,
 } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import {
+    ExtensionDeploymentConfiguration,
     StaticPropertyAlternative,
     StaticPropertyAlternatives,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
-import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
     selector: 'sp-app-static-alternatives',
     templateUrl: './static-alternatives.component.html',
-    styleUrls: ['./static-alternatives.component.css'],
+    styleUrls: ['./static-alternatives.component.scss'],
 })
 export class StaticAlternativesComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyAlternatives>
     implements OnInit
 {
-    @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Input()
+    deploymentConfiguration: ExtensionDeploymentConfiguration;
 
-    completedStaticProperty: ConfigurationInfo;
-    dependentStaticPropertyIds: Map<string, boolean> = new Map<
-        string,
-        boolean
-    >();
+    // dependentStaticPropertyIds: Map<string, boolean> = new Map<
+    //     string,
+    //     boolean
+    // >();
+
+    completedAlternativeConfigurations: ConfigurationInfo[] = [];
 
     constructor(private changeDetectorRef: ChangeDetectorRef) {
         super();
@@ -55,10 +58,16 @@ export class StaticAlternativesComponent
     ngOnInit() {
         this.staticProperty.alternatives.forEach(al => {
             if (al.staticProperty) {
-                const configuration = al.staticProperty.internalName;
-                this.dependentStaticPropertyIds.set(configuration, false);
+                this.completedAlternativeConfigurations.push({
+                    staticPropertyInternalName: al.staticProperty.internalName,
+                    configured: false,
+                });
             }
         });
+        if (!this.staticProperty.alternatives.some(a => a.selected)) {
+            this.staticProperty.alternatives[0].selected = true;
+            this.checkFireCompleted(this.staticProperty.alternatives[0]);
+        }
     }
 
     radioSelectionChange(event) {
@@ -71,21 +80,23 @@ export class StaticAlternativesComponent
     }
 
     handleConfigurationUpdate(configurationInfo: ConfigurationInfo) {
-        this.dependentStaticPropertyIds.set(
-            configurationInfo.staticPropertyInternalName,
-            configurationInfo.configured,
+        this.staticPropertyUtils.updateCompletedConfiguration(
+            configurationInfo,
+            this.completedAlternativeConfigurations,
         );
         if (this.alternativeCompleted()) {
-            this.completedStaticProperty = { ...configurationInfo };
-            this.emitUpdate(true);
+            this.completedAlternativeConfigurations = [
+                ...this.completedAlternativeConfigurations,
+            ];
+            this.applyCompletedConfiguration(true);
         } else {
-            this.emitUpdate();
+            this.applyCompletedConfiguration(false);
         }
     }
 
     checkFireCompleted(alternative: StaticPropertyAlternative) {
         if (alternative.selected && alternative.staticProperty === null) {
-            this.emitUpdate(true);
+            this.applyCompletedConfiguration(true);
         }
     }
 
@@ -98,9 +109,11 @@ export class StaticAlternativesComponent
                     if (al.staticProperty === null) {
                         return false;
                     } else {
-                        return this.dependentStaticPropertyIds.get(
-                            al.staticProperty.internalName,
-                        );
+                        return this.completedAlternativeConfigurations.find(
+                            c =>
+                                c.staticPropertyInternalName ===
+                                al.staticProperty.internalName,
+                        ).configured;
                     }
                 }
             }) !== undefined

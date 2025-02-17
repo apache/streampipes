@@ -22,7 +22,6 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.extensions.api.pe.routing.PipelineElementCollector;
 import org.apache.streampipes.messaging.SpProtocolDefinition;
-import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.wrapper.standalone.manager.PManager;
 
@@ -37,18 +36,15 @@ public abstract class StandaloneSpCollector<T extends TransportProtocol, W> impl
   protected T transportProtocol;
   protected SpProtocolDefinition<T> protocolDefinition;
 
-  protected TransportFormat transportFormat;
   protected SpDataFormatDefinition dataFormatDefinition;
   protected String topic;
 
 
-  public StandaloneSpCollector(T protocol, TransportFormat format) throws SpRuntimeException {
+  public StandaloneSpCollector(T protocol) throws SpRuntimeException {
     this.transportProtocol = protocol;
     this.protocolDefinition = PManager.getProtocolDefinition(protocol).orElseThrow(() -> new
         SpRuntimeException("Could not find protocol"));
-    this.transportFormat = format;
-    this.dataFormatDefinition = PManager.getDataFormat(format).orElseThrow(() -> new
-        SpRuntimeException("Could not find format"));
+    this.dataFormatDefinition = PManager.getDataFormat();
     this.consumers = new ConcurrentHashMap<>();
     this.topic = transportProtocol.getTopicDefinition().getActualTopicName();
   }

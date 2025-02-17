@@ -30,6 +30,7 @@ import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescript
 import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -70,7 +71,7 @@ public class ToOriginalSchemaConverter implements ITransformationRuleVisitor, Pr
 
   @Override
   public void visit(MoveRuleDescription rule) {
-    var targetRuntimeKey = rule.getNewRuntimeKey() + "." + rule.getOldRuntimeKey();
+    var targetRuntimeKey = rule.getNewRuntimeKey() + Utils.DELIMITER + rule.getOldRuntimeKey();
     var existing = new Cloner().property(findProperty(properties, targetRuntimeKey));
     var existingHierarchy = findPropertyHierarchy(this.properties, targetRuntimeKey);
     existingHierarchy.removeIf(property -> property.getRuntimeName().equals(existing.getRuntimeName()));
@@ -88,6 +89,11 @@ public class ToOriginalSchemaConverter implements ITransformationRuleVisitor, Pr
   public void visit(RenameRuleDescription rule) {
     var property = findProperty(properties, rule.getNewRuntimeKey());
     property.setRuntimeName(rule.getOldRuntimeKey());
+  }
+
+  @Override
+  public void visit(RegexTransformationRuleDescription rule) {
+    // does not affect schema
   }
 
   @Override
@@ -125,7 +131,7 @@ public class ToOriginalSchemaConverter implements ITransformationRuleVisitor, Pr
   public void visit(TimestampTranfsformationRuleDescription rule) {
     var property = findPrimitiveProperty(properties, rule.getRuntimeKey());
     property.setRuntimeType(Datatypes.String.toString());
-    property.setDomainProperties(List.of());
+    property.setSemanticType(null);
   }
 
   @Override

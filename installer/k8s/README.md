@@ -21,7 +21,7 @@
 StreamPipes k8s is a helm chart to deploy StreamPipes on Kubernetes.
 
 <!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
-**Current version:** 0.95.1
+**Current version:** 0.97.0
 <!-- END do not edit -->
 
 We provide two helm chart templates to get you going:
@@ -78,11 +78,10 @@ ui-b94bd9766-rm6zb                             2/2     Running   0          3m27
 For **minikube users**:
 > **NOTE**: If you're running Docker Desktop or Minikube with a local k8s cluster, the above step to use your host IP
 > might not work. Luckily, you can port-forward a service port to your localhost using the following command to be able to
-> access the UI either via `http://localhost` or `http://<HOST_IP>` (you require sudo to run this command in order to bind
-> to a privileged port).
+> access the UI either via `http://localhost:8088` or `http://<HOST_IP>:8088` (If you want to use privileged ports such as 80, you need to run this command with sudo to bind to the privileged port).
 
 ```bash
-kubectl port-forward svc/ui --address=0.0.0.0 80:80
+kubectl port-forward svc/ui --address=0.0.0.0 8088:8088
 ```
 
 **Deleting** the current helm chart deployment:
@@ -117,41 +116,41 @@ rm -rf ${HOME}/streampipes-k8s
 
 ### StreamPipes common parameters
 
-| Parameter Name                                | Description                                             | Value                                   |
-|-----------------------------------------------|---------------------------------------------------------|-----------------------------------------|
-| streampipes.version                           | StreamPipes version                                     | "0.95.1"                        |
-| streampipes.registry                          | StreamPipes registry URL                                | "apachestreampipes"                     |
-| streampipes.auth.secretName                   | The secret name for storing secrets                     | "sp-secrets"                            |
-| streampipes.auth.users.admin.user             | The initial admin user                                  | "admin@streampipes.apache.org"          |
-| streampipes.auth.users.admin.password         | The initial admin password (leave empty for autogen)    | "admin"                                 |
-| streampipes.auth.users.service.user           | The initial service account user                        | "sp-service-client"                     |
-| streampipes.auth.users.service.secret         | The initial service account secret                      | empty (auto-generated)                  |
-| streampipes.auth.encryption.passcode          | Passcode for value encryption                           | empty (auto-generated)                  |
-| streampipes.core.appName                      | StreamPipes backend application name                    | "backend"                               |
-| streampipes.core.port                         | StreamPipes backend port                                | 8030                                    |
-| streampipes.core.persistence.storageClassName | Storage class name for backend PVs                      | "hostpath"                              |
-| streampipes.core.persistence.storageSize      | Size of the backend PV                                  | "1Gi"                                   |
-| streampipes.core.persistence.claimName        | Name of the backend PersistentVolumeClaim               | "backend-pvc"                           |
-| streampipes.core.persistence.pvName           | Name of the backend PersistentVolume                    | "backend-pv"                            |
-| streampipes.core.service.name                 | Name of the backend service                             | "backend"                               |
-| streampipes.core.service.port                 | TargetPort of the StreamPipes backend service           | 8030                                    |
-| streampipes.ui.appName                        | StreamPipes UI application name                         | "ui"                                    |
-| streampipes.ui.resolverActive                 | Flag for enabling DNS resolver for Nginx proxy          | true                                    |
-| streampipes.ui.port                           | StreamPipes UI port                                     | 8088                                    |
+| Parameter Name                                | Description                                             | Value                                    |
+|-----------------------------------------------|---------------------------------------------------------|------------------------------------------|
+| streampipes.version                           | StreamPipes version                                     | "0.97.0"                        |
+| streampipes.registry                          | StreamPipes registry URL                                | "apachestreampipes"                      |
+| streampipes.auth.secretName                   | The secret name for storing secrets                     | "sp-secrets"                             |
+| streampipes.auth.users.admin.user             | The initial admin user                                  | "admin@streampipes.apache.org"           |
+| streampipes.auth.users.admin.password         | The initial admin password (leave empty for autogen)    | "admin"                                  |
+| streampipes.auth.users.service.user           | The initial service account user                        | "sp-service-client"                      |
+| streampipes.auth.users.service.secret         | The initial service account secret                      | empty (auto-generated)                   |
+| streampipes.auth.encryption.passcode          | Passcode for value encryption                           | empty (auto-generated)                   |
+| streampipes.core.appName                      | StreamPipes backend application name                    | "backend"                                |
+| streampipes.core.port                         | StreamPipes backend port                                | 8030                                     |
+| streampipes.core.persistence.storageClassName | Storage class name for backend PVs                      | "hostpath"                               |
+| streampipes.core.persistence.storageSize      | Size of the backend PV                                  | "1Gi"                                    |
+| streampipes.core.persistence.claimName        | Name of the backend PersistentVolumeClaim               | "backend-pvc"                            |
+| streampipes.core.persistence.pvName           | Name of the backend PersistentVolume                    | "backend-pv"                             |
+| streampipes.core.service.name                 | Name of the backend service                             | "backend"                                |
+| streampipes.core.service.port                 | TargetPort of the StreamPipes backend service           | 8030                                     |
+| streampipes.ui.appName                        | StreamPipes UI application name                         | "ui"                                     |
+| streampipes.ui.resolverActive                 | Flag for enabling DNS resolver for Nginx proxy          | true                                     |
+| streampipes.ui.port                           | StreamPipes UI port                                     | 8088                                     |
 | streampipes.ui.resolver                       | DNS resolver for Nginx proxy                            | "kube-dns.kube-system.svc.cluster.local" |
-| streampipes.ui.service.name                   | Name of the UI service                                  | "ui"                                    |
-| streampipes.ui.service.type                   | Type of the UI service                                  | "ClusterIP"                             |
-| streampipes.ui.service.nodePort               | Node port for the UI service                            | 8088                                    |
-| streampipes.ui.service.port                   | TargetPort of the StreamPipes UI service                | 8088                                    |
-| streampipes.ingress.active                    | Flag for enabling Ingress for StreamPipes               | false                                   |
-| streampipes.ingress.annotations               | Annotations for Ingress                                 | {}                                      |
-| streampipes.ingress.host                      | Hostname for Ingress                                    | ""                                      |
-| streampipes.ingressroute.active               | Flag for enabling IngressRoute for StreamPipes          | true                                    |
-| streampipes.ingressroute.annotations          | Annotations for IngressRoute                            | {}                                      |
-| streampipes.ingressroute.entryPoints          | Entry points for IngressRoute                           | ["web", "websecure"]                    |
-| streampipes.ingressroute.host                 | Hostname for IngressRoute                               | ""                                      |
-| streampipes.ingressroute.certResolverActive   | Flag for enabling certificate resolver for IngressRoute | true                                    |
-| streampipes.ingressroute.certResolver         | Certificate resolver for IngressRoute                   | ""                                      |
+| streampipes.ui.service.name                   | Name of the UI service                                  | "ui"                                     |
+| streampipes.ui.service.type                   | Type of the UI service                                  | "ClusterIP"                              |
+| streampipes.ui.service.nodePort               | Node port for the UI service                            | 8088                                     |
+| streampipes.ui.service.port                   | TargetPort of the StreamPipes UI service                | 8088                                     |
+| streampipes.ingress.active                    | Flag for enabling Ingress for StreamPipes               | false                                    |
+| streampipes.ingress.annotations               | Annotations for Ingress                                 | {}                                       |
+| streampipes.ingress.host                      | Hostname for Ingress                                    | ""                                       |
+| streampipes.ingressroute.active               | Flag for enabling IngressRoute for StreamPipes          | true                                     |
+| streampipes.ingressroute.annotations          | Annotations for IngressRoute                            | {}                                       |
+| streampipes.ingressroute.entryPoints          | Entry points for IngressRoute                           | ["web", "websecure"]                     |
+| streampipes.ingressroute.host                 | Hostname for IngressRoute                               | ""                                       |
+| streampipes.ingressroute.certResolverActive   | Flag for enabling certificate resolver for IngressRoute | true                                     |
+| streampipes.ingressroute.certResolver         | Certificate resolver for IngressRoute                   | ""                                       |
 
 ### Extensions common parameters
 
@@ -314,7 +313,7 @@ If you have any problems during the installation or questions around StreamPipes
 community channels:
 
 - [Slack](https://slack.streampipes.org)
-- [Mailing Lists](https://streampipes.apache.org/mailinglists.html)
+- [Mailing Lists](https://streampipes.apache.org/community/mailing-lists/)
 
 And don't forget to follow us on [Twitter](https://twitter.com/streampipes)!
 

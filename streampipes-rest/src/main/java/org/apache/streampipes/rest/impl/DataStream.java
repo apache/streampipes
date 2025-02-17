@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.topic.WildcardTopicGenerator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
@@ -34,6 +34,6 @@ public class DataStream extends AbstractRestResource {
 
   @PostMapping(path = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SpDataStream> getStreamsBySource(@RequestBody SpDataStream stream) {
-    return ok(Operations.updateActualTopic(stream));
+    return ok(new WildcardTopicGenerator(stream).computeActualTopic());
   }
 }

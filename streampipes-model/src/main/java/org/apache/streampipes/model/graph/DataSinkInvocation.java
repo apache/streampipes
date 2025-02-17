@@ -20,7 +20,6 @@ package org.apache.streampipes.model.graph;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
-import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 
 import java.util.ArrayList;
@@ -42,7 +41,6 @@ public class DataSinkInvocation extends InvocableStreamPipesEntity {
     super();
     this.setName(other.getName());
     this.setDescription(other.getDescription());
-    this.setIconUrl(other.getIconUrl());
     this.setInputStreams(other.getSpDataStreams());
     this.setSupportedGrounding(other.getSupportedGrounding());
     this.setStaticProperties(other.getStaticProperties());
@@ -51,14 +49,11 @@ public class DataSinkInvocation extends InvocableStreamPipesEntity {
     this.setStreamRequirements(other.getSpDataStreams());
     this.setAppId(other.getAppId());
     this.setIncludesAssets(other.isIncludesAssets());
+    this.setIncludesLocales(other.isIncludesLocales());
     this.setElementId(ElementIdGenerator.makeElementId(this));
     this.setIncludedAssets(other.getIncludedAssets());
-    this.serviceTagPrefix = SpServiceTagPrefix.DATA_SINK;
-  }
-
-  public DataSinkInvocation(DataSinkDescription sec, String domId) {
-    this(sec);
-    this.setDom(domId);
+    this.setIncludedLocales(other.getIncludedLocales());
+    this.setVersion(other.getVersion());
     this.serviceTagPrefix = SpServiceTagPrefix.DATA_SINK;
   }
 
@@ -66,14 +61,6 @@ public class DataSinkInvocation extends InvocableStreamPipesEntity {
     super();
     inputStreams = new ArrayList<>();
     this.serviceTagPrefix = SpServiceTagPrefix.DATA_SINK;
-  }
-
-  public List<StaticProperty> getStaticProperties() {
-    return staticProperties;
-  }
-
-  public void setStaticProperties(List<StaticProperty> staticProperties) {
-    this.staticProperties = staticProperties;
   }
 
   public List<String> getCategory() {

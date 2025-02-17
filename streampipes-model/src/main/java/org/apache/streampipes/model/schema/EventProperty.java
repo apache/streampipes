@@ -19,15 +19,11 @@
 package org.apache.streampipes.model.schema;
 
 import org.apache.streampipes.model.util.ElementIdGenerator;
-import org.apache.streampipes.model.util.ListUtils;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -40,31 +36,18 @@ import java.util.Objects;
 public abstract class EventProperty {
 
   protected static final String PREFIX = "urn:streampipes.org:spi:";
-  private static final long serialVersionUID = 7079045979946059387L;
 
   private String elementId;
   private String label;
-
   private String description;
-
   private String runtimeName;
-
-  private boolean required;
-
-  private List<URI> domainProperties;
-
+  private String semanticType;
   private String propertyScope;
-
-  private int index = 0;
-
   private String runtimeId;
-
   private Map<String, Object> additionalMetadata;
-
 
   public EventProperty() {
     this.elementId = ElementIdGenerator.makeElementId(EventProperty.class);
-    this.domainProperties = new ArrayList<>();
     this.additionalMetadata = new HashMap<>();
   }
 
@@ -72,24 +55,17 @@ public abstract class EventProperty {
     this.elementId = other.getElementId();
     this.label = other.getLabel();
     this.description = other.getDescription();
-    this.required = other.isRequired();
     this.runtimeName = other.getRuntimeName();
-    this.domainProperties = other.getDomainProperties();
     this.propertyScope = other.getPropertyScope();
     this.runtimeId = other.getRuntimeId();
-    this.index = other.getIndex();
     this.additionalMetadata = other.getAdditionalMetadata();
+    this.semanticType = other.getSemanticType();
   }
 
-  public EventProperty(List<URI> subClassOf) {
-    this();
-    this.domainProperties = subClassOf;
-  }
-
-  public EventProperty(String propertyName, List<URI> subClassOf) {
+  public EventProperty(String propertyName, String semanticType) {
     this();
     this.runtimeName = propertyName;
-    this.domainProperties = subClassOf;
+    this.semanticType = semanticType;
   }
 
   public EventProperty(String propertyName) {
@@ -108,22 +84,6 @@ public abstract class EventProperty {
 
   public void setRuntimeName(String propertyName) {
     this.runtimeName = propertyName;
-  }
-
-  public boolean isRequired() {
-    return required;
-  }
-
-  public void setRequired(boolean required) {
-    this.required = required;
-  }
-
-  public List<URI> getDomainProperties() {
-    return domainProperties;
-  }
-
-  public void setDomainProperties(List<URI> subClassOf) {
-    this.domainProperties = subClassOf;
   }
 
   public String getLabel() {
@@ -158,14 +118,6 @@ public abstract class EventProperty {
     this.runtimeId = runtimeId;
   }
 
-  public int getIndex() {
-    return index;
-  }
-
-  public void setIndex(int index) {
-    this.index = index;
-  }
-
   public String getElementId() {
     return elementId;
   }
@@ -182,9 +134,17 @@ public abstract class EventProperty {
     this.additionalMetadata = additionalMetadata;
   }
 
+  public String getSemanticType() {
+    return semanticType;
+  }
+
+  public void setSemanticType(String semanticType) {
+    this.semanticType = semanticType;
+  }
+
   @Override
   public int hashCode() {
-    return Objects.hash(elementId, label, description, runtimeName, required, domainProperties, propertyScope, index,
+    return Objects.hash(elementId, label, description, runtimeName, semanticType, propertyScope,
         runtimeId);
   }
 
@@ -198,14 +158,12 @@ public abstract class EventProperty {
     }
     EventProperty that = (EventProperty) o;
 
-    return required == that.required
-           && index == that.index
-           && Objects.equals(label, that.label)
+    return Objects.equals(label, that.label)
            && Objects.equals(description, that.description)
            && Objects.equals(runtimeName, that.runtimeName)
            && Objects.equals(propertyScope, that.propertyScope)
            && Objects.equals(runtimeId, that.runtimeId)
-           && ListUtils.isEqualList(this.domainProperties, that.domainProperties);
+           && Objects.equals(semanticType, that.semanticType);
   }
 
   @Override
@@ -215,10 +173,8 @@ public abstract class EventProperty {
            + ", label='" + label + '\''
            + ", description='" + description + '\''
            + ", runtimeName='" + runtimeName + '\''
-           + ", required=" + required
-           + ", domainProperties=" + domainProperties
+           + ", semanticType=" + semanticType
            + ", propertyScope='" + propertyScope + '\''
-           + ", index=" + index
            + ", runtimeId='" + runtimeId + '\''
            + '}';
   }

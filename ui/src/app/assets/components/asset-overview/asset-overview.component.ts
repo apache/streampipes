@@ -19,26 +19,27 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {
+    AssetConstants,
     GenericStorageService,
     SpAssetModel,
 } from '@streampipes/platform-services';
-import { AssetConstants } from '../../constants/asset.constants';
 import {
+    ConfirmDialogComponent,
+    CurrentUserService,
     DialogService,
     PanelType,
+    SpAssetBrowserService,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { SpAssetRoutes } from '../../assets.routes';
-import { AssetUploadDialogComponent } from '../../dialog/asset-upload/asset-upload-dialog.component';
 import { Router } from '@angular/router';
 import { SpCreateAssetDialogComponent } from '../../dialog/create-asset/create-asset-dialog.component';
-import { DataExportService } from '../../../configuration/export/data-export.service';
-import { mergeMap } from 'rxjs/operators';
-import { saveAs } from 'file-saver';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
+import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-    selector: 'sp-asset-overview-component',
+    selector: 'sp-asset-overview',
     templateUrl: './asset-overview.component.html',
     styleUrls: ['./asset-overview.component.scss'],
 })
@@ -47,18 +48,26 @@ export class SpAssetOverviewComponent implements OnInit {
 
     displayedColumns: string[] = ['name', 'action'];
 
-    dataSource: MatTableDataSource<SpAssetModel>;
+    dataSource: MatTableDataSource<SpAssetModel> =
+        new MatTableDataSource<SpAssetModel>();
+
+    hasWritePrivilege = false;
 
     constructor(
         private genericStorageService: GenericStorageService,
         private breadcrumbService: SpBreadcrumbService,
         private dialogService: DialogService,
         private router: Router,
-        private dataExportService: DataExportService,
         private idGeneratorService: IdGeneratorService,
+        private assetBrowserService: SpAssetBrowserService,
+        private currentUserService: CurrentUserService,
+        private dialog: MatDialog,
     ) {}
 
     ngOnInit(): void {
+        this.hasWritePrivilege = this.currentUserService.hasRole(
+            UserPrivilege.PRIVILEGE_WRITE_ASSETS,
+        );
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpAssetRoutes.BASE),
         );
@@ -70,92 +79,71 @@ export class SpAssetOverviewComponent implements OnInit {
             .getAllDocuments(AssetConstants.ASSET_APP_DOC_NAME)
             .subscribe(result => {
                 this.existingAssets = result as SpAssetModel[];
-                this.dataSource = new MatTableDataSource<SpAssetModel>(
-                    this.existingAssets,
-                );
+                this.dataSource.data = this.existingAssets;
             });
     }
 
-    createNewAsset(assetModel?: SpAssetModel) {
-        if (!assetModel) {
-            assetModel = {
-                assetName: 'New Asset',
-                assetDescription: '',
-                assetLinks: [],
-                assetId: this.idGeneratorService.generate(6),
-                _id: this.idGeneratorService.generate(24),
-                appDocType: 'asset-management',
-                removable: true,
-                _rev: undefined,
-                assets: [],
-                assetType: undefined,
-            };
-        }
+    createNewAsset() {
+        const assetModel = {
+            assetName: 'New Asset',
+            assetDescription: '',
+            assetLinks: [],
+            assetId: this.idGeneratorService.generate(6),
+            _id: this.idGeneratorService.generate(24),
+            appDocType: 'asset-management',
+            removable: true,
+            _rev: undefined,
+            assets: [],
+            assetType: undefined,
+        };
         const dialogRef = this.dialogService.open(
             SpCreateAssetDialogComponent,
             {
-                panelType: PanelType.STANDARD_PANEL,
+                panelType: PanelType.SLIDE_IN_PANEL,
                 title: 'Create asset',
-                width: '40vw',
+                width: '50vw',
                 data: {
-                    createMode: true,
                     assetModel: assetModel,
                 },
             },
         );
 
-        dialogRef.afterClosed().subscribe(() => {
-            this.loadAssets();
-        });
-    }
-
-    uploadAsset() {
-        const dialogRef = this.dialogService.open(AssetUploadDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Upload asset model',
-            width: '40vw',
-        });
-
-        dialogRef.afterClosed().subscribe(reload => {
-            if (reload) {
-                this.loadAssets();
+        dialogRef.afterClosed().subscribe(ev => {
+            if (ev) {
+                this.goToDetailsView(assetModel, true);
             }
         });
     }
 
     goToDetailsView(asset: SpAssetModel, editMode = false) {
-        if (!editMode) {
-            this.router.navigate(['assets', 'details', asset._id]);
-        } else {
-            this.router.navigate(['assets', 'details', asset._id], {
-                queryParams: { editMode: editMode },
-            });
-        }
+        const mode = editMode ? 'edit' : 'view';
+        this.router.navigate(['assets', 'details', asset._id, mode]);
     }
 
     deleteAsset(asset: SpAssetModel) {
-        this.genericStorageService
-            .deleteDocument(
-                AssetConstants.ASSET_APP_DOC_NAME,
-                asset._id,
-                asset._rev,
-            )
-            .subscribe(result => {
-                this.loadAssets();
-            });
-    }
-
-    downloadAsset(asset: SpAssetModel) {
-        this.dataExportService
-            .getExportPreview([asset._id])
-            .pipe(
-                mergeMap(preview =>
-                    this.dataExportService.triggerExport(preview),
-                ),
-            )
-            .subscribe((data: Blob) => {
-                const blob = new Blob([data], { type: 'application/zip' });
-                saveAs(blob, 'assetExport');
-            });
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            width: '500px',
+            data: {
+                title: 'Are you sure you want to delete this asset?',
+                subtitle: 'This action cannot be reversed!',
+                cancelTitle: 'Cancel',
+                okTitle: 'Delete Asset',
+                confirmAndCancel: true,
+            },
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.genericStorageService
+                    .deleteDocument(
+                        AssetConstants.ASSET_APP_DOC_NAME,
+                        asset._id,
+                        asset._rev,
+                    )
+                    .subscribe(() => {
+                        this.loadAssets();
+                        this.assetBrowserService.loadAssetData();
+                    });
+            }
+        });
     }
 }

@@ -20,5 +20,38 @@ package org.apache.streampipes.model.client.user;
 
 import java.util.List;
 
-public record UserRegistrationData(String username, String password, List<String> roles) {
+public class UserRegistrationData {
+
+  private String username;
+  private String password;
+  private List<String> roles;
+  private String provider;
+
+  public UserRegistrationData(String username,
+                              String password,
+                              List<String> roles) {
+    this.username = username;
+    this.password = password;
+    this.roles = roles;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public List<String> getRoles() {
+    return roles;
+  }
+
+  public String getProvider() {
+    return provider;
+  }
+
+  public void setProvider(String provider) {
+    this.provider = provider;
+  }
 }

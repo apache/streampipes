@@ -19,12 +19,13 @@
 package org.apache.streampipes.extensions.connectors.opcua.sink;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.connectors.opcua.client.SpOpcUaClient;
+import org.apache.streampipes.extensions.connectors.opcua.client.ConnectedOpcUaClient;
+import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProvider;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.vocabulary.XSD;
 
-import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
@@ -42,7 +43,8 @@ public class OpcUa {
 
   private static final Logger LOG = LoggerFactory.getLogger(OpcUa.class);
 
-  private OpcUaClient opcUaClient;
+  private ConnectedOpcUaClient connectedClient;
+  private final OpcUaConfig opcUaConfig;
   private OpcUaParameters params;
 
   private NodeId node;
@@ -73,24 +75,31 @@ public class OpcUa {
     compatibleDataTypes.put(String.class, new Class[]{String.class});
   }
 
-  public void onInvocation(OpcUaParameters params) throws
+  private final OpcUaClientProvider clientProvider;
+
+  public OpcUa(OpcUaClientProvider clientProvider,
+               OpcUaParameters params) {
+    this.clientProvider = clientProvider;
+    this.params = params;
+    this.opcUaConfig = params.config();
+  }
+
+  public void onInvocation() throws
       SpRuntimeException {
 
     try {
-      this.params = params;
-      this.node = NodeId.parse(params.getSelectedNode());
-      opcUaClient = new SpOpcUaClient<>(params.getConfig()).getClient();
-      opcUaClient.connect().get();
+      this.node = NodeId.parse(params.selectedNode());
+      this.connectedClient = clientProvider.getClient(opcUaConfig);
 
     } catch (Exception e) {
-      throw new SpRuntimeException("Could not connect to OPC-UA server: " + params.getConfig().getOpcServerURL());
+      throw new SpRuntimeException("Could not connect to OPC-UA server: " + params.config().getOpcServerURL());
     }
 
     // check whether input data type and target data type are compatible
     try {
-      Variant value = opcUaClient.getAddressSpace().getVariableNode(node).readValue().getValue();
+      Variant value = this.connectedClient.getClient().getAddressSpace().getVariableNode(node).readValue().getValue();
       targetDataType = value.getValue().getClass();
-      sourceDataType = XSDMatchings.get(params.getMappingPropertyType());
+      sourceDataType = XSDMatchings.get(params.mappingPropertyType());
       if (!sourceDataType.equals(targetDataType)) {
         if (Arrays.stream(compatibleDataTypes.get(sourceDataType)).noneMatch(dt -> dt.equals(targetDataType))) {
           throw new SpRuntimeException("Data Type of event of target node are not compatible");
@@ -107,40 +116,45 @@ public class OpcUa {
     Variant v = getValue(inputEvent);
 
     if (v == null) {
-      LOG.error("Mapping property type: " + this.params.getMappingPropertyType() + " is not supported");
+      LOG.error("Mapping property type: " + this.params.mappingPropertyType() + " is not supported");
     } else {
 
       DataValue value = new DataValue(v);
-      CompletableFuture<StatusCode> f = opcUaClient.writeValue(node, value);
+      CompletableFuture<StatusCode> f = this.connectedClient.getClient().writeValue(node, value);
 
       try {
         StatusCode status = f.get();
         if (status.isBad()) {
           if (status.getValue() == 0x80740000L) {
-            LOG.error("Type missmatch! Tried to write value of type: " + this.params.getMappingPropertyType()
+            LOG.error("Type missmatch! Tried to write value of type {} ", this.params.mappingPropertyType()
                 + " but server did not accept this");
           } else if (status.getValue() == 0x803B0000L) {
             LOG.error("Wrong access level. Not allowed to write to nodes");
           }
           LOG.error(
-              "Value: " + value.getValue().toString() + " could not be written to node Id: "
-                  + node.getIdentifier() + " on " + "OPC-UA server: " + params.getConfig().getOpcServerURL());
+              "Value: {} could not be written to node Id {} on OPC-UA server {}",
+              value.getValue().toString(),
+              node.getIdentifier(),
+              params.config().getOpcServerURL());
         }
       } catch (InterruptedException | ExecutionException e) {
-        LOG.error("Exception: Value: " + value.getValue().toString() + " could not be written to node Id: "
-            + node.getIdentifier() + " on " + "OPC-UA server: " + params.getConfig().getOpcServerURL());
+        LOG.error(
+            "Exception: Value {} could not be written to node Id {} on OPC_UA server {}",
+            value.getValue().toString(),
+            node.getIdentifier(),
+            params.config().getOpcServerURL());
       }
     }
   }
 
   public void onDetach() throws SpRuntimeException {
-    opcUaClient.disconnect();
+    clientProvider.releaseClient(opcUaConfig);
   }
 
   private Variant getValue(Event inputEvent) {
     Variant result = null;
     PrimitiveField propertyPrimitive =
-        inputEvent.getFieldBySelector(this.params.getMappingPropertySelector()).getAsPrimitive();
+        inputEvent.getFieldBySelector(this.params.mappingPropertySelector()).getAsPrimitive();
 
     if (targetDataType.equals(Integer.class)) {
       result = new Variant(propertyPrimitive.getAsInt());

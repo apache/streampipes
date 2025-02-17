@@ -1,0 +1,191 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-basic-nav-tabs
+    [spNavigationItems]="tabs"
+    [activeLink]="'extensions-installation'"
+    padding="0"
+>
+    <div class="page-container-nav">
+        <div
+            fxFlex="100"
+            fxLayoutAlign="start center"
+            fxLayout="row"
+            class="pl-10 form-field-small"
+        >
+            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+                <button
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    [disabled]="selectedEndpointItems.length === 0"
+                    (click)="installSelected()"
+                    class="mr-10"
+                >
+                    <i class="material-icons">cloud_download</i>
+                    &nbsp;Install selected
+                </button>
+                <button
+                    mat-button
+                    mat-raised-button
+                    color="accent"
+                    [disabled]="selectedEndpointItems.length === 0"
+                    (click)="uninstallSelected()"
+                    class="mr-10"
+                >
+                    <i class="material-icons">delete</i>
+                    &nbsp;Uninstall selected
+                </button>
+                <button
+                    mat-icon-button
+                    color="accent"
+                    class="mr-10"
+                    (click)="selectAll(true)"
+                    matTooltip="Select all"
+                    matTooltipPosition="above"
+                >
+                    <i class="material-icons">queue</i>
+                </button>
+                <button
+                    mat-icon-button
+                    color="accent"
+                    class="mr-10"
+                    (click)="selectAll(false)"
+                    matTooltip="Select none"
+                    matTooltipPosition="above"
+                >
+                    <i class="material-icons">filter_none</i>
+                </button>
+            </div>
+            <span fxFlex></span>
+            <div fxLayoutAlign="start center" fxLayout="row">
+                <div class="form-field-small">
+                    <mat-form-field color="accent" appearance="outline">
+                        <mat-select
+                            [(value)]="selectedCategory"
+                            (selectionChange)="filterByCategory($event)"
+                        >
+                            <mat-option value="all"> All</mat-option>
+                            <mat-option value="ADAPTER"> Adapters</mat-option>
+                            <mat-option value="DATA_STREAM">
+                                Streams</mat-option
+                            >
+                            <mat-option value="DATA_PROCESSOR">
+                                Processors
+                            </mat-option>
+                            <mat-option value="DATA_SINK"> Sinks</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="ml-10" fxLayoutAlign="start center" fxLayout="row">
+                <div class="form-field-small">
+                    <mat-form-field
+                        class="form-style"
+                        color="accent"
+                        appearance="outline"
+                    >
+                        <input
+                            matInput
+                            placeholder="Find Element"
+                            value=""
+                            [(ngModel)]="filterTerm"
+                            name="something"
+                        />
+                        <mat-icon matPrefix>search</mat-icon>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div fxLayoutAlign="start center" fxLayout="row" class="ml-10">
+                <div class="form-field-small">
+                    <mat-form-field color="accent" appearance="outline">
+                        <mat-select [(value)]="selectedInstallationStatus">
+                            <mat-option [value]="'all'">
+                                Available & Installed
+                            </mat-option>
+                            <mat-option [value]="'installed'">
+                                Installed
+                            </mat-option>
+                            <mat-option [value]="'available'">
+                                Available
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div fxLayoutAlign="start center" fxLayout="row" class="ml-10">
+                <button
+                    mat-icon-button
+                    color="accent"
+                    (click)="getEndpointItems()"
+                    matTooltip="Reload items"
+                    matTooltipPosition="above"
+                >
+                    <mat-icon>refresh</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div fxLayout="column" fxFlex="100" class="p-10">
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            fxLayoutAlign="start start"
+            *ngIf="endpointItemsLoadingComplete"
+        >
+            <div fxLayoutAlign="start start" fxLayout="column">
+                <sp-basic-header-title-component
+                    title="Available Extensions"
+                ></sp-basic-header-title-component>
+            </div>
+            <div fxLayout="row wrap" class="w-100">
+                <sp-endpoint-item
+                    fxFlex="33"
+                    [itemSelected]="endpointItem.selected"
+                    [item]="endpointItem"
+                    (triggerInstallation)="triggerInstallation($event)"
+                    *ngFor="
+                        let endpointItem of endpointItems
+                            | pipelineElementTypeFilter: selectedTab
+                            | pipelineElementNameFilter: filterTerm
+                            | pipelineElementInstallationStatusFilter
+                                : selectedInstallationStatus
+                            | orderBy: 'asc' : 'name'
+                    "
+                    class="p-15"
+                    (click)="toggleSelected(endpointItem)"
+                ></sp-endpoint-item>
+            </div>
+        </div>
+        <div
+            fxFlex="100"
+            fxLayout="row"
+            fxLayoutAlign="center center"
+            *ngIf="!endpointItemsLoadingComplete"
+        >
+            <mat-spinner
+                [mode]="'indeterminate'"
+                [diameter]="20"
+                color="accent"
+            ></mat-spinner>
+            <h4>
+                &nbsp;&nbsp;Searching for available extensions, please wait...
+            </h4>
+        </div>
+    </div>
+</sp-basic-nav-tabs>

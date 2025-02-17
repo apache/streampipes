@@ -22,7 +22,6 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { UnitDescription } from '../../../../model/UnitDescription';
 import { RestService } from '../../../../services/rest.service';
-import { UnitProviderService } from '../../../../services/unit-provider.service';
 import { EventPropertyPrimitive } from '@streampipes/platform-services';
 
 @Component({
@@ -30,7 +29,7 @@ import { EventPropertyPrimitive } from '@streampipes/platform-services';
     templateUrl: './edit-unit-transformation.component.html',
     styleUrls: ['./edit-unit-transformation.component.scss'],
 })
-export class EditUnitTransformationComponent implements OnInit {
+export class EditUnitTransformationComponent {
     @Input() cachedProperty: EventPropertyPrimitive;
     @Input() originalProperty: EventPropertyPrimitive;
 
@@ -50,19 +49,24 @@ export class EditUnitTransformationComponent implements OnInit {
     newUnitStateCtrl = new UntypedFormControl();
     filteredUnits: Observable<UnitDescription[]>;
 
-    constructor(
-        private restService: RestService,
-        private unitProviderService: UnitProviderService,
-    ) {
-        this.allUnits = this.unitProviderService
-            .getUnits()
-            .sort((a, b) => a.label.localeCompare(b.label));
-        this.filteredUnits = this.currentUnitStateCtrl.valueChanges.pipe(
-            startWith(''),
-            map(unit =>
-                unit ? this._filteredUnits(unit) : this.allUnits.slice(),
-            ),
-        );
+    constructor(private restService: RestService) {
+        this.restService
+            .getAllUnitDescriptions()
+            .subscribe((unitDescriptions: UnitDescription[]) => {
+                unitDescriptions.sort((a, b) => a.label.localeCompare(b.label));
+                this.allUnits = unitDescriptions;
+                this.filteredUnits =
+                    this.currentUnitStateCtrl.valueChanges.pipe(
+                        startWith(''),
+                        map(unit =>
+                            unit
+                                ? this._filteredUnits(unit)
+                                : this.allUnits.slice(),
+                        ),
+                    );
+                this.applySelectedUnits();
+            });
+
         this.currentUnitStateCtrl.valueChanges.subscribe(val => {
             const unitResource =
                 val === '' ? undefined : this.findUnitByLabel(val).resource;
@@ -76,7 +80,7 @@ export class EditUnitTransformationComponent implements OnInit {
 
     protected open = false;
 
-    ngOnInit() {
+    applySelectedUnits(): void {
         if (this.cachedProperty.measurementUnit) {
             const sourceUnit = this.cachedProperty.additionalMetadata
                 .toMeasurementUnit

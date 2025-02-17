@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.connectors.influx.shared.InfluxConfigs;
 import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -30,7 +31,6 @@ import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
@@ -83,7 +83,7 @@ public class InfluxDbSink extends StreamPipesDataSink {
 
   @Override
   public void onDetach() throws SpRuntimeException {
-    influxDbClient.stop();
+    influxDbClient.disconnect();
   }
 
   public static String prepareString(String s) {
@@ -94,7 +94,7 @@ public class InfluxDbSink extends StreamPipesDataSink {
   public DataSinkDescription declareModel() {
     var builder = DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.influxdb", 0)
         .withLocales(Locales.EN)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .category(DataSinkType.DATABASE);
 
     InfluxConfigs.appendSharedInfluxConfig(builder);

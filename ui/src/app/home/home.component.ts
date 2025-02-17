@@ -40,6 +40,7 @@ import {
     UserInfo,
 } from '@streampipes/platform-services';
 import { zip } from 'rxjs';
+import { StatusBox } from './models/home.model';
 
 @Component({
     templateUrl: './home.component.html',
@@ -53,6 +54,8 @@ export class HomeComponent implements OnInit {
     availableAdapters: AdapterDescription[] = [];
     availablePipelines: Pipeline[] = [];
     runningPipelines: Pipeline[] = [];
+
+    statusBoxes: StatusBox[] = [];
 
     requiredAdapterForTutorialAppId: any =
         'org.apache.streampipes.connect.iiot.adapters.simulator.machine';
@@ -78,12 +81,16 @@ export class HomeComponent implements OnInit {
         private adapterService: AdapterService,
     ) {
         this.serviceLinks = this.homeService.getFilteredServiceLinks();
+        this.statusBoxes = this.homeService
+            .getFilteredServiceLinks()
+            .filter(s => s.showStatusBox)
+            .map(s => s.statusBox);
     }
 
     ngOnInit() {
         this.currentUser = this.currentUserService.getCurrentUser();
         const isAdmin = this.hasRole(UserRole.ROLE_ADMIN);
-        this.showStatus = isAdmin || this.hasRole(UserRole.ROLE_PIPELINE_ADMIN);
+        this.showStatus = true;
         if (isAdmin) {
             this.loadResources();
         }
@@ -214,7 +221,6 @@ export class HomeComponent implements OnInit {
                 .concat(...res[2])
                 .concat(...res[3])
                 .concat(...res[4]);
-
             this.checkForTutorial();
         });
     }

@@ -50,6 +50,7 @@ The Kafka broker URL indicates the URL of the broker (e.g., localhost), the port
 The topic where events should be sent to.
 
 
-## Output
+### Additional configurations
 
-(not applicable for data sinks)
+Can be used to provide additional Kafka producer configurations. Input must be in form of key-value pairs, e.g.
+buffer.memory=33554432

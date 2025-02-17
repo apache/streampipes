@@ -20,11 +20,14 @@ package org.apache.streampipes.extensions.management.locales;
 import org.apache.streampipes.extensions.api.assets.AssetResolver;
 import org.apache.streampipes.extensions.api.assets.DefaultAssetResolver;
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.AppendOutputStrategy;
 import org.apache.streampipes.model.output.FixedOutputStrategy;
+import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
@@ -32,6 +35,7 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 public class LabelGenerator<T extends NamedStreamPipesEntity> {
@@ -84,38 +88,49 @@ public class LabelGenerator<T extends NamedStreamPipesEntity> {
             });
       }
 
-      if (isDataProcessor()) {
-        ((DataProcessorDescription) desc).getOutputStrategies()
-            .forEach(os -> {
-              if (os instanceof AppendOutputStrategy) {
-                ((AppendOutputStrategy) os).getEventProperties()
-                    .forEach(ep -> {
-                      ep.setLabel(getTitle(
-                          props,
-                          ep.getRuntimeId()
-                      ));
-                      ep.setDescription(getDescription(
-                          props,
-                          ep.getRuntimeId()
-                      ));
-                    });
-              } else if (os instanceof FixedOutputStrategy) {
-                ((FixedOutputStrategy) os).getEventProperties()
-                    .forEach(ep -> {
-                      ep.setLabel(getTitle(
-                          props,
-                          ep.getRuntimeId()
-                      ));
-                      ep.setDescription(getDescription(
-                          props,
-                          ep.getRuntimeId()
-                      ));
-                    });
-              }
-            });
+      if (isInvocable()) {
+        ((InvocableStreamPipesEntity) desc).getStaticProperties().forEach(sp -> generateLabels(props, sp));
+        if (isDataProcessorInvocation()) {
+          applyOutputStrategies(((DataProcessorInvocation) desc).getOutputStrategies(), props);
+        }
+      }
+
+      if (isDataProcessorDescription()) {
+        applyOutputStrategies(((DataProcessorDescription) desc).getOutputStrategies(), props);
       }
     }
     return desc;
+  }
+
+  private void applyOutputStrategies(List<OutputStrategy> outputStrategies,
+                                     Properties props) {
+    outputStrategies.forEach(os -> {
+      if (os instanceof AppendOutputStrategy) {
+        ((AppendOutputStrategy) os).getEventProperties()
+            .forEach(ep -> {
+              ep.setLabel(getTitle(
+                  props,
+                  ep.getRuntimeId()
+              ));
+              ep.setDescription(getDescription(
+                  props,
+                  ep.getRuntimeId()
+              ));
+            });
+      } else if (os instanceof FixedOutputStrategy) {
+        ((FixedOutputStrategy) os).getEventProperties()
+            .forEach(ep -> {
+              ep.setLabel(getTitle(
+                  props,
+                  ep.getRuntimeId()
+              ));
+              ep.setDescription(getDescription(
+                  props,
+                  ep.getRuntimeId()
+              ));
+            });
+      }
+    });
   }
 
 
@@ -185,8 +200,16 @@ public class LabelGenerator<T extends NamedStreamPipesEntity> {
     return desc instanceof ConsumableStreamPipesEntity;
   }
 
-  private boolean isDataProcessor() {
+  private boolean isDataProcessorDescription() {
     return desc instanceof DataProcessorDescription;
+  }
+
+  private boolean isDataProcessorInvocation() {
+    return desc instanceof DataProcessorInvocation;
+  }
+
+  private boolean isInvocable() {
+    return desc instanceof InvocableStreamPipesEntity;
   }
 
   private boolean isAdapter() {

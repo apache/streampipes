@@ -28,6 +28,7 @@ from typing import Tuple, Type
 from streampipes.endpoint import APIEndpoint
 from streampipes.model.container import Versions
 from streampipes.model.container.resource_container import ResourceContainer
+from streampipes.model.resource import Version
 from streampipes.model.resource.resource import Resource
 
 
@@ -59,7 +60,7 @@ class VersionEndpoint(APIEndpoint):
     >>> client = StreamPipesClient.create(client_config=client_config)
 
     >>> client.versionApi.get(identifier="").to_dict(use_source_names=False)
-    {'backend_version': '0.95.0'}
+    {'backend_version': '0.92.0'}
     """
 
     @property
@@ -72,6 +73,16 @@ class VersionEndpoint(APIEndpoint):
         """
 
         return Versions
+
+    @property
+    def _resource_cls(cls) -> Type[Version]:
+        """Returns the class of the resource that are bundled.
+
+        Returns
+        -------
+        [Version][streampipes.model.resource.Version]
+        """
+        return Version
 
     @property
     def _relative_api_path(self) -> Tuple[str, ...]:
@@ -94,12 +105,12 @@ class VersionEndpoint(APIEndpoint):
         Raises
         ------
         NotImplementedError
-            this endpoint does not return multiple entries, therefore this method is not available
+            This endpoint does not return multiple entries, therefore this method is not available.
 
         """
         raise NotImplementedError("The `all()` method is not supported by this endpoint.")
 
-    def get(self, identifier: str, **kwargs) -> Resource:
+    def get(self, identifier: str, **kwargs) -> Version:
         """Queries the resource from the API endpoint.
 
         For this endpoint only one resource is available.
@@ -109,13 +120,25 @@ class VersionEndpoint(APIEndpoint):
         identifier: str
             Not supported by this endpoint, is set to an empty string.
 
+        Raises
+        ------
+        ValueError
+            Non-empty `identifier` is not supported by this endpoint. Please set `identifier` to an empty string or `None`.
+
         Returns
         -------
         versions: Version
             The specified resource as an instance of the corresponding model class([Version][streampipes.model.resource.Version]).  # noqa: 501
         """
+        if identifier:
+            raise ValueError(
+                "Non-empty 'identifier' is not supported by this endpoint. "
+                "Please set 'identifier' to an empty string or 'None'."
+            )
 
-        return super().get(identifier="")
+        response = self._make_request(request_method=self._parent_client.request_session.get, url=self.build_url())
+
+        return self._resource_cls(**response.json())
 
     def post(self, resource: Resource) -> None:
         """Usually, this method allows to create via this endpoint.
@@ -124,7 +147,7 @@ class VersionEndpoint(APIEndpoint):
         Raises
         ------
         NotImplementedError
-            this endpoint does not allow for POST requests, therefore this method is not available
+            This endpoint does not allow for POST requests, therefore this method is not available.
 
         """
         raise NotImplementedError("The `post()` method is not supported by this endpoint.")

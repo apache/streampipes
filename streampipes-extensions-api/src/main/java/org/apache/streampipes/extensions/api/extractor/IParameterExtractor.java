@@ -60,6 +60,15 @@ public interface IParameterExtractor {
 
   <V> List<V> selectedMultiValues(String internalName, Class<V> targetClass);
 
+  <V> List<V> selectedMultiValuesInternalNames(String internalName, Class<V> targetClass);
+
+  <V> List<V> selectedTreeNodesInternalNames(String internalName,
+                                             Class<V> targetClass);
+
+  /**
+   * @deprecated use {@link #selectedTreeNodesInternalNames(String, Class)} instead
+   */
+  @Deprecated(since = "0.97.0", forRemoval = true)
   <V> List<V> selectedTreeNodesInternalNames(String internalName,
                                              Class<V> targetClass,
                                              boolean onlyDataNodes);
@@ -76,9 +85,6 @@ public interface IParameterExtractor {
   List<String> mappingPropertyValues(String staticPropertyName);
 
   String propertyDatatype(String runtimeName);
-
-  <V> V supportedOntologyPropertyValue(String domainPropertyInternalId, String
-      propertyId, Class<V> targetClass);
 
   List<EventProperty> getEventPropertiesBySelector(List<String> selectors) throws
       SpRuntimeException;
@@ -98,4 +104,6 @@ public interface IParameterExtractor {
   List<String> getEventPropertiesSelectorByScope(PropertyScope scope);
 
   List<EventProperty> getEventPropertiesByScope(PropertyScope scope);
+
+  List<EventProperty> getInputEventProperties(int streamIndex);
 }

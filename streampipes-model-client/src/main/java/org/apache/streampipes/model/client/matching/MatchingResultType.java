@@ -22,8 +22,8 @@ public enum MatchingResultType {
 
   DATATYPE_MATCH("Datatype Match", "A required datatype is not present in the input event property."),
   STREAM_MATCH("Stream Match", ""),
-  DOMAIN_PROPERTY_MATCH("Domain Property Match",
-      "A required domain property is not present in the input event property."),
+  SEMANTIC_TYPE_MATCH("Semantic Type Match",
+      "A required semantic type is not present in the input event property."),
   FORMAT_MATCH("Format Match", "No supported transport format found."),
   GROUNDING_MATCH("Grounding Match", ""),
   PROTOCOL_MATCH("Protocol Match", "No supported communication protocol found."),

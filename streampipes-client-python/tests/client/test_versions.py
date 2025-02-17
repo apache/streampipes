@@ -45,3 +45,7 @@ class TestVersions(TestCase):
         )
 
         self.assertEqual("development", result.backend_version)
+
+        # Test get with non-empty identifier raises ValueError
+        with self.assertRaises(ValueError):
+            client.versionApi.get("any-incorrect-identifier")

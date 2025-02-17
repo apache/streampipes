@@ -17,8 +17,8 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { SpConfigurationTabs } from '../configuration-tabs';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpConfigurationTabsService } from '../configuration-tabs.service';
+import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.routes';
 
 @Component({
@@ -27,14 +27,18 @@ import { SpConfigurationRoutes } from '../configuration.routes';
     styleUrls: ['./security-configuration.component.scss'],
 })
 export class SecurityConfigurationComponent implements OnInit {
-    tabs = SpConfigurationTabs.getTabs();
+    tabs: SpNavigationItem[] = [];
 
-    constructor(private breadcrumbService: SpBreadcrumbService) {}
+    constructor(
+        private breadcrumbService: SpBreadcrumbService,
+        private tabService: SpConfigurationTabsService,
+    ) {}
 
     ngOnInit(): void {
+        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
-            { label: SpConfigurationTabs.getTabs()[7].itemTitle },
+            { label: this.tabService.getTabTitle('security') },
         ]);
     }
 }

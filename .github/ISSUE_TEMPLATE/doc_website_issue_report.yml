@@ -22,12 +22,12 @@ body:
     attributes:
       value: "
         <p align='center'>
-        
+
         <img src='https://streampipes.apache.org/img/sp-logo-color.png' alt='StreamPipes Logo' title='Apache StreamPipes Logo' width='50%' align='center'/>
         </p>
-        
+
         <br>
-        
+
         Thank you for taking the time to report the issue!
 
         We greatly appreciate the community's efforts to improve StreamPipes.
@@ -40,10 +40,11 @@ body:
   - type: dropdown
     attributes:
       label: Where does your observation occur?
-      description: Please choose whether the issue you want to report occurs on the [website](https://streampipes.apache.org/) or on the [documentation](https://streampipes.apache.org/docs/index.html).
+      description: Please choose whether the issue you want to report occurs on the [website](https://streampipes.apache.org/), the [documentation](https://streampipes.apache.org/docs/user-guide-introduction/), or the [python client documentation](https://streampipes.apache.org/docs/docs/python/latest/).
       multiple: false
       options:
         - StreamPipes Documentation
+        - StreamPipes Python Documentation
         - StreamPipes Website
 
   - type: textarea

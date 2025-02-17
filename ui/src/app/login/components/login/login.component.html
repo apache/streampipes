@@ -16,17 +16,12 @@
   ~
   -->
 
-<sp-auth-box>
+<sp-auth-box [linkSettings]="loginSettings.linkSettings" *ngIf="configReady">
     <div fxFlex="100" fxLayout="column" fxLayoutAlign="center start">
         <h1>Login</h1>
     </div>
     <div fxFlex="100" fxLayout="column" class="mt-10">
-        <form
-            [formGroup]="parentForm"
-            fxFlex="100"
-            fxLayout="column"
-            *ngIf="configReady"
-        >
+        <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
             <div fxFlex="100" fxLayout="column">
                 <mat-form-field fxFlex color="accent">
                     <mat-label>Email</mat-label>
@@ -52,13 +47,13 @@
                     />
                 </mat-form-field>
             </div>
-            <div class="form-actions" style="margin-top: 20px">
+            <div class="form-actions">
                 <button
                     mat-button
                     mat-raised-button
                     color="accent"
                     data-cy="login-button"
-                    (click)="logIn()"
+                    (click)="doLogin()"
                     [disabled]="!parentForm.valid || loading"
                 >
                     <span *ngIf="loading">Logging in...</span>
@@ -94,6 +89,35 @@
                     </span>
                     <div *ngIf="loginSettings.allowSelfRegistration">
                         <a [routerLink]="['/register']">Create new account</a>
+                    </div>
+                </div>
+                <div
+                    fxLayout="column"
+                    class="mt-10"
+                    *ngIf="loginSettings.oAuthSettings?.enabled"
+                >
+                    <div class="separator">
+                        <span>or</span>
+                    </div>
+                    <div
+                        fxLayout="column"
+                        *ngFor="
+                            let provider of loginSettings.oAuthSettings
+                                .supportedProviders
+                        "
+                        class="mt-10"
+                    >
+                        <button
+                            mat-button
+                            mat-raised-button
+                            color="accent"
+                            data-cy="login-button"
+                            (click)="doOAuthLogin(provider.registrationId)"
+                        >
+                            <span *ngIf="!loading"
+                                >Login with {{ provider.name }}</span
+                            >
+                        </button>
                     </div>
                 </div>
             </div>

@@ -60,6 +60,6 @@ public class PasswordRecoveryMailTemplate extends AbstractMailTemplate {
   }
 
   private String makeLink() {
-    return new LinkPart("/#/set-new-password?recoveryCode=" + this.recoveryCode).generate();
+    return new LinkPart("/#/set-new-password?recoveryCode=" + encodeUrlPart(this.recoveryCode)).generate();
   }
 }

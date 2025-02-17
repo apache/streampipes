@@ -16,7 +16,6 @@
  *
  */
 
-import { CategoryAlreadyInPipelinePipe } from './category-already-in-pipeline.filter';
 import { PipelinesComponent } from './pipelines.component';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
@@ -27,11 +26,8 @@ import { PipelineOverviewComponent } from './components/pipeline-overview/pipeli
 import { PipelineStatusDialogComponent } from './dialog/pipeline-status/pipeline-status-dialog.component';
 import { DeletePipelineDialogComponent } from './dialog/delete-pipeline/delete-pipeline-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ImportPipelineDialogComponent } from './dialog/import-pipeline/import-pipeline-dialog.component';
 import { StartAllPipelinesDialogComponent } from './dialog/start-all-pipelines/start-all-pipelines-dialog.component';
-import { PipelineCategoriesDialogComponent } from './dialog/pipeline-categories/pipeline-categories-dialog.component';
 import { FormsModule } from '@angular/forms';
-import { PipelineInCategoryPipe } from './pipeline-category.filter';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { PipelineNotificationsComponent } from './dialog/pipeline-notifications/pipeline-notifications.component';
@@ -42,10 +38,8 @@ import { EditorModule } from '../editor/editor.module';
 import { PipelineDetailsModule } from '../pipeline-details/pipeline-details.module';
 import { RouterModule } from '@angular/router';
 import { EditorComponent } from '../editor/editor.component';
-import { SpPipelineDetailsOverviewComponent } from '../pipeline-details/components/overview/pipeline-details-overview.component';
-import { PipelineMonitoringComponent } from '../pipeline-details/components/monitoring/pipeline-monitoring.component';
-import { QuickEditComponent } from '../pipeline-details/components/edit/quickedit.component';
-import { PipelineLogsComponent } from '../pipeline-details/components/pipeline-logs/pipeline-logs.component';
+import { SpPipelineDetailsComponent } from '../pipeline-details/pipeline-details.component';
+import { PipelineLogsDialogComponent } from '../pipeline-details/dialogs/pipeline-logs/pipeline-logs-dialog.component';
 import { FunctionsOverviewComponent } from './components/functions-overview/functions-overview.component';
 import { SpFunctionsMetricsComponent } from './components/functions-overview/functions-metrics/functions-metrics.component';
 import { SpFunctionsLogsComponent } from './components/functions-overview/functions-logs/functions-logs.component';
@@ -91,29 +85,7 @@ import { MatIconModule } from '@angular/material/icon';
                     },
                     {
                         path: 'details/:pipelineId',
-                        children: [
-                            {
-                                path: '',
-                                redirectTo: 'overview',
-                                pathMatch: 'full',
-                            },
-                            {
-                                path: 'overview',
-                                component: SpPipelineDetailsOverviewComponent,
-                            },
-                            {
-                                path: 'metrics',
-                                component: PipelineMonitoringComponent,
-                            },
-                            {
-                                path: 'logs',
-                                component: PipelineLogsComponent,
-                            },
-                            {
-                                path: 'quick-edit',
-                                component: QuickEditComponent,
-                            },
-                        ],
+                        component: SpPipelineDetailsComponent,
                     },
                     {
                         path: 'create',
@@ -130,19 +102,15 @@ import { MatIconModule } from '@angular/material/icon';
     declarations: [
         DeletePipelineDialogComponent,
         FunctionsOverviewComponent,
-        ImportPipelineDialogComponent,
         PipelinesComponent,
-        PipelineCategoriesDialogComponent,
         PipelineNotificationsComponent,
         PipelineOverviewComponent,
         PipelineStatusDialogComponent,
         StartAllPipelinesDialogComponent,
-        PipelineInCategoryPipe,
-        CategoryAlreadyInPipelinePipe,
         SpFunctionsMetricsComponent,
         SpFunctionsLogsComponent,
     ],
-    providers: [CategoryAlreadyInPipelinePipe, PipelineInCategoryPipe],
+    providers: [],
     exports: [PipelinesComponent],
 })
 export class PipelinesModule {

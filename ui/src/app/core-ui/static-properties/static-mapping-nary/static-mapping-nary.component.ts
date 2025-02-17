@@ -30,8 +30,6 @@ export class StaticMappingNaryComponent
     extends StaticMappingComponent<MappingPropertyNary>
     implements OnInit
 {
-    @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
-
     constructor(private displayRecommendedPipe: DisplayRecommendedPipe) {
         super();
     }
@@ -56,7 +54,6 @@ export class StaticMappingNaryComponent
                 }
             });
         }
-        this.inputEmitter.emit(true);
     }
 
     selectOption(property: any, $event) {
@@ -112,6 +109,6 @@ export class StaticMappingNaryComponent
     onStatusChange(status: any) {}
 
     onValueChange(value: any) {
-        this.emitUpdate();
+        this.applyCompletedConfiguration();
     }
 }

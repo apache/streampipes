@@ -18,101 +18,99 @@
 
 package org.apache.streampipes.processors.filters.jvm.processor.textfilter;
 
-//@RunWith(Parameterized.class)
+import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
+import org.apache.streampipes.test.executors.TestConfiguration;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
 public class TestTextFilterProcessor {
 
-//  private static final Logger LOG = LoggerFactory.getLogger(TestTextFilterProcessor.class);
-//
-//  @org.junit.runners.Parameterized.Parameters
-//  public static Iterable<Object[]> data() {
-//    return Arrays.asList(new Object[][] {
-//        {"TestLowerCaseMatch", "keyword", StringOperator.MATCHES, Arrays.asList("keyword", "KeyWord", "KEYWORD"), 1},
-//        {"TestUpperCaseMatch", "KEYWORD", StringOperator.MATCHES, Arrays.asList("keyword", "KeyWord", "KEYWORD"), 1},
-//        {"TestMixMatch", "KeyWord", StringOperator.MATCHES, Arrays.asList("keyword", "KeyWord", "KEYWORD"), 1},
-//        {"TestEmptyMatch", "keYWord", StringOperator.MATCHES, Arrays.asList("keyword", "KeyWord", "KEYWORD"), 0},
-//        {"TestMultipleMatch", "KeyWord", StringOperator.MATCHES,
-//            Arrays.asList("keyword", "KeyWord", "KEYWORD", "KeyWord"), 2},
-//
-//        {"TestContainsWord", "keyword", StringOperator.CONTAINS,
-//            Arrays.asList("text contains keyword", "text doesn't have word"), 1},
-//        {"TestNotContainsWord", "keyword", StringOperator.CONTAINS,
-//            Arrays.asList("text is empty", "text doesn't have word"), 0},
-//    });
-//  }
-//
-//  @org.junit.runners.Parameterized.Parameter
-//  public String selectedFieldName;
-//
-//  @org.junit.runners.Parameterized.Parameter(1)
-//  public String keyword;
-//
-//  @org.junit.runners.Parameterized.Parameter(2)
-//  public StringOperator stringOperator;
-//
-//  @org.junit.runners.Parameterized.Parameter(3)
-//  public List<String> eventStrings;
-//
-//  @org.junit.runners.Parameterized.Parameter(4)
-//  public int expectedFilteredTextCount;
-//
-//  @Test
-//  public void testTextFilter() {
-//    TextFilterProcessor textFilterProcessor = new TextFilterProcessor();
-//    DataProcessorDescription originalGraph = textFilterProcessor.declareModel();
-//    originalGraph.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
-//
-//    DataProcessorInvocation graph = InvocationGraphGenerator.makeEmptyInvocation(originalGraph);
-//    graph.setInputStreams(Collections
-//        .singletonList(EventStreamGenerator
-//            .makeStreamWithProperties(Collections.singletonList(selectedFieldName))));
-//    graph.setOutputStream(EventStreamGenerator
-//    .makeStreamWithProperties(Collections.singletonList(selectedFieldName)));
-//    graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition()
-//        .setActualTopicName("output-topic");
-//
-//    graph.getStaticProperties().stream()
-//        .filter(p -> p instanceof MappingPropertyUnary)
-//        .map(p -> (MappingPropertyUnary) p)
-//        .filter(p -> p.getInternalName().equals(TextFilterProcessor.MAPPING_PROPERTY_ID))
-//        .findFirst().get().setSelectedProperty("s0::" + selectedFieldName);
-//    ProcessorParams params = new ProcessorParams(graph);
-//    params.extractor().getStaticPropertyByName(TextFilterProcessor.OPERATION_ID, OneOfStaticProperty.class)
-//        .getOptions()
-//        .stream().filter(o -> o.getName().equals(stringOperator.name())).findFirst().get().setSelected(true);
-//    params.extractor().getStaticPropertyByName(TextFilterProcessor.KEYWORD_ID, FreeTextStaticProperty.class)
-//        .setValue(keyword);
-//    StoreEventCollector collector = new StoreEventCollector();
-//
-//    textFilterProcessor.onInvocation(params, collector, null);
-//    int result = sendEvents(textFilterProcessor, collector);
-//
-//    LOG.info("Expected filtered text count is {}", expectedFilteredTextCount);
-//    LOG.info("Actual filtered text count is {}", result);
-//    assertEquals(expectedFilteredTextCount, result);
-//
-//  }
-//
-//  private int sendEvents(TextFilterProcessor textFilterProcessor, StoreEventCollector collector) {
-//    List<Event> events = makeEvents();
-//    for (Event e : events) {
-//      textFilterProcessor.onEvent(e, collector);
-//    }
-//    return collector.getEvents().size();
-//  }
-//
-//  private List<Event> makeEvents() {
-//    List<Event> events = new ArrayList<>();
-//    for (String eventString : eventStrings) {
-//      events.add(makeEvent(eventString));
-//    }
-//    return events;
-//  }
-//
-//  private Event makeEvent(String eventString) {
-//    Map<String, Object> map = Maps.newHashMap();
-//    map.put(selectedFieldName, eventString);
-//    return EventFactory.fromMap(map,
-//        new SourceInfo("test", "s0"),
-//        new SchemaInfo(null, Lists.newArrayList()));
-//  }
+  TextFilterProcessor processor;
+
+  public static final String FIELD_NAME = "selectedField";
+
+  @BeforeEach
+  public void setup(){
+    processor = new TextFilterProcessor();
+  }
+
+  @ParameterizedTest
+  @MethodSource("data")
+  public void test(String keyword,
+                   StringOperator stringOperator,
+                   List<String> eventValues,
+                   List<String> outputEventValues){
+
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix(TextFilterProcessor.MAPPING_PROPERTY_ID, FIELD_NAME)
+        .config(TextFilterProcessor.OPERATION_ID, stringOperator)
+        .config(TextFilterProcessor.KEYWORD_ID, keyword)
+        .build();
+
+    List<Map<String, Object>> events = new ArrayList<>();
+    eventValues.forEach(value->events.add(Map.of(FIELD_NAME, value)));
+
+    List<Map<String, Object>> outputEvents = new ArrayList<>();
+    outputEventValues.forEach(value->outputEvents.add(Map.of(FIELD_NAME, value)));
+
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+
+    testExecutor.run(events, outputEvents);
+  }
+
+
+  static Stream<Arguments> data() {
+    return Stream.of(
+        Arguments.of(
+            "keyword",
+            StringOperator.MATCHES,
+            List.of("keyword", "KeyWord", "KEYWORD"),
+            List.of("keyword")
+        ),
+        Arguments.of(
+            "KEYWORD",
+            StringOperator.MATCHES,
+            List.of("keyword", "KeyWord", "KEYWORD"),
+            List.of("KEYWORD")
+        ),
+        Arguments.of(
+            "KeyWord",
+            StringOperator.MATCHES,
+            List.of("keyword", "KeyWord", "KEYWORD"),
+            List.of("KeyWord")
+        ),
+        Arguments.of(
+            "keYWord",
+            StringOperator.MATCHES,
+            List.of("keyword", "KeyWord", "KEYWORD"),
+            List.of()
+        ),
+        Arguments.of(
+            "KeyWord",
+            StringOperator.MATCHES,
+            List.of("keyword", "KeyWord", "KEYWORD", "KeyWord"),
+            List.of("KeyWord", "KeyWord")
+        ),
+        Arguments.of(
+            "keyword",
+            StringOperator.CONTAINS,
+            List.of("text contains keyword", "text doesn't have word"),
+            List.of("text contains keyword")
+        ),
+        Arguments.of(
+            "keyword",
+            StringOperator.CONTAINS,
+            List.of("text is empty", "text doesn't have word"),
+            List.of()
+        )
+    );
+  }
 }

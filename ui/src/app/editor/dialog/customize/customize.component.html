@@ -75,6 +75,10 @@
                             fxLayout="column"
                             class="customize-section p-15"
                         >
+                            <sp-input-schema-panel
+                                [pipelineElement]="cachedPipelineElement"
+                            >
+                            </sp-input-schema-panel>
                             <form [formGroup]="parentForm" fxFlex="100">
                                 <sp-app-static-property
                                     *ngFor="
@@ -89,12 +93,11 @@
                                     [eventSchemas]="eventSchemas"
                                     [parentForm]="parentForm"
                                     [fieldName]="config.internalName"
-                                    [completedStaticProperty]="
-                                        completedStaticProperty
+                                    [completedConfigurations]="
+                                        completedConfigurations
                                     "
-                                    (updateEmitter)="triggerUpdate($event)"
-                                    (validateEmitter)="
-                                        validConfiguration($event)
+                                    (completedConfigurationsEmitter)="
+                                        updateCompletedConfiguration($event)
                                     "
                                 >
                                 </sp-app-static-property>

@@ -19,6 +19,9 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content">
         <div fxFlex="100" fxLayout="column" class="p-15">
+            <sp-warning-box *ngIf="isUserAccount && isExternalProvider">
+                Some settings of externally-managed users cannot be changed.
+            </sp-warning-box>
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                 <div class="general-options-panel" fxLayout="column">
                     <span class="general-options-header">Basics</span>
@@ -41,7 +44,6 @@
                             fxFlex
                             type="email"
                             matInput
-                            required
                             data-cy="new-user-email"
                         />
                         <mat-error>Must be a valid email address.</mat-error>
@@ -56,7 +58,6 @@
                             formControlName="fullName"
                             fxFlex
                             matInput
-                            required
                             data-cy="new-user-full-name"
                         />
                     </mat-form-field>
@@ -132,13 +133,13 @@
                 <div fxLayout="column" class="general-options-panel">
                     <span class="general-options-header">Roles</span>
                     <mat-checkbox
-                        *ngFor="let role of availableRoles"
-                        [value]="role.role"
-                        [checked]="user.roles.indexOf(role.role) > -1"
+                        *ngFor="let role of availableRoles$ | async"
+                        [value]="role.elementId"
+                        [checked]="user.roles.indexOf(role.elementId) > -1"
                         (change)="changeRoleAssignment($event)"
-                        [attr.data-cy]="'role-' + role.role"
+                        [attr.data-cy]="'role-' + role.elementId"
                     >
-                        {{ role.roleTitle }}
+                        {{ role.label }}
                     </mat-checkbox>
                 </div>
                 <div fxLayout="column" class="general-options-panel">

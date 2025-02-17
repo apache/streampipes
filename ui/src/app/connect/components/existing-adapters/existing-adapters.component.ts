@@ -21,7 +21,6 @@ import {
     AdapterDescription,
     AdapterMonitoringService,
     AdapterService,
-    PipelineElementService,
     SpLogMessage,
     SpMetricsEntry,
 } from '@streampipes/platform-services';
@@ -36,7 +35,6 @@ import {
 } from '@streampipes/shared-ui';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-adapter-actions-dialog.component';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { UserRole } from '../../../_enums/user-role.enum';
@@ -47,7 +45,6 @@ import { SpConnectRoutes } from '../../connect.routes';
 import { Subscription, zip } from 'rxjs';
 import { RestApi } from '../../../services/rest-api.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { HelpComponent } from '../../../core-ui/help/help.component';
 
 @Component({
     selector: 'sp-existing-adapters',
@@ -63,9 +60,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     currentFilter: AdapterFilterSettingsModel;
 
-    @ViewChild(MatPaginator)
-    paginator: MatPaginator;
-    pageSize = 1;
     @ViewChild(MatSort)
     sort: MatSort;
 
@@ -80,7 +74,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         'action',
     ];
 
-    dataSource: MatTableDataSource<AdapterDescription>;
+    dataSource: MatTableDataSource<AdapterDescription> =
+        new MatTableDataSource();
     isAdmin = false;
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
@@ -93,7 +88,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         private adapterService: AdapterService,
         private dialogService: DialogService,
         private currentUserService: CurrentUserService,
-        private pipelineElementService: PipelineElementService,
         private router: Router,
         private restApi: RestApi,
         private adapterFilter: AdapterFilterPipe,
@@ -188,22 +182,12 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     getMonitoringInfos(adapters: AdapterDescription[]) {
-        const observables = adapters
-            .map(adapter => adapter.elementId)
-            .map(elementId =>
-                this.adapterMonitoringService.getMetricsInfoForAdapter(
-                    elementId,
-                ),
-            );
+        const filteredElementIds = adapters.map(adapter => adapter.elementId);
 
         this.adapterMonitoringService
-            .triggerMonitoringUpdate()
-            .subscribe(() => {
-                zip(...observables).subscribe(metrics => {
-                    adapters.forEach((adapter, index) => {
-                        this.adapterMetrics[adapter.elementId] = metrics[index];
-                    });
-                });
+            .getMetricsInfoForAdapters(filteredElementIds)
+            .subscribe(metrics => {
+                this.adapterMetrics = metrics;
             });
     }
 
@@ -261,40 +245,29 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         });
     }
 
-    openHelpDialog(adapter: AdapterDescription) {
-        const streamId = adapter.correspondingDataStreamElementId;
-
-        this.pipelineElementService
-            .getDataStreamByElementId(streamId)
-            .subscribe(stream => {
-                if (stream) {
-                    this.dialogService.open(HelpComponent, {
-                        panelType: PanelType.STANDARD_PANEL,
-                        title: stream.name,
-                        width: '70vw',
-                        data: {
-                            pipelineElement: stream,
-                        },
-                    });
-                }
-            });
-    }
-
     getAdaptersRunning(): void {
         this.adapterService.getAdapters().subscribe(adapters => {
             this.existingAdapters = adapters;
             this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
-            this.filteredAdapters = this.adapterFilter.transform(
-                this.existingAdapters,
-                this.currentFilter,
-            );
-            this.dataSource = new MatTableDataSource(this.filteredAdapters);
+            this.applyAdapterFilters();
             this.getMonitoringInfos(adapters);
             setTimeout(() => {
-                this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
             });
         });
+    }
+
+    applyAdapterFilters(elementIds: Set<string> = new Set<string>()): void {
+        this.filteredAdapters = this.adapterFilter
+            .transform(this.existingAdapters, this.currentFilter)
+            .filter(a => {
+                if (elementIds.size === 0) {
+                    return true;
+                } else {
+                    return elementIds.has(a.elementId);
+                }
+            });
+        this.dataSource.data = this.filteredAdapters;
     }
 
     startAdapterTutorial() {
@@ -310,20 +283,12 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     applyFilter(filter: AdapterFilterSettingsModel) {
         this.currentFilter = filter;
         if (this.dataSource) {
-            this.dataSource.data = this.adapterFilter.transform(
-                this.filteredAdapters,
-                this.currentFilter,
-            );
+            this.applyAdapterFilters();
         }
     }
 
     navigateToDetailsOverviewPage(adapter: AdapterDescription): void {
-        this.router.navigate([
-            'connect',
-            'details',
-            adapter.elementId,
-            'metrics',
-        ]);
+        this.router.navigate(['connect', 'details', adapter.elementId]);
     }
 
     ngOnDestroy() {

@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -33,7 +34,6 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.helpers.Tuple2;
-import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
@@ -48,36 +48,49 @@ public class SizeMeasureProcessor extends StreamPipesDataProcessor {
   static final String KILOBYTE_SIZE = "KILOBYTE";
   static final String MEGABYTE_SIZE = "MEGABYTE";
 
+  static final String BYTES_OPTION = "Bytes";
+  static final String KILO_BYTES_OPTION = "Kilobytes (1024 Bytes)";
+  static final String MEGA_BYTES_OPTION = "Megabytes (1024 Kilobytes)";
+
   static final String EVENT_SIZE = "eventSize";
 
   private String sizeUnit;
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.sizemeasure")
+    return ProcessingElementBuilder
+        .create("org.apache.streampipes.processors.enricher.jvm.sizemeasure", 0)
         .category(DataProcessorType.STRUCTURE_ANALYTICS)
-        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredSingleValueSelection(Labels.withId(SIZE_UNIT),
-            Options.from(new Tuple2<>("Bytes", BYTE_SIZE),
-                new Tuple2<>("Kilobytes (1024 Bytes)", KILOBYTE_SIZE),
-                new Tuple2<>("Megabytes (1024 Kilobytes)", MEGABYTE_SIZE)))
+                            .create()
+                            .requiredProperty(EpRequirements.anyProperty())
+                            .build())
+        .requiredSingleValueSelection(
+            Labels.withId(SIZE_UNIT),
+            Options.from(
+                new Tuple2<>(BYTES_OPTION, BYTE_SIZE),
+                new Tuple2<>(KILO_BYTES_OPTION, KILOBYTE_SIZE),
+                new Tuple2<>(MEGA_BYTES_OPTION, MEGABYTE_SIZE)
+            )
+        )
         .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(
             Labels.withId(EVENT_SIZE),
             EVENT_SIZE,
-            "http://schema.org/contentSize")))
+            "http://schema.org/contentSize"
+        )))
         .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    this.sizeUnit = parameters.extractor().selectedSingleValueInternalName(SIZE_UNIT, String.class);
+  public void onInvocation(
+      ProcessorParams parameters,
+      SpOutputCollector spOutputCollector,
+      EventProcessorRuntimeContext runtimeContext
+  ) throws SpRuntimeException {
+    this.sizeUnit = parameters.extractor()
+                              .selectedSingleValueInternalName(SIZE_UNIT, String.class);
   }
 
   @Override

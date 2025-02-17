@@ -15,115 +15,57 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.model.client.user;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
+import org.apache.streampipes.model.shared.api.Storable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.SerializedName;
 
 @TsModel
-public enum Privilege {
-  // Pipelines
-  PRIVILEGE_READ_PIPELINE(Constants.PRIVILEGE_READ_PIPELINE_VALUE),
-  PRIVILEGE_WRITE_PIPELINE(Constants.PRIVILEGE_WRITE_PIPELINE_VALUE),
-  PRIVILEGE_DELETE_PIPELINE(Constants.PRIVILEGE_DELETE_PIPELINE_VALUE),
+public class Privilege implements Storable {
 
-  // Adapters
-  PRIVILEGE_READ_ADAPTER(Constants.PRIVILEGE_READ_ADAPTER_VALUE),
-  PRIVILEGE_WRITE_ADAPTER(Constants.PRIVILEGE_WRITE_ADAPTER_VALUE),
-  PRIVILEGE_DELETE_ADAPTER(Constants.PRIVILEGE_DELETE_ADAPTER_VALUE),
+  protected @SerializedName("_id") String elementId;
+  protected @SerializedName("_rev") String rev;
 
-  // Pipeline Elements
-  PRIVILEGE_READ_PIPELINE_ELEMENT(Constants.PRIVILEGE_READ_PIPELINE_ELEMENT_VALUE),
-  PRIVILEGE_WRITE_PIPELINE_ELEMENT(Constants.PRIVILEGE_WRITE_PIPELINE_ELEMENT_VALUE),
-  PRIVILEGE_DELETE_PIPELINE_ELEMENT(Constants.PRIVILEGE_DELETE_PIPELINE_ELEMENT_VALUE),
+  // document type should be persisted to CouchDB with Gson serialization, but not via Jackson to the UI
+  @JsonIgnore
+  @SerializedName("$type")
+  private String type = "privilege";
 
-  // Dashboard
-  PRIVILEGE_READ_DASHBOARD(Constants.PRIVILEGE_READ_DASHBOARD_VALUE),
-  PRIVILEGE_WRITE_DASHBOARD(Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE),
-  PRIVILEGE_DELETE_DASHBOARD(Constants.PRIVILEGE_DELETE_DASHBOARD_VALUE),
-
-  // Dashboard widget
-  PRIVILEGE_READ_DASHBOARD_WIDGET(Constants.PRIVILEGE_READ_DASHBOARD_WIDGET_VALUE),
-  PRIVILEGE_WRITE_DASHBOARD_WIDGET(Constants.PRIVILEGE_WRITE_DASHBOARD_WIDGET_VALUE),
-  PRIVILEGE_DELETE_DASHBOARD_WIDGET(Constants.PRIVILEGE_DELETE_DASHBOARD_WIDGET_VALUE),
-
-  // Data Explorer view
-  PRIVILEGE_READ_DATA_EXPLORER_VIEW(Constants.PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE),
-  PRIVILEGE_WRITE_DATA_EXPLORER_VIEW(Constants.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE),
-  PRIVILEGE_DELETE_DATA_EXPLORER_VIEW(Constants.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW_VALUE),
-
-  // Data Explorer widget
-  PRIVILEGE_READ_DATA_EXPLORER_WIDGET(Constants.PRIVILEGE_READ_DATA_EXPLORER_WIDGET_VALUE),
-  PRIVILEGE_WRITE_DATA_EXPLORER_WIDGET(Constants.PRIVILEGE_WRITE_DATA_EXPLORER_WIDGET_VALUE),
-  PRIVILEGE_DELETE_DATA_EXPLORER_WIDGET(Constants.PRIVILEGE_DELETE_DATA_EXPLORER_WIDGET_VALUE),
-
-  // Apps
-  PRIVILEGE_READ_APPS(Constants.PRIVILEGE_READ_APPS_VALUE),
-  PRIVILEGE_WRITE_APPS(Constants.PRIVILEGE_WRITE_APPS_VALUE),
-
-  // NOTIFICATIONS
-  PRIVILEGE_READ_NOTIFICATIONS(Constants.PRIVILEGE_READ_NOTIFICATIONS_VALUE),
-
-  // FILES
-  PRIVILEGE_READ_FILES(Constants.PRIVILEGE_READ_FILES_VALUE),
-  PRIVILEGE_WRITE_FILES(Constants.PRIVILEGE_WRITE_FILES_VALUE),
-  PRIVILEGE_DELETE_FILES(Constants.PRIVILEGE_DELETE_FILES_VALUE),
-
-  // ASSETS
-  PRIVILEGE_READ_ASSETS(Constants.PRIVILEGE_READ_ASSETS_VALUE),
-  PRIVILEGE_WRITE_ASSETS(Constants.PRIVILEGE_WRITE_ASSETS_VALUE),
-
-  // GENERIC STORAGE
-  PRIVILEGE_READ_GENERIC_STORAGE(Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE),
-  PRIVILEGE_WRITE_GENERIC_STORAGE(Constants.PRIVILEGE_WRITE_GENERIC_STORAGE_VALUE);
-
-  private String privilegeString;
-
-  Privilege(String privilegeString) {
-    this.privilegeString = privilegeString;
+  public static Privilege create(String id) {
+    Privilege privilege = new Privilege();
+    privilege.setElementId(id);
+    return privilege;
   }
 
-  public static final class Constants {
-    public static final String PRIVILEGE_READ_PIPELINE_VALUE = "PRIVILEGE_READ_PIPELINE";
-    public static final String PRIVILEGE_WRITE_PIPELINE_VALUE = "PRIVILEGE_WRITE_PIPELINE";
-    public static final String PRIVILEGE_DELETE_PIPELINE_VALUE = "PRIVILEGE_DELETE_PIPELINE";
+  @Override
+  public String getRev() {
+    return rev;
+  }
 
-    public static final String PRIVILEGE_READ_ADAPTER_VALUE = "PRIVILEGE_READ_ADAPTER";
-    public static final String PRIVILEGE_WRITE_ADAPTER_VALUE = "PRIVILEGE_WRITE_ADAPTER";
-    public static final String PRIVILEGE_DELETE_ADAPTER_VALUE = "PRIVILEGE_DELETE_ADAPTER";
+  @Override
+  public void setRev(String rev) {
+    this.rev = rev;
+  }
 
-    public static final String PRIVILEGE_READ_PIPELINE_ELEMENT_VALUE = "PRIVILEGE_READ_PIPELINE_ELEMENT";
-    public static final String PRIVILEGE_WRITE_PIPELINE_ELEMENT_VALUE = "PRIVILEGE_WRITE_PIPELINE_ELEMENT";
-    public static final String PRIVILEGE_DELETE_PIPELINE_ELEMENT_VALUE = "PRIVILEGE_DELETE_PIPELINE_ELEMENT";
+  @Override
+  public String getElementId() {
+    return elementId;
+  }
 
-    public static final String PRIVILEGE_READ_DASHBOARD_VALUE = "PRIVILEGE_READ_DASHBOARD";
-    public static final String PRIVILEGE_WRITE_DASHBOARD_VALUE = "PRIVILEGE_WRITE_DASHBOARD";
-    public static final String PRIVILEGE_DELETE_DASHBOARD_VALUE = "PRIVILEGE_DELETE_DASHBOARD";
+  @Override
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
+  }
 
-    public static final String PRIVILEGE_READ_DASHBOARD_WIDGET_VALUE = "PRIVILEGE_READ_DASHBOARD_WIDGET";
-    public static final String PRIVILEGE_WRITE_DASHBOARD_WIDGET_VALUE = "PRIVILEGE_WRITE_DASHBOARD_WIDGET";
-    public static final String PRIVILEGE_DELETE_DASHBOARD_WIDGET_VALUE = "PRIVILEGE_DELETE_DASHBOARD_WIDGET";
+  public String getType() {
+    return type;
+  }
 
-    public static final String PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE = "PRIVILEGE_READ_DATA_EXPLORER_VIEW";
-    public static final String PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE = "PRIVILEGE_WRITE_DATA_EXPLORER_VIEW";
-    public static final String PRIVILEGE_DELETE_DATA_EXPLORER_VIEW_VALUE = "PRIVILEGE_DELETE_DATA_EXPLORER_VIEW";
-
-    public static final String PRIVILEGE_READ_DATA_EXPLORER_WIDGET_VALUE = "PRIVILEGE_READ_DATA_EXPLORER_WIDGET";
-    public static final String PRIVILEGE_WRITE_DATA_EXPLORER_WIDGET_VALUE = "PRIVILEGE_WRITE_DATA_EXPLORER_WIDGET";
-    public static final String PRIVILEGE_DELETE_DATA_EXPLORER_WIDGET_VALUE = "PRIVILEGE_DELETE_DATA_EXPLORER_WIDGET";
-
-    public static final String PRIVILEGE_READ_APPS_VALUE = "PRIVILEGE_READ_APPS";
-    public static final String PRIVILEGE_WRITE_APPS_VALUE = "PRIVILEGE_WRITE_APPS";
-
-    public static final String PRIVILEGE_READ_NOTIFICATIONS_VALUE = "PRIVILEGE_READ_NOTIFICATIONS";
-
-    public static final String PRIVILEGE_READ_FILES_VALUE = "PRIVILEGE_READ_FILES";
-    public static final String PRIVILEGE_WRITE_FILES_VALUE = "PRIVILEGE_WRITE_FILES";
-    public static final String PRIVILEGE_DELETE_FILES_VALUE = "PRIVILEGE_DELETE_FILES";
-
-    public static final String PRIVILEGE_READ_ASSETS_VALUE = "PRIVILEGE_READ_ASSETS";
-    public static final String PRIVILEGE_WRITE_ASSETS_VALUE = "PRIVILEGE_WRITE_ASSETS";
-
-    public static final String PRIVILEGE_READ_GENERIC_STORAGE_VALUE = "PRIVILEGE_READ_GENERIC_STORAGE";
-    public static final String PRIVILEGE_WRITE_GENERIC_STORAGE_VALUE = "PRIVILEGE_WRITE_GENERIC_STORAGE";
+  public void setType(String type) {
+    this.type = type;
   }
 }

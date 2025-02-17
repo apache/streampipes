@@ -16,31 +16,19 @@
  *
  */
 
-.adapter-box {
-    height: 100%;
-    box-shadow: 1px 1px 2px #555;
-    border: 1px solid gray;
-    background: var(--color-bg-dialog);
-    cursor: pointer;
-    padding: 10px;
-    opacity: 0.7;
-}
 .adapter-description-box {
     height: 100%;
-    box-shadow: 1px 1px 2px #555;
+    min-height: 260px;
     border: 1px solid gray;
+    border-bottom: 5px solid gray;
     background: var(--color-bg-dialog);
-    cursor: pointer;
     padding: 10px;
-    opacity: 0.7;
-}
-
-.adapter-box:hover {
-    opacity: 1;
+    cursor: pointer;
 }
 
 .adapter-description-box:hover {
-    opacity: 1;
+    border-bottom: 5px solid var(--color-accent);
+    border-color: var(--color-accent);
 }
 
 .edit {

@@ -17,9 +17,11 @@
  */
 
 import { UserInputType } from './UserInputType';
+import { TreeNodeUserInput } from './TreeNodeUserInput';
 
 export class UserInput {
     type: UserInputType;
     selector: string;
     value: string;
+    treeNode?: TreeNodeUserInput;
 }

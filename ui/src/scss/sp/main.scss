@@ -89,97 +89,10 @@ pre[class*='language-'] {
     background-color: $sp-color-accent;
 }
 
-.cv-wrapper {
-    font-size: 1em;
-    width: 320px;
-    height: 320px;
-    overflow: hidden;
-    position: absolute;
-    left: -100px;
-    top: -100px;
-    border-radius: 50%;
-    pointer-events: none;
-    -webkit-transition: all 0.3s ease;
-    -moz-transition: all 0.3s ease;
-    transition: all 0.3s ease;
-    transform: scale(0.1);
-    visibility: hidden;
-}
-
 .opened-nav {
     /*border-radius: 50%;*/
     transform: scale(1);
     visibility: visible;
-}
-
-.cv-wrapper li {
-    pointer-events: all;
-    position: absolute;
-    width: 160px;
-    height: 160px;
-    -webkit-transform-origin: 100% 100%;
-    -moz-transform-origin: 100% 100%;
-    -ms-transform-origin: 100% 100%;
-    transform-origin: 100% 100%;
-    overflow: hidden;
-    left: 0%;
-    top: 0%;
-    -webkit-transition: border 0.3s ease;
-    -moz-transition: border 0.3s ease;
-    transition: border 0.3s ease;
-    background: lightgray;
-}
-
-.cv-wrapper li a {
-    cursor: pointer;
-    pointer-events: all;
-    display: block;
-    height: 300px;
-    width: 300px;
-    position: absolute;
-    right: -150px;
-    bottom: -150px;
-    border-radius: 50%;
-    text-decoration: none;
-    text-align: center;
-    -webkit-backface-visibility: hidden;
-    -webkit-transition:
-        opacity 0.3s,
-        color 0.3s;
-    -moz-transition:
-        opacity 0.3s,
-        color 0.3s;
-    transition:
-        opacity 0.3s,
-        color 0.3s;
-}
-
-.cv-wrapper li:nth-child(odd) a.sepa {
-    background-color: #009688;
-}
-
-.cv-wrapper li:nth-child(even) a.sepa {
-    background-color: #00a496;
-}
-
-.cv-wrapper li:nth-child(odd) a.action {
-    background-color: #3f51b5;
-}
-
-.cv-wrapper li:nth-child(even) a.action {
-    background-color: #4f65e6;
-}
-
-/* hover style */
-.cv-wrapper li a:hover,
-.cv-wrapper li a:active,
-.cv-wrapper li a:focus {
-    background: rgba(255, 255, 255, 0.5) !important;
-    border: 2px solid #919191;
-}
-
-.cv-wrapper a:focus {
-    position: fixed; /* fix the "displacement" bug in webkit browsers when using tab key */
 }
 
 md-toolbar:not(.md-menu-toolbar) {
@@ -621,9 +534,9 @@ md-content {
         0 1px 3px 0 rgba(0, 0, 0, 0.2),
         0 1px 1px 0 rgba(0, 0, 0, 0.14),
         0 2px 1px -1px rgba(0, 0, 0, 0.12);
-    padding: 5px;
     border: 1px solid var(--color-bg-2);
-    height: 300px;
+    display: flex;
+    flex: 1 1 0;
     max-width: 100%;
 
     background-color: var(--color-bg-1);
@@ -861,10 +774,10 @@ label {
 .error-message {
     background-color: black;
     font:
-        0.8rem Inconsolata,
+        0.7rem Inconsolata,
         monospace;
     text-shadow: 0 0 5px #c8c8c8;
     color: white;
-    padding: 10px;
     width: 100%;
+    max-width: 100%;
 }

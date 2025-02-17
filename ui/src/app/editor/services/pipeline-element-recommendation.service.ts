@@ -41,25 +41,6 @@ export class PipelineElementRecommendationService {
         return possibleElementConfigs;
     }
 
-    populateRecommendedList(allElements, recs) {
-        const elementRecommendations: any = [];
-        recs.sort((a, b) => {
-            return a.count > b.count ? -1 : b.count > a.count ? 1 : 0;
-        });
-        const maxRecs = recs.length > 7 ? 7 : recs.length;
-        for (let i = 0; i < maxRecs; i++) {
-            const el = recs[i];
-            const elements = this.getPipelineElementContents(
-                allElements,
-                el.elementId,
-            );
-            const element = elements[0];
-            (element as any).weight = el.weight;
-            elementRecommendations.push(element);
-        }
-        return elementRecommendations;
-    }
-
     getPipelineElementContents(
         allElements: PipelineElementUnion[],
         belongsTo: string,

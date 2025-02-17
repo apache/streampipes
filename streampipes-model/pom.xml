@@ -23,24 +23,24 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.95.1</version>
+        <version>0.97.0</version>
     </parent>
     <dependencies>
         <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-commons</artifactId>
-            <version>0.95.1</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model-shared</artifactId>
-            <version>0.95.1</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-vocabulary</artifactId>
-            <version>0.95.1</version>
+            <version>0.97.0</version>
         </dependency>
         <!-- External dependencies -->
         <dependency>

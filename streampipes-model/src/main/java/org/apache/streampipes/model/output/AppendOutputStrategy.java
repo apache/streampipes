@@ -26,13 +26,16 @@ import java.util.List;
 
 public class AppendOutputStrategy extends OutputStrategy {
 
-  private static final long serialVersionUID = 7202888911899551012L;
-
   private List<EventProperty> eventProperties;
 
   public AppendOutputStrategy() {
     super();
     eventProperties = new ArrayList<>();
+  }
+
+  @Override
+  public void accept(OutputStrategyVisitor visitor) {
+    visitor.visit(this);
   }
 
   public AppendOutputStrategy(AppendOutputStrategy other) {

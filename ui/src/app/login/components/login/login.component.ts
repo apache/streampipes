@@ -16,70 +16,45 @@
  *
  */
 
-import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { LoginService } from '../../services/login.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-import { LoginModel } from './login.model';
 import {
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
+import { BaseLoginPageDirective } from '../base-login-page.directive';
 
 @Component({
     selector: 'sp-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent extends BaseLoginPageDirective {
     parentForm: UntypedFormGroup;
-    configReady = false;
     loading: boolean;
     authenticationFailed: boolean;
     credentials: any;
 
-    loginSettings: LoginModel;
     returnUrl: string;
 
     constructor(
-        private loginService: LoginService,
+        loginService: LoginService,
         private router: Router,
         private route: ActivatedRoute,
-        private shepherdService: ShepherdService,
         private authService: AuthService,
         private fb: UntypedFormBuilder,
     ) {
+        super(loginService);
         this.loading = false;
         this.authenticationFailed = false;
         this.credentials = {};
     }
 
-    ngOnInit() {
-        this.loginService.fetchLoginSettings().subscribe(result => {
-            this.loginSettings = result;
-            this.configReady = true;
-            this.parentForm = this.fb.group({});
-            this.parentForm.addControl(
-                'username',
-                new UntypedFormControl('', Validators.required),
-            );
-            this.parentForm.addControl(
-                'password',
-                new UntypedFormControl('', Validators.required),
-            );
-
-            this.parentForm.valueChanges.subscribe(v => {
-                this.credentials.username = v.username;
-                this.credentials.password = v.password;
-            });
-            this.returnUrl = this.route.snapshot.queryParams.returnUrl || '';
-        });
-    }
-
-    logIn() {
+    doLogin() {
         this.authenticationFailed = false;
         this.loading = true;
         this.loginService.login(this.credentials).subscribe(
@@ -95,5 +70,33 @@ export class LoginComponent implements OnInit {
                 this.authenticationFailed = true;
             },
         );
+    }
+
+    onSettingsAvailable(): void {
+        const token = this.route.snapshot.queryParamMap.get('token');
+        if (token) {
+            this.authService.oauthLogin(token);
+            this.loading = false;
+            this.router.navigate(['']);
+        }
+        this.parentForm = this.fb.group({});
+        this.parentForm.addControl(
+            'username',
+            new UntypedFormControl('', Validators.required),
+        );
+        this.parentForm.addControl(
+            'password',
+            new UntypedFormControl('', Validators.required),
+        );
+
+        this.parentForm.valueChanges.subscribe(v => {
+            this.credentials.username = v.username;
+            this.credentials.password = v.password;
+        });
+        this.returnUrl = this.route.snapshot.queryParams.returnUrl || '';
+    }
+
+    doOAuthLogin(provider: string): void {
+        window.location.href = `/streampipes-backend/oauth2/authorization/${provider}?redirect_uri=${this.loginSettings.oAuthSettings.redirectUri}/%23/login`;
     }
 }

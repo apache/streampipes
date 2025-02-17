@@ -64,9 +64,14 @@
             optionDescription="Avoid duplicated events within a certain time interval"
             optionIcon="cleaning_services"
             dataCy="connect-remove-duplicates-box"
+            [isChecked]="removeDuplicates"
             (optionSelectedEmitter)="removeDuplicates = $event"
         >
-            <mat-form-field *ngIf="removeDuplicates" color="accent">
+            <mat-form-field
+                *ngIf="removeDuplicates"
+                color="accent"
+                class="mt-10"
+            >
                 <input
                     matInput
                     id="input-removeDuplicatesTime"
@@ -83,9 +88,14 @@
             optionDescription="Send maximum one event in the specified time window"
             optionIcon="speed"
             dataCy="connect-reduce-event-rate-box"
+            [isChecked]="eventRateReduction"
             (optionSelectedEmitter)="eventRateReduction = $event"
         >
-            <mat-form-field *ngIf="eventRateReduction" color="accent">
+            <mat-form-field
+                *ngIf="eventRateReduction"
+                color="accent"
+                class="mt-10"
+            >
                 <input
                     type="number"
                     matInput
@@ -144,6 +154,22 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+        </sp-adapter-options-panel>
+
+        <sp-adapter-options-panel
+            optionTitle="Show code"
+            optionDescription="Show code to programmatically deploy this adapter over the API"
+            optionIcon="code"
+            dataCy="show-code-checkbox"
+            (optionSelectedEmitter)="showCode = $event"
+        >
+            @if (showCode) {
+                <sp-adapter-code-panel
+                    [adapterDescription]="adapterDescription"
+                    class="w-100"
+                >
+                </sp-adapter-code-panel>
+            }
         </sp-adapter-options-panel>
     </div>
 

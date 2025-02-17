@@ -49,12 +49,20 @@ import { TimeSeriesChartWidgetModel } from '../components/widgets/time-series-ch
 import { SpTimeseriesRendererService } from '../components/widgets/time-series-chart/sp-timeseries-renderer.service';
 import { SpEchartsWidgetAppearanceConfigComponent } from '../components/widgets/utils/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
 import { SpTimeSeriesAppearanceConfigComponent } from '../components/widgets/time-series-chart/appearance-config/time-series-appearance-config.component';
+import { SpGaugeRendererService } from '../components/widgets/gauge/gauge-renderer.service';
+import { GaugeWidgetConfigComponent } from '../components/widgets/gauge/config/gauge-widget-config.component';
+import { GaugeWidgetModel } from '../components/widgets/gauge/model/gauge-widget.model';
+import { TrafficLightWidgetConfigComponent } from '../components/widgets/traffic-light/config/traffic-light-widget-config.component';
+import { TrafficLightWidgetComponent } from '../components/widgets/traffic-light/traffic-light-widget.component';
+import { StatusWidgetConfigComponent } from '../components/widgets/status/config/status-widget-config.component';
+import { StatusWidgetComponent } from '../components/widgets/status/status-widget.component';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerWidgetRegistry {
     widgetTypes: IWidget<any>[] = [];
 
     constructor(
+        private gaugeRenderer: SpGaugeRendererService,
         private heatmapRenderer: SpHeatmapRendererService,
         private histogramRenderer: SpHistogramRendererService,
         private pieRenderer: SpPieRendererService,
@@ -66,10 +74,31 @@ export class DataExplorerWidgetRegistry {
     ) {
         this.widgetTypes = [
             {
+                id: 'gauge',
+                label: 'Gauge',
+                widgetAppearanceConfigurationComponent:
+                    SpEchartsWidgetAppearanceConfigComponent,
+                widgetConfigurationComponent: GaugeWidgetConfigComponent,
+                widgetComponent: SpEchartsWidgetComponent<GaugeWidgetModel>,
+                chartRenderer: this.gaugeRenderer,
+            },
+            {
                 id: 'table',
                 label: 'Table',
                 widgetConfigurationComponent: TableWidgetConfigComponent,
                 widgetComponent: TableWidgetComponent,
+            },
+            {
+                id: 'traffic-Light',
+                label: 'Traffic Light',
+                widgetConfigurationComponent: TrafficLightWidgetConfigComponent,
+                widgetComponent: TrafficLightWidgetComponent,
+            },
+            {
+                id: 'status',
+                label: 'Status',
+                widgetConfigurationComponent: StatusWidgetConfigComponent,
+                widgetComponent: StatusWidgetComponent,
             },
             {
                 id: 'map',

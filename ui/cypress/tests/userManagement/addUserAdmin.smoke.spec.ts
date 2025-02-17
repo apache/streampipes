@@ -50,12 +50,12 @@ describe('Test User Management', () => {
         );
 
         // Login as user
-        cy.switchUser(user);
+        UserUtils.switchUser(user);
 
         UserUtils.goToUserConfiguration();
         cy.dataCy('close-tutorial-button').click();
 
-        cy.switchUser(UserUtils.adminUser);
+        UserUtils.switchUser(UserUtils.adminUser);
         UserUtils.goToUserConfiguration();
 
         UserUtils.deleteUser(user);

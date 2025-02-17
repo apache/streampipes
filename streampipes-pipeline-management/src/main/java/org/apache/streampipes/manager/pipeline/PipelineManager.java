@@ -19,8 +19,9 @@
 package org.apache.streampipes.manager.pipeline;
 
 import org.apache.streampipes.commons.random.UUIDGenerator;
-import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.permission.PermissionManager;
+import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -30,6 +31,7 @@ import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +46,7 @@ public class PipelineManager {
    * @return all pipelines
    */
   public static List<Pipeline> getAllPipelines() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines();
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().findAll();
   }
 
   /**
@@ -54,7 +56,7 @@ public class PipelineManager {
    * @return pipeline resulting pipeline with given id
    */
   public static Pipeline getPipeline(String pipelineId) {
-    return getPipelineStorage().getPipeline(pipelineId);
+    return getPipelineStorage().getElementById(pipelineId);
   }
 
   /**
@@ -71,10 +73,10 @@ public class PipelineManager {
         ? UUIDGenerator.generateUuid()
         : pipeline.getPipelineId();
     preparePipelineBasics(principalSid, pipeline, pipelineId);
-    Operations.storePipeline(pipeline);
+    new PipelineStorageService(pipeline).addPipeline();
 
     Permission permission = new PermissionManager().makePermission(pipeline, principalSid);
-    getPermissionStorage().addPermission(permission);
+    getPermissionStorage().persist(permission);
 
     return pipelineId;
   }
@@ -88,7 +90,7 @@ public class PipelineManager {
    */
   public static PipelineOperationStatus startPipeline(String pipelineId) {
     Pipeline pipeline = getPipeline(pipelineId);
-    return Operations.startPipeline(pipeline);
+    return new PipelineExecutor(pipeline).startPipeline();
   }
 
   /**
@@ -103,7 +105,7 @@ public class PipelineManager {
                                                      boolean forceStop) {
     Pipeline pipeline = getPipeline(pipelineId);
 
-    return Operations.stopPipeline(pipeline, forceStop);
+    return new PipelineExecutor(pipeline).stopPipeline(forceStop);
   }
 
   /**
@@ -114,9 +116,22 @@ public class PipelineManager {
   public static void deletePipeline(String pipelineId) {
     var pipeline = getPipeline(pipelineId);
     if (Objects.nonNull(pipeline)) {
-      getPipelineStorage().deletePipeline(pipelineId);
+      getPipelineStorage().deleteElementById(pipelineId);
       new NotificationsResourceManager().deleteNotificationsForPipeline(pipeline);
     }
+  }
+
+  public static List<PipelineOperationStatus> stopAllPipelines(boolean forceStop) {
+    List<PipelineOperationStatus> status = new ArrayList<>();
+    List<Pipeline> pipelines =
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().findAll();
+
+    pipelines.forEach(p -> {
+      if (p.isRunning()) {
+        status.add(new PipelineExecutor(p).stopPipeline(forceStop));
+      }
+    });
+    return status;
   }
 
 

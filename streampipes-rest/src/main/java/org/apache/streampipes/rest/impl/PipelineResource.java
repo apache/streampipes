@@ -18,16 +18,14 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.commons.exceptions.NoMatchingFormatException;
-import org.apache.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
-import org.apache.streampipes.commons.exceptions.NoMatchingProtocolException;
-import org.apache.streampipes.commons.exceptions.NoMatchingSchemaException;
 import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
-import org.apache.streampipes.commons.exceptions.RemoteServerNotAccessibleException;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
-import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
-import org.apache.streampipes.model.client.exception.InvalidConnectionException;
+import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
+import org.apache.streampipes.manager.recommender.ElementRecommender;
+import org.apache.streampipes.manager.storage.PipelineStorageService;
+import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
@@ -38,10 +36,11 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.rest.shared.exception.SpNotificationException;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.google.gson.JsonSyntaxException;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -81,6 +80,14 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineResource.class);
 
+  private final CompactPipelineManagement compactPipelineManagement;
+
+  public PipelineResource() {
+    this.compactPipelineManagement = new CompactPipelineManagement(
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage()
+    );
+  }
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get all pipelines of the current user", tags = {"Pipeline"}, responses = {
       @ApiResponse(content = {
@@ -88,7 +95,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
               mediaType = "application/json",
               array = @ArraySchema(schema = @Schema(implementation = Pipeline.class))
           )})})
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
+  @PreAuthorize("this.hasReadAuthority()")
   @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
   public List<Pipeline> get() {
     return PipelineManager.getAllPipelines();
@@ -98,7 +105,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       path = "{pipelineId}/status",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get the pipeline status of a given pipeline", tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
+  @PreAuthorize("this.hasReadAuthority()")
   public List<PipelineStatusMessage> getPipelineStatus(@PathVariable("pipelineId") String pipelineId) {
     return PipelineStatusManager.getPipelineStatus(pipelineId, 5);
   }
@@ -107,15 +114,15 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       path = "/{pipelineId}",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Delete a pipeline with a given id", tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_PRIVILEGE)
-  public Message removeOwn(@PathVariable("pipelineId") String pipelineId) {
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission('#pipelineId', 'WRITE')")
+  public Message delete(@PathVariable("pipelineId") String pipelineId) {
     PipelineManager.deletePipeline(pipelineId);
     return Notifications.success("Pipeline deleted");
   }
 
   @GetMapping(path = "/{pipelineId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a specific pipeline with the given id", tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
+  @PreAuthorize("this.hasReadAuthority() and hasPermission('#pipelineId', 'READ')")
   public ResponseEntity<Pipeline> getElement(@PathVariable("pipelineId") String pipelineId) {
     Pipeline foundPipeline = PipelineManager.getPipeline(pipelineId);
 
@@ -128,7 +135,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/{pipelineId}/start", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Start the pipeline with the given id", tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission('#pipelineId', 'WRITE')")
   public ResponseEntity<?> start(@PathVariable("pipelineId") String pipelineId) {
     try {
       PipelineOperationStatus status = PipelineManager.startPipeline(pipelineId);
@@ -142,7 +149,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "/{pipelineId}/stop", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Stop the pipeline with the given id", tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission('#pipelineId', 'WRITE')")
   public ResponseEntity<?> stop(@PathVariable("pipelineId") String pipelineId,
                                 @RequestParam(value = "forceStop", defaultValue = "false") boolean forceStop) {
     try {
@@ -159,7 +166,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Store a new pipeline", tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<SuccessMessage> addPipeline(@RequestBody Pipeline pipeline) {
 
     String pipelineId = PipelineManager.addPipeline(getAuthenticatedUserSid(), pipeline);
@@ -169,16 +176,26 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   }
 
   @PostMapping(
+      path = "compact",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Convert a pipeline to the compact model", tags = {"Pipeline"})
+  @PreAuthorize("this.hasWriteAuthority()")
+  public ResponseEntity<CompactPipeline> convertToCompactPipeline(@RequestBody Pipeline pipeline) {
+    return ok(compactPipelineManagement.convertPipeline(pipeline));
+  }
+
+  @PostMapping(
       path = "/recommend/{recId}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Hidden
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
+  @PreAuthorize("this.hasWriteAuthority()")
   @PostAuthorize("hasPermission(returnObject, 'READ')")
   public PipelineElementRecommendationMessage recommend(@RequestBody Pipeline pipeline,
                                                         @PathVariable("recId") String baseRecElement) {
     try {
-      return Operations.findRecommendedElements(pipeline, baseRecElement);
+      return new ElementRecommender(pipeline, baseRecElement).findRecommendedElements();
     } catch (JsonSyntaxException e) {
       throw new SpNotificationException(
           HttpStatus.BAD_REQUEST,
@@ -204,22 +221,12 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Hidden
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> validatePipeline(@RequestBody Pipeline pipeline) {
     try {
-      return ok(Operations.validatePipeline(pipeline));
+      return ok(new PipelineVerificationHandlerV2(pipeline).verifyPipeline());
     } catch (JsonSyntaxException e) {
       return badRequest(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage()));
-    } catch (NoMatchingSchemaException e) {
-      return badRequest(new Notification(NotificationType.NO_VALID_CONNECTION, e.getMessage()));
-    } catch (NoMatchingFormatException e) {
-      return badRequest(new Notification(NotificationType.NO_MATCHING_FORMAT_CONNECTION, e.getMessage()));
-    } catch (NoMatchingProtocolException e) {
-      return badRequest(new Notification(NotificationType.NO_MATCHING_PROTOCOL_CONNECTION, e.getMessage()));
-    } catch (RemoteServerNotAccessibleException | NoMatchingJsonSchemaException e) {
-      return serverError(new Notification(NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE, e.getMessage()));
-    } catch (InvalidConnectionException e) {
-      return badRequest(e.getErrorLog());
     } catch (Exception e) {
       LOG.error(e.getMessage());
       return serverError(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage()));
@@ -231,21 +238,20 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Update an existing pipeline", tags = {"Pipeline"})
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
-  public ResponseEntity<SuccessMessage> overwritePipeline(@PathVariable("pipelineId") String pipelineId,
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission('#pipelineId', 'WRITE')")
+  public ResponseEntity<SuccessMessage> updatePipeline(@PathVariable("pipelineId") String pipelineId,
                                                           @RequestBody Pipeline pipeline) {
-    Pipeline storedPipeline = getPipelineStorage().getPipeline(pipelineId);
+    Pipeline storedPipeline = getPipelineStorage().getElementById(pipelineId);
     if (!storedPipeline.isRunning()) {
       storedPipeline.setStreams(pipeline.getStreams());
       storedPipeline.setSepas(pipeline.getSepas());
       storedPipeline.setActions(pipeline.getActions());
     }
     storedPipeline.setCreatedAt(System.currentTimeMillis());
-    storedPipeline.setPipelineCategories(pipeline.getPipelineCategories());
     storedPipeline.setHealthStatus(pipeline.getHealthStatus());
     storedPipeline.setPipelineNotifications(pipeline.getPipelineNotifications());
     storedPipeline.setValid(pipeline.isValid());
-    Operations.updatePipeline(storedPipeline);
+    new PipelineStorageService(storedPipeline).updatePipeline();
     SuccessMessage message = Notifications.success("Pipeline modified");
     message.addNotification(new Notification("id", pipelineId));
     return ok(message);
@@ -258,10 +264,23 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       "Pipeline"}, responses = {@ApiResponse(content = {
         @Content(mediaType = "application/json",
           array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))})})
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
+  @PreAuthorize("this.hasReadAuthority()")
   @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
   public List<Pipeline> getPipelinesContainingElement(@PathVariable("elementId") String elementId) {
     return PipelineManager.getPipelinesContainingElements(elementId);
   }
 
+  /**
+   * required by Spring expression
+   */
+  public boolean hasReadAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_READ_PIPELINE_VALUE);
+  }
+
+  /**
+   * required by Spring expression
+   */
+  public boolean hasWriteAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE);
+  }
 }

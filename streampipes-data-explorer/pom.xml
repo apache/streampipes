@@ -21,44 +21,43 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.95.1</version>
+        <version>0.97.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>streampipes-data-explorer</artifactId>
+    <description>
+        This Maven module encompasses all StreamPipes-specific implementation endeavors concerning data explorer functionalities.
+    </description>
 
     <dependencies>
+        <!--StreamPipes dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-data-explorer-commons</artifactId>
-            <version>0.95.1</version>
+            <artifactId>streampipes-data-explorer-api</artifactId>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
-            <version>0.95.1</version>
+            <version>0.97.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-storage-management</artifactId>
-            <version>0.95.1</version>
+            <version>0.97.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.influxdb</groupId>
-            <artifactId>influxdb-java</artifactId>
-        </dependency>
-
 
         <!-- Test dependencies -->
         <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-test-utils</artifactId>
-            <version>0.95.1</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-test-utils</artifactId>
+            <version>0.97.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

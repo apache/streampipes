@@ -32,14 +32,16 @@ theme:
   favicon: https://streampipes.apache.org/img/favicon.png
   custom_dir: docs/overrides
   features:
+    - content.action.edit
+    - content.code.copy
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.instant
     - navigation.indexes
     - navigation.tracking
+    - search.suggest
   font: false
   palette:
-
     # Palette toggle for light mode
     - scheme: default
       toggle:
@@ -61,6 +63,9 @@ extra:
   homepage: https://streampipes.apache.org/
   version:
     provider: mike
+
+exclude_docs: |
+  /scripts/**
 
 # Extensions
 markdown_extensions:
@@ -94,15 +99,17 @@ plugins:
             docstring_style: numpy
             docstring_section_style: spacy
             show_source: False
-            merge_init_into_class: True
+            merge_init_into_class: true
+            inherited_members: true
   - mike:
-      canonical_version: 'latest'
+      canonical_version: "latest"
       version_selector: true
       css_dir: css
       javascript_dir: js
   - search:
       lang:
         - en
+  - git-revision-date-localized
 
 extra_css:
   - stylesheets/extra.css
@@ -119,4 +126,5 @@ nav:
       - Exploring Live Data from a StreamPipes Data Stream: tutorials/3-getting-live-data-from-the-streampipes-data-stream.ipynb
       - Using Online Machine Learning on a StreamPipes Data Stream: tutorials/4-using-online-machine-learning-on-a-streampipes-data-stream.ipynb
       - Applying Interoperable Machine Learning in StreamPipes: tutorials/5-applying-interoperable-machine-learning-in-streampipes.ipynb
+      - Creating Output Streams with StreamPipes Functions: tutorials/6-streampipes-function-output-stream.ipynb
   - 📚 Reference: reference/*

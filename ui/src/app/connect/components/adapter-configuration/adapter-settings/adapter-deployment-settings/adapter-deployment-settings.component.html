@@ -1,0 +1,78 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxFlex="100" fxLayout="column">
+    <mat-radio-group
+        [(ngModel)]="deploymentMode"
+        (change)="handleSelectionChange($event)"
+    >
+        <mat-radio-button value="all">Any available service</mat-radio-button>
+        <mat-radio-button
+            value="filter"
+            [disabled]="
+                deploymentMode === 'all' && availableServiceTags.length === 0
+            "
+        >
+            Restrict to service tags
+        </mat-radio-button>
+    </mat-radio-group>
+
+    <div
+        *ngIf="deploymentMode === 'filter'"
+        fxFlex="100"
+        fxLayout="column"
+        class="mt-10"
+    >
+        <mat-form-field color="accent">
+            <mat-label>Service Tags</mat-label>
+            <mat-chip-grid #chipGrid>
+                <mat-chip-row
+                    *ngFor="
+                        let serviceTag of deploymentConfiguration.desiredServiceTags
+                    "
+                    (removed)="remove(serviceTag.value)"
+                >
+                    {{ serviceTag.value }}
+                    <button matChipRemove>
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip-row>
+            </mat-chip-grid>
+            <input
+                placeholder="Add service tag"
+                #serviceTagInput
+                [formControl]="serviceTagCtrl"
+                [matChipInputFor]="chipGrid"
+                [matAutocomplete]="auto"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="add($event)"
+            />
+            <mat-autocomplete
+                #auto="matAutocomplete"
+                (optionSelected)="selected($event)"
+            >
+                <mat-option
+                    *ngFor="let serviceTag of filteredServiceTags | async"
+                    [value]="serviceTag"
+                >
+                    {{ serviceTag }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+</div>
