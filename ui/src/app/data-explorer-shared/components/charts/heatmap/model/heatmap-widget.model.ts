@@ -26,6 +26,8 @@ import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.mod
 export interface HeatmapVisConfig extends DataExplorerVisConfig {
     showLabelsProperty: boolean;
     selectedHeatProperty: DataExplorerField;
+    visualMapMin: number;
+    visualMapMax: number;
 }
 
 export interface HeatmapWidgetModel extends DataExplorerWidgetModel {
