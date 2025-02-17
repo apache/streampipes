@@ -59,13 +59,6 @@ spec:
               value: "{{ .Values.external.kafka.service.name }}"
             - name: SP_KAFKA_PORT
               value: "{{ .Values.external.kafka.service.port }}"
-            - name: SP_ZOOKEEPER_HOST
-              value: "{{ .Values.external.zookeeper.service.name }}"
-            - name: SP_ZOOKEEPER_PORT
-              value: "{{ .Values.external.zookeeper.service.port }}"
-            {{- end }}
-            {{- if eq .Values.preferredBroker "nats" }}
-              value: "nats"
             - name: SP_NATS_HOST
               value: "{{ .Values.external.nats.service.name }}"
             - name: SP_NATS_PORT
