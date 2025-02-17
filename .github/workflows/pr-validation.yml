@@ -51,7 +51,6 @@ jobs:
       - name: Install dependencies
         working-directory: ./ui
         run: |
-          rm -rf node_modules package-lock.json
           npm install
 
       - name: Format and Lint all files
@@ -84,6 +83,7 @@ jobs:
       - name: Install NPM dependencies
         working-directory: ./ui
         run: |
+          rm -rf node_modules package-lock.json
           npm install
 
       - name: Build UI
