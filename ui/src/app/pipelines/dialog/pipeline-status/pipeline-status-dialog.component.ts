@@ -21,8 +21,9 @@ import {
     PipelineOperationStatus,
     PipelineService,
 } from '@streampipes/platform-services';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { PipelineAction } from '../../model/pipeline-model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-status-dialog',
@@ -40,10 +41,11 @@ export class PipelineStatusDialogComponent implements OnInit {
     @Input()
     action: PipelineAction;
 
-    constructor(
-        private dialogRef: DialogRef<PipelineStatusDialogComponent>,
-        private pipelineService: PipelineService,
-    ) {}
+    private translateService = inject(TranslateService);
+    private pipelineService = inject(PipelineService);
+    private dialogRef = inject(DialogRef<PipelineStatusDialogComponent>);
+
+    constructor() {}
 
     ngOnInit(): void {
         if (this.action === PipelineAction.Start) {
@@ -66,7 +68,7 @@ export class PipelineStatusDialogComponent implements OnInit {
             error => {
                 this.operationInProgress = false;
                 this.pipelineOperationStatus = {
-                    title: 'Network Error',
+                    title: this.translateService.instant('Network Error'),
                     success: false,
                     pipelineId: undefined,
                     pipelineName: undefined,
@@ -106,7 +108,7 @@ export class PipelineStatusDialogComponent implements OnInit {
             error => {
                 this.operationInProgress = false;
                 this.pipelineOperationStatus = {
-                    title: 'Network Error',
+                    title: this.translateService.instant('Network Error'),
                     success: false,
                     pipelineId: undefined,
                     pipelineName: undefined,

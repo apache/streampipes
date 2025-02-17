@@ -25,14 +25,24 @@
                 style="padding: 20px"
                 *ngIf="page === 'preview'"
             >
-                <h4>
-                    You are about to {{ action ? 'start' : 'stop' }} the
-                    following pipelines:
+                <h4 *ngIf="action">
+                    {{
+                        'You are about to start the following pipelines:'
+                            | translate
+                    }}
+                </h4>
+                <h4 *ngIf="!action">
+                    {{
+                        'You are about to stop the following pipelines:'
+                            | translate
+                    }}
                 </h4>
                 <div *ngFor="let pipeline of pipelinesToModify">
                     <h5>{{ pipeline.name }}</h5>
                 </div>
-                <h5><b>Press 'Next' to start the process.</b></h5>
+                <h5>
+                    <b>{{ 'Press Next to start the process.' | translate }}</b>
+                </h5>
             </div>
             <div
                 fxFlex="100"
@@ -42,19 +52,30 @@
             >
                 <div *ngFor="let status of installationStatus">
                     <h4>
-                        {{
-                            action ? 'Starting pipeline ' : 'Stopping pipeline'
-                        }}
-                        {{ status.id + 1 }} of
+                        @if (action) {
+                            {{ 'Starting pipeline ' | translate }}
+                        } @else {
+                            {{ 'Stopping pipeline' | translate }}
+                        }
+                        {{ status.id + 1 }} {{ 'of' | translate }}
                         {{ pipelinesToModify.length }} ({{ status.name }})...{{
                             status.status
                         }}
                     </h4>
                 </div>
                 <div *ngIf="pipelinesToModify.length === 0">
-                    <h4>
-                        Sorry, there are no pipelines that are currently
-                        {{ action ? 'idle.' : 'running.' }}
+                    <h4 *ngIf="action"></h4>
+                    <h4 *ngIf="!action">
+                        {{
+                            'Sorry, there are no pipelines that are currently idle.'
+                                | translate
+                        }}
+                    </h4>
+                    <h4 *ngIf="action">
+                        {{
+                            'Sorry, there are no pipelines that are currently running.'
+                                | translate
+                        }}
                     </h4>
                 </div>
             </div>
@@ -69,7 +90,7 @@
             (click)="close(false)"
             style="margin-right: 10px"
         >
-            Cancel
+            {{ 'Cancel' | translate }}
         </button>
         <button
             mat-button
