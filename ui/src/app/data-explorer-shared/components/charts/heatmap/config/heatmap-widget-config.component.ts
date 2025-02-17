@@ -53,6 +53,16 @@ export class HeatmapWidgetConfigComponent extends BaseWidgetConfig<
         this.triggerDataRefresh();
     }
 
+    updateVisualMapMin(min: number) {
+        this.currentlyConfiguredWidget.visualizationConfig.visualMapMin = min;
+        this.triggerDataRefresh();
+    }
+
+    updateVisualMapMax(max: number) {
+        this.currentlyConfiguredWidget.visualizationConfig.visualMapMax = max;
+        this.triggerDataRefresh();
+    }
+
     protected applyWidgetConfig(config: HeatmapVisConfig): void {
         config.selectedHeatProperty = this.fieldService.getSelectedField(
             config.selectedHeatProperty,
@@ -60,6 +70,14 @@ export class HeatmapWidgetConfigComponent extends BaseWidgetConfig<
             () => this.fieldProvider.numericFields[0],
         );
         config.showLabelsProperty ??= false;
+
+        if (config.visualMapMax === undefined) {
+            config.visualMapMax = 200;
+        }
+
+        if (config.visualMapMin === undefined) {
+            config.visualMapMin = 0;
+        }
     }
 
     protected requiredFieldsForChartPresent(): boolean {

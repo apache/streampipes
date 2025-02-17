@@ -32,13 +32,50 @@
         >
         </sp-select-single-property-config>
     </sp-configuration-box>
+
     <sp-configuration-box [title]="'Settings' | translate">
-        <mat-checkbox
-            [(ngModel)]="
-                currentlyConfiguredWidget.visualizationConfig.showLabelsProperty
-            "
-            (change)="setShowLabelsProperty($event)"
-            >{{ 'Show values as labels' | translate }}
-        </mat-checkbox>
+        <div fxLayout="column" class="ml-10 mb-10">
+            <div class="mb-10">
+                <mat-checkbox
+                    [(ngModel)]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .showLabelsProperty
+                    "
+                    (change)="setShowLabelsProperty($event)"
+                >
+                    {{ 'Show values as labels' | translate }}
+                </mat-checkbox>
+            </div>
+            <div class="ml-10 mb-10" fxFlex fxLayoutAlign="start center">
+                <small>Visual Map Min</small>
+                <span fxFlex></span>
+                <mat-form-field appearance="outline" color="accent" fxFlex="30">
+                    <input
+                        matInput
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .visualMapMin
+                        "
+                        (ngModelChange)="updateVisualMapMin($event)"
+                        type="number"
+                    />
+                </mat-form-field>
+            </div>
+            <div class="ml-10 mb-10" fxFlex fxLayoutAlign="start center">
+                <small>Visual Map Max</small>
+                <span fxFlex></span>
+                <mat-form-field appearance="outline" color="accent" fxFlex="30">
+                    <input
+                        matInput
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .visualMapMax
+                        "
+                        (ngModelChange)="updateVisualMapMax($event)"
+                        type="number"
+                    />
+                </mat-form-field>
+            </div>
+        </div>
     </sp-configuration-box>
 </sp-visualization-config-outer>
