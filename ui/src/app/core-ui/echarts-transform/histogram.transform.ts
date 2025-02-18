@@ -64,7 +64,7 @@ export const HistogramTransform: ExternalDataTransform<HistogramConfig> = {
         const hist: number[] = d3h.map(item => item.length);
         const binEdges = d3h.map(item => item.x0);
         if (d3h.length) {
-            binEdges.push(d3h.at(-1).x1);
+            binEdges.push(d3h[d3h.length - 1].x1);
         }
         hist.forEach((val, index) => {
             source.push([binEdges[index] + '-' + binEdges[index + 1], val]);
