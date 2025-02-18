@@ -43,6 +43,7 @@ import { PipelineDetailsToolbarComponent } from './components/pipeline-details-t
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDivider } from '@angular/material/divider';
 import { PipelineCodeDialogComponent } from './dialogs/pipeline-code/pipeline-code-dialog.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -64,6 +65,7 @@ import { PipelineCodeDialogComponent } from './dialogs/pipeline-code/pipeline-co
         MatSlideToggleModule,
         MatDivider,
         ClipboardModule,
+        TranslateModule.forChild(),
     ],
     declarations: [
         PipelineActionsComponent,

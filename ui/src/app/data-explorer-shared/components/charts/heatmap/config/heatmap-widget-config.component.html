@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box title="Field">
+    <sp-configuration-box [title]="'Field' | translate">
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.numericFields"
             [selectedProperty]="
@@ -33,7 +33,7 @@
         </sp-select-single-property-config>
     </sp-configuration-box>
 
-    <sp-configuration-box title="Settings">
+    <sp-configuration-box [title]="'Settings' | translate">
         <div fxLayout="column" class="ml-10 mb-10">
             <div class="mb-10">
                 <mat-checkbox
@@ -43,7 +43,7 @@
                     "
                     (change)="setShowLabelsProperty($event)"
                 >
-                    Show values as labels
+                    {{ 'Show values as labels' | translate }}
                 </mat-checkbox>
             </div>
             <div class="ml-10 mb-10" fxFlex fxLayoutAlign="start center">

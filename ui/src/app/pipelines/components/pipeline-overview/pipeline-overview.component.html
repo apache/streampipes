@@ -23,7 +23,7 @@
     data-cy="all-pipelines-table"
 >
     <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'Status' | translate }}</th>
         <td mat-cell *matCellDef="let pipeline">
             <div>
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="150px">
@@ -51,7 +51,7 @@
                     <div
                         *ngIf="!pipeline.running"
                         class="light light-neutral"
-                        [matTooltip]="'Stopped'"
+                        [matTooltip]="'Stopped' | translate"
                     ></div>
                     <div class="notification-icon">
                         <button
@@ -80,7 +80,10 @@
                     >
                         <mat-icon
                             color="warn"
-                            matTooltip="Invalid pipeline: Modify to fix problems"
+                            [matTooltip]="
+                                'Invalid pipeline: Modify to fix problems'
+                                    | translate
+                            "
                             *ngIf="!pipeline.valid"
                             >sync_problem
                         </mat-icon>
@@ -90,12 +93,12 @@
         </td>
     </ng-container>
     <ng-container matColumnDef="start">
-        <th mat-header-cell *matHeaderCellDef>Start</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'Start' | translate }}</th>
         <td mat-cell *matCellDef="let pipeline">
             <button
                 color="accent"
                 mat-icon-button
-                matTooltip="Start pipeline"
+                [matTooltip]="'Start pipeline' | translate"
                 matTooltipPosition="above"
                 data-cy="start-pipeline-button"
                 (click)="
@@ -115,7 +118,7 @@
             <button
                 color="accent"
                 mat-icon-button
-                matTooltip="Stop pipeline"
+                [matTooltip]="'Stop pipeline' | translate"
                 matTooltipPosition="above"
                 data-cy="stop-pipeline-button"
                 (click)="
@@ -134,7 +137,9 @@
     </ng-container>
 
     <ng-container matColumnDef="name">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+            {{ 'Name' | translate }}
+        </th>
         <td mat-cell *matCellDef="let pipeline">
             <div>
                 <b>{{ pipeline.name }}</b>
@@ -146,7 +151,9 @@
     </ng-container>
 
     <ng-container matColumnDef="lastModified">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>Last modified</th>
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+            {{ 'Last modified' | translate }}
+        </th>
         <td mat-cell *matCellDef="let pipeline">
             <h5>{{ pipeline.createdAt | date: 'dd.MM.yyyy HH:mm' }}</h5>
         </td>
@@ -159,7 +166,7 @@
                 <button
                     color="accent"
                     mat-icon-button
-                    matTooltip="Show pipeline"
+                    [matTooltip]="'Show pipeline' | translate"
                     matTooltipPosition="above"
                     (click)="
                         pipelineOperationsService.showPipelineDetails(
@@ -172,7 +179,7 @@
                 <button
                     color="accent"
                     mat-icon-button
-                    matTooltip="Modify pipeline"
+                    [matTooltip]="'Modify pipeline' | translate"
                     matTooltipPosition="above"
                     *ngIf="hasPipelineWritePrivileges"
                     (click)="
@@ -185,7 +192,7 @@
                 <button
                     color="accent"
                     mat-icon-button
-                    matTooltip="Permissions"
+                    [matTooltip]="'Permissions' | translate"
                     matTooltipPosition="above"
                     *ngIf="isAdmin"
                     (click)="
@@ -201,7 +208,7 @@
                 <button
                     color="accent"
                     mat-icon-button
-                    matTooltip="Delete pipeline"
+                    [matTooltip]="'Delete pipeline' | translate"
                     matTooltipPosition="above"
                     *ngIf="hasPipelineWritePrivileges"
                     (click)="

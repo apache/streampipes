@@ -29,7 +29,9 @@
                     ></sp-exception-message>
                 </div>
                 <div *ngIf="logInfo.length === 0">
-                    <h5 class="text-center">(no log messages available)</h5>
+                    <h5 class="text-center">
+                        ({{ 'no log messages available' | translate }})
+                    </h5>
                 </div>
             </div>
         </div>
@@ -42,7 +44,7 @@
             class="mat-basic"
             (click)="close()"
         >
-            Close
+            {{ 'Close' | translate }}
         </button>
     </div>
 </div>

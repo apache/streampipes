@@ -29,15 +29,19 @@ import {
     PanelType,
 } from '@streampipes/shared-ui';
 import { ObjectPermissionDialogComponent } from '../../core-ui/object-permission-dialog/object-permission-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerSharedService {
-    constructor(private dialogService: DialogService) {}
+    constructor(
+        private dialogService: DialogService,
+        private translateService: TranslateService,
+    ) {}
 
     openPermissionsDialog(elementId: string, headerTitle: string) {
         return this.dialogService.open(ObjectPermissionDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Manage permissions',
+            title: this.translateService.instant('Manage permissions'),
             width: '50vw',
             data: {
                 objectInstanceId: elementId,
@@ -52,7 +56,7 @@ export class DataExplorerSharedService {
     ) {
         this.dialogService.open(DataDownloadDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: 'Download data',
+            title: this.translateService.instant('Download data'),
             width: '50vw',
             data: {
                 dataDownloadDialogModel: {

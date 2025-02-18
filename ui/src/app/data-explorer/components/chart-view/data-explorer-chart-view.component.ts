@@ -39,6 +39,7 @@ import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/model
 import { Observable, of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { map } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-data-view',
@@ -67,6 +68,7 @@ export class DataExplorerChartViewComponent
         private routingService: DataExplorerRoutingService,
         private dataViewService: ChartService,
         private timeSelectionService: TimeSelectionService,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit() {
@@ -139,7 +141,8 @@ export class DataExplorerChartViewComponent
         this.dataView['@class'] =
             'org.apache.streampipes.model.datalake.DataExplorerWidgetModel';
         this.dataView.baseAppearanceConfig = {};
-        this.dataView.baseAppearanceConfig.widgetTitle = 'New chart';
+        this.dataView.baseAppearanceConfig.widgetTitle =
+            this.translateService.instant('New chart');
         this.dataView.dataConfig = {};
         this.dataView.dataConfig.ignoreMissingValues = false;
         this.dataView.baseAppearanceConfig.backgroundColor = '#FFFFFF';
@@ -166,11 +169,13 @@ export class DataExplorerChartViewComponent
             const dialogRef = this.dialog.open(ConfirmDialogComponent, {
                 width: '500px',
                 data: {
-                    title: 'Save changes?',
-                    subtitle:
+                    title: this.translateService.instant('Save changes?'),
+                    subtitle: this.translateService.instant(
                         'Update all changes to chart or discard current changes.',
-                    cancelTitle: 'Discard changes',
-                    okTitle: 'Update',
+                    ),
+                    cancelTitle:
+                        this.translateService.instant('Discard changes'),
+                    okTitle: this.translateService.instant('Update'),
                     confirmAndCancel: true,
                 },
             });

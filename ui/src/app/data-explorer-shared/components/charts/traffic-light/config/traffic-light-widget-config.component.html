@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box title="Field">
+    <sp-configuration-box [title]="'Field' | translate">
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.numericFields"
             [selectedProperty]="
@@ -33,7 +33,7 @@
         </sp-select-single-property-config>
     </sp-configuration-box>
 
-    <sp-configuration-box title="Settings">
+    <sp-configuration-box [title]="'Settings' | translate">
         <div fxLayout="column" fxLayoutGap="10px">
             <div
                 fxLayout="row"
@@ -41,7 +41,7 @@
                 fxLayoutAlign="start center"
                 fxFlex="100"
             >
-                <small fxFlex="30">Threshold</small>
+                <small fxFlex="30">{{ 'Threshold' | translate }}</small>
                 <mat-form-field color="accent" appearance="outline" fxFlex>
                     <input
                         type="text"
@@ -63,7 +63,9 @@
                 fxLayoutAlign="start center"
                 fxFlex="100"
             >
-                <small fxFlex="30">With Threshold being</small>
+                <small fxFlex="30">{{
+                    'With Threshold being' | translate
+                }}</small>
                 <mat-radio-group
                     [(ngModel)]="
                         currentlyConfiguredWidget.visualizationConfig
@@ -71,12 +73,12 @@
                     "
                     (change)="selectUpperLimit($event.source.value)"
                 >
-                    <mat-radio-button [value]="true"
-                        >Upper Limit</mat-radio-button
-                    >
-                    <mat-radio-button [value]="false"
-                        >Lower Limit</mat-radio-button
-                    >
+                    <mat-radio-button [value]="true">{{
+                        'Upper Limit' | translate
+                    }}</mat-radio-button>
+                    <mat-radio-button [value]="false">{{
+                        'Lower Limit' | translate
+                    }}</mat-radio-button>
                 </mat-radio-group>
             </div>
 
@@ -86,7 +88,7 @@
                 fxLayoutAlign="start center"
                 fxFlex="100"
             >
-                <small fxFlex="30">Warning Range (%)</small>
+                <small fxFlex="30">{{ 'Warning Range (%)' | translate }}</small>
                 <mat-form-field color="accent" appearance="outline" fxFlex>
                     <input
                         [(ngModel)]="
@@ -114,7 +116,7 @@
                 fxFlex="100"
                 class="checkbox-container"
             >
-                <small>Show Value in Traffic Light</small>
+                <small>{{ 'Show Value in Traffic Light' | translate }}</small>
                 <mat-checkbox
                     color="accent"
                     [(ngModel)]="

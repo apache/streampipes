@@ -27,11 +27,13 @@
     </div>
     <div fxLayout="column" fxLayoutAlign="center center">
         <div class="default-text">
-            Invalid configuration for {{ widgetTypeLabel }}
+            {{ 'Invalid configuration for' | translate }} {{ widgetTypeLabel }}
         </div>
         <div class="default-text date-range-text">
-            This chart is missing required fields - choose another chart type or
-            add additional fields.
+            {{
+                'This chart is missing required fields - choose another chart type or add additional fields.'
+                    | translate
+            }}
         </div>
     </div>
 </div>

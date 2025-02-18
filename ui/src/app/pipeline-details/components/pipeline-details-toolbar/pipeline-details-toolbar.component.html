@@ -20,26 +20,30 @@
     <button
         mat-button
         color="accent"
-        matTooltip="Data Preview"
+        [matTooltip]="'Data Preview' | translate"
         [matTooltipPosition]="'above'"
         (click)="togglePreviewEmitter.emit()"
     >
         <div fxLayoutAlign="start center" fxLayout="row">
             <i class="material-icons">visibility</i>
-            <span *ngIf="!previewModeActive">&nbsp;Enable live preview</span>
-            <span *ngIf="previewModeActive">&nbsp;Disable live preview</span>
+            <span *ngIf="!previewModeActive"
+                >&nbsp;{{ 'Enable live preview' | translate }}</span
+            >
+            <span *ngIf="previewModeActive"
+                >&nbsp;{{ 'Disable live preview' | translate }}</span
+            >
         </div>
     </button>
     <button
         mat-button
         color="accent"
-        matTooltip="Pipeline as code"
+        [matTooltip]="'Pipeline as code' | translate"
         [matTooltipPosition]="'above'"
         (click)="openCodeDialogEmitter.emit()"
     >
         <div fxLayoutAlign="start center" fxLayout="row">
             <i class="material-icons">code</i>
-            <span>&nbsp;View pipeline as code</span>
+            <span>&nbsp;{{ 'View pipeline as code' | translate }}</span>
         </div>
     </button>
     <div fxFlex></div>
@@ -52,13 +56,13 @@
             (click)="reloadMetricsEmitter.emit()"
         >
             <i class="material-icons">refresh</i>
-            &nbsp;Refresh metrics
+            &nbsp;{{ 'Refresh metrics' | translate }}
         </button>
         <mat-slide-toggle
             [(ngModel)]="autoRefresh"
             (ngModelChange)="autoRefreshChange.emit($event)"
             color="accent"
-            >Auto refresh
+            >{{ 'Auto refresh' | translate }}
         </mat-slide-toggle>
     </div>
 </div>

@@ -19,7 +19,10 @@
 <div class="sp-dialog-container" fxLayout="column">
     <div class="sp-dialog-content p-15" fxFlex="100" fxLayout="column">
         <div class="info-message">
-            Pipeline health monitoring discovered the following issues:
+            {{
+                'Pipeline health monitoring discovered the following issues:'
+                    | translate
+            }}
         </div>
         <div class="log-message" fxFlex="100" fxLayout="column">
             <span *ngFor="let notification of pipeline.pipelineNotifications">
@@ -35,7 +38,7 @@
             color="accent"
             (click)="acknowledgeAndClose()"
         >
-            Acknowledge
+            {{ 'Acknowledge' | translate }}
         </button>
     </div>
 </div>

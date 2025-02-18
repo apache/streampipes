@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import {
@@ -25,6 +25,7 @@ import {
 } from '../model/traffic-light-widget.model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-traffic-light-widget-config',
@@ -35,6 +36,7 @@ export class TrafficLightWidgetConfigComponent extends BaseWidgetConfig<
     TrafficLightWidgetModel,
     TrafficLightVisConfig
 > {
+    translateService: TranslateService = inject(TranslateService);
     constructor(
         widgetConfigurationService: ChartConfigurationService,
         fieldService: DataExplorerFieldProviderService,
@@ -157,7 +159,9 @@ export class TrafficLightWidgetConfigComponent extends BaseWidgetConfig<
                 this.currentlyConfiguredWidget.visualizationConfig
                     .selectedWarningRange === 0
             ) {
-                this.warningRangeInterval = 'No Warning Range defined';
+                this.warningRangeInterval = this.translateService.instant(
+                    'No Warning Range defined',
+                );
             } else if (
                 this.currentlyConfiguredWidget.visualizationConfig
                     .selectedUpperLimit
@@ -166,15 +170,15 @@ export class TrafficLightWidgetConfigComponent extends BaseWidgetConfig<
                     this.currentlyConfiguredWidget.visualizationConfig
                         .selectedThreshold - rangeValue;
                 this.warningRangeInterval =
-                    'Current Warning Range: ' +
-                    `${lowerBound} to ${this.currentlyConfiguredWidget.visualizationConfig.selectedThreshold}`;
+                    this.translateService.instant('Current Warning Range: ') +
+                    `${lowerBound} ${this.translateService.instant('to')} ${this.currentlyConfiguredWidget.visualizationConfig.selectedThreshold}`;
             } else {
                 const upperBound =
                     this.currentlyConfiguredWidget.visualizationConfig
                         .selectedThreshold + rangeValue;
                 this.warningRangeInterval =
-                    'Current Warning Range: ' +
-                    `${this.currentlyConfiguredWidget.visualizationConfig.selectedThreshold} to ${upperBound}`;
+                    this.translateService.instant('Current Warning Range: ') +
+                    `${this.currentlyConfiguredWidget.visualizationConfig.selectedThreshold} ${this.translateService.instant('to')} ${upperBound}`;
             }
         } else {
             this.warningRangeInterval = '';

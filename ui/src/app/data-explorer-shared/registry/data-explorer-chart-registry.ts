@@ -56,6 +56,7 @@ import { TrafficLightWidgetConfigComponent } from '../components/charts/traffic-
 import { TrafficLightWidgetComponent } from '../components/charts/traffic-light/traffic-light-widget.component';
 import { StatusWidgetConfigComponent } from '../components/charts/status/config/status-widget-config.component';
 import { StatusWidgetComponent } from '../components/charts/status/status-widget.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerChartRegistry {
@@ -71,11 +72,12 @@ export class DataExplorerChartRegistry {
         private densityRenderer: SpDensityRendererService,
         private indicatorRenderer: SpIndicatorRendererService,
         private timeseriesRenderer: SpTimeseriesRendererService,
+        private translateService: TranslateService,
     ) {
         this.chartTypes = [
             {
                 id: 'gauge',
-                label: 'Gauge',
+                label: this.translateService.instant('Gauge'),
                 widgetAppearanceConfigurationComponent:
                     SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent: GaugeWidgetConfigComponent,
@@ -84,31 +86,31 @@ export class DataExplorerChartRegistry {
             },
             {
                 id: 'table',
-                label: 'Table',
+                label: this.translateService.instant('Table'),
                 widgetConfigurationComponent: TableWidgetConfigComponent,
                 widgetComponent: TableWidgetComponent,
             },
             {
                 id: 'traffic-Light',
-                label: 'Traffic Light',
+                label: this.translateService.instant('Traffic Light'),
                 widgetConfigurationComponent: TrafficLightWidgetConfigComponent,
                 widgetComponent: TrafficLightWidgetComponent,
             },
             {
                 id: 'status',
-                label: 'Status',
+                label: this.translateService.instant('Status'),
                 widgetConfigurationComponent: StatusWidgetConfigComponent,
                 widgetComponent: StatusWidgetComponent,
             },
             {
                 id: 'map',
-                label: 'Map',
+                label: this.translateService.instant('Map'),
                 widgetConfigurationComponent: MapWidgetConfigComponent,
                 widgetComponent: MapWidgetComponent,
             },
             {
                 id: 'heatmap',
-                label: 'Time-Series Heatmap',
+                label: this.translateService.instant('Time-Series Heatmap'),
                 widgetAppearanceConfigurationComponent:
                     SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent: HeatmapWidgetConfigComponent,
@@ -117,7 +119,7 @@ export class DataExplorerChartRegistry {
             },
             {
                 id: 'time-series-chart',
-                label: 'Time Series Chart',
+                label: this.translateService.instant('Time Series Chart'),
                 widgetAppearanceConfigurationComponent:
                     SpTimeSeriesAppearanceConfigComponent,
                 widgetConfigurationComponent:
@@ -128,13 +130,13 @@ export class DataExplorerChartRegistry {
             },
             {
                 id: 'image',
-                label: 'Image',
+                label: this.translateService.instant('Image'),
                 widgetConfigurationComponent: ImageWidgetConfigComponent,
                 widgetComponent: ImageWidgetComponent,
             },
             {
                 id: 'indicator-chart',
-                label: 'Indicator',
+                label: this.translateService.instant('Indicator'),
                 widgetAppearanceConfigurationComponent:
                     SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent: IndicatorWidgetConfigComponent,
@@ -144,7 +146,7 @@ export class DataExplorerChartRegistry {
             },
             {
                 id: 'scatter-chart',
-                label: 'Scatter',
+                label: this.translateService.instant('Scatter'),
                 widgetAppearanceConfigurationComponent:
                     SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent: CorrelationWidgetConfigComponent,
@@ -155,7 +157,7 @@ export class DataExplorerChartRegistry {
             },
             {
                 id: 'histogram-chart',
-                label: 'Histogram',
+                label: this.translateService.instant('Histogram'),
                 widgetAppearanceConfigurationComponent:
                     SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent:
@@ -167,7 +169,7 @@ export class DataExplorerChartRegistry {
             },
             {
                 id: 'pie-chart',
-                label: 'Pie',
+                label: this.translateService.instant('Pie'),
                 widgetAppearanceConfigurationComponent:
                     SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent: SpPieChartWidgetConfigComponent,
@@ -176,7 +178,9 @@ export class DataExplorerChartRegistry {
             },
             {
                 id: 'value-heatmap-chart',
-                label: 'Value Distribution Heatmap',
+                label: this.translateService.instant(
+                    'Value Distribution Heatmap',
+                ),
                 widgetAppearanceConfigurationComponent:
                     SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent:
@@ -187,7 +191,7 @@ export class DataExplorerChartRegistry {
             },
             {
                 id: 'density-chart',
-                label: '2D Density Contour',
+                label: this.translateService.instant('2D Density Contour'),
                 widgetAppearanceConfigurationComponent:
                     SpEchartsWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent: CorrelationWidgetConfigComponent,
