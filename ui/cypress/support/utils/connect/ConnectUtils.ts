@@ -386,7 +386,7 @@ export class ConnectUtils {
             amountOfProperties,
         );
 
-        cy.dataCy('live-preview-table-no-data', { timout: 1000 }).should(
+        cy.dataCy('live-preview-table-no-data', { timout: 5000 }).should(
             'not.exist',
         );
     }

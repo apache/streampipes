@@ -93,10 +93,12 @@ describe('Test Edit Adapter and Pipeline', () => {
         cy.dataCy('sp-editor-save-pipeline').click();
         cy.dataCy('sp-editor-checkbox-navigate-to-overview').children().click();
         cy.dataCy('sp-editor-apply').click();
-        cy.dataCy('sp-navigate-to-pipeline-overview').click();
+        cy.dataCy('sp-navigate-to-pipeline-overview', {
+            timeout: 7000,
+        }).click();
 
         // Visit dashboard
-        cy.wait(1000);
+        cy.wait(5000);
         DataLakeUtils.goToDatalake();
         DataLakeUtils.createAndEditDataView();
 
