@@ -103,7 +103,7 @@
     "@types/rx": "^4.1.2",
     "@types/showdown": "2.0.6",
     "@typescript-eslint/eslint-plugin": "8.15.0",
-    "@typescript-eslint/parser": "8.15.0",
+    "@typescript-eslint/parser": "8.24.1",
     "@vendure/ngx-translate-extract": "^9.4.0",
     "ajv-keywords": "^5.1.0",
     "assert": "^2.1.0",
