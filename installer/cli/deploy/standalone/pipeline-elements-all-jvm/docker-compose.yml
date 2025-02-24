@@ -16,8 +16,6 @@
 services:
   pipeline-elements-all-jvm:
     image: ${SP_DOCKER_REGISTRY}/pipeline-elements-all-jvm:${SP_VERSION}
-    volumes:
-      - files:/spImages
     logging:
       driver: "json-file"
       options:
@@ -25,9 +23,6 @@ services:
         max-file: "1"
     networks:
       spnet:
-
-volumes:
-  files:
 
 networks:
   spnet:

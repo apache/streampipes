@@ -38,7 +38,6 @@ services:
       - couchdb
     volumes:
       - backend:/root/.streampipes
-      - files:/spImages
     logging: *default-logging
     networks:
       spnet:
@@ -66,8 +65,6 @@ services:
       context: ./streampipes-extensions/streampipes-extensions-all-jvm
       dockerfile: Dockerfile
     image: streampipes_pipeline-elements-all-jvm:release-validation
-    volumes:
-      - files:/spImages
     logging: *default-logging
     networks:
       spnet:
@@ -138,7 +135,6 @@ services:
 
 volumes:
   kafka3:
-  files:
   couchdb:
   influxdb:
   influxdb2:
