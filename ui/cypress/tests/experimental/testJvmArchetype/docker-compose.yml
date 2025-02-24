@@ -99,8 +99,6 @@ services:
     # Lite version pipeline elements
     extensions-all-jvm:
         image: '${SP_DOCKER_REGISTRY}/extensions-all-jvm:${SP_VERSION}'
-        volumes:
-            - files:/spImages
         logging: *default-logging
         restart: unless-stopped
         networks:
@@ -121,7 +119,6 @@ volumes:
     kafka:
     zookeeper:
     influxdb:
-    files:
 
 networks:
     spnet:

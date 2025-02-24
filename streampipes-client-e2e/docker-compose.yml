@@ -31,15 +31,12 @@ services:
       - couchdb
     volumes:
       - backend:/root/.streampipes
-      - files:/spImages
     logging: *default-logging
     networks:
       spnet:
 
   extensions-all-jvm:
     image: streampipes_pipeline-elements-all-jvm:release-validation
-    volumes:
-      - files:/spImages
     logging: *default-logging
     networks:
       spnet:
@@ -117,7 +114,6 @@ services:
 
 volumes:
   kafka:
-  files:
   couchdb:
   zookeeper:
   influxdb:

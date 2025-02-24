@@ -32,7 +32,6 @@ services:
       - couchdb
     volumes:
       - backend:/root/.streampipes
-      - files:/spImages
     logging: *default-logging
     restart: unless-stopped
     networks:
@@ -109,8 +108,6 @@ services:
   # Lite version pipeline elements
   extensions-all-jvm:
     image: "${SP_DOCKER_REGISTRY}/extensions-all-jvm:${SP_VERSION}"
-    volumes:
-      - files:/spImages
     logging: *default-logging
     restart: unless-stopped
     networks:
@@ -124,7 +121,6 @@ volumes:
   kafka3:
   influxdb:
   influxdb2:
-  files:
   nginx:
 
 
