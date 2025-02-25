@@ -61,6 +61,9 @@ export class EditValueTransformationComponent implements OnInit {
 
     applyStaticValue(value: any) {
         this.cachedProperty.elementId =
-            this.staticValueTransformService.makeElementId(value);
+            this.staticValueTransformService.makeElementId(
+                this.cachedProperty.elementId,
+                value,
+            );
     }
 }
