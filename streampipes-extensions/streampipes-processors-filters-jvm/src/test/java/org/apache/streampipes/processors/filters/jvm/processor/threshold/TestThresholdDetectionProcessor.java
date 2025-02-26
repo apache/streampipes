@@ -51,19 +51,17 @@ class TestThresholdDetectionProcessor {
   private EventProcessorRuntimeContext runtimeContext;
 
   @Mock
-  private ProcessingElementParameterExtractor extractor;  // ✅ Added mock for extractor
+  private ProcessingElementParameterExtractor extractor;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
     processor = new ThresholdDetectionProcessor();
 
-    // ✅ Ensure `processorParams.extractor()` returns a valid mock
     when(processorParams.extractor()).thenReturn(extractor);
   }
 
   private void initializeProcessor(double threshold, String operator, String property) {
-    // ✅ Mock the extractor's behavior properly
     when(extractor.singleValueParameter("value", Double.class)).thenReturn(threshold);
     when(extractor.selectedSingleValue("operation", String.class)).thenReturn(operator);
     when(extractor.mappingPropertyValue("number-mapping")).thenReturn(property);
@@ -81,7 +79,7 @@ class TestThresholdDetectionProcessor {
     initializeProcessor(10.0, ">", "value");
 
     Event event = new Event();
-    event.addField("value", 15.0); // 15 > 10
+    event.addField("value", 15.0);
 
     processor.onEvent(event, outputCollector);
 
@@ -94,7 +92,7 @@ class TestThresholdDetectionProcessor {
     initializeProcessor(10.0, "<", "value");
 
     Event event = new Event();
-    event.addField("value", 15.0); // 15 is NOT < 10
+    event.addField("value", 15.0);
 
     processor.onEvent(event, outputCollector);
 
@@ -109,12 +107,7 @@ class TestThresholdDetectionProcessor {
     Event event = new Event();
     event.addField("value", 10.0);
 
-    // Debugging logs
-    System.out.println("Before Processing: " + event.getRaw());
-
     processor.onEvent(event, outputCollector);
-
-    System.out.println("After Processing: " + event.getRaw());
 
     assertNotNull(event.getFieldBySelector("thresholdDetected"), "Field 'thresholdDetected' should be present");
     assertTrue(event.getFieldBySelector("thresholdDetected").getAsPrimitive().getAsBoolean(),
