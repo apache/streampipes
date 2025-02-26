@@ -122,6 +122,10 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
   public void visit(AddValueTransformationRuleDescription rule) {
     var property = new EventPropertyPrimitive();
     property.setElementId(STATIC_VALUE_ID_PREFIX + rule.getStaticValue());
+    var uniqueId = UUIDGenerator.generateUuid().substring(0, 10);
+
+    property.setElementId(STATIC_VALUE_ID_PREFIX + uniqueId + ":" + rule.getStaticValue());
+
     property.setRuntimeName(rule.getRuntimeKey());
     property.setRuntimeType(rule.getDatatype());
     property.setLabel(rule.getLabel());
@@ -136,6 +140,8 @@ public class ToTransformedSchemaConverter implements ITransformationRuleVisitor,
     }
     this.properties.add(property);
   }
+
+
 
   @Override
   public void visit(ChangeDatatypeTransformationRuleDescription rule) {

@@ -20,6 +20,7 @@ import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
 import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
+import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
 
 describe('Connect schema rule transformations', () => {
     beforeEach('Setup Test', () => {
@@ -31,7 +32,7 @@ describe('Connect schema rule transformations', () => {
             'connect/addNumericalStaticValue/input.csv',
         );
         const adapterConfiguration =
-            ConnectUtils.setUpPreprocessingRuleTest(true);
+            ConnectUtils.setUpPreprocessingRuleTest(false);
 
         const newValueOne = 'newValueOne';
         const newValueTwo = 'newValueTwo';
@@ -58,5 +59,27 @@ describe('Connect schema rule transformations', () => {
             'cypress/fixtures/connect/addNumericalStaticValue/expected.json',
             true,
         );
+
+        ConnectUtils.goToConnect();
+        ConnectBtns.editAdapter().click();
+        // This waiting time is required to ensure that the file is loaded correctly before the next button is clicked
+        cy.wait(1000);
+        ConnectBtns.nextBtn().click();
+
+        // Validate that the preview is correct
+
+        const expectedJsonPreview = {
+            newValueTwo: 2,
+            count: 122,
+            timestamp: 1720018277000,
+            newValueOne: 1,
+        };
+        ConnectEventSchemaUtils.schemaPreviewResultEvent().then($el => {
+            let jsonPreview = $el.text();
+            jsonPreview = jsonPreview.replace(/\s+/g, '');
+
+            const actualJson = JSON.parse(jsonPreview);
+            expect(actualJson).to.deep.equal(expectedJsonPreview);
+        });
     });
 });
