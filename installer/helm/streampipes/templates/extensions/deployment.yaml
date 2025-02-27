@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "streampipes.extensions.iiot.fullname" . }}
+  labels:
+    {{- include "streampipes.extensions.iiot.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.extensions.iiot.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "streampipes.extensions.iiot.selectorLabels" . | nindent 6 }}
+  strategy: 
+    {{- toYaml .Values.extensions.iiot.updateStrategy | nindent 4 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        random-annotation: {{ randAlphaNum 10 | lower }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "streampipes.extensions.iiot.selectorLabels" . | nindent 8 }}
+        {{- if .Values.extensions.iiot.podLabels }}
+        {{- toYaml .Values.extensions.iiot.podLabels | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      serviceAccountName: {{ include "streampipes.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.extensions.iiot.securityContext | nindent 8 }} 
+      initContainers:
+        - name: init-wait-{{ include "streampipes.backend.fullname" . }}
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{ include "streampipes.backend.service" . }} {{ .Values.backend.service.port }} && exit 0 || sleep 3; done; exit 1"]
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+          - {{ include "streampipes.extensions.iiot.fullname" . }}
+      restartPolicy: {{ .Values.extensions.iiot.restartPolicy }}
+      containers:
+      - name: {{ include  "streampipes.extensions.iiot.fullname" . }}
+        image: {{ include "streampipes.extensions.iiot.image" . }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+          - containerPort: {{ .Values.extensions.iiot.containerPort }}
+        env:
+          {{- include "snippet.streampipes.extensions.env" . | nindent 12 }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.extensions.iiot.containerPort }}
+          initialDelaySeconds: {{ .Values.extensions.iiot.initialDelaySeconds }}
+          periodSeconds: {{ .Values.extensions.iiot.periodSeconds }}
+          failureThreshold: {{ .Values.extensions.iiot.failureThreshold }}
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.extensions.iiot.containerPort }}
+          initialDelaySeconds: {{ .Values.extensions.iiot.initialDelaySeconds }}
+          periodSeconds: {{ .Values.extensions.iiot.periodSeconds }}
+          failureThreshold: {{ .Values.extensions.iiot.failureThreshold }}
+        startupProbe:
+          tcpSocket:
+            port: {{ .Values.extensions.iiot.containerPort }}
+          initialDelaySeconds: {{ .Values.extensions.iiot.initialDelaySeconds }}
+          periodSeconds: {{ .Values.extensions.iiot.periodSeconds }}
+          failureThreshold: {{ .Values.extensions.iiot.failureThreshold }}
+  

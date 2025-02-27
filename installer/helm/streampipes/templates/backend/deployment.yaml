@@ -1,0 +1,77 @@
+# TODO: Add the Volumes and PVC attachments for the backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "streampipes.backend.fullname" . }}
+  labels:
+    {{- include "streampipes.backend.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "streampipes.backend.selectorLabels" . | nindent 6 }}
+  strategy:
+    {{- toYaml .Values.backend.updateStrategy | nindent 4 }} 
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        random-annotation: {{ randAlphaNum 10 | lower }}
+        {{- toYaml . | nindent 8 }}
+      {{- end}}
+      labels:
+        {{- include "streampipes.backend.selectorLabels" . | nindent 8 }}
+        {{- if .Values.backend.podLabels }}
+        {{- toYaml .Values.backend.podLabels | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      serviceAccountName: {{ include "streampipes.serviceAccountName" . }}
+      initContainers:
+        {{- include "streampipes.initContainer" . | nindent 8 }}
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+          - {{ include "streampipes.backend.fullname" . }}
+      restartPolicy: {{ .Values.backend.restartPolicy }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.backend.securityContext | nindent 12 }}
+          image: {{ include "streampipes.backend.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.backend.containerPort }}
+          env:
+            {{- include "snippet.streampipes.backend.env" . | nindent 12}}
+          volumeMounts:
+            - name: {{ include "streampipes.backend.fullname" . }}-pv
+              mountPath: "/root/.streampipes"
+          readinessProbe:
+            httpGet:
+              path: /streampipes-backend/api/v2/setup/configured
+              port: {{ .Values.backend.containerPort }}
+            initialDelaySeconds: {{ .Values.backend.initialDelaySeconds }}
+            periodSeconds: {{ .Values.backend.periodSeconds }}
+            failureThreshold: {{ .Values.backend.failureThreshold }}
+          livenessProbe:
+            httpGet:
+              path: /streampipes-backend/api/v2/setup/configured
+              port: {{ .Values.backend.containerPort }}
+            initialDelaySeconds: {{ .Values.backend.initialDelaySeconds }}
+            periodSeconds: {{ .Values.backend.periodSeconds }}
+            failureThreshold: {{ .Values.backend.failureThreshold }}
+          startupProbe:
+            httpGet:
+              path: /streampipes-backend/api/v2/setup/configured
+              port: {{ .Values.backend.containerPort }}
+            initialDelaySeconds: {{ .Values.backend.initialDelaySeconds }}
+            periodSeconds: {{ .Values.backend.periodSeconds }}
+            failureThreshold: {{ .Values.backend.failureThreshold }}
+      volumes:
+        - name: {{ include "streampipes.backend.fullname" . }}-pv
+          persistentVolumeClaim:
+            claimName: {{ include "streampipes.backend.fullname" . }}-pvc

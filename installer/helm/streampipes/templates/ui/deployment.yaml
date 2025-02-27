@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "streampipes.ui.fullname" . }}
+  labels:
+    {{- include "streampipes.ui.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.ui.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "streampipes.ui.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }} 
+      annotations:
+        random-annotation: {{ randAlphaNum 10 | lower }}
+        {{- toYaml . | nindent 8 }}
+      {{- end}}
+      labels:
+        {{- include "streampipes.ui.selectorLabels" . | nindent 8 }}
+        {{- if .Values.ui.podLabels }}
+        {{- toYaml .Values.ui.podLabels | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      serviceAccountName: {{ include "streampipes.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      initContainers:
+        {{- include "streampipes.initContainer" . | nindent 8 }}
+      restartPolicy: {{ .Values.ui.restartPolicy }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.ui.securityContext | nindent 12 }} 
+          image: {{ include "streampipes.ui.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{- include "snippet.streampipes.proxy.env" . | nindent 12 }}
+          ports:
+          - name: http
+            containerPort: {{ .Values.ui.containerPort }}
+            protocol: TCP
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+          readinessProbe:
+            httpGet:
+              path: /#/login
+              port: {{ .Values.ui.containerPort }}
+            initialDelaySeconds: {{ .Values.ui.initialDelaySeconds }}
+            periodSeconds: {{ .Values.ui.periodSeconds }}
+            failureThreshold: {{ .Values.ui.failureThreshold }}
+          livenessProbe:
+            httpGet:
+              path: /#/login
+              port: {{ .Values.ui.containerPort }}
+            initialDelaySeconds: {{ .Values.ui.initialDelaySeconds }}
+            periodSeconds: {{ .Values.ui.periodSeconds }}
+            failureThreshold: {{ .Values.ui.failureThreshold }}
+          startupProbe:
+            httpGet:
+              path: /#/login
+              port: {{ .Values.ui.containerPort }}
+            initialDelaySeconds: {{ .Values.ui.initialDelaySeconds }}
+            periodSeconds: {{ .Values.ui.periodSeconds }}
+            failureThreshold: {{ .Values.ui.failureThreshold }}
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+

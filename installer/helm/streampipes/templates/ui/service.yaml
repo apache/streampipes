@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "streampipes.ui.fullname" . }}
+  labels:
+    {{- include "streampipes.ui.labels" . | nindent 4 }}
+spec:
+  selector: 
+    {{ include "streampipes.ui.selectorLabels" . | nindent 4 }}
+  type: {{ .Values.ui.service.type }}
+  ports:
+    - name: main
+      protocol: TCP
+      port: {{ .Values.ui.service.port }}
+      targetPort: {{ .Values.ui.containerPort }}
+  
+  

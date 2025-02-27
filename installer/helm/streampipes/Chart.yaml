@@ -1,0 +1,43 @@
+apiVersion: v2
+name: streampipes
+description: A Helm chart for Apache Streampipes..
+home: https://streampipes.apache.org
+keywords:
+  - iiot
+  - streampipes
+  - apache
+sources:
+  - https://github.com/what-is-a-theostack/helm-charts
+icon: https://avatars1.githubusercontent.com/u/33908576
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+version: 0.97.5
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+# It is recommended to use it with quotes.
+appVersion: "0.97.0"
+dependencies:
+  - name: couchdb
+    version: 4.5.3
+    repository: https://apache.github.io/couchdb-helm
+    condition: couchdb.enabled
+  - name: influxdb
+    version: 6.5.4
+    repository: https://charts.bitnami.com/bitnami
+    condition: influxdb.enabled
+  - name: kafka
+    version: 31.3.1
+    repository: https://charts.bitnami.com/bitnami
+    condition: kafka.enabled
+  - name: nats
+    version: 1.2.10
+    repository: https://nats-io.github.io/k8s/helm/charts
+    condition: nats.enabled
+  - name: pulsar
+    version: 3.9.0
+    repository: https://pulsar.apache.org/charts
+    condition: pulsar.enabled

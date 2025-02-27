@@ -1,0 +1,30 @@
+{{- if .Values.streampipes.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "streampipes.fullname" . }}-ingress
+  {{- with .Values.streampipes.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.streampipes.ingress.className}}
+  rules:
+  - host: {{ .Values.streampipes.ingress.host }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "streampipes.ui.fullname" . }}
+            port:
+              number: {{ .Values.ui.service.port }}
+      - path: /streampipes-backend(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "streampipes.backend.fullname" . }}
+            port:
+              number: {{ .Values.backend.service.port }}
+{{- end }}
