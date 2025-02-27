@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-02-14 21:48:17.
+// Generated using typescript-generator version 3.2.1263 on 2025-02-24 11:25:01.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -2390,8 +2389,6 @@ export class MessagingSettings {
     prioritizedProtocols: SpProtocol[];
     pulsarUrl: string;
     supportedProtocols: string[];
-    zookeeperHost: string;
-    zookeeperPort: number;
 
     static fromData(
         data: MessagingSettings,
@@ -2420,8 +2417,6 @@ export class MessagingSettings {
         instance.supportedProtocols = __getCopyArrayFn(__identity<string>())(
             data.supportedProtocols,
         );
-        instance.zookeeperHost = data.zookeeperHost;
-        instance.zookeeperPort = data.zookeeperPort;
         return instance;
     }
 }

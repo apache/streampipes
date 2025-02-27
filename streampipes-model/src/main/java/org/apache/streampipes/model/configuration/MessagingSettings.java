@@ -46,9 +46,6 @@ public class MessagingSettings {
 
   private String pulsarUrl;
 
-  private String zookeeperHost;
-  private int zookeeperPort;
-
   private List<String> supportedProtocols;
 
   public MessagingSettings(Integer batchSize,
@@ -178,22 +175,6 @@ public class MessagingSettings {
 
   public void setPulsarUrl(String pulsarUrl) {
     this.pulsarUrl = pulsarUrl;
-  }
-
-  public String getZookeeperHost() {
-    return zookeeperHost;
-  }
-
-  public void setZookeeperHost(String zookeeperHost) {
-    this.zookeeperHost = zookeeperHost;
-  }
-
-  public int getZookeeperPort() {
-    return zookeeperPort;
-  }
-
-  public void setZookeeperPort(int zookeeperPort) {
-    this.zookeeperPort = zookeeperPort;
   }
 
   public List<String> getSupportedProtocols() {

@@ -15,6 +15,5 @@
 
 [environment:basic]
 kafka
-zookeeper
 couchdb
 influxdb

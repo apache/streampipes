@@ -27,7 +27,6 @@ services:
         image: '${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}'
         volumes:
             - backend:/root/.streampipes
-            - files:/spImages
         logging: *default-logging
         restart: unless-stopped
         networks:
@@ -35,7 +34,6 @@ services:
 
 volumes:
     backend:
-    files:
 
 networks:
     spnet:
