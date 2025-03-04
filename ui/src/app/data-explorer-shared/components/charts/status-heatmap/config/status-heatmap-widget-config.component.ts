@@ -18,21 +18,21 @@
 
 import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import {
-    PieChartVisConfig,
-    PieChartWidgetModel,
-} from '../model/pie-chart-widget.model';
-import { DataExplorerField } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
+import {
+    StatusHeatmapVisConfig,
+    StatusHeatmapWidgetModel,
+} from '../model/status-heatmap-widget.model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
+import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-pie-chart-widget-config',
-    templateUrl: './pie-chart-widget-config.component.html',
+    selector: 'sp-data-explorer-status-heatmap-widget-config',
+    templateUrl: './status-heatmap-widget-config.component.html',
 })
-export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
-    PieChartWidgetModel,
-    PieChartVisConfig
+export class StatusHeatmapWidgetConfigComponent extends BaseWidgetConfig<
+    StatusHeatmapWidgetModel,
+    StatusHeatmapVisConfig
 > {
     constructor(
         widgetConfigurationService: ChartConfigurationService,
@@ -47,26 +47,12 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
         this.triggerDataRefresh();
     }
 
-    protected applyWidgetConfig(config: PieChartVisConfig): void {
+    protected applyWidgetConfig(config: StatusHeatmapVisConfig): void {
         config.selectedProperty = this.fieldService.getSelectedField(
             config.selectedProperty,
             this.fieldProvider.allFields,
             () => this.fieldProvider.allFields[0],
         );
-        config.roundingValue ??= 0.1;
-        config.selectedRadius ??= 0;
-    }
-
-    updateRoundingValue(selectedType: number) {
-        this.currentlyConfiguredWidget.visualizationConfig.roundingValue =
-            selectedType;
-        this.triggerViewRefresh();
-    }
-
-    updateInnerRadius(selectedRadius: number) {
-        this.currentlyConfiguredWidget.visualizationConfig.selectedRadius =
-            selectedRadius;
-        this.triggerViewRefresh();
     }
 
     protected requiredFieldsForChartPresent(): boolean {
@@ -76,7 +62,7 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
     triggerViewUpdate() {
         this.widgetConfigurationService.notify({
             refreshView: true,
-            refreshData: false,
+            refreshData: true,
         });
     }
 }

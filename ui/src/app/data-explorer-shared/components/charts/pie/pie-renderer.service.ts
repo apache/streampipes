@@ -61,8 +61,27 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
         );
     }
 
-    addAdditionalConfigs(option: EChartsOption) {
-        // do nothing
+    addAdditionalConfigs(
+        option: EChartsOption,
+        widgetConfig: PieChartWidgetModel,
+    ): void {
+        if (
+            widgetConfig.visualizationConfig.selectedProperty
+                .fieldCharacteristics.binary
+        ) {
+            option.legend = { show: false };
+        } else {
+            option.legend = {
+                type: 'scroll',
+                formatter: name => {
+                    return (
+                        widgetConfig.visualizationConfig.colorMappingsPieChart.find(
+                            c => String(c.value) === name,
+                        )?.label || name
+                    );
+                },
+            };
+        }
     }
 
     addSeriesItem(
@@ -71,7 +90,9 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
         _widgetConfig: PieChartWidgetModel,
     ): PieSeriesOption {
         const innerRadius = _widgetConfig.visualizationConfig.selectedRadius;
-        const colorMapping = _widgetConfig.visualizationConfig.colorMappings;
+        const colorMapping =
+            _widgetConfig.visualizationConfig.colorMappingsPieChart;
+
         return {
             name,
             type: 'pie',
@@ -79,12 +100,20 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
             datasetIndex: datasetIndex,
             tooltip: {
                 formatter: params => {
-                    return `${params.marker} ${params.value[0]} <b>${params.value[1]}</b> (${params.percent}%)`;
+                    const mappedLabel =
+                        colorMapping.find(
+                            c => c.value === params.value[0]?.toString(),
+                        )?.label || params.value[0];
+                    return `${params.marker} ${mappedLabel} <b>${params.value[1]}</b> (${params.percent}%)`;
                 },
             },
             label: {
                 formatter: params => {
-                    return `${params.value[0]} (${params.percent}%)`;
+                    const mappedLabel =
+                        colorMapping.find(
+                            c => c.value === params.value[0]?.toString(),
+                        )?.label || params.value[0];
+                    return `${mappedLabel} (${params.percent}%)`;
                 },
             },
             encode: { itemName: 'name', value: 'value' },

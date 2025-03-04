@@ -23,16 +23,18 @@ import {
 } from '@streampipes/platform-services';
 import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
-export interface PieChartVisConfig extends DataExplorerVisConfig {
+export interface StatusHeatmapVisConfig extends DataExplorerVisConfig {
     selectedProperty: DataExplorerField;
-    roundingValue: number;
-    selectedRadius: number;
-    showCustomColorMapping: boolean;
     isSelectedPropertyBoolean: boolean;
-    colorMappingsPieChart: { value: string; label: string; color: string }[];
+    showCustomColorMapping: boolean;
+    colorMappingsStatusHeatmap: {
+        value: string;
+        label: string;
+        color: string;
+    }[];
 }
 
-export interface PieChartWidgetModel extends DataExplorerWidgetModel {
+export interface StatusHeatmapWidgetModel extends DataExplorerWidgetModel {
     dataConfig: DataExplorerDataConfig;
-    visualizationConfig: PieChartVisConfig;
+    visualizationConfig: StatusHeatmapVisConfig;
 }

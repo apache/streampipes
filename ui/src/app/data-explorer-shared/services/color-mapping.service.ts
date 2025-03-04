@@ -35,22 +35,25 @@ export class ColorMappingService {
     ];
     constructor() {}
 
-    addMapping(colorMappings: { value: string; color: string }[]): void {
+    addMapping(
+        colorMappings: { value: string; label: string; color: string }[],
+    ): void {
         colorMappings.push({
             value: '',
+            label: '',
             color: this.getDefaultColor(colorMappings.length),
         });
     }
 
     removeMapping(
-        colorMappings: { value: string; color: string }[],
+        colorMappings: { value: string; label: string; color: string }[],
         index: number,
-    ): { value: string; color: string }[] {
+    ): { value: string; label: string; color: string }[] {
         return colorMappings.filter((_, i) => i !== index);
     }
 
     updateColor(
-        currentMappings: { value: string; color: string }[],
+        currentMappings: { value: string; label: string; color: string }[],
         index: number,
         newColor: string,
     ): void {

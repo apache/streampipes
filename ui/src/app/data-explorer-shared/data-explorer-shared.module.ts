@@ -80,6 +80,7 @@ import { StatusWidgetConfigComponent } from './components/charts/status/config/s
 import { MapWidgetConfigComponent } from './components/charts/map/config/map-widget-config.component';
 import { MapWidgetComponent } from './components/charts/map/map-widget.component';
 import { HeatmapWidgetConfigComponent } from './components/charts/heatmap/config/heatmap-widget-config.component';
+import { StatusHeatmapWidgetConfigComponent } from './components/charts/status-heatmap/config/status-heatmap-widget-config.component';
 import { ImageViewerComponent } from './components/charts/image/image-viewer/image-viewer.component';
 import { ChartDirective } from './components/chart-container/chart.directive';
 import { TooMuchDataComponent } from './components/charts/base/too-much-data/too-much-data.component';
@@ -95,6 +96,7 @@ import { SpTimeseriesItemConfigComponent } from './components/chart-config/selec
 import { SpEchartsWidgetAppearanceConfigComponent } from './components/chart-config/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
 import { SpTimeSeriesAppearanceConfigComponent } from './components/charts/time-series-chart/appearance-config/time-series-appearance-config.component';
 import { SpDataZoomConfigComponent } from './components/chart-config/data-zoom-config/data-zoom-config.component';
+import { ColorMappingOptionsConfigComponent } from './components/chart-config/color-mapping-options-config/color-mapping-options-config.component';
 
 @NgModule({
     imports: [
@@ -162,6 +164,7 @@ import { SpDataZoomConfigComponent } from './components/chart-config/data-zoom-c
         TrafficLightWidgetConfigComponent,
         StatusWidgetComponent,
         StatusWidgetConfigComponent,
+        StatusHeatmapWidgetConfigComponent,
         MapWidgetConfigComponent,
         MapWidgetComponent,
         HeatmapWidgetConfigComponent,
@@ -180,6 +183,7 @@ import { SpDataZoomConfigComponent } from './components/chart-config/data-zoom-c
         SpEchartsWidgetAppearanceConfigComponent,
         SpTimeSeriesAppearanceConfigComponent,
         SpDataZoomConfigComponent,
+        ColorMappingOptionsConfigComponent,
     ],
     exports: [DataExplorerChartContainerComponent],
 })
