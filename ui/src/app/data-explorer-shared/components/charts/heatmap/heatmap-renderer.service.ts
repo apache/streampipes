@@ -35,7 +35,7 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
         options: EChartsOption,
         widgetConfig: HeatmapWidgetModel,
     ): void {
-        this.basicOptions(options);
+        this.basicOptions(options, widgetConfig);
 
         const field = widgetConfig.visualizationConfig.selectedHeatProperty;
         const sourceIndex = field.sourceIndex;
@@ -62,7 +62,7 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
             return [
                 index,
                 this.makeTag(rawDataset.rawDataset.dimensions, tags, row),
-                row[heatIndex],
+                (row[heatIndex] as number).toFixed(2),
             ];
         });
 
@@ -77,7 +77,7 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
                 datasetIndex: 0,
                 encode: {
                     itemId: 0,
-                    value: heatIndex,
+                    value: 2,
                 },
                 label: {
                     show: widgetConfig.visualizationConfig.showLabelsProperty,
@@ -87,6 +87,9 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
                         shadowBlur: 10,
                         shadowColor: 'rgba(0, 0, 0, 0.5)',
                     },
+                },
+                labelLayout: {
+                    hideOverlap: true,
                 },
             },
         ];
@@ -102,7 +105,10 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
         );
     }
 
-    basicOptions(options: EChartsOption): void {
+    basicOptions(
+        options: EChartsOption,
+        widgetConfig: HeatmapWidgetModel,
+    ): void {
         options.tooltip = {};
         options.grid = {
             height: '80%',
@@ -121,6 +127,8 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
             },
         };
         options.visualMap = {
+            min: widgetConfig.visualizationConfig.visualMapMin,
+            max: widgetConfig.visualizationConfig.visualMapMax,
             calculable: true,
             orient: 'horizontal',
             right: '5%',

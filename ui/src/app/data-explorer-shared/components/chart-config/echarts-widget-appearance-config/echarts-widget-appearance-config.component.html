@@ -16,22 +16,22 @@
   ~
   -->
 
-<sp-configuration-box title="Chart settings">
+<sp-configuration-box [title]="'Chart settings' | translate">
     <div fxLayout="column">
         <mat-checkbox
             [(ngModel)]="appearanceConfig.chartAppearance.showLegend"
             (change)="triggerViewUpdate()"
-            >Show legend
+            >{{ 'Show legend' | translate }}
         </mat-checkbox>
         <mat-checkbox
             [(ngModel)]="appearanceConfig.chartAppearance.showToolbox"
             (change)="triggerViewUpdate()"
-            >Show toolbox
+            >{{ 'Show toolbox' | translate }}
         </mat-checkbox>
         <mat-checkbox
             [(ngModel)]="appearanceConfig.chartAppearance.showTooltip"
             (change)="triggerViewUpdate()"
-            >Show tooltip
+            >{{ 'Show tooltip' | translate }}
         </mat-checkbox>
     </div>
 </sp-configuration-box>

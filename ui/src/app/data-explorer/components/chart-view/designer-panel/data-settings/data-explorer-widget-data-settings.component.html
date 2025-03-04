@@ -28,16 +28,15 @@
                 <div fxFlex="100" fxLayout="row">
                     <div fxFlex fxLayoutAlign="start center">
                         {{
-                            sourceConfig.measureName
-                                ? sourceConfig.measureName
-                                : 'New Data Source'
+                            sourceConfig?.measureName ||
+                                ('New Data Source' | translate)
                         }}
                     </div>
                     <div fxFlex fxLayoutAlign="end center">
                         <button
                             mat-icon-button
                             color="accent"
-                            matTooltip="Clone Data Source"
+                            [matTooltip]="'Clone Data Source' | translate"
                         >
                             <i
                                 class="material-icons plus-icon align-btn"
@@ -48,7 +47,7 @@
                         <button
                             mat-icon-button
                             color="accent"
-                            matTooltip="Delete Data Source"
+                            [matTooltip]="'Delete Data Source' | translate"
                             (click)="removeSourceConfig(i)"
                         >
                             <i class="material-icons align-btn">delete</i>
@@ -57,17 +56,17 @@
                 </div>
             </mat-expansion-panel-header>
             <div fxFlex="100" fxLayout="column" class="mt-10">
-                <sp-configuration-box title="Data Source">
+                <sp-configuration-box [title]="'Data Source' | translate">
                     <div header fxFlex class="header-container">
                         <span fxFlex></span>
                         <button
                             mat-icon-button
                             class="pull-btn-right"
-                            matTooltip="{{
+                            [matTooltip]="
                                 expandFieldsDataSource
-                                    ? 'Expand Less'
-                                    : 'Expand More'
-                            }}"
+                                    ? ('Expand Less' | translate)
+                                    : ('Expand More' | translate)
+                            "
                             (click)="toggleExpandFieldsDataSource()"
                             [disabled]="
                                 availablePipelines.length === 0 &&
@@ -97,8 +96,10 @@
                         >
                             <i class="material-icons warning-icon">warning</i>
                             <b>
-                                No data available! Please connect an adapter or
-                                verify your pipeline is running.
+                                {{
+                                    'No data available! Please connect an adapter or verify your pipeline is running'
+                                        | translate
+                                }}
                             </b>
                         </div>
                         <div
@@ -114,7 +115,7 @@
                                 class="small-button"
                                 (click)="navigateToConnect()"
                             >
-                                Connect Adapter
+                                {{ 'Connect Adapter' | translate }}
                             </button>
                             <button
                                 mat-button
@@ -123,7 +124,7 @@
                                 class="small-button"
                                 (click)="navigateToPipelines()"
                             >
-                                Start Pipeline
+                                {{ 'Start Pipeline' | translate }}
                             </button>
                         </div>
                     </div>
@@ -155,11 +156,13 @@
                                     [value]="'pipeline'"
                                     [disabled]="availablePipelines.length === 0"
                                 >
-                                    <b>Pipeline</b>
+                                    <b>{{ 'Pipeline' | translate }}</b>
                                 </mat-radio-button>
                                 <p class="description">
-                                    Select this option if you want to use data
-                                    from one of your pipelines.
+                                    {{
+                                        'Select this option if you want to use data from one of your pipelines.'
+                                            | translate
+                                    }}
                                 </p>
                                 <div
                                     class="selection-form-field"
@@ -221,11 +224,15 @@
                                         availableMeasurements.length === 0
                                     "
                                 >
-                                    <b>Database Identifier</b>
+                                    <b>{{
+                                        'Database Identifier' | translate
+                                    }}</b>
                                 </mat-radio-button>
                                 <p class="description">
-                                    Choose this option to work with individual
-                                    measurements from a Data Lake.
+                                    {{
+                                        'Choose this option to work with individual measurements from a Data Lake.'
+                                            | translate
+                                    }}
                                 </p>
                                 <div
                                     class="selection-form-field"
@@ -270,7 +277,7 @@
                 </sp-configuration-box>
 
                 <sp-configuration-box
-                    title="Query"
+                    [title]="'Query' | translate"
                     *ngIf="sourceConfig.measureName"
                 >
                     <div header fxFlex class="header-container">
@@ -278,11 +285,11 @@
                         <button
                             mat-icon-button
                             class="pull-btn-right"
-                            matTooltip="{{
-                                expandFieldsQuery
-                                    ? 'Expand Less'
-                                    : 'Expand More'
-                            }}"
+                            [matTooltip]="
+                                expandFieldsDataSource
+                                    ? ('Expand Less' | translate)
+                                    : ('Expand More' | translate)
+                            "
                             (click)="toggleExpandFieldsQuery()"
                         >
                             <mat-icon>{{
@@ -313,10 +320,14 @@
                                 <mat-radio-button
                                     class="selection-radio-button"
                                     [value]="'raw'"
-                                    >Raw
+                                >
+                                    {{ 'Raw' | translate }}
                                 </mat-radio-button>
                                 <p class="description">
-                                    Show raw data from your data source.
+                                    {{
+                                        'Show raw data from your data source.'
+                                            | translate
+                                    }}
                                 </p>
                                 <div
                                     fxLayout="column"
@@ -331,7 +342,11 @@
                                             appearance="outline"
                                         >
                                             <mat-label>
-                                                <span>&nbsp;Limit</span>
+                                                <span
+                                                    >&nbsp;{{
+                                                        'Limit' | translate
+                                                    }}</span
+                                                >
                                             </mat-label>
                                             <input
                                                 [(ngModel)]="
@@ -350,7 +365,11 @@
                                             appearance="outline"
                                         >
                                             <mat-label>
-                                                <span>&nbsp;Page</span>
+                                                <span
+                                                    >&nbsp;{{
+                                                        'Page' | translate
+                                                    }}</span
+                                                >
                                             </mat-label>
                                             <input
                                                 [(ngModel)]="
@@ -379,10 +398,14 @@
                                 <mat-radio-button
                                     class="selection-radio-button"
                                     [value]="'aggregated'"
-                                    >Aggregated
+                                >
+                                    {{ 'Aggregated' | translate }}
                                 </mat-radio-button>
                                 <p class="description">
-                                    Aggregate raw data by time unit or value.
+                                    {{
+                                        'Aggregate raw data by time unit or value.'
+                                            | translate
+                                    }}
                                 </p>
                                 <div
                                     fxLayout="column"
@@ -401,7 +424,7 @@
                                             "
                                             (change)="triggerDataRefresh()"
                                         >
-                                            Auto-Aggregate
+                                            {{ 'Auto-Aggregate' | translate }}
                                         </mat-checkbox>
                                     </div>
                                     <sp-aggregate-configuration
@@ -431,10 +454,11 @@
                                 <mat-radio-button
                                     class="selection-radio-button"
                                     [value]="'single'"
-                                    >Single
+                                >
+                                    {{ 'Single' | translate }}
                                 </mat-radio-button>
                                 <p class="description">
-                                    Show single data entry.
+                                    {{ 'Show single data entry.' | translate }}
                                 </p>
                             </div>
                         </mat-radio-group>
@@ -474,19 +498,19 @@
             (click)="addDataSource()"
             style="margin-right: 10px; margin-bottom: 15px"
         >
-            Add Data Source
+            {{ 'Add Data Source' | translate }}
         </button>
     </div>
     <div class="p-10">
         <mat-checkbox [(ngModel)]="dataConfig.ignoreTooMuchDataWarning">
-            Deactivate browser overload warning
+            {{ 'Deactivate browser overload warning' | translate }}
         </mat-checkbox>
         <mat-checkbox
             [(ngModel)]="dataConfig.ignoreMissingValues"
             (change)="triggerDataRefresh()"
             data-cy="data-explorer-ignore-missing-values-checkbox"
         >
-            Ignore Events with missing values
+            {{ 'Ignore Events with missing values' | translate }}
         </mat-checkbox>
     </div>
 </div>

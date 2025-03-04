@@ -78,7 +78,6 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.kafka";
 
-  private Thread thread;
   private SpKafkaConsumer kafkaConsumer;
 
   public KafkaProtocol() {
@@ -190,13 +189,9 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
     protocol.setTopicDefinition(new SimpleTopicDefinition(config.getTopic()));
 
     this.kafkaConsumer = new SpKafkaConsumer(protocol,
-        config.getTopic(),
-        new BrokerEventProcessor(extractor.selectedParser(), collector),
         config.getConfigAppenders()
     );
-
-    thread = new Thread(this.kafkaConsumer);
-    thread.start();
+    this.kafkaConsumer.connect(new BrokerEventProcessor(extractor.selectedParser(), collector));
   }
 
   @Override
@@ -215,7 +210,6 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
     }
 
     LOG.info("Kafka Adapter was sucessfully stopped");
-    thread.interrupt();
   }
 
   @Override

@@ -16,8 +16,16 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-select-properties-config',
@@ -28,11 +36,13 @@ export class SelectMultiplePropertiesConfigComponent implements OnInit {
     @Output() changeSelectedProperties: EventEmitter<DataExplorerField[]> =
         new EventEmitter();
 
+    translateService: TranslateService = inject(TranslateService);
+
     @Input() availableProperties: DataExplorerField[];
     @Input() selectedProperties: DataExplorerField[];
     @Input() label: string;
     @Input() multiple: boolean;
-    @Input() title = 'Fields';
+    @Input() title = this.translateService.instant('Fields');
 
     constructor() {}
 

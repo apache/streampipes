@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box title="Settings">
+    <sp-configuration-box [title]="'Settings' | translate">
         <div fxLayout="column" fxLayoutGap="10px">
             <div
                 fxLayout="row"
@@ -29,7 +29,7 @@
                 fxLayoutAlign="start center"
                 fxFlex="100"
             >
-                <small fxFlex="30">Select Value Type</small>
+                <small fxFlex="30">{{ 'Select Value Type' | translate }}</small>
                 <mat-radio-group
                     [(ngModel)]="
                         currentlyConfiguredWidget.visualizationConfig
@@ -37,12 +37,12 @@
                     "
                     (change)="selectDataType($event.source.value)"
                 >
-                    <mat-radio-button [value]="'number'"
-                        >Numeric Value</mat-radio-button
-                    >
-                    <mat-radio-button [value]="'boolean'"
-                        >Boolean Value</mat-radio-button
-                    >
+                    <mat-radio-button [value]="'number'">{{
+                        'Numeric Value' | translate
+                    }}</mat-radio-button>
+                    <mat-radio-button [value]="'boolean'">{{
+                        'Boolean Value' | translate
+                    }}</mat-radio-button>
                 </mat-radio-group>
             </div>
 
@@ -62,9 +62,12 @@
                 >
                     <small
                         fxFlex="30"
-                        matTooltip="Interval in seconds in which an event must arrive"
+                        [matTooltip]="
+                            'Interval in seconds in which an event must arrive'
+                                | translate
+                        "
                         matTooltipPosition="above"
-                        >Interval [sec]</small
+                        >{{ 'Interval [sec]' | translate }}</small
                     >
                     <mat-form-field color="accent" appearance="outline" fxFlex>
                         <input
@@ -85,7 +88,7 @@
                     fxLayoutAlign="start center"
                     fxFlex="100"
                 >
-                    <small>Show Last Seen Timestamp</small>
+                    <small>{{ 'Show Last Seen Timestamp' | translate }}</small>
                     <mat-checkbox
                         color="accent"
                         [(ngModel)]="
@@ -112,7 +115,7 @@
                     fxLayoutAlign="start center"
                     fxFlex="100"
                 >
-                    <small fxFlex="30">Field</small>
+                    <small fxFlex="30">{{ 'Field' | translate }}</small>
                     <sp-select-single-property-config
                         [availableProperties]="fieldProvider.booleanFields"
                         [selectedProperty]="
@@ -132,7 +135,9 @@
                     fxLayoutAlign="start center"
                     fxFlex="100"
                 >
-                    <small fxFlex="30">Select Mapping</small>
+                    <small fxFlex="30">{{
+                        'Select Mapping' | translate
+                    }}</small>
                     <mat-radio-group
                         [(ngModel)]="
                             currentlyConfiguredWidget.visualizationConfig
@@ -141,14 +146,18 @@
                         (change)="selectMappingGreenTrue($event.source.value)"
                     >
                         <mat-radio-button [value]="true">
-                            <span class="color-box green-box"></span> True
+                            <span class="color-box green-box"></span>
+                            {{ 'True' | translate }}
                             <span class="spacing"></span>
-                            <span class="color-box red-box"></span> False
+                            <span class="color-box red-box"></span>
+                            {{ 'False' | translate }}
                         </mat-radio-button>
                         <mat-radio-button [value]="false">
-                            <span class="color-box red-box"></span> True
+                            <span class="color-box red-box"></span>
+                            {{ 'True' | translate }}
                             <span class="spacing"></span>
-                            <span class="color-box green-box"></span> False
+                            <span class="color-box green-box"></span>
+                            {{ 'False' | translate }}
                         </mat-radio-button>
                     </mat-radio-group>
                 </div>

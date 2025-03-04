@@ -20,6 +20,17 @@ import { Injectable } from '@angular/core';
 import { IdGeneratorService } from '../../core-services/id-generator/id-generator.service';
 
 @Injectable({ providedIn: 'root' })
+/**
+ * This service provides methods to transform and handle static value properties.
+ *
+ * The format for static values is as follows:
+ *
+ * `http://eventProperty.de/staticValue/{uniqueId}:{value}`
+ *
+ * - `http://eventProperty.de/staticValue/` is the fixed prefix.
+ * - `{uniqueId}` is a unique identifier generated for each static value property.
+ * - `{value}` is the actual static value.
+ */
 export class StaticValueTransformService {
     prefix = 'http://eventProperty.de/staticValue/';
     placeholderValue = 'placeholder';
@@ -27,12 +38,12 @@ export class StaticValueTransformService {
     constructor(private idGeneratorService: IdGeneratorService) {}
 
     makeDefaultElementId(): string {
-        return this.getPrefix() + this.placeholderValue;
+        return this.getUniquePrefix() + this.placeholderValue;
     }
 
-    makeElementId(value: string) {
-        const lastSlashIndex = this.prefix.lastIndexOf('/');
-        const prefixWithId = this.prefix.substring(0, lastSlashIndex + 1);
+    makeElementId(elementId: string, value: string) {
+        const lastSlashIndex = elementId.lastIndexOf(':');
+        const prefixWithId = elementId.substring(0, lastSlashIndex + 1);
         return prefixWithId + value;
     }
 
@@ -41,11 +52,28 @@ export class StaticValueTransformService {
     }
 
     getStaticValue(elementId: string) {
-        const lastSlashIndex = elementId.lastIndexOf('/');
+        const lastSlashIndex = elementId.lastIndexOf(':');
         return elementId.substring(lastSlashIndex + 1);
     }
 
-    private getPrefix(): string {
-        return `${this.prefix + this.idGeneratorService.generate(10)}/`;
+    /**
+     * This is used to get a unique property prefix. The value of the static
+     * value will be appended
+     */
+    private getUniquePrefix(): string {
+        return `${this.prefix + this.idGeneratorService.generate(10)}:`;
+    }
+
+    /**
+     * This method returns the id part of the element id
+     * @param elementId
+     */
+    public extractUniquePrefix(elementId: string): string {
+        const lastSlashIndex = elementId.lastIndexOf(':');
+        return elementId.substring(0, lastSlashIndex + 1);
+    }
+
+    public getPrefix() {
+        return this.prefix;
     }
 }

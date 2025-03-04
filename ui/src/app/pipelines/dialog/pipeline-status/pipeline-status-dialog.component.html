@@ -35,7 +35,12 @@
                         [diameter]="50"
                         fxLayoutAlign="center"
                         style="margin: 10px 0 5px 0"
-                        >{{ action === 0 ? 'Starting...' : 'Stopping' }}
+                    >
+                        @if (action === 0) {
+                            {{ 'Starting' | translate }}
+                        } @else {
+                            {{ 'Stopping' | translate }}
+                        }
                     </mat-spinner>
                 </div>
                 <div
@@ -44,8 +49,17 @@
                     fxLayout="column"
                 >
                     <h3>
-                        Please wait while the pipeline is
-                        {{ action === 0 ? 'starting...' : 'stopping' }}...
+                        @if (action === 0) {
+                            {{
+                                'Please wait while the pipeline is starting'
+                                    | translate
+                            }}
+                        } @else {
+                            {{
+                                'Please wait while the pipeline is stopping'
+                                    | translate
+                            }}
+                        }
                     </h3>
                 </div>
             </div>
@@ -64,7 +78,11 @@
                 >
                     <div fxLayout="row">
                         <mat-icon color="accent">done</mat-icon>
-                        <span>&nbsp;Forced stop successful</span>
+                        <span
+                            >&nbsp;{{
+                                'Forced stop successful' | translate
+                            }}</span
+                        >
                     </div>
                 </div>
             </div>
@@ -91,7 +109,7 @@
             (click)="close()"
             data-cy="sp-pipeline-dialog-close"
         >
-            Close
+            {{ 'Close' | translate }}
         </button>
     </div>
 </div>

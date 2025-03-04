@@ -18,6 +18,5 @@ backend
 couchdb
 kafka
 ui
-zookeeper
 pipeline-elements-all-jvm
 influxdb

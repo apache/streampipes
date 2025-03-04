@@ -225,7 +225,7 @@ rm -rf ${HOME}/streampipes-k8s
 | Parameter Name                              | Description                                                                              | Value       |
 |---------------------------------------------|------------------------------------------------------------------------------------------|-------------|
 | external.kafka.appName                      | Kafka application name                                                                   | "kafka"     |
-| external.kafka.version                      | Kafka version                                                                            | 2.2.0       |
+| external.kafka.version                      | Kafka version                                                                            | 3.9.0       |
 | external.kafka.port                         | Port for the Kafka service                                                               | 9092        |
 | external.kafka.external.hostname            | Name which will be advertised to external clients. Clients which use (default) port 9094 | "localhost" |
 | external.kafka.service.name                 | Name of the Kafka service                                                                | "kafka"     |
@@ -236,20 +236,6 @@ rm -rf ${HOME}/streampipes-k8s
 | external.kafka.persistence.claimName        | Name of the Kafka PersistentVolumeClaim                                                  | "kafka-pvc" |
 | external.kafka.persistence.pvName           | Name of the Kafka PersistentVolume                                                       | "kafka-pv"  |
 |
-
-#### Zookeeper common parameters
-
-| Parameter Name                                  | Description                                 | Value           |
-|-------------------------------------------------|---------------------------------------------|-----------------|
-| external.zookeeper.appName                      | ZooKeeper application name                  | "zookeeper"     |
-| external.zookeeper.version                      | ZooKeeper version                           | 3.4.13          |
-| external.zookeeper.port                         | Port for the ZooKeeper service              | 2181            |
-| external.zookeeper.service.name                 | Name of the ZooKeeper service               | "zookeeper"     |
-| external.zookeeper.service.port                 | TargetPort of the ZooKeeper service         | 2181            |
-| external.zookeeper.persistence.storageClassName | Storage class name for ZooKeeper PVs        | "hostpath"      |
-| external.zookeeper.persistence.storageSize      | Size of the ZooKeeper PV                    | "1Gi"           |
-| external.zookeeper.persistence.claimName        | Name of the ZooKeeper PersistentVolumeClaim | "zookeeper-pvc" |
-| external.zookeeper.persistence.pvName           | Name of the ZooKeeper PersistentVolume      | "zookeeper-pv"  |
 
 #### Pulsar common parameters
 

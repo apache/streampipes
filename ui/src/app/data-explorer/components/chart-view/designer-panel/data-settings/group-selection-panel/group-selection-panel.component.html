@@ -15,7 +15,7 @@
   ~ limitations under the License.
   ~
   -->
-<sp-configuration-box title="Group by" marginTop="5px">
+<sp-configuration-box [title]="'Group by' | translate" marginTop="5px">
     <div header>
         <button
             mat-button
@@ -25,7 +25,7 @@
             style="margin-right: 10px"
             (click)="selectAllFields()"
         >
-            Select all
+            {{ 'Select all' | translate }}
         </button>
         <button
             mat-button
@@ -34,7 +34,7 @@
             style="margin-right: 10px"
             (click)="deselectAllFields()"
         >
-            Deselect all
+            {{ 'Deselect all' | translate }}
         </button>
     </div>
     <div fxLayout="column" class="field-scroll-panel">

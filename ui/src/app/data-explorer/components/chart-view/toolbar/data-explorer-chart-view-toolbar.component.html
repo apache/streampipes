@@ -36,7 +36,9 @@
                 class="mt-5 form-field-small widget-title-container"
                 *ngIf="editMode"
             >
-                <span class="widget-title-text">Chart Name</span>
+                <span class="widget-title-text">{{
+                    'Chart Name' | translate
+                }}</span>
                 <mat-form-field
                     appearance="outline"
                     color="accent"
@@ -56,30 +58,30 @@
         <button
             mat-raised-button
             color="accent"
-            matTooltip="Save"
+            [matTooltip]="'Save' | translate"
             class="edit-menu-btn"
             (click)="saveDataViewEmitter.emit()"
             data-cy="save-data-view-btn"
             *ngIf="editMode"
         >
             <mat-icon>save</mat-icon>
-            Save
+            {{ 'Save' | translate }}
         </button>
         <button
             mat-raised-button
-            matTooltip="Discard"
+            [matTooltip]="'Discard' | translate"
             class="mat-basic mr-10 edit-menu-btn"
             (click)="discardDataViewEmitter.emit()"
             data-cy="discard-data-explorer-widget-btn"
             *ngIf="editMode"
         >
             <i class="material-icons">undo</i>
-            <span>&nbsp;Discard</span>
+            <span>&nbsp;{{ 'Discard' | translate }}</span>
         </button>
         <button
             mat-icon-button
             color="accent"
-            matTooltip="Download data"
+            [matTooltip]="'Download data' | translate"
             (click)="downloadFileEmitter.emit()"
             data-cy="data-view-data-download-btn"
             *ngIf="editMode"

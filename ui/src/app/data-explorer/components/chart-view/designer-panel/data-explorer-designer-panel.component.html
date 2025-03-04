@@ -31,7 +31,10 @@
                 fxFlexFill
                 class="small-tab-headers mat-tab-fill-height"
             >
-                <mat-tab data-cy="designer-panel-data-config" label="Data">
+                <mat-tab
+                    data-cy="designer-panel-data-config"
+                    [label]="'Data' | translate"
+                >
                     <div class="scroll-tab-content">
                         <sp-data-explorer-widget-data-settings
                             #dataSettingsPanel
@@ -49,7 +52,7 @@
                 </mat-tab>
                 <mat-tab
                     data-cy="designer-panel-visualization-config"
-                    label="Visualization"
+                    [label]="'Visualization' | translate"
                     [disabled]="
                         !currentlyConfiguredWidget.dataConfig.sourceConfigs ||
                         currentlyConfiguredWidget.dataConfig.sourceConfigs
@@ -70,7 +73,7 @@
                 </mat-tab>
                 <mat-tab
                     data-cy="designer-panel-appearance-config"
-                    label="Appearance"
+                    [label]="'Appearance' | translate"
                 >
                     <div class="scroll-tab-content">
                         <sp-data-explorer-widget-appearance-settings
@@ -108,7 +111,7 @@
                 *ngIf="newWidgetMode && selectedIndex === 0"
                 (click)="selectedIndex = 1"
             >
-                Next
+                {{ 'Next' | translate }}
             </button>
             <button
                 *ngIf="newWidgetMode && selectedIndex === 1"
@@ -118,7 +121,7 @@
                 (click)="selectedIndex = 0"
                 style="margin-right: 10px"
             >
-                Back
+                {{ 'Back' | translate }}
             </button>
             <button
                 mat-button
@@ -128,7 +131,7 @@
                 *ngIf="newWidgetMode && selectedIndex === 1"
                 (click)="createNewWidget()"
             >
-                Create
+                {{ 'Create' | translate }}
             </button>
         </div>
     </div>

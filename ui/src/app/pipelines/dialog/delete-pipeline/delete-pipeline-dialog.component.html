@@ -22,16 +22,22 @@
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <b
                     ><h4>
-                        Do you really want to delete pipeline
+                        {{
+                            'Do you really want to delete pipeline' | translate
+                        }}
                         {{ pipeline.name }}?
                     </h4></b
                 >
                 <b
                     ><h4 *ngIf="pipeline.running">
-                        This pipeline is still running.
+                        {{ 'This pipeline is still running.' | translate }}
                     </h4></b
                 >
-                <b><h5>This operation cannot be undone.</h5></b>
+                <b
+                    ><h5>
+                        {{ 'This operation cannot be undone.' | translate }}
+                    </h5></b
+                >
             </div>
 
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
@@ -42,7 +48,7 @@
                     *ngIf="!pipeline.running"
                     (click)="deletePipeline()"
                 >
-                    Delete pipeline
+                    {{ 'Delete pipeline' | translate }}
                 </button>
                 <button
                     mat-button
@@ -52,7 +58,7 @@
                     (click)="stopAndDeletePipeline()"
                     data-cy="sp-pipeline-stop-and-delete"
                 >
-                    Stop and delete pipeline
+                    {{ 'Stop and delete pipeline' | translate }}
                 </button>
             </div>
         </div>
@@ -82,7 +88,7 @@
             class="mat-basic"
             (click)="close(false)"
         >
-            Close
+            {{ 'Close' | translate }}
         </button>
     </div>
 </div>

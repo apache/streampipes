@@ -114,9 +114,7 @@ public class ProtocolSelector extends GroundingSelector {
     return new KafkaTransportProtocol(
         messagingSettings.getKafkaHost(),
         messagingSettings.getKafkaPort(),
-        outputTopic,
-        messagingSettings.getZookeeperHost(),
-        messagingSettings.getZookeeperPort()
+        outputTopic
     );
   }
 

@@ -29,14 +29,14 @@
             (ngModelChange)="setCustomColorMapping($event)"
         >
         </mat-checkbox>
-        <small>Add custom color mapping</small>
+        <small>{{ 'Add custom color mapping' | translate }}</small>
     </div>
 
     <div *ngIf="!isSelectedPropertyBoolean && showCustomColorMapping">
         <div style="margin-bottom: 20px">
             <button mat-raised-button color="accent" (click)="addMapping()">
                 <i class="material-icons">add</i>
-                <span>&nbsp;Add Mapping</span>
+                <span>&nbsp;{{ 'Add Mapping' | translate }}</span>
             </button>
         </div>
 
@@ -55,7 +55,7 @@
                         color="accent"
                         appearance="outline"
                     >
-                        <mat-label>Value</mat-label>
+                        <mat-label>{{ 'Value' | translate }}</mat-label>
                         <input
                             matInput
                             [(ngModel)]="mapping.value"
@@ -69,7 +69,7 @@
                         color="accent"
                         appearance="outline"
                     >
-                        <mat-label>Label</mat-label>
+                        <mat-label>{{ 'Label' | translate }}</mat-label>
                         <input
                             matInput
                             [(ngModel)]="mapping.label"
@@ -94,7 +94,7 @@
                 <div fxLayoutAlign="end center">
                     <button
                         mat-icon-button
-                        matTooltip="Remove Mapping"
+                        [matTooltip]="'Remove Mapping' | translate"
                         color="accent"
                         (click)="removeMapping(i)"
                     >

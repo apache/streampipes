@@ -18,7 +18,12 @@
 
 <div fxFlex="100" class="h-100 form-field-small" fxLayout="column">
     <div *ngIf="!configurationValid" fxLayoutAlign="center center">
-        <h5>The current data selection can't be displayed by this chart.</h5>
+        <h5>
+            {{
+                "The current data selection can't be displayed by this chart."
+                    | translate
+            }}
+        </h5>
     </div>
     <div fxFlex="100" *ngIf="configurationValid">
         <ng-content></ng-content>

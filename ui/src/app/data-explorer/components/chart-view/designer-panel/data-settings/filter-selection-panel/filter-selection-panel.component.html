@@ -16,7 +16,7 @@
   ~
   -->
 
-<sp-configuration-box title="Filter" marginTop="5px">
+<sp-configuration-box [title]="'Filter' | translate" marginTop="5px">
     <div header fxLayoutAlign="start center" fxFlex="100">
         <button
             mat-button
@@ -27,7 +27,7 @@
             (click)="addFilter()"
             style="margin-right: 10px"
         >
-            Add Filter
+            {{ 'Add Filter' | translate }}
         </button>
     </div>
     <div fxLayout="column">

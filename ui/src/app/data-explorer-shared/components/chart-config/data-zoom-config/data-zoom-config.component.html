@@ -16,17 +16,17 @@
   ~
   -->
 
-<sp-configuration-box title="Data Zoom">
+<sp-configuration-box [title]="'Data Zoom' | translate">
     <div fxLayout="column">
         <mat-checkbox
             [(ngModel)]="appearanceConfig.dataZoom.show"
             (ngModelChange)="configChangedEmitter.emit()"
-            >Active
+            >{{ 'Active' | translate }}
         </mat-checkbox>
 
         <div fxFlex="100" fxLayoutAlign="start center" class="ml-10">
             <div fxLayoutAlign="start center">
-                <span>Type</span>
+                <span>{{ 'Type' | translate }}</span>
             </div>
             <span fxFlex></span>
             <div class="form-field-small w-100" fxLayoutAlign="end center">
@@ -36,8 +36,12 @@
                         [(ngModel)]="appearanceConfig.dataZoom.type"
                         [disabled]="!appearanceConfig.dataZoom.show"
                     >
-                        <mat-option value="inside">Wheel</mat-option>
-                        <mat-option value="slider">Slider</mat-option>
+                        <mat-option value="inside">{{
+                            'Wheel' | translate
+                        }}</mat-option>
+                        <mat-option value="slider">{{
+                            'Slider' | translate
+                        }}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>

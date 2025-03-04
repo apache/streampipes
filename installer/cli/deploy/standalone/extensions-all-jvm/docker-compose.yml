@@ -21,8 +21,6 @@ services:
       - SP_SETUP_PROMETHEUS_ENDPOINT=${SP_SETUP_PROMETHEUS_ENDPOINT}
     depends_on:
       - couchdb     
-    volumes:
-      - files:/spImages
     logging:
       driver: "json-file"
       options:
@@ -30,9 +28,6 @@ services:
         max-file: "1"
     networks:
       spnet:
-
-volumes:
-  files:
 
 networks:
   spnet:

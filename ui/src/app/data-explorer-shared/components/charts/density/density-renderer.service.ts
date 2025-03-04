@@ -155,7 +155,7 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
         dataset: PreparedDataset,
         xField: DataExplorerField,
         yField: DataExplorerField,
-    ): any[] {
+    ): { x: number; y: number }[] {
         const xIndex = this.getIndex(xField, dataset);
         const yIndex = this.getIndex(yField, dataset);
         const data = (dataset.rawDataset.source as any).map(row => {
@@ -195,14 +195,14 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
         xScale: any,
         yScale: any,
         widgetSize: WidgetSize,
-        data: any[],
+        data: { x: number; y: number }[],
     ) {
         return contourDensity()
-            .x(d => xScale(d.x))
-            .y(d => yScale(d.y))
+            .x(d => xScale(d[0]))
+            .y(d => yScale(d[1]))
             .size([widgetSize.width, widgetSize.height])
             .bandwidth(30)
-            .thresholds(10)(data);
+            .thresholds(10)(data.map(d => [d.x, d.y]));
     }
 
     toEchartsData(xScale: any, yScale: any, contours: any) {
@@ -234,7 +234,7 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
             .rangeRound([0, widgetSize.width]);
     }
 
-    getYScale(data: any, widgetSize: WidgetSize): any {
+    getYScale(data: any[], widgetSize: WidgetSize): any {
         return scaleLinear()
             .domain(extent(data, d => d.y) as [number, number])
             .rangeRound([widgetSize.height, 0]);

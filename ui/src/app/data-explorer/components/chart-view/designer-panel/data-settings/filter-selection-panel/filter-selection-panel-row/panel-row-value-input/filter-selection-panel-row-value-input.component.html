@@ -18,7 +18,7 @@
 <mat-form-field color="accent" appearance="outline" class="w-140-px mr-5">
     <input
         type="text"
-        placeholder="Value"
+        [placeholder]="'Value' | translate"
         aria-label="Number"
         matInput
         [(ngModel)]="value"

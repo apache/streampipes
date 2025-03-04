@@ -18,7 +18,7 @@
 
 <div fxFlex="100" fxLayout="column">
     <sp-basic-header-title-component
-        title="Charts"
+        [title]="'Charts' | translate"
     ></sp-basic-header-title-component>
     <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
         <sp-table
@@ -33,7 +33,7 @@
                     mat-header-cell
                     *matHeaderCellDef
                 >
-                    Chart
+                    {{ 'Chart' | translate }}
                 </th>
                 <td
                     fxFlex="60"
@@ -63,7 +63,7 @@
                         <button
                             mat-icon-button
                             color="accent"
-                            matTooltip="Show data view"
+                            [matTooltip]="'Show chart' | translate"
                             (click)="openDataView(element, false)"
                         >
                             <i class="material-icons">visibility</i>
@@ -71,7 +71,7 @@
                         <button
                             mat-icon-button
                             color="accent"
-                            matTooltip="Edit data view"
+                            [matTooltip]="'Edit chart' | translate"
                             *ngIf="hasDataExplorerWritePrivileges"
                             [attr.data-cy]="
                                 'edit-data-view-' +
@@ -87,7 +87,7 @@
                         <button
                             mat-icon-button
                             color="accent"
-                            matTooltip="Manage permissions"
+                            [matTooltip]="'Manage permissions' | translate"
                             *ngIf="isAdmin"
                             (click)="showPermissionsDialog(element)"
                         >
@@ -96,7 +96,7 @@
                         <button
                             mat-icon-button
                             color="accent"
-                            matTooltip="Delete data view"
+                            [matTooltip]="'Delete chart' | translate"
                             *ngIf="hasDataExplorerWritePrivileges"
                             [attr.data-cy]="
                                 'delete-data-view-' +

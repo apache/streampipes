@@ -20,12 +20,6 @@ package org.apache.streampipes.model.grounding;
 
 public class KafkaTransportProtocol extends TransportProtocol {
 
-  private static final long serialVersionUID = -4067982203807146257L;
-
-  private String zookeeperHost;
-
-  private int zookeeperPort;
-
   private int kafkaPort;
 
   private Integer lingerMs;
@@ -44,24 +38,12 @@ public class KafkaTransportProtocol extends TransportProtocol {
 
   public KafkaTransportProtocol(String kafkaHost, int kafkaPort, String topic) {
     super(kafkaHost, new SimpleTopicDefinition(topic));
-    this.zookeeperHost = kafkaHost;
-    this.zookeeperPort = kafkaPort;
-    this.kafkaPort = kafkaPort;
-  }
-
-  public KafkaTransportProtocol(String kafkaHost, int kafkaPort, String topic, String zookeeperHost,
-                                int zookeeperPort) {
-    super(kafkaHost, new SimpleTopicDefinition(topic));
-    this.zookeeperHost = zookeeperHost;
-    this.zookeeperPort = zookeeperPort;
     this.kafkaPort = kafkaPort;
   }
 
   public KafkaTransportProtocol(KafkaTransportProtocol other) {
     super(other);
     this.kafkaPort = other.getKafkaPort();
-    this.zookeeperHost = other.getZookeeperHost();
-    this.zookeeperPort = other.getZookeeperPort();
     this.acks = other.getAcks();
     this.batchSize = other.getBatchSize();
     this.groupId = other.getGroupId();
@@ -74,32 +56,10 @@ public class KafkaTransportProtocol extends TransportProtocol {
   public KafkaTransportProtocol(String kafkaHost, Integer kafkaPort, WildcardTopicDefinition wildcardTopicDefinition) {
     super(kafkaHost, wildcardTopicDefinition);
     this.kafkaPort = kafkaPort;
-    this.zookeeperHost = kafkaHost;
-    this.zookeeperPort = kafkaPort;
   }
 
   public KafkaTransportProtocol() {
     super();
-  }
-
-  public static long getSerialVersionUID() {
-    return serialVersionUID;
-  }
-
-  public String getZookeeperHost() {
-    return zookeeperHost;
-  }
-
-  public void setZookeeperHost(String zookeeperHost) {
-    this.zookeeperHost = zookeeperHost;
-  }
-
-  public int getZookeeperPort() {
-    return zookeeperPort;
-  }
-
-  public void setZookeeperPort(int zookeeperPort) {
-    this.zookeeperPort = zookeeperPort;
   }
 
   public int getKafkaPort() {

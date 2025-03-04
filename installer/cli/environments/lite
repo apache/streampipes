@@ -18,6 +18,5 @@ ui
 backend
 couchdb
 kafka
-zookeeper
 influxdb
 extensions-all-jvm

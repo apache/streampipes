@@ -33,6 +33,8 @@ src/assets/img/favicon/favicon-96x96.png
 src/proxy.conf.json
 src/tsconfig.federation.json
 src/scss/_variables.scss
+# i18n
+src/assets/i18n
 # compiled output
 /dist
 /dist-server

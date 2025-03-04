@@ -38,7 +38,9 @@
                 (click)="navigateToPipelineEditor()"
                 data-cy="pipelines-navigate-to-editor"
             >
-                <i class="material-icons">add</i>&nbsp;New pipeline
+                <i class="material-icons">add</i>&nbsp;{{
+                    'New Pipeline' | translate
+                }}
             </button>
             <button
                 class="mr-10"
@@ -49,7 +51,7 @@
                 *ngIf="hasPipelineWritePrivileges"
             >
                 <mat-icon>play_arrow</mat-icon>
-                <span>Start all pipelines</span>
+                <span>{{ 'Start All Pipelines' | translate }}</span>
             </button>
             <button
                 mat-button
@@ -59,7 +61,7 @@
                 *ngIf="hasPipelineWritePrivileges"
             >
                 <mat-icon>stop</mat-icon>
-                <span>Stop all pipelines</span>
+                <span>{{ 'Stop all pipelines' | translate }}</span>
             </button>
             <span fxFlex></span>
             <button

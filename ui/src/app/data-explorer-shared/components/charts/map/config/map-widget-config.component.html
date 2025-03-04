@@ -22,7 +22,7 @@
     "
 >
     <div fxLayout="column">
-        <sp-configuration-box title="Fields">
+        <sp-configuration-box [title]="'Fields' | translate">
             <div fxLayout="column" fxLayoutGap="10px">
                 <div
                     fxLayout="row"
@@ -30,7 +30,7 @@
                     fxLayoutGap="10px"
                     fxLayoutAlign="start center"
                 >
-                    <small fxFlex="30">Latitude</small>
+                    <small fxFlex="30">{{ 'Latitude' | translate }}</small>
                     <sp-select-single-property-config
                         fxFlex
                         [availableProperties]="fieldProvider.numericFields"
@@ -51,7 +51,7 @@
                     fxLayoutGap="10px"
                     fxLayoutAlign="start center"
                 >
-                    <small fxFlex="30">Longitude</small>
+                    <small fxFlex="30">{{ 'Longitude' | translate }}</small>
                     <sp-select-single-property-config
                         fxFlex
                         [availableProperties]="fieldProvider.numericFields"
@@ -68,7 +68,7 @@
                 </div>
             </div>
         </sp-configuration-box>
-        <sp-configuration-box title="Settings">
+        <sp-configuration-box [title]="'Settings' | translate">
             <div fxLayout="column" fxLayoutGap="10px">
                 <div
                     fxLayout="row"
@@ -76,7 +76,7 @@
                     fxLayoutAlign="start center"
                     fxFlex="100"
                 >
-                    <small fxFlex="30">Map Zoom</small>
+                    <small fxFlex="30">{{ 'Map Zoom' | translate }}</small>
                     <mat-form-field color="accent" appearance="outline" fxFlex>
                         <mat-label> <span>enter zoom value</span></mat-label>
                         <input
@@ -102,7 +102,7 @@
                                 .useLastEventCoordinates
                         "
                         (change)="setUseLastEventCoordinations($event)"
-                        >Focus map on last event
+                        >{{ 'Focus map on last event' | translate }}
                     </mat-checkbox>
                 </div>
 
@@ -112,7 +112,9 @@
                     fxLayoutAlign="start center"
                     fxFlex="100"
                 >
-                    <small fxFlex="30">Marker or Trace</small>
+                    <small fxFlex="30">{{
+                        'Marker or Trace' | translate
+                    }}</small>
                     <mat-form-field color="accent" appearance="outline" fxFlex>
                         <!-- <mat-label>Marker or Trace</mat-label> -->
                         <mat-select
@@ -123,8 +125,12 @@
                             (selectionChange)="triggerViewRefresh()"
                             data-cy="data-view-map-select-marker-or-trace"
                         >
-                            <mat-option [value]="'marker'">Marker</mat-option>
-                            <mat-option [value]="'trace'">Trace</mat-option>
+                            <mat-option [value]="'marker'">{{
+                                'Marker' | translate
+                            }}</mat-option>
+                            <mat-option [value]="'trace'">{{
+                                'Trace' | translate
+                            }}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -139,7 +145,7 @@
                             .selectedMarkerOrTrace === 'marker'
                     "
                 >
-                    <small fxFlex="30">Marker Type</small>
+                    <small fxFlex="30">{{ 'Marker Type' | translate }}</small>
                     <mat-form-field fxFlex color="accent" appearance="outline">
                         <mat-select
                             [(value)]="
@@ -148,8 +154,12 @@
                             "
                             (selectionChange)="triggerViewRefresh()"
                         >
-                            <mat-option [value]="'pin'">Pin</mat-option>
-                            <mat-option [value]="'car'">Car</mat-option>
+                            <mat-option [value]="'pin'">{{
+                                'Pin' | translate
+                            }}</mat-option>
+                            <mat-option [value]="'car'">{{
+                                'Car' | translate
+                            }}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -157,8 +167,8 @@
         </sp-configuration-box>
 
         <sp-select-properties-config
-            title="Tooltip"
-            label="Tooltip Content"
+            [title]="'Tooltip' | translate"
+            [label]="'Tooltip Content' | translate"
             multiple="true"
             (changeSelectedProperties)="setSelectedToolTipContent($event)"
             [availableProperties]="fieldProvider.allFields"

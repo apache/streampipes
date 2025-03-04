@@ -22,7 +22,7 @@
     "
 >
     <sp-select-properties-config
-        label="Select Fields"
+        [label]="'Select Fields' | translate"
         multiple="true"
         (changeSelectedProperties)="setSelectedColumn($event)"
         [availableProperties]="fieldProvider.allFields"
@@ -31,9 +31,9 @@
         "
     >
     </sp-select-properties-config>
-    <sp-configuration-box title="Search" marginTop="5px">
+    <sp-configuration-box [title]="'Search' | translate" marginTop="5px">
         <mat-form-field appearance="outline" fxFlex="100" color="accent">
-            <mat-label>Filter</mat-label>
+            <mat-label>{{ 'Filter' | translate }}</mat-label>
             <input
                 [(ngModel)]="
                     currentlyConfiguredWidget.visualizationConfig.searchValue

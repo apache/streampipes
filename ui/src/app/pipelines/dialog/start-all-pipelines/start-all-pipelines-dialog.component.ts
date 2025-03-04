@@ -16,9 +16,10 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { Pipeline, PipelineService } from '@streampipes/platform-services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-start-all-pipelines-dialog',
@@ -39,22 +40,28 @@ export class StartAllPipelinesDialogComponent implements OnInit {
     @Input()
     action: boolean;
 
-    constructor(
-        private dialogRef: DialogRef<StartAllPipelinesDialogComponent>,
-        private pipelineService: PipelineService,
-    ) {
+    translateService = inject(TranslateService);
+    pipelineService = inject(PipelineService);
+    dialogRef = inject(DialogRef<StartAllPipelinesDialogComponent>);
+
+    successStr = this.translateService.instant('success');
+    errorStr = this.translateService.instant('error');
+    nextBtnStr = this.translateService.instant('Next');
+    closeBtnStr = this.translateService.instant('Close');
+
+    constructor() {
         this.pipelinesToModify = [];
         this.installationStatus = [];
         this.installationFinished = false;
         this.page = 'preview';
-        this.nextButton = 'Next';
+        this.nextButton = this.nextBtnStr;
         this.installationRunning = false;
     }
 
     ngOnInit() {
         this.getPipelinesToModify();
         if (this.pipelinesToModify.length === 0) {
-            this.nextButton = 'Close';
+            this.nextButton = this.closeBtnStr;
             this.page = 'installation';
         }
     }
@@ -85,7 +92,7 @@ export class StartAllPipelinesDialogComponent implements OnInit {
         this.installationStatus.push({
             name: pipeline.name,
             id: index,
-            status: 'waiting',
+            status: this.translateService.instant('waiting'),
         });
         if (this.action) {
             this.startPipeline(pipeline, index);
@@ -100,11 +107,11 @@ export class StartAllPipelinesDialogComponent implements OnInit {
             .subscribe(
                 data => {
                     this.installationStatus[index].status = data.success
-                        ? 'success'
-                        : 'error';
+                        ? this.successStr
+                        : this.errorStr;
                 },
                 data => {
-                    this.installationStatus[index].status = 'error';
+                    this.installationStatus[index].status = this.errorStr;
                 },
             )
             .add(() => {
@@ -115,7 +122,7 @@ export class StartAllPipelinesDialogComponent implements OnInit {
                         index,
                     );
                 } else {
-                    this.nextButton = 'Close';
+                    this.nextButton = this.closeBtnStr;
                     this.installationRunning = false;
                 }
             });
@@ -127,11 +134,11 @@ export class StartAllPipelinesDialogComponent implements OnInit {
             .subscribe(
                 data => {
                     this.installationStatus[index].status = data.success
-                        ? 'success'
-                        : 'error';
+                        ? this.successStr
+                        : this.errorStr;
                 },
                 data => {
-                    this.installationStatus[index].status = 'error';
+                    this.installationStatus[index].status = this.errorStr;
                 },
             )
             .add(() => {
@@ -142,7 +149,7 @@ export class StartAllPipelinesDialogComponent implements OnInit {
                         index,
                     );
                 } else {
-                    this.nextButton = 'Close';
+                    this.nextButton = this.closeBtnStr;
                     this.installationRunning = false;
                 }
             });

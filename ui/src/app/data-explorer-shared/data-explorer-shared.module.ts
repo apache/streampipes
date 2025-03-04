@@ -96,6 +96,7 @@ import { SpTimeseriesItemConfigComponent } from './components/chart-config/selec
 import { SpEchartsWidgetAppearanceConfigComponent } from './components/chart-config/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
 import { SpTimeSeriesAppearanceConfigComponent } from './components/charts/time-series-chart/appearance-config/time-series-appearance-config.component';
 import { SpDataZoomConfigComponent } from './components/chart-config/data-zoom-config/data-zoom-config.component';
+import { TranslateModule } from '@ngx-translate/core';
 import { ColorMappingOptionsConfigComponent } from './components/chart-config/color-mapping-options-config/color-mapping-options-config.component';
 
 @NgModule({
@@ -142,6 +143,7 @@ import { ColorMappingOptionsConfigComponent } from './components/chart-config/co
         MatChipsModule,
         PlatformServicesModule,
         SharedUiModule,
+        TranslateModule.forChild(),
         NgxEchartsModule.forChild(),
     ],
     declarations: [

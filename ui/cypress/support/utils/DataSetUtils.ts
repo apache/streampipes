@@ -19,24 +19,60 @@
 import * as CSV from 'csv-string';
 
 export class DataSetUtils {
+    /**
+     * Compares two CSV strings for equality.
+     *
+     * @param actualCsv - The actual CSV string.
+     * @param expectedCsv - The expected CSV string.
+     * @param ignoreTime - Whether to ignore the timestamp field during comparison.
+     */
     public static csvEqual(
         actualCsv: string,
         expectedCsv: string,
         ignoreTime: boolean,
     ) {
-        let actualResult;
-        if (ignoreTime) {
-            actualResult = DataSetUtils.parseCsv(actualCsv).map(row => {
-                return row.splice(1);
-            });
-        } else {
-            actualResult = DataSetUtils.parseCsv(actualCsv);
-        }
+        const actualResult = ignoreTime
+            ? DataSetUtils.getActualResultIgnoringTime(actualCsv)
+            : DataSetUtils.parseCsv(actualCsv);
+
         const expectedResult = DataSetUtils.parseCsv(expectedCsv);
-        expect(actualResult).to.deep.equal(expectedResult);
+        DataSetUtils.compareCsvResults(actualResult, expectedResult);
+    }
+
+    private static getActualResultIgnoringTime(csv: string) {
+        return DataSetUtils.parseCsv(csv).map(row => row.splice(1));
     }
 
     private static parseCsv(csv: string) {
         return CSV.parse(csv, ';');
+    }
+
+    private static compareCsvResults(
+        actualResult: any[],
+        expectedResult: any[],
+    ) {
+        expect(actualResult).to.deep.equal(expectedResult);
+    }
+
+    /**
+     * Compares two JSON strings for equality.
+     *
+     * @param actualJsonString - The actual JSON string.
+     * @param expectedJson - The expected JSON object.
+     * @param ignoreTime - Whether to ignore the timestamp field during comparison.
+     */
+    public static jsonFilesEqual(
+        actualJsonString: string,
+        expectedJson: any[],
+        ignoreTime: boolean,
+    ) {
+        const actualJson = JSON.parse(actualJsonString);
+
+        if (ignoreTime) {
+            actualJson.forEach((item: any) => delete item.timestamp);
+            expectedJson.forEach((item: any) => delete item.timestamp);
+        }
+
+        expect(actualJson).to.deep.equal(expectedJson);
     }
 }

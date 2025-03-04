@@ -20,7 +20,7 @@
     <mat-checkbox
         [(ngModel)]="axisConfig.autoScaleActive"
         (change)="viewRefreshEmitter.emit()"
-        >Auto-scale {{ title }}
+        >{{ 'Auto-scale {{title}}' | translate:{ title: title } }}
     </mat-checkbox>
     <div
         fxFlex
@@ -28,7 +28,7 @@
         *ngIf="!axisConfig.autoScaleActive"
         class="ml-10 mb-10"
     >
-        <small>Min</small>
+        <small>{{ 'Min' | translate }}</small>
         <span fxFlex></span>
         <mat-form-field appearance="outline" color="accent" fxFlex="30">
             <input
@@ -45,7 +45,7 @@
         *ngIf="!axisConfig.autoScaleActive"
         class="ml-10 mb-10"
     >
-        <small>Max</small>
+        <small>{{ 'Max' | translate }}</small>
         <span fxFlex></span>
         <mat-form-field appearance="outline" color="accent" fxFlex="30">
             <input

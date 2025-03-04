@@ -19,12 +19,14 @@
 package org.apache.streampipes.model.datalake;
 
 import org.apache.streampipes.model.dashboard.DashboardEntity;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@TsModel
 public class DataExplorerWidgetModel extends DashboardEntity {
 
   private String widgetId;

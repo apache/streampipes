@@ -41,6 +41,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class SpKafkaConsumer implements EventConsumer, Runnable,
@@ -50,62 +52,75 @@ public class SpKafkaConsumer implements EventConsumer, Runnable,
   private InternalEventProcessor<byte[]> eventProcessor;
   private final KafkaTransportProtocol protocol;
   private volatile boolean isRunning;
-  private Boolean patternTopic = false;
 
   private List<KafkaConfigAppender> appenders = new ArrayList<>();
+  private KafkaConsumer<byte[], byte[]> consumer;
 
   private static final Logger LOG = LoggerFactory.getLogger(SpKafkaConsumer.class);
 
   public SpKafkaConsumer(KafkaTransportProtocol protocol) {
     this.protocol = protocol;
+    this.topic = protocol.getTopicDefinition().getActualTopicName();
   }
 
   public SpKafkaConsumer(KafkaTransportProtocol protocol,
-                         String topic,
-                         InternalEventProcessor<byte[]> eventProcessor) {
-    this.protocol = protocol;
-    this.topic = topic;
-    this.eventProcessor = eventProcessor;
-    this.isRunning = true;
-  }
-
-  public SpKafkaConsumer(KafkaTransportProtocol protocol,
-                         String topic,
-                         InternalEventProcessor<byte[]> eventProcessor,
                          List<KafkaConfigAppender> appenders) {
-    this(protocol, topic, eventProcessor);
+    this(protocol);
     this.appenders = appenders;
   }
 
   @Override
   public void run() {
-
-    Properties props = makeProperties(protocol, appenders);
-
-    LOG.info("Using kafka properties: {}", props.toString());
-    KafkaConsumer<byte[], byte[]> consumer = new KafkaConsumer<>(props);
-    if (!patternTopic) {
-      consumer.subscribe(Collections.singletonList(topic));
-    } else {
-      topic = replaceWildcardWithPatternFormat(topic);
-      consumer.subscribe(Pattern.compile(topic), new ConsumerRebalanceListener() {
-        @Override
-        public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
-          // TODO
-        }
-
-        @Override
-        public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
-          // TODO
-        }
-      });
-    }
     Duration duration = Duration.of(100, ChronoUnit.MILLIS);
     while (isRunning) {
       ConsumerRecords<byte[], byte[]> records = consumer.poll(duration);
       records.forEach(record -> eventProcessor.onEvent(record.value()));
     }
     consumer.close();
+  }
+
+  @Override
+  public void connect(InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
+    LOG.info("Kafka consumer: Connecting to {}", protocol.getTopicDefinition().getActualTopicName());
+    var patternTopic = isPatternTopic();
+    this.eventProcessor = eventProcessor;
+    this.isRunning = true;
+    Properties props = makeProperties(protocol, appenders);
+
+    consumer = new KafkaConsumer<>(props);
+    var latch = new CountDownLatch(1);
+    if (!patternTopic) {
+      consumer.subscribe(Collections.singletonList(topic), new RebalanceListener(latch));
+    } else {
+      topic = replaceWildcardWithPatternFormat(topic);
+      consumer.subscribe(Pattern.compile(topic), new RebalanceListener(latch));
+    }
+
+    Thread thread = new Thread(this);
+    thread.start();
+    try {
+      if (!latch.await(10, TimeUnit.SECONDS)) {
+        throw new SpRuntimeException("Timeout while waiting for partition assignment");
+      }
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new SpRuntimeException("Interrupted while waiting for partition assignment", e);
+    }
+  }
+
+  @Override
+  public void disconnect() throws SpRuntimeException {
+    LOG.info("Kafka consumer: Disconnecting from {}", topic);
+    this.isRunning = false;
+  }
+
+  @Override
+  public boolean isConnected() {
+    return isRunning;
+  }
+
+  private boolean isPatternTopic() {
+    return this.protocol.getTopicDefinition() instanceof WildcardTopicDefinition;
   }
 
   private String replaceWildcardWithPatternFormat(String topic) {
@@ -118,30 +133,22 @@ public class SpKafkaConsumer implements EventConsumer, Runnable,
     return new ConsumerConfigFactory(protocol).buildProperties(appenders);
   }
 
-  @Override
-  public void connect(InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
-    LOG.info("Kafka consumer: Connecting to " + protocol.getTopicDefinition().getActualTopicName());
-    if (protocol.getTopicDefinition() instanceof WildcardTopicDefinition) {
-      this.patternTopic = true;
+  private class RebalanceListener implements ConsumerRebalanceListener {
+
+    private final CountDownLatch latch;
+    public RebalanceListener(CountDownLatch latch) {
+      this.latch = latch;
     }
-    this.eventProcessor = eventProcessor;
 
-    this.topic = protocol.getTopicDefinition().getActualTopicName();
-    this.isRunning = true;
+    @Override
+    public void onPartitionsRevoked(Collection<TopicPartition> collection) {
+      consumer.pause(collection);
+    }
 
-    Thread thread = new Thread(this);
-    thread.start();
-  }
-
-  @Override
-  public void disconnect() throws SpRuntimeException {
-    LOG.info("Kafka consumer: Disconnecting from " + topic);
-    this.isRunning = false;
-
-  }
-
-  @Override
-  public boolean isConnected() {
-    return isRunning;
+    @Override
+    public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
+      consumer.resume(partitions);
+      latch.countDown();
+    }
   }
 }

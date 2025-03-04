@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-01-25 23:02:05.
+// Generated using typescript-generator version 3.2.1263 on 2025-02-24 11:25:01.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1188,61 +1187,6 @@ export class DashboardModel implements Storable {
     }
 }
 
-export class DashboardWidgetModel extends DashboardEntity {
-    dashboardWidgetSettings: DashboardWidgetSettings;
-    pipelineId: string;
-    visualizationName: string;
-    widgetId: string;
-    widgetType: string;
-
-    static fromData(
-        data: DashboardWidgetModel,
-        target?: DashboardWidgetModel,
-    ): DashboardWidgetModel {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new DashboardWidgetModel();
-        super.fromData(data, instance);
-        instance.dashboardWidgetSettings = DashboardWidgetSettings.fromData(
-            data.dashboardWidgetSettings,
-        );
-        instance.pipelineId = data.pipelineId;
-        instance.visualizationName = data.visualizationName;
-        instance.widgetId = data.widgetId;
-        instance.widgetType = data.widgetType;
-        return instance;
-    }
-}
-
-export class DashboardWidgetSettings {
-    config: StaticPropertyUnion[];
-    requiredSchema: EventSchema;
-    widgetDescription: string;
-    widgetIconName: string;
-    widgetLabel: string;
-    widgetName: string;
-
-    static fromData(
-        data: DashboardWidgetSettings,
-        target?: DashboardWidgetSettings,
-    ): DashboardWidgetSettings {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new DashboardWidgetSettings();
-        instance.config = __getCopyArrayFn(StaticProperty.fromDataUnion)(
-            data.config,
-        );
-        instance.requiredSchema = EventSchema.fromData(data.requiredSchema);
-        instance.widgetDescription = data.widgetDescription;
-        instance.widgetIconName = data.widgetIconName;
-        instance.widgetLabel = data.widgetLabel;
-        instance.widgetName = data.widgetName;
-        return instance;
-    }
-}
-
 export class DataExplorerWidgetModel extends DashboardEntity {
     baseAppearanceConfig: { [index: string]: any };
     dataConfig: { [index: string]: any };
@@ -2208,8 +2152,6 @@ export class KafkaTransportProtocol extends TransportProtocol {
     'maxRequestSize': string;
     'messageMaxBytes': string;
     'offset': string;
-    'zookeeperHost': string;
-    'zookeeperPort': number;
 
     static 'fromData'(
         data: KafkaTransportProtocol,
@@ -2228,8 +2170,6 @@ export class KafkaTransportProtocol extends TransportProtocol {
         instance.maxRequestSize = data.maxRequestSize;
         instance.messageMaxBytes = data.messageMaxBytes;
         instance.offset = data.offset;
-        instance.zookeeperHost = data.zookeeperHost;
-        instance.zookeeperPort = data.zookeeperPort;
         return instance;
     }
 }
@@ -2449,8 +2389,6 @@ export class MessagingSettings {
     prioritizedProtocols: SpProtocol[];
     pulsarUrl: string;
     supportedProtocols: string[];
-    zookeeperHost: string;
-    zookeeperPort: number;
 
     static fromData(
         data: MessagingSettings,
@@ -2479,8 +2417,6 @@ export class MessagingSettings {
         instance.supportedProtocols = __getCopyArrayFn(__identity<string>())(
             data.supportedProtocols,
         );
-        instance.zookeeperHost = data.zookeeperHost;
-        instance.zookeeperPort = data.zookeeperPort;
         return instance;
     }
 }
@@ -4135,30 +4071,6 @@ export class UserInfo {
         instance.roles = __getCopyArrayFn(__identity<string>())(data.roles);
         instance.showTutorial = data.showTutorial;
         instance.username = data.username;
-        return instance;
-    }
-}
-
-export class VisualizablePipeline {
-    pipelineId: string;
-    pipelineName: string;
-    schema: EventSchema;
-    topic: string;
-    visualizationName: string;
-
-    static fromData(
-        data: VisualizablePipeline,
-        target?: VisualizablePipeline,
-    ): VisualizablePipeline {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new VisualizablePipeline();
-        instance.pipelineId = data.pipelineId;
-        instance.pipelineName = data.pipelineName;
-        instance.schema = EventSchema.fromData(data.schema);
-        instance.topic = data.topic;
-        instance.visualizationName = data.visualizationName;
         return instance;
     }
 }

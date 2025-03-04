@@ -16,9 +16,10 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Pipeline, PipelineService } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-delete-pipeline-dialog',
@@ -32,10 +33,11 @@ export class DeletePipelineDialogComponent {
     isInProgress = false;
     currentStatus: any;
 
-    constructor(
-        private dialogRef: DialogRef<DeletePipelineDialogComponent>,
-        private pipelineService: PipelineService,
-    ) {}
+    private translateService = inject(TranslateService);
+    private pipelineService = inject(PipelineService);
+    private dialogRef = inject(DialogRef<DeletePipelineDialogComponent>);
+
+    constructor() {}
 
     close(refreshPipelines: boolean) {
         this.dialogRef.close(refreshPipelines);
@@ -43,7 +45,9 @@ export class DeletePipelineDialogComponent {
 
     deletePipeline() {
         this.isInProgress = true;
-        this.currentStatus = 'Deleting pipeline...';
+        this.currentStatus = this.translateService.instant(
+            'Deleting pipeline...',
+        );
         this.pipelineService
             .deleteOwnPipeline(this.pipeline._id)
             .subscribe(data => {
@@ -53,7 +57,9 @@ export class DeletePipelineDialogComponent {
 
     stopAndDeletePipeline() {
         this.isInProgress = true;
-        this.currentStatus = 'Stopping pipeline...';
+        this.currentStatus = this.translateService.instant(
+            'Stopping pipeline...',
+        );
         this.pipelineService.stopPipeline(this.pipeline._id).subscribe(
             data => {
                 this.deletePipeline();

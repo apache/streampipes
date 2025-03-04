@@ -81,6 +81,7 @@ import { FilterSelectionPanelRowValueInputComponent } from './components/chart-v
 import { FilterSelectionPanelRowValueAutocompleteComponent } from './components/chart-view/designer-panel/data-settings/filter-selection-panel/filter-selection-panel-row/panel-row-value-input-autocomplete/filter-selection-panel-row-value-autocomplete.component';
 import { DataExplorerSharedModule } from '../data-explorer-shared/data-explorer-shared.module';
 import { AggregateConfigurationComponent } from './components/chart-view/designer-panel/data-settings/aggregate-configuration/aggregate-configuration.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -126,6 +127,7 @@ import { AggregateConfigurationComponent } from './components/chart-view/designe
         MatChipsModule,
         PlatformServicesModule,
         SharedUiModule,
+        TranslateModule.forChild(),
         NgxEchartsModule.forChild(),
         RouterModule.forChild([
             {

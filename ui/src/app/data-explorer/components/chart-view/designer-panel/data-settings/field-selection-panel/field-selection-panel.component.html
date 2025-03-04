@@ -15,7 +15,7 @@
   ~ limitations under the License.
   ~
   -->
-<sp-configuration-box title="Fields">
+<sp-configuration-box [title]="'Fields' | translate">
     <div header fxLayoutAlign="start center" fxFlex="100">
         <button
             mat-button
@@ -25,7 +25,7 @@
             data-cy="data-explorer-data-set-field-select-all"
             (click)="selectAllFields()"
         >
-            Select all
+            {{ 'Select all' | translate }}
         </button>
         <button
             mat-button
@@ -33,13 +33,13 @@
             class="small-button mat-basic btn-margin"
             (click)="deselectAllFields()"
         >
-            Deselect all
+            {{ 'Deselect all' | translate }}
         </button>
         <span fxFlex></span>
         <button
             mat-icon-button
             class="pull-btn-right"
-            matTooltip="Expand More"
+            [matTooltip]="'Expand More' | translate"
             (click)="toggleExpandFields()"
             *ngIf="!expandFields"
         >
@@ -48,7 +48,7 @@
         <button
             mat-icon-button
             class="pull-btn-right"
-            matTooltip="Expand Less"
+            [matTooltip]="'Expand Less' | translate"
             (click)="toggleExpandFields()"
             *ngIf="expandFields"
         >

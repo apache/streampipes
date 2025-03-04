@@ -20,7 +20,6 @@ services:
       - couchdb
     volumes:
       - backend:/root/.streampipes
-      - files:/spImages
     environment:
       - SP_PRIORITIZED_PROTOCOL=${SP_PRIORITIZED_PROTOCOL:-kafka}
       - SP_MQTT_HOST=${SP_MQTT_HOST:-activemq}
@@ -35,7 +34,6 @@ services:
 
 volumes:
   backend:
-  files:
 
 networks:
   spnet:

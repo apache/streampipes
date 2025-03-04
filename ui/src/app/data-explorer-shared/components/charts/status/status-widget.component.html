@@ -55,6 +55,8 @@
         </div>
     </div>
     <div *ngIf="selectedDataType === 'number' && showLastSeen">
-        <h5>Last seen: {{ lastTimestamp | date: 'short' }}</h5>
+        <h5>
+            {{ 'Last seen:' | translate }} {{ lastTimestamp | date: 'short' }}
+        </h5>
     </div>
 </div>

@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box title="Field">
+    <sp-configuration-box [title]="'Field' | translate">
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.allFields"
             [selectedProperty]="
@@ -31,14 +31,14 @@
         >
         </sp-select-single-property-config>
     </sp-configuration-box>
-    <sp-configuration-box title="Settings">
+    <sp-configuration-box [title]="'Settings' | translate">
         <mat-checkbox
             data-cy="data-explorer-select-delta-checkbox"
             (change)="updateDelta($event)"
             [(ngModel)]="
                 currentlyConfiguredWidget.visualizationConfig.showDelta
             "
-            >Show delta indicator
+            >{{ 'Show delta indicator' | translate }}
         </mat-checkbox>
     </sp-configuration-box>
 </sp-visualization-config-outer>

@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box title="Field">
+    <sp-configuration-box [title]="'Field' | translate">
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.allFields"
             [selectedProperty]="
@@ -32,7 +32,7 @@
         </sp-select-single-property-config>
     </sp-configuration-box>
 
-    <sp-configuration-box title="Settings">
+    <sp-configuration-box [title]="'Settings' | translate">
         <div fxLayout="column" fxLayoutGap="10px">
             <div
                 fxFlex="100"
@@ -44,7 +44,7 @@
                         .selectedProperty?.fieldCharacteristics.numeric
                 "
             >
-                <small>Rounding</small>
+                <small>{{ 'Rounding' | translate }}</small>
                 <mat-form-field
                     appearance="outline"
                     class="marginColorField"
@@ -73,7 +73,7 @@
                 fxLayoutAlign="start center"
                 fxLayoutGap="10px"
             >
-                <small>Inner Radius</small>
+                <small>{{ 'Inner Radius' | translate }}</small>
                 <mat-slider min="0" max="80" step="1" fxFlex="65">
                     <input
                         matSliderThumb

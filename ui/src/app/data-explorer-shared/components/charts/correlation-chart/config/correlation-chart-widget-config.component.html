@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box title="Fields">
+    <sp-configuration-box [title]="'Fields' | translate">
         <div fxLayout="column" fxLayoutGap="10px">
             <div
                 fxLayout="row"
@@ -29,7 +29,7 @@
                 fxLayoutGap="10px"
                 fxLayoutAlign="start center"
             >
-                <small>X</small>
+                <small>{{ 'X' | translate }}</small>
                 <sp-select-single-property-config
                     fxFlex
                     [availableProperties]="fieldProvider.numericFields"
@@ -46,7 +46,7 @@
                 fxLayoutGap="10px"
                 fxLayoutAlign="start center"
             >
-                <small>Y</small>
+                <small>{{ 'Y' | translate }}</small>
                 <sp-select-single-property-config
                     fxFlex
                     [availableProperties]="fieldProvider.numericFields"

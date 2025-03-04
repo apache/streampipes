@@ -45,7 +45,7 @@
         <button
             mat-icon-button
             color="accent"
-            matTooltip="Field settings"
+            [matTooltip]="'Field settings' | translate"
             data-cy="time-series-item-config-toggle"
             (click)="toggleExpand()"
             [disabled]="!isSelected(field)"
@@ -63,7 +63,9 @@
         class="ml-10"
     >
         <div fxLayout="row" fxFlex="100">
-            <div fxFlex="30"><small>Color</small></div>
+            <div fxFlex="30">
+                <small>{{ 'Color' | translate }}</small>
+            </div>
             <div fxFlex="70" fxLayoutAlign="start center">
                 <input
                     class="color-field"
@@ -89,7 +91,7 @@
         </div>
         <div fxLayout="row" fxFlex="100">
             <div fxFlex="30" fxLayoutAlign="start center">
-                <small>Label</small>
+                <small>{{ 'Label' | translate }}</small>
             </div>
             <div fxFlex="70" fxLayoutAlign="start center">
                 <mat-form-field
@@ -115,7 +117,7 @@
 
         <div fxLayout="row" fxFlex="100">
             <div fxFlex="30" fxLayoutAlign="start center">
-                <small>Type</small>
+                <small>{{ 'Type' | translate }}</small>
             </div>
             <div fxFlex="70" fxLayoutAlign="start center">
                 <mat-form-field
@@ -133,13 +135,17 @@
                         "
                         (selectionChange)="viewRefreshEmitter.emit()"
                     >
-                        <mat-option [value]="'bar'">Bar</mat-option>
-                        <mat-option [value]="'lines'">Line</mat-option>
+                        <mat-option [value]="'bar'">{{
+                            'Bar' | translate
+                        }}</mat-option>
+                        <mat-option [value]="'lines'">{{
+                            'Line' | translate
+                        }}</mat-option>
                         <mat-option [value]="'normal_markers'"
-                            >Scatter
+                            >{{ 'Scatter' | translate }}
                         </mat-option>
                         <mat-option [value]="'lines+markers'"
-                            >Scattered Line
+                            >{{ 'Scattered Line' | translate }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -148,7 +154,7 @@
 
         <div fxLayout="row" fxFlex="100">
             <div fxFlex="30" fxLayoutAlign="start center">
-                <small>Axis</small>
+                <small>{{ 'Axis' | translate }}</small>
             </div>
             <div fxFlex="70" fxLayoutAlign="start center">
                 <mat-form-field
@@ -165,8 +171,12 @@
                         "
                         (selectionChange)="viewRefreshEmitter.emit()"
                     >
-                        <mat-option [value]="'left'">Left</mat-option>
-                        <mat-option [value]="'right'">Right</mat-option>
+                        <mat-option [value]="'left'">{{
+                            'Left' | translate
+                        }}</mat-option>
+                        <mat-option [value]="'right'">{{
+                            'Right' | translate
+                        }}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>

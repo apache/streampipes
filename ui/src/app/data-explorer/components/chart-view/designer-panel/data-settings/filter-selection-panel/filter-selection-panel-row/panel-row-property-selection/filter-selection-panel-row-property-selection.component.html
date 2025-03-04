@@ -16,7 +16,7 @@
   ~
   -->
 <mat-form-field color="accent" class="w-140-px mr-5" appearance="outline">
-    <mat-label>Field</mat-label>
+    <mat-label>{{ 'Field' | translate }}</mat-label>
     <mat-select
         [(value)]="filter.field"
         (selectionChange)="updateParentComponent()"

@@ -21,7 +21,7 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <sp-configuration-box title="Field" marginTop="5px">
+    <sp-configuration-box [title]="'Field' | translate" marginTop="5px">
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.numericFields"
             [selectedProperty]="
@@ -31,10 +31,12 @@
         >
         </sp-select-single-property-config>
     </sp-configuration-box>
-    <sp-configuration-box title="Settings" marginTop="5px">
+    <sp-configuration-box [title]="'Settings' | translate" marginTop="5px">
         <div class="mt-10">
             <mat-form-field fxFlex="100" color="accent" appearance="outline">
-                <mat-label><span>Resolution</span></mat-label>
+                <mat-label
+                    ><span>{{ 'Resolution' | translate }}</span></mat-label
+                >
                 <input
                     [(ngModel)]="
                         currentlyConfiguredWidget.visualizationConfig.resolution

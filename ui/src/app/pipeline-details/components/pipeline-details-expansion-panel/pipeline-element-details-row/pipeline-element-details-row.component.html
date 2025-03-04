@@ -26,7 +26,7 @@
             (click)="openLogsDialog()"
             mat-icon-button
             color="accent"
-            matTooltip="Logs"
+            [matTooltip]="'Logs' | translate"
             [disabled]="!pipelineRunning || logInfo.length === 0"
         >
             <mat-icon>topic</mat-icon>

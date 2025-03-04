@@ -18,7 +18,7 @@
 
 <sp-asset-browser
     filteredAssetLinkType="chart"
-    allResourcesAlias="Charts"
+    [allResourcesAlias]="'Charts' | translate"
     [resourceCount]="resourceCount"
     (filterIdsEmitter)="applyChartFilters($event)"
 >
@@ -40,7 +40,7 @@
                 *ngIf="hasDataExplorerWritePrivileges"
             >
                 <i class="material-icons">add</i>
-                <span>New chart</span>
+                <span>{{ 'New chart' | translate }}</span>
             </button>
         </div>
         <div fxFlex="100" fxLayout="column">

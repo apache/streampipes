@@ -152,18 +152,6 @@ external:
       storageSize: "1Gi"
       claimName: "kafka-pvc"
       pvName: "kafka-pv"
-  zookeeper:
-    appName: "zookeeper"
-    version: 3.4.13
-    port: 2181
-    service:
-      name: "zookeeper"
-      port: 2181
-    persistence:
-      storageClassName: "hostpath"
-      storageSize: "1Gi"
-      claimName: "zookeeper-pvc"
-      pvName: "zookeeper-pv"
   pulsar:
     appName: "pulsar"
     version: 3.0.0
