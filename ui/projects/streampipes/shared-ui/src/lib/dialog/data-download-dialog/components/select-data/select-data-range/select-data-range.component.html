@@ -16,7 +16,7 @@
   ~
   -->
 
-<sp-configuration-box title="Data Range">
+<sp-configuration-box [title]="'Data Range' | translate">
     <mat-radio-group
         class="sp-radio-group"
         [(ngModel)]="dataExportConfig.dataRangeConfiguration"
@@ -27,21 +27,21 @@
             data-cy="download-configuration-visible"
             *ngIf="dataExplorerDataConfig"
         >
-            Currently configured query
+            {{ 'Currently configured query' | translate }}
         </mat-radio-button>
         <mat-radio-button
             value="all"
             class="sp-radio-button"
             data-cy="download-configuration-all"
         >
-            All data in database
+            {{ 'All data in database' | translate }}
         </mat-radio-button>
         <mat-radio-button
             value="customInterval"
             class="sp-radio-button"
             data-cy="download-configuration-customInterval"
         >
-            All data in custom time interval
+            {{ 'All data in custom time interval' | translate }}
         </mat-radio-button>
 
         <div
@@ -51,12 +51,12 @@
             *ngIf="dataExportConfig.dataRangeConfiguration === 'customInterval'"
         >
             <div>
-                <h5>From&nbsp;</h5>
+                <h5>{{ 'From' | translate }}&nbsp;</h5>
                 <sp-date-input [(date)]="dataExportConfig.dateRange.startDate">
                 </sp-date-input>
             </div>
             <div>
-                <h5>To&nbsp;</h5>
+                <h5>{{ 'To' | translate }}</h5>
                 <sp-date-input [(date)]="dataExportConfig.dateRange.endDate">
                 </sp-date-input>
             </div>

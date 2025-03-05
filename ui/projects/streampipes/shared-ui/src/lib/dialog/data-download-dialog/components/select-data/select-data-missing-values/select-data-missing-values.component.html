@@ -16,7 +16,9 @@
   ~
   -->
 
-<sp-configuration-box title="Behaviour in case of missing values">
+<sp-configuration-box
+    [title]="'Behaviour in case of missing values' | translate"
+>
     <mat-radio-group
         class="sp-radio-group"
         [(ngModel)]="dataExportConfig.missingValueBehaviour"
@@ -26,14 +28,14 @@
             class="sp-radio-button"
             data-cy="download-configuration-ignore"
         >
-            Ignore lines with missing value
+            {{ 'Ignore lines with missing value' | translate }}
         </mat-radio-button>
         <mat-radio-button
             value="empty"
             class="sp-radio-button"
             data-cy="download-configuration-empty"
         >
-            Leave entry empty
+            {{ 'Leave entry empty' | translate }}
         </mat-radio-button>
     </mat-radio-group>
 </sp-configuration-box>

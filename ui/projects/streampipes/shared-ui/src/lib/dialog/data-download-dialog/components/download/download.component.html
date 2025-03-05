@@ -16,7 +16,7 @@
   ~
   -->
 <div fxFlex="100">
-    <ng-template matStepLabel>Download</ng-template>
+    <ng-template matStepLabel>{{ 'Download' | translate }}</ng-template>
     <div
         fxLayout="column"
         fxLayoutAlign="center center"
@@ -28,7 +28,7 @@
             >{{ downloadProgress.downloadedMBs | number: '1.0-2' }} Mb</label
         >
         <button mat-button color="warn" (click)="cancelDownload()">
-            Cancel
+            {{ 'Cancel' | translate }}
         </button>
     </div>
     <div
@@ -37,6 +37,6 @@
         *ngIf="downloadProgress.finished"
     >
         <mat-icon class="icon-check">check</mat-icon>
-        <h5>Download successful</h5>
+        <h5>{{ 'Download successful' | translate }}</h5>
     </div>
 </div>
