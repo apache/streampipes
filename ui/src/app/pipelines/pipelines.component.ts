@@ -61,6 +61,7 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     tutorialActive = false;
     tutorialActiveSubscription: Subscription;
     userSubscription: Subscription;
+    currentFilters: Set<string> = new Set<string>();
 
     constructor(
         private pipelineService: PipelineService,
@@ -112,11 +113,12 @@ export class PipelinesComponent implements OnInit, OnDestroy {
         this.pipelines = [];
         this.pipelineService.getPipelines().subscribe(pipelines => {
             this.pipelines = pipelines;
-            this.applyPipelineFilters(new Set<string>());
+            this.applyPipelineFilters(this.currentFilters);
         });
     }
 
     applyPipelineFilters(elementIds: Set<string>) {
+        this.currentFilters = elementIds;
         if (elementIds.size == 0) {
             this.filteredPipelines = this.pipelines;
         } else {

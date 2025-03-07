@@ -83,6 +83,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     userSubscription: Subscription;
     tutorialActiveSubscription: Subscription;
+    currentFilterIds: Set<string> = new Set<string>();
 
     constructor(
         private adapterService: AdapterService,
@@ -249,7 +250,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.adapterService.getAdapters().subscribe(adapters => {
             this.existingAdapters = adapters;
             this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
-            this.applyAdapterFilters();
+            this.applyAdapterFilters(this.currentFilterIds);
             this.getMonitoringInfos(adapters);
             setTimeout(() => {
                 this.dataSource.sort = this.sort;
@@ -257,7 +258,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         });
     }
 
-    applyAdapterFilters(elementIds: Set<string> = new Set<string>()): void {
+    applyAdapterFilters(elementIds: Set<string>): void {
+        this.currentFilterIds = elementIds;
         this.filteredAdapters = this.adapterFilter
             .transform(this.existingAdapters, this.currentFilter)
             .filter(a => {
@@ -283,7 +285,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     applyFilter(filter: AdapterFilterSettingsModel) {
         this.currentFilter = filter;
         if (this.dataSource) {
-            this.applyAdapterFilters();
+            this.applyAdapterFilters(this.currentFilterIds);
         }
     }
 
