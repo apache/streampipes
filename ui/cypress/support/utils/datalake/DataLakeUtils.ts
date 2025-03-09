@@ -379,8 +379,7 @@ export class DataLakeUtils {
         // Select visualization type
         cy.dataCy('data-explorer-select-visualization-type', { timeout: 10000 })
             .click()
-            .get('mat-option')
-            .contains(type)
+            .dataCy(`select-widget-${type}`)
             .click();
     }
 

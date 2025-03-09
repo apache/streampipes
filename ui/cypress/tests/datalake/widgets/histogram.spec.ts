@@ -24,7 +24,11 @@ describe('Test Histogram View in Data Explorer', () => {
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Histogram');
+        DataLakeUtils.addDataViewAndWidget(
+            'view',
+            'Persist',
+            'histogram-chart',
+        );
 
         // Change field for histogram
         DataLakeUtils.openVisualizationConfig();

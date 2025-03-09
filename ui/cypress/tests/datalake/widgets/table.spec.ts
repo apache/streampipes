@@ -25,7 +25,7 @@ describe('Test Table View in Data Explorer', () => {
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Table');
+        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'table');
 
         // Check if table is displayed correctly
         DataLakeWidgetTableUtils.checkAmountOfRows(10);
