@@ -18,6 +18,7 @@
 
 import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
 import { DataLakeBtns } from '../../support/utils/datalake/DataLakeBtns';
+import { DataExplorerWidget } from '../../support/model/DataExplorerWidget';
 
 describe('Test Time Order in Data Explorer', () => {
     beforeEach('Setup Test', () => {
@@ -34,7 +35,7 @@ describe('Test Time Order in Data Explorer', () => {
         DataLakeUtils.clickOrderBy('descending');
 
         DataLakeUtils.openVisualizationConfig();
-        DataLakeUtils.selectVisualizationType('Table');
+        DataLakeUtils.selectVisualizationType(DataExplorerWidget.TABLE);
         DataLakeUtils.selectTimeRange(startDate, endDate);
         cy.wait(1000);
 
@@ -55,7 +56,7 @@ describe('Test Time Order in Data Explorer', () => {
         DataLakeBtns.editDataViewButton('Newchart');
         DataLakeUtils.clickOrderBy('ascending');
         DataLakeUtils.openVisualizationConfig();
-        DataLakeUtils.selectVisualizationType('Table');
+        DataLakeUtils.selectVisualizationType(DataExplorerWidget.TABLE);
         DataLakeUtils.selectTimeRange(startDate, endDate);
         cy.wait(1000);
 

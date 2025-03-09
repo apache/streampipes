@@ -375,7 +375,7 @@ export class DataLakeUtils {
     /**
      * Select visualization type
      */
-    public static selectVisualizationType(type: string | 'Table') {
+    public static selectVisualizationType(type: string | 'table') {
         // Select visualization type
         cy.dataCy('data-explorer-select-visualization-type', { timeout: 10000 })
             .click()
