@@ -323,7 +323,7 @@
   "Topics": null,
   "Code": null,
   "Loading": null,
-  "# Provide OPC UA Node IDs below, one per line.\n# Format: ns={{namespace}};s={{node_id}} (e.g., ns=3;s=SampleNodeId)\n": null,
+  "# Provide OPC UA Node IDs below, one per line.\n# Format: ns=<namespace>;s=<node_id> (e.g., ns=3;s=SampleNodeId)\n": null,
   "The value should be a number": null,
   "Please enter a valid URL": null,
   "Please enter a valid String": null,

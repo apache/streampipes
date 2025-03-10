@@ -323,7 +323,7 @@
   "Topics": "Themen",
   "Code": "Code",
   "Loading": "Laden",
-  "# Provide OPC UA Node IDs below, one per line.\n# Format: ns={{namespace}};s={{node_id}} (e.g., ns=3;s=SampleNodeId)\n": "# Geben Sie die OPC UA Node IDs unten an, eine pro Zeile.\n# Format: ns={{namespace}};s={{node_id}} (z. B. ns=3;s=SampleNodeId)\n",
+  "# Provide OPC UA Node IDs below, one per line.\n# Format: ns=<namespace>;s=<node_id> (e.g., ns=3;s=SampleNodeId)\n": "# Geben Sie unten OPC UA Node-IDs ein, eine pro Zeile.\n# Format: ns=<namespace>;s=<node_id> (z. B. ns=3;s=SampleNodeId)\n",
   "The value should be a number": "Der Wert sollte eine Zahl sein",
   "Please enter a valid URL": "Bitte geben Sie eine gültige URL ein",
   "Please enter a valid String": "Bitte geben Sie einen gültigen String ein",

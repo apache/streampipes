@@ -55,7 +55,7 @@ export class StaticTreeInputTextEditorComponent implements OnInit {
     };
 
     headerText = this.translateService.instant(
-        '# Provide OPC UA Node IDs below, one per line.\n# Format: ns={{namespace}};s={{node_id}} (e.g., ns=3;s=SampleNodeId)\n',
+        '# Provide OPC UA Node IDs below, one per line.\n# Format: ns=<namespace>;s=<node_id> (e.g., ns=3;s=SampleNodeId)\n',
     );
     textEditor: string = '';
 
