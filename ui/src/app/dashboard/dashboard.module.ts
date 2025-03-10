@@ -69,6 +69,7 @@ import { ChartPreviewComponent } from './components/panel/chart-selection-panel/
 import { ChartSelectionComponent } from './components/panel/chart-selection-panel/chart-selection/chart-selection.component';
 import { EditDashboardDialogComponent } from './dialogs/edit-dashboard/edit-dashboard-dialog.component';
 import { DashboardOverviewTableComponent } from './components/overview/dashboard-overview-table/dashboard-overview-table.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -112,6 +113,7 @@ import { DashboardOverviewTableComponent } from './components/overview/dashboard
         ServicesModule,
         SharedUiModule,
         DataExplorerSharedModule,
+        TranslateModule.forChild(),
         RouterModule.forChild([
             {
                 path: '',

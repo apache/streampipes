@@ -30,6 +30,7 @@ import { DataExplorerRoutingService } from '../../../../data-explorer-shared/ser
 import { MatDialog } from '@angular/material/dialog';
 import { DataExplorerDashboardService } from '../../../services/dashboard.service';
 import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-dashboard-overview-table',
@@ -56,6 +57,7 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
         authService: AuthService,
         currentUserService: CurrentUserService,
         private dialog: MatDialog,
+        private translateService: TranslateService,
     ) {
         super(dialogService, authService, currentUserService, routingService);
     }
@@ -68,7 +70,9 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
     showPermissionsDialog(dashboard: Dashboard) {
         const dialogRef = this.dataExplorerSharedService.openPermissionsDialog(
             dashboard.elementId,
-            `Manage permissions for dashboard ${dashboard.name}`,
+            this.translateService.instant(
+                `Manage permissions for dashboard ${dashboard.name}`,
+            ),
         );
 
         dialogRef.afterClosed().subscribe(refresh => {
@@ -94,10 +98,14 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '600px',
             data: {
-                title: 'Are you sure you want to delete this dashboard?',
-                subtitle: 'This action cannot be undone!',
-                cancelTitle: 'Cancel',
-                okTitle: 'Delete Dashboard',
+                title: this.translateService.instant(
+                    'Are you sure you want to delete this dashboard?',
+                ),
+                subtitle: this.translateService.instant(
+                    'This action cannot be undone!',
+                ),
+                cancelTitle: this.translateService.instant('Cancel'),
+                okTitle: this.translateService.instant('Delete dashboard'),
                 confirmAndCancel: true,
             },
         });

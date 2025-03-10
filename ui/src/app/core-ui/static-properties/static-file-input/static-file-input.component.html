@@ -23,12 +23,12 @@
                 [formControl]="chooseExistingFileControl"
                 color="accent"
             >
-                <mat-radio-button style="margin-right: 10px" [value]="true"
-                    >Choose existing file</mat-radio-button
-                >
-                <mat-radio-button [value]="false"
-                    >Upload new file</mat-radio-button
-                >
+                <mat-radio-button style="margin-right: 10px" [value]="true">{{
+                    'Choose existing file' | translate
+                }}</mat-radio-button>
+                <mat-radio-button [value]="false">{{
+                    'Upload new file' | translate
+                }}</mat-radio-button>
             </mat-radio-group>
         </div>
         <div
@@ -39,7 +39,7 @@
                 <input
                     data-cy="file-input-file-name"
                     type="text"
-                    placeholder="Select file"
+                    [placeholder]="'Select file' | translate"
                     formControlName="{{ fieldName }}"
                     matInput
                     [matAutocomplete]="auto"
@@ -48,7 +48,7 @@
                     *ngIf="selectedFile"
                     matSuffix
                     mat-icon-button
-                    aria-label="Clear"
+                    [attr.aria-label]="'Clear' | translate"
                     (click)="selectedFile = {}"
                 >
                     <mat-icon>close</mat-icon>
@@ -120,7 +120,7 @@
                     (click)="upload()"
                     [disabled]="!fileName"
                 >
-                    Upload
+                    {{ 'Upload' | translate }}
                 </button>
             </div>
         </div>

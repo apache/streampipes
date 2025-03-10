@@ -22,9 +22,11 @@
             <h4>{{ headerTitle }}</h4>
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                 <div class="general-options-panel" fxLayout="column">
-                    <span class="general-options-header">Basics</span>
+                    <span class="general-options-header">{{
+                        'Basics' | translate
+                    }}</span>
                     <mat-form-field color="accent">
-                        <mat-label>Owner</mat-label>
+                        <mat-label>{{ 'Owner' | translate }}</mat-label>
                         <mat-select formControlName="owner" fxFlex required>
                             <mat-option
                                 *ngFor="let user of allUsers"
@@ -37,7 +39,7 @@
                         data-cy="permission-public-element"
                         formControlName="publicElement"
                     >
-                        Public Element
+                        {{ 'Public Element' | translate }}
                     </mat-checkbox>
                 </div>
                 <div
@@ -45,10 +47,17 @@
                     class="general-options-panel"
                     *ngIf="!permission.publicElement"
                 >
-                    <span class="general-options-header">Users</span>
+                    <span class="general-options-header">{{
+                        'Users' | translate
+                    }}</span>
                     <mat-form-field color="accent">
-                        <mat-label>Authorized Users</mat-label>
-                        <mat-chip-grid #chipList aria-label="User selection">
+                        <mat-label>{{
+                            'Authorized Users' | translate
+                        }}</mat-label>
+                        <mat-chip-grid
+                            #chipList
+                            [attr.aria-label]="'User selection' | translate"
+                        >
                             <mat-chip-row
                                 *ngFor="let user of grantedUserAuthorities"
                                 selectable="true"
@@ -61,7 +70,7 @@
                                 </button>
                             </mat-chip-row>
                             <input
-                                placeholder="Add"
+                                [placeholder]="'Add' | translate"
                                 #userInput
                                 [formControl]="userCtrl"
                                 [matAutocomplete]="auto"
@@ -92,10 +101,17 @@
                     class="general-options-panel"
                     *ngIf="!permission.publicElement"
                 >
-                    <span class="general-options-header">Groups</span>
+                    <span class="general-options-header">{{
+                        'Groups' | translate
+                    }}</span>
                     <mat-form-field color="accent">
-                        <mat-label>Authorized Groups</mat-label>
-                        <mat-chip-grid #chipList aria-label="Group selection">
+                        <mat-label>{{
+                            'Authorized Groups' | translate
+                        }}</mat-label>
+                        <mat-chip-grid
+                            #chipList
+                            [attr.aria-label]="'Group selection' | translate"
+                        >
                             <mat-chip-row
                                 *ngFor="let group of grantedGroupAuthorities"
                                 selectable="true"
@@ -108,7 +124,7 @@
                                 </button>
                             </mat-chip-row>
                             <input
-                                placeholder="Add"
+                                [placeholder]="'Add' | translate"
                                 #groupInput
                                 [formControl]="groupCtrl"
                                 [matAutocomplete]="auto"
@@ -147,7 +163,8 @@
                 [disabled]="!parentForm.valid"
                 data-cy="sp-manage-permissions-save"
             >
-                <i class="material-icons">save</i><span>&nbsp;Save</span>
+                <i class="material-icons">save</i
+                ><span>&nbsp;{{ 'Save' | translate }}</span>
             </button>
             <button
                 mat-button
@@ -155,7 +172,7 @@
                 class="mat-basic"
                 (click)="close(false)"
             >
-                Cancel
+                {{ 'Cancel' | translate }}
             </button>
         </div>
     </div>

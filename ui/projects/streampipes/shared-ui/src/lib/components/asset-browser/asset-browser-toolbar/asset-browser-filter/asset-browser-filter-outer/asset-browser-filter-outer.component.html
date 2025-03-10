@@ -56,7 +56,7 @@
                     class="small-button btn-margin"
                     (click)="selectAllEmitter.emit()"
                 >
-                    All
+                    {{ 'All' | translate }}
                 </button>
                 <button
                     mat-button
@@ -64,7 +64,7 @@
                     class="small-button mat-basic btn-margin"
                     (click)="deselectAllEmitter.emit()"
                 >
-                    None
+                    {{ 'None' | translate }}
                 </button>
             </div>
         </div>

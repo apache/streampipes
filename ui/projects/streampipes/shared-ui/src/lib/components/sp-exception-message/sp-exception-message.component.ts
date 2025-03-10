@@ -16,11 +16,12 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { SpLogMessage } from '@streampipes/platform-services';
 import { DialogService } from '../../dialog/base-dialog/base-dialog.service';
 import { PanelType } from '../../dialog/base-dialog/base-dialog.model';
 import { SpExceptionDetailsDialogComponent } from './exception-details-dialog/exception-details-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-exception-message',
@@ -28,6 +29,8 @@ import { SpExceptionDetailsDialogComponent } from './exception-details-dialog/ex
     styleUrls: ['./sp-exception-message.component.scss'],
 })
 export class SpExceptionMessageComponent {
+    translateService = inject(TranslateService);
+
     @Input()
     level = 'error';
 
@@ -46,7 +49,7 @@ export class SpExceptionMessageComponent {
         this.dialogService.open(SpExceptionDetailsDialogComponent, {
             panelType: PanelType.STANDARD_PANEL,
             width: '80vw',
-            title: 'Error Details',
+            title: this.translateService.instant('Error Details'),
             data: {
                 message: this.message,
             },

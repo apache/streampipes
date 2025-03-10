@@ -27,17 +27,17 @@
         </div>
     } @else {
         <div fxLayoutAlign="center center" fxLayout="column" fxFlex="100">
-            <span class="no-widget-hint"
-                >No charts found - create a new chart first to add it to this
-                dashboard.</span
-            >
+            <span class="no-widget-hint">{{
+                'No charts found - create a new chart first to add it to this dashboard.'
+                    | translate
+            }}</span>
             <button
                 mat-button
                 color="accent"
                 class="mt-10"
                 (click)="navigateToDataViewCreation()"
             >
-                Create chart
+                {{ 'Create chart' | translate }}
             </button>
         </div>
     }

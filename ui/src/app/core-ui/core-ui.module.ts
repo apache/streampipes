@@ -113,6 +113,7 @@ import { ConfigurationCodePanelComponent } from './configuration-code-panel/conf
 import { JsonPrettyPrintPipe } from './pipes/json-pretty-print.pipe';
 import { YamlPrettyPrintPipe } from './pipes/yaml-pretty-print.pipe';
 import { TopicsComponent } from './topics/topics.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -162,6 +163,7 @@ import { TopicsComponent } from './topics/topics.component';
         QuillModule.forRoot(),
         MatTreeModule,
         MarkdownModule.forRoot(),
+        TranslateModule.forChild(),
         LeafletModule,
     ],
     declarations: [

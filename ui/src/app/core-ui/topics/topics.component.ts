@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
@@ -24,6 +24,7 @@ import {
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineElementUnion } from '../../editor/model/editor.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-element-topics',
@@ -31,9 +32,14 @@ import { PipelineElementUnion } from '../../editor/model/editor.model';
     styleUrls: ['./topics.component.scss'],
 })
 export class TopicsComponent implements OnInit {
+    translateService = inject(TranslateService);
     selectedTabIndex = 0;
 
-    availableTabs = ['Topics', 'Code'];
+    availableTabs = [
+        this.translateService.instant('Topics'),
+        this.translateService.instant('Code'),
+    ];
+
     tabs: string[] = [];
 
     @Input()

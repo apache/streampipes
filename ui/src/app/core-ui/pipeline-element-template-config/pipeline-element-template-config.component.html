@@ -18,9 +18,9 @@
 
 <div class="p-15" *ngIf="templateConfigs">
     <div fxFlex="100" fxLayout="column">
-        <h4>Basics</h4>
+        <h4>{{ 'Basics' | translate }}</h4>
         <mat-form-field fxFlex color="accent">
-            <mat-label>Template name</mat-label>
+            <mat-label>{{ 'Template name' | translate }}</mat-label>
             <input
                 [(ngModel)]="template.templateName"
                 matInput
@@ -31,7 +31,7 @@
             />
         </mat-form-field>
         <mat-form-field fxFlex color="accent">
-            <mat-label>Template description</mat-label>
+            <mat-label>{{ 'Template description' | translate }}</mat-label>
             <input
                 [(ngModel)]="template.templateDescription"
                 matInput
@@ -42,10 +42,10 @@
             />
         </mat-form-field>
         <mat-divider class="divider"></mat-divider>
-        <h4>Configuration</h4>
-        <mat-hint style="margin-bottom: 10px"
-            >(dynamic options cannot be saved and are hidden)</mat-hint
-        >
+        <h4>{{ 'Configuration' | translate }}</h4>
+        <mat-hint style="margin-bottom: 10px">{{
+            '(dynamic options cannot be saved and are hidden)' | translate
+        }}</mat-hint>
         <div
             fxLayout="column"
             *ngFor="
@@ -67,7 +67,7 @@
             </div>
         </div>
         <mat-divider class="divider"></mat-divider>
-        <h4>Existing templates</h4>
+        <h4>{{ 'Existing templates' | translate }}</h4>
         <div
             fxLayout="column"
             *ngFor="let template of existingTemplates"
@@ -92,7 +92,7 @@
         <mat-hint
             style="margin-bottom: 10px"
             *ngIf="existingTemplates.length === 0"
-            >(no templates available)</mat-hint
+            >{{ '(no templates available)' | translate }}</mat-hint
         >
     </div>
 </div>

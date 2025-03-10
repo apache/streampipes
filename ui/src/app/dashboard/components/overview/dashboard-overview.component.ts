@@ -29,6 +29,7 @@ import { SpDashboardRoutes } from '../../dashboard.routes';
 import { Dashboard } from '@streampipes/platform-services';
 import { DataExplorerDashboardService } from '../../services/dashboard.service';
 import { DashboardOverviewTableComponent } from './dashboard-overview-table/dashboard-overview-table.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-dashboard-overview',
@@ -51,6 +52,7 @@ export class DashboardOverviewComponent implements OnInit {
         private authService: AuthService,
         private currentUserService: CurrentUserService,
         private breadcrumbService: SpBreadcrumbService,
+        private translateService: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -74,7 +76,7 @@ export class DashboardOverviewComponent implements OnInit {
             dashboardLiveSettings: {
                 refreshModeActive: false,
                 refreshIntervalInSeconds: 10,
-                label: 'Off',
+                label: this.translateService.instant('Off'),
             },
         };
 

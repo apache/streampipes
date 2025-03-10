@@ -26,7 +26,7 @@
             (click)="loadOptionsFromRestApi()"
             style="margin-right: 10px; margin-left: 10px"
         >
-            <span>Reload</span>
+            <span>{{ 'Reload' | translate }}</span>
         </button>
     </div>
     <div *ngIf="!staticProperty.horizontalRendering" fxLayout="column">
