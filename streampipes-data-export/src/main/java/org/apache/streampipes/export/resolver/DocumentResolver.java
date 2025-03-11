@@ -16,9 +16,28 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog.scss';
+package org.apache.streampipes.export.resolver;
 
-.warning-box {
-    border: 1px solid #dea843;
-    background: #f1f1e6;
+import org.apache.streampipes.model.export.AssetExportConfiguration;
+import org.apache.streampipes.model.export.ExportItem;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.lightcouch.DocumentConflictException;
+
+public interface DocumentResolver<T> {
+
+  T findDocument(String resourceId);
+
+  T modifyDocumentForExport(T document);
+
+  T readDocument(String serializedDocument) throws JsonProcessingException;
+
+  ExportItem convert(T document);
+
+  void writeDocument(String document, AssetExportConfiguration config)
+      throws JsonProcessingException, DocumentConflictException;
+
+  T deserializeDocument(String document) throws JsonProcessingException;
+
+  void deleteDocument(String document) throws JsonProcessingException;
 }

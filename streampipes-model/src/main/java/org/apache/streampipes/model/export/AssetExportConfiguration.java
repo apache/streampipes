@@ -34,8 +34,10 @@ public class AssetExportConfiguration {
   private Set<ExportItem> dataSources;
   private Set<ExportItem> pipelines;
   private Set<ExportItem> files;
+  private Set<ExportItem> genericStorageDocuments;
 
   private boolean overrideBrokerSettings;
+  private boolean overwriteExistingDocuments;
 
   public AssetExportConfiguration() {
     this.adapters = new HashSet<>();
@@ -46,6 +48,7 @@ public class AssetExportConfiguration {
     this.pipelines = new HashSet<>();
     this.files = new HashSet<>();
     this.assets = new HashSet<>();
+    this.genericStorageDocuments = new HashSet<>();
   }
 
   public Set<ExportItem> getAdapters() {
@@ -166,5 +169,25 @@ public class AssetExportConfiguration {
 
   public void setOverrideBrokerSettings(boolean overrideBrokerSettings) {
     this.overrideBrokerSettings = overrideBrokerSettings;
+  }
+
+  public Set<ExportItem> getGenericStorageDocuments() {
+    return genericStorageDocuments;
+  }
+
+  public void setGenericStorageDocuments(Set<ExportItem> genericStorageDocuments) {
+    this.genericStorageDocuments = genericStorageDocuments;
+  }
+
+  public void addGenericStorageDocument(ExportItem exportItem) {
+    this.genericStorageDocuments.add(exportItem);
+  }
+
+  public boolean isOverwriteExistingDocuments() {
+    return overwriteExistingDocuments;
+  }
+
+  public void setOverwriteExistingDocuments(boolean overwriteExistingDocuments) {
+    this.overwriteExistingDocuments = overwriteExistingDocuments;
   }
 }

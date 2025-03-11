@@ -20,7 +20,10 @@ import { Component } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { DataExportService } from '../data-export.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { AssetExportConfiguration } from '../../../../../dist/streampipes/platform-services';
+import {
+    AssetExportConfiguration,
+    ExportItem,
+} from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-data-import-dialog',
@@ -92,5 +95,30 @@ export class SpDataImportDialogComponent {
 
     close(): void {
         this.dialogRef.close();
+    }
+
+    toggleSelect(select: boolean): void {
+        if (this.importConfiguration) {
+            this.toggleExportItems(select);
+        }
+    }
+
+    private toggleExportItems(select: boolean): void {
+        this.toggleAllItems(this.importConfiguration.files, select);
+        this.toggleAllItems(this.importConfiguration.dataSources, select);
+        this.toggleAllItems(this.importConfiguration.adapters, select);
+        this.toggleAllItems(this.importConfiguration.assets, select);
+        this.toggleAllItems(this.importConfiguration.dashboards, select);
+        this.toggleAllItems(this.importConfiguration.dataViews, select);
+        this.toggleAllItems(this.importConfiguration.dataLakeMeasures, select);
+        this.toggleAllItems(
+            this.importConfiguration.genericStorageDocuments,
+            select,
+        );
+        this.toggleAllItems(this.importConfiguration.pipelines, select);
+    }
+
+    private toggleAllItems(exportItem: ExportItem[], select: boolean): void {
+        exportItem.forEach(e => (e.selected = select));
     }
 }

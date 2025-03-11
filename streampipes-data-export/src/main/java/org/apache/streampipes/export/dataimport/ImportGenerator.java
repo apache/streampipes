@@ -115,6 +115,14 @@ public abstract class ImportGenerator<T> {
       }
     }
 
+    for (String documentId : manifest.getGenericStorageDocuments()) {
+      try {
+        handleGenericStorageDocument(asString(previewFiles.get(documentId)), documentId);
+      } catch (DocumentConflictException e) {
+        LOG.warn("Skipping import of generic storage doc {} (already present with the same id)", documentId);
+      }
+    }
+
     afterResourcesCreated();
 
     return getReturnObject();
@@ -146,6 +154,9 @@ public abstract class ImportGenerator<T> {
 
   protected abstract void handleFile(String document, String fileMetadataId, Map<String, byte[]> zipContent)
       throws IOException;
+
+  protected abstract void handleGenericStorageDocument(String document, String dataLakeMeasureId)
+      throws JsonProcessingException;
 
   protected abstract T getReturnObject();
 

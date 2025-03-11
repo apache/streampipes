@@ -97,6 +97,8 @@ import { FileUploadDialogComponent } from './dialog/file-upload/file-upload-dial
 import { FileRenameDialogComponent } from './dialog/file-rename/file-rename-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { GenericStorageItemComponent } from './export/export-dialog/generic-storage-items/generic-storage-item/generic-storage-item.component';
+import { GenericStorageItemsComponent } from './export/export-dialog/generic-storage-items/generic-storage-items.component';
 
 @NgModule({
     imports: [
@@ -215,6 +217,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
         FileUploadDialogComponent,
         FileRenameDialogComponent,
         GeneralConfigurationComponent,
+        GenericStorageItemComponent,
+        GenericStorageItemsComponent,
         ExtensionsServiceManagementComponent,
         LocationFeaturesConfigurationComponent,
         ManageSiteDialogComponent,

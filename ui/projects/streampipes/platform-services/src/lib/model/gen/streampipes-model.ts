@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-02-24 11:25:01.
+// Generated using typescript-generator version 3.2.1263 on 2025-03-10 14:35:15.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -610,7 +611,9 @@ export class AssetExportConfiguration {
     dataSources: ExportItem[];
     dataViews: ExportItem[];
     files: ExportItem[];
+    genericStorageDocuments: ExportItem[];
     overrideBrokerSettings: boolean;
+    overwriteExistingDocuments: boolean;
     pipelines: ExportItem[];
 
     static fromData(
@@ -640,7 +643,11 @@ export class AssetExportConfiguration {
             data.dataViews,
         );
         instance.files = __getCopyArrayFn(ExportItem.fromData)(data.files);
+        instance.genericStorageDocuments = __getCopyArrayFn(
+            ExportItem.fromData,
+        )(data.genericStorageDocuments);
         instance.overrideBrokerSettings = data.overrideBrokerSettings;
+        instance.overwriteExistingDocuments = data.overwriteExistingDocuments;
         instance.pipelines = __getCopyArrayFn(ExportItem.fromData)(
             data.pipelines,
         );
@@ -3809,6 +3816,7 @@ export class StreamPipesApplicationPackage {
     dataViewWidgets: string[];
     dataViews: string[];
     files: string[];
+    genericStorageDocuments: string[];
     pipelines: string[];
     requiredAdapterAppIds: string[];
     requiredDataSinkAppIds: string[];
@@ -3845,6 +3853,9 @@ export class StreamPipesApplicationPackage {
             data.dataViews,
         );
         instance.files = __getCopyArrayFn(__identity<string>())(data.files);
+        instance.genericStorageDocuments = __getCopyArrayFn(
+            __identity<string>(),
+        )(data.genericStorageDocuments);
         instance.pipelines = __getCopyArrayFn(__identity<string>())(
             data.pipelines,
         );

@@ -19,11 +19,15 @@
 package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.export.utils.SerializationUtils;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
+import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.resource.management.secret.SecretProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class PipelineResolver extends AbstractResolver<Pipeline> {
@@ -40,9 +44,8 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
     doc.setRunning(false);
     doc.setSepas(doc.getSepas().stream().peek(s -> s.setSelectedEndpointUrl(null)).collect(Collectors.toList()));
     doc.setActions(doc.getActions().stream().peek(s -> s.setSelectedEndpointUrl(null)).collect(Collectors.toList()));
-    doc.setStreams(doc.getStreams()
-        .stream()
-        .collect(Collectors.toList()));
+    doc.setStreams(new ArrayList<>(doc.getStreams()));
+    SecretProvider.getDecryptionService().apply(doc);
     return doc;
   }
 
@@ -57,14 +60,10 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
   }
 
   @Override
-  public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getPipelineStorageAPI().persist(deserializeDocument(document));
-  }
-
   public void writeDocument(String document,
-                            boolean overrideDocument) throws JsonProcessingException {
+                            AssetExportConfiguration config) throws JsonProcessingException {
     var pipeline = deserializeDocument(document);
-    if (overrideDocument) {
+    if (config.isOverrideBrokerSettings()) {
       pipeline.setSepas(pipeline.getSepas().stream().peek(processor -> {
         processor.getInputStreams()
             .forEach(is -> overrideProtocol(is.getEventGrounding()));
@@ -81,11 +80,25 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
       }).collect(Collectors.toList()));
 
     }
+    SecretProvider.getEncryptionService().apply(pipeline);
     getNoSqlStore().getPipelineStorageAPI().persist(pipeline);
   }
 
   @Override
-  protected Pipeline deserializeDocument(String document) throws JsonProcessingException {
+  public Pipeline deserializeDocument(String document) throws JsonProcessingException {
     return this.spMapper.readValue(document, Pipeline.class);
+  }
+
+  @Override
+  public void deleteDocument(String document) throws JsonProcessingException {
+    var pipeline = readDocument(document);
+    var resourceId = pipeline.getElementId();
+    var storedPipeline = PipelineManager.getPipeline(resourceId);
+    if (storedPipeline != null) {
+      if (storedPipeline.isRunning()) {
+        PipelineManager.stopPipeline(resourceId, true);
+      }
+      getNoSqlStore().getPipelineStorageAPI().deleteElementById(resourceId);
+    }
   }
 }
