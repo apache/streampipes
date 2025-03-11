@@ -53,7 +53,8 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
 
   @Override
   public Map<String, Object> readDocument(String serializedDocument) throws JsonProcessingException {
-    return SerializationUtils.getDefaultObjectMapper().readValue(serializedDocument, new TypeReference<>() {});
+    return SerializationUtils.getDefaultObjectMapper().readValue(serializedDocument, new TypeReference<>() {
+    });
   }
 
   @Override
@@ -63,7 +64,8 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
   }
 
   @Override
-  public void writeDocument(String document, AssetExportConfiguration config) throws JsonProcessingException, DocumentConflictException {
+  public void writeDocument(String document, AssetExportConfiguration config)
+      throws JsonProcessingException, DocumentConflictException {
     try {
       getNoSqlStore().getGenericStorage().create(document);
     } catch (IOException e) {
@@ -73,7 +75,8 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
 
   @Override
   public Map<String, Object> deserializeDocument(String document) throws JsonProcessingException {
-    return SerializationUtils.getDefaultObjectMapper().readValue(document, new TypeReference<>() {});
+    return SerializationUtils.getDefaultObjectMapper().readValue(document, new TypeReference<>() {
+    });
   }
 
   @Override
