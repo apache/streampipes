@@ -63,6 +63,21 @@
                 <mat-option [value]="'SUM'">
                     <span class="pipeline-name">{{ 'Sum' | translate }}</span>
                 </mat-option>
+                <mat-option [value]="'MEDIAN'" *ngIf="field.numeric">
+                    <span class="pipeline-name">{{
+                        'Median' | translate
+                    }}</span>
+                </mat-option>
+                <mat-option [value]="'STDDEV'" *ngIf="field.numeric">
+                    <span class="pipeline-name">{{
+                        'Standard deviation' | translate
+                    }}</span>
+                </mat-option>
+                <mat-option [value]="'SPREAD'" *ngIf="field.numeric">
+                    <span class="pipeline-name">{{
+                        'Spread' | translate
+                    }}</span>
+                </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
