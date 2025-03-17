@@ -24,7 +24,7 @@ describe('Test Scatter View in Data Explorer', () => {
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Scatter');
+        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'scatter-chart');
 
         // Check if scatter plot is displayed
         cy.dataCy('scatter-chart').should('be.visible');

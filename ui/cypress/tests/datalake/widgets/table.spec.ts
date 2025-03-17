@@ -18,6 +18,7 @@
 
 import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 import { DataLakeWidgetTableUtils } from '../../../support/utils/datalake/DataLakeWidgetTableUtils';
+import { DataExplorerWidget } from '../../../support/model/DataExplorerWidget';
 
 describe('Test Table View in Data Explorer', () => {
     beforeEach('Setup Test', () => {
@@ -25,7 +26,11 @@ describe('Test Table View in Data Explorer', () => {
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Table');
+        DataLakeUtils.addDataViewAndWidget(
+            'view',
+            'Persist',
+            DataExplorerWidget.TABLE,
+        );
 
         // Check if table is displayed correctly
         DataLakeWidgetTableUtils.checkAmountOfRows(10);

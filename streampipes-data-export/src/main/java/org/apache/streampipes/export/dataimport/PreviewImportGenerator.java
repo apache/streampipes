@@ -26,7 +26,6 @@ import org.apache.streampipes.export.resolver.DataSourceResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
-import org.apache.streampipes.export.utils.ImportAdapterMigrationUtils;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 
@@ -69,8 +68,7 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   protected void handleAdapter(String document,
                                String adapterId) throws JsonProcessingException {
     try {
-      var convertedDoc = ImportAdapterMigrationUtils.checkAndPerformMigration(document);
-      addExportItem(adapterId, new AdapterResolver().readDocument(convertedDoc).getName(), importConfig::addAdapter);
+      addExportItem(adapterId, new AdapterResolver().readDocument(document).getName(), importConfig::addAdapter);
     } catch (IllegalArgumentException e) {
       LOG.warn("Skipping import of data set adapter {}", adapterId);
     }
@@ -112,6 +110,11 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
                             Map<String, byte[]> zipContent) throws JsonProcessingException {
     addExportItem(fileMetadataId, new FileResolver().readDocument(document).getFilename(),
         importConfig::addFile);
+  }
+
+  @Override
+  protected void handleGenericStorageDocument(String document, String genericDocId) throws JsonProcessingException {
+    addExportItem(genericDocId, genericDocId, importConfig::addGenericStorageDocument);
   }
 
   @Override

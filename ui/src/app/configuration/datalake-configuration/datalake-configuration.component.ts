@@ -48,7 +48,8 @@ export class DatalakeConfigurationComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    dataSource: MatTableDataSource<DataLakeConfigurationEntry>;
+    dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
+        new MatTableDataSource([]);
     availableMeasurements: DataLakeConfigurationEntry[] = [];
 
     displayedColumns: string[] = [
@@ -61,6 +62,7 @@ export class DatalakeConfigurationComponent implements OnInit {
     ];
 
     pageSize = 15;
+    pageIndex = 0;
 
     constructor(
         private datalakeRestService: DatalakeRestService,
@@ -112,10 +114,8 @@ export class DatalakeConfigurationComponent implements OnInit {
                         this.availableMeasurements.sort((a, b) =>
                             a.name.localeCompare(b.name),
                         );
-                        this.receiveMeasurementSizes(0);
-                        this.dataSource = new MatTableDataSource(
-                            this.availableMeasurements,
-                        );
+                        this.receiveMeasurementSizes(this.pageIndex);
+                        this.dataSource.data = this.availableMeasurements;
                         setTimeout(() => {
                             this.dataSource.paginator = this.paginator;
                             this.dataSource.sort = this.sort;
@@ -176,7 +176,8 @@ export class DatalakeConfigurationComponent implements OnInit {
     }
 
     onPageChange(event: any) {
-        this.receiveMeasurementSizes(event.pageIndex);
+        this.pageIndex = event.pageIndex;
+        this.receiveMeasurementSizes(this.pageIndex);
     }
 
     receiveMeasurementSizes(pageIndex: number) {
@@ -186,14 +187,16 @@ export class DatalakeConfigurationComponent implements OnInit {
             .slice(start, end)
             .filter(m => m.events === -1)
             .map(m => m.name);
-        this.datalakeRestService
-            .getMeasurementEntryCounts(measurements)
-            .subscribe(res => {
-                this.availableMeasurements.forEach(m => {
-                    if (res[m.name] !== undefined) {
-                        m.events = res[m.name];
-                    }
+        if (measurements.length > 0) {
+            this.datalakeRestService
+                .getMeasurementEntryCounts(measurements)
+                .subscribe(res => {
+                    this.availableMeasurements.forEach(m => {
+                        if (res[m.name] !== undefined) {
+                            m.events = res[m.name];
+                        }
+                    });
                 });
-            });
+        }
     }
 }

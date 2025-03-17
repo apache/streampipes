@@ -1,0 +1,154 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+<div fxLayout="column" fxLayoutGap="10px">
+    <div
+        fxLayout="row"
+        fxLayoutGap="10px"
+        fxLayoutAlign="start center"
+        fxFlex="1"
+        class="checkbox-container"
+    >
+        <mat-checkbox
+            color="accent"
+            [(ngModel)]="showCustomColorMapping"
+            (ngModelChange)="setCustomColorMapping($event)"
+        >
+        </mat-checkbox>
+        <small>{{ 'Add custom color mapping' | translate }}</small>
+    </div>
+
+    <div *ngIf="!isSelectedPropertyBoolean && showCustomColorMapping">
+        <div style="margin-bottom: 20px">
+            <button mat-raised-button color="accent" (click)="addMapping()">
+                <i class="material-icons">add</i>
+                <span>&nbsp;{{ 'Add Mapping' | translate }}</span>
+            </button>
+        </div>
+
+        <div fxLayout="column" fxLayoutGap="10px">
+            <div
+                *ngFor="let mapping of colorMapping; let i = index"
+                fxLayout="row"
+                fxLayoutGap="10px"
+                fxLayoutAlign="start center"
+                fxFlex="1"
+                style="margin-top: 10px; align-items: center"
+            >
+                <div fxFlex="150px">
+                    <mat-form-field
+                        class="w-100"
+                        color="accent"
+                        appearance="outline"
+                    >
+                        <mat-label>{{ 'Value' | translate }}</mat-label>
+                        <input
+                            matInput
+                            [(ngModel)]="mapping.value"
+                            (ngModelChange)="updateMapping()"
+                        />
+                    </mat-form-field>
+                </div>
+                <div fxFlex="150px">
+                    <mat-form-field
+                        class="w-100"
+                        color="accent"
+                        appearance="outline"
+                    >
+                        <mat-label>{{ 'Label' | translate }}</mat-label>
+                        <input
+                            matInput
+                            [(ngModel)]="mapping.label"
+                            (ngModelChange)="updateMapping()"
+                        />
+                    </mat-form-field>
+                </div>
+                <div fxFlex="40px">
+                    <input
+                        [(colorPicker)]="mapping.color"
+                        [style.background]="mapping.color"
+                        style="
+                            height: 50%;
+                            width: 100%;
+                            border: none;
+                            border-radius: 10%;
+                            cursor: pointer;
+                        "
+                        (colorPickerChange)="updateColor(i, $event)"
+                    />
+                </div>
+                <div fxLayoutAlign="end center">
+                    <button
+                        mat-icon-button
+                        [matTooltip]="'Remove Mapping' | translate"
+                        color="accent"
+                        (click)="removeMapping(i)"
+                    >
+                        <i class="material-icons">delete</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isSelectedPropertyBoolean && showCustomColorMapping">
+        <div
+            fxLayout="column"
+            fxLayoutGap="10px"
+            style="margin-top: 10px; margin-right: 10px"
+        >
+            <div
+                *ngFor="let mapping of colorMapping; let i = index"
+                fxLayout="row"
+                fxLayoutGap="10px"
+                fxLayoutAlign="start center"
+                fxFlex="1"
+                style="margin-top: 10px; align-items: center"
+            >
+                <div fxFlex="40px">{{ mapping.value }}</div>
+                <div fxFlex>
+                    <mat-form-field
+                        class="w-100"
+                        color="accent"
+                        appearance="outline"
+                    >
+                        <mat-label>Label</mat-label>
+                        <input
+                            matInput
+                            [(ngModel)]="mapping.label"
+                            (ngModelChange)="updateMapping()"
+                        />
+                    </mat-form-field>
+                </div>
+                <div fxFlex="70px">
+                    <input
+                        [(colorPicker)]="mapping.color"
+                        [style.background]="mapping.color"
+                        style="
+                            height: 50%;
+                            width: 100%;
+                            border: none;
+                            border-radius: 10%;
+                            cursor: pointer;
+                        "
+                        (colorPickerChange)="updateColor(i, $event)"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

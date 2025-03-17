@@ -19,6 +19,14 @@
 import { ConnectBtns } from './ConnectBtns';
 
 export class ConnectEventSchemaUtils {
+    public static markPropertyAsMeasurement(propertyName: string) {
+        cy.dataCy('property-scope-' + propertyName, { timeout: 10000 })
+            .click()
+            .get('.mdc-list-item__primary-text')
+            .contains('Measurement')
+            .click();
+    }
+
     public static markPropertyAsDimension(propertyName: string) {
         cy.dataCy('property-scope-' + propertyName, { timeout: 10000 })
             .click()
@@ -175,8 +183,7 @@ export class ConnectEventSchemaUtils {
 
         // Edit new property
         cy.dataCy('connect-add-field-name', { timeout: 10000 }).type(
-            '{backspace}{backspace}{backspace}{backspace}{backspace}' +
-                propertyName,
+            propertyName,
         );
         cy.dataCy('connect-add-field-name-button').click();
 
@@ -231,7 +238,9 @@ export class ConnectEventSchemaUtils {
             .click();
         cy.dataCy('sp-save-edit-property').click();
         // validate that static value is persisted
-        cy.dataCy('edit-' + propertyName, { timeout: 10000 }).click({
+        cy.dataCy('edit-' + propertyName.toLowerCase(), {
+            timeout: 10000,
+        }).click({
             force: true,
         });
         ConnectBtns.changeRuntimeType().contains(dataType);

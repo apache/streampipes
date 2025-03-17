@@ -31,13 +31,6 @@ export class EventPropertyUtilsService {
         return this.findProperty(properties, elementId, ep => ep.elementId);
     }
 
-    findPropertyByRuntimeName(
-        properties: EventPropertyUnion[],
-        runtimeName: string,
-    ) {
-        return this.findProperty(properties, runtimeName, ep => ep.runtimeName);
-    }
-
     private findProperty(
         properties: EventPropertyUnion[],
         searchValue: string,

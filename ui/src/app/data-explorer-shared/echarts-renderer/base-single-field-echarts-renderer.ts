@@ -73,7 +73,13 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
             gridOptions,
         );
         this.configureAxes(options, widgetConfig, numberOfCharts, series);
-        this.finalizeOptions(options, datasets, series, gridOptions);
+        this.finalizeOptions(
+            options,
+            datasets,
+            series,
+            gridOptions,
+            widgetConfig,
+        );
     }
 
     private getNumberOfCharts(tags: TagValue[]): number {
@@ -163,6 +169,7 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
         dataset: DatasetOption[],
         series: S[],
         gridOptions: GridOptions,
+        widgetConfig: T,
     ) {
         if (series.length > 1) {
             this.echartsUtilsService.addSeriesTitles(
@@ -173,7 +180,7 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
         }
         options.dataset = dataset;
         options.series = series;
-        this.addAdditionalConfigs(options);
+        this.addAdditionalConfigs(options, widgetConfig);
     }
 
     showAxes(): boolean {
@@ -182,7 +189,10 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
 
     abstract addDatasetTransform(widgetConfig: T): DataTransformOption;
 
-    abstract addAdditionalConfigs(option: EChartsOption): void;
+    abstract addAdditionalConfigs(
+        option: EChartsOption,
+        widgetConfig?: T,
+    ): void;
 
     abstract addSeriesItem(
         name: string,

@@ -25,6 +25,7 @@ import org.apache.streampipes.export.resolver.ChartResolver;
 import org.apache.streampipes.export.resolver.DashboardResolver;
 import org.apache.streampipes.export.resolver.DataSourceResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
+import org.apache.streampipes.export.resolver.GenericStorageDocumentResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.export.utils.SerializationUtils;
@@ -106,6 +107,10 @@ public class ExportPackageGenerator {
             item,
             new ChartResolver(),
             manifest::addDataView);
+      });
+
+      config.getGenericStorageDocuments().forEach(item -> {
+        addDoc(builder, item, new GenericStorageDocumentResolver(), manifest::addGenericStorageDocument);
       });
 
       config.getFiles().forEach(item -> {

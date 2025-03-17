@@ -24,7 +24,7 @@ describe('Test Map View in Data Explorer', () => {
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Map');
+        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'map');
 
         // Change marker positions
         DataLakeUtils.openVisualizationConfig();

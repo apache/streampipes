@@ -24,7 +24,7 @@ describe('Test Heatmap View in Data Explorer', () => {
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Heatmap');
+        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'heatmap');
 
         // Check checkbox
         DataLakeUtils.openVisualizationConfig();

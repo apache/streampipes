@@ -19,13 +19,23 @@
 
 package org.apache.streampipes.export.resolver;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
+import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
+import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.resource.management.secret.SecretProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AdapterResolver extends AbstractResolver<AdapterDescription> {
+
+  private static final Logger LOG = LoggerFactory.getLogger(AdapterResolver.class);
 
   @Override
   public AdapterDescription findDocument(String resourceId) {
@@ -37,6 +47,7 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
     adapterDescription.setRev(null);
     adapterDescription.setSelectedEndpointUrl(null);
     adapterDescription.setRunning(false);
+    SecretProvider.getDecryptionService().apply(adapterDescription);
 
     return adapterDescription;
   }
@@ -52,22 +63,41 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
   }
 
   @Override
-  public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getAdapterInstanceStorage().persist(deserializeDocument(document));
-  }
-
   public void writeDocument(String document,
-                            boolean overrideDocument) throws JsonProcessingException {
+                            AssetExportConfiguration config) throws JsonProcessingException {
     var adapterDescription = deserializeDocument(document);
-    if (overrideDocument) {
+    if (config.isOverrideBrokerSettings()) {
       overrideProtocol(adapterDescription.getEventGrounding());
     }
+    SecretProvider.getEncryptionService().apply(adapterDescription);
     getNoSqlStore().getAdapterInstanceStorage().persist(adapterDescription);
   }
 
   @Override
-  protected AdapterDescription deserializeDocument(String document) throws JsonProcessingException {
+  public AdapterDescription deserializeDocument(String document) throws JsonProcessingException {
     return this.spMapper.readValue(document, AdapterDescription.class);
+  }
+
+  @Override
+  public void deleteDocument(String document) throws JsonProcessingException {
+    var adapter = deserializeDocument(document);
+    var resourceId = adapter.getElementId();
+    var existingAdapter = getNoSqlStore().getAdapterInstanceStorage().getElementById(resourceId);
+    if (existingAdapter != null) {
+      if (existingAdapter.isRunning()) {
+        try {
+          new AdapterMasterManagement(
+              getNoSqlStore().getAdapterInstanceStorage(),
+              new SpResourceManager().manageAdapters(),
+              new SpResourceManager().manageDataStreams(),
+              AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+          ).stopStreamAdapter(resourceId);
+        } catch (AdapterException e) {
+          LOG.warn("Error when stopping adapter with id {} and name {}", resourceId, existingAdapter.getName());
+        }
+      }
+      getNoSqlStore().getAdapterInstanceStorage().deleteElementById(resourceId);
+    }
   }
 
 }

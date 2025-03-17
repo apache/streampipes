@@ -31,6 +31,7 @@
                 >
                     <mat-option
                         [value]="widget.id"
+                        [attr.data-cy]="'select-widget-' + widget.id"
                         *ngFor="let widget of availableWidgets"
                     >
                         <span class="pipeline-name">{{ widget.label }}</span>

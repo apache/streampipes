@@ -16,9 +16,9 @@
   ~
   -->
 
-<ng-template matStepLabel>Select Format</ng-template>
+<ng-template matStepLabel>{{ 'Select Format' | translate }}</ng-template>
 <div>
-    <sp-configuration-box title="Download Format">
+    <sp-configuration-box [title]="'Download Format' | translate">
         <mat-radio-group
             class="sp-radio-group"
             [(ngModel)]="formatExportConfig.format"
@@ -42,13 +42,13 @@
                 class="sp-radio-button"
                 data-cy="download-configuration-xlsx"
             >
-                Excel (XLSX)
+                EXCEL (XLSX)
             </mat-radio-button>
         </mat-radio-group>
     </sp-configuration-box>
 </div>
 <div *ngIf="formatExportConfig.format === 'csv'" class="mt-10">
-    <sp-configuration-box title="Delimiter">
+    <sp-configuration-box [title]="'Delimiter' | translate">
         <mat-radio-group
             [(ngModel)]="formatExportConfig.delimiter"
             class="sp-radio-group"
@@ -72,19 +72,19 @@
     *ngIf="formatExportConfig.format === 'xlsx' && hasReadFilePrivilege"
     fxLayout="column"
 >
-    <sp-configuration-box title="Excel template">
+    <sp-configuration-box [title]="'Excel template' | translate">
         <div fxLayout="column">
             <mat-checkbox
                 [(ngModel)]="formatExportConfig.useTemplate"
                 [disabled]="excelTemplates.length === 0"
             >
-                Use uploaded file template
+                {{ 'Use uploaded file template' | translate }}
             </mat-checkbox>
             @if (formatExportConfig.useTemplate && excelTemplates.length > 0) {
                 <mat-form-field class="mt-10" color="accent">
                     <mat-select
                         [(ngModel)]="formatExportConfig.templateId"
-                        placeholder="Choose template"
+                        [placeholder]="'Choose template' | translate"
                     >
                         <mat-option
                             *ngFor="let template of excelTemplates"
@@ -95,7 +95,9 @@
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field color="accent">
-                    <mat-label>First row index to append data</mat-label>
+                    <mat-label>{{
+                        'First row index to append data' | translate
+                    }}</mat-label>
                     <input
                         matInput
                         [(ngModel)]="formatExportConfig.startRow"
@@ -112,7 +114,7 @@
         formatExportConfig.format === 'csv'
     "
 >
-    <sp-configuration-box title="Header column name">
+    <sp-configuration-box [title]="'Header column name' | translate">
         <mat-radio-group
             [(ngModel)]="formatExportConfig.headerColumnName"
             class="sp-radio-group"
@@ -121,13 +123,17 @@
                 value="key"
                 class="sp-radio-button"
                 data-cy="download-configuration-column-name-key"
-                >Use field key (runtime name) as header column
+                >{{
+                    'Use field key (runtime name) as header column' | translate
+                }}
             </mat-radio-button>
             <mat-radio-button
                 value="label"
                 class="sp-radio-button"
                 data-cy="download-configuration-column-name-label"
-                >Use field label as header column if available
+                >{{
+                    'Use field label as header column if available' | translate
+                }}
             </mat-radio-button>
         </mat-radio-group>
     </sp-configuration-box>

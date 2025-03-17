@@ -375,12 +375,11 @@ export class DataLakeUtils {
     /**
      * Select visualization type
      */
-    public static selectVisualizationType(type: string | 'Table') {
+    public static selectVisualizationType(type: string | 'table') {
         // Select visualization type
         cy.dataCy('data-explorer-select-visualization-type', { timeout: 10000 })
             .click()
-            .get('mat-option')
-            .contains(type)
+            .dataCy(`select-widget-${type}`)
             .click();
     }
 
@@ -413,29 +412,65 @@ export class DataLakeUtils {
     }
 
     public static checkResults(
-        dataLakeIndex: string,
+        measurementName: string,
         fileRoute: string,
+        ignoreTime: boolean,
+    ) {
+        const fileType = this.getFileType(fileRoute);
+
+        this.fetchDataLakeResults(measurementName, fileType).then(
+            actualResultString =>
+                this.compareResults(
+                    actualResultString,
+                    fileRoute,
+                    fileType,
+                    ignoreTime,
+                ),
+        );
+    }
+
+    private static getFileType(fileRoute: string): 'csv' | 'json' {
+        return fileRoute.endsWith('.csv') ? 'csv' : 'json';
+    }
+
+    private static fetchDataLakeResults(
+        measurementName: string,
+        fileType: 'csv' | 'json',
+    ): Cypress.Chainable<string> {
+        return cy
+            .request({
+                method: 'GET',
+                url: `/streampipes-backend/api/v4/datalake/measurements/${measurementName}/download?format=${fileType}&delimiter=semicolon`,
+                headers: {
+                    'content-type': 'application/octet-stream',
+                },
+                auth: {
+                    bearer: window.localStorage.getItem('auth-token'),
+                },
+            })
+            .then(response => response.body);
+    }
+
+    private static compareResults(
+        actualResultString: string,
+        fileRoute: string,
+        fileType: 'csv' | 'json',
         ignoreTime?: boolean,
     ) {
-        // Validate result in datalake
-        cy.request({
-            method: 'GET',
-            url: `/streampipes-backend/api/v4/datalake/measurements/${dataLakeIndex}/download?format=csv&delimiter=semicolon`,
-            headers: {
-                'content-type': 'application/octet-stream',
-            },
-            auth: {
-                bearer: window.localStorage.getItem('auth-token'),
-            },
-        }).then(response => {
-            const actualResultString = response.body;
-            cy.readFile(fileRoute).then(expectedResultString => {
+        cy.readFile(fileRoute).then(expectedResult => {
+            if (fileType === 'csv') {
                 DataSetUtils.csvEqual(
                     actualResultString,
-                    expectedResultString,
+                    expectedResult,
                     ignoreTime,
                 );
-            });
+            } else if (fileType === 'json') {
+                DataSetUtils.jsonFilesEqual(
+                    actualResultString,
+                    expectedResult,
+                    ignoreTime,
+                );
+            }
         });
     }
 

@@ -23,7 +23,6 @@ import {
     PieChartWidgetModel,
 } from '../model/pie-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { ColorMappingService } from '../../../../services/color-mapping.service';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 
@@ -36,7 +35,6 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
     PieChartVisConfig
 > {
     constructor(
-        private colorMappingService: ColorMappingService,
         widgetConfigurationService: ChartConfigurationService,
         fieldService: DataExplorerFieldProviderService,
     ) {
@@ -46,7 +44,7 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
     setSelectedProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
             field;
-        this.triggerViewRefresh();
+        this.triggerDataRefresh();
     }
 
     protected applyWidgetConfig(config: PieChartVisConfig): void {
@@ -57,8 +55,6 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
         );
         config.roundingValue ??= 0.1;
         config.selectedRadius ??= 0;
-        config.showCustomColorMapping ??= false;
-        config.colorMappings ??= [];
     }
 
     updateRoundingValue(selectedType: number) {
@@ -73,53 +69,14 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
         this.triggerViewRefresh();
     }
 
-    showCustomColorMapping(showCustomColorMapping: boolean) {
-        this.currentlyConfiguredWidget.visualizationConfig.showCustomColorMapping =
-            showCustomColorMapping;
-
-        if (!showCustomColorMapping) {
-            this.resetColorMappings();
-        }
-
-        this.triggerViewRefresh();
-    }
-
-    resetColorMappings(): void {
-        this.currentlyConfiguredWidget.visualizationConfig.colorMappings = [];
-        this.triggerViewRefresh();
-    }
-
-    addMapping() {
-        this.colorMappingService.addMapping(
-            this.currentlyConfiguredWidget.visualizationConfig.colorMappings,
-        );
-        this.triggerViewRefresh();
-    }
-
-    removeMapping(index: number) {
-        this.currentlyConfiguredWidget.visualizationConfig.colorMappings =
-            this.colorMappingService.removeMapping(
-                this.currentlyConfiguredWidget.visualizationConfig
-                    .colorMappings,
-                index,
-            );
-        this.triggerViewRefresh();
-    }
-
-    updateColor(index: number, newColor: string) {
-        this.colorMappingService.updateColor(
-            this.currentlyConfiguredWidget.visualizationConfig.colorMappings,
-            index,
-            newColor,
-        );
-        this.triggerViewRefresh();
-    }
-
-    updateMapping() {
-        this.triggerViewRefresh();
-    }
-
     protected requiredFieldsForChartPresent(): boolean {
         return this.fieldProvider.allFields.length > 0;
+    }
+
+    triggerViewUpdate() {
+        this.widgetConfigurationService.notify({
+            refreshView: true,
+            refreshData: false,
+        });
     }
 }

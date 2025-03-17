@@ -47,6 +47,7 @@ export class SchemaEditorHeaderComponent {
 
     public addStaticValueProperty() {
         this.addStaticValuePropertyEmitter.emit(this.staticValueKey);
+        this.staticValueKey = '';
         this.trigger.closeMenu();
     }
 

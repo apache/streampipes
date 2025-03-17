@@ -23,6 +23,7 @@ import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
+import { DataExplorerWidget } from '../../support/model/DataExplorerWidget';
 
 describe('Validate that filter works for numerical dimension property', () => {
     beforeEach('Setup Test', () => {
@@ -54,7 +55,7 @@ describe('Validate that filter works for numerical dimension property', () => {
         DataLakeUtils.clickOrderBy('descending');
 
         DataLakeUtils.openVisualizationConfig();
-        DataLakeUtils.selectVisualizationType('Table');
+        DataLakeUtils.selectVisualizationType(DataExplorerWidget.TABLE);
         DataLakeUtils.selectTimeRange(startDate, endDate);
         cy.wait(1000);
 

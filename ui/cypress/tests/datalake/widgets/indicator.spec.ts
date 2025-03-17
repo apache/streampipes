@@ -24,7 +24,11 @@ describe('Test Indicator View in Data Explorer', () => {
     });
 
     it('Perform Test', () => {
-        DataLakeUtils.addDataViewAndWidget('view', 'Persist', 'Indicator');
+        DataLakeUtils.addDataViewAndWidget(
+            'view',
+            'Persist',
+            'indicator-chart',
+        );
 
         // Check checkbox
         DataLakeUtils.openVisualizationConfig();

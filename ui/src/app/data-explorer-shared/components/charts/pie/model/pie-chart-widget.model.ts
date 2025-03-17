@@ -28,7 +28,8 @@ export interface PieChartVisConfig extends DataExplorerVisConfig {
     roundingValue: number;
     selectedRadius: number;
     showCustomColorMapping: boolean;
-    colorMappings: { value: string; color: string }[];
+    isSelectedPropertyBoolean: boolean;
+    colorMappingsPieChart: { value: string; label: string; color: string }[];
 }
 
 export interface PieChartWidgetModel extends DataExplorerWidgetModel {

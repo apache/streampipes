@@ -23,6 +23,7 @@ import { TableWidgetComponent } from '../components/charts/table/table-widget.co
 import { MapWidgetConfigComponent } from '../components/charts/map/config/map-widget-config.component';
 import { MapWidgetComponent } from '../components/charts/map/map-widget.component';
 import { HeatmapWidgetConfigComponent } from '../components/charts/heatmap/config/heatmap-widget-config.component';
+import { StatusHeatmapWidgetConfigComponent } from '../components/charts/status-heatmap/config/status-heatmap-widget-config.component';
 import { TimeSeriesChartWidgetConfigComponent } from '../components/charts/time-series-chart/config/time-series-chart-widget-config.component';
 import { ImageWidgetConfigComponent } from '../components/charts/image/config/image-widget-config.component';
 import { ImageWidgetComponent } from '../components/charts/image/image-widget.component';
@@ -30,6 +31,7 @@ import { IndicatorWidgetConfigComponent } from '../components/charts/indicator/c
 import { CorrelationWidgetConfigComponent } from '../components/charts/correlation-chart/config/correlation-chart-widget-config.component';
 import { SpEchartsWidgetComponent } from '../components/charts/base/echarts-widget.component';
 import { HeatmapWidgetModel } from '../components/charts/heatmap/model/heatmap-widget.model';
+import { StatusHeatmapWidgetModel } from '../components/charts/status-heatmap/model/status-heatmap-widget.model';
 import { SpValueHeatmapWidgetConfigComponent } from '../components/charts/value-heatmap/config/value-heatmap-chart-widget-config.component';
 import { SpHistogramChartWidgetConfigComponent } from '../components/charts/histogram/config/histogram-chart-widget-config.component';
 import { SpPieChartWidgetConfigComponent } from '../components/charts/pie/config/pie-chart-widget-config.component';
@@ -38,6 +40,7 @@ import { PieChartWidgetModel } from '../components/charts/pie/model/pie-chart-wi
 import { ValueHeatmapChartWidgetModel } from '../components/charts/value-heatmap/model/value-heatmap-chart-widget.model';
 import { SpHistogramRendererService } from '../components/charts/histogram/histogram-renderer.service';
 import { SpHeatmapRendererService } from '../components/charts/heatmap/heatmap-renderer.service';
+import { SpStatusHeatmapRendererService } from '../components/charts/status-heatmap/status-heatmap-renderer.service';
 import { SpPieRendererService } from '../components/charts/pie/pie-renderer.service';
 import { SpValueHeatmapRendererService } from '../components/charts/value-heatmap/value-heatmap-renderer.service';
 import { CorrelationChartWidgetModel } from '../components/charts/correlation-chart/model/correlation-chart-widget.model';
@@ -65,6 +68,7 @@ export class DataExplorerChartRegistry {
     constructor(
         private gaugeRenderer: SpGaugeRendererService,
         private heatmapRenderer: SpHeatmapRendererService,
+        private statusHeatmapRenderer: SpStatusHeatmapRendererService,
         private histogramRenderer: SpHistogramRendererService,
         private pieRenderer: SpPieRendererService,
         private valueHeatmapRenderer: SpValueHeatmapRendererService,
@@ -116,6 +120,17 @@ export class DataExplorerChartRegistry {
                 widgetConfigurationComponent: HeatmapWidgetConfigComponent,
                 widgetComponent: SpEchartsWidgetComponent<HeatmapWidgetModel>,
                 chartRenderer: this.heatmapRenderer,
+            },
+            {
+                id: 'status-heatmap',
+                label: 'Status Heatmap',
+                widgetAppearanceConfigurationComponent:
+                    SpEchartsWidgetAppearanceConfigComponent,
+                widgetConfigurationComponent:
+                    StatusHeatmapWidgetConfigComponent,
+                widgetComponent:
+                    SpEchartsWidgetComponent<StatusHeatmapWidgetModel>,
+                chartRenderer: this.statusHeatmapRenderer,
             },
             {
                 id: 'time-series-chart',

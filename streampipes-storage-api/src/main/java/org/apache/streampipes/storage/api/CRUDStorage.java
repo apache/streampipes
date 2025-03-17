@@ -35,6 +35,8 @@ public interface CRUDStorage<T> {
 
   default void deleteElementById(String id) {
     var element = getElementById(id);
-    deleteElement(element);
+    if (element != null) {
+      deleteElement(element);
+    }
   }
 }

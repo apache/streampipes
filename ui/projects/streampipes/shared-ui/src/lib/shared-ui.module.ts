@@ -82,6 +82,7 @@ import { SpConfigurationBoxComponent } from './components/configuration-box/conf
 import { DateInputComponent } from './components/date-input/date-input.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     declarations: [
@@ -148,6 +149,7 @@ import { MatInputModule } from '@angular/material/input';
         MatPaginator,
         MatRadioModule,
         MatSort,
+        TranslateModule.forChild({}),
     ],
     providers: [DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel],
     exports: [

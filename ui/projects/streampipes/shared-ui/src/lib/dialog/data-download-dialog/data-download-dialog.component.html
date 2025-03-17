@@ -28,7 +28,9 @@
                         [dataExportConfig]="exportConfig.dataExportConfig"
                     >
                     </sp-select-data>
-                    <ng-template matStepLabel>Select Data</ng-template>
+                    <ng-template matStepLabel>{{
+                        'Select Data' | translate
+                    }}</ng-template>
                 </mat-step>
 
                 <mat-step>
@@ -53,7 +55,7 @@
             style="margin-right: 10px"
             (click)="exitDialog()"
         >
-            Close
+            {{ 'Close' | translate }}
         </button>
         <button
             mat-button
@@ -63,7 +65,7 @@
             *ngIf="downloadDialogStepper.selectedIndex === 1"
             (click)="previousStep()"
         >
-            Previous
+            {{ 'Previous' | translate }}
         </button>
         <button
             mat-button
@@ -73,7 +75,7 @@
             (click)="nextStep()"
             data-cy="download-configuration-next-btn"
         >
-            Next
+            {{ 'Next' | translate }}
         </button>
         <button
             mat-button
@@ -83,7 +85,7 @@
             (click)="downloadData()"
             data-cy="download-configuration-download-btn"
         >
-            Download
+            {{ 'Download' | translate }}
         </button>
     </div>
 </div>

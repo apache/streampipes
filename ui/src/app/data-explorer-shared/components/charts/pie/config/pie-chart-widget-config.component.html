@@ -87,98 +87,19 @@
                 </mat-slider>
                 <small>{{ slider.value }}% </small>
             </div>
-            <div
-                fxLayout="row"
-                fxLayoutGap="10px"
-                fxLayoutAlign="start center"
-                fxFlex="100"
-                class="checkbox-container"
-            >
-                <mat-checkbox
-                    color="accent"
-                    [(ngModel)]="
-                        currentlyConfiguredWidget.visualizationConfig
-                            .showCustomColorMapping
-                    "
-                    (ngModelChange)="showCustomColorMapping($event)"
-                >
-                </mat-checkbox>
-                <small>{{ 'Add custom color mapping' | translate }}</small>
-            </div>
 
-            <div
-                *ngIf="
+            <sp-color-mapping-options-config
+                [(colorMapping)]="
                     currentlyConfiguredWidget.visualizationConfig
-                        .showCustomColorMapping
+                        .colorMappingsPieChart
                 "
-            >
-                <button mat-raised-button color="accent" (click)="addMapping()">
-                    <i class="material-icons">add</i
-                    ><span>&nbsp;{{ 'Add Mapping' | translate }}</span>
-                </button>
-            </div>
-
-            <div
-                *ngIf="
+                [selectedProperty]="
                     currentlyConfiguredWidget.visualizationConfig
-                        .showCustomColorMapping
+                        .selectedProperty
                 "
+                (viewRefreshEmitter)="triggerViewUpdate()"
             >
-                <div fxLayout="column" fxLayoutGap="10px">
-                    <div
-                        *ngFor="
-                            let mapping of currentlyConfiguredWidget
-                                .visualizationConfig.colorMappings;
-                            let i = index
-                        "
-                        fxLayout="row"
-                        fxLayoutGap="10px"
-                        fxLayoutAlign="start center"
-                        fxFlex="100"
-                        style="margin-top: 10px; align-items: center"
-                    >
-                        <div fxFlex>
-                            <mat-form-field
-                                class="w-100"
-                                color="accent"
-                                appearance="outline"
-                            >
-                                <mat-label>{{ 'Value' | translate }}</mat-label>
-                                <input
-                                    matInput
-                                    [(ngModel)]="mapping.value"
-                                    (ngModelChange)="updateMapping()"
-                                />
-                            </mat-form-field>
-                        </div>
-                        <div fxFlex="70px">
-                            <input
-                                [(colorPicker)]="mapping.color"
-                                [style.background]="mapping.color"
-                                style="
-                                    height: 50%;
-                                    width: 100%;
-                                    border: none;
-                                    border-radius: 10%;
-                                    cursor: pointer;
-                                "
-                                (colorPickerChange)="updateColor(i, $event)"
-                                readonly
-                            />
-                        </div>
-                        <div fxLayoutAlign="end center">
-                            <button
-                                mat-icon-button
-                                [matTooltip]="'Remove Mapping' | translate"
-                                color="accent"
-                                (click)="removeMapping(i)"
-                            >
-                                <i class="material-icons">delete</i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </sp-color-mapping-options-config>
         </div>
     </sp-configuration-box>
 </sp-visualization-config-outer>
