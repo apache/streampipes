@@ -186,10 +186,11 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
 
   @PostMapping(path = "/{id}/stop", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority() and hasPermission('#elementId', 'WRITE')")
-  public ResponseEntity<?> stopAdapter(@PathVariable("id") String elementId) {
+  public ResponseEntity<?> stopAdapter(@PathVariable("id") String elementId,
+                                       @RequestParam(value = "forceStop", defaultValue = "false") boolean forceStop) {
     try {
-      managementService.stopStreamAdapter(elementId);
-      return ok(Notifications.success("Adapter started"));
+      managementService.stopStreamAdapter(elementId, forceStop);
+      return ok(Notifications.success("Adapter stopped"));
     } catch (AdapterException e) {
       LOG.error("Could not stop adapter with id {}", elementId, e);
       return serverError(SpLogMessage.from(e));
@@ -201,7 +202,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   public ResponseEntity<?> startAdapter(@PathVariable("id") String elementId) {
     try {
       managementService.startStreamAdapter(elementId);
-      return ok(Notifications.success("Adapter stopped"));
+      return ok(Notifications.success("Adapter started"));
     } catch (AdapterException e) {
       LOG.error("Could not start adapter with id {}", elementId, e);
       return serverError(SpLogMessage.from(e));

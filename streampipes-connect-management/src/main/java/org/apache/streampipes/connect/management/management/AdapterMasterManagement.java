@@ -125,7 +125,7 @@ public class AdapterMasterManagement {
 
     // Stop stream adapter
     try {
-      stopStreamAdapter(elementId);
+      stopStreamAdapter(elementId, true);
     } catch (AdapterException e) {
       LOG.info("Could not stop adapter: " + elementId, e);
     }
@@ -145,10 +145,21 @@ public class AdapterMasterManagement {
     return adapterInstanceStorage.findAll();
   }
 
-  public void stopStreamAdapter(String elementId) throws AdapterException {
+  public void stopStreamAdapter(String elementId,
+                                boolean forceStop) throws AdapterException {
     AdapterDescription ad = adapterInstanceStorage.getElementById(elementId);
 
-    WorkerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), ad);
+    try {
+      WorkerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), ad);
+    } catch (AdapterException e) {
+      if (!forceStop) {
+        throw new AdapterException("Could not stop adapter", e);
+      } else {
+        ad.setRunning(false);
+        ad.setSelectedEndpointUrl(null);
+        adapterInstanceStorage.updateElement(ad);
+      }
+    }
     ExtensionsLogProvider.INSTANCE.reset(elementId);
 
     // remove the adapter from the metrics manager so that

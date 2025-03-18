@@ -75,9 +75,16 @@ export class AdapterService {
         );
     }
 
-    stopAdapter(adapter: AdapterDescription): Observable<Message> {
+    stopAdapter(
+        adapter: AdapterDescription,
+        forceStop = false,
+    ): Observable<Message> {
         return this.http
-            .post(this.adapterMasterUrl + adapter.elementId + '/stop', {})
+            .post(
+                this.adapterMasterUrl + adapter.elementId + '/stop',
+                {},
+                { params: { forceStop } },
+            )
             .pipe(map(response => Message.fromData(response as any)));
     }
 
