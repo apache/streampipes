@@ -88,7 +88,7 @@
         <jgrapht.version>1.5.1</jgrapht.version>
         <json-smart.version>2.4.10</json-smart.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
-        <jjwt.version>0.11.2</jjwt.version>
+        <jjwt.version>0.12.6</jjwt.version>
         <jts-core.version>1.19.0</jts-core.version>
         <kafka.version>3.7.1</kafka.version>
         <lightcouch.version>0.2.0</lightcouch.version>
