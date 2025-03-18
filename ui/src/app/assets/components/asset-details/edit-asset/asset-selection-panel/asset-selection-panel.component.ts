@@ -95,7 +95,7 @@ export class SpAssetSelectionPanelComponent implements OnInit {
     }
 
     rerenderTree(): void {
-        this.dataSource.data = null;
+        this.dataSource.data = [];
         this.dataSource.data = [this.assetModel];
         this.treeControl.expandAll();
     }
