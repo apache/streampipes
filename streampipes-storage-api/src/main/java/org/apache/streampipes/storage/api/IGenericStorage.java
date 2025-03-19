@@ -32,6 +32,8 @@ public interface IGenericStorage {
 
   Map<String, Object> findOne(String id) throws IOException;
 
+  Map<String, Object> findOneWithNullIfEmpty(String id);
+
   Map<String, Object> create(String payload) throws IOException;
 
   <T> T create(T payload, Class<T> targetClass) throws IOException;

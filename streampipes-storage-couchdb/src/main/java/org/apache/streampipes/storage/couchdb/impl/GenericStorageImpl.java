@@ -100,6 +100,15 @@ public class GenericStorageImpl implements IGenericStorage {
   }
 
   @Override
+  public Map<String, Object> findOneWithNullIfEmpty(String id) {
+    try {
+      return this.queryDocuments(getDatabaseRoute() + SLASH + id);
+    } catch (IOException e) {
+      return null;
+    }
+  }
+
+  @Override
   public Map<String, Object> create(String payload) throws IOException {
     Request req = Utils.postRequest(getDatabaseRoute(), payload);
     Content content = executeAndReturnContent(req);
