@@ -1,0 +1,40 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+org.apache.streampipes.sinks.databases.jvm.milvus.title=Milvus
+org.apache.streampipes.sinks.databases.jvm.milvus.description=Stores events in a Milvus database.
+
+db_uri_title=URI
+db_uri_description=The URI of the Milvus instance
+
+db_token_title=Token
+db_token_description=The token for the Milvus Server
+
+db_database_title=DBName
+db_database_description=The name of the database where events will be stored
+
+db_collection_title=Collection
+db_collection_description=The name of the collection where events will be stored
+
+db_DatabaseReplicasNumber_title=Database Replicas Number
+db_DatabaseReplicasNumber_description=The number of replicas of the database
+
+db_vector_title=Vector
+db_vector_description=The vector of the event
+
+
+
