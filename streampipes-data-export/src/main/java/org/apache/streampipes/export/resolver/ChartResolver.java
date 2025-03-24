@@ -20,6 +20,7 @@ package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -51,13 +52,20 @@ public class ChartResolver extends AbstractResolver<DataExplorerWidgetModel> {
   }
 
   @Override
-  public void writeDocument(String document) throws JsonProcessingException {
+  public void writeDocument(String document, AssetExportConfiguration config) throws JsonProcessingException {
     getNoSqlStore().getDataExplorerWidgetStorage().persist(deserializeDocument(document));
   }
 
   @Override
-  protected DataExplorerWidgetModel deserializeDocument(String document) throws JsonProcessingException {
+  public DataExplorerWidgetModel deserializeDocument(String document) throws JsonProcessingException {
     return this.defaultMapper.readValue(document, DataExplorerWidgetModel.class);
+  }
+
+  @Override
+  public void deleteDocument(String document) throws JsonProcessingException {
+    var chart = readDocument(document);
+    var resourceId = chart.getElementId();
+    getNoSqlStore().getDataExplorerWidgetStorage().deleteElementById(resourceId);
   }
 
 }

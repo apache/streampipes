@@ -109,7 +109,6 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
         options: EChartsOption,
         widgetConfig: HeatmapWidgetModel,
     ): void {
-        options.tooltip = {};
         options.grid = {
             height: '80%',
             top: '80',
@@ -127,6 +126,7 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
             },
         };
         options.visualMap = {
+            show: widgetConfig.baseAppearanceConfig.chartAppearance.showLegend,
             min: widgetConfig.visualizationConfig.visualMapMin,
             max: widgetConfig.visualizationConfig.visualMapMax,
             calculable: true,

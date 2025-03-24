@@ -20,6 +20,7 @@ package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -48,14 +49,10 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
   }
 
   @Override
-  public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getDataStreamStorage().persist(deserializeDocument(document));
-  }
-
   public void writeDocument(String document,
-                            boolean overrideDocument) throws JsonProcessingException {
+                            AssetExportConfiguration config) throws JsonProcessingException {
     var dataStream = deserializeDocument(document);
-    if (overrideDocument) {
+    if (config.isOverrideBrokerSettings()) {
       if (dataStream.getEventGrounding() != null) {
         overrideProtocol(dataStream.getEventGrounding());
       }
@@ -64,7 +61,14 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
   }
 
   @Override
-  protected SpDataStream deserializeDocument(String document) throws JsonProcessingException {
+  public SpDataStream deserializeDocument(String document) throws JsonProcessingException {
     return this.spMapper.readValue(document, SpDataStream.class);
+  }
+
+  @Override
+  public void deleteDocument(String document) throws JsonProcessingException {
+    var dataSource = readDocument(document);
+    var resourceId = dataSource.getElementId();
+    getNoSqlStore().getDataStreamStorage().deleteElementById(resourceId);
   }
 }

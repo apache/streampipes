@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
     Content,
     icon,
@@ -35,6 +35,7 @@ import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widg
 import { MapWidgetModel } from './model/map-widget.model';
 import {
     DataExplorerField,
+    LocationConfigService,
     SpQueryResult,
 } from '@streampipes/platform-services';
 
@@ -47,15 +48,9 @@ export class MapWidgetComponent
     extends BaseDataExplorerWidgetDirective<MapWidgetModel>
     implements OnInit
 {
+    private locationConfigService = inject(LocationConfigService);
+
     item: any;
-
-    selectedLatitudeField: string;
-    selectedLongitudeField: string;
-    selectedMarkerIcon: string;
-    idsToDisplay: string[];
-    additionalItemsToDisplay: string[];
-    centerMap: boolean;
-
     showMarkers = false;
 
     layers: Marker[] & Polyline[];
@@ -71,20 +66,22 @@ export class MapWidgetComponent
 
     defaultCenter = latLng(46.879966, -121.726909);
 
-    options = {
-        layers: [
-            tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                attribution:
-                    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> Contributors",
-            }),
-        ],
-        zoom: 1,
-        center: this.defaultCenter,
-    };
+    options = {};
 
     ngOnInit(): void {
         super.ngOnInit();
+        this.locationConfigService.getLocationConfig().subscribe(config => {
+            this.options = {
+                layers: [
+                    tileLayer(config.tileServerUrl, {
+                        maxZoom: 18,
+                        attribution: config.attributionText,
+                    }),
+                ],
+                zoom: 1,
+                center: this.defaultCenter,
+            };
+        });
         this.layers = [];
         this.markerIds = [];
         this.showMarkers = true;
@@ -93,7 +90,7 @@ export class MapWidgetComponent
     markerImage(selectedMarker: string): string {
         return selectedMarker === 'Default'
             ? 'assets/img/marker-icon.png'
-            : 'assets/img/pe_icons/car.png';
+            : 'assets/img/car.png';
     }
 
     onMapReady(map: Map) {
@@ -236,11 +233,7 @@ export class MapWidgetComponent
                                 .selectedMarkerType,
                         );
 
-                        let text =
-                            '<b>Time</b>' +
-                            ': ' +
-                            result.rows[index][0] +
-                            '<br>';
+                        let text = `<b>Time:</b>${new Date(result.rows[index][0])}<br/>`;
                         this.dataExplorerWidget.visualizationConfig.selectedToolTipContent.forEach(
                             item => {
                                 const subIndex = this.getColumnIndex(
@@ -248,12 +241,7 @@ export class MapWidgetComponent
                                     spQueryResult,
                                 );
                                 text = text.concat(
-                                    '<b>' +
-                                        item.fullDbName +
-                                        '</b>' +
-                                        ': ' +
-                                        result.rows[index][subIndex] +
-                                        '<br>',
+                                    `<b>${item.fullDbName}:</b> ${result.rows[index][subIndex]}<br/>`,
                                 );
                             },
                         );

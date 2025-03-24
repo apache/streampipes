@@ -40,6 +40,7 @@ public class StreamPipesApplicationPackage {
   private Set<String> dataSources;
   private Set<String> pipelines;
   private Set<String> files;
+  private Set<String> genericStorageDocuments;
 
   public StreamPipesApplicationPackage() {
     this.requiredProcessorAppIds = new HashSet<>();
@@ -56,6 +57,7 @@ public class StreamPipesApplicationPackage {
     this.dataSources = new HashSet<>();
     this.pipelines = new HashSet<>();
     this.files = new HashSet<>();
+    this.genericStorageDocuments = new HashSet<>();
   }
 
   public Set<String> getRequiredProcessorAppIds() {
@@ -200,5 +202,17 @@ public class StreamPipesApplicationPackage {
 
   public void addAsset(String asset) {
     this.assets.add(asset);
+  }
+
+  public Set<String> getGenericStorageDocuments() {
+    return genericStorageDocuments;
+  }
+
+  public void setGenericStorageDocuments(Set<String> genericStorageDocuments) {
+    this.genericStorageDocuments = genericStorageDocuments;
+  }
+
+  public void addGenericStorageDocument(String documentId) {
+    this.genericStorageDocuments.add(documentId);
   }
 }

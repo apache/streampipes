@@ -85,6 +85,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     tutorialActiveSubscription: Subscription;
     currentFilterIds: Set<string> = new Set<string>();
 
+    startAdapterErrorText = 'Could not start adapter';
+    stopAdapterErrorText = 'Could not stop adapter';
+
     constructor(
         private adapterService: AdapterService,
         private dialogService: DialogService,
@@ -119,24 +122,18 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                 this.getAdaptersRunning();
             },
             error => {
-                this.openAdapterStatusErrorDialog(
-                    error.error,
-                    'Could not start adapter',
-                );
+                this.openAdapterStatusErrorDialog(adapter, error.error, true);
             },
         );
     }
 
-    stopAdapter(adapter: AdapterDescription) {
-        this.adapterService.stopAdapter(adapter).subscribe(
+    stopAdapter(adapter: AdapterDescription, forceStop = false) {
+        this.adapterService.stopAdapter(adapter, forceStop).subscribe(
             _ => {
                 this.getAdaptersRunning();
             },
             error => {
-                this.openAdapterStatusErrorDialog(
-                    error.error,
-                    'Could not stop adapter',
-                );
+                this.openAdapterStatusErrorDialog(adapter, error.error, false);
             },
         );
     }
@@ -170,15 +167,32 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         });
     }
 
-    openAdapterStatusErrorDialog(message: SpLogMessage, title: string) {
-        this.dialogService.open(SpExceptionDetailsDialogComponent, {
-            panelType: PanelType.STANDARD_PANEL,
-            title: 'Adapter Status',
-            width: '70vw',
-            data: {
-                message: message,
-                title: title,
+    openAdapterStatusErrorDialog(
+        adapter: AdapterDescription,
+        message: SpLogMessage,
+        startAction: boolean,
+    ) {
+        const title = startAction
+            ? this.startAdapterErrorText
+            : this.stopAdapterErrorText;
+        const dialogRef = this.dialogService.open(
+            SpExceptionDetailsDialogComponent,
+            {
+                panelType: PanelType.STANDARD_PANEL,
+                title: 'Adapter Status',
+                width: '70vw',
+                data: {
+                    message: message,
+                    title: title,
+                    additionalButton: !startAction,
+                    additionalButtonText: 'Reset adapter state',
+                },
             },
+        );
+        dialogRef.afterClosed().subscribe(forceStop => {
+            if (forceStop) {
+                this.stopAdapter(adapter, true);
+            }
         });
     }
 

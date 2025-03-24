@@ -16,9 +16,20 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog.scss';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ExportItem } from '@streampipes/platform-services';
 
-.warning-box {
-    border: 1px solid #dea843;
-    background: #f1f1e6;
+@Component({
+    selector: 'sp-generic-storage-item',
+    templateUrl: './generic-storage-item.component.html',
+})
+export class GenericStorageItemComponent {
+    @Input()
+    exportItem: ExportItem;
+
+    @Input()
+    importMode = false;
+
+    @Output()
+    removeItem: EventEmitter<string> = new EventEmitter<string>();
 }

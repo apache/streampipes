@@ -60,11 +60,11 @@
                     data-cy="select-upload-file-button"
                 >
                     <mat-icon *ngIf="uploadStatus < 99"
-                        >insert_drive_file</mat-icon
-                    >
+                        >insert_drive_file
+                    </mat-icon>
                     <mat-icon *ngIf="uploadStatus === 100" class="green-icon"
-                        >check_circle</mat-icon
-                    >
+                        >check_circle
+                    </mat-icon>
                 </button>
                 <mat-error *ngIf="!hasInput">
                     {{ errorMessage }}
@@ -77,7 +77,24 @@
             class="p-15"
             *ngIf="currentImportStep === 1"
         >
-            <h4>Select resources to import</h4>
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <h4>Select resources to import</h4>
+                <button
+                    mat-raised-button
+                    color="accent"
+                    class="small-button ml-5"
+                    (click)="toggleSelect(true)"
+                >
+                    Select all
+                </button>
+                <button
+                    mat-raised-button
+                    class="small-button mat-basic"
+                    (click)="toggleSelect(false)"
+                >
+                    Deselect all
+                </button>
+            </div>
             <sp-data-export-item
                 [exportItems]="importConfiguration.assets"
                 sectionTitle="Assets"
@@ -110,7 +127,11 @@
                 [exportItems]="importConfiguration.pipelines"
                 sectionTitle="Pipelines"
             ></sp-data-export-item>
-
+            <sp-generic-storage-items
+                [exportItems]="importConfiguration.genericStorageDocuments"
+                [importMode]="true"
+            >
+            </sp-generic-storage-items>
             <div
                 fxFlex="100"
                 fxLayout="column"
@@ -121,8 +142,17 @@
                 <div fxLayout="column" *ngIf="importConfiguration">
                     <mat-checkbox
                         [(ngModel)]="importConfiguration.overrideBrokerSettings"
-                        >Use broker settings from this instance</mat-checkbox
-                    >
+                        >Use broker settings from this instance
+                    </mat-checkbox>
+                    <div class="warning-box">
+                        <mat-checkbox
+                            [(ngModel)]="
+                                importConfiguration.overwriteExistingDocuments
+                            "
+                            >Update/overwrite existing documents with the same
+                            ID (operation may break things)
+                        </mat-checkbox>
+                    </div>
                 </div>
             </div>
         </div>

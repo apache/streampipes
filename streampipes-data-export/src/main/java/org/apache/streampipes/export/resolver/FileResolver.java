@@ -19,6 +19,7 @@
 package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.export.utils.SerializationUtils;
+import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.file.FileMetadata;
 
@@ -48,12 +49,19 @@ public class FileResolver extends AbstractResolver<FileMetadata> {
   }
 
   @Override
-  public void writeDocument(String document) throws JsonProcessingException {
+  public void writeDocument(String document, AssetExportConfiguration config) throws JsonProcessingException {
     getNoSqlStore().getFileMetadataStorage().persist(deserializeDocument(document));
   }
 
   @Override
-  protected FileMetadata deserializeDocument(String document) throws JsonProcessingException {
+  public FileMetadata deserializeDocument(String document) throws JsonProcessingException {
     return SerializationUtils.getSpObjectMapper().readValue(document, FileMetadata.class);
+  }
+
+  @Override
+  public void deleteDocument(String document) throws JsonProcessingException {
+    var fileMetadata = readDocument(document);
+    var resourceId = fileMetadata.getElementId();
+    getNoSqlStore().getFileMetadataStorage().deleteElementById(resourceId);
   }
 }
