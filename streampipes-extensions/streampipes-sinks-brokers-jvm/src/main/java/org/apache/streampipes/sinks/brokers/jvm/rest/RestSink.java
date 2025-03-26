@@ -76,19 +76,19 @@ public class RestSink implements IStreamPipesDataSink {
                     .withAssets(ExtensionAssetType.DOCUMENTATION)
                     .withLocales(Locales.EN)
                     .requiredTextParameter(
-                            Labels.from(URL_KEY, "Target URL", "The target URL of the REST endpoint to send events to (e.g., https://api.example.com/data)"),
+                            Labels.withId(URL_KEY),
                             false,
                             false
                     )
                     .requiredStaticProperty(
                             StaticProperties.collection(
-                            Labels.from(
-                                    HEADER_COLLECTION, "Headers Input", "Optional custom headers to be included with the REST request."),
+                            Labels.withId(
+                                    HEADER_COLLECTION ),
                                     false,
                             StaticProperties.stringFreeTextProperty(
-                                            Labels.from(HEADER_KEY, "Header Key", "The header key value to be included with the request. (e.g. Authorization, Content-Type)")),
+                                            Labels.withId(HEADER_KEY)),
                             StaticProperties.stringFreeTextProperty(
-                                            Labels.from(HEADER_VALUE, "Header Value", "The header value to be included with the request."))
+                                            Labels.withId(HEADER_VALUE))
                             )
                     )
                     .requiredStream(StreamRequirementsBuilder
