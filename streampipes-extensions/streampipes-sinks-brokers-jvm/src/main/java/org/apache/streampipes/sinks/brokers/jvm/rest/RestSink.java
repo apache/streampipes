@@ -45,6 +45,7 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
+import org.apache.streampipes.sdk.helpers.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,12 +62,18 @@ public class RestSink implements IStreamPipesDataSink {
   private static final String HEADER_COLLECTION = "header-collection";
   private static final String HEADER_KEY = "header-key";
   private static final String HEADER_VALUE = "header-value";
+  private static final String IS_RETRY_ENABLED_KEY = "is-retry-enabled-key";
+  private static final String RETRY_DELAY_MS_KEY = "retry-delay-ms-key";
+  private static final String RETRY_MAX_RETRIES_KEY = "retry-max-retries-key";
+  private static final String OPTION_RETRY_ENABLED = "true";
+  private static final String OPTION_RETRY_DISABLED = "false";
 
   private String url;
   private JsonDataFormatDefinition jsonDataFormatDefinition;
   private List<RestHeaderConfiguration> headerConfigurations = new ArrayList<>();
-  private static final int MAX_RETRIES = 3;
-  private static final int RETRY_DELAY_MS = 1000;
+  private boolean isRetryEnabled;
+  private int maxRetries;
+  private int retryDelayMs;
   @Override
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
@@ -80,6 +87,12 @@ public class RestSink implements IStreamPipesDataSink {
                             false,
                             false
                     )
+                    .requiredSingleValueSelection(
+                            Labels.withId(IS_RETRY_ENABLED_KEY),
+                            Options.from(OPTION_RETRY_ENABLED, OPTION_RETRY_DISABLED)
+                    )
+                    .requiredIntegerParameter(Labels.withId(RETRY_DELAY_MS_KEY))
+                    .requiredIntegerParameter(Labels.withId(RETRY_MAX_RETRIES_KEY))
                     .requiredStaticProperty(
                             StaticProperties.collection(
                             Labels.withId(
@@ -132,13 +145,16 @@ public class RestSink implements IStreamPipesDataSink {
     jsonDataFormatDefinition = new JsonDataFormatDefinition();
     url = parameters.extractor().singleValueParameter(URL_KEY, String.class);
     headerConfigurations = getHeaderConfigurations(parameters.extractor());
+    isRetryEnabled = parameters.extractor().singleValueParameter(IS_RETRY_ENABLED_KEY, Boolean.class);
+    maxRetries = isRetryEnabled ? parameters.extractor().singleValueParameter(RETRY_DELAY_MS_KEY, Integer.class) : 0;
+    retryDelayMs = isRetryEnabled ? parameters.extractor().singleValueParameter(RETRY_DELAY_MS_KEY, Integer.class) : 0;
   }
 
   @Override
   public void onEvent(Event event) {
     try {
       byte[] json = jsonDataFormatDefinition.fromMap(event.getRaw());
-      for (int attempt = 0; attempt < MAX_RETRIES; attempt++) {
+      for (int attempt = 0; attempt < maxRetries; attempt++) {
         try {
           Request request = Request.Post(url)
                   .bodyByteArray(json, ContentType.APPLICATION_JSON)
@@ -155,24 +171,24 @@ public class RestSink implements IStreamPipesDataSink {
             LOG.info("Successfully sent event to {} with status {}", url, statusCode);
             return;
           } else if (statusCode >= 500) {
-            LOG.warn("Server error {} from {}, retrying... (attempt {}/{})", statusCode, url, attempt + 1, MAX_RETRIES);
+            LOG.warn("Server error {} from {}, retrying... (attempt {}/{})", statusCode, url, attempt + 1, maxRetries);
           } else {
             LOG.error("Received status {} from {}, not retrying.", statusCode, url);
             return;
           }
         } catch (IOException e) {
-          LOG.warn("IO error when sending to {}, retrying... (attempt {}/{}) : {}", url, attempt + 1, MAX_RETRIES, e.getMessage());
+          LOG.warn("IO error when sending to {}, retrying... (attempt {}/{}) : {}", url, attempt + 1, maxRetries, e.getMessage());
         }
-        if (attempt < MAX_RETRIES - 1) {
+        if (attempt < maxRetries - 1) {
           try {
-            Thread.sleep(RETRY_DELAY_MS);
+            Thread.sleep(retryDelayMs);
           } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
             LOG.error("Interrupted while waiting to retry.");
             return;
           }
         } else {
-          LOG.error("Failed to send event to {} after {} attempts.", url, MAX_RETRIES);
+          LOG.error("Failed to send event to {} after {} attempts.", url, maxRetries);
         }
       }
     } catch (SpRuntimeException e) {
