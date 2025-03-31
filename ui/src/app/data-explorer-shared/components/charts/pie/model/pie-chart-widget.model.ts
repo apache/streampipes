@@ -27,7 +27,7 @@ export interface PieChartVisConfig extends DataExplorerVisConfig {
     selectedProperty: DataExplorerField;
     roundingValue: number;
     selectedRadius: number;
-    showCustomColorMapping: boolean;
+    showCustomColorMappingPieChart: boolean;
     isSelectedPropertyBoolean: boolean;
     colorMappingsPieChart: { value: string; label: string; color: string }[];
 }

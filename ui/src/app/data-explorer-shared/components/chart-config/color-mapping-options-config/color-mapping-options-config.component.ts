@@ -37,6 +37,8 @@ export class ColorMappingOptionsConfigComponent implements OnInit, OnChanges {
 
     @Input() selectedProperty: DataExplorerField;
 
+    @Input() showCustomColorMapping: boolean;
+
     @Output()
     viewRefreshEmitter: EventEmitter<void> = new EventEmitter<void>();
 
@@ -45,15 +47,15 @@ export class ColorMappingOptionsConfigComponent implements OnInit, OnChanges {
         { value: string; label: string; color: string }[]
     > = new EventEmitter();
 
+    @Output() showCustomColorMappingChange = new EventEmitter<boolean>();
+
     protected isSelectedPropertyBoolean: boolean;
-    protected showCustomColorMapping: boolean;
     private wasPreviousFieldBoolean: boolean;
 
     constructor(private colorMappingService: ColorMappingService) {}
 
     ngOnInit(): void {
         this.isSelectedPropertyBoolean = this.isBooleanPropertySelected();
-        this.showCustomColorMapping ??= false;
         this.resetColorMappings();
     }
 
@@ -68,10 +70,8 @@ export class ColorMappingOptionsConfigComponent implements OnInit, OnChanges {
     }
 
     resetColorMappings(): void {
-        const isNowBoolean = this.isBooleanPropertySelected();
-
         if (!this.showCustomColorMapping) {
-            if (isNowBoolean) {
+            if (this.isBooleanPropertySelected()) {
                 this.colorMapping = [
                     { value: 'true', label: '', color: '#66BB66' },
                     { value: 'false', label: '', color: '#BB6666' },
@@ -80,7 +80,7 @@ export class ColorMappingOptionsConfigComponent implements OnInit, OnChanges {
                 this.colorMapping = [];
             }
         }
-        if (isNowBoolean) {
+        if (this.isBooleanPropertySelected()) {
             if (
                 !(this.colorMapping ?? []).some(
                     mapping =>
@@ -97,9 +97,11 @@ export class ColorMappingOptionsConfigComponent implements OnInit, OnChanges {
                 this.colorMapping = [];
             }
         }
-        this.wasPreviousFieldBoolean = isNowBoolean;
-        this.colorMappingChange.emit(this.colorMapping);
-        this.viewRefreshEmitter.emit();
+        this.wasPreviousFieldBoolean = this.isBooleanPropertySelected();
+        setTimeout(() => {
+            this.colorMappingChange.emit(this.colorMapping);
+            this.viewRefreshEmitter.emit();
+        });
     }
 
     addMapping() {
@@ -138,6 +140,7 @@ export class ColorMappingOptionsConfigComponent implements OnInit, OnChanges {
 
     setCustomColorMapping(showCustomColorMapping: boolean) {
         this.showCustomColorMapping = showCustomColorMapping;
+        this.showCustomColorMappingChange.emit(showCustomColorMapping);
 
         if (!showCustomColorMapping) {
             this.resetColorMappings();

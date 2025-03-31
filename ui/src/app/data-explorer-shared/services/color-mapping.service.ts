@@ -22,17 +22,6 @@ import { Injectable } from '@angular/core';
     providedIn: 'root',
 })
 export class ColorMappingService {
-    private colorPalette = [
-        '#5470c6',
-        '#91cc75',
-        '#fac858',
-        '#ee6666',
-        '#73c0de',
-        '#3ba272',
-        '#fc8452',
-        '#9a60b4',
-        '#ea7ccc',
-    ];
     constructor() {}
 
     addMapping(
@@ -41,7 +30,7 @@ export class ColorMappingService {
         colorMappings.push({
             value: '',
             label: '',
-            color: this.getDefaultColor(colorMappings.length),
+            color: this.getDefaultColor(Math.random() * 1000),
         });
     }
 
@@ -60,7 +49,20 @@ export class ColorMappingService {
         currentMappings[index].color = newColor;
     }
 
-    getDefaultColor(index: number): string {
-        return this.colorPalette[index % this.colorPalette.length];
+    getDefaultColor(value: string | number): string {
+        let hash = 0x811c9dc5;
+        const input = String(value);
+
+        for (let i = 0; i < input.length; i++) {
+            hash ^= input.charCodeAt(i);
+            hash = (hash * 0x5bd1e995) & 0xffffffff;
+            hash ^= hash >> 15;
+        }
+
+        const hue = Math.abs(hash) % 360;
+        const saturation = 50 + (Math.abs(hash >> 8) % 20);
+        const lightness = 45 + (Math.abs(hash >> 16) % 20);
+
+        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     }
 }
