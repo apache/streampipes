@@ -129,13 +129,13 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
     }
 
     applyDashboardFilters(elementIds: Set<string> = new Set<string>()): void {
-        this.filteredDashboards = this.dashboards.filter(a => {
-            if (elementIds.size === 0) {
-                return true;
-            } else {
-                return elementIds.has(a.elementId);
-            }
-        });
+        if (elementIds.size == 0) {
+            this.filteredDashboards = this.dashboards;
+        } else {
+            this.filteredDashboards = this.dashboards.filter(a =>
+                elementIds.has(a.elementId),
+            );
+        }
         this.dataSource.data = this.filteredDashboards;
     }
 }

@@ -125,13 +125,13 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
     }
 
     applyChartFilters(elementIds: Set<string> = new Set<string>()): void {
-        this.filteredCharts = this.charts.filter(a => {
-            if (elementIds.size === 0) {
-                return true;
-            } else {
-                return elementIds.has(a.elementId);
-            }
-        });
+        if (elementIds.size == 0) {
+            this.filteredCharts = this.charts;
+        } else {
+            this.filteredCharts = this.charts.filter(a =>
+                elementIds.has(a.elementId),
+            );
+        }
         this.dataSource.data = this.filteredCharts;
     }
 }
