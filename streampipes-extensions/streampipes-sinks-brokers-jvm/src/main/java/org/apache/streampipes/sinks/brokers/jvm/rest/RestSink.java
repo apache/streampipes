@@ -78,7 +78,7 @@ public class RestSink implements IStreamPipesDataSink {
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
             RestSink::new,
-            DataSinkBuilder.create(ID, 0)
+            DataSinkBuilder.create(ID, 1)
                     .category(DataSinkType.FORWARD)
                     .withAssets(ExtensionAssetType.DOCUMENTATION)
                     .withLocales(Locales.EN)
