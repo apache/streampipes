@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.connectors.plc;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
@@ -31,6 +32,7 @@ import org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapte
 import org.apache.plc4x.java.api.PlcDriverManager;
 import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,9 +41,12 @@ public class PlcConnectorsModuleExport implements IExtensionModuleExport {
 
   @Override
   public List<StreamPipesAdapter> adapters() {
+    var env = Environments.getEnvironment();
     var driverManager = PlcDriverManager.getDefault();
     var cachedConnectionManager =  CachedPlcConnectionManager
         .getBuilder(driverManager.getConnectionManager())
+        .withMaxWaitTime(Duration.ofMillis(env.getPlc4xMaxWaitTimeMs().getValueOrDefault()))
+        .withMaxLeaseTime(Duration.ofMillis(env.getPlc4xMaxLeaseTimeMs().getValueOrDefault()))
         .build();
     var adapters = new ArrayList<>(List.of(
         new Plc4xModbusAdapter(cachedConnectionManager),
