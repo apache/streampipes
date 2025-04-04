@@ -125,7 +125,7 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
     }
 
     findLabel(value: string): SpLabel {
-        return this.allLabels.find(l => l.label === value);
+        return this.allLabels.find(l => l._id === value);
     }
 
     remove(label: SpLabel): void {
@@ -139,7 +139,7 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
     }
 
     selected(event: MatAutocompleteSelectedEvent): void {
-        this.addLabelToSelection(event.option.viewValue);
+        this.addLabelToSelection(event.option.value);
         this.labelInput.nativeElement.value = '';
         this.labelCtrl.setValue(null);
     }
