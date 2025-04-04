@@ -50,6 +50,7 @@ import { DataExplorerRoutingService } from '../../../data-explorer-shared/servic
 import { DataExplorerDetectChangesService } from '../../../data-explorer/services/data-explorer-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 import { TranslateService } from '@ngx-translate/core';
+import { SpDashboardRoutes } from '../../dashboard.routes';
 
 @Component({
     selector: 'sp-dashboard-panel',
@@ -206,7 +207,7 @@ export class DashboardPanelComponent
             this.originalDashboard = JSON.parse(JSON.stringify(dashboard));
             this.breadcrumbService.updateBreadcrumb(
                 this.breadcrumbService.makeRoute(
-                    [SpDataExplorerRoutes.BASE],
+                    [SpDashboardRoutes.BASE],
                     this.dashboard.name,
                 ),
             );
