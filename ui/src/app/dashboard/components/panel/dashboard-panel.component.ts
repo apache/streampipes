@@ -45,12 +45,11 @@ import {
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { map, switchMap } from 'rxjs/operators';
-import { SpDataExplorerRoutes } from '../../../data-explorer/data-explorer.routes';
+import { SpDashboardRoutes } from '../../dashboard.routes';
 import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
 import { DataExplorerDetectChangesService } from '../../../data-explorer/services/data-explorer-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 import { TranslateService } from '@ngx-translate/core';
-import { SpDashboardRoutes } from '../../dashboard.routes';
 
 @Component({
     selector: 'sp-dashboard-panel',
