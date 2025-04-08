@@ -25,6 +25,7 @@ import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.sinks.databases.jvm.couchdb.CouchDbSink;
 import org.apache.streampipes.sinks.databases.jvm.ditto.DittoSink;
 import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbSink;
+import org.apache.streampipes.sinks.databases.jvm.milvus.MilvusSink;
 import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlSink;
 import org.apache.streampipes.sinks.databases.jvm.redis.RedisSink;
 
@@ -44,7 +45,8 @@ public class DatabaseSinksExtensionModuleExport implements IExtensionModuleExpor
         new PostgreSqlSink(),
         new IotDbSink(),
         new DittoSink(),
-        new RedisSink()
+        new RedisSink(),
+        new MilvusSink()
     );
   }
 

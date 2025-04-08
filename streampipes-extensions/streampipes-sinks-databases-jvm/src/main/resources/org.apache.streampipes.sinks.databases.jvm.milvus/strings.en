@@ -18,23 +18,35 @@
 org.apache.streampipes.sinks.databases.jvm.milvus.title=Milvus
 org.apache.streampipes.sinks.databases.jvm.milvus.description=Stores events in a Milvus database.
 
-db_uri_title=URI
-db_uri_description=The URI of the Milvus instance
+milvus_uri.title=URI
+milvus_uri.description=The URI of the Milvus instance ("http://${YOUR_PROXY_IP}:19530")
 
-db_token_title=Token
-db_token_description=The token for the Milvus Server
+milvus_token.title=Token
+milvus_token.description=The token for the Milvus Server
 
-db_database_title=DBName
-db_database_description=The name of the database where events will be stored
+milvus_dbname.title=DBName
+milvus_dbname.description=The name of the database where events will be stored
 
-db_collection_title=Collection
-db_collection_description=The name of the collection where events will be stored
+database_replica_number.title=Database Replicas Number
+database_replica_number.description=The number of replicas of the database
 
-db_DatabaseReplicasNumber_title=Database Replicas Number
-db_DatabaseReplicasNumber_description=The number of replicas of the database
+collection_name.title=Collection
+collection_name.description=The name of the collection where events will be stored
 
-db_vector_title=Vector
-db_vector_description=The vector of the event
+vector.title=Vector
+vector.description=The name of vector field
+
+index.title=Index
+index.description=The DataType of the vector
+
+primary.title=Primary
+primary.description=The primary key of the collectionSchema
+
+dimension.title=Dimension
+dimension.description=The dimension of the vector
+
+metric_type.title=MetricType
+metric_type.description=The metric type of the vector
 
 
 

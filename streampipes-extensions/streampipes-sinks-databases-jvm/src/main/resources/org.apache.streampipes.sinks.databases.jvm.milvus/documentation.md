@@ -24,11 +24,13 @@
 ***
 
 ## Description
+
 stores events in a Milvus database.
 
 ***
 
 ## Required input
+
 This sink does not have any requirements and works with any incoming event type.
 
 ***
@@ -36,7 +38,7 @@ This sink does not have any requirements and works with any incoming event type.
 ## Configuration
 
 ### URI
-The URI of the Milvus instance.
+The URI of the Milvus instance.("http://${YOUR_PROXY_IP}:19530")
 
 ### Token
 A valid access token to access the specified Milvus instance.(default: "root:milvus")
@@ -53,8 +55,19 @@ The name of the collection to create.
 ### Vector
 The name of the vector field to create.
 
-## Output
+### Index
+The name of the vectorDataType to create.
 
+### Primary
+The name of the primary key to create.
+
+### Dimension
+The dimension of the vector field to create.
+
+### MetricType
+The metric type of the vector field to create.
+
+## Output
 (not applicable for data sinks)
 
 
