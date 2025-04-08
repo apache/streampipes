@@ -18,9 +18,28 @@
 
 package org.apache.streampipes.sinks.databases.jvm.milvus;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
+import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
+import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyNested;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.sdk.builder.DataSinkBuilder;
+import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.wrapper.params.compat.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
 import io.milvus.param.Constant;
 import io.milvus.pool.MilvusClientV2Pool;
 import io.milvus.pool.PoolConfig;
@@ -35,24 +54,12 @@ import io.milvus.v2.service.collection.request.HasCollectionReq;
 import io.milvus.v2.service.collection.response.DescribeCollectionResp;
 import io.milvus.v2.service.database.request.CreateDatabaseReq;
 import io.milvus.v2.service.vector.request.InsertReq;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
-import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.model.schema.*;
-import org.apache.streampipes.sdk.builder.DataSinkBuilder;
-import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.helpers.EpRequirements;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.wrapper.params.compat.SinkParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MilvusSink extends StreamPipesDataSink {
   public static final String MILVUS_URI_KEY = "milvus_uri";
@@ -86,7 +93,7 @@ public class MilvusSink extends StreamPipesDataSink {
   CreateCollectionReq.CollectionSchema collectionSchema;
 
   public static final String BYTE = "http://www.w3.org/2001/XMLSchema#byte";
-  public static final String SHORT= "http://www.w3.org/2001/XMLSchema#short";
+  public static final String SHORT = "http://www.w3.org/2001/XMLSchema#short";
   public static final String LONG = "http://www.w3.org/2001/XMLSchema#long";
   public static final String INT =  "http://www.w3.org/2001/XMLSchema#integer";
   public static final String FLOAT = "http://www.w3.org/2001/XMLSchema#float";
@@ -125,7 +132,7 @@ public class MilvusSink extends StreamPipesDataSink {
         .requiredTextParameter(Labels.withId(MILVUS_DBNAME_KEY))
         .requiredTextParameter(Labels.withId(DATABASE_REPLICA_NUMBER_KEY), "2")
         .requiredTextParameter(Labels.withId(COLLECTION_NAME_KEY))
-        .requiredTextParameter(Labels.withId(PRIMARY),"id")
+        .requiredTextParameter(Labels.withId(PRIMARY), "id")
         .requiredIntegerParameter(Labels.withId(DIMENSION), 2)
         .requiredStream(StreamRequirementsBuilder
             .create()
@@ -143,42 +150,43 @@ public class MilvusSink extends StreamPipesDataSink {
   @Override
   public void onInvocation(SinkParams parameters,
                            EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-  var extractor = parameters.extractor();
-  final String uri = extractor.singleValueParameter(MILVUS_URI_KEY, String.class);
-  final String token = extractor.singleValueParameter(MILVUS_TOKEN_KEY, String.class);
+    var extractor = parameters.extractor();
+    final String uri = extractor.singleValueParameter(MILVUS_URI_KEY, String.class);
+    final String token = extractor.singleValueParameter(MILVUS_TOKEN_KEY, String.class);
 
-  ConnectConfig connectConfig = ConnectConfig.builder()
-      .uri(uri)
-      .token(token)
-      .build();
+    ConnectConfig connectConfig = ConnectConfig.builder()
+        .uri(uri)
+        .token(token)
+        .build();
 
-  PoolConfig poolConfig = PoolConfig.builder()
-      .maxIdlePerKey(10) // max idle clients per key
-      .maxTotalPerKey(20) // max total(idle + active) clients per key
-      .maxTotal(100) // max total clients for all keys
-      .maxBlockWaitDuration(Duration.ofSeconds(5L)) // getClient() will wait 5 seconds if no idle client available
-      .minEvictableIdleDuration(Duration.ofSeconds(10L)) // if number
-      .build();
+    PoolConfig poolConfig = PoolConfig.builder()
+        .maxIdlePerKey(10) // max idle clients per key
+        .maxTotalPerKey(20) // max total(idle + active) clients per key
+        .maxTotal(100) // max total clients for all keys
+        .maxBlockWaitDuration(Duration.ofSeconds(5L)) // getClient() will wait 5 seconds if no idle client available
+        .minEvictableIdleDuration(Duration.ofSeconds(10L)) // if number
+        .build();
 
-  try {
-    pool = new MilvusClientV2Pool(poolConfig, connectConfig);
-    client = pool.getClient("client_name");
-    //create a dataBase
-    final String DBName = parameters.extractor().singleValueParameter(MILVUS_DBNAME_KEY, String.class);
-    final String DBReplicaNum = parameters.extractor().singleValueParameter(DATABASE_REPLICA_NUMBER_KEY, String.class);
-    Map<String, String> properties = new HashMap<>();
-    properties.put(Constant.DATABASE_REPLICA_NUMBER, DBReplicaNum);
+    try {
+      pool = new MilvusClientV2Pool(poolConfig, connectConfig);
+      client = pool.getClient("client_name");
+      //create a dataBase
+      final String dbName = parameters.extractor().singleValueParameter(MILVUS_DBNAME_KEY, String.class);
+      final String dbReplicaNum =
+              parameters.extractor().singleValueParameter(DATABASE_REPLICA_NUMBER_KEY, String.class);
+      Map<String, String> properties = new HashMap<>();
+      properties.put(Constant.DATABASE_REPLICA_NUMBER, dbReplicaNum);
       try {
         CreateDatabaseReq createDatabaseReq = CreateDatabaseReq.builder()
-            .databaseName(DBName)
+            .databaseName(dbName)
             .properties(properties)
             .build();
         client.createDatabase(createDatabaseReq);
-        client.useDatabase(DBName);
+        client.useDatabase(dbName);
       } catch (Exception ignored) {
-          //todo add log
+        //todo add log
       } finally {
-          client.useDatabase(DBName);
+        client.useDatabase(dbName);
       }
 
       this.vector = parameters.extractor().mappingPropertyValue(VECTOR_KEY).substring(4);
@@ -197,28 +205,29 @@ public class MilvusSink extends StreamPipesDataSink {
         DescribeCollectionReq describeCollectionReq = DescribeCollectionReq.builder()
             .collectionName(this.collectionName)
             .build();
-      System.out.println("collection name" + this.collectionName);
-      DescribeCollectionResp describeCollectionResp = client.describeCollection(describeCollectionReq);
-      if (!validateEventSchema(parameters.getModel().getInputStreams().get(0).getEventSchema().getEventProperties(), "", describeCollectionResp.getCollectionSchema())){
-        throw new SpRuntimeException("The schema of the collection does not match the schema of the event stream");
+        System.out.println("collection name" + this.collectionName);
+        DescribeCollectionResp describeCollectionResp = client.describeCollection(describeCollectionReq);
+        if (!validateEventSchema(parameters.getModel().getInputStreams().get(0).getEventSchema().getEventProperties(),
+                "", describeCollectionResp.getCollectionSchema())){
+          throw new SpRuntimeException("The schema of the collection does not match the schema of the event stream");
+        }
+      } else {
+        // create a collection with schema, when indexParams is specified, it will create index as well
+        collectionSchema = client.createSchema();
+        EventSchema schema = parameters.getModel().getInputStreams().get(0).getEventSchema();
+        this.extractEventProperties(schema.getEventProperties(), "", collectionSchema);
+        indexParam = IndexParam.builder()
+            .fieldName(vector)
+            .metricType(metricType) // todo add metricType
+            .build();
+        CreateCollectionReq createCollectionReq = CreateCollectionReq.builder()
+            .collectionName(collectionName)
+            .collectionSchema(collectionSchema)
+            .indexParams(Collections.singletonList(indexParam))
+            .build();
+        client.createCollection(createCollectionReq);
       }
-    } else {
-      // create a collection with schema, when indexParams is specified, it will create index as well
-      collectionSchema = client.createSchema();
-      EventSchema schema = parameters.getModel().getInputStreams().get(0).getEventSchema();
-      this.extractEventProperties(schema.getEventProperties(), "", collectionSchema);
-      indexParam = IndexParam.builder()
-          .fieldName(vector)
-          .metricType(metricType) // todo add metricType
-          .build();
-      CreateCollectionReq createCollectionReq = CreateCollectionReq.builder()
-          .collectionName(collectionName)
-          .collectionSchema(collectionSchema)
-          .indexParams(Collections.singletonList(indexParam))
-          .build();
-      client.createCollection(createCollectionReq);
-    }
-  } catch (Exception e) {
+    } catch (Exception e) {
       //todo add log
       throw new SpRuntimeException(e.getMessage());
     }
@@ -279,32 +288,35 @@ public class MilvusSink extends StreamPipesDataSink {
                 name + "_", collectionSchema);
       } else {
         if (property instanceof EventPropertyPrimitive) {
-          initField(name,((EventPropertyPrimitive) property).getRuntimeType(),collectionSchema);
+          initField(name, ((EventPropertyPrimitive) property).getRuntimeType(), collectionSchema);
         }
       }
     }
   }
 
-  private void initField(final String name ,final String uri,final CreateCollectionReq.CollectionSchema collectionSchema){
+  private void initField(final String name , final String uri,
+                         final CreateCollectionReq.CollectionSchema collectionSchema){
     if (name.equals(this.vector)) {
-      initField(collectionSchema,name,this.vectorDataType);
+      initField(collectionSchema, name, this.vectorDataType);
     } else {
       switch (uri){
-        case STRING -> initField(collectionSchema,name,DataType.VarChar);
-        case BYTE -> initField(collectionSchema,name,DataType.Int8);
-        case SHORT -> initField(collectionSchema,name,DataType.Int16);
-        case INT -> initField(collectionSchema,name,DataType.Int32);
-        case LONG -> initField(collectionSchema,name,DataType.Int64);
-        case DOUBLE -> initField(collectionSchema,name,DataType.Double);
-        case FLOAT -> initField(collectionSchema,name,DataType.Float);
-        case BOOLEAN -> initField(collectionSchema,name,DataType.Bool);
+        case STRING -> initField(collectionSchema, name, DataType.VarChar);
+        case BYTE -> initField(collectionSchema, name, DataType.Int8);
+        case SHORT -> initField(collectionSchema, name, DataType.Int16);
+        case INT -> initField(collectionSchema, name, DataType.Int32);
+        case LONG -> initField(collectionSchema, name, DataType.Int64);
+        case DOUBLE -> initField(collectionSchema, name, DataType.Double);
+        case FLOAT -> initField(collectionSchema, name, DataType.Float);
+        case BOOLEAN -> initField(collectionSchema, name, DataType.Bool);
       }
     }
   }
 
-  private void initField(final CreateCollectionReq.CollectionSchema collectionSchema, final String name, DataType dataType) {
+  private void initField(final CreateCollectionReq.CollectionSchema collectionSchema,
+                         final String name, DataType dataType) {
     if (name.equals(this.primary)) {
-      collectionSchema.addField(AddFieldReq.builder().fieldName(name).dataType(dataType).isPrimaryKey(true).autoID(Boolean.FALSE).description(primary).build());
+      collectionSchema.addField(AddFieldReq.builder().fieldName(name).dataType(dataType)
+              .isPrimaryKey(true).autoID(Boolean.FALSE).description(primary).build());
     } else if (name.equals(this.vector)) {
       collectionSchema.addField(AddFieldReq.builder().fieldName(name).dataType(dataType).dimension(dimension).build());
     } else {
@@ -319,24 +331,26 @@ public class MilvusSink extends StreamPipesDataSink {
       final String name = preProperty + property.getRuntimeName();
       if (property instanceof EventPropertyNested) {
         if (!validateEventSchema(((EventPropertyNested) property).getEventProperties(),
-              name + "_", collectionSchema)) {
-           return false;
+                name + "_", collectionSchema)) {
+          return false;
         }
       } else {
         if (property instanceof EventPropertyPrimitive) {
-          final boolean result = validateField(name, ((EventPropertyPrimitive) property).getRuntimeType(), collectionSchema);
+          final boolean result = validateField(name,
+                  ((EventPropertyPrimitive) property).getRuntimeType(), collectionSchema);
           if (!result) {
             return false;
           }
         }
       }
     }
-      return true;
+    return true;
   }
 
-  private boolean validateField(final String name, final String uri, final CreateCollectionReq.CollectionSchema collectionSchema) {
+  private boolean validateField(final String name, final String uri,
+                                final CreateCollectionReq.CollectionSchema collectionSchema) {
     if (name.equals(this.vector)){
-      return validateField(collectionSchema,name,this.vectorDataType);
+      return validateField(collectionSchema, name, this.vectorDataType);
     } else {
       return switch (uri) {
         case BYTE -> validateField(collectionSchema, name, DataType.Int8);
@@ -352,7 +366,8 @@ public class MilvusSink extends StreamPipesDataSink {
     }
   }
 
-  private boolean validateField(final CreateCollectionReq.CollectionSchema collectionSchema, final String name, DataType dataType) {
+  private boolean validateField(final CreateCollectionReq.CollectionSchema collectionSchema,
+                                final String name, DataType dataType) {
     final CreateCollectionReq.FieldSchema fieldSchema = collectionSchema.getField(name);
     final boolean result = fieldSchema != null && fieldSchema.getDataType().equals(dataType);
     if (name.equals(this.primary)) {
@@ -360,6 +375,6 @@ public class MilvusSink extends StreamPipesDataSink {
     } else if (name.equals(this.vector)){
       return result && fieldSchema.getDataType().equals(this.vectorDataType);
     }
-      return result;
+    return result;
   }
 }
