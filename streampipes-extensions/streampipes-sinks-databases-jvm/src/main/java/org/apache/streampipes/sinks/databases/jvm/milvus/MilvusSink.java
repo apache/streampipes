@@ -35,6 +35,7 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.vocabulary.XSD;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
@@ -53,6 +54,7 @@ import io.milvus.v2.service.collection.request.DescribeCollectionReq;
 import io.milvus.v2.service.collection.request.HasCollectionReq;
 import io.milvus.v2.service.collection.response.DescribeCollectionResp;
 import io.milvus.v2.service.database.request.CreateDatabaseReq;
+import io.milvus.v2.service.database.response.ListDatabasesResp;
 import io.milvus.v2.service.vector.request.InsertReq;
 
 import java.time.Duration;
@@ -92,14 +94,14 @@ public class MilvusSink extends StreamPipesDataSink {
   IndexParam indexParam;
   CreateCollectionReq.CollectionSchema collectionSchema;
 
-  public static final String BYTE = "http://www.w3.org/2001/XMLSchema#byte";
-  public static final String SHORT = "http://www.w3.org/2001/XMLSchema#short";
-  public static final String LONG = "http://www.w3.org/2001/XMLSchema#long";
-  public static final String INT =  "http://www.w3.org/2001/XMLSchema#integer";
-  public static final String FLOAT = "http://www.w3.org/2001/XMLSchema#float";
-  public static final String DOUBLE = "http://www.w3.org/2001/XMLSchema#double";
-  public static final String BOOLEAN = "http://www.w3.org/2001/XMLSchema#boolean";
-  public static final String STRING = "http://www.w3.org/2001/XMLSchema#string";
+  public static final String BYTE = XSD.BYTE.toString();
+  public static final String SHORT = XSD.SHORT.toString();
+  public static final String LONG = XSD.LONG.toString();
+  public static final String INT =  XSD.INT.toString();
+  public static final String FLOAT = XSD.FLOAT.toString();
+  public static final String DOUBLE = XSD.DOUBLE.toString();
+  public static final String BOOLEAN = XSD.BOOLEAN.toString();
+  public static final String STRING = XSD.STRING.toString();
 
 
   private static final Map<String, DataType> INDEX_MAP = new HashMap<>() {
@@ -176,16 +178,16 @@ public class MilvusSink extends StreamPipesDataSink {
               parameters.extractor().singleValueParameter(DATABASE_REPLICA_NUMBER_KEY, String.class);
       Map<String, String> properties = new HashMap<>();
       properties.put(Constant.DATABASE_REPLICA_NUMBER, dbReplicaNum);
-      try {
+      ListDatabasesResp listDatabasesResp = client.listDatabases();
+      List<String> dbNames = listDatabasesResp.getDatabaseNames();
+      if (!dbNames.contains(dbName)) {
         CreateDatabaseReq createDatabaseReq = CreateDatabaseReq.builder()
             .databaseName(dbName)
             .properties(properties)
             .build();
         client.createDatabase(createDatabaseReq);
         client.useDatabase(dbName);
-      } catch (Exception ignored) {
-        //todo add log
-      } finally {
+      } else {
         client.useDatabase(dbName);
       }
 
@@ -205,7 +207,6 @@ public class MilvusSink extends StreamPipesDataSink {
         DescribeCollectionReq describeCollectionReq = DescribeCollectionReq.builder()
             .collectionName(this.collectionName)
             .build();
-        System.out.println("collection name" + this.collectionName);
         DescribeCollectionResp describeCollectionResp = client.describeCollection(describeCollectionReq);
         if (!validateEventSchema(parameters.getModel().getInputStreams().get(0).getEventSchema().getEventProperties(),
                 "", describeCollectionResp.getCollectionSchema())){
@@ -218,7 +219,7 @@ public class MilvusSink extends StreamPipesDataSink {
         this.extractEventProperties(schema.getEventProperties(), "", collectionSchema);
         indexParam = IndexParam.builder()
             .fieldName(vector)
-            .metricType(metricType) // todo add metricType
+            .metricType(metricType)
             .build();
         CreateCollectionReq createCollectionReq = CreateCollectionReq.builder()
             .collectionName(collectionName)
@@ -228,7 +229,6 @@ public class MilvusSink extends StreamPipesDataSink {
         client.createCollection(createCollectionReq);
       }
     } catch (Exception e) {
-      //todo add log
       throw new SpRuntimeException(e.getMessage());
     }
   }
@@ -246,7 +246,7 @@ public class MilvusSink extends StreamPipesDataSink {
     }
 
     final Map<String, Object> measurementValuePairs = event.getRaw();
-    // should be at least a timestamp field and a measurement field
+
     if (measurementValuePairs.size() <= 1) {
       return;
     }
@@ -299,15 +299,22 @@ public class MilvusSink extends StreamPipesDataSink {
     if (name.equals(this.vector)) {
       initField(collectionSchema, name, this.vectorDataType);
     } else {
-      switch (uri){
-        case STRING -> initField(collectionSchema, name, DataType.VarChar);
-        case BYTE -> initField(collectionSchema, name, DataType.Int8);
-        case SHORT -> initField(collectionSchema, name, DataType.Int16);
-        case INT -> initField(collectionSchema, name, DataType.Int32);
-        case LONG -> initField(collectionSchema, name, DataType.Int64);
-        case DOUBLE -> initField(collectionSchema, name, DataType.Double);
-        case FLOAT -> initField(collectionSchema, name, DataType.Float);
-        case BOOLEAN -> initField(collectionSchema, name, DataType.Bool);
+      if (uri.equals(BYTE)){
+        initField(collectionSchema, name, DataType.Int8);
+      } else if (uri.equals(SHORT)){
+        initField(collectionSchema, name, DataType.Int16);
+      } else if (uri.equals(INT)){
+        initField(collectionSchema, name, DataType.Int32);
+      } else if (uri.equals(LONG)){
+        initField(collectionSchema, name, DataType.Int64);
+      } else if (uri.equals(DOUBLE)){
+        initField(collectionSchema, name, DataType.Double);
+      } else if (uri.equals(FLOAT)){
+        initField(collectionSchema, name, DataType.Float);
+      } else if (uri.equals(BOOLEAN)){
+        initField(collectionSchema, name, DataType.Bool);
+      } else if (uri.equals(STRING)){
+        initField(collectionSchema, name, DataType.VarChar);
       }
     }
   }
@@ -352,17 +359,24 @@ public class MilvusSink extends StreamPipesDataSink {
     if (name.equals(this.vector)){
       return validateField(collectionSchema, name, this.vectorDataType);
     } else {
-      return switch (uri) {
-        case BYTE -> validateField(collectionSchema, name, DataType.Int8);
-        case SHORT -> validateField(collectionSchema, name, DataType.Int16);
-        case INT -> validateField(collectionSchema, name, DataType.Int32);
-        case LONG -> validateField(collectionSchema, name, DataType.Int64);
-        case DOUBLE -> validateField(collectionSchema, name, DataType.Double);
-        case FLOAT -> validateField(collectionSchema, name, DataType.Float);
-        case BOOLEAN -> validateField(collectionSchema, name, DataType.Bool);
-        case STRING -> validateField(collectionSchema, name, DataType.VarChar);
-        default -> false;
-      };
+      if (uri.equals(BYTE)){
+        return validateField(collectionSchema, name, DataType.Int8);
+      } else if (uri.equals(SHORT)){
+        return validateField(collectionSchema, name, DataType.Int16);
+      } else if (uri.equals(INT)){
+        return validateField(collectionSchema, name, DataType.Int32);
+      } else if (uri.equals(LONG)){
+        return validateField(collectionSchema, name, DataType.Int64);
+      } else if (uri.equals(DOUBLE)){
+        return validateField(collectionSchema, name, DataType.Double);
+      } else if (uri.equals(FLOAT)){
+        return validateField(collectionSchema, name, DataType.Float);
+      } else if (uri.equals(BOOLEAN)){
+        return validateField(collectionSchema, name, DataType.Bool);
+      } else if (uri.equals(STRING)){
+        return validateField(collectionSchema, name, DataType.VarChar);
+      }
+      return false;
     }
   }
 
