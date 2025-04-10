@@ -46,6 +46,56 @@
                 </td>
             </ng-container>
 
+            <ng-container matColumnDef="lastModified">
+                <th
+                    fxFlex="60"
+                    fxLayoutAlign="start center"
+                    mat-header-cell
+                    *matHeaderCellDef
+                >
+                    {{ 'Last modified' | translate }}
+                </th>
+                <td
+                    fxFlex="60"
+                    fxLayoutAlign="center start"
+                    mat-cell
+                    *matCellDef="let element"
+                    fxLayout="column"
+                >
+                    <div *ngIf="element.metadata">
+                        {{
+                            this.formatDate(
+                                element.metadata.lastModifiedEpochMs
+                            )
+                        }}
+                    </div>
+                    <div *ngIf="!element.metadata">–</div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdAt">
+                <th
+                    fxFlex="60"
+                    fxLayoutAlign="start center"
+                    mat-header-cell
+                    *matHeaderCellDef
+                >
+                    {{ 'Created' | translate }}
+                </th>
+                <td
+                    fxFlex="60"
+                    fxLayoutAlign="center start"
+                    mat-cell
+                    *matCellDef="let element"
+                    fxLayout="column"
+                >
+                    <div *ngIf="element.metadata">
+                        {{ this.formatDate(element.metadata.createdAtEpochMs) }}
+                    </div>
+                    <div *ngIf="!element.metadata">–</div>
+                </td>
+            </ng-container>
+
             <ng-container matColumnDef="actions">
                 <th
                     fxFlex="40"

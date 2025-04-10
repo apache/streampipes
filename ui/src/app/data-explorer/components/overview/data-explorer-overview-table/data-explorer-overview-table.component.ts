@@ -26,6 +26,7 @@ import {
 import {
     ConfirmDialogComponent,
     CurrentUserService,
+    DateFormatService,
     DialogService,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../../services/auth.service';
@@ -57,12 +58,18 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
         routingService: DataExplorerRoutingService,
         private dialog: MatDialog,
         private translateService: TranslateService,
+        protected dateFormatService: DateFormatService,
     ) {
         super(dialogService, authService, currentUserService, routingService);
     }
 
     afterInit(): void {
-        this.displayedColumns = ['name', 'actions'];
+        this.displayedColumns = [
+            'name',
+            'lastModified',
+            'createdAt',
+            'actions',
+        ];
         this.getDataViews();
     }
 
@@ -133,5 +140,9 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
             }
         });
         this.dataSource.data = this.filteredCharts;
+    }
+
+    formatDate(timestamp?: number): string {
+        return this.dateFormatService.formatDate(timestamp);
     }
 }

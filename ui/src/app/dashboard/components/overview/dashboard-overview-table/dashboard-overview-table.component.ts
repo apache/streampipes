@@ -31,6 +31,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DataExplorerDashboardService } from '../../../services/dashboard.service';
 import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
 import { TranslateService } from '@ngx-translate/core';
+import { DateFormatService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-dashboard-overview-table',
@@ -57,13 +58,19 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
         authService: AuthService,
         currentUserService: CurrentUserService,
         private dialog: MatDialog,
-        private translateService: TranslateService,
+        protected translateService: TranslateService,
+        protected dateFormatService: DateFormatService,
     ) {
         super(dialogService, authService, currentUserService, routingService);
     }
 
     afterInit(): void {
-        this.displayedColumns = ['name', 'actions'];
+        this.displayedColumns = [
+            'name',
+            'lastModified',
+            'createdAt',
+            'actions',
+        ];
         this.getDashboards();
     }
 
@@ -145,5 +152,9 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
             }
         });
         this.dataSource.data = this.filteredDashboards;
+    }
+
+    formatDate(timestamp?: number): string {
+        return this.dateFormatService.formatDate(timestamp);
     }
 }
