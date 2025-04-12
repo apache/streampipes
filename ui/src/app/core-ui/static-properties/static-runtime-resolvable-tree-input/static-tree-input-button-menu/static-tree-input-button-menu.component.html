@@ -27,7 +27,7 @@
             [disabled]="!showOptions"
             data-cy="clear-tree-node-selection"
         >
-            <span>Clear selection & reload</span>
+            <span>{{ 'Clear selection & reload' | translate }}</span>
         </button>
         <button
             mat-raised-button
@@ -38,7 +38,7 @@
             *ngIf="editorMode === 'tree'"
             [disabled]="!showOptions"
         >
-            <span>Reload</span>
+            <span>{{ 'Reload' | translate }}</span>
         </button>
     </div>
     <div
@@ -52,22 +52,24 @@
             [mode]="'indeterminate'"
             [diameter]="15"
         ></mat-spinner>
-        <span class="reloading-nodes-label">&nbsp;Reloading nodes</span>
+        <span class="reloading-nodes-label">{{
+            'Reloading nodes' | translate
+        }}</span>
     </div>
 
     <div fxFlex fxLayoutAlign="end center">
         <mat-button-toggle-group
-            aria-label="Font Style"
+            [attr.aria-label]="'Font Style' | translate"
             class="small-button"
             [(value)]="editorMode"
             (change)="onChangeEditor($event.value)"
         >
-            <mat-button-toggle data-cy="editor-mode-tree" value="tree"
-                >Tree</mat-button-toggle
-            >
-            <mat-button-toggle data-cy="editor-mode-text" value="text"
-                >Text</mat-button-toggle
-            >
+            <mat-button-toggle data-cy="editor-mode-tree" value="tree">{{
+                'Tree' | translate
+            }}</mat-button-toggle>
+            <mat-button-toggle data-cy="editor-mode-text" value="text">{{
+                'Text' | translate
+            }}</mat-button-toggle>
         </mat-button-toggle-group>
     </div>
 </div>

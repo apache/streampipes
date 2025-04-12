@@ -16,7 +16,8 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-loading-indicator',
@@ -24,6 +25,8 @@ import { Component, Input } from '@angular/core';
     styleUrls: ['./loading-indicator.component.scss'],
 })
 export class LoadingIndicatorComponent {
+    translateService = inject(TranslateService);
+
     @Input()
-    message = 'Loading';
+    message = this.translateService.instant('Loading');
 }

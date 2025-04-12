@@ -45,8 +45,10 @@
                 !forceStopDisabled
             "
             class="message-small"
-            >You can perform a forced stop, which will stop and reset the
-            pipeline status.</span
+            >{{
+                'You can perform a forced stop, which will stop and reset the pipeline status.'
+                    | translate
+            }}</span
         >
     </div>
     <div fxLayout="row">
@@ -56,8 +58,12 @@
             class="mat-basic"
             (click)="toggleStatusDetailsVisible()"
         >
-            <div *ngIf="!statusDetailsVisible">Show Details</div>
-            <div *ngIf="statusDetailsVisible">Hide Details</div>
+            <div *ngIf="!statusDetailsVisible">
+                {{ 'Show Details' | translate }}
+            </div>
+            <div *ngIf="statusDetailsVisible">
+                {{ 'Hide Details' | translate }}
+            </div>
         </button>
         <button
             mat-button
@@ -71,7 +77,7 @@
                 !forceStopDisabled
             "
         >
-            <div>Force stop</div>
+            <div>{{ 'Force stop' | translate }}</div>
         </button>
     </div>
 

@@ -41,6 +41,10 @@
             [selectedProperty]="
                 currentlyConfiguredWidget.visualizationConfig.selectedProperty
             "
+            [(showCustomColorMapping)]="
+                currentlyConfiguredWidget.visualizationConfig
+                    .showCustomColorMappingStatusHeatmap
+            "
             (viewRefreshEmitter)="triggerViewUpdate()"
         >
         </sp-color-mapping-options-config>

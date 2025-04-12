@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import {
     FileMetadata,
@@ -28,6 +28,7 @@ import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-valida
 import { UntypedFormControl, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FileRenameDialogComponent } from '../../../configuration/dialog/file-rename/file-rename-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-static-file-input',
@@ -40,6 +41,8 @@ export class StaticFileInputComponent
 {
     public chooseExistingFileControl = new UntypedFormControl();
 
+    translateService = inject(TranslateService);
+
     dialogRef: MatDialogRef<FileRenameDialogComponent>;
 
     fileName: string;
@@ -47,7 +50,7 @@ export class StaticFileInputComponent
     selectedUploadFile: File;
 
     hasInput: boolean;
-    errorMessage = 'Please enter a value';
+    errorMessage = this.translateService.instant('Please enter a value');
 
     uploadStatus = 0;
 

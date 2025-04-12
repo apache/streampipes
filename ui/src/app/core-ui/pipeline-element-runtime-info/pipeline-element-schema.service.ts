@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
     DataType,
     EventPropertyList,
@@ -24,26 +24,29 @@ import {
     EventPropertyUnion,
     SemanticType,
 } from '@streampipes/platform-services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
 export class PipelineElementSchemaService {
+    translateService = inject(TranslateService);
+
     getFriendlyRuntimeType(ep: EventPropertyUnion): string {
         if (ep instanceof EventPropertyPrimitive) {
             if (this.isTimestamp(ep)) {
-                return 'Timestamp';
+                return this.translateService.instant('Timestamp');
             } else if (this.isImage(ep)) {
-                return 'Image';
+                return this.translateService.instant('Image');
             } else if (DataType.isNumberType(ep.runtimeType)) {
-                return 'Number';
+                return this.translateService.instant('Number');
             } else if (DataType.isBooleanType(ep.runtimeType)) {
-                return 'Boolean';
+                return this.translateService.instant('Boolean');
             } else {
-                return 'Text';
+                return this.translateService.instant('Text');
             }
         } else if (ep instanceof EventPropertyList) {
-            return 'List';
+            return this.translateService.instant('List');
         } else {
-            return 'Nested';
+            return this.translateService.instant('Nested');
         }
     }
 

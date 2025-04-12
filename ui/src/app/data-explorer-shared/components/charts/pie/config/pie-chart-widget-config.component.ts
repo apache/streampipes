@@ -44,7 +44,7 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
     setSelectedProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
             field;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
     protected applyWidgetConfig(config: PieChartVisConfig): void {

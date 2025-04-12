@@ -59,7 +59,8 @@ public class ContinuousPlcRequestReader
       if (connectionManager instanceof CachedPlcConnectionManager) {
         ((CachedPlcConnectionManager) connectionManager).removeCachedConnection(settings.connectionString());
       }
-      LOG.error("Error while reading from PLC with connection string {} ", settings.connectionString(), e);
+      LOG.error("Error while reading from PLC with connection string {}: {} ",
+          settings.connectionString(), e.getMessage());
     }
   }
 
