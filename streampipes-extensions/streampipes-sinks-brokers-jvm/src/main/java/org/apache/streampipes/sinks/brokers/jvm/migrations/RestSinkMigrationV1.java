@@ -1,0 +1,111 @@
+package org.apache.streampipes.sinks.brokers.jvm.migrations;
+
+import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
+import org.apache.streampipes.extensions.api.migration.IDataSinkMigrator;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
+import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.migration.MigrationResult;
+import org.apache.streampipes.model.migration.ModelMigratorConfig;
+import org.apache.streampipes.model.staticproperty.*;
+import org.apache.streampipes.sdk.StaticProperties;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sinks.brokers.jvm.rest.RestSink;
+
+import javax.swing.*;
+import java.util.List;
+
+public class RestSinkMigrationV1 implements IDataSinkMigrator {
+
+    @Override
+    public ModelMigratorConfig config() {
+        return new ModelMigratorConfig(
+                "com.spmoilandgas.streampipes.pe.rest.sink",
+                SpServiceTagPrefix.DATA_SINK,
+                0,
+                1);
+    }
+
+    @Override
+    public MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element,
+                                                       IDataSinkParameterExtractor extractor) throws  RuntimeException {
+        // Extract the URL value from the old configuration
+        String urlValue = extractor.singleValueParameter(RestSink.URL_KEY, String.class);
+        if (urlValue == null) {
+            return MigrationResult.failure(element, "URL property not found in old configuration");
+        }
+
+
+        addRetryDelayKey(element);
+        addIsRetryEnabledKey(element);
+        addRetryMaxRetriesKey(element);
+        addHeaderCollectionKeys(element);
+
+        return MigrationResult.success(element);
+    }
+
+    public void addRetryDelayKey(DataSinkInvocation element) {
+        var label = Labels.from(RestSink.RETRY_DELAY_MS_KEY,"Retry Delay (ms)","Duration in ms to wait for request to retry.");
+        var staticProperty = new RuntimeResolvableAnyStaticProperty(
+                label.getInternalId(),
+                label.getLabel(),
+                label.getDescription()
+        );
+
+        element.getStaticProperties().add(staticProperty);
+    }
+
+    public void addIsRetryEnabledKey(DataSinkInvocation element) {
+        var label = Labels.from(RestSink.IS_RETRY_ENABLED_KEY,"Enable Retry", "If enabled, the request will be retried at an interval defined by the retry delay up to max retries.");
+        var staticProperty = new SlideToggleStaticProperty(
+                label.getInternalId(),
+                label.getLabel(),
+                label.getDescription(),
+                false
+        );
+        element.getStaticProperties().add(staticProperty);
+    }
+
+    public void addRetryMaxRetriesKey(DataSinkInvocation element) {
+        var label = Labels.from(RestSink.RETRY_MAX_RETRIES_KEY, "Max Retries", "The maximum number of retries allowed for request to retry.");
+        var staticProperty = new RuntimeResolvableAnyStaticProperty(
+                label.getInternalId(),
+                label.getLabel(),
+                label.getDescription()
+        );
+        //var staticProperty = StaticProperties.integerFreeTextProperty(
+        //label,
+        //0
+        //);
+        element.getStaticProperties().add(staticProperty);
+    }
+
+    public void addHeaderCollectionKeys(DataSinkInvocation element) {
+        StaticPropertyGroup staticPropertyGroup = new StaticPropertyGroup();
+        staticPropertyGroup.setLabel("Request Headers");
+        staticPropertyGroup.setDescription("Request Headers");
+        staticPropertyGroup.setInternalName(RestSink.HEADER_COLLECTION);
+        staticPropertyGroup.setHorizontalRendering(false);
+
+        var header_key_label =
+                StaticProperties.stringFreeTextProperty(Labels.from(RestSink.HEADER_KEY, "Header", "Optional custom headers to be included with the REST request." ));
+        header_key_label.setValue("");
+        header_key_label.setOptional(true);
+
+        var header_value_label = StaticProperties.stringFreeTextProperty(Labels.from(RestSink.HEADER_VALUE, "Header Value", "Optional custom headers to be included with the REST request."));
+        header_value_label.setValue("");
+        header_value_label.setOptional(true);
+
+        staticPropertyGroup.getStaticProperties().addAll(
+                List.of(
+                        header_key_label,
+                        header_value_label
+
+                )
+        );
+        element.getStaticProperties().add(staticPropertyGroup);
+    }
+
+
+
+}

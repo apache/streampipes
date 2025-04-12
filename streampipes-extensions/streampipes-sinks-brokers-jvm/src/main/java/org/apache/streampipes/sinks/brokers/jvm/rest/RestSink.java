@@ -58,16 +58,13 @@ public class RestSink implements IStreamPipesDataSink {
   private static final Logger LOG = LoggerFactory.getLogger(RestSink.class);
 
   public static final String ID = "org.apache.streampipes.sinks.brokers.jvm.rest";
-  private static final String URL_KEY = "url-key";
-  private static final String HEADER_COLLECTION = "header-collection";
-  private static final String HEADER_KEY = "header-key";
-  private static final String HEADER_VALUE = "header-value";
-  private static final String IS_RETRY_ENABLED_KEY = "is-retry-enabled-key";
-  private static final String RETRY_DELAY_MS_KEY = "retry-delay-ms-key";
-  private static final String RETRY_MAX_RETRIES_KEY = "retry-max-retries-key";
-  private static final String OPTION_RETRY_ENABLED = "true";
-  private static final String OPTION_RETRY_DISABLED = "false";
-
+  public static final String URL_KEY = "url-key";
+  public static final String HEADER_COLLECTION = "header-collection";
+  public static final String HEADER_KEY = "header-key";
+  public static final String HEADER_VALUE = "header-value";
+  public static final String IS_RETRY_ENABLED_KEY = "is-retry-enabled-key";
+  public static final String RETRY_DELAY_MS_KEY = "retry-delay-ms-key";
+  public static final String RETRY_MAX_RETRIES_KEY = "retry-max-retries-key";
   private String url;
   private JsonDataFormatDefinition jsonDataFormatDefinition;
   private List<RestHeaderConfiguration> headerConfigurations = new ArrayList<>();
@@ -87,12 +84,12 @@ public class RestSink implements IStreamPipesDataSink {
                             false,
                             false
                     )
-                    .requiredSingleValueSelection(
+                    .requiredSlideToggle(
                             Labels.withId(IS_RETRY_ENABLED_KEY),
-                            Options.from(OPTION_RETRY_ENABLED, OPTION_RETRY_DISABLED)
+                            false
                     )
-                    .requiredIntegerParameter(Labels.withId(RETRY_DELAY_MS_KEY))
-                    .requiredIntegerParameter(Labels.withId(RETRY_MAX_RETRIES_KEY))
+                    .requiredStaticProperty(StaticProperties.integerFreeTextProperty(Labels.withId(RETRY_DELAY_MS_KEY), 100))
+                    .requiredStaticProperty(StaticProperties.integerFreeTextProperty(Labels.withId(RETRY_MAX_RETRIES_KEY), 3))
                     .requiredStaticProperty(
                             StaticProperties.collection(
                             Labels.withId(
@@ -145,7 +142,7 @@ public class RestSink implements IStreamPipesDataSink {
     jsonDataFormatDefinition = new JsonDataFormatDefinition();
     url = parameters.extractor().singleValueParameter(URL_KEY, String.class);
     headerConfigurations = getHeaderConfigurations(parameters.extractor());
-    isRetryEnabled = parameters.extractor().singleValueParameter(IS_RETRY_ENABLED_KEY, Boolean.class);
+    isRetryEnabled = parameters.extractor().slideToggleValue(IS_RETRY_ENABLED_KEY);
     maxRetries = isRetryEnabled ? parameters.extractor().singleValueParameter(RETRY_DELAY_MS_KEY, Integer.class) : 0;
     retryDelayMs = isRetryEnabled ? parameters.extractor().singleValueParameter(RETRY_DELAY_MS_KEY, Integer.class) : 0;
   }
@@ -153,8 +150,14 @@ public class RestSink implements IStreamPipesDataSink {
   @Override
   public void onEvent(Event event) {
     try {
+      // Set maximum attempts to 1 if not enabled
+      int maxAttempts = 1;
+      if(isRetryEnabled){
+        maxAttempts = maxRetries;
+      }
+
       byte[] json = jsonDataFormatDefinition.fromMap(event.getRaw());
-      for (int attempt = 0; attempt < maxRetries; attempt++) {
+      for (int attempt = 0; attempt < maxAttempts; attempt++) {
         try {
           Request request = Request.Post(url)
                   .bodyByteArray(json, ContentType.APPLICATION_JSON)

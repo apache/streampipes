@@ -25,16 +25,16 @@ header-collection.title=Request Headers
 header-collection.description=Optional custom headers to be included with the REST request.
 
 header-key.title=Header
-header-key.description=Optional custom headers to be included with the REST request.=
+header-key.description=Optional custom headers to be included with the REST request.
 
 header-value.title=Header Value
 header-value.description=Optional custom headers to be included with the REST request.
 
-is-retry-enabled-key.title=Retry on Failure
+is-retry-enabled-key.title=Enable Retry
 is-retry-enabled-key.description=If enabled, the request will be retried at an interval defined by the retry delay up to max retries.
 
 retry-delay-ms-key.title=Retry Delay (ms)
-retry-delay-ms-key.description=Number of milliseconds between retry requests.
+retry-delay-ms-key.description=Duration in ms to wait for request to retry.
 
 retry-max-retries-key.title=Max Retries
-retry-max-retries-key.description=Maximum number of retries before the request is abandondened.
+retry-max-retries-key.description=The maximum number of retries allowed for request to retry.
