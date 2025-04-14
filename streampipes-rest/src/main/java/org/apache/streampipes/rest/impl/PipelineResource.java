@@ -246,6 +246,8 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       storedPipeline.setStreams(pipeline.getStreams());
       storedPipeline.setSepas(pipeline.getSepas());
       storedPipeline.setActions(pipeline.getActions());
+      storedPipeline.setName(pipeline.getName());
+      storedPipeline.setDescription(pipeline.getDescription());
     }
     storedPipeline.setCreatedAt(System.currentTimeMillis());
     storedPipeline.setHealthStatus(pipeline.getHealthStatus());

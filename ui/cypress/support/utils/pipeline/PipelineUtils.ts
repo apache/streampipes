@@ -149,6 +149,11 @@ export class PipelineUtils {
         cy.dataCy('sp-editor-pipeline-name').type(newPipelineName);
     }
 
+    public static updatePipeline(newPipelineName: string) {
+        cy.dataCy('pipeline-update-mode-update').children().click();
+        cy.dataCy('sp-editor-pipeline-name').type(newPipelineName);
+    }
+
     public static finalizePipelineStart() {
         cy.dataCy('sp-editor-checkbox-navigate-to-overview').children().click();
         cy.dataCy('sp-editor-apply').click();
@@ -182,5 +187,19 @@ export class PipelineUtils {
         cy.dataCy('sp-pipeline-stop-and-delete').click();
 
         PipelineBtns.deletePipeline().should('have.length', 0);
+    }
+
+    public static verifyPipelineName(expectedName: string) {
+        cy.dataCy('all-pipelines-table', { timeout: 10000 })
+            .first()
+            .within(() => {
+                cy.get('td').eq(2).should('contain', expectedName);
+            });
+    }
+
+    public static verifyPipelineCount(expectedCount: number) {
+        cy.dataCy('all-pipelines-table', { timeout: 10000 })
+            .find('tr')
+            .should('have.length', expectedCount + 1);
     }
 }
