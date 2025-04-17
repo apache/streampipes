@@ -33,3 +33,12 @@ Streampipes backend K8s Service
 {{- define "streampipes.backend.service" -}}
 {{ printf "%s.%s.svc.cluster.local"  (include "streampipes.backend.fullname" .) .Release.Namespace | trimSuffix "-" }}
 {{- end }}
+
+{{- define "streampipes.backend.pvc.name" -}}
+{{- if .Values.backend.persistence.existingClaim  }}
+    {{- .Values.backend.persistence.existingClaim }}
+{{- else -}}
+    {{- include "streampipes.backend.fullname" . }}-pvc
+{{- end }}
+{{- end }}
+

@@ -5,53 +5,21 @@ fullnameOverride: ""
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
 
-# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
-image:
-  # Streapipes backend image repository
-  registry: apachestreampipes
-
-  # This sets the pull policy for images.
-  pullPolicy: Always
-
-# Turn on DEBUG mode for the Backend Container
-# Not reccomended for production due to the large amount of logs
 debug: false
 
+# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
+image:
+  registry: apachestreampipes
+  pullPolicy: Always
+
+
+# Enable DEBUG mode for the Backend
 backend:
   # Override backend image name
   image: backend
   # Override the backend image tag - defaults to AppVersion
   tag: ""
-
   replicaCount: 1
-
-  resources: {}
-
-  # This is for setting Kubernetes Annotations to a Pod.
-  # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-  podAnnotations: {}
-  # This is for setting Kubernetes Labels to a Pod.
-  # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-  podLabels: {}
-
-  podSecurityContext:
-    {}
-    # fsGroup: 2000
-
-  securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
-  updateStrategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 0
-
-  restartPolicy: "Always"
 
   # Turn this up if using couchDB included with helm chart to allow time for couchDB to spin up
   # Turn down if couchdb is already deployed as it will only slow down the rollout
@@ -67,15 +35,31 @@ backend:
     port: 8030
     type: ClusterIP
 
-  # TODO: Add ability to reference existing claim
   persistence:
+    existingClaim: ""
     accessModes:
       - ReadWriteOnce
     annotations": {}
     storageClass: "standard"
-    path: "/Users/matthewholden/streampipes-k8s"
     size: 1Gi
 
+  updateStrategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+
+  securityContext: {}
+  podSecurityContext: {}
+  podAnnotations: {}
+  podLabels: {}
+  restartPolicy: "Always"
+
+  resources:
+    limits: {}
+    requests: {}
+
+
+# UI component configuration
 ui:
   # Use this if you need to override the name of the ui container image
   image: ui
@@ -84,34 +68,6 @@ ui:
   tag: ""
 
   replicaCount: 1
-
-  resources: {}
-
-  # This is for setting Kubernetes Annotations to a Pod.
-  # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-  podAnnotations: {}
-  # This is for setting Kubernetes Labels to a Pod.
-  # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-  podLabels: {}
-
-  podSecurityContext:
-    {}
-    # fsGroup: 2000
-
-  securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
-  updateStrategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 0
-
-  restartPolicy: "Always"
 
   initialDelaySeconds: 60
 
@@ -127,98 +83,81 @@ ui:
     resolverActive: true
     resolver: kube-dns.kube-system.svc.cluster.local
 
+  updateStrategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+
+  securityContext: {}
+  podSecurityContext: {}
+  podAnnotations: {}
+  podLabels: {}
+  restartPolicy: "Always"
+
+  resources:
+    limits: {}
+    requests: {}
+
 extensions:
-  iiot:
-    # Use this if you need to override the name of the ui container image
-    image: extensions-all-jvm
+  # Use this if you need to override the name of the ui container image
+  image: extensions-all-jvm
 
-    # Override the backend image tag - defaults to AppVersion
-    tag: ""
+  # Override the backend image tag - defaults to AppVersion
+  tag: ""
 
-    replicaCount: 1
+  replicaCount: 1
 
-    resources: {}
+  initialDelaySeconds: 60
 
-    # This is for setting Kubernetes Annotations to a Pod.
-    # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-    podAnnotations: {}
-    # This is for setting Kubernetes Labels to a Pod.
-    # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-    podLabels: {}
+  failureThreshold: 30
 
-    podSecurityContext:
-      {}
-      # fsGroup: 2000
+  periodSeconds: 30
 
-    securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
+  containerPort: 8090
 
-    updateStrategy:
-      rollingUpdate:
-        maxSurge: 25%
-        maxUnavailable: 0
+  service:
+    port: 8090
+    type: ClusterIP
 
-    restartPolicy: "Always"
+  updateStrategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
 
-    initialDelaySeconds: 60
+  securityContext: {}
+  podSecurityContext: {}
+  podAnnotations: {}
+  podLabels: {}
+  restartPolicy: "Always"
 
-    failureThreshold: 30
+  resources:
+    limits: {}
+    requests: {}
 
-    periodSeconds: 30
-
-    containerPort: 8090
-
-    service:
-      port: 8090
-      type: ClusterIP
-
+# Streampipes specific configuration
 streampipes:
-  ingress:
-    enabled: false
-    className: nginx
-    host:
-
-  # if secret is not set, will generate secrets into '{release-name}-secrets'
-  secrets:
-    # use an existing secret (all secret keys are required)
-    existingSecret: streampipes-secret
-    # key from retrieving admin passowrd secret from existimngSecret
-    adminPasswordSecretKey: sp-initial-admin-password
-    # key from retrieving admin passowrd secret from existimngSecret
-    clientSecretKey: sp-initial-client-secret
-    # key from retrieving encrypiton passcode secret from existimngSecret
-    encryptionPasscodeSecretKey: sp-encryption-password
-
+  # kafka, nats, pulsar
+  broker:
+    type: "kafka"
   admin:
-    # Sets the default admin login email
     email: admin@streampipes.apache.org
-    # Set admin login pasword
     password: admin
-
   serviceUser:
     user: sp-service-client
-    # If secret is left empty and no existing secret then it will be randomly generated
-    # If not empty, must be at least 35 characters long
-    secret:
-
+    secret: ""
   encryption:
-    # If left empty will generate a random secret
-    passcode:
+    passcode: ""
+  secrets:
+    existingSecret: ""
+    adminPasswordSecretKey: sp-initial-admin-password
+    clientSecretKey: sp-initial-client-secret
+    encryptionPasscodeSecretKey: sp-encryption-password
 
-  broker:
-    # Set the message broker for default communication in streampipes
-    # Can be kafka, nats, pulsar
-    type: "kafka"
+# Network configuration
+proxy: ""
+noProxy: ""
 
-proxy: http://proxy.cat.com:80
-
-noProxy: 127.0.0.0/8\\,10.0.0.0/8\\,cattle-system.svc\\,172.16.0.0/12\\,10.223.0.0/16\\,192.168.0.0/16\\,.svc\\,.cluster.local
-
+# Message broker configuration
 kafka:
   enabled: false
 
@@ -233,13 +172,15 @@ pulsar:
   enabled: false
 
 # CouchDB is included into this release for convenience
-# it is reccomended to host it seperately from this release
+# it is recommended to host it separately from this release
 # set couchdb.enabled = false and configure externalCouchdb
 couchdb:
-  # TODO: Test to ensure backend connects successfully to couchdb when initialized with helm chart
+  # If enabled you can override any couchdb settings from the couchdb helm chart
   enabled: false
 
-  couchdbConfig.couchdb.uuid: decafbaddecafbaddecafbaddecafbad
+  couchdbConfig:
+    couchdb:
+      uuid: decafbaddecafbaddecafbaddecafbad
 
   # DO NOT CHANGE - NOT CONFIGURED YET
   createAdminSecret: false
@@ -253,13 +194,14 @@ couchdb:
   cookieAuthSecret: "1234"
 
   persistentVolume:
-    enabled: "false"
+    enabled: false
 
     accessMode: ["ReadWriteOnce"]
 
     size: "10Gi"
 
     storageClass: "-"
+
 
 # Required fields if couchdb.enabled = false
 externalCouchdb:
@@ -273,8 +215,8 @@ externalCouchdb:
   cookieAuthSecret: cookie
   erlangCookie: "1234"
   # Use an existing secret for the couchdb password
-  existingSecret:
-  # The key in the secrt containing the couchdb user
+  existingSecret: ""
+  # The key in the secret containing the couchdb user
   adminUsernameKey: adminUsername
   # The key in the secret containing the couchdb password
   adminPasswordKey: adminPassword
@@ -283,6 +225,31 @@ externalCouchdb:
   # The key in the secret containing the erlangCookie
   erlangCookieSecretKey: erlangCookie
 
+# Time series database configuration
+influxdb:
+  enabled: false
+externalInfluxdb:
+  host: influxdb.influxdb.svc.cluster.local
+  port: 8086
+  admin:
+    password: ""
+    token: ""
+  existingSecret: influxdb-secret
+  adminPasswordSecretKey: admin-user-password
+  adminTokenSecretKey: admin-user-token
+
+# Monitoring configuration
+monitoring:
+  enabled: false
+  interval: 30s
+  labels: {}
+
+# This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  host: "demo.localdev.me"
 # This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
   # Specifies whether a service account should be created
@@ -295,33 +262,5 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-influxdb:
-  enabled: false
 
-externalInfluxdb:
-  host: influxdb.influxdb.svc.cluster.local
-  port: 8086
 
-  admin:
-    password:
-    token:
-
-  existingSecret: influxdb-secret
-
-  adminPasswordSecretKey: admin-user-password
-
-  adminTokenSecretKey: admin-user-token
-
-# This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
-# service:
-# This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-# type: ClusterIP
-# This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
-# port: 80
-
-# This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
-ingress:
-  enabled: true
-  className: "nginx"
-  annotations: {}
-  host: "demo.localdev.me"

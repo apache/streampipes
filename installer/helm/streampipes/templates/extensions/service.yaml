@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "streampipes.extensions.iiot.fullname" . }}
+  name: {{ include "streampipes.extensions.fullname" . }}
   labels:
-    {{- include "streampipes.extensions.iiot.labels" . | nindent 4 }}
+    {{- include "streampipes.extensions.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.extensions.iiot.service.type }}
+  type: {{ .Values.extensions.service.type }}
   selector:
-    {{ include "streampipes.extensions.iiot.selectorLabels" . | nindent 4 }}
+    {{ include "streampipes.extensions.selectorLabels" . | nindent 4 }}
   ports:
     - name: main
       protocol: TCP
-      port: {{ .Values.extensions.iiot.service.port }}
-      targetPort: {{ .Values.extensions.iiot.containerPort }}
+      port: {{ .Values.extensions.service.port }}
+      targetPort: {{ .Values.extensions.containerPort }}
   
   

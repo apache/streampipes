@@ -1,4 +1,5 @@
 {{/* vim: set filetype=mustache: */}}
+
 {{/*
 Expand the name of the chart.
 */}}
@@ -11,8 +12,8 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "streampipes.fullname" -}}
-  {{- if .Values.fullNameOverride }}
-  {{- .Values.fullNameOverride | trunc 63 | trimSuffix "-"}}
+  {{- if .Values.fullnameOverride }}
+  {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-"}}
   {{- else}}
   {{- $name := default .Chart.Name .Values.nameOverride -}}
   {{- if contains $name .Release.Name -}}
@@ -35,7 +36,7 @@ Create chart name and version as used by the chart label.
 Common labels.
 */}}
 {{- define "streampipes.labels" -}}
-helm.sh/chart: {{  include "streampipes.name" . }}
+helm.sh/chart: {{ include "streampipes.chart" . }}
 {{ include "streampipes.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
@@ -110,8 +111,8 @@ Generate the fullname of the pulsar subchart
 {{- end}}
 
 {{/* Generate extensions image url */}}
-{{- define "streampipes.extensions.iiot.image" -}}
-{{- printf "%s/%s:%s" .Values.image.registry .Values.extensions.iiot.image (.Values.extensions.iiot.tag | default .Chart.AppVersion) }}
+{{- define "streampipes.extensions.image" -}}
+{{- printf "%s/%s:%s" .Values.image.registry .Values.extensions.image (.Values.extensions.tag | default .Chart.AppVersion) }}
 {{- end}}
 
 {{/*

@@ -4,6 +4,7 @@ description: A Helm chart for Apache Streampipes..
 home: https://streampipes.apache.org
 keywords:
   - iiot
+  - iot
   - streampipes
   - apache
 sources:

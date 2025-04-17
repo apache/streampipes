@@ -47,7 +47,7 @@
 
 {{- define "snippet.streampipes.core.env"}}
 - name: SP_HTTP_SERVER_ADAPTER_ENDPOINT
-  value: {{ include "streampipes.extensions.iiot.service" . }}
+  value: {{ include "streampipes.extensions.service" . }}
 - name: SP_CORE_HOST
   value: {{ include "streampipes.backend.service" . }}
 - name: SP_CORE_PORT

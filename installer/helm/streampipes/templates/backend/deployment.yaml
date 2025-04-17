@@ -1,4 +1,3 @@
-# TODO: Add the Volumes and PVC attachments for the backend
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,7 +13,7 @@ spec:
     {{- toYaml .Values.backend.updateStrategy | nindent 4 }} 
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- with .Values.backend.podAnnotations }}
       annotations:
         random-annotation: {{ randAlphaNum 10 | lower }}
         {{- toYaml . | nindent 8 }}
@@ -72,6 +71,6 @@ spec:
             periodSeconds: {{ .Values.backend.periodSeconds }}
             failureThreshold: {{ .Values.backend.failureThreshold }}
       volumes:
-        - name: {{ include "streampipes.backend.fullname" . }}-pv
+        - name:  {{ include "streampipes.backend.fullname" . }}-pv
           persistentVolumeClaim:
-            claimName: {{ include "streampipes.backend.fullname" . }}-pvc
+            claimName: {{ include "streampipes.backend.pvc.name" . }}

@@ -1,15 +1,18 @@
+{{- if not .Values.backend.persistence.existingClaim }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ include "streampipes.backend.fullname" . }}-pvc
   labels:
-    {{- include "streampipes.backend.labels" . | nindent 4 }}
+    {{- include "streampipes.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
 spec:
   storageClassName: {{ .Values.backend.persistence.storageClass }}
-  accessModes: 
+  accessModes:
     {{- range .Values.backend.persistence.accessModes }}
     - {{ . | quote }}
     {{- end }}
   resources:
     requests:
       storage: {{ .Values.backend.persistence.size | quote }}
+{{- end }}
