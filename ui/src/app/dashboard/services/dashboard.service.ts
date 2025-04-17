@@ -20,15 +20,21 @@ import { Dashboard } from '@streampipes/platform-services';
 import { EditDashboardDialogComponent } from '../dialogs/edit-dashboard/edit-dashboard-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerDashboardService {
-    constructor(private dialogService: DialogService) {}
+    constructor(
+        private dialogService: DialogService,
+        private translateService: TranslateService,
+    ) {}
 
     openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
         return this.dialogService.open(EditDashboardDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: createMode ? 'New Dashboard' : 'Edit Dashboard',
+            title: createMode
+                ? this.translateService.instant('New dashboard')
+                : this.translateService.instant('Edit dashboard'),
             width: '60vw',
             data: {
                 createMode: createMode,

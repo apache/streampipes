@@ -28,7 +28,7 @@
             [disabled]="!showOptions"
             style="margin-right: 10px; margin-left: 10px"
         >
-            <span>Reload</span>
+            <span>{{ 'Reload' | translate }}</span>
         </button>
     </div>
     <div fxLayout="column" *ngIf="error" class="mt-10">
@@ -57,7 +57,7 @@
                 *ngIf="!showOptions && !loading"
                 class="mt-10"
             >
-                <span>(waiting for input)</span>
+                <span>{{ '(waiting for input)' | translate }}</span>
             </div>
             <div fxLayout="column" *ngIf="loading">
                 <mat-spinner

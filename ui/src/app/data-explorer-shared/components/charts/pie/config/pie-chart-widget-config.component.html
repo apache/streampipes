@@ -97,6 +97,10 @@
                     currentlyConfiguredWidget.visualizationConfig
                         .selectedProperty
                 "
+                [(showCustomColorMapping)]="
+                    currentlyConfiguredWidget.visualizationConfig
+                        .showCustomColorMappingPieChart
+                "
                 (viewRefreshEmitter)="triggerViewUpdate()"
             >
             </sp-color-mapping-options-config>

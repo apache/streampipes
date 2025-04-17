@@ -26,7 +26,7 @@ import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.mod
 export interface StatusHeatmapVisConfig extends DataExplorerVisConfig {
     selectedProperty: DataExplorerField;
     isSelectedPropertyBoolean: boolean;
-    showCustomColorMapping: boolean;
+    showCustomColorMappingStatusHeatmap: boolean;
     colorMappingsStatusHeatmap: {
         value: string;
         label: string;

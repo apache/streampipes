@@ -21,8 +21,8 @@
         mat-button
         color="accent"
         [matMenuTriggerFor]="menu"
-        aria-label="Refresh interval"
-        matTooltip="Refresh interval"
+        [attr.aria-label]="'Refresh interval' | translate"
+        [matTooltip]="'Refresh interval' | translate"
         [disabled]="!liveRefreshEnabled"
     >
         <mat-icon>autorenew</mat-icon>

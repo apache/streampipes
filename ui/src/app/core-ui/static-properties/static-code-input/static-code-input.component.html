@@ -26,7 +26,7 @@
             (click)="resetCode()"
             style="margin-right: 10px; margin-bottom: 10px"
         >
-            Reset code template
+            {{ 'Reset code template' | translate }}
         </button>
         <button
             mat-button
@@ -37,7 +37,7 @@
             [attr.data-cy]="'reset-code-' + fieldName"
             style="margin-right: 10px; margin-bottom: 10px"
         >
-            Clean code
+            {{ 'Clean code' | translate }}
         </button>
     </div>
     <div fxFlex="100" fxLayout="row">

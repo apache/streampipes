@@ -397,4 +397,14 @@ public class DefaultEnvironment implements Environment {
   public BooleanEnvironmentVariable getAllowSelfSignedCertificates() {
     return new BooleanEnvironmentVariable(Envs.SP_SECURITY_ALLOW_SELFSIGNED);
   }
+
+  @Override
+  public IntEnvironmentVariable getPlc4xMaxWaitTimeMs() {
+    return new IntEnvironmentVariable(Envs.SP_PLC4X_CONN_MAX_WAIT_TIME_MS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getPlc4xMaxLeaseTimeMs() {
+    return new IntEnvironmentVariable(Envs.SP_PLC4X_CONN_MAX_LEASE_TIME_MS);
+  }
 }

@@ -29,46 +29,53 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class PullAdapterScheduler {
 
   protected static final Logger LOG = LoggerFactory.getLogger(PullAdapterScheduler.class);
 
-  private ScheduledExecutorService scheduler;
+  private final ScheduledExecutorService scheduler;
+
+  public PullAdapterScheduler() {
+    this.scheduler = Executors.newSingleThreadScheduledExecutor();
+  }
 
   public void schedule(IPullAdapter pullAdapter,
                        String adapterElementId) {
-    scheduler = Executors.newSingleThreadScheduledExecutor();
-    final Runnable task = new Runnable() {
-      @Override
-      public void run() {
-        try {
-          pullAdapter.pullData();
-        } catch (ExecutionException | InterruptedException | TimeoutException e) {
-          LOG.error("Error while pulling data", e);
-          SpMonitoringManager.INSTANCE.addErrorMessage(
-              adapterElementId,
-              SpLogEntry.from(System.currentTimeMillis(), SpLogMessage.from(e))
-          );
-        } finally {
-          scheduler.schedule(
-              this,
-              pullAdapter.getPollingInterval().value(),
-              pullAdapter.getPollingInterval().timeUnit()
-          );
+    final Runnable task = () -> {
+      try {
+        pullAdapter.pullData();
+      } catch (ExecutionException | InterruptedException | TimeoutException e) {
+        LOG.error("Error while pulling data", e);
+        SpMonitoringManager.INSTANCE.addErrorMessage(
+            adapterElementId,
+            SpLogEntry.from(System.currentTimeMillis(), SpLogMessage.from(e))
+        );
+        if (e instanceof InterruptedException) {
+          Thread.currentThread().interrupt();
         }
       }
     };
 
-    scheduler.schedule(
+    scheduler.scheduleWithFixedDelay(
         task,
+        0,
         pullAdapter.getPollingInterval().value(),
         pullAdapter.getPollingInterval().timeUnit()
     );
   }
 
   public void shutdown() {
-    scheduler.shutdownNow();
+    scheduler.shutdown();
+    try {
+      if (!scheduler.awaitTermination(2, TimeUnit.SECONDS)) {
+        scheduler.shutdownNow();
+      }
+    } catch (InterruptedException e) {
+      scheduler.shutdownNow();
+      Thread.currentThread().interrupt();
+    }
   }
 }

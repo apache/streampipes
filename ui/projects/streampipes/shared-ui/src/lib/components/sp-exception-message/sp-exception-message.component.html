@@ -36,7 +36,11 @@
                         {{ messageTimestamp | date: 'short' }}
                     </h5>
                     <h5 data-cy="exception-message-title" kfxFlex>
-                        {{ message.title || 'Error' }}
+                        {{
+                            message.title
+                                ? message.title
+                                : ('Error' | translate)
+                        }}
                     </h5>
                 </div>
                 <span fxFlex></span>
@@ -46,7 +50,9 @@
                         color="accent"
                         (click)="openDetailsDialog()"
                     >
-                        <i class="material-icons">visibility</i>&nbsp;Details
+                        <i class="material-icons">visibility</i>&nbsp;{{
+                            'Details' | translate
+                        }}
                     </button>
                 </div>
             </div>

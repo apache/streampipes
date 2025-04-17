@@ -19,7 +19,7 @@
 <div fxFlex="100" class="designer-panel-content" fxLayout="column">
     <div fxLayout="row" class="sp-tab-bg designer-panel-header">
         <div fxLayoutAlign="start center" class="designer-panel-title">
-            <span> Configure Dashboard </span>
+            <span> {{ 'Configure dashboard' | translate }} </span>
         </div>
     </div>
     <div fxFlex="100" fxLayout="column" class="no-overflow">
@@ -28,7 +28,10 @@
             fxFlexFill
             class="small-tab-headers mat-tab-fill-height"
         >
-            <mat-tab data-cy="designer-panel-data-config" label="Charts">
+            <mat-tab
+                data-cy="designer-panel-data-config"
+                [label]="'Charts' | translate"
+            >
                 <div class="scroll-tab-content">
                     <sp-chart-selection
                         (addChartEmitter)="addChartEmitter.emit($event)"

@@ -35,12 +35,18 @@ export class SpExceptionDetailsDialogComponent implements OnInit {
     @Input()
     title: string;
 
+    @Input()
+    additionalButton = false;
+
+    @Input()
+    additionalButtonText = 'Button';
+
     constructor(
         private dialogRef: DialogRef<SpExceptionDetailsDialogComponent>,
     ) {}
 
-    close() {
-        this.dialogRef.close();
+    close(additionalButtonClicked = false) {
+        this.dialogRef.close(additionalButtonClicked);
     }
 
     ngOnInit(): void {}

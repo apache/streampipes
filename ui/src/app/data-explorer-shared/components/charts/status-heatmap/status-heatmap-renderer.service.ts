@@ -25,22 +25,20 @@ import {
     OptionDataValue,
     OptionSourceDataArrayRows,
 } from 'echarts/types/src/util/types';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { FieldUpdateInfo } from '../../../models/field-update.model';
 import { ColorMappingService } from '../../../services/color-mapping.service';
 
 @Injectable({ providedIn: 'root' })
 export class SpStatusHeatmapRendererService extends SpBaseEchartsRenderer<StatusHeatmapWidgetModel> {
-    constructor(private colorMappingService: ColorMappingService) {
-        super();
-    }
+    colorMappingService = inject(ColorMappingService);
+
     applyOptions(
         generatedDataset: GeneratedDataset,
         options: EChartsOption,
         widgetConfig: StatusHeatmapWidgetModel,
     ): void {
         this.basicOptions(options);
-
         const field = widgetConfig.visualizationConfig.selectedProperty;
         const sourceIndex = field.sourceIndex;
 
@@ -63,91 +61,91 @@ export class SpStatusHeatmapRendererService extends SpBaseEchartsRenderer<Status
             return new Date(a[0]).getTime() - new Date(b[0]).getTime();
         });
 
-        const uniqueValues = [
-            ...new Set(rawDatasetSource.map(row => row[statusIndex])),
-        ];
-        const valueMapping = new Map(
-            uniqueValues.map((val, index) => [val, index]),
-        );
+        if (statusIndex >= 0) {
+            const mappedRawDataset = rawDatasetSource?.map(
+                row => row[statusIndex],
+            );
+            const uniqueValuesSet =
+                mappedRawDataset !== undefined
+                    ? new Set(mappedRawDataset)
+                    : new Set();
+            const uniqueValues = [...uniqueValuesSet];
+            const uniqueValueSorted = uniqueValues.sort();
 
-        const transformedDataset = rawDatasetSource.map((row, index) => {
-            let statusValue = row[statusIndex];
+            const valueMapping = new Map(
+                uniqueValueSorted.map((val, index) => [val, index]),
+            );
 
-            if (typeof statusValue === 'boolean') {
-                statusValue = statusValue ? 1 : 0;
-            } else if (
-                typeof statusValue === 'string' ||
-                typeof statusValue === 'number'
-            ) {
-                statusValue = valueMapping.get(statusValue) ?? null;
-            }
+            const transformedDataset = rawDatasetSource.map((row, index) => {
+                const statusValue = valueMapping.get(row[statusIndex]) ?? null;
+                return [
+                    index,
+                    this.makeTag(rawDataset.rawDataset.dimensions, tags, row),
+                    statusValue,
+                ];
+            });
 
-            return [
-                index,
-                this.makeTag(rawDataset.rawDataset.dimensions, tags, row),
-                statusValue,
-            ];
-        });
+            options.dataset = { source: transformedDataset };
 
-        options.dataset = { source: transformedDataset };
+            (options.xAxis as any).data = rawDatasetSource.map(s => {
+                return new Date(s[0]).toLocaleString();
+            });
 
-        (options.xAxis as any).data = rawDatasetSource.map(s => {
-            return new Date(s[0]).toLocaleString();
-        });
+            options.tooltip = {
+                formatter: params => {
+                    const timestamp = rawDatasetSource[params.data[0]][0];
+                    const statusValue = params.value[2];
+                    const originalValue = uniqueValueSorted[statusValue];
 
-        options.tooltip = {
-            formatter: params => {
-                const timestamp = rawDatasetSource[params.data[0]][0];
-                const statusValue = params.value[2];
-                const originalValue = uniqueValues[statusValue];
+                    const statusLabel =
+                        colorMapping.find(
+                            c => c.value === originalValue.toString(),
+                        )?.label || originalValue.toString();
 
-                const statusLabel =
-                    colorMapping.find(c => c.value === originalValue.toString())
-                        ?.label || originalValue;
-
-                return `${params.marker} ${new Date(timestamp).toLocaleString()}<br/>Status: <b>${statusLabel}</b>`;
-            },
-        };
-
-        const dynamicPieces = uniqueValues.map((val, index) => ({
-            value: index,
-            label:
-                colorMapping.find(c => c.value === val.toString())?.label ||
-                val.toString(),
-            color:
-                colorMapping.find(c => c.value === val.toString())?.color ||
-                this.colorMappingService.getDefaultColor(index),
-        }));
-
-        options.visualMap = {
-            type: 'piecewise',
-            pieces: dynamicPieces,
-            orient: 'horizontal',
-            right: '5%',
-            top: '20',
-        };
-
-        options.legend = {
-            type: 'scroll',
-        };
-
-        options.series = [
-            {
-                name: '',
-                type: 'heatmap',
-                datasetIndex: 0,
-                encode: {
-                    itemId: 0,
-                    value: 2,
+                    return `${params.marker} ${new Date(timestamp).toLocaleString()}<br/>Status: <b>${statusLabel}</b>`;
                 },
-                emphasis: {
-                    itemStyle: {
-                        shadowBlur: 10,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)',
+            };
+
+            const dynamicPieces = uniqueValueSorted.map((val, index) => ({
+                value: index,
+                label:
+                    colorMapping.find(c => c.value === val.toString())?.label ||
+                    val.toString(),
+                color:
+                    colorMapping.find(c => c.value === val.toString())?.color ||
+                    this.colorMappingService.getDefaultColor(val.toString()),
+            }));
+
+            options.visualMap = {
+                type: 'piecewise',
+                pieces: dynamicPieces,
+                orient: 'horizontal',
+                right: '5%',
+                top: '20',
+            };
+
+            options.legend = {
+                type: 'scroll',
+            };
+
+            options.series = [
+                {
+                    name: '',
+                    type: 'heatmap',
+                    datasetIndex: 0,
+                    encode: {
+                        itemId: 0,
+                        value: 2,
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)',
+                        },
                     },
                 },
-            },
-        ];
+            ];
+        }
     }
 
     public handleUpdatedFields(

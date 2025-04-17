@@ -24,7 +24,8 @@
                 <small>{{ pipelineElement?.description }}</small>
             </div>
             <div class="element-id" fxLayoutAlign="end start">
-                <span>ID</span>&nbsp;
+                <span>{{ 'ID' | translate }}</span
+                >&nbsp;
                 <b>{{
                     isDataStream
                         ? pipelineElement?.elementId
@@ -51,7 +52,7 @@
                 >
                     <ng-container matColumnDef="outputTopics">
                         <th mat-header-cell *matHeaderCellDef>
-                            <strong>Output Topics</strong>
+                            <strong>{{ 'Output Topics' | translate }}</strong>
                         </th>
                         <td mat-cell *matCellDef="let element">
                             <div
@@ -66,7 +67,7 @@
                                     [cdkCopyToClipboard]="
                                         element.topicDefinition.actualTopicName
                                     "
-                                    matTooltip="Copy"
+                                    [matTooltip]="'Copy' | translate"
                                 >
                                     <mat-icon>content_copy</mat-icon>
                                 </button>
@@ -85,7 +86,7 @@
                 <table mat-table [dataSource]="pipelineElement?.inputStreams">
                     <ng-container matColumnDef="inputTopics">
                         <th mat-header-cell *matHeaderCellDef>
-                            <strong>Input Topics</strong>
+                            <strong>{{ 'Input Topics' | translate }}</strong>
                         </th>
                         <td mat-cell *matCellDef="let element">
                             <div
@@ -104,7 +105,7 @@
                                             ?.transportProtocols?.[0]
                                             ?.topicDefinition?.actualTopicName
                                     "
-                                    matTooltip="Copy"
+                                    [matTooltip]="'Copy' | translate"
                                 >
                                     <mat-icon>content_copy</mat-icon>
                                 </button>
@@ -127,7 +128,7 @@
                 >
                     <ng-container matColumnDef="outputTopics">
                         <th mat-header-cell *matHeaderCellDef>
-                            <strong>Output Topics</strong>
+                            <strong>{{ 'Output Topics' | translate }}</strong>
                         </th>
                         <td mat-cell *matCellDef="let element">
                             <div
@@ -143,7 +144,7 @@
                                         element?.topicDefinition
                                             ?.actualTopicName
                                     "
-                                    matTooltip="Copy"
+                                    [matTooltip]="'Copy' | translate"
                                 >
                                     <mat-icon>content_copy</mat-icon>
                                 </button>
@@ -162,7 +163,7 @@
                 <table mat-table [dataSource]="pipelineElement?.inputStreams">
                     <ng-container matColumnDef="inputTopics">
                         <th mat-header-cell *matHeaderCellDef>
-                            <strong>Input Topics</strong>
+                            <strong>{{ 'Input Topics' | translate }}</strong>
                         </th>
                         <td mat-cell *matCellDef="let element">
                             <div
@@ -181,7 +182,7 @@
                                             ?.transportProtocols?.[0]
                                             ?.topicDefinition?.actualTopicName
                                     "
-                                    matTooltip="Copy"
+                                    [matTooltip]="'Copy' | translate"
                                 >
                                     <mat-icon>content_copy</mat-icon>
                                 </button>
@@ -207,7 +208,7 @@
             class="mat-basic"
             (click)="close()"
         >
-            Close
+            {{ 'Close' | translate }}
         </button>
     </div>
 </div>

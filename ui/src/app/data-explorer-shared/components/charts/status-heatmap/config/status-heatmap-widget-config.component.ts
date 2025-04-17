@@ -44,7 +44,7 @@ export class StatusHeatmapWidgetConfigComponent extends BaseWidgetConfig<
     setSelectedProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
             field;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
     protected applyWidgetConfig(config: StatusHeatmapVisConfig): void {
@@ -62,7 +62,7 @@ export class StatusHeatmapWidgetConfigComponent extends BaseWidgetConfig<
     triggerViewUpdate() {
         this.widgetConfigurationService.notify({
             refreshView: true,
-            refreshData: true,
+            refreshData: false,
         });
     }
 }

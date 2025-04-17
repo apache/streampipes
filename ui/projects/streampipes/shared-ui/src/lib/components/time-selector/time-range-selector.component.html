@@ -79,7 +79,7 @@
     <div fxLayoutAlign="end center">
         <button
             mat-icon-button
-            matTooltip="Refresh"
+            [matTooltip]="'Refresh' | translate"
             color="accent"
             (click)="updateTimeSettingsAndReload()"
         >

@@ -22,6 +22,7 @@ import { ChartConfigurationService } from '../../../../services/chart-configurat
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 import { MapVisConfig, MapWidgetModel } from '../model/map-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
     selector: 'sp-data-explorer-map-widget-config',
@@ -60,16 +61,16 @@ export class MapWidgetConfigComponent extends BaseWidgetConfig<
         this.triggerDataRefresh();
     }
 
-    setUseLastEventCoordinations(field: DataExplorerField) {
+    setUseLastEventCoordinates(event: MatCheckboxChange) {
         this.currentlyConfiguredWidget.visualizationConfig.useLastEventCoordinates =
-            field['checked'];
-        this.triggerDataRefresh();
+            event.checked;
+        this.triggerViewRefresh();
     }
 
     setSelectedToolTipContent(fields: DataExplorerField[]) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedToolTipContent =
             fields;
-        this.triggerDataRefresh();
+        this.triggerViewRefresh();
     }
 
     protected applyWidgetConfig(config: MapVisConfig): void {

@@ -25,23 +25,23 @@
     <button
         mat-raised-button
         color="accent"
-        matTooltip="Save"
+        [matTooltip]="'Save' | translate"
         class="edit-menu-btn"
         (click)="saveDashboardEmitter.emit()"
         data-cy="save-dashboard-btn"
     >
         <mat-icon>save</mat-icon>
-        <span>Save</span>
+        <span>{{ 'Save' | translate }}</span>
     </button>
     <button
         mat-raised-button
         color="accent"
-        matTooltip="Discard"
+        [matTooltip]="'Discard' | translate"
         class="mat-basic mr-10 edit-menu-btn"
         (click)="discardDashboardEmitter.emit()"
     >
         <i class="material-icons">undo</i>
-        <span>&nbsp;Discard</span>
+        <span>&nbsp;{{ 'Discard' | translate }}</span>
     </button>
 </div>
 <div
@@ -52,8 +52,8 @@
     <button
         mat-icon-button
         [matMenuTriggerFor]="menu"
-        aria-label="View mode"
-        matTooltip="View mode"
+        [attr.aria-label]="'View mode' | translate"
+        [matTooltip]="'View mode' | translate"
     >
         <mat-icon
             >{{ viewMode === 'grid' ? 'grid_view' : 'web_asset' }}
@@ -62,11 +62,11 @@
     <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="viewModeChange.emit('grid')">
             <mat-icon>grid_view</mat-icon>
-            <span>Grid</span>
+            <span>{{ 'Grid' | translate }}</span>
         </button>
         <button mat-menu-item (click)="viewModeChange.emit('slide')">
             <mat-icon>web_asset</mat-icon>
-            <span>Slides</span>
+            <span>{{ 'Slides' | translate }}</span>
         </button>
     </mat-menu>
 </div>
@@ -93,7 +93,7 @@
     <button
         mat-icon-button
         [matMenuTriggerFor]="optMenu"
-        aria-label="Options"
+        [attr.aria-label]="'Options' | translate"
         data-cy="options-data-explorer"
     >
         <mat-icon>more_vert</mat-icon>
@@ -106,7 +106,7 @@
             data-cy="options-edit-dashboard"
         >
             <mat-icon>edit</mat-icon>
-            <span>Edit dashboard</span>
+            <span>{{ 'Edit dashboard' | translate }}</span>
         </button>
         <button
             mat-menu-item
@@ -114,7 +114,7 @@
             *ngIf="!editMode && !timeRangeVisible"
         >
             <mat-icon>alarm_on</mat-icon>
-            <span>Show time range selector</span>
+            <span>{{ 'Show time range selector' | translate }}</span>
         </button>
         <button
             mat-menu-item
@@ -122,7 +122,7 @@
             *ngIf="!editMode && timeRangeVisible"
         >
             <mat-icon>alarm_off</mat-icon>
-            <span>Hide time range selector</span>
+            <span>{{ 'Hide time range selector' | translate }}</span>
         </button>
         <button
             mat-menu-item
@@ -130,7 +130,7 @@
             (click)="deleteDashboardEmitter.emit()"
         >
             <mat-icon>clear</mat-icon>
-            <span>Delete dashboard</span>
+            <span>{{ 'Delete dashboard' | translate }}</span>
         </button>
     </mat-menu>
 </div>

@@ -18,7 +18,7 @@
 
 <div fxFlex="100" fxLayout="column">
     <sp-basic-header-title-component
-        title="Dashboards"
+        [title]="'Dashboards' | translate"
     ></sp-basic-header-title-component>
     <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
         <sp-table
@@ -33,7 +33,7 @@
                     mat-header-cell
                     *matHeaderCellDef
                 >
-                    Dashboard
+                    {{ 'Dashboards' | translate }}
                 </th>
                 <td
                     fxFlex="60"
@@ -69,7 +69,7 @@
                         <button
                             mat-icon-button
                             color="accent"
-                            matTooltip="Show data view"
+                            [matTooltip]="'Show dashboard' | translate"
                             (click)="showDashboard(element)"
                         >
                             <i class="material-icons">visibility</i>
@@ -77,7 +77,7 @@
                         <button
                             mat-icon-button
                             color="accent"
-                            matTooltip="Edit data view"
+                            [matTooltip]="'Edit dashboard' | translate"
                             *ngIf="hasDataExplorerWritePrivileges"
                             [attr.data-cy]="'edit-dashboard-' + element.name"
                             (click)="editDashboard(element)"
@@ -87,7 +87,7 @@
                         <button
                             mat-icon-button
                             color="accent"
-                            matTooltip="Edit data view settings"
+                            [matTooltip]="'Dashboard settings' | translate"
                             *ngIf="hasDataExplorerWritePrivileges"
                             (click)="openEditDashboardDialog(element)"
                         >
@@ -96,7 +96,7 @@
                         <button
                             mat-icon-button
                             color="accent"
-                            matTooltip="Manage permissions"
+                            [matTooltip]="'Manage permissions' | translate"
                             *ngIf="isAdmin"
                             (click)="showPermissionsDialog(element)"
                         >
@@ -105,7 +105,7 @@
                         <button
                             mat-icon-button
                             color="accent"
-                            matTooltip="Delete data view"
+                            [matTooltip]="'Delete chart' | translate"
                             *ngIf="hasDataExplorerWritePrivileges"
                             [attr.data-cy]="'delete-dashboard-' + element.name"
                             (click)="openDeleteDashboardDialog(element)"

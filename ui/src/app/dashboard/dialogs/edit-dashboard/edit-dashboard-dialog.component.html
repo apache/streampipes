@@ -25,7 +25,7 @@
                 style="margin: 5px; width: 100%"
             >
                 <mat-form-field class="w-100" floatLabel="auto" color="accent">
-                    <mat-label>Data View Name</mat-label>
+                    <mat-label>{{ 'Dashboard title' | translate }}</mat-label>
                     <input
                         id="dvname"
                         #dvname="ngModel"
@@ -34,14 +34,16 @@
                         data-cy="data-view-name"
                         [(ngModel)]="dashboard.name"
                     />
-                    <mat-error>Name must not be empty</mat-error>
+                    <mat-error>{{
+                        'Title must not be empty' | translate
+                    }}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="w-100" color="accent">
-                    <mat-label>Description</mat-label>
+                    <mat-label>{{ 'Description' | translate }}</mat-label>
                     <input matInput [(ngModel)]="dashboard.description" />
                 </mat-form-field>
                 <div class="mt-10" fxLayout="column">
-                    <label>Default view mode</label>
+                    <label>{{ 'Default view mode' | translate }}</label>
                     <mat-radio-group
                         [(ngModel)]="
                             dashboard.dashboardGeneralSettings.defaultViewMode
@@ -51,24 +53,26 @@
                             class="view-radio-button"
                             [value]="'grid'"
                         >
-                            Grid View
+                            {{ 'Grid view' | translate }}
                         </mat-radio-button>
                         <mat-radio-button
                             class="view-radio-button"
                             [value]="'slide'"
                         >
-                            Slide View
+                            {{ 'Slide view' | translate }}
                         </mat-radio-button>
                     </mat-radio-group>
                 </div>
                 <div class="mt-10" fxLayout="column">
-                    <label>Time Settings</label>
+                    <label>{{ 'Time settings' | translate }}</label>
                     <mat-checkbox
                         [(ngModel)]="
                             dashboard.dashboardGeneralSettings.globalTimeEnabled
                         "
-                        >Use global time settings instead of widget time
-                        settings
+                        >{{
+                            'Use global time settings instead of chart time settings'
+                                | translate
+                        }}
                     </mat-checkbox>
                 </div>
                 <!--<mat-checkbox [(ngModel)]="dashboard.displayHeader">Show name and description in dashboard</mat-checkbox>-->
@@ -83,7 +87,7 @@
             class="mat-basic mr-10"
             (click)="onCancel()"
         >
-            Close
+            {{ 'Close' | translate }}
         </button>
         <button
             [disabled]="dvname.invalid"
@@ -93,7 +97,7 @@
             data-cy="save-data-view"
             (click)="onSave()"
         >
-            {{ createMode ? 'Create' : 'Save' }}
+            {{ (createMode ? 'Create' : 'Save') | translate }}
         </button>
     </div>
 </div>

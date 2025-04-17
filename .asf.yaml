@@ -23,12 +23,18 @@ github:
     - analytics
     - stream-processing
     - self-service
-    - hacktoberfest
+    - opcua
+    - s7
+    - iot-platform
+    - iot-analytics
+    - microservices
+    - dashboard
 
   features:
     wiki: false
     issues: true
     projects: false
+    discussions: true
 
   custom_subjects:
     new_pr: "[PR] {title}"

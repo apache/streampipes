@@ -17,7 +17,7 @@
   -->
 
 <div fxFlex fxLayoutAlign="start center" *ngIf="expanded">
-    <h4 class="ml-5">Browse assets</h4>
+    <h4 class="ml-5">{{ 'Browse assets' | translate }}</h4>
 </div>
 <div fxLayoutAlign="end center">
     <button
@@ -26,7 +26,7 @@
         color="accent"
         [matMenuTriggerFor]="menu"
         #menuTrigger="matMenuTrigger"
-        matTooltip="Filter assets"
+        [matTooltip]="'Filter assets' | translate"
         (menuClosed)="menuTrigger.closeMenu()"
     >
         <mat-icon>filter_alt</mat-icon>

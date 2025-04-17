@@ -52,12 +52,17 @@ export class SpValueHeatmapRendererService extends SpBaseSingleFieldEchartsRende
         );
     }
 
-    addAdditionalConfigs(options: EChartsOption) {
+    addAdditionalConfigs(
+        options: EChartsOption,
+        widgetConfig: ValueHeatmapChartWidgetModel,
+    ): void {
         Object.assign(options, {
             legend: {
                 show: false,
             },
             visualMap: {
+                show: widgetConfig.baseAppearanceConfig.chartAppearance
+                    .showLegend,
                 min: 0,
                 max: 1,
                 calculable: true,

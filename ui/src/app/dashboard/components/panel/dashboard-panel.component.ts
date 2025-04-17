@@ -45,10 +45,11 @@ import {
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { map, switchMap } from 'rxjs/operators';
-import { SpDataExplorerRoutes } from '../../../data-explorer/data-explorer.routes';
+import { SpDashboardRoutes } from '../../dashboard.routes';
 import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
 import { DataExplorerDetectChangesService } from '../../../data-explorer/services/data-explorer-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-dashboard-panel',
@@ -95,6 +96,7 @@ export class DashboardPanelComponent
         private route: ActivatedRoute,
         private routingService: DataExplorerRoutingService,
         private breadcrumbService: SpBreadcrumbService,
+        private translateService: TranslateService,
     ) {}
 
     public ngOnInit() {
@@ -204,7 +206,7 @@ export class DashboardPanelComponent
             this.originalDashboard = JSON.parse(JSON.stringify(dashboard));
             this.breadcrumbService.updateBreadcrumb(
                 this.breadcrumbService.makeRoute(
-                    [SpDataExplorerRoutes.BASE],
+                    [SpDashboardRoutes.BASE],
                     this.dashboard.name,
                 ),
             );
@@ -258,11 +260,13 @@ export class DashboardPanelComponent
             const dialogRef = this.dialog.open(ConfirmDialogComponent, {
                 width: '500px',
                 data: {
-                    title: 'Save changes?',
-                    subtitle:
-                        'Update all changes to dashboard widgets or discard current changes.',
-                    cancelTitle: 'Discard changes',
-                    okTitle: 'Update',
+                    title: this.translateService.instant('Save changes?'),
+                    subtitle: this.translateService.instant(
+                        'Update all changes to dashboard charts or discard current changes.',
+                    ),
+                    cancelTitle:
+                        this.translateService.instant('Discard changes'),
+                    okTitle: this.translateService.instant('Update'),
                     confirmAndCancel: true,
                 },
             });

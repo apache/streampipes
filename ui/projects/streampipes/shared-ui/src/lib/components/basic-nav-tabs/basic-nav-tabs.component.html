@@ -28,7 +28,7 @@
                 <button
                     mat-icon-button
                     color="accent"
-                    matTooltip="Back"
+                    [matTooltip]="'Back' | translate"
                     (click)="navigateBack()"
                     class="edit-menu-btn"
                     data-cy="save-data-explorer-go-back-to-overview"

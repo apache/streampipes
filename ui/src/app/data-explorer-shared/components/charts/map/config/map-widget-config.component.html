@@ -101,7 +101,7 @@
                             currentlyConfiguredWidget.visualizationConfig
                                 .useLastEventCoordinates
                         "
-                        (change)="setUseLastEventCoordinations($event)"
+                        (change)="setUseLastEventCoordinates($event)"
                         >{{ 'Focus map on last event' | translate }}
                     </mat-checkbox>
                 </div>
@@ -116,7 +116,6 @@
                         'Marker or Trace' | translate
                     }}</small>
                     <mat-form-field color="accent" appearance="outline" fxFlex>
-                        <!-- <mat-label>Marker or Trace</mat-label> -->
                         <mat-select
                             [(value)]="
                                 currentlyConfiguredWidget.visualizationConfig
