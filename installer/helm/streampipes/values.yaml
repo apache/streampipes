@@ -253,12 +253,6 @@ externalInfluxdb:
   adminPasswordSecretKey: admin-user-password
   adminTokenSecretKey: admin-user-token
 
-# Monitoring configuration
-monitoring:
-  enabled: false
-  interval: 30s
-  labels: {}
-
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: true
