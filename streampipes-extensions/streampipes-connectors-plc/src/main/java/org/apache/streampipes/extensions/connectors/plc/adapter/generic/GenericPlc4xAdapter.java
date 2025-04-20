@@ -45,7 +45,6 @@ import org.apache.plc4x.java.api.PlcConnectionManager;
 import org.apache.plc4x.java.api.PlcDriver;
 import org.apache.plc4x.java.api.metadata.Option;
 import org.apache.plc4x.java.api.metadata.OptionMetadata;
-import org.apache.plc4x.java.utils.cache.CachedPlcConnectionManager;
 
 import java.util.List;
 import java.util.function.Function;

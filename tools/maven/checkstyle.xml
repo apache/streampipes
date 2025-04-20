@@ -43,11 +43,12 @@ page at http://checkstyle.sourceforge.net/config.html -->
         <property name="severity" value="error" />
     </module>
 
-    <module name="RegexpSingleline">
-        <property name="format" value="\s+$"/>
-        <property name="message" value="Trailing whitespace"/>
-        <property name="severity" value="error"/>
-    </module>
+    <!--    Rules defined using the Spotloss plugin-->
+    <!--    <module name="RegexpSingleline">-->
+    <!--        <property name="format" value="\s+$"/>-->
+    <!--        <property name="message" value="Trailing whitespace"/>-->
+    <!--        <property name="severity" value="error"/>-->
+    <!--    </module>-->
 
     <module name="RegexpSingleline">
         <property name="format" value="Throwables.propagate\("/>
@@ -64,20 +65,22 @@ page at http://checkstyle.sourceforge.net/config.html -->
         LENGTH and CODING CHECKS
         -->
 
-    <module name="LineLength">
-        <!-- Checks if a line is too long. -->
-        <property name="max" value="120"/>
-        <property name="severity" value="error"/>
+    <!--    Rules defined using the Spotloss plugin-->
+    <!--    <module name="LineLength">-->
+    <!--        &lt;!&ndash; Checks if a line is too long. &ndash;&gt;-->
+    <!--        <property name="max" value="120"/>-->
+    <!--        <property name="severity" value="error"/>-->
 
-        <!--
-          The default ignore pattern exempts the following elements:
-            - import statements
-            - long URLs inside comments
-        -->
+    <!--
+      The default ignore pattern exempts the following elements:
+        - import statements
+        - long URLs inside comments
+    -->
 
-        <property name="ignorePattern"
-                  value="^(package .*;\s*)|(import .*;\s*)|( *\* .*https?://.*)$"/>
-    </module>
+
+    <!--        <property name="ignorePattern"-->
+    <!--                  value="^(package .*;\s*)|(import .*;\s*)|( *\* .*https?://.*)$"/>-->
+    <!--    </module>-->
 
     <module name="SuppressWarningsFilter"/>
 
@@ -87,11 +90,11 @@ page at http://checkstyle.sourceforge.net/config.html -->
     <!-- All Java AST specific tests live under TreeWalker module. -->
     <module name="TreeWalker">
 
-        <module name="SuppressWarningsHolder" />
+        <module name="SuppressWarningsHolder"/>
 
         <module name="TodoComment">
             <!-- Checks that disallowed strings are not used in comments.  -->
-            <property name="format" value="(FIXME)|(XXX)|(@author)" />
+            <property name="format" value="(FIXME)|(XXX)|(@author)"/>
         </module>
 
         <!--
@@ -391,12 +394,13 @@ page at http://checkstyle.sourceforge.net/config.html -->
             <property name="severity" value="error"/>
         </module>
 
-        <module name="WhitespaceAfter">
-            <!-- Checks that commas, semicolons and typecasts are followed by
-                 whitespace.
-            -->
-            <property name="tokens" value="COMMA, SEMI, TYPECAST"/>
-        </module>
+        <!--        Rules defined using the Spotloss plugin-->
+        <!--        <module name="WhitespaceAfter">-->
+        <!-- Checks that commas, semicolons and typecasts are followed by
+             whitespace.
+        -->
+        <!--            <property name="tokens" value="COMMA, SEMI, TYPECAST"/>-->
+        <!--        </module>-->
 
         <module name="NoWhitespaceAfter">
             <!-- Checks that there is no whitespace after various unary operators.
@@ -440,13 +444,14 @@ page at http://checkstyle.sourceforge.net/config.html -->
             <property name="severity" value="error"/>
         </module>
 
-        <module name="Indentation">
-            <property name="basicOffset" value="2"/>
-            <property name="braceAdjustment" value="2"/>
-            <property name="caseIndent" value="2"/>
-            <property name="throwsIndent" value="4"/>
-            <property name="lineWrappingIndentation" value="4"/>
-            <property name="arrayInitIndent" value="2"/>
-        </module>
+        <!--        Rules defined using the Spotloss plugin-->
+        <!--        <module name="Indentation">-->
+        <!--            <property name="basicOffset" value="2"/>-->
+        <!--            <property name="braceAdjustment" value="2"/>-->
+        <!--            <property name="caseIndent" value="2"/>-->
+        <!--            <property name="throwsIndent" value="4"/>-->
+        <!--            <property name="lineWrappingIndentation" value="4"/>-->
+        <!--            <property name="arrayInitIndent" value="2"/>-->
+        <!--        </module>-->
     </module>
 </module>
