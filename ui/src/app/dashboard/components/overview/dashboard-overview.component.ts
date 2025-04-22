@@ -78,6 +78,10 @@ export class DashboardOverviewComponent implements OnInit {
                 refreshIntervalInSeconds: 10,
                 label: this.translateService.instant('Off'),
             },
+            metadata: {
+                createdAtEpochMs: Date.now(),
+                lastModifiedEpochMs: Date.now(),
+            },
         };
 
         this.openDashboardModificationDialog(true, dataViewDashboard);

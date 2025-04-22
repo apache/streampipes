@@ -147,11 +147,16 @@ export class DataExplorerChartViewComponent
         this.dataView.dataConfig.ignoreMissingValues = false;
         this.dataView.baseAppearanceConfig.backgroundColor = '#FFFFFF';
         this.dataView.baseAppearanceConfig.textColor = '#3e3e3e';
+        this.dataView.metadata = {
+            createdAtEpochMs: Date.now(),
+            lastModifiedEpochMs: Date.now(),
+        };
         this.dataView = { ...this.dataView };
     }
 
     saveDataView(): void {
         this.dataView.timeSettings = this.timeSettings;
+        this.dataView.metadata.lastModifiedEpochMs = Date.now();
         const observable =
             this.dataView.elementId !== undefined
                 ? this.dataViewService.updateChart(this.dataView)

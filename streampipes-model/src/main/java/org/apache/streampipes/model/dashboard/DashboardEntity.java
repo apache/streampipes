@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.dashboard;
 
+import org.apache.streampipes.model.ResourceMetadata;
+import org.apache.streampipes.model.api.SpResource;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
@@ -28,7 +30,7 @@ import com.google.gson.annotations.SerializedName;
 @JsonSubTypes({
     @JsonSubTypes.Type(DataExplorerWidgetModel.class)
 })
-public abstract class DashboardEntity implements Storable {
+public abstract class DashboardEntity implements Storable, SpResource {
 
   @JsonAlias("_id")
   @SerializedName("_id")
@@ -37,6 +39,8 @@ public abstract class DashboardEntity implements Storable {
   @JsonAlias("_rev")
   @SerializedName("_rev")
   private String rev;
+
+  private ResourceMetadata metadata;
 
   public DashboardEntity() {
     super();
@@ -60,5 +64,10 @@ public abstract class DashboardEntity implements Storable {
   @Override
   public void setElementId(String elementId) {
     this.elementId = elementId;
+  }
+
+  @Override
+  public ResourceMetadata getMetadata() {
+    return metadata;
   }
 }
