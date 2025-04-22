@@ -57,3 +57,4 @@ export * from './lib/services/echarts-toolbox.service';
 export * from './lib/services/colorization.service';
 export * from './lib/services/time-selection.service';
 export * from './lib/components/asset-browser/asset-browser.service';
+export * from './lib/services/date-format.service';
