@@ -40,6 +40,7 @@
 
     <properties>
         <activemq-client.version>5.18.3</activemq-client.version>
+        <antlr4.version>4.11.1</antlr4.version>
         <amqp-client.version>5.21.0</amqp-client.version>
         <apache-sis-referencing.version>1.2</apache-sis-referencing.version>
         <boofcv.version>1.1.0</boofcv.version>
@@ -130,8 +131,10 @@
         <spring-security.version>6.4.2</spring-security.version>
         <swagger.version>2.2.19</swagger.version>
         <type-parser.version>0.8.1</type-parser.version>
+        <tsfile.version>1.1.0</tsfile.version>
         <hawtbuf.version>1.11</hawtbuf.version>
         <woodstox.version>7.0.0</woodstox.version>
+        <xz.version>1.10</xz.version>
 
         <!-- Test dependencies -->
         <junit.version>5.11.4</junit.version>
@@ -278,6 +281,21 @@
                 <groupId>io.milvus</groupId>
                 <artifactId>milvus-sdk-java</artifactId>
                 <version>${milvus-sdk-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tsfile</groupId>
+                <artifactId>tsfile</artifactId>
+                <version>${tsfile.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.tukaani</groupId>
+                <artifactId>xz</artifactId>
+                <version>${xz.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-runtime</artifactId>
+                <version>${antlr4.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.errorprone</groupId>
