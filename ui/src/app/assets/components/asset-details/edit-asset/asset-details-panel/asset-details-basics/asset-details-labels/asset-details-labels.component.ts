@@ -33,9 +33,9 @@ import {
 import { MatChipInputEvent } from '@angular/material/chips';
 import { FormControl } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { map, startWith } from 'rxjs/operators';
+import { filter, map, startWith } from 'rxjs/operators';
 import { SpColorizationService } from '@streampipes/shared-ui';
 
 @Component({
@@ -54,7 +54,7 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
 
     separatorKeysCodes: number[] = [ENTER, COMMA];
     labelCtrl = new FormControl('');
-    filteredLabels: Observable<string[]>;
+    filteredLabels: Observable<SpLabel[]>;
     allLabels: SpLabel[] = [];
     labelsAvailable = false;
 
@@ -67,7 +67,9 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.labelsService.getAllLabels().subscribe(labels => {
-            this.allLabels = labels;
+            this.allLabels = labels.sort((a, b) =>
+                a.label.localeCompare(b.label),
+            );
             labels.forEach(
                 label =>
                     (this.labelTextColors[label._id] =
@@ -76,19 +78,17 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
                         )),
             );
             this.asset.labelIds =
-                this.asset.labelIds?.filter(
-                    id => this.allLabels.find(l => l._id === id) !== undefined,
+                this.asset.labelIds?.filter(id =>
+                    this.allLabels.find(l => l._id === id),
                 ) || [];
             this.refreshCurrentLabels();
             this.labelsAvailable = true;
+            this.updateFilteredLabels();
         });
+
         this.filteredLabels = this.labelCtrl.valueChanges.pipe(
-            startWith(null),
-            map((labelName: string | null) =>
-                labelName
-                    ? this._filter(labelName)
-                    : this.allLabels.map(label => label.label).slice(),
-            ),
+            startWith(''),
+            map(value => this._filter(value as string)),
         );
     }
 
@@ -106,6 +106,15 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
         }
     }
 
+    getAvailableLabels(): SpLabel[] {
+        return this.allLabels.filter(
+            label =>
+                !this.labels.some(
+                    selectedLabel => selectedLabel._id === label._id,
+                ),
+        );
+    }
+
     add(event: MatChipInputEvent): void {
         const value = (event.value || '').trim();
         if (value) {
@@ -116,7 +125,7 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
     }
 
     findLabel(value: string): SpLabel {
-        return this.allLabels.find(l => l.label === value);
+        return this.allLabels.find(l => l._id === value);
     }
 
     remove(label: SpLabel): void {
@@ -126,25 +135,34 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
             this.labels.splice(labelsIndex, 1);
             this.asset.labelIds.splice(index, 1);
         }
+        this.updateFilteredLabels();
     }
 
     selected(event: MatAutocompleteSelectedEvent): void {
-        this.addLabelToSelection(event.option.viewValue);
+        this.addLabelToSelection(event.option.value);
         this.labelInput.nativeElement.value = '';
         this.labelCtrl.setValue(null);
     }
 
     addLabelToSelection(textLabel: string): void {
         const label = this.findLabel(textLabel);
-        this.labels.push(label);
-        this.asset.labelIds.push(label._id);
+        if (label && !this.labels.some(l => l._id === label._id)) {
+            this.labels.push(label);
+            this.asset.labelIds.push(label._id);
+        }
     }
 
-    private _filter(value: string): string[] {
+    private _filter(value: string): SpLabel[] {
         const filterValue = value.toLowerCase();
+        return this.getAvailableLabels().filter(label =>
+            label.label.toLowerCase().includes(filterValue),
+        );
+    }
 
-        return this.allLabels
-            .filter(label => label.label.toLowerCase().includes(filterValue))
-            .map(label => label.label);
+    private updateFilteredLabels(): void {
+        this.filteredLabels = this.labelCtrl.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter(typeof value === 'string' ? value : '')),
+        );
     }
 }

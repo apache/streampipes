@@ -18,6 +18,7 @@
 
 import { GridsterConfig, GridsterItem } from 'angular-gridster2';
 import { TimeSettings } from '../datalake/DateRange';
+import { ResourceMetadata } from '../gen/streampipes-model';
 
 // tslint:disable-next-line:no-empty-interface
 export interface DashboardConfig extends GridsterConfig {}
@@ -45,5 +46,6 @@ export interface Dashboard {
     dashboardGeneralSettings?: any;
     dashboardLiveSettings: DashboardLiveSettings;
     elementId?: string;
+    metadata: ResourceMetadata;
     rev?: string;
 }

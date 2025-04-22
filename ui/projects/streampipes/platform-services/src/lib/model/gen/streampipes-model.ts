@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-03-10 14:35:15.
+// Generated using typescript-generator version 3.2.1263 on 2025-04-04 12:37:31.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1096,8 +1096,9 @@ export class CustomTransformOutputStrategy extends OutputStrategy {
     }
 }
 
-export class DashboardEntity implements Storable {
+export class DashboardEntity implements Storable, SpResource {
     elementId: string;
+    metadata: ResourceMetadata;
     rev: string;
 
     static fromData(
@@ -1109,6 +1110,7 @@ export class DashboardEntity implements Storable {
         }
         const instance = target || new DashboardEntity();
         instance.elementId = data.elementId;
+        instance.metadata = ResourceMetadata.fromData(data.metadata);
         instance.rev = data.rev;
         return instance;
     }
@@ -1150,7 +1152,7 @@ export class DashboardItem {
     }
 }
 
-export class DashboardModel implements Storable {
+export class DashboardModel implements Storable, SpResource {
     couchDbId: string;
     dashboardGeneralSettings: { [index: string]: any };
     dashboardLiveSettings: { [index: string]: any };
@@ -1159,6 +1161,7 @@ export class DashboardModel implements Storable {
     displayHeader: boolean;
     elementId: string;
     id: string;
+    metadata: ResourceMetadata;
     name: string;
     rev: string;
     widgets: DashboardItem[];
@@ -1185,6 +1188,7 @@ export class DashboardModel implements Storable {
         instance.displayHeader = data.displayHeader;
         instance.elementId = data.elementId;
         instance.id = data.id;
+        instance.metadata = ResourceMetadata.fromData(data.metadata);
         instance.name = data.name;
         instance.rev = data.rev;
         instance.widgets = __getCopyArrayFn(DashboardItem.fromData)(
@@ -3255,6 +3259,24 @@ export class RenameRuleDescription extends SchemaTransformationRuleDescription {
     }
 }
 
+export class ResourceMetadata {
+    createdAtEpochMs: number;
+    lastModifiedEpochMs: number;
+
+    static fromData(
+        data: ResourceMetadata,
+        target?: ResourceMetadata,
+    ): ResourceMetadata {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ResourceMetadata();
+        instance.createdAtEpochMs = data.createdAtEpochMs;
+        instance.lastModifiedEpochMs = data.lastModifiedEpochMs;
+        return instance;
+    }
+}
+
 export class RuntimeOptionsRequest {
     '@class':
         | 'org.apache.streampipes.model.runtime.RuntimeOptionsRequest'
@@ -3672,6 +3694,10 @@ export class SpQueryResult {
         instance.total = data.total;
         return instance;
     }
+}
+
+export interface SpResource {
+    metadata: ResourceMetadata;
 }
 
 export class SpServiceConfiguration implements Storable {
