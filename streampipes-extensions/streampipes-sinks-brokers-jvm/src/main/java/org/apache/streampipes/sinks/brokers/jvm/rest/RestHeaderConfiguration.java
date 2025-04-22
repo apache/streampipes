@@ -19,7 +19,7 @@
 package org.apache.streampipes.sinks.brokers.jvm.rest;
 
 public record RestHeaderConfiguration(
-		String headerKey,
-		String headerValue
+    String headerKey,
+    String headerValue
 ) {
 }

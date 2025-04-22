@@ -24,6 +24,7 @@ import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.sinks.brokers.jvm.bufferrest.BufferRestPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.jms.JmsPublisherSink;
+import org.apache.streampipes.sinks.brokers.jvm.migrations.RestSinkMigrationV1;
 import org.apache.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.rest.RestSink;
 import org.apache.streampipes.sinks.brokers.jvm.websocket.WebsocketServerSink;
@@ -50,6 +51,8 @@ public class BrokerSinksExtensionModuleExport implements IExtensionModuleExport 
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return Collections.emptyList();
+    return List.of(
+        new RestSinkMigrationV1()
+    );
   }
 }
