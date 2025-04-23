@@ -62,7 +62,7 @@ public class TsFileSink extends StreamPipesDataSink {
   public static final String TSFILE_NAME_KEY = "tsfile_name";
   public static final String TIMESTAMP_MAPPING_KEY = "timestamp_mapping";
   //To tell where the tsfile is stored.Like "/home/user/".
-  public static final String DIR_ABSOLUTE_PATH_KEY = "dir_absolute_path";
+  public static final String TSFILE_GENERATION_DIRECTORY_KRY = "tsfile_generation_directory";
   //Set the max size of the tsfile.
   public static final String MAX_TSFILE_SIZE_KEY = "max_tsfile_size";
   //Set when should the tsfile be flushed to disk.
@@ -110,7 +110,7 @@ public class TsFileSink extends StreamPipesDataSink {
         category(DataSinkType.DATABASE)
         .requiredTextParameter(Labels.withId(TSFILE_NAME_KEY))
         .requiredTextParameter(Labels.withId(DEVICE_ID_KEY))
-        .requiredTextParameter(Labels.withId(DIR_ABSOLUTE_PATH_KEY))
+        .requiredTextParameter(Labels.withId(TSFILE_GENERATION_DIRECTORY_KRY))
         .requiredLongParameter(Labels.withId(MAX_TSFILE_SIZE_KEY), 1024L * 1024 * 10)
         .requiredLongParameter(Labels.withId(MAX_FLUSH_DISK_SIZE_KEY), Long.MAX_VALUE)
         .requiredStream(
@@ -126,7 +126,7 @@ public class TsFileSink extends StreamPipesDataSink {
   public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     this.tsFileName = parameters.extractor().singleValueParameter(TSFILE_NAME_KEY, String.class);
     this.deviceId = parameters.extractor().singleValueParameter(DEVICE_ID_KEY, String.class);
-    this.dirAbsolutePath = parameters.extractor().singleValueParameter(DIR_ABSOLUTE_PATH_KEY, String.class);
+    this.dirAbsolutePath = parameters.extractor().singleValueParameter(TSFILE_GENERATION_DIRECTORY_KRY, String.class);
     this.timestampFieldId = parameters.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
     this.maxTsFileSize = parameters.extractor().singleValueParameter(MAX_TSFILE_SIZE_KEY, Long.class);
     this.maxFlushDiskSize = parameters.extractor().singleValueParameter(MAX_FLUSH_DISK_SIZE_KEY, Long.class);
@@ -179,7 +179,15 @@ public class TsFileSink extends StreamPipesDataSink {
     }
 
     TSRecord tsRecord = new TSRecord(timestamp, deviceId); // init tsRecord
+    /*
+     We need to know the size of the file to determine the timing of flashing data to disk and
+     creating a new file when the file is too large.
+     However, newTsFile. length() cannot return the actual file size,
+     so we use size to estimate the file size. For example,
+     if we write a Boolean type data that occupies 8 bytes, we add 8 to achieve this goal
+     */
     int size = 0;
+
     for (Map.Entry<String, Object> measurementValuePair : measurementValuePairs.entrySet()) {
       if (measurementValuePair.getKey().equals(timestampFieldId)) {
         continue;
@@ -213,7 +221,9 @@ public class TsFileSink extends StreamPipesDataSink {
 
     try {
       if (maxTime > timestamp) {
-        log.info("timestamp fault");
+        log.info("The file size did not reach the expected size, "
+                 + "but due to the time taken to write the measurement point being less than the previous writing time,"
+                 + " the file needs to be closed in advance");
         resetTsFileWriter();
         maxTime = Long.MIN_VALUE;
       }
@@ -228,13 +238,11 @@ public class TsFileSink extends StreamPipesDataSink {
       }
       if (totalWriteSize >= maxTsFileSize) {
         resetTsFileWriter();
-        log.info("Success to reset tsFileWriter");
         return;
       }
       if (writeSize >= maxFlushDiskSize) {
         tsFileWriter.flushAllChunkGroups();
         writeSize = 0;
-        log.info("Success to flush tsFileWriter,totalWriteSize is " + totalWriteSize);
       }
     } catch (IOException e) {
       throw new SpRuntimeException("Failed to resetTsFileWriter" , e);
@@ -308,7 +316,8 @@ public class TsFileSink extends StreamPipesDataSink {
   private void resetTsFileWriter() throws IOException {
     if (tsFileWriter != null){
       tsFileWriter.close();
-      log.info("Success to close tsFileWriter,writeSize is " + writeSize + " and totalWriteSize is " + totalWriteSize);
+      log.info("Success to close tsFileWriter, file name is {}, totalWriteSize is {}",
+              newTsFile.getName(), totalWriteSize);
     }
     totalWriteSize = 0;
     writeSize = 0;

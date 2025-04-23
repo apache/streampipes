@@ -27,8 +27,8 @@ tsfile_name.description=The name of the tsfile to be created. If the file alread
 timestamp_mapping.title=Timestamp Mapping
 timestamp_mapping.description=The mapping of the timestamp field. The timestamp field will be used as the key when storing the event.
 
-dir_absolute_path.title=Directory Absolute Path
-dir_absolute_path.description=The directory absolute path where the tsfile will be created. The directory must exist and be writable by the user running the application.
+tsfile_generation_directory.title=TsFile Generation Directory
+tsfile_generation_directory.description=The directory must exist and be writable by the user running the application.(Example:"/BOOT-INF/")
 
 max_tsfile_size.title=Max TsFile Size
 max_tsfile_size.description=The maximum size of the tsfile. The default value is 10MB.

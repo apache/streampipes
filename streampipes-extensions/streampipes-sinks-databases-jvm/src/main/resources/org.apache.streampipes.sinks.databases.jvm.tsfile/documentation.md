@@ -46,11 +46,11 @@ The name of the TsFile to create.
 ### TimeStamp
 To create timeStamp field in TsFile.
 
-### DirAbsolutePath
-The absolute path of directory where the TsFile is stored.
+### TsFileGenerationDirectory
+The directory where the TsFile will be generated.
 
 ### MaxTsFileSize
 The maximum size of the TsFile. The default value is 10MB.
 
 ### MaxFlushDiskSize
-The maximum size of the TsFile to flush to disk.
+The maximum memory cache when writing TSFile
