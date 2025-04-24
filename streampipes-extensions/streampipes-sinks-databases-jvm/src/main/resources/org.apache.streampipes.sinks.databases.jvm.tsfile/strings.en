@@ -35,3 +35,6 @@ max_tsfile_size.description=The maximum size of the tsfile. The default value is
 
 max_flush_disk_size.title=Max Flush Disk Size
 max_flush_disk_size.description=The maximum size to tell when to flush the data to disk.
+
+aligned.title=Aligned
+aligned.description=This field allows users to choose whether the written data format is aligned or not.

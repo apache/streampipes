@@ -54,3 +54,6 @@ The maximum size of the TsFile. The default value is 10MB.
 
 ### MaxFlushDiskSize
 The maximum memory cache when writing TSFile
+
+### Aligned
+This field allows users to choose whether the written data format is aligned or not 
