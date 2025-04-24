@@ -34,6 +34,7 @@ import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.vocabulary.XSD;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
@@ -114,10 +115,7 @@ public class TsFileSink extends StreamPipesDataSink {
         .requiredTextParameter(Labels.withId(TSFILE_GENERATION_DIRECTORY_KRY))
         .requiredLongParameter(Labels.withId(MAX_TSFILE_SIZE_KEY), 1024L * 1024 * 10)
         .requiredLongParameter(Labels.withId(MAX_FLUSH_DISK_SIZE_KEY), Long.MAX_VALUE)
-            .requiredSingleValueSelectionFromContainer(
-                Labels.withId(ALIGNED),
-                List.of("true", "false")
-            )
+        .requiredSingleValueSelection(Labels.withId(ALIGNED), Options.from("False", "True"))
         .requiredStream(
                 StreamRequirementsBuilder.create()
                         .requiredPropertyWithUnaryMapping
@@ -242,6 +240,7 @@ public class TsFileSink extends StreamPipesDataSink {
         maxTime = Long.MIN_VALUE;
       }
       try {
+        System.out.println("aligned" + aligned);
         if (aligned){
           tsFileWriter.writeAligned(tablet);
         } else {
