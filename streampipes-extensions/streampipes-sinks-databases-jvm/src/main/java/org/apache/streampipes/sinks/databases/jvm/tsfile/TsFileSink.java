@@ -42,8 +42,7 @@ import org.apache.tsfile.enums.TSDataType;
 import org.apache.tsfile.exception.write.WriteProcessException;
 import org.apache.tsfile.read.common.Path;
 import org.apache.tsfile.write.TsFileWriter;
-import org.apache.tsfile.write.record.TSRecord;
-import org.apache.tsfile.write.record.datapoint.DataPoint;
+import org.apache.tsfile.write.record.Tablet;
 import org.apache.tsfile.write.schema.MeasurementSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +66,7 @@ public class TsFileSink extends StreamPipesDataSink {
   public static final String MAX_TSFILE_SIZE_KEY = "max_tsfile_size";
   //Set when should the tsfile be flushed to disk.
   public static final String MAX_FLUSH_DISK_SIZE_KEY = "max_flush_disk_size";
+  public static final String ALIGNED = "aligned";
 
   private static final String suffix = ".tsfile";
 
@@ -100,6 +100,7 @@ public class TsFileSink extends StreamPipesDataSink {
   private long writeSize = 0;
   //The total size of the tsfile written to disk.
   private long totalWriteSize = 0;
+  private boolean aligned = false;
 
   @Override
   public DataSinkDescription declareModel() {
@@ -113,6 +114,10 @@ public class TsFileSink extends StreamPipesDataSink {
         .requiredTextParameter(Labels.withId(TSFILE_GENERATION_DIRECTORY_KRY))
         .requiredLongParameter(Labels.withId(MAX_TSFILE_SIZE_KEY), 1024L * 1024 * 10)
         .requiredLongParameter(Labels.withId(MAX_FLUSH_DISK_SIZE_KEY), Long.MAX_VALUE)
+            .requiredSingleValueSelectionFromContainer(
+                Labels.withId(ALIGNED),
+                List.of("true", "false")
+            )
         .requiredStream(
                 StreamRequirementsBuilder.create()
                         .requiredPropertyWithUnaryMapping
@@ -130,6 +135,7 @@ public class TsFileSink extends StreamPipesDataSink {
     this.timestampFieldId = parameters.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
     this.maxTsFileSize = parameters.extractor().singleValueParameter(MAX_TSFILE_SIZE_KEY, Long.class);
     this.maxFlushDiskSize = parameters.extractor().singleValueParameter(MAX_FLUSH_DISK_SIZE_KEY, Long.class);
+    this.aligned = parameters.extractor().selectedSingleValue(ALIGNED, String.class).equals("true");
 
     try {
       newTsFile = createTsFile(dirAbsolutePath, tsFileName);
@@ -178,7 +184,7 @@ public class TsFileSink extends StreamPipesDataSink {
       return;
     }
 
-    TSRecord tsRecord = new TSRecord(timestamp, deviceId); // init tsRecord
+    Tablet tablet = new Tablet(deviceId, schemas, 1);
     /*
      We need to know the size of the file to determine the timing of flashing data to disk and
      creating a new file when the file is too large.
@@ -188,34 +194,42 @@ public class TsFileSink extends StreamPipesDataSink {
      */
     int size = 0;
 
-    for (Map.Entry<String, Object> measurementValuePair : measurementValuePairs.entrySet()) {
-      if (measurementValuePair.getKey().equals(timestampFieldId)) {
+    tablet.timestamps[0] = timestamp;
+    for (int i = 0; i < schemas.size(); i++) {
+      MeasurementSchema schema = tablet.getSchemas().get(i);
+      AbstractField fieldByRuntimeName = event.getFieldByRuntimeName(schema.getMeasurementId());
+      if (fieldByRuntimeName == null){
+        tablet.bitMaps[i].mark(0);
         continue;
       }
-      final String measurementId = measurementValuePair.getKey();
-      final Object value = measurementValuePair.getValue();
-
-      if (value instanceof Boolean) {
-        size += BOOLEAN_SIZE;
-        tsRecord.addTuple(DataPoint.getDataPoint(TSDataType.BOOLEAN, measurementId, String.valueOf(value)));
-      } else if (value instanceof Integer) {
-        size += INIEGER_SIZE;
-        tsRecord.addTuple(DataPoint.getDataPoint(TSDataType.INT32, measurementId, String.valueOf(value)));
-      } else if (value instanceof Long) {
-        size += LONG_SIZE;
-        tsRecord.addTuple(DataPoint.getDataPoint(TSDataType.INT64, measurementId, String.valueOf(value)));
-      } else if (value instanceof Float) {
-        size += FLOAT_SIZE;
-        tsRecord.addTuple(DataPoint.getDataPoint(TSDataType.FLOAT, measurementId, String.valueOf(value)));
-      } else if (value instanceof Double) {
-        size += DOUBLE_SIZE;
-        tsRecord.addTuple(DataPoint.getDataPoint(TSDataType.DOUBLE, measurementId, String.valueOf(value)));
-      } else if (value instanceof String) {
-        String sValue = String.valueOf(value);
-        size += sValue.length();
-        tsRecord.addTuple(DataPoint.getDataPoint(TSDataType.STRING, measurementId, String.valueOf(value)));
-      } else {
-        throw new UnsupportedOperationException("Unsupported data type: " + value.getClass());
+      switch (schema.getType()){
+        case BOOLEAN:
+          size += BOOLEAN_SIZE;
+          ((boolean[]) tablet.values[i])[0] = fieldByRuntimeName.getAsPrimitive().getAsBoolean();
+          break;
+        case INT32:
+          size += INIEGER_SIZE;
+          ((int[]) tablet.values[i])[0] = fieldByRuntimeName.getAsPrimitive().getAsInt();
+          break;
+        case INT64:
+          size += LONG_SIZE;
+          ((long[]) tablet.values[i])[0] = fieldByRuntimeName.getAsPrimitive().getAsLong();
+          break;
+        case FLOAT:
+          size += FLOAT_SIZE;
+          ((float[]) tablet.values[i])[0] = fieldByRuntimeName.getAsPrimitive().getAsFloat();
+          break;
+        case DOUBLE:
+          size += DOUBLE_SIZE;
+          ((double[]) tablet.values[i])[0] = fieldByRuntimeName.getAsPrimitive().getAsDouble();
+          break;
+        case TEXT:
+          String sValue = fieldByRuntimeName.getAsPrimitive().getAsString();
+          size += sValue.length();
+          ((String[]) tablet.values[i])[0] = sValue;
+          break;
+        default:
+          throw new UnsupportedOperationException("Unsupported data type: " + schema.getType());
       }
     }
 
@@ -228,7 +242,11 @@ public class TsFileSink extends StreamPipesDataSink {
         maxTime = Long.MIN_VALUE;
       }
       try {
-        tsFileWriter.write(tsRecord);
+        if (aligned){
+          tsFileWriter.writeAligned(tablet);
+        } else {
+          tsFileWriter.write(tablet);
+        }
         totalWriteSize += size;
         writeSize += size;
         maxTime = timestamp;
