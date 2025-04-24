@@ -20,7 +20,7 @@ package org.apache.streampipes.extensions.connectors.opcua.client;
 
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
 
-import org.eclipse.milo.opcua.sdk.client.api.UaClient;
+import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscriptionManager;
@@ -48,10 +48,10 @@ import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.
 public class ConnectedOpcUaClient {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConnectedOpcUaClient.class);
-  private final UaClient client;
+  private final OpcUaClient client;
   private static final AtomicLong clientHandles = new AtomicLong(1L);
 
-  public ConnectedOpcUaClient(UaClient client) {
+  public ConnectedOpcUaClient(OpcUaClient client) {
     this.client = client;
   }
 
@@ -144,7 +144,7 @@ public class ConnectedOpcUaClient {
    *
    * @return current {@link org.eclipse.milo.opcua.sdk.client.OpcUaClient}
    */
-  public UaClient getClient() {
+  public OpcUaClient getClient() {
     return this.client;
   }
 

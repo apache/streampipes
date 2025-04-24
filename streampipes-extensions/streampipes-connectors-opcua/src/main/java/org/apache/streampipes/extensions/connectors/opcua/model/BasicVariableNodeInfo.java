@@ -16,24 +16,28 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.utils;
+package org.apache.streampipes.extensions.connectors.opcua.model;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
+import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 
-public class OpcUaUtilTest {
+public class BasicVariableNodeInfo {
 
-  private static final String SERVER_ADDRESS_WITH_OPC_PREFIX = "opc.tcp://example.com";
+  private final BaseDataVariableTypeNode node;
 
-  @Test
-  public void testAddOpcPrefixIfNotExistsWithPrefix() {
-    var result = OpcUaUtils.addOpcPrefixIfNotExists(SERVER_ADDRESS_WITH_OPC_PREFIX);
-    Assertions.assertEquals(SERVER_ADDRESS_WITH_OPC_PREFIX, result);
+  public BasicVariableNodeInfo(BaseDataVariableTypeNode node) {
+    this.node = node;
   }
 
-  @Test
-  public void testAddOpcPrefixIfNotExistsNoPrefix() {
-    var result = OpcUaUtils.addOpcPrefixIfNotExists("example.com");
-    Assertions.assertEquals(SERVER_ADDRESS_WITH_OPC_PREFIX, result);
+  public BaseDataVariableTypeNode getNode() {
+    return node;
+  }
+
+  public String getDisplayName() {
+    return node.getDisplayName().getText();
+  }
+
+  public NodeId getNodeId() {
+    return node.getNodeId();
   }
 }

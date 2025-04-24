@@ -19,9 +19,6 @@
 package org.apache.streampipes.extensions.connectors.opcua.utils;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaNodeBrowser;
@@ -29,37 +26,22 @@ import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProv
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
-import org.apache.streampipes.extensions.connectors.opcua.model.OpcNode;
-import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
-import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
-import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 
 import org.eclipse.milo.opcua.sdk.client.api.UaClient;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.UaException;
-import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
-import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 /***
  * Collection of several utility functions in context of OPC UA
  */
-public class OpcUaUtil {
+public class OpcUaUtils {
 
   private static final String OPC_TCP_PREFIX = "opc.tcp://";
 
@@ -71,102 +53,6 @@ public class OpcUaUtil {
   public static String addOpcPrefixIfNotExists(String serverAddress) {
     return serverAddress.startsWith(OPC_TCP_PREFIX) ? serverAddress : OPC_TCP_PREFIX + serverAddress;
   }
-
-  /***
-   * OPC UA specific implementation of
-   * @param extractor
-   * @return guess schema
-   * @throws AdapterException
-   * @throws ParseException
-   */
-  public static GuessSchema getSchema(OpcUaClientProvider clientProvider,
-                                      IAdapterParameterExtractor extractor)
-      throws AdapterException, ParseException {
-    var builder = GuessSchemaBuilder.create();
-    EventSchema eventSchema = new EventSchema();
-    Map<String, Object> eventPreview = new HashMap<>();
-    Map<String, FieldStatusInfo> fieldStatusInfos = new HashMap<>();
-    List<EventProperty> allProperties = new ArrayList<>();
-
-    var opcUaConfig = SpOpcUaConfigExtractor.extractSharedConfig(
-        extractor.getStaticPropertyExtractor(), new OpcUaConfig()
-    );
-    try {
-      var connectedClient = clientProvider.getClient(opcUaConfig);
-      OpcUaNodeBrowser nodeBrowser =
-          new OpcUaNodeBrowser(connectedClient.getClient(), opcUaConfig);
-      List<OpcNode> selectedNodes = nodeBrowser.findNodes();
-
-      if (!selectedNodes.isEmpty()) {
-        for (OpcNode opcNode : selectedNodes) {
-          if (opcNode.hasUnitId()) {
-            allProperties.add(PrimitivePropertyBuilder
-                                  .create(opcNode.getType(), opcNode.getLabel())
-                                  .label(opcNode.getLabel())
-                                  .measurementUnit(new URI(opcNode.getQudtURI()))
-                                  .build());
-          } else {
-            allProperties.add(PrimitivePropertyBuilder
-                                  .create(opcNode.getType(), opcNode.getLabel())
-                                  .label(opcNode.getLabel())
-                                  .build());
-          }
-        }
-      }
-
-      var nodeIds = selectedNodes.stream()
-                                 .map(OpcNode::getNodeId)
-                                 .collect(Collectors.toList());
-      var response = connectedClient.getClient()
-                                  .readValues(0, TimestampsToReturn.Both, nodeIds);
-
-      var returnValues = response.get();
-
-      //clientProvider.releaseClient(opcUaConfig);
-
-      makeEventPreview(selectedNodes, eventPreview, fieldStatusInfos, returnValues);
-
-
-    } catch (Exception e) {
-      throw new AdapterException("Could not guess schema for opc node:  " + e.getMessage(), e);
-    } finally {
-      // TODO
-      //spOpcUaClient.disconnect();
-      clientProvider.releaseClient(opcUaConfig);
-    }
-
-    eventSchema.setEventProperties(allProperties);
-    builder.properties(allProperties);
-    builder.fieldStatusInfos(fieldStatusInfos);
-    builder.preview(eventPreview);
-
-    return builder.build();
-  }
-
-  private static void makeEventPreview(
-      List<OpcNode> selectedNodes,
-      Map<String, Object> eventPreview,
-      Map<String, FieldStatusInfo> fieldStatusInfos,
-      List<DataValue> dataValues
-  ) {
-
-    for (int i = 0; i < dataValues.size(); i++) {
-      var dv = dataValues.get(i);
-      String label = selectedNodes.get(i)
-                                  .getLabel();
-      if (StatusCode.GOOD.equals(dv.getStatusCode())) {
-        var value = dv.getValue()
-                      .getValue();
-        eventPreview.put(label, value);
-        fieldStatusInfos.put(label, FieldStatusInfo.good());
-      } else {
-        String additionalInfo = dv.getStatusCode() != null ? dv.getStatusCode()
-                                                               .toString() : "Status code is null";
-        fieldStatusInfos.put(label, FieldStatusInfo.bad(additionalInfo, false));
-      }
-    }
-  }
-
 
   /***
    * OPC UA specific implementation of
@@ -219,10 +105,6 @@ public class OpcUaUtil {
       throw new SpConfigurationException("Could not connect to the OPC UA server with the provided settings", e);
     } finally {
       clientProvider.releaseClient(opcUaConfig);
-      // TODO
-//      if (spOpcUaClient.getClient() != null) {
-//        spOpcUaClient.disconnect();
-//      }
     }
   }
 

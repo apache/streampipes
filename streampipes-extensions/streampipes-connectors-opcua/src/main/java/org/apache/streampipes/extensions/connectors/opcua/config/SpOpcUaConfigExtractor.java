@@ -23,7 +23,7 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.opcua.config.identity.AnonymousIdentityConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.identity.UsernamePasswordIdentityConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.security.SecurityConfig;
-import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
 
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.MessageSecurityMode;
@@ -103,9 +103,9 @@ public class SpOpcUaConfigExtractor {
     if (useURL) {
       String serverAddress =
           extractor.singleValueParameter(OPC_SERVER_URL.name(), String.class);
-      config.setOpcServerURL(OpcUaUtil.addOpcPrefixIfNotExists(serverAddress));
+      config.setOpcServerURL(OpcUaUtils.addOpcPrefixIfNotExists(serverAddress));
     } else {
-      String serverAddress = OpcUaUtil.addOpcPrefixIfNotExists(
+      String serverAddress = OpcUaUtils.addOpcPrefixIfNotExists(
           extractor.singleValueParameter(OPC_SERVER_HOST.name(), String.class)
       );
       int port = extractor.singleValueParameter(OPC_SERVER_PORT.name(), int.class);

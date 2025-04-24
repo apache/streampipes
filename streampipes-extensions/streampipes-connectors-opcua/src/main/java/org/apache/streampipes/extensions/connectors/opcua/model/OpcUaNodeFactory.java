@@ -16,24 +16,22 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.utils;
+package org.apache.streampipes.extensions.connectors.opcua.model;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaTypes;
 
-public class OpcUaUtilTest {
+import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
 
-  private static final String SERVER_ADDRESS_WITH_OPC_PREFIX = "opc.tcp://example.com";
+import java.util.List;
 
-  @Test
-  public void testAddOpcPrefixIfNotExistsWithPrefix() {
-    var result = OpcUaUtils.addOpcPrefixIfNotExists(SERVER_ADDRESS_WITH_OPC_PREFIX);
-    Assertions.assertEquals(SERVER_ADDRESS_WITH_OPC_PREFIX, result);
-  }
+public class OpcUaNodeFactory {
 
-  @Test
-  public void testAddOpcPrefixIfNotExistsNoPrefix() {
-    var result = OpcUaUtils.addOpcPrefixIfNotExists("example.com");
-    Assertions.assertEquals(SERVER_ADDRESS_WITH_OPC_PREFIX, result);
+  public static OpcUaNode createOpcUaNode(BasicVariableNodeInfo nodeInfo,
+                                          List<String> runtimeNamesToDelete) {
+    if (OpcUaTypes.isExtensionOrCustom(nodeInfo.getNode())) {
+      return new ExtensionObjectOpcUaNode(nodeInfo, runtimeNamesToDelete);
+    } else {
+      return new PrimitiveOpcUaNode(nodeInfo, runtimeNamesToDelete);
+    }
   }
 }
