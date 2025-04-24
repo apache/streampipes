@@ -240,7 +240,6 @@ public class TsFileSink extends StreamPipesDataSink {
         maxTime = Long.MIN_VALUE;
       }
       try {
-        System.out.println("aligned" + aligned);
         if (aligned){
           tsFileWriter.writeAligned(tablet);
         } else {
