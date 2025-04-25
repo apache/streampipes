@@ -221,7 +221,7 @@ public class TsFileSink extends StreamPipesDataSink {
           size += DOUBLE_SIZE;
           ((double[]) tablet.values[i])[0] = fieldByRuntimeName.getAsPrimitive().getAsDouble();
           break;
-        case TEXT:
+        case STRING:
           String sValue = fieldByRuntimeName.getAsPrimitive().getAsString();
           size += sValue.length();
           ((String[]) tablet.values[i])[0] = sValue;
