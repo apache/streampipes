@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    OnInit,
+    signal,
+    ViewChild,
+} from '@angular/core';
 import {
     ChartService,
     DataExplorerWidgetModel,
@@ -70,6 +76,9 @@ export class DataExplorerChartViewComponent
         private timeSelectionService: TimeSelectionService,
         private translateService: TranslateService,
     ) {}
+
+    protected defaultWidth = 450;
+    protected currentWidth = signal(this.defaultWidth);
 
     ngOnInit() {
         const dataViewId = this.route.snapshot.params.id;
@@ -215,5 +224,9 @@ export class DataExplorerChartViewComponent
             this.timeSettings,
             this.dataView,
         );
+    }
+
+    updateCurrentWidth(newWidth: number): void {
+        this.currentWidth.set(newWidth);
     }
 }

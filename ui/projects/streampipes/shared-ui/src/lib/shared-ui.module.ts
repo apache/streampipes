@@ -65,6 +65,7 @@ import { TimeRangeSelectorComponent } from './components/time-selector/time-rang
 import { TimeRangeSelectorMenuComponent } from './components/time-selector/time-selector-menu/time-selector-menu.component';
 import { CustomTimeRangeSelectionComponent } from './components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
 import { DataExplorerRefreshIntervalSettingsComponent } from './components/time-selector/refresh-interval-settings/refresh-interval-settings.component';
+import { SidebarResizeComponent } from './components/sidebar-resize/sidebar-resize.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
@@ -83,6 +84,7 @@ import { DateInputComponent } from './components/date-input/date-input.component
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
     declarations: [
@@ -123,6 +125,7 @@ import { TranslateModule } from '@ngx-translate/core';
         SpConfigurationBoxComponent,
         SelectDataRangeComponent,
         SelectDataMissingValuesComponent,
+        SidebarResizeComponent,
     ],
     imports: [
         CommonModule,
@@ -150,6 +153,7 @@ import { TranslateModule } from '@ngx-translate/core';
         MatRadioModule,
         MatSort,
         TranslateModule.forChild({}),
+        DragDropModule,
     ],
     providers: [DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel],
     exports: [
@@ -176,6 +180,7 @@ import { TranslateModule } from '@ngx-translate/core';
         TimeRangeSelectorComponent,
         TimeRangeSelectorMenuComponent,
         DataExplorerRefreshIntervalSettingsComponent,
+        SidebarResizeComponent,
     ],
 })
 export class SharedUiModule {}

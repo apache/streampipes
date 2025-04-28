@@ -45,11 +45,20 @@
             class="designer-panel-container h-100 dashboard-grid"
         >
             <mat-drawer
+                [style.width.px]="currentWidth()"
                 [opened]="editMode"
                 mode="side"
                 position="end"
                 class="designer-panel"
+                [style.overflow-x]="'hidden'"
             >
+                <sidebar-resize
+                    [currentWidth]="currentWidth"
+                    (currentWidthChanged)="updateCurrentWidth($event)"
+                    [minWidth]="450"
+                    [maxWidth]="1000"
+                >
+                </sidebar-resize>
                 <div fxLayout="column" fxFlex="100">
                     <sp-data-explorer-designer-panel
                         [currentlyConfiguredWidget]="dataView"
@@ -59,7 +68,10 @@
                     </sp-data-explorer-designer-panel>
                 </div>
             </mat-drawer>
-            <mat-drawer-content class="h-100 dashboard-grid">
+            <mat-drawer-content
+                class="h-100 dashboard-grid"
+                [style.margin-right.px]="currentWidth()"
+            >
                 <div #panel fxFlex="100" fxLayout="column">
                     <sp-data-explorer-dashboard-widget
                         *ngIf="

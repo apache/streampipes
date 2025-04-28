@@ -47,6 +47,7 @@ export * from './lib/components/time-selector/time-range-selector.component';
 export * from './lib/components/time-selector/time-selector-menu/time-selector-menu.component';
 export * from './lib/components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
 export * from './lib/components/time-selector/refresh-interval-settings/refresh-interval-settings.component';
+export * from './lib/components/sidebar-resize/sidebar-resize.component';
 
 export * from './lib/models/sp-navigation.model';
 
