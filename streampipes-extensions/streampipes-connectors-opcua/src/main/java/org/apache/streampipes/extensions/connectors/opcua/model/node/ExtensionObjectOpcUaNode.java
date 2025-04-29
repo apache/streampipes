@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.model;
+package org.apache.streampipes.extensions.connectors.opcua.model.node;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaTypes;
@@ -50,8 +50,14 @@ public class ExtensionObjectOpcUaNode implements OpcUaNode {
   }
 
   @Override
-  public int getNumberOfEventProperties() {
-    return 0;
+  public int getNumberOfEventProperties(OpcUaClient client) {
+    var struct = extractStruct(client, nodeInfo.getNode().getValue().getValue());
+    return (int) struct.getMembers().entrySet().stream()
+        .filter(entry -> {
+          var nodeName = nodeInfo.getDesiredName(entry.getKey());
+          return !runtimeNamesToDelete.contains(nodeName);
+        })
+        .count();
   }
 
   @Override
@@ -59,9 +65,10 @@ public class ExtensionObjectOpcUaNode implements OpcUaNode {
                           List<EventProperty> eventProperties) {
     var struct = extractStruct(client, nodeInfo.getNode().getValue().getValue());
     struct.getMembers().forEach((key, member) -> {
+      var nodeName = nodeInfo.getDesiredName(key);
       eventProperties.add(
-          PrimitivePropertyBuilder.create(OpcUaTypes.getTypeFromValue(member.getValue()), key)
-              .label(key)
+          PrimitivePropertyBuilder.create(OpcUaTypes.getTypeFromValue(member.getValue()), nodeName)
+              .label(nodeName)
               .build()
       );
     });
@@ -74,7 +81,10 @@ public class ExtensionObjectOpcUaNode implements OpcUaNode {
     var struct = extractStruct(client, variant);
 
     struct.getMembers().forEach((key, member) -> {
-      event.put(key, member.getValue());
+      var nodeName = nodeInfo.getDesiredName(key);
+      if (!runtimeNamesToDelete.contains(nodeName)) {
+        event.put(nodeName, member.getValue());
+      }
     });
   }
 
@@ -87,11 +97,12 @@ public class ExtensionObjectOpcUaNode implements OpcUaNode {
     if (fieldStatusInfo.getFieldStatus() == FieldStatus.GOOD) {
       var struct = extractStruct(client, variant);
       struct.getMembers().forEach((key, member) -> {
-        eventPreview.put(key, member.getValue());
-        fieldStatusInfos.put(key, fieldStatusInfo);
+        var nodeName = nodeInfo.getDesiredName(key);
+        eventPreview.put(nodeName, member.getValue());
+        fieldStatusInfos.put(nodeName, fieldStatusInfo);
       });
     } else {
-      throw new SpRuntimeException("Could not read value for " + nodeInfo.getDisplayName());
+      throw new SpRuntimeException("Could not read value for " + nodeInfo.getBaseNodeName());
     }
   }
 

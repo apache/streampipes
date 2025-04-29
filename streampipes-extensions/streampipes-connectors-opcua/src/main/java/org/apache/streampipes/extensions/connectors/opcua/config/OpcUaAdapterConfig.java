@@ -18,10 +18,13 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.config;
 
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaNamingStrategy;
+
 public class OpcUaAdapterConfig extends OpcUaConfig {
 
   private Integer pullIntervalMilliSeconds;
   private String incompleteEventStrategy;
+  private OpcUaNamingStrategy namingStrategy;
 
   public Integer getPullIntervalMilliSeconds() {
     return pullIntervalMilliSeconds;
@@ -41,5 +44,13 @@ public class OpcUaAdapterConfig extends OpcUaConfig {
 
   public void setIncompleteEventStrategy(String incompleteEventStrategy) {
     this.incompleteEventStrategy = incompleteEventStrategy;
+  }
+
+  public OpcUaNamingStrategy getNamingStrategy() {
+    return namingStrategy;
+  }
+
+  public void setNamingStrategy(OpcUaNamingStrategy namingStrategy) {
+    this.namingStrategy = namingStrategy;
   }
 }

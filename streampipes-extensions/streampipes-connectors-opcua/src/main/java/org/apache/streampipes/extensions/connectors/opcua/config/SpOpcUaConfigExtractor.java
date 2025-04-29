@@ -23,6 +23,8 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.opcua.config.identity.AnonymousIdentityConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.identity.UsernamePasswordIdentityConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.security.SecurityConfig;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaNamingStrategy;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
 
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
@@ -66,6 +68,12 @@ public class SpOpcUaConfigExtractor {
       config.setPullIntervalMilliSeconds(pullIntervalSeconds);
       config.setIncompleteEventStrategy(incompleteEventStrategy);
     }
+
+    var namingStrategySelection = extractor.selectedSingleValueInternalName(
+        OpcUaLabels.NAMING_STRATEGY.name(), String.class
+    );
+    var namingStrategy = OpcUaNamingStrategy.valueOf(namingStrategySelection);
+    config.setNamingStrategy(namingStrategy);
 
     return config;
   }

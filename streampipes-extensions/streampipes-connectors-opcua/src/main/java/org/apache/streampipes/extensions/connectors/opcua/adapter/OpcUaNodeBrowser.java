@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.adapter;
 
-import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
-import org.apache.streampipes.extensions.connectors.opcua.model.BasicVariableNodeInfo;
-import org.apache.streampipes.extensions.connectors.opcua.model.OpcUaNode;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaAdapterConfig;
+import org.apache.streampipes.extensions.connectors.opcua.model.node.BasicVariableNodeInfo;
+import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
 import org.apache.streampipes.extensions.connectors.opcua.model.OpcUaNodeFactory;
 import org.apache.streampipes.model.staticproperty.TreeInputNode;
 
@@ -48,19 +48,19 @@ import java.util.stream.Collectors;
 public class OpcUaNodeBrowser {
 
   private final OpcUaClient client;
-  private final OpcUaConfig spOpcConfig;
+  private final OpcUaAdapterConfig spOpcConfig;
 
   private static final Logger LOG = LoggerFactory.getLogger(OpcUaNodeBrowser.class);
 
   public OpcUaNodeBrowser(
       OpcUaClient client,
-      OpcUaConfig spOpcUaClientConfig
+      OpcUaAdapterConfig spOpcUaClientConfig
   ) {
     this.client = client;
     this.spOpcConfig = spOpcUaClientConfig;
   }
 
-  public OpcUaNodeProvider findNodes(List<String> runtimeNameFilters) throws UaException {
+  public OpcUaNodeProvider makeNodeProvider(List<String> runtimeNameFilters) throws UaException {
     var opcNodes = new ArrayList<OpcUaNode>();
     for (String selectedNodeName : this.spOpcConfig.getSelectedNodeNames()) {
       opcNodes.add(toOpcNode(selectedNodeName, runtimeNameFilters));
@@ -109,7 +109,7 @@ public class OpcUaNodeBrowser {
     );
 
     if (node instanceof BaseDataVariableTypeNode) {
-      var nodeInfo = new BasicVariableNodeInfo((BaseDataVariableTypeNode) node);
+      var nodeInfo = new BasicVariableNodeInfo((BaseDataVariableTypeNode) node, spOpcConfig.getNamingStrategy());
       return OpcUaNodeFactory.createOpcUaNode(nodeInfo, runtimeNamesToDelete);
     }
 

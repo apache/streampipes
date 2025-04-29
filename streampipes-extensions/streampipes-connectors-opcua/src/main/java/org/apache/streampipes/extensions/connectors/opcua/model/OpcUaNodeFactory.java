@@ -18,9 +18,11 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.model;
 
+import org.apache.streampipes.extensions.connectors.opcua.model.node.BasicVariableNodeInfo;
+import org.apache.streampipes.extensions.connectors.opcua.model.node.ExtensionObjectOpcUaNode;
+import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
+import org.apache.streampipes.extensions.connectors.opcua.model.node.PrimitiveOpcUaNode;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaTypes;
-
-import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
 
 import java.util.List;
 

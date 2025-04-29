@@ -16,30 +16,22 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.adapter;
+package org.apache.streampipes.extensions.connectors.opcua.model.nodename;
 
-import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
+import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
 
-import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
+import java.util.function.Function;
 
-import java.util.List;
+public class SimpleNameResolver implements NamingStrategyResolver {
 
-public class OpcUaNodeProvider {
+  private final Function<BaseDataVariableTypeNode, String> nameFn;
 
-  private final List<OpcUaNode> opcUaNodes;
-
-  public OpcUaNodeProvider(List<OpcUaNode> opcUaNodes) {
-    this.opcUaNodes = opcUaNodes;
+  public SimpleNameResolver(Function<BaseDataVariableTypeNode, String> nameFn) {
+    this.nameFn = nameFn;
   }
 
-  public List<OpcUaNode> getNodes() {
-    return opcUaNodes;
-  }
-
-  public int getNumberOfEventProperties(OpcUaClient client) {
-    return opcUaNodes
-        .stream()
-        .mapToInt(n -> n.getNumberOfEventProperties(client))
-        .sum();
+  @Override
+  public String resolveName(BaseDataVariableTypeNode node, String fieldAppendix) {
+    return nameFn.apply(node) + (!fieldAppendix.isEmpty() ? "_" + fieldAppendix : "");
   }
 }

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.model;
+package org.apache.streampipes.extensions.connectors.opcua.model.node;
 
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -31,7 +31,7 @@ public interface OpcUaNode {
 
   BasicVariableNodeInfo nodeInfo();
 
-  int getNumberOfEventProperties();
+  int getNumberOfEventProperties(OpcUaClient client);
 
   void addToSchema(OpcUaClient client,
                    List<EventProperty> eventProperties);

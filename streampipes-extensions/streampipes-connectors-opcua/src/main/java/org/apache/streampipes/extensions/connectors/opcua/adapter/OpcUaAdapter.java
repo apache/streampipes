@@ -34,7 +34,7 @@ import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProv
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaAdapterConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
-import org.apache.streampipes.extensions.connectors.opcua.model.OpcUaNode;
+import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
@@ -83,6 +83,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
   private IEventCollector collector;
   private PullAdapterScheduler pullAdapterScheduler;
+  private int numberOfEventProperties = 0;
 
   /**
    * This variable is used to map the node ids during the subscription to the labels of the nodes
@@ -108,7 +109,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
       this.connectedClient = clientProvider.getClient(this.opcUaAdapterConfig);
       OpcUaNodeBrowser browserClient =
           new OpcUaNodeBrowser(this.connectedClient.getClient(), this.opcUaAdapterConfig);
-      this.nodeProvider = browserClient.findNodes(deleteKeys);
+      this.nodeProvider = browserClient.makeNodeProvider(deleteKeys);
       this.allNodes = nodeProvider.getNodes();
 
       if (opcUaAdapterConfig.inPullMode()) {
@@ -180,7 +181,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
     if (currNode != null) {
       currNode.addToEvent(connectedClient.getClient(), event, value.getValue());
       // ensure that event is complete and all opc ua subscriptions transmitted at least one value
-      if (event.size() >= nodeProvider.getNumberOfEventProperties()) {
+      if (event.size() >= numberOfEventProperties) {
         Map<String, Object> newEvent = new HashMap<>();
         // deep copy of event to prevent preprocessor error
         for (String k : event.keySet()) {
@@ -206,6 +207,8 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
         SpOpcUaConfigExtractor.extractAdapterConfig(extractor.getStaticPropertyExtractor());
     this.collector = collector;
     this.prepareAdapter(extractor);
+    this.numberOfEventProperties =
+        nodeProvider.getNumberOfEventProperties(this.connectedClient.getClient());
 
     if (this.opcUaAdapterConfig.inPullMode()) {
       this.pullAdapterScheduler = new PullAdapterScheduler();
@@ -231,7 +234,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    var builder = AdapterConfigurationBuilder.create(ID, 4, () -> new OpcUaAdapter(clientProvider))
+    var builder = AdapterConfigurationBuilder.create(ID, 5, () -> new OpcUaAdapter(clientProvider))
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
@@ -241,6 +244,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
             ),
             Alternatives.from(Labels.withId(SUBSCRIPTION_MODE)));
     SharedUserConfiguration.appendSharedOpcUaConfig(builder, true);
+    builder.requiredStaticProperty(SharedUserConfiguration.makeNamingStrategyOption());
     return builder.buildConfiguration();
   }
 

@@ -16,28 +16,21 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.model;
+package org.apache.streampipes.extensions.connectors.opcua.model.nodename;
 
 import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
-import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 
-public class BasicVariableNodeInfo {
+public class ParsedNodeIdResolver implements NamingStrategyResolver {
 
-  private final BaseDataVariableTypeNode node;
-
-  public BasicVariableNodeInfo(BaseDataVariableTypeNode node) {
-    this.node = node;
+  @Override
+  public String resolveName(BaseDataVariableTypeNode node,
+                            String fieldAppendix) {
+    var nodeIdStr = node.getNodeId().toParseableString();
+    var sanitizedNodeIdStr = removeSpecialChars(nodeIdStr);
+    return sanitizedNodeIdStr + (!fieldAppendix.isEmpty() ? "_" + fieldAppendix : "");
   }
 
-  public BaseDataVariableTypeNode getNode() {
-    return node;
-  }
-
-  public String getDisplayName() {
-    return node.getDisplayName().getText();
-  }
-
-  public NodeId getNodeId() {
-    return node.getNodeId();
+  private String removeSpecialChars(String parseableNodeId) {
+    return parseableNodeId.replaceAll("[^a-zA-Z0-9]", "_");
   }
 }

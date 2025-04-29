@@ -53,6 +53,8 @@ public class OpcUaTypes {
       return Datatypes.Boolean;
     } else if (UInteger.valueOf(12).equals(o)) {
       return Datatypes.String;
+    } else if (UInteger.valueOf(13).equals(o)) {
+      return Datatypes.Long;
     }
 
     return Datatypes.String;

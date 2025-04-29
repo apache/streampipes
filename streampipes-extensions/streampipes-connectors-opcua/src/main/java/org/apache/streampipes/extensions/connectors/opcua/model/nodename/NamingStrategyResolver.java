@@ -16,30 +16,12 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.adapter;
+package org.apache.streampipes.extensions.connectors.opcua.model.nodename;
 
-import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
+import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
 
-import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
+public interface NamingStrategyResolver {
 
-import java.util.List;
-
-public class OpcUaNodeProvider {
-
-  private final List<OpcUaNode> opcUaNodes;
-
-  public OpcUaNodeProvider(List<OpcUaNode> opcUaNodes) {
-    this.opcUaNodes = opcUaNodes;
-  }
-
-  public List<OpcUaNode> getNodes() {
-    return opcUaNodes;
-  }
-
-  public int getNumberOfEventProperties(OpcUaClient client) {
-    return opcUaNodes
-        .stream()
-        .mapToInt(n -> n.getNumberOfEventProperties(client))
-        .sum();
-  }
+  String resolveName(BaseDataVariableTypeNode node,
+                     String fieldAppendix);
 }

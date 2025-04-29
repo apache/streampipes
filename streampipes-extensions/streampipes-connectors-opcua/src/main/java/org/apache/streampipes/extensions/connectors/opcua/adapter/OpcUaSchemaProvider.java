@@ -22,9 +22,8 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProvider;
-import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
-import org.apache.streampipes.extensions.connectors.opcua.model.OpcUaNode;
+import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -60,14 +59,14 @@ public class OpcUaSchemaProvider {
     Map<String, FieldStatusInfo> fieldStatusInfos = new HashMap<>();
     List<EventProperty> allProperties = new ArrayList<>();
 
-    var opcUaConfig = SpOpcUaConfigExtractor.extractSharedConfig(
-        extractor.getStaticPropertyExtractor(), new OpcUaConfig()
+    var opcUaConfig = SpOpcUaConfigExtractor.extractAdapterConfig(
+        extractor.getStaticPropertyExtractor()
     );
     try {
       var connectedClient = clientProvider.getClient(opcUaConfig);
       OpcUaNodeBrowser nodeBrowser =
           new OpcUaNodeBrowser(connectedClient.getClient(), opcUaConfig);
-      var nodeProvider = nodeBrowser.findNodes(List.of());
+      var nodeProvider = nodeBrowser.makeNodeProvider(List.of());
       var selectedNodes = nodeProvider.getNodes();
 
       if (!selectedNodes.isEmpty()) {

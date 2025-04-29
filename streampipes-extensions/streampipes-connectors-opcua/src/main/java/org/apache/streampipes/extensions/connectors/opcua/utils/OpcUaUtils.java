@@ -23,7 +23,7 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaNodeBrowser;
 import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProvider;
-import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaAdapterConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
@@ -77,7 +77,7 @@ public class OpcUaUtils {
       return config;
     }
 
-    var opcUaConfig = SpOpcUaConfigExtractor.extractSharedConfig(parameterExtractor, new OpcUaConfig());
+    var opcUaConfig = SpOpcUaConfigExtractor.extractSharedConfig(parameterExtractor, new OpcUaAdapterConfig());
 
     try {
       var connectedClient = clientProvider.getClient(opcUaConfig);
