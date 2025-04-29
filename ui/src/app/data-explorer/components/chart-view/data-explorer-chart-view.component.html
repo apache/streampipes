@@ -46,11 +46,16 @@
         >
             <mat-drawer
                 [opened]="editMode"
+                [style.width.px]="drawerWidth"
                 mode="side"
                 position="end"
                 class="designer-panel"
             >
-                <sp-sidebar-resize [minWidth]="450" [maxWidth]="1000">
+                <sp-sidebar-resize
+                    [minWidth]="450"
+                    [maxWidth]="1000"
+                    (widthChanged)="onWidthChanged($event)"
+                >
                     <div fxLayout="column" fxFlex="100">
                         <sp-data-explorer-designer-panel
                             [currentlyConfiguredWidget]="dataView"

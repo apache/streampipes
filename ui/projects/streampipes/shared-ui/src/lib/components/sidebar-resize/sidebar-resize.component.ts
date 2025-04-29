@@ -16,8 +16,9 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
+import { MatDrawerContainer } from '@angular/material/sidenav';
 
 @Component({
     selector: 'sp-sidebar-resize',
@@ -28,6 +29,10 @@ export class SidebarResizeComponent {
     @Input() currentWidth: number = 450;
     @Input() minWidth: number = 450;
     @Input() maxWidth: number = 1000;
+
+    @Output() widthChanged = new EventEmitter<number>();
+
+    private drawerContainer = inject(MatDrawerContainer);
 
     isDragging = false;
     ghostLeft = 0;
@@ -59,5 +64,7 @@ export class SidebarResizeComponent {
     protected onDragEnded() {
         this.isDragging = false;
         this.currentWidth = this.ghostLeft;
+        this.widthChanged.emit(this.currentWidth);
+        setTimeout(() => this.drawerContainer.updateContentMargins(), 0);
     }
 }

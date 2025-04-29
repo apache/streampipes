@@ -63,6 +63,7 @@ export class DataExplorerChartViewComponent
     originalDataView: DataExplorerWidgetModel;
     dataLakeMeasure: DataLakeMeasure;
     gridsterItemComponent: any;
+    drawerWidth = 450;
 
     @ViewChild('panel', { static: false }) outerPanel: ElementRef;
 
@@ -221,5 +222,9 @@ export class DataExplorerChartViewComponent
             this.timeSettings,
             this.dataView,
         );
+    }
+
+    onWidthChanged(newWidth: number) {
+        this.drawerWidth = newWidth;
     }
 }
