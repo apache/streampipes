@@ -16,37 +16,48 @@
  *
  */
 
-import {
-    Component,
-    EventEmitter,
-    Output,
-    WritableSignal,
-    Input,
-} from '@angular/core';
-import { CdkDragMove } from '@angular/cdk/drag-drop';
+import { Component, Input } from '@angular/core';
+import { CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
 
 @Component({
-    selector: 'sidebar-resize',
+    selector: 'sp-sidebar-resize',
     templateUrl: './sidebar-resize.component.html',
     styleUrls: ['./sidebar-resize.component.scss'],
 })
 export class SidebarResizeComponent {
-    @Input() currentWidth: WritableSignal<number>;
+    @Input() currentWidth: number = 450;
     @Input() minWidth: number = 450;
     @Input() maxWidth: number = 1000;
 
-    @Output() currentWidthChanged = new EventEmitter<number>();
+    isDragging = false;
+    ghostLeft = 0;
+    startX = 0;
+    startWidth = 0;
+
+    protected onDragStarted(event: CdkDragStart) {
+        this.isDragging = true;
+
+        const element = event.source.element.nativeElement.parentElement;
+        const rect = element.getBoundingClientRect();
+
+        this.startX = rect.left;
+        this.startWidth = this.currentWidth;
+
+        this.ghostLeft = this.startWidth;
+    }
 
     protected onDragMoved(event: CdkDragMove) {
-        const deltaX = -event.distance.x * 0.4;
-        const newWidth = Math.min(
-            Math.max(this.currentWidth() + deltaX, this.minWidth),
+        const deltaX = -event.distance.x;
+        this.ghostLeft = Math.min(
+            Math.max(this.startWidth + deltaX, this.minWidth),
             this.maxWidth,
         );
-
         const element = event.source.element.nativeElement;
         element.style.transform = 'none';
+    }
 
-        this.currentWidthChanged.emit(newWidth);
+    protected onDragEnded() {
+        this.isDragging = false;
+        this.currentWidth = this.ghostLeft;
     }
 }

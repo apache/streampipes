@@ -15,6 +15,22 @@
   ~ limitations under the License.
   ~
   -->
-<div class="resizer" cdkDrag (cdkDragMoved)="onDragMoved($event)">
-    <span class="drag-icon">⠿</span>
+<div class="outer-container">
+    <div
+        *ngIf="isDragging"
+        class="ghost-bar"
+        [style.right.px]="ghostLeft"
+    ></div>
+    <div class="resize-container" [style.width.px]="currentWidth">
+        <div
+            class="resizer"
+            cdkDrag
+            (cdkDragStarted)="onDragStarted($event)"
+            (cdkDragMoved)="onDragMoved($event)"
+            (cdkDragEnded)="onDragEnded()"
+        >
+            <span class="drag-icon">⠿</span>
+        </div>
+        <ng-content></ng-content>
+    </div>
 </div>

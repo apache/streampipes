@@ -77,9 +77,6 @@ export class DataExplorerChartViewComponent
         private translateService: TranslateService,
     ) {}
 
-    protected defaultWidth = 450;
-    protected currentWidth = signal(this.defaultWidth);
-
     ngOnInit() {
         const dataViewId = this.route.snapshot.params.id;
         this.editMode = this.route.snapshot.queryParams.editMode;
@@ -224,9 +221,5 @@ export class DataExplorerChartViewComponent
             this.timeSettings,
             this.dataView,
         );
-    }
-
-    updateCurrentWidth(newWidth: number): void {
-        this.currentWidth.set(newWidth);
     }
 }
