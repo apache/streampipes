@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'sp-loading-message',
@@ -24,5 +24,8 @@ import { Component } from '@angular/core';
     styleUrls: ['./loading-message.component.scss'],
 })
 export class LoadingMessageComponent {
+    @Input()
+    currentProgress = 10;
+
     constructor() {}
 }

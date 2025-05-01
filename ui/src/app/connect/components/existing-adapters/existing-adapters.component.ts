@@ -59,6 +59,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     filteredAdapters: AdapterDescription[] = [];
 
     currentFilter: AdapterFilterSettingsModel;
+    operationInProgressAdapterId: string | undefined;
 
     @ViewChild(MatSort)
     sort: MatSort;
@@ -117,22 +118,26 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     startAdapter(adapter: AdapterDescription) {
+        this.operationInProgressAdapterId = adapter.elementId;
         this.adapterService.startAdapter(adapter).subscribe(
             _ => {
                 this.getAdaptersRunning();
             },
             error => {
+                this.operationInProgressAdapterId = undefined;
                 this.openAdapterStatusErrorDialog(adapter, error.error, true);
             },
         );
     }
 
     stopAdapter(adapter: AdapterDescription, forceStop = false) {
+        this.operationInProgressAdapterId = adapter.elementId;
         this.adapterService.stopAdapter(adapter, forceStop).subscribe(
             _ => {
                 this.getAdaptersRunning();
             },
             error => {
+                this.operationInProgressAdapterId = undefined;
                 this.openAdapterStatusErrorDialog(adapter, error.error, false);
             },
         );
@@ -265,6 +270,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             this.existingAdapters = adapters;
             this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
             this.applyAdapterFilters(this.currentFilterIds);
+            this.operationInProgressAdapterId = undefined;
             this.getMonitoringInfos(adapters);
             setTimeout(() => {
                 this.dataSource.sort = this.sort;

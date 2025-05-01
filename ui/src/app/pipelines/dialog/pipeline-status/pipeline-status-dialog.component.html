@@ -32,7 +32,7 @@
                 <div fxFlex="100" fxLayoutAlign="center center">
                     <mat-spinner
                         color="accent"
-                        [diameter]="50"
+                        [diameter]="30"
                         fxLayoutAlign="center"
                         style="margin: 10px 0 5px 0"
                     >
@@ -48,7 +48,7 @@
                     fxLayoutAlign="center center"
                     fxLayout="column"
                 >
-                    <h3>
+                    <span class="success-message">
                         @if (action === 0) {
                             {{
                                 'Please wait while the pipeline is starting'
@@ -60,7 +60,7 @@
                                     | translate
                             }}
                         }
-                    </h3>
+                    </span>
                 </div>
             </div>
 

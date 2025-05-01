@@ -45,7 +45,9 @@ export class RestService {
 
     getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
         return this.http
-            .post(`${this.connectPath}/master/guess/schema`, adapter)
+            .post(`${this.connectPath}/master/guess/schema`, adapter, {
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+            })
             .pipe(
                 map(response => {
                     return GuessSchema.fromData(response as GuessSchema);

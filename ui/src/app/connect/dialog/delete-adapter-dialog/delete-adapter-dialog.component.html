@@ -27,29 +27,40 @@
             fxLayout="column"
             style="width: 100%"
         >
-            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <b>
-                    <h4>
-                        The adapter is currently used by these pipelines:
-                        {{ namesOfPipelinesUsingAdapter }}
-                        (if you don't see those pipelines, they are created by
-                        other users)
-                    </h4>
-                    <h4>
-                        You need to delete those pipelines first before deleting
-                        the adapter.
-                    </h4>
-                    <h4>
-                        Do you want to delete all associated pipelines and the
-                        adapter?
-                    </h4>
-                </b>
+            <div
+                fxFlex="100"
+                fxLayoutAlign="center center"
+                fxLayout="column"
+                class="info-text"
+            >
+                <p>
+                    The adapter is currently used by these pipelines:
+                    <b>{{ namesOfPipelinesUsingAdapter }}</b
+                    ><br />
+                    (if you don't see those pipelines, they are created by other
+                    users)
+                </p>
+                <p>
+                    You need to delete those pipelines first before deleting the
+                    adapter.
+                </p>
+                <p>
+                    <b
+                        >Do you want to delete all associated pipelines and the
+                        adapter?</b
+                    >
+                </p>
             </div>
-            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+            <div
+                fxFlex="100"
+                fxLayoutAlign="center center"
+                fxLayout="column"
+                class="mt-10"
+            >
                 <button
                     mat-button
                     mat-raised-button
-                    color="accent"
+                    color="warn"
                     (click)="deleteAdapter(true)"
                     data-cy="delete-adapter-and-associated-pipelines-confirmation"
                 >

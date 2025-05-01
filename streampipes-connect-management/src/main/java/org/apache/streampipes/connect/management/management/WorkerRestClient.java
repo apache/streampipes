@@ -85,7 +85,7 @@ public class WorkerRestClient {
 
   private static void startAdapter(String url,
                                    AdapterDescription ad) throws AdapterException {
-    LOG.info("Trying to start adapter on endpoint {} ", url);
+    LOG.debug("Trying to start adapter on endpoint {} ", url);
     triggerAdapterStateChange(ad, url, "started");
   }
 
@@ -93,7 +93,7 @@ public class WorkerRestClient {
   private static void stopAdapter(AdapterDescription ad,
                                   String url) throws AdapterException {
 
-    LOG.info("Trying to stop adapter on endpoint {} ", url);
+    LOG.debug("Trying to stop adapter on endpoint {} ", url);
     triggerAdapterStateChange(ad, url, "stopped");
   }
 
