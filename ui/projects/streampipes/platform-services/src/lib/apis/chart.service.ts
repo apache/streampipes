@@ -24,12 +24,16 @@ import {
     DataExplorerWidgetModel,
     DataLakeMeasure,
 } from '../model/gen/streampipes-model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ChartService {
-    constructor(private http: HttpClient) {}
+    constructor(
+        private http: HttpClient,
+        private translateService: TranslateService,
+    ) {}
 
     getAllCharts(): Observable<DataExplorerWidgetModel[]> {
         return this.http
@@ -64,6 +68,32 @@ export class ChartService {
 
     deleteChart(widgetId: string): Observable<any> {
         return this.http.delete(`${this.dashboardWidgetUrl}/${widgetId}`);
+    }
+
+    cloneChart(
+        widget: DataExplorerWidgetModel,
+    ): Observable<DataExplorerWidgetModel> {
+        const clone = JSON.parse(JSON.stringify(widget));
+        clone.elementId = undefined;
+        clone.rev = undefined;
+
+        clone.baseAppearanceConfig.widgetTitle = this.translateService.instant(
+            '{{ widgetTitle }} Clone',
+            { widgetTitle: widget.baseAppearanceConfig.widgetTitle },
+        );
+
+        clone.metadata = {
+            createdAtEpochMs: Date.now(),
+            lastModifiedEpochMs: Date.now(),
+        };
+
+        return this.http.post(this.dashboardWidgetUrl, clone).pipe(
+            map(response => {
+                return DataExplorerWidgetModel.fromData(
+                    response as DataExplorerWidgetModel,
+                );
+            }),
+        );
     }
 
     updateChart(widget: DataExplorerWidgetModel): Observable<any> {

@@ -146,6 +146,15 @@
                         <button
                             mat-icon-button
                             color="accent"
+                            [matTooltip]="'Clone chart' | translate"
+                            *ngIf="hasDataExplorerWritePrivileges"
+                            (click)="cloneDataView(element)"
+                        >
+                            <i class="material-icons">flip_to_front</i>
+                        </button>
+                        <button
+                            mat-icon-button
+                            color="accent"
                             [matTooltip]="'Delete chart' | translate"
                             *ngIf="hasDataExplorerWritePrivileges"
                             [attr.data-cy]="

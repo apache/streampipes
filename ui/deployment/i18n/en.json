@@ -155,6 +155,7 @@
   "Edit chart": null,
   "Manage permissions": null,
   "Delete chart": null,
+  "Clone chart": null,
   "Chart Name": null,
   "Save": null,
   "Discard": null,
@@ -410,5 +411,6 @@
   "30 min": null,
   "Error Details": null,
   "Resources": null,
-  "All {{allResourcesAlias}}": "All {{allResourcesAlias}}"
+  "All {{allResourcesAlias}}": "All {{allResourcesAlias}}",
+  "{{ widgetTitle }} Clone": "{{ widgetTitle }} Clone"
 }
