@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.connect.rules;
 
-import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
@@ -45,7 +44,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(UnitTransformRuleDescription.class),
     @JsonSubTypes.Type(EventRateTransformationRuleDescription.class),
     @JsonSubTypes.Type(RemoveDuplicatesTransformationRuleDescription.class),
-    @JsonSubTypes.Type(CreateNestedRuleDescription.class),
     @JsonSubTypes.Type(DeleteRuleDescription.class),
     @JsonSubTypes.Type(RenameRuleDescription.class),
     @JsonSubTypes.Type(RegexTransformationRuleDescription.class),

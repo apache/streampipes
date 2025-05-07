@@ -21,7 +21,6 @@ package org.apache.streampipes.extensions.management.connect;
 import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
@@ -53,11 +52,6 @@ public class TransformationRuleUpdateVisitor implements ITransformationRuleVisit
         .map(EventProperty::getRuntimeName).toList();
     this.allRules = allRules;
     this.validRules = new ArrayList<>();
-  }
-
-  @Override
-  public void visit(CreateNestedRuleDescription rule) {
-    validRules.add(rule);
   }
 
   @Override
