@@ -40,7 +40,9 @@
 
     <properties>
         <activemq-client.version>5.18.3</activemq-client.version>
+        <audience-annotations.version>0.12.0</audience-annotations.version>
         <antlr4.version>4.11.1</antlr4.version>
+        <avro.version>1.11.4</avro.version>
         <amqp-client.version>5.21.0</amqp-client.version>
         <apache-sis-referencing.version>1.2</apache-sis-referencing.version>
         <boofcv.version>1.1.0</boofcv.version>
@@ -56,6 +58,8 @@
         <commons-pool2.version>2.12.0</commons-pool2.version>
         <commons-text.version>1.12.0</commons-text.version>
         <commoms-collection4.version>4.4</commoms-collection4.version>
+        <commoms-math3.version>3.6.1</commoms-math3.version>
+        <commoms-net.version>3.10.0</commoms-net.version>
         <ditto-client.version>1.0.0</ditto-client.version>
         <eclipse.milo.version>0.6.14</eclipse.milo.version>
         <error-prone.version>2.10.0</error-prone.version>
@@ -70,6 +74,8 @@
         <grpc-context.version>1.59.1</grpc-context.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
+        <hadoop.version>3.4.1</hadoop.version>
+        <hadoop-mapreduce-client-core.version>3.4.1</hadoop-mapreduce-client-core.version>
         <influxdb.version>2.24</influxdb.version>
         <inlong.version>1.13.0</inlong.version>
         <iotdb.version>1.3.0</iotdb.version>
@@ -89,11 +95,16 @@
         <jboss-logging.version>3.5.2.Final</jboss-logging.version>
         <jedis.version>5.1.4</jedis.version>
         <jersey.version>3.1.3</jersey.version>
+        <jetty-io.version>12.0.19</jetty-io.version>
+        <jetty-http.version>12.0.19</jetty-http.version>
+        <jetty-util.version>12.0.19</jetty-util.version>
         <jgrapht.version>1.5.1</jgrapht.version>
         <json-smart.version>2.4.10</json-smart.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <jjwt.version>0.11.2</jjwt.version>
         <jts-core.version>1.19.0</jts-core.version>
+        <jaxb-impl.version>2.4.0-b180830.0438</jaxb-impl.version>
+        <zstd-jni.version>1.5.6-3</zstd-jni.version>
         <kafka.version>3.7.1</kafka.version>
         <lightcouch.version>0.2.0</lightcouch.version>
         <maven-plugin-annotations.version>3.13.0</maven-plugin-annotations.version>
@@ -103,7 +114,12 @@
         <mqtt-client.version>1.12</mqtt-client.version>
         <milvus-sdk-java.version>2.5.5</milvus-sdk-java.version>
         <nats.version>2.19.1</nats.version>
-        <netty.version>4.1.118.Final</netty.version>
+        <netty.version>5.0.0.Alpha2</netty.version>
+        <netty-codec-http.version>5.0.0.Alpha2</netty-codec-http.version>
+        <netty-transport-classes-epoll.version>4.2.0.Final</netty-transport-classes-epoll.version>
+        <netty-transport-native-unix-common.version>4.2.0.Final</netty-transport-native-unix-common.version>
+        <netty-resolver.version>5.0.0.Alpha2</netty-resolver.version>
+        <nimbus-jose-jwt.version>9.8.1</nimbus-jose-jwt.version>
         <okhttp.version>3.13.1</okhttp.version>
         <opencsv.version>5.9</opencsv.version>
         <opennlp.version>2.3.1</opennlp.version>
@@ -114,6 +130,7 @@
         <postgresql.version>42.7.2</postgresql.version>
         <protobuf.version>4.28.2</protobuf.version>
         <pulsar.version>3.2.2</pulsar.version>
+        <parquet.version>1.12.0</parquet.version>
         <quartz.version>2.3.2</quartz.version>
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
         <rdf4j.version>3.7.7</rdf4j.version>
@@ -125,11 +142,13 @@
         <slf4j.version>2.0.6</slf4j.version>
         <slf4j-simple.version>2.0.6</slf4j-simple.version>
         <snakeyaml.version>2.2</snakeyaml.version>
+        <snappy-java.version>1.1.10.5</snappy-java.version>
         <springdoc.version>2.8.4</springdoc.version>
         <spring.version>6.2.2</spring.version>
         <spring-boot.version>3.4.2</spring-boot.version>
         <spring-security.version>6.4.2</spring-security.version>
         <swagger.version>2.2.19</swagger.version>
+        <stax2-api.version>4.2.2</stax2-api.version>
         <type-parser.version>0.8.1</type-parser.version>
         <tsfile.version>1.1.0</tsfile.version>
         <hawtbuf.version>1.11</hawtbuf.version>
@@ -188,6 +207,16 @@
                 <version>${commons-logging.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math3</artifactId>
+                <version>${commoms-math3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>${commoms-net.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
                 <version>${jackson.version}</version>
@@ -223,6 +252,11 @@
                 <version>${type-parser.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.github.luben</groupId>
+                <artifactId>zstd-jni</artifactId>
+                <version>${zstd-jni.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
@@ -236,6 +270,16 @@
                 <groupId>com.opencsv</groupId>
                 <artifactId>opencsv</artifactId>
                 <version>${opencsv.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbus-jose-jwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>${jaxb-impl.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
@@ -281,6 +325,26 @@
                 <groupId>io.milvus</groupId>
                 <artifactId>milvus-sdk-java</artifactId>
                 <version>${milvus-sdk-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-http</artifactId>
+                <version>${netty-codec-http.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport-classes-epoll</artifactId>
+                <version>${netty-transport-classes-epoll.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport-native-unix-common</artifactId>
+                <version>${netty-transport-native-unix-common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-resolver</artifactId>
+                <version>${netty-resolver.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tsfile</groupId>
@@ -383,6 +447,11 @@
                 <version>${activemq-client.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro</artifactId>
+                <version>${avro.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
@@ -406,6 +475,72 @@
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-streaming-java_2.11</artifactId>
                 <version>${flink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-common</artifactId>
+                <version>${hadoop.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.dropwizard.metrics</groupId>
+                        <artifactId>metrics-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.reload4j</groupId>
+                        <artifactId>reload4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-transport-native-epoll</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-mapreduce-client-core</artifactId>
+                <version>${hadoop-mapreduce-client-core.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-transport-native-epoll</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.hadoop</groupId>
+                        <artifactId>hadoop-annotations</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.jersey</groupId>
+                        <artifactId>jersey-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.inject.extensions</groupId>
+                        <artifactId>guice-servlet</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.hadoop</groupId>
+                        <artifactId>hadoop-auth</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.jersey</groupId>
+                        <artifactId>jersey-servlet</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.jersey</groupId>
+                        <artifactId>jersey-server</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.inject</groupId>
+                        <artifactId>guice</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-stdlib</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-stdlib-common</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -438,6 +573,11 @@
                 <version>${kafka.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.parquet</groupId>
+                <artifactId>parquet-avro</artifactId>
+                <version>${parquet.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.pulsar</groupId>
                 <artifactId>pulsar-client</artifactId>
                 <version>${pulsar.version}</version>
@@ -449,6 +589,11 @@
                 </exclusions>
             </dependency>
             <dependency>
+                <groupId>org.apache.yetus</groupId>
+                <artifactId>audience-annotations</artifactId>
+                <version>${audience-annotations.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk18on</artifactId>
                 <version>${bcprov-jdk18on.version}</version>
@@ -457,6 +602,26 @@
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcutil-jdk18on</artifactId>
                 <version>${bcprov-jdk18on.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.woodstox</groupId>
+                <artifactId>stax2-api</artifactId>
+                <version>${stax2-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-io</artifactId>
+                <version>${jetty-io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-http</artifactId>
+                <version>${jetty-http.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-util</artifactId>
+                <version>${jetty-util.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.rdf4j</groupId>
@@ -492,6 +657,11 @@
                 <groupId>org.glassfish.jersey.media</groupId>
                 <artifactId>jersey-media-multipart</artifactId>
                 <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.xerial.snappy</groupId>
+                <artifactId>snappy-java</artifactId>
+                <version>${snappy-java.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.influxdb</groupId>
