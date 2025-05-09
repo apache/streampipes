@@ -190,7 +190,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
-      if (isUsernameAvailable(existingUser.getUsername())) {
+      if (isUserNameUnchanged(user, existingUser) || isUsernameAvailable(existingUser.getUsername())) {
         updateUser(existingUser, user, isAdmin(), existingUser.getPassword());
         user.setRev(existingUser.getRev());
         getUserStorage().updateUser(user);
@@ -336,6 +336,11 @@ public class UserResource extends AbstractAuthGuardedRestResource {
         .stream()
         .noneMatch(u -> u.getUsername()
                          .equalsIgnoreCase(username));
+  }
+
+  private boolean isUserNameUnchanged(UserAccount existingUser, UserAccount user) {
+    return existingUser.getUsername()
+                       .equalsIgnoreCase(user.getUsername());
   }
 
   private void encryptAndStore(
