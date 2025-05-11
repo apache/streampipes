@@ -4,6 +4,8 @@
   "peerDependencies": {
     "@angular/common": "^18.2.13",
     "@angular/core": "^18.2.13",
+    "@angular/platform-browser": "^18.2.13",
+    "@ngx-loading-bar/http-client": "6.0.2",
     "rxjs": "^7.8.0",
     "angular-gridster2": "^18.0.1"
   },

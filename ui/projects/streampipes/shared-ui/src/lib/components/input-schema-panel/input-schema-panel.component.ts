@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,16 +16,15 @@
  *
  */
 
-.mat-expansion-panel {
-    box-shadow: none;
-    border: 1px solid var(--color-bg-3);
-}
+import { Component, Input } from '@angular/core';
+import { SpDataStream } from '@streampipes/platform-services';
 
-.property-row {
-    padding: 10px;
-    background-color: var(--color-bg-1);
-}
-
-.property-row:nth-child(even) {
-    background-color: var(--color-bg-2);
+@Component({
+    selector: 'sp-input-schema-panel',
+    templateUrl: './input-schema-panel.component.html',
+    styleUrls: ['./input-schema-panel.component.scss'],
+})
+export class InputSchemaPanelComponent {
+    @Input()
+    inputStreams: SpDataStream[] = [];
 }

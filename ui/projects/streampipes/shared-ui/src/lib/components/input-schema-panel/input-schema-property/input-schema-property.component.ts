@@ -16,24 +16,28 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { EventPropertyUnion } from '@streampipes/platform-services';
+import { PipelineElementSchemaService } from '../../../services/pipeline-element-schema.service';
 
-@Injectable({ providedIn: 'root' })
-export class ElementIconText {
-    constructor() {}
+@Component({
+    selector: 'sp-input-schema-property',
+    templateUrl: './input-schema-property.component.html',
+})
+export class InputSchemaPropertyComponent implements OnInit {
+    @Input()
+    property: EventPropertyUnion;
 
-    getElementIconText(s) {
-        let result = '';
-        if (s.length <= 3) {
-            result = s;
-        } else {
-            const words = s.split(' ');
-            words.forEach((word, i) => {
-                if (i < 3) {
-                    result += word.charAt(0);
-                }
-            });
-        }
-        return result.toUpperCase();
+    runtimeType: string;
+
+    constructor(
+        private pipelineElementSchemaService: PipelineElementSchemaService,
+    ) {}
+
+    ngOnInit() {
+        this.runtimeType =
+            this.pipelineElementSchemaService.getFriendlyRuntimeType(
+                this.property,
+            );
     }
 }

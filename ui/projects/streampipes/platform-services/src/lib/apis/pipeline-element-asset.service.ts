@@ -16,14 +16,23 @@
  *
  */
 
-@import '../../../scss/sp/sp-dialog.scss';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { PlatformServicesCommons } from './commons.service';
 
-.element-id {
-    border-radius: 5px;
-    margin-right: 10px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-size: small;
-    display: inline-block;
-    padding: 5px;
+@Injectable({
+    providedIn: 'root',
+})
+export class PipelineElementAssetService {
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
+
+    getAssetUrl(appId) {
+        return (
+            this.platformServicesCommons.apiBasePath +
+            '/pe/' +
+            appId +
+            '/assets'
+        );
+    }
 }

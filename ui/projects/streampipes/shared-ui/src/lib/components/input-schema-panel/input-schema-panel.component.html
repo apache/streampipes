@@ -25,12 +25,13 @@
                     ><b>&nbsp;Show input fields</b></mat-panel-title
                 >
             </mat-expansion-panel-header>
-            @for (
-                inputStream of pipelineElement.inputStreams;
-                track pipelineElement.elementId
-            ) {
+            @for (inputStream of inputStreams; track $index) {
                 <div fxLayout="column">
-                    <b>{{ inputStream.name }}</b>
+                    <div class="input-stream-name-outer">
+                        <span class="input-stream-name">{{
+                            inputStream.name
+                        }}</span>
+                    </div>
                     @for (
                         property of inputStream.eventSchema.eventProperties
                             | sortByRuntimeName;

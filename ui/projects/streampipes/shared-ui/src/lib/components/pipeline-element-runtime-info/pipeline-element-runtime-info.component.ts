@@ -24,19 +24,14 @@ import {
     OnInit,
 } from '@angular/core';
 import {
-    DataType,
-    EventPropertyList,
-    EventPropertyPrimitive,
-    EventPropertyUnion,
-    SemanticType,
+    LivePreviewService,
+    PipelineElementRuntimeInfoService,
     SpDataStream,
 } from '@streampipes/platform-services';
-import { RestService } from '../../connect/services/rest.service';
 import { Subscription } from 'rxjs';
 import { HttpDownloadProgressEvent, HttpEventType } from '@angular/common/http';
-import { LivePreviewService } from '../../services/live-preview.service';
 import { RuntimeInfo } from './pipeline-element-runtime-info.model';
-import { PipelineElementSchemaService } from './pipeline-element-schema.service';
+import { PipelineElementSchemaService } from '../../services/pipeline-element-schema.service';
 
 @Component({
     selector: 'sp-pipeline-element-runtime-info',
@@ -57,7 +52,7 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     runtimeSub: Subscription;
 
     constructor(
-        private restService: RestService,
+        private restService: PipelineElementRuntimeInfoService,
         private livePreviewService: LivePreviewService,
         private pipelineELementSchemaService: PipelineElementSchemaService,
     ) {}
