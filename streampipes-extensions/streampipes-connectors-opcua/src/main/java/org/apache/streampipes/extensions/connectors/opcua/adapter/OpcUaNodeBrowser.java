@@ -25,6 +25,7 @@ import org.apache.streampipes.extensions.connectors.opcua.model.OpcUaNodeFactory
 import org.apache.streampipes.model.staticproperty.TreeInputNode;
 
 import org.eclipse.milo.opcua.sdk.client.AddressSpace;
+import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.UaClient;
 import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
