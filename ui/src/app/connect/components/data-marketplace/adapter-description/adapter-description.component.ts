@@ -17,8 +17,10 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AdapterDescription } from '@streampipes/platform-services';
-import { RestApi } from '../../../../services/rest-api.service';
+import {
+    AdapterDescription,
+    PipelineElementAssetService,
+} from '@streampipes/platform-services';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpAdapterDocumentationDialogComponent } from '../../../dialog/adapter-documentation/adapter-documentation-dialog.component';
@@ -37,7 +39,7 @@ export class AdapterDescriptionComponent implements OnInit {
     iconUrl: SafeUrl;
 
     constructor(
-        private restApi: RestApi,
+        private pipelineElementAssetService: PipelineElementAssetService,
         private sanitizer: DomSanitizer,
         private dialogService: DialogService,
     ) {}
@@ -56,7 +58,10 @@ export class AdapterDescriptionComponent implements OnInit {
     }
 
     makeAssetIconUrl() {
-        return this.restApi.getAssetUrl(this.adapter.appId) + '/icon';
+        return (
+            this.pipelineElementAssetService.getAssetUrl(this.adapter.appId) +
+            '/icon'
+        );
     }
 
     openDocumentation(event: MouseEvent): void {

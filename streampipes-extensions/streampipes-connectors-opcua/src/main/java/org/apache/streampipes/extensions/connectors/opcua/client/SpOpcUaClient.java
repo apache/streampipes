@@ -23,11 +23,11 @@ import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.extensions.connectors.opcua.config.MiloOpcUaConfigurationProvider;
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
 
+import org.eclipse.milo.opcua.binaryschema.GenericBsdParser;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
+import org.eclipse.milo.opcua.sdk.client.dtd.DataTypeDictionarySessionInitializer;
 import org.eclipse.milo.opcua.stack.core.UaException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
@@ -37,9 +37,6 @@ import java.util.concurrent.ExecutionException;
  */
 public class SpOpcUaClient<T extends OpcUaConfig> {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SpOpcUaClient.class);
-
-  private OpcUaClient client;
   private final T spOpcConfig;
 
   public SpOpcUaClient(T config) {
@@ -55,15 +52,8 @@ public class SpOpcUaClient<T extends OpcUaConfig> {
       throws UaException, ExecutionException, InterruptedException, SpConfigurationException, URISyntaxException {
     OpcUaClientConfig clientConfig = new MiloOpcUaConfigurationProvider().makeClientConfig(spOpcConfig);
     var client = OpcUaClient.create(clientConfig);
+    client.addSessionInitializer(new DataTypeDictionarySessionInitializer(new GenericBsdParser()));
     client.connect().get();
     return new ConnectedOpcUaClient(client);
-  }
-
-
-
-
-
-  public T getSpOpcConfig() {
-    return spOpcConfig;
   }
 }

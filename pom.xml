@@ -39,7 +39,8 @@
     <url>https://streampipes.apache.org</url>
 
     <properties>
-        <activemq-client.version>5.18.3</activemq-client.version>
+        <activemq-client.version>5.18.7</activemq-client.version>
+        <antlr4.version>4.11.1</antlr4.version>
         <amqp-client.version>5.21.0</amqp-client.version>
         <apache-sis-referencing.version>1.2</apache-sis-referencing.version>
         <boofcv.version>1.1.0</boofcv.version>
@@ -56,7 +57,7 @@
         <commons-text.version>1.12.0</commons-text.version>
         <commoms-collection4.version>4.4</commoms-collection4.version>
         <ditto-client.version>1.0.0</ditto-client.version>
-        <eclipse.milo.version>0.6.14</eclipse.milo.version>
+        <eclipse.milo.version>0.6.16</eclipse.milo.version>
         <error-prone.version>2.10.0</error-prone.version>
         <file-management.version>3.1.0</file-management.version>
         <flink.version>1.13.5</flink.version>
@@ -72,8 +73,8 @@
         <influxdb.version>2.24</influxdb.version>
         <inlong.version>1.13.0</inlong.version>
         <iotdb.version>1.3.0</iotdb.version>
-        <jackson.version>2.17.0</jackson.version>
-        <jackson.databind.version>2.17.0</jackson.databind.version>
+        <jackson.version>2.18.3</jackson.version>
+        <jackson.databind.version>2.18.3</jackson.databind.version>
         <jakarta-annotation.version>3.0.0</jakarta-annotation.version>
         <jakarta-activation-api.version>2.1.3</jakarta-activation-api.version>
         <jakarta-inject-api.version>2.0.1</jakarta-inject-api.version>
@@ -102,7 +103,7 @@
         <mqtt-client.version>1.12</mqtt-client.version>
         <milvus-sdk-java.version>2.5.5</milvus-sdk-java.version>
         <nats.version>2.19.1</nats.version>
-        <netty.version>4.1.118.Final</netty.version>
+        <netty.version>4.2.0.Final</netty.version>
         <okhttp.version>3.13.1</okhttp.version>
         <opencsv.version>5.9</opencsv.version>
         <opennlp.version>2.3.1</opennlp.version>
@@ -130,8 +131,10 @@
         <spring-security.version>6.4.2</spring-security.version>
         <swagger.version>2.2.19</swagger.version>
         <type-parser.version>0.8.1</type-parser.version>
+        <tsfile.version>1.1.0</tsfile.version>
         <hawtbuf.version>1.11</hawtbuf.version>
         <woodstox.version>7.0.0</woodstox.version>
+        <xz.version>1.10</xz.version>
 
         <!-- Test dependencies -->
         <junit.version>5.11.4</junit.version>
@@ -279,6 +282,21 @@
                 <groupId>io.milvus</groupId>
                 <artifactId>milvus-sdk-java</artifactId>
                 <version>${milvus-sdk-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tsfile</groupId>
+                <artifactId>tsfile</artifactId>
+                <version>${tsfile.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.tukaani</groupId>
+                <artifactId>xz</artifactId>
+                <version>${xz.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-runtime</artifactId>
+                <version>${antlr4.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.errorprone</groupId>
@@ -724,6 +742,11 @@
             <dependency>
                 <groupId>org.eclipse.milo</groupId>
                 <artifactId>sdk-client</artifactId>
+                <version>${eclipse.milo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.milo</groupId>
+                <artifactId>dictionary-reader</artifactId>
                 <version>${eclipse.milo.version}</version>
             </dependency>
             <dependency>

@@ -31,7 +31,7 @@ import {
     SpLogMessage,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
-import { CompactPipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/compact-pipeline.service';
+import { CompactPipelineService } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',

@@ -1,0 +1,124 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.streampipes.extensions.connectors.opcua.utils;
+
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
+import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaNodeBrowser;
+import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProvider;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaAdapterConfig;
+import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
+import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
+
+import org.eclipse.milo.opcua.sdk.client.api.UaClient;
+import org.eclipse.milo.opcua.stack.core.AttributeId;
+import org.eclipse.milo.opcua.stack.core.UaException;
+import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
+
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+
+/***
+ * Collection of several utility functions in context of OPC UA
+ */
+public class OpcUaUtils {
+
+  private static final String OPC_TCP_PREFIX = "opc.tcp://";
+
+  /***
+   * Ensures server address starts with {@code opc.tcp://}
+   * @param serverAddress server address as given by user
+   * @return correctly formated server address
+   */
+  public static String addOpcPrefixIfNotExists(String serverAddress) {
+    return serverAddress.startsWith(OPC_TCP_PREFIX) ? serverAddress : OPC_TCP_PREFIX + serverAddress;
+  }
+
+  /***
+   * OPC UA specific implementation of
+   * {@link ResolvesContainerProvidedOptions resolveOptions(String, StaticPropertyExtractor)}.
+   * @param internalName The internal name of the Static Property
+   * @param parameterExtractor to extract parameters from the OPC UA config
+   * @return {@code List<Option>} with available node names for the given OPC UA configuration
+   */
+  public static RuntimeResolvableTreeInputStaticProperty resolveConfig(OpcUaClientProvider clientProvider,
+                                                                       String internalName,
+                                                                       IStaticPropertyExtractor parameterExtractor)
+      throws SpConfigurationException {
+
+    RuntimeResolvableTreeInputStaticProperty config = parameterExtractor
+        .getStaticPropertyByName(internalName, RuntimeResolvableTreeInputStaticProperty.class);
+    // access mode and host/url have to be selected
+    try {
+      parameterExtractor.selectedAlternativeInternalId(OpcUaLabels.OPC_HOST_OR_URL.name());
+      parameterExtractor.selectedSingleValueInternalName(SharedUserConfiguration.SECURITY_MODE, String.class);
+      parameterExtractor.selectedSingleValue(SharedUserConfiguration.SECURITY_POLICY, String.class);
+    } catch (NullPointerException nullPointerException) {
+      return config;
+    }
+
+    var opcUaConfig = SpOpcUaConfigExtractor.extractSharedConfig(parameterExtractor, new OpcUaAdapterConfig());
+
+    try {
+      var connectedClient = clientProvider.getClient(opcUaConfig);
+      OpcUaNodeBrowser nodeBrowser =
+          new OpcUaNodeBrowser(connectedClient.getClient(), opcUaConfig);
+
+      var nodes = nodeBrowser.buildNodeTreeFromOrigin(config.getNextBaseNodeToResolve());
+      if (Objects.isNull(config.getNextBaseNodeToResolve())) {
+        config.setNodes(nodes);
+      } else {
+        config.setLatestFetchedNodes(nodes);
+      }
+
+      if (!config.getSelectedNodesInternalNames().isEmpty()) {
+        config.setSelectedNodesInternalNames(
+            filterMissingNodes(connectedClient.getClient(), config.getSelectedNodesInternalNames())
+        );
+      }
+
+
+      return config;
+    } catch (UaException e) {
+      throw new SpConfigurationException(ExceptionMessageExtractor.getDescription(e), e);
+    } catch (ExecutionException | InterruptedException | URISyntaxException e) {
+      throw new SpConfigurationException("Could not connect to the OPC UA server with the provided settings", e);
+    } finally {
+      clientProvider.releaseClient(opcUaConfig);
+    }
+  }
+
+  public static List<String> filterMissingNodes(UaClient opcUaClient,
+                                                List<String> selectedNodes) {
+    return selectedNodes.stream().filter(selectedNode -> {
+      try {
+        var node = opcUaClient.getAddressSpace().getNode(NodeId.parse(selectedNode));
+        var value = node.readAttribute(AttributeId.Value);
+        var statusCode = value.getStatusCode();
+        return statusCode != null && statusCode.isGood();
+      } catch (UaException e) {
+        return false;
+      }
+    }).toList();
+  }
+}

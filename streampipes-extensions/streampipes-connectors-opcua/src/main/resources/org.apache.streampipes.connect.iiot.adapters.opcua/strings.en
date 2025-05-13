@@ -82,3 +82,6 @@ SUBSCRIPTION_MODE.description=
 
 incomplete-event-handling.title=Incomplete Events
 incomplete-event-handling.description=Select how events with missing values (e.g., due to bad status codes) are handled.
+
+NAMING_STRATEGY.title=Naming Strategy
+NAMING_STRATEGY.description=Select how the runtime name of the OPC-UA nodes are generated.

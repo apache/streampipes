@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
-import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
@@ -27,7 +26,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterDescriptionTest {
@@ -39,16 +37,11 @@ public class AdapterDescriptionTest {
     adapterDescription = new AdapterDescription() {
     };
 
-    List rules = new ArrayList<>();
-    rules.add(new CreateNestedRuleDescription());
-    rules.add(new CreateNestedRuleDescription());
-    rules.add(new DeleteRuleDescription());
-    rules.add(new UnitTransformRuleDescription());
-    rules.add(new CreateNestedRuleDescription());
-    rules.add(new CreateNestedRuleDescription());
-    rules.add(new UnitTransformRuleDescription());
-    rules.add(new MoveRuleDescription());
-    rules.add(new CreateNestedRuleDescription());
+    var rules = List.of(
+        new DeleteRuleDescription(),
+        new UnitTransformRuleDescription(),
+        new UnitTransformRuleDescription(),
+        new MoveRuleDescription());
 
     adapterDescription.setRules(rules);
   }
@@ -67,7 +60,7 @@ public class AdapterDescriptionTest {
 
   @Test
   public void getSchemaRules() {
-    Assertions.assertEquals(7,
+    Assertions.assertEquals(2,
                             adapterDescription.getSchemaRules().size());
   }
 }

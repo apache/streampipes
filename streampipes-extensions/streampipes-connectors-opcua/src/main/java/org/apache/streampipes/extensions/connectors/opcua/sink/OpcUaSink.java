@@ -29,7 +29,7 @@ import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProvider;
 import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
-import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
@@ -114,6 +114,6 @@ public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
   @Override
   public StaticProperty resolveConfiguration(String staticPropertyInternalName,
                                              IStaticPropertyExtractor extractor) throws SpConfigurationException {
-    return OpcUaUtil.resolveConfig(clientProvider, staticPropertyInternalName, extractor);
+    return OpcUaUtils.resolveConfig(clientProvider, staticPropertyInternalName, extractor);
   }
 }

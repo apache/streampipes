@@ -104,7 +104,7 @@ export class PipelinesComponent implements OnInit, OnDestroy {
 
     getFunctions() {
         this.functionsService.getActiveFunctions().subscribe(functions => {
-            this.functions = functions.map(f => f.functionId);
+            this.functions = functions.map(f => f.functionId).sort();
             this.functionsReady = true;
         });
     }
@@ -112,7 +112,9 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     getPipelines() {
         this.pipelines = [];
         this.pipelineService.getPipelines().subscribe(pipelines => {
-            this.pipelines = pipelines;
+            this.pipelines = pipelines.sort((a, b) =>
+                a.name.localeCompare(b.name),
+            );
             this.applyPipelineFilters(this.currentFilters);
         });
     }

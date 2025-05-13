@@ -17,42 +17,8 @@
   -->
 
 <div fxLayout="column">
-    <div
-        id="overwriteCheckbox"
-        class="checkbox"
-        *ngIf="storageOptions.updateModeActive"
-    >
-        <mat-radio-group
-            [(ngModel)]="storageOptions.updateMode"
-            fxLayout="column"
-            color="accent"
-            class="pipeline-radio-group"
-        >
-            <mat-radio-button
-                [value]="'update'"
-                style="padding-left: 0"
-                data-cy="pipeline-update-mode-update"
-            >
-                Update pipeline <b>{{ currentPipelineName }}</b>
-            </mat-radio-button>
-            <mat-radio-button
-                [value]="'clone'"
-                class="mb-10"
-                data-cy="pipeline-update-mode-clone"
-            >
-                Create new pipeline
-            </mat-radio-button>
-        </mat-radio-group>
-    </div>
     <form [formGroup]="submitPipelineForm">
-        <div
-            fxFlex="100"
-            fxLayout="column"
-            *ngIf="
-                !storageOptions.updateModeActive ||
-                storageOptions.updateMode === 'clone'
-            "
-        >
+        <div fxFlex="100" fxLayout="column">
             <mat-form-field fxFlex color="accent">
                 <mat-label>Pipeline Name</mat-label>
                 <input
@@ -75,6 +41,33 @@
             </mat-form-field>
         </div>
     </form>
+    <div
+        id="overwriteCheckbox"
+        class="checkbox"
+        *ngIf="storageOptions.updateModeActive"
+    >
+        <mat-radio-group
+            [(ngModel)]="storageOptions.updateMode"
+            fxLayout="column"
+            color="accent"
+            class="pipeline-radio-group"
+        >
+            <mat-radio-button
+                [value]="'update'"
+                style="padding-left: 0"
+                data-cy="pipeline-update-mode-update"
+            >
+                Update pipeline
+            </mat-radio-button>
+            <mat-radio-button
+                [value]="'clone'"
+                class="mb-10"
+                data-cy="pipeline-update-mode-clone"
+            >
+                Create new pipeline
+            </mat-radio-button>
+        </mat-radio-group>
+    </div>
     <mat-checkbox
         [(ngModel)]="storageOptions.startPipelineAfterStorage"
         color="accent"
