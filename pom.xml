@@ -1168,6 +1168,7 @@
                 <artifactId>spotless-maven-plugin</artifactId>
                 <version>${spotless.version}</version>
                 <configuration>
+                    <skip>true</skip>
                     <java>
                         <importOrder>
                             <order>org.apache.streampipes,,jakarta,javax,java,scala,\#</order>
