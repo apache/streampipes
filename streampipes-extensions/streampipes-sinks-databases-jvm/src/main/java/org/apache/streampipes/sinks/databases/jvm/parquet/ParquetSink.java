@@ -147,8 +147,9 @@ public class ParquetSink extends StreamPipesDataSink {
     try {
       newParquetFilePath = createNewParquetFilePath(parquetGenerationDirectory, parquetFileName);
       EventSchema schema = parameters.getModel().getInputStreams().get(0).getEventSchema();
-      this.extractEventProperties(schema.getEventProperties(), "", initialFieldAssembler());
-      this.parquetSchema = schemaFieldAssembler.endRecord();
+      this.schemaFieldAssembler = initialFieldAssembler();
+      this.extractEventProperties(schema.getEventProperties(), schemaFieldAssembler);
+      this.parquetSchema = this.schemaFieldAssembler.endRecord();
       this.writer = createParquetWriter(newParquetFilePath);
     } catch (IOException e) {
       throw new SpRuntimeException(e.getMessage());
@@ -230,10 +231,10 @@ public class ParquetSink extends StreamPipesDataSink {
   }
 
   private void extractEventProperties(List<EventProperty> properties,
-                                    String preProperty, SchemaBuilder.FieldAssembler<Schema> schemaFieldAssembler)
+                                    SchemaBuilder.FieldAssembler<Schema> schemaFieldAssembler)
         throws SpRuntimeException {
     for (EventProperty property : properties) {
-      final String fieldName = preProperty + property.getRuntimeName();
+      final String fieldName = property.getRuntimeName();
       if (!(property instanceof EventPropertyPrimitive)) {
         throw new UnsupportedOperationException("Unsupported data type: " + property.getClass());
       }
@@ -268,7 +269,7 @@ public class ParquetSink extends StreamPipesDataSink {
       long index = setIndex();
       String filename = parquetFileName + "_" + index;
       newParquetFilePath = new Path(sourceDir, filename + suffix);
-      path = newParquetFilePath.toString(); // 更新路径
+      path = newParquetFilePath.toString();
       counter++;
       if (counter > 5) {
         throw new SpRuntimeException("Failed to create new parquetFilePath after 5 attempts");
@@ -304,7 +305,6 @@ public class ParquetSink extends StreamPipesDataSink {
         .withCompressionCodec(compressionCodecName)
         .withRowGroupSize(rowGroupSize)
         .withPageSize(pageSize)
-        .withConf(new org.apache.hadoop.conf.Configuration())
         .build();
   }
 
