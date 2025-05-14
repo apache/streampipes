@@ -68,7 +68,7 @@ optional = true
 autoflake = "2.3.0"
 black = "24.8.0"
 blacken-docs = "1.18.0"
-flake8 = "7.1.0"
+flake8 = "7.2.0"
 interrogate = { version = "1.7.0", extras = ["png"] }
 isort = "5.13.2"
 mypy = "1.13.0"
