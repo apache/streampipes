@@ -24,12 +24,15 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
+import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sinks.brokers.jvm.rest.RestSink;
+import org.apache.streampipes.vocabulary.XSD;
 
 import java.util.List;
 
@@ -68,11 +71,12 @@ public class RestSinkMigrationV1 implements IDataSinkMigrator {
         "Retry Delay (ms)", "Duration in ms to wait for request to "
             + "retry."
     );
-    var staticProperty = new RuntimeResolvableAnyStaticProperty(
+    var staticProperty = new FreeTextStaticProperty(
         label.getInternalId(),
         label.getLabel(),
         label.getDescription()
     );
+    staticProperty.setRequiredDatatype(XSD.INTEGER);
 
     element.getStaticProperties().add(staticProperty);
   }
@@ -86,24 +90,25 @@ public class RestSinkMigrationV1 implements IDataSinkMigrator {
         label.getDescription(),
         false
     );
+    staticProperty.setSelected(false);
     element.getStaticProperties().add(staticProperty);
   }
 
   public void addRetryMaxRetriesKey(DataSinkInvocation element) {
     var label = Labels.from(RestSink.RETRY_MAX_RETRIES_KEY, "Max Retries",
         "The maximum number of retries allowed for request to retry.");
-    var staticProperty = new RuntimeResolvableAnyStaticProperty(
+    var staticProperty = new FreeTextStaticProperty(
         label.getInternalId(),
         label.getLabel(),
         label.getDescription()
     );
+    staticProperty.setRequiredDatatype(XSD.INTEGER);
     element.getStaticProperties().add(staticProperty);
   }
 
   public void addHeaderCollectionKeys(DataSinkInvocation element) {
     StaticPropertyGroup staticPropertyGroup = new StaticPropertyGroup();
     staticPropertyGroup.setLabel("Request Headers");
-    staticPropertyGroup.setDescription("Request Headers");
     staticPropertyGroup.setInternalName(RestSink.HEADER_COLLECTION);
     staticPropertyGroup.setHorizontalRendering(false);
 
@@ -127,13 +132,19 @@ public class RestSinkMigrationV1 implements IDataSinkMigrator {
     );
     headerValueLabel.setValue("");
     headerValueLabel.setOptional(true);
-
     staticPropertyGroup.getStaticProperties().addAll(
         List.of(
             headerKeyLabel,
             headerValueLabel
         )
     );
-    element.getStaticProperties().add(staticPropertyGroup);
+
+    var collection = new CollectionStaticProperty(
+        RestSink.HEADER_COLLECTION,
+        "Request Headers",
+        "Optional custom headers to be included with the REST request.",
+        staticPropertyGroup
+    );
+    element.getStaticProperties().add(collection);
   }
 }
