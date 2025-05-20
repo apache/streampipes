@@ -34,8 +34,8 @@ import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProv
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaAdapterConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
-import org.apache.streampipes.extensions.connectors.opcua.model.OpcNode;
-import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil;
+import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;
@@ -50,13 +50,11 @@ import org.apache.streampipes.sdk.helpers.Locales;
 
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
-import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +66,6 @@ import java.util.stream.Collectors;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ADAPTER_TYPE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULL_MODE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_MODE;
-import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtil.getSchema;
 
 public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsRuntimeConfig {
 
@@ -80,13 +77,13 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   private final OpcUaClientProvider clientProvider;
   private ConnectedOpcUaClient connectedClient;
   private OpcUaAdapterConfig opcUaAdapterConfig;
-  private List<OpcNode> allNodes;
-  private List<NodeId> allNodeIds;
-  private int numberProperties;
+  private OpcUaNodeProvider nodeProvider;
+  private List<OpcUaNode> allNodes;
   private final Map<String, Object> event;
 
   private IEventCollector collector;
   private PullAdapterScheduler pullAdapterScheduler;
+  private int numberOfEventProperties = 0;
 
   /**
    * This variable is used to map the node ids during the subscription to the labels of the nodes
@@ -95,13 +92,11 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
   public OpcUaAdapter(OpcUaClientProvider clientProvider) {
     this.clientProvider = clientProvider;
-    this.numberProperties = 0;
     this.event = new HashMap<>();
     this.nodeIdToLabelMapping = new HashMap<>();
   }
 
   private void prepareAdapter(IAdapterParameterExtractor extractor) throws AdapterException {
-    this.allNodeIds = new ArrayList<>();
     List<String> deleteKeys = extractor
         .getAdapterDescription()
         .getSchemaRules()
@@ -114,21 +109,19 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
       this.connectedClient = clientProvider.getClient(this.opcUaAdapterConfig);
       OpcUaNodeBrowser browserClient =
           new OpcUaNodeBrowser(this.connectedClient.getClient(), this.opcUaAdapterConfig);
-      this.allNodes = browserClient.findNodes(deleteKeys);
-
-
-      for (OpcNode node : this.allNodes) {
-        this.allNodeIds.add(node.getNodeId());
-      }
+      this.nodeProvider = browserClient.makeNodeProvider(deleteKeys);
+      this.allNodes = nodeProvider.getNodes();
 
       if (opcUaAdapterConfig.inPullMode()) {
         this.pullingIntervalMilliSeconds = opcUaAdapterConfig.getPullIntervalMilliSeconds();
       } else {
-        this.numberProperties = this.allNodeIds.size();
-        this.connectedClient.createListSubscription(this.allNodeIds, this);
+        var allNodeIds = this.allNodes.stream()
+            .map(node -> node.nodeInfo().getNodeId()).toList();
+        this.connectedClient.createListSubscription(allNodeIds, this);
       }
 
-      this.allNodes.forEach(node -> this.nodeIdToLabelMapping.put(node.getNodeId().toString(), node.getLabel()));
+      this.allNodes.forEach(node -> this.nodeIdToLabelMapping
+          .put(node.nodeInfo().getNodeId().toString(), node.nodeInfo().getDisplayName()));
 
 
     } catch (Exception e) {
@@ -139,7 +132,10 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   @Override
   public void pullData() throws ExecutionException, RuntimeException, InterruptedException, TimeoutException {
     var response =
-        this.connectedClient.getClient().readValues(0, TimestampsToReturn.Both, this.allNodeIds);
+        this.connectedClient.getClient().readValues(
+            0,
+            TimestampsToReturn.Both,
+            this.allNodes.stream().map(o -> o.nodeInfo().getNodeId()).toList());
     boolean badStatusCodeReceived = false;
     boolean emptyValueReceived = false;
     List<DataValue> returnValues =
@@ -151,13 +147,13 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
       for (int i = 0; i < returnValues.size(); i++) {
         var status = returnValues.get(i).getStatusCode();
         if (StatusCode.GOOD.equals(status)) {
-          Object value = returnValues.get(i).getValue().getValue();
-          this.event.put(this.allNodes.get(i).getLabel(), value);
+          var value = returnValues.get(i).getValue();
+          this.allNodes.get(i).addToEvent(connectedClient.getClient(), this.event, value);
         } else {
           badStatusCodeReceived = true;
           LOG.warn("Received status code {} for node label: {}",
               status,
-              this.allNodes.get(i).getLabel());
+              this.allNodes.get(i).nodeInfo().getDisplayName());
         }
       }
     }
@@ -177,16 +173,15 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
     String key = this.nodeIdToLabelMapping.get(item.getReadValueId().getNodeId().toString());
 
-    OpcNode currNode = this.allNodes.stream()
-        .filter(node -> key.equals(node.getLabel()))
+    var currNode = this.allNodes.stream()
+        .filter(node -> key.equals(node.nodeInfo().getDisplayName()))
         .findFirst()
         .orElse(null);
 
     if (currNode != null) {
-      event.put(currNode.getLabel(), value.getValue().getValue());
-
+      currNode.addToEvent(connectedClient.getClient(), event, value.getValue());
       // ensure that event is complete and all opc ua subscriptions transmitted at least one value
-      if (event.keySet().size() >= this.numberProperties) {
+      if (event.size() >= numberOfEventProperties) {
         Map<String, Object> newEvent = new HashMap<>();
         // deep copy of event to prevent preprocessor error
         for (String k : event.keySet()) {
@@ -210,9 +205,10 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     this.opcUaAdapterConfig =
         SpOpcUaConfigExtractor.extractAdapterConfig(extractor.getStaticPropertyExtractor());
-    //this.connectedClient = clientProvider.getClient(this.opcUaAdapterConfig);
     this.collector = collector;
     this.prepareAdapter(extractor);
+    this.numberOfEventProperties =
+        nodeProvider.getNumberOfEventProperties(this.connectedClient.getClient());
 
     if (this.opcUaAdapterConfig.inPullMode()) {
       this.pullAdapterScheduler = new PullAdapterScheduler();
@@ -233,12 +229,12 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   @Override
   public StaticProperty resolveConfiguration(String staticPropertyInternalName,
                                              IStaticPropertyExtractor extractor) throws SpConfigurationException {
-    return OpcUaUtil.resolveConfig(clientProvider, staticPropertyInternalName, extractor);
+    return OpcUaUtils.resolveConfig(clientProvider, staticPropertyInternalName, extractor);
   }
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    var builder = AdapterConfigurationBuilder.create(ID, 4, () -> new OpcUaAdapter(clientProvider))
+    var builder = AdapterConfigurationBuilder.create(ID, 5, () -> new OpcUaAdapter(clientProvider))
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .withCategory(AdapterType.Generic, AdapterType.Manufacturing)
@@ -248,6 +244,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
             ),
             Alternatives.from(Labels.withId(SUBSCRIPTION_MODE)));
     SharedUserConfiguration.appendSharedOpcUaConfig(builder, true);
+    builder.requiredStaticProperty(SharedUserConfiguration.makeNamingStrategyOption());
     return builder.buildConfiguration();
   }
 
@@ -255,6 +252,6 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
                                        IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    return getSchema(clientProvider, extractor);
+    return new OpcUaSchemaProvider().getSchema(clientProvider, extractor);
   }
 }

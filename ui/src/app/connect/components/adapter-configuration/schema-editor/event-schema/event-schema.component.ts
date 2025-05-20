@@ -21,6 +21,7 @@ import {
     EventEmitter,
     Input,
     OnChanges,
+    OnDestroy,
     Output,
     SimpleChanges,
     ViewChild,
@@ -44,13 +45,14 @@ import { TransformationRuleService } from '../../../../services/transformation-r
 import { StaticValueTransformService } from '../../../../services/static-value-transform.service';
 import { IdGeneratorService } from '../../../../../core-services/id-generator/id-generator.service';
 import { SemanticType } from '@streampipes/platform-services';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
     selector: 'sp-event-schema',
     templateUrl: './event-schema.component.html',
     styleUrls: ['./event-schema.component.scss'],
 })
-export class EventSchemaComponent implements OnChanges {
+export class EventSchemaComponent implements OnChanges, OnDestroy {
     constructor(
         private restService: RestService,
         private transformationRuleService: TransformationRuleService,
@@ -105,6 +107,9 @@ export class EventSchemaComponent implements OnChanges {
     desiredPreview: Record<string, any>;
     fieldStatusInfo: Record<string, FieldStatusInfo>;
 
+    progress = 0;
+    progressSub: Subscription;
+
     options: ITreeOptions = {
         childrenField: 'eventProperties',
         allowDrag: () => {
@@ -136,8 +141,26 @@ export class EventSchemaComponent implements OnChanges {
     public guessSchema(): void {
         this.isLoading = true;
         this.isError = false;
+
+        this.progress = 0;
+
+        const duration = 18000;
+        const tickRate = 150;
+        const totalTicks = duration / tickRate;
+        let tick = 0;
+
+        this.progressSub = interval(tickRate).subscribe(() => {
+            tick++;
+            this.progress = (tick / totalTicks) * 100;
+
+            if (tick >= totalTicks) {
+                this.stopProgress();
+            }
+        });
+
         this.restService.getGuessSchema(this.adapterDescription).subscribe(
             guessSchema => {
+                this.progress = 100;
                 this.eventPreview = guessSchema.eventPreview;
                 this.fieldStatusInfo = guessSchema.fieldStatusInfo;
                 this.targetSchema = guessSchema.targetSchema;
@@ -151,7 +174,7 @@ export class EventSchemaComponent implements OnChanges {
 
                 this.isEditable = true;
                 this.isEditableChange.emit(true);
-                this.isLoading = false;
+                this.stopProgress();
                 this.refreshedEventSchema = true;
                 this.refreshTree();
                 if (
@@ -164,10 +187,17 @@ export class EventSchemaComponent implements OnChanges {
             errorMessage => {
                 this.errorMessage = errorMessage.error;
                 this.isError = true;
-                this.isLoading = false;
+                this.stopProgress();
                 this.targetSchema = new EventSchema();
             },
         );
+    }
+
+    private stopProgress() {
+        this.progress = 100;
+        this.isLoading = false;
+        this.progressSub?.unsubscribe();
+        this.progress = 0;
     }
 
     public refreshTree(refreshPreview = true): void {
@@ -342,5 +372,9 @@ export class EventSchemaComponent implements OnChanges {
 
     get tree(): TreeComponent {
         return this._tree;
+    }
+
+    ngOnDestroy() {
+        this.progressSub?.unsubscribe();
     }
 }

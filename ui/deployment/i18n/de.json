@@ -155,6 +155,7 @@
   "Edit chart": "Diagramm bearbeiten",
   "Manage permissions": "Berechtigungen verwalten",
   "Delete chart": "Diagramm löschen",
+  "Clone chart": "Diagramm kopieren",
   "Chart Name": "Diagrammname",
   "Save": "Speichern",
   "Discard": "Verwerfen",
@@ -410,5 +411,6 @@
   "30 min": "30 Minuten",
   "Error Details": "Fehler-Details",
   "Resources": "Ressourcen",
-  "All {{allResourcesAlias}}": "Alle {{allResourcesAlias}}"
+  "All {{allResourcesAlias}}": "Alle {{allResourcesAlias}}",
+  "{{ widgetTitle }} Clone": "{{ widgetTitle }} Kopie"
 }

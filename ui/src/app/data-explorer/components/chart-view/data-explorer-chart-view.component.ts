@@ -156,6 +156,10 @@ export class DataExplorerChartViewComponent
 
     saveDataView(): void {
         this.dataView.timeSettings = this.timeSettings;
+        this.dataView.metadata ??= {
+            lastModifiedEpochMs: undefined,
+            createdAtEpochMs: undefined,
+        };
         this.dataView.metadata.lastModifiedEpochMs = Date.now();
         const observable =
             this.dataView.elementId !== undefined

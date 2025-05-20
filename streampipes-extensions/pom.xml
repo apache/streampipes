@@ -64,6 +64,7 @@
         <module>streampipes-connectors-plc</module>
         <module>streampipes-extensions-iiot-minimal</module>
         <module>streampipes-connectors-ros</module>
+        <module>streampipes-processors-llm-jvm</module>
     </modules>
 
     <properties>

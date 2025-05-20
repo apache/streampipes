@@ -20,7 +20,6 @@ package org.apache.streampipes.connect.shared.preprocessing.convert;
 
 import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
 import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
-import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
@@ -54,11 +53,6 @@ public class ToOriginalSchemaConverter implements ITransformationRuleVisitor, Pr
 
   public ToOriginalSchemaConverter(List<EventProperty> properties) {
     this.properties = new Cloner().properties(properties);
-  }
-
-  @Override
-  public void visit(CreateNestedRuleDescription rule) {
-    properties.removeIf(p -> p.getRuntimeName().equals(rule.getRuntimeKey()));
   }
 
   @Override

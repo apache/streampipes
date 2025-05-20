@@ -27,7 +27,6 @@ import {
     ExistingNotification,
     NotificationItem,
 } from './model/notifications.model';
-import { ElementIconText } from '../services/get-element-icon-text.service';
 import { NotificationsService } from './service/notifications.service';
 import { Subscription, timer } from 'rxjs';
 import { NotificationUtils } from './utils/notifications.utils';
@@ -35,6 +34,7 @@ import { NotificationCountService } from '../services/notification-count-service
 import {
     FreeTextStaticProperty,
     Pipeline,
+    PipelineElementIconTextService,
     PipelineService,
 } from '@streampipes/platform-services';
 import { AuthService } from '../services/auth.service';
@@ -77,7 +77,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     constructor(
         private authService: AuthService,
         private pipelineService: PipelineService,
-        public elementIconText: ElementIconText,
+        public elementIconText: PipelineElementIconTextService,
         private notificationService: NotificationsService,
         private notificationCountService: NotificationCountService,
         private breadcrumbService: SpBreadcrumbService,

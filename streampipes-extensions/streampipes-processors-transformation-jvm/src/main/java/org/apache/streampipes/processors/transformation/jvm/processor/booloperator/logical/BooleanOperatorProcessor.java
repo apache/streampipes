@@ -74,8 +74,9 @@ public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
             BooleanOperatorType.NOR.operator()))
         .outputStrategy(OutputStrategies.append(
             PrimitivePropertyBuilder.create(
-                    Datatypes.String, BOOLEAN_PROCESSOR_OUT_KEY)
-                .build()))
+                    Datatypes.Boolean, BOOLEAN_PROCESSOR_OUT_KEY)
+                .build())
+        )
         .build();
   }
 
