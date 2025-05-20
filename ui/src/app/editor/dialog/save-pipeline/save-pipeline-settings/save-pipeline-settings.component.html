@@ -29,7 +29,38 @@
                     (blur)="triggerTutorial()"
                 />
                 <mat-error
-                    >Pipeline name must have between 3 and 40 characters.
+                    *ngIf="
+                        submitPipelineForm
+                            .get('pipelineName')
+                            .hasError('required') ||
+                        submitPipelineForm
+                            .get('pipelineName')
+                            .hasError('whiteSpaceOnly')
+                    "
+                >
+                    Pipeline name is required.
+                </mat-error>
+                <mat-error
+                    *ngIf="
+                        submitPipelineForm
+                            .get('pipelineName')
+                            .hasError('minlength') ||
+                        submitPipelineForm
+                            .get('pipelineName')
+                            .hasError('maxlength')
+                    "
+                >
+                    Pipeline name must have between 3 and 50 characters.
+                </mat-error>
+                <mat-error
+                    *ngIf="
+                        submitPipelineForm
+                            .get('pipelineName')
+                            .hasError('invalidName')
+                    "
+                >
+                    Pipeline name can only contain letters, numbers, dashes (-),
+                    and underscores (_).
                 </mat-error>
             </mat-form-field>
             <mat-form-field fxFlex color="accent">

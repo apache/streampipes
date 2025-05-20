@@ -29,6 +29,7 @@ import {
     PipelineService,
 } from '@streampipes/platform-services';
 import { PipelineStorageOptions } from '../../../model/editor.model';
+import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
 
 @Component({
     selector: 'sp-save-pipeline-settings',
@@ -61,7 +62,8 @@ export class SavePipelineSettingsComponent implements OnInit {
             new UntypedFormControl(this.pipeline.name, [
                 Validators.required,
                 Validators.minLength(3),
-                Validators.maxLength(40),
+                Validators.maxLength(50),
+                ValidateName(),
             ]),
         );
         this.submitPipelineForm.addControl(
