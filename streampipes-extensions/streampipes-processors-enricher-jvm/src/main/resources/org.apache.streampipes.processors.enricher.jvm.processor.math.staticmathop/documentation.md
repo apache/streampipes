@@ -16,7 +16,7 @@
   ~
   -->
 
-## Static Math
+## Static Math Operation
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -25,26 +25,87 @@
 ***
 
 ## Description
-
-Performs calculation on an event property with a static value (+, -, *, /, %).
+The Static Math Operation processor performs arithmetic calculations between a numerical field and a static value. It:
+* Supports basic arithmetic operations (+, -, *, /, %)
+* Works with any numerical field type
+* Uses a configurable static value as one operand
+* Updates the input field with the calculation result
+* Preserves other event fields
 
 ***
 
-## Required input
-The math processor works with any event that has at least one field containing a numerical value.
+## Required Input
+The processor requires an input event stream containing at least one numerical field to perform calculations on.
 
 ***
 
 ## Configuration
 
-### Left operand
-The field from the input event that should be used as the left operand.
+### Left Operand
+Select the field from the input event that should be used as the left operand in the calculation.
 
-### Right operand value
-Specify the value of the right operand.
+### Right Operand Value
+Specify the static numerical value that should be used as the right operand in the calculation.
 
 ### Operation
-The math operation that should be performed.
+Choose one of the following arithmetic operations:
+* Addition (+)
+* Subtraction (-)
+* Multiplication (*)
+* Division (/)
+* Modulo (%)
 
 ## Output
-The processor appends the calculation result to each input event.
+The processor updates the selected input field with the result of the arithmetic operation.
+
+### Example
+
+#### Input Event
+```json
+{
+  "temperature": 25.5,
+  "timestamp": 1586380105115
+}
+```
+
+#### Configuration
+* Left Operand: `temperature`
+* Right Operand Value: `2.0`
+* Operation: `*`
+
+#### Output Event
+```json
+{
+  "temperature": 51.0,
+  "timestamp": 1586380105115
+}
+```
+
+## Use Cases
+
+1. **Unit Conversion**
+   * Converting between measurement units
+   * Scaling values
+   * Normalizing data
+   * Applying conversion factors
+
+2. **Data Transformation**
+   * Applying constant offsets
+   * Scaling measurements
+   * Adjusting values
+   * Normalizing ranges
+
+3. **Signal Processing**
+   * Amplifying signals
+   * Attenuating values
+   * Applying gains
+   * Signal conditioning
+
+## Notes
+
+* The processor updates the input field directly
+* All calculations are performed using double-precision floating-point arithmetic
+* Division by zero will result in an error
+* The modulo operation works with floating-point numbers
+* The original field name is preserved
+* Other event fields remain unchanged
