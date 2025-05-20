@@ -24,49 +24,89 @@
 
 ***
 
-## Overview
+## Description
 
-The "Datetime From String" processor is a handy tool that helps convert human-readable datetime information into a
-format that machines can understand. This is particularly useful when dealing with data that includes dates and times.
+The Datetime From String processor converts string timestamps into millisecond timestamps. It supports:
+* ISO 8601 format parsing
+* Timezone handling
+* String to millisecond conversion
+* Automatic timezone application
 
-### Why Use This Processor?
-
-In the context of event streams, you may encounter dates and times formatted for human readability but not necessarily
-optimized for computer processing. The "Datetime From String" processor addresses this by facilitating the conversion
-of human-readable datetime information within your continuous stream of events.
-
-***
-
-## How It Works
-
-When you input a data stream into this processor containing a datetime in a specific format (such as "2023-11-24 15:30:
-00"), it
-undergoes a transformation. The processor converts it into a computer-friendly format called a ZonedDateTime object.
-
-### Example
-
-Let's say you have an event stream with a property containing values like "2023-11-24 15:30:00" and you want to make
-sure your computer understands it. You can use
-this processor to convert it into a format that's machine-friendly.
+This processor is essential for:
+* Converting timestamps to milliseconds
+* Standardizing date formats
+* Handling timezone conversions
+* Processing ISO 8601 dates
 
 ***
 
-## Getting Started
+## Required input
 
-To use this processor, you need one thing in your data:
+The processor requires a data stream containing at least one string field with a timestamp in ISO 8601 format.
 
-1. **Datetime String**: This is the name of the event property that contains the human-readable datetime string, like "2023-11-24 15:30:00".
+***
 
+## Configuration
 
-### Configuration
+### DateTime String
 
-The only thing you need to configure is the time zone.
-1. **Time Zone**: Specify the time zone that applies to your datetime if it doesn't already have this information.This ensures that the processor understands the context of your
-datetime.
+Select the field containing the timestamp string. The string should be in ISO 8601 format (e.g., '2023-11-29T18:30:22' or '2023-11-29T18:30:22+01:00').
+
+### Time Zone
+
+Select the timezone for the input timestamp. This is used when the timestamp string doesn't include timezone information. If the input string already contains timezone information, this setting is ignored.
 
 ## Output
 
-After the conversion happens, the processor adds a new piece of information to your data stream:
+The processor creates a new event containing:
+* All original fields from the input event
+* A new field named "timestringInMillis" containing the timestamp in milliseconds since epoch
+* A new field named "timeZone" containing the selected timezone
 
-* **timestringInMillis**: This is the transformed datetime in a format that computers can easily work with (UNIX timestamp in milliseconds).
-* **timeZone**: The name of the timezone the `dateTime` value refers to. Can be used to reconstitute the actual time.
+### Example
+
+#### Input Event
+```json
+{
+  "deviceId": "sensor01",
+  "timestamp": "2023-11-29T18:30:22",
+  "value": 23.5
+}
+```
+
+#### Configuration
+* DateTime String: timestamp
+* Time Zone: UTC
+
+#### Output Event
+```json
+{
+  "deviceId": "sensor01",
+  "timestamp": "2023-11-29T18:30:22",
+  "value": 23.5,
+  "timestringInMillis": 1701279022000,
+  "timeZone": "UTC"
+}
+```
+
+## Use Cases
+
+1. **Data Standardization**
+   * Convert timestamps to milliseconds
+   * Standardize date formats
+   * Handle timezone conversions
+   * Process ISO 8601 dates
+
+2. **System Integration**
+   * Map timestamps to milliseconds
+   * Convert between timezones
+   * Standardize date formats
+   * Process time-based data
+
+## Notes
+
+* Input must be in ISO 8601 format
+* Timezone in input string takes precedence over selected timezone
+* Invalid formats will cause processing errors
+* Processing is stateless
+* Output is always in milliseconds since epoch
