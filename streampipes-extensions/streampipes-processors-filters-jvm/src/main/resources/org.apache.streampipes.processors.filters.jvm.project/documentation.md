@@ -25,18 +25,78 @@
 ***
 
 ## Description
-Outputs a selectable subset of an input event type.
+The Projection processor allows you to select a subset of fields from input events, creating a new event with only the specified fields. This processor is essential for:
+* Reducing data volume
+* Focusing on relevant fields
+* Data privacy
+* Stream optimization
 
 ***
 
-## Required input
-The project processor works with any input event stream.
+## Required Input
+The processor works with any input event stream containing one or more fields.
 
 ***
 
 ## Configuration
-
-(no further configuration required)
+At pipeline development time, you can select which fields to include in the output event.
 
 ## Output
-The output depends on the fields selected at pipeline development time.
+The processor creates a new event containing only the selected fields from the input event.
+
+### Example
+
+#### Input Event
+```json
+{
+  "temperature": 25.5,
+  "humidity": 60,
+  "pressure": 1013,
+  "timestamp": 1586380104915,
+  "device_id": "sensor_001",
+  "location": "room_101"
+}
+```
+
+#### Configuration
+Selected fields:
+* temperature
+* humidity
+* timestamp
+
+#### Output Event
+```json
+{
+  "temperature": 25.5,
+  "humidity": 60,
+  "timestamp": 1586380104915
+}
+```
+
+## Use Cases
+
+1. **Data Volume Reduction**
+   * Remove unnecessary fields
+   * Reduce network bandwidth
+   * Optimize storage
+   * Improve processing speed
+
+2. **Data Privacy**
+   * Remove sensitive fields
+   * Anonymize data
+   * Control data exposure
+   * Comply with regulations
+
+3. **Stream Optimization**
+   * Focus on relevant data
+   * Reduce downstream processing
+   * Improve pipeline efficiency
+   * Optimize resource usage
+
+## Notes
+
+* The processor preserves the original values of selected fields
+* Fields not selected are completely removed from the output
+* The order of fields in the output may differ from the input
+* All field types are supported
+* The processor can handle any number of fields

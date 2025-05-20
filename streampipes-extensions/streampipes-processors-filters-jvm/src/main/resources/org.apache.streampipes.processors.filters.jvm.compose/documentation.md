@@ -25,20 +25,93 @@
 ***
 
 ## Description
+The Compose processor merges two event streams by combining their properties. It supports:
+* Real-time event stream merging
+* Last-event state tracking
+* Custom output field selection
+* Dynamic event composition
+* Stateful event processing
 
-Merges two event streams. Any time, a new input event arrives, it is merged with the last input event from the other 
-event stream and forwarded.
+This processor is essential for:
+* Combining data from multiple sources
+* Creating unified event views
+* Merging related event streams
+* Building composite event structures
 
 ***
 
-## Required input
-The Compose processor does not have any specific input requirements.
+## Required Input
+The processor requires two input streams:
+* First stream: Any event stream with at least one property
+* Second stream: Any event stream with at least one property
 
 ***
 
 ## Configuration
 
-(no further configuration required)
+### Output Selection
+During pipeline modeling, you can select which fields from each stream should be included in the output event. The processor will:
+* Keep the last event from each stream in memory
+* Merge selected fields when new events arrive
+* Forward the combined event with selected fields
 
 ## Output
-The compose processor has a configurable output that can be selected by the user at pipeline modeling time.
+The processor creates a new event containing the selected fields from both input streams. The output is generated whenever:
+* A new event arrives from either stream
+* The last event from the other stream is available
+
+### Example
+
+#### Input Event Stream 1
+```json
+{
+  "deviceId": "sensor01",
+  "temperature": 25.5,
+  "timestamp": 1586380104915
+}
+```
+
+#### Input Event Stream 2
+```json
+{
+  "location": "room1",
+  "humidity": 45.2,
+  "timestamp": 1586380104915
+}
+```
+
+#### Configuration
+* Output Fields: deviceId, temperature, location, humidity
+
+#### Output Event
+```json
+{
+  "deviceId": "sensor01",
+  "temperature": 25.5,
+  "location": "room1",
+  "humidity": 45.2
+}
+```
+
+## Use Cases
+
+1. **Data Integration**
+   * Combine sensor readings
+   * Merge related metrics
+   * Create unified views
+   * Join event streams
+
+2. **Event Enrichment**
+   * Add context to events
+   * Combine related data
+   * Create composite events
+   * Build rich event structures
+
+## Notes
+
+* Events are merged in real-time
+* Last event state is maintained
+* Output fields are configurable
+* Original event structure is preserved
+* Events are forwarded on any new input
+* State is cleared on pipeline stop
