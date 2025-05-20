@@ -16,7 +16,7 @@
   ~
   -->
 
-## Sequence Detection
+## Sequence Monitor
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -25,5 +25,69 @@
 ***
 
 ## Description
+The Sequence Monitor processor detects when events stop arriving from a stream for a specified duration. It:
+* Monitors event arrival patterns
+* Detects gaps in event sequences
+* Triggers when no events arrive for a specified time
+* Preserves original event data
+* Works with any event stream type
 
-Merges events from two event streams, when the top event arrives first and then the bottom event
+***
+
+## Required Input
+The processor requires an input event stream. It works with any event stream type and does not require specific fields.
+
+***
+
+## Configuration
+
+### Duration
+Specify the time duration (in seconds) to wait for events before triggering. If no events arrive within this duration, the processor will output the last received event.
+
+## Output
+The processor outputs the last received event when no new events arrive for the specified duration.
+
+### Example
+
+#### Input Event
+```json
+{
+  "sensor_id": "sensor1",
+  "temperature": 25.5,
+  "timestamp": 1586380105115
+}
+```
+
+#### Configuration
+* Duration: `60` (seconds)
+
+#### Output Event
+The processor will output the last received event if no new events arrive within 60 seconds.
+
+## Use Cases
+
+1. **Stream Monitoring**
+   * Detect stream interruptions
+   * Monitor data flow continuity
+   * Identify connection issues
+   * Track stream health
+
+2. **Alert Generation**
+   * Trigger alerts on stream stops
+   * Notify on data gaps
+   * Monitor system health
+   * Detect anomalies
+
+3. **Quality Assurance**
+   * Ensure continuous data flow
+   * Monitor data consistency
+   * Track stream reliability
+   * Validate system performance
+
+## Notes
+
+* The processor triggers when no events arrive for the specified duration
+* Original event data is preserved in the output
+* The processor works with any event stream type
+* The duration is specified in seconds
+* The processor outputs the last received event

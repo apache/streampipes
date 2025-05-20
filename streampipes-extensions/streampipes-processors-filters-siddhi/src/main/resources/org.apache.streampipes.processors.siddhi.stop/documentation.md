@@ -18,33 +18,81 @@
 
 ## Stream Stop Detection
 
+<p align="center"> 
+    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
+</p>
+
 ***
 
 ## Description
-
-Triggers an event when the input data stream stops sending events
+The Stream Stop Detection processor monitors an input stream and triggers an event when no new events arrive for a specified duration. It:
+* Detects stream interruptions
+* Monitors event arrival patterns
+* Triggers alerts on stream stops
+* Provides timestamp of detection
+* Works with any event stream type
 
 ***
 
-## Required input
-
-Does not have any specific input requirements.
+## Required Input
+The processor works with any input event stream and does not require specific fields.
 
 ***
 
 ## Configuration
 
 ### Time Window Length (Seconds)
-
-Specifies the size of the time window in seconds.
+Specify the duration in seconds to wait for events before triggering the stop detection. If no events arrive within this time window, the processor will output a stop detection event.
 
 ## Output
+The processor outputs an event with a timestamp and a message indicating that the stream has stopped.
 
-Outputs a similar event like below.
+### Example
 
-```
+#### Input Event
+```json
 {
-  'timestamp': 1621243855401,
-  'message': 'Event stream has stopped'  
+  "sensor_id": "sensor1",
+  "temperature": 25.5,
+  "timestamp": 1586380105115
 }
 ```
+
+#### Configuration
+* Time Window Length: `60` (seconds)
+
+#### Output Event
+```json
+{
+  "timestamp": 1586380165115,
+  "message": "Event stream has stopped"
+}
+```
+
+## Use Cases
+
+1. **System Monitoring**
+   * Detect sensor failures
+   * Monitor data source health
+   * Track stream reliability
+   * Identify connection issues
+
+2. **Alert Generation**
+   * Trigger alerts on stream stops
+   * Notify on data gaps
+   * Monitor system health
+   * Detect anomalies
+
+3. **Quality Assurance**
+   * Ensure continuous data flow
+   * Monitor data consistency
+   * Track stream reliability
+   * Validate system performance
+
+## Notes
+
+* The processor triggers when no events arrive for the specified duration
+* The output includes a timestamp of when the stop was detected
+* The processor works with any event stream type
+* The time window is specified in seconds
+* The processor provides a clear message indicating stream stop
