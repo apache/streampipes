@@ -16,7 +16,7 @@
   ~
   -->
 
-## Enrich By Merging 
+## Merge By Enrich
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -25,17 +25,94 @@
 ***
 
 ## Description
-Merges two data streams by enriching one of the streams with the properties of the other stream. The output frequency is the same as the frequency of the stream which is enriched.
+The Merge By Enrich processor combines two event streams by enriching one stream with properties from the other. It supports:
+* Real-time event stream enrichment
+* Last-event state tracking
+* Custom output field selection
+* Dynamic event composition
+* Stateful event processing
+
+This processor is essential for:
+* Enriching events with additional context
+* Combining related data streams
+* Creating unified event views
+* Building composite event structures
+
 ***
 
-## Required input
-None
+## Required Input
+The processor requires two input streams:
+* First stream: Any event stream with at least one property
+* Second stream: Any event stream with at least one property
+
 ***
 
 ## Configuration
 
-* Select the stream which should be enriched with the properties of the other stream.
-  * The last event of the stream is hold in state and each event of the other stream is enriched by the properties the user selected
+### Stream Selection
+During pipeline modeling, you can:
+* Select which stream should be enriched (Stream 1 or Stream 2)
+* Choose which fields from each stream should be included in the output
+* The processor will maintain the event frequency of the selected stream
 
 ## Output
-The compose processor has a configurable output that can be selected by the user at pipeline modeling time.
+The processor creates a new event containing the selected fields from both input streams. The output is generated whenever:
+* A new event arrives from the selected stream
+* The last event from the other stream is available
+
+### Example
+
+#### Input Event Stream 1
+```json
+{
+  "deviceId": "sensor01",
+  "temperature": 25.5,
+  "timestamp": 1586380104915
+}
+```
+
+#### Input Event Stream 2
+```json
+{
+  "location": "room1",
+  "humidity": 45.2,
+  "timestamp": 1586380104915
+}
+```
+
+#### Configuration
+* Selected Stream: Stream 1
+* Output Fields: deviceId, temperature, location, humidity
+
+#### Output Event
+```json
+{
+  "deviceId": "sensor01",
+  "temperature": 25.5,
+  "location": "room1",
+  "humidity": 45.2
+}
+```
+
+## Use Cases
+
+1. **Event Enrichment**
+   * Add context to sensor readings
+   * Combine related metrics
+   * Create unified views
+   * Join event streams
+
+2. **Data Integration**
+   * Merge sensor data
+   * Combine related events
+   * Create composite events
+   * Build rich event structures
+
+## Notes
+
+* Events are enriched in real-time
+* Last event state is maintained
+* Output fields are configurable
+* Original event structure is preserved
+* Events are forwarded at the frequency of the selected stream
+* State is cleared on pipeline stop

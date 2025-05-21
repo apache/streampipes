@@ -67,13 +67,7 @@ import { PipelineElementTemplatePipe } from './pipeline-element-template-config/
 import { StatusWidgetComponent } from './status/status-widget.component';
 import { SpSimpleMetricsComponent } from './monitoring/simple-metrics/simple-metrics.component';
 import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.component';
-import { HelpComponent } from './help/help.component';
-import { PipelineElementRuntimeInfoComponent } from './pipeline-element-runtime-info/pipeline-element-runtime-info.component';
-import { PipelineElementDocumentationComponent } from './pipeline-element-documentation/pipeline-element-documentation.component';
-import { MarkdownModule } from 'ngx-markdown';
-import { LivePreviewLoadingComponent } from './pipeline-element-runtime-info/live-preview-loading/live-preview-loading.component';
-import { LivePreviewTableComponent } from './pipeline-element-runtime-info/live-preview-table/live-preview-table.component';
-import { LivePreviewErrorComponent } from './pipeline-element-runtime-info/live-preview-error/live-preview-error.component';
+//import { HelpComponent } from '../../../projects/streampipes/shared-ui/src/lib/dialog/pipeline-element-help/help.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -162,7 +156,6 @@ import { TranslateModule } from '@ngx-translate/core';
         OverlayModule,
         QuillModule.forRoot(),
         MatTreeModule,
-        MarkdownModule.forRoot(),
         TranslateModule.forChild(),
         LeafletModule,
     ],
@@ -173,9 +166,6 @@ import { TranslateModule } from '@ngx-translate/core';
         PipelineElementTemplateConfigComponent,
         PipelineElementTemplateConfigItemComponent,
         PipelineElementTemplatePipe,
-        PipelineElementRuntimeInfoComponent,
-        PipelineElementDocumentationComponent,
-        HelpComponent,
         TopicsComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,
@@ -207,9 +197,6 @@ import { TranslateModule } from '@ngx-translate/core';
         SpSimpleLogsComponent,
         SpSimpleMetricsComponent,
         StatusWidgetComponent,
-        LivePreviewLoadingComponent,
-        LivePreviewTableComponent,
-        LivePreviewErrorComponent,
         LoadingIndicatorComponent,
         StatusIndicatorComponent,
         MultiStepStatusIndicatorComponent,
@@ -221,9 +208,6 @@ import { TranslateModule } from '@ngx-translate/core';
     exports: [
         ConfigurationCodePanelComponent,
         PipelineElementTemplateConfigComponent,
-        PipelineElementRuntimeInfoComponent,
-        PipelineElementDocumentationComponent,
-        HelpComponent,
         TopicsComponent,
         StaticAnyInputComponent,
         StaticPropertyComponent,

@@ -17,33 +17,40 @@
  */
 
 import { Component, Input, OnInit, inject } from '@angular/core';
-import { SpDataStream } from '@streampipes/platform-services';
-import { DialogRef } from '@streampipes/shared-ui';
-import { PipelineElementUnion } from '../../editor/model/editor.model';
+import {
+    DataProcessorInvocation,
+    DataSinkInvocation,
+    SpDataStream,
+} from '@streampipes/platform-services';
 import { TranslateService } from '@ngx-translate/core';
+import { DialogRef } from '../base-dialog/dialog-ref';
 
 @Component({
     selector: 'sp-pipeline-element-help',
-    templateUrl: './help.component.html',
-    styleUrls: ['./help.component.scss'],
+    templateUrl: './pipeline-element-help.component.html',
+    styleUrls: ['./pipeline-element-help.component.scss'],
 })
-export class HelpComponent implements OnInit {
+export class PipelineElementHelpComponent implements OnInit {
     selectedTabIndex = 0;
 
     translateService = inject(TranslateService);
 
     availableTabs = [
-        this.translateService.instant('TOPICS'),
-        this.translateService.instant('CODE'),
+        this.translateService.instant('Preview'),
+        this.translateService.instant('Documentation'),
     ];
 
     tabs: string[] = [];
 
     @Input()
-    pipelineElement: PipelineElementUnion;
+    pipelineElement:
+        | SpDataStream
+        | DataProcessorInvocation
+        | DataSinkInvocation;
+
     isDataStream: boolean;
 
-    constructor(private dialogRef: DialogRef<HelpComponent>) {}
+    constructor(private dialogRef: DialogRef<PipelineElementHelpComponent>) {}
 
     ngOnInit() {
         if (this.pipelineElement instanceof SpDataStream) {

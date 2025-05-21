@@ -26,39 +26,116 @@
 
 ## Description
 
-This processor can be used to measure the time between two boolean sensors.
-For example on a conveyor, where one sensor is placed on the left and one senor placed on the right.
-Parts are transported on the conveyor and the sensors are boolean sensors detecting those parts.
-The time is measured between the two sensors as well as the amount of complete transportation's is counted.
-The measurement is initialized once the left sensor is true and stopped once the right sensor is true.
-There can also be multiple parts on the conveyor as long as the individual parts do not change.
+The Measure Time Between Two Sensors processor calculates the time difference between two boolean signals. It supports:
+* Signal timing measurement
+* Event sequence tracking
+* Time difference calculation
+* Signal counting
+* Multiple time units (milliseconds, seconds, minutes)
 
-
-<p align="center">
-    <img src="time_measure_example.png" width="300px;" class="pe-image-documentation"/>
-</p>
+This processor is essential for:
+* Measuring process times
+* Tracking signal sequences
+* Analyzing delays
+* Monitoring performance
 
 ***
 
 ## Required input
-Requires two boolean fields in the datastream.
 
-### Left Field
-The left field starts the timer when value is true.
-
-### Right Field
-The right field stops the timer and emits the event when its value is true.
+The processor requires a data stream containing:
+* A left boolean field (start signal)
+* A right boolean field (end signal)
 
 ***
 
 ## Configuration
-No furhter configuration is required.
+
+### Left Field
+
+Select the boolean field that starts the timer. This signal marks the beginning of the time measurement.
+
+### Right Field
+
+Select the boolean field that ends the timer. This signal triggers the output event with the measured time.
+
+### Output Unit
+
+Choose the time unit for the output:
+* **Milliseconds**: Raw time difference
+* **Seconds**: Time difference divided by 1000
+* **Minutes**: Time difference divided by 60000
 
 ## Output
-Appends two fields to the input event.
 
-### Timer Field
-The timer field is a numeric value representing the time between the two sensors. Runtime name: measured_time
+The processor creates a new event containing:
+* All original fields from the input event
+* A "measured_time" field showing the time between signals in the selected unit
+* A "counter" field showing the number of completed measurements
 
-### Counter
-The counter indicated how many events where emitted by this component. Runtime name: counter
+### Example
+
+#### Input Event Stream
+```json
+[
+  {
+    "deviceId": "machine01",
+    "timestamp": 1586380104915,
+    "startSignal": false,
+    "endSignal": false
+  },
+  {
+    "deviceId": "machine01",
+    "timestamp": 1586380105015,
+    "startSignal": true,
+    "endSignal": false
+  },
+  {
+    "deviceId": "machine01",
+    "timestamp": 1586380105115,
+    "startSignal": true,
+    "endSignal": true
+  }
+]
+```
+
+#### Configuration
+* Left Field: startSignal
+* Right Field: endSignal
+* Output Unit: Seconds
+
+#### Output Event
+```json
+{
+  "deviceId": "machine01",
+  "timestamp": 1586380105115,
+  "startSignal": true,
+  "endSignal": true,
+  "measured_time": 1.0,
+  "counter": 1
+}
+```
+
+## Use Cases
+
+1. **Process Timing**
+   * Measure process cycle times
+   * Track signal sequences
+   * Analyze delays
+   * Monitor performance
+
+2. **Performance Analysis**
+   * Measure response times
+   * Track operation sequences
+   * Analyze system delays
+   * Monitor equipment performance
+
+## Notes
+
+* Only boolean fields can be monitored
+* Processing is stateful
+* Time measurement is based on system time
+* Counter resets at Long.MAX_VALUE
+* Multiple start signals are buffered
+* Output is triggered by end signal
+* Original event fields are preserved

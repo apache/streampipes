@@ -16,11 +16,15 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
-import { RestApi } from '../../../services/rest-api.service';
-import { ElementIconText } from '../../../services/get-element-icon-text.service';
-import { PipelineElementUnion } from '../../model/editor.model';
+import { Component, inject, Input } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {
+    DataProcessorInvocation,
+    DataSinkInvocation,
+    PipelineElementAssetService,
+    PipelineElementIconTextService,
+    SpDataStream,
+} from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-pipeline-element',
@@ -31,7 +35,10 @@ export class PipelineElementComponent {
     showImage: any;
     iconText: any;
 
-    pipelineElement_: PipelineElementUnion;
+    pipelineElement_:
+        | SpDataStream
+        | DataProcessorInvocation
+        | DataSinkInvocation;
 
     @Input()
     iconSize: any;
@@ -42,11 +49,11 @@ export class PipelineElementComponent {
     iconUrl: any;
     image: SafeUrl;
 
-    constructor(
-        private restApi: RestApi,
-        private elementIconText: ElementIconText,
-        private sanitizer: DomSanitizer,
-    ) {}
+    private pipelineElementAssetService = inject(PipelineElementAssetService);
+    private pipelineElementIconTextService = inject(
+        PipelineElementIconTextService,
+    );
+    private sanitizer = inject(DomSanitizer);
 
     checkImageAvailable() {
         if (
@@ -63,7 +70,11 @@ export class PipelineElementComponent {
     }
 
     makeAssetIconUrl() {
-        return this.restApi.getAssetUrl(this.pipelineElement.appId) + '/icon';
+        return (
+            this.pipelineElementAssetService.getAssetUrl(
+                this.pipelineElement.appId,
+            ) + '/icon'
+        );
     }
 
     iconSizeCss() {
@@ -81,9 +92,14 @@ export class PipelineElementComponent {
     }
 
     @Input()
-    set pipelineElement(pipelineElement: PipelineElementUnion) {
+    set pipelineElement(
+        pipelineElement:
+            | SpDataStream
+            | DataProcessorInvocation
+            | DataSinkInvocation,
+    ) {
         this.pipelineElement_ = pipelineElement;
-        this.iconText = this.elementIconText.getElementIconText(
+        this.iconText = this.pipelineElementIconTextService.getElementIconText(
             this.pipelineElement.name,
         );
         this.checkImageAvailable();

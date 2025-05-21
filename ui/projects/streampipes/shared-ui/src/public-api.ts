@@ -26,6 +26,7 @@ export * from './lib/dialog/data-download-dialog/data-download-dialog.component'
 export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
 export * from './lib/dialog/panel-dialog/panel-dialog.component';
 export * from './lib/dialog/standard-dialog/standard-dialog.component';
+export * from './lib/dialog/pipeline-element-help/pipeline-element-help.component';
 
 export * from './lib/components/asset-browser/asset-browser.component';
 export * from './lib/components/basic-header-title/header-title.component';
@@ -47,6 +48,10 @@ export * from './lib/components/time-selector/time-range-selector.component';
 export * from './lib/components/time-selector/time-selector-menu/time-selector-menu.component';
 export * from './lib/components/time-selector/time-selector-menu/custom-time-range-selection/custom-time-range-selection.component';
 export * from './lib/components/time-selector/refresh-interval-settings/refresh-interval-settings.component';
+export * from './lib/components/pipeline-element-runtime-info/pipeline-element-runtime-info.component';
+export * from './lib/components/pipeline-element-documentation/pipeline-element-documentation.component';
+export * from './lib/components/pipeline-element/pipeline-element.component';
+export * from './lib/components/input-schema-panel/input-schema-panel.component';
 
 export * from './lib/models/sp-navigation.model';
 
@@ -58,3 +63,4 @@ export * from './lib/services/colorization.service';
 export * from './lib/services/time-selection.service';
 export * from './lib/components/asset-browser/asset-browser.service';
 export * from './lib/services/date-format.service';
+export * from './lib/services/pipeline-element-schema.service';

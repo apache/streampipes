@@ -16,7 +16,7 @@
   ~
   -->
 
-## Trigonometry
+## Trigonometry Functions
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -25,26 +25,80 @@
 ***
 
 ## Description
-
-Performs Trigonometric functions (sin, cos, tan) on event properties.
+The Trigonometry Functions processor performs trigonometric calculations on numerical values. It:
+* Supports basic trigonometric functions (sin, cos, tan)
+* Works with any numerical field type
+* Preserves original event data
+* Adds calculation results as new fields
 
 ***
 
-## Required input
-The trigonometry processor works with any event that has at least one field containing a numerical value.
+## Required Input
+The processor requires an input event stream containing at least one numerical field to perform trigonometric calculations on.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
-
 ### Alpha
-The field that should be used for calculating the trigonometric function.
-
+Select the field from the input event that should be used as the angle (in radians) for the trigonometric calculation.
 
 ### Operation
-The trigonometric function that should be calculated.
+Choose one of the following trigonometric functions:
+* **sin**: Calculates the sine of the angle
+* **cos**: Calculates the cosine of the angle
+* **tan**: Calculates the tangent of the angle
 
 ## Output
-The processor appends the calculation result to each input event.
+The processor forwards the input event with an additional field named `trigonometryResult` containing the result of the trigonometric calculation.
+
+### Example
+
+#### Input Event
+```json
+{
+  "angle": 1.57,
+  "timestamp": 1586380105115
+}
+```
+
+#### Configuration
+* Alpha: `angle`
+* Operation: `sin`
+
+#### Output Event
+```json
+{
+  "angle": 1.57,
+  "timestamp": 1586380105115,
+  "trigonometryResult": 0.9999996829318346
+}
+```
+
+## Use Cases
+
+1. **Signal Processing**
+   * Waveform analysis
+   * Signal filtering
+   * Phase calculations
+   * Frequency analysis
+
+2. **Geometric Calculations**
+   * Angle conversions
+   * Distance calculations
+   * Position tracking
+   * Navigation systems
+
+3. **Scientific Computing**
+   * Physics simulations
+   * Engineering calculations
+   * Mathematical modeling
+   * Data analysis
+
+## Notes
+
+* Input angles must be in radians
+* Results are stored as double-precision floating-point numbers
+* The original event structure is preserved
+* The calculation is performed for each incoming event
+* The result field is always named `trigonometryResult`

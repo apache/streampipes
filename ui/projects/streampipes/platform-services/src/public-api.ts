@@ -54,6 +54,8 @@ export * from './lib/apis/user.service';
 export * from './lib/apis/user-admin.service';
 export * from './lib/apis/user-group.service';
 export * from './lib/apis/shared-dashboard.service';
+export * from './lib/apis/pipeline-element-runtime-info.service';
+export * from './lib/apis/pipeline-element-asset.service';
 
 export * from './lib/model/datalake/DateRange';
 export * from './lib/model/datalake/DatalakeQueryParameters';
@@ -79,3 +81,5 @@ export * from './lib/model/types/data-type';
 export * from './lib/model/types/semantic-type';
 
 export * from './lib/services/isa95-type.service';
+export * from './lib/services/live-preview.service';
+export * from './lib/services/pipeline-element-icon-text.service';

@@ -35,6 +35,7 @@ import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { TransformationRuleService } from '../../../services/transformation-rule.service';
+import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
 
 @Component({
     selector: 'sp-start-adapter-configuration',
@@ -110,10 +111,12 @@ export class StartAdapterConfigurationComponent implements OnInit {
         this.startAdapterForm = this._formBuilder.group({});
         this.startAdapterForm.addControl(
             'adapterName',
-            new UntypedFormControl(
-                this.adapterDescription.name,
+            new UntypedFormControl(this.adapterDescription.name, [
                 Validators.required,
-            ),
+                Validators.minLength(3),
+                Validators.maxLength(40),
+                ValidateName(),
+            ]),
         );
         this.startAdapterForm.valueChanges.subscribe(
             v => (this.adapterDescription.name = v.adapterName),

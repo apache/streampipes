@@ -26,15 +26,96 @@
 
 ## Description
 
-This processor sends out an event everytime a specific object changes.
-It also adds a timestamp in ms from the system time.
+The Value Changed processor detects changes in field values and outputs events only when changes occur. It supports:
+* Any data type comparison
+* Dimension-based state tracking
+* Change timestamp tracking
+* State size management
+* Multi-dimensional monitoring
+
+This processor is essential for:
+* Detecting value changes
+* Tracking state transitions
+* Monitoring field updates
+* Building change logs
+* Implementing change triggers
+
+***
+
+## Required input
+
+The processor requires a data stream containing at least one field to monitor for changes.
 
 ***
 
 ## Configuration
-Select property to monitor for changes
 
-Describe the configuration parameters here
+### Keep Fields
+
+Select the field to monitor for changes. The processor will output an event only when the selected field's value changes.
 
 ## Output
-Emit an event on change and append a timestamp when the change occured
+
+The processor creates a new event containing:
+* All original fields from the input event
+* A new field named "change_detected" containing the timestamp when the change occurred
+* Only when the monitored field changes value
+
+### Example
+
+#### Input Event Stream
+```json
+{
+  "deviceId": "sensor01",
+  "location": "l1",
+  "value": 12,
+  "timestamp": 1586380104915
+}
+```
+```json
+{
+  "deviceId": "sensor01",
+  "location": "l1",
+  "value": 15,
+  "timestamp": 1586380105015
+}
+```
+
+#### Configuration
+* Keep Fields: value
+
+#### Output Event
+```json
+{
+  "deviceId": "sensor01",
+  "location": "l1",
+  "value": 15,
+  "timestamp": 1586380105015,
+  "change_detected": 1586380105015
+}
+```
+
+## Use Cases
+
+1. **Change Detection**
+   * Monitor value changes
+   * Track state transitions
+   * Detect field updates
+   * Build change logs
+
+2. **State Monitoring**
+   * Track state changes
+   * Monitor transitions
+   * Detect updates
+   * Log changes
+
+## Notes
+
+* Supports any data type
+* Processing is stateful
+* State size limited to 5000 entries
+* Events only emitted on value changes
+* Original fields are preserved
+* Change timestamps are added
+* Dimension-based state tracking
+* Multi-dimensional monitoring supported

@@ -25,23 +25,82 @@
 ***
 
 ## Description
-The Text Filter processor filters text values based on a given string.
+The Text Filter processor filters events based on text field content. It allows you to:
+* Match exact text strings
+* Check for text containment
+* Filter events based on text criteria
+* Route events based on text content
 
 ***
 
-## Required input
-The processor works with any input event that has one field containing a text.
+## Required Input
+The processor requires an input event stream containing at least one text field to filter on.
 
 ***
 
 ## Configuration
 
 ### Text Field
-The field containing the text that should be filtered.
-
+Select the field containing the text that should be filtered.
 
 ### Operation
-The operation used by the filter processor (equals or matches)
+Choose from two filtering operations:
+* **MATCHES**: Exact string matching (case-sensitive)
+* **CONTAINS**: Substring matching (case-sensitive)
+
+### Keyword
+Specify the text string to match against.
 
 ## Output
-The processor outputs the input event if it satisfies the filter expression.
+The processor forwards the input event only if the text field satisfies the filter condition.
+
+### Example
+
+#### Input Event
+```json
+{
+  "message": "Temperature warning: 25.5°C",
+  "timestamp": 1586380104915
+}
+```
+
+#### Configuration
+* Text Field: `message`
+* Operation: `CONTAINS`
+* Keyword: `warning`
+
+#### Output Event
+```json
+{
+  "message": "Temperature warning: 25.5°C",
+  "timestamp": 1586380104915
+}
+```
+
+## Use Cases
+
+1. **Event Routing**
+   * Route events based on text content
+   * Filter log messages
+   * Process specific error messages
+   * Handle different event types
+
+2. **Content Filtering**
+   * Filter text-based alerts
+   * Process specific keywords
+   * Extract relevant messages
+   * Filter notifications
+
+3. **Data Validation**
+   * Validate text content
+   * Ensure required text patterns
+   * Filter invalid messages
+   * Enforce text standards
+
+## Notes
+
+* Text matching is case-sensitive
+* The processor preserves the original event structure
+* No text transformation is performed
+* Events that don't match the filter are dropped
+* The filter operates on the exact text field value
