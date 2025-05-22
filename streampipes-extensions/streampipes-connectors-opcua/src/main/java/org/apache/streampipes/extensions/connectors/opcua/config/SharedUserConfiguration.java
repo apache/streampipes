@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.config;
 
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaNamingStrategy;
 import org.apache.streampipes.extensions.connectors.opcua.utils.SecurityUtils;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.Option;
@@ -54,6 +56,16 @@ public class SharedUserConfiguration {
   public static final String SECURITY_POLICY = "securityPolicy";
   public static final String USER_AUTHENTICATION = "userAuthentication";
   public static final String USER_AUTHENTICATION_ANONYMOUS = "anonymous";
+
+  public static OneOfStaticProperty makeNamingStrategyOption() {
+    return StaticProperties.singleValueSelection(
+        Labels.withId(OpcUaLabels.NAMING_STRATEGY),
+        List.of(
+            OpcUaNamingStrategy.DISPLAY_NAME.toOption(),
+            OpcUaNamingStrategy.BROWSE_NAME.toOption(),
+            OpcUaNamingStrategy.PARSED_NODE_ID.toOption()
+        ));
+  }
 
   public static void appendSharedOpcUaConfig(AbstractConfigurablePipelineElementBuilder<?, ?> builder,
                                              boolean adapterConfig) {

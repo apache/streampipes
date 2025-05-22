@@ -76,7 +76,9 @@
                             class="customize-section p-15"
                         >
                             <sp-input-schema-panel
-                                [pipelineElement]="cachedPipelineElement"
+                                [inputStreams]="
+                                    cachedPipelineElement.inputStreams
+                                "
                             >
                             </sp-input-schema-panel>
                             <form [formGroup]="parentForm" fxFlex="100">

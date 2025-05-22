@@ -18,43 +18,94 @@
 
 ## Count Aggregation
 
-Performs count aggregation with Siddhi CEP engine.
+<p align="center"> 
+    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
+</p>
 
 ***
 
 ## Description
-
-Performs an aggregation based on a given field and outputs the number of occurrences.
-Example: Count the number of vehicle positions per vehicleId.
-The Count aggregation requires a time window, used to perform the count aggregation and a field used to aggregate
-values.
+The Count Aggregation processor performs counting operations on event streams. It:
+* Counts occurrences of values within a configurable time window
+* Groups events by a specified field
+* Provides real-time counting statistics
+* Supports flexible time window configurations
+* Preserves timestamp information
 
 ***
 
-## Required input
-
-Does not have any specific input requirements.
+## Required Input
+The processor requires an input event stream containing:
+* A timestamp field for window-based processing
+* At least one field to count occurrences of
 
 ***
 
 ## Configuration
 
-### FieldToCount    
-Specifies the field containing the values that should be counted.
+### Field to Count
+Select the field from the input event that should be used for counting occurrences. This field's values will be grouped and counted.
 
-### TimeWindowSize  
-Specifies the size of the time window and consequently the number of values that are aggregated each time. 
+### Time Window Size
+Specify the duration of the time window for aggregation. This determines how many events will be considered in each counting operation.
 
 ### Time Window Scale
-Specifies the scale/unit of the time window. There are three different time scales to choose from: seconds, minutes or hours.
+Choose the time unit for the window size:
+* Hours
+* Minutes
+* Seconds
 
 ## Output
-The output event is composed of two fields. The field "value" specifies the value to count.
-The second field "count" returns the number of occurrences.
-Example:
-```
+The processor outputs events containing:
+* `timestamp`: The timestamp of the window
+* `value`: The value being counted
+* `count`: The number of occurrences within the time window
+
+### Example
+
+#### Input Event
+```json
 {
-  'value': 'vehicleId', 
-  'count': 12
+  "vehicleId": "V123",
+  "timestamp": 1586380105115
 }
 ```
+
+#### Configuration
+* Field to Count: `vehicleId`
+* Time Window Size: `5`
+* Time Window Scale: `Minutes`
+
+#### Output Event
+```json
+{
+  "timestamp": 1586380105115,
+  "value": "V123",
+  "count": 12
+}
+```
+
+## Use Cases
+
+1. **Traffic Analysis**
+   * Count vehicle passes at intersections
+   * Monitor traffic flow rates
+   * Track vehicle frequency
+
+2. **Event Monitoring**
+   * Count error occurrences
+   * Track system events
+   * Monitor user actions
+
+3. **Resource Usage**
+   * Count API calls
+   * Monitor service requests
+   * Track resource utilization
+
+## Notes
+
+* The processor uses sliding time windows
+* Counts are reset at the end of each window
+* Timestamps are preserved from the input events
+* The processor groups events by the selected field
+* Results are emitted at the end of each time window

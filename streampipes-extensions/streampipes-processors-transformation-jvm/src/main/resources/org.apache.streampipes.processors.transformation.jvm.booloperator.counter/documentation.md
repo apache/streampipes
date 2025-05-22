@@ -26,35 +26,158 @@
 
 ## Description
 
-This processor monitors a boolean value and counts how often the value of the boolean changes.
-A user can configure whether the changes from FALSE to TRUE, TRUE to FALSE, or BOTH changes should be counted.
+The Boolean Counter processor counts state changes in a boolean field. It supports:
+* Rising edge counting (FALSE -> TRUE)
+* Falling edge counting (TRUE -> FALSE)
+* Both edge counting
+* Incremental counting
+* State change detection
+* Event-based counting
+
+This processor is essential for:
+* Counting state transitions
+* Tracking signal changes
+* Monitoring event frequency
+* Measuring cycle counts
+* Analyzing state patterns
+* Building event counters
 
 ***
 
 ## Required input
 
-A boolean value is required in the data stream and can be selected with the field mapping.
-
-### Boolean Field
-
-The boolean value to be monitored.
+The processor requires a data stream containing at least one boolean field to monitor for state changes.
 
 ***
 
 ## Configuration
 
-A user can configure whether the changes from TRUE to FALSE, FALSE to TRUE, or all changes of the
-boolean value should be counted.
+### Boolean Field
 
-### Flank parameter
+Select the boolean field to monitor for state changes. This field will be used to detect edges and increment the counter.
 
-Either:
-* TRUE -> FALSE: Increase counter on a true followed by a false
-* FALSE -> TRUE: Increase counter on a false followed by a true
-* BOTH: Increase counter on each change of the boolean value on two consecutive events
+### Flank Parameter
+
+Choose which state changes to count:
+
+* **FALSE -> TRUE**: Count rising edges only
+  * Triggers when signal changes from false to true
+  * Use for: Counting activations
+  * Example: Count device startups
+
+* **TRUE -> FALSE**: Count falling edges only
+  * Triggers when signal changes from true to false
+  * Use for: Counting deactivations
+  * Example: Count device shutdowns
+
+* **BOTH**: Count all state changes
+  * Triggers on any state change
+  * Use for: Counting all transitions
+  * Example: Count all state changes
 
 ## Output
 
-Adds an additional numerical field with the current count value to the event.
-Events are just emitted when the counter changes.
-Runtime Name: countField
+The processor creates a new event containing:
+* All original fields from the input event
+* A new field named "counter" containing the current count
+
+### Example
+
+#### Input Event Stream
+```json
+[
+  {
+    "deviceId": "machine01",
+    "isRunning": false,
+    "timestamp": 1586380104915
+  },
+  {
+    "deviceId": "machine01",
+    "isRunning": true,
+    "timestamp": 1586380105015
+  },
+  {
+    "deviceId": "machine01",
+    "isRunning": false,
+    "timestamp": 1586380105115
+  }
+]
+```
+
+#### Configuration 1: Rising Edge Counting
+* Boolean Field: isRunning
+* Flank Parameter: FALSE -> TRUE
+
+#### Output Event
+```json
+{
+  "deviceId": "machine01",
+  "isRunning": true,
+  "timestamp": 1586380105015,
+  "counter": 1
+}
+```
+
+#### Configuration 2: Both Edges Counting
+* Boolean Field: isRunning
+* Flank Parameter: BOTH
+
+#### Output Events
+```json
+{
+  "deviceId": "machine01",
+  "isRunning": true,
+  "timestamp": 1586380105015,
+  "counter": 1
+}
+```
+```json
+{
+  "deviceId": "machine01",
+  "isRunning": false,
+  "timestamp": 1586380105115,
+  "counter": 2
+}
+```
+
+## Use Cases
+
+1. **Equipment Monitoring**
+   * Count machine cycles
+   * Track state changes
+   * Monitor activations
+   * Count operations
+   * Track usage patterns
+
+2. **Process Control**
+   * Count process steps
+   * Track state transitions
+   * Monitor phase changes
+   * Count operations
+   * Track cycles
+
+3. **Event Detection**
+   * Count button presses
+   * Track switch changes
+   * Monitor transitions
+   * Count events
+   * Track occurrences
+
+4. **System Analysis**
+   * Count state changes
+   * Track transitions
+   * Monitor patterns
+   * Count events
+   * Track frequencies
+
+## Notes
+
+* Only boolean fields can be counted
+* Counter is incremental
+* Count starts at 0
+* Processing is stateful
+* Counter persists between events
+* Events are only emitted on state changes
+* Counter is reset on pipeline restart
+* Multiple counters require chaining
+* Edge detection is immediate

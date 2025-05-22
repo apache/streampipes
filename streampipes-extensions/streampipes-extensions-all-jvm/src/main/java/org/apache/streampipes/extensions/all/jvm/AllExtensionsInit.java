@@ -41,6 +41,7 @@ import org.apache.streampipes.processors.enricher.jvm.EnricherExtensionModuleExp
 import org.apache.streampipes.processors.filters.jvm.FilterExtensionModuleExport;
 import org.apache.streampipes.processors.geo.jvm.GeoExtensionModuleExport;
 import org.apache.streampipes.processors.imageprocessing.jvm.ImageProcessingExtensionModuleExport;
+import org.apache.streampipes.processors.llm.jvm.LlmExtensionModuleExport;
 import org.apache.streampipes.processors.siddhi.SiddhiFilterExtensionModuleExport;
 import org.apache.streampipes.processors.textmining.jvm.TextMiningExtensionModuleExport;
 import org.apache.streampipes.processors.transformation.jvm.TransformationExtensionModuleExport;
@@ -90,7 +91,8 @@ public class AllExtensionsInit extends StreamPipesExtensionsServiceBase {
             new BrokerSinksExtensionModuleExport(),
             new DatabaseSinksExtensionModuleExport(),
             new InternalSinksExtensionModuleExports(),
-            new NotificationsExtensionModuleExport()
+            new NotificationsExtensionModuleExport(),
+            new LlmExtensionModuleExport()
         )
         .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .registerMessagingProtocols(

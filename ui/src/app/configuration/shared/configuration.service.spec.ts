@@ -22,7 +22,7 @@ import {
     provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { ConfigurationService } from './configuration.service';
-import { SpServiceConfiguration } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { SpServiceConfiguration } from '@streampipes/platform-services';
 import {
     provideHttpClient,
     withInterceptorsFromDi,

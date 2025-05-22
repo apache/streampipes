@@ -16,17 +16,29 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AssetSiteDesc, LocationConfig } from '@streampipes/platform-services';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'sp-edit-asset-location-component',
     templateUrl: './edit-location.component.html',
 })
-export class EditAssetLocationComponent {
+export class EditAssetLocationComponent implements OnInit {
     @Input()
     site: AssetSiteDesc;
 
     @Input()
     locationConfig: LocationConfig;
+
+    siteAreaControl: FormGroup;
+
+    ngOnInit() {
+        this.siteAreaControl = new FormGroup({
+            label: new FormControl(this.site.label || '', [
+                Validators.required,
+            ]),
+            location: new FormControl(this.site.location || null, []),
+        });
+    }
 }

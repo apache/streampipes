@@ -26,6 +26,7 @@ import {
 import {
     ConfirmDialogComponent,
     CurrentUserService,
+    DateFormatService,
     DialogService,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../../services/auth.service';
@@ -57,12 +58,18 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
         routingService: DataExplorerRoutingService,
         private dialog: MatDialog,
         private translateService: TranslateService,
+        protected dateFormatService: DateFormatService,
     ) {
         super(dialogService, authService, currentUserService, routingService);
     }
 
     afterInit(): void {
-        this.displayedColumns = ['name', 'actions'];
+        this.displayedColumns = [
+            'name',
+            'lastModified',
+            'createdAt',
+            'actions',
+        ];
         this.getDataViews();
     }
 
@@ -124,14 +131,24 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
         });
     }
 
-    applyChartFilters(elementIds: Set<string> = new Set<string>()): void {
-        this.filteredCharts = this.charts.filter(a => {
-            if (elementIds.size === 0) {
-                return true;
-            } else {
-                return elementIds.has(a.elementId);
-            }
+    cloneDataView(dataView: DataExplorerWidgetModel) {
+        this.dataViewService.cloneChart(dataView).subscribe(() => {
+            this.getDataViews();
         });
+    }
+
+    applyChartFilters(elementIds: Set<string> = new Set<string>()): void {
+        if (elementIds.size == 0) {
+            this.filteredCharts = this.charts;
+        } else {
+            this.filteredCharts = this.charts.filter(a =>
+                elementIds.has(a.elementId),
+            );
+        }
         this.dataSource.data = this.filteredCharts;
+    }
+
+    formatDate(timestamp?: number): string {
+        return this.dateFormatService.formatDate(timestamp);
     }
 }

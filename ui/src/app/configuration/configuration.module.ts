@@ -99,6 +99,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { GenericStorageItemComponent } from './export/export-dialog/generic-storage-items/generic-storage-item/generic-storage-item.component';
 import { GenericStorageItemsComponent } from './export/export-dialog/generic-storage-items/generic-storage-items.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -197,6 +198,7 @@ import { GenericStorageItemsComponent } from './export/export-dialog/generic-sto
         MatSort,
         MatListModule,
         MatDialogModule,
+        TranslatePipe,
     ],
     declarations: [
         ServiceConfigsComponent,

@@ -10,35 +10,13 @@
       "prefix": "sp",
       "architect": {
         "build": {
-          "builder": "@angular-architects/native-federation:build",
-          "options": {},
-          "configurations": {
-            "production": {
-              "target": "app:esbuild:production"
-            },
-            "development": {
-              "target": "app:esbuild:development",
-              "dev": true
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "serve": {
-          "builder": "@angular-architects/native-federation:build",
-          "options": {
-            "target": "app:serve-original:development",
-            "rebuildDelay": 0,
-            "dev": true
-          }
-        },
-        "esbuild": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "browser": "src/main.ts",
             "outputPath": "dist/streampipes/ui",
             "index": "src/index.html",
             "tsConfig": "src/tsconfig.app.json",
-            "polyfills": ["src/polyfills.ts", "es-module-shims"],
+            "polyfills": ["src/polyfills.ts", "zone.js"],
             "allowedCommonJsDependencies": ["codemirror"],
             "assets": [
               "src/assets",
@@ -69,7 +47,8 @@
                   "maximumWarning": "6kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "aot": true
             },
             "development": {
               "optimization": false,
@@ -80,14 +59,14 @@
           },
           "defaultConfiguration": "production"
         },
-        "serve-original": {
+        "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "app:esbuild:production"
+              "buildTarget": "app:build:production"
             },
             "development": {
-              "buildTarget": "app:esbuild:development",
+              "buildTarget": "app:build:development",
               "proxyConfig": "src/proxy.conf.json",
               "port": 8082
             }

@@ -1,0 +1,61 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+org.apache.streampipes.processors.llm.jvm.multimodel.title=Multi-Model Prompt Processor
+org.apache.streampipes.processors.llm.jvm.multimodel.description=Use OpenAI, Anthropic, or Ollama in a multi-shot conversation
+
+modelProvider.title=Model Provider
+modelProvider.description=Which LLM provider to use (OpenAI, Anthropic, or Ollama)
+
+OpenAI.title=OpenApi Model
+OpenAI.description=Use an OpenApi model
+
+Anthropic.title=Anthropic Model
+Anthropic.description=Use an Anthropic model
+
+Ollama.title=Ollama Model
+Ollama.description=Use an Ollama model
+
+modelName.title=Model Name
+modelName.description=Exact model string, e.g. "gpt-3.5-turbo", "claude-3-sonnet-20240229", or "llama2"
+
+systemPrompt.title=System Prompt
+systemPrompt.description=Sets the system prompt (e.g. "For each input number, if value greater than 15 then return `WARNING`, otherwise return `OK`.")
+
+anthropicKey.title=Anthropic API Key
+anthropicKey.description=Anthropic API key
+
+openApiKey.title=OpenApi API Key
+openApiKey.description=OpenApi API key
+
+ollamaUrl.title=Ollama Base URL
+ollamaUrl.description=Base URL for your Ollama instance (e.g. "http://localhost:11434")
+
+inputField.title=Input Field
+inputField.description=Event field that contains the user’s message
+
+outputField.title=Output Field
+outputField.description=Event field that will store the model’s reply
+
+temperature.title=Temperature
+temperature.description=Creativity of the response (0=deterministic,1=very creative)
+
+historyMode.title=History Strategy
+historyMode.description=How much conversation context to keep: Stateless, Windowed, or Full
+
+windowSize.title=Window Size
+windowSize.description=Number of recent (user, assistant) turns to retain when using the Windowed strategy

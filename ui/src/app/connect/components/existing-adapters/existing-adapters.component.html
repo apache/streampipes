@@ -123,28 +123,39 @@
                             *matCellDef="let adapter"
                             data-cy="adapters-table"
                         >
-                            <button
-                                color="accent"
-                                mat-icon-button
-                                matTooltip="Start adapter"
-                                matTooltipPosition="above"
-                                data-cy="start-adapter"
-                                (click)="startAdapter(adapter)"
-                                *ngIf="!adapter.running"
-                            >
-                                <i class="material-icons">play_arrow</i>
-                            </button>
-                            <button
-                                color="accent"
-                                mat-icon-button
-                                matTooltip="Stop adapter"
-                                matTooltipPosition="above"
-                                data-cy="stop-adapter"
-                                (click)="stopAdapter(adapter)"
-                                *ngIf="adapter.running"
-                            >
-                                <i class="material-icons">stop</i>
-                            </button>
+                            @if (
+                                adapter.elementId ===
+                                operationInProgressAdapterId
+                            ) {
+                                <div fxLayoutAlign="center center">
+                                    <mat-spinner
+                                        color="accent"
+                                        [diameter]="20"
+                                    ></mat-spinner>
+                                </div>
+                            } @else if (!adapter.running) {
+                                <button
+                                    color="accent"
+                                    mat-icon-button
+                                    matTooltip="Start adapter"
+                                    matTooltipPosition="above"
+                                    data-cy="start-adapter"
+                                    (click)="startAdapter(adapter)"
+                                >
+                                    <i class="material-icons">play_arrow</i>
+                                </button>
+                            } @else if (adapter.running) {
+                                <button
+                                    color="accent"
+                                    mat-icon-button
+                                    matTooltip="Stop adapter"
+                                    matTooltipPosition="above"
+                                    data-cy="stop-adapter"
+                                    (click)="stopAdapter(adapter)"
+                                >
+                                    <i class="material-icons">stop</i>
+                                </button>
+                            }
                         </td>
                     </ng-container>
 

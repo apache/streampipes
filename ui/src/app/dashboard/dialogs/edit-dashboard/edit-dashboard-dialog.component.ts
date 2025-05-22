@@ -51,6 +51,7 @@ export class EditDashboardDialogComponent implements OnInit {
     }
 
     onSave(): void {
+        this.dashboard.metadata.lastModifiedEpochMs = Date.now();
         if (this.createMode) {
             this.dashboardService
                 .saveDashboard(this.dashboard)

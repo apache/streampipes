@@ -16,7 +16,7 @@
   ~
   -->
 
-## MQTT
+## MQTT Protocol
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -25,23 +25,64 @@
 ***
 
 ## Description
-
-Consumes messages from a broker using the MQTT protocol
-
+The MQTT protocol adapter enables StreamPipes to consume messages from an MQTT broker. It provides:
+* Real-time message consumption from MQTT topics
+* Support for various authentication methods
+* Configurable message handling
+* Automatic reconnection handling
+* Support for MQTT 3.1 and 3.1.1 protocols
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Broker Settings
+* **Broker URL**: The URL of the MQTT broker (e.g., tcp://test-server.com:1883). The protocol (tcp://) and port are required.
 
-### Broker Url
+### Topic Settings
+* **Topic**: The MQTT topic to subscribe to (e.g., test/topic)
 
-Example: tcp://test-server.com:1883 (Protocol required. Port required)"
+### Authentication Settings
+* **Access Mode**: Choose between:
+  * **Unauthenticated**: No authentication required
+  * **Username/Password**: Basic authentication with username and password
+    * **Username**: The username for authentication
+    * **Password**: The password for authentication
 
-### Access Mode
+***
 
-Unauthenticated or Authenticated (Username/Password)
+## Features
+* **Message Handling**:
+  * Real-time message consumption
+  * Support for MQTT QoS levels
+  * Automatic reconnection on connection loss
+  * Configurable keep-alive settings
+
+* **Security**:
+  * Basic authentication support
+  * TCP protocol support
+  * SSL/TLS support (coming soon)
+
+* **Protocol Support**:
+  * MQTT 3.1
+  * MQTT 3.1.1
+
+***
+
+## Use Cases
+* **IoT Data Collection**: Connect to IoT devices publishing data via MQTT
+* **Sensor Networks**: Subscribe to sensor data streams
+* **Real-time Monitoring**: Monitor real-time data from MQTT-enabled systems
+* **Device Integration**: Integrate with MQTT-based device ecosystems
+
+***
+
+## Important Notes
+* The adapter uses the MQTT protocol for message consumption
+* Messages are received in real-time as they are published to the subscribed topic
+* The adapter automatically handles reconnection if the connection to the broker is lost
+* For production use, it's recommended to use authentication when available
+* The adapter supports both MQTT 3.1 and 3.1.1 protocols
 
 ## Output
 

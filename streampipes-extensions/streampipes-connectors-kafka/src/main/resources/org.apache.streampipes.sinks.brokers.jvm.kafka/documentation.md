@@ -25,32 +25,78 @@
 ***
 
 ## Description
-
-Publishes events to Apache Kafka.
+The Kafka Publisher sink enables StreamPipes to publish events to Apache Kafka topics. It provides:
+* Real-time event publishing to Kafka topics
+* Support for various security configurations
+* Automatic topic creation if not exists
+* Configurable message handling
+* JSON message serialization
 
 ***
 
-## Required input
-
-This sink does not have any requirements and works with any incoming event type.
+## Required Input
+This sink accepts any incoming event type and serializes it to JSON format before publishing to Kafka.
 
 ***
 
 ## Configuration
 
-### Kafka Broker Settings
+### Broker Settings
+* **Broker Hostname**: The hostname or IP address of the Kafka broker (e.g., test.server.com). Do not include the protocol.
+* **Broker Port**: The port number of the Kafka broker (default: 9092)
 
-The basic settings to connect to the broker. 
-The Kafka broker URL indicates the URL of the broker (e.g., localhost), the port indicates the port of the broker
- (e.g., 9092)
+### Security Settings
+* **Security Protocol**: Choose the security protocol for broker communication:
+  * `PLAINTEXT`: No authentication and plaintext communication
+  * `SSL`: Using SSL with no authentication
+  * `SASL/PLAINTEXT`: SASL authentication without encryption
+  * `SASL/SSL`: SASL authentication with SSL encryption
 
+* **Authentication** (when using SASL):
+  * **Security Mechanism**: Choose the SASL mechanism:
+    * `PLAIN`: Simple username/password authentication
+    * `SCRAM-SHA-256`: SCRAM authentication with SHA-256
+    * `SCRAM-SHA-512`: SCRAM authentication with SHA-512
+  * **Username**: SASL authentication username
+  * **Password**: SASL authentication password
 
-### Kafka Topic
+### Topic Settings
+* **Topic**: The Kafka topic where events will be published. If the topic doesn't exist, it will be created automatically with default settings.
 
-The topic where events should be sent to.
+### Advanced Settings
+* **Additional Configurations**: Add custom Kafka producer configurations in key=value format. Each configuration should be on a new line. For example:
+  ```
+  buffer.memory=33554432
+  batch.size=16384
+  linger.ms=20
+  ```
 
+***
 
-### Additional configurations
+## Features
+* **Message Handling**:
+  * Automatic JSON serialization of events
+  * Configurable message size limits
+  * Batch processing support
+  * Automatic topic creation
 
-Can be used to provide additional Kafka producer configurations. Input must be in form of key-value pairs, e.g.
-buffer.memory=33554432
+* **Security**:
+  * SSL/TLS encryption support
+  * SASL authentication with multiple mechanisms
+  * Configurable security protocols
+
+***
+
+## Use Cases
+* **Data Distribution**: Publish processed events to Kafka for other systems to consume
+* **Event Streaming**: Stream events to Kafka for real-time processing
+* **Data Integration**: Integrate StreamPipes with Kafka-based data pipelines
+
+***
+
+## Important Notes
+* The sink uses the Kafka Producer API to publish messages
+* Events are automatically serialized to JSON format
+* Topics are created automatically if they don't exist
+* For production use, it's recommended to configure appropriate security settings
+* The sink supports all standard Kafka producer configurations through the additional settings

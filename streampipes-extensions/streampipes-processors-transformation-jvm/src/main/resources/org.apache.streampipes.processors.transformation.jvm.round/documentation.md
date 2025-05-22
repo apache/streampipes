@@ -26,14 +26,18 @@
 
 ## Description
 
-This processor rounds numeric values to the given decimal places.
-It supports multiple rounding strategies.
+The Number Rounder processor provides precise control over the decimal places in numerical data by applying various rounding strategies. This is essential for:
+* Ensuring consistent precision across numerical data
+* Reducing noise in measurements
+* Improving data readability
+* Meeting specific business or technical requirements for numerical precision
+* Standardizing numerical outputs for downstream processing
 
 ***
 
 ## Required input
 
-This processor requires an event that provides numerical properties.
+This processor requires an event that contains one or more numerical properties (integers or floating-point numbers).
 
 ***
 
@@ -41,26 +45,95 @@ This processor requires an event that provides numerical properties.
 
 ### Fields to Be Rounded
 
-Select which fields of the event should be rounded.
+Select which numerical fields in the event should be rounded. Multiple fields can be selected, and each will be rounded according to the same configuration.
 
 ### Number of Digits
 
-Specify the number of digits after the decimal point to round/keep, e.g., if number is 2.8935 and 'digits' is 3,
-the result will be 2.894.
+Specify the number of decimal places to keep after rounding. This determines the precision of the output:
+* Positive values (e.g., 2): Keep that many decimal places
+* Zero (0): Round to whole numbers
+* Negative values (e.g., -2): Round to tens, hundreds, etc.
+
+Examples:
+* Input: 2.8935, Digits: 3 → Output: 2.894
+* Input: 2.8935, Digits: 2 → Output: 2.89
+* Input: 2.8935, Digits: 0 → Output: 3
+* Input: 285.8935, Digits: -2 → Output: 300
 
 ### Mode of Rounding
 
-Specify the mode of rounding. 
-Supported rounding modes:
-* `UP`: Rounding mode to round away from zero. Always increments the digit prior to a non-zero discarded fraction. Note that this rounding mode never decreases the magnitude of the calculated value.
-* `DOWN`: Rounding mode to round towards zero. Never increments the digit prior to a discarded fraction (i.e., truncates). Note that this rounding mode never increases the magnitude of the calculated value.
-* `CEILING`: Rounding mode to round towards positive infinity. If the result is positive, behaves as for `UP`; if negative, behaves as for `DOWN`. Note that this rounding mode never decreases the calculated value
-* `FLOOR`: Rounding mode to round towards negative infinity. If the result is positive, behave as for `DOWN`; if negative, behave as for `UP`. Note that this rounding mode never increases the calculated value.
-* `HALF_UP`: Rounding mode to round towards "nearest neighbor" unless both neighbors are equidistant, in which case round up. Behaves as for `UP` if the discarded fraction is ≥ 0.5; otherwise, behaves as for `DOWN`.
-* `HALF_DOWN`: Rounding mode to round towards "nearest neighbor" unless both neighbors are equidistant, in which case round down. Behaves as for `UP` if the discarded fraction is > 0.5; otherwise, behaves as for `DOWN`.
-* `HALF_EVEN`: Rounding mode to round towards the "nearest neighbor" unless both neighbors are equidistant, in which case, round towards the even neighbor. Behaves as for `HALF_UP` if the digit to the left of the discarded fraction is odd; behaves as for `HALF_DOWN` if it's even. Note that this is the rounding mode that statistically minimizes cumulative error when applied repeatedly over a sequence of calculations.
+Select the rounding strategy to use. Each mode handles rounding differently, especially around the midpoint between two numbers:
+
+* **UP** 
+  * Always rounds away from zero
+  * 3.1 → 4, -3.1 → -4
+  * Use when you need to ensure the result is never smaller in magnitude
+
+* **DOWN**
+  * Always rounds toward zero (truncates)
+  * 3.7 → 3, -3.7 → -3
+  * Use when you need to ensure the result is never larger in magnitude
+
+* **CEILING**
+  * Always rounds toward positive infinity
+  * 3.1 → 4, -3.7 → -3
+  * Use when you need to ensure the result never decreases
+
+* **FLOOR**
+  * Always rounds toward negative infinity
+  * 3.7 → 3, -3.1 → -4
+  * Use when you need to ensure the result never increases
+
+* **HALF_UP** (Most common)
+  * Rounds to nearest number, ties round up
+  * 3.5 → 4, 3.4 → 3, -3.5 → -4
+  * Use for standard mathematical rounding
+
+* **HALF_DOWN**
+  * Rounds to nearest number, ties round down
+  * 3.5 → 3, 3.6 → 4, -3.5 → -3
+  * Use when ties should be rounded down
+
+* **HALF_EVEN** (Banker's Rounding)
+  * Rounds to nearest number, ties round to even neighbor
+  * 3.5 → 4, 4.5 → 4, -3.5 → -4
+  * Use to minimize cumulative rounding errors in large datasets
 
 ## Output
 
-The output of this processor is the same event with the fields selected by the ``Fiels to Be Rounded`` parameter rounded
-to ``Number of Digits`` digits.
+The processor outputs an event with the same structure as the input, but with the selected numerical fields rounded according to the configuration. All other fields remain unchanged.
+
+### Example
+
+#### Input Event
+```json
+{
+  "sensorId": "temp01",
+  "temperature": 23.4567,
+  "pressure": 1013.8935,
+  "humidity": 45.5000
+}
+```
+
+#### Configuration
+* Fields to Be Rounded: temperature, pressure
+* Number of Digits: 2
+* Mode of Rounding: HALF_UP
+
+#### Output Event
+```json
+{
+  "sensorId": "temp01",
+  "temperature": 23.46,
+  "pressure": 1013.89,
+  "humidity": 45.5000
+}
+```
+
+## Use Cases
+
+1. **Measurement Data**: Standardize precision of sensor readings
+2. **Financial Calculations**: Ensure proper decimal handling in monetary values
+3. **Scientific Analysis**: Control significant figures in experimental data
+4. **Display Formatting**: Prepare numbers for user interfaces
+5. **Data Storage**: Optimize numerical precision for storage efficiency

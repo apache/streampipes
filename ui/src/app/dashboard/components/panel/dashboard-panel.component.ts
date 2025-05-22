@@ -157,6 +157,11 @@ export class DashboardPanelComponent
 
     persistDashboardChanges() {
         this.dashboard.dashboardGeneralSettings.defaultViewMode = this.viewMode;
+        this.dashboard.metadata ??= {
+            createdAtEpochMs: undefined,
+            lastModifiedEpochMs: undefined,
+        };
+        this.dashboard.metadata.lastModifiedEpochMs = Date.now();
         this.dashboardService
             .updateDashboard(this.dashboard)
             .subscribe(result => {

@@ -27,13 +27,13 @@ public class OpcUaUtilTest {
 
   @Test
   public void testAddOpcPrefixIfNotExistsWithPrefix() {
-    var result = OpcUaUtil.addOpcPrefixIfNotExists(SERVER_ADDRESS_WITH_OPC_PREFIX);
+    var result = OpcUaUtils.addOpcPrefixIfNotExists(SERVER_ADDRESS_WITH_OPC_PREFIX);
     Assertions.assertEquals(SERVER_ADDRESS_WITH_OPC_PREFIX, result);
   }
 
   @Test
   public void testAddOpcPrefixIfNotExistsNoPrefix() {
-    var result = OpcUaUtil.addOpcPrefixIfNotExists("example.com");
+    var result = OpcUaUtils.addOpcPrefixIfNotExists("example.com");
     Assertions.assertEquals(SERVER_ADDRESS_WITH_OPC_PREFIX, result);
   }
 }

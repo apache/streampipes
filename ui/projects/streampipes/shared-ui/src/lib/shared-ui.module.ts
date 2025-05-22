@@ -84,6 +84,19 @@ import { DateInputComponent } from './components/date-input/date-input.component
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
+import { LivePreviewLoadingComponent } from './components/pipeline-element-runtime-info/live-preview-loading/live-preview-loading.component';
+import { LivePreviewTableComponent } from './components/pipeline-element-runtime-info/live-preview-table/live-preview-table.component';
+import { LivePreviewErrorComponent } from './components/pipeline-element-runtime-info/live-preview-error/live-preview-error.component';
+import { PipelineElementRuntimeInfoComponent } from './components/pipeline-element-runtime-info/pipeline-element-runtime-info.component';
+import { PipelineElementDocumentationComponent } from './components/pipeline-element-documentation/pipeline-element-documentation.component';
+import { MarkdownModule } from 'ngx-markdown';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { PipelineElementHelpComponent } from './dialog/pipeline-element-help/pipeline-element-help.component';
+import { PipelineElementComponent } from './components/pipeline-element/pipeline-element.component';
+import { InputSchemaPanelComponent } from './components/input-schema-panel/input-schema-panel.component';
+import { InputSchemaPropertyComponent } from './components/input-schema-panel/input-schema-property/input-schema-property.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { SortByRuntimeNamePipe } from './pipes/sort-by-runtime-name.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
@@ -126,6 +139,16 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         SelectDataRangeComponent,
         SelectDataMissingValuesComponent,
         SidebarResizeComponent,
+        LivePreviewLoadingComponent,
+        LivePreviewTableComponent,
+        LivePreviewErrorComponent,
+        PipelineElementRuntimeInfoComponent,
+        PipelineElementDocumentationComponent,
+        PipelineElementHelpComponent,
+        PipelineElementComponent,
+        InputSchemaPanelComponent,
+        InputSchemaPropertyComponent,
+        SortByRuntimeNamePipe,
     ],
     imports: [
         CommonModule,
@@ -143,6 +166,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         MatTooltipModule,
         MatTreeModule,
         MatDatepickerModule,
+        MatExpansionModule,
         MatCardModule,
         PortalModule,
         OverlayModule,
@@ -151,11 +175,17 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         MatTableModule,
         MatPaginator,
         MatRadioModule,
+        MatProgressSpinnerModule,
         MatSort,
         TranslateModule.forChild({}),
         DragDropModule,
+        MarkdownModule.forRoot(),
     ],
-    providers: [DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel],
+    providers: [
+        DefaultMatCalendarRangeStrategy,
+        MatRangeDateSelectionModel,
+        SortByRuntimeNamePipe,
+    ],
     exports: [
         AssetBrowserComponent,
         ConfirmDialogComponent,
@@ -180,6 +210,11 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         TimeRangeSelectorComponent,
         TimeRangeSelectorMenuComponent,
         DataExplorerRefreshIntervalSettingsComponent,
+        PipelineElementRuntimeInfoComponent,
+        PipelineElementDocumentationComponent,
+        PipelineElementHelpComponent,
+        PipelineElementComponent,
+        InputSchemaPanelComponent,
         SidebarResizeComponent,
     ],
 })

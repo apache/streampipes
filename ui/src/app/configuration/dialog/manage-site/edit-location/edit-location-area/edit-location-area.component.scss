@@ -26,3 +26,14 @@
     padding: 5px;
     font-weight: bold;
 }
+
+.custom-icon-button {
+    margin-top: 1px;
+}
+
+.custom-icon-button:disabled {
+    color: grey;
+    opacity: 0.4;
+    cursor: not-allowed;
+    margin-top: 1px;
+}

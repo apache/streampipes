@@ -20,7 +20,11 @@ package org.apache.streampipes.extensions.connectors.opcua.utils;
 
 import org.apache.streampipes.sdk.utils.Datatypes;
 
+import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseDataVariableTypeNode;
+import org.eclipse.milo.opcua.stack.core.BuiltinDataType;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
+
+import java.util.Objects;
 
 public class OpcUaTypes {
 
@@ -49,9 +53,38 @@ public class OpcUaTypes {
       return Datatypes.Boolean;
     } else if (UInteger.valueOf(12).equals(o)) {
       return Datatypes.String;
+    } else if (UInteger.valueOf(13).equals(o)) {
+      return Datatypes.Long;
     }
 
     return Datatypes.String;
+  }
+
+  public static Datatypes getTypeFromValue(Object value) {
+    if (value instanceof Boolean) {
+      return Datatypes.Boolean;
+    } else if (value instanceof Integer) {
+      return Datatypes.Integer;
+    } else if (value instanceof Long) {
+      return Datatypes.Long;
+    } else if (value instanceof Float) {
+      return Datatypes.Float;
+    } else if (value instanceof Double) {
+      return Datatypes.Double;
+    } else {
+      return Datatypes.String;
+    }
+  }
+
+  /**
+   * Determines if the node is an extension data type or a custom data type
+   *
+   * @param node a data variable node
+   * @return true if the node is an ExtensionObject or custom data type
+   */
+  public static boolean isExtensionOrCustom(BaseDataVariableTypeNode node) {
+    return !BuiltinDataType.isBuiltin(node.getDataType())
+        || Objects.equals(node.getDataType(), BuiltinDataType.ExtensionObject.getNodeId());
   }
 
 }

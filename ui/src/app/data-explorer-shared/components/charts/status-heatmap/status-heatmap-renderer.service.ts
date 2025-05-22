@@ -39,6 +39,7 @@ export class SpStatusHeatmapRendererService extends SpBaseEchartsRenderer<Status
         widgetConfig: StatusHeatmapWidgetModel,
     ): void {
         this.basicOptions(options);
+        this.addAxisOptions(options);
         const field = widgetConfig.visualizationConfig.selectedProperty;
         const sourceIndex = field.sourceIndex;
 
@@ -121,11 +122,12 @@ export class SpStatusHeatmapRendererService extends SpBaseEchartsRenderer<Status
                 pieces: dynamicPieces,
                 orient: 'horizontal',
                 right: '5%',
-                top: '20',
+                top: '5%',
             };
 
             options.legend = {
                 type: 'scroll',
+                top: '0%',
             };
 
             options.series = [
@@ -160,16 +162,28 @@ export class SpStatusHeatmapRendererService extends SpBaseEchartsRenderer<Status
 
     basicOptions(options: EChartsOption): void {
         options.grid = {
-            height: '80%',
-            top: '80',
+            containLabel: true,
+            height: '60%',
+            top: '20%',
+            bottom: '10%',
         };
+    }
+
+    private addAxisOptions(options: EChartsOption): void {
         options.xAxis = {
             type: 'category',
             splitArea: { show: true },
+            axisLabel: {
+                overflow: 'truncate',
+            },
         };
+
         options.yAxis = {
             type: 'category',
             splitArea: { show: true },
+            axisLabel: {
+                overflow: 'truncate',
+            },
         };
     }
 

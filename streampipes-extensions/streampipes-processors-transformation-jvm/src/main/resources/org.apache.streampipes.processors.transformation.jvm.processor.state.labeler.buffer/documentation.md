@@ -26,40 +26,114 @@
 
 ## Description
 
-Apply a rule to a time-series recorded during a state of a machine.
-(E.g. when minimum value is lower then 10, add label `not ok` else add label `ok`)
+The State Buffer Labeler processor adds labels to sensor time-series data based on statistical operations and user-defined rules. It supports:
+* State-based labeling
+* Statistical operations (min, max, average)
+* Custom rule definition
+* Multiple conditions
+* Default labels
 
+This processor is essential for:
+* Adding context to data
+* Classifying measurements
+* Identifying patterns
+* Marking conditions
 
 ***
 
 ## Required input
 
-Requires a list with sensor values and a field defining the state
-
-### Sensor values
-
-An array representing sensor values recorded during the state.
-
-### State field
-
-A field representing the state when the sensor values where recorded.
+The processor requires a data stream containing:
+* A state field (array of strings)
+* A sensor value field (array of numbers)
 
 ***
 
 ## Configuration
 
+### State Field
+
+Select the field containing the state information. This determines when rules are applied.
+
 ### Select a specific state
-When you are interested in the values of a specific state add it here.
-All other states will be ignored. To get results of all states enter `*`
+
+Add a filter to define which states to evaluate. Use '*' to select all states.
+
+### Sensor values
+
+Select the array containing the sensor values to evaluate against the rules.
 
 ### Operation
-Operation that will be performed on the sensor values (calculate `maximim`, or `average`, or `minimum`)
+
+Define the statistical operation to apply to the sensor values:
+* Minimum: Get the lowest value
+* Maximum: Get the highest value
+* Average: Calculate the mean value
 
 ### Condition
-Define a rule which label to add. Example: `<;5;nok` means when the calculated value is smaller then 5 add label ok.
-The default label can be defined with `*;nok`.
-The first rule that is true defines the label. Rules are applied in the same order as defined here.
 
+Add conditions in the format:
+* `<;5;ok` - Label as "ok" if value is less than 5
+* `<;10;ok` - Label as "ok" if value is less than 10
+* `*;nok` - Default label "nok" for all other cases
 
 ## Output
-Appends a new field  with the label defined in the Condition Configuration
+
+The processor creates a new event containing:
+* All original fields from the input event
+* A new label field based on the conditions
+
+### Example
+
+#### Input Event
+```json
+{
+  "deviceId": "sensor01",
+  "timestamp": 1586380104915,
+  "state": ["active"],
+  "values": [23.5, 24.1, 24.3]
+}
+```
+
+#### Configuration
+* State Field: state
+* Select a specific state: active
+* Sensor values: values
+* Operation: Average
+* Condition: "<;20;cold", "<;30;warm", "*;hot"
+
+#### Output Event
+```json
+{
+  "deviceId": "sensor01",
+  "timestamp": 1586380104915,
+  "state": ["active"],
+  "values": [23.5, 24.1, 24.3],
+  "label": "warm"
+}
+```
+
+## Use Cases
+
+1. **Data Classification**
+   * Add context to data
+   * Classify measurements
+   * Identify patterns
+   * Mark conditions
+
+2. **Quality Control**
+   * Label quality levels
+   * Mark thresholds
+   * Identify issues
+   * Track conditions
+
+## Notes
+
+* Conditions are evaluated in order
+* Default label is required
+* State filtering is optional
+* Processing is stateless
+* Multiple conditions supported
+* Statistical operation is applied before condition evaluation
+* Input arrays must contain numeric values
+* State field must be an array of strings

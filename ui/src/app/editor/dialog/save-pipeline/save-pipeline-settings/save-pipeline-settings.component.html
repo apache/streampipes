@@ -17,6 +17,61 @@
   -->
 
 <div fxLayout="column">
+    <form [formGroup]="submitPipelineForm">
+        <div fxFlex="100" fxLayout="column">
+            <mat-form-field fxFlex color="accent">
+                <mat-label>Pipeline Name</mat-label>
+                <input
+                    [formControlName]="'pipelineName'"
+                    data-cy="sp-editor-pipeline-name"
+                    matInput
+                    name="pipelineName"
+                    (blur)="triggerTutorial()"
+                />
+                <mat-error
+                    *ngIf="
+                        submitPipelineForm
+                            .get('pipelineName')
+                            .hasError('required') ||
+                        submitPipelineForm
+                            .get('pipelineName')
+                            .hasError('whiteSpaceOnly')
+                    "
+                >
+                    Pipeline name is required.
+                </mat-error>
+                <mat-error
+                    *ngIf="
+                        submitPipelineForm
+                            .get('pipelineName')
+                            .hasError('minlength') ||
+                        submitPipelineForm
+                            .get('pipelineName')
+                            .hasError('maxlength')
+                    "
+                >
+                    Pipeline name must have between 3 and 50 characters.
+                </mat-error>
+                <mat-error
+                    *ngIf="
+                        submitPipelineForm
+                            .get('pipelineName')
+                            .hasError('invalidName')
+                    "
+                >
+                    Pipeline name can only contain letters, numbers, dashes (-),
+                    and underscores (_).
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field fxFlex color="accent">
+                <mat-label>Description</mat-label>
+                <input [formControlName]="'pipelineDescription'" matInput />
+                <mat-error
+                    >Pipeline description must not have more than 80 characters.
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </form>
     <div
         id="overwriteCheckbox"
         class="checkbox"
@@ -33,7 +88,7 @@
                 style="padding-left: 0"
                 data-cy="pipeline-update-mode-update"
             >
-                Update pipeline <b>{{ currentPipelineName }}</b>
+                Update pipeline
             </mat-radio-button>
             <mat-radio-button
                 [value]="'clone'"
@@ -44,37 +99,6 @@
             </mat-radio-button>
         </mat-radio-group>
     </div>
-    <form [formGroup]="submitPipelineForm">
-        <div
-            fxFlex="100"
-            fxLayout="column"
-            *ngIf="
-                !storageOptions.updateModeActive ||
-                storageOptions.updateMode === 'clone'
-            "
-        >
-            <mat-form-field fxFlex color="accent">
-                <mat-label>Pipeline Name</mat-label>
-                <input
-                    [formControlName]="'pipelineName'"
-                    data-cy="sp-editor-pipeline-name"
-                    matInput
-                    name="pipelineName"
-                    (blur)="triggerTutorial()"
-                />
-                <mat-error
-                    >Pipeline name must have between 3 and 40 characters.
-                </mat-error>
-            </mat-form-field>
-            <mat-form-field fxFlex color="accent">
-                <mat-label>Description</mat-label>
-                <input [formControlName]="'pipelineDescription'" matInput />
-                <mat-error
-                    >Pipeline description must not have more than 80 characters.
-                </mat-error>
-            </mat-form-field>
-        </div>
-    </form>
     <mat-checkbox
         [(ngModel)]="storageOptions.startPipelineAfterStorage"
         color="accent"

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import {
     icon,
     Layer,
@@ -32,12 +32,20 @@ import {
     LatLng,
     LocationConfig,
 } from '@streampipes/platform-services';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
     selector: 'sp-single-marker-map',
     templateUrl: './single-marker-map.component.html',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => SingleMarkerMapComponent),
+            multi: true,
+        },
+    ],
 })
-export class SingleMarkerMapComponent implements OnInit {
+export class SingleMarkerMapComponent implements OnInit, ControlValueAccessor {
     @Input()
     locationConfig: LocationConfig;
 
@@ -101,6 +109,7 @@ export class SingleMarkerMapComponent implements OnInit {
 
     onZoomChange(zoom: number): void {
         this.assetLocation.zoom = zoom;
+        this.emitChange();
     }
 
     onMarkerAdded(e: LeafletMouseEvent) {
@@ -109,6 +118,7 @@ export class SingleMarkerMapComponent implements OnInit {
                 latitude: e.latlng.lat,
                 longitude: e.latlng.lng,
             });
+            this.emitChange();
         }
     }
 
@@ -124,6 +134,39 @@ export class SingleMarkerMapComponent implements OnInit {
                 });
             }
             this.assetLocation.coordinates = location;
+        }
+    }
+
+    private onChange: (_: AssetLocation) => void = () => {};
+    private onTouched: () => void = () => {};
+
+    registerOnChange(fn: any): void {
+        this.onChange = fn;
+    }
+
+    registerOnTouched(fn: any): void {
+        this.onTouched = fn;
+    }
+
+    setDisabledState?(isDisabled: boolean): void {
+        this.readonly = isDisabled;
+    }
+
+    private emitChange() {
+        this.onChange(this.assetLocation);
+        this.onTouched();
+    }
+
+    writeValue(value: AssetLocation): void {
+        if (value) {
+            this.assetLocation = value;
+            if (this.map) {
+                this.addMarker(value.coordinates);
+                this.map.setView(
+                    [value.coordinates.latitude, value.coordinates.longitude],
+                    value.zoom || 1,
+                );
+            }
         }
     }
 }

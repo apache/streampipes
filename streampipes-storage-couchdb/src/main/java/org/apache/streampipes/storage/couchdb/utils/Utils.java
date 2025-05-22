@@ -94,10 +94,6 @@ public class Utils {
     return getCouchDbStandardSerializerClient("notification");
   }
 
-  public static CouchDbClient getCouchDbPipelineCategoriesClient() {
-    return getCouchDbStandardSerializerClient("pipelinecategories");
-  }
-
   public static CouchDbClient getCouchDbGsonClient(String dbname) {
     CouchDbClient dbClient = new CouchDbClient(props(dbname));
     dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());

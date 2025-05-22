@@ -30,7 +30,7 @@ public class PulsarContainer extends GenericContainer<PulsarContainer> {
   private static final int BROKER_SERVICE_PORT = 6650;
 
   public PulsarContainer() {
-    super("apachepulsar/pulsar-test-latest-version:latest");
+    super("apachepulsar/pulsar:4.0.4");
   }
 
   public void start() {

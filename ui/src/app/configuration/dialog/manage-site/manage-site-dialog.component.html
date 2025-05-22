@@ -20,6 +20,7 @@
     <div class="sp-dialog-content p-15">
         <div *ngIf="clonedSite !== undefined">
             <sp-edit-asset-location-component
+                #editLocation
                 [site]="clonedSite"
                 [locationConfig]="locationConfig"
             >
@@ -35,6 +36,7 @@
             color="accent"
             (click)="store()"
             style="margin-right: 10px"
+            [disabled]="editLocationComponent?.siteAreaControl.invalid"
         >
             Save changes
         </button>
