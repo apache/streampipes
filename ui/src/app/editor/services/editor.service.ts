@@ -43,7 +43,7 @@ import {
 } from '@streampipes/shared-ui';
 import { map } from 'rxjs/operators';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
-import { TopicsComponent } from 'src/app/core-ui/topics/topics.component';
+import { TopicsComponent } from '../../core-ui/topics/topics.component';
 
 @Injectable({ providedIn: 'root' })
 export class EditorService {
