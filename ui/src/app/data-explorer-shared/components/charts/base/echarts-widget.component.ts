@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
     DataExplorerField,
     DataExplorerWidgetModel,
@@ -28,6 +28,7 @@ import { ECharts } from 'echarts/core';
 import { EChartsOption } from 'echarts';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { ResizeEchartsService } from '../../../services/resize-echarts.service';
 
 @Component({
     selector: 'sp-data-explorer-echarts-widget',
@@ -48,15 +49,24 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
     latestData: SpQueryResult[];
 
     renderSubject = new Subject<void>();
-    renderSubjectSubscription: Subscription;
+    renderSubject$: Subscription;
+    resizeEcharts$: Subscription;
     renderer: SpEchartsRenderer<T>;
+
+    resizeEchartsService = inject(ResizeEchartsService);
 
     widgetTypeLabel: string;
 
     ngOnInit(): void {
         super.ngOnInit();
         this.renderer = this.getRenderer();
-        this.renderSubjectSubscription = this.renderSubject
+        this.resizeEcharts$ =
+            this.resizeEchartsService.echartsResizeSubject.subscribe(width => {
+                this.currentWidth = width - this.widthOffset;
+                this.applySize(this.currentWidth, this.currentHeight);
+                this.refreshView();
+            });
+        this.renderSubject$ = this.renderSubject
             .pipe(debounceTime(300))
             .subscribe(() => {
                 this.renderChartOptions(this.latestData);
@@ -124,7 +134,8 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
 
     public cleanupSubscriptions(): void {
         super.cleanupSubscriptions();
-        this.renderSubjectSubscription.unsubscribe();
+        this.resizeEcharts$?.unsubscribe();
+        this.renderSubject$?.unsubscribe();
     }
 
     getRenderer(): SpEchartsRenderer<T> {
