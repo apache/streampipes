@@ -51,7 +51,7 @@
     "@ngx-translate/core": "^16.0.4",
     "@ngx-translate/http-loader": "^16.0.1",
     "@panzoom/panzoom": "^4.5.1",
-    "angular-gridster2": "^18.0.1",
+    "angular-gridster2": "^19.0.0",
     "codemirror": "^5.65.11",
     "console-browserify": "^1.2.0",
     "d3-array": "^3.2.4",
