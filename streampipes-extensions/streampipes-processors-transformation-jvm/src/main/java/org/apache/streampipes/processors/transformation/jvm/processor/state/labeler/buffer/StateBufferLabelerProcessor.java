@@ -18,13 +18,14 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.buffer;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -35,6 +36,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.state.labe
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
@@ -43,8 +45,6 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.vocabulary.SPSensor;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import com.google.common.math.Stats;
 
@@ -60,8 +60,8 @@ import static org.apache.streampipes.processors.transformation.jvm.processor.sta
 import static org.apache.streampipes.processors.transformation.jvm.processor.state.StateUtils.getLabelStrings;
 import static org.apache.streampipes.processors.transformation.jvm.processor.state.StateUtils.getNumberValues;
 
-public class StateBufferLabelerProcessor extends StreamPipesDataProcessor
-    implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
+public class StateBufferLabelerProcessor implements IStreamPipesDataProcessor,
+    ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   public static final String STATE_FILTER_ID = "stateFilterId";
   public static final String STATE_FIELD_ID = "stateFieldId";
@@ -82,69 +82,65 @@ public class StateBufferLabelerProcessor extends StreamPipesDataProcessor
   private List<Statement> statements;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.buffer", 0)
-        .category(DataProcessorType.STRING_OPERATOR)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.listRequirement(),
-                Labels.withId(SENSOR_VALUE_ID),
-                PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.semanticTypeReqList(SPSensor.STATE),
-                Labels.withId(STATE_FIELD_ID),
-                PropertyScope.NONE)
-            .build())
-        .requiredTextParameter(Labels.withId(LABEL_NAME))
-        .requiredTextParameter(Labels.withId(STATE_FILTER_ID))
-        .requiredSingleValueSelection(Labels.withId(OPERATIONS_ID),
-            Options.from(MINIMUM, MAXIMUM, AVERAGE))
-        .requiredCollection(
-            Labels.withId(LABEL_COLLECTION_ID),
-            StaticProperties.group(Labels.from("group", "Group", ""), false,
-                StaticProperties.singleValueSelection(Labels.withId(COMPARATOR_ID),
-                    Options.from("<", "<=", ">", ">=", "==", "*")),
-                StaticProperties.doubleFreeTextProperty(Labels.withId(NUMBER_VALUE_ID)),
-                StaticProperties.stringFreeTextProperty(Labels.withId(LABEL_STRING_ID))
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        StateBufferLabelerProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.buffer", 0)
+            .category(DataProcessorType.STRING_OPERATOR)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                .requiredPropertyWithUnaryMapping(
+                    EpRequirements.listRequirement(),
+                    Labels.withId(SENSOR_VALUE_ID),
+                    PropertyScope.NONE)
+                .requiredPropertyWithUnaryMapping(
+                    EpRequirements.semanticTypeReqList(SPSensor.STATE),
+                    Labels.withId(STATE_FIELD_ID),
+                    PropertyScope.NONE)
+                .build())
+            .requiredTextParameter(Labels.withId(LABEL_NAME))
+            .requiredTextParameter(Labels.withId(STATE_FILTER_ID))
+            .requiredSingleValueSelection(Labels.withId(OPERATIONS_ID),
+                Options.from(MINIMUM, MAXIMUM, AVERAGE))
+            .requiredCollection(
+                Labels.withId(LABEL_COLLECTION_ID),
+                StaticProperties.group(Labels.from("group", "Group", ""), false,
+                    StaticProperties.singleValueSelection(Labels.withId(COMPARATOR_ID),
+                        Options.from("<", "<=", ">", ">=", "==", "*")),
+                    StaticProperties.doubleFreeTextProperty(Labels.withId(NUMBER_VALUE_ID)),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(LABEL_STRING_ID))
+                )
             )
-        )
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.stringEp(Labels.withId(LABEL), LABEL, SPSensor.STATE, PropertyScope.DIMENSION_PROPERTY)
-        ))
-        .build();
+            .outputStrategy(OutputStrategies.append(
+                EpProperties.stringEp(Labels.withId(LABEL), LABEL, SPSensor.STATE, PropertyScope.DIMENSION_PROPERTY)
+            ))
+            .build()
+    );
   }
 
   @Override
   public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
-                                           ProcessingElementParameterExtractor parameterExtractor)
-      throws SpRuntimeException {
-
+                                           ProcessingElementParameterExtractor parameterExtractor) {
     String labelName = getLabelName(parameterExtractor);
-
     List<String> labelStrings = getLabelStrings(parameterExtractor);
-
     return LabelerUtils.resolveOutputStrategy(processingElement, labelName, labelStrings);
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataProcessorParameters parameters,
+                                SpOutputCollector spOutputCollector,
+                                EventProcessorRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
     sensorListValueProperty = extractor.mappingPropertyValue(SENSOR_VALUE_ID);
     stateProperty = extractor.mappingPropertyValue(STATE_FIELD_ID);
     stateFilter = extractor.singleValueParameter(STATE_FILTER_ID, String.class);
     selectedOperation = extractor.selectedSingleValue(OPERATIONS_ID, String.class);
-
     labelName = getLabelName(extractor);
-
     List<Double> numberValues = getNumberValues(extractor);
     List<String> labelStrings = getLabelStrings(extractor);
     List<String> comparators = getComparators(extractor);
-
     statements = StatementUtils.getStatements(
         numberValues,
         labelStrings,
@@ -152,15 +148,13 @@ public class StateBufferLabelerProcessor extends StreamPipesDataProcessor
   }
 
   @Override
-  public void onEvent(Event inputEvent,
-                      SpOutputCollector collector) throws SpRuntimeException {
+  public void onEvent(Event inputEvent, SpOutputCollector collector) {
     List<Double> values =
         inputEvent.getFieldBySelector(this.sensorListValueProperty).getAsList().parseAsSimpleType(Double.class);
     List<String> states = inputEvent.getFieldBySelector(this.stateProperty).getAsList().parseAsSimpleType(String.class);
 
     if (states.contains(this.stateFilter) || this.stateFilter.equals("*")) {
       double calculatedValue;
-
       if (StateBufferLabelerProcessor.MAXIMUM.equals(this.selectedOperation)) {
         calculatedValue = Stats.of(values).max();
       } else if (StateBufferLabelerProcessor.MINIMUM.equals(this.selectedOperation)) {
@@ -168,14 +162,12 @@ public class StateBufferLabelerProcessor extends StreamPipesDataProcessor
       } else {
         calculatedValue = Stats.of(values).mean();
       }
-
       Event resultEvent = StatementUtils.addLabel(inputEvent, labelName, calculatedValue, this.statements);
       collector.collect(resultEvent);
     }
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }

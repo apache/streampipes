@@ -18,28 +18,28 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SignalEdgeFilterProcessor extends StreamPipesDataProcessor {
+public class SignalEdgeFilterProcessor implements IStreamPipesDataProcessor {
 
   public static final String BOOLEAN_SIGNAL_FIELD = "boolean_signal_field";
   public static final String FLANK_ID = "flank";
@@ -64,33 +64,35 @@ public class SignalEdgeFilterProcessor extends StreamPipesDataProcessor {
   private boolean edgeDetected;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge", 0)
-        .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.FILTER)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(), Labels.withId(BOOLEAN_SIGNAL_FIELD),
-                PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(FLANK_ID), Options.from(BOTH, FLANK_UP, FLANK_DOWN))
-        .requiredIntegerParameter(Labels.withId(DELAY_ID), 0)
-        .requiredSingleValueSelection(Labels.withId(EVENT_SELECTION_ID),
-            Options.from(OPTION_FIRST, OPTION_LAST, OPTION_ALL))
-        .outputStrategy(OutputStrategies.keep())
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        SignalEdgeFilterProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge", 0)
+            .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.FILTER)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(), Labels.withId(BOOLEAN_SIGNAL_FIELD),
+                    PropertyScope.NONE)
+                .build())
+            .requiredSingleValueSelection(Labels.withId(FLANK_ID), Options.from(BOTH, FLANK_UP, FLANK_DOWN))
+            .requiredIntegerParameter(Labels.withId(DELAY_ID), 0)
+            .requiredSingleValueSelection(Labels.withId(EVENT_SELECTION_ID),
+                Options.from(OPTION_FIRST, OPTION_LAST, OPTION_ALL))
+            .outputStrategy(OutputStrategies.keep())
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataProcessorParameters parameters,
+                               SpOutputCollector spOutputCollector,
+                               EventProcessorRuntimeContext runtimeContext) {
     booleanSignalField = parameters.extractor().mappingPropertyValue(BOOLEAN_SIGNAL_FIELD);
     flank = parameters.extractor().selectedSingleValue(FLANK_ID, String.class);
     delay = parameters.extractor().singleValueParameter(DELAY_ID, Integer.class);
     eventSelection = parameters.extractor().selectedSingleValue(EVENT_SELECTION_ID, String.class);
-
     this.lastValue = false;
     this.delayCount = 0;
     this.resultEvents = new ArrayList<>();
@@ -99,39 +101,32 @@ public class SignalEdgeFilterProcessor extends StreamPipesDataProcessor {
 
   @Override
   public void onEvent(Event inputEvent,
-                      SpOutputCollector collector) throws SpRuntimeException {
+                      SpOutputCollector collector) {
     boolean value = inputEvent.getFieldBySelector(this.booleanSignalField).getAsPrimitive().getAsBoolean();
-
     // Detect edges in signal
     if (detectEdge(value, lastValue)) {
       this.edgeDetected = true;
       this.resultEvents = new ArrayList<>();
       this.delayCount = 0;
     }
-
     if (edgeDetected) {
       // Buffer event(s) according to user configuration
       addResultEvent(inputEvent);
-
       // Detect if the delay has been waited for
       if (this.delay == delayCount) {
         for (Event event : this.resultEvents) {
           collector.collect(event);
         }
-
         this.edgeDetected = false;
-
       } else {
         this.delayCount++;
       }
     }
-
     this.lastValue = value;
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 
   private boolean detectEdge(boolean value, boolean lastValue) {

@@ -18,23 +18,23 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.round;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -42,7 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RoundProcessor extends StreamPipesDataProcessor {
+public class RoundProcessor implements IStreamPipesDataProcessor {
   private List<String> fieldsToBeRounded;
   private int numDigits;
   private String roundingMode;
@@ -63,33 +63,37 @@ public class RoundProcessor extends StreamPipesDataProcessor {
   };
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.round", 0)
-        .category(DataProcessorType.TRANSFORM)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithNaryMapping(EpRequirements.numberReq(), Labels.withId(FIELDS), PropertyScope.NONE)
-            .build())
-        .requiredIntegerParameter(Labels.withId(NUM_DIGITS))
-        .requiredSingleValueSelection(Labels.withId(ROUNDING_MODE),
-            Options.from(ROUNDING_MODE_MAP.keySet().toArray(new String[0])))
-        .outputStrategy(OutputStrategies.keep())
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        RoundProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.transformation.jvm.round", 0)
+            .category(DataProcessorType.TRANSFORM)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredPropertyWithNaryMapping(EpRequirements.numberReq(), Labels.withId(FIELDS), PropertyScope.NONE)
+                .build())
+            .requiredIntegerParameter(Labels.withId(NUM_DIGITS))
+            .requiredSingleValueSelection(Labels.withId(ROUNDING_MODE),
+                Options.from(ROUNDING_MODE_MAP.keySet().toArray(new String[0])))
+            .outputStrategy(OutputStrategies.keep())
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataProcessorParameters parameters,
+                               SpOutputCollector spOutputCollector,
+                               EventProcessorRuntimeContext runtimeContext) {
     fieldsToBeRounded = parameters.extractor().mappingPropertyValues(FIELDS);
     numDigits = parameters.extractor().singleValueParameter(NUM_DIGITS, Integer.class);
     roundingMode = parameters.extractor().selectedSingleValue(ROUNDING_MODE, String.class);
   }
 
   @Override
-  public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
+  public void onEvent(Event event, SpOutputCollector collector) {
     for (String fieldToBeRounded : fieldsToBeRounded) {
       double value = event.getFieldBySelector(fieldToBeRounded).getAsPrimitive().getAsDouble();
       double roundedValue =
@@ -100,6 +104,7 @@ public class RoundProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() {
+  public void onPipelineStopped() {
   }
 }
+

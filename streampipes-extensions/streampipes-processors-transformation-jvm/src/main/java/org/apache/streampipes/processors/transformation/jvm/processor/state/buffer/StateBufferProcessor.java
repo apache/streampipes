@@ -18,15 +18,17 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.state.buffer;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -34,16 +36,13 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.SPSensor;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StateBufferProcessor extends StreamPipesDataProcessor {
+public class StateBufferProcessor implements IStreamPipesDataProcessor {
 
   public static final String TIMESTAMP_FIELD_ID = "timestampId";
   public static final String STATE_FIELD_ID = "stateId";
@@ -59,40 +58,42 @@ public class StateBufferProcessor extends StreamPipesDataProcessor {
 
   private Map<String, List> stateBuffer;
 
-
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.processor.state.buffer", 0)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.timestampReq(),
-                Labels.withId(TIMESTAMP_FIELD_ID),
-                PropertyScope.HEADER_PROPERTY)
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.semanticTypeReqList(SPSensor.STATE),
-                Labels.withId(STATE_FIELD_ID),
-                PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.numberReq(),
-                Labels.withId(SENSOR_VALUE_FIELD_ID),
-                PropertyScope.MEASUREMENT_PROPERTY)
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        StateBufferProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.transformation.jvm.processor.state.buffer", 0)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                .requiredPropertyWithUnaryMapping(
+                    EpRequirements.timestampReq(),
+                    Labels.withId(TIMESTAMP_FIELD_ID),
+                    PropertyScope.HEADER_PROPERTY)
+                .requiredPropertyWithUnaryMapping(
+                    EpRequirements.semanticTypeReqList(SPSensor.STATE),
+                    Labels.withId(STATE_FIELD_ID),
+                    PropertyScope.NONE)
+                .requiredPropertyWithUnaryMapping(
+                    EpRequirements.numberReq(),
+                    Labels.withId(SENSOR_VALUE_FIELD_ID),
+                    PropertyScope.MEASUREMENT_PROPERTY)
+                .build()
+            )
+            .outputStrategy(OutputStrategies.fixed(
+                EpProperties.timestampProperty(TIMESTAMP),
+                EpProperties.listDoubleEp(Labels.withId(VALUES), VALUES, SO.NUMBER),
+                EpProperties.listStringEp(Labels.withId(STATE), STATE, SPSensor.STATE)
+            ))
             .build()
-        )
-        .outputStrategy(OutputStrategies.fixed(
-            EpProperties.timestampProperty(TIMESTAMP),
-            EpProperties.listDoubleEp(Labels.withId(VALUES), VALUES, SO.NUMBER),
-            EpProperties.listStringEp(Labels.withId(STATE), STATE, SPSensor.STATE)
-        ))
-        .build();
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataProcessorParameters parameters,
+                                SpOutputCollector spOutputCollector,
+                                EventProcessorRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
     timeProperty = extractor.mappingPropertyValue(TIMESTAMP_FIELD_ID);
     stateProperty = extractor.mappingPropertyValue(STATE_FIELD_ID);
@@ -101,21 +102,14 @@ public class StateBufferProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onEvent(Event inputEvent,
-                      SpOutputCollector collector) throws SpRuntimeException {
+  public void onEvent(Event inputEvent, SpOutputCollector collector) {
     long timestamp = inputEvent.getFieldBySelector(this.timeProperty).getAsPrimitive().getAsLong();
     List<String> states = inputEvent.getFieldBySelector(this.stateProperty).getAsList().parseAsSimpleType(String.class);
     double value = inputEvent.getFieldBySelector(this.sensorValueProperty).getAsPrimitive().getAsDouble();
 
     // add value to state buffer
     for (String state : states) {
-      if (stateBuffer.containsKey(state)) {
-        stateBuffer.get(state).add(value);
-      } else {
-        List tmp = new ArrayList();
-        tmp.add(value);
-        stateBuffer.put(state, tmp);
-      }
+      stateBuffer.computeIfAbsent(state, k -> new ArrayList<>()).add(value);
     }
 
     // emit event if state is not in event anymore
@@ -124,20 +118,18 @@ public class StateBufferProcessor extends StreamPipesDataProcessor {
       if (!states.contains(key)) {
         Event resultEvent = new Event();
         resultEvent.addField(StateBufferProcessor.VALUES, stateBuffer.get(key));
-        resultEvent.addField(StateBufferProcessor.STATE, Arrays.asList(key));
+        resultEvent.addField(StateBufferProcessor.STATE, List.of(key));
         resultEvent.addField(StateBufferProcessor.TIMESTAMP, timestamp);
         collector.collect(resultEvent);
         keysToRemove.add(key);
       }
     }
-
     for (String s : keysToRemove) {
       stateBuffer.remove(s);
     }
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }

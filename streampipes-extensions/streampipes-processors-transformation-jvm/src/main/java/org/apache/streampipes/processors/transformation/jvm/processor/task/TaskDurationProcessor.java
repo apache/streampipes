@@ -17,26 +17,26 @@
  */
 package org.apache.streampipes.processors.transformation.jvm.processor.task;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class TaskDurationProcessor extends StreamPipesDataProcessor {
+public class TaskDurationProcessor implements IStreamPipesDataProcessor {
 
   private static final String TASK_FIELD_KEY = "task-field";
   private static final String TIMESTAMP_FIELD_KEY = "timestamp-field";
@@ -56,34 +56,36 @@ public class TaskDurationProcessor extends StreamPipesDataProcessor {
   private Long lastTimestamp;
   private Double outputDivisor;
 
-
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.taskduration", 0)
-        .category(DataProcessorType.TIME)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.anyProperty(),
-                Labels.withId(TASK_FIELD_KEY),
-                PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                Labels.withId(TIMESTAMP_FIELD_KEY), PropertyScope.NONE)
-            .build())
-        .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
-        .outputStrategy(OutputStrategies.fixed(EpProperties.stringEp(Labels.withId(TASK_ID),
-                "processId", "http://schema.org/taskId"),
-            EpProperties.integerEp(Labels.withId(DURATION_ID), "duration",
-                "http://schema.org/duration")))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        TaskDurationProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.transformation.jvm.taskduration", 0)
+            .category(DataProcessorType.TIME)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                .requiredPropertyWithUnaryMapping(
+                    EpRequirements.anyProperty(),
+                    Labels.withId(TASK_FIELD_KEY),
+                    PropertyScope.NONE)
+                .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                    Labels.withId(TIMESTAMP_FIELD_KEY), PropertyScope.NONE)
+                .build())
+            .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
+            .outputStrategy(OutputStrategies.fixed(EpProperties.stringEp(Labels.withId(TASK_ID),
+                    "processId", "http://schema.org/taskId"),
+                EpProperties.integerEp(Labels.withId(DURATION_ID), "duration",
+                    "http://schema.org/duration")))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataProcessorParameters parameters,
+                               SpOutputCollector spOutputCollector,
+                               EventProcessorRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
     taskFieldSelector = extractor.mappingPropertyValue(TASK_FIELD_KEY);
     timestampFieldSelector = extractor.mappingPropertyValue(TIMESTAMP_FIELD_KEY);
@@ -99,7 +101,7 @@ public class TaskDurationProcessor extends StreamPipesDataProcessor {
 
   @Override
   public void onEvent(Event event,
-                      SpOutputCollector collector) throws SpRuntimeException {
+                      SpOutputCollector collector) {
     String taskValue = event.getFieldBySelector(taskFieldSelector).getAsPrimitive().getAsString();
     Long timestampValue =
         event.getFieldBySelector(timestampFieldSelector).getAsPrimitive().getAsLong();
@@ -110,7 +112,6 @@ public class TaskDurationProcessor extends StreamPipesDataProcessor {
     } else {
       if (!this.lastValue.equals(taskValue)) {
         Long duration = timestampValue - this.lastTimestamp;
-
 
         double result = duration / this.outputDivisor;
 
@@ -131,7 +132,7 @@ public class TaskDurationProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() {
     this.lastValue = null;
   }
 }
