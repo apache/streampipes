@@ -33,6 +33,7 @@ import { SpDataExplorerDataViewOverviewComponent } from './data-explorer-overvie
     selector: 'sp-data-explorer-overview',
     templateUrl: './data-explorer-overview.component.html',
     styleUrls: ['./data-explorer-overview.component.scss'],
+    standalone: false,
 })
 export class DataExplorerOverviewComponent extends SpDataExplorerOverviewDirective {
     resourceCount = 0;

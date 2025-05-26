@@ -49,6 +49,7 @@ import { AddTemplateDialogComponent } from '../../../dialog/add-template-dialog/
     selector: 'sp-pipeline-assembly-options',
     templateUrl: './pipeline-assembly-options.component.html',
     styleUrls: ['./pipeline-assembly-options.component.scss'],
+    standalone: false,
 })
 export class PipelineAssemblyOptionsComponent {
     @Input()

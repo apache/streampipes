@@ -24,6 +24,7 @@ import { RestApi } from '../../services/rest-api.service';
 @Component({
     selector: 'sp-versions',
     templateUrl: './versions.component.html',
+    standalone: false,
 })
 export class VersionsComponent {
     versionInfo: VersionInfo;

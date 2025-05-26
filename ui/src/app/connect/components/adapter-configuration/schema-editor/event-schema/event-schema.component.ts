@@ -51,6 +51,7 @@ import { interval, Subscription } from 'rxjs';
     selector: 'sp-event-schema',
     templateUrl: './event-schema.component.html',
     styleUrls: ['./event-schema.component.scss'],
+    standalone: false,
 })
 export class EventSchemaComponent implements OnChanges, OnDestroy {
     constructor(

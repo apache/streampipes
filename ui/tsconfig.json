@@ -9,10 +9,10 @@
         "projects/streampipes/shared-ui/src/public-api.ts"
       ]
     },
-    "downlevelIteration": true,
     "importHelpers": true,
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
+    "esModuleInterop": true,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
@@ -23,6 +23,7 @@
     "typeRoots": ["node_modules/@types"],
     "types": ["node"],
     "lib": ["es2021", "dom"],
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "skipLibCheck": true
   }
 }

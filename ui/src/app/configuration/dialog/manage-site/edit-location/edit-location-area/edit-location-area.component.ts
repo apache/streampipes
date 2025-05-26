@@ -25,6 +25,7 @@ import { checkForDuplicatesValidator } from '../../../../../core-ui/static-prope
     selector: 'sp-edit-asset-location-area-component',
     templateUrl: './edit-location-area.component.html',
     styleUrls: ['./edit-location-area.component.scss'],
+    standalone: false,
 })
 export class EditAssetLocationAreaComponent implements OnInit {
     @Input()

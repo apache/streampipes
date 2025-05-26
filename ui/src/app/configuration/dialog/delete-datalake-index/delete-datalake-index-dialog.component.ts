@@ -23,7 +23,7 @@ import { DatalakeRestService } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-delete-datalake-index-dialog',
     templateUrl: './delete-datalake-index-dialog.component.html',
-    styleUrls: ['./delete-datalake-index-dialog.component.scss'],
+    standalone: false,
 })
 export class DeleteDatalakeIndexComponent {
     @Input()

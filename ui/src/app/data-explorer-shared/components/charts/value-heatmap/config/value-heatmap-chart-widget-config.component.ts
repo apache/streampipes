@@ -27,6 +27,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-value-heatmap-widget-config',
     templateUrl: './value-heatmap-chart-widget-config.component.html',
+    standalone: false,
 })
 export class SpValueHeatmapWidgetConfigComponent extends BaseWidgetConfig<
     ValueHeatmapChartWidgetModel,

@@ -48,6 +48,7 @@ import { PipelineCodeDialogComponent } from './dialogs/pipeline-code/pipeline-co
     selector: 'sp-pipeline-details-overview-component',
     templateUrl: './pipeline-details.component.html',
     styleUrls: ['./pipeline-details.component.scss'],
+    standalone: false,
 })
 export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     hasPipelineWritePrivileges = false;

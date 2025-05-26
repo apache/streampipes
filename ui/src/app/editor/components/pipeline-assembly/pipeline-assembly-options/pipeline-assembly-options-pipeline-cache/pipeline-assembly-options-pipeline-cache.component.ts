@@ -27,6 +27,7 @@ import { PipelineCanvasMetadata } from '@streampipes/platform-services';
     selector: 'sp-pipeline-assembly-options-pipeline-cache',
     templateUrl: './pipeline-assembly-options-pipeline-cache.component.html',
     styleUrls: ['./pipeline-assembly-options-pipeline-cache.component.scss'],
+    standalone: false,
 })
 export class PipelineAssemblyOptionsPipelineCacheComponent {
     pipelineCached = false;

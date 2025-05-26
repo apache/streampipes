@@ -29,6 +29,7 @@ import { ChartConfigurationService } from '../../../../../../data-explorer-share
     selector: 'sp-field-selection-panel',
     templateUrl: './field-selection-panel.component.html',
     styleUrls: ['./field-selection-panel.component.scss'],
+    standalone: false,
 })
 export class FieldSelectionPanelComponent implements OnInit {
     MAX_INITIAL_FIELDS = 3;

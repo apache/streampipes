@@ -37,6 +37,7 @@ import { PipelineElementSchemaService } from '../../services/pipeline-element-sc
     selector: 'sp-pipeline-element-runtime-info',
     templateUrl: './pipeline-element-runtime-info.component.html',
     styleUrls: ['./pipeline-element-runtime-info.component.scss'],
+    standalone: false,
 })
 export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     @Input()

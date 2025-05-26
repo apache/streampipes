@@ -25,6 +25,7 @@ import { Router } from '@angular/router';
     selector: 'sp-functions-overview',
     templateUrl: './functions-overview.component.html',
     styleUrls: ['./functions-overview.component.scss'],
+    standalone: false,
 })
 export class FunctionsOverviewComponent implements OnInit {
     @Input()

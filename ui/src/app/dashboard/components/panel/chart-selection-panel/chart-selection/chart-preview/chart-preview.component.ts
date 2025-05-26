@@ -24,6 +24,7 @@ import { DataExplorerChartRegistry } from '../../../../../../data-explorer-share
     selector: 'sp-chart-preview',
     templateUrl: './chart-preview.component.html',
     styleUrls: ['./chart-preview.component.scss'],
+    standalone: false,
 })
 export class ChartPreviewComponent implements OnInit {
     @Input()

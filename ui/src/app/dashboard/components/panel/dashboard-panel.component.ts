@@ -55,6 +55,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-dashboard-panel',
     templateUrl: './dashboard-panel.component.html',
     styleUrls: ['./dashboard-panel.component.scss'],
+    standalone: false,
 })
 export class DashboardPanelComponent
     implements OnInit, OnDestroy, SupportsUnsavedChangeDialog

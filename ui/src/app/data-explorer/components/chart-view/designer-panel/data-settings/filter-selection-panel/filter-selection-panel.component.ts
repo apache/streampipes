@@ -28,6 +28,7 @@ import { DataExplorerFieldProviderService } from '../../../../../../data-explore
 @Component({
     selector: 'sp-filter-selection-panel',
     templateUrl: './filter-selection-panel.component.html',
+    standalone: false,
 })
 export class FilterSelectionPanelComponent implements OnInit {
     @Input() sourceConfig: SourceConfig;

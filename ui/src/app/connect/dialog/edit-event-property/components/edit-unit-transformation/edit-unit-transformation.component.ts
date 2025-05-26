@@ -28,6 +28,7 @@ import { EventPropertyPrimitive } from '@streampipes/platform-services';
     selector: 'sp-edit-unit-transformation',
     templateUrl: './edit-unit-transformation.component.html',
     styleUrls: ['./edit-unit-transformation.component.scss'],
+    standalone: false,
 })
 export class EditUnitTransformationComponent {
     @Input() cachedProperty: EventPropertyPrimitive;

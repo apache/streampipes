@@ -26,6 +26,7 @@ import { FormControl, Validators } from '@angular/forms';
     selector: 'sp-token-management-settings',
     templateUrl: './token-management-settings.component.html',
     styleUrls: ['./token-management-settings.component.scss'],
+    standalone: false,
 })
 export class TokenManagementSettingsComponent
     extends BasicProfileSettings

@@ -35,6 +35,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-dashboard-overview',
     templateUrl: './dashboard-overview.component.html',
     styleUrls: ['./dashboard-overview.component.scss'],
+    standalone: false,
 })
 export class DashboardOverviewComponent implements OnInit {
     displayedColumns: string[] = [];

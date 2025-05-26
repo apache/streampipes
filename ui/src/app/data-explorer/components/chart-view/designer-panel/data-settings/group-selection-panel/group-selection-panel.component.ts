@@ -28,6 +28,7 @@ import {
 @Component({
     selector: 'sp-group-selection-panel',
     templateUrl: './group-selection-panel.component.html',
+    standalone: false,
 })
 export class GroupSelectionPanelComponent implements OnInit {
     @Input() sourceConfig: SourceConfig;

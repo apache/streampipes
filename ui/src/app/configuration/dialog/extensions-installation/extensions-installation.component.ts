@@ -26,7 +26,7 @@ import {
 @Component({
     selector: 'sp-extensions-installation-dialog',
     templateUrl: './extensions-installation.component.html',
-    styleUrls: ['./extensions-installation.component.scss'],
+    standalone: false,
 })
 export class SpExtensionsInstallationDialogComponent {
     endpointItems: ExtensionItemDescription[];

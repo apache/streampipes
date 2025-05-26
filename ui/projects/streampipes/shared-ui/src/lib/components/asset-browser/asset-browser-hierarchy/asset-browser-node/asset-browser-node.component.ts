@@ -33,6 +33,7 @@ import { AssetBrowserData } from '../../asset-browser.model';
     selector: 'sp-asset-browser-node',
     templateUrl: 'asset-browser-node.component.html',
     styleUrls: ['./asset-browser-node.component.scss'],
+    standalone: false,
 })
 export class AssetBrowserNodeComponent implements OnInit, OnChanges {
     @Input()

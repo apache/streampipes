@@ -24,6 +24,7 @@ import { MatDrawerContainer } from '@angular/material/sidenav';
     selector: 'sp-sidebar-resize',
     templateUrl: './sidebar-resize.component.html',
     styleUrls: ['./sidebar-resize.component.scss'],
+    standalone: false,
 })
 export class SidebarResizeComponent {
     @Input() currentWidth: number = 450;

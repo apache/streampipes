@@ -27,6 +27,7 @@ import {
     selector: 'sp-pipeline-status',
     templateUrl: './pipeline-status.component.html',
     styleUrls: ['./pipeline-status.component.scss'],
+    standalone: false,
 })
 export class PipelineStatusComponent implements OnInit {
     pipelineStatus: PipelineStatusMessage[];

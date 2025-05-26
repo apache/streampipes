@@ -41,6 +41,7 @@ import { ValidateName } from '../../../../core-ui/static-properties/input.valida
     selector: 'sp-start-adapter-configuration',
     templateUrl: './start-adapter-configuration.component.html',
     styleUrls: ['./start-adapter-configuration.component.scss'],
+    standalone: false,
 })
 export class StartAdapterConfigurationComponent implements OnInit {
     static EventRateTransformationRuleId =

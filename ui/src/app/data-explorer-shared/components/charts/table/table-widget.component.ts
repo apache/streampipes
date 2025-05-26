@@ -31,6 +31,7 @@ import { MatPaginator } from '@angular/material/paginator';
     selector: 'sp-data-explorer-table-widget',
     templateUrl: './table-widget.component.html',
     styleUrls: ['./table-widget.component.scss'],
+    standalone: false,
 })
 export class TableWidgetComponent
     extends BaseDataExplorerWidgetDirective<TableWidgetModel>

@@ -27,6 +27,7 @@ import {
     selector: 'sp-edit-value-transformation',
     templateUrl: './edit-value-transformation.component.html',
     styleUrls: ['./edit-value-transformation.component.scss'],
+    standalone: false,
 })
 export class EditValueTransformationComponent implements OnInit {
     @Input()

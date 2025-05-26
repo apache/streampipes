@@ -24,6 +24,7 @@ import { SpMetricsEntry } from '@streampipes/platform-services';
     selector: 'sp-functions-metrics',
     templateUrl: './functions-metrics.component.html',
     styleUrls: [],
+    standalone: false,
 })
 export class SpFunctionsMetricsComponent
     extends AbstractFunctionDetailsDirective

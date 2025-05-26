@@ -30,6 +30,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
     selector: 'sp-data-explorer-status-widget-config',
     templateUrl: './status-widget-config.component.html',
     styleUrls: ['./status-widget-config.component.scss'],
+    standalone: false,
 })
 export class StatusWidgetConfigComponent extends BaseWidgetConfig<
     StatusWidgetModel,

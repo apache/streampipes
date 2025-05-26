@@ -38,6 +38,7 @@ import { BaseAssetLinksDirective } from '../base-asset-links.directive';
     selector: 'sp-edit-asset-link-dialog-component',
     templateUrl: './edit-asset-link-dialog.component.html',
     styleUrls: ['./edit-asset-link-dialog.component.scss'],
+    standalone: false,
 })
 export class EditAssetLinkDialogComponent
     extends BaseAssetLinksDirective

@@ -25,6 +25,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-aggregate-configuration',
     templateUrl: './aggregate-configuration.component.html',
     styleUrls: ['./aggregate-configuration.component.scss'],
+    standalone: false,
 })
 export class AggregateConfigurationComponent {
     @Input() queryConfig: QueryConfig;

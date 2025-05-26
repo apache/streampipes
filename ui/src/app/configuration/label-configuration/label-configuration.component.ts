@@ -26,6 +26,7 @@ import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
     selector: 'sp-label-configuration',
     templateUrl: './label-configuration.component.html',
     styleUrls: ['./label-configuration.component.scss'],
+    standalone: false,
 })
 export class SpLabelConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

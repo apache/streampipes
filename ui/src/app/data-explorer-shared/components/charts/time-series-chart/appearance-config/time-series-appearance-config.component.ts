@@ -23,6 +23,7 @@ import { ChartConfigurationService } from '../../../../services/chart-configurat
 @Component({
     selector: 'sp-time-series-appearance-config',
     templateUrl: './time-series-appearance-config.component.html',
+    standalone: false,
 })
 export class SpTimeSeriesAppearanceConfigComponent {
     @Input()

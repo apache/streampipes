@@ -24,6 +24,7 @@ import { LinkSettings } from '@streampipes/platform-services';
     selector: 'sp-auth-box',
     templateUrl: './auth-box.component.html',
     styleUrls: ['./auth-box.component.scss'],
+    standalone: false,
 })
 export class AuthBoxComponent {
     @Input()

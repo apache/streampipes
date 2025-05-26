@@ -27,6 +27,7 @@ import { DialogRef } from '@streampipes/shared-ui';
     selector: 'sp-delete-adapter-dialog',
     templateUrl: './delete-adapter-dialog.component.html',
     styleUrls: ['./delete-adapter-dialog.component.scss'],
+    standalone: false,
 })
 export class DeleteAdapterDialogComponent {
     @Input()

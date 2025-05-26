@@ -53,6 +53,7 @@ import { ResizeEchartsService } from '../../../data-explorer-shared/services/res
     selector: 'sp-data-explorer-data-view',
     templateUrl: './data-explorer-chart-view.component.html',
     styleUrls: ['./data-explorer-chart-view.component.scss'],
+    standalone: false,
 })
 export class DataExplorerChartViewComponent
     implements OnInit, SupportsUnsavedChangeDialog

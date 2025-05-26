@@ -28,6 +28,7 @@ import { ChartConfigurationService } from '../../../../../../data-explorer-share
     selector: 'sp-field-selection',
     templateUrl: './field-selection.component.html',
     styleUrls: ['./field-selection.component.scss'],
+    standalone: false,
 })
 export class FieldSelectionComponent implements OnInit {
     @Input() field: FieldConfig;

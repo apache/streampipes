@@ -22,6 +22,7 @@ import { ConfigItem, DataType } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-service-configs-item',
     templateUrl: './service-configs-item.component.html',
+    standalone: false,
 })
 export class ServiceConfigsItemComponent implements OnInit {
     @Input()

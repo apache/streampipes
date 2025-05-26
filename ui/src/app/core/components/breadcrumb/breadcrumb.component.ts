@@ -24,6 +24,7 @@ import { Router } from '@angular/router';
     selector: 'sp-breadcrumb',
     templateUrl: './breadcrumb.component.html',
     styleUrls: ['./breadcrumb.component.scss'],
+    standalone: false,
 })
 export class SpBreadcrumbComponent implements OnInit {
     currentNavItems: SpBreadcrumbItem[] = [];

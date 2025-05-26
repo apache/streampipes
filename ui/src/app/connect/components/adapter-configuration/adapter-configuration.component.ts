@@ -31,6 +31,7 @@ import { SpAdapterDocumentationDialogComponent } from '../../dialog/adapter-docu
     selector: 'sp-adapter-configuration',
     templateUrl: './adapter-configuration.component.html',
     styleUrls: ['./adapter-configuration.component.scss'],
+    standalone: false,
 })
 export class AdapterConfigurationComponent implements OnInit {
     /**

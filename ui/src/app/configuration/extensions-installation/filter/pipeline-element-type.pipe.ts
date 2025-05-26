@@ -22,6 +22,7 @@ import { ExtensionItemDescription } from '@streampipes/platform-services';
 @Pipe({
     name: 'pipelineElementTypeFilter',
     pure: false,
+    standalone: false,
 })
 export class PipelineElementTypeFilter implements PipeTransform {
     transform(

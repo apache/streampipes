@@ -35,6 +35,7 @@ import { SpConfigurationTabsService } from '../configuration-tabs.service';
     selector: 'sp-extensions-installation',
     templateUrl: './extensions-installation.component.html',
     styleUrls: ['./extensions-installation.component.scss'],
+    standalone: false,
 })
 export class SpExtensionsInstallationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

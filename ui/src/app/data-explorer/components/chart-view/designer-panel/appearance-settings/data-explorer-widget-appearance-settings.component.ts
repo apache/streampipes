@@ -27,6 +27,7 @@ import { Subscription } from 'rxjs';
     selector: 'sp-data-explorer-widget-appearance-settings',
     templateUrl: './data-explorer-widget-appearance-settings.component.html',
     styleUrls: ['./data-explorer-widget-appearance-settings.component.scss'],
+    standalone: false,
 })
 export class DataExplorerWidgetAppearanceSettingsComponent
     implements OnInit, OnDestroy

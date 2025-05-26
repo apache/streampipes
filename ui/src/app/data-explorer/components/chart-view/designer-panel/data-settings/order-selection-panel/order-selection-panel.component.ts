@@ -24,6 +24,7 @@ import { ChartConfigurationService } from '../../../../../../data-explorer-share
     selector: 'sp-order-selection-panel',
     templateUrl: './order-selection-panel.component.html',
     styleUrls: ['./order-selection-panel.component.scss'],
+    standalone: false,
 })
 export class OrderSelectionPanelComponent implements OnInit {
     @Input() sourceConfig: SourceConfig;

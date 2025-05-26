@@ -37,6 +37,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-app-static-free-input',
     templateUrl: './static-free-input.component.html',
     styleUrls: ['./static-free-input.component.scss'],
+    standalone: false,
 })
 export class StaticFreeInputComponent
     extends AbstractValidatedStaticPropertyRenderer<FreeTextStaticProperty>

@@ -34,6 +34,7 @@ import {
     selector: 'sp-adapter-details-data',
     templateUrl: './adapter-details-data.component.html',
     styleUrl: './adapter-details-data.component.scss',
+    standalone: false,
 })
 export class AdapterDetailsDataComponent
     extends SpAbstractAdapterDetailsDirective

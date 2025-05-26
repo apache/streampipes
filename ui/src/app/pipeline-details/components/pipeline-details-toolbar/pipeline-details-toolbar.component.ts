@@ -21,6 +21,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
     selector: 'sp-pipeline-details-toolbar',
     templateUrl: './pipeline-details-toolbar.component.html',
+    standalone: false,
 })
 export class PipelineDetailsToolbarComponent {
     @Input()

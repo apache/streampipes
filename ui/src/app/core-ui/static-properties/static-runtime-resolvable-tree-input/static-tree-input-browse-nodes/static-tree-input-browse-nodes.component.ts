@@ -38,6 +38,7 @@ import { StaticTreeInputServiceService } from '../static-tree-input-service.serv
         './static-tree-input-browse-nodes.component.scss',
         '../static-runtime-resolvable-tree-input.component.scss',
     ],
+    standalone: false,
 })
 export class StaticTreeInputBrowseNodesComponent implements OnInit {
     @Input()

@@ -35,6 +35,7 @@ import { ValidateName } from '../../../../core-ui/static-properties/input.valida
     selector: 'sp-save-pipeline-settings',
     templateUrl: './save-pipeline-settings.component.html',
     styleUrls: ['./save-pipeline-settings.component.scss'],
+    standalone: false,
 })
 export class SavePipelineSettingsComponent implements OnInit {
     @Input()

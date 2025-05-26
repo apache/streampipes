@@ -25,6 +25,7 @@ import { TimeSeriesChartWidgetModel } from '../../charts/time-series-chart/model
     selector: 'sp-select-color-properties-config',
     templateUrl: './select-color-properties-config.component.html',
     styleUrls: ['./select-color-properties-config.component.scss'],
+    standalone: false,
 })
 export class SelectColorPropertiesConfigComponent implements OnInit {
     @Output() changeSelectedProperties: EventEmitter<DataExplorerField[]> =

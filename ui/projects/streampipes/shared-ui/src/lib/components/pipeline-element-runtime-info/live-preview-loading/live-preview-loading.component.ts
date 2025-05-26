@@ -22,5 +22,6 @@ import { Component } from '@angular/core';
     selector: 'sp-live-preview-loading',
     templateUrl: './live-preview-loading.component.html',
     styleUrls: ['./live-preview-loading.component.scss'],
+    standalone: false,
 })
 export class LivePreviewLoadingComponent {}

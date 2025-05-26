@@ -30,6 +30,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-pipeline-element-topics',
     templateUrl: './topics.component.html',
     styleUrls: ['./topics.component.scss'],
+    standalone: false,
 })
 export class TopicsComponent implements OnInit {
     translateService = inject(TranslateService);

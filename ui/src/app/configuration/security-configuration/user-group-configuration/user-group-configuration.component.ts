@@ -31,6 +31,7 @@ import { MatDialog } from '@angular/material/dialog';
     selector: 'sp-security-user-group-config',
     templateUrl: './user-group-configuration.component.html',
     styleUrls: ['./user-group-configuration.component.scss'],
+    standalone: false,
 })
 export class SecurityUserGroupConfigComponent implements OnInit {
     dataSource: MatTableDataSource<Group>;

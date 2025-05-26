@@ -34,6 +34,7 @@ import { LoginService } from '../../services/login.service';
     selector: 'sp-set-new-password',
     templateUrl: './set-new-password.component.html',
     styleUrls: ['../login/login.component.scss'],
+    standalone: false,
 })
 export class SetNewPasswordComponent extends BaseLoginPageDirective {
     parentForm: UntypedFormGroup;

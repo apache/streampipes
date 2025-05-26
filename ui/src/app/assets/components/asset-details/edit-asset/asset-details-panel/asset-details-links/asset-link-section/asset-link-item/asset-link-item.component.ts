@@ -24,6 +24,7 @@ import { Router } from '@angular/router';
     selector: 'sp-asset-link-item',
     templateUrl: './asset-link-item.component.html',
     styleUrls: ['./asset-link-item.component.scss'],
+    standalone: false,
 })
 export class SpAssetLinkItemComponent {
     @Input()

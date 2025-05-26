@@ -23,6 +23,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
     selector: 'sp-edit-asset-location-component',
     templateUrl: './edit-location.component.html',
+    standalone: false,
 })
 export class EditAssetLocationComponent implements OnInit {
     @Input()

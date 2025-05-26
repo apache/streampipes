@@ -24,6 +24,7 @@ import { SpServiceRegistration } from '@streampipes/platform-services';
     selector: 'sp-extensions-service-details-dialog',
     templateUrl: './extensions-service-details-dialog.component.html',
     styleUrls: ['./extensions-service-details-dialog.component.scss'],
+    standalone: false,
 })
 export class SpExtensionsServiceDetailsDialogComponent {
     @Input()

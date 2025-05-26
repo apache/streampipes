@@ -50,6 +50,7 @@ import { Subscription } from 'rxjs';
     selector: 'sp-pipeline-assembly-drawing-area',
     templateUrl: './pipeline-assembly-drawing-area.component.html',
     styleUrls: ['./pipeline-assembly-drawing-area.component.scss'],
+    standalone: false,
 })
 export class PipelineAssemblyDrawingAreaComponent implements OnInit {
     @Input()

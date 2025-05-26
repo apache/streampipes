@@ -29,6 +29,7 @@ import 'codemirror/mode/htmlembedded/htmlembedded';
     selector: 'sp-email-template-configuration',
     templateUrl: './email-template-configuration.component.html',
     styleUrls: ['./email-template-configuration.component.scss'],
+    standalone: false,
 })
 export class SpEmailTemplateConfigurationComponent implements OnInit {
     template: EmailTemplate;

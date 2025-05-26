@@ -22,6 +22,7 @@ import { Component, Input } from '@angular/core';
     selector: 'sp-adapter-configuration-header',
     templateUrl: './adapter-configuration-header.component.html',
     styleUrls: ['./adapter-configuration-header.component.scss'],
+    standalone: false,
 })
 export class AdapterConfigurationHeaderComponent {
     /**

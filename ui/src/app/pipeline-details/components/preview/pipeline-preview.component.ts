@@ -42,6 +42,7 @@ import { PipelineAssemblyDrawingAreaComponent } from '../../../editor/components
     selector: 'sp-pipeline-preview',
     templateUrl: './pipeline-preview.component.html',
     styleUrls: ['./pipeline-preview.component.scss'],
+    standalone: false,
 })
 export class PipelinePreviewComponent implements OnInit, AfterViewInit {
     @Input()

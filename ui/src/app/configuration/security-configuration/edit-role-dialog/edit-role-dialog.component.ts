@@ -35,6 +35,7 @@ import { DialogRef } from '@streampipes/shared-ui';
     selector: 'sp-edit-role-dialog',
     templateUrl: './edit-role-dialog.component.html',
     styleUrls: ['./edit-role-dialog.component.scss'],
+    standalone: false,
 })
 export class EditRoleDialogComponent implements OnInit {
     @Input()

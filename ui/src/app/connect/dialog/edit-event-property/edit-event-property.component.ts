@@ -47,6 +47,7 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
     selector: 'sp-edit-event-property',
     templateUrl: './edit-event-property.component.html',
     styleUrls: ['./edit-event-property.component.scss'],
+    standalone: false,
 })
 export class EditEventPropertyComponent implements OnInit {
     @Input() property: EventPropertyUnion;

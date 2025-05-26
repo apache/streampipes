@@ -33,6 +33,7 @@ import { DataExplorerChartRegistry } from '../../../../../data-explorer-shared/r
     selector: 'sp-explorer-visualisation-settings',
     templateUrl: './data-explorer-visualisation-settings.component.html',
     styleUrls: ['./data-explorer-visualisation-settings.component.scss'],
+    standalone: false,
 })
 export class DataExplorerVisualisationSettingsComponent
     implements OnInit, OnChanges

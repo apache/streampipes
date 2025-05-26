@@ -22,6 +22,7 @@ import { PipelineElementConfig } from '../model/editor.model';
 @Pipe({
     name: 'enabledPipelineElement',
     pure: false,
+    standalone: false,
 })
 export class EnabledPipelineElementFilter implements PipeTransform {
     transform(items: PipelineElementConfig[]): any {

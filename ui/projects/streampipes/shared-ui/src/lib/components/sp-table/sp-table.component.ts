@@ -40,6 +40,7 @@ import { MatPaginator } from '@angular/material/paginator';
     selector: 'sp-table',
     templateUrl: './sp-table.component.html',
     styleUrls: ['./sp-table.component.scss'],
+    standalone: false,
 })
 export class SpTableComponent<T> implements AfterViewInit, AfterContentInit {
     @ContentChildren(MatHeaderRowDef) headerRowDefs: QueryList<MatHeaderRowDef>;

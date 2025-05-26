@@ -22,6 +22,7 @@ import { DialogRef } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-adapter-documentation-dialog',
     templateUrl: './adapter-documentation-dialog.component.html',
+    standalone: false,
 })
 export class SpAdapterDocumentationDialogComponent {
     @Input()

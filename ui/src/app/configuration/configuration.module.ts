@@ -52,7 +52,7 @@ import { SpDataImportDialogComponent } from './export/import-dialog/data-import-
 import { SpDataExportItemComponent } from './export/export-dialog/data-export-item/data-export-item.component';
 import { SpEditLabelComponent } from './label-configuration/edit-label/edit-label.component';
 import { SpLabelConfigurationComponent } from './label-configuration/label-configuration.component';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerComponent, ColorPickerDirective } from 'ngx-color-picker';
 import { ExtensionsServiceManagementComponent } from './extensions-service-management/extensions-service-management.component';
 import { ServiceConfigsComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs.component';
 import { ServiceConfigsTextComponent } from './extensions-service-management/extensions-service-configuration/service-configs/service-configs-text/service-configs-text.component';
@@ -193,7 +193,8 @@ import { TranslatePipe } from '@ngx-translate/core';
             },
         ]),
         SharedUiModule,
-        ColorPickerModule,
+        ColorPickerComponent,
+        ColorPickerDirective,
         CodemirrorModule,
         MatSort,
         MatListModule,

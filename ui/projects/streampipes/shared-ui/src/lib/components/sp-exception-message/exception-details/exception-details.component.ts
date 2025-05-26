@@ -23,6 +23,7 @@ import { SpLogMessage } from '@streampipes/platform-services';
     selector: 'sp-exception-details',
     templateUrl: './exception-details.component.html',
     styleUrl: './exception-details.component.scss',
+    standalone: false,
 })
 export class SpExceptionDetailsComponent {
     @Input()

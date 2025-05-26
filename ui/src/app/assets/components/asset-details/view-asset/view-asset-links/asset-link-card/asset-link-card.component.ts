@@ -24,6 +24,7 @@ import { Router } from '@angular/router';
     selector: 'sp-asset-link-card',
     templateUrl: './asset-link-card.component.html',
     styleUrls: ['./asset-link-card.component.scss'],
+    standalone: false,
 })
 export class AssetLinkCardComponent implements OnInit {
     @Input()

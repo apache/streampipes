@@ -41,6 +41,7 @@ import { SpConfigurationRoutes } from '../configuration.routes';
     selector: 'sp-datalake-configuration',
     templateUrl: './datalake-configuration.component.html',
     styleUrls: ['./datalake-configuration.component.scss'],
+    standalone: false,
 })
 export class DatalakeConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

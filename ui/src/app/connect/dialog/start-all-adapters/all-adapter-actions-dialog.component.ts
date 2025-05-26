@@ -26,7 +26,7 @@ import {
 @Component({
     selector: 'sp-start-all-adapters-dialog',
     templateUrl: './all-adapter-actions-dialog.component.html',
-    styleUrls: ['./all-adapter-actions-dialog.component.scss'],
+    standalone: false,
 })
 export class AllAdapterActionsComponent implements OnInit {
     @Input()

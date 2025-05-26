@@ -33,6 +33,7 @@ import {
     selector: 'sp-view-asset-basics',
     templateUrl: './view-asset-basics.component.html',
     styleUrls: ['./view-asset-basics.component.scss'],
+    standalone: false,
 })
 export class ViewAssetBasicsComponent implements OnInit, OnChanges {
     @Input()

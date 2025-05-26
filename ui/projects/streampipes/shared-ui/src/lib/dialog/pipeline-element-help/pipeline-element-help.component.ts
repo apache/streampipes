@@ -29,6 +29,7 @@ import { DialogRef } from '../base-dialog/dialog-ref';
     selector: 'sp-pipeline-element-help',
     templateUrl: './pipeline-element-help.component.html',
     styleUrls: ['./pipeline-element-help.component.scss'],
+    standalone: false,
 })
 export class PipelineElementHelpComponent implements OnInit {
     selectedTabIndex = 0;

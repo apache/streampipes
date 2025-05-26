@@ -27,6 +27,7 @@ import {
     selector: 'sp-adapter-code-panel',
     templateUrl: './adapter-code-panel.component.html',
     styleUrls: ['./adapter-code-panel.component.scss'],
+    standalone: false,
 })
 export class AdapterCodePanelComponent implements OnInit {
     @Input()

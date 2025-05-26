@@ -28,6 +28,7 @@ import {
     selector: 'sp-pipeline-element-preview',
     templateUrl: './pipeline-element-preview.component.html',
     styleUrls: ['./pipeline-element-preview.component.scss'],
+    standalone: false,
 })
 export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
     @Input()

@@ -30,6 +30,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-add-to-collection',
     templateUrl: './add-to-collection.component.html',
     styleUrls: ['./add-to-collection.component.scss'],
+    standalone: false,
 })
 export class AddToCollectionComponent {
     translateService = inject(TranslateService);

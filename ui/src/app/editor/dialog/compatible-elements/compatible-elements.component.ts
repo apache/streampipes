@@ -29,6 +29,7 @@ import {
     selector: 'sp-compatible-elements',
     templateUrl: './compatible-elements.component.html',
     styleUrls: ['./compatible-elements.component.scss'],
+    standalone: false,
 })
 export class CompatibleElementsComponent implements OnInit {
     @Input()

@@ -21,6 +21,7 @@ import { EventPropertyUnion } from '@streampipes/platform-services';
 
 @Pipe({
     name: 'sortByRuntimeName',
+    standalone: false,
 })
 export class SortByRuntimeNamePipe implements PipeTransform {
     transform(value: EventPropertyUnion[]): any[] {

@@ -34,6 +34,7 @@ import { DataExplorerWidgetDataSettingsComponent } from './data-settings/data-ex
     selector: 'sp-data-explorer-designer-panel',
     templateUrl: './data-explorer-designer-panel.component.html',
     styleUrls: ['./data-explorer-designer-panel.component.scss'],
+    standalone: false,
 })
 export class DataExplorerDesignerPanelComponent {
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;

@@ -24,6 +24,7 @@ import { SpNavigationItem } from '../../models/sp-navigation.model';
     selector: 'sp-basic-nav-tabs',
     templateUrl: './basic-nav-tabs.component.html',
     styleUrls: ['./basic-nav-tabs.component.scss'],
+    standalone: false,
 })
 export class SpBasicNavTabsComponent {
     @Input()

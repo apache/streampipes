@@ -22,6 +22,7 @@ import { Component, Input } from '@angular/core';
     selector: 'sp-warning-box',
     templateUrl: './warning-box.component.html',
     styleUrls: ['./warning-box.component.scss'],
+    standalone: false,
 })
 export class SpWarningBoxComponent {
     @Input()

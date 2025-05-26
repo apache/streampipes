@@ -29,6 +29,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
     selector: 'sp-schema-editor-header',
     templateUrl: './schema-editor-header.component.html',
     styleUrls: ['./schema-editor-header.component.scss'],
+    standalone: false,
 })
 export class SchemaEditorHeaderComponent {
     @Input() countSelected: number;

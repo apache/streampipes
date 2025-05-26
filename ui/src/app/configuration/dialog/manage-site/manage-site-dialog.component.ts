@@ -30,6 +30,7 @@ import { EditAssetLocationComponent } from './edit-location/edit-location.compon
     selector: 'sp-manage-site-dialog-component',
     templateUrl: './manage-site-dialog.component.html',
     styleUrls: ['./manage-site-dialog.component.scss'],
+    standalone: false,
 })
 export class ManageSiteDialogComponent implements OnInit {
     @Input()

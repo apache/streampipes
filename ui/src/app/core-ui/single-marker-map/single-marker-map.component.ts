@@ -44,6 +44,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
             multi: true,
         },
     ],
+    standalone: false,
 })
 export class SingleMarkerMapComponent implements OnInit, ControlValueAccessor {
     @Input()

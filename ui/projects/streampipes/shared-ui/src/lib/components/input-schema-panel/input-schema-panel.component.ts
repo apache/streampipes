@@ -23,6 +23,7 @@ import { SpDataStream } from '@streampipes/platform-services';
     selector: 'sp-input-schema-panel',
     templateUrl: './input-schema-panel.component.html',
     styleUrls: ['./input-schema-panel.component.scss'],
+    standalone: false,
 })
 export class InputSchemaPanelComponent {
     @Input()

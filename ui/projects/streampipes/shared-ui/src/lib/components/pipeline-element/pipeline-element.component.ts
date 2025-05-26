@@ -30,6 +30,7 @@ import {
     selector: 'sp-pipeline-element',
     templateUrl: './pipeline-element.component.html',
     styleUrls: ['./pipeline-element.component.scss'],
+    standalone: false,
 })
 export class PipelineElementComponent {
     showImage: any;

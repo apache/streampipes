@@ -23,6 +23,7 @@ import { PipelineElementSchemaService } from '../../../services/pipeline-element
 @Component({
     selector: 'sp-input-schema-property',
     templateUrl: './input-schema-property.component.html',
+    standalone: false,
 })
 export class InputSchemaPropertyComponent implements OnInit {
     @Input()

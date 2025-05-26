@@ -23,6 +23,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
     selector: 'sp-select-single-property-config',
     templateUrl: './select-single-property-config.component.html',
     styleUrls: [],
+    standalone: false,
 })
 export class SelectSinglePropertyConfigComponent {
     @Output() changeSelectedProperty: EventEmitter<DataExplorerField> =

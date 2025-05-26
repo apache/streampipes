@@ -39,6 +39,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-data-explorer-overview-table',
     templateUrl: './data-explorer-overview-table.component.html',
     styleUrls: ['../data-explorer-overview.component.scss'],
+    standalone: false,
 })
 export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverviewDirective {
     dataSource = new MatTableDataSource<DataExplorerWidgetModel>();

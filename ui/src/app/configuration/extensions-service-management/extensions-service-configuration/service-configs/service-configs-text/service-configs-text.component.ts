@@ -24,6 +24,7 @@ import { ConfigItem } from '@streampipes/platform-services';
     selector: 'sp-service-configs-text',
     templateUrl: './service-configs-text.component.html',
     providers: [ConfigurationService],
+    standalone: false,
 })
 export class ServiceConfigsTextComponent {
     @Input() configuration: ConfigItem;

@@ -23,6 +23,7 @@ import { DataType } from '@streampipes/platform-services';
     selector: 'sp-edit-data-type',
     templateUrl: './edit-data-type.component.html',
     styleUrls: ['./edit-data-type.component.scss'],
+    standalone: false,
 })
 export class EditDataTypeComponent {
     @Input() cachedProperty: any;

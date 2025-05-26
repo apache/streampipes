@@ -26,6 +26,7 @@ import {
 @Component({
     selector: 'sp-asset-location',
     templateUrl: './asset-location.component.html',
+    standalone: false,
 })
 export class AssetLocationComponent implements OnInit {
     @Input()

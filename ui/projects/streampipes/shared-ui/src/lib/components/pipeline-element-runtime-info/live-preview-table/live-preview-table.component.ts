@@ -24,6 +24,7 @@ import { RuntimeInfo } from '../pipeline-element-runtime-info.model';
     selector: 'sp-live-preview-table',
     templateUrl: './live-preview-table.component.html',
     styleUrls: ['./live-preview-table.component.scss'],
+    standalone: false,
 })
 export class LivePreviewTableComponent {
     @Input()

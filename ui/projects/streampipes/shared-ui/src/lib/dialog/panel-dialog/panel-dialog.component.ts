@@ -62,6 +62,7 @@ import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
             transition('* => *', animate(300)),
         ]),
     ],
+    standalone: false,
 })
 export class PanelDialogComponent<T>
     extends BaseDialogComponent<T>

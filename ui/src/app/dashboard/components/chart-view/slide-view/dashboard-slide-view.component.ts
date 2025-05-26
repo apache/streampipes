@@ -31,6 +31,7 @@ import { DataExplorerChartRegistry } from '../../../../data-explorer-shared/regi
     selector: 'sp-dashboard-slide-view',
     templateUrl: './dashboard-slide-view.component.html',
     styleUrls: ['./dashboard-slide-view.component.scss'],
+    standalone: false,
 })
 export class DashboardSlideViewComponent
     extends AbstractChartViewDirective

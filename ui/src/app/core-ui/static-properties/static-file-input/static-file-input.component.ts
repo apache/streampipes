@@ -34,6 +34,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-static-file-input',
     templateUrl: './static-file-input.component.html',
     styleUrls: ['./static-file-input.component.scss'],
+    standalone: false,
 })
 export class StaticFileInputComponent
     extends AbstractValidatedStaticPropertyRenderer<FileStaticProperty>

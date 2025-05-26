@@ -23,7 +23,7 @@ import { Pipeline } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-can-not-edit-adapter-dialog',
     templateUrl: './can-not-edit-adapter-dialog.component.html',
-    styleUrls: ['./can-not-edit-adapter-dialog.component.scss'],
+    standalone: false,
 })
 export class CanNotEditAdapterDialog {
     @Input()

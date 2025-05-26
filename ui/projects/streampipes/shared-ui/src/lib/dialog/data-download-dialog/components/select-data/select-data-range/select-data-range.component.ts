@@ -30,6 +30,7 @@ import { DataExportConfig } from '../../../model/data-export-config.model';
         './select-data-range.component.scss',
         '../select-data.component.scss',
     ],
+    standalone: false,
 })
 export class SelectDataRangeComponent implements OnInit {
     @Input() dataExplorerDataConfig: DataExplorerDataConfig;

@@ -45,6 +45,7 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
     selector: 'sp-notifications',
     templateUrl: './notifications.component.html',
     styleUrls: ['./notifications.component.scss'],
+    standalone: false,
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
     static readonly NOTIFICATIONS_APP_ID =

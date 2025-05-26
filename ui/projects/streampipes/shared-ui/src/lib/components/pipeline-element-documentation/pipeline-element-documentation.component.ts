@@ -24,6 +24,7 @@ import { Lexer, Parser } from 'marked';
     selector: 'sp-pipeline-element-documentation',
     templateUrl: './pipeline-element-documentation.component.html',
     styleUrls: ['./pipeline-element-documentation.component.scss'],
+    standalone: false,
 })
 export class PipelineElementDocumentationComponent implements OnInit {
     @Input()

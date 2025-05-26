@@ -23,6 +23,7 @@ import { UserErrorMessage } from '../../core-model/base/UserErrorMessage';
     selector: 'sp-error-hint',
     templateUrl: './error-hint.component.html',
     styleUrls: ['./error-hint.component.scss'],
+    standalone: false,
 })
 export class ErrorHintComponent implements OnInit {
     @Input() errorMessages: UserErrorMessage[];

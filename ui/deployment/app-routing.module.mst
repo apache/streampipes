@@ -56,7 +56,6 @@ const routes: Routes = [
   { path: 'set-new-password', component: SetNewPasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
   { path: 'startup', component: StartupComponent },
   { path: '', component: StreampipesComponent, children: [
-      { path: '', component: HomeComponent, canActivate: [ConfiguredCanActivateGuard] },
       {{#modulesActive}}
       {{#componentImport}}
       { path: '{{{link}}}', component: {{{component}}}, data: { privileges: {{{privileges}}}, authPageNames: [{{{pageNames}}}]}},

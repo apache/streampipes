@@ -43,6 +43,7 @@ import {
     selector: 'sp-data-explorer-map-widget',
     templateUrl: './map-widget.component.html',
     styleUrls: ['./map-widget.component.scss'],
+    standalone: false,
 })
 export class MapWidgetComponent
     extends BaseDataExplorerWidgetDirective<MapWidgetModel>

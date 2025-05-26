@@ -36,6 +36,7 @@ import { LoginService } from '../../../login/services/login.service';
     selector: 'sp-toolbar',
     templateUrl: './toolbar.component.html',
     styleUrls: ['./toolbar.component.scss'],
+    standalone: false,
 })
 export class ToolbarComponent
     extends BaseNavigationComponent

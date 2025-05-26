@@ -29,6 +29,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-data-explorer-heatmap-widget-config',
     templateUrl: './heatmap-widget-config.component.html',
+    standalone: false,
 })
 export class HeatmapWidgetConfigComponent extends BaseWidgetConfig<
     HeatmapWidgetModel,

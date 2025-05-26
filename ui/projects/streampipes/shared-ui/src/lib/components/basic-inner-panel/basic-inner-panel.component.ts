@@ -22,6 +22,7 @@ import { Component, Input } from '@angular/core';
     selector: 'sp-basic-inner-panel',
     templateUrl: './basic-inner-panel.component.html',
     styleUrls: ['./basic-inner-panel.component.scss'],
+    standalone: false,
 })
 export class SpBasicInnerPanelComponent {
     @Input()

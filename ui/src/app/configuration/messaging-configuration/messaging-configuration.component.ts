@@ -28,6 +28,7 @@ import { MessagingSettings } from '@streampipes/platform-services';
     selector: 'sp-messaging-configuration',
     templateUrl: './messaging-configuration.component.html',
     styleUrls: ['./messaging-configuration.component.scss'],
+    standalone: false,
 })
 export class MessagingConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

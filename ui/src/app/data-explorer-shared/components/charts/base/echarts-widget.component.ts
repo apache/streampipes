@@ -34,6 +34,7 @@ import { ResizeEchartsService } from '../../../services/resize-echarts.service';
     selector: 'sp-data-explorer-echarts-widget',
     templateUrl: './echarts-widget.component.html',
     styleUrls: ['./echarts-widget.component.scss'],
+    standalone: false,
 })
 export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
     extends BaseDataExplorerWidgetDirective<T>

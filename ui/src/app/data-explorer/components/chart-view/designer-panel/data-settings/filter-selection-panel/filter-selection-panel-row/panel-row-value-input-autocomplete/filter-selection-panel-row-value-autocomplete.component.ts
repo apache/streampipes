@@ -23,6 +23,7 @@ import { EscapeNumberFilterService } from '../escape-number-filter.service';
     selector: 'sp-filter-selection-panel-row-value-autocomplete',
     templateUrl:
         './filter-selection-panel-row-value-autocomplete.component.html',
+    standalone: false,
 })
 export class FilterSelectionPanelRowValueAutocompleteComponent
     implements OnInit

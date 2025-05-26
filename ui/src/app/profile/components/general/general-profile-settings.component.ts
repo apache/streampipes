@@ -35,6 +35,7 @@ import { Router } from '@angular/router';
     selector: 'sp-general-profile-settings',
     templateUrl: './general-profile-settings.component.html',
     styleUrls: ['./general-profile-settings.component.scss'],
+    standalone: false,
 })
 export class GeneralProfileSettingsComponent
     extends BasicProfileSettings

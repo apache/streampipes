@@ -39,6 +39,7 @@ import { DateFormatService } from '@streampipes/shared-ui';
     styleUrls: [
         '../../../../data-explorer/components/overview/data-explorer-overview.component.scss',
     ],
+    standalone: false,
 })
 export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirective {
     dataSource = new MatTableDataSource<Dashboard>();

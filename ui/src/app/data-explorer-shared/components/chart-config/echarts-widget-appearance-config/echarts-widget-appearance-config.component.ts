@@ -23,6 +23,7 @@ import { ChartConfigurationService } from '../../../services/chart-configuration
 @Component({
     selector: 'sp-echarts-widget-appearance-config',
     templateUrl: './echarts-widget-appearance-config.component.html',
+    standalone: false,
 })
 export class SpEchartsWidgetAppearanceConfigComponent implements OnInit {
     @Input()

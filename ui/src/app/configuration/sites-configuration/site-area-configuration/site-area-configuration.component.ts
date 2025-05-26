@@ -30,6 +30,7 @@ import { DialogService, PanelType } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-site-area-configuration',
     templateUrl: './site-area-configuration.component.html',
+    standalone: false,
 })
 export class SiteAreaConfigurationComponent implements OnInit {
     @Input()

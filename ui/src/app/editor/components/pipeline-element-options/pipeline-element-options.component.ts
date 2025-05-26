@@ -50,6 +50,7 @@ import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
     selector: 'sp-pipeline-element-options',
     templateUrl: './pipeline-element-options.component.html',
     styleUrls: ['./pipeline-element-options.component.scss'],
+    standalone: false,
 })
 export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     recommendationsAvailable: any = false;

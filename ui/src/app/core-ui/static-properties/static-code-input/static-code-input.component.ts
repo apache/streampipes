@@ -33,6 +33,7 @@ import CodeMirror from 'codemirror';
     selector: 'sp-static-code-input',
     templateUrl: './static-code-input.component.html',
     styleUrls: ['./static-code-input.component.scss'],
+    standalone: false,
 })
 export class StaticCodeInputComponent
     extends AbstractValidatedStaticPropertyRenderer<CodeInputStaticProperty>

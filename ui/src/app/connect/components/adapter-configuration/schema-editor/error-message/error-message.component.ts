@@ -23,6 +23,7 @@ import { SpLogMessage } from '@streampipes/platform-services';
     selector: 'sp-error-message',
     templateUrl: './error-message.component.html',
     styleUrls: ['./error-message.component.scss'],
+    standalone: false,
 })
 export class ErrorMessageComponent {
     @Input() errorMessage: SpLogMessage;

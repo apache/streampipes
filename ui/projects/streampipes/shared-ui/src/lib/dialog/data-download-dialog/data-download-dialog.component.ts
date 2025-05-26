@@ -27,6 +27,7 @@ import { DataExportService } from './services/data-export.service';
     selector: 'sp-data-download-dialog',
     templateUrl: 'data-download-dialog.component.html',
     styleUrls: ['./data-download-dialog.component.scss'],
+    standalone: false,
 })
 export class DataDownloadDialogComponent implements OnInit {
     @Input() dataDownloadDialogModel: DataDownloadDialogModel;

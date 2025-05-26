@@ -25,6 +25,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
         './chart-selection-panel.component.scss',
         '../../../../data-explorer/components/chart-view/designer-panel/data-explorer-designer-panel.component.scss',
     ],
+    standalone: false,
 })
 export class ChartSelectionPanelComponent {
     @Output()

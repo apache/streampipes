@@ -41,6 +41,7 @@ import { SpColorizationService } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-asset-details-labels',
     templateUrl: './asset-details-labels.component.html',
+    standalone: false,
 })
 export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
     @Input()

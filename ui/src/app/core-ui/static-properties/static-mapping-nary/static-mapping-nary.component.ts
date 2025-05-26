@@ -25,6 +25,7 @@ import { DisplayRecommendedPipe } from '../filter/display-recommended.pipe';
     selector: 'sp-app-static-mapping-nary',
     templateUrl: './static-mapping-nary.component.html',
     styleUrls: ['./static-mapping-nary.component.scss'],
+    standalone: false,
 })
 export class StaticMappingNaryComponent
     extends StaticMappingComponent<MappingPropertyNary>

@@ -24,6 +24,7 @@ import * as FileSaver from 'file-saver';
     selector: 'sp-authentication-configuration',
     templateUrl: './authentication-configuration.component.html',
     styleUrls: ['./authentication-configuration.component.scss'],
+    standalone: false,
 })
 export class SecurityAuthenticationConfigurationComponent {
     constructor(private configurationService: ConfigurationService) {}

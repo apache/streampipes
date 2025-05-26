@@ -23,6 +23,7 @@ import { SpLabel } from '@streampipes/platform-services';
     selector: 'sp-edit-label',
     templateUrl: './edit-label.component.html',
     styleUrls: ['./edit-label.component.scss'],
+    standalone: false,
 })
 export class SpEditLabelComponent implements OnInit {
     @Input()

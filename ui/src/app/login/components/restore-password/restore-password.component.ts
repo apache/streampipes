@@ -30,6 +30,7 @@ import { BaseLoginPageDirective } from '../base-login-page.directive';
     selector: 'sp-restore-password',
     templateUrl: './restore-password.component.html',
     styleUrls: ['../login/login.component.scss'],
+    standalone: false,
 })
 export class RestorePasswordComponent extends BaseLoginPageDirective {
     parentForm: UntypedFormGroup;

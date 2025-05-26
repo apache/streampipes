@@ -22,6 +22,7 @@ import { Component, Input } from '@angular/core';
     selector: 'sp-invalid-configuration',
     templateUrl: './invalid-configuration.component.html',
     styleUrls: ['../no-data/no-data-in-date-range.component.scss'],
+    standalone: false,
 })
 export class SpInvalidConfigurationComponent {
     @Input()

@@ -23,6 +23,7 @@ import { SpColorizationService } from '../../services/colorization.service';
     selector: 'sp-label',
     templateUrl: './sp-label.component.html',
     styleUrls: ['./sp-label.component.scss'],
+    standalone: false,
 })
 export class SpLabelComponent implements OnInit {
     @Input()

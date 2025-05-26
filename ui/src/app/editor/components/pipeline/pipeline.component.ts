@@ -74,6 +74,7 @@ import { IdGeneratorService } from '../../../core-services/id-generator/id-gener
     selector: 'sp-pipeline',
     templateUrl: './pipeline.component.html',
     styleUrls: ['./pipeline.component.scss'],
+    standalone: false,
 })
 export class PipelineComponent implements OnInit, OnDestroy {
     @Input()

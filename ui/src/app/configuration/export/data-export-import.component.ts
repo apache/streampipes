@@ -37,6 +37,7 @@ import { SpDataImportDialogComponent } from './import-dialog/data-import-dialog.
     selector: 'sp-data-export-import',
     templateUrl: './data-export-import.component.html',
     styleUrls: ['./data-export-import.component.scss'],
+    standalone: false,
 })
 export class SpDataExportImportComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

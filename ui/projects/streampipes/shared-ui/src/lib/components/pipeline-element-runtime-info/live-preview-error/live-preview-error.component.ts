@@ -22,5 +22,6 @@ import { Component } from '@angular/core';
     selector: 'sp-live-preview-error',
     templateUrl: './live-preview-error.component.html',
     styleUrls: ['./live-preview-error.component.scss'],
+    standalone: false,
 })
 export class LivePreviewErrorComponent {}

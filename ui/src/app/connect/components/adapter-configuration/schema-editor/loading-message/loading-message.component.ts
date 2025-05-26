@@ -22,6 +22,7 @@ import { Component, Input } from '@angular/core';
     selector: 'sp-loading-message',
     templateUrl: './loading-message.component.html',
     styleUrls: ['./loading-message.component.scss'],
+    standalone: false,
 })
 export class LoadingMessageComponent {
     @Input()

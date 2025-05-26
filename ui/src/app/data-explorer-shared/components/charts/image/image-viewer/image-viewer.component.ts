@@ -23,6 +23,7 @@ import { Observable } from 'rxjs';
     selector: 'sp-image-viewer',
     templateUrl: './image-viewer.component.html',
     styleUrls: ['./image-viewer.component.scss'],
+    standalone: false,
 })
 export class ImageViewerComponent {
     @Input()

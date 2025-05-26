@@ -22,6 +22,7 @@ import { Component, Input } from '@angular/core';
     selector: 'sp-static-tree-input-node-details',
     templateUrl: './static-tree-input-node-details.component.html',
     styleUrl: '../static-runtime-resolvable-tree-input.component.scss',
+    standalone: false,
 })
 export class StaticTreeInputNodeDetailsComponent {
     @Input()

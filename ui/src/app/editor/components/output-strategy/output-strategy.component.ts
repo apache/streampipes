@@ -27,6 +27,7 @@ import { UntypedFormGroup } from '@angular/forms';
     selector: 'sp-output-strategy',
     templateUrl: './output-strategy.component.html',
     styleUrls: ['./output-strategy.component.scss'],
+    standalone: false,
 })
 export class OutputStrategyComponent implements OnInit {
     @Input()

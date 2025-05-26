@@ -24,6 +24,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
     selector: 'sp-file-rename-dialog-component',
     templateUrl: './file-rename-dialog.component.html',
     styleUrls: ['./file-rename-dialog.component.scss'],
+    standalone: false,
 })
 export class FileRenameDialogComponent {
     constructor(

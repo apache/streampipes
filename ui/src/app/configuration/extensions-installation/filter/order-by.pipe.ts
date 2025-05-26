@@ -19,7 +19,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ExtensionItemDescription } from '@streampipes/platform-services';
 
-@Pipe({ name: 'orderBy' })
+@Pipe({
+    name: 'orderBy',
+    standalone: false,
+})
 export class OrderByPipe implements PipeTransform {
     transform(
         value: ExtensionItemDescription[],

@@ -29,6 +29,7 @@ import { SpAdapterDocumentationDialogComponent } from '../../../dialog/adapter-d
     selector: 'sp-adapter-description',
     templateUrl: './adapter-description.component.html',
     styleUrls: ['./adapter-description.component.scss'],
+    standalone: false,
 })
 export class AdapterDescriptionComponent implements OnInit {
     @Input()

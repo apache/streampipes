@@ -42,6 +42,7 @@ import { Subscription } from 'rxjs';
         './pipeline-overview.component.scss',
         '../../../../scss/sp/status-light.scss',
     ],
+    standalone: false,
 })
 export class PipelineOverviewComponent implements OnInit, OnDestroy {
     _pipelines: Pipeline[];

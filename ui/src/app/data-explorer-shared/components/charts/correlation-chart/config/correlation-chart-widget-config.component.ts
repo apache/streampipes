@@ -27,6 +27,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-data-explorer-correlation-chart-widget-config',
     templateUrl: './correlation-chart-widget-config.component.html',
+    standalone: false,
 })
 export class CorrelationWidgetConfigComponent extends BaseWidgetConfig<
     CorrelationChartWidgetModel,

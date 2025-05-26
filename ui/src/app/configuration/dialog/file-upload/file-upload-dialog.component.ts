@@ -25,6 +25,7 @@ import { FilesService } from '@streampipes/platform-services';
     selector: 'sp-file-upload-dialog-component',
     templateUrl: './file-upload-dialog.component.html',
     styleUrls: ['./file-upload-dialog.component.scss'],
+    standalone: false,
 })
 export class FileUploadDialogComponent {
     inputValue: string;

@@ -32,6 +32,7 @@ import {
 @Component({
     selector: 'sp-view-asset-labels',
     templateUrl: './view-asset-labels.component.html',
+    standalone: false,
 })
 export class ViewAssetLabelsComponent implements OnInit, OnChanges {
     @Input()

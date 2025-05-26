@@ -22,6 +22,7 @@ import { Component, Input } from '@angular/core';
     selector: 'sp-status-widget',
     templateUrl: './status-widget.component.html',
     styleUrls: ['./status-widget.component.scss'],
+    standalone: false,
 })
 export class StatusWidgetComponent {
     @Input() widgetHeight = '150px';

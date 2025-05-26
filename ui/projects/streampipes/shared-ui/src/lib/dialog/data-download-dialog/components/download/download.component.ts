@@ -25,6 +25,7 @@ import { Subscription } from 'rxjs';
     selector: 'sp-download',
     templateUrl: './download.component.html',
     styleUrls: ['./download.component.scss'],
+    standalone: false,
 })
 export class DownloadComponent implements OnInit, OnDestroy {
     downloadProgress: DownloadProgress;

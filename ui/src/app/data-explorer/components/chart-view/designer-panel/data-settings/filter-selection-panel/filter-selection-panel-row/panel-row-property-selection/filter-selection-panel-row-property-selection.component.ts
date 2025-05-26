@@ -22,6 +22,7 @@ import { FieldConfig, SelectedFilter } from '@streampipes/platform-services';
     selector: 'sp-filter-selection-panel-row-property-selection',
     templateUrl:
         './filter-selection-panel-row-property-selection.component.html',
+    standalone: false,
 })
 export class FilterSelectionPanelRowPropertySelectionComponent {
     @Input()

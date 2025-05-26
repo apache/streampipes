@@ -24,6 +24,7 @@ import { TimeSeriesChartWidgetModel } from '../../../charts/time-series-chart/mo
     selector: 'sp-time-series-item-config',
     templateUrl: './time-series-item-config.component.html',
     styleUrls: ['./time-series-item-config.component.scss'],
+    standalone: false,
 })
 export class SpTimeseriesItemConfigComponent {
     @Input()

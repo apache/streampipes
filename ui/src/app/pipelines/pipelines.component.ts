@@ -43,6 +43,7 @@ import { Subscription } from 'rxjs';
     selector: 'sp-pipelines',
     templateUrl: './pipelines.component.html',
     styleUrls: ['./pipelines.component.scss'],
+    standalone: false,
 })
 export class PipelinesComponent implements OnInit, OnDestroy {
     pipeline: Pipeline;

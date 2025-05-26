@@ -34,6 +34,7 @@ import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 @Component({
     selector: 'sp-app-static-runtime-resolvable-group',
     templateUrl: './static-runtime-resolvable-group.component.html',
+    standalone: false,
 })
 export class StaticRuntimeResolvableGroupComponent
     extends BaseRuntimeResolvableInput<RuntimeResolvableGroupStaticProperty>

@@ -24,7 +24,7 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
     selector: 'sp-delete-pipeline-dialog',
     templateUrl: './delete-pipeline-dialog.component.html',
-    styleUrls: ['./delete-pipeline-dialog.component.scss'],
+    standalone: false,
 })
 export class DeletePipelineDialogComponent {
     @Input()

@@ -31,6 +31,7 @@ import { EditAssetLinkDialogComponent } from '../../../../../dialog/edit-asset-l
 @Component({
     selector: 'sp-asset-details-links',
     templateUrl: './asset-details-links.component.html',
+    standalone: false,
 })
 export class AssetDetailsLinksComponent implements OnInit {
     @Input()

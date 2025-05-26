@@ -53,6 +53,7 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
         './existing-adapters.component.scss',
         '../../../../scss/sp/status-light.scss',
     ],
+    standalone: false,
 })
 export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     existingAdapters: AdapterDescription[] = [];
