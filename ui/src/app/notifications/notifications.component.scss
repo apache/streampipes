@@ -15,8 +15,6 @@
  *   limitations under the License.
  */
 
-@import '../../scss/_variables';
-
 .fixed-height {
     flex-direction: row;
     box-sizing: border-box;
@@ -36,7 +34,7 @@
 }
 
 .notifications-overview {
-    border-right: 5px solid $sp-color-accent;
+    border-right: 5px solid var(--color-accent);
 }
 
 .notifications-details {
@@ -56,7 +54,7 @@
 .notification-header {
     min-height: 75px;
     padding: 10px 10px 10px 20px;
-    color: $sp-color-accent;
+    color: var(--color-accent);
 }
 
 .header-divider {
@@ -64,7 +62,7 @@
     align-self: center;
     margin: 10px 20px;
     width: 100%;
-    border-top: 2px solid $sp-color-accent;
+    border-top: 2px solid var(--color-accent);
 }
 
 .notification-header-pipeline-name {

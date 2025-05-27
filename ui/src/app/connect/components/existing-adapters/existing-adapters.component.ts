@@ -49,10 +49,7 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 @Component({
     selector: 'sp-existing-adapters',
     templateUrl: './existing-adapters.component.html',
-    styleUrls: [
-        './existing-adapters.component.scss',
-        '../../../../scss/sp/status-light.scss',
-    ],
+    styleUrls: ['./existing-adapters.component.scss'],
     standalone: false,
 })
 export class ExistingAdaptersComponent implements OnInit, OnDestroy {

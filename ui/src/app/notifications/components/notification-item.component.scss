@@ -15,8 +15,6 @@
  *   limitations under the License.
  */
 
-@import '../../../scss/_variables';
-
 .head {
     font-size: 13px;
 }
@@ -26,7 +24,7 @@
 }
 
 .time {
-    color: $sp-color-accent;
+    color: var(--color-accent);
 }
 .notification-box {
     margin-top: 20px;
