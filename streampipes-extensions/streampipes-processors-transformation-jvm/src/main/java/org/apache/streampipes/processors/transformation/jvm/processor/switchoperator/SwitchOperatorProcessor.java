@@ -77,7 +77,7 @@ public class SwitchOperatorProcessor implements IStreamPipesDataProcessor {
   public IDataProcessorConfiguration declareConfig() {
     return DataProcessorConfiguration.create(
         SwitchOperatorProcessor::new,
-        ProcessingElementBuilder.create("com.spmoilandgas.streampipes.switchoperator", 0)
+        ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.switchoperator", 0)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
             .withLocales(Locales.EN)
             .category(DataProcessorType.FILTER)
