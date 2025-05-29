@@ -35,6 +35,7 @@ import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
@@ -47,19 +48,20 @@ public class SwitchOperatorProcessor implements IStreamPipesDataProcessor {
   private static final String SWITCH_CASE_VALUE = "switch-case-value";
   private static final String SWITCH_CASE_VALUE_OUTPUT = "switch-case-value-output";
   private static final String SWITCH_CASE_GROUP = "switch-case-group";
-
+  private static final String OUTPUT_TYPE_KEY = "output-type";
   private static final String SWITCH_CASE_VALUE_DEFAULT_OUTPUT = "switch-case-value-default-output";
 
   // Fields to store runtime parameters
   private String selectedField;
   private List<SwitchCaseEntry> switchCases;
+  private String outputType;
 
   // Inner class to store switch case entries
   private static class SwitchCaseEntry {
     private final String caseValue;
-    private final boolean outputValue;
+    private final Object outputValue;
 
-    public SwitchCaseEntry(String caseValue, boolean outputValue) {
+    public SwitchCaseEntry(String caseValue, Object outputValue) {
       this.caseValue = caseValue;
       this.outputValue = outputValue;
     }
@@ -68,7 +70,7 @@ public class SwitchOperatorProcessor implements IStreamPipesDataProcessor {
       return caseValue;
     }
 
-    public boolean getOutputValue() {
+    public Object getOutputValue() {
       return outputValue;
     }
   }
@@ -80,13 +82,14 @@ public class SwitchOperatorProcessor implements IStreamPipesDataProcessor {
         ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.switchoperator", 0)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
             .withLocales(Locales.EN)
-            .category(DataProcessorType.FILTER)
+            .category(DataProcessorType.TRANSFORM)
             .requiredStream(StreamRequirementsBuilder
                 .create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId(SWITCH_FILTER_KEY),
+                .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId(SWITCH_FILTER_KEY),
                     PropertyScope.MEASUREMENT_PROPERTY)
                 .build()
             )
+            .requiredSingleValueSelection(Labels.withId(OUTPUT_TYPE_KEY), Options.from("String", "Boolean", "Integer"))
             .requiredCollection(Labels.withId(SWITCH_CASE_GROUP),
                 StaticProperties.freeTextProperty(Labels.withId(SWITCH_CASE_VALUE), Datatypes.String),
                 StaticProperties.freeTextProperty(Labels.withId(SWITCH_CASE_VALUE_OUTPUT), Datatypes.String))
@@ -104,20 +107,32 @@ public class SwitchOperatorProcessor implements IStreamPipesDataProcessor {
     // Extract the selected field
     this.selectedField = params.extractor().mappingPropertyValue(SWITCH_FILTER_KEY);
 
+    // Extract the output type
+    this.outputType = params.extractor().selectedSingleValue(OUTPUT_TYPE_KEY, String.class);
+
     // Extract all switch case entries
     this.switchCases = new java.util.ArrayList<>();
 
     String caseValue = params.extractor().textParameter(SWITCH_CASE_VALUE);
-    String outputValueStr = params.extractor().textParameter(SWITCH_CASE_VALUE_OUTPUT);
-    boolean outputValue = Boolean.parseBoolean(outputValueStr);
+    Object outputValue = parseOutputValue(params.extractor().selectedSingleValue(SWITCH_CASE_VALUE_OUTPUT,
+        String.class));
 
     switchCases.add(new SwitchCaseEntry(caseValue, outputValue));
   }
 
+  private Object parseOutputValue(String outputValueStr) {
+    return switch (outputType) {
+      case "String" -> outputValueStr;
+      case "Boolean" -> Boolean.parseBoolean(outputValueStr);
+      case "Integer" -> Integer.parseInt(outputValueStr);
+      default -> throw new IllegalArgumentException("Unsupported output type: " + outputType);
+    };
+  }
+
   @Override
   public void onEvent(Event event, SpOutputCollector collector) {
-    // Default result is false, used if the field doesn't exist or no match found
-    boolean result = false;
+    // Default result based on output type
+    Object result = getDefaultResult();
 
     try {
       // Get the value of the selected field from the event
@@ -149,10 +164,17 @@ public class SwitchOperatorProcessor implements IStreamPipesDataProcessor {
     collector.collect(event);
   }
 
+  private Object getDefaultResult() {
+    return switch (outputType) {
+      case "String" -> "";
+      case "Boolean" -> false;
+      case "Integer" -> 0;
+      default -> throw new IllegalArgumentException("Unsupported output type: " + outputType);
+    };
+  }
+
   @Override
   public void onPipelineStopped() {
     // Cleanup logic here
   }
-
-
 }
