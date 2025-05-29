@@ -19,248 +19,160 @@
 package org.apache.streampipes.processors.transformation.jvm.processor.switchoperator;
 
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
-import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
+import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.output.AppendOutputStrategy;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.model.runtime.field.AbstractField;
-import org.apache.streampipes.model.runtime.field.PrimitiveField;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.util.List;
+
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class SwitchOperatorProcessorTest {
-
-  private SwitchOperatorProcessor processor;
-  private SpOutputCollector collector;
-  private IDataProcessorParameters params;
-  private IDataProcessorParameterExtractor extractor;
-  private Event event;
-  private EventProcessorRuntimeContext runtimeContext;
-
-  // Constants to avoid string literals in tests
   private static final String SWITCH_FILTER_KEY = "switch-filter-key";
   private static final String SWITCH_CASE_VALUE = "switch-case-value";
   private static final String SWITCH_CASE_VALUE_OUTPUT = "switch-case-value-output";
-  private static final String SWITCH_CASE_VALUE_DEFAULT_OUTPUT = "switch-case-value-default-output";
   private static final String SWITCH_FILTER_OUTPUT_KEY = "switch-filter-result";
+
+  private SwitchOperatorProcessor processor;
+  private IDataProcessorParameters params;
+  private IDataProcessorParameterExtractor extractor;
+  private SpOutputCollector collector;
+  private EventProcessorRuntimeContext context;
+  private Event event;
 
   @BeforeEach
   void setUp() {
     processor = new SwitchOperatorProcessor();
-    collector = mock(SpOutputCollector.class);
     params = mock(IDataProcessorParameters.class);
     extractor = mock(IDataProcessorParameterExtractor.class);
-    when(params.extractor()).thenReturn(extractor);
-    runtimeContext = mock(EventProcessorRuntimeContext.class);
+    collector = mock(SpOutputCollector.class);
+    context = mock(EventProcessorRuntimeContext.class);
+    event = new Event();
 
-    // Set up mock event with default behavior
-    event = mock(Event.class);
-    // Note: Not using hasField as it doesn't exist in the Event class
+    when(params.extractor()).thenReturn(extractor);
   }
 
   @Test
   void testDeclareConfig() {
-    IDataProcessorConfiguration config = processor.declareConfig();
-    assertNotNull(config);
+    var config = processor.declareConfig();
+
+    assertNotNull(config, "Configuration should not be null");
+    assertNotNull(config.getDescription(), "Processing element description should not be null");
+
+    var description = config.getDescription();
+    assertEquals("sp:org.apache.streampipes.processors.transformation.jvm.switchoperator", description.getElementId(), "Element ID should match");
+    assertEquals(3, description.getStaticProperties().size(), "Should have three static properties");
+    assertEquals(List.of(DataProcessorType.FILTER.name()), description.getCategory(), "Category should be FILTER");
+
+    var dataStreams = description.getSpDataStreams();
+    assertEquals(1, dataStreams.size(), "Should have one input stream");
+
+    var outputStrategies = description.getOutputStrategies();
+    assertEquals(1, outputStrategies.size(), "Should have one output strategy");
+    assertTrue(outputStrategies.get(0) instanceof AppendOutputStrategy,
+        "Output strategy should be AppendOutputStrategy");
+    var appendStrategy = (AppendOutputStrategy) outputStrategies.get(0);
+    assertEquals(1, appendStrategy.getEventProperties().size(),
+        "Should append one property");
   }
 
   @Test
   void testOnPipelineStarted() {
-    // Setup
-    String fieldSelector = "testField";
-    String caseValue = "testValue";
-    String outputValue = "true";
-    String defaultOutput = "false";
+    when(extractor.mappingPropertyValue(SWITCH_FILTER_KEY)).thenReturn("field1");
+    when(extractor.textParameter(SWITCH_CASE_VALUE)).thenReturn("value1");
+    when(extractor.textParameter(SWITCH_CASE_VALUE_OUTPUT)).thenReturn("true");
 
-    when(extractor.mappingPropertyValue(eq(SWITCH_FILTER_KEY))).thenReturn(fieldSelector);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE))).thenReturn(caseValue);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE_OUTPUT))).thenReturn(outputValue);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE_DEFAULT_OUTPUT))).thenReturn(defaultOutput);
+    processor.onPipelineStarted(params, collector, context);
 
-    // Test
-    processor.onPipelineStarted(params, collector, runtimeContext);
+    event.addField( "field1", "value1");
+    processor.onEvent(event, collector);
+
+    ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+    verify(collector).collect(eventCaptor.capture());
+    assertEquals("true",
+        eventCaptor.getValue().getFieldByRuntimeName(SWITCH_FILTER_OUTPUT_KEY).getAsPrimitive().getAsString(),
+        "Output should be 'true' for matching case after pipeline start");
   }
 
   @Test
-  void testOnEvent_MatchingCase() {
-    // Setup
-    String fieldSelector = "testField";
-    String caseValue = "testValue";
-    String outputValue = "true";
-    String defaultOutput = "false";
+  void testOnEventMatchCaseTrue() {
+    when(extractor.mappingPropertyValue(SWITCH_FILTER_KEY)).thenReturn("field1");
+    when(extractor.textParameter(SWITCH_CASE_VALUE)).thenReturn("value1");
+    when(extractor.textParameter(SWITCH_CASE_VALUE_OUTPUT)).thenReturn("true");
+    processor.onPipelineStarted(params, collector, context);
 
-    when(extractor.mappingPropertyValue(eq(SWITCH_FILTER_KEY))).thenReturn(fieldSelector);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE))).thenReturn(caseValue);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE_OUTPUT))).thenReturn(outputValue);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE_DEFAULT_OUTPUT))).thenReturn(defaultOutput);
+    event.addField("field1", "value1");
 
-    processor.onPipelineStarted(params, collector, runtimeContext);
-
-    // Set up event with matching field value
-    AbstractField<?> abstractField = mock(AbstractField.class);
-    PrimitiveField primitiveField = mock(PrimitiveField.class);
-    when(primitiveField.getAsString()).thenReturn(caseValue);
-    when(abstractField.getAsPrimitive()).thenReturn(primitiveField);
-    when(event.getFieldBySelector(eq(fieldSelector))).thenReturn(abstractField);
-
-    // Test
     processor.onEvent(event, collector);
 
-    // Verify that the result field was added with expected value (true)
-    verify(event).addField(eq(SWITCH_FILTER_OUTPUT_KEY), eq(true));
-    verify(collector).collect(eq(event));
+    ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+    verify(collector).collect(eventCaptor.capture());
+    assertEquals("true",
+        eventCaptor.getValue().getFieldByRuntimeName(SWITCH_FILTER_OUTPUT_KEY).getAsPrimitive().getAsString(),
+        "Output should be 'true' for matching case");
   }
 
   @Test
-  void testOnEvent_NonMatchingCase() {
-    // Setup
-    String fieldSelector = "testField";
-    String caseValue = "testValue";
-    String outputValue = "true";
-    String defaultOutput = "false";
+  void testOnEventNoMatch() {
+    when(extractor.mappingPropertyValue(SWITCH_FILTER_KEY)).thenReturn("field1");
+    when(extractor.textParameter(SWITCH_CASE_VALUE)).thenReturn("value1");
+    when(extractor.textParameter(SWITCH_CASE_VALUE_OUTPUT)).thenReturn("true");
+    processor.onPipelineStarted(params, collector, context);
 
-    when(extractor.mappingPropertyValue(eq(SWITCH_FILTER_KEY))).thenReturn(fieldSelector);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE))).thenReturn(caseValue);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE_OUTPUT))).thenReturn(outputValue);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE_DEFAULT_OUTPUT))).thenReturn(defaultOutput);
+    event.addField("field1", "value2");
 
-    processor.onPipelineStarted(params, collector, runtimeContext);
-
-    // Set up event with non-matching field value
-    AbstractField<?> abstractField = mock(AbstractField.class);
-    PrimitiveField primitiveField = mock(PrimitiveField.class);
-    when(primitiveField.getAsString()).thenReturn("nonMatchingValue");
-    when(abstractField.getAsPrimitive()).thenReturn(primitiveField);
-    when(event.getFieldBySelector(eq(fieldSelector))).thenReturn(abstractField);
-
-    // Test
     processor.onEvent(event, collector);
 
-    // Verify that the result field was added with expected value (false for non-matching)
-    verify(event).addField(eq(SWITCH_FILTER_OUTPUT_KEY), eq(false));
-    verify(collector).collect(eq(event));
+    ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+    verify(collector).collect(eventCaptor.capture());
+    assertEquals("false",
+        eventCaptor.getValue().getFieldByRuntimeName(SWITCH_FILTER_OUTPUT_KEY).getAsPrimitive().getAsString(),
+        "Output should be 'false' for non-matching case");
   }
 
   @Test
-  void testOnEvent_NonMatchingCaseWithCustomDefaultOutput() {
-    // Setup
-    String fieldSelector = "testField";
-    String caseValue = "testValue";
-    String outputValue = "true";
-    String defaultOutput = "true"; // Set default to true
+  void testOnEventNullField() {
+    when(extractor.mappingPropertyValue(SWITCH_FILTER_KEY)).thenReturn("field1");
+    when(extractor.textParameter(SWITCH_CASE_VALUE)).thenReturn("value1");
+    when(extractor.textParameter(SWITCH_CASE_VALUE_OUTPUT)).thenReturn("true");
+    processor.onPipelineStarted(params, collector, context);
 
-    when(extractor.mappingPropertyValue(eq(SWITCH_FILTER_KEY))).thenReturn(fieldSelector);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE))).thenReturn(caseValue);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE_OUTPUT))).thenReturn(outputValue);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE_DEFAULT_OUTPUT))).thenReturn(defaultOutput);
+    // No field added, simulating null/missing field
 
-    processor.onPipelineStarted(params, collector, runtimeContext);
-
-    // Set up event with non-matching field value
-    AbstractField<?> abstractField = mock(AbstractField.class);
-    PrimitiveField primitiveField = mock(PrimitiveField.class);
-    when(primitiveField.getAsString()).thenReturn("nonMatchingValue");
-    when(abstractField.getAsPrimitive()).thenReturn(primitiveField);
-    when(event.getFieldBySelector(eq(fieldSelector))).thenReturn(abstractField);
-
-    // Test
     processor.onEvent(event, collector);
 
-    // Verify that the result field was added with the default value (false)
-    // Note: Custom default is not yet implemented in the processor
-    verify(event).addField(eq(SWITCH_FILTER_OUTPUT_KEY), eq(false));
-    verify(collector).collect(eq(event));
+    ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+    verify(collector).collect(eventCaptor.capture());
+    assertEquals("false",
+        eventCaptor.getValue().getFieldByRuntimeName(SWITCH_FILTER_OUTPUT_KEY).getAsPrimitive().getAsString(),
+        "Output should be 'false' for null field");
   }
 
   @Test
-  void testOnEvent_NullFieldValue() {
-    // Setup
-    String fieldSelector = "testField";
-    String caseValue = "testValue";
-    String outputValue = "true";
-    String defaultOutput = "false";
+  void testOnEventExceptionHandling() {
+    when(extractor.mappingPropertyValue(SWITCH_FILTER_KEY)).thenReturn("field1");
+    when(extractor.textParameter(SWITCH_CASE_VALUE)).thenReturn("value1");
+    when(extractor.textParameter(SWITCH_CASE_VALUE_OUTPUT)).thenReturn("true");
+    processor.onPipelineStarted(params, collector, context);
 
-    when(extractor.mappingPropertyValue(eq(SWITCH_FILTER_KEY))).thenReturn(fieldSelector);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE))).thenReturn(caseValue);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE_OUTPUT))).thenReturn(outputValue);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE_DEFAULT_OUTPUT))).thenReturn(defaultOutput);
+    // Add a non-string field to trigger a potential ClassCastException
+    event.addField("field1", 123);
 
-    processor.onPipelineStarted(params, collector, runtimeContext);
-
-    // Set up event with null field value
-    AbstractField<?> abstractField = mock(AbstractField.class);
-    when(abstractField.getAsPrimitive()).thenReturn(null);
-    when(event.getFieldBySelector(eq(fieldSelector))).thenReturn(abstractField);
-
-    // Test
     processor.onEvent(event, collector);
 
-    // Verify that the result field was added with the default value for null field value
-    verify(event).addField(eq(SWITCH_FILTER_OUTPUT_KEY), eq(false));
-    verify(collector).collect(eq(event));
+    ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+    verify(collector).collect(eventCaptor.capture());
+    assertEquals("false",
+        eventCaptor.getValue().getFieldByRuntimeName(SWITCH_FILTER_OUTPUT_KEY).getAsPrimitive().getAsString(),
+        "Output should be 'false' when exception occurs");
   }
 
-  @Test
-  void testOnEvent_FalseOutputValue() {
-    // Setup
-    String fieldSelector = "testField";
-    String caseValue = "testValue";
-    String outputValue = "false";  // Set the output value to false
-    String defaultOutput = "true";
-
-    when(extractor.mappingPropertyValue(eq(SWITCH_FILTER_KEY))).thenReturn(fieldSelector);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE))).thenReturn(caseValue);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE_OUTPUT))).thenReturn(outputValue);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE_DEFAULT_OUTPUT))).thenReturn(defaultOutput);
-
-    processor.onPipelineStarted(params, collector, runtimeContext);
-
-    // Set up event with matching field value
-    AbstractField<?> abstractField = mock(AbstractField.class);
-    PrimitiveField primitiveField = mock(PrimitiveField.class);
-    when(primitiveField.getAsString()).thenReturn(caseValue);
-    when(abstractField.getAsPrimitive()).thenReturn(primitiveField);
-    when(event.getFieldBySelector(eq(fieldSelector))).thenReturn(abstractField);
-
-    // Test
-    processor.onEvent(event, collector);
-
-    // Verify that the result field was added with expected value (false)
-    verify(event).addField(eq(SWITCH_FILTER_OUTPUT_KEY), eq(false));
-    verify(collector).collect(eq(event));
-  }
-
-  @Test
-  void testOnEvent_FieldDoesNotExist() {
-    // Setup
-    String fieldSelector = "testField";
-    String caseValue = "testValue";
-    String outputValue = "true";
-    String defaultOutput = "false";
-
-    when(extractor.mappingPropertyValue(eq(SWITCH_FILTER_KEY))).thenReturn(fieldSelector);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE))).thenReturn(caseValue);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE_OUTPUT))).thenReturn(outputValue);
-    when(extractor.textParameter(eq(SWITCH_CASE_VALUE_DEFAULT_OUTPUT))).thenReturn(defaultOutput);
-
-    processor.onPipelineStarted(params, collector, runtimeContext);
-
-    // Set up event with non-existent field - return null instead of using hasField
-    when(event.getFieldBySelector(eq(fieldSelector))).thenReturn(null);
-
-    // Test
-    processor.onEvent(event, collector);
-
-    // Verify that the result field was added with default value (false)
-    verify(event).addField(eq(SWITCH_FILTER_OUTPUT_KEY), eq(false));
-    verify(collector).collect(eq(event));
-  }
 }
