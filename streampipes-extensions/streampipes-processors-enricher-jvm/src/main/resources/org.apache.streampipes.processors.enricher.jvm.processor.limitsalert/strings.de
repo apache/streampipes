@@ -1,0 +1,40 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+org.apache.streampipes.processors.enricher.jvm.processor.limitsalert.title=Sensor-Grenzwert-Alarm
+org.apache.streampipes.processors.enricher.jvm.processor.limitsalert.description=Überwacht Sensorwerte und löst Alarme aus, wenn sie definierte Regel- oder Warnlimiten überschreiten.
+
+sensorValue.title=Sensorwert
+sensorValue.description=Wählen Sie den zu überwachenden Sensorwert aus.
+
+upperControlLimit.title=Obere Regelgrenze
+upperControlLimit.description=Legen Sie die obere Regelgrenze für den Sensorwert fest.
+
+upperWarningLimit.title=Obere Warnlinie
+upperWarningLimit.description=Legen Sie die obere Warnlinie für den Sensorwert fest.
+
+lowerWarningLimit.title=Untere Warnlinie
+lowerWarningLimit.description=Legen Sie die untere Warnlinie für den Sensorwert fest.
+
+lowerControlLimit.title=Untere Regelgrenze
+lowerControlLimit.description=Legen Sie die untere Regelgrenze für den Sensorwert fest.
+
+alertStatus.title=Alarmstatus
+alertStatus.description=Gibt an, ob der Sensorwert eine Warn- oder Regelgrenze überschritten hat.
+
+limitBreached.title=Überschrittene Grenze
+limitBreached.description=Gibt an, welche Grenze (z.B. Obere Regelgrenze, Untere Warnlinie) vom Sensorwert überschritten wurde. 

@@ -1,0 +1,31 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+org.apache.streampipes.processors.transformation.jvm.taskduration.title=Aufgabendauer
+org.apache.streampipes.processors.transformation.jvm.taskduration.description=Berechnet die Zeitdifferenz zwischen zwei Nachrichten, die Felder enthalten, die einen aktuellen Prozessschritt anzeigen, d.h. sie berechnet die für einen Zustandswechsel erforderliche Zeit.
+
+task-field.title=Aufgabenfeld
+task-field.description=Das Feld, das eine Beschreibung des aktuellen Prozessschritts enthält.
+
+timestamp-field.title=Zeitstempelfeld
+timestamp-field.description=Das Feld, das einen Zeitstempel der Nachricht enthält.
+
+process-id.title=Prozess-ID
+process-id.description=Die ID des erkannten Zustandswechsels.
+
+duration-id.title=Dauer
+duration-id.description=Die Dauer des Zustandswechsels. 

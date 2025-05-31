@@ -1,0 +1,50 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+
+org.apache.streampipes.processors.filters.jvm.limit.title=Ratenbegrenzung
+org.apache.streampipes.processors.filters.jvm.limit.description=Begrenzt die Anzahl der ausgegebenen Ereignisse basierend auf einem festgelegten Kriterium wie Zeit oder Anzahl von Ereignissen.
+
+event-selection.title=Ausgabeereignis-Auswahl
+event-selection.description=Gibt die auszuwählenden Ereignisse an, die ausgegeben werden sollen.
+
+window-type.title=Fenstertyp
+window-type.description=Gibt den zu verwendenden Fenstertyp an (Zeit oder Länge).
+
+length-window.title=Längenfenster
+length-window.description=Längenfenster-Konfiguration.
+
+length-window-size.title=Längenfenstergröße
+length-window-size.description=Längenfenstergröße in Ereignisanzahl.
+
+time-window.title=Zeitfenster
+time-window.description=Zeitfenster-Konfiguration.
+
+time-window-size.title=Zeitfenstergröße
+time-window-size.description=Zeitfenstergröße in Millisekunden.
+
+cron-window.title=Cron-Fenster
+cron-window.description=Cron-Fenster-Konfiguration.
+
+cron-window-expr.title=Cron-Fenster-Ausdruck
+cron-window-expr.description=Cron-Ausdruck zum Auslösen des Fensters (z.B. 0 * * ? * * für jede Minute).
+
+grouping-field.title=Gruppierungsfeld
+grouping-field.description=Laufzeitfeld, das als Gruppierungsschlüssel verwendet werden soll. Wenn die Gruppierung deaktiviert ist, wird diese Einstellung ignoriert.
+
+grouping-enabled.title=Gruppierung aktivieren
+grouping-enabled.description=Aktiviert die Gruppierung mit Ratenbegrenzung. (Hinweis: Bei Deaktivierung wird die Gruppierungsfeld-Eigenschaft ignoriert) 
