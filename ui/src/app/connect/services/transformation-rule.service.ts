@@ -243,11 +243,10 @@ export class TransformationRuleService {
                                 keyNew.lastIndexOf(this.delimiter) + 1,
                             );
                         } else {
-                            keyOfOldValue = `${keyOldPrefix}.${keyNew.substr(
+                            keyOfOldValue = `${keyOldPrefix}${this.delimiter}${keyNew.substr(
                                 keyNew.lastIndexOf(this.delimiter) + 1,
                             )}`;
                         }
-
                         const rule = new MoveRuleDescription();
                         rule['@class'] =
                             'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
