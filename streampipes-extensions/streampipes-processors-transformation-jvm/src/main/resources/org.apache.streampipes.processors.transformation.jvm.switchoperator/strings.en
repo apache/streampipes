@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-org.apache.streampipes.processors.transformation.jvm.switchoperator.title=Switch Operator
+org.apache.streampipes.processors.transformation.jvm.switchoperator.title=Switch Operator Processor
 org.apache.streampipes.processors.transformation.jvm.switchoperator.description=Logical Switch operator implemented for streampipes
 
 switch-filter-key.title=Input Field
