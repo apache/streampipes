@@ -45,6 +45,8 @@ import org.apache.streampipes.processors.transformation.jvm.processor.staticmeta
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.StringToStateProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.timer.StringTimerProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.booleaninput.SwitchBooleanInputProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.stringinput.SwitchStringInputProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.task.TaskDurationProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor.TimestampExtractorProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.transformtoboolean.TransformToBooleanProcessor;
@@ -83,7 +85,9 @@ public class TransformationExtensionModuleExport implements IExtensionModuleExpo
         new StaticMetaDataEnrichmentProcessor(),
         new StringTimerProcessor(),
         new SignalEdgeFilterProcessor(),
-        new SwitchOperatorProcessor(),
+        new SwitchBooleanInputProcessor(),
+        new SwitchStringInputProcessor(),
+        new SwitchStringInputProcessor(),
         new BooleanToStateProcessor(),
         new NumberLabelerProcessor(),
         new StringToStateProcessor(),

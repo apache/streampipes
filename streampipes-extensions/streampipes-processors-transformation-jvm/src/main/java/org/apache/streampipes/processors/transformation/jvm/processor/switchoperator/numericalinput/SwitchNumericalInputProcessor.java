@@ -1,4 +1,4 @@
-package org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.booleaninput;
+package org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.numericalinput;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
 import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
@@ -29,7 +29,7 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SwitchBooleanInputProcessor implements IStreamPipesDataProcessor {
+public class SwitchNumericalInputProcessor implements IStreamPipesDataProcessor {
   private static final String SWITCH_FILTER_OUTPUT_KEY = "switch-filter-result";
   private static final String SWITCH_FILTER_KEY = "switch-filter-key";
   private static final String SWITCH_CASE_VALUE = "switch-case-value";
@@ -48,8 +48,8 @@ public class SwitchBooleanInputProcessor implements IStreamPipesDataProcessor {
   @Override
   public IDataProcessorConfiguration declareConfig() {
     return DataProcessorConfiguration.create(
-        SwitchBooleanInputProcessor::new,
-        ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.switchoperator.boolean"
+        SwitchNumericalInputProcessor::new,
+        ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.switchoperator.numerical"
                 , 0)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
             .withLocales(Locales.EN)

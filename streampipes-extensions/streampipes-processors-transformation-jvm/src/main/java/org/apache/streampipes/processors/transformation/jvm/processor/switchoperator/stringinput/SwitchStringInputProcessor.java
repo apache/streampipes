@@ -1,4 +1,4 @@
-package org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.booleaninput;
+package org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.stringinput;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
 import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
@@ -29,7 +29,7 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SwitchBooleanInputProcessor implements IStreamPipesDataProcessor {
+public class SwitchStringInputProcessor implements IStreamPipesDataProcessor {
   private static final String SWITCH_FILTER_OUTPUT_KEY = "switch-filter-result";
   private static final String SWITCH_FILTER_KEY = "switch-filter-key";
   private static final String SWITCH_CASE_VALUE = "switch-case-value";
@@ -48,21 +48,20 @@ public class SwitchBooleanInputProcessor implements IStreamPipesDataProcessor {
   @Override
   public IDataProcessorConfiguration declareConfig() {
     return DataProcessorConfiguration.create(
-        SwitchBooleanInputProcessor::new,
-        ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.switchoperator.boolean"
-                , 0)
+        SwitchStringInputProcessor::new,
+        ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.switchoperator.string", 0)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
             .withLocales(Locales.EN)
             .category(DataProcessorType.TRANSFORM)
             .requiredStream(StreamRequirementsBuilder
                 .create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(), Labels.withId(SWITCH_FILTER_KEY),
+                .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId(SWITCH_FILTER_KEY),
                     PropertyScope.MEASUREMENT_PROPERTY)
                 .build()
             )
             .requiredSingleValueSelection(Labels.withId(OUTPUT_TYPE_KEY), Options.from("String", "Boolean", "Integer"))
             .requiredCollection(Labels.withId(SWITCH_CASE_GROUP),
-                StaticProperties.singleValueSelection(Labels.withId(SWITCH_CASE_VALUE), Options.from("true", "false")),
+                StaticProperties.freeTextProperty(Labels.withId(SWITCH_CASE_VALUE), Datatypes.String),
                 StaticProperties.freeTextProperty(Labels.withId(SWITCH_CASE_VALUE_OUTPUT), Datatypes.String))
             .outputStrategy(OutputStrategies.append(
                 PrimitivePropertyBuilder.create(Datatypes.String, SWITCH_FILTER_OUTPUT_KEY).build())
@@ -118,13 +117,13 @@ public class SwitchBooleanInputProcessor implements IStreamPipesDataProcessor {
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) {
-    Boolean switchValue = event.getFieldBySelector(this.selectedSwitchField).getAsPrimitive().getAsBoolean();
+    String switchValue = event.getFieldBySelector(this.selectedSwitchField).getAsPrimitive().getAsString();
     // Default result based on output type
     var resultValue = getDefaultResult();
 
     try {
       for (SwitchCaseEntry switchCase : this.switchCases) {
-        if (switchValue == Boolean.parseBoolean(switchCase.getCaseValue())) {
+        if (switchValue.equals(switchCase.getCaseValue())) {
           resultValue = switchCase.getOutputValue();
           break;
         }
@@ -134,7 +133,6 @@ public class SwitchBooleanInputProcessor implements IStreamPipesDataProcessor {
       resultValue = getDefaultResult();
     }
 
-    // Add the result to the event and forward it
     // Add the result to the event and forward it
     switch (this.selectedOutputType) {
       case "String" -> {
