@@ -1,0 +1,40 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+org.apache.streampipes.processors.transformation.jvm.switchoperator.string.title=Switch Operator Processor
+org.apache.streampipes.processors.transformation.jvm.switchoperator.string.description=Logical Switch operator implemented for streampipes
+
+switch-filter-key.title=Input Field
+switch-filter-key.description=The field from the event to evaluate in the switch statement. Can be of any data type, converted to a string for comparison.
+
+switch-case-group.title=Switch Cases
+switch-case-group.description=Switch case-value pairs for outputting a value based on the matched case.
+
+switch-case-value.title=Case Value
+switch-case-value.description=The string value to compare against the input field.
+
+switch-case-value-output.title=Output Value
+switch-case-value-output.description=The value to return when the case matches, matching the selected output type (e.g., true/false for Boolean, any string for String, a number for Integer).
+
+switch-filter-result.title=Result
+switch-filter-result.description=The result of the switch operation, in the user-selected data type (String, Boolean, or Integer).
+
+switch-case-value-default-output.title=Default Output Value
+switch-case-value-default-output.description=The value to return when no case matches, matching the selected output type (e.g., empty string for String, false for Boolean, 0 for Integer).
+
+output-type.title=Output Type
+output-type.description=The data type of the output result (String, Boolean, or Integer).

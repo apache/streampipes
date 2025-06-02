@@ -1,6 +1,5 @@
 package org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.numericalinput;
 
-import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
 import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
@@ -12,6 +11,7 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
+import org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.IStreamPipesSwitchProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.SwitchCaseEntry;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
@@ -29,7 +29,7 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SwitchNumericalInputProcessor implements IStreamPipesDataProcessor {
+public class SwitchNumericalInputProcessor implements IStreamPipesSwitchProcessor {
   private static final String SWITCH_FILTER_OUTPUT_KEY = "switch-filter-result";
   private static final String SWITCH_FILTER_KEY = "switch-filter-key";
   private static final String SWITCH_CASE_VALUE = "switch-case-value";
