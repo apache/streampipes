@@ -27,6 +27,7 @@ import { CurrentUserService } from '@streampipes/shared-ui';
     selector: 'sp-iconbar',
     templateUrl: './iconbar.component.html',
     styleUrls: ['./iconbar.component.scss'],
+    standalone: false,
 })
 export class IconbarComponent
     extends BaseNavigationComponent

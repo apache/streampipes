@@ -24,6 +24,7 @@ import { Observable } from 'rxjs';
     selector: 'sp-image-container',
     templateUrl: './image-container.component.html',
     styleUrls: ['./image-container.component.scss'],
+    standalone: false,
 })
 export class SpImageContainerComponent {
     imagePath: SafeUrl;

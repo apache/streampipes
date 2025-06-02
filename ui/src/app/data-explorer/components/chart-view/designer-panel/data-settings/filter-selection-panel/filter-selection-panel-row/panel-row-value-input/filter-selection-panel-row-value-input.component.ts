@@ -22,6 +22,7 @@ import { EscapeNumberFilterService } from '../escape-number-filter.service';
 @Component({
     selector: 'sp-filter-selection-panel-row-value-input',
     templateUrl: './filter-selection-panel-row-value-input.component.html',
+    standalone: false,
 })
 export class FilterSelectionPanelRowValueInputComponent implements OnInit {
     @Input()

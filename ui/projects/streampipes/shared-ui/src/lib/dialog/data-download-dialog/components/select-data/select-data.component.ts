@@ -25,6 +25,7 @@ import { DataExplorerDataConfig } from '@streampipes/platform-services';
     selector: 'sp-select-data',
     templateUrl: './select-data.component.html',
     styleUrls: ['./select-data.component.scss'],
+    standalone: false,
 })
 export class SelectDataComponent {
     /**

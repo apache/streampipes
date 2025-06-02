@@ -34,6 +34,7 @@ import { CurrentUserService } from '@streampipes/shared-ui';
             transition(':leave', [animate('1000ms', style({ opacity: 0 }))]),
         ]),
     ],
+    standalone: false,
 })
 export class StreampipesComponent implements OnInit {
     darkMode: boolean;

@@ -48,6 +48,7 @@ import { InvocablePipelineElementUnion } from '../../editor/model/editor.model';
     selector: 'sp-app-static-property',
     templateUrl: './static-property.component.html',
     styleUrls: ['./static-property.component.scss'],
+    standalone: false,
 })
 export class StaticPropertyComponent implements OnInit {
     @Input()

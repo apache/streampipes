@@ -54,6 +54,10 @@
             <groupId>org.eclipse.milo</groupId>
             <artifactId>sdk-client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.milo</groupId>
+            <artifactId>dictionary-reader</artifactId>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>

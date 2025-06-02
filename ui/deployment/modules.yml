@@ -27,6 +27,19 @@ spAssets:
     privileges: '[UserPrivilege.PRIVILEGE_READ_ASSETS, UserPrivilege.PRIVILEGE_WRITE_ASSETS]'
     pageNames: 'PageName.ASSETS'
     showStatusBox: false
+spHome:
+    streamPipesModule: True
+    moduleName: 'HomeModule'
+    path: './home/home.module'
+    link: ''
+    url: '/'
+    title: 'Home'
+    description: 'Home'
+    icon: 'home'
+    pageNames: 'PageName.HOME'
+    privileges: '[]'
+    guard: 'canActivate: [ConfiguredCanActivateGuard], '
+    showStatusBox: false
 spConnect:
     componentImport: False
     moduleName: 'ConnectModule'

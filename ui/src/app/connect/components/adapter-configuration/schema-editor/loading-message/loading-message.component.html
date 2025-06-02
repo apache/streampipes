@@ -18,15 +18,15 @@
 
 <div fxLayout="column">
     <div fxLayoutAlign="center">
-        <mat-spinner
+        <mat-progress-bar
             fxLayoutAlign="center"
             style="margin: 10px 0 5px 0"
             color="accent"
-            [diameter]="30"
-            >Loading</mat-spinner
+            [value]="currentProgress"
+            >Loading</mat-progress-bar
         >
     </div>
     <div fxLayoutAlign="center">
-        <h4>Guessing the event schema...</h4>
+        <h4>Looking at your data to understand the schema...</h4>
     </div>
 </div>

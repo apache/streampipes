@@ -46,18 +46,25 @@
         >
             <mat-drawer
                 [opened]="editMode"
+                [style.width.px]="drawerWidth"
                 mode="side"
                 position="end"
                 class="designer-panel"
             >
-                <div fxLayout="column" fxFlex="100">
-                    <sp-data-explorer-designer-panel
-                        [currentlyConfiguredWidget]="dataView"
-                        [dataLakeMeasure]="dataLakeMeasure"
-                        fxFlex="100"
-                    >
-                    </sp-data-explorer-designer-panel>
-                </div>
+                <sp-sidebar-resize
+                    [minWidth]="450"
+                    [maxWidth]="1000"
+                    (widthChanged)="onWidthChanged($event)"
+                >
+                    <div fxLayout="column" fxFlex="100">
+                        <sp-data-explorer-designer-panel
+                            [currentlyConfiguredWidget]="dataView"
+                            [dataLakeMeasure]="dataLakeMeasure"
+                            fxFlex="100"
+                        >
+                        </sp-data-explorer-designer-panel>
+                    </div>
+                </sp-sidebar-resize>
             </mat-drawer>
             <mat-drawer-content class="h-100 dashboard-grid">
                 <div #panel fxFlex="100" fxLayout="column">

@@ -25,7 +25,6 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
@@ -99,7 +98,6 @@ public class GsonSerializer {
                          "org.apache.streampipes.model.RegexTransformationRuleDescription")
         .registerSubtype(MoveRuleDescription.class, "org.apache.streampipes.model.MoveRuleDescription")
         .registerSubtype(DeleteRuleDescription.class, "org.apache.streampipes.model.DeleteRuleDescription")
-        .registerSubtype(CreateNestedRuleDescription.class, "org.apache.streampipes.model.CreateNestedRuleDescription")
         .registerSubtype(RemoveDuplicatesTransformationRuleDescription.class,
             "org.apache.streampipes.model.RemoveDuplicatesRuleDescription")
         .registerSubtype(AddTimestampRuleDescription.class, "org.apache.streampipes.model.AddTimestampRuleDescription")

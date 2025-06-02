@@ -28,6 +28,7 @@ import { SpExtensionsServiceDetailsDialogComponent } from '../../dialog/extensio
     selector: 'sp-registered-extensions-services',
     templateUrl: './registered-extensions-services.component.html',
     styleUrls: ['./registered-extensions-services.component.scss'],
+    standalone: false,
 })
 export class SpRegisteredExtensionsServiceComponent {
     displayedColumns: string[] = ['status', 'name', 'group', 'action'];

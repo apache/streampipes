@@ -31,7 +31,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 
 import { GridsterModule } from 'angular-gridster2';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerComponent, ColorPickerDirective } from 'ngx-color-picker';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { DataExplorerOverviewComponent } from './components/overview/data-explorer-overview.component';
@@ -114,7 +114,7 @@ import { TranslateModule } from '@ngx-translate/core';
         GridsterModule,
         FlexLayoutModule,
         FormsModule,
-        ColorPickerModule,
+        ColorPickerComponent,
         MatGridListModule,
         CdkTableModule,
         MatSnackBarModule,
@@ -150,6 +150,7 @@ import { TranslateModule } from '@ngx-translate/core';
             },
         ]),
         DataExplorerSharedModule,
+        ColorPickerDirective,
     ],
     declarations: [
         AggregateConfigurationComponent,

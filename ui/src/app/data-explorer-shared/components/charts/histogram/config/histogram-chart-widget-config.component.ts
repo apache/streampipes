@@ -27,6 +27,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-histogram-widget-config',
     templateUrl: './histogram-chart-widget-config.component.html',
+    standalone: false,
 })
 export class SpHistogramChartWidgetConfigComponent extends BaseWidgetConfig<
     HistogramChartWidgetModel,

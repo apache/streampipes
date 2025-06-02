@@ -25,6 +25,7 @@ import { SpConfigurationRoutes } from '../configuration.routes';
     selector: 'sp-security-configuration',
     templateUrl: './security-configuration.component.html',
     styleUrls: ['./security-configuration.component.scss'],
+    standalone: false,
 })
 export class SecurityConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

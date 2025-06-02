@@ -32,6 +32,7 @@ import { BaseLoginPageDirective } from '../base-login-page.directive';
     selector: 'sp-register-user',
     templateUrl: './register.component.html',
     styleUrls: ['../login/login.component.scss'],
+    standalone: false,
 })
 export class RegisterComponent extends BaseLoginPageDirective {
     parentForm: UntypedFormGroup;

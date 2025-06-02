@@ -32,6 +32,7 @@ import { BaseAssetDetailsDirective } from '../base-asset-details.directive';
     selector: 'sp-asset-details',
     templateUrl: './asset-details.component.html',
     styleUrls: ['./asset-details.component.scss'],
+    standalone: false,
 })
 export class SpAssetDetailsComponent extends BaseAssetDetailsDirective {
     activeTab = 'basic';

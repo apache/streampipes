@@ -33,6 +33,7 @@ import { TimeSelectorLabel } from '../../time-selector.model';
     selector: 'sp-custom-time-range-selection',
     templateUrl: 'custom-time-range-selection.component.html',
     styleUrls: ['./custom-time-range-selection.component.scss'],
+    standalone: false,
 })
 export class CustomTimeRangeSelectionComponent implements OnInit {
     @Input() timeSettings: TimeSettings;

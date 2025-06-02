@@ -31,6 +31,7 @@ import { SpConnectRoutes } from '../../connect.routes';
     selector: 'sp-data-marketplace',
     templateUrl: './data-marketplace.component.html',
     styleUrls: ['./data-marketplace.component.scss'],
+    standalone: false,
 })
 export class DataMarketplaceComponent implements OnInit {
     adapterDescriptions: AdapterDescription[];

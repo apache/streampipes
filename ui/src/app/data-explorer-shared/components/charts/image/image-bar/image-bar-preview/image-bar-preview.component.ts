@@ -23,6 +23,7 @@ import { Observable } from 'rxjs';
     selector: 'sp-image-bar-preview',
     templateUrl: './image-bar-preview.component.html',
     styleUrls: ['./image-bar-preview.component.scss'],
+    standalone: false,
 })
 export class ImageBarPreviewComponent {
     @Input()

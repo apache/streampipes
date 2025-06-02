@@ -26,6 +26,7 @@ import { DataExportConfig } from '../../../model/data-export-config.model';
         './select-data-missing-values.component.scss',
         '../select-data.component.scss',
     ],
+    standalone: false,
 })
 export class SelectDataMissingValuesComponent {
     @Input() dataExportConfig: DataExportConfig;

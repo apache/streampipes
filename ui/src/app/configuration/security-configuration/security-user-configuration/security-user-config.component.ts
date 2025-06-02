@@ -25,6 +25,7 @@ import { Observable } from 'rxjs';
     selector: 'sp-security-user-config',
     templateUrl: './security-user-config.component.html',
     styleUrls: ['./security-user-config.component.scss'],
+    standalone: false,
 })
 export class SecurityUserConfigComponent extends AbstractSecurityPrincipalConfig<UserAccount> {
     displayedColumns: string[] = ['username', 'provider', 'fullName', 'edit'];

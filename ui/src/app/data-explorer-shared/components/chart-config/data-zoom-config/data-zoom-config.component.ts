@@ -29,6 +29,7 @@ import { TimeSeriesAppearanceConfig } from '../../../models/dataview-dashboard.m
 @Component({
     selector: 'sp-data-zoom-config',
     templateUrl: './data-zoom-config.component.html',
+    standalone: false,
 })
 export class SpDataZoomConfigComponent implements OnChanges {
     @Input()

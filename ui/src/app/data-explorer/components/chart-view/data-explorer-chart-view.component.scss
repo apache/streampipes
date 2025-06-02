@@ -49,8 +49,11 @@
 }
 
 .designer-panel {
-    width: 450px;
     border: 1px solid var(--color-tab-border);
+    width: auto;
+    flex: 0 0 auto;
+    display: inline-block;
+    overflow-x: hidden;
 }
 
 .widget-title-text {

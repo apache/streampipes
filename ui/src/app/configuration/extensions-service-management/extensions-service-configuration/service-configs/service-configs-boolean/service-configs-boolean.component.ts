@@ -24,6 +24,7 @@ import { ConfigItem } from '@streampipes/platform-services';
     selector: 'sp-service-configs-boolean',
     templateUrl: './service-configs-boolean.component.html',
     providers: [ConfigurationService],
+    standalone: false,
 })
 export class ServiceConfigsBooleanComponent {
     @Input() configuration: ConfigItem;

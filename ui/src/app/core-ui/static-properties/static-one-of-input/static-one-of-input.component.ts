@@ -25,6 +25,7 @@ import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
     selector: 'sp-static-one-of-input',
     templateUrl: './static-one-of-input.component.html',
     styleUrls: ['./static-one-of-input.component.scss'],
+    standalone: false,
 })
 export class StaticOneOfInputComponent
     extends AbstractStaticPropertyRenderer<OneOfStaticProperty>

@@ -23,6 +23,7 @@ import { TimeSettings } from '@streampipes/platform-services';
     selector: 'sp-no-data-in-date-range',
     templateUrl: './no-data-in-date-range.component.html',
     styleUrls: ['./no-data-in-date-range.component.scss'],
+    standalone: false,
 })
 export class NoDataInDateRangeComponent {
     @Input()

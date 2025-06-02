@@ -26,7 +26,7 @@ import { DialogRef } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-create-asset-dialog-component',
     templateUrl: './create-asset-dialog.component.html',
-    styleUrls: ['./create-asset-dialog.component.scss'],
+    standalone: false,
 })
 export class SpCreateAssetDialogComponent {
     @Input() assetModel: SpAssetModel;

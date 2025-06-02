@@ -55,6 +55,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-dashboard-panel',
     templateUrl: './dashboard-panel.component.html',
     styleUrls: ['./dashboard-panel.component.scss'],
+    standalone: false,
 })
 export class DashboardPanelComponent
     implements OnInit, OnDestroy, SupportsUnsavedChangeDialog
@@ -157,6 +158,11 @@ export class DashboardPanelComponent
 
     persistDashboardChanges() {
         this.dashboard.dashboardGeneralSettings.defaultViewMode = this.viewMode;
+        this.dashboard.metadata ??= {
+            createdAtEpochMs: undefined,
+            lastModifiedEpochMs: undefined,
+        };
+        this.dashboard.metadata.lastModifiedEpochMs = Date.now();
         this.dashboardService
             .updateDashboard(this.dashboard)
             .subscribe(result => {

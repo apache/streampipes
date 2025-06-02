@@ -29,6 +29,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-pipeline-status-dialog',
     templateUrl: './pipeline-status-dialog.component.html',
     styleUrls: ['./pipeline-status-dialog.component.scss'],
+    standalone: false,
 })
 export class PipelineStatusDialogComponent implements OnInit {
     operationInProgress = true;

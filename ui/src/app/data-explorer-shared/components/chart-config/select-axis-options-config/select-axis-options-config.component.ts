@@ -30,6 +30,7 @@ import { AxisConfig } from '../../../models/dataview-dashboard.model';
     selector: 'sp-select-axis-options-config',
     templateUrl: './select-axis-options-config.component.html',
     styleUrls: ['./select-axis-options-config.component.scss'],
+    standalone: false,
 })
 export class SpSelectAxisOptionsConfigComponent implements OnChanges {
     @Input() title: string;

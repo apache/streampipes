@@ -23,6 +23,7 @@ import { PipelineOperationStatus } from '@streampipes/platform-services';
     selector: 'sp-pipeline-operation-status',
     templateUrl: './pipeline-operation-status.component.html',
     styleUrls: ['./pipeline-operation-status.component.scss'],
+    standalone: false,
 })
 export class PipelineOperationStatusComponent {
     @Input()

@@ -37,10 +37,6 @@ export class RestApi {
         return this.platformServicesCommons.apiBasePath;
     }
 
-    getAssetUrl(appId) {
-        return this.getServerUrl() + '/pe/' + appId + '/assets';
-    }
-
     configured(): Observable<any> {
         return this.$http.get(this.getServerUrl() + '/setup/configured', {
             context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),

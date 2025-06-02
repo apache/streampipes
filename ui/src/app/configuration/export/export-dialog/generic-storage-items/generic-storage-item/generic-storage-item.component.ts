@@ -22,6 +22,7 @@ import { ExportItem } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-generic-storage-item',
     templateUrl: './generic-storage-item.component.html',
+    standalone: false,
 })
 export class GenericStorageItemComponent {
     @Input()

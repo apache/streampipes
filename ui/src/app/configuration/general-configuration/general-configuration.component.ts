@@ -43,6 +43,7 @@ import { map } from 'rxjs/operators';
     selector: 'sp-general-configuration',
     templateUrl: './general-configuration.component.html',
     styleUrls: ['./general-configuration.component.scss'],
+    standalone: false,
 })
 export class GeneralConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

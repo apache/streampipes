@@ -24,6 +24,7 @@ import { DialogRef } from '@streampipes/shared-ui';
     selector: 'sp-edit-dashboard-dialog-component',
     templateUrl: './edit-dashboard-dialog.component.html',
     styleUrls: ['./edit-dashboard-dialog.component.scss'],
+    standalone: false,
 })
 export class EditDashboardDialogComponent implements OnInit {
     @Input() createMode: boolean;
@@ -51,6 +52,7 @@ export class EditDashboardDialogComponent implements OnInit {
     }
 
     onSave(): void {
+        this.dashboard.metadata.lastModifiedEpochMs = Date.now();
         if (this.createMode) {
             this.dashboardService
                 .saveDashboard(this.dashboard)

@@ -30,6 +30,7 @@ import { MatListModule } from '@angular/material/list';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
 import { SharedUiModule } from '@streampipes/shared-ui';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
     imports: [
@@ -42,6 +43,17 @@ import { SharedUiModule } from '@streampipes/shared-ui';
         MatListModule,
         PlatformServicesModule,
         SharedUiModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                children: [
+                    {
+                        path: '',
+                        component: HomeComponent,
+                    },
+                ],
+            },
+        ]),
     ],
     declarations: [HomeComponent, StatusComponent, WelcomeTourComponent],
     providers: [HomeService],

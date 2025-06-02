@@ -17,16 +17,14 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import {
-    AssetLink,
-    AssetLinkType,
-} from '../../../../../../../../../../projects/streampipes/platform-services/src/public-api';
+import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
 
 @Component({
     selector: 'sp-asset-link-item',
     templateUrl: './asset-link-item.component.html',
     styleUrls: ['./asset-link-item.component.scss'],
+    standalone: false,
 })
 export class SpAssetLinkItemComponent {
     @Input()

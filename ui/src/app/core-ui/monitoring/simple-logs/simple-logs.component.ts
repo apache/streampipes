@@ -23,6 +23,7 @@ import { SpLogEntry } from '@streampipes/platform-services';
     selector: 'sp-simple-logs',
     templateUrl: './simple-logs.component.html',
     styleUrls: [],
+    standalone: false,
 })
 export class SpSimpleLogsComponent {
     @Input()

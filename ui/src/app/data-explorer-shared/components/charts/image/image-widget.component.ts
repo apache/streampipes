@@ -30,6 +30,7 @@ import { SecurePipe } from '../../../../services/secure.pipe';
     selector: 'sp-data-explorer-image-widget',
     templateUrl: './image-widget.component.html',
     styleUrls: ['./image-widget.component.scss'],
+    standalone: false,
 })
 export class ImageWidgetComponent
     extends BaseDataExplorerWidgetDirective<ImageWidgetModel>

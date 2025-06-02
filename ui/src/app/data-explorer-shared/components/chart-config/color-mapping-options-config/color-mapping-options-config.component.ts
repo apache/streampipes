@@ -31,6 +31,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-color-mapping-options-config',
     templateUrl: './color-mapping-options-config.component.html',
+    standalone: false,
 })
 export class ColorMappingOptionsConfigComponent implements OnInit, OnChanges {
     @Input() colorMapping: { value: string; label: string; color: string }[];

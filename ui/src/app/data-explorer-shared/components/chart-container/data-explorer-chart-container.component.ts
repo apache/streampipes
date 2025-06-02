@@ -61,6 +61,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
     selector: 'sp-data-explorer-dashboard-widget',
     templateUrl: './data-explorer-chart-container.component.html',
     styleUrls: ['./data-explorer-chart-container.component.scss'],
+    standalone: false,
 })
 export class DataExplorerChartContainerComponent
     implements OnInit, OnDestroy, OnChanges

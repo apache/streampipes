@@ -24,6 +24,7 @@ import { SpLogEntry } from '@streampipes/platform-services';
     selector: 'sp-functions-logs',
     templateUrl: './functions-logs.component.html',
     styleUrls: [],
+    standalone: false,
 })
 export class SpFunctionsLogsComponent
     extends AbstractFunctionDetailsDirective

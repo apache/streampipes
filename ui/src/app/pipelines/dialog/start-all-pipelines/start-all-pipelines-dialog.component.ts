@@ -24,7 +24,7 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
     selector: 'sp-start-all-pipelines-dialog',
     templateUrl: './start-all-pipelines-dialog.component.html',
-    styleUrls: ['./start-all-pipelines-dialog.component.scss'],
+    standalone: false,
 })
 export class StartAllPipelinesDialogComponent implements OnInit {
     @Input()

@@ -32,6 +32,7 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
     selector: 'sp-static-tree-input-text-editor',
     templateUrl: './static-tree-input-text-editor.component.html',
+    standalone: false,
 })
 export class StaticTreeInputTextEditorComponent implements OnInit {
     @Input()

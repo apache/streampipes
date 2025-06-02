@@ -61,8 +61,9 @@ public class ProtocolManager {
       return producers.get(topicName(protocol));
     } else {
       producers.put(topicName(protocol), makeOutputCollector(protocol, resourceId));
-      LOG.info("Adding new producer to producer map (size=" + producers.size() + "): " + topicName
-          (protocol));
+      LOG.debug("Adding new producer to producer map (size={}): {}",
+          producers.size(),
+          topicName(protocol));
       return producers.get(topicName(protocol));
     }
 
@@ -87,15 +88,17 @@ public class ProtocolManager {
   public static <T extends TransportProtocol> void removeInputCollector(T protocol) throws
       SpRuntimeException {
     consumers.remove(topicName(protocol));
-    LOG.info("Removing consumer from consumer map (size=" + consumers.size() + "): " + topicName
-        (protocol));
+    LOG.debug("Removing consumer from consumer map (size={}): {}",
+        consumers.size(),
+        topicName(protocol));
   }
 
   public static <T extends TransportProtocol> void removeOutputCollector(T protocol) throws
       SpRuntimeException {
     producers.remove(topicName(protocol));
-    LOG.info("Removing producer from producer map (size=" + producers.size() + "): " + topicName
-        (protocol));
+    LOG.debug("Removing producer from producer map (size={}): {}",
+        producers.size(),
+        topicName(protocol));
   }
 
 

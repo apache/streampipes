@@ -28,6 +28,7 @@ import {
     selector: 'sp-data-explorer-status-widget',
     templateUrl: './status-widget.component.html',
     styleUrls: ['./status-widget.component.scss'],
+    standalone: false,
 })
 export class StatusWidgetComponent
     extends BaseDataExplorerWidgetDirective<StatusWidgetModel>

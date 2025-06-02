@@ -26,6 +26,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-data-explorer-gauge-widget-config',
     templateUrl: './gauge-widget-config.component.html',
+    standalone: false,
 })
 export class GaugeWidgetConfigComponent extends BaseWidgetConfig<
     GaugeWidgetModel,

@@ -22,6 +22,7 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
 
 @Component({
     templateUrl: './info.component.html',
+    standalone: false,
 })
 export class InfoComponent implements OnInit {
     constructor(private breadcrumbService: SpBreadcrumbService) {}

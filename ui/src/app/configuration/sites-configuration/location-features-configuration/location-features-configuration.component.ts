@@ -33,6 +33,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
     selector: 'sp-location-features-configuration',
     templateUrl: './location-features-configuration.component.html',
+    standalone: false,
 })
 export class LocationFeaturesConfigurationComponent
     implements OnInit, OnDestroy

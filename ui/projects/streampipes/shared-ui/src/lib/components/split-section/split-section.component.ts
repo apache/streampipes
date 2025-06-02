@@ -22,6 +22,7 @@ import { Component, Input } from '@angular/core';
     selector: 'sp-split-section',
     templateUrl: './split-section.component.html',
     styleUrls: ['./split-section.component.scss'],
+    standalone: false,
 })
 export class SplitSectionComponent {
     @Input()

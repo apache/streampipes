@@ -29,6 +29,7 @@ import { DataExplorerFieldProviderService } from '../../../../services/data-expl
 @Component({
     selector: 'sp-pie-chart-widget-config',
     templateUrl: './pie-chart-widget-config.component.html',
+    standalone: false,
 })
 export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
     PieChartWidgetModel,

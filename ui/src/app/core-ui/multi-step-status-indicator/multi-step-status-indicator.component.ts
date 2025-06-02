@@ -23,6 +23,7 @@ import { Status, StatusIndicator } from './multi-step-status-indicator.model';
     selector: 'sp-multi-step-status-indicator',
     templateUrl: './multi-step-status-indicator.component.html',
     styleUrls: ['./multi-step-status-indicator.component.scss'],
+    standalone: false,
 })
 export class MultiStepStatusIndicatorComponent {
     @Input()

@@ -23,6 +23,7 @@ import { DomSanitizer } from '@angular/platform-browser';
     selector: 'sp-notification-item',
     templateUrl: './notification-item.component.html',
     styleUrls: ['./notification-item.component.scss'],
+    standalone: false,
 })
 export class NotificationItemComponent implements OnInit {
     @Input() notification: NotificationItem;

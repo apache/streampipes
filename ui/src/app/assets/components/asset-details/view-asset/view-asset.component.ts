@@ -30,6 +30,7 @@ import { ActivatedRoute } from '@angular/router';
     selector: 'sp-view-asset',
     templateUrl: './view-asset.component.html',
     styleUrls: ['./view-asset.component.scss'],
+    standalone: false,
 })
 export class SpViewAssetComponent extends BaseAssetDetailsDirective {
     locationConfig: LocationConfig;

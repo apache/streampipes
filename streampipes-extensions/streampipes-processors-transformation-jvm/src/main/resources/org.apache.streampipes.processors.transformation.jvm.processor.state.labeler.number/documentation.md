@@ -26,27 +26,95 @@
 
 ## Description
 
-Apply a rule to a value of a field. (E.g. when minimum value is lower then 10, add label `not ok` else add label `ok`)
+The Number Labeler processor adds labels to numerical values based on user-defined rules. It supports:
+* Value-based labeling
+* Custom rule definition
+* Multiple conditions
+* Default labels
+* Value comparison
+
+This processor is essential for:
+* Classifying measurements
+* Adding context to data
+* Identifying patterns
+* Marking conditions
 
 ***
 
 ## Required input
 
-Requires a sensor value
-
-### Sensor value
-
-A number representing the current sensor value.
+The processor requires a data stream containing:
+* A numerical value field to evaluate
+* Timestamp information
 
 ***
 
 ## Configuration
 
-### Condition
-Define a rule which label to add. Example: `<;5;nok` means when the calculated value is smaller then 5 add label ok.
-The default label can be defined with `*;nok`.
-The first rule that is true defines the label. Rules are applied in the same order as defined here.
+### Sensor Value
 
+Select the numerical field to evaluate against the rules.
+
+### Label Name
+
+Specify the name of the label field in the output event.
+
+### Condition
+
+Add conditions in the format:
+* `<;5;low` - Label as "low" if value is less than 5
+* `<;10;medium` - Label as "medium" if value is less than 10
+* `*;high` - Default label "high" for all other cases
 
 ## Output
-Appends a new field  with the label defined in the Condition Configuration
+
+The processor creates a new event containing:
+* All original fields from the input event
+* A new label field based on the conditions
+
+### Example
+
+#### Input Event
+```json
+{
+  "deviceId": "sensor01",
+  "timestamp": 1586380104915,
+  "temperature": 23.5
+}
+```
+
+#### Configuration
+* Sensor Value: temperature
+* Label Name: temperature_status
+* Condition: "<;20;cold", "<;30;warm", "*;hot"
+
+#### Output Event
+```json
+{
+  "deviceId": "sensor01",
+  "timestamp": 1586380104915,
+  "temperature": 23.5,
+  "temperature_status": "warm"
+}
+```
+
+## Use Cases
+
+1. **Data Classification**
+   * Classify measurements
+   * Add context to data
+   * Identify patterns
+   * Mark conditions
+
+2. **Quality Control**
+   * Label quality levels
+   * Mark thresholds
+   * Identify issues
+   * Track conditions
+
+## Notes
+
+* Conditions are evaluated in order
+* Default label is required
+* Processing is stateless
+* Multiple conditions supported

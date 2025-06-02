@@ -34,6 +34,7 @@ import {
     selector: 'sp-asset-details-basics',
     templateUrl: './asset-details-basics.component.html',
     styleUrls: ['./asset-details-basics.component.scss'],
+    standalone: false,
 })
 export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
     @Input()

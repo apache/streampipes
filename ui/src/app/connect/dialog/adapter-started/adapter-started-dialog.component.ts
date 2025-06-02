@@ -31,12 +31,12 @@ import {
     SpLogMessage,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
-import { CompactPipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/compact-pipeline.service';
+import { CompactPipelineService } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
     templateUrl: './adapter-started-dialog.component.html',
-    styleUrls: ['./adapter-started-dialog.component.scss'],
+    standalone: false,
 })
 export class AdapterStartedDialog implements OnInit {
     adapterInstalled = false;

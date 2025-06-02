@@ -22,6 +22,7 @@ import { Component, Input } from '@angular/core';
     selector: 'sp-configuration-box',
     templateUrl: './configuration-box.component.html',
     styleUrls: ['./configuration-box.component.scss'],
+    standalone: false,
 })
 export class SpConfigurationBoxComponent {
     @Input()

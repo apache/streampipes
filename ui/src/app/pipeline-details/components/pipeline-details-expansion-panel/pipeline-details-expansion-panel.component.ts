@@ -24,6 +24,7 @@ import { PipelineElementUnion } from '../../../editor/model/editor.model';
     selector: 'sp-pipeline-details-expansion-panel',
     templateUrl: './pipeline-details-expansion-panel.component.html',
     styleUrls: ['./pipeline-details-expansion-panel.component.scss'],
+    standalone: false,
 })
 export class PipelineDetailsExpansionPanelComponent implements OnInit {
     expanded = true;

@@ -42,7 +42,8 @@
           {
             "suffixes": ["Component", "Dialog"]
           }
-        ]
+        ],
+        "@angular-eslint/prefer-standalone": "off"
       }
     },
     {

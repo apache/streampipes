@@ -78,3 +78,8 @@
     overflow: hidden;
     border-top: 1px solid #cccccc;
 }
+
+.custom-dialog-container .mat-dialog-container {
+    padding: 0px;
+    overflow: auto;
+}

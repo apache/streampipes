@@ -28,6 +28,7 @@ import { CurrentUserService } from '../../../../services/current-user.service';
         './select-format.component.scss',
         '../../data-download-dialog.component.scss',
     ],
+    standalone: false,
 })
 export class SelectFormatComponent implements OnInit {
     @Input() formatExportConfig: FormatExportConfig;

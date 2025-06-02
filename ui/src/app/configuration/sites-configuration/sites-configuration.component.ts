@@ -28,6 +28,7 @@ import { SpConfigurationRoutes } from '../configuration.routes';
 @Component({
     selector: 'sp-sites-configuration',
     templateUrl: './sites-configuration.component.html',
+    standalone: false,
 })
 export class SitesConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

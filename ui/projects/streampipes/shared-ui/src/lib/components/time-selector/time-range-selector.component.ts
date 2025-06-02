@@ -48,6 +48,7 @@ import { DataExplorerRefreshIntervalSettingsComponent } from './refresh-interval
     templateUrl: 'time-range-selector.component.html',
     styleUrls: ['./time-range-selector.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false,
 })
 export class TimeRangeSelectorComponent
     implements OnInit, OnChanges, AfterViewInit

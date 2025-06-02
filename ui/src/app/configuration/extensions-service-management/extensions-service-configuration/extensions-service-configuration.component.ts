@@ -46,6 +46,7 @@ import { SpServiceConfiguration } from '@streampipes/platform-services';
             ),
         ]),
     ],
+    standalone: false,
 })
 export class SpExtensionsServiceConfigurationComponent {
     displayedColumns: string[] = ['group', 'name', 'action'];

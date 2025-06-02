@@ -43,6 +43,7 @@ import { JsplumbService } from '../../services/jsplumb.service';
     selector: 'sp-pipeline-assembly',
     templateUrl: './pipeline-assembly.component.html',
     styleUrls: ['./pipeline-assembly.component.scss'],
+    standalone: false,
 })
 export class PipelineAssemblyComponent implements AfterViewInit {
     @Input()

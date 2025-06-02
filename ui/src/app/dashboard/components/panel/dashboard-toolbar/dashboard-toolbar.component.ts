@@ -27,6 +27,7 @@ import {
     selector: 'sp-dashboard-toolbar',
     templateUrl: './dashboard-toolbar.component.html',
     styleUrls: ['./dashboard-toolbar.component.scss'],
+    standalone: false,
 })
 export class DashboardToolbarComponent {
     @Input()

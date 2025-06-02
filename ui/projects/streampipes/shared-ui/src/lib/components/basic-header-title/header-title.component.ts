@@ -22,6 +22,7 @@ import { Component, Input, OnInit } from '@angular/core';
     selector: 'sp-basic-header-title-component',
     templateUrl: './header-title.component.html',
     styleUrls: ['./header-title.component.scss'],
+    standalone: false,
 })
 export class SpBasicHeaderTitleComponent implements OnInit {
     @Input()

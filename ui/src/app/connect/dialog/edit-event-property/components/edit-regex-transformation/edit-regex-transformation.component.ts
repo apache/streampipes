@@ -23,6 +23,7 @@ import { EventPropertyUnion } from '@streampipes/platform-services';
     selector: 'sp-edit-regex-transformation',
     templateUrl: './edit-regex-transformation.component.html',
     styleUrl: './edit-regex-transformation.component.scss',
+    standalone: false,
 })
 export class EditRegexTransformationComponent {
     @Input() cachedProperty: EventPropertyUnion;

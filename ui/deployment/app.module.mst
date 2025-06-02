@@ -39,10 +39,6 @@ import { AuthService } from './services/auth.service';
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
 
-{{#modulesActive}}
-import { {{{moduleName}}} } from '{{{path}}}';
-{{/modulesActive}}
-
 import { NotificationModule } from './notifications/notifications.module';
 
 import { AppComponent } from './app.component';
@@ -58,6 +54,7 @@ import { ValueDistributionTransform } from './core-ui/echarts-transform/value-di
 import { HistogramTransform } from './core-ui/echarts-transform/histogram.transform';
 import { RoundValuesTransform} from './core-ui/echarts-transform/round-values.transform';
 import { MapTransform } from './core-ui/echarts-transform/map.transform';
+import { MarkdownModule } from 'ngx-markdown';
 
 import * as echarts from 'echarts';
 import * as transform from 'echarts-simple-transform';
@@ -98,6 +95,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         PipelineDetailsModule,
         ServicesModule,
         ProfileModule,
+        MarkdownModule.forRoot(),
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

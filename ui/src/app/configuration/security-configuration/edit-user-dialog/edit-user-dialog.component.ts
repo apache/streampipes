@@ -49,6 +49,7 @@ import { map } from 'rxjs/operators';
     templateUrl: './edit-user-dialog.component.html',
     styleUrls: ['./edit-user-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false,
 })
 export class EditUserDialogComponent implements OnInit {
     @Input()

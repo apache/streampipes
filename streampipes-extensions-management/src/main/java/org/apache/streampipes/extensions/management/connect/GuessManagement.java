@@ -53,14 +53,14 @@ public class GuessManagement {
     if (adapter.isPresent()) {
       var adapterInstance = adapter.get();
 
-      LOG.info("Start guessing schema for: " + adapterDescription.getAppId());
+      LOG.debug("Start guessing schema for: {}", adapterDescription.getAppId());
 
       // get registered parser of adapter
       var registeredParsers = adapterInstance.declareConfig().getSupportedParsers();
 
       var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
 
-      LOG.info("Requesting the event schema for: " + adapterDescription.getAppId());
+      LOG.info("Requesting the event schema for: {}", adapterDescription.getAppId());
 
       try {
         var guessedSchemaObj = adapterInstance

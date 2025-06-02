@@ -44,6 +44,7 @@ import { map, startWith } from 'rxjs/operators';
     selector: 'sp-object-permission-dialog',
     templateUrl: './object-permission-dialog.component.html',
     styleUrls: ['./object-permission-dialog.component.scss'],
+    standalone: false,
 })
 export class ObjectPermissionDialogComponent implements OnInit {
     separatorKeysCodes: number[] = [ENTER, COMMA];

@@ -15,8 +15,7 @@
   ~ limitations under the License.
   ~
   -->
-
-<div fxLayout="column">
+<div fxLayout="column" [formGroup]="siteAreaControl">
     <sp-basic-field-description
         fxFlex="100"
         descriptionPanelWidth="30"
@@ -27,8 +26,14 @@
             <input
                 data-cy="sites-dialog-site-input"
                 matInput
-                [(ngModel)]="site.label"
+                formControlName="label"
+                placeholder="New site"
             />
+            <mat-error
+                *ngIf="siteAreaControl.get('label').hasError('required')"
+            >
+                {{ 'Site label is required' | translate }}
+            </mat-error>
         </mat-form-field>
     </sp-basic-field-description>
     <sp-basic-field-description
@@ -53,6 +58,7 @@
             fxFlex="100"
             [locationConfig]="locationConfig"
             [assetLocation]="site.location"
+            formControlName="location"
         >
         </sp-single-marker-map>
     </sp-basic-field-description>

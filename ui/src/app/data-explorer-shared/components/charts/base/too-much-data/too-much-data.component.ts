@@ -22,6 +22,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     selector: 'sp-too-much-data',
     templateUrl: './too-much-data.component.html',
     styleUrls: ['./too-much-data.component.scss'],
+    standalone: false,
 })
 export class TooMuchDataComponent {
     @Input()

@@ -20,7 +20,6 @@ package org.apache.streampipes.connect.shared.preprocessing.generator;
 
 import org.apache.streampipes.connect.shared.preprocessing.transform.stream.DuplicateFilterPipelineElement;
 import org.apache.streampipes.connect.shared.preprocessing.transform.stream.EventRateTransformationRule;
-import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
@@ -35,11 +34,6 @@ import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformation
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 
 public class StatefulTransformationRuleGeneratorVisitor extends TransformationRuleGeneratorVisitor {
-
-  @Override
-  public void visit(CreateNestedRuleDescription rule) {
-    // skip (not a stateful transformation)
-  }
 
   @Override
   public void visit(DeleteRuleDescription rule) {

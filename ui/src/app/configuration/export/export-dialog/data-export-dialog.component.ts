@@ -24,7 +24,7 @@ import { ExportConfiguration } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-data-export-dialog',
     templateUrl: './data-export-dialog.component.html',
-    styleUrls: ['./data-export-dialog.component.scss'],
+    standalone: false,
 })
 export class SpDataExportDialogComponent implements OnInit {
     @Input()

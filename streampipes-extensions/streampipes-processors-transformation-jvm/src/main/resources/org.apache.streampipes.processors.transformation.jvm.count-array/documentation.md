@@ -26,24 +26,80 @@
 
 ## Description
 
-This processor takes a list field, computes the size of the list and appends the result to the event.
+The Count Array processor counts the number of elements in array/list fields. It supports:
+* Array size counting
+* List length measurement
+* Collection size tracking
+* Dynamic array handling
+
+This processor is essential for:
+* Measuring array sizes
+* Tracking list lengths
+* Monitoring collection growth
+* Analyzing data volumes
 
 ***
 
 ## Required input
 
-This processor works with any event that has a field of type ``list``.
+The processor requires a data stream containing at least one array or list field to count its elements.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
-
 ### List Field
 
-The field containing the list that should be used.
+Select the array or list field to count its elements. This field will be used to determine the number of items it contains.
 
 ## Output
 
-Outputs the incoming event while appending the list size (named ``countValue``) to the incoming event.
+The processor creates a new event containing:
+* All original fields from the input event
+* A new field named "countValue" containing the number of elements in the selected array/list
+
+### Example
+
+#### Input Event
+```json
+{
+  "deviceId": "sensor01",
+  "measurements": [23.5, 24.1, 25.3, 24.8],
+  "timestamp": 1586380104915
+}
+```
+
+#### Configuration
+* List Field: measurements
+
+#### Output Event
+```json
+{
+  "deviceId": "sensor01",
+  "measurements": [23.5, 24.1, 25.3, 24.8],
+  "timestamp": 1586380104915,
+  "countValue": 4
+}
+```
+
+## Use Cases
+
+1. **Data Analysis**
+   * Count array elements
+   * Track list sizes
+   * Monitor collection growth
+   * Measure data volumes
+
+2. **Resource Management**
+   * Monitor buffer sizes
+   * Track queue lengths
+   * Measure storage usage
+   * Analyze capacity needs
+
+## Notes
+
+* Only array/list fields can be counted
+* Count is calculated per event
+* Processing is stateless
+* Empty arrays return 0
+* Null arrays are not supported

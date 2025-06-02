@@ -20,6 +20,7 @@ import { Directive, ViewContainerRef } from '@angular/core';
 
 @Directive({
     selector: '[spWidgetHost]',
+    standalone: false,
 })
 export class ChartDirective {
     constructor(public viewContainerRef: ViewContainerRef) {}

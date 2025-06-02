@@ -33,6 +33,40 @@
                         required
                         (blur)="triggerTutorialAdapterNameAssigned()"
                     />
+                    <mat-error
+                        *ngIf="
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('invalidName')
+                        "
+                    >
+                        Name can only contain letters, numbers, dashes (-), and
+                        underscores (_).
+                    </mat-error>
+                    <mat-error
+                        *ngIf="
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('required') ||
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('whiteSpaceOnly')
+                        "
+                    >
+                        Adapter name is required.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('minlength') ||
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('maxlength')
+                        "
+                    >
+                        Adapter name must have between 3 and 40 characters.
+                    </mat-error>
                 </mat-form-field>
                 <mat-form-field color="accent">
                     <input

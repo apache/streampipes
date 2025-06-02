@@ -24,6 +24,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
     selector: 'sp-data-export-item',
     templateUrl: './data-export-item.component.html',
     styleUrls: ['./data-export-item.component.scss'],
+    standalone: false,
 })
 export class SpDataExportItemComponent {
     @Input()

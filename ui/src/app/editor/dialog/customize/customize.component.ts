@@ -49,6 +49,7 @@ import { StaticPropertyUtilService } from '../../../core-ui/static-properties/st
     templateUrl: './customize.component.html',
     styleUrls: ['./customize.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false,
 })
 export class CustomizeComponent implements OnInit, AfterViewInit {
     @Input()

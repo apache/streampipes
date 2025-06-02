@@ -114,13 +114,15 @@ public class ExportPackageGenerator {
       });
 
       config.getFiles().forEach(item -> {
-        var fileResolver = new FileResolver();
-        String filename = fileResolver.findDocument(item.getResourceId()).getFilename();
-        addDoc(builder, item, new FileResolver(), manifest::addFile);
-        try {
-          builder.addBinary(filename, Files.readAllBytes(new FileManager().getFile(filename).toPath()));
-        } catch (IOException e) {
-          e.printStackTrace();
+        if (item.isSelected()) {
+          var fileResolver = new FileResolver();
+          String filename = fileResolver.findDocument(item.getResourceId()).getFilename();
+          addDoc(builder, item, new FileResolver(), manifest::addFile);
+          try {
+            builder.addBinary(filename, Files.readAllBytes(new FileManager().getFile(filename).toPath()));
+          } catch (IOException e) {
+            LOG.warn("Could not add binary file to export package: {}", e.getMessage());
+          }
         }
       });
     });
@@ -143,10 +145,12 @@ public class ExportPackageGenerator {
                       AbstractResolver<?> resolver,
                       Consumer<String> function) {
     try {
-      var resourceId = exportItem.getResourceId();
-      var sanitizedResourceId = sanitize(resourceId);
-      builder.addText(sanitizedResourceId, resolver.getSerializedDocument(resourceId));
-      function.accept(sanitizedResourceId);
+      if (exportItem.isSelected()) {
+        var resourceId = exportItem.getResourceId();
+        var sanitizedResourceId = sanitize(resourceId);
+        builder.addText(sanitizedResourceId, resolver.getSerializedDocument(resourceId));
+        function.accept(sanitizedResourceId);
+      }
     } catch (JsonProcessingException | ElementNotFoundException e) {
       LOG.warn(
           "Could not find document with resource id {} with resolver {}",
@@ -170,7 +174,7 @@ public class ExportPackageGenerator {
         builder.addText(String.valueOf(asset.get("_id")), this.defaultMapper.writeValueAsString(asset));
         manifest.addAsset(String.valueOf(asset.get("_id")));
       } catch (IOException e) {
-        e.printStackTrace();
+        LOG.warn("Could not add asset to export package: {}", e.getMessage());
       }
     });
   }

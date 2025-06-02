@@ -21,6 +21,7 @@ import {
     AdapterDescription,
     AdapterMonitoringService,
     AdapterService,
+    PipelineElementAssetService,
     SpLogMessage,
     SpMetricsEntry,
 } from '@streampipes/platform-services';
@@ -43,22 +44,20 @@ import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 import { SpConnectRoutes } from '../../connect.routes';
 import { Subscription, zip } from 'rxjs';
-import { RestApi } from '../../../services/rest-api.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 
 @Component({
     selector: 'sp-existing-adapters',
     templateUrl: './existing-adapters.component.html',
-    styleUrls: [
-        './existing-adapters.component.scss',
-        '../../../../scss/sp/status-light.scss',
-    ],
+    styleUrls: ['./existing-adapters.component.scss'],
+    standalone: false,
 })
 export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     existingAdapters: AdapterDescription[] = [];
     filteredAdapters: AdapterDescription[] = [];
 
     currentFilter: AdapterFilterSettingsModel;
+    operationInProgressAdapterId: string | undefined;
 
     @ViewChild(MatSort)
     sort: MatSort;
@@ -93,7 +92,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         private dialogService: DialogService,
         private currentUserService: CurrentUserService,
         private router: Router,
-        private restApi: RestApi,
+        private pipelineElementAssetService: PipelineElementAssetService,
         private adapterFilter: AdapterFilterPipe,
         private breadcrumbService: SpBreadcrumbService,
         private adapterMonitoringService: AdapterMonitoringService,
@@ -117,22 +116,26 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     startAdapter(adapter: AdapterDescription) {
+        this.operationInProgressAdapterId = adapter.elementId;
         this.adapterService.startAdapter(adapter).subscribe(
             _ => {
                 this.getAdaptersRunning();
             },
             error => {
+                this.operationInProgressAdapterId = undefined;
                 this.openAdapterStatusErrorDialog(adapter, error.error, true);
             },
         );
     }
 
     stopAdapter(adapter: AdapterDescription, forceStop = false) {
+        this.operationInProgressAdapterId = adapter.elementId;
         this.adapterService.stopAdapter(adapter, forceStop).subscribe(
             _ => {
                 this.getAdaptersRunning();
             },
             error => {
+                this.operationInProgressAdapterId = undefined;
                 this.openAdapterStatusErrorDialog(adapter, error.error, false);
             },
         );
@@ -208,7 +211,10 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     getIconUrl(adapter: AdapterDescription) {
         if (adapter.includedAssets.length > 0) {
-            return this.restApi.getAssetUrl(adapter.appId) + '/icon';
+            return (
+                this.pipelineElementAssetService.getAssetUrl(adapter.appId) +
+                '/icon'
+            );
         }
     }
 
@@ -265,6 +271,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             this.existingAdapters = adapters;
             this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
             this.applyAdapterFilters(this.currentFilterIds);
+            this.operationInProgressAdapterId = undefined;
             this.getMonitoringInfos(adapters);
             setTimeout(() => {
                 this.dataSource.sort = this.sort;

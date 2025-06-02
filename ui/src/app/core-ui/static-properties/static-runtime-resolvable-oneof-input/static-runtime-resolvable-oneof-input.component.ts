@@ -31,6 +31,7 @@ import { UntypedFormControl } from '@angular/forms';
     selector: 'sp-app-static-runtime-resolvable-oneof-input',
     templateUrl: './static-runtime-resolvable-oneof-input.component.html',
     styleUrls: ['./static-runtime-resolvable-oneof-input.component.scss'],
+    standalone: false,
 })
 export class StaticRuntimeResolvableOneOfInputComponent
     extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableOneOfStaticProperty>

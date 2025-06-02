@@ -29,6 +29,7 @@ import { PipelineElementTypeUtils } from '../../utils/editor.utils';
     selector: 'sp-pipeline-element-statistics',
     templateUrl: './pipeline-element-statistics.component.html',
     styleUrls: ['./pipeline-element-statistics.component.scss'],
+    standalone: false,
 })
 export class PipelineElementStatisticsComponent implements OnInit {
     @Input()

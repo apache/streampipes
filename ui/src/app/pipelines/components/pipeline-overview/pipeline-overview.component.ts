@@ -38,10 +38,8 @@ import { Subscription } from 'rxjs';
 @Component({
     selector: 'sp-pipeline-overview',
     templateUrl: './pipeline-overview.component.html',
-    styleUrls: [
-        './pipeline-overview.component.scss',
-        '../../../../scss/sp/status-light.scss',
-    ],
+    styleUrls: ['./pipeline-overview.component.scss'],
+    standalone: false,
 })
 export class PipelineOverviewComponent implements OnInit, OnDestroy {
     _pipelines: Pipeline[];

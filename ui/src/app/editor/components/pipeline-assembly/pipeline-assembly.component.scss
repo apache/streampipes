@@ -16,8 +16,6 @@
  *
  */
 
-@import '../../../../scss/_variables.scss';
-
 .mat-spinner-color::ng-deep svg circle {
     stroke: var(--color-accent) !important;
 }

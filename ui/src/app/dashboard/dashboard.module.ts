@@ -22,7 +22,7 @@ import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { GridsterModule } from 'angular-gridster2';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FormsModule } from '@angular/forms';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerComponent } from 'ngx-color-picker';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { DashboardOverviewComponent } from './components/overview/dashboard-overview.component';
 import { CdkTableModule } from '@angular/cdk/table';
@@ -101,7 +101,7 @@ import { TranslateModule } from '@ngx-translate/core';
         GridsterModule,
         FlexLayoutModule,
         FormsModule,
-        ColorPickerModule,
+        ColorPickerComponent,
         MatGridListModule,
         MatDividerModule,
         MatFormFieldModule,

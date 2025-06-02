@@ -19,35 +19,30 @@
 package org.apache.streampipes.processors.transformation.jvm.processor.value.change;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ChangedValueDetectionProcessor
-    extends StreamPipesDataProcessor {
-
-  private static Logger logger = LoggerFactory.getLogger(ChangedValueDetectionProcessor.class);
+public class ChangedValueDetectionProcessor implements IStreamPipesDataProcessor {
 
   public static final String COMPARE_FIELD_ID = "compare";
   public static final String CHANGE_FIELD_NAME = "change_detected";
@@ -57,33 +52,34 @@ public class ChangedValueDetectionProcessor
 
   private HashMap<String, Object> dimensionsState = new HashMap<>();
 
-  //TODO: Change Icon
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.changed-value", 0)
-        .category(DataProcessorType.VALUE_OBSERVER)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                Labels.withId(COMPARE_FIELD_ID),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.append(EpProperties.timestampProperty(CHANGE_FIELD_NAME)))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        ChangedValueDetectionProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.transformation.jvm.changed-value", 0)
+            .category(DataProcessorType.VALUE_OBSERVER)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION)
+            .requiredStream(StreamRequirementsBuilder.create()
+                .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
+                    Labels.withId(COMPARE_FIELD_ID),
+                    PropertyScope.NONE)
+                .build())
+            .outputStrategy(OutputStrategies.append(EpProperties.timestampProperty(CHANGE_FIELD_NAME)))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-
+  public void onPipelineStarted(IDataProcessorParameters parameters,
+                                SpOutputCollector spOutputCollector,
+                                EventProcessorRuntimeContext runtimeContext) {
     compareParameter = parameters.extractor().mappingPropertyValue(COMPARE_FIELD_ID);
   }
 
   @Override
-  public void onEvent(Event inputEvent, SpOutputCollector collector) throws SpRuntimeException {
+  public void onEvent(Event inputEvent, SpOutputCollector collector) {
     Object newObject = inputEvent.getFieldBySelector(compareParameter).getRawValue();
 
     String dimensionKey = this.getDimensionKey(inputEvent);
@@ -104,7 +100,6 @@ public class ChangedValueDetectionProcessor
   }
 
   String getDimensionKey(Event inputEvent) {
-
     List<EventProperty> eventProperties = inputEvent.getSchemaInfo().getEventSchema().getEventProperties();
 
     return eventProperties.stream()
@@ -116,8 +111,8 @@ public class ChangedValueDetectionProcessor
         .sorted()
         .collect(Collectors.joining());
   }
-  @Override
-  public void onDetach() throws SpRuntimeException {
 
+  @Override
+  public void onPipelineStopped() {
   }
 }

@@ -17,52 +17,121 @@
   -->
 ## Static Metadata Enricher
 
-Enrich a data stream by dynamically adding fields based on user-provided static metadata configuration.
+<p align="center">
+    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
+</p>
 
----
+***
 
 ## Description
 
-The Static Metadata Enricher is designed to enrich a data stream by dynamically adding fields based on user-provided
-metadata configuration. Users can specify static properties, and the processor will process each event, adding fields
-according to the provided key-value pairs. The output strategy is determined dynamically based on the provided metadata.
-For added convenience, users also have the option of uploading a CSV file with metadata information.
+The Static Metadata Enricher processor adds predefined metadata fields to events. It supports:
+* Custom field addition
+* Multiple data types (String, Boolean, Float, Integer)
+* Field labeling
+* Field descriptions
+* Runtime naming
+* Metadata enrichment
 
-### Configuration
+This processor is essential for:
+* Adding context to data
+* Enriching events
+* Creating metadata
+* Building annotations
+* Standardizing fields
+* Documenting data
 
-For each metadata entry, configure the following three options:
+***
 
-- **Runtime Name:** A unique identifier for the property during runtime.
-- **Value:** The value associated with the property.
-- **Data Type:** The data type of the property value.
+## Required input
 
-#### Using CSV Option
+The processor requires a data stream to enrich with additional metadata fields.
 
-Alternatively, you can utilize the CSV upload feature by creating a CSV file with the following format:
+***
 
-```
-Runtime Name,Runtime Value,Data Type
-sensorType,Temperature,String
-maxSensorValue,100.0,Float
-minSensorValue,0,Float
-```
+## Configuration
 
-## Example
-### Input Event
+### Metadata Input
 
+Configure the metadata fields to add to each event:
+
+#### Runtime Name
+Enter the name that will be used for the field in the output event.
+
+#### Runtime Value
+Enter the value that will be assigned to the field.
+
+#### Data Type
+Select the data type of the value:
+* String: Text values
+* Boolean: true/false values
+* Float: Decimal numbers
+* Integer: Whole numbers
+
+#### Label (Optional)
+Provide a short label describing the field.
+
+#### Description (Optional)
+Provide a detailed description of the field.
+
+## Output
+
+The processor creates a new event containing:
+* All original fields from the input event
+* The configured metadata fields with their values
+
+### Example
+
+#### Input Event
 ```json
 {
-  "reading": 25.5
+  "deviceId": "sensor01",
+  "temperature": 23.5,
+  "humidity": 45.2
 }
 ```
 
-### Output Event
+#### Configuration
+* Runtime Name: location
+* Runtime Value: Building A
+* Data Type: String
+* Label: Sensor Location
+* Description: Physical location of the sensor
 
+#### Output Event
 ```json
 {
-  "reading": 25.5,
-  "sensorType": "Temperature",
-  "maxSensorValue": 100.0,
-  "minSensorValue": 0.0
+  "deviceId": "sensor01",
+  "temperature": 23.5,
+  "humidity": 45.2,
+  "location": "Building A"
 }
 ```
+
+## Use Cases
+
+1. **Data Enrichment**
+   * Add context to data
+   * Enrich events
+   * Create metadata
+   * Build annotations
+   * Standardize fields
+
+2. **Documentation**
+   * Document data
+   * Add descriptions
+   * Create labels
+   * Build metadata
+   * Standardize fields
+
+## Notes
+
+* Multiple fields can be added
+* Data types must match values
+* Labels are optional
+* Descriptions are optional
+* Processing is stateless
+* Field names must be unique
+* Values are automatically cast to the selected data type
+* Original event fields are preserved
+* Metadata is consistent across all events

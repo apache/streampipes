@@ -25,6 +25,7 @@ import { MappingPropertyUnary } from '@streampipes/platform-services';
     selector: 'sp-app-static-mapping-unary',
     templateUrl: './static-mapping-unary.component.html',
     styleUrls: ['./static-mapping-unary.component.scss'],
+    standalone: false,
 })
 export class StaticMappingUnaryComponent
     extends StaticMappingComponent<MappingPropertyUnary>

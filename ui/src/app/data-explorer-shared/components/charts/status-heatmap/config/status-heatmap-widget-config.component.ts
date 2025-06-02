@@ -29,6 +29,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-data-explorer-status-heatmap-widget-config',
     templateUrl: './status-heatmap-widget-config.component.html',
+    standalone: false,
 })
 export class StatusHeatmapWidgetConfigComponent extends BaseWidgetConfig<
     StatusHeatmapWidgetModel,

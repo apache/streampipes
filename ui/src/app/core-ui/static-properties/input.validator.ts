@@ -16,7 +16,7 @@
  *
  */
 
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export function ValidateUrl(control: AbstractControl) {
     if (control.value == null) {
@@ -48,4 +48,40 @@ export function ValidateString(control: AbstractControl) {
         return { validString: true };
     }
     return null;
+}
+
+export function checkForDuplicatesValidator(
+    getExistingNames: () => string[],
+): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+        if (!control.value || typeof control.value !== 'string') {
+            return null;
+        }
+        const existingNames = getExistingNames();
+
+        const isDuplicate = existingNames.includes(control.value);
+
+        return isDuplicate ? { forbiddenName: { value: control.value } } : null;
+    };
+}
+
+export function ValidateName(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+        const value = control.value;
+
+        if (value == null) {
+            return null;
+        }
+
+        const trimmed = value.trim();
+
+        if (trimmed.length === 0) {
+            return { whiteSpaceOnly: { value } };
+        }
+
+        const regex = /^[a-zA-Z0-9 _-]+$/;
+        const valid = regex.test(trimmed);
+
+        return valid ? null : { invalidName: { value } };
+    };
 }

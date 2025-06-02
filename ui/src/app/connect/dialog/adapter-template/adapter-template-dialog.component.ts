@@ -27,7 +27,7 @@ import { DialogRef } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-adapter-template-dialog',
     templateUrl: './adapter-template-dialog.component.html',
-    styleUrls: ['./adapter-template-dialog.component.scss'],
+    standalone: false,
 })
 export class SpAdapterTemplateDialogComponent implements OnInit {
     @Input()

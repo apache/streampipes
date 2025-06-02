@@ -18,13 +18,14 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.array.split;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.AbstractField;
@@ -36,21 +37,20 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SplitArrayProcessor extends StreamPipesDataProcessor
-    implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
-
+public class SplitArrayProcessor
+    implements IStreamPipesDataProcessor,
+               ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
   public static final String KEEP_PROPERTIES_ID = "keep";
   public static final String ARRAY_FIELD_ID = "array-field";
   public static final String VALUE = "array_value";
@@ -59,28 +59,36 @@ public class SplitArrayProcessor extends StreamPipesDataProcessor
   private List<String> keepProperties;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.split-array", 0)
-        .category(DataProcessorType.TRANSFORM)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
-                Labels.withId(KEEP_PROPERTIES_ID),
-                PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(),
-                Labels.withId(ARRAY_FIELD_ID),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.customTransformation())
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        SplitArrayProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.transformation.jvm.split-array", 0)
+            .category(DataProcessorType.TRANSFORM)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                                                     .requiredPropertyWithNaryMapping(
+                                                         EpRequirements.anyProperty(),
+                                                         Labels.withId(KEEP_PROPERTIES_ID),
+                                                         PropertyScope.NONE
+                                                     )
+                                                     .requiredPropertyWithUnaryMapping(
+                                                         EpRequirements.listRequirement(),
+                                                         Labels.withId(ARRAY_FIELD_ID),
+                                                         PropertyScope.NONE
+                                                     )
+                                                     .build())
+            .outputStrategy(OutputStrategies.customTransformation())
+            .build()
+    );
   }
 
   @Override
-  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
-                                           ProcessingElementParameterExtractor extractor)
-      throws SpRuntimeException {
+  public EventSchema resolveOutputStrategy(
+      DataProcessorInvocation processingElement,
+      ProcessingElementParameterExtractor extractor
+  ) {
     String arrayFieldSelector = extractor.mappingPropertyValue(ARRAY_FIELD_ID);
     List<String> keepPropertySelectors = extractor.mappingPropertyValues(KEEP_PROPERTIES_ID);
 
@@ -91,8 +99,7 @@ public class SplitArrayProcessor extends StreamPipesDataProcessor
     newProperty.setLabel("Array Value");
     newProperty.setDescription("Contains values of the array. Created by Split Array processor.");
 
-    List<EventProperty> keepProperties = extractor.getEventPropertiesBySelector
-        (keepPropertySelectors);
+    List<EventProperty> keepProperties = extractor.getEventPropertiesBySelector(keepPropertySelectors);
     outProperties.add(newProperty);
     outProperties.addAll(keepProperties);
 
@@ -100,32 +107,36 @@ public class SplitArrayProcessor extends StreamPipesDataProcessor
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    arrayField = parameters.extractor().mappingPropertyValue(ARRAY_FIELD_ID);
-    keepProperties = parameters.extractor().mappingPropertyValues(KEEP_PROPERTIES_ID);
+  public void onPipelineStarted(
+      IDataProcessorParameters parameters,
+      SpOutputCollector spOutputCollector,
+      EventProcessorRuntimeContext runtimeContext
+  ) {
+    arrayField = parameters.extractor()
+                           .mappingPropertyValue(ARRAY_FIELD_ID);
+    keepProperties = parameters.extractor()
+                               .mappingPropertyValues(KEEP_PROPERTIES_ID);
   }
 
   @Override
-  public void onEvent(Event event,
-                      SpOutputCollector collector) throws SpRuntimeException {
-
-    List<AbstractField> allEvents = event.getFieldBySelector(arrayField).getAsList()
-        .parseAsCustomType(o -> {
-          if (o instanceof NestedField) {
-            return o;
-          } else if (o instanceof ListField) {
-            return o;
-          } else {
-            return o;
-          }
-        });
+  public void onEvent(Event event, SpOutputCollector collector) {
+    List<AbstractField> allEvents = event.getFieldBySelector(arrayField)
+                                         .getAsList()
+                                         .parseAsCustomType(o -> {
+                                           if (o instanceof NestedField) {
+                                             return o;
+                                           } else if (o instanceof ListField) {
+                                             return o;
+                                           } else {
+                                             return o;
+                                           }
+                                         });
 
     for (AbstractField field : allEvents) {
       Event outEvent = new Event();
       if (field instanceof NestedField) {
-        for (Map.Entry<String, AbstractField> key : ((NestedField) field).getRawValue().entrySet()) {
+        for (Map.Entry<String, AbstractField> key : ((NestedField) field).getRawValue()
+                                                                         .entrySet()) {
           outEvent.addField(key.getValue());
         }
       } else {
@@ -141,7 +152,7 @@ public class SplitArrayProcessor extends StreamPipesDataProcessor
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }
+

@@ -27,6 +27,7 @@ import { saveAs } from 'file-saver';
     selector: 'sp-file-overview',
     templateUrl: './file-overview.component.html',
     styleUrls: ['./file-overview.component.scss'],
+    standalone: false,
 })
 export class FileOverviewComponent implements OnInit {
     displayedColumns: string[] = ['filename', 'filetype', 'uploaded', 'action'];

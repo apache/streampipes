@@ -37,6 +37,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-asset-browser',
     templateUrl: 'asset-browser.component.html',
     styleUrls: ['./asset-browser.component.scss'],
+    standalone: false,
 })
 export class AssetBrowserComponent implements OnInit, OnDestroy {
     translateService = inject(TranslateService);

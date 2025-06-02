@@ -36,6 +36,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-asset-browser-hierarchy',
     templateUrl: 'asset-browser-hierarchy.component.html',
     styleUrls: ['./asset-browser-hierarchy.component.scss'],
+    standalone: false,
 })
 export class AssetBrowserHierarchyComponent implements OnChanges {
     translateService = inject(TranslateService);

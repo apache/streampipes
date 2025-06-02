@@ -31,6 +31,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-data-explorer-traffic-light-widget-config',
     templateUrl: './traffic-light-widget-config.component.html',
     styleUrls: ['./traffic-light-widget-config.component.scss'],
+    standalone: false,
 })
 export class TrafficLightWidgetConfigComponent extends BaseWidgetConfig<
     TrafficLightWidgetModel,

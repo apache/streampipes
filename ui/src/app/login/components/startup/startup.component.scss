@@ -16,10 +16,8 @@
  *
  */
 
-@import '../../../../scss/_variables.scss';
-
 ::ng-deep .mdc-linear-progress__bar-inner {
-    border-color: $sp-color-accent !important;
+    border-color: var(--color-accent) !important;
 }
 
 .sp-progress {

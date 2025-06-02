@@ -18,28 +18,27 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.HashMap;
 
-public class StringCounterProcessor extends StreamPipesDataProcessor {
+public class StringCounterProcessor implements IStreamPipesDataProcessor {
 
   protected static final String FIELD_ID = "field";
   private static final String COUNT_FIELD_ID = "countField";
@@ -52,45 +51,59 @@ public class StringCounterProcessor extends StreamPipesDataProcessor {
 
   public String selectedFieldName;
   private String fieldValueOfLastEvent;
-
   private HashMap<String, Integer> changeCounter;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.stringoperator.counter", 0)
-        .category(DataProcessorType.STRING_OPERATOR, DataProcessorType.COUNT_OPERATOR)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.stringReq(),
-                Labels.withId(FIELD_ID),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(OutputStrategies.append(
-            EpProperties.stringEp(Labels.withId(CHANGE_FROM_FIELD_ID), CHANGE_FROM_FIELD_RUNTIME_NAME,
-                "http://schema.org/String"),
-            EpProperties.stringEp(Labels.withId(CHANGE_TO_FIELD_ID), CHANGE_TO_FIELD_RUNTIME_NAME,
-                "http://schema.org/String"),
-            EpProperties.numberEp(Labels.withId(COUNT_FIELD_ID), COUNT_FIELD_RUNTIME_NAME, "http://schema.org/Number")
-        ))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        StringCounterProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.transformation.jvm.stringoperator.counter", 0)
+            .category(DataProcessorType.STRING_OPERATOR, DataProcessorType.COUNT_OPERATOR)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .requiredStream(StreamRequirementsBuilder.create()
+                                                     .requiredPropertyWithUnaryMapping(
+                                                         EpRequirements.stringReq(),
+                                                         Labels.withId(FIELD_ID),
+                                                         PropertyScope.NONE
+                                                     )
+                                                     .build())
+            .outputStrategy(OutputStrategies.append(
+                EpProperties.stringEp(
+                    Labels.withId(CHANGE_FROM_FIELD_ID), CHANGE_FROM_FIELD_RUNTIME_NAME,
+                    "http://schema.org/String"
+                ),
+                EpProperties.stringEp(
+                    Labels.withId(CHANGE_TO_FIELD_ID), CHANGE_TO_FIELD_RUNTIME_NAME,
+                    "http://schema.org/String"
+                ),
+                EpProperties.numberEp(
+                    Labels.withId(COUNT_FIELD_ID),
+                    COUNT_FIELD_RUNTIME_NAME, "http://schema.org/Number"
+                )
+            ))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    ProcessingElementParameterExtractor extractor = parameters.extractor();
+  public void onPipelineStarted(
+      IDataProcessorParameters parameters,
+      SpOutputCollector spOutputCollector,
+      EventProcessorRuntimeContext runtimeContext
+  ) {
+    var extractor = parameters.extractor();
     this.selectedFieldName = extractor.mappingPropertyValue(FIELD_ID);
     this.fieldValueOfLastEvent = "";
     this.changeCounter = new HashMap<>();
   }
 
   @Override
-  public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
-    String value = event.getFieldBySelector(selectedFieldName).getAsPrimitive().getAsString();
+  public void onEvent(Event event, SpOutputCollector collector) {
+    String value = event.getFieldBySelector(selectedFieldName)
+                        .getAsPrimitive()
+                        .getAsString();
     String key = this.fieldValueOfLastEvent + ">" + value;
     boolean updateCounter = false;
 
@@ -110,7 +123,7 @@ public class StringCounterProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }
+

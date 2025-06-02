@@ -22,6 +22,7 @@ import { Component, Input } from '@angular/core';
     selector: 'sp-ep-settings-section',
     templateUrl: './ep-settings-section.component.html',
     styleUrls: ['./ep-settings-section.component.scss'],
+    standalone: false,
 })
 export class SpEpSettingsSectionComponent {
     @Input()

@@ -16,56 +16,121 @@
   ~
   -->
 
-## CSV Metadata Enrichment
-Enrich a datastream with information provided in a CSV file.
-The data of the CSV file is matched by an id column with a property value of a String in the data stream.
+## CSV Metadata Enricher
+
+<p align="center">
+    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
+</p>
 
 ***
 
 ## Description
-Upload a CSV file with static meta information that will be appended to each event.
-The file can contain different information for different keys in the stream.
 
+The CSV Metadata Enricher processor adds additional fields to events by looking up values in a CSV file. It supports:
+* CSV file integration
+* Field mapping
+* ID-based lookups
+* Multiple field enrichment
+* Static metadata
 
-### Structure of CSV file
-The first row containes the runtime names for the properties to insert.
-Once the file is uploaded the user can select which column to use for the matching property
-and which values should be appended.
-Delimiter: ';'
-
+This processor is essential for:
+* Adding static metadata
+* Enriching event data
+* Mapping reference data
+* Creating data relationships
 
 ***
 
-## Example
-Add the location of a production line to the event
+## Required input
 
-### Input  event
-```
-{
-  'line_id': 'line1',
-  'timestamp': 1586378041
-}
-```
+The processor requires:
+* A data stream containing an ID field for lookups
+* A CSV file containing the metadata to be added
+* A field in the CSV file that matches the ID field
+
+***
+
+## Configuration
+
+### ID Field
+
+Select the field from the input event that will be used to look up matching records in the CSV file.
 
 ### CSV File
-```
-production_line;location
-line1;germany
-line2;uk
-line3;usa
-```
 
-### Configuration
-* The field that is used for the lookup (Example: line_id)
-* The CSV file (Example: Upload the csv file)
-* Field to match (Example: production_line)
-* Fields to append (Example: location)
+Upload the CSV file containing the metadata to be added to the events. The file should contain:
+* A column that matches the ID field
+* Additional columns with the metadata to be added
 
-### Output event
-```
+### Field to Match
+
+Select the column name in the CSV file that corresponds to the ID field. This field will be used to find matching records.
+
+### Fields to Append
+
+Select one or more columns from the CSV file that should be added to the events. These fields will be appended to the output events.
+
+## Output
+
+The processor creates a new event containing:
+* All original fields from the input event
+* The selected fields from the CSV file for matching records
+
+### Example
+
+#### Input Event
+```json
 {
-  'line_id': 'line1',
-  'timestamp': 1586378041,
-  'location': 'germany'
+  "deviceId": "sensor01",
+  "temperature": 23.5,
+  "timestamp": 1586380104915
 }
 ```
+
+#### CSV File Content
+```csv
+device_id,location,manufacturer,model
+sensor01,Building A,Acme Corp,TempPro 2000
+sensor02,Building B,Acme Corp,TempPro 2000
+```
+
+#### Configuration
+* ID Field: deviceId
+* Field to Match: device_id
+* Fields to Append: location, manufacturer, model
+
+#### Output Event
+```json
+{
+  "deviceId": "sensor01",
+  "temperature": 23.5,
+  "timestamp": 1586380104915,
+  "location": "Building A",
+  "manufacturer": "Acme Corp",
+  "model": "TempPro 2000"
+}
+```
+
+## Use Cases
+
+1. **Device Management**
+   * Add device metadata
+   * Map locations
+   * Track equipment info
+   * Monitor assets
+
+2. **Data Enrichment**
+   * Add reference data
+   * Map relationships
+   * Create context
+   * Build hierarchies
+
+## Notes
+
+* CSV file must be uploaded
+* ID field must exist in both event and CSV
+* Field names are case-sensitive
+* CSV must have a header row
+* No matches return empty values
+* Processing is stateless
+* CSV is loaded at startup

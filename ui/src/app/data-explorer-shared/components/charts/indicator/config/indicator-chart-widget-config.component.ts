@@ -28,6 +28,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 @Component({
     selector: 'sp-data-explorer-indicator-chart-widget-config',
     templateUrl: './indicator-chart-widget-config.component.html',
+    standalone: false,
 })
 export class IndicatorWidgetConfigComponent extends BaseWidgetConfig<
     IndicatorChartWidgetModel,

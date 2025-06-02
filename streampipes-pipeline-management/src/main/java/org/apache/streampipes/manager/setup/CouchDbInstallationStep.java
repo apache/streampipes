@@ -66,7 +66,6 @@ public class CouchDbInstallationStep extends InstallationStep {
       Utils.getCouchDbUserClient();
       Utils.getCouchDbPipelineClient();
       Utils.getCouchDbNotificationClient();
-      Utils.getCouchDbPipelineCategoriesClient();
 
       logSuccess(getTitle());
     } catch (Exception e) {

@@ -25,6 +25,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
         '../static-runtime-resolvable-tree-input.component.scss',
         './static-tree-input-selected-nodes.component.scss',
     ],
+    standalone: false,
 })
 export class StaticTreeInputSelectedNodesComponent {
     @Input()

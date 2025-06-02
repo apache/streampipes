@@ -20,3 +20,21 @@ org.apache.streampipes.sinks.brokers.jvm.rest.description=Posts events to a REST
 
 url-key.title=REST URL
 url-key.description=URL of the REST endpoint
+
+header-collection.title=Request Headers
+header-collection.description=Optional custom headers to be included with the REST request.
+
+header-key.title=Header
+header-key.description=Optional custom headers to be included with the REST request.
+
+header-value.title=Header Value
+header-value.description=Optional custom headers to be included with the REST request.
+
+is-retry-enabled-key.title=Enable Retry
+is-retry-enabled-key.description=If enabled, the request will be retried at an interval defined by the retry delay up to max retries.
+
+retry-delay-ms-key.title=Retry Delay (ms)
+retry-delay-ms-key.description=Duration in ms to wait for request to retry.
+
+retry-max-retries-key.title=Max Retries
+retry-max-retries-key.description=The maximum number of retries allowed for request to retry.

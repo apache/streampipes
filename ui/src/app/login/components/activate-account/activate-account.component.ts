@@ -26,6 +26,7 @@ import { LoginService } from '../../services/login.service';
     selector: 'sp-activate-account',
     templateUrl: './activate-account.component.html',
     styleUrls: ['../login/login.component.scss'],
+    standalone: false,
 })
 export class ActivateAccountComponent extends BaseLoginPageDirective {
     activationCode: string;

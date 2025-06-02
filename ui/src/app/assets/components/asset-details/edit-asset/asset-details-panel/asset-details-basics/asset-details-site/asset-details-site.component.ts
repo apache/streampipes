@@ -23,6 +23,7 @@ import { MatSelectChange } from '@angular/material/select';
 @Component({
     selector: 'sp-asset-details-site',
     templateUrl: './asset-details-site.component.html',
+    standalone: false,
 })
 export class AssetDetailsSiteComponent implements OnChanges {
     @Input()

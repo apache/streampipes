@@ -35,6 +35,7 @@ import {
 import { PipelineAssemblyDrawingAreaPanZoomComponent } from './pipeline-assembly-drawing-area-pan-zoom/pipeline-assembly-drawing-area-pan-zoom.component';
 import { PipelineValidationService } from '../../../services/pipeline-validation.service';
 import {
+    LivePreviewService,
     PipelineCanvasMetadata,
     PipelinePreviewModel,
     SpMetricsEntry,
@@ -42,7 +43,6 @@ import {
 import { EditorService } from '../../../services/editor.service';
 import { PipelinePositioningService } from '../../../services/pipeline-positioning.service';
 import { HttpDownloadProgressEvent } from '@angular/common/http';
-import { LivePreviewService } from '../../../../services/live-preview.service';
 import { ObjectProvider } from '../../../services/object-provider.service';
 import { Subscription } from 'rxjs';
 
@@ -50,6 +50,7 @@ import { Subscription } from 'rxjs';
     selector: 'sp-pipeline-assembly-drawing-area',
     templateUrl: './pipeline-assembly-drawing-area.component.html',
     styleUrls: ['./pipeline-assembly-drawing-area.component.scss'],
+    standalone: false,
 })
 export class PipelineAssemblyDrawingAreaComponent implements OnInit {
     @Input()

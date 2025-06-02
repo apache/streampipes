@@ -23,6 +23,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-status-indicator',
     templateUrl: './status-indicator.component.html',
     styleUrls: ['./status-indicator.component.scss'],
+    standalone: false,
 })
 export class StatusIndicatorComponent {
     translateService = inject(TranslateService);

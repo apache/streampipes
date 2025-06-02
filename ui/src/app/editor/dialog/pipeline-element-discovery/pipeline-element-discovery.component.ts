@@ -33,6 +33,7 @@ import {
     selector: 'sp-pipeline-element-discovery',
     templateUrl: './pipeline-element-discovery.component.html',
     styleUrls: ['./pipeline-element-discovery.component.scss'],
+    standalone: false,
 })
 export class PipelineElementDiscoveryComponent implements OnInit {
     @Input()

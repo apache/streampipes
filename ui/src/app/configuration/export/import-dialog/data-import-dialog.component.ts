@@ -29,6 +29,7 @@ import {
     selector: 'sp-data-import-dialog',
     templateUrl: './data-import-dialog.component.html',
     styleUrls: ['./data-import-dialog.component.scss'],
+    standalone: false,
 })
 export class SpDataImportDialogComponent {
     currentImportStep = 0;

@@ -38,6 +38,7 @@ import {
     templateUrl: './change-password-dialog.component.html',
     styleUrls: ['./change-password-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false,
 })
 export class ChangePasswordDialogComponent implements OnInit {
     @Input()

@@ -32,6 +32,7 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
     selector: 'sp-asset-selection-panel',
     templateUrl: './asset-selection-panel.component.html',
     styleUrls: ['./asset-selection-panel.component.scss'],
+    standalone: false,
 })
 export class SpAssetSelectionPanelComponent implements OnInit {
     @Input()

@@ -40,6 +40,7 @@ import { IdGeneratorService } from '../../../../../core-services/id-generator/id
     selector: 'sp-event-property-row',
     templateUrl: './event-property-row.component.html',
     styleUrls: ['./event-property-row.component.scss'],
+    standalone: false,
 })
 export class EventPropertyRowComponent implements OnInit {
     @Input() node: TreeNode;

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
     CurrentUserService,
     DialogService,
@@ -26,14 +26,20 @@ import { AuthService } from '../../../services/auth.service';
 import { SpDataExplorerRoutes } from '../../data-explorer.routes';
 import { SpDataExplorerOverviewDirective } from './data-explorer-overview.directive';
 import { DataExplorerRoutingService } from '../../../data-explorer-shared/services/data-explorer-routing.service';
+import { DashboardOverviewTableComponent } from '../../../dashboard/components/overview/dashboard-overview-table/dashboard-overview-table.component';
+import { SpDataExplorerDataViewOverviewComponent } from './data-explorer-overview-table/data-explorer-overview-table.component';
 
 @Component({
     selector: 'sp-data-explorer-overview',
     templateUrl: './data-explorer-overview.component.html',
     styleUrls: ['./data-explorer-overview.component.scss'],
+    standalone: false,
 })
 export class DataExplorerOverviewComponent extends SpDataExplorerOverviewDirective {
     resourceCount = 0;
+
+    @ViewChild(SpDataExplorerDataViewOverviewComponent)
+    chartsOverview: SpDataExplorerDataViewOverviewComponent;
 
     constructor(
         public dialogService: DialogService,
@@ -56,6 +62,6 @@ export class DataExplorerOverviewComponent extends SpDataExplorerOverviewDirecti
     }
 
     applyChartFilters(elementIds: Set<string> = new Set<string>()): void {
-        //this.da.applyDashboardFilters(elementIds);
+        this.chartsOverview.applyChartFilters(elementIds);
     }
 }

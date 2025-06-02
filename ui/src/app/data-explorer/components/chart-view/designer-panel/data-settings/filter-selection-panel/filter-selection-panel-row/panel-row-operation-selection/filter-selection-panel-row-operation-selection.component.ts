@@ -22,6 +22,7 @@ import { SelectedFilter } from '@streampipes/platform-services';
     selector: 'sp-filter-selection-panel-row-operation-selection',
     templateUrl:
         './filter-selection-panel-row-operation-selection.component.html',
+    standalone: false,
 })
 export class FilterSelectionPanelRowOperationSelectionComponent {
     @Input()

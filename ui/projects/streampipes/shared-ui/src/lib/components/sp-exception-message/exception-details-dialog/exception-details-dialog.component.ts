@@ -27,6 +27,7 @@ import { DialogRef } from '../../../dialog/base-dialog/dialog-ref';
         './exception-details-dialog.component.scss',
         '../../../../../../../../src/scss/sp/sp-dialog.scss',
     ],
+    standalone: false,
 })
 export class SpExceptionDetailsDialogComponent implements OnInit {
     @Input()

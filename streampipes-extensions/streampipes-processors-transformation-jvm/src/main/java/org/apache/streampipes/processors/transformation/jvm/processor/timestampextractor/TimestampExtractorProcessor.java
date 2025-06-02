@@ -18,19 +18,21 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
@@ -39,15 +41,13 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class TimestampExtractorProcessor extends StreamPipesDataProcessor
-    implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
+public class TimestampExtractorProcessor implements IStreamPipesDataProcessor,
+    ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   public static final String TIMESTAMP_FIELD = "timestampField";
   public static final String SELECTED_OUTPUT_FIELDS = "selectedOutputFields";
@@ -56,32 +56,33 @@ public class TimestampExtractorProcessor extends StreamPipesDataProcessor
   private List<String> outputFields;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor", 0)
-        .category(DataProcessorType.TIME)
-        .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
-        .requiredStream(
-            StreamRequirementsBuilder.create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                    Labels.withId(TIMESTAMP_FIELD), PropertyScope.NONE)
-                .build())
-        .requiredMultiValueSelection(Labels.withId(SELECTED_OUTPUT_FIELDS),
-            Options.from(OutputFields.YEAR.toString(), OutputFields.MONTH.toString(), OutputFields.DAY.toString(),
-                OutputFields.HOUR.toString(),
-                OutputFields.MINUTE.toString(), OutputFields.SECOND.toString(), OutputFields.WEEKDAY.toString()))
-        .outputStrategy(OutputStrategies.customTransformation())
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        TimestampExtractorProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor", 0)
+            .category(DataProcessorType.TIME)
+            .withLocales(Locales.EN)
+            .withAssets(ExtensionAssetType.DOCUMENTATION)
+            .requiredStream(
+                StreamRequirementsBuilder.create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                        Labels.withId(TIMESTAMP_FIELD), PropertyScope.NONE)
+                    .build())
+            .requiredMultiValueSelection(Labels.withId(SELECTED_OUTPUT_FIELDS),
+                Options.from(OutputFields.YEAR.toString(), OutputFields.MONTH.toString(), OutputFields.DAY.toString(),
+                    OutputFields.HOUR.toString(),
+                    OutputFields.MINUTE.toString(), OutputFields.SECOND.toString(), OutputFields.WEEKDAY.toString()))
+            .outputStrategy(OutputStrategies.customTransformation())
+            .build()
+    );
   }
 
   @Override
   public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
-                                           ProcessingElementParameterExtractor extractor) throws SpRuntimeException {
+                                           ProcessingElementParameterExtractor extractor) {
     EventSchema eventSchema = processingElement.getInputStreams().get(0).getEventSchema();
-
     List<String> selectedOutputField = extractor.selectedMultiValues(SELECTED_OUTPUT_FIELDS, String.class);
-
     for (String field : selectedOutputField) {
       if (field.equals(OutputFields.YEAR.toString())) {
         eventSchema.addEventProperty(
@@ -115,27 +116,23 @@ public class TimestampExtractorProcessor extends StreamPipesDataProcessor
                 SO.TEXT));
       }
     }
-
-
     return eventSchema;
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataProcessorParameters parameters,
+                                SpOutputCollector spOutputCollector,
+                                EventProcessorRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
     timestampField = extractor.mappingPropertyValue(TIMESTAMP_FIELD);
     outputFields = extractor.selectedMultiValues(SELECTED_OUTPUT_FIELDS, String.class);
   }
 
   @Override
-  public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
+  public void onEvent(Event event, SpOutputCollector collector) {
     Long timestamp = event.getFieldBySelector(timestampField).getAsPrimitive().getAsLong();
-
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(new Date(timestamp));
-
     for (String field : outputFields) {
       if (field.equals(OutputFields.YEAR.toString())) {
         event.addField("timestampYear", calendar.get(Calendar.YEAR));
@@ -157,39 +154,24 @@ public class TimestampExtractorProcessor extends StreamPipesDataProcessor
       }
       if (field.equals(OutputFields.WEEKDAY.toString())) {
         int day = calendar.get(Calendar.DAY_OF_WEEK);
-        String dayString = "";
-        switch (day) {
-          case Calendar.MONDAY:
-            dayString = "Monday";
-            break;
-          case Calendar.TUESDAY:
-            dayString = "Tuesday";
-            break;
-          case Calendar.WEDNESDAY:
-            dayString = "Wednesday";
-            break;
-          case Calendar.THURSDAY:
-            dayString = "Thursday";
-            break;
-          case Calendar.FRIDAY:
-            dayString = "Friday";
-            break;
-          case Calendar.SATURDAY:
-            dayString = "Saturday";
-            break;
-          case Calendar.SUNDAY:
-            dayString = "Sunday";
-            break;
-        }
+        String dayString = switch (day) {
+          case Calendar.MONDAY -> "Monday";
+          case Calendar.TUESDAY -> "Tuesday";
+          case Calendar.WEDNESDAY -> "Wednesday";
+          case Calendar.THURSDAY -> "Thursday";
+          case Calendar.FRIDAY -> "Friday";
+          case Calendar.SATURDAY -> "Saturday";
+          case Calendar.SUNDAY -> "Sunday";
+          default -> "";
+        };
         event.addField("timestampWeekday", dayString);
       }
     }
-
     collector.collect(event);
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }
+

@@ -21,6 +21,7 @@ import { AssetLink } from '@streampipes/platform-services';
 
 @Pipe({
     name: 'assetTypeFilter',
+    standalone: false,
 })
 @Injectable({ providedIn: 'root' })
 export class AssetTypeFilterPipe implements PipeTransform {

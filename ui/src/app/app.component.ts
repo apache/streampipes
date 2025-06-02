@@ -27,6 +27,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-app-root',
     templateUrl: './app.component.html',
     animations: [slideInAnimation],
+    standalone: false,
 })
 export class AppComponent implements OnInit {
     constructor(

@@ -23,6 +23,7 @@ import { ConfigItem } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-service-configs-number',
     templateUrl: './service-configs-number.component.html',
+    standalone: false,
 })
 export class ServiceConfigsNumberComponent {
     @Input() configuration: ConfigItem;

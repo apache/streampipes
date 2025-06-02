@@ -25,6 +25,7 @@ import { AppConstants } from '../../../services/app.constants';
     selector: 'sp-startup',
     templateUrl: './startup.component.html',
     styleUrls: ['./startup.component.scss'],
+    standalone: false,
 })
 export class StartupComponent implements OnInit {
     progress = 0;

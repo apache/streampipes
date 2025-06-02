@@ -27,6 +27,7 @@ import { Router } from '@angular/router';
     selector: 'sp-chart-selection',
     templateUrl: './chart-selection.component.html',
     styleUrls: ['./chart-selection.component.scss'],
+    standalone: false,
 })
 export class ChartSelectionComponent implements OnInit {
     @Output()

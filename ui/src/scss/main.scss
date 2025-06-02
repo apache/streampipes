@@ -18,46 +18,45 @@
 
 @use './sp/sp-theme';
 
-@import '@ali-hm/angular-tree-component/css/angular-tree-component.css';
-@import '@fortawesome/fontawesome-free/css/all.css';
-@import '@jsplumb/browser-ui/css/jsplumbtoolkit.css';
-@import 'shepherd.js/dist/css/shepherd.css';
-@import 'leaflet/dist/leaflet.css';
-@import 'material-icons/iconfont/material-icons.css';
-@import 'quill/dist/quill.snow.css';
-@import 'swagger-ui-dist/swagger-ui.css';
+@use '@ali-hm/angular-tree-component/css/angular-tree-component.css';
+@use '@fortawesome/fontawesome-free/css/all.css';
+@use '@jsplumb/browser-ui/css/jsplumbtoolkit.css';
+@use 'shepherd.js/dist/css/shepherd.css';
+@use 'leaflet/dist/leaflet.css';
+@use 'material-icons/iconfont/material-icons.css';
+@use 'quill/dist/quill.snow.css';
+@use 'swagger-ui-dist/swagger-ui.css';
 
-@import 'roboto-fontface/css/roboto/roboto-fontface.css';
+@use 'roboto-fontface/css/roboto/roboto-fontface.css';
 
-@import './sp/shepherd-new';
+@use './sp/shepherd-new';
 
-@import './sp/main';
-@import './sp/buttons';
-@import './sp/buttons.ng1';
-@import './sp/spinner';
-@import './sp/forms';
-@import './sp/dialog';
-@import './sp/pipeline-element-options';
-@import './sp/pipeline-element-loading';
-@import './sp/pipeline-element';
-@import './sp/pipeline-validation';
-@import './sp/mat-tab';
-@import './sp/dialog.ng5';
-@import './sp/feedback.ng1';
-@import './sp/widgets.scss';
-@import './sp/progress-bar.scss';
-@import './sp/jsplumb';
-@import './sp/sp-dialog';
+@use './sp/main';
+@use './sp/buttons';
+@use './sp/spinner';
+@use './sp/forms';
+@use './sp/dialog';
+@use './sp/pipeline-element-options';
+@use './sp/pipeline-element-loading';
+@use './sp/pipeline-element';
+@use './sp/pipeline-validation';
+@use './sp/mat-tab';
+@use './sp/feedback.ng1';
+@use './sp/widgets.scss';
+@use './sp/progress-bar.scss';
+@use './sp/jsplumb';
+@use './sp/sp-dialog';
+@use './sp/status-light';
 
-@import './sp/layout';
+@use './sp/layout';
 
-@import './sp/documentation.ng1';
-@import './sp/stepper';
+@use './sp/documentation.ng1';
+@use './sp/stepper';
 
-@import './sp/colors.scss';
+@use './sp/colors.scss';
 
-@import 'codemirror/lib/codemirror.css';
-@import 'codemirror/theme/darcula.css';
-@import 'codemirror/theme/dracula.css';
-@import 'codemirror/addon/hint/show-hint.css';
-@import 'codemirror/addon/lint/lint.css';
+@use 'codemirror/lib/codemirror.css';
+@use 'codemirror/theme/darcula.css';
+@use 'codemirror/theme/dracula.css';
+@use 'codemirror/addon/hint/show-hint.css';
+@use 'codemirror/addon/lint/lint.css';

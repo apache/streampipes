@@ -27,6 +27,7 @@ import { AssetFilter } from '../../../asset-browser.model';
     selector: 'sp-asset-browser-filter-type',
     templateUrl: 'asset-browser-filter-type.component.html',
     styleUrls: ['../asset-browser-filter.component.scss'],
+    standalone: false,
 })
 export class AssetBrowserFilterTypeComponent implements OnInit {
     allAssetTypes: Isa95TypeDesc[] = [];

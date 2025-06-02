@@ -24,6 +24,7 @@ import { DialogRef } from '@streampipes/shared-ui';
     selector: 'sp-pipeline-logs',
     templateUrl: './pipeline-logs-dialog.component.html',
     styleUrls: ['./pipeline-logs-dialog.component.scss'],
+    standalone: false,
 })
 export class PipelineLogsDialogComponent {
     @Input()

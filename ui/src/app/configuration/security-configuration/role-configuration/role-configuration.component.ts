@@ -33,6 +33,7 @@ import { EditRoleDialogComponent } from '../edit-role-dialog/edit-role-dialog.co
     selector: 'sp-security-role-config',
     templateUrl: './role-configuration.component.html',
     styleUrls: ['./role-configuration.component.scss'],
+    standalone: false,
 })
 export class SecurityRoleConfigComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;

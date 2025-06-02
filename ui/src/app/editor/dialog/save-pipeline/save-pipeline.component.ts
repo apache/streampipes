@@ -47,6 +47,7 @@ import { PipelineAction } from '../../../pipelines/model/pipeline-model';
     selector: 'sp-save-pipeline',
     templateUrl: './save-pipeline.component.html',
     styleUrls: ['./save-pipeline.component.scss'],
+    standalone: false,
 })
 export class SavePipelineComponent implements OnInit {
     @Input()

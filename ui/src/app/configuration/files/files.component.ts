@@ -30,6 +30,7 @@ import { SpConfigurationRoutes } from '../configuration.routes';
 @Component({
     templateUrl: './files.component.html',
     styleUrls: ['./files.component.scss'],
+    standalone: false,
 })
 export class FilesComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

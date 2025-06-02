@@ -40,6 +40,7 @@ import { JsplumbService } from './services/jsplumb.service';
     selector: 'sp-editor',
     templateUrl: './editor.component.html',
     styleUrls: ['./editor.component.scss'],
+    standalone: false,
 })
 export class EditorComponent implements OnInit {
     allElements: PipelineElementUnion[] = [];

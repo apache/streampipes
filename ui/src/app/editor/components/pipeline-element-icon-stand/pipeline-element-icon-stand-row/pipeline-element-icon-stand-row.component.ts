@@ -28,6 +28,7 @@ import { EditorService } from '../../../services/editor.service';
     selector: 'sp-pe-icon-stand-row',
     templateUrl: './pipeline-element-icon-stand-row.component.html',
     styleUrls: ['./pipeline-element-icon-stand-row.component.scss'],
+    standalone: false,
 })
 export class PipelineElementIconStandRowComponent implements OnInit {
     @Input()

@@ -24,6 +24,7 @@ import { SpConfigurationRoutes } from '../configuration.routes';
 @Component({
     selector: 'sp-extensions-service-management',
     templateUrl: './extensions-service-management.component.html',
+    standalone: false,
 })
 export class ExtensionsServiceManagementComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

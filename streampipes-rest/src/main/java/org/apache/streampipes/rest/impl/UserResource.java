@@ -166,8 +166,10 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       path = "{userId}/tokens",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> createNewApiToken(@PathVariable("userId") String username,
-                                             @RequestBody RawUserApiToken rawToken) {
+  public ResponseEntity<?> createNewApiToken(
+      @PathVariable("userId") String username,
+      @RequestBody RawUserApiToken rawToken
+  ) {
     String authenticatedUserName = getAuthenticatedUsername();
     if (authenticatedUserName.equals(username)) {
       RawUserApiToken generatedToken = new TokenService().createAndStoreNewToken(username, rawToken);
@@ -181,15 +183,21 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       path = "user/{principalId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> updateUserAccountDetails(@PathVariable("principalId") String principalId,
-                                                    @RequestBody UserAccount user) {
+  public ResponseEntity<?> updateUserAccountDetails(
+      @PathVariable("principalId") String principalId,
+      @RequestBody UserAccount user
+  ) {
     String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
-      updateUser(existingUser, user, isAdmin(), existingUser.getPassword());
-      user.setRev(existingUser.getRev());
-      getUserStorage().updateUser(user);
-      return ok(Notifications.success("User updated"));
+      if (isUserNameUnchanged(user, existingUser) || isUsernameAvailable(existingUser.getUsername())) {
+        updateUser(existingUser, user, isAdmin(), existingUser.getPassword());
+        user.setRev(existingUser.getRev());
+        getUserStorage().updateUser(user);
+        return ok(Notifications.success("User updated"));
+      } else {
+        return badRequest(Notifications.error("Username is not available"));
+      }
     } else {
       return statusMessage(Notifications.error("User not found"));
     }
@@ -199,8 +207,10 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       path = "user/{principalId}/username",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> updateUsername(@PathVariable("principalId") String principalId,
-                                 @RequestBody UserAccount user) {
+  public ResponseEntity<?> updateUsername(
+      @PathVariable("principalId") String principalId,
+      @RequestBody UserAccount user
+  ) {
     String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
@@ -208,15 +218,12 @@ public class UserResource extends AbstractAuthGuardedRestResource {
         if (PasswordUtil.validatePassword(user.getPassword(), existingUser.getPassword())) {
           existingUser.setUsername(user.getUsername());
 
-          if (getUserStorage()
-              .getAllUserAccounts()
-              .stream()
-              .noneMatch(u -> u.getUsername().equalsIgnoreCase(user.getUsername()))) {
+          if (isUsernameAvailable(user.getUsername())) {
             updateUser(existingUser, user, isAdmin(), existingUser.getPassword());
             getUserStorage().updateUser(existingUser);
             return ok();
           } else {
-            return badRequest(Notifications.error("Username already taken"));
+            return badRequest(Notifications.error("Username is not available"));
           }
         } else {
           return badRequest(Notifications.error("Incorrect password"));
@@ -226,14 +233,17 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       }
     }
 
-    return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).build();
+    return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED)
+                         .build();
   }
 
   @PutMapping(path = "user/{principalId}/password",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> updatePassword(@PathVariable("principalId") String principalId,
-                                 @RequestBody ChangePasswordRequest passwordRequest) {
+              produces = MediaType.APPLICATION_JSON_VALUE,
+              consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> updatePassword(
+      @PathVariable("principalId") String principalId,
+      @RequestBody ChangePasswordRequest passwordRequest
+  ) {
     String authenticatedUserId = getAuthenticatedUserSid();
     UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
     if (principalId.equals(authenticatedUserId) || isAdmin()) {
@@ -260,8 +270,10 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       path = "service/{principalId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<? extends Message> updateServiceAccountDetails(@PathVariable("principalId") String principalId,
-                                              @RequestBody ServiceAccount user) {
+  public ResponseEntity<? extends Message> updateServiceAccountDetails(
+      @PathVariable("principalId") String principalId,
+      @RequestBody ServiceAccount user
+  ) {
     String authenticatedUserId = getAuthenticatedUserSid();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       Principal existingUser = getPrincipalById(principalId);
@@ -286,16 +298,20 @@ public class UserResource extends AbstractAuthGuardedRestResource {
         .getAuthentication()
         .getAuthorities()
         .stream()
-        .anyMatch(r -> r.getAuthority().equals(DefaultRole.ROLE_ADMIN.name()));
+        .anyMatch(r -> r.getAuthority()
+                        .equals(DefaultRole.ROLE_ADMIN.name()));
   }
 
-  private void updateUser(UserAccount existingUser,
-                          UserAccount user,
-                          boolean adminPrivileges,
-                          String property) {
+  private void updateUser(
+      UserAccount existingUser,
+      UserAccount user,
+      boolean adminPrivileges,
+      String property
+  ) {
     user.setPassword(property);
     user.setProvider(existingUser.getProvider());
-    if (!existingUser.getProvider().equals(UserAccount.LOCAL)) {
+    if (!existingUser.getProvider()
+                     .equals(UserAccount.LOCAL)) {
       // These settings are managed externally
       user.setUsername(existingUser.getUsername());
       user.setFullName(existingUser.getFullName());
@@ -304,18 +320,33 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       replacePermissions(user, existingUser);
     }
     user.setUserApiTokens(existingUser
-        .getUserApiTokens()
-        .stream()
-        .filter(existingToken -> user.getUserApiTokens()
-            .stream()
-            .anyMatch(updatedToken -> existingToken
-                .getTokenId()
-                .equals(updatedToken.getTokenId())))
-        .collect(Collectors.toList()));
+                              .getUserApiTokens()
+                              .stream()
+                              .filter(existingToken -> user.getUserApiTokens()
+                                                           .stream()
+                                                           .anyMatch(updatedToken -> existingToken
+                                                               .getTokenId()
+                                                               .equals(updatedToken.getTokenId())))
+                              .collect(Collectors.toList()));
   }
 
-  private void encryptAndStore(UserAccount userAccount,
-                               String property) throws NoSuchAlgorithmException, InvalidKeySpecException {
+  private boolean isUsernameAvailable(String username) {
+    return getUserStorage()
+        .getAllUserAccounts()
+        .stream()
+        .noneMatch(u -> u.getUsername()
+                         .equalsIgnoreCase(username));
+  }
+
+  private boolean isUserNameUnchanged(UserAccount existingUser, UserAccount user) {
+    return existingUser.getUsername()
+                       .equalsIgnoreCase(user.getUsername());
+  }
+
+  private void encryptAndStore(
+      UserAccount userAccount,
+      String property
+  ) throws NoSuchAlgorithmException, InvalidKeySpecException {
     String encryptedProperty = PasswordUtil.encryptPassword(property);
     userAccount.setPassword(encryptedProperty);
     getUserStorage().storeUser(userAccount);

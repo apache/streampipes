@@ -31,6 +31,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'sp-select-properties-config',
     templateUrl: './select-multiple-properties-config.component.html',
     styleUrls: ['./select-multiple-properties-config.component.scss'],
+    standalone: false,
 })
 export class SelectMultiplePropertiesConfigComponent implements OnInit {
     @Output() changeSelectedProperties: EventEmitter<DataExplorerField[]> =

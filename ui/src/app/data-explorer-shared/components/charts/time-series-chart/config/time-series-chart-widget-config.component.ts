@@ -29,6 +29,7 @@ import { DataExplorerFieldProviderService } from '../../../../services/data-expl
 @Component({
     selector: 'sp-data-explorer-time-series-chart-widget-config',
     templateUrl: './time-series-chart-widget-config.component.html',
+    standalone: false,
 })
 export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
     TimeSeriesChartWidgetModel,

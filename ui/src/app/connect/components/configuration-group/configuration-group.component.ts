@@ -29,6 +29,7 @@ import { StaticPropertyUtilService } from '../../../core-ui/static-properties/st
     selector: 'sp-configuration-group',
     templateUrl: './configuration-group.component.html',
     styleUrls: ['./configuration-group.component.scss'],
+    standalone: false,
 })
 export class ConfigurationGroupComponent implements OnInit {
     @Input() configurationGroup: UntypedFormGroup;

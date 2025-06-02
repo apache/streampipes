@@ -27,6 +27,7 @@ import { AdapterTemplateConfigurationDirective } from '../directives/adapter-tem
     selector: 'sp-adapter-settings',
     templateUrl: './adapter-settings.component.html',
     styleUrls: ['./adapter-settings.component.scss'],
+    standalone: false,
 })
 export class AdapterSettingsComponent
     extends AdapterTemplateConfigurationDirective

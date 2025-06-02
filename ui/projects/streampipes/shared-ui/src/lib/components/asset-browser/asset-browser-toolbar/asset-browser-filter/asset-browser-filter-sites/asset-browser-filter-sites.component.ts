@@ -24,6 +24,7 @@ import { AssetFilter } from '../../../asset-browser.model';
     selector: 'sp-asset-browser-filter-sites',
     templateUrl: 'asset-browser-filter-sites.component.html',
     styleUrls: ['../asset-browser-filter.component.scss'],
+    standalone: false,
 })
 export class AssetBrowserFilterSitesComponent {
     @Input()

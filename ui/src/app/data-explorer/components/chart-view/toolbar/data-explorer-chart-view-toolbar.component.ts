@@ -26,6 +26,7 @@ import {
     selector: 'sp-data-explorer-data-view-toolbar',
     templateUrl: './data-explorer-chart-view-toolbar.component.html',
     styleUrls: ['../data-explorer-chart-view.component.scss'],
+    standalone: false,
 })
 export class DataExplorerChartViewToolbarComponent {
     @Input()

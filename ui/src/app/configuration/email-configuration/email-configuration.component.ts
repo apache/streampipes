@@ -32,6 +32,7 @@ import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
     selector: 'sp-email-configuration',
     templateUrl: './email-configuration.component.html',
     styleUrls: ['./email-configuration.component.scss'],
+    standalone: false,
 })
 export class EmailConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

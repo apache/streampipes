@@ -27,6 +27,7 @@ import {
     selector: 'sp-adapter-started-success',
     templateUrl: './adapter-started-success.component.html',
     styleUrls: ['./adapter-started-success.component.scss'],
+    standalone: false,
 })
 export class SpAdapterStartedSuccessComponent {
     @Input()

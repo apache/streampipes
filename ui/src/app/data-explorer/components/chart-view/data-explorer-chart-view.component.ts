@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    inject,
+    OnInit,
+    signal,
+    ViewChild,
+} from '@angular/core';
 import {
     ChartService,
     DataExplorerWidgetModel,
@@ -40,11 +47,13 @@ import { Observable, of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { ResizeEchartsService } from '../../../data-explorer-shared/services/resize-echarts.service';
 
 @Component({
     selector: 'sp-data-explorer-data-view',
     templateUrl: './data-explorer-chart-view.component.html',
     styleUrls: ['./data-explorer-chart-view.component.scss'],
+    standalone: false,
 })
 export class DataExplorerChartViewComponent
     implements OnInit, SupportsUnsavedChangeDialog
@@ -57,6 +66,10 @@ export class DataExplorerChartViewComponent
     originalDataView: DataExplorerWidgetModel;
     dataLakeMeasure: DataLakeMeasure;
     gridsterItemComponent: any;
+    drawerWidth = 450;
+    panelWidth = '100%';
+
+    resizeEchartsService = inject(ResizeEchartsService);
 
     @ViewChild('panel', { static: false }) outerPanel: ElementRef;
 
@@ -147,11 +160,20 @@ export class DataExplorerChartViewComponent
         this.dataView.dataConfig.ignoreMissingValues = false;
         this.dataView.baseAppearanceConfig.backgroundColor = '#FFFFFF';
         this.dataView.baseAppearanceConfig.textColor = '#3e3e3e';
+        this.dataView.metadata = {
+            createdAtEpochMs: Date.now(),
+            lastModifiedEpochMs: Date.now(),
+        };
         this.dataView = { ...this.dataView };
     }
 
     saveDataView(): void {
         this.dataView.timeSettings = this.timeSettings;
+        this.dataView.metadata ??= {
+            lastModifiedEpochMs: undefined,
+            createdAtEpochMs: undefined,
+        };
+        this.dataView.metadata.lastModifiedEpochMs = Date.now();
         const observable =
             this.dataView.elementId !== undefined
                 ? this.dataViewService.updateChart(this.dataView)
@@ -215,5 +237,14 @@ export class DataExplorerChartViewComponent
             this.timeSettings,
             this.dataView,
         );
+    }
+
+    onWidthChanged(newWidth: number) {
+        this.drawerWidth = newWidth;
+        setTimeout(() => {
+            this.resizeEchartsService.notify(
+                this.outerPanel.nativeElement.offsetWidth,
+            );
+        }, 100);
     }
 }

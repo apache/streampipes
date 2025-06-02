@@ -36,6 +36,7 @@ import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
     selector: 'sp-app-static-alternatives',
     templateUrl: './static-alternatives.component.html',
     styleUrls: ['./static-alternatives.component.scss'],
+    standalone: false,
 })
 export class StaticAlternativesComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyAlternatives>

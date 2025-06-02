@@ -37,6 +37,7 @@ import { TimeSelectorLabel } from '../time-selector.model';
     selector: 'sp-time-selector-menu',
     templateUrl: 'time-selector-menu.component.html',
     styleUrls: ['./time-selector-menu.component.scss'],
+    standalone: false,
 })
 export class TimeRangeSelectorMenuComponent implements OnInit {
     @Input()

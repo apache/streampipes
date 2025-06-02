@@ -47,6 +47,7 @@ import { ChartTypeService } from '../../../../../data-explorer-shared/services/c
     selector: 'sp-data-explorer-widget-data-settings',
     templateUrl: './data-explorer-widget-data-settings.component.html',
     styleUrls: ['./data-explorer-widget-data-settings.component.scss'],
+    standalone: false,
 })
 export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     @Input() dataConfig: DataExplorerDataConfig;

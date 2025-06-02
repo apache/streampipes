@@ -26,6 +26,7 @@ import { AppConstants } from '../../../services/app.constants';
     selector: 'sp-setup',
     templateUrl: './setup.component.html',
     styleUrls: ['./setup.component.scss'],
+    standalone: false,
 })
 export class SetupComponent {
     @ViewChild('scroll') private scrollContainer: ElementRef;

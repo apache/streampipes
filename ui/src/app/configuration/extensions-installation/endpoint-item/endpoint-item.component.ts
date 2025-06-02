@@ -33,6 +33,7 @@ import { ExtensionsInstallationService } from '../extensions-installation.servic
     selector: 'sp-endpoint-item',
     templateUrl: './endpoint-item.component.html',
     styleUrls: ['./endpoint-item.component.scss'],
+    standalone: false,
 })
 export class EndpointItemComponent implements OnInit {
     @Input()

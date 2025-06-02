@@ -46,7 +46,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { GridsterModule } from 'angular-gridster2';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerComponent } from 'ngx-color-picker';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -130,7 +130,7 @@ import { ColorMappingOptionsConfigComponent } from './components/chart-config/co
         GridsterModule,
         FlexLayoutModule,
         FormsModule,
-        ColorPickerModule,
+        ColorPickerComponent,
         MatGridListModule,
         CdkTableModule,
         MatSnackBarModule,

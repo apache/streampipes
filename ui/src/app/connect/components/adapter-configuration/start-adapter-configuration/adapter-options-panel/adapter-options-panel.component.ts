@@ -22,6 +22,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     selector: 'sp-adapter-options-panel',
     templateUrl: './adapter-options-panel.component.html',
     styleUrls: ['./adapter-options-panel.component.scss'],
+    standalone: false,
 })
 export class SpAdapterOptionsPanelComponent {
     @Input()

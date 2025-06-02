@@ -28,6 +28,7 @@ import {
     selector: 'sp-data-explorer-traffic-light-widget',
     templateUrl: './traffic-light-widget.component.html',
     styleUrls: ['./traffic-light-widget.component.scss'],
+    standalone: false,
 })
 export class TrafficLightWidgetComponent
     extends BaseDataExplorerWidgetDirective<TrafficLightWidgetModel>

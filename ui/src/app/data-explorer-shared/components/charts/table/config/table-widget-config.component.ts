@@ -27,6 +27,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
     selector: 'sp-data-explorer-table-widget-config',
     templateUrl: './table-widget-config.component.html',
     styleUrls: ['./table-widget-config.component.scss'],
+    standalone: false,
 })
 export class TableWidgetConfigComponent extends BaseWidgetConfig<
     TableWidgetModel,

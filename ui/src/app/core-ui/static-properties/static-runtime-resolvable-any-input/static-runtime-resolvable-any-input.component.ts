@@ -30,6 +30,7 @@ import { MatSelectChange } from '@angular/material/select';
     selector: 'sp-app-static-runtime-resolvable-any-input',
     templateUrl: './static-runtime-resolvable-any-input.component.html',
     styleUrls: ['./static-runtime-resolvable-any-input.component.scss'],
+    standalone: false,
 })
 export class StaticRuntimeResolvableAnyInputComponent
     extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableAnyStaticProperty>

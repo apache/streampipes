@@ -19,7 +19,8 @@
 @use '@angular/material' as mat;
 @use '../_variables' as sp;
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 $dark-primary-text: rgba(black, 0.87);
 $light-primary-text: white;
