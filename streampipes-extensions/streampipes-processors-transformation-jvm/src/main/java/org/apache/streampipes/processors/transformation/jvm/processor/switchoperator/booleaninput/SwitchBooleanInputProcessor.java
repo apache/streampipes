@@ -47,15 +47,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SwitchBooleanInputProcessor implements IStreamPipesSwitchProcessor {
-  private static final String SWITCH_FILTER_OUTPUT_KEY = "switch-filter-result";
-  private static final String SWITCH_FILTER_KEY = "switch-filter-key";
-  private static final String SWITCH_CASE_VALUE = "switch-case-value";
-  private static final String SWITCH_CASE_VALUE_OUTPUT = "switch-case-value-output";
-  private static final String SWITCH_CASE_GROUP = "switch-case-group";
-  private static final String OUTPUT_TYPE_KEY = "output-type";
-  private static final String SWITCH_CASE_VALUE_DEFAULT_OUTPUT = "switch-case-value-default-output";
-
-  // Fields to store runtime parameters
   private String selectedSwitchField;
   private String selectedOutputType;
   private List<SwitchCaseEntry> switchCases;
