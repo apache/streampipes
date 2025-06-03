@@ -16,81 +16,63 @@
   ~
   -->
 
-# Switch Operator Processor
+# Switch Operator (Boolean Input)
 
-<p align="center"> 
+<p> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-## Example
-
-This example demonstrates using the Switch Operator to evaluate a device status field with a Boolean output:
-1. Select "deviceStatus" as the input field to monitor.
-2. Choose "Boolean" as the output type.
-3. Configure a switch case to match the value "ONLINE" and return true.
-4. Set the default output value to false for all other values.
-5. The processor outputs true when the device is online, and false otherwise.
-
-For example, when the input event is:
-```json
-{
-"deviceId": "pump-1",
-"deviceStatus": "ONLINE",
-"timestamp": 1716930475000
-}
-```
-
-The output will be:
-```json
-{
-   "deviceId": "pump-1",
-   "deviceStatus": "ONLINE",
-   "timestamp": 1716930475000,
-   "switch-filter-result": true
-}
-```
-
-Alternatively, if the output type is set to "String" with a case mapping "ONLINE" to "ACTIVE":
-```json
-{
-   "deviceId": "pump-1",
-   "deviceStatus": "ONLINE",
-   "timestamp": 1716930475000, 
-   "switch-filter-result": "ACTIVE"
-}
-```
-
-
 ## Description
 
-The Switch Operator processor evaluates the value of a selected input field against a set of predefined cases and produces an output based on the matching case, with a user-selectable data type (String, Boolean, or Integer). It functions like a switch-case statement in programming languages, allowing flexible conditional logic.
-This processor is useful for:
-
-- Converting field values to specific outputs (e.g., status strings to boolean flags or numeric codes).
-- Implementing conditional logic in data pipelines.
-- Triggering different pipeline branches based on field values.
-- Creating typed outputs for downstream processors or dashboards.
-
-The processor forwards all events, adding a result field with the outcome of the evaluation in the chosen data type.
+The `Switch Operator (Boolean Input)` is a StreamPipes data processor that allows you to route events based on the value of a selected boolean field. You can define multiple "switch cases," each with a specific boolean value (true or false) and a corresponding output value. If the input boolean field matches a case, the defined output value will be added to the event. A default output value is used if no case matches or an error occurs during processing.
 
 ## Configuration
-The Switch Operator requires the following configuration:
 
-1. **Input Field** - Select the field from the input event to evaluate. Any data type is supported, and the value is converted to a string for comparison.Input Field - Select the field from the input event to evaluate. Any data type is supported, with the value converted to a string for comparison.
-2. **Output Type** - Choose the data type for the result field: String, Boolean, or Integer.
-3. **Switch Cases** - Define one or more case-value pairs:
-- **Case Value** - The string value to match against the input field.
-- **Output Value** - The value to return when the case matches, corresponding to the selected output type (e.g., true/false for Boolean, any string for String, a number for Integer).
-4. **Default Output Value** - The value to return when no cases match, based on the output type:
-- String: Empty string ("").
-- Boolean: false.
-- Integer: 0.
+### Input Stream Requirements
 
-Note: If the input field is missing, null, or causes an error, the default output value for the selected type is used.
+This processor requires an input stream with at least one boolean property.
 
-## Output
-The processor forwards all incoming events and adds a new field:
+### Output Strategy
 
-- **switch-filter-result** - A field of the user-selected type (String, Boolean, or Integer) based on the case matching result.
+This processor appends a new field to the event with the processed output value. The name of the output field is `switch-output`.
 
-For example, with a Boolean output type and an "ON" match returning `true`, an event with a "status" field of "ON" will include `switch-filter-result: true`. For a String output type mapping "ON" to "RUNNING", the output will include `switch-filter-result: "RUNNING"`.
+### Static Properties
+
+* **Switch Field**: Select the boolean field from the input stream that will be used for the switch condition.
+* **Output Type**: Choose the data type of the output value. Available options are:
+    * `String`
+    * `Boolean`
+    * `Integer`
+* **Switch Cases**: Define the different switch conditions and their corresponding output values. Each switch case consists of:
+    * **Case Value**: The boolean value (`true` or `false`) to match against the selected switch field.
+    * **Output Value**: The value to output if this case matches. This value will be converted to the selected `Output Type`.
+* **Default Output Value**: The value to use if none of the defined switch cases match the input or if an error occurs during processing. This value will also be converted to the selected `Output Type`.
+
+## Example
+
+Let's say you have an event with a boolean field `isValid` and you want to output a "Status" string based on its value:
+
+| Original Event |
+| :------------- |
+| `{ "isValid": true }` |
+
+**Configuration:**
+
+* **Switch Field**: `isValid`
+* **Output Type**: `String`
+* **Switch Cases**:
+    * Case Value: `true`, Output Value: `Valid Data`
+    * Case Value: `false`, Output Value: `Invalid Data`
+* **Default Output Value**: `Unknown`
+
+**Output Event when `isValid` is `true`:**
+
+| Processed Event |
+| :-------------- |
+| `{ "isValid": true, "switch-output": "Valid Data" }` |
+
+**Output Event when `isValid` is `false`:**
+
+| Processed Event |
+| :-------------- |
+| `{ "isValid": false, "switch-output": "Invalid Data" }` |

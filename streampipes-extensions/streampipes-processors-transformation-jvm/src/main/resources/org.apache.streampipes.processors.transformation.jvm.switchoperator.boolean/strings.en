@@ -15,26 +15,26 @@
 # limitations under the License.
 #
 
-org.apache.streampipes.processors.transformation.jvm.switchoperator.boolean.title=Switch Operator Processor
-org.apache.streampipes.processors.transformation.jvm.switchoperator.boolean.description=Logical Switch operator implemented for streampipes
+org.apache.streampipes.processors.transformation.jvm.switchoperator.boolean.title=Switch Operator (Boolean Input)
+org.apache.streampipes.processors.transformation.jvm.switchoperator.boolean.description=Routes events based on a boolean input field, allowing for different outputs based on true/false conditions.
 
-switch-filter-key.title=Input Field
-switch-filter-key.description=The field from the event to evaluate in the switch statement. Can be of any data type, converted to a string for comparison.
+switch-filter-key.title=Switch Field
+switch-filter-key.description=Select the boolean field from the input stream that will be used for the switch condition.
+
+output-type-key.title=Output Type
+output-type-key.description=Choose the data type of the output value (String, Boolean, or Integer).
 
 switch-case-group.title=Switch Cases
-switch-case-group.description=Switch case-value pairs for outputting a value based on the matched case.
+switch-case-group.description=Define the different switch conditions and their corresponding output values.
 
 switch-case-value.title=Case Value
-switch-case-value.description=The string value to compare against the input field.
+switch-case-value.description=The boolean value (true or false) to match against the selected switch field.
 
 switch-case-value-output.title=Output Value
-switch-case-value-output.description=The value to return when the case matches, matching the selected output type (e.g., true/false for Boolean, any string for String, a number for Integer).
-
-switch-filter-result.title=Result
-switch-filter-result.description=The result of the switch operation, in the user-selected data type (String, Boolean, or Integer).
+switch-case-value-output.description=The value to output if this case matches. This value will be converted to the selected Output Type.
 
 switch-case-value-default-output.title=Default Output Value
-switch-case-value-default-output.description=The value to return when no case matches, matching the selected output type (e.g., empty string for String, false for Boolean, 0 for Integer).
+switch-case-value-default-output.description=The value to use if none of the defined switch cases match the input or if an error occurs.
 
-output-type.title=Output Type
-output-type.description=The data type of the output result (String, Boolean, or Integer).
+switch-filter-output-key.title=switch-output
+switch-filter-output-key.description=The output field containing the result of the switch operation.
