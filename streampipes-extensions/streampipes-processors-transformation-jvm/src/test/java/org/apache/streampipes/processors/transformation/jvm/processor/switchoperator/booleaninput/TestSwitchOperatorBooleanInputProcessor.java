@@ -21,6 +21,7 @@ package org.apache.streampipes.processors.transformation.jvm.processor.switchope
 import org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.AbstractSwitchOperatorProcessor;
 import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.TestConfiguration;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,14 +31,17 @@ import java.util.Map;
 
 public class TestSwitchOperatorBooleanInputProcessor {
   private static final String SWITCH_FILTER_OUTPUT_KEY = AbstractSwitchOperatorProcessor.SWITCH_FILTER_OUTPUT_KEY;
-  private static final String SWITCH_FILTER_INPUT_FIELD_KEY = AbstractSwitchOperatorProcessor.SWITCH_FILTER_INPUT_FIELD_KEY;
+  private static final String SWITCH_FILTER_INPUT_FIELD_KEY =
+      AbstractSwitchOperatorProcessor.SWITCH_FILTER_INPUT_FIELD_KEY;
   private static final String SWITCH_CASE_VALUE_KEY = AbstractSwitchOperatorProcessor.SWITCH_CASE_VALUE_KEY;
-  private static final String SWITCH_CASE_OUTPUT_VALUE_KEY = AbstractSwitchOperatorProcessor.SWITCH_CASE_OUTPUT_VALUE_KEY;
+  private static final String SWITCH_CASE_OUTPUT_VALUE_KEY =
+      AbstractSwitchOperatorProcessor.SWITCH_CASE_OUTPUT_VALUE_KEY;
   private static final String SWITCH_CASE_GROUP_KEY = AbstractSwitchOperatorProcessor.SWITCH_CASE_GROUP_KEY;
   private static final String OUTPUT_TYPE_SELECTION_KEY = AbstractSwitchOperatorProcessor.OUTPUT_TYPE_SELECTION_KEY;
   private static final String DEFAULT_OUTPUT_VALUE_KEY = AbstractSwitchOperatorProcessor.DEFAULT_OUTPUT_VALUE_KEY;
 
   private SwitchOperatorBooleanInputProcessor processor;
+
   @BeforeEach
   void setUp() {
     this.processor = new SwitchOperatorBooleanInputProcessor();
@@ -50,6 +54,7 @@ public class TestSwitchOperatorBooleanInputProcessor {
         SWITCH_CASE_OUTPUT_VALUE_KEY, outputValue // Use new constant
     );
   }
+
   private List<Map<String, Object>> createMultipleBooleanSwitchCaseConfigs(Map<String, String> cases) {
     List<Map<String, Object>> configList = new java.util.ArrayList<>();
     cases.forEach((caseVal, outputVal) ->
@@ -69,7 +74,8 @@ public class TestSwitchOperatorBooleanInputProcessor {
     Map<String, Object> processorConfig = Map.of(
         SWITCH_FILTER_INPUT_FIELD_KEY, "s0::" + inputField, // Use new constant
         OUTPUT_TYPE_SELECTION_KEY, "String", // Use new constant
-        SWITCH_CASE_GROUP_KEY, createMultipleBooleanSwitchCaseConfigs(Map.of("true", expectedOutput, "false", "STATUS_INACTIVE")), // Use new constant
+        SWITCH_CASE_GROUP_KEY, createMultipleBooleanSwitchCaseConfigs(Map.of("true", expectedOutput, "false",
+            "STATUS_INACTIVE")), // Use new constant
         DEFAULT_OUTPUT_VALUE_KEY, "UNKNOWN" // Use new constant
     );
 
@@ -95,7 +101,8 @@ public class TestSwitchOperatorBooleanInputProcessor {
     Map<String, Object> processorConfig = Map.of(
         SWITCH_FILTER_INPUT_FIELD_KEY, "s0::" + inputField,
         OUTPUT_TYPE_SELECTION_KEY, "String",
-        SWITCH_CASE_GROUP_KEY, createMultipleBooleanSwitchCaseConfigs(Map.of("true", "STATUS_ACTIVE", "false", expectedOutput)),
+        SWITCH_CASE_GROUP_KEY, createMultipleBooleanSwitchCaseConfigs(Map.of("true", "STATUS_ACTIVE", "false",
+            expectedOutput)),
         DEFAULT_OUTPUT_VALUE_KEY, "UNKNOWN"
     );
 

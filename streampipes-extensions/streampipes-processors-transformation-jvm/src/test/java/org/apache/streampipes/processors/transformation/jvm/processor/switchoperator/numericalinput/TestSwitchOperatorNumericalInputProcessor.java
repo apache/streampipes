@@ -21,6 +21,7 @@ package org.apache.streampipes.processors.transformation.jvm.processor.switchope
 import org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.AbstractSwitchOperatorProcessor;
 import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.TestConfiguration;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,10 +32,13 @@ public class TestSwitchOperatorNumericalInputProcessor {
 
   // Constants from the abstract processor (now used directly in tests)
   private static final String SWITCH_FILTER_OUTPUT_KEY = AbstractSwitchOperatorProcessor.SWITCH_FILTER_OUTPUT_KEY;
-  private static final String SWITCH_FILTER_INPUT_FIELD_KEY = AbstractSwitchOperatorProcessor.SWITCH_FILTER_INPUT_FIELD_KEY;
-  private static final String SWITCH_CASE_VALUE_KEY = AbstractSwitchOperatorProcessor.SWITCH_CASE_VALUE_KEY; // Base key for value
+  private static final String SWITCH_FILTER_INPUT_FIELD_KEY =
+      AbstractSwitchOperatorProcessor.SWITCH_FILTER_INPUT_FIELD_KEY;
+  private static final String SWITCH_CASE_VALUE_KEY = AbstractSwitchOperatorProcessor.SWITCH_CASE_VALUE_KEY; // Base
+  // key for value
   private static final String SWITCH_CASE_OPERATOR_KEY = AbstractSwitchOperatorProcessor.SWITCH_CASE_OPERATOR_KEY;
-  private static final String SWITCH_CASE_OUTPUT_VALUE_KEY = AbstractSwitchOperatorProcessor.SWITCH_CASE_OUTPUT_VALUE_KEY;
+  private static final String SWITCH_CASE_OUTPUT_VALUE_KEY =
+      AbstractSwitchOperatorProcessor.SWITCH_CASE_OUTPUT_VALUE_KEY;
   private static final String SWITCH_CASE_GROUP_KEY = AbstractSwitchOperatorProcessor.SWITCH_CASE_GROUP_KEY;
   private static final String OUTPUT_TYPE_SELECTION_KEY = AbstractSwitchOperatorProcessor.OUTPUT_TYPE_SELECTION_KEY;
   private static final String DEFAULT_OUTPUT_VALUE_KEY = AbstractSwitchOperatorProcessor.DEFAULT_OUTPUT_VALUE_KEY;
@@ -48,7 +52,8 @@ public class TestSwitchOperatorNumericalInputProcessor {
   }
 
   // Helper to create a single switch case configuration for the collection static property
-  private Map<String, Object> createSingleNumericalSwitchCaseConfig(String caseValue, String operator, String outputValue) {
+  private Map<String, Object> createSingleNumericalSwitchCaseConfig(String caseValue, String operator,
+                                                                    String outputValue) {
     return Map.of(
         SWITCH_CASE_VALUE_KEY, caseValue, // Use new constant
         SWITCH_CASE_OPERATOR_KEY, operator, // Use new constant
@@ -64,10 +69,10 @@ public class TestSwitchOperatorNumericalInputProcessor {
     Double inputTemperature = 25.0;
     String expectedOutput = "Normal_Temp";
 
-    Map<String, Object> processorConfig = Map.of(
-        SWITCH_FILTER_INPUT_FIELD_KEY, "s0::" + inputField, // Use new constant
+    Map<String, Object> processorConfig = Map.of(SWITCH_FILTER_INPUT_FIELD_KEY,
+        "s0::" + inputField, // Use new constant
         OUTPUT_TYPE_SELECTION_KEY, "String", // Use new constant
-        SWITCH_CASE_GROUP_KEY, List.of( // Use new constant
+        SWITCH_CASE_GROUP_KEY, List.of(
             createSingleNumericalSwitchCaseConfig("25.0", "==", expectedOutput),
             createSingleNumericalSwitchCaseConfig("30.0", ">", "High_Temp")
         ),

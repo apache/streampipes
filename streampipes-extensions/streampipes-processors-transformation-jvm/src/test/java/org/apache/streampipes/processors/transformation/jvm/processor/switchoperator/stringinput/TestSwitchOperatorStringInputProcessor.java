@@ -21,6 +21,7 @@ package org.apache.streampipes.processors.transformation.jvm.processor.switchope
 import org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.AbstractSwitchOperatorProcessor;
 import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.TestConfiguration;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,9 +32,12 @@ public class TestSwitchOperatorStringInputProcessor {
 
   // Constants from the abstract processor (now used directly in tests)
   private static final String SWITCH_FILTER_OUTPUT_KEY = AbstractSwitchOperatorProcessor.SWITCH_FILTER_OUTPUT_KEY;
-  private static final String SWITCH_FILTER_INPUT_FIELD_KEY = AbstractSwitchOperatorProcessor.SWITCH_FILTER_INPUT_FIELD_KEY;
-  private static final String SWITCH_CASE_VALUE_KEY = AbstractSwitchOperatorProcessor.SWITCH_CASE_VALUE_KEY; // Base key for value
-  private static final String SWITCH_CASE_OUTPUT_VALUE_KEY = AbstractSwitchOperatorProcessor.SWITCH_CASE_OUTPUT_VALUE_KEY;
+  private static final String SWITCH_FILTER_INPUT_FIELD_KEY =
+      AbstractSwitchOperatorProcessor.SWITCH_FILTER_INPUT_FIELD_KEY;
+  private static final String SWITCH_CASE_VALUE_KEY = AbstractSwitchOperatorProcessor.SWITCH_CASE_VALUE_KEY; // Base
+  // key for value
+  private static final String SWITCH_CASE_OUTPUT_VALUE_KEY =
+      AbstractSwitchOperatorProcessor.SWITCH_CASE_OUTPUT_VALUE_KEY;
   private static final String SWITCH_CASE_GROUP_KEY = AbstractSwitchOperatorProcessor.SWITCH_CASE_GROUP_KEY;
   private static final String OUTPUT_TYPE_SELECTION_KEY = AbstractSwitchOperatorProcessor.OUTPUT_TYPE_SELECTION_KEY;
   private static final String DEFAULT_OUTPUT_VALUE_KEY = AbstractSwitchOperatorProcessor.DEFAULT_OUTPUT_VALUE_KEY;
@@ -64,16 +68,12 @@ public class TestSwitchOperatorStringInputProcessor {
     Map<String, Object> processorConfig = Map.of(
         SWITCH_FILTER_INPUT_FIELD_KEY, "s0::" + inputField, // Use new constant
         OUTPUT_TYPE_SELECTION_KEY, "String", // Use new constant
-        SWITCH_CASE_GROUP_KEY, List.of( // Use new constant
-            createSingleStringSwitchCaseConfig("RUNNING", expectedOutput),
-            createSingleStringSwitchCaseConfig("STOPPED", "Process_Stopped")
-        ),
+        SWITCH_CASE_GROUP_KEY, List.of(createSingleStringSwitchCaseConfig("RUNNING", expectedOutput),
+            createSingleStringSwitchCaseConfig("STOPPED", "Process_Stopped")),
         DEFAULT_OUTPUT_VALUE_KEY, "Unknown_Status" // Use new constant
     );
 
-    List<Map<String, Object>> inputEvents = List.of(
-        Map.of(inputField, inputValue)
-    );
+    List<Map<String, Object>> inputEvents = List.of(Map.of(inputField, inputValue));
 
     List<Map<String, Object>> expectedOutputEvents = List.of(
         Map.of(inputField, inputValue, SWITCH_FILTER_OUTPUT_KEY, expectedOutput)

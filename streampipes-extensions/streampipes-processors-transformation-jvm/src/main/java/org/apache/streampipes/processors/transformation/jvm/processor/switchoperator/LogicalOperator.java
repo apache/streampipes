@@ -44,7 +44,8 @@ public class LogicalOperator {
       } else {
         // For numerical operators, if values are not numbers, it's an invalid comparison.
         // You might want to log this or handle it more gracefully depending on requirements.
-        throw new IllegalArgumentException("Cannot perform numerical comparison on non-numeric string values with operator: " + operator);
+        throw new IllegalArgumentException(
+            "Cannot perform numerical comparison on non-numeric string values with operator: " + operator);
       }
     }
 
