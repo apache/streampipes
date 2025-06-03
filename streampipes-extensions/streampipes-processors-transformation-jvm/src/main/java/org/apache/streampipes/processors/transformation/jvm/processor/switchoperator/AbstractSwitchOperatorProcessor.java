@@ -13,15 +13,15 @@ import java.util.List;
 
 public abstract class AbstractSwitchOperatorProcessor implements IStreamPipesSwitchProcessor {
   // Common Constants (moved from individual processors)
-  protected static final String SWITCH_FILTER_OUTPUT_KEY = "switch-filter-result";
-  protected static final String SWITCH_FILTER_INPUT_FIELD_KEY = "switch-filter-key";
-  protected static final String SWITCH_CASE_VALUE_KEY = "switch-case-value"; // General name for case value key
-  protected static final String SWITCH_CASE_OPERATOR_KEY = "switch-case-value-operator"; // Specific to numerical,
+  public static final String SWITCH_FILTER_OUTPUT_KEY = "switch-filter-result";
+  public static final String SWITCH_FILTER_INPUT_FIELD_KEY = "switch-filter-key";
+  public static final String SWITCH_CASE_VALUE_KEY = "switch-case-value"; // General name for case value key
+  public static final String SWITCH_CASE_OPERATOR_KEY = "switch-case-value-operator"; // Specific to numerical,
   // but declared here for common parsing
-  protected static final String SWITCH_CASE_OUTPUT_VALUE_KEY = "switch-case-value-output";
-  protected static final String SWITCH_CASE_GROUP_KEY = "switch-case-group";
-  protected static final String OUTPUT_TYPE_SELECTION_KEY = "output-type";
-  protected static final String DEFAULT_OUTPUT_VALUE_KEY = "switch-case-value-default-output";
+  public static final String SWITCH_CASE_OUTPUT_VALUE_KEY = "switch-case-value-output";
+  public static final String SWITCH_CASE_GROUP_KEY = "switch-case-group";
+  public static final String OUTPUT_TYPE_SELECTION_KEY = "output-type";
+  public static final String DEFAULT_OUTPUT_VALUE_KEY = "switch-case-value-default-output";
 
   // Common Instance Fields
   protected String selectedSwitchField;
