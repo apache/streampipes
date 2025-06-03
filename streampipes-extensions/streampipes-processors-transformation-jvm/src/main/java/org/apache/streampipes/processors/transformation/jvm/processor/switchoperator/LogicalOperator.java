@@ -23,39 +23,69 @@ public class LogicalOperator {
   private static final String[] NOT_EQUALS = {"notEquals", "!="};
   private static final String[] GREATER_THAN = {"greaterThan", ">"};
   private static final String[] LESS_THAN = {"lessThan", "<"};
-  private static final String[] GREATER_THAN_OR_EQUALS = {"greaterThanOrEquals", ">="}; // New
-  private static final String[] LESS_THAN_OR_EQUALS = {"lessThanOrEquals", "<="};     // New
+  private static final String[] GREATER_THAN_OR_EQUALS = {"greaterThanOrEquals", ">="};
+  private static final String[] LESS_THAN_OR_EQUALS = {"lessThanOrEquals", "<="};
+
+  // This method is for string comparisons (e.g., in the StringInputProcessor)
   public static boolean evaluate(String operator, String inputValue, Object compareValue) {
+    double eventNumericValue = 0.0;
+    double caseNumericValue = 0.0;
+
+    // Attempt to parse to double for numerical operators, otherwise use string comparison
+    try {
+      eventNumericValue = Double.parseDouble(inputValue);
+      caseNumericValue = Double.parseDouble(compareValue.toString());
+    } catch (NumberFormatException e) {
+      // If not parseable as number, default to string comparison for "==" and "!="
+      if (matches(operator, EQUALS)) {
+        return inputValue.equals(compareValue.toString());
+      } else if (matches(operator, NOT_EQUALS)) {
+        return !inputValue.equals(compareValue.toString());
+      } else {
+        // For numerical operators, if values are not numbers, it's an invalid comparison.
+        // You might want to log this or handle it more gracefully depending on requirements.
+        throw new IllegalArgumentException("Cannot perform numerical comparison on non-numeric string values with operator: " + operator);
+      }
+    }
+
+
     if (matches(operator, EQUALS)) {
-      return inputValue.equals(compareValue.toString());
+      return eventNumericValue == caseNumericValue;
     } else if (matches(operator, NOT_EQUALS)) {
-      return !inputValue.equals(compareValue.toString());
+      return eventNumericValue != caseNumericValue;
     } else if (matches(operator, GREATER_THAN)) {
-      return Double.parseDouble(inputValue) > Double.parseDouble(compareValue.toString());
+      return eventNumericValue > caseNumericValue;
     } else if (matches(operator, LESS_THAN)) {
-      return Double.parseDouble(inputValue) < Double.parseDouble(compareValue.toString());
-    } else if (matches(operator, GREATER_THAN_OR_EQUALS)) { // New
-      return Double.parseDouble(inputValue) >= Double.parseDouble(compareValue.toString());
-    } else if (matches(operator, LESS_THAN_OR_EQUALS)) {   // New
-      return Double.parseDouble(inputValue) <= Double.parseDouble(compareValue.toString());
+      return eventNumericValue < caseNumericValue;
+    } else if (matches(operator, GREATER_THAN_OR_EQUALS)) {
+      return eventNumericValue >= caseNumericValue;
+    } else if (matches(operator, LESS_THAN_OR_EQUALS)) {
+      return eventNumericValue <= caseNumericValue;
     } else {
       throw new IllegalArgumentException("Unknown operator: " + operator);
     }
   }
 
+  // This method is used by the NumericalInputProcessor.
   public static boolean evaluate(String operator, double inputValue, Object compareValue) {
+    double caseNumericValue = Double.parseDouble(compareValue.toString()); // Value from the switch case config
+
     if (matches(operator, EQUALS)) {
-      return inputValue == Double.parseDouble(compareValue.toString());
+      return inputValue == caseNumericValue;
     } else if (matches(operator, NOT_EQUALS)) {
-      return inputValue != Double.parseDouble(compareValue.toString());
+      return inputValue != caseNumericValue;
     } else if (matches(operator, GREATER_THAN)) {
-      return inputValue > Double.parseDouble(compareValue.toString());
+      // FIX APPLIED: inputValue is already a double.
+      return inputValue > caseNumericValue;
     } else if (matches(operator, LESS_THAN)) {
-      return inputValue < Double.parseDouble(compareValue.toString());
-    } else if (matches(operator, GREATER_THAN_OR_EQUALS)) { // New
-      return inputValue >= Double.parseDouble(compareValue.toString());
-    } else if (matches(operator, LESS_THAN_OR_EQUALS)) {   // New
-      return inputValue <= Double.parseDouble(compareValue.toString());
+      // FIX APPLIED: inputValue is already a double.
+      return inputValue < caseNumericValue;
+    } else if (matches(operator, GREATER_THAN_OR_EQUALS)) {
+      // FIX APPLIED: inputValue is already a double.
+      return inputValue >= caseNumericValue;
+    } else if (matches(operator, LESS_THAN_OR_EQUALS)) {
+      // FIX APPLIED: inputValue is already a double.
+      return inputValue <= caseNumericValue;
     } else {
       throw new IllegalArgumentException("Unknown operator: " + operator);
     }
@@ -69,5 +99,4 @@ public class LogicalOperator {
     }
     return false;
   }
-
 }
