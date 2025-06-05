@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.processors.transformation.jvm.processor.switchoperator.booleaninput;
 
 import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
