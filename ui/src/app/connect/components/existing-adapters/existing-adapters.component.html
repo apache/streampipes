@@ -112,8 +112,7 @@
                         <td mat-cell *matCellDef="let adapter">
                             <sp-adapter-status-light
                                 [adapterRunning]="adapter.running"
-                            >
-                            </sp-adapter-status-light>
+                            ></sp-adapter-status-light>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="start">
@@ -127,7 +126,10 @@
                                 adapter.elementId ===
                                 operationInProgressAdapterId
                             ) {
-                                <div fxLayoutAlign="center center">
+                                <div
+                                    data-cy="adapter-operation-in-progress-spinner"
+                                    fxLayoutAlign="center center"
+                                >
                                     <mat-spinner
                                         color="accent"
                                         [diameter]="20"
