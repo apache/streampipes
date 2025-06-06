@@ -384,7 +384,7 @@ export class DataLakeUtils {
     }
 
     public static selectDataConfig() {
-        this.selectDataViewConfigTab(1);
+        this.selectDataViewConfigTab(0);
     }
 
     public static openVisualizationConfig() {
@@ -397,7 +397,7 @@ export class DataLakeUtils {
 
     // Workaround: mat-tab does not render the data-cy attribute, so we select tabs by index.
     // Using the label is not reliable due to multi-language support.
-    private static selectDataViewConfigTab(tabNumber: int) {
+    private static selectDataViewConfigTab(tabNumber: number) {
         cy.get('div[role=tab]').eq(tabNumber).click();
     }
 
