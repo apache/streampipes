@@ -64,25 +64,36 @@ public class StaticMathOpProcessor implements IStreamPipesDataProcessor {
             .withLocales(Locales.EN)
             .category(DataProcessorType.ALGORITHM)
             .requiredStream(StreamRequirementsBuilder
-                .create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                    Labels.withId(LEFT_OPERAND),
-                    PropertyScope.NONE)
-                .build())
+                                .create()
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.numberReq(),
+                                    Labels.withId(LEFT_OPERAND),
+                                    PropertyScope.NONE
+                                )
+                                .build())
             .requiredFloatParameter(Labels.withId(RIGHT_OPERAND_VALUE))
             .outputStrategy(
                 OutputStrategies.keep())
-            .requiredSingleValueSelection(Labels.withId(OPERATION),
-                Options.from("+", "-", "/", "*", "%"))
+            .requiredSingleValueSelection(
+                Labels.withId(OPERATION),
+                Options.from("+", "-", "/", "*", "%")
+            )
             .build()
     );
   }
 
   @Override
-  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
-    this.leftOperand = params.extractor().mappingPropertyValue(LEFT_OPERAND);
-    this.rightOperandValue = params.extractor().singleValueParameter(RIGHT_OPERAND_VALUE, Double.class);
-    String operation = params.extractor().selectedSingleValue(OPERATION, String.class);
+  public void onPipelineStarted(
+      IDataProcessorParameters params,
+      SpOutputCollector spOutputCollector,
+      EventProcessorRuntimeContext runtimeContext
+  ) {
+    this.leftOperand = params.extractor()
+                             .mappingPropertyValue(LEFT_OPERAND);
+    this.rightOperandValue = params.extractor()
+                                   .singleValueParameter(RIGHT_OPERAND_VALUE, Double.class);
+    String operation = params.extractor()
+                             .selectedSingleValue(OPERATION, String.class);
 
     switch (operation) {
       case "+":
@@ -105,7 +116,8 @@ public class StaticMathOpProcessor implements IStreamPipesDataProcessor {
   @Override
   public void onEvent(Event in, SpOutputCollector out) throws SpRuntimeException {
     Double leftValue = Double.parseDouble(String.valueOf(in.getFieldBySelector(leftOperand)
-        .getAsPrimitive().getAsDouble()));
+                                                           .getAsPrimitive()
+                                                           .getAsDouble()));
 
     Double result = arithmeticOperation.operate(leftValue, rightOperandValue);
     in.updateFieldBySelector(leftOperand, result);

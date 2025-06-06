@@ -62,11 +62,13 @@ public class ValueChangeProcessor implements IStreamPipesDataProcessor {
             .requiredFloatParameter(Labels.withId(FROM_PROPERTY_VALUE_ID))
             .requiredFloatParameter(Labels.withId(TO_PROPERTY_VALUE_ID))
             .requiredStream(StreamRequirementsBuilder
-                .create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                    Labels.withId(CHANGE_VALUE_MAPPING_ID),
-                    PropertyScope.NONE)
-                .build())
+                                .create()
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.numberReq(),
+                                    Labels.withId(CHANGE_VALUE_MAPPING_ID),
+                                    PropertyScope.NONE
+                                )
+                                .build())
             .outputStrategy(OutputStrategies.append(
                 EpProperties.booleanEp(Labels.withId(IS_CHANGED_ID), IS_CHANGED, SO.BOOLEAN)))
             .build()
@@ -74,22 +76,27 @@ public class ValueChangeProcessor implements IStreamPipesDataProcessor {
   }
 
   @Override
-  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector collector, EventProcessorRuntimeContext runtimeContext) {
+  public void onPipelineStarted(
+      IDataProcessorParameters params,
+      SpOutputCollector collector,
+      EventProcessorRuntimeContext runtimeContext
+  ) {
     this.lastValueOfEvent = Float.MAX_VALUE;
-    this.userDefinedFrom = params.extractor().singleValueParameter(FROM_PROPERTY_VALUE_ID, Float.class);
-    this.userDefinedTo = params.extractor().singleValueParameter(TO_PROPERTY_VALUE_ID, Float.class);
-    this.mappingProperty = params.extractor().mappingPropertyValue(CHANGE_VALUE_MAPPING_ID);
+    this.userDefinedFrom = params.extractor()
+                                 .singleValueParameter(FROM_PROPERTY_VALUE_ID, Float.class);
+    this.userDefinedTo = params.extractor()
+                               .singleValueParameter(TO_PROPERTY_VALUE_ID, Float.class);
+    this.mappingProperty = params.extractor()
+                                 .mappingPropertyValue(CHANGE_VALUE_MAPPING_ID);
   }
 
   @Override
   public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
-    float thisValue = event.getFieldBySelector(mappingProperty).getAsPrimitive().getAsFloat();
+    float thisValue = event.getFieldBySelector(mappingProperty)
+                           .getAsPrimitive()
+                           .getAsFloat();
     if (this.lastValueOfEvent != Float.MAX_VALUE) {
-      if (this.lastValueOfEvent == this.userDefinedFrom && thisValue == this.userDefinedTo) {
-        event.addField(IS_CHANGED, true);
-      } else {
-        event.addField(IS_CHANGED, false);
-      }
+      event.addField(IS_CHANGED, this.lastValueOfEvent == this.userDefinedFrom && thisValue == this.userDefinedTo);
     } else {
       event.addField(IS_CHANGED, false);
     }

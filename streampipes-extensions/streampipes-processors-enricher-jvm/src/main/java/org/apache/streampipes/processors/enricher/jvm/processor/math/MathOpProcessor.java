@@ -67,28 +67,43 @@ public class MathOpProcessor implements IStreamPipesDataProcessor {
             .withLocales(Locales.EN)
             .category(DataProcessorType.ALGORITHM)
             .requiredStream(StreamRequirementsBuilder
-                .create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                    Labels.withId(LEFT_OPERAND),
-                    PropertyScope.NONE)
-                .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                    Labels.withId(RIGHT_OPERAND),
-                    PropertyScope.NONE)
-                .build())
+                                .create()
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.numberReq(),
+                                    Labels.withId(LEFT_OPERAND),
+                                    PropertyScope.NONE
+                                )
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.numberReq(),
+                                    Labels.withId(RIGHT_OPERAND),
+                                    PropertyScope.NONE
+                                )
+                                .build())
             .outputStrategy(
                 OutputStrategies.append(
                     EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.NUMBER)))
-            .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("+", "-", "/",
-                "*", "%"))
+            .requiredSingleValueSelection(
+                Labels.withId(OPERATION), Options.from(
+                    "+", "-", "/",
+                    "*", "%"
+                )
+            )
             .build()
     );
   }
 
   @Override
-  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector collector, EventProcessorRuntimeContext runtimeContext) {
-    this.leftOperand = params.extractor().mappingPropertyValue(LEFT_OPERAND);
-    this.rightOperand = params.extractor().mappingPropertyValue(RIGHT_OPERAND);
-    String operation = params.extractor().selectedSingleValue(OPERATION, String.class);
+  public void onPipelineStarted(
+      IDataProcessorParameters params,
+      SpOutputCollector collector,
+      EventProcessorRuntimeContext runtimeContext
+  ) {
+    this.leftOperand = params.extractor()
+                             .mappingPropertyValue(LEFT_OPERAND);
+    this.rightOperand = params.extractor()
+                              .mappingPropertyValue(RIGHT_OPERAND);
+    String operation = params.extractor()
+                             .selectedSingleValue(OPERATION, String.class);
 
     switch (operation) {
       case "+":
@@ -113,8 +128,12 @@ public class MathOpProcessor implements IStreamPipesDataProcessor {
 
   @Override
   public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
-    Double leftValue = event.getFieldBySelector(this.leftOperand).getAsPrimitive().getAsDouble();
-    Double rightValue = event.getFieldBySelector(this.rightOperand).getAsPrimitive().getAsDouble();
+    Double leftValue = event.getFieldBySelector(this.leftOperand)
+                            .getAsPrimitive()
+                            .getAsDouble();
+    Double rightValue = event.getFieldBySelector(this.rightOperand)
+                             .getAsPrimitive()
+                             .getAsDouble();
     Double result = this.arithmeticOperation.operate(leftValue, rightValue);
 
     event.addField(RESULT_FIELD, result);

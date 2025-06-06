@@ -58,24 +58,34 @@ public class TrigonometryProcessor implements IStreamPipesDataProcessor {
             .withLocales(Locales.EN)
             .category(DataProcessorType.ALGORITHM)
             .requiredStream(StreamRequirementsBuilder
-                .create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                    Labels.withId(OPERAND),
-                    PropertyScope.NONE)
-                .build())
+                                .create()
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.numberReq(),
+                                    Labels.withId(OPERAND),
+                                    PropertyScope.NONE
+                                )
+                                .build())
             .outputStrategy(
                 OutputStrategies.append(
                     EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.NUMBER)))
-            .requiredSingleValueSelection(Labels.withId(OPERATION),
-                Options.from("sin", "cos", "tan"))
+            .requiredSingleValueSelection(
+                Labels.withId(OPERATION),
+                Options.from("sin", "cos", "tan")
+            )
             .build()
     );
   }
 
   @Override
-  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector collector, EventProcessorRuntimeContext runtimeContext) {
-    this.operand = params.extractor().mappingPropertyValue(OPERAND);
-    String stringOperation = params.extractor().selectedSingleValue(OPERATION, String.class);
+  public void onPipelineStarted(
+      IDataProcessorParameters params,
+      SpOutputCollector collector,
+      EventProcessorRuntimeContext runtimeContext
+  ) {
+    this.operand = params.extractor()
+                         .mappingPropertyValue(OPERAND);
+    String stringOperation = params.extractor()
+                                   .selectedSingleValue(OPERATION, String.class);
 
     switch (stringOperation) {
       case "sin":
@@ -91,7 +101,9 @@ public class TrigonometryProcessor implements IStreamPipesDataProcessor {
 
   @Override
   public void onEvent(Event in, SpOutputCollector out) throws SpRuntimeException {
-    double value = in.getFieldBySelector(operand).getAsPrimitive().getAsDouble();
+    double value = in.getFieldBySelector(operand)
+                     .getAsPrimitive()
+                     .getAsDouble();
     double result;
 
     if (operation == Operation.SIN) {
