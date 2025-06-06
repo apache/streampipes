@@ -19,8 +19,6 @@
 import { login } from './general/login';
 import { logout } from './general/logout';
 import { dataCy } from './general/dataCy';
-// tslint:disable-next-line:no-implicit-dependencies
-import 'cypress-file-upload';
 import { resetStreamPipes } from './general/resetStreamPipes';
 import { initStreamPipesTest } from './general/InitStreamPipesTest';
 import { removeDownloadDirectory } from './general/removeDownloadDirectory';

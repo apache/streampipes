@@ -25,9 +25,15 @@ export class FileManagementUtils {
         cy.dataCy('sp-open-file-upload-dialog').click();
 
         // Upload file
-        // const filepath = 'fileTest/test.csv'
-        cy.dataCy('sp-file-management-file-input').attachFile(filePath);
+        cy.dataCy('sp-file-management-file-input').selectFile(
+            this.addFixtureDirectoryPrefix(filePath),
+            { force: true },
+        );
         cy.dataCy('sp-file-management-store-file').click();
+    }
+
+    private static addFixtureDirectoryPrefix(filePath: string): string {
+        return 'cypress/fixtures/' + filePath;
     }
 
     public static deleteFile() {
