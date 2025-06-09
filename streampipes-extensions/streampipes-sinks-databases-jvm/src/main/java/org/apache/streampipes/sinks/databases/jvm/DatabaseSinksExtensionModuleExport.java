@@ -52,8 +52,7 @@ public class DatabaseSinksExtensionModuleExport implements IExtensionModuleExpor
         new MilvusSink(),
         new QdrantSink(),
         new TsFileSink(),
-        new ParquetSink()
-    );
+        new ParquetSink());
   }
 
   @Override
