@@ -16,17 +16,22 @@
  *
  */
 
-import { login } from './general/login';
-import { logout } from './general/logout';
-import { dataCy } from './general/dataCy';
-import { resetStreamPipes } from './general/resetStreamPipes';
-import { initStreamPipesTest } from './general/InitStreamPipesTest';
-import { removeDownloadDirectory } from './general/removeDownloadDirectory';
+package org.apache.streampipes.processors.transformation.jvm.processor.switchoperator;
 
-// General commands
-Cypress.Commands.add('login', login);
-Cypress.Commands.add('logout', logout);
-Cypress.Commands.add('dataCy', dataCy);
-Cypress.Commands.add('resetStreamPipes', resetStreamPipes);
-Cypress.Commands.add('initStreamPipesTest', initStreamPipesTest);
-Cypress.Commands.add('removeDownloadDirectory', removeDownloadDirectory);
+public class SwitchCaseEntry {
+  private final String caseValue;
+  private final Object outputValue;
+
+  public SwitchCaseEntry(String caseValue, Object outputValue) {
+    this.caseValue = caseValue;
+    this.outputValue = outputValue;
+  }
+
+  public String getCaseValue() {
+    return caseValue;
+  }
+
+  public Object getOutputValue() {
+    return outputValue;
+  }
+}

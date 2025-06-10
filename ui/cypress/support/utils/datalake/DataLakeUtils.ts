@@ -384,18 +384,21 @@ export class DataLakeUtils {
     }
 
     public static selectDataConfig() {
-        cy.get('.mdc-tab__text-label').contains('Data').parent().click();
+        this.selectDataViewConfigTab(0);
     }
 
     public static openVisualizationConfig() {
-        cy.get('.mdc-tab__text-label')
-            .contains('Visualization')
-            .parent()
-            .click();
+        this.selectDataViewConfigTab(1);
     }
 
     public static selectAppearanceConfig() {
-        cy.get('.mdc-tab__text-label').contains('Appearance').parent().click();
+        this.selectDataViewConfigTab(2);
+    }
+
+    // Workaround: mat-tab does not render the data-cy attribute, so we select tabs by index.
+    // Using the label is not reliable due to multi-language support.
+    private static selectDataViewConfigTab(tabNumber: number) {
+        cy.get('div[role=tab]').eq(tabNumber).click();
     }
 
     public static selectDataViewName(dataViewName: string) {

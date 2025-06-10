@@ -1,0 +1,43 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+org.apache.streampipes.sinks.databases.jvm.qdrant.title=Qdrant
+org.apache.streampipes.sinks.databases.jvm.qdrant.description=Stores events in a Qdrant vector database. This sink connector allows you to store vector data along with associated metadata in a Qdrant collection.
+
+qdrant_host.title=Host
+qdrant_host.description=The host address of the Qdrant instance
+
+qdrant_port.title=Port
+qdrant_port.description=The port number of the Qdrant instance (default is 6334 for gRPC)
+
+qdrant_api_key.title=API Key
+qdrant_api_key.description=The API key for authentication with Qdrant. This is required for secure access to the Qdrant instance.
+
+qdrant_collection_name.title=Collection Name
+qdrant_collection_name.description=The name of the collection where the data will be stored. If the collection doesn't exist, it will be created automatically.
+
+qdrant_id.title=ID Field
+qdrant_id.description=The field name that will be used as the unique identifier for each point in the collection. This should be a UUID string.
+
+qdrant_vector_field.title=Vector Field
+qdrant_vector_field.description=The name of the field containing the vector data. This field should contain a list of float values.
+
+qdrant_vector_dimension.title=Vector Dimension
+qdrant_vector_dimension.description=The dimension of the vectors to be stored. This must match the dimension of your input vectors.
+
+qdrant_distance_metric.title=Distance Metric
+qdrant_distance_metric.description=The distance metric to use for vector similarity search. Available options are: Cosine, Euclid, Dot, and Manhattan.

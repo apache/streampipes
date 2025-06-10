@@ -16,17 +16,13 @@
  *
  */
 
-import { login } from './general/login';
-import { logout } from './general/logout';
-import { dataCy } from './general/dataCy';
-import { resetStreamPipes } from './general/resetStreamPipes';
-import { initStreamPipesTest } from './general/InitStreamPipesTest';
-import { removeDownloadDirectory } from './general/removeDownloadDirectory';
+package org.apache.streampipes.processors.transformation.jvm.processor.switchoperator;
 
-// General commands
-Cypress.Commands.add('login', login);
-Cypress.Commands.add('logout', logout);
-Cypress.Commands.add('dataCy', dataCy);
-Cypress.Commands.add('resetStreamPipes', resetStreamPipes);
-Cypress.Commands.add('initStreamPipesTest', initStreamPipesTest);
-Cypress.Commands.add('removeDownloadDirectory', removeDownloadDirectory);
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+
+// Interface can be simpler as constants are now in AbstractSwitchOperatorProcessor
+public interface IStreamPipesSwitchProcessor extends IStreamPipesDataProcessor {
+  // No constants needed here as they are now in the abstract base class for implementation details.
+  // If you had methods specific to the "Switch" concept that don't belong to IStreamPipesDataProcessor,
+  // they would go here. For now, it mostly serves as a marker interface and base for the abstract class.
+}
