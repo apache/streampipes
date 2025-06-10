@@ -18,27 +18,28 @@
 package org.apache.streampipes.processors.filters.jvm.processor.enrich;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.List;
 
-public class MergeByEnrichProcessor extends StreamPipesDataProcessor {
+public class MergeByEnrichProcessor implements IStreamPipesDataProcessor {
 
   private static final String SELECT_STREAM = "select-stream";
 
@@ -48,34 +49,46 @@ public class MergeByEnrichProcessor extends StreamPipesDataProcessor {
   private Event eventBuffer;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.enrich", 0)
-        .category(DataProcessorType.TRANSFORM)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredSingleValueSelection(Labels.withId(SELECT_STREAM),
-            Options.from("Stream 1", "Stream 2"))
-        .outputStrategy(OutputStrategies.custom(true))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        MergeByEnrichProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.filters.jvm.enrich", 0)
+            .category(DataProcessorType.TRANSFORM)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                                .create()
+                                .requiredProperty(EpRequirements.anyProperty())
+                                .build())
+            .requiredStream(StreamRequirementsBuilder
+                                .create()
+                                .requiredProperty(EpRequirements.anyProperty())
+                                .build())
+            .requiredSingleValueSelection(
+                Labels.withId(SELECT_STREAM),
+                Options.from("Stream 1", "Stream 2")
+            )
+            .outputStrategy(OutputStrategies.custom(true))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-    this.outputKeySelectors = processorParams.extractor().outputKeySelectors();
+  public void onPipelineStarted(
+      IDataProcessorParameters processorParams,
+      SpOutputCollector spOutputCollector,
+      EventProcessorRuntimeContext eventProcessorRuntimeContext
+  ) throws SpRuntimeException {
+    this.outputKeySelectors = processorParams.extractor()
+                                             .outputKeySelectors();
 
-    this.selectedStream = processorParams.extractor().selectedSingleValue(SELECT_STREAM, String.class);
+    this.selectedStream = processorParams.extractor()
+                                         .selectedSingleValue(SELECT_STREAM, String.class);
 
-    this.outputSchema = processorParams.getGraph().getOutputStream().getEventSchema();
+    this.outputSchema = processorParams.getModel()
+                                       .getOutputStream()
+                                       .getEventSchema();
 
     if (this.selectedStream.equals("Stream 1")) {
       this.selectedStream = "s0";
@@ -88,7 +101,8 @@ public class MergeByEnrichProcessor extends StreamPipesDataProcessor {
 
   @Override
   public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
-    String streamId = event.getSourceInfo().getSelectorPrefix();
+    String streamId = event.getSourceInfo()
+                           .getSelectorPrefix();
 
     // Enrich the selected stream and store last event of other stream
     if (this.selectedStream.equals(streamId)) {
@@ -102,11 +116,11 @@ public class MergeByEnrichProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() throws SpRuntimeException {
   }
 
   private Event mergeEvents(Event e1, Event e2) {
-    return EventFactory.fromEvents(e1, e2, outputSchema).getSubset(outputKeySelectors);
+    return EventFactory.fromEvents(e1, e2, outputSchema)
+                       .getSubset(outputKeySelectors);
   }
 }

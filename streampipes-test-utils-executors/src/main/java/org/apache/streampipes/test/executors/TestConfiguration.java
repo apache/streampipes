@@ -27,10 +27,16 @@ public class TestConfiguration {
 
   private final List<String> prefixes;
 
-  public TestConfiguration(Map<String, Object> fieldConfiguration,
-                            List<String> eventPrefixes) {
+  // This variables is used to configure the custom output strategy for a test
+  private List<String> customOutputProperties;
+
+  public TestConfiguration(
+      Map<String, Object> fieldConfiguration,
+      List<String> eventPrefixes
+  ) {
     this.fieldConfiguration = fieldConfiguration;
     this.prefixes = eventPrefixes;
+    this.customOutputProperties = List.of();
   }
 
   public Map<String, Object> getFieldConfiguration() {
@@ -43,5 +49,13 @@ public class TestConfiguration {
 
   public static TestConfigurationBuilder builder() {
     return new TestConfigurationBuilder();
+  }
+
+  public List<String> getCustomOutputProperties() {
+    return customOutputProperties;
+  }
+
+  public void setCustomOutputProperties(List<String> customOutputProperties) {
+    this.customOutputProperties = customOutputProperties;
   }
 }

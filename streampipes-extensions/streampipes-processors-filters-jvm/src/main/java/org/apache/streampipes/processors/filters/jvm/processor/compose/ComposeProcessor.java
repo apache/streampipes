@@ -18,57 +18,60 @@
 package org.apache.streampipes.processors.filters.jvm.processor.compose;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ComposeProcessor extends StreamPipesDataProcessor {
+public class ComposeProcessor implements IStreamPipesDataProcessor {
 
   private List<String> outputKeySelectors;
   private Map<String, Event> lastEvents;
   private EventSchema outputSchema;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.filters.jvm.compose", 0)
-        .category(DataProcessorType.TRANSFORM)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .outputStrategy(OutputStrategies.custom(true))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        ComposeProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.filters.jvm.compose", 0)
+            .category(DataProcessorType.TRANSFORM)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredProperty(EpRequirements.anyProperty())
+                .build())
+            .requiredStream(StreamRequirementsBuilder
+                .create()
+                .requiredProperty(EpRequirements.anyProperty())
+                .build())
+            .outputStrategy(OutputStrategies.custom(true))
+            .build());
   }
 
   @Override
-  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(IDataProcessorParameters processorParams, SpOutputCollector spOutputCollector,
+                                EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
     this.outputKeySelectors = processorParams.extractor().outputKeySelectors();
-    this.outputSchema = processorParams.getGraph().getOutputStream().getEventSchema();
+    this.outputSchema = processorParams.getModel().getOutputStream().getEventSchema();
     this.lastEvents = new HashMap<>();
   }
 
@@ -81,7 +84,7 @@ public class ComposeProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() throws SpRuntimeException {
     this.lastEvents.clear();
   }
 
@@ -96,5 +99,4 @@ public class ComposeProcessor extends StreamPipesDataProcessor {
         ? PropertySelectorConstants.SECOND_STREAM_ID_PREFIX : PropertySelectorConstants
         .FIRST_STREAM_ID_PREFIX;
   }
-
 }

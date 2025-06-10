@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.manager.template.DataProcessorTemplateHandler;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.output.CustomOutputStrategy;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.runtime.SchemaInfo;
@@ -60,7 +61,7 @@ public class ProcessingElementTestExecutor {
     this.processor = processor;
     this.testConfiguration = testConfiguration;
     this.selectorPrefixes = testConfiguration.getPrefixes()
-        .iterator();
+                                             .iterator();
     this.invocationConfig = invocationConfig;
   }
 
@@ -68,7 +69,7 @@ public class ProcessingElementTestExecutor {
     this.processor = processor;
     this.testConfiguration = testConfiguration;
     this.selectorPrefixes = testConfiguration.getPrefixes()
-        .iterator();
+                                             .iterator();
   }
 
   /**
@@ -90,7 +91,10 @@ public class ProcessingElementTestExecutor {
       invocationConfig.accept(dataProcessorInvocation);
     }
 
+    this.setCustomOutputStrategyIfConfigured(dataProcessorInvocation);
+
     var extractor = getProcessingElementParameterExtractor(dataProcessorInvocation);
+
     var mockParams = mock(IDataProcessorParameters.class);
 
     when(mockParams.getModel()).thenReturn(dataProcessorInvocation);
@@ -111,17 +115,17 @@ public class ProcessingElementTestExecutor {
 
     // Validate the output of the processor
     Mockito.verify(
-            mockCollector,
-            Mockito.times(expectedOutputEvents.size())
-        )
-        .collect(spOutputCollectorCaptor.capture());
+               mockCollector,
+               Mockito.times(expectedOutputEvents.size())
+           )
+           .collect(spOutputCollectorCaptor.capture());
     var resultingEvents = spOutputCollectorCaptor.getAllValues();
     IntStream.range(0, expectedOutputEvents.size())
-        .forEach(i -> assertEventEquality(
-            expectedOutputEvents.get(i),
-            resultingEvents.get(i)
-                .getRaw()
-        ));
+             .forEach(i -> assertEventEquality(
+                 expectedOutputEvents.get(i),
+                 resultingEvents.get(i)
+                                .getRaw()
+             ));
 
     // validate that the processor is stopped correctly
     processor.onPipelineStopped();
@@ -142,7 +146,8 @@ public class ProcessingElementTestExecutor {
             roundValue.value(),
             (Double) actual.get(key),
             roundValue.epsilon(),
-            () -> getAssertionErrorMessage(key, expected, actual));
+            () -> getAssertionErrorMessage(key, expected, actual)
+        );
       } else {
         assertEquals(
             value,
@@ -195,7 +200,7 @@ public class ProcessingElementTestExecutor {
 
     staticProperties.forEach(staticProperty -> {
       var value = testConfiguration.getFieldConfiguration()
-          .get(staticProperty.getInternalName());
+                                   .get(staticProperty.getInternalName());
       configs.add(
           Map.of(
               staticProperty.getInternalName(),
@@ -211,7 +216,7 @@ public class ProcessingElementTestExecutor {
 
     if (!selectorPrefixes.hasNext()) {
       selectorPrefixes = testConfiguration.getPrefixes()
-          .iterator();
+                                          .iterator();
     }
 
     String selectorPrefix = selectorPrefixes.next();
@@ -222,4 +227,18 @@ public class ProcessingElementTestExecutor {
 
     return EventFactory.fromMap(rawEvent, sourceInfo, schemaInfo);
   }
+
+
+  private void setCustomOutputStrategyIfConfigured(DataProcessorInvocation dataProcessorInvocation) {
+    if (!testConfiguration.getCustomOutputProperties()
+                          .isEmpty()) {
+      (
+          (CustomOutputStrategy) dataProcessorInvocation.getOutputStrategies()
+                                                        .get(0)
+      )
+          .setSelectedPropertyKeys(testConfiguration.getCustomOutputProperties());
+    }
+
+  }
+
 }
