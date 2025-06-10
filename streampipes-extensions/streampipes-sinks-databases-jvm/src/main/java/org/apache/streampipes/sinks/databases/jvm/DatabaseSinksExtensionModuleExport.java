@@ -28,6 +28,7 @@ import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbSink;
 import org.apache.streampipes.sinks.databases.jvm.milvus.MilvusSink;
 import org.apache.streampipes.sinks.databases.jvm.parquet.ParquetSink;
 import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlSink;
+import org.apache.streampipes.sinks.databases.jvm.qdrant.QdrantSink;
 import org.apache.streampipes.sinks.databases.jvm.redis.RedisSink;
 import org.apache.streampipes.sinks.databases.jvm.tsfile.TsFileSink;
 
@@ -49,9 +50,9 @@ public class DatabaseSinksExtensionModuleExport implements IExtensionModuleExpor
         new DittoSink(),
         new RedisSink(),
         new MilvusSink(),
+        new QdrantSink(),
         new TsFileSink(),
-        new ParquetSink()
-    );
+        new ParquetSink());
   }
 
   @Override

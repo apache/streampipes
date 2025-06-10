@@ -39,8 +39,11 @@ describe('Test Edit Adapter', () => {
         ConnectBtns.stopAdapter().click();
 
         // click edit adapter
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
+
+        // Change adapter name and wait time
 
         const newUserConfiguration = AdapterBuilder.create(
             'Machine_Data_Simulator',
@@ -52,13 +55,11 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.configureAdapter(newUserConfiguration);
 
         // Update event schema
-
         ConnectUtils.finishEventSchemaConfiguration();
 
         cy.dataCy('sp-adapter-name').clear().type(newAdapterName);
 
         // This wait is required to ensure that there is no couch db update conflict
-        cy.wait(1000);
         ConnectBtns.storeEditAdapter().click();
 
         cy.dataCy('sp-connect-adapter-success-added', {
