@@ -40,6 +40,8 @@ public interface IStreamPipesClient extends Serializable {
 
   IPipelineElementTemplateApi pipelineElementTemplates();
 
+  IAdapterApi adapters();
+
   IDataSinkApi sinks();
 
   IDataStreamApi streams();
