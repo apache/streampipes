@@ -19,17 +19,20 @@
 package org.apache.streampipes.processors.geo.jvm.latlong.processor.distancecalculator.haversine;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.geo.jvm.latlong.helper.HaversineDistanceUtil;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
@@ -37,12 +40,10 @@ import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.net.URI;
 
-public class HaversineDistanceCalculatorProcessor extends StreamPipesDataProcessor {
+public class HaversineDistanceCalculatorProcessor implements IStreamPipesDataProcessor {
   private static final String LAT_1_KEY = "lat1";
   private static final String LONG_1_KEY = "long1";
   private static final String LAT_2_KEY = "lat2";
@@ -54,51 +55,79 @@ public class HaversineDistanceCalculatorProcessor extends StreamPipesDataProcess
   String long2FieldMapper;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(
-            "org.apache.streampipes.processors.geo.jvm.latlong.processor.distancecalculator.haversine", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LAT),
-                Labels.withId(LAT_1_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LNG),
-                Labels.withId(LONG_1_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LAT),
-                Labels.withId(LAT_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.semanticTypeReq(Geo.LNG),
-                Labels.withId(LONG_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .build()
-        )
-        .outputStrategy(OutputStrategies.append(PrimitivePropertyBuilder
-                .create(Datatypes.Float, DISTANCE_RUNTIME_NAME)
-                .semanticType(SO.NUMBER)
-                .measurementUnit(URI.create("http://qudt.org/vocab/unit#Kilometer"))
-                .build())
-            )
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        HaversineDistanceCalculatorProcessor::new,
+        ProcessingElementBuilder.create(
+                                    "org.apache.streampipes.processors.geo.jvm.latlong.processor.distancecalculator.haversine", 0)
+                                .category(DataProcessorType.GEO)
+                                .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+                                .withLocales(Locales.EN)
+                                .requiredStream(StreamRequirementsBuilder
+                                                    .create()
+                                                    .requiredPropertyWithUnaryMapping(
+                                                        EpRequirements.semanticTypeReq(Geo.LAT),
+                                                        Labels.withId(LAT_1_KEY), PropertyScope.MEASUREMENT_PROPERTY
+                                                    )
+                                                    .requiredPropertyWithUnaryMapping(
+                                                        EpRequirements.semanticTypeReq(Geo.LNG),
+                                                        Labels.withId(LONG_1_KEY), PropertyScope.MEASUREMENT_PROPERTY
+                                                    )
+                                                    .requiredPropertyWithUnaryMapping(
+                                                        EpRequirements.semanticTypeReq(Geo.LAT),
+                                                        Labels.withId(LAT_2_KEY), PropertyScope.MEASUREMENT_PROPERTY
+                                                    )
+                                                    .requiredPropertyWithUnaryMapping(
+                                                        EpRequirements.semanticTypeReq(Geo.LNG),
+                                                        Labels.withId(LONG_2_KEY), PropertyScope.MEASUREMENT_PROPERTY
+                                                    )
+                                                    .build()
+                                )
+                                .outputStrategy(OutputStrategies.append(PrimitivePropertyBuilder
+                                                                            .create(
+                                                                                Datatypes.Float,
+                                                                                DISTANCE_RUNTIME_NAME
+                                                                            )
+                                                                            .semanticType(SO.NUMBER)
+                                                                            .measurementUnit(URI.create(
+                                                                                "http://qudt.org/vocab/unit#Kilometer"))
+                                                                            .build())
+                                )
+                                .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-
-    this.lat1FieldMapper = parameters.extractor().mappingPropertyValue(LAT_1_KEY);
-    this.long1FieldMapper = parameters.extractor().mappingPropertyValue(LONG_1_KEY);
-    this.lat2FieldMapper = parameters.extractor().mappingPropertyValue(LAT_2_KEY);
-    this.long2FieldMapper = parameters.extractor().mappingPropertyValue(LONG_2_KEY);
-
+  public void onPipelineStarted(
+      IDataProcessorParameters params,
+      SpOutputCollector spOutputCollector,
+      EventProcessorRuntimeContext runtimeContext
+  ) throws SpRuntimeException {
+    this.lat1FieldMapper = params.extractor()
+                                 .mappingPropertyValue(LAT_1_KEY);
+    this.long1FieldMapper = params.extractor()
+                                  .mappingPropertyValue(LONG_1_KEY);
+    this.lat2FieldMapper = params.extractor()
+                                 .mappingPropertyValue(LAT_2_KEY);
+    this.long2FieldMapper = params.extractor()
+                                  .mappingPropertyValue(LONG_2_KEY);
   }
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
 
-    float lat1 = event.getFieldBySelector(lat1FieldMapper).getAsPrimitive().getAsFloat();
-    float long1 = event.getFieldBySelector(long1FieldMapper).getAsPrimitive().getAsFloat();
-    float lat2 = event.getFieldBySelector(lat2FieldMapper).getAsPrimitive().getAsFloat();
-    float long2 = event.getFieldBySelector(long2FieldMapper).getAsPrimitive().getAsFloat();
+    float lat1 = event.getFieldBySelector(lat1FieldMapper)
+                      .getAsPrimitive()
+                      .getAsFloat();
+    float long1 = event.getFieldBySelector(long1FieldMapper)
+                       .getAsPrimitive()
+                       .getAsFloat();
+    float lat2 = event.getFieldBySelector(lat2FieldMapper)
+                      .getAsPrimitive()
+                      .getAsFloat();
+    float long2 = event.getFieldBySelector(long2FieldMapper)
+                       .getAsPrimitive()
+                       .getAsFloat();
 
     double resultDist = HaversineDistanceUtil.dist(lat1, long1, lat2, long2);
 
@@ -108,7 +137,6 @@ public class HaversineDistanceCalculatorProcessor extends StreamPipesDataProcess
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }
