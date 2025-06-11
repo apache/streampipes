@@ -18,21 +18,22 @@
 package org.apache.streampipes.processors.enricher.jvm.processor.jseval;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
@@ -41,7 +42,7 @@ import org.graalvm.polyglot.proxy.ProxyObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JSEvalProcessor extends StreamPipesDataProcessor {
+public class JSEvalProcessor implements IStreamPipesDataProcessor {
 
   private static final String JS_FUNCTION = "jsFunction";
 
@@ -49,27 +50,33 @@ public class JSEvalProcessor extends StreamPipesDataProcessor {
   private Value function;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.enricher.jvm.jseval", 0)
-        .category(DataProcessorType.SCRIPTING)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        .requiredCodeblock(Labels.withId(JS_FUNCTION), CodeLanguage.Javascript)
-        .outputStrategy(OutputStrategies.userDefined())
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        JSEvalProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.enricher.jvm.jseval", 0)
+            .category(DataProcessorType.SCRIPTING)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                                .create()
+                                .requiredProperty(EpRequirements.anyProperty())
+                                .build())
+            .requiredCodeblock(Labels.withId(JS_FUNCTION), CodeLanguage.Javascript)
+            .outputStrategy(OutputStrategies.userDefined())
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters,
-                           SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(
+      IDataProcessorParameters params,
+      SpOutputCollector collector,
+      EventProcessorRuntimeContext runtimeContext
+  ) throws SpRuntimeException {
     polyglot = Context.create();
-    String code = parameters.extractor().codeblockValue(JS_FUNCTION);
+    String code = params.extractor()
+                        .codeblockValue(JS_FUNCTION);
     function = polyglot.eval("js", "(" + code + ")");
   }
 
@@ -94,7 +101,9 @@ public class JSEvalProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
+    if (polyglot != null) {
+      polyglot.close();
+    }
   }
 }

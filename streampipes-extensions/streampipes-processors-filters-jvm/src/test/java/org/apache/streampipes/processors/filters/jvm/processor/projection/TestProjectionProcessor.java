@@ -17,98 +17,50 @@
  */
 package org.apache.streampipes.processors.filters.jvm.processor.projection;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
-import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
+import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
+import org.apache.streampipes.test.executors.TestConfiguration;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
-import java.util.Collections;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.util.Map;
 
 class TestProjectionProcessor {
 
-  private ProjectionProcessor processor;
-  private ProcessorParams processorParams;
-  private SpOutputCollector outputCollector;
-  private EventProcessorRuntimeContext runtimeContext;
-
-  @BeforeEach
-  void setUp() {
-    processor = new ProjectionProcessor();
-    processorParams = mock(ProcessorParams.class);
-    outputCollector = mock(SpOutputCollector.class);
-    runtimeContext = mock(EventProcessorRuntimeContext.class);
-
-    ProcessingElementParameterExtractor mockExtractor = mock(ProcessingElementParameterExtractor.class);
-    when(processorParams.extractor()).thenReturn(mockExtractor);
-
-    when(mockExtractor.outputKeySelectors()).thenReturn(List.of("field1", "field2"));
-  }
 
   @Test
-  void testOnInvocationExtractsKeys() throws SpRuntimeException {
-    processor.onInvocation(processorParams, outputCollector, runtimeContext);
+  public void test() {
+    var configuration = TestConfiguration
+        .builder()
+        .customOutputStrategy(List.of("field1", "field2"))
+        .build();
+    List<Map<String, Object>> events = List.of(
+        Map.of(
+            "field1", "value1",
+            "field2", "value2",
+            "field3", "ignoredValue"
+        ),
+        Map.of(
+            "field1", "value3",
+            "field2", "value4",
+            "field3", "ignoredValue"
+        )
+    );
 
-    verify(processorParams.extractor(), times(1)).outputKeySelectors();
+    List<Map<String, Object>> outputEvents = List.of(
+        Map.of(
+            "field1", "value1",
+            "field2", "value2"
+        ),
+        Map.of(
+            "field1", "value3",
+            "field2", "value4"
+        )
+    );
+
+    var testExecutor = new ProcessingElementTestExecutor(new ProjectionProcessor(), configuration);
+
+    testExecutor.run(events, outputEvents);
   }
 
-  @Test
-  void testOnEventFiltersEvent() throws SpRuntimeException {
-    processor.onInvocation(processorParams, outputCollector, runtimeContext);
-
-    Event inputEvent = new Event();
-    inputEvent.addField("field1", "value1");
-    inputEvent.addField("field2", "value2");
-    inputEvent.addField("field3", "ignoredValue");
-
-    processor.onEvent(inputEvent, outputCollector);
-
-    ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
-    verify(outputCollector, times(1)).collect(eventCaptor.capture());
-
-    Event capturedEvent = eventCaptor.getValue();
-    assertEquals(2, capturedEvent.getFields().size());
-    assertEquals("value1", capturedEvent.getFieldBySelector("field1").getAsPrimitive().getAsString());
-    assertEquals("value2", capturedEvent.getFieldBySelector("field2").getAsPrimitive().getAsString());
-  }
-
-  @Test
-  void testOnEventWithNoKeys() throws SpRuntimeException {
-    when(processorParams.extractor().outputKeySelectors()).thenReturn(Collections.emptyList());
-
-    processor.onInvocation(processorParams, outputCollector, runtimeContext);
-
-    Event inputEvent = new Event();
-    inputEvent.addField("field1", "value1");
-    inputEvent.addField("field2", "value2");
-
-    processor.onEvent(inputEvent, outputCollector);
-
-    ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
-    verify(outputCollector, times(1)).collect(eventCaptor.capture());
-
-    Event capturedEvent = eventCaptor.getValue();
-    assertEquals(0, capturedEvent.getFields().size());
-  }
-
-  @Test
-  void testOnEventThrowsExceptionWhenNotInvoked() {
-    Event inputEvent = new Event();
-    inputEvent.addField("field1", "value1");
-
-    assertThrows(NullPointerException.class, () -> processor.onEvent(inputEvent, outputCollector));
-  }
 }

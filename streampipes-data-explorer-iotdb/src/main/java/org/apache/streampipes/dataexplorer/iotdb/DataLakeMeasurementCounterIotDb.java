@@ -43,7 +43,7 @@ public class DataLakeMeasurementCounterIotDb extends DataLakeMeasurementCounter 
    * Creates a CompletableFuture to execute a count query on a DataLakeMeasure asynchronously.
    *
    * @param measure The DataLakeMeasure object representing the measure to query.
-   * @return A CompletableFuture<Integer> representing the count query result as a future.
+   * @return A {@link CompletableFuture} representing the count query result as a future.
    */
   @Override
   protected CompletableFuture<Integer> createQueryAsAsyncFuture(DataLakeMeasure measure) {

@@ -1,0 +1,40 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+org.apache.streampipes.processors.transformation.jvm.switchoperator.string.title=Switch Operator (String Input)
+org.apache.streampipes.processors.transformation.jvm.switchoperator.string.description=Routes events based on a string input field, allowing for different outputs based on exact string matches.
+
+switch-filter-key.title=Switch Field
+switch-filter-key.description=Select the string field from the input stream that will be used for the switch condition.
+
+output-type-key.title=Output Type
+output-type-key.description=Choose the data type of the output value (String, Boolean, or Integer).
+
+switch-case-group.title=Switch Cases
+switch-case-group.description=Define the different switch conditions and their corresponding output values.
+
+switch-case-value.title=Case Value
+switch-case-value.description=The string value to match against the selected switch field.
+
+switch-case-value-output.title=Output Value
+switch-case-value-output.description=The value to output if this case matches. This value will be converted to the selected Output Type.
+
+switch-case-value-default-output.title=Default Output Value
+switch-case-value-default-output.description=The value to use if none of the defined switch cases match the input or if an error occurs.
+
+switch-filter-output-key.title=switch-output
+switch-filter-output-key.description=The output field containing the result of the switch operation.

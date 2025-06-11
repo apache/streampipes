@@ -20,11 +20,13 @@
 package org.apache.streampipes.processors.enricher.jvm.processor.math;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.Operation;
@@ -35,6 +37,7 @@ import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.O
 import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.OperationSubtracting;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -42,10 +45,8 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class MathOpProcessor extends StreamPipesDataProcessor {
+public class MathOpProcessor implements IStreamPipesDataProcessor {
 
   protected static final String RESULT_FIELD = "calculationResult";
   protected static final String LEFT_OPERAND = "leftOperand";
@@ -57,67 +58,89 @@ public class MathOpProcessor extends StreamPipesDataProcessor {
   String rightOperand;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.enricher.jvm.processor.math.mathop", 0)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .category(DataProcessorType.ALGORITHM)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(LEFT_OPERAND),
-                PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                Labels.withId(RIGHT_OPERAND),
-                PropertyScope.NONE)
-            .build())
-        .outputStrategy(
-            OutputStrategies.append(
-                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.NUMBER)))
-        .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("+", "-", "/",
-            "*", "%"))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        MathOpProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.enricher.jvm.processor.math.mathop", 0)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .category(DataProcessorType.ALGORITHM)
+            .requiredStream(StreamRequirementsBuilder
+                                .create()
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.numberReq(),
+                                    Labels.withId(LEFT_OPERAND),
+                                    PropertyScope.NONE
+                                )
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.numberReq(),
+                                    Labels.withId(RIGHT_OPERAND),
+                                    PropertyScope.NONE
+                                )
+                                .build())
+            .outputStrategy(
+                OutputStrategies.append(
+                    EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.NUMBER)))
+            .requiredSingleValueSelection(
+                Labels.withId(OPERATION), Options.from(
+                    "+", "-", "/",
+                    "*", "%"
+                )
+            )
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    this.leftOperand = parameters.extractor().mappingPropertyValue(LEFT_OPERAND);
-    this.rightOperand = parameters.extractor().mappingPropertyValue(RIGHT_OPERAND);
-    String operation = parameters.extractor().selectedSingleValue(OPERATION, String.class);
+  public void onPipelineStarted(
+      IDataProcessorParameters params,
+      SpOutputCollector collector,
+      EventProcessorRuntimeContext runtimeContext
+  ) {
+    this.leftOperand = params.extractor()
+                             .mappingPropertyValue(LEFT_OPERAND);
+    this.rightOperand = params.extractor()
+                              .mappingPropertyValue(RIGHT_OPERAND);
+    String operation = params.extractor()
+                             .selectedSingleValue(OPERATION, String.class);
 
     switch (operation) {
       case "+":
-        arithmeticOperation = new OperationAddition();
+        this.arithmeticOperation = new OperationAddition();
         break;
       case "-":
-        arithmeticOperation = new OperationSubtracting();
-        break;
-      case "*":
-        arithmeticOperation = new OperationMultiply();
+        this.arithmeticOperation = new OperationSubtracting();
         break;
       case "/":
-        arithmeticOperation = new OperationDivide();
+        this.arithmeticOperation = new OperationDivide();
+        break;
+      case "*":
+        this.arithmeticOperation = new OperationMultiply();
         break;
       case "%":
-        arithmeticOperation = new OperationModulo();
+        this.arithmeticOperation = new OperationModulo();
+        break;
+      default:
+        throw new IllegalArgumentException("Unsupported operation: " + operation);
     }
   }
 
   @Override
-  public void onEvent(Event in, SpOutputCollector out) throws SpRuntimeException {
-    Double leftValue = in.getFieldBySelector(leftOperand).getAsPrimitive().getAsDouble();
-    Double rightValue = in.getFieldBySelector(rightOperand).getAsPrimitive().getAsDouble();
+  public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
+    Double leftValue = event.getFieldBySelector(this.leftOperand)
+                            .getAsPrimitive()
+                            .getAsDouble();
+    Double rightValue = event.getFieldBySelector(this.rightOperand)
+                             .getAsPrimitive()
+                             .getAsDouble();
+    Double result = this.arithmeticOperation.operate(leftValue, rightValue);
 
-    Double result = arithmeticOperation.operate(leftValue, rightValue);
-    in.addField(RESULT_FIELD, result);
-
-    out.collect(in);
+    event.addField(RESULT_FIELD, result);
+    spOutputCollector.collect(event);
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }

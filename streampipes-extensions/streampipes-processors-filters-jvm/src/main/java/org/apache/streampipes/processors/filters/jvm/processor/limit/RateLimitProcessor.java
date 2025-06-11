@@ -19,11 +19,13 @@
 package org.apache.streampipes.processors.filters.jvm.processor.limit;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.util.EventSelection;
@@ -33,19 +35,18 @@ import org.apache.streampipes.processors.filters.jvm.processor.limit.window.Wind
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class RateLimitProcessor extends StreamPipesDataProcessor {
+public class RateLimitProcessor implements IStreamPipesDataProcessor {
 
   private static final String EVENT_SELECTION = "event-selection";
   private static final String WINDOW_TYPE = "window-type";
@@ -69,48 +70,49 @@ public class RateLimitProcessor extends StreamPipesDataProcessor {
   private ConcurrentMap<Object, Window> windows;
   private WindowFactory factory;
 
-
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.limit", 0)
-        .category(DataProcessorType.FILTER, DataProcessorType.STRUCTURE_ANALYTICS)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredSingleValueSelection(Labels.withId(GROUPING_ENABLED),
-            Options.from(OPTION_TRUE, OPTION_FALSE))
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                Labels.withId(GROUPING_FIELD), PropertyScope.NONE)
-            .build())
-        .requiredAlternatives(Labels.withId(WINDOW_TYPE),
-            Alternatives.from(Labels.withId(TIME_WINDOW),
-                StaticProperties.integerFreeTextProperty(Labels.withId(TIME_WINDOW_SIZE))),
-            Alternatives.from(Labels.withId(CRON_WINDOW),
-                StaticProperties.stringFreeTextProperty(Labels.withId(CRON_WINDOW_EXPR))),
-            Alternatives.from(Labels.withId(LENGTH_WINDOW),
-                StaticProperties.integerFreeTextProperty(Labels.withId(LENGTH_WINDOW_SIZE))))
-        .requiredSingleValueSelection(Labels.withId(EVENT_SELECTION),
-            Options.from(OPTION_FIRST, OPTION_LAST, OPTION_ALL))
-        .outputStrategy(OutputStrategies.keep())
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        RateLimitProcessor::new,
+        ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.limit", 0)
+            .category(DataProcessorType.FILTER, DataProcessorType.STRUCTURE_ANALYTICS)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredSingleValueSelection(Labels.withId(GROUPING_ENABLED),
+                Options.from(OPTION_TRUE, OPTION_FALSE))
+            .requiredStream(StreamRequirementsBuilder.create()
+                .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
+                    Labels.withId(GROUPING_FIELD), PropertyScope.NONE)
+                .build())
+            .requiredAlternatives(Labels.withId(WINDOW_TYPE),
+                Alternatives.from(Labels.withId(TIME_WINDOW),
+                    StaticProperties.integerFreeTextProperty(Labels.withId(TIME_WINDOW_SIZE))),
+                Alternatives.from(Labels.withId(CRON_WINDOW),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(CRON_WINDOW_EXPR))),
+                Alternatives.from(Labels.withId(LENGTH_WINDOW),
+                    StaticProperties.integerFreeTextProperty(Labels.withId(LENGTH_WINDOW_SIZE))))
+            .requiredSingleValueSelection(Labels.withId(EVENT_SELECTION),
+                Options.from(OPTION_FIRST, OPTION_LAST, OPTION_ALL))
+            .outputStrategy(OutputStrategies.keep())
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams
-                               processorParams, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-
+  public void onPipelineStarted(IDataProcessorParameters parameters,
+                                SpOutputCollector spOutputCollector,
+                                EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.groupingEnabled =
-        Boolean.valueOf(processorParams.extractor().selectedSingleValue(GROUPING_ENABLED, String.class));
-    this.groupingField = processorParams.extractor().mappingPropertyValue(GROUPING_FIELD);
+        Boolean.valueOf(parameters.extractor().selectedSingleValue(GROUPING_ENABLED, String.class));
+    this.groupingField = parameters.extractor().mappingPropertyValue(GROUPING_FIELD);
     this.windows = new ConcurrentHashMap<>();
 
-    EventSelection eventSelection = EventSelection.valueOf(processorParams.extractor()
+    EventSelection eventSelection = EventSelection.valueOf(parameters.extractor()
         .selectedSingleValue(EVENT_SELECTION, String.class).toUpperCase());
-    String windowType = processorParams.extractor().selectedAlternativeInternalId(WINDOW_TYPE);
+    String windowType = parameters.extractor().selectedAlternativeInternalId(WINDOW_TYPE);
 
     if (TIME_WINDOW.equals(windowType)) {
-      Integer windowSize = processorParams.extractor().singleValueParameter(TIME_WINDOW_SIZE, Integer.class);
+      Integer windowSize = parameters.extractor().singleValueParameter(TIME_WINDOW_SIZE, Integer.class);
       this.factory = new WindowFactory(
           WindowType.TIME,
           windowSize,
@@ -118,7 +120,7 @@ public class RateLimitProcessor extends StreamPipesDataProcessor {
           spOutputCollector);
 
     } else if (CRON_WINDOW.equals(windowType)) {
-      String cronExpression = processorParams.extractor().singleValueParameter(CRON_WINDOW_EXPR, String.class);
+      String cronExpression = parameters.extractor().singleValueParameter(CRON_WINDOW_EXPR, String.class);
       this.factory = new WindowFactory(
           WindowType.CRON,
           cronExpression,
@@ -126,7 +128,7 @@ public class RateLimitProcessor extends StreamPipesDataProcessor {
           spOutputCollector);
 
     } else {
-      Integer windowSize = processorParams.extractor().singleValueParameter(LENGTH_WINDOW_SIZE, Integer.class);
+      Integer windowSize = parameters.extractor().singleValueParameter(LENGTH_WINDOW_SIZE, Integer.class);
       this.factory = new WindowFactory(
           WindowType.LENGTH,
           windowSize,
@@ -148,7 +150,7 @@ public class RateLimitProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
+  public void onPipelineStopped() throws SpRuntimeException {
     for (Window window : this.windows.values()) {
       window.destroy();
     }

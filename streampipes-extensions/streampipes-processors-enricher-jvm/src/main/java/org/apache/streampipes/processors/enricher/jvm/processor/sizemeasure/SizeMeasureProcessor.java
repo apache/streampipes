@@ -19,14 +19,17 @@
 package org.apache.streampipes.processors.enricher.jvm.processor.sizemeasure;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -34,14 +37,12 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.helpers.Tuple2;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-public class SizeMeasureProcessor extends StreamPipesDataProcessor {
+public class SizeMeasureProcessor implements IStreamPipesDataProcessor {
 
   static final String SIZE_UNIT = "sizeUnit";
   static final String BYTE_SIZE = "BYTE";
@@ -57,40 +58,43 @@ public class SizeMeasureProcessor extends StreamPipesDataProcessor {
   private String sizeUnit;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.enricher.jvm.sizemeasure", 0)
-        .category(DataProcessorType.STRUCTURE_ANALYTICS)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-                            .create()
-                            .requiredProperty(EpRequirements.anyProperty())
-                            .build())
-        .requiredSingleValueSelection(
-            Labels.withId(SIZE_UNIT),
-            Options.from(
-                new Tuple2<>(BYTES_OPTION, BYTE_SIZE),
-                new Tuple2<>(KILO_BYTES_OPTION, KILOBYTE_SIZE),
-                new Tuple2<>(MEGA_BYTES_OPTION, MEGABYTE_SIZE)
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        SizeMeasureProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.enricher.jvm.sizemeasure", 0)
+            .category(DataProcessorType.STRUCTURE_ANALYTICS)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                                .create()
+                                .requiredProperty(EpRequirements.anyProperty())
+                                .build())
+            .requiredSingleValueSelection(
+                Labels.withId(SIZE_UNIT),
+                Options.from(
+                    new Tuple2<>(BYTES_OPTION, BYTE_SIZE),
+                    new Tuple2<>(KILO_BYTES_OPTION, KILOBYTE_SIZE),
+                    new Tuple2<>(MEGA_BYTES_OPTION, MEGABYTE_SIZE)
+                )
             )
-        )
-        .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(
-            Labels.withId(EVENT_SIZE),
-            EVENT_SIZE,
-            "http://schema.org/contentSize"
-        )))
-        .build();
+            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(
+                Labels.withId(EVENT_SIZE),
+                EVENT_SIZE,
+                "http://schema.org/contentSize"
+            )))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(
-      ProcessorParams parameters,
-      SpOutputCollector spOutputCollector,
+  public void onPipelineStarted(
+      IDataProcessorParameters params,
+      SpOutputCollector collector,
       EventProcessorRuntimeContext runtimeContext
-  ) throws SpRuntimeException {
-    this.sizeUnit = parameters.extractor()
-                              .selectedSingleValueInternalName(SIZE_UNIT, String.class);
+  ) {
+    this.sizeUnit = params.extractor()
+                          .selectedSingleValueInternalName(SIZE_UNIT, String.class);
   }
 
   @Override
@@ -105,13 +109,12 @@ public class SizeMeasureProcessor extends StreamPipesDataProcessor {
       event.addField(EVENT_SIZE, size);
       collector.collect(event);
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new SpRuntimeException("Error calculating event size", e);
     }
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 
   private int getSizeInBytes(Object map) throws IOException {

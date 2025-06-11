@@ -125,11 +125,13 @@
                     [attr.data-cy]="'property-scope-' + label"
                 >
                     <mat-option value="MEASUREMENT_PROPERTY"
-                        >Measurement
-                    </mat-option>
-                    <mat-option value="DIMENSION_PROPERTY"
-                        >Dimension
-                    </mat-option>
+                        >Measurement</mat-option
+                    >
+                    <mat-option
+                        *ngIf="runtimeType !== 'FLOAT'"
+                        value="DIMENSION_PROPERTY"
+                        >Dimension</mat-option
+                    >
                     <mat-option value="HEADER_PROPERTY">Header</mat-option>
                 </mat-select>
             </mat-form-field>
