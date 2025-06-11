@@ -26,6 +26,7 @@ import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.sdk.builder.sink.DataSinkConfiguration;
 import org.apache.streampipes.wrapper.params.compat.SinkParams;
 
+@Deprecated(since = "0.98.0", forRemoval = true)
 public abstract class StreamPipesDataSink implements IStreamPipesDataSink {
 
   @Override
