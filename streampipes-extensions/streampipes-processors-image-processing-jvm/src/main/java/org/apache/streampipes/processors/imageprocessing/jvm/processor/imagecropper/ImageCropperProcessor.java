@@ -19,24 +19,24 @@ package org.apache.streampipes.processors.imageprocessing.jvm.processor.imagecro
 
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.ImagePropertyConstants;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.ImageTransformer;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.BoxCoordinates;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.awt.image.BufferedImage;
 import java.util.Base64;
@@ -44,30 +44,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class ImageCropperProcessor extends StreamPipesDataProcessor {
+public class ImageCropperProcessor implements IStreamPipesDataProcessor {
 
   private String imageProperty;
   private String boxArray;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processor.imageclassification.jvm.image-cropper", 0)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .category(DataProcessorType.IMAGE_PROCESSING)
-        .requiredStream(RequiredBoxStream.getBoxStream())
-        .outputStrategy(OutputStrategies.append(EpProperties.integerEp(Labels.empty(),
-                ImagePropertyConstants.CLASS_NAME.getProperty(), "https://streampipes.org/classname"),
-            EpProperties.doubleEp(Labels.empty(), ImagePropertyConstants.SCORE.getProperty(),
-                "https://streampipes.org/Label")))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        ImageCropperProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processor.imageclassification.jvm.image-cropper", 0)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .category(DataProcessorType.IMAGE_PROCESSING)
+            .requiredStream(RequiredBoxStream.getBoxStream())
+            .outputStrategy(OutputStrategies.append(EpProperties.integerEp(Labels.empty(),
+                    ImagePropertyConstants.CLASS_NAME.getProperty(), "https://streampipes.org/classname"),
+                EpProperties.doubleEp(Labels.empty(), ImagePropertyConstants.SCORE.getProperty(),
+                    "https://streampipes.org/Label")))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) {
-    ProcessingElementParameterExtractor extractor = parameters.extractor();
+  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+    var extractor = params.extractor();
     this.imageProperty = extractor.mappingPropertyValue(RequiredBoxStream.IMAGE_PROPERTY);
     this.boxArray = extractor.mappingPropertyValue(RequiredBoxStream.BOX_ARRAY_PROPERTY);
   }
@@ -111,7 +113,6 @@ public class ImageCropperProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }

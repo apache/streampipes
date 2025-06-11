@@ -18,23 +18,23 @@
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.ImagePropertyConstants;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.ImageTransformer;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class ImageEnrichmentProcessor extends StreamPipesDataProcessor {
+public class ImageEnrichmentProcessor implements IStreamPipesDataProcessor {
 
   public static final String ID = "org.apache.streampipes.processor.imageclassification.jvm.image-enricher";
 
@@ -56,24 +56,26 @@ public class ImageEnrichmentProcessor extends StreamPipesDataProcessor {
   private String boxArray;
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(ID, 1)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .category(DataProcessorType.IMAGE_PROCESSING)
-        .requiredStream(RequiredBoxStream.getBoxStream())
-        .outputStrategy(OutputStrategies.fixed(
-            EpProperties.timestampProperty("timestamp"),
-            EpProperties.stringEp(Labels.empty(), ImagePropertyConstants.IMAGE.getProperty(),
-                "https://image.com")
-        ))
-        .build();
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        ImageEnrichmentProcessor::new,
+        ProcessingElementBuilder.create(ID, 1)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .category(DataProcessorType.IMAGE_PROCESSING)
+            .requiredStream(RequiredBoxStream.getBoxStream())
+            .outputStrategy(OutputStrategies.fixed(
+                EpProperties.timestampProperty("timestamp"),
+                EpProperties.stringEp(Labels.empty(), ImagePropertyConstants.IMAGE.getProperty(),
+                    "https://image.com")
+            ))
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    ProcessingElementParameterExtractor extractor = parameters.extractor();
+  public void onPipelineStarted(IDataProcessorParameters params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+    var extractor = params.extractor();
     this.imageProperty = extractor.mappingPropertyValue(RequiredBoxStream.IMAGE_PROPERTY);
     this.boxArray = extractor.mappingPropertyValue(RequiredBoxStream.BOX_ARRAY_PROPERTY);
   }
@@ -131,7 +133,6 @@ public class ImageEnrichmentProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }
