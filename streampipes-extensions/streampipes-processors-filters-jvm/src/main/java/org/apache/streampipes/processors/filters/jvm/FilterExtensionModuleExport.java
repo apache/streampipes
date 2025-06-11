@@ -24,6 +24,7 @@ import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.processors.filters.jvm.processor.booleanfilter.BooleanFilterProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.compose.ComposeProcessor;
+import org.apache.streampipes.processors.filters.jvm.processor.duration.ConditionalTimeFilterProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.enrich.MergeByEnrichProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.RateLimitProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.merge.MergeByTimeProcessor;
@@ -50,6 +51,7 @@ public class FilterExtensionModuleExport implements IExtensionModuleExport {
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
     return List.of(
         new BooleanFilterProcessor(),
+        new ConditionalTimeFilterProcessor(),
         new TextFilterProcessor(),
         new NumericalFilterProcessor(),
         new ThresholdDetectionProcessor(),
