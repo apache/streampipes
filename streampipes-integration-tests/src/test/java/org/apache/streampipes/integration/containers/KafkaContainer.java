@@ -31,7 +31,7 @@ public class KafkaContainer extends org.testcontainers.containers.KafkaContainer
 
 
   public KafkaContainer() {
-    super(DockerImageName.parse("confluentinc/cp-kafka"));
+    super(DockerImageName.parse("confluentinc/cp-kafka:7.9.1"));
   }
 
 
