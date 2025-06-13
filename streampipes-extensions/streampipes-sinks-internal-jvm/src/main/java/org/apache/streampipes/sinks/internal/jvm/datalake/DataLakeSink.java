@@ -172,8 +172,8 @@ public class DataLakeSink extends StreamPipesDataSink implements SupportsRuntime
         })
         .peek(ep -> {
           // Remova all dimensions from DIMENSION_PROPERTY scope if not part of dimensions
-          if (ep.getPropertyScope()
-                .equals(PropertyScope.DIMENSION_PROPERTY.name())) {
+          if (PropertyScope.DIMENSION_PROPERTY.name()
+                .equals(ep.getPropertyScope())) {
             if (!dimensions.contains(ep.getRuntimeName())) {
               ep.setPropertyScope(PropertyScope.MEASUREMENT_PROPERTY.name());
             }
