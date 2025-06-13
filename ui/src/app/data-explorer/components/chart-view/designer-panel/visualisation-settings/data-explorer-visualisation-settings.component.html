@@ -29,12 +29,19 @@
                     (selectionChange)="triggerWidgetTypeChange($event)"
                     data-cy="data-explorer-select-visualization-type"
                 >
+                    <mat-select-trigger>{{
+                        activeWidgetType.label
+                    }}</mat-select-trigger>
                     <mat-option
                         [value]="widget.id"
                         [attr.data-cy]="'select-widget-' + widget.id"
                         *ngFor="let widget of availableWidgets"
                     >
+                        <mat-icon>{{ widget.icon }}</mat-icon>
                         <span class="pipeline-name">{{ widget.label }}</span>
+                        <span class="widget-description">{{
+                            widget.description
+                        }}</span>
                     </mat-option>
                 </mat-select>
             </mat-form-field>

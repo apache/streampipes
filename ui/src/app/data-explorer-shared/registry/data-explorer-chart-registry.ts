@@ -87,30 +87,50 @@ export class DataExplorerChartRegistry {
                 widgetConfigurationComponent: GaugeWidgetConfigComponent,
                 widgetComponent: SpEchartsWidgetComponent<GaugeWidgetModel>,
                 chartRenderer: this.gaugeRenderer,
+                icon: 'speed',
+                description: this.translateService.instant(
+                    'The current value displayed in a gauge',
+                ),
             },
             {
                 id: 'table',
                 label: this.translateService.instant('Table'),
                 widgetConfigurationComponent: TableWidgetConfigComponent,
                 widgetComponent: TableWidgetComponent,
+                icon: 'table_chart',
+                description: this.translateService.instant(
+                    'A table displaying the data in rows and columns',
+                ),
             },
             {
                 id: 'traffic-Light',
                 label: this.translateService.instant('Traffic Light'),
                 widgetConfigurationComponent: TrafficLightWidgetConfigComponent,
                 widgetComponent: TrafficLightWidgetComponent,
+                icon: 'traffic',
+                description: this.translateService.instant(
+                    'A traffic light that shows if a value is above/below a threshold',
+                ),
             },
             {
                 id: 'status',
                 label: this.translateService.instant('Status'),
                 widgetConfigurationComponent: StatusWidgetConfigComponent,
                 widgetComponent: StatusWidgetComponent,
+                icon: 'check_circle',
+                description: this.translateService.instant(
+                    'A simple red/green status light',
+                ),
             },
             {
                 id: 'map',
                 label: this.translateService.instant('Map'),
                 widgetConfigurationComponent: MapWidgetConfigComponent,
                 widgetComponent: MapWidgetComponent,
+                icon: 'map',
+                description: this.translateService.instant(
+                    'A map visualization for spatial coordinates',
+                ),
             },
             {
                 id: 'heatmap',
@@ -120,6 +140,10 @@ export class DataExplorerChartRegistry {
                 widgetConfigurationComponent: HeatmapWidgetConfigComponent,
                 widgetComponent: SpEchartsWidgetComponent<HeatmapWidgetModel>,
                 chartRenderer: this.heatmapRenderer,
+                icon: 'view_column',
+                description: this.translateService.instant(
+                    'A heatmap that shows values mapped to a color range',
+                ),
             },
             {
                 id: 'status-heatmap',
@@ -131,6 +155,10 @@ export class DataExplorerChartRegistry {
                 widgetComponent:
                     SpEchartsWidgetComponent<StatusHeatmapWidgetModel>,
                 chartRenderer: this.statusHeatmapRenderer,
+                icon: 'view_column',
+                description: this.translateService.instant(
+                    'A heatmap that lets you map specific values to a color',
+                ),
             },
             {
                 id: 'time-series-chart',
@@ -142,12 +170,18 @@ export class DataExplorerChartRegistry {
                 widgetComponent:
                     SpEchartsWidgetComponent<TimeSeriesChartWidgetModel>,
                 chartRenderer: this.timeseriesRenderer,
+                icon: 'insert_chart',
+                description: this.translateService.instant(
+                    'A simple chart that shows values on a value/time graph',
+                ),
             },
             {
                 id: 'image',
                 label: this.translateService.instant('Image'),
                 widgetConfigurationComponent: ImageWidgetConfigComponent,
                 widgetComponent: ImageWidgetComponent,
+                icon: 'image',
+                description: this.translateService.instant('Display an image'),
             },
             {
                 id: 'indicator-chart',
@@ -158,6 +192,10 @@ export class DataExplorerChartRegistry {
                 widgetComponent:
                     SpEchartsWidgetComponent<IndicatorChartWidgetModel>,
                 chartRenderer: this.indicatorRenderer,
+                icon: '123',
+                description: this.translateService.instant(
+                    'The current value displayed as a number',
+                ),
             },
             {
                 id: 'scatter-chart',
@@ -169,6 +207,10 @@ export class DataExplorerChartRegistry {
                     SpEchartsWidgetComponent<CorrelationChartWidgetModel>,
                 chartRenderer: this.scatterRenderer,
                 alias: 'correlation-chart',
+                icon: 'grain',
+                description: this.translateService.instant(
+                    'Display points on an x/y plane',
+                ),
             },
             {
                 id: 'histogram-chart',
@@ -181,6 +223,10 @@ export class DataExplorerChartRegistry {
                     SpEchartsWidgetComponent<HistogramChartWidgetModel>,
                 chartRenderer: this.histogramRenderer,
                 alias: 'distribution-chart',
+                icon: 'bar_chart',
+                description: this.translateService.instant(
+                    'Shows the distribution of numerical data',
+                ),
             },
             {
                 id: 'pie-chart',
@@ -190,6 +236,10 @@ export class DataExplorerChartRegistry {
                 widgetConfigurationComponent: SpPieChartWidgetConfigComponent,
                 widgetComponent: SpEchartsWidgetComponent<PieChartWidgetModel>,
                 chartRenderer: this.pieRenderer,
+                icon: 'pie_chart',
+                description: this.translateService.instant(
+                    'A pie chart that shows the frequency of specific values',
+                ),
             },
             {
                 id: 'value-heatmap-chart',
@@ -203,6 +253,10 @@ export class DataExplorerChartRegistry {
                 widgetComponent:
                     SpEchartsWidgetComponent<ValueHeatmapChartWidgetModel>,
                 chartRenderer: this.valueHeatmapRenderer,
+                icon: 'grid_on',
+                description: this.translateService.instant(
+                    'A chart that shows the distribution of numerical data as a heatmap',
+                ),
             },
             {
                 id: 'density-chart',
@@ -213,6 +267,10 @@ export class DataExplorerChartRegistry {
                 widgetComponent:
                     SpEchartsWidgetComponent<CorrelationChartWidgetModel>,
                 chartRenderer: this.densityRenderer,
+                icon: 'blur_on',
+                description: this.translateService.instant(
+                    'A chart that shows data points as dots on an x/y plane and highlights similar points',
+                ),
             },
         ];
     }

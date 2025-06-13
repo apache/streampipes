@@ -80,6 +80,8 @@ export interface IWidget<T extends DataExplorerWidgetModel> {
     widgetAppearanceConfigurationComponent?: any;
     chartRenderer?: SpEchartsRenderer<T>;
     alias?: string;
+    icon?: string;
+    description?: string;
 }
 
 export interface WidgetChartAppearanceConfig {
