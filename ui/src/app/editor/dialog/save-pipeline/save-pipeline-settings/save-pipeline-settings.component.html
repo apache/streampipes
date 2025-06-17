@@ -44,6 +44,15 @@
                     *ngIf="
                         submitPipelineForm
                             .get('pipelineName')
+                            .hasError('leadingOrTrailingWhitespace')
+                    "
+                >
+                    Pipeline name cannot start or end with a space.
+                </mat-error>
+                <mat-error
+                    *ngIf="
+                        submitPipelineForm
+                            .get('pipelineName')
                             .hasError('minlength') ||
                         submitPipelineForm
                             .get('pipelineName')

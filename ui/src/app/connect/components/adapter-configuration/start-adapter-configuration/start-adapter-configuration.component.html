@@ -40,8 +40,18 @@
                                 .hasError('invalidName')
                         "
                     >
-                        Name can only contain letters, numbers, dashes (-), and
-                        underscores (_).
+                        Name can only contain letters, numbers, special
+                        characters (including umlauts), punctuation, symbols,
+                        and spaces.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="
+                            startAdapterForm
+                                .get('adapterName')
+                                .hasError('leadingOrTrailingWhitespace')
+                        "
+                    >
+                        Name cannot start or end with a space.
                     </mat-error>
                     <mat-error
                         *ngIf="
