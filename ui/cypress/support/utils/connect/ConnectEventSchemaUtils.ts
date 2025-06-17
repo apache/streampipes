@@ -17,6 +17,8 @@
  */
 
 import { ConnectBtns } from './ConnectBtns';
+import { DataTypeString } from '../../model/DataTypeString';
+import { PropertyDataTypeChange } from '../../model/PropertyDataTypeChange';
 
 export class ConnectEventSchemaUtils {
     public static markPropertyAsMeasurement(propertyName: string) {
@@ -222,9 +224,22 @@ export class ConnectEventSchemaUtils {
         }).click({ force: true });
     }
 
+    public static changePropertyDataTypes(
+        dataTypeChanges: PropertyDataTypeChange[],
+    ) {
+        if (dataTypeChanges.length > 0) {
+            dataTypeChanges.forEach(dataTypeChange => {
+                ConnectEventSchemaUtils.changePropertyDataType(
+                    dataTypeChange.propertyName,
+                    dataTypeChange.dataType,
+                );
+            });
+        }
+    }
+
     public static changePropertyDataType(
         propertyName: string,
-        dataType: string,
+        dataType: DataTypeString,
         warningIsShown: boolean = false,
     ) {
         ConnectEventSchemaUtils.clickEditProperty(propertyName);

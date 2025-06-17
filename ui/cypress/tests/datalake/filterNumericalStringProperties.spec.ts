@@ -35,6 +35,7 @@ describe('Validate that filter works for numerical dimension property', () => {
         const adapterInput = AdapterBuilder.create('File_Stream')
             .setName('Test Adapter')
             .setTimestampProperty('timestamp')
+            .addDataTypeChange('dimensionKey', 'Integer')
             .addDimensionProperty('dimensionKey')
             .setStoreInDataLake()
             .setFormat('csv')
@@ -64,7 +65,7 @@ describe('Validate that filter works for numerical dimension property', () => {
 
         // select filter for tag
         DataLakeUtils.selectDataConfig();
-        var filterConfig = new DataLakeFilterConfig('dimensionKey', '1.0', '=');
+        var filterConfig = new DataLakeFilterConfig('dimensionKey', '1', '=');
         DataLakeUtils.dataConfigAddFilter(filterConfig);
 
         // validate data in table is filtered

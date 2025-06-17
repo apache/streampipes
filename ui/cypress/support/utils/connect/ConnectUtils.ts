@@ -48,6 +48,10 @@ export class ConnectUtils {
             ConnectEventSchemaUtils.addTimestampProperty();
         }
 
+        ConnectEventSchemaUtils.changePropertyDataTypes(
+            adapterConfiguration.dataTypeChanges,
+        );
+
         ConnectUtils.configureDimensionProperties(adapterConfiguration);
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();

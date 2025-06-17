@@ -16,8 +16,6 @@
  *
  */
 
-import { TableConfig } from '../../../src/app/dashboard/components/widgets/table/table-config';
-
 export class DataExplorerWidget {
     public static TABLE = 'table';
     public static TIME_SERIES = 'time-series-chart';
