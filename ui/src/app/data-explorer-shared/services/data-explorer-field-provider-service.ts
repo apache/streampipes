@@ -116,6 +116,9 @@ export class DataExplorerFieldProviderService {
                 semanticTypes: [property.semanticType],
             },
         };
+        if (property instanceof EventPropertyPrimitive) {
+            field.measurementUnitResourceId = property.measurementUnit;
+        }
         provider.allFields.push(field);
 
         if (field.fieldCharacteristics.numeric) {
