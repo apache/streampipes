@@ -64,7 +64,7 @@ export class SpGaugeRendererService
             data: [
                 {
                     value: value,
-                    name: fieldName,
+                    name: visConfig.displayName ?? fieldName,
                 },
             ],
         };

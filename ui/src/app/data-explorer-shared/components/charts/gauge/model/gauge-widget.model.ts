@@ -27,6 +27,7 @@ export interface GaugeVisConfig extends DataExplorerVisConfig {
     selectedProperty: DataExplorerField;
     min: number;
     max: number;
+    displayName: string;
 }
 
 export interface GaugeWidgetModel extends DataExplorerWidgetModel {
