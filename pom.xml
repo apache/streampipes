@@ -75,7 +75,7 @@
         <influxdb.version>2.24</influxdb.version>
         <inlong.version>1.13.0</inlong.version>
         <iotdb.version>1.3.0</iotdb.version>
-        <jackson.version>2.18.3</jackson.version>
+        <jackson.version>2.19.1</jackson.version>
         <jackson.databind.version>2.18.3</jackson.databind.version>
         <jakarta-annotation.version>3.0.0</jakarta-annotation.version>
         <jakarta-activation-api.version>2.1.3</jakarta-activation-api.version>
