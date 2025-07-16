@@ -147,7 +147,8 @@ public class DataLakeMeasure implements Storable {
   @TsIgnore
   @JsonIgnore
   public String getTimestampFieldName() {
-    return timestampField.split(STREAM_PREFIX_DELIMITER)[1];
+    var timestampWithPrefix = timestampField.split(STREAM_PREFIX_DELIMITER);
+    return timestampWithPrefix.length > 1 ? timestampWithPrefix[1] : timestampField;
   }
 
   @Override
