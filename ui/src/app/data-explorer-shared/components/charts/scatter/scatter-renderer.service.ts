@@ -68,7 +68,7 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
                 max: 'dataMax',
                 name:
                     widgetConfig.visualizationConfig.labelX ||
-                    `${xField.fullDbName} (${xField.measurementUnitResourceId ? xField.measurementUnitResourceId.split('#').pop() : 'Unknown Unit'})`,
+                    `${xField.fullDbName}${xField.measurementUnitResourceId ? ` (${xField.measurementUnitResourceId.split('#').pop()})` : ''}`,
                 nameLocation: 'center',
                 nameTextStyle: {
                     fontSize: 20,
@@ -80,7 +80,7 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
                 max: 'dataMax',
                 name:
                     widgetConfig.visualizationConfig.labelY ||
-                    `${yField.fullDbName} (${yField.measurementUnitResourceId ? yField.measurementUnitResourceId.split('#').pop() : 'Unknown Unit'})`,
+                    `${yField.fullDbName}${yField.measurementUnitResourceId ? ` (${yField.measurementUnitResourceId.split('#').pop()})` : ''}`,
                 nameLocation: 'center',
                 nameTextStyle: {
                     fontSize: 20,

@@ -67,7 +67,7 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
                 max: Math.ceil(stats.maxX + 1),
                 name:
                     widgetConfig.visualizationConfig.labelX ||
-                    `${xField.fullDbName} (${xField.measurementUnitResourceId ? xField.measurementUnitResourceId.split('#').pop() : 'Unknown Unit'})`,
+                    `${xField.fullDbName}${xField.measurementUnitResourceId ? ` (${xField.measurementUnitResourceId.split('#').pop()})` : ''}`,
                 nameLocation: 'center',
                 nameTextStyle: {
                     fontSize: 20,
@@ -79,7 +79,7 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
                 max: Math.ceil(stats.maxY + 1),
                 name:
                     widgetConfig.visualizationConfig.labelY ||
-                    `${yField.fullDbName} (${yField.measurementUnitResourceId ? yField.measurementUnitResourceId.split('#').pop() : 'Unknown Unit'})`,
+                    `${yField.fullDbName}${yField.measurementUnitResourceId ? ` (${yField.measurementUnitResourceId.split('#').pop()})` : ''}`,
                 nameLocation: 'center',
                 nameTextStyle: {
                     fontSize: 20,
