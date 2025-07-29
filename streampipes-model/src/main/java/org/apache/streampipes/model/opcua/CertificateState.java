@@ -15,36 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model;
 
-import org.apache.streampipes.model.shared.annotation.TsModel;
+package org.apache.streampipes.model.opcua;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
-import java.util.ArrayList;
-import java.util.List;
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
-@TsModel
-public class SpDataStreamContainer {
-
-  private List<SpDataStream> list;
-
-  public SpDataStreamContainer() {
-    super();
-    this.list = new ArrayList<>();
-  }
-
-  public SpDataStreamContainer(List<SpDataStream> dataStreams) {
-    super();
-    this.list = dataStreams;
-  }
-
-  public List<SpDataStream> getList() {
-    return list;
-  }
-
-  public void setList(List<SpDataStream> list) {
-    this.list = list;
-  }
+public enum CertificateState {
+  REJECTED,
+  TRUSTED
 }

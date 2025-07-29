@@ -26,6 +26,7 @@ import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProv
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaAdapterConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 
 import org.eclipse.milo.opcua.sdk.client.api.UaClient;
@@ -66,6 +67,7 @@ public class OpcUaUtils {
                                                                        IStaticPropertyExtractor parameterExtractor)
       throws SpConfigurationException {
 
+    var client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
     RuntimeResolvableTreeInputStaticProperty config = parameterExtractor
         .getStaticPropertyByName(internalName, RuntimeResolvableTreeInputStaticProperty.class);
     // access mode and host/url have to be selected
@@ -77,7 +79,7 @@ public class OpcUaUtils {
       return config;
     }
 
-    var opcUaConfig = SpOpcUaConfigExtractor.extractSharedConfig(parameterExtractor, new OpcUaAdapterConfig());
+    var opcUaConfig = SpOpcUaConfigExtractor.extractSharedConfig(parameterExtractor, new OpcUaAdapterConfig(), client);
 
     try {
       var connectedClient = clientProvider.getClient(opcUaConfig);
@@ -120,5 +122,9 @@ public class OpcUaUtils {
         return false;
       }
     }).toList();
+  }
+
+  public static String getCoreCertificatePath() {
+    return "/api/v2/admin/certificates/trusted";
   }
 }

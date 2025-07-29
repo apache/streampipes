@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.config;
 
+import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.opcua.config.identity.AnonymousIdentityConfig;
@@ -53,8 +54,9 @@ public class SpOpcUaConfigExtractor {
    * @param extractor extractor for user inputs
    * @return {@link OpcUaAdapterConfig}  instance based on information from {@code extractor}
    */
-  public static OpcUaAdapterConfig extractAdapterConfig(IStaticPropertyExtractor extractor) {
-    var config = extractSharedConfig(extractor, new OpcUaAdapterConfig());
+  public static OpcUaAdapterConfig extractAdapterConfig(IStaticPropertyExtractor extractor,
+                                                        IStreamPipesClient streamPipesClient) {
+    var config = extractSharedConfig(extractor, new OpcUaAdapterConfig(), streamPipesClient);
     boolean usePullMode = extractor.selectedAlternativeInternalId(ADAPTER_TYPE.name())
         .equals(PULL_MODE.name());
 
@@ -78,12 +80,14 @@ public class SpOpcUaConfigExtractor {
     return config;
   }
 
-  public static OpcUaConfig extractSinkConfig(IParameterExtractor extractor) {
-    return extractSharedConfig(extractor, new OpcUaConfig());
+  public static OpcUaConfig extractSinkConfig(IParameterExtractor extractor,
+                                              IStreamPipesClient streamPipesClient) {
+    return extractSharedConfig(extractor, new OpcUaConfig(), streamPipesClient);
   }
 
   public static <T extends OpcUaConfig> T extractSharedConfig(IParameterExtractor extractor,
-                                                              T config) {
+                                                              T config,
+                                                              IStreamPipesClient streamPipesClient) {
 
     String selectedAlternativeConnection =
         extractor.selectedAlternativeInternalId(OPC_HOST_OR_URL.name());
@@ -103,9 +107,13 @@ public class SpOpcUaConfigExtractor {
         SharedUserConfiguration.SECURITY_POLICY,
         String.class
     );
-    config.setSecurityConfig(new SecurityConfig(
-        MessageSecurityMode.valueOf(selectedSecurityMode),
-        SecurityPolicy.valueOf(selectedSecurityPolicy)));
+    config.setSecurityConfig(
+        new SecurityConfig(
+            MessageSecurityMode.valueOf(selectedSecurityMode),
+            SecurityPolicy.valueOf(selectedSecurityPolicy),
+            streamPipesClient
+        )
+    );
 
     boolean useURL = selectedAlternativeConnection.equals(OPC_URL.name());
     if (useURL) {

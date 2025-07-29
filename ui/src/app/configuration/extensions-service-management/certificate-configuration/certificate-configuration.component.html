@@ -1,0 +1,73 @@
+<sp-table
+    *ngIf="dataSource"
+    data-cy="security-user-config"
+    [dataSource]="dataSource"
+    [columns]="displayedColumns"
+    matSort
+>
+    <ng-container matColumnDef="issuer">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Issuer</th>
+        <td
+            mat-cell
+            *matCellDef="let certificate"
+            data-cy="user-accounts-table-row"
+        >
+            <b>{{ certificate.issuerDn }}</b>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="expires">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Expires</th>
+        <td
+            mat-cell
+            *matCellDef="let certificate"
+            data-cy="user-accounts-table-row"
+        >
+            <b>{{ certificate.notAfter }}</b>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td
+            mat-cell
+            *matCellDef="let certificate"
+            data-cy="user-accounts-table-row"
+        >
+            <div fxLayout="row" fxLayoutGap="10px">
+                <button
+                    color="accent"
+                    mat-button
+                    mat-raised-button
+                    (click)="
+                        certificate.state === 'TRUSTED'
+                            ? onStateChange(certificate, 'REJECTED')
+                            : onStateChange(certificate, 'TRUSTED')
+                    "
+                    data-cy="trust-certificate-button"
+                >
+                    <i class="material-icons">{{
+                        certificate.state === 'TRUSTED' ? 'cancel' : 'check'
+                    }}</i>
+                    <span
+                        >&nbsp;{{
+                            certificate.state === 'TRUSTED' ? 'Reject' : 'Trust'
+                        }}</span
+                    >
+                </button>
+                <button
+                    color="warn"
+                    mat-button
+                    mat-raised-button
+                    matTooltip="Delete certificate"
+                    matTooltipPosition="above"
+                    [attr.data-cy]="
+                        'certificate-delete-btn-' + certificate.elementId
+                    "
+                    (click)="onDelete(certificate)"
+                >
+                    <i class="material-icons">delete</i>
+                    <span>&nbsp;Delete</span>
+                </button>
+            </div>
+        </td>
+    </ng-container>
+</sp-table>

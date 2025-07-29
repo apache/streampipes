@@ -79,7 +79,7 @@ public class OpcUaSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
   public void onPipelineStarted(IDataSinkParameters parameters,
                                 EventSinkRuntimeContext runtimeContext) {
     var extractor = parameters.extractor();
-    var config = SpOpcUaConfigExtractor.extractSinkConfig(extractor);
+    var config = SpOpcUaConfigExtractor.extractSinkConfig(extractor, runtimeContext.getStreamPipesClient());
 
     String mappingPropertySelector = extractor.mappingPropertyValue(MAPPING_PROPERY.name());
 

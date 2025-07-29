@@ -28,6 +28,7 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.file.FileMetadata;
+import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IAdapterStorage;
@@ -235,6 +236,14 @@ public enum CouchDbStorageManager implements INoSqlStorage {
     return new DefaultCrudStorage<>(
         () -> Utils.getCouchDbGsonClient("pipeline-templates"),
         CompactPipelineTemplate.class
+    );
+  }
+
+  @Override
+  public CRUDStorage<Certificate> getCertificateStorage() {
+    return new DefaultCrudStorage<>(
+        () -> Utils.getCouchDbGsonClient("certificates"),
+        Certificate.class
     );
   }
 }

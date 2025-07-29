@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.client.api;
 
+import java.util.List;
 import java.util.Map;
 
 public interface ICustomRequestApi {
@@ -26,4 +27,6 @@ public interface ICustomRequestApi {
   <T> T sendGet(String apiPath, Class<T> responseClass);
 
   <T> T sendGet(String apiPath, Map<String, String> queryParameters, Class<T> responseClass);
+
+  <T> List<T> getList(String apiPath, Class<T> response);
 }
