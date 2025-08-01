@@ -38,7 +38,7 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'sp-edit-schema-transformation',
     templateUrl: './edit-schema-transformation.component.html',
-    styleUrls: ['./edit-schema-transformation.component.scss'],
+    styleUrls: ['../../edit-event-property.component.scss'],
     standalone: false,
 })
 export class EditSchemaTransformationComponent implements OnInit {
