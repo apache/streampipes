@@ -26,6 +26,7 @@ import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProv
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaAdapterConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
+import org.apache.streampipes.extensions.connectors.opcua.config.security.CompositeCertificateValidator;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 
@@ -102,9 +103,13 @@ public class OpcUaUtils {
 
       return config;
     } catch (UaException e) {
-      throw new SpConfigurationException(ExceptionMessageExtractor.getDescription(e), e);
+        throw new SpConfigurationException(ExceptionMessageExtractor.getDescription(e), e);
     } catch (ExecutionException | InterruptedException | URISyntaxException e) {
-      throw new SpConfigurationException("Could not connect to the OPC UA server with the provided settings", e);
+      if (e instanceof ExecutionException && isCertificateException((ExecutionException) e)) {
+        throw new SpConfigurationException("The provided certificate could not be trusted. Administrators can accept this certificate in the settings.", e);
+      } else {
+        throw new SpConfigurationException("Could not connect to the OPC UA server with the provided settings", e);
+      }
     } finally {
       clientProvider.releaseClient(opcUaConfig);
     }
@@ -125,6 +130,28 @@ public class OpcUaUtils {
   }
 
   public static String getCoreCertificatePath() {
-    return "/api/v2/admin/certificates/trusted";
+    return "/api/v2/admin/certificates";
   }
+
+  public static String getCoreTrustedCertificatePath() {
+    return getCoreCertificatePath() + "/trusted";
+  }
+
+  private static boolean isCertificateException(ExecutionException e) {
+    Throwable cause = e.getCause();
+
+    if (cause instanceof UaException uaException) {
+      return CompositeCertificateValidator.REJECTED_STATUS_CODES
+          .contains(uaException.getStatusCode().getValue());
+    }
+
+    Throwable nestedCause = cause != null ? cause.getCause() : null;
+    if (nestedCause instanceof UaException uaException) {
+      return CompositeCertificateValidator.REJECTED_STATUS_CODES
+          .contains(uaException.getStatusCode().getValue());
+    }
+
+    return false;
+  }
+
 }

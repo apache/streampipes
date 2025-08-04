@@ -130,7 +130,7 @@ public class SecurityConfig {
 
   private List<X509Certificate> fetchTrustedCertsFromRest() throws SpConfigurationException {
     try {
-      var response = streamPipesClient.customRequest().getList(OpcUaUtils.getCoreCertificatePath(), Certificate.class);
+      var response = streamPipesClient.customRequest().getList(OpcUaUtils.getCoreTrustedCertificatePath(), Certificate.class);
       return response
           .stream()
           .map(res -> {

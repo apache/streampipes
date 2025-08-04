@@ -24,6 +24,7 @@ import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.opcua.CertificateState;
 
 import org.eclipse.milo.opcua.stack.client.security.ClientCertificateValidator;
+import org.eclipse.milo.opcua.stack.core.StatusCodes;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.security.TrustListManager;
 import org.eclipse.milo.opcua.stack.core.util.validation.CertificateValidationUtil;
@@ -42,6 +43,15 @@ import java.util.stream.Stream;
 public class CompositeCertificateValidator implements ClientCertificateValidator {
 
   private static final Logger LOG = LoggerFactory.getLogger(CompositeCertificateValidator.class);
+
+  public static final List<Long> REJECTED_STATUS_CODES = List.of(
+      StatusCodes.Bad_CertificateChainIncomplete,
+      StatusCodes.Bad_CertificateInvalid,
+      StatusCodes.Bad_NoValidCertificates,
+      StatusCodes.Bad_CertificateUntrusted,
+      StatusCodes.Bad_CertificateUseNotAllowed,
+      StatusCodes.Bad_SecurityChecksFailed
+  );
 
   private final TrustListManager trustListManager;
   private final List<X509Certificate> trustedCerts;
@@ -69,7 +79,9 @@ public class CompositeCertificateValidator implements ClientCertificateValidator
           trustListManager.getIssuerCertificates()
       );
     } catch (UaException e) {
-      sendToCore(certificateChain.get(0));
+      if (isCertificateRejected(e.getStatusCode().getValue())) {
+        sendToCore(certificateChain.get(0));
+      }
       throw e;
     }
 
@@ -142,5 +154,9 @@ public class CompositeCertificateValidator implements ClientCertificateValidator
     } catch (Exception ex) {
       LOG.error("Failed to report rejected certificate to API", ex);
     }
+  }
+
+  private boolean isCertificateRejected(long statusCode) {
+    return REJECTED_STATUS_CODES.contains(statusCode);
   }
 }

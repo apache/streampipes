@@ -101,6 +101,7 @@ import { GenericStorageItemComponent } from './export/export-dialog/generic-stor
 import { GenericStorageItemsComponent } from './export/export-dialog/generic-storage-items/generic-storage-items.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { CertificateConfigurationComponent } from './extensions-service-management/certificate-configuration/certificate-configuration.component';
+import { CertificateDetailsDialogComponent } from './dialog/certificate-details/certificate-details-dialog.component';
 
 @NgModule({
     imports: [
@@ -257,6 +258,7 @@ import { CertificateConfigurationComponent } from './extensions-service-manageme
         PipelineElementInstallationStatusFilter,
         PipelineElementTypeFilter,
         CertificateConfigurationComponent,
+        CertificateDetailsDialogComponent,
     ],
     providers: [
         OrderByPipe,

@@ -6,8 +6,18 @@
     matSort
 >
     <ng-container matColumnDef="issuer">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>Issuer</th>
+        <th
+            fxFlex="40"
+            fxLayoutAlign="start center"
+            mat-header-cell
+            mat-sort-header
+            *matHeaderCellDef
+        >
+            Issuer
+        </th>
         <td
+            fxFlex="40"
+            fxLayoutAlign="start center"
             mat-cell
             *matCellDef="let certificate"
             data-cy="user-accounts-table-row"
@@ -16,8 +26,18 @@
         </td>
     </ng-container>
     <ng-container matColumnDef="expires">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>Expires</th>
+        <th
+            fxFlex
+            fxLayoutAlign="start center"
+            mat-header-cell
+            mat-sort-header
+            *matHeaderCellDef
+        >
+            Expires
+        </th>
         <td
+            fxFlex
+            fxLayoutAlign="start center"
             mat-cell
             *matCellDef="let certificate"
             data-cy="user-accounts-table-row"
@@ -26,13 +46,37 @@
         </td>
     </ng-container>
     <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <th fxFlex fxLayoutAlign="end center" mat-header-cell *matHeaderCellDef>
+            <button
+                mat-icon-button
+                color="accent"
+                matTooltip="Refresh"
+                (click)="loadCertificates()"
+            >
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </th>
         <td
+            fxFlex
+            fxLayoutAlign="end center"
             mat-cell
             *matCellDef="let certificate"
             data-cy="user-accounts-table-row"
         >
             <div fxLayout="row" fxLayoutGap="10px">
+                <button
+                    color="accent"
+                    mat-button
+                    matTooltip="Certificate Details"
+                    matTooltipPosition="above"
+                    [attr.data-cy]="
+                        'certificate-details-btn-' + certificate.elementId
+                    "
+                    (click)="openDetailsDialog(certificate)"
+                >
+                    <i class="material-icons">search</i>
+                    <span>&nbsp;Details</span>
+                </button>
                 <button
                     color="accent"
                     mat-button
