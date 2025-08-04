@@ -27,6 +27,7 @@ export * from './lib/apis/adapter.service';
 export * from './lib/apis/adapter-monitoring.service';
 export * from './lib/apis/asset-management.service';
 export * from './lib/apis/compact-pipeline.service';
+export * from './lib/apis/certificate.service';
 export * from './lib/apis/chart.service';
 export * from './lib/apis/dashboard.service';
 export * from './lib/apis/datalake-rest.service';

@@ -1,6 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CertificateService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/certificate.service';
-import { Certificate, CertificateState } from '@streampipes/platform-services';
+import {
+    Certificate,
+    CertificateState,
+    CertificateService,
+} from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
