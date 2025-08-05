@@ -54,18 +54,10 @@ jobs:
       - name: Build and run streampipes
         run: docker compose up --build -d
 
-      - name: Wait 70 seconds
+      - name: Wait 80 seconds
         working-directory: ./installer/compose
-        run: sleep 70
+        run: sleep 80
 
       - name: 'UI Tests'
-        uses: cypress-io/github-action@v6
-        with:
-          install: false
-          wait-on: 'http://localhost/#/login'
-          record: true
-          wait-on-timeout: 120
-          spec: cypress/tests/**/*.spec.ts
-          working-directory: ui
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        working-directory: ./ui
+        run: npx cypress run --record --key ${{ secrets.CYPRESS_RECORD_KEY }}  --spec "cypress/tests/**/*.spec.ts"

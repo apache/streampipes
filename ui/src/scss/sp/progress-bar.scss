@@ -16,8 +16,8 @@
  *
  */
 
-@import '../_variables';
+@use '../_variables' as sp;
 
 mat-progress-bar .mat-progress-bar-buffer {
-    background: $sp-color-accent-light;
+    background: sp.$sp-color-accent-light;
 }
