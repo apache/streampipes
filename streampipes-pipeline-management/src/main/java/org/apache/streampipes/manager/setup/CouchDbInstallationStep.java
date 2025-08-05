@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.manager.setup.design.UserDesignDocument;
+import org.apache.streampipes.manager.setup.tasks.AddDataLakeMeasureViewTask;
 import org.apache.streampipes.manager.setup.tasks.AddDefaultPipelineTemplatesTask;
 import org.apache.streampipes.manager.setup.tasks.CreateAssetLinkTypeTask;
 import org.apache.streampipes.manager.setup.tasks.CreateDefaultAssetTask;
@@ -77,6 +78,7 @@ public class CouchDbInstallationStep extends InstallationStep {
     addUserView();
     addNotificationView();
     addPipelineView();
+    addDataLakeMeasureView();
   }
 
   private void addNotificationView() {
@@ -167,5 +169,9 @@ public class CouchDbInstallationStep extends InstallationStep {
     } catch (Exception e) {
       logFailure(PREPARING_USERS_TEXT, e);
     }
+  }
+
+  private void addDataLakeMeasureView() {
+    new AddDataLakeMeasureViewTask().execute();
   }
 }
