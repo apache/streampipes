@@ -28,11 +28,10 @@ import {
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
 import {
-    DashboardItem,
+    ClientDashboardItem,
     DataExplorerDataConfig,
     DataExplorerField,
     DataExplorerWidgetModel,
-    DatalakeRestService,
     DataViewQueryGeneratorService,
     SpLogMessage,
     SpQueryResult,
@@ -80,7 +79,7 @@ export abstract class BaseDataExplorerWidgetDirective<
     @Input()
     gridMode = true;
 
-    @Input() dataViewDashboardItem: DashboardItem;
+    @Input() dataViewDashboardItem: ClientDashboardItem;
     @Input() dataExplorerWidget: T;
 
     @Input()
@@ -110,8 +109,6 @@ export abstract class BaseDataExplorerWidgetDirective<
         Observable<SpQueryResult>[]
     >();
 
-    // inject services to avoid constructor overload
-    protected dataLakeRestService = inject(DatalakeRestService);
     protected widgetConfigurationService = inject(ChartConfigurationService);
     protected resizeService = inject(ResizeService);
     protected dataViewQueryGeneratorService = inject(

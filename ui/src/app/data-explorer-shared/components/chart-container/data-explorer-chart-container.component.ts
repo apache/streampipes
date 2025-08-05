@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import { GridsterItemComponent } from 'angular-gridster2';
 import {
-    DashboardItem,
+    ClientDashboardItem,
     DataExplorerWidgetModel,
     DataLakeMeasure,
     ExtendedTimeSettings,
@@ -70,7 +70,7 @@ export class DataExplorerChartContainerComponent
     @ViewChild('timeSelectorMenu')
     timeSelectorMenu: TimeRangeSelectorMenuComponent;
     @Input()
-    dashboardItem: DashboardItem;
+    dashboardItem: ClientDashboardItem;
 
     @Input()
     configuredWidget: DataExplorerWidgetModel;

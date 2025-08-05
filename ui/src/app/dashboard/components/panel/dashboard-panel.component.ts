@@ -63,6 +63,7 @@ export class DashboardPanelComponent
     dashboardLoaded = false;
     originalDashboard: Dashboard;
     dashboard: Dashboard;
+    widgets: DataExplorerWidgetModel[] = [];
 
     /**
      * This is the date range (start, end) to view the data and is set in data-explorer.ts
@@ -73,11 +74,8 @@ export class DashboardPanelComponent
     editMode = false;
     timeRangeVisible = true;
 
-    @ViewChild('dashboardGrid')
-    dashboardGrid: DashboardGridViewComponent;
-
-    @ViewChild('dashboardSlide')
-    dashboardSlide: DashboardSlideViewComponent;
+    _dashboardGrid: DashboardGridViewComponent;
+    _dashboardSlide: DashboardSlideViewComponent;
 
     hasDataExplorerWritePrivileges = false;
 
@@ -133,11 +131,14 @@ export class DashboardPanelComponent
         dashboardItem.x = 0;
         dashboardItem.y = 0;
         this.dashboard.widgets.push(dashboardItem);
-        if (this.viewMode === 'grid') {
-            this.dashboardGrid.loadWidgetConfig(dataViewElementId, true);
-        } else {
-            this.dashboardSlide.loadWidgetConfig(dataViewElementId, true);
-        }
+        setTimeout(() => {
+            if (this.viewMode === 'grid') {
+                console.log(this.dashboardGrid);
+                this.dashboardGrid.loadWidgetConfig(dataViewElementId, true);
+            } else {
+                this.dashboardSlide.loadWidgetConfig(dataViewElementId, true);
+            }
+        });
     }
 
     setShouldShowConfirm(): boolean {
@@ -207,42 +208,49 @@ export class DashboardPanelComponent
     }
 
     getDashboard(dashboardId: string, startTime: number, endTime: number) {
-        this.dashboardService.getDashboard(dashboardId).subscribe(dashboard => {
-            this.dashboard = dashboard;
-            this.originalDashboard = JSON.parse(JSON.stringify(dashboard));
-            this.breadcrumbService.updateBreadcrumb(
-                this.breadcrumbService.makeRoute(
-                    [SpDashboardRoutes.BASE],
-                    this.dashboard.name,
-                ),
-            );
-            this.viewMode =
-                this.dashboard.dashboardGeneralSettings.defaultViewMode ||
-                'grid';
-            if (
-                this.dashboard.dashboardGeneralSettings.globalTimeEnabled ===
-                undefined
-            ) {
-                this.dashboard.dashboardGeneralSettings.globalTimeEnabled =
-                    true;
-            }
-            if (!this.dashboard.dashboardTimeSettings.startTime) {
-                this.dashboard.dashboardTimeSettings =
-                    this.timeSelectionService.getDefaultTimeSettings();
-            } else {
-                this.timeSelectionService.updateTimeSettings(
-                    this.timeSelectionService.defaultQuickTimeSelections,
-                    this.dashboard.dashboardTimeSettings,
-                    new Date(),
+        this.dashboardService
+            .getCompositeDashboard(dashboardId)
+            .subscribe(compositeDashboard => {
+                this.dashboard = compositeDashboard.dashboard;
+                this.widgets = compositeDashboard.widgets;
+                this.originalDashboard = JSON.parse(
+                    JSON.stringify(compositeDashboard.dashboard),
                 );
-            }
-            this.timeSettings =
-                startTime && endTime
-                    ? this.overrideTime(+startTime, +endTime)
-                    : this.dashboard.dashboardTimeSettings;
-            this.dashboardLoaded = true;
-            this.modifyRefreshInterval(this.dashboard.dashboardLiveSettings);
-        });
+                this.breadcrumbService.updateBreadcrumb(
+                    this.breadcrumbService.makeRoute(
+                        [SpDashboardRoutes.BASE],
+                        this.dashboard.name,
+                    ),
+                );
+                this.viewMode =
+                    this.dashboard.dashboardGeneralSettings.defaultViewMode ||
+                    'grid';
+                if (
+                    this.dashboard.dashboardGeneralSettings
+                        .globalTimeEnabled === undefined
+                ) {
+                    this.dashboard.dashboardGeneralSettings.globalTimeEnabled =
+                        true;
+                }
+                if (!this.dashboard.dashboardTimeSettings.startTime) {
+                    this.dashboard.dashboardTimeSettings =
+                        this.timeSelectionService.getDefaultTimeSettings();
+                } else {
+                    this.timeSelectionService.updateTimeSettings(
+                        this.timeSelectionService.defaultQuickTimeSelections,
+                        this.dashboard.dashboardTimeSettings,
+                        new Date(),
+                    );
+                }
+                this.timeSettings =
+                    startTime && endTime
+                        ? this.overrideTime(+startTime, +endTime)
+                        : this.dashboard.dashboardTimeSettings;
+                this.dashboardLoaded = true;
+                this.modifyRefreshInterval(
+                    this.dashboard.dashboardLiveSettings,
+                );
+            });
     }
 
     overrideTime(startTime: number, endTime: number): TimeSettings {
@@ -321,5 +329,27 @@ export class DashboardPanelComponent
                 }),
             )
             .subscribe();
+    }
+
+    @ViewChild('dashboardGrid', { static: false })
+    set dashboardGrid(v: DashboardGridViewComponent) {
+        if (v) {
+            this._dashboardGrid = v;
+        }
+    }
+
+    get dashboardGrid(): DashboardGridViewComponent {
+        return this._dashboardGrid;
+    }
+
+    @ViewChild('dashboardSlide', { static: false })
+    set dashboardSlide(v: DashboardSlideViewComponent) {
+        if (v) {
+            this._dashboardSlide = v;
+        }
+    }
+
+    get dashboardSlide(): DashboardSlideViewComponent {
+        return this._dashboardSlide;
     }
 }

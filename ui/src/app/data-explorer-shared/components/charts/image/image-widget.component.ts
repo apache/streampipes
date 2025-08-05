@@ -16,11 +16,12 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import {
     DataExplorerField,
+    DatalakeRestService,
     SpQueryResult,
 } from '@streampipes/platform-services';
 import { ImageWidgetModel } from './model/image-widget.model';
@@ -45,9 +46,8 @@ export class ImageWidgetComponent
     canvasWidth;
     imagePreviewHeight;
 
-    constructor(private securePipe: SecurePipe) {
-        super();
-    }
+    private securePipe = inject(SecurePipe);
+    private dataLakeRestService = inject(DatalakeRestService);
 
     ngOnInit(): void {
         super.ngOnInit();

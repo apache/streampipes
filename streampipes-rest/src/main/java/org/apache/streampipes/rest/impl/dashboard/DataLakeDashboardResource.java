@@ -57,7 +57,7 @@ public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
     return getResourceManager().find(dashboardId);
   }
 
-  @GetMapping(path = "/{dashboardId}/full", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/{dashboardId}/composite", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority() and hasPermission(#dashboardId, 'READ')")
   public CompositeDashboardModel getCompositeDashboardModel(@PathVariable("dashboardId") String dashboardId) {
     return getResourceManager().getCompositeDashboard(dashboardId);
