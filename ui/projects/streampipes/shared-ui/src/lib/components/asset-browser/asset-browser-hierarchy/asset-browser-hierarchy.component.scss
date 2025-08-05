@@ -42,3 +42,13 @@
 .mat-tree-node:hover {
     background: var(--color-bg-1);
 }
+
+.placeholder-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.placeholder-icon .mat-icon.invisible {
+    visibility: hidden;
+}
