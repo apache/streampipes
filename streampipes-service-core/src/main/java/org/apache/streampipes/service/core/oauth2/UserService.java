@@ -20,6 +20,7 @@ package org.apache.streampipes.service.core.oauth2;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
 import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.resource.management.UserResourceManager;
@@ -31,8 +32,11 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class UserService {
@@ -74,10 +78,15 @@ public class UserService {
               String.format("Already signed up with another provider %s", user.getProvider())
           );
         }
+        applyRoles(user, oAuthConfig, attributes);
+        userStorage.updateUser(user);
       } else {
-        new UserResourceManager().registerOauthUser(toUserAccount(registrationId, principalId, email, fullName));
-        user = (UserAccount) userStorage.getUserById(principalId);
+        user = toUserAccount(registrationId, principalId, email, fullName);
+        applyRoles(user, oAuthConfig, attributes);
+        new UserResourceManager().registerOauthUser(user);
       }
+
+      user = (UserAccount) userStorage.getUserById(principalId);
       return OidcUserAccountDetails.create(user, attributes, idToken, userInfo);
     } else {
       throw new OAuth2AuthenticationProcessingException(
@@ -86,12 +95,37 @@ public class UserService {
     }
   }
 
+  private void applyRoles(UserAccount user,
+                          OAuthConfiguration oAuthConfig,
+                          Map<String, Object> attributes) {
+    if (oAuthConfig.getRoleAttributeName() != null) {
+      Object rolesObject = attributes.get(oAuthConfig.getRoleAttributeName());
+
+      if (rolesObject instanceof List<?> rolesList) {
+        Set<String> roles = extractRoleOrGroup("ROLE", rolesList);
+        Set<String> groups = convertGroup(extractRoleOrGroup("GROUP", rolesList));
+
+        user.setRoles(roles);
+        user.setGroups(groups);
+        user.setExternallyManagedRoles(true);
+      } else {
+        applyDefaultRole(user);
+      }
+    } else {
+      applyDefaultRole(user);
+    }
+  }
+
+  private void applyDefaultRole(UserAccount user) {
+    user.setRoles(Stream.of(DefaultRole.ROLE_ADMIN.toString()).collect(Collectors.toSet()));
+    user.setExternallyManagedRoles(false);
+  }
+
   private UserAccount toUserAccount(String registrationId,
                                     String principalId,
                                     String email,
                                     Object fullName) {
-    var roles = Stream.of(DefaultRole.ROLE_ADMIN.toString()).toList();
-    var user = UserAccount.from(email, null, new HashSet<>(roles));
+    var user = UserAccount.from(email, null, new HashSet<>());
     user.setPrincipalId(principalId);
     if (Objects.nonNull(fullName)) {
       user.setFullName(fullName.toString());
@@ -99,5 +133,22 @@ public class UserService {
     user.setAccountEnabled(false);
     user.setProvider(registrationId);
     return user;
+  }
+
+  private Set<String> extractRoleOrGroup(String type,
+                                         List<?> roles) {
+    return roles.stream()
+        .filter(role -> role instanceof String)
+        .filter(role -> ((String) role).startsWith(type))
+        .map(role -> (String) role)
+        .collect(Collectors.toSet());
+  }
+
+  private Set<String> convertGroup(Set<String> groups) {
+    return groups.stream()
+        .map(group -> group.split("_"))
+        .filter(parts -> parts.length == 2)
+        .map(parts -> parts[1])
+        .collect(Collectors.toSet());
   }
 }

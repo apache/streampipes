@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-02-24 11:25:02.
+// Generated using typescript-generator version 3.2.1263 on 2025-08-05 18:37:35.
 
 import { Storable } from './streampipes-model';
 
@@ -231,6 +232,7 @@ export class ServiceAccount extends Principal {
 
 export class UserAccount extends Principal {
     darkMode: boolean;
+    externallyManagedRoles: boolean;
     fullName: string;
     hideTutorial: boolean;
     password: string;
@@ -247,6 +249,7 @@ export class UserAccount extends Principal {
         const instance = target || new UserAccount();
         super.fromData(data, instance);
         instance.darkMode = data.darkMode;
+        instance.externallyManagedRoles = data.externallyManagedRoles;
         instance.fullName = data.fullName;
         instance.hideTutorial = data.hideTutorial;
         instance.password = data.password;

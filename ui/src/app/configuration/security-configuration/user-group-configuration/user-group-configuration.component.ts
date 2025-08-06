@@ -36,7 +36,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class SecurityUserGroupConfigComponent implements OnInit {
     dataSource: MatTableDataSource<Group>;
 
-    displayedColumns: string[] = ['groupName', 'edit'];
+    displayedColumns: string[] = ['groupName', 'groupId', 'edit'];
 
     constructor(
         private userGroupService: UserGroupService,

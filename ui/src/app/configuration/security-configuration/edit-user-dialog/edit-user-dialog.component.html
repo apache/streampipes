@@ -20,7 +20,7 @@
     <div class="sp-dialog-content">
         <div fxFlex="100" fxLayout="column" class="p-15">
             <sp-warning-box *ngIf="isUserAccount && isExternalProvider">
-                Some settings of externally-managed users cannot be changed.
+                Settings of externally-managed users cannot be changed.
             </sp-warning-box>
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                 <div class="general-options-panel" fxLayout="column">
@@ -123,6 +123,9 @@
                     <span class="general-options-header">Groups</span>
                     <mat-checkbox
                         *ngFor="let group of availableGroups"
+                        [disabled]="
+                            isExternalProvider && isExternallyManagedRoles
+                        "
                         [value]="group.groupId"
                         [checked]="user.groups.indexOf(group.groupId) > -1"
                         (change)="changeGroupAssignment($event)"
@@ -135,6 +138,9 @@
                     <mat-checkbox
                         *ngFor="let role of availableRoles$ | async"
                         [value]="role.elementId"
+                        [disabled]="
+                            isExternalProvider && isExternallyManagedRoles
+                        "
                         [checked]="user.roles.indexOf(role.elementId) > -1"
                         (change)="changeRoleAssignment($event)"
                         [attr.data-cy]="'role-' + role.elementId"
@@ -142,21 +148,23 @@
                         {{ role.label }}
                     </mat-checkbox>
                 </div>
-                <div fxLayout="column" class="general-options-panel">
-                    <span class="general-options-header">Account</span>
-                    <mat-checkbox
-                        formControlName="accountEnabled"
-                        data-cy="new-user-enabled"
-                    >
-                        Enabled
-                    </mat-checkbox>
-                    <mat-checkbox
-                        formControlName="accountLocked"
-                        data-cy="new-user-locked"
-                    >
-                        Locked
-                    </mat-checkbox>
-                </div>
+                @if (!isExternalProvider) {
+                    <div fxLayout="column" class="general-options-panel">
+                        <span class="general-options-header">Account</span>
+                        <mat-checkbox
+                            formControlName="accountEnabled"
+                            data-cy="new-user-enabled"
+                        >
+                            Enabled
+                        </mat-checkbox>
+                        <mat-checkbox
+                            formControlName="accountLocked"
+                            data-cy="new-user-locked"
+                        >
+                            Locked
+                        </mat-checkbox>
+                    </div>
+                }
             </form>
         </div>
     </div>
@@ -170,7 +178,10 @@
                     color="accent"
                     (click)="save()"
                     style="margin-right: 10px"
-                    [disabled]="!parentForm.valid"
+                    [disabled]="
+                        parentForm.invalid ||
+                        (isExternalProvider && isExternallyManagedRoles)
+                    "
                     data-cy="sp-element-edit-user-save"
                 >
                     <i class="material-icons">save</i><span>&nbsp;Save</span>

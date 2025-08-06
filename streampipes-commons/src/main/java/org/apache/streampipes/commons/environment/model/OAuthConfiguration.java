@@ -34,6 +34,7 @@ public class OAuthConfiguration {
   private String userInfoUri;
   private String emailAttributeName;
   private String userIdAttributeName;
+  private String roleAttributeName;
 
 
   public String getRegistrationId() {
@@ -134,6 +135,14 @@ public class OAuthConfiguration {
 
   public String getUserIdAttributeName() {
     return userIdAttributeName;
+  }
+
+  public String getRoleAttributeName() {
+    return roleAttributeName;
+  }
+
+  public void setRoleAttributeName(String roleAttributeName) {
+    this.roleAttributeName = roleAttributeName;
   }
 
   public void setUserIdAttributeName(String userIdAttributeName) {

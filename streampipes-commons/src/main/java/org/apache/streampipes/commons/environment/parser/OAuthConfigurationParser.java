@@ -75,7 +75,7 @@ public class OAuthConfigurationParser {
   ) {
     var parts = getParts(key);
     if (parts.length >= 5) {
-      // containst the identifier of the provider (e.g. azure, github, ...)
+      // contains the identifier of the provider (e.g. azure, github, ...)
       var registrationId = getRegistrationId(parts);
       var settingName = getSettingName(parts);
 
@@ -95,6 +95,7 @@ public class OAuthConfigurationParser {
         case "USER_INFO_URI" -> oAuthConfiguration.setUserInfoUri(value);
         case "EMAIL_ATTRIBUTE_NAME" -> oAuthConfiguration.setEmailAttributeName(value);
         case "USER_ID_ATTRIBUTE_NAME" -> oAuthConfiguration.setUserIdAttributeName(value);
+        case "ROLE_ATTRIBUTE_NAME" -> oAuthConfiguration.setRoleAttributeName(value);
         case "NAME" -> oAuthConfiguration.setRegistrationName(value);
         default -> LOG.warn(
             "Unknown setting {} for oauth configuration in environment variable {}",
