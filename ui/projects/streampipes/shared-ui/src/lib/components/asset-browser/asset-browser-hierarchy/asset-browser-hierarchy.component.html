@@ -23,25 +23,12 @@
         class="sp-tree"
         #tree
     >
-        <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-            <sp-asset-browser-node
-                class="w-100"
-                [node]="node"
-                [assetBrowserData]="assetBrowserData"
-                [assetSelectionMode]="assetSelectionMode"
-                [filteredAssetLinkType]="filteredAssetLinkType"
-                [resourceCount]="resourceCount"
-                [selectedAsset]="selectedAsset"
-                (selectedNodeEmitter)="selectNode($event)"
-            >
-            </sp-asset-browser-node>
-        </mat-tree-node>
-
         <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
             <div class="mat-tree-node">
                 <button
                     mat-icon-button
                     matTreeNodeToggle
+                    *ngIf="hasChild(0, node)"
                     [attr.data-cy]="'button-' + node.nodeName"
                     [attr.aria-label]="'Toggle ' + node.nodeName"
                 >
@@ -53,6 +40,12 @@
                         }}
                     </mat-icon>
                 </button>
+                <span
+                    *ngIf="!hasChild(0, node)"
+                    class="mat-icon-button placeholder-icon"
+                >
+                    <mat-icon class="invisible">chevron_right</mat-icon>
+                </span>
                 <sp-asset-browser-node
                     fxFlex="100"
                     [node]="node"
