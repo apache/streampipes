@@ -18,6 +18,7 @@
 
 @use '@angular/material' as mat;
 @use '../_variables' as sp;
+@use 'sass:map';
 
 @include mat.elevation-classes();
 @include mat.app-background();
@@ -165,9 +166,9 @@ $custom-theme-dark: mat.m2-define-light-theme(
     )
 );
 
-$primary: map-get($custom-theme-light, primary);
-$accent-dark: map-get($custom-theme-dark, accent);
-$accent: map-get($custom-theme-light, accent);
+$primary: map.get($custom-theme-light, primary);
+$accent-dark: map.get($custom-theme-dark, accent);
+$accent: map.get($custom-theme-light, accent);
 
 .small .mat-tab-label {
     height: 24px;

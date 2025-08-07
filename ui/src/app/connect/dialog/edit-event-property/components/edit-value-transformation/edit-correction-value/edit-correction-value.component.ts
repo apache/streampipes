@@ -22,7 +22,7 @@ import { EventPropertyUnion } from '@streampipes/platform-services';
 @Component({
     selector: 'sp-edit-correction-value',
     templateUrl: './edit-correction-value.component.html',
-    styleUrls: ['./edit-correction-value.component.scss'],
+    styleUrls: ['../../../edit-event-property.component.scss'],
     standalone: false,
 })
 export class EditCorrectionValueComponent {
