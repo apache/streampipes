@@ -93,7 +93,7 @@ public class LogbackRollingFileConfig implements SpringApplicationRunListener {
     rootLogger.addAppender(fileAppender);
     if (!env.getConsoleLoggingEnabled().getValueOrDefault()) {
       LOG.info("Console logging is set to disabled. Set SP_LOGGING_CONSOLE_ENABLED to true to enable console logging.");
-      rootLogger.detachAppender("CONSOLE");
+      rootLogger.detachAppender(CONSOLE_LOGGER);
     }
 
   }

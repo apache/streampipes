@@ -146,7 +146,7 @@ public enum Envs {
   SP_LOGGING_FILE_DIR("SP_LOGGING_FILE_DIR", "logs"),
   SP_LOGGING_FILE_PATTERN(
       "SP_LOGGING_FILE_PATTERN",
-      "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n}"
+      "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
   );
 
 
