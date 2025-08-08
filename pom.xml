@@ -48,6 +48,7 @@
         <classindex.version>3.9</classindex.version>
         <checker-qual.version>3.43.0</checker-qual.version>
         <commons-codec.version>1.17.0</commons-codec.version>
+        <commons-csv.version>1.14.1</commons-csv.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-compress.version>1.27.1</commons-compress.version>
         <commons-io.version>2.17.0</commons-io.version>
@@ -179,9 +180,14 @@
                 <version>${commons-codec.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>${commons-collections.version}</version>
+                  <groupId>commons-collections</groupId>
+                  <artifactId>commons-collections</artifactId>
+                  <version>${commons-collections.version}</version>
+              </dependency>
+            <dependency>
+              <groupId>org.apache.commons</groupId>
+              <artifactId>commons-csv</artifactId>
+              <version>${commons-csv.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
