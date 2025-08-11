@@ -17,7 +17,7 @@
  */
 
 gridster.custom-gridster-style ::ng-deep {
-    background: var(--color-bg-0);
+    background: var(--color-bg-1);
 }
 
 gridster.custom-gridster-style.edit ::ng-deep {
@@ -40,8 +40,9 @@ gridster.scrollVertical ::ng-deep {
     border-right: 1px solid var(--color-bg-1);
 }
 
-.shadow {
-    box-shadow:
-        rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-        rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+.widget-outer {
+    //box-shadow:
+    //    rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+    //    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    border: 1px solid var(--color-bg-2);
 }

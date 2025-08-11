@@ -18,7 +18,7 @@
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, of, Subscription, timer } from 'rxjs';
-import { DashboardGridViewComponent } from '../chart-view/grid-view/dashboard-grid-view.component';
+import { DashboardGridViewComponent } from '../../../dashboard-shared/components/chart-view/grid-view/dashboard-grid-view.component';
 import {
     ClientDashboardItem,
     Dashboard,
@@ -36,7 +36,7 @@ import {
     ActivatedRouteSnapshot,
     RouterStateSnapshot,
 } from '@angular/router';
-import { DashboardSlideViewComponent } from '../chart-view/slide-view/dashboard-slide-view.component';
+import { DashboardSlideViewComponent } from '../../../dashboard-shared/components/chart-view/slide-view/dashboard-slide-view.component';
 import {
     ConfirmDialogComponent,
     CurrentUserService,
@@ -133,7 +133,6 @@ export class DashboardPanelComponent
         this.dashboard.widgets.push(dashboardItem);
         setTimeout(() => {
             if (this.viewMode === 'grid') {
-                console.log(this.dashboardGrid);
                 this.dashboardGrid.loadWidgetConfig(dataViewElementId, true);
             } else {
                 this.dashboardSlide.loadWidgetConfig(dataViewElementId, true);

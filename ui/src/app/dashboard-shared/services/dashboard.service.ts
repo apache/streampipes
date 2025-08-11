@@ -17,7 +17,7 @@
  */
 
 import { Dashboard } from '@streampipes/platform-services';
-import { EditDashboardDialogComponent } from '../dialogs/edit-dashboard/edit-dashboard-dialog.component';
+import { EditDashboardDialogComponent } from '../../dashboard/dialogs/edit-dashboard/edit-dashboard-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';

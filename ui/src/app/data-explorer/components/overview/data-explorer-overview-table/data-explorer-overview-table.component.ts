@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { SpDataExplorerOverviewDirective } from '../data-explorer-overview.directive';
 import { MatTableDataSource } from '@angular/material/table';
 import {
@@ -34,6 +34,7 @@ import { DataExplorerRoutingService } from '../../../../data-explorer-shared/ser
 import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { DataExplorerDashboardService } from '../../../../dashboard-shared/services/dashboard.service';
 
 @Component({
     selector: 'sp-data-explorer-overview-table',
@@ -50,19 +51,11 @@ export class SpDataExplorerDataViewOverviewComponent extends SpDataExplorerOverv
     @Output()
     resourceCountEmitter: EventEmitter<number> = new EventEmitter();
 
-    constructor(
-        private dataViewService: ChartService,
-        private dataExplorerDashboardService: DataExplorerSharedService,
-        public dialogService: DialogService,
-        authService: AuthService,
-        currentUserService: CurrentUserService,
-        routingService: DataExplorerRoutingService,
-        private dialog: MatDialog,
-        private translateService: TranslateService,
-        protected dateFormatService: DateFormatService,
-    ) {
-        super(dialogService, authService, currentUserService, routingService);
-    }
+    private dataViewService = inject(ChartService);
+    private dataExplorerDashboardService = inject(DataExplorerSharedService);
+    private dialog = inject(MatDialog);
+    private translateService = inject(TranslateService);
+    private dateFormatService = inject(DateFormatService);
 
     afterInit(): void {
         this.displayedColumns = [

@@ -27,7 +27,7 @@ import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { SpDashboardRoutes } from '../../dashboard.routes';
 import { Dashboard } from '@streampipes/platform-services';
-import { DataExplorerDashboardService } from '../../services/dashboard.service';
+import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { DashboardOverviewTableComponent } from './dashboard-overview-table/dashboard-overview-table.component';
 import { TranslateService } from '@ngx-translate/core';
 

@@ -24,13 +24,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { FormsModule } from '@angular/forms';
 import { ColorPickerComponent } from 'ngx-color-picker';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { DashboardOverviewComponent } from './components/overview/dashboard-overview.component';
 import { CdkTableModule } from '@angular/cdk/table';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { ServicesModule } from '../services/services.module';
-import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -59,16 +57,9 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 import { DataExplorerSharedModule } from '../data-explorer-shared/data-explorer-shared.module';
-import { DashboardPanelComponent } from './components/panel/dashboard-panel.component';
-import { DataExplorerPanelCanDeactivateGuard } from '../data-explorer-shared/services/data-explorer-panel.can-deactivate.guard';
-import { DashboardToolbarComponent } from './components/panel/dashboard-toolbar/dashboard-toolbar.component';
-import { ChartSelectionPanelComponent } from './components/panel/chart-selection-panel/chart-selection-panel.component';
-import { ChartPreviewComponent } from './components/panel/chart-selection-panel/chart-selection/chart-preview/chart-preview.component';
-import { ChartSelectionComponent } from './components/panel/chart-selection-panel/chart-selection/chart-selection.component';
-import { EditDashboardDialogComponent } from './dialogs/edit-dashboard/edit-dashboard-dialog.component';
-import { DashboardOverviewTableComponent } from './components/overview/dashboard-overview-table/dashboard-overview-table.component';
+import { DashboardGridViewComponent } from './components/chart-view/grid-view/dashboard-grid-view.component';
+import { DashboardSlideViewComponent } from './components/chart-view/slide-view/dashboard-slide-view.component';
 import { TranslateModule } from '@ngx-translate/core';
-import { DashboardSharedModule } from '../dashboard-shared/dashboard-shared.module';
 
 @NgModule({
     imports: [
@@ -112,43 +103,12 @@ import { DashboardSharedModule } from '../dashboard-shared/dashboard-shared.modu
         ServicesModule,
         SharedUiModule,
         DataExplorerSharedModule,
-        DashboardSharedModule,
         TranslateModule.forChild(),
-        RouterModule.forChild([
-            {
-                path: '',
-                children: [
-                    {
-                        path: '',
-                        component: DashboardOverviewComponent,
-                    },
-                    {
-                        path: ':id',
-                        component: DashboardPanelComponent,
-                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
-                    },
-                    {
-                        path: ':id/:startTime/:endTime',
-                        component: DashboardPanelComponent,
-                        canDeactivate: [DataExplorerPanelCanDeactivateGuard],
-                    },
-                ],
-            },
-        ]),
     ],
-    declarations: [
-        DashboardOverviewComponent,
-        DashboardPanelComponent,
-        DashboardToolbarComponent,
-        ChartSelectionPanelComponent,
-        ChartPreviewComponent,
-        ChartSelectionComponent,
-        EditDashboardDialogComponent,
-        DashboardOverviewTableComponent,
-    ],
+    declarations: [DashboardGridViewComponent, DashboardSlideViewComponent],
     providers: [],
-    exports: [],
+    exports: [DashboardGridViewComponent, DashboardSlideViewComponent],
 })
-export class DashboardModule {
+export class DashboardSharedModule {
     constructor() {}
 }

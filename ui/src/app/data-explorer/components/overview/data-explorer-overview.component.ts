@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import {
     CurrentUserService,
     DialogService,
@@ -41,15 +41,7 @@ export class DataExplorerOverviewComponent extends SpDataExplorerOverviewDirecti
     @ViewChild(SpDataExplorerDataViewOverviewComponent)
     chartsOverview: SpDataExplorerDataViewOverviewComponent;
 
-    constructor(
-        public dialogService: DialogService,
-        private breadcrumbService: SpBreadcrumbService,
-        authService: AuthService,
-        currentUserService: CurrentUserService,
-        routingService: DataExplorerRoutingService,
-    ) {
-        super(dialogService, authService, currentUserService, routingService);
-    }
+    private breadcrumbService = inject(SpBreadcrumbService);
 
     afterInit(): void {
         this.breadcrumbService.updateBreadcrumb(

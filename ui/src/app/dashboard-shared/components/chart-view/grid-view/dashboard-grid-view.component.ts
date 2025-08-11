@@ -18,13 +18,18 @@
 
 import {
     Component,
+    Input,
     OnChanges,
     OnInit,
     QueryList,
     SimpleChanges,
     ViewChildren,
 } from '@angular/core';
-import { GridsterItemComponent, GridType } from 'angular-gridster2';
+import {
+    DisplayGrid,
+    GridsterItemComponent,
+    GridType,
+} from 'angular-gridster2';
 import { GridsterInfo } from '../../../../data-explorer-shared/models/gridster-info.model';
 import { IDataViewDashboardConfig } from '../../../../data-explorer-shared/models/dataview-dashboard.model';
 import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
@@ -39,6 +44,9 @@ export class DashboardGridViewComponent
     extends AbstractChartViewDirective
     implements OnInit, OnChanges
 {
+    @Input()
+    kioskMode = false;
+
     options: IDataViewDashboardConfig;
     loaded = false;
 
@@ -56,8 +64,10 @@ export class DashboardGridViewComponent
             minRows: 4,
             fixedRowHeight: 100,
             fixedColWidth: 100,
-            margin: 5,
-            displayGrid: this.editMode ? 'always' : 'none',
+            margin: 3,
+            displayGrid: this.editMode
+                ? DisplayGrid.OnDragAndResize
+                : DisplayGrid.None,
             resizable: { enabled: this.editMode },
             itemResizeCallback: (item, itemComponent) => {
                 this.resizeService.notify({

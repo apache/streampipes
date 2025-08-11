@@ -94,6 +94,9 @@ export class DataExplorerChartContainerComponent
     gridMode = true;
 
     @Input()
+    kioskMode = false;
+
+    @Input()
     widgetIndex: number;
 
     /**
@@ -252,6 +255,7 @@ export class DataExplorerChartContainerComponent
         this.componentRef.instance.gridsterItemComponent =
             this.gridsterItemComponent;
         this.componentRef.instance.editMode = this.editMode;
+        this.componentRef.instance.kioskMode = this.kioskMode;
         this.componentRef.instance.dataViewDashboardItem = this.dashboardItem;
         this.componentRef.instance.dataExplorerWidget = this.configuredWidget;
         this.componentRef.instance.previewMode = this.previewMode;
