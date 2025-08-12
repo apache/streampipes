@@ -1,5 +1,6 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
+    CompositeDashboard,
     Dashboard,
     DashboardService,
     DataExplorerWidgetModel,
@@ -24,18 +25,29 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
     dashboard: Dashboard;
     widgets: DataExplorerWidgetModel[] = [];
     refresh$: Subscription;
+    eTag: string;
 
     ngOnInit() {
         const dashboardId = this.route.snapshot.params.dashboardId;
         this.dashboardService
             .getCompositeDashboard(dashboardId)
-            .subscribe(cd => {
-                this.dashboard = cd.dashboard;
-                this.widgets = cd.widgets;
-                if (this.dashboard.dashboardLiveSettings.refreshModeActive) {
-                    this.createQuerySubscription();
+            .subscribe(res => {
+                if (res.ok) {
+                    const cd = res.body;
+                    const eTag = res.headers.get('ETag');
+                    this.initDashboard(cd, eTag);
                 }
             });
+    }
+
+    initDashboard(cd: CompositeDashboard, eTag: string): void {
+        this.dashboard = cd.dashboard;
+        this.widgets = cd.widgets;
+        this.eTag = eTag;
+        if (this.dashboard.dashboardLiveSettings.refreshModeActive) {
+            this.createQuerySubscription();
+            this.createRefreshListener();
+        }
     }
 
     createQuerySubscription() {
@@ -56,6 +68,30 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
                 }),
             )
             .subscribe();
+    }
+
+    createRefreshListener(): void {
+        this.dashboardService
+            .getCompositeDashboard(this.dashboard.elementId, this.eTag) // this should send If-None-Match
+            .subscribe({
+                next: res => {
+                    if (res.status === 200) {
+                        const newEtag = res.headers.get('ETag');
+                        if (newEtag) {
+                            this.eTag = newEtag;
+                        }
+                        this.dashboard = undefined;
+                        this.refresh$?.unsubscribe();
+                        setTimeout(() => {
+                            this.initDashboard(res.body, newEtag);
+                        });
+                    }
+                    setTimeout(() => this.createRefreshListener(), 5000);
+                },
+                error: err => {
+                    setTimeout(() => this.createRefreshListener(), 5000);
+                },
+            });
     }
 
     updateDateRange(timeSettings: TimeSettings) {

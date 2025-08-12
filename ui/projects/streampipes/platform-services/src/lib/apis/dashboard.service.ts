@@ -16,7 +16,7 @@
  *
  */
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SharedDatalakeRestService } from './shared-dashboard.service';
@@ -42,9 +42,17 @@ export class DashboardService {
         return this.http.get<Dashboard>(`${this.dashboardUrl}/${dashboardId}`);
     }
 
-    getCompositeDashboard(dashboardId: string): Observable<CompositeDashboard> {
+    getCompositeDashboard(
+        dashboardId: string,
+        eTag = undefined,
+    ): Observable<HttpResponse<any>> {
+        const headers = eTag ? { 'If-None-Match': eTag } : {};
         return this.http.get<CompositeDashboard>(
             `${this.dashboardUrl}/${dashboardId}/composite`,
+            {
+                headers,
+                observe: 'response',
+            },
         );
     }
 

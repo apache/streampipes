@@ -125,7 +125,7 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
                 ),
             };
             if (this.kioskMode) {
-                ['legend', 'toolbox', 'visualMap'].forEach(key => {
+                ['toolbox', 'visualMap'].forEach(key => {
                     const item = this.option[key];
                     if (item) {
                         (Array.isArray(item) ? item : [item]).forEach(
@@ -141,7 +141,6 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
                         bottom: 60,
                     },
                 });
-                console.log(this.option);
             }
         } else {
             this.showInvalidConfiguration = true;

@@ -209,12 +209,15 @@ export class DashboardPanelComponent
     getDashboard(dashboardId: string, startTime: number, endTime: number) {
         this.dashboardService
             .getCompositeDashboard(dashboardId)
-            .subscribe(compositeDashboard => {
-                this.dashboard = compositeDashboard.dashboard;
-                this.widgets = compositeDashboard.widgets;
-                this.originalDashboard = JSON.parse(
-                    JSON.stringify(compositeDashboard.dashboard),
-                );
+            .subscribe(resp => {
+                if (resp.ok) {
+                    const compositeDashboard = resp.body;
+                    this.dashboard = compositeDashboard.dashboard;
+                    this.widgets = compositeDashboard.widgets;
+                    this.originalDashboard = JSON.parse(
+                        JSON.stringify(compositeDashboard.dashboard),
+                    );
+                }
                 this.breadcrumbService.updateBreadcrumb(
                     this.breadcrumbService.makeRoute(
                         [SpDashboardRoutes.BASE],

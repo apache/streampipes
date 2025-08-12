@@ -35,7 +35,7 @@
                 class="widget-outer"
             >
                 @if (widgetsAvailable && configuredWidgets.has(item.id)) {
-                    <sp-data-explorer-dashboard-widget
+                    <sp-data-explorer-chart-container
                         [ngStyle]="{
                             height: gridsterItemComponent.height - 13 + 'px'
                         }"
@@ -53,7 +53,7 @@
                         [gridMode]="true"
                         [widgetIndex]="i"
                         [gridsterItemComponent]="gridsterItemComponent"
-                    ></sp-data-explorer-dashboard-widget>
+                    ></sp-data-explorer-chart-container>
                 }
             </gridster-item>
         </ng-container>

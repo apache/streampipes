@@ -58,7 +58,7 @@ import { DataExplorerSharedService } from '../../services/data-explorer-shared.s
 import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
-    selector: 'sp-data-explorer-dashboard-widget',
+    selector: 'sp-data-explorer-chart-container',
     templateUrl: './data-explorer-chart-container.component.html',
     styleUrls: ['./data-explorer-chart-container.component.scss'],
     standalone: false,
