@@ -16,7 +16,7 @@
  *
  */
 
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SharedDatalakeRestService } from './shared-dashboard.service';
@@ -24,6 +24,7 @@ import {
     CompositeDashboard,
     Dashboard,
 } from '../model/dashboard/dashboard.model';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({
     providedIn: 'root',
@@ -52,6 +53,7 @@ export class DashboardService {
             {
                 headers,
                 observe: 'response',
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
             },
         );
     }
