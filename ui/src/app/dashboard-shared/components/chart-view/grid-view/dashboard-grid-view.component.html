@@ -27,7 +27,7 @@
     [ngClass]="editMode ? 'edit' : ''"
     class="custom-gridster-style"
 >
-    @for (item of dashboard.widgets; let i = $index; track $index) {
+    @for (item of dashboard.widgets; let i = $index; track item.widgetId) {
         <ng-container>
             <gridster-item
                 [item]="item"

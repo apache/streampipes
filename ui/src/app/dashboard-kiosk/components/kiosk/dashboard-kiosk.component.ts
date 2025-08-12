@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of, Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { TimeSelectionService } from '@streampipes/shared-ui';
+import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 
 @Component({
     selector: 'sp-dashboard-kiosk',
@@ -21,6 +22,7 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
     private route = inject(ActivatedRoute);
     private dashboardService = inject(DashboardService);
     private timeSelectionService = inject(TimeSelectionService);
+    private dataExplorerDashboardService = inject(DataExplorerDashboardService);
 
     dashboard: Dashboard;
     widgets: DataExplorerWidgetModel[] = [];
@@ -34,6 +36,10 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
             .subscribe(res => {
                 if (res.ok) {
                     const cd = res.body;
+                    cd.dashboard.widgets.forEach(w => {
+                        w.widgetId ??=
+                            this.dataExplorerDashboardService.makeUniqueWidgetId();
+                    });
                     const eTag = res.headers.get('ETag');
                     this.initDashboard(cd, eTag);
                 }
