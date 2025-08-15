@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.adapter;
 
+import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
@@ -51,7 +52,8 @@ public class OpcUaSchemaProvider {
    * @throws ParseException
    */
   public GuessSchema getSchema(OpcUaClientProvider clientProvider,
-                               IAdapterParameterExtractor extractor)
+                               IAdapterParameterExtractor extractor,
+                               IStreamPipesClient streamPipesClient)
       throws AdapterException, ParseException {
     var builder = GuessSchemaBuilder.create();
     EventSchema eventSchema = new EventSchema();
@@ -60,7 +62,8 @@ public class OpcUaSchemaProvider {
     List<EventProperty> allProperties = new ArrayList<>();
 
     var opcUaConfig = SpOpcUaConfigExtractor.extractAdapterConfig(
-        extractor.getStaticPropertyExtractor()
+        extractor.getStaticPropertyExtractor(),
+        streamPipesClient
     );
     try {
       var connectedClient = clientProvider.getClient(opcUaConfig);

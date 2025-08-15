@@ -65,11 +65,25 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
                 scale: true,
                 min: Math.floor(stats.minX - 1),
                 max: Math.ceil(stats.maxX + 1),
+                name:
+                    widgetConfig.visualizationConfig.labelX ||
+                    `${xField.fullDbName}${xField.measurementUnitResourceId ? ` (${xField.measurementUnitResourceId.split('#').pop()})` : ''}`,
+                nameLocation: 'center',
+                nameTextStyle: {
+                    fontSize: 20,
+                },
             },
             yAxis: {
                 scale: true,
                 min: Math.floor(stats.minY - 1),
                 max: Math.ceil(stats.maxY + 1),
+                name:
+                    widgetConfig.visualizationConfig.labelY ||
+                    `${yField.fullDbName}${yField.measurementUnitResourceId ? ` (${yField.measurementUnitResourceId.split('#').pop()})` : ''}`,
+                nameLocation: 'center',
+                nameTextStyle: {
+                    fontSize: 20,
+                },
             },
             dataset: dataset.rawDataset,
             visualMap: {

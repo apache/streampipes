@@ -20,8 +20,9 @@ package org.apache.streampipes.rest.impl.dashboard;
 
 
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
+import org.apache.streampipes.model.dashboard.CompositeDashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.resource.management.AbstractCRUDResourceManager;
+import org.apache.streampipes.resource.management.DataExplorerResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import org.springframework.http.MediaType;
@@ -56,6 +57,12 @@ public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
     return getResourceManager().find(dashboardId);
   }
 
+  @GetMapping(path = "/{dashboardId}/composite", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority() and hasPermission(#dashboardId, 'READ')")
+  public CompositeDashboardModel getCompositeDashboardModel(@PathVariable("dashboardId") String dashboardId) {
+    return getResourceManager().getCompositeDashboard(dashboardId);
+  }
+
   @PutMapping(path = "/{dashboardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dashboardModel.couchDbId, 'WRITE')")
   public ResponseEntity<DashboardModel> modifyDashboard(@RequestBody DashboardModel dashboardModel) {
@@ -77,7 +84,7 @@ public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
     return ok();
   }
 
-  private AbstractCRUDResourceManager<DashboardModel> getResourceManager() {
+  private DataExplorerResourceManager getResourceManager() {
     return getSpResourceManager().manageDataExplorer();
   }
 

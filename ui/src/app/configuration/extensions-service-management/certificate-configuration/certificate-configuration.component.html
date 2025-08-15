@@ -1,0 +1,135 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-table
+    *ngIf="dataSource"
+    data-cy="security-user-config"
+    [dataSource]="dataSource"
+    [columns]="displayedColumns"
+    matSort
+>
+    <ng-container matColumnDef="issuer">
+        <th
+            fxFlex="40"
+            fxLayoutAlign="start center"
+            mat-header-cell
+            mat-sort-header
+            *matHeaderCellDef
+        >
+            Issuer
+        </th>
+        <td
+            fxFlex="40"
+            fxLayoutAlign="start center"
+            mat-cell
+            *matCellDef="let certificate"
+            data-cy="user-accounts-table-row"
+        >
+            <b>{{ certificate.issuerDn }}</b>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="expires">
+        <th
+            fxFlex
+            fxLayoutAlign="start center"
+            mat-header-cell
+            mat-sort-header
+            *matHeaderCellDef
+        >
+            Expires
+        </th>
+        <td
+            fxFlex
+            fxLayoutAlign="start center"
+            mat-cell
+            *matCellDef="let certificate"
+            data-cy="user-accounts-table-row"
+        >
+            <b>{{ certificate.notAfter }}</b>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+        <th fxFlex fxLayoutAlign="end center" mat-header-cell *matHeaderCellDef>
+            <button
+                mat-icon-button
+                color="accent"
+                matTooltip="Refresh"
+                (click)="loadCertificates()"
+            >
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </th>
+        <td
+            fxFlex
+            fxLayoutAlign="end center"
+            mat-cell
+            *matCellDef="let certificate"
+            data-cy="user-accounts-table-row"
+        >
+            <div fxLayout="row" fxLayoutGap="10px">
+                <button
+                    color="accent"
+                    mat-button
+                    matTooltip="Certificate Details"
+                    matTooltipPosition="above"
+                    [attr.data-cy]="
+                        'certificate-details-btn-' + certificate.elementId
+                    "
+                    (click)="openDetailsDialog(certificate)"
+                >
+                    <i class="material-icons">search</i>
+                    <span>&nbsp;Details</span>
+                </button>
+                <button
+                    color="accent"
+                    mat-button
+                    mat-raised-button
+                    (click)="
+                        certificate.state === 'TRUSTED'
+                            ? onStateChange(certificate, 'REJECTED')
+                            : onStateChange(certificate, 'TRUSTED')
+                    "
+                    data-cy="trust-certificate-button"
+                >
+                    <i class="material-icons">{{
+                        certificate.state === 'TRUSTED' ? 'cancel' : 'check'
+                    }}</i>
+                    <span
+                        >&nbsp;{{
+                            certificate.state === 'TRUSTED' ? 'Reject' : 'Trust'
+                        }}</span
+                    >
+                </button>
+                <button
+                    color="warn"
+                    mat-button
+                    mat-raised-button
+                    matTooltip="Delete certificate"
+                    matTooltipPosition="above"
+                    [attr.data-cy]="
+                        'certificate-delete-btn-' + certificate.elementId
+                    "
+                    (click)="onDelete(certificate)"
+                >
+                    <i class="material-icons">delete</i>
+                    <span>&nbsp;Delete</span>
+                </button>
+            </div>
+        </td>
+    </ng-container>
+</sp-table>

@@ -18,30 +18,42 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.config.security;
 
+import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
+import org.apache.streampipes.model.opcua.Certificate;
 
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
-import org.eclipse.milo.opcua.stack.client.security.DefaultClientCertificateValidator;
 import org.eclipse.milo.opcua.stack.core.security.DefaultTrustListManager;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.MessageSecurityMode;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Base64;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SecurityConfig {
 
   private final MessageSecurityMode securityMode;
   private final SecurityPolicy securityPolicy;
+  private final IStreamPipesClient streamPipesClient;
 
   public SecurityConfig(MessageSecurityMode securityMode,
-                        SecurityPolicy securityPolicy) {
+                        SecurityPolicy securityPolicy,
+                        IStreamPipesClient streamPipesClient) {
     this.securityMode = securityMode;
     this.securityPolicy = securityPolicy;
+    this.streamPipesClient = streamPipesClient;
   }
 
   public void configureSecurityPolicy(String opcServerUrl,
@@ -72,12 +84,20 @@ public class SecurityConfig {
         var securityDir = Paths.get(env.getOpcUaSecurityDir().getValueOrDefault());
         var trustListManager = new DefaultTrustListManager(securityDir.resolve("pki").toFile());
 
-        var certificateValidator = new DefaultClientCertificateValidator(trustListManager);
+        var loadedCerts = new AtomicReference<>(fetchTrustedCertsFromRest());
+
+        var compositeValidator = new CompositeCertificateValidator(
+            trustListManager,
+            loadedCerts.get(),
+            List.of(),
+            streamPipesClient
+        );
+
         var loader = new KeyStoreLoader().load(env, securityDir);
         builder.setKeyPair(loader.getClientKeyPair());
         builder.setCertificate(loader.getClientCertificate());
         builder.setCertificateChain(loader.getClientCertificateChain());
-        builder.setCertificateValidator(certificateValidator);
+        builder.setCertificateValidator(compositeValidator);
       } catch (Exception e) {
         throw new SpConfigurationException(
             "Failed to load keystore - check that all required environment variables "
@@ -106,6 +126,29 @@ public class SecurityConfig {
         original.getUserIdentityTokens(),
         original.getTransportProfileUri(),
         original.getSecurityLevel());
+  }
+
+  private List<X509Certificate> fetchTrustedCertsFromRest() throws SpConfigurationException {
+    try {
+      var response = streamPipesClient.customRequest().getList(OpcUaUtils.getCoreTrustedCertificatePath(), Certificate.class);
+      return response
+          .stream()
+          .map(res -> {
+            byte[] derBytes = Base64.getDecoder().decode(res.getCertificateDerBase64());
+            CertificateFactory certFactory = null;
+            try {
+              certFactory = CertificateFactory.getInstance("X.509");
+              try (ByteArrayInputStream in = new ByteArrayInputStream(derBytes)) {
+                return (X509Certificate) certFactory.generateCertificate(in);
+              }
+            } catch (CertificateException | IOException e) {
+              throw new RuntimeException(e);
+            }
+          })
+          .toList();
+    } catch (Exception e) {
+      throw new SpConfigurationException("Could not fetch trusted certificates from REST API", e);
+    }
   }
 
   @Override

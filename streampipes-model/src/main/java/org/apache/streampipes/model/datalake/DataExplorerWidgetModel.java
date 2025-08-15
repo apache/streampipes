@@ -45,10 +45,6 @@ public class DataExplorerWidgetModel extends DashboardEntity {
   @JsonSerialize(using = CustomMapSerializer.class, as = Map.class)
   private Map<String, Object> timeSettings;
 
-  private String pipelineId;
-  private String measureName;
-
-
   public DataExplorerWidgetModel() {
     super();
     this.baseAppearanceConfig = new HashMap<>();
@@ -95,22 +91,6 @@ public class DataExplorerWidgetModel extends DashboardEntity {
 
   public void setDataConfig(Map<String, Object> dataConfig) {
     this.dataConfig = dataConfig;
-  }
-
-  public String getPipelineId() {
-    return pipelineId;
-  }
-
-  public void setPipelineId(String pipelineId) {
-    this.pipelineId = pipelineId;
-  }
-
-  public String getMeasureName() {
-    return measureName;
-  }
-
-  public void setMeasureName(String measureName) {
-    this.measureName = measureName;
   }
 
   public Map<String, Object> getTimeSettings() {

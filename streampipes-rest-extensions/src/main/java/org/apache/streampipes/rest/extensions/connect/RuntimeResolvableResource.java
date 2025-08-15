@@ -68,7 +68,7 @@ public class RuntimeResolvableResource extends AbstractSharedRestInterface {
             "This element does not support dynamic options - is the pipeline element description up to date?");
       }
     } catch (SpConfigurationException e) {
-      LOG.warn("Error when fetching runtime configurations: {}", e.getMessage(), e);
+      LOG.warn("Error when fetching runtime configurations: {}", e.getMessage());
       return ResponseEntity
           .status(HttpStatus.BAD_REQUEST)
           .body(e);

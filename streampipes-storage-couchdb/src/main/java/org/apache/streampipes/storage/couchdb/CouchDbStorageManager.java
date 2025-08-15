@@ -28,9 +28,11 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.file.FileMetadata;
+import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
 import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.api.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.IDataSinkStorage;
 import org.apache.streampipes.storage.api.IDataStreamStorage;
@@ -48,6 +50,7 @@ import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.CoreConfigurationStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.DataLakeMeasureStorage;
 import org.apache.streampipes.storage.couchdb.impl.DataProcessorStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataSinkStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.DataStreamStorageImpl;
@@ -115,9 +118,9 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<DataLakeMeasure> getDataLakeStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("data-lake"),
+  public IDataLakeMeasureStorage getDataLakeStorage() {
+    return new DataLakeMeasureStorage(
+        () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
         DataLakeMeasure.class
     );
   }
@@ -235,6 +238,14 @@ public enum CouchDbStorageManager implements INoSqlStorage {
     return new DefaultCrudStorage<>(
         () -> Utils.getCouchDbGsonClient("pipeline-templates"),
         CompactPipelineTemplate.class
+    );
+  }
+
+  @Override
+  public CRUDStorage<Certificate> getCertificateStorage() {
+    return new DefaultCrudStorage<>(
+        () -> Utils.getCouchDbGsonClient("certificates"),
+        Certificate.class
     );
   }
 }

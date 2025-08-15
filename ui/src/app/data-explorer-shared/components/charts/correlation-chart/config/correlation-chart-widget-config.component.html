@@ -46,6 +46,24 @@
                 fxLayoutGap="10px"
                 fxLayoutAlign="start center"
             >
+                <small>{{ 'X Label' | translate }}</small>
+                <mat-form-field appearance="outline" color="accent" fxFlex>
+                    <input
+                        matInput
+                        type="text"
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig.labelX
+                        "
+                        (ngModelChange)="triggerViewRefresh()"
+                    />
+                </mat-form-field>
+            </div>
+            <div
+                fxLayout="row"
+                fxFlex="100"
+                fxLayoutGap="10px"
+                fxLayoutAlign="start center"
+            >
                 <small>{{ 'Y' | translate }}</small>
                 <sp-select-single-property-config
                     fxFlex
@@ -57,6 +75,24 @@
                     (changeSelectedProperty)="updateSecondField($event)"
                 >
                 </sp-select-single-property-config>
+            </div>
+            <div
+                fxLayout="row"
+                fxFlex="100"
+                fxLayoutGap="10px"
+                fxLayoutAlign="start center"
+            >
+                <small>{{ 'Y Label' | translate }}</small>
+                <mat-form-field appearance="outline" color="accent" fxFlex>
+                    <input
+                        matInput
+                        type="text"
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig.labelY
+                        "
+                        (ngModelChange)="triggerViewRefresh()"
+                    />
+                </mat-form-field>
             </div>
         </div>
     </sp-configuration-box>

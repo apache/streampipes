@@ -204,7 +204,10 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     this.opcUaAdapterConfig =
-        SpOpcUaConfigExtractor.extractAdapterConfig(extractor.getStaticPropertyExtractor());
+        SpOpcUaConfigExtractor.extractAdapterConfig(
+            extractor.getStaticPropertyExtractor(),
+            adapterRuntimeContext.getStreamPipesClient()
+        );
     this.collector = collector;
     this.prepareAdapter(extractor);
     this.numberOfEventProperties =
@@ -252,6 +255,6 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   @Override
   public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
                                        IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    return new OpcUaSchemaProvider().getSchema(clientProvider, extractor);
+    return new OpcUaSchemaProvider().getSchema(clientProvider, extractor, adapterGuessSchemaContext.getStreamPipesClient());
   }
 }

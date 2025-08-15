@@ -16,7 +16,7 @@
  *
  */
 
-import { Directive, EventEmitter, Input, Output } from '@angular/core';
+import { Directive, EventEmitter, inject, Input, Output } from '@angular/core';
 import {
     ChartService,
     Dashboard,
@@ -25,13 +25,19 @@ import {
     TimeSettings,
 } from '@streampipes/platform-services';
 import { ResizeService } from '../../../data-explorer-shared/services/resize.service';
-import { of, zip } from 'rxjs';
 import { DataExplorerChartRegistry } from '../../../data-explorer-shared/registry/data-explorer-chart-registry';
-import { catchError } from 'rxjs/operators';
 
 @Directive()
 export abstract class AbstractChartViewDirective {
-    _dashboard: Dashboard;
+    protected resizeService = inject(ResizeService);
+    protected dataViewDataExplorerService = inject(ChartService);
+    protected widgetRegistryService = inject(DataExplorerChartRegistry);
+
+    @Input()
+    dashboard: Dashboard;
+
+    @Input()
+    widgets: DataExplorerWidgetModel[] = [];
 
     @Input()
     editMode: boolean;
@@ -61,39 +67,20 @@ export abstract class AbstractChartViewDirective {
     @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> =
         new EventEmitter<DataExplorerWidgetModel>();
 
-    constructor(
-        protected resizeService: ResizeService,
-        protected dataViewDataExplorerService: ChartService,
-        protected widgetRegistryService: DataExplorerChartRegistry,
-    ) {}
-
     startEditMode(value: DataExplorerWidgetModel) {
         this.startEditModeEmitter.emit(value);
         this.currentlyConfiguredWidgetId = value.elementId;
     }
 
-    @Input() set dashboard(dashboard: Dashboard) {
-        this._dashboard = dashboard;
-        this.loadWidgetConfigs();
-    }
-
-    get dashboard() {
-        return this._dashboard;
-    }
-
     loadWidgetConfigs() {
-        const observables = this.dashboard.widgets.map(w =>
-            this.dataViewDataExplorerService
-                .getChart(w.id)
-                .pipe(catchError(() => of(undefined))),
-        );
-        zip(...observables).subscribe(results => {
-            results.forEach(r => {
-                this.processWidget(r);
-                this.onWidgetsAvailable();
-                this.widgetsAvailable = true;
-            });
+        this.dashboard.widgets.forEach(widgetConfig => {
+            const availableWidget = this.widgets.find(
+                w => w.elementId === widgetConfig.id,
+            );
+            this.processWidget(availableWidget);
         });
+        this.onWidgetsAvailable();
+        this.widgetsAvailable = true;
     }
 
     loadWidgetConfig(widgetId: string, setCurrentlyConfigured?: boolean) {

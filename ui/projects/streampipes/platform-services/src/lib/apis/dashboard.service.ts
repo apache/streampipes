@@ -19,9 +19,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { SharedDatalakeRestService } from './shared-dashboard.service';
-import { Dashboard } from '../model/dashboard/dashboard.model';
+import {
+    CompositeDashboard,
+    Dashboard,
+} from '../model/dashboard/dashboard.model';
 
 @Injectable({
     providedIn: 'root',
@@ -37,9 +39,13 @@ export class DashboardService {
     }
 
     getDashboard(dashboardId: string): Observable<Dashboard> {
-        return this.http
-            .get(`${this.dashboardUrl}/${dashboardId}`)
-            .pipe(map(data => data as Dashboard));
+        return this.http.get<Dashboard>(`${this.dashboardUrl}/${dashboardId}`);
+    }
+
+    getCompositeDashboard(dashboardId: string): Observable<CompositeDashboard> {
+        return this.http.get<CompositeDashboard>(
+            `${this.dashboardUrl}/${dashboardId}/composite`,
+        );
     }
 
     updateDashboard(dashboard: Dashboard): Observable<Dashboard> {

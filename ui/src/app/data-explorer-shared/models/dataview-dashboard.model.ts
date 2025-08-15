@@ -22,7 +22,7 @@ import {
     GridsterItemComponent,
 } from 'angular-gridster2';
 import {
-    DashboardItem,
+    ClientDashboardItem,
     DataExplorerField,
     DataExplorerWidgetModel,
     SpLogMessage,
@@ -50,7 +50,7 @@ export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
 
     timeSettings: TimeSettings;
 
-    dataViewDashboardItem: DashboardItem;
+    dataViewDashboardItem: ClientDashboardItem;
     dataExplorerWidget: T;
     previewMode: boolean;
     gridMode: boolean;

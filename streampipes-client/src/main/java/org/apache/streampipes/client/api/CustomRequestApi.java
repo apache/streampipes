@@ -20,6 +20,7 @@ package org.apache.streampipes.client.api;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
+import java.util.List;
 import java.util.Map;
 
 public class CustomRequestApi extends AbstractClientApi implements ICustomRequestApi {
@@ -44,6 +45,13 @@ public class CustomRequestApi extends AbstractClientApi implements ICustomReques
         StreamPipesApiPath.fromStreamPipesBasePath(apiPath)
             .withQueryParameters(queryParameters),
         responseClass);
+  }
+
+  @Override
+  public <T> List<T> getList(String apiPath, Class<T> responseClass) {
+    return getList(
+        StreamPipesApiPath.fromStreamPipesBasePath(apiPath), responseClass
+    );
   }
 
 }

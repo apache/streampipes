@@ -27,10 +27,7 @@ import {
 import { GridsterItemComponent, GridType } from 'angular-gridster2';
 import { GridsterInfo } from '../../../../data-explorer-shared/models/gridster-info.model';
 import { IDataViewDashboardConfig } from '../../../../data-explorer-shared/models/dataview-dashboard.model';
-import { ResizeService } from '../../../../data-explorer-shared/services/resize.service';
-import { ChartService } from '@streampipes/platform-services';
 import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
-import { DataExplorerChartRegistry } from '../../../../data-explorer-shared/registry/data-explorer-chart-registry';
 
 @Component({
     selector: 'sp-dashboard-grid-view',
@@ -48,19 +45,8 @@ export class DashboardGridViewComponent
     @ViewChildren(GridsterItemComponent)
     gridsterItemComponents: QueryList<GridsterItemComponent>;
 
-    constructor(
-        protected resizeService: ResizeService,
-        protected dataViewDataExplorerService: ChartService,
-        protected widgetRegistryService: DataExplorerChartRegistry,
-    ) {
-        super(
-            resizeService,
-            dataViewDataExplorerService,
-            widgetRegistryService,
-        );
-    }
-
     ngOnInit(): void {
+        this.loadWidgetConfigs();
         this.options = {
             disablePushOnDrag: true,
             draggable: { enabled: this.editMode },

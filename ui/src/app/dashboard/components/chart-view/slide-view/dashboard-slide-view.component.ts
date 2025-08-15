@@ -16,16 +16,19 @@
  *
  */
 
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
-import { ResizeService } from '../../../../data-explorer-shared/services/resize.service';
 import {
-    ChartService,
+    AfterViewInit,
+    Component,
+    ElementRef,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
+import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
+import {
     DashboardItem,
     DataExplorerWidgetModel,
     DataLakeMeasure,
 } from '@streampipes/platform-services';
-import { DataExplorerChartRegistry } from '../../../../data-explorer-shared/registry/data-explorer-chart-registry';
 
 @Component({
     selector: 'sp-dashboard-slide-view',
@@ -35,7 +38,7 @@ import { DataExplorerChartRegistry } from '../../../../data-explorer-shared/regi
 })
 export class DashboardSlideViewComponent
     extends AbstractChartViewDirective
-    implements AfterViewInit
+    implements OnInit, AfterViewInit
 {
     selectedWidgetIndex = 0;
 
@@ -49,16 +52,8 @@ export class DashboardSlideViewComponent
 
     @ViewChild('slideViewOuter') slideViewOuter: ElementRef;
 
-    constructor(
-        protected resizeService: ResizeService,
-        protected dataViewDataExplorerService: ChartService,
-        protected widgetRegistryService: DataExplorerChartRegistry,
-    ) {
-        super(
-            resizeService,
-            dataViewDataExplorerService,
-            widgetRegistryService,
-        );
+    ngOnInit() {
+        this.loadWidgetConfigs();
     }
 
     selectWidget(index: number, widgetId: string): void {

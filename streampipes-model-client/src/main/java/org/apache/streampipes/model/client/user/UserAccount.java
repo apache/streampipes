@@ -45,6 +45,7 @@ public class UserAccount extends Principal {
    * The authentication provider (LOCAL or one of the configured OAuth providers
    */
   protected String provider;
+  protected boolean externallyManagedRoles = false;
 
   public UserAccount() {
     super(PrincipalType.USER_ACCOUNT);
@@ -171,5 +172,13 @@ public class UserAccount extends Principal {
 
   public void setProvider(String provider) {
     this.provider = provider;
+  }
+
+  public boolean isExternallyManagedRoles() {
+    return externallyManagedRoles;
+  }
+
+  public void setExternallyManagedRoles(boolean externallyManagedRoles) {
+    this.externallyManagedRoles = externallyManagedRoles;
   }
 }

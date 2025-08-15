@@ -24,10 +24,10 @@ import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.file.FileMetadata;
+import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
 
 public interface INoSqlStorage {
@@ -48,7 +48,7 @@ public interface INoSqlStorage {
 
   INotificationStorage getNotificationStorageApi();
 
-  CRUDStorage<DataLakeMeasure> getDataLakeStorage();
+  IDataLakeMeasureStorage getDataLakeStorage();
 
   CRUDStorage<FileMetadata> getFileMetadataStorage();
 
@@ -85,4 +85,6 @@ public interface INoSqlStorage {
   CRUDStorage<Privilege> getPrivilegeStorage();
 
   CRUDStorage<CompactPipelineTemplate> getPipelineTemplateStorage();
+
+  CRUDStorage<Certificate> getCertificateStorage();
 }

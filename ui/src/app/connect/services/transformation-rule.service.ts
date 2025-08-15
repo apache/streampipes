@@ -23,7 +23,6 @@ import {
     AddValueTransformationRuleDescription,
     ChangeDatatypeTransformationRuleDescription,
     CorrectionValueTransformationRuleDescription,
-    CreateNestedRuleDescription,
     DeleteRuleDescription,
     EventProperty,
     EventPropertyNested,
@@ -105,13 +104,6 @@ export class TransformationRuleService {
                 )
                 .concat(
                     this.getRenameRules(
-                        targetSchema.eventProperties,
-                        originalSchema,
-                        targetSchema,
-                    ),
-                )
-                .concat(
-                    this.getCreateNestedRules(
                         targetSchema.eventProperties,
                         originalSchema,
                         targetSchema,
@@ -259,36 +251,6 @@ export class TransformationRuleService {
         };
 
         extractMoveRules(newEventProperties, '');
-        return result;
-    }
-
-    public getCreateNestedRules(
-        newEventProperties: EventProperty[],
-        oldEventSchema: EventSchema,
-        newEventSchema: EventSchema,
-    ): CreateNestedRuleDescription[] {
-        const allNewIds: string[] = this.getAllIds(
-            newEventSchema.eventProperties,
-        );
-        const allOldIds: string[] = this.getAllIds(
-            oldEventSchema.eventProperties,
-        );
-
-        const result: CreateNestedRuleDescription[] = [];
-        for (const id of allNewIds) {
-            if (allOldIds.indexOf(id) === -1) {
-                const key = this.getCompleteRuntimeNameKey(
-                    newEventSchema.eventProperties,
-                    id,
-                );
-                const rule: CreateNestedRuleDescription =
-                    new CreateNestedRuleDescription();
-                rule['@class'] =
-                    'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription';
-                rule.runtimeKey = key;
-                result.push(rule);
-            }
-        }
         return result;
     }
 

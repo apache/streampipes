@@ -158,4 +158,10 @@ public interface Environment {
 
   IntEnvironmentVariable getPlc4xMaxWaitTimeMs();
   IntEnvironmentVariable getPlc4xMaxLeaseTimeMs();
+
+  BooleanEnvironmentVariable getFileLoggingEnabled();
+  BooleanEnvironmentVariable getConsoleLoggingEnabled();
+  StringEnvironmentVariable getFileLoggingPrefix();
+  StringEnvironmentVariable getFileLoggingDir();
+  StringEnvironmentVariable getFileLoggingPattern();
 }

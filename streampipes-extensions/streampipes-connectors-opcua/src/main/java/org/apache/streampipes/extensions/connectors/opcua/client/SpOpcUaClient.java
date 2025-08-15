@@ -53,7 +53,12 @@ public class SpOpcUaClient<T extends OpcUaConfig> {
     OpcUaClientConfig clientConfig = new MiloOpcUaConfigurationProvider().makeClientConfig(spOpcConfig);
     var client = OpcUaClient.create(clientConfig);
     client.addSessionInitializer(new DataTypeDictionarySessionInitializer(new GenericBsdParser()));
-    client.connect().get();
-    return new ConnectedOpcUaClient(client);
+    try {
+      client.connect().get();
+      return new ConnectedOpcUaClient(client);
+    } catch (Exception e) {
+      client.disconnect().get();
+      throw e;
+    }
   }
 }

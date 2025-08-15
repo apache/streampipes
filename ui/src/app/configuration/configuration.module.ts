@@ -100,6 +100,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { GenericStorageItemComponent } from './export/export-dialog/generic-storage-items/generic-storage-item/generic-storage-item.component';
 import { GenericStorageItemsComponent } from './export/export-dialog/generic-storage-items/generic-storage-items.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { CertificateConfigurationComponent } from './extensions-service-management/certificate-configuration/certificate-configuration.component';
+import { CertificateDetailsDialogComponent } from './dialog/certificate-details/certificate-details-dialog.component';
 
 @NgModule({
     imports: [
@@ -255,6 +257,8 @@ import { TranslateModule } from '@ngx-translate/core';
         PipelineElementNameFilter,
         PipelineElementInstallationStatusFilter,
         PipelineElementTypeFilter,
+        CertificateConfigurationComponent,
+        CertificateDetailsDialogComponent,
     ],
     providers: [
         OrderByPipe,

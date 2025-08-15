@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-04-04 12:37:31.
+// Generated using typescript-generator version 3.2.1263 on 2025-07-29 10:59:26.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -215,7 +215,6 @@ export class TransformationRuleDescription {
         | 'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
@@ -255,8 +254,6 @@ export class TransformationRuleDescription {
                 return RemoveDuplicatesTransformationRuleDescription.fromData(
                     data,
                 );
-            case 'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription':
-                return CreateNestedRuleDescription.fromData(data);
             case 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription':
                 return DeleteRuleDescription.fromData(data);
             case 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription':
@@ -673,6 +670,39 @@ export class CanvasPosition {
     }
 }
 
+export class Certificate implements Storable {
+    algorithm: string;
+    certificateDerBase64: string;
+    elementId: string;
+    issuerDn: string;
+    notAfter: string;
+    notBefore: string;
+    rev: string;
+    serialNumber: string;
+    sigAlgName: string;
+    state: CertificateState;
+    subjectDn: string;
+
+    static fromData(data: Certificate, target?: Certificate): Certificate {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new Certificate();
+        instance.algorithm = data.algorithm;
+        instance.certificateDerBase64 = data.certificateDerBase64;
+        instance.elementId = data.elementId;
+        instance.issuerDn = data.issuerDn;
+        instance.notAfter = data.notAfter;
+        instance.notBefore = data.notBefore;
+        instance.rev = data.rev;
+        instance.serialNumber = data.serialNumber;
+        instance.sigAlgName = data.sigAlgName;
+        instance.state = data.state;
+        instance.subjectDn = data.subjectDn;
+        return instance;
+    }
+}
+
 export class ChangeDatatypeTransformationRuleDescription extends ValueTransformationRuleDescription {
     '@class': 'org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription';
     'originalDatatypeXsd': string;
@@ -985,48 +1015,6 @@ export class CorrectionValueTransformationRuleDescription extends ValueTransform
         super.fromData(data, instance);
         instance.correctionValue = data.correctionValue;
         instance.operator = data.operator;
-        instance.runtimeKey = data.runtimeKey;
-        return instance;
-    }
-}
-
-export class SchemaTransformationRuleDescription extends TransformationRuleDescription {
-    '@class':
-        | 'org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription'
-        | 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
-
-    static 'fromData'(
-        data: SchemaTransformationRuleDescription,
-        target?: SchemaTransformationRuleDescription,
-    ): SchemaTransformationRuleDescription {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new SchemaTransformationRuleDescription();
-        super.fromData(data, instance);
-        return instance;
-    }
-}
-
-/**
- * @deprecated since 0.97.0, for removal
- */
-export class CreateNestedRuleDescription extends SchemaTransformationRuleDescription {
-    '@class': 'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription';
-    'runtimeKey': string;
-
-    static 'fromData'(
-        data: CreateNestedRuleDescription,
-        target?: CreateNestedRuleDescription,
-    ): CreateNestedRuleDescription {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new CreateNestedRuleDescription();
-        super.fromData(data, instance);
         instance.runtimeKey = data.runtimeKey;
         return instance;
     }
@@ -1427,6 +1415,26 @@ export class DataSinkType {
         instance.code = data.code;
         instance.description = data.description;
         instance.label = data.label;
+        return instance;
+    }
+}
+
+export class SchemaTransformationRuleDescription extends TransformationRuleDescription {
+    '@class':
+        | 'org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription'
+        | 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription'
+        | 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription'
+        | 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
+
+    static 'fromData'(
+        data: SchemaTransformationRuleDescription,
+        target?: SchemaTransformationRuleDescription,
+    ): SchemaTransformationRuleDescription {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SchemaTransformationRuleDescription();
+        super.fromData(data, instance);
         return instance;
     }
 }
@@ -3590,24 +3598,6 @@ export class SpDataStream extends NamedStreamPipesEntity {
     }
 }
 
-export class SpDataStreamContainer {
-    '@class': 'org.apache.streampipes.model.SpDataStreamContainer';
-    'list': SpDataStream[];
-
-    static 'fromData'(
-        data: SpDataStreamContainer,
-        target?: SpDataStreamContainer,
-    ): SpDataStreamContainer {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new SpDataStreamContainer();
-        instance['@class'] = data['@class'];
-        instance.list = __getCopyArrayFn(SpDataStream.fromData)(data.list);
-        return instance;
-    }
-}
-
 export class SpLogEntry {
     errorMessage: SpLogMessage;
     timestamp: number;
@@ -4156,6 +4146,8 @@ export class WildcardTopicMapping {
     }
 }
 
+export type CertificateState = 'REJECTED' | 'TRUSTED';
+
 export type ConfigurationScope =
     | 'CONTAINER_STARTUP_CONFIG'
     | 'CONTAINER_GLOBAL_CONFIG'
@@ -4278,7 +4270,6 @@ export type TransformationRuleDescriptionUnion =
     | UnitTransformRuleDescription
     | EventRateTransformationRuleDescription
     | RemoveDuplicatesTransformationRuleDescription
-    | CreateNestedRuleDescription
     | DeleteRuleDescription
     | RenameRuleDescription
     | RegexTransformationRuleDescription

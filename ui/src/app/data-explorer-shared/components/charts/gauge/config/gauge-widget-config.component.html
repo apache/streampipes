@@ -67,6 +67,21 @@
                     />
                 </mat-form-field>
             </div>
+            <div fxFlex fxLayoutAlign="start center" class="ml-10 mb-10">
+                <small>{{ 'Display Name' | translate }}</small>
+                <span fxFlex></span>
+                <mat-form-field appearance="outline" color="accent" fxFlex="60">
+                    <input
+                        matInput
+                        type="text"
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .displayName
+                        "
+                        (ngModelChange)="triggerViewRefresh()"
+                    />
+                </mat-form-field>
+            </div>
         </div>
     </sp-configuration-box>
 </sp-visualization-config-outer>

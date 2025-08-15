@@ -19,11 +19,13 @@
 package org.apache.streampipes.processors.geo.jvm.jts.processor.validation.simple;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
+import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.SpGeometryBuilder;
@@ -31,13 +33,12 @@ import org.apache.streampipes.processors.geo.jvm.jts.processor.validation.Valida
 import org.apache.streampipes.processors.geo.jvm.jts.processor.validation.ValidationType;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.builder.processor.DataProcessorConfiguration;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.wrapper.params.compat.ProcessorParams;
-import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import org.locationtech.jts.geom.Geometry;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class GeometryValidationProcessor extends StreamPipesDataProcessor {
+public class GeometryValidationProcessor implements IStreamPipesDataProcessor {
   public static final String GEOM_KEY = "geom-key";
   public static final String EPSG_KEY = "epsg-key";
   public static final String VALIDATION_OUTPUT_KEY = "validation-output-key";
@@ -60,50 +61,61 @@ public class GeometryValidationProcessor extends StreamPipesDataProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(GeometryValidationProcessor.class);
 
   @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.validation.simple", 0)
-        .category(DataProcessorType.GEO)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN)
-        .requiredStream(StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.semanticTypeReq("http://www.opengis.net/ont/geosparql#Geometry"),
-                Labels.withId(GEOM_KEY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(
-                EpRequirements.semanticTypeReq("http://data.ign.fr/def/ignf#CartesianCS"),
-                Labels.withId(EPSG_KEY),
-                PropertyScope.MEASUREMENT_PROPERTY)
-            .build())
-        .outputStrategy(OutputStrategies.keep())
-        .requiredSingleValueSelection(
-            Labels.withId(VALIDATION_OUTPUT_KEY),
-            Options.from(
-                ValidationOutput.VALID.name(),
-                ValidationOutput.INVALID.name()
+  public IDataProcessorConfiguration declareConfig() {
+    return DataProcessorConfiguration.create(
+        GeometryValidationProcessor::new,
+        ProcessingElementBuilder
+            .create("org.apache.streampipes.processors.geo.jvm.jts.processor.validation.simple", 0)
+            .category(DataProcessorType.GEO)
+            .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                                .create()
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.semanticTypeReq("http://www.opengis.net/ont/geosparql#Geometry"),
+                                    Labels.withId(GEOM_KEY),
+                                    PropertyScope.MEASUREMENT_PROPERTY
+                                )
+                                .requiredPropertyWithUnaryMapping(
+                                    EpRequirements.semanticTypeReq("http://data.ign.fr/def/ignf#CartesianCS"),
+                                    Labels.withId(EPSG_KEY),
+                                    PropertyScope.MEASUREMENT_PROPERTY
+                                )
+                                .build())
+            .outputStrategy(OutputStrategies.keep())
+            .requiredSingleValueSelection(
+                Labels.withId(VALIDATION_OUTPUT_KEY),
+                Options.from(
+                    ValidationOutput.VALID.name(),
+                    ValidationOutput.INVALID.name()
+                )
             )
-        )
-        .requiredMultiValueSelection(
-            Labels.withId(VALIDATION_TYPE_KEY),
-            Options.from(
-                ValidationType.IsEmpty.name(),
-                ValidationType.IsSimple.name()
+            .requiredMultiValueSelection(
+                Labels.withId(VALIDATION_TYPE_KEY),
+                Options.from(
+                    ValidationType.IsEmpty.name(),
+                    ValidationType.IsSimple.name()
+                )
             )
-        )
-        .build();
+            .build()
+    );
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
-                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onPipelineStarted(
+      IDataProcessorParameters params,
+      SpOutputCollector spOutputCollector,
+      EventProcessorRuntimeContext runtimeContext
+  ) throws SpRuntimeException {
+    this.geometryMapper = params.extractor()
+                                .mappingPropertyValue(GEOM_KEY);
+    this.epsgMapper = params.extractor()
+                            .mappingPropertyValue(EPSG_KEY);
 
-    this.geometryMapper = parameters.extractor().mappingPropertyValue(GEOM_KEY);
-    this.epsgMapper = parameters.extractor().mappingPropertyValue(EPSG_KEY);
-
-    String readValidationOutput = parameters.extractor().selectedSingleValue(VALIDATION_OUTPUT_KEY, String.class);
-    List<String> readValidationType = parameters.extractor().selectedMultiValues(VALIDATION_TYPE_KEY, String.class);
+    String readValidationOutput = params.extractor()
+                                        .selectedSingleValue(VALIDATION_OUTPUT_KEY, String.class);
+    List<String> readValidationType = params.extractor()
+                                            .selectedMultiValues(VALIDATION_TYPE_KEY, String.class);
 
     if (readValidationOutput.equals(ValidationOutput.VALID.name())) {
       this.outputChoice = ValidationOutput.VALID.name();
@@ -116,10 +128,12 @@ public class GeometryValidationProcessor extends StreamPipesDataProcessor {
       this.isEmptySelected = true;
       this.isSimpleSelected = true;
       this.isMultiSelected = true;
-    } else if (readValidationType.get(0).equals(ValidationType.IsEmpty.name())) {
+    } else if (readValidationType.get(0)
+                                 .equals(ValidationType.IsEmpty.name())) {
       this.isEmptySelected = true;
       this.isSimpleSelected = false;
-    } else if (readValidationType.get(0).equals(ValidationType.IsSimple.name())) {
+    } else if (readValidationType.get(0)
+                                 .equals(ValidationType.IsSimple.name())) {
       this.isEmptySelected = false;
       this.isSimpleSelected = true;
     }
@@ -127,8 +141,12 @@ public class GeometryValidationProcessor extends StreamPipesDataProcessor {
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
-    String geom = event.getFieldBySelector(geometryMapper).getAsPrimitive().getAsString();
-    Integer sourceEpsg = event.getFieldBySelector(epsgMapper).getAsPrimitive().getAsInt();
+    String geom = event.getFieldBySelector(geometryMapper)
+                       .getAsPrimitive()
+                       .getAsString();
+    Integer sourceEpsg = event.getFieldBySelector(epsgMapper)
+                              .getAsPrimitive()
+                              .getAsInt();
 
     Geometry geometry = SpGeometryBuilder.createSPGeom(geom, sourceEpsg);
 
@@ -154,7 +172,6 @@ public class GeometryValidationProcessor extends StreamPipesDataProcessor {
   }
 
   @Override
-  public void onDetach() throws SpRuntimeException {
-
+  public void onPipelineStopped() {
   }
 }

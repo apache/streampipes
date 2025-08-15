@@ -137,7 +137,18 @@ public enum Envs {
 
   // PLC4X connection cache
   SP_PLC4X_CONN_MAX_WAIT_TIME_MS("SP_PLC4X_CONN_MAX_WAIT_TIME_MS", "20000"),
-  SP_PLC4X_CONN_MAX_LEASE_TIME_MS("SP_PLC4X_CONN_MAX_LEASE_TIME_MS", "4000");
+  SP_PLC4X_CONN_MAX_LEASE_TIME_MS("SP_PLC4X_CONN_MAX_LEASE_TIME_MS", "4000"),
+
+  // Logging
+  SP_LOGGING_FILE_ENABLED("SP_LOGGING_FILE_ENABLED", "false"),
+  SP_LOGGING_CONSOLE_ENABLED("SP_LOGGING_CONSOLE_ENABLED", "true"),
+  SP_LOGGING_FILE_PREFIX("SP_LOGGING_FILE_PREFIX", "streampipes"),
+  SP_LOGGING_FILE_DIR("SP_LOGGING_FILE_DIR", "logs"),
+  SP_LOGGING_FILE_PATTERN(
+      "SP_LOGGING_FILE_PATTERN",
+      "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+  );
+
 
   private final String envVariableName;
   private String defaultValue;
