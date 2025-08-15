@@ -32,7 +32,7 @@ md-progress-linear.md-accent .md-container {
 
 body {
     overflow: auto;
-    background: #ffffff;
+    background: var(--mat-sys-surface);
 
     font-family: 'Roboto', 'Arial', sans-serif !important;
     height: auto !important;

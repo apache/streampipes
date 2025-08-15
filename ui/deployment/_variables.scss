@@ -94,41 +94,41 @@ body {
 }
 
 .light-mode {
-    --color-primary: #{$sp-color-primary};
-    --color-accent: #{$sp-color-accent};
-    --color-bg-outer: var(--color-bg-1);
-    --color-bg-page-container: var(--color-bg-0);
-    --color-bg-main-panel-header: var(--color-bg-0);
-    --color-bg-main-panel-content: var(--color-bg-0);
-    --color-bg-navbar-icon: inherit;
-    --color-bg-navbar-icon-selected: inherit;
-    --color-bg-0: #ffffff;
-    --color-bg-1: #fafafa;
-    --color-bg-2: #f1f1f1;
-    --color-bg-3: rgb(224, 224, 224);
-    --color-bg-4: rgb(212, 212, 212);
-    --color-bg-dialog: #ffffff;
-    --color-shadow: #555;
-    --color-pe: #ffffff;
-    --color-default-text: #121212;
-    --color-secondary-text: #555;
-    --color-warn: #b71c1c;
+    //     --color-primary: #{$sp-color-primary};
+    //     --color-accent: #{$sp-color-accent};
+    //     --color-bg-outer: var(--color-bg-1);
+    //     --color-bg-page-container: var(--color-bg-0);
+    //     --color-bg-main-panel-header: var(--color-bg-0);
+    //     --color-bg-main-panel-content: var(--color-bg-0);
+    //     --color-bg-navbar-icon: inherit;
+    //     --color-bg-navbar-icon-selected: inherit;
+    //     --color-bg-0: #ffffff;
+    //     --color-bg-1: #fafafa;
+    //     --color-bg-2: #f1f1f1;
+    //     --color-bg-3: rgb(224, 224, 224);
+    //     --color-bg-4: rgb(212, 212, 212);
+    //     --color-bg-dialog: #ffffff;
+    //     --color-shadow: #555;
+    //     --color-pe: #ffffff;
+    //     --color-default-text: #121212;
+    //     --color-secondary-text: #555;
+    //     --color-warn: #b71c1c;
 
-    --color-tab-border: #cccccc;
+    //     --color-tab-border: #cccccc;
 
-    --color-navigation-bg: var(--color-primary);
-    --color-navigation-link-text: var(--color-bg-0);
-    --color-navigation-text: #ffffff;
+    --color-navigation-bg: #{$sp-color-primary};
+    --color-navigation-link-text: var(--mat-sys-surface);
+    // --color-navigation-text: #ffffff;
     --color-navigation-selected: #{$sp-color-primary};
     --color-navigation-hover: #{$sp-color-primary-600};
-    --color-navigation-bg-selected: var(--color-bg-1);
-    --color-navigation-divider: var(--color-primary);
+    --color-navigation-bg-selected: var(--mat-sys-surface);
+    // --color-navigation-divider: var(--color-primary);
 
-    --content-box-color: rgb(156, 156, 156);
-    --canvas-color: linear-gradient(
-            90deg,
-            rgba(208, 208, 208, 0.5) 10%,
-            transparent 0%
-        ),
-        linear-gradient(rgba(208, 208, 208, 0.5) 10%, transparent 0%);
+    //     --content-box-color: rgb(156, 156, 156);
+    // --canvas-color: linear-gradient(
+    //         90deg,
+    //         rgba(208, 208, 208, 0.5) 10%,
+    //         transparent 0%
+    //     ),
+    //     linear-gradient(rgba(208, 208, 208, 0.5) 10%, transparent 0%);
 }
