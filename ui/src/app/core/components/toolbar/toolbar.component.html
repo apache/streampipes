@@ -50,9 +50,13 @@
                 style="height: 100%"
             >
                 <!-- uncomment this to quickly investigate layout issues between dark and light mode -->
-                <!--            <div>-->
-                <!--                <mat-slide-toggle color="accent" [formControl]="appearanceControl">Dark Mode</mat-slide-toggle>-->
-                <!--            </div>-->
+                <div>
+                    <mat-slide-toggle
+                        color="accent"
+                        [formControl]="appearanceControl"
+                        >Dark Mode</mat-slide-toggle
+                    >
+                </div>
                 <div
                     [ngClass]="
                         'notifications' === activePage

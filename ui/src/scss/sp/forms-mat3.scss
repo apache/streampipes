@@ -16,31 +16,22 @@
  *
  */
 
-@use '../custom-theme/custom-variables' as customThemeVars;
+@use '@angular/material' as mat;
 
-.note {
-    float: left;
-    display: block;
-    position: relative;
-    padding: 1em;
-    width: 100%;
-    min-height: 100%;
-    background-color: white;
-    box-shadow: 5px 5px 10px -2px rgba(33, 33, 33, 0.3);
-    transition: transform 0.15s;
-    z-index: 1;
-    border-radius: 10px;
-    margin-left: 5px;
-    max-height: 100%;
-    overflow: auto;
-}
-
-p.note h2 {
-    color: customThemeVars.$sp-color-accent;
-    font-size: 20px;
-}
-
-p.note h3 {
-    color: green;
-    font-size: 16px;
+:root {
+    @include mat.form-field-overrides(
+        (
+            container-height: 40px,
+            outlined-container-shape: 2px,
+            outlined-outline-color: var(--mat-sys-surface-container-highest),
+            outlined-hover-outline-color:
+                color-mix(in srgb, var(--mat-sys-outline) 85%, #000 0%),
+            outlined-focus-outline-color: var(--mat-sys-primary),
+            label-text-color: var(--mat-sys-on-surface-variant),
+            outlined-caret-color: var(--mat-sys-primary),
+            input-text-color: var(--mat-sys-on-surface),
+            input-text-placeholder-color:
+                color-mix(in srgb, var(--mat-sys-on-surface) 60%, transparent),
+        )
+    );
 }

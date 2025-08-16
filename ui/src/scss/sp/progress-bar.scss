@@ -16,8 +16,8 @@
  *
  */
 
-@use '../_variables' as sp;
+@use '../custom-theme/custom-variables' as customThemeVars;
 
 mat-progress-bar .mat-progress-bar-buffer {
-    background: sp.$sp-color-accent-light;
+    background: customThemeVars.$sp-color-accent-light;
 }

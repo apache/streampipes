@@ -144,11 +144,11 @@ fs.writeFileSync(
 );
 console.log('Moved: favicon');
 
-fs.writeFileSync(
-    'src/scss/_variables.scss',
-    fs.readFileSync('deployment/_variables.scss', 'utf8'),
-);
-console.log('Moved: styling variables file');
+// fs.writeFileSync(
+//     'src/scss/_variables.scss',
+//     fs.readFileSync('deployment/_variables.scss', 'utf8'),
+// );
+// console.log('Moved: styling variables file');
 
 fs.writeFileSync(
     'src/proxy.conf.json',

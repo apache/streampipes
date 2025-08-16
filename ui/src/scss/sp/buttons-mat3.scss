@@ -1,0 +1,45 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+@use '@angular/material' as mat;
+
+:root {
+    @include mat.button-overrides(
+        (
+            filled-container-shape: 8px,
+            outlined-outline-color: var(--mat-sys-outline),
+            outlined-label-text-color: var(--mat-sys-on-surface),
+            filled-label-text-weight: 400,
+            filled-label-text-tracking: -0.01em,
+            outlined-label-text-tracking: -0.01em,
+            text-label-text-tracking: -0.01em,
+            filled-hover-state-layer-opacity: 0.2,
+        )
+    );
+
+    .btn-secondary {
+        @include mat.button-overrides(
+            (
+                filled-container-color: #f3f3f3,
+                filled-label-text-color: var(--mat-sys-primary),
+                text-hover-state-layer-opacity: 1,
+                filled-label-text-weight: 400,
+            )
+        );
+    }
+}
