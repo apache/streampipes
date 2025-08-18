@@ -20,6 +20,7 @@ Specific implementation of the StreamPipes API's data lake measure endpoints.
 This endpoint allows to consume data stored in StreamPipes' data lake.
 """
 from datetime import datetime
+from json import dumps
 from typing import Any, Dict, List, Literal, Optional, Tuple, Type
 
 from pydantic.v1 import BaseModel, Extra, Field, StrictInt, ValidationError, validator
@@ -199,7 +200,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     Consequently, it allows querying metadata about available data sets (see `all()` method).
     The metadata is returned as an instance of [`DataLakeMeasures`][streampipes.model.container.DataLakeMeasures].
 
-    In addition, the endpoint provides direct access to the data stored in the data laka by querying a
+    In addition, the endpoint provides direct access to the data stored in the data lake by querying a
     specific data lake measure using the `get()` method.
 
     Examples
@@ -253,7 +254,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     ```
 
     As you can see, the returned amount of rows per default is `1000`.
-    We can modify this behavior by passing the `limit` paramter.
+    We can modify this behavior by passing the `limit` parameter.
     ```python
     flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate", limit=10).to_pandas()
     len(flow_rate_pd)
@@ -347,7 +348,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         """Queries the specified data lake measure from the API.
 
         By default, the maximum number of returned records is 1000.
-        This behaviour can be influenced by passing the parameter `limit` with a different value
+        This behavior can be influenced by passing the parameter `limit` with a different value
         (see [MeasurementGetQueryConfig][streampipes.endpoint.api.data_lake_measure.MeasurementGetQueryConfig]).
 
         Parameters
@@ -369,7 +370,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         see directly at [DataLakeMeasureEndpoint][streampipes.endpoint.api.data_lake_measure.DataLakeMeasureEndpoint].
         """
 
-        # bild base URL for resource
+        # build base URL for resource
         url = f"{self.build_url()}/{identifier}"
 
         # extend base URL by query parameters
@@ -378,3 +379,12 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
         response = self._make_request(request_method=self._parent_client.request_session.get, url=url)
         return self._resource_cls(**response.json())
+    
+    def post(self, identifier: str, query_result: QueryResult) -> None:
+        self._make_request(
+            request_method=self._parent_client.request_session.post,
+            url=f"{self.build_url()}/{identifier}",
+            data=dumps(query_result.to_dict(use_source_names=True)),
+            headers={"Content-type": "application/json"},
+        )
+
