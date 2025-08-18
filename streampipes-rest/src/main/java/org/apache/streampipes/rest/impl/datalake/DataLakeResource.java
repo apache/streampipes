@@ -18,9 +18,13 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
+import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataexplorer.TimeSeriesStore;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
+import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
@@ -28,6 +32,7 @@ import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
+import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
@@ -38,6 +43,9 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -52,10 +60,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_AGGREGATION_FUNCTION;
 import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_AUTO_AGGREGATE;
@@ -84,6 +94,7 @@ import static org.apache.streampipes.model.datalake.param.SupportedRestQueryPara
 @RequestMapping("/api/v4/datalake")
 public class DataLakeResource extends AbstractRestResource {
 
+  private static final Logger LOG = LoggerFactory.getLogger(DataLakeResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
 
@@ -354,6 +365,30 @@ public class DataLakeResource extends AbstractRestResource {
           .headers(headers)
           .body(streamingOutput);
     }
+  }
+
+  @PostMapping(
+      path = "/measurements/{measurementID}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Store a measurement series to a data lake with the given id", tags = {"Data Lake"},
+      responses = {
+          @ApiResponse(
+              responseCode = "400",
+              description = "Can't store the given data to this data lake"),
+          @ApiResponse(
+              responseCode = "200",
+              description = "Successfully stored data")})
+  public ResponseEntity<?> storeDataToMeasurement(@PathVariable String measurementID,
+                                                  @RequestBody SpQueryResult queryResult) {
+    var dataWriter = new DataLakeDataWriter(dataExplorerSchemaManagement);
+    try {
+      dataWriter.writeData(measurementID, queryResult);
+    } catch (SpRuntimeException e) {
+      LOG.warn("Could not store event", e);
+      return badRequest(Notifications.error("Could not store event for measurement " + measurementID));
+    }
+    return ok();
   }
 
   @DeleteMapping(path = "/measurements")
