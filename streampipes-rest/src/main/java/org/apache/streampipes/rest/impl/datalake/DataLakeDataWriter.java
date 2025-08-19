@@ -21,13 +21,13 @@ package org.apache.streampipes.rest.impl.datalake;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.TimeSeriesStore;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
+import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
 import java.util.List;
 import java.util.Map;
@@ -36,14 +36,8 @@ import java.util.stream.IntStream;
 
 public class DataLakeDataWriter {
 
-  private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
-
-  public DataLakeDataWriter(IDataExplorerSchemaManagement dataExplorerSchemaManagement) {
-    this.dataExplorerSchemaManagement = dataExplorerSchemaManagement;
-  }
-
-  public void writeData(String measurementID, SpQueryResult queryResult) {
-    var measure = dataExplorerSchemaManagement.getById(measurementID);
+  public void writeData(String measureName, SpQueryResult queryResult) {
+    var measure = CouchDbStorageManager.INSTANCE.getDataLakeStorage().getByMeasureName(measureName);
     var dataSeries = getDataSeries(queryResult);
     getTimeSeriesStoreAndPersistQueryResult(dataSeries, measure);
   }

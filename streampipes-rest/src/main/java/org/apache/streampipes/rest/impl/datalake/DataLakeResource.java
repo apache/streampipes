@@ -381,7 +381,7 @@ public class DataLakeResource extends AbstractRestResource {
               description = "Successfully stored data")})
   public ResponseEntity<?> storeDataToMeasurement(@PathVariable String measurementID,
                                                   @RequestBody SpQueryResult queryResult) {
-    var dataWriter = new DataLakeDataWriter(dataExplorerSchemaManagement);
+    var dataWriter = new DataLakeDataWriter();
     try {
       dataWriter.writeData(measurementID, queryResult);
     } catch (SpRuntimeException e) {
