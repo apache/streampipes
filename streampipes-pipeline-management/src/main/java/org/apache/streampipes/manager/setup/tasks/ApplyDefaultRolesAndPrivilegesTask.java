@@ -54,13 +54,17 @@ public class ApplyDefaultRolesAndPrivilegesTask implements InstallationTask {
 
   private <T extends Storable> void updateDocs(CRUDStorage<T> storage,
                                                List<T> defaultDocs) {
-    defaultDocs.forEach(role -> {
-      var doc = storage.getElementById(role.getElementId());
-      if (doc != null) {
-        role.setRev(doc.getRev());
-        storage.updateElement(role);
+    defaultDocs.forEach(doc -> {
+      var existingDoc = storage.getElementById(doc.getElementId());
+      if (existingDoc != null) {
+        doc.setRev(existingDoc.getRev());
+        // Preserve alternateIds for Role objects
+        if (doc instanceof Role && existingDoc instanceof Role) {
+          ((Role) doc).setAlternateIds(((Role) existingDoc).getAlternateIds());
+        }
+        storage.updateElement(doc);
       } else {
-        storage.persist(role);
+        storage.persist(doc);
       }
     });
   }

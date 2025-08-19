@@ -21,13 +21,17 @@ package org.apache.streampipes.service.core.oauth2;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
-import org.apache.streampipes.model.client.user.DefaultRole;
+import org.apache.streampipes.model.client.user.Group;
+import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.rest.security.OAuth2AuthenticationProcessingException;
+import org.apache.streampipes.storage.api.CRUDStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 
@@ -37,15 +41,24 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class UserService {
 
+  private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+
   private final IUserStorage userStorage;
+  private final CRUDStorage<Role> roleStorage;
+  private final CRUDStorage<Group> groupStorage;
   private final Environment env;
+  private List<Role> allRoles;
+  private List<Group> allGroups;
 
   public UserService() {
     this.userStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
+    this.roleStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getRoleStorage();
+    this.groupStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserGroupStorage();
+    this.allGroups = this.groupStorage.findAll();
+    this.allRoles = this.roleStorage.findAll();
     this.env = Environments.getEnvironment();
   }
 
@@ -78,11 +91,11 @@ public class UserService {
               String.format("Already signed up with another provider %s", user.getProvider())
           );
         }
-        applyRoles(user, oAuthConfig, attributes);
+        applyRoles(user, oAuthConfig, attributes, false);
         userStorage.updateUser(user);
       } else {
         user = toUserAccount(registrationId, principalId, email, fullName);
-        applyRoles(user, oAuthConfig, attributes);
+        applyRoles(user, oAuthConfig, attributes, true);
         new UserResourceManager().registerOauthUser(user);
       }
 
@@ -97,7 +110,8 @@ public class UserService {
 
   private void applyRoles(UserAccount user,
                           OAuthConfiguration oAuthConfig,
-                          Map<String, Object> attributes) {
+                          Map<String, Object> attributes,
+                          boolean newUser) {
     if (oAuthConfig.getRoleAttributeName() != null) {
       Object rolesObject = attributes.get(oAuthConfig.getRoleAttributeName());
 
@@ -105,20 +119,57 @@ public class UserService {
         Set<String> roles = extractRoleOrGroup("ROLE", rolesList);
         Set<String> groups = convertGroup(extractRoleOrGroup("GROUP", rolesList));
 
+        allRoles.forEach(role -> {
+          if (Objects.nonNull(role.getAlternateIds())) {
+            role.getAlternateIds().forEach(a -> {
+              if (rolesList.contains(a)) {
+                roles.add(role.getElementId());
+              }
+            });
+          }
+        });
+
+        allGroups.forEach(group -> {
+          if (Objects.nonNull(group.getAlternateIds())) {
+            group.getAlternateIds().forEach(a -> {
+              if (rolesList.contains(a)) {
+                groups.add(group.getElementId());
+              }
+            });
+          }
+        });
+
         user.setRoles(roles);
         user.setGroups(groups);
         user.setExternallyManagedRoles(true);
       } else {
-        applyDefaultRole(user);
+        LOG.warn(
+            "Invalid role attribute: {} of type {}",
+            oAuthConfig.getRoleAttributeName(),
+            Objects.nonNull(rolesObject) ? rolesObject.getClass().getName() : "null"
+        );
+        applyDefaultRole(user, oAuthConfig.getDefaultRoles(), newUser);
       }
     } else {
-      applyDefaultRole(user);
+      LOG.warn("Applying default roles as no role attribute is configured");
+      applyDefaultRole(user, oAuthConfig.getDefaultRoles(), newUser);
     }
   }
 
-  private void applyDefaultRole(UserAccount user) {
-    user.setRoles(Stream.of(DefaultRole.ROLE_ADMIN.toString()).collect(Collectors.toSet()));
-    user.setExternallyManagedRoles(false);
+  private void applyDefaultRole(UserAccount user,
+                                Set<String> defaultRoles,
+                                boolean newUser) {
+    if (newUser) {
+      user.setRoles(
+          defaultRoles
+              .stream()
+              .filter(r -> allRoles
+                  .stream()
+                  .anyMatch(role -> role.getElementId().equals(r)))
+              .collect(Collectors.toSet())
+      );
+      user.setExternallyManagedRoles(false);
+    }
   }
 
   private UserAccount toUserAccount(String registrationId,

@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,23 +16,27 @@
  *
  */
 
-.lists-container {
-    display: flex;
-    justify-content: space-between;
-}
+import { Component, Input, OnInit } from '@angular/core';
 
-.list-section {
-    font-size: 10pt;
-    border: 1px solid var(--color-bg-2);
-}
+@Component({
+    selector: 'sp-alternate-id-configuration',
+    templateUrl: './alternate-id-configuration.component.html',
+    standalone: false,
+})
+export class AlternateIdConfigurationComponent {
+    @Input()
+    alternateIds: string[] = [];
 
-.button-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
+    newAlternateId: string = '';
 
-.privilege-header {
-    padding: 10px;
-    font-weight: bold;
+    addAlternateId(): void {
+        if (!this.alternateIds) {
+            this.alternateIds = [];
+        }
+        this.alternateIds.push(this.newAlternateId);
+    }
+
+    removeAlternateId(id: string): void {
+        this.alternateIds.splice(this.alternateIds.indexOf(id), 1);
+    }
 }

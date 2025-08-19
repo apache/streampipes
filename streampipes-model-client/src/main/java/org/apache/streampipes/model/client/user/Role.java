@@ -24,6 +24,7 @@ import org.apache.streampipes.model.shared.api.Storable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @TsModel
@@ -35,6 +36,7 @@ public class Role implements Storable {
   private String label;
   private boolean defaultRole;
   private List<String> privilegeIds;
+  private List<String> alternateIds;
 
   // document type should be persisted to CouchDB with Gson serialization, but not via Jackson to the UI
   @JsonIgnore
@@ -49,6 +51,7 @@ public class Role implements Storable {
     role.label = label;
     role.defaultRole = true;
     role.privilegeIds = privilegeIds;
+    role.alternateIds = new ArrayList<>();
     return role;
   }
 
@@ -102,5 +105,13 @@ public class Role implements Storable {
 
   public void setPrivilegeIds(List<String> privilegeIds) {
     this.privilegeIds = privilegeIds;
+  }
+
+  public List<String> getAlternateIds() {
+    return alternateIds;
+  }
+
+  public void setAlternateIds(List<String> alternateIds) {
+    this.alternateIds = alternateIds;
   }
 }

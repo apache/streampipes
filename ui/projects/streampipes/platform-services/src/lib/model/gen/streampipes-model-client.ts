@@ -20,11 +20,12 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-08-05 18:37:35.
+// Generated using typescript-generator version 3.2.1263 on 2025-08-19 20:00:50.
 
 import { Storable } from './streampipes-model';
 
 export class Group implements Storable {
+    alternateIds: string[];
     elementId: string;
     groupId: string;
     groupName: string;
@@ -36,6 +37,9 @@ export class Group implements Storable {
             return data;
         }
         const instance = target || new Group();
+        instance.alternateIds = __getCopyArrayFn(__identity<string>())(
+            data.alternateIds,
+        );
         instance.elementId = data.elementId;
         instance.groupId = data.groupId;
         instance.groupName = data.groupName;
@@ -189,6 +193,7 @@ export class RawUserApiToken {
 }
 
 export class Role implements Storable {
+    alternateIds: string[];
     defaultRole: boolean;
     elementId: string;
     label: string;
@@ -200,6 +205,9 @@ export class Role implements Storable {
             return data;
         }
         const instance = target || new Role();
+        instance.alternateIds = __getCopyArrayFn(__identity<string>())(
+            data.alternateIds,
+        );
         instance.defaultRole = data.defaultRole;
         instance.elementId = data.elementId;
         instance.label = data.label;

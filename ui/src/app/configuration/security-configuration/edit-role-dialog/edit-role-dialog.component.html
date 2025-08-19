@@ -52,7 +52,7 @@
                         fxLayoutGap="10px"
                         class="lists-container"
                     >
-                        <div class="list-section">
+                        <div class="list-section" fxFlex="50">
                             <div class="privilege-header">
                                 Available Privileges
                             </div>
@@ -62,7 +62,10 @@
                                         mat-icon-button
                                         color="accent"
                                         (click)="assignPrivilege(privilege)"
-                                        [disabled]="isAssigned(privilege)"
+                                        [disabled]="
+                                            isAssigned(privilege) ||
+                                            clonedRole.defaultRole
+                                        "
                                     >
                                         <mat-icon>add</mat-icon>
                                     </button>
@@ -70,7 +73,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="list-section">
+                        <div class="list-section" fxFlex="50">
                             <div class="privilege-header">
                                 Selected Privileges
                             </div>
@@ -79,6 +82,7 @@
                                     <button
                                         mat-icon-button
                                         color="accent"
+                                        [disabled]="clonedRole.defaultRole"
                                         (click)="removePrivilege(privilege)"
                                     >
                                         <mat-icon>remove</mat-icon>
@@ -88,6 +92,14 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div fxLayout="column" class="general-options-panel">
+                    <span class="general-options-header">Alternate IDs</span>
+                    <sp-alternate-id-configuration
+                        [alternateIds]="clonedRole.alternateIds"
+                    >
+                    </sp-alternate-id-configuration>
                 </div>
             </form>
         </div>
@@ -102,7 +114,7 @@
                 (click)="save()"
                 style="margin-right: 10px"
                 [disabled]="
-                    !parentForm.valid || selectedPrivileges.length === 0
+                    parentForm.invalid || selectedPrivileges.length === 0
                 "
                 data-cy="sp-edit-role-save"
             >
