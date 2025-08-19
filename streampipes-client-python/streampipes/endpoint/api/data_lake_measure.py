@@ -379,12 +379,38 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
         response = self._make_request(request_method=self._parent_client.request_session.get, url=url)
         return self._resource_cls(**response.json())
-    
-    def post(self, identifier: str, query_result: QueryResult) -> None:
+
+    def storeDataToMeasurement(self, identifier: str, query_result: QueryResult) -> None:
+        """Stores data into the specified data lake measurement.
+
+        This method sends the provided `QueryResult` as JSON to the StreamPipes Data Lake
+        and appends it to the measurement identified by `identifier`.
+
+        Parameters
+        ----------
+        identifier : str
+            The identifier of the data lake measurement into which the data will be stored.
+        query_result : QueryResult
+            The data to be stored, provided as a QueryResult object. It will be serialized
+            to JSON using its `to_dict()` representation.
+
+        Returns
+        -------
+        None
+            This method does not return anything.
+
+        Examples
+        --------
+        >>> df = pd.DataFrame({
+        ...     "timestamp": [1672531200000, 1672531260000],
+        ...     "value": [42, 43],
+        ... })
+        >>> query_result = QueryResult.from_pandas(df)
+        >>> client.dataLakeMeasureEndpoint.storeDataToMeasurement("my-measure-id", query_result)
+        """
         self._make_request(
             request_method=self._parent_client.request_session.post,
             url=f"{self.build_url()}/{identifier}",
             data=dumps(query_result.to_dict(use_source_names=True)),
             headers={"Content-type": "application/json"},
         )
-

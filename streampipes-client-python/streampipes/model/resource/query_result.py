@@ -91,7 +91,7 @@ class QueryResult(Resource):
         df = pd.DataFrame(data=pandas_representation["rows"], columns=pandas_representation["headers"])
 
         return df
-    
+
     @classmethod
     def from_pandas(
         cls,
@@ -121,21 +121,19 @@ class QueryResult(Resource):
         if df.empty:
             raise ValueError("Cannot create QueryResult from an empty DataFrame")
 
-        headers = list(df.columns)
+        headers = df.columns.to_list()
         if headers[0] != "timestamp":
-            raise StreamPipesUnsupportedDataSeries(
-                f"First column must be 'timestamp', got {headers[0]!r}"
-            )
-        
+            raise StreamPipesUnsupportedDataSeries(f"First column must be 'timestamp', got {headers[0]!r}")
+
         df["timestamp"] = df["timestamp"].astype("int64")
         rows = df.values.tolist()
-        data_series = DataSeries(headers=headers, rows=rows, total=len(rows))
+        data_series = DataSeries(total=len(rows), headers=headers, rows=rows, tags=None)
 
         return cls(
             total=len(rows),
             headers=headers,
             all_data_series=[data_series],
-            query_status=query_status,
+            spQueryStatus=query_status,
             source_index=source_index,
             for_id=for_id,
             last_timestamp=int(df["timestamp"].max()),
