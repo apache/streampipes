@@ -21,6 +21,7 @@ This endpoint allows to consume data stored in StreamPipes' data lake.
 """
 from datetime import datetime
 from json import dumps
+from math import ceil
 from typing import Any, Dict, List, Literal, Optional, Tuple, Type
 
 from pandas import DataFrame
@@ -381,12 +382,14 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         response = self._make_request(request_method=self._parent_client.request_session.get, url=url)
         return self._resource_cls(**response.json())
 
-    def storeDataToMeasurement(self, identifier: str, df: DataFrame, ignore_schema_mismatch=False) -> None:
+    def storeDataToMeasurement(
+        self, identifier: str, df: DataFrame, ignore_schema_mismatch=False, batch_size: int = 10000
+    ) -> None:
         """Stores data from a pandas DataFrame into the specified data lake measurement.
 
-        The provided DataFrame will be converted into a `QueryResult` using
-        `QueryResult.from_pandas` and then serialized to JSON before being sent
-        to the StreamPipes Data Lake. The data will be appended to the measurement
+        The provided DataFrame will be split into chunks and converted into a
+        `QueryResult` and then serialized to JSON before being sent to the
+        StreamPipes Data Lake. The data will be appended to the measurement
         identified by `identifier`.
 
         Parameters
@@ -398,6 +401,9 @@ class DataLakeMeasureEndpoint(APIEndpoint):
             must be `timestamp` and all timestamp values will be cast to integers.
         ignore_schema_mismatch: bool
             Defines if mismatching events should be stored.
+        batch_size:
+            The size of the chunks in which the data gets split. This ensures
+            that requests remain reasonably small
 
         Returns
         -------
@@ -414,11 +420,17 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         client.dataLakeMeasureApi.storeDataToMeasurement("my-measure-id", df)
         ```
         """
-        query_result = QueryResult.from_pandas(df)
-        self._make_request(
-            request_method=self._parent_client.request_session.post,
-            url=f"{self.build_url()}/{identifier}",
-            params={"ignoreSchemaMismatch": ignore_schema_mismatch},
-            data=dumps(query_result.to_dict(use_source_names=True)),
-            headers={"Content-type": "application/json"},
-        )
+
+        num_chunks = ceil(len(df) / batch_size)
+        for i in range(num_chunks):
+            start = i * batch_size
+            end = (i + 1) * batch_size
+            chunk = df.iloc[start:end].copy()
+            query_result = QueryResult.from_pandas(chunk)
+            self._make_request(
+                request_method=self._parent_client.request_session.post,
+                url=f"{self.build_url()}/{identifier}",
+                params={"ignoreSchemaMismatch": ignore_schema_mismatch},
+                data=dumps(query_result.to_dict(use_source_names=True)),
+                headers={"Content-type": "application/json"},
+            )

@@ -120,6 +120,8 @@ class QueryResult(Resource):
         """
         if df.empty:
             raise ValueError("Cannot create QueryResult from an empty DataFrame")
+        if df.isna().any().any():
+            raise ValueError("Cannot create QueryResult from a DataFrame with NaN values")
 
         headers = df.columns.to_list()
         if headers[0] != "timestamp":
