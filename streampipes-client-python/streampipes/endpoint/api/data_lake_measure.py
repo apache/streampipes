@@ -23,6 +23,7 @@ from datetime import datetime
 from json import dumps
 from typing import Any, Dict, List, Literal, Optional, Tuple, Type
 
+from pandas import DataFrame
 from pydantic.v1 import BaseModel, Extra, Field, StrictInt, ValidationError, validator
 
 from streampipes.endpoint.endpoint import APIEndpoint
@@ -380,19 +381,23 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         response = self._make_request(request_method=self._parent_client.request_session.get, url=url)
         return self._resource_cls(**response.json())
 
-    def storeDataToMeasurement(self, identifier: str, query_result: QueryResult) -> None:
-        """Stores data into the specified data lake measurement.
+    def storeDataToMeasurement(self, identifier: str, df: DataFrame, ignore_schema_mismatch=False) -> None:
+        """Stores data from a pandas DataFrame into the specified data lake measurement.
 
-        This method sends the provided `QueryResult` as JSON to the StreamPipes Data Lake
-        and appends it to the measurement identified by `identifier`.
+        The provided DataFrame will be converted into a `QueryResult` using
+        `QueryResult.from_pandas` and then serialized to JSON before being sent
+        to the StreamPipes Data Lake. The data will be appended to the measurement
+        identified by `identifier`.
 
         Parameters
         ----------
         identifier : str
             The identifier of the data lake measurement into which the data will be stored.
-        query_result : QueryResult
-            The data to be stored, provided as a QueryResult object. It will be serialized
-            to JSON using its `to_dict()` representation.
+        df : pandas.DataFrame
+            The data to be stored, provided as a pandas DataFrame. The first column
+            must be `timestamp` and all timestamp values will be cast to integers.
+        ignore_schema_mismatch: bool
+            Defines if mismatching events should be stored.
 
         Returns
         -------
@@ -401,16 +406,19 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
         Examples
         --------
-        >>> df = pd.DataFrame({
-        ...     "timestamp": [1672531200000, 1672531260000],
-        ...     "value": [42, 43],
-        ... })
-        >>> query_result = QueryResult.from_pandas(df)
-        >>> client.dataLakeMeasureEndpoint.storeDataToMeasurement("my-measure-id", query_result)
+        ```python
+        df = pd.DataFrame({
+            "timestamp": [1672531200000, 1672531260000],
+            "value": [42, 43],
+        })
+        client.dataLakeMeasureApi.storeDataToMeasurement("my-measure-id", df)
+        ```
         """
+        query_result = QueryResult.from_pandas(df)
         self._make_request(
             request_method=self._parent_client.request_session.post,
             url=f"{self.build_url()}/{identifier}",
+            params={"ignoreSchemaMismatch": ignore_schema_mismatch},
             data=dumps(query_result.to_dict(use_source_names=True)),
             headers={"Content-type": "application/json"},
         )

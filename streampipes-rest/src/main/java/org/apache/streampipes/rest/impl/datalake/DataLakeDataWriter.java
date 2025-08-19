@@ -29,6 +29,8 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,8 +38,17 @@ import java.util.stream.IntStream;
 
 public class DataLakeDataWriter {
 
+  private final boolean ignoreSchemaMismatch;
+
+  public DataLakeDataWriter(boolean ignoreSchemaMismatch) {
+    this.ignoreSchemaMismatch = ignoreSchemaMismatch;
+  }
+
   public void writeData(String measureName, SpQueryResult queryResult) {
     var measure = CouchDbStorageManager.INSTANCE.getDataLakeStorage().getByMeasureName(measureName);
+    if (measure == null) {
+      throw new SpRuntimeException("Measure \"" + measureName + "\" not found");
+    }
     var dataSeries = getDataSeries(queryResult);
     getTimeSeriesStoreAndPersistQueryResult(dataSeries, measure);
   }
@@ -45,10 +56,16 @@ public class DataLakeDataWriter {
   private void getTimeSeriesStoreAndPersistQueryResult(DataSeries dataSeries,
                                                        DataLakeMeasure measure){
     var timeSeriesStore = getTimeSeriesStore(measure);
+    var runtimeNames = getRuntimeNames(measure);
     for (var row : dataSeries.getRows()) {
       var event = rowToEvent(row, dataSeries.getHeaders());
       renameTimestampField(event, measure.getTimestampField());
-      timeSeriesStore.onEvent(event);
+      checkRuntimeNames(runtimeNames, event);
+      try {
+        timeSeriesStore.onEvent(event);
+      } catch (IllegalArgumentException e) {
+        throw new SpRuntimeException("Fields don't match for event: " + event.getRaw());
+      }
     }
     timeSeriesStore.close();
   }
@@ -69,6 +86,29 @@ public class DataLakeDataWriter {
     } else {
       throw new SpRuntimeException("SpQueryResult must contain exactly one data series");
     }
+  }
+
+  private void checkRuntimeNames(List<String> runtimeNames, Event event) {
+    if (!ignoreSchemaMismatch) {
+      var strippedEventKeys = event.getFields().keySet().stream()
+          .map(this::getSubstringAfterColons)
+          .collect(Collectors.toSet());
+      var runtimeNameSet = new HashSet<>(runtimeNames);
+
+      if (!runtimeNameSet.equals(strippedEventKeys)){
+        throw new SpRuntimeException("The fields of the event do not match. Use \"ignoreSchemaMismatch\" to "
+            + "ignore this error. Fields of the event: " + strippedEventKeys);
+      }
+    }
+  }
+
+  private List<String> getRuntimeNames(DataLakeMeasure measure) {
+    var runtimeNames = new ArrayList<String>();
+    runtimeNames.add(measure.getTimestampFieldName());
+    for (var eventProperties: measure.getEventSchema().getEventProperties()) {
+      runtimeNames.add(eventProperties.getRuntimeName());
+    }
+    return runtimeNames;
   }
 
   private String getSubstringAfterColons(String input) {
