@@ -1,26 +1,7 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-07-29 10:59:26.
+// Generated using typescript-generator version 3.2.1263 on 2025-08-20 10:54:16.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -672,15 +653,19 @@ export class CanvasPosition {
 
 export class Certificate implements Storable {
     algorithm: string;
+    basicConstraints: string;
     certificateDerBase64: string;
     elementId: string;
+    extendedKeyUsages: string[];
     issuerDn: string;
+    keyUsages: string[];
     notAfter: string;
     notBefore: string;
     rev: string;
     serialNumber: string;
     sigAlgName: string;
     state: CertificateState;
+    subjectAlternativeNames: string[];
     subjectDn: string;
 
     static fromData(data: Certificate, target?: Certificate): Certificate {
@@ -689,15 +674,25 @@ export class Certificate implements Storable {
         }
         const instance = target || new Certificate();
         instance.algorithm = data.algorithm;
+        instance.basicConstraints = data.basicConstraints;
         instance.certificateDerBase64 = data.certificateDerBase64;
         instance.elementId = data.elementId;
+        instance.extendedKeyUsages = __getCopyArrayFn(__identity<string>())(
+            data.extendedKeyUsages,
+        );
         instance.issuerDn = data.issuerDn;
+        instance.keyUsages = __getCopyArrayFn(__identity<string>())(
+            data.keyUsages,
+        );
         instance.notAfter = data.notAfter;
         instance.notBefore = data.notBefore;
         instance.rev = data.rev;
         instance.serialNumber = data.serialNumber;
         instance.sigAlgName = data.sigAlgName;
         instance.state = data.state;
+        instance.subjectAlternativeNames = __getCopyArrayFn(
+            __identity<string>(),
+        )(data.subjectAlternativeNames);
         instance.subjectDn = data.subjectDn;
         return instance;
     }
@@ -1189,8 +1184,6 @@ export class DashboardModel implements Storable, SpResource {
 export class DataExplorerWidgetModel extends DashboardEntity {
     baseAppearanceConfig: { [index: string]: any };
     dataConfig: { [index: string]: any };
-    measureName: string;
-    pipelineId: string;
     timeSettings: { [index: string]: any };
     visualizationConfig: { [index: string]: any };
     widgetId: string;
@@ -1211,8 +1204,6 @@ export class DataExplorerWidgetModel extends DashboardEntity {
         instance.dataConfig = __getCopyObjectFn(__identity<any>())(
             data.dataConfig,
         );
-        instance.measureName = data.measureName;
-        instance.pipelineId = data.pipelineId;
         instance.timeSettings = __getCopyObjectFn(__identity<any>())(
             data.timeSettings,
         );

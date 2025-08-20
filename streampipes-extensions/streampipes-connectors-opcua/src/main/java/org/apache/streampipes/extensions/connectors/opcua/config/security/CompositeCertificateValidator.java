@@ -20,7 +20,7 @@ package org.apache.streampipes.extensions.connectors.opcua.config.security;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
-import org.apache.streampipes.model.opcua.Certificate;
+import org.apache.streampipes.model.opcua.CertificateBuilder;
 import org.apache.streampipes.model.opcua.CertificateState;
 
 import org.eclipse.milo.opcua.stack.client.security.ClientCertificateValidator;
@@ -36,7 +36,6 @@ import java.security.cert.PKIXCertPathBuilderResult;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -138,18 +137,7 @@ public class CompositeCertificateValidator implements ClientCertificateValidator
 
   private void sendToCore(X509Certificate cert) {
     try {
-      var certificate = new Certificate(
-          cert.getSubjectX500Principal().getName(),
-          cert.getIssuerX500Principal().getName(),
-          cert.getSerialNumber().toString(),
-          cert.getNotBefore().toString(),
-          cert.getNotAfter().toString(),
-          cert.getSigAlgName(),
-          cert.getPublicKey().getAlgorithm(),
-          Base64.getEncoder().encodeToString(cert.getEncoded()),
-          CertificateState.REJECTED
-      );
-
+      var certificate = CertificateBuilder.fromX509(cert, CertificateState.REJECTED);
       streamPipesClient.customRequest().sendPost(OpcUaUtils.getCoreCertificatePath(), certificate);
     } catch (Exception ex) {
       LOG.error("Failed to report rejected certificate to API", ex);

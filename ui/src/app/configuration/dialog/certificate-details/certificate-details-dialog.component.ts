@@ -31,6 +31,10 @@ export class CertificateDetailsDialogComponent {
     @Input()
     certificate: Certificate;
 
+    isArray(value: any): boolean {
+        return Array.isArray(value);
+    }
+
     close(): void {
         this.dialogRef.close();
     }
