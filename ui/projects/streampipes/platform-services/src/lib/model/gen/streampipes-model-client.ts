@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-08-19 20:00:50.
+// Generated using typescript-generator version 3.2.1263 on 2025-08-21 14:22:05.
 
 import { Storable } from './streampipes-model';
 
@@ -83,6 +83,7 @@ export class Permission implements Storable {
     ownerSid: string;
     permissionId: string;
     publicElement: boolean;
+    readAnonymous: boolean;
     rev: string;
 
     static fromData(data: Permission, target?: Permission): Permission {
@@ -99,6 +100,7 @@ export class Permission implements Storable {
         instance.ownerSid = data.ownerSid;
         instance.permissionId = data.permissionId;
         instance.publicElement = data.publicElement;
+        instance.readAnonymous = data.readAnonymous;
         instance.rev = data.rev;
         return instance;
     }

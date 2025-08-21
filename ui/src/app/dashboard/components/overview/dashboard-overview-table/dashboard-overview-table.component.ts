@@ -71,6 +71,8 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
             this.translateService.instant(
                 `Manage permissions for dashboard ${dashboard.name}`,
             ),
+            true,
+            this.makeDashboardKioskUrl(dashboard.elementId),
         );
 
         dialogRef.afterClosed().subscribe(refresh => {
@@ -151,5 +153,9 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
 
     openDashboardInKioskMode(dashboard: Dashboard) {
         this.router.navigate(['dashboard-kiosk', dashboard.elementId]);
+    }
+
+    makeDashboardKioskUrl(dashboardId: string): string {
+        return `${window.location.protocol}//${window.location.host}/#/dashboard-kiosk/${dashboardId}`;
     }
 }

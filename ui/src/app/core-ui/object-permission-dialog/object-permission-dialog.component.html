@@ -17,140 +17,201 @@
   -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content" *ngIf="usersLoaded">
-        <div fxFlex="100" fxLayout="column" class="p-15">
-            <h4>{{ headerTitle }}</h4>
-            <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
-                <div class="general-options-panel" fxLayout="column">
-                    <span class="general-options-header">{{
-                        'Basics' | translate
-                    }}</span>
-                    <mat-form-field color="accent">
-                        <mat-label>{{ 'Owner' | translate }}</mat-label>
-                        <mat-select formControlName="owner" fxFlex required>
-                            <mat-option
-                                *ngFor="let user of allUsers"
-                                [value]="user.principalId"
-                                >{{ user.username }}</mat-option
-                            >
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-checkbox
-                        data-cy="permission-public-element"
-                        formControlName="publicElement"
-                    >
-                        {{ 'Public Element' | translate }}
-                    </mat-checkbox>
-                </div>
-                <div
-                    fxLayout="column"
-                    class="general-options-panel"
-                    *ngIf="!permission.publicElement"
-                >
-                    <span class="general-options-header">{{
-                        'Users' | translate
-                    }}</span>
-                    <mat-form-field color="accent">
-                        <mat-label>{{
-                            'Authorized Users' | translate
-                        }}</mat-label>
-                        <mat-chip-grid
-                            #chipList
-                            [attr.aria-label]="'User selection' | translate"
+    @if (usersLoaded) {
+        <div class="sp-dialog-content">
+            <div fxFlex="100" fxLayout="column" class="p-15">
+                <h4>{{ headerTitle }}</h4>
+                <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+                    <div class="general-options-panel" fxLayout="column">
+                        <span class="general-options-header">{{
+                            'Basics' | translate
+                        }}</span>
+                        <mat-form-field color="accent">
+                            <mat-label>{{ 'Owner' | translate }}</mat-label>
+                            <mat-select formControlName="owner" fxFlex required>
+                                <mat-option
+                                    *ngFor="let user of allUsers"
+                                    [value]="user.principalId"
+                                    >{{ user.username }}</mat-option
+                                >
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-checkbox
+                            data-cy="permission-public-element"
+                            formControlName="publicElement"
                         >
-                            <mat-chip-row
-                                *ngFor="let user of grantedUserAuthorities"
-                                selectable="true"
-                                removable="true"
-                                (removed)="removeUser(user)"
+                            {{ 'Public Element' | translate }} ({{
+                                'visible to registered users' | translate
+                            }})
+                        </mat-checkbox>
+                    </div>
+                    @if (!parentForm.get('publicElement')?.value) {
+                        <div fxLayout="column" class="general-options-panel">
+                            <span class="general-options-header">{{
+                                'Users' | translate
+                            }}</span>
+                            <mat-form-field color="accent">
+                                <mat-label>{{
+                                    'Authorized Users' | translate
+                                }}</mat-label>
+                                <mat-chip-grid
+                                    #chipList
+                                    [attr.aria-label]="
+                                        'User selection' | translate
+                                    "
+                                >
+                                    <mat-chip-row
+                                        *ngFor="
+                                            let user of grantedUserAuthorities
+                                        "
+                                        selectable="true"
+                                        removable="true"
+                                        (removed)="removeUser(user)"
+                                    >
+                                        {{ user.username }}
+                                        <button matChipRemove>
+                                            <mat-icon>cancel</mat-icon>
+                                        </button>
+                                    </mat-chip-row>
+                                    <input
+                                        matInput
+                                        [placeholder]="'Add' | translate"
+                                        #userInput
+                                        [formControl]="userCtrl"
+                                        [matAutocomplete]="userAuto"
+                                        [matChipInputFor]="chipList"
+                                        [matChipInputSeparatorKeyCodes]="
+                                            separatorKeysCodes
+                                        "
+                                        data-cy="authorized-user"
+                                        (matChipInputTokenEnd)="addUser($event)"
+                                    />
+                                </mat-chip-grid>
+                                <mat-autocomplete
+                                    #userAuto="matAutocomplete"
+                                    (optionSelected)="userSelected($event)"
+                                >
+                                    <mat-option
+                                        *ngFor="
+                                            let user of filteredUsers | async
+                                        "
+                                        [value]="user"
+                                        [attr.data-cy]="
+                                            'user-option-' + user.username
+                                        "
+                                    >
+                                        {{ user.username }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                    }
+                    @if (!parentForm.get('publicElement')?.value) {
+                        <div fxLayout="column" class="general-options-panel">
+                            <span class="general-options-header">{{
+                                'Groups' | translate
+                            }}</span>
+                            <mat-form-field color="accent">
+                                <mat-label data-cy="authorized-groups-label">{{
+                                    'Authorized Groups' | translate
+                                }}</mat-label>
+                                <mat-chip-grid
+                                    #chipList
+                                    [attr.aria-label]="
+                                        'Group selection' | translate
+                                    "
+                                >
+                                    <mat-chip-row
+                                        *ngFor="
+                                            let group of grantedGroupAuthorities
+                                        "
+                                        selectable="true"
+                                        removable="true"
+                                        (removed)="removeGroup(group)"
+                                    >
+                                        {{ group.groupName }}
+                                        <button matChipRemove>
+                                            <mat-icon>cancel</mat-icon>
+                                        </button>
+                                    </mat-chip-row>
+                                    <input
+                                        matInput
+                                        [placeholder]="'Add' | translate"
+                                        #groupInput
+                                        [formControl]="groupCtrl"
+                                        [matAutocomplete]="groupAuto"
+                                        [matChipInputFor]="chipList"
+                                        [matChipInputSeparatorKeyCodes]="
+                                            separatorKeysCodes
+                                        "
+                                        (matChipInputTokenEnd)="
+                                            addGroup($event)
+                                        "
+                                    />
+                                </mat-chip-grid>
+                                <mat-autocomplete
+                                    #groupAuto="matAutocomplete"
+                                    (optionSelected)="groupSelected($event)"
+                                >
+                                    <mat-option
+                                        *ngFor="
+                                            let group of filteredGroups | async
+                                        "
+                                        [value]="group"
+                                    >
+                                        {{ group.groupName }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                    }
+                    @if (
+                        anonymousReadSupported &&
+                        parentForm.contains('readAnonymous')
+                    ) {
+                        <div fxLayout="column" class="general-options-panel">
+                            <span class="general-options-header">{{
+                                'Public Link' | translate
+                            }}</span>
+                            <mat-checkbox
+                                data-cy="permission-anonymous-read"
+                                formControlName="readAnonymous"
                             >
-                                {{ user.username }}
-                                <button matChipRemove>
-                                    <mat-icon>cancel</mat-icon>
-                                </button>
-                            </mat-chip-row>
-                            <input
-                                [placeholder]="'Add' | translate"
-                                #userInput
-                                [formControl]="userCtrl"
-                                [matAutocomplete]="auto"
-                                [matChipInputFor]="chipList"
-                                [matChipInputSeparatorKeyCodes]="
-                                    separatorKeysCodes
-                                "
-                                data-cy="authorized-user"
-                                (matChipInputTokenEnd)="addUser($event)"
-                            />
-                        </mat-chip-grid>
-                        <mat-autocomplete
-                            #auto="matAutocomplete"
-                            (optionSelected)="userSelected($event)"
-                        >
-                            <mat-option
-                                *ngFor="let user of filteredUsers | async"
-                                [value]="user"
-                                [attr.data-cy]="'user-option-' + user.username"
-                            >
-                                {{ user.username }}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </div>
-                <div
-                    fxLayout="column"
-                    class="general-options-panel"
-                    *ngIf="!permission.publicElement"
-                >
-                    <span class="general-options-header">{{
-                        'Groups' | translate
-                    }}</span>
-                    <mat-form-field color="accent">
-                        <mat-label data-cy="authorized-groups-label">{{
-                            'Authorized Groups' | translate
-                        }}</mat-label>
-                        <mat-chip-grid
-                            #chipList
-                            [attr.aria-label]="'Group selection' | translate"
-                        >
-                            <mat-chip-row
-                                *ngFor="let group of grantedGroupAuthorities"
-                                selectable="true"
-                                removable="true"
-                                (removed)="removeGroup(group)"
-                            >
-                                {{ group.groupName }}
-                                <button matChipRemove>
-                                    <mat-icon>cancel</mat-icon>
-                                </button>
-                            </mat-chip-row>
-                            <input
-                                [placeholder]="'Add' | translate"
-                                #groupInput
-                                [formControl]="groupCtrl"
-                                [matAutocomplete]="auto"
-                                [matChipInputFor]="chipList"
-                                [matChipInputSeparatorKeyCodes]="
-                                    separatorKeysCodes
-                                "
-                                (matChipInputTokenEnd)="addGroup($event)"
-                            />
-                        </mat-chip-grid>
-                        <mat-autocomplete
-                            #auto="matAutocomplete"
-                            (optionSelected)="groupSelected($event)"
-                        >
-                            <mat-option
-                                *ngFor="let group of filteredGroups | async"
-                                [value]="group"
-                            >
-                                {{ group.groupName }}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </div>
-            </form>
+                                {{
+                                    'Allow anonymous access through public link'
+                                        | translate
+                                }}
+                            </mat-checkbox>
+                            @if (parentForm.get('readAnonymous')?.value) {
+                                <div
+                                    fxLayout="row"
+                                    fxFlex="100"
+                                    class="mt-10"
+                                    fxLayoutGap="10px"
+                                    fxLayoutAlign="start center"
+                                >
+                                    <span>
+                                        {{ 'URL' | translate }}
+                                    </span>
+                                    <span class="public-link" fxFlex>
+                                        {{ publicLink }}
+                                    </span>
+                                    <button
+                                        mat-icon-button
+                                        color="accent"
+                                        [matTooltip]="'Copy' | translate"
+                                        [cdkCopyToClipboard]="publicLink"
+                                    >
+                                        <mat-icon>content_copy</mat-icon>
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    }
+                </form>
+            </div>
         </div>
-    </div>
+    }
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
         <div fxLayout="row">
@@ -160,7 +221,7 @@
                 color="accent"
                 (click)="save()"
                 style="margin-right: 10px"
-                [disabled]="!parentForm.valid"
+                [disabled]="parentForm.invalid"
                 data-cy="sp-manage-permissions-save"
             >
                 <i class="material-icons">save</i

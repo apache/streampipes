@@ -89,7 +89,7 @@
                     title="Pipelines"
                 ></sp-basic-header-title-component>
                 <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-                    <div fxFlex="90">
+                    <div fxFlex="100">
                         <sp-pipeline-overview
                             [pipelines]="filteredPipelines"
                             (refreshPipelinesEmitter)="getPipelines()"
@@ -106,7 +106,7 @@
                         fxLayout="row"
                         fxLayoutAlign="center start"
                     >
-                        <div fxFlex="90">
+                        <div fxFlex="100">
                             <sp-functions-overview
                                 [functions]="functions"
                                 *ngIf="functionsReady"

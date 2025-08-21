@@ -38,7 +38,12 @@ export class DataExplorerSharedService {
         private translateService: TranslateService,
     ) {}
 
-    openPermissionsDialog(elementId: string, headerTitle: string) {
+    openPermissionsDialog(
+        elementId: string,
+        headerTitle: string,
+        anonymousReadSupported: boolean = false,
+        publicLink: string = '',
+    ) {
         return this.dialogService.open(ObjectPermissionDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: this.translateService.instant('Manage permissions'),
@@ -46,6 +51,8 @@ export class DataExplorerSharedService {
             data: {
                 objectInstanceId: elementId,
                 headerTitle,
+                anonymousReadSupported,
+                publicLink,
             },
         });
     }

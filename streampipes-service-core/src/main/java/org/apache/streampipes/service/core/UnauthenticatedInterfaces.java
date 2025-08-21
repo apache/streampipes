@@ -42,7 +42,8 @@ public class UnauthenticatedInterfaces {
         "/error",
         "/",
         "/streampipes-backend/",
-        "/streampipes-backend/index.html"
+        "/streampipes-backend/index.html",
+        "/api/v3/datalake/dashboard/*/composite"
     );
   }
 }
