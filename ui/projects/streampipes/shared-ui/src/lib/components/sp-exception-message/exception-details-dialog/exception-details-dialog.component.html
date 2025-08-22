@@ -24,11 +24,11 @@
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
         @if (additionalButton) {
-            <button mat-raised-button color="accent" (click)="close(true)">
+            <button mat-flat-button color="accent" (click)="close(true)">
                 {{ additionalButtonText }}
             </button>
         }
-        <button mat-raised-button class="mat-basic" (click)="close()">
+        <button mat-flat-button class="mat-basic" (click)="close()">
             {{ 'Close' | translate }}
         </button>
     </div>

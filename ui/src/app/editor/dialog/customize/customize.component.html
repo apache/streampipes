@@ -152,7 +152,7 @@
         <div fxLayout="row" *ngIf="!templateMode">
             <button
                 mat-button
-                mat-raised-button
+                mat-flat-button
                 color="accent"
                 (click)="save()"
                 style="margin-right: 10px"
@@ -163,7 +163,7 @@
             </button>
             <button
                 mat-button
-                mat-raised-button
+                mat-flat-button
                 class="mat-basic"
                 (click)="close()"
                 data-cy="cancel-customize"
@@ -173,7 +173,7 @@
             <div fxFlex></div>
             <button
                 mat-button
-                mat-raised-button
+                mat-flat-button
                 color="accent"
                 [disabled]="!formValid"
                 data-cy="create-template"
@@ -186,7 +186,7 @@
         <div fxLayout="row" *ngIf="templateMode">
             <button
                 mat-button
-                mat-raised-button
+                mat-flat-button
                 color="accent"
                 (click)="saveTemplate()"
                 style="margin-right: 10px"
@@ -198,7 +198,7 @@
             </button>
             <button
                 mat-button
-                mat-raised-button
+                mat-flat-button
                 class="mat-basic"
                 (click)="cancelTemplateMode()"
             >

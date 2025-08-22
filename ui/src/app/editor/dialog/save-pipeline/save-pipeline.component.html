@@ -49,7 +49,7 @@
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
         <button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             (click)="hide(false)"
             *ngIf="operationCompleted"
@@ -57,7 +57,7 @@
             Create another pipeline
         </button>
         <button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             data-cy="sp-navigate-to-pipeline-overview"
             (click)="navigateToPipelineOverview()"
@@ -73,7 +73,7 @@
                 operationCompleted
             "
             mat-button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             (click)="savePipeline()"
             style="margin-right: 10px"
@@ -86,7 +86,7 @@
                 !operationProgress && (!operationCompleted || !operationSuccess)
             "
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic"
             (click)="hide(true)"
         >

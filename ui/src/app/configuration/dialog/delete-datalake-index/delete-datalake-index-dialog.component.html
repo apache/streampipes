@@ -38,7 +38,7 @@
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     data-cy="confirm-truncate-data-btn"
                     *ngIf="!deleteDialog"
@@ -48,7 +48,7 @@
                 </button>
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     data-cy="confirm-delete-data-btn"
                     *ngIf="deleteDialog"
@@ -80,7 +80,7 @@
     <div class="sp-dialog-actions actions-align-right">
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic"
             (click)="close(false)"
         >

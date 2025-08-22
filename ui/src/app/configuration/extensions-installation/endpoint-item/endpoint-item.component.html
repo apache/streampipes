@@ -70,7 +70,7 @@
                 <button
                     class="small-button-add"
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     [disabled]="!item.editable"
                     (click)="installSingleElement($event, item)"
@@ -81,7 +81,7 @@
                 <button
                     class="small-button-add-inverted"
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     [disabled]="!item.editable"
                     (click)="uninstallSingleElement($event, item)"
                     *ngIf="item.installed"
@@ -92,7 +92,7 @@
                     <button
                         class="small-button-add mat-basic no-min-width"
                         [disabled]="!item.editable"
-                        mat-raised-button
+                        mat-flat-button
                         mat-button
                         [matMenuTriggerFor]="menu"
                     >

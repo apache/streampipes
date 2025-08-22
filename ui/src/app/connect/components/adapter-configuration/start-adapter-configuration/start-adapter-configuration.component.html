@@ -218,13 +218,13 @@
     </div>
 
     <div fxLayoutAlign="end" style="margin-top: 10px">
-        <button class="mat-basic" mat-raised-button (click)="removeSelection()">
+        <button class="mat-basic" mat-flat-button (click)="removeSelection()">
             Cancel
         </button>
         <button
             style="margin-left: 10px"
             class="mat-basic stepper-button"
-            mat-raised-button
+            mat-flat-button
             (click)="goBack()"
         >
             Back
@@ -232,7 +232,7 @@
         <button
             *ngIf="!isEditMode"
             [disabled]="!startAdapterSettingsFormValid"
-            mat-raised-button
+            mat-flat-button
             data-cy="adapter-settings-start-adapter-btn"
             color="accent"
             (click)="startAdapter()"
@@ -244,7 +244,7 @@
         <button
             *ngIf="isEditMode"
             [disabled]="!startAdapterSettingsFormValid"
-            mat-raised-button
+            mat-flat-button
             data-cy="store-edit-adapter"
             color="accent"
             (click)="editAdapter()"
