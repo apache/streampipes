@@ -119,13 +119,13 @@ public class SpPermissionEvaluator implements PermissionEvaluator {
   private boolean hasPermissionForId(Authentication auth,
                                      List<Permission> permissions,
                                      String objectInstanceId) {
-    if (isPublicOrAnonymousElement(permissions)) {
-      return true;
-    }
-
     PrincipalUserDetails<?> user = getUserDetailsOrNull(auth);
     if (user == null) {
       return false;
+    }
+
+    if (isPublicElement(permissions)) {
+      return true;
     }
 
     return user.getAllObjectPermissions().contains(objectInstanceId);
@@ -152,9 +152,9 @@ public class SpPermissionEvaluator implements PermissionEvaluator {
         );
   }
 
-  private boolean isPublicOrAnonymousElement(List<Permission> permissions) {
+  private boolean isPublicElement(List<Permission> permissions) {
     return !permissions.isEmpty()
-        && (permissions.get(0).isPublicElement() || permissions.get(0).isReadAnonymous());
+        && (permissions.get(0).isPublicElement());
   }
 
   private boolean isAnonymousAccess(List<Permission> permissions) {

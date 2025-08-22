@@ -29,6 +29,8 @@ import { of, Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { TimeSelectionService } from '@streampipes/shared-ui';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
+import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
+import { ObservableGenerator } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 
 @Component({
     selector: 'sp-dashboard-kiosk',
@@ -41,7 +43,9 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
     private dashboardService = inject(DashboardService);
     private timeSelectionService = inject(TimeSelectionService);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
+    private dataExplorerSharedService = inject(DataExplorerSharedService);
 
+    observableGenerator: ObservableGenerator;
     dashboard: Dashboard;
     widgets: DataExplorerWidgetModel[] = [];
     refresh$: Subscription;
@@ -49,6 +53,10 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         const dashboardId = this.route.snapshot.params.dashboardId;
+        this.observableGenerator =
+            this.dataExplorerSharedService.kioskModeObservableGenerator(
+                dashboardId,
+            );
         this.dashboardService
             .getCompositeDashboard(dashboardId)
             .subscribe(res => {

@@ -41,6 +41,7 @@ import { ResizeService } from '../../../services/resize.service';
 import {
     BaseWidgetData,
     FieldProvider,
+    ObservableGenerator,
 } from '../../../models/dataview-dashboard.model';
 import { Observable, Subject, Subscription, zip } from 'rxjs';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
@@ -71,6 +72,7 @@ export abstract class BaseDataExplorerWidgetDirective<
     @Input() gridsterItemComponent: GridsterItemComponent;
     @Input() editMode: boolean;
     @Input() kioskMode: boolean;
+    @Input() observableGenerator: ObservableGenerator;
 
     @Input() timeSettings: TimeSettings;
 
@@ -245,29 +247,18 @@ export abstract class BaseDataExplorerWidgetDirective<
     }
 
     private loadData(includeTooMuchEventsParameter: boolean) {
-        let observables: Observable<SpQueryResult>[];
-        if (
+        const returnCompleteResult =
             includeTooMuchEventsParameter &&
-            !this.dataExplorerWidget.dataConfig.ignoreTooMuchDataWarning
-        ) {
-            observables =
-                this.dataViewQueryGeneratorService.generateObservables(
-                    this.timeSettings.startTime,
-                    this.timeSettings.endTime,
-                    this.dataExplorerWidget
-                        .dataConfig as DataExplorerDataConfig,
-                    BaseDataExplorerWidgetDirective.TOO_MUCH_DATA_PARAMETER,
-                );
-        } else {
-            observables =
-                this.dataViewQueryGeneratorService.generateObservables(
-                    this.timeSettings.startTime,
-                    this.timeSettings.endTime,
-                    this.dataExplorerWidget
-                        .dataConfig as DataExplorerDataConfig,
-                );
-        }
-
+            !this.dataExplorerWidget.dataConfig.ignoreTooMuchDataWarning;
+        const observables = this.observableGenerator.generateObservables(
+            this.timeSettings.startTime,
+            this.timeSettings.endTime,
+            this.dataExplorerWidget.dataConfig as DataExplorerDataConfig,
+            this.dataExplorerWidget.elementId,
+            returnCompleteResult
+                ? BaseDataExplorerWidgetDirective.TOO_MUCH_DATA_PARAMETER
+                : undefined,
+        );
         this.timerCallback.emit(true);
         this.requestQueue$.next(observables);
     }

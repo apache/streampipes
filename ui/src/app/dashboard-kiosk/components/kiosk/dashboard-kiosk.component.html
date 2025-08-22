@@ -58,11 +58,11 @@
     <div fxLayout="column" style="height: calc(100vh - 40px)">
         @if (dashboard) {
             <sp-dashboard-grid-view
-                #dashboardGrid
                 *ngIf="dashboard?.widgets.length > 0"
                 [editMode]="false"
                 [kioskMode]="true"
                 [dashboard]="dashboard"
+                [observableGenerator]="observableGenerator"
                 [widgets]="widgets"
                 [timeSettings]="dashboard.dashboardTimeSettings"
                 class="dashboard-grid"

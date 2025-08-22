@@ -64,7 +64,6 @@
                     <button
                         mat-icon-button
                         [matMenuTriggerFor]="menu"
-                        [aria-label]="'More options' | translate"
                         [matTooltip]="'More options' | translate"
                         *ngIf="!dataViewMode"
                         [attr.data-cy]="
@@ -102,7 +101,6 @@
                         mat-icon-button
                         [matMenuTriggerFor]="optMenu"
                         *ngIf="!globalTimeEnabled"
-                        [aria-label]="'Options' | translate"
                         data-cy="options-data-explorer"
                         #menuTrigger="matMenuTrigger"
                         [matTooltip]="tooltipText"

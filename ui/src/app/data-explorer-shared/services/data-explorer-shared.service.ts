@@ -16,10 +16,11 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
     DataExplorerDataConfig,
     DataExplorerWidgetModel,
+    DataViewQueryGeneratorService,
     DateRange,
     TimeSettings,
 } from '@streampipes/platform-services';
@@ -30,13 +31,15 @@ import {
 } from '@streampipes/shared-ui';
 import { ObjectPermissionDialogComponent } from '../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ObservableGenerator } from '../models/dataview-dashboard.model';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerSharedService {
-    constructor(
-        private dialogService: DialogService,
-        private translateService: TranslateService,
-    ) {}
+    private dialogService = inject(DialogService);
+    private translateService = inject(TranslateService);
+    private dataViewQueryGeneratorService = inject(
+        DataViewQueryGeneratorService,
+    );
 
     openPermissionsDialog(
         elementId: string,
@@ -74,5 +77,45 @@ export class DataExplorerSharedService {
                 },
             },
         });
+    }
+
+    defaultObservableGenerator(): ObservableGenerator {
+        return {
+            generateObservables: (
+                startTime: number,
+                endTime: number,
+                dataConfig: DataExplorerDataConfig,
+                widgetId: string,
+                maxRowCountPerTag: number,
+            ) => {
+                return this.dataViewQueryGeneratorService.generateObservables(
+                    startTime,
+                    endTime,
+                    dataConfig,
+                    maxRowCountPerTag,
+                );
+            },
+        };
+    }
+
+    kioskModeObservableGenerator(dashboardId: string): ObservableGenerator {
+        return {
+            generateObservables: (
+                startTime: number,
+                endTime: number,
+                dataConfig: DataExplorerDataConfig,
+                widgetId: string,
+                maxRowCountPerTag: number,
+            ) => {
+                return this.dataViewQueryGeneratorService.generateObservablesForKioskMode(
+                    startTime,
+                    endTime,
+                    dataConfig,
+                    dashboardId,
+                    widgetId,
+                    maxRowCountPerTag,
+                );
+            },
+        };
     }
 }

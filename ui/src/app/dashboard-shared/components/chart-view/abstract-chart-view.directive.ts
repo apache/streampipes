@@ -26,6 +26,7 @@ import {
 } from '@streampipes/platform-services';
 import { ResizeService } from '../../../data-explorer-shared/services/resize.service';
 import { DataExplorerChartRegistry } from '../../../data-explorer-shared/registry/data-explorer-chart-registry';
+import { ObservableGenerator } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 
 @Directive()
 export abstract class AbstractChartViewDirective {
@@ -44,6 +45,9 @@ export abstract class AbstractChartViewDirective {
 
     @Input()
     currentlyConfiguredWidgetId: string;
+
+    @Input()
+    observableGenerator: ObservableGenerator;
 
     configuredWidgets: Map<string, DataExplorerWidgetModel> = new Map<
         string,

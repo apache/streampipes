@@ -51,6 +51,7 @@ import { DataExplorerDetectChangesService } from '../../../data-explorer/service
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 import { TranslateService } from '@ngx-translate/core';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
+import { DataExplorerSharedService } from '../../../data-explorer-shared/services/data-explorer-shared.service';
 
 @Component({
     selector: 'sp-dashboard-panel',
@@ -97,6 +98,10 @@ export class DashboardPanelComponent
     private breadcrumbService = inject(SpBreadcrumbService);
     private translateService = inject(TranslateService);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
+    private dataExplorerSharedService = inject(DataExplorerSharedService);
+
+    observableGenerator =
+        this.dataExplorerSharedService.defaultObservableGenerator();
 
     public ngOnInit() {
         const params = this.route.snapshot.params;

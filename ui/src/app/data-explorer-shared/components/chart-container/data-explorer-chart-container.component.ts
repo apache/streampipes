@@ -53,7 +53,10 @@ import {
     TimeSelectionService,
     TimeSelectorLabel,
 } from '@streampipes/shared-ui';
-import { BaseWidgetData } from '../../models/dataview-dashboard.model';
+import {
+    BaseWidgetData,
+    ObservableGenerator,
+} from '../../models/dataview-dashboard.model';
 import { DataExplorerSharedService } from '../../services/data-explorer-shared.service';
 import { MatMenuTrigger } from '@angular/material/menu';
 
@@ -107,6 +110,9 @@ export class DataExplorerChartContainerComponent
 
     @Input()
     globalTimeEnabled = true;
+
+    @Input()
+    observableGenerator: ObservableGenerator;
 
     @Output() deleteCallback: EventEmitter<number> = new EventEmitter<number>();
     @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> =
@@ -261,6 +267,8 @@ export class DataExplorerChartContainerComponent
         this.componentRef.instance.previewMode = this.previewMode;
         this.componentRef.instance.gridMode = this.gridMode;
         this.componentRef.instance.widgetIndex = this.widgetIndex;
+        this.componentRef.instance.observableGenerator =
+            this.observableGenerator;
         const removeSub =
             this.componentRef.instance.removeWidgetCallback.subscribe(ev =>
                 this.removeWidget(),

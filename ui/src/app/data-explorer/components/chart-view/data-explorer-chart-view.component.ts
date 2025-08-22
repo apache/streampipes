@@ -21,7 +21,6 @@ import {
     ElementRef,
     inject,
     OnInit,
-    signal,
     ViewChild,
 } from '@angular/core';
 import {
@@ -71,18 +70,19 @@ export class DataExplorerChartViewComponent
 
     resizeEchartsService = inject(ResizeEchartsService);
 
-    @ViewChild('panel', { static: false }) outerPanel: ElementRef;
+    private dataExplorerSharedService = inject(DataExplorerSharedService);
+    private detectChangesService = inject(DataExplorerDetectChangesService);
+    private route = inject(ActivatedRoute);
+    private dialog = inject(MatDialog);
+    private routingService = inject(DataExplorerRoutingService);
+    private dataViewService = inject(ChartService);
+    private timeSelectionService = inject(TimeSelectionService);
+    private translateService = inject(TranslateService);
 
-    constructor(
-        private dashboardService: DataExplorerSharedService,
-        private detectChangesService: DataExplorerDetectChangesService,
-        private route: ActivatedRoute,
-        private dialog: MatDialog,
-        private routingService: DataExplorerRoutingService,
-        private dataViewService: ChartService,
-        private timeSelectionService: TimeSelectionService,
-        private translateService: TranslateService,
-    ) {}
+    observableGenerator =
+        this.dataExplorerSharedService.defaultObservableGenerator();
+
+    @ViewChild('panel', { static: false }) outerPanel: ElementRef;
 
     ngOnInit() {
         const dataViewId = this.route.snapshot.params.id;
@@ -233,7 +233,7 @@ export class DataExplorerChartViewComponent
     }
 
     downloadDataAsFile() {
-        this.dashboardService.downloadDataAsFile(
+        this.dataExplorerSharedService.downloadDataAsFile(
             this.timeSettings,
             this.dataView,
         );
