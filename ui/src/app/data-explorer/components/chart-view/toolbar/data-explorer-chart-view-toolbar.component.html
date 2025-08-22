@@ -56,7 +56,7 @@
         </div>
 
         <button
-            mat-raised-button
+            mat-flat-button
             color="accent"
             [matTooltip]="'Save' | translate"
             class="edit-menu-btn"
@@ -68,7 +68,7 @@
             {{ 'Save' | translate }}
         </button>
         <button
-            mat-raised-button
+            mat-flat-button
             [matTooltip]="'Discard' | translate"
             class="mat-basic mr-10 edit-menu-btn"
             (click)="discardDataViewEmitter.emit()"

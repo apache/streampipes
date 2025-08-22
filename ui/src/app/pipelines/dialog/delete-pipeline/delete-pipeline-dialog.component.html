@@ -43,7 +43,7 @@
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     *ngIf="!pipeline.running"
                     (click)="deletePipeline()"
@@ -52,7 +52,7 @@
                 </button>
                 <button
                     mat-button
-                    mat-raised-button
+                    mat-flat-button
                     color="accent"
                     *ngIf="pipeline.running"
                     (click)="stopAndDeletePipeline()"
@@ -84,7 +84,7 @@
     <div class="sp-dialog-actions actions-align-right">
         <button
             mat-button
-            mat-raised-button
+            mat-flat-button
             class="mat-basic"
             (click)="close(false)"
         >

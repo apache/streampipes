@@ -26,7 +26,7 @@ import { CurrentUserService } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-iconbar',
     templateUrl: './iconbar.component.html',
-    styleUrls: ['./iconbar.component.scss'],
+    styleUrls: ['./iconbar.component.scss', '../bars.scss'],
     standalone: false,
 })
 export class IconbarComponent
