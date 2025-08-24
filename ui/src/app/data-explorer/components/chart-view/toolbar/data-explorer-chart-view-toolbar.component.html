@@ -21,6 +21,7 @@
         class="data-explorer-options-item"
         fxLayoutAlign="start center"
         fxLayout="row"
+        fxLayoutGap="10px"
         fxFlex="100"
     >
         <div
@@ -57,7 +58,6 @@
 
         <button
             mat-flat-button
-            color="accent"
             [matTooltip]="'Save' | translate"
             class="edit-menu-btn"
             (click)="saveDataViewEmitter.emit()"

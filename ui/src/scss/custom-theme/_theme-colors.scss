@@ -151,6 +151,7 @@ $_rest: (
     error: map.get($_palettes, error),
 );
 
+$palettes: $_palettes;
 $primary-palette: map.merge(map.get($_palettes, primary), $_rest);
 $tertiary-palette: map.merge(map.get($_palettes, tertiary), $_rest);
 

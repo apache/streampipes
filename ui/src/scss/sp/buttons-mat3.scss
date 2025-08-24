@@ -21,12 +21,13 @@
 :root {
     @include mat.button-overrides(
         (
-            filled-container-shape: 8px,
+            filled-container-shape: 6px,
             outlined-outline-color: var(--mat-sys-outline),
             outlined-label-text-color: var(--mat-sys-on-surface),
             filled-label-text-weight: 400,
             filled-label-text-tracking: -0.01em,
             outlined-label-text-tracking: -0.01em,
+            text-container-shape: 6px,
             text-label-text-tracking: -0.01em,
             filled-hover-state-layer-opacity: 0.2,
         )
@@ -41,5 +42,52 @@
                 filled-label-text-weight: 400,
             )
         );
+    }
+
+    .mat-basic {
+        border: 1px solid var(--mat-sys-surface-container-highest);
+        @include mat.button-overrides(
+            (
+                filled-container-color: var(--mat-sys-surface-container-high),
+                filled-label-text-color: var(--mat-sys-primary),
+                text-hover-state-layer-opacity: 1,
+                filled-label-text-weight: 400,
+            )
+        );
+    }
+
+    .btn-warn {
+        @include mat.button-overrides(
+            (
+                filled-container-color: var(--mat-sys-error-container),
+                filled-label-text-color: var(--mat-sys-on-error-container),
+                text-hover-state-layer-opacity: 1,
+                filled-label-text-weight: 400,
+            )
+        );
+    }
+
+    .mdc-button.small-button {
+        padding: 0.25em 0.75em;
+        font-size: 0.8em;
+        max-height: 20px;
+        line-height: 10px;
+    }
+
+    .mdc-button.small-button-add {
+        padding: 0.25em 0.75em;
+        font-size: 0.8em;
+        max-height: 75px;
+        line-height: 25px;
+    }
+
+    .mdc-raised-button.small-button-add-inverted {
+        padding: 0.25em 0.75em;
+        font-size: 0.8em;
+        max-height: 75px;
+        line-height: 25px;
+        background: white;
+        border: 1.5px solid var(--mat-sys-primary);
+        color: var(--mat-sys-primary);
     }
 }
