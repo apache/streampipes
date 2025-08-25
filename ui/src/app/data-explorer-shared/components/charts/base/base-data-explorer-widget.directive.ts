@@ -70,6 +70,7 @@ export abstract class BaseDataExplorerWidgetDirective<
     @Input() gridsterItem: GridsterItem;
     @Input() gridsterItemComponent: GridsterItemComponent;
     @Input() editMode: boolean;
+    @Input() kioskMode: boolean;
 
     @Input() timeSettings: TimeSettings;
 

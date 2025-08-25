@@ -102,6 +102,7 @@ import { GenericStorageItemsComponent } from './export/export-dialog/generic-sto
 import { TranslateModule } from '@ngx-translate/core';
 import { CertificateConfigurationComponent } from './extensions-service-management/certificate-configuration/certificate-configuration.component';
 import { CertificateDetailsDialogComponent } from './dialog/certificate-details/certificate-details-dialog.component';
+import { AlternateIdConfigurationComponent } from './security-configuration/alternate-id-configuration/alternate-id-configuration.component';
 
 @NgModule({
     imports: [
@@ -259,6 +260,7 @@ import { CertificateDetailsDialogComponent } from './dialog/certificate-details/
         PipelineElementTypeFilter,
         CertificateConfigurationComponent,
         CertificateDetailsDialogComponent,
+        AlternateIdConfigurationComponent,
     ],
     providers: [
         OrderByPipe,

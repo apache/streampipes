@@ -16,28 +16,33 @@
  *
  */
 
-import { Component, inject, Input } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
-import { Certificate } from '@streampipes/platform-services';
+gridster.custom-gridster-style ::ng-deep {
+    background: var(--color-bg-1);
+}
 
-@Component({
-    selector: 'sp-certificate-details-dialog',
-    templateUrl: './certificate-details-dialog.component.html',
-    standalone: false,
-})
-export class CertificateDetailsDialogComponent {
-    dialogRef = inject(DialogRef<CertificateDetailsDialogComponent>);
+gridster.custom-gridster-style.edit ::ng-deep {
+    background: var(--color-bg-3);
+}
 
-    @Input()
-    certificate: Certificate;
+gridster.scrollVertical ::ng-deep {
+    min-height: 100%;
+    display: flex;
+    flex: 1 1 100%;
+}
 
-    isArray(value: any): boolean {
-        return Array.isArray(value);
-    }
+::ng-deep gridster.custom-gridster-style > .gridster-row {
+    border-bottom: 1px solid var(--color-bg-1);
+    border-top: 1px solid var(--color-bg-1);
+}
 
-    close(): void {
-        this.dialogRef.close();
-    }
+::ng-deep gridster.custom-gridster-style > div.gridster-column {
+    border-left: 1px solid var(--color-bg-1);
+    border-right: 1px solid var(--color-bg-1);
+}
 
-    protected readonly Object = Object;
+.widget-outer {
+    //box-shadow:
+    //    rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+    //    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    border: 1px solid var(--color-bg-2);
 }

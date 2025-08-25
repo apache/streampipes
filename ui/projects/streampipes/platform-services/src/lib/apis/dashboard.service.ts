@@ -16,7 +16,7 @@
  *
  */
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SharedDatalakeRestService } from './shared-dashboard.service';
@@ -24,6 +24,7 @@ import {
     CompositeDashboard,
     Dashboard,
 } from '../model/dashboard/dashboard.model';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({
     providedIn: 'root',
@@ -42,9 +43,18 @@ export class DashboardService {
         return this.http.get<Dashboard>(`${this.dashboardUrl}/${dashboardId}`);
     }
 
-    getCompositeDashboard(dashboardId: string): Observable<CompositeDashboard> {
+    getCompositeDashboard(
+        dashboardId: string,
+        eTag = undefined,
+    ): Observable<HttpResponse<any>> {
+        const headers = eTag ? { 'If-None-Match': eTag } : {};
         return this.http.get<CompositeDashboard>(
             `${this.dashboardUrl}/${dashboardId}/composite`,
+            {
+                headers,
+                observe: 'response',
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+            },
         );
     }
 

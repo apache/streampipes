@@ -81,7 +81,6 @@ public class OpcUaUtils {
     }
 
     var opcUaConfig = SpOpcUaConfigExtractor.extractSharedConfig(parameterExtractor, new OpcUaAdapterConfig(), client);
-
     try {
       var connectedClient = clientProvider.getClient(opcUaConfig);
       OpcUaNodeBrowser nodeBrowser =
@@ -100,13 +99,14 @@ public class OpcUaUtils {
         );
       }
 
-
       return config;
     } catch (UaException e) {
         throw new SpConfigurationException(ExceptionMessageExtractor.getDescription(e), e);
     } catch (ExecutionException | InterruptedException | URISyntaxException e) {
       if (e instanceof ExecutionException && isCertificateException((ExecutionException) e)) {
-        throw new SpConfigurationException("The provided certificate could not be trusted. Administrators can accept this certificate in the settings.", e);
+        throw new SpConfigurationException(
+            makeExceptionMessage((ExecutionException) e)
+        );
       } else {
         throw new SpConfigurationException("Could not connect to the OPC UA server with the provided settings", e);
       }
@@ -154,4 +154,14 @@ public class OpcUaUtils {
     return false;
   }
 
+  private static String makeExceptionMessage(ExecutionException e) {
+    StringBuilder message = new StringBuilder(
+       "The provided certificate could not be trusted. Administrators can accept this certificate in the settings. "
+    );
+    Throwable cause = e.getCause();
+    if (cause != null) {
+      message.append("Reason: ").append(cause.getMessage());
+    }
+    return message.toString();
+  }
 }

@@ -16,9 +16,9 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, of, Subscription, timer } from 'rxjs';
-import { DashboardGridViewComponent } from '../chart-view/grid-view/dashboard-grid-view.component';
+import { DashboardGridViewComponent } from '../../../dashboard-shared/components/chart-view/grid-view/dashboard-grid-view.component';
 import {
     ClientDashboardItem,
     Dashboard,
@@ -36,7 +36,7 @@ import {
     ActivatedRouteSnapshot,
     RouterStateSnapshot,
 } from '@angular/router';
-import { DashboardSlideViewComponent } from '../chart-view/slide-view/dashboard-slide-view.component';
+import { DashboardSlideViewComponent } from '../../../dashboard-shared/components/chart-view/slide-view/dashboard-slide-view.component';
 import {
     ConfirmDialogComponent,
     CurrentUserService,
@@ -50,6 +50,7 @@ import { DataExplorerRoutingService } from '../../../data-explorer-shared/servic
 import { DataExplorerDetectChangesService } from '../../../data-explorer/services/data-explorer-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../data-explorer-shared/models/dataview-dashboard.model';
 import { TranslateService } from '@ngx-translate/core';
+import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 
 @Component({
     selector: 'sp-dashboard-panel',
@@ -85,18 +86,17 @@ export class DashboardPanelComponent
     authSubscription: Subscription;
     refreshSubscription: Subscription;
 
-    constructor(
-        private detectChangesService: DataExplorerDetectChangesService,
-        private dialog: MatDialog,
-        private timeSelectionService: TimeSelectionService,
-        private authService: AuthService,
-        private currentUserService: CurrentUserService,
-        private dashboardService: DashboardService,
-        private route: ActivatedRoute,
-        private routingService: DataExplorerRoutingService,
-        private breadcrumbService: SpBreadcrumbService,
-        private translateService: TranslateService,
-    ) {}
+    private detectChangesService = inject(DataExplorerDetectChangesService);
+    private dialog = inject(MatDialog);
+    private timeSelectionService = inject(TimeSelectionService);
+    private authService = inject(AuthService);
+    private currentUserService = inject(CurrentUserService);
+    private dashboardService = inject(DashboardService);
+    private route = inject(ActivatedRoute);
+    private routingService = inject(DataExplorerRoutingService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private translateService = inject(TranslateService);
+    private dataExplorerDashboardService = inject(DataExplorerDashboardService);
 
     public ngOnInit() {
         const params = this.route.snapshot.params;
@@ -130,10 +130,11 @@ export class DashboardPanelComponent
         dashboardItem.rows = 4;
         dashboardItem.x = 0;
         dashboardItem.y = 0;
+        dashboardItem.widgetId =
+            this.dataExplorerDashboardService.makeUniqueWidgetId();
         this.dashboard.widgets.push(dashboardItem);
         setTimeout(() => {
             if (this.viewMode === 'grid') {
-                console.log(this.dashboardGrid);
                 this.dashboardGrid.loadWidgetConfig(dataViewElementId, true);
             } else {
                 this.dashboardSlide.loadWidgetConfig(dataViewElementId, true);
@@ -181,6 +182,7 @@ export class DashboardPanelComponent
 
     removeChartFromDashboard(widgetIndex: number) {
         this.dashboard.widgets.splice(widgetIndex, 1);
+        this.widgets.splice(widgetIndex, 1);
     }
 
     updateDateRange(timeSettings: TimeSettings) {
@@ -210,12 +212,19 @@ export class DashboardPanelComponent
     getDashboard(dashboardId: string, startTime: number, endTime: number) {
         this.dashboardService
             .getCompositeDashboard(dashboardId)
-            .subscribe(compositeDashboard => {
-                this.dashboard = compositeDashboard.dashboard;
-                this.widgets = compositeDashboard.widgets;
-                this.originalDashboard = JSON.parse(
-                    JSON.stringify(compositeDashboard.dashboard),
-                );
+            .subscribe(resp => {
+                if (resp.ok) {
+                    const compositeDashboard = resp.body;
+                    compositeDashboard.dashboard.widgets.forEach(w => {
+                        w.widgetId ??=
+                            this.dataExplorerDashboardService.makeUniqueWidgetId();
+                    });
+                    this.dashboard = compositeDashboard.dashboard;
+                    this.widgets = compositeDashboard.widgets;
+                    this.originalDashboard = JSON.parse(
+                        JSON.stringify(compositeDashboard.dashboard),
+                    );
+                }
                 this.breadcrumbService.updateBreadcrumb(
                     this.breadcrumbService.makeRoute(
                         [SpDashboardRoutes.BASE],

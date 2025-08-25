@@ -40,112 +40,118 @@
             >
                 {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
             </div>
-            <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-                <mat-spinner
-                    [diameter]="20"
-                    color="primary"
-                    class="mr-10"
-                    *ngIf="timerActive"
-                >
-                </mat-spinner>
-                <div
-                    class="time-counter"
-                    *ngIf="editMode"
-                    [ngStyle]="{
-                        background:
-                            configuredWidget.baseAppearanceConfig.textColor,
-                        color: configuredWidget.baseAppearanceConfig
-                            .backgroundColor
-                    }"
-                >
-                    {{ loadingTime }}s
-                </div>
-                <button
-                    mat-icon-button
-                    [matMenuTriggerFor]="menu"
-                    [aria-label]="'More options' | translate"
-                    [matTooltip]="'More options' | translate"
-                    *ngIf="!dataViewMode"
-                    [attr.data-cy]="
-                        'more-options-' +
-                        configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
-                            ' ',
-                            ''
-                        )
-                    "
-                >
-                    <mat-icon>more_vert</mat-icon>
-                </button>
-                <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="downloadDataAsFile()">
-                        <mat-icon>get_app</mat-icon>
-                        <span>{{ 'Download data' | translate }}</span>
-                    </button>
+            @if (!kioskMode) {
+                <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+                    <mat-spinner
+                        [diameter]="20"
+                        color="primary"
+                        class="mr-10"
+                        *ngIf="timerActive"
+                    >
+                    </mat-spinner>
+                    <div
+                        class="time-counter"
+                        *ngIf="editMode"
+                        [ngStyle]="{
+                            background:
+                                configuredWidget.baseAppearanceConfig.textColor,
+                            color: configuredWidget.baseAppearanceConfig
+                                .backgroundColor
+                        }"
+                    >
+                        {{ loadingTime }}s
+                    </div>
                     <button
-                        mat-menu-item
-                        (click)="startEditMode()"
-                        *ngIf="hasDataExplorerWritePrivileges"
+                        mat-icon-button
+                        [matMenuTriggerFor]="menu"
+                        [aria-label]="'More options' | translate"
+                        [matTooltip]="'More options' | translate"
+                        *ngIf="!dataViewMode"
                         [attr.data-cy]="
-                            'start-edit-' +
+                            'more-options-' +
                             configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
                                 ' ',
                                 ''
                             )
                         "
                     >
-                        <mat-icon>edit</mat-icon>
-                        <span>{{ 'Edit Chart' | translate }}</span>
+                        <mat-icon>more_vert</mat-icon>
                     </button>
-                </mat-menu>
-                <button
-                    mat-icon-button
-                    [matMenuTriggerFor]="optMenu"
-                    *ngIf="!globalTimeEnabled"
-                    [aria-label]="'Options' | translate"
-                    data-cy="options-data-explorer"
-                    #menuTrigger="matMenuTrigger"
-                    [matTooltip]="tooltipText"
-                    matTooltipClass="no-wrap-tooltip"
-                >
-                    <mat-icon
-                        [color]="timeSettingsModified ? 'primary' : 'default'"
-                        >alarm_clock</mat-icon
-                    >
-                </button>
-                <mat-menu #optMenu="matMenu" class="large-menu">
-                    <sp-time-selector-menu
-                        #timeSelectorMenu
-                        *ngIf="quickSelections"
-                        [timeSettings]="clonedTimeSettings"
-                        [quickSelections]="quickSelections"
-                        [enableTimePicker]="enableTimePicker"
-                        [maxDayRange]="maxDayRange"
-                        [labels]="labels"
-                        (timeSettingsEmitter)="modifyWidgetTimeSettings($event)"
-                        class="w-100"
-                    >
-                        <button
-                            mat-raised-button
-                            class="mat-basic"
-                            (click)="resetWidgetTimeSettings()"
-                        >
-                            {{ 'Reset' | translate }}
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="downloadDataAsFile()">
+                            <mat-icon>get_app</mat-icon>
+                            <span>{{ 'Download data' | translate }}</span>
                         </button>
-                    </sp-time-selector-menu>
-                </mat-menu>
-                <button
-                    mat-icon-button
-                    (click)="removeWidget()"
-                    [matTooltip]="'Delete Chart' | translate"
-                    *ngIf="editMode && hasDataExplorerWritePrivileges"
-                    [attr.data-cy]="
-                        'remove-' +
-                        configuredWidget.baseAppearanceConfig.widgetTitle
-                    "
-                >
-                    <mat-icon>clear</mat-icon>
-                </button>
-            </div>
+                        <button
+                            mat-menu-item
+                            (click)="startEditMode()"
+                            *ngIf="hasDataExplorerWritePrivileges"
+                            [attr.data-cy]="
+                                'start-edit-' +
+                                configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(
+                                    ' ',
+                                    ''
+                                )
+                            "
+                        >
+                            <mat-icon>edit</mat-icon>
+                            <span>{{ 'Edit Chart' | translate }}</span>
+                        </button>
+                    </mat-menu>
+                    <button
+                        mat-icon-button
+                        [matMenuTriggerFor]="optMenu"
+                        *ngIf="!globalTimeEnabled"
+                        [aria-label]="'Options' | translate"
+                        data-cy="options-data-explorer"
+                        #menuTrigger="matMenuTrigger"
+                        [matTooltip]="tooltipText"
+                        matTooltipClass="no-wrap-tooltip"
+                    >
+                        <mat-icon
+                            [color]="
+                                timeSettingsModified ? 'primary' : 'default'
+                            "
+                            >alarm_clock</mat-icon
+                        >
+                    </button>
+                    <mat-menu #optMenu="matMenu" class="large-menu">
+                        <sp-time-selector-menu
+                            #timeSelectorMenu
+                            *ngIf="quickSelections"
+                            [timeSettings]="clonedTimeSettings"
+                            [quickSelections]="quickSelections"
+                            [enableTimePicker]="enableTimePicker"
+                            [maxDayRange]="maxDayRange"
+                            [labels]="labels"
+                            (timeSettingsEmitter)="
+                                modifyWidgetTimeSettings($event)
+                            "
+                            class="w-100"
+                        >
+                            <button
+                                mat-raised-button
+                                class="mat-basic"
+                                (click)="resetWidgetTimeSettings()"
+                            >
+                                {{ 'Reset' | translate }}
+                            </button>
+                        </sp-time-selector-menu>
+                    </mat-menu>
+                    <button
+                        mat-icon-button
+                        (click)="removeWidget()"
+                        [matTooltip]="'Delete Chart' | translate"
+                        *ngIf="editMode && hasDataExplorerWritePrivileges"
+                        [attr.data-cy]="
+                            'remove-' +
+                            configuredWidget.baseAppearanceConfig.widgetTitle
+                        "
+                    >
+                        <mat-icon>clear</mat-icon>
+                    </button>
+                </div>
+            }
         </div>
         <div
             fxLayout="column"

@@ -124,6 +124,24 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
                     },
                 ),
             };
+            if (this.kioskMode) {
+                ['toolbox', 'visualMap'].forEach(key => {
+                    const item = this.option[key];
+                    if (item) {
+                        (Array.isArray(item) ? item : [item]).forEach(
+                            obj => (obj.show = false),
+                        );
+                    }
+                });
+                Object.assign(this.option, {
+                    grid: {
+                        left: 60,
+                        right: 60,
+                        top: 60,
+                        bottom: 60,
+                    },
+                });
+            }
         } else {
             this.showInvalidConfiguration = true;
         }

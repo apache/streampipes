@@ -85,7 +85,7 @@ export abstract class AbstractChartViewDirective {
 
     loadWidgetConfig(widgetId: string, setCurrentlyConfigured?: boolean) {
         if (!this.isGridView()) {
-            this.widgetsVisible = false;
+            this.widgetsAvailable = false;
         }
         this.dataViewDataExplorerService
             .getChart(widgetId)

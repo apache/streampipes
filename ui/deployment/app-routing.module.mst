@@ -50,6 +50,7 @@ const routes: Routes = [
   { path: 'apidocs', component: ApidocsComponent, canActivate: [ConfiguredCanActivateGuard]},
   { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard],
   data: {animation: 'LoginPage'}},
+  { path: 'dashboard-kiosk', loadChildren: () => import('./dashboard-kiosk/dashboard-kiosk.module').then(m => m.DashboardKioskModule), canActivate: [ConfiguredCanActivateGuard]},
   { path: 'register', component: RegisterComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
   { path: 'activate-account', component: ActivateAccountComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
   { path: 'restore-password', component: RestorePasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },

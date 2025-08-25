@@ -58,7 +58,7 @@ import { DataExplorerSharedService } from '../../services/data-explorer-shared.s
 import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
-    selector: 'sp-data-explorer-dashboard-widget',
+    selector: 'sp-data-explorer-chart-container',
     templateUrl: './data-explorer-chart-container.component.html',
     styleUrls: ['./data-explorer-chart-container.component.scss'],
     standalone: false,
@@ -92,6 +92,9 @@ export class DataExplorerChartContainerComponent
 
     @Input()
     gridMode = true;
+
+    @Input()
+    kioskMode = false;
 
     @Input()
     widgetIndex: number;
@@ -252,6 +255,7 @@ export class DataExplorerChartContainerComponent
         this.componentRef.instance.gridsterItemComponent =
             this.gridsterItemComponent;
         this.componentRef.instance.editMode = this.editMode;
+        this.componentRef.instance.kioskMode = this.kioskMode;
         this.componentRef.instance.dataViewDashboardItem = this.dashboardItem;
         this.componentRef.instance.dataExplorerWidget = this.configuredWidget;
         this.componentRef.instance.previewMode = this.previewMode;

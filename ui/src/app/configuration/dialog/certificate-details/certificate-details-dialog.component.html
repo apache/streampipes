@@ -26,10 +26,27 @@
                     key !== 'certificateDerBase64'
                 ) {
                     <div fxLayout="row" fxLayoutGap="10px" class="p-5">
-                        <span fxFlex="30"
-                            ><b>{{ key }}</b></span
-                        >
-                        <span fxFlex="70">{{ certificate[key] }}</span>
+                        <div fxFlex="30">
+                            <b>{{ key }}</b>
+                        </div>
+                        <div fxFlex="70">
+                            @if (isArray(certificate[key])) {
+                                <div fxLayout="row wrap" fxLayoutGap="5px">
+                                    @for (
+                                        item of certificate[key];
+                                        track $index
+                                    ) {
+                                        <sp-label
+                                            size="small"
+                                            [labelText]="item"
+                                            class="mb-10"
+                                        ></sp-label>
+                                    }
+                                </div>
+                            } @else {
+                                <small>{{ certificate[key] }}</small>
+                            }
+                        </div>
                     </div>
                 }
             }

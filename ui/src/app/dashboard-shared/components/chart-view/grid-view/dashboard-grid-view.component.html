@@ -1,0 +1,61 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+@if (dashboard.displayHeader) {
+    <div class="text-center">
+        <h2>{{ dashboard.name }}</h2>
+        <h3>{{ dashboard.description }}</h3>
+    </div>
+}
+<gridster
+    [options]="options"
+    [ngClass]="editMode ? 'edit' : ''"
+    class="custom-gridster-style"
+>
+    @for (item of dashboard.widgets; let i = $index; track item.widgetId) {
+        <ng-container>
+            <gridster-item
+                [item]="item"
+                #gridsterItemComponent
+                class="widget-outer"
+            >
+                @if (widgetsAvailable && configuredWidgets.has(item.id)) {
+                    <sp-data-explorer-chart-container
+                        [ngStyle]="{
+                            height: gridsterItemComponent.height - 13 + 'px'
+                        }"
+                        [timeSettings]="timeSettings"
+                        [globalTimeEnabled]="
+                            dashboard.dashboardGeneralSettings.globalTimeEnabled
+                        "
+                        (deleteCallback)="propagateItemRemoval($event)"
+                        (startEditModeEmitter)="startEditMode($event)"
+                        [dashboardItem]="item"
+                        [configuredWidget]="configuredWidgets.get(item.id)"
+                        [dataLakeMeasure]="dataLakeMeasures.get(item.id)"
+                        [editMode]="editMode"
+                        [kioskMode]="kioskMode"
+                        [gridMode]="true"
+                        [widgetIndex]="i"
+                        [gridsterItemComponent]="gridsterItemComponent"
+                    ></sp-data-explorer-chart-container>
+                }
+            </gridster-item>
+        </ng-container>
+    }
+</gridster>

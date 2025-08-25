@@ -16,7 +16,7 @@
  *
  */
 
-import { Directive, OnDestroy, OnInit } from '@angular/core';
+import { Directive, inject, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { UserRole } from '../../../_enums/user-role.enum';
@@ -34,12 +34,10 @@ export abstract class SpDataExplorerOverviewDirective
 
     authSubscription: Subscription;
 
-    protected constructor(
-        public dialogService: DialogService,
-        protected authService: AuthService,
-        protected currentUserService: CurrentUserService,
-        protected routingService: DataExplorerRoutingService,
-    ) {}
+    public dialogService = inject(DialogService);
+    protected authService = inject(AuthService);
+    protected currentUserService = inject(CurrentUserService);
+    protected routingService = inject(DataExplorerRoutingService);
 
     ngOnInit() {
         this.authSubscription = this.currentUserService.user$.subscribe(

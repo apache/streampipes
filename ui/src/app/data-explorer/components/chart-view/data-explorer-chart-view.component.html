@@ -68,7 +68,7 @@
             </mat-drawer>
             <mat-drawer-content class="h-100 dashboard-grid">
                 <div #panel fxFlex="100" fxLayout="column">
-                    <sp-data-explorer-dashboard-widget
+                    <sp-data-explorer-chart-container
                         *ngIf="
                             dataView &&
                             gridsterItemComponent &&
@@ -83,7 +83,7 @@
                         "
                         (startEditModeEmitter)="editDataView()"
                     >
-                    </sp-data-explorer-dashboard-widget>
+                    </sp-data-explorer-chart-container>
                 </div>
             </mat-drawer-content>
         </mat-drawer-container>

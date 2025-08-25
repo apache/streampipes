@@ -16,32 +16,27 @@
  *
  */
 
-gridster.custom-gridster-style ::ng-deep {
-    background: var(--color-bg-0);
-}
+import { Component, Input, OnInit } from '@angular/core';
 
-gridster.custom-gridster-style.edit ::ng-deep {
-    background: var(--color-bg-3);
-}
+@Component({
+    selector: 'sp-alternate-id-configuration',
+    templateUrl: './alternate-id-configuration.component.html',
+    standalone: false,
+})
+export class AlternateIdConfigurationComponent {
+    @Input()
+    alternateIds: string[] = [];
 
-gridster.scrollVertical ::ng-deep {
-    min-height: 100%;
-    display: flex;
-    flex: 1 1 100%;
-}
+    newAlternateId: string = '';
 
-::ng-deep gridster.custom-gridster-style > .gridster-row {
-    border-bottom: 1px solid var(--color-bg-1);
-    border-top: 1px solid var(--color-bg-1);
-}
+    addAlternateId(): void {
+        if (!this.alternateIds) {
+            this.alternateIds = [];
+        }
+        this.alternateIds.push(this.newAlternateId);
+    }
 
-::ng-deep gridster.custom-gridster-style > div.gridster-column {
-    border-left: 1px solid var(--color-bg-1);
-    border-right: 1px solid var(--color-bg-1);
-}
-
-.shadow {
-    box-shadow:
-        rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-        rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    removeAlternateId(id: string): void {
+        this.alternateIds.splice(this.alternateIds.indexOf(id), 1);
+    }
 }

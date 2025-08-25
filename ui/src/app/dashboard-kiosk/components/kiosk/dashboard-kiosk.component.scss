@@ -16,28 +16,33 @@
  *
  */
 
-import { Component, inject, Input } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
-import { Certificate } from '@streampipes/platform-services';
+@use '../../../../scss/_variables';
 
-@Component({
-    selector: 'sp-certificate-details-dialog',
-    templateUrl: './certificate-details-dialog.component.html',
-    standalone: false,
-})
-export class CertificateDetailsDialogComponent {
-    dialogRef = inject(DialogRef<CertificateDetailsDialogComponent>);
+.h-100 {
+    height: 100%;
+}
 
-    @Input()
-    certificate: Certificate;
+.standalone-outer {
+    background: var(--color-bg-1);
+}
 
-    isArray(value: any): boolean {
-        return Array.isArray(value);
-    }
+.dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 100%;
+}
 
-    close(): void {
-        this.dialogRef.close();
-    }
+.standalone-toolbar {
+    height: 60px;
+    background: var(--color-bg-1);
+}
 
-    protected readonly Object = Object;
+.dashboard-title {
+    margin-left: 2rem;
+    font-size: 1.25rem;
+}
+
+.dashboard-description {
+    font-size: 1.25rem;
+    font-weight: normal;
 }

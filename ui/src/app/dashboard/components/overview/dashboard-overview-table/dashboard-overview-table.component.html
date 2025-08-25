@@ -28,7 +28,7 @@
         >
             <ng-container matColumnDef="name">
                 <th
-                    fxFlex="60"
+                    fxFlex="40"
                     fxLayoutAlign="start center"
                     mat-header-cell
                     *matHeaderCellDef
@@ -36,7 +36,7 @@
                     {{ 'Dashboards' | translate }}
                 </th>
                 <td
-                    fxFlex="60"
+                    fxFlex="40"
                     fxLayoutAlign="center start"
                     mat-cell
                     data-cy="dashboard-table-overview"
@@ -54,7 +54,6 @@
 
             <ng-container matColumnDef="lastModified">
                 <th
-                    fxFlex="60"
                     fxLayoutAlign="start center"
                     mat-header-cell
                     *matHeaderCellDef
@@ -62,7 +61,6 @@
                     {{ 'Last modified' | translate }}
                 </th>
                 <td
-                    fxFlex="60"
                     fxLayoutAlign="center start"
                     mat-cell
                     *matCellDef="let element"
@@ -81,7 +79,6 @@
 
             <ng-container matColumnDef="createdAt">
                 <th
-                    fxFlex="60"
                     fxLayoutAlign="start center"
                     mat-header-cell
                     *matHeaderCellDef
@@ -89,7 +86,6 @@
                     {{ 'Created' | translate }}
                 </th>
                 <td
-                    fxFlex="60"
                     fxLayoutAlign="center start"
                     mat-cell
                     *matCellDef="let element"
@@ -104,13 +100,13 @@
 
             <ng-container matColumnDef="actions">
                 <th
-                    fxFlex="40"
+                    fxFlex
                     fxLayoutAlign="center center"
                     mat-header-cell
                     *matHeaderCellDef
                 ></th>
                 <td
-                    fxFlex="40"
+                    fxFlex
                     fxLayoutAlign="start center"
                     mat-cell
                     *matCellDef="let element"
@@ -133,6 +129,14 @@
                             (click)="editDashboard(element)"
                         >
                             <i class="material-icons">edit</i>
+                        </button>
+                        <button
+                            mat-icon-button
+                            color="accent"
+                            [matTooltip]="'Kiosk mode' | translate"
+                            (click)="openDashboardInKioskMode(element)"
+                        >
+                            <i class="material-icons">open_in_new</i>
                         </button>
                         <button
                             mat-icon-button

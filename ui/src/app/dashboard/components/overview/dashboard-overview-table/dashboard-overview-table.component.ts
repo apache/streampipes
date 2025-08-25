@@ -16,22 +16,19 @@
  *
  */
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import {
     ConfirmDialogComponent,
-    CurrentUserService,
-    DialogService,
+    DateFormatService,
 } from '@streampipes/shared-ui';
-import { AuthService } from '../../../../services/auth.service';
 import { SpDataExplorerOverviewDirective } from '../../../../data-explorer/components/overview/data-explorer-overview.directive';
-import { DataExplorerRoutingService } from '../../../../data-explorer-shared/services/data-explorer-routing.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DataExplorerDashboardService } from '../../../services/dashboard.service';
+import { DataExplorerDashboardService } from '../../../../dashboard-shared/services/dashboard.service';
 import { DataExplorerSharedService } from '../../../../data-explorer-shared/services/data-explorer-shared.service';
 import { TranslateService } from '@ngx-translate/core';
-import { DateFormatService } from '@streampipes/shared-ui';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'sp-dashboard-overview-table',
@@ -50,20 +47,13 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
     @Output()
     resourceCountEmitter: EventEmitter<number> = new EventEmitter();
 
-    constructor(
-        private dashboardService: DashboardService,
-        private dataExplorerDashboardService: DataExplorerDashboardService,
-        private dataExplorerSharedService: DataExplorerSharedService,
-        public dialogService: DialogService,
-        routingService: DataExplorerRoutingService,
-        authService: AuthService,
-        currentUserService: CurrentUserService,
-        private dialog: MatDialog,
-        protected translateService: TranslateService,
-        protected dateFormatService: DateFormatService,
-    ) {
-        super(dialogService, authService, currentUserService, routingService);
-    }
+    private dashboardService = inject(DashboardService);
+    private dataExplorerDashboardService = inject(DataExplorerDashboardService);
+    private dataExplorerSharedService = inject(DataExplorerSharedService);
+    private dialog = inject(MatDialog);
+    protected translateService = inject(TranslateService);
+    protected dateFormatService = inject(DateFormatService);
+    private router = inject(Router);
 
     afterInit(): void {
         this.displayedColumns = [
@@ -157,5 +147,9 @@ export class DashboardOverviewTableComponent extends SpDataExplorerOverviewDirec
 
     formatDate(timestamp?: number): string {
         return this.dateFormatService.formatDate(timestamp);
+    }
+
+    openDashboardInKioskMode(dashboard: Dashboard) {
+        this.router.navigate(['dashboard-kiosk', dashboard.elementId]);
     }
 }

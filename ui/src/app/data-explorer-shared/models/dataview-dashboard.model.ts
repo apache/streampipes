@@ -47,6 +47,7 @@ export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
     gridsterItem: GridsterItem;
     gridsterItemComponent: GridsterItemComponent;
     editMode: boolean;
+    kioskMode: boolean;
 
     timeSettings: TimeSettings;
 
