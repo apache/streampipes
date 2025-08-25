@@ -64,11 +64,10 @@
                 <mat-option
                     *ngFor="let label of labels; let i = index"
                     [value]="label"
-                    class="smaller-font-size"
                 >
                     <sp-label
                         [labelText]="label.label"
-                        size="medium"
+                        size="small"
                         [labelBackground]="label.color"
                     >
                     </sp-label>

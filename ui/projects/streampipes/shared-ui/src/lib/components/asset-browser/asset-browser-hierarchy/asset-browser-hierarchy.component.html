@@ -28,7 +28,7 @@
                 <button
                     mat-icon-button
                     matTreeNodeToggle
-                    *ngIf="hasChild(0, node)"
+                    *ngIf="hasChild(0, node) && !hideAssetChildren"
                     [attr.data-cy]="'button-' + node.nodeName"
                     [attr.aria-label]="'Toggle ' + node.nodeName"
                 >
