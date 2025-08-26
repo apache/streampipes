@@ -32,6 +32,7 @@ import {
 import {
     ActivatedRoute,
     ActivatedRouteSnapshot,
+    Router,
     RouterStateSnapshot,
 } from '@angular/router';
 import {
@@ -73,6 +74,7 @@ export class DataExplorerChartViewComponent
     private dataExplorerSharedService = inject(DataExplorerSharedService);
     private detectChangesService = inject(DataExplorerDetectChangesService);
     private route = inject(ActivatedRoute);
+    private router = inject(Router);
     private dialog = inject(MatDialog);
     private routingService = inject(DataExplorerRoutingService);
     private dataViewService = inject(ChartService);
@@ -123,6 +125,7 @@ export class DataExplorerChartViewComponent
             const height = this.outerPanel.nativeElement.offsetHeight;
             this.gridsterItemComponent = { width, height };
             this.timeSelectionService.notify(this.timeSettings);
+            this.updateQueryParams(this.timeSettings);
         });
     }
 
@@ -230,6 +233,19 @@ export class DataExplorerChartViewComponent
     updateDateRange(timeSettings: TimeSettings) {
         this.timeSettings = timeSettings;
         this.timeSelectionService.notify(timeSettings);
+        this.updateQueryParams(timeSettings);
+    }
+
+    updateQueryParams(timeSettings: TimeSettings) {
+        this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {
+                startDate: timeSettings.startTime,
+                endDate: timeSettings.endTime,
+            },
+            queryParamsHandling: 'merge',
+            replaceUrl: true,
+        });
     }
 
     downloadDataAsFile() {
