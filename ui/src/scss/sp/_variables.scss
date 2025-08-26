@@ -51,6 +51,10 @@ html {
     --mdc-icon-button-icon-color: var(--mat-sys-primary);
 
     --mat-divider-color: var(--mat-sys-surface-container-high);
+    --mat-table-row-item-outline-color: var(--mat-sys-surface-container-high);
+    --mat-autocomplete-background-color: var(
+        --mat-sys-surface-container-lowest
+    );
 
     --mat-standard-button-toggle-selected-state-background-color: var(
         --mat-sys-primary-container
@@ -60,6 +64,7 @@ html {
     );
 
     --mat-tree-node-text-size: var(--mat-sys-body-medium-size);
+    --mat-expansion-container-text-size: var(--mat-sys-body-medium-size);
 }
 
 .dark-mode {
