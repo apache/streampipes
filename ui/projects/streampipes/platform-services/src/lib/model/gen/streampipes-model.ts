@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-08-20 10:54:16.
+// Generated using typescript-generator version 3.2.1263 on 2025-08-27 21:55:36.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -4094,6 +4094,7 @@ export class UserDefinedOutputStrategy extends OutputStrategy {
 export class UserInfo {
     darkMode: boolean;
     displayName: string;
+    hasAcknowledged: boolean;
     roles: string[];
     showTutorial: boolean;
     username: string;
@@ -4105,6 +4106,7 @@ export class UserInfo {
         const instance = target || new UserInfo();
         instance.darkMode = data.darkMode;
         instance.displayName = data.displayName;
+        instance.hasAcknowledged = data.hasAcknowledged;
         instance.roles = __getCopyArrayFn(__identity<string>())(data.roles);
         instance.showTutorial = data.showTutorial;
         instance.username = data.username;

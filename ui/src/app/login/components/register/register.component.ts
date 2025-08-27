@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
     UntypedFormBuilder,
     UntypedFormControl,
@@ -24,7 +24,6 @@ import {
     Validators,
 } from '@angular/forms';
 import { RegistrationModel } from './registration.model';
-import { LoginService } from '../../services/login.service';
 import { checkPasswords } from '../../utils/check-password';
 import { BaseLoginPageDirective } from '../base-login-page.directive';
 
@@ -43,12 +42,7 @@ export class RegisterComponent extends BaseLoginPageDirective {
     registrationSuccess = false;
     registrationError: string;
 
-    constructor(
-        private fb: UntypedFormBuilder,
-        loginService: LoginService,
-    ) {
-        super(loginService);
-    }
+    private fb = inject(UntypedFormBuilder);
 
     registerUser() {
         this.registrationError = undefined;

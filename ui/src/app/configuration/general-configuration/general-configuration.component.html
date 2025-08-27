@@ -134,6 +134,8 @@
                 </sp-split-section>
                 <sp-configuration-link-settings [parentForm]="parentForm">
                 </sp-configuration-link-settings>
+                <sp-user-acknowledgment [parentForm]="parentForm">
+                </sp-user-acknowledgment>
                 <sp-split-section>
                     <div class="mt-10">
                         <button
@@ -142,7 +144,7 @@
                             color="accent"
                             (click)="updateConfig()"
                             style="margin-right: 10px"
-                            [disabled]="!parentForm.valid"
+                            [disabled]="parentForm.invalid"
                             data-cy="sp-element-general-config-save"
                         >
                             <i class="material-icons">save</i

@@ -39,6 +39,9 @@ import { RestorePasswordAllowedCanActivateGuard } from './_guards/restore-passwo
 import { SetNewPasswordComponent } from './login/components/set-new-password/set-new-password.component';
 import { ActivateAccountComponent } from './login/components/activate-account/activate-account.component';
 import { UserPrivilege } from './_enums/user-privilege.enum';
+import { TermsComponent } from './login/components/terms/terms.component';
+import { AuthCanActivateGuard } from './_guards/auth.can-activate.guard';
+import { TermsCanActivateChildrenGuard } from './_guards/terms.can-activate-children.guard';
 
 {{#modulesActive}}
 {{#componentImport}}
@@ -52,6 +55,7 @@ const routes: Routes = [
   data: {animation: 'LoginPage'}},
   { path: 'dashboard-kiosk', loadChildren: () => import('./dashboard-kiosk/dashboard-kiosk.module').then(m => m.DashboardKioskModule), canActivate: [ConfiguredCanActivateGuard]},
   { path: 'register', component: RegisterComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
+  { path: 'terms', component: TermsComponent, canActivate: [AuthCanActivateGuard] },
   { path: 'activate-account', component: ActivateAccountComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
   { path: 'restore-password', component: RestorePasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
   { path: 'set-new-password', component: SetNewPasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
@@ -69,7 +73,7 @@ const routes: Routes = [
       { path: 'notifications', component: NotificationsComponent },
       { path: 'info', component: InfoComponent },
       { path: 'profile', component: ProfileComponent},
-    ], canActivateChild: [AuthCanActivateChildrenGuard, PageAuthGuard] }
+    ], canActivateChild: [AuthCanActivateChildrenGuard, PageAuthGuard, TermsCanActivateChildrenGuard] }
 ];
 
 @NgModule({

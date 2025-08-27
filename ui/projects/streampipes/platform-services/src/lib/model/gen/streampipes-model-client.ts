@@ -20,7 +20,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2025-08-21 14:22:05.
+// Generated using typescript-generator version 3.2.1263 on 2025-08-27 16:31:50.
 
 import { Storable } from './streampipes-model';
 
@@ -244,12 +244,14 @@ export class UserAccount extends Principal {
     darkMode: boolean;
     externallyManagedRoles: boolean;
     fullName: string;
+    hasAcknowledged: boolean;
     hideTutorial: boolean;
     password: string;
     preferredDataProcessors: string[];
     preferredDataSinks: string[];
     preferredDataStreams: string[];
     provider: string;
+    shouldAcknowledge: boolean;
     userApiTokens: UserApiToken[];
 
     static fromData(data: UserAccount, target?: UserAccount): UserAccount {
@@ -261,6 +263,7 @@ export class UserAccount extends Principal {
         instance.darkMode = data.darkMode;
         instance.externallyManagedRoles = data.externallyManagedRoles;
         instance.fullName = data.fullName;
+        instance.hasAcknowledged = data.hasAcknowledged;
         instance.hideTutorial = data.hideTutorial;
         instance.password = data.password;
         instance.preferredDataProcessors = __getCopyArrayFn(
@@ -273,6 +276,7 @@ export class UserAccount extends Principal {
             data.preferredDataStreams,
         );
         instance.provider = data.provider;
+        instance.shouldAcknowledge = data.shouldAcknowledge;
         instance.userApiTokens = __getCopyArrayFn(UserApiToken.fromData)(
             data.userApiTokens,
         );

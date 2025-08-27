@@ -97,6 +97,11 @@ export class GeneralConfigurationComponent implements OnInit {
                     defaultUserRoles: [UserRole.ROLE_PIPELINE_USER],
                     appName: this.appConstants.APP_NAME,
                     linkSettings: configs[0].linkSettings,
+                    userAcknowledgment: {
+                        required: false,
+                        title: '',
+                        text: '',
+                    },
                 };
             }
             this.mailConfig = configs[1];
@@ -186,30 +191,26 @@ export class GeneralConfigurationComponent implements OnInit {
                 ),
             );
 
-            this.parentForm.valueChanges.subscribe(v => {
-                this.generalConfig.appName = v.appName;
-                this.generalConfig.protocol = v.protocol;
-                this.generalConfig.port = v.port;
-                this.generalConfig.hostname = v.hostname;
-                this.generalConfig.allowPasswordRecovery =
-                    v.allowPasswordRecovery;
-                this.generalConfig.allowSelfRegistration =
-                    v.allowSelfRegistration;
-                this.generalConfig.defaultUserRoles = v.defaultUserRoles.map(
-                    r => UserRole[r],
-                );
-                this.generalConfig.linkSettings.documentationUrl =
-                    v.documentationUrl;
-                this.generalConfig.linkSettings.supportUrl = v.supportUrl;
-                this.generalConfig.linkSettings.showApiDocumentationLinkOnStartScreen =
-                    v.showApiDocumentationLinkOnStartScreen;
-                this.generalConfig.linkSettings.showSupportUrlOnStartScreen =
-                    v.showSupportUrlOnStartScreen;
-                this.generalConfig.linkSettings.showDocumentationLinkInProfileMenu =
-                    v.showDocumentationLinkInProfileMenu;
-                this.generalConfig.linkSettings.showDocumentationLinkOnStartScreen =
-                    v.showDocumentationLinkOnStartScreen;
-            });
+            this.parentForm.addControl(
+                'requireTermsAcknowledgment',
+                new UntypedFormControl(
+                    this.generalConfig.userAcknowledgment?.required || false,
+                ),
+            );
+
+            this.parentForm.addControl(
+                'termsAcknowledgmentTitle',
+                new UntypedFormControl(
+                    this.generalConfig.userAcknowledgment?.title || '',
+                ),
+            );
+
+            this.parentForm.addControl(
+                'termsAcknowledgmentText',
+                new UntypedFormControl(
+                    this.generalConfig.userAcknowledgment?.text || '',
+                ),
+            );
 
             this.formReady = true;
         });
@@ -222,6 +223,42 @@ export class GeneralConfigurationComponent implements OnInit {
     }
 
     updateConfig() {
+        const formValue = this.parentForm.getRawValue();
+        const toUserRole = (r: string | number) =>
+            typeof r === 'number'
+                ? r
+                : UserRole[r as keyof typeof UserRole] ?? r;
+
+        this.generalConfig = {
+            ...this.generalConfig,
+            appName: formValue.appName,
+            protocol: formValue.protocol,
+            port: formValue.port,
+            hostname: formValue.hostname,
+            allowPasswordRecovery: formValue.allowPasswordRecovery,
+            allowSelfRegistration: formValue.allowSelfRegistration,
+            defaultUserRoles: (formValue.defaultUserRoles || []).map(
+                toUserRole,
+            ),
+            linkSettings: {
+                documentationUrl: formValue.documentationUrl,
+                supportUrl: formValue.supportUrl,
+                showApiDocumentationLinkOnStartScreen:
+                    formValue.showApiDocumentationLinkOnStartScreen,
+                showSupportUrlOnStartScreen:
+                    formValue.showSupportUrlOnStartScreen,
+                showDocumentationLinkInProfileMenu:
+                    formValue.showDocumentationLinkInProfileMenu,
+                showDocumentationLinkOnStartScreen:
+                    formValue.showDocumentationLinkOnStartScreen,
+            },
+            userAcknowledgment: {
+                required: formValue.requireTermsAcknowledgment,
+                title: formValue.termsAcknowledgmentTitle,
+                text: formValue.termsAcknowledgmentText,
+            },
+        };
+
         this.generalConfigService
             .updateGeneralConfig(this.generalConfig)
             .subscribe(result => {

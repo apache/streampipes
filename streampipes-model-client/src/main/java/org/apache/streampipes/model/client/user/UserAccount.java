@@ -40,6 +40,7 @@ public class UserAccount extends Principal {
 
   protected boolean hideTutorial;
   protected boolean darkMode = false;
+  protected boolean hasAcknowledged = false;
 
   /**
    * The authentication provider (LOCAL or one of the configured OAuth providers
@@ -180,5 +181,13 @@ public class UserAccount extends Principal {
 
   public void setExternallyManagedRoles(boolean externallyManagedRoles) {
     this.externallyManagedRoles = externallyManagedRoles;
+  }
+
+  public boolean isHasAcknowledged() {
+    return hasAcknowledged;
+  }
+
+  public void setHasAcknowledged(boolean hasAcknowledged) {
+    this.hasAcknowledged = hasAcknowledged;
   }
 }

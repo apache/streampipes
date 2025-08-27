@@ -16,23 +16,26 @@
  *
  */
 
-import { LinkSettings } from '../gen/streampipes-model';
+import { Component, Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
-export interface UserAcknowledgment {
-    required: boolean;
-    title: string;
-    text: string;
-}
+@Component({
+    selector: 'sp-user-acknowledgment',
+    templateUrl: './user-acknowledgment.component.html',
+    styleUrls: ['./user-acknowledgment.component.scss'],
+    standalone: false,
+})
+export class UserAcknowledgmentComponent {
+    @Input()
+    parentForm: FormGroup;
 
-export interface GeneralConfigModel {
-    hostname: string;
-    port: number;
-    protocol: 'http' | 'https';
-    configured: boolean;
-    allowPasswordRecovery: boolean;
-    allowSelfRegistration: boolean;
-    defaultUserRoles: string[];
-    appName: string;
-    linkSettings: LinkSettings;
-    userAcknowledgment: UserAcknowledgment;
+    quillConfig: any = {
+        toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ header: 1 }, { header: 2 }],
+            [{ size: ['small', false, 'large', 'huge'] }],
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            [{ color: [] }, { background: [] }],
+        ],
+    };
 }

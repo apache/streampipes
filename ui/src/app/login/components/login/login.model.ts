@@ -34,4 +34,7 @@ export interface LoginModel {
     allowPasswordRecovery: boolean;
     linkSettings: LinkSettings;
     oAuthSettings: OAuthSettings;
+    termsAcknowledgmentRequired: boolean;
+    termsAcknowledgmentTitle?: string;
+    termsAcknowledgmentText?: string;
 }

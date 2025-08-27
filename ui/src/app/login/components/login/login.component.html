@@ -16,111 +16,115 @@
   ~
   -->
 
-<sp-auth-box [linkSettings]="loginSettings.linkSettings" *ngIf="configReady">
-    <div fxFlex="100" fxLayout="column" fxLayoutAlign="center start">
-        <h1>Login</h1>
-    </div>
-    <div fxFlex="100" fxLayout="column" class="mt-10">
-        <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
-            <div fxFlex="100" fxLayout="column">
-                <mat-form-field fxFlex color="accent">
-                    <mat-label>Email</mat-label>
-                    <input
-                        formControlName="username"
-                        matInput
-                        name="username"
-                        class="sp"
-                        required
-                        data-cy="login-email"
-                    />
-                </mat-form-field>
-                <mat-form-field fxFlex color="accent">
-                    <mat-label>Password</mat-label>
-                    <input
-                        formControlName="password"
-                        matInput
-                        name="password"
-                        type="password"
-                        class="sp"
-                        required
-                        data-cy="login-password"
-                    />
-                </mat-form-field>
-            </div>
-            <div class="form-actions">
-                <button
-                    mat-button
-                    mat-raised-button
-                    color="accent"
-                    data-cy="login-button"
-                    (click)="doLogin()"
-                    [disabled]="!parentForm.valid || loading"
-                >
-                    <span *ngIf="loading">Logging in...</span>
-                    <span *ngIf="!loading">Login</span>
-                </button>
-                <mat-spinner
-                    [mode]="'indeterminate'"
-                    color="accent"
-                    [diameter]="20"
-                    *ngIf="loading"
-                    style="margin-top: 10px"
-                ></mat-spinner>
-                <div class="md-warn" *ngIf="authenticationFailed">
-                    <h5 class="login-error">
-                        User not found or incorrect password provided.<br />Please
-                        try again.
-                    </h5>
+@if (configReady) {
+    <sp-auth-box [linkSettings]="loginSettings.linkSettings">
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="center start">
+            <h1>Login</h1>
+        </div>
+        <div fxFlex="100" fxLayout="column" class="mt-10">
+            <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+                <div fxFlex="100" fxLayout="column">
+                    <mat-form-field fxFlex color="accent">
+                        <mat-label>Email</mat-label>
+                        <input
+                            formControlName="username"
+                            matInput
+                            name="username"
+                            class="sp"
+                            required
+                            data-cy="login-email"
+                        />
+                    </mat-form-field>
+                    <mat-form-field fxFlex color="accent">
+                        <mat-label>Password</mat-label>
+                        <input
+                            formControlName="password"
+                            matInput
+                            name="password"
+                            type="password"
+                            class="sp"
+                            required
+                            data-cy="login-password"
+                        />
+                    </mat-form-field>
                 </div>
-                <div fxLayout="row" class="mt-10">
-                    <div *ngIf="loginSettings.allowPasswordRecovery">
-                        <a [routerLink]="['/restore-password']"
-                            >Forgot password?</a
-                        >
-                    </div>
-                    <span
-                        style="margin-left: 5px; margin-right: 5px"
-                        *ngIf="
-                            loginSettings.allowSelfRegistration &&
-                            loginSettings.allowPasswordRecovery
-                        "
+                <div class="form-actions">
+                    <button
+                        mat-button
+                        mat-raised-button
+                        color="accent"
+                        data-cy="login-button"
+                        (click)="doLogin()"
+                        [disabled]="!parentForm.valid || loading"
                     >
-                        |
-                    </span>
-                    <div *ngIf="loginSettings.allowSelfRegistration">
-                        <a [routerLink]="['/register']">Create new account</a>
+                        <span *ngIf="loading">Logging in...</span>
+                        <span *ngIf="!loading">Login</span>
+                    </button>
+                    <mat-spinner
+                        [mode]="'indeterminate'"
+                        color="accent"
+                        [diameter]="20"
+                        *ngIf="loading"
+                        style="margin-top: 10px"
+                    ></mat-spinner>
+                    <div class="md-warn" *ngIf="authenticationFailed">
+                        <h5 class="login-error">
+                            User not found or incorrect password provided.<br />Please
+                            try again.
+                        </h5>
                     </div>
-                </div>
-                <div
-                    fxLayout="column"
-                    class="mt-10"
-                    *ngIf="loginSettings.oAuthSettings?.enabled"
-                >
-                    <div class="separator">
-                        <span>or</span>
+                    <div fxLayout="row" class="mt-10">
+                        <div *ngIf="loginSettings.allowPasswordRecovery">
+                            <a [routerLink]="['/restore-password']"
+                                >Forgot password?</a
+                            >
+                        </div>
+                        <span
+                            style="margin-left: 5px; margin-right: 5px"
+                            *ngIf="
+                                loginSettings.allowSelfRegistration &&
+                                loginSettings.allowPasswordRecovery
+                            "
+                        >
+                            |
+                        </span>
+                        <div *ngIf="loginSettings.allowSelfRegistration">
+                            <a [routerLink]="['/register']"
+                                >Create new account</a
+                            >
+                        </div>
                     </div>
                     <div
                         fxLayout="column"
-                        *ngFor="
-                            let provider of loginSettings.oAuthSettings
-                                .supportedProviders
-                        "
                         class="mt-10"
+                        *ngIf="loginSettings.oAuthSettings?.enabled"
                     >
-                        <button
-                            mat-button
-                            mat-raised-button
-                            color="accent"
-                            data-cy="login-button"
-                            (click)="doOAuthLogin(provider.registrationId)"
+                        <div class="separator">
+                            <span>or</span>
+                        </div>
+                        <div
+                            fxLayout="column"
+                            *ngFor="
+                                let provider of loginSettings.oAuthSettings
+                                    .supportedProviders
+                            "
+                            class="mt-10"
                         >
-                            <span *ngIf="!loading"
-                                >Login with {{ provider.name }}</span
+                            <button
+                                mat-button
+                                mat-raised-button
+                                color="accent"
+                                data-cy="login-button"
+                                (click)="doOAuthLogin(provider.registrationId)"
                             >
-                        </button>
+                                <span *ngIf="!loading"
+                                    >Login with {{ provider.name }}</span
+                                >
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </form>
-    </div>
-</sp-auth-box>
+            </form>
+        </div>
+    </sp-auth-box>
+}

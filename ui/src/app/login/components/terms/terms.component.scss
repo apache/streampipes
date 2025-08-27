@@ -16,23 +16,27 @@
  *
  */
 
-import { LinkSettings } from '../gen/streampipes-model';
-
-export interface UserAcknowledgment {
-    required: boolean;
-    title: string;
-    text: string;
+.page {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-export interface GeneralConfigModel {
-    hostname: string;
-    port: number;
-    protocol: 'http' | 'https';
-    configured: boolean;
-    allowPasswordRecovery: boolean;
-    allowSelfRegistration: boolean;
-    defaultUserRoles: string[];
-    appName: string;
-    linkSettings: LinkSettings;
-    userAcknowledgment: UserAcknowledgment;
+.terms-box {
+    width: 100%;
+    max-width: 100%;
+    max-height: 400px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    box-sizing: border-box;
+    padding-right: 4px;
+
+    white-space: normal; /* normal wrapping */
+    overflow-wrap: break-word; /* break only very long words */
+    word-break: normal; /* don’t break between characters */
+
+    min-width: 0;
 }

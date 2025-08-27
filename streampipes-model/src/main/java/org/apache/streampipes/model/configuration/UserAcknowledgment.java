@@ -16,23 +16,9 @@
  *
  */
 
-import { LinkSettings } from '../gen/streampipes-model';
+package org.apache.streampipes.model.configuration;
 
-export interface UserAcknowledgment {
-    required: boolean;
-    title: string;
-    text: string;
-}
-
-export interface GeneralConfigModel {
-    hostname: string;
-    port: number;
-    protocol: 'http' | 'https';
-    configured: boolean;
-    allowPasswordRecovery: boolean;
-    allowSelfRegistration: boolean;
-    defaultUserRoles: string[];
-    appName: string;
-    linkSettings: LinkSettings;
-    userAcknowledgment: UserAcknowledgment;
+public record UserAcknowledgment(boolean required,
+                                 String title,
+                                 String text) {
 }

@@ -40,6 +40,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { SetNewPasswordComponent } from './components/set-new-password/set-new-password.component';
 import { ActivateAccountComponent } from './components/activate-account/activate-account.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
+import { TermsComponent } from './components/terms/terms.component';
 
 @NgModule({
     imports: [
@@ -69,6 +70,7 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
         SetNewPasswordComponent,
         SetupComponent,
         StartupComponent,
+        TermsComponent,
     ],
     providers: [],
 })

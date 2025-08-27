@@ -103,6 +103,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CertificateConfigurationComponent } from './extensions-service-management/certificate-configuration/certificate-configuration.component';
 import { CertificateDetailsDialogComponent } from './dialog/certificate-details/certificate-details-dialog.component';
 import { AlternateIdConfigurationComponent } from './security-configuration/alternate-id-configuration/alternate-id-configuration.component';
+import { UserAcknowledgmentComponent } from './general-configuration/user-acknowledgement/user-acknowledgment.component';
+import { QuillEditorComponent } from 'ngx-quill';
 
 @NgModule({
     imports: [
@@ -203,6 +205,7 @@ import { AlternateIdConfigurationComponent } from './security-configuration/alte
         MatListModule,
         MatDialogModule,
         TranslateModule.forChild({}),
+        QuillEditorComponent,
     ],
     declarations: [
         ServiceConfigsComponent,
@@ -261,6 +264,7 @@ import { AlternateIdConfigurationComponent } from './security-configuration/alte
         CertificateConfigurationComponent,
         CertificateDetailsDialogComponent,
         AlternateIdConfigurationComponent,
+        UserAcknowledgmentComponent,
     ],
     providers: [
         OrderByPipe,

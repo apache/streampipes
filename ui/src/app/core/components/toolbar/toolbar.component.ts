@@ -16,20 +16,16 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BaseNavigationComponent } from '../base-navigation.component';
-import { Router } from '@angular/router';
 import { RestApi } from '../../../services/rest-api.service';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { UntypedFormControl } from '@angular/forms';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ProfileService } from '../../../profile/profile.service';
-import { AuthService } from '../../../services/auth.service';
-import { AppConstants } from '../../../services/app.constants';
 import { Subscription, timer } from 'rxjs';
 import { exhaustMap } from 'rxjs/operators';
 import { NotificationCountService } from '../../../services/notification-count-service';
-import { CurrentUserService } from '@streampipes/shared-ui';
 import { LoginService } from '../../../login/services/login.service';
 
 @Component({
@@ -56,19 +52,11 @@ export class ToolbarComponent
     documentationLinkActive = false;
     documentationLink = '';
 
-    constructor(
-        router: Router,
-        authService: AuthService,
-        private loginService: LoginService,
-        private profileService: ProfileService,
-        private restApi: RestApi,
-        private overlay: OverlayContainer,
-        currentUserService: CurrentUserService,
-        appConstants: AppConstants,
-        public notificationCountService: NotificationCountService,
-    ) {
-        super(authService, currentUserService, router, appConstants);
-    }
+    private loginService = inject(LoginService);
+    private profileService = inject(ProfileService);
+    private restApi = inject(RestApi);
+    private overlay = inject(OverlayContainer);
+    public notificationCountService = inject(NotificationCountService);
 
     ngOnInit(): void {
         this.unreadNotificationsSubscription = timer(0, 10000)
