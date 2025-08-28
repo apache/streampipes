@@ -22,7 +22,6 @@ import { FormGroup } from '@angular/forms';
 @Component({
     selector: 'sp-user-acknowledgment',
     templateUrl: './user-acknowledgment.component.html',
-    styleUrls: ['./user-acknowledgment.component.scss'],
     standalone: false,
 })
 export class UserAcknowledgmentComponent {
