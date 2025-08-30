@@ -17,11 +17,17 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
+import {
+    HttpClient,
+    HttpContext,
+    HttpParams,
+    HttpRequest,
+} from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { DataLakeMeasure, SpQueryResult } from '../model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({
     providedIn: 'root',
@@ -81,20 +87,21 @@ export class DatalakeRestService {
     getData(
         index: string,
         queryParams: DatalakeQueryParameters,
-        ignoreLoadingBar?: boolean,
+        ignoreLoadingBar = false,
     ): Observable<SpQueryResult> {
         const columns = queryParams.columns;
+        const context = ignoreLoadingBar
+            ? new HttpContext().set(NGX_LOADING_BAR_IGNORED, true)
+            : undefined;
         if (columns === '') {
             const emptyQueryResult = new SpQueryResult();
             emptyQueryResult.total = 0;
             return of(emptyQueryResult);
         } else {
             const url = this.dataLakeUrl + '/measurements/' + index;
-            const headers = ignoreLoadingBar ? { ignoreLoadingBar: '' } : {};
-            // @ts-ignore
             return this.http.get<SpQueryResult>(url, {
                 params: queryParams as unknown as HttpParams,
-                headers,
+                context,
             });
         }
     }

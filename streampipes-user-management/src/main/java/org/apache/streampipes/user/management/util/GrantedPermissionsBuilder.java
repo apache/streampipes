@@ -25,7 +25,7 @@ import java.util.Set;
 
 public class GrantedPermissionsBuilder {
 
-  private Principal principal;
+  private final Principal principal;
 
   public GrantedPermissionsBuilder(Principal principal) {
     this.principal = principal;

@@ -28,6 +28,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * The {@code OAuthConfigurationParser} class is responsible for parsing OAuth provider configurations
@@ -52,8 +54,16 @@ public class OAuthConfigurationParser {
 
   private static final Logger LOG = LoggerFactory.getLogger(OAuthConfigurationParser.class);
 
-
   private static final String OAUTH_PREFIX = "SP_OAUTH_PROVIDER";
+  private static final Set<String> defaultRoles = Set.of(
+      "ROLE_PIPELINE_USER",
+      "ROLE_PIPELINE_ADMIN",
+      "ROLE_CONNECT_ADMIN",
+      "ROLE_DASHBOARD_USER",
+      "ROLE_DASHBOARD_ADMIN",
+      "ROLE_DATA_EXPLORER_USER",
+      "ROLE_DATA_EXPLORER_ADMIN"
+  );
 
   public List<OAuthConfiguration> parse(Map<String, String> env) {
     Map<String, OAuthConfiguration> oAuthConfigurationsMap = new HashMap<>();
@@ -97,6 +107,12 @@ public class OAuthConfigurationParser {
         case "USER_ID_ATTRIBUTE_NAME" -> oAuthConfiguration.setUserIdAttributeName(value);
         case "ROLE_ATTRIBUTE_NAME" -> oAuthConfiguration.setRoleAttributeName(value);
         case "NAME" -> oAuthConfiguration.setRegistrationName(value);
+        case "DEFAULT_ROLES" -> {
+          var defaultRoles = Arrays.stream(value.split(","))
+              .map(String::trim)
+              .collect(Collectors.toSet());
+          oAuthConfiguration.setDefaultRoles(defaultRoles);
+        }
         default -> LOG.warn(
             "Unknown setting {} for oauth configuration in environment variable {}",
             settingName,
@@ -133,6 +149,7 @@ public class OAuthConfigurationParser {
   ) {
     var oAuthConfiguration = oAuthConfigurationsMap.computeIfAbsent(registrationId, k -> new OAuthConfiguration());
     oAuthConfiguration.setRegistrationId(registrationId);
+    oAuthConfiguration.setDefaultRoles(defaultRoles);
     return oAuthConfiguration;
   }
 }

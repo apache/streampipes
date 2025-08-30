@@ -19,13 +19,14 @@
 import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
+    CanActivateChild,
     Router,
     RouterStateSnapshot,
 } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Injectable()
-export class AuthCanActivateChildrenGuard {
+export class AuthCanActivateChildrenGuard implements CanActivateChild {
     constructor(
         private authService: AuthService,
         private router: Router,

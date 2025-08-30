@@ -21,7 +21,6 @@ import {
     ElementRef,
     inject,
     OnInit,
-    signal,
     ViewChild,
 } from '@angular/core';
 import {
@@ -33,6 +32,7 @@ import {
 import {
     ActivatedRoute,
     ActivatedRouteSnapshot,
+    Router,
     RouterStateSnapshot,
 } from '@angular/router';
 import {
@@ -71,18 +71,20 @@ export class DataExplorerChartViewComponent
 
     resizeEchartsService = inject(ResizeEchartsService);
 
-    @ViewChild('panel', { static: false }) outerPanel: ElementRef;
+    private dataExplorerSharedService = inject(DataExplorerSharedService);
+    private detectChangesService = inject(DataExplorerDetectChangesService);
+    private route = inject(ActivatedRoute);
+    private router = inject(Router);
+    private dialog = inject(MatDialog);
+    private routingService = inject(DataExplorerRoutingService);
+    private dataViewService = inject(ChartService);
+    private timeSelectionService = inject(TimeSelectionService);
+    private translateService = inject(TranslateService);
 
-    constructor(
-        private dashboardService: DataExplorerSharedService,
-        private detectChangesService: DataExplorerDetectChangesService,
-        private route: ActivatedRoute,
-        private dialog: MatDialog,
-        private routingService: DataExplorerRoutingService,
-        private dataViewService: ChartService,
-        private timeSelectionService: TimeSelectionService,
-        private translateService: TranslateService,
-    ) {}
+    observableGenerator =
+        this.dataExplorerSharedService.defaultObservableGenerator();
+
+    @ViewChild('panel', { static: false }) outerPanel: ElementRef;
 
     ngOnInit() {
         const dataViewId = this.route.snapshot.params.id;
@@ -123,6 +125,7 @@ export class DataExplorerChartViewComponent
             const height = this.outerPanel.nativeElement.offsetHeight;
             this.gridsterItemComponent = { width, height };
             this.timeSelectionService.notify(this.timeSettings);
+            this.updateQueryParams(this.timeSettings);
         });
     }
 
@@ -230,10 +233,23 @@ export class DataExplorerChartViewComponent
     updateDateRange(timeSettings: TimeSettings) {
         this.timeSettings = timeSettings;
         this.timeSelectionService.notify(timeSettings);
+        this.updateQueryParams(timeSettings);
+    }
+
+    updateQueryParams(timeSettings: TimeSettings) {
+        this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {
+                startDate: timeSettings.startTime,
+                endDate: timeSettings.endTime,
+            },
+            queryParamsHandling: 'merge',
+            replaceUrl: true,
+        });
     }
 
     downloadDataAsFile() {
-        this.dashboardService.downloadDataAsFile(
+        this.dataExplorerSharedService.downloadDataAsFile(
             this.timeSettings,
             this.dataView,
         );

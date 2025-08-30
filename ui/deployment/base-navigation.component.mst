@@ -23,6 +23,7 @@ import { AuthService } from '../../services/auth.service';
 import { CurrentUserService } from '@streampipes/shared-ui';
 import { AppConstants } from '../../services/app.constants';
 import { UserPrivilege } from '../../_enums/user-privilege.enum';
+import { inject } from '@angular/core';
 
 export abstract class BaseNavigationComponent {
 
@@ -47,12 +48,10 @@ export abstract class BaseNavigationComponent {
   notificationsVisible = false;
 
 
-  constructor(protected authService: AuthService,
-              protected currentUserService: CurrentUserService,
-              protected router: Router,
-              private appConstants: AppConstants) {
-
-    }
+   protected authService = inject(AuthService);
+   protected currentUserService = inject(CurrentUserService);
+   protected router = inject(Router);
+   protected appConstants = inject(AppConstants);
 
     onInit() {
       this.currentUserService.user$.subscribe(user => {

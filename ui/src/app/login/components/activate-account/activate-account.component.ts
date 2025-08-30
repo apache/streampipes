@@ -16,11 +16,10 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AccountActivationService } from '../../services/account-activation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseLoginPageDirective } from '../base-login-page.directive';
-import { LoginService } from '../../services/login.service';
 
 @Component({
     selector: 'sp-activate-account',
@@ -33,14 +32,9 @@ export class ActivateAccountComponent extends BaseLoginPageDirective {
     activationSuccess: boolean;
     activationPerformed = false;
 
-    constructor(
-        private accountActivationService: AccountActivationService,
-        private route: ActivatedRoute,
-        private router: Router,
-        protected loginService: LoginService,
-    ) {
-        super(loginService);
-    }
+    private accountActivationService = inject(AccountActivationService);
+    private route = inject(ActivatedRoute);
+    private router = inject(Router);
 
     navigateToLoginPage() {
         this.router.navigate(['/login']);

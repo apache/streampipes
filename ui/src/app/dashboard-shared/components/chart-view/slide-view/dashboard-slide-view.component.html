@@ -48,7 +48,7 @@
         </div>
         <div fxFlex="100">
             <div class="h-100 w-100 mw-100" id="slideViewOuter" fxFlex="100">
-                <sp-data-explorer-dashboard-widget
+                <sp-data-explorer-chart-container
                     [ngStyle]="{
                         height: gridsterItemComponent.height - 15 + 'px'
                     }"
@@ -61,6 +61,7 @@
                     [dashboardItem]="currentDashboardItem"
                     [configuredWidget]="currentWidget"
                     [dataLakeMeasure]="currentMeasure"
+                    [observableGenerator]="observableGenerator"
                     [editMode]="editMode"
                     [gridMode]="false"
                     [widgetIndex]="i"
@@ -71,7 +72,7 @@
                         currentWidget &&
                         widgetsVisible
                     "
-                ></sp-data-explorer-dashboard-widget>
+                ></sp-data-explorer-chart-container>
             </div>
         </div>
     </div>

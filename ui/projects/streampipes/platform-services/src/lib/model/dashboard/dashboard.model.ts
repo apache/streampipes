@@ -59,4 +59,5 @@ export interface CompositeDashboard {
     dashboard: Dashboard;
     dataLakeMeasures: DataLakeMeasure[];
     widgets: DataExplorerWidgetModel[];
+    revisionHash: string;
 }

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.datalake;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
@@ -38,6 +39,8 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -84,6 +87,7 @@ import static org.apache.streampipes.model.datalake.param.SupportedRestQueryPara
 @RequestMapping("/api/v4/datalake")
 public class DataLakeResource extends AbstractRestResource {
 
+  private static final Logger LOG = LoggerFactory.getLogger(DataLakeResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
 
@@ -354,6 +358,33 @@ public class DataLakeResource extends AbstractRestResource {
           .headers(headers)
           .body(streamingOutput);
     }
+  }
+
+  @PostMapping(
+      path = "/measurements/{measurementID}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Store a measurement series to a data lake with the given id", tags = {"Data Lake"},
+      responses = {
+          @ApiResponse(
+              responseCode = "400",
+              description = "Can't store the given data to this data lake"),
+          @ApiResponse(
+              responseCode = "200",
+              description = "Successfully stored data")})
+  public ResponseEntity<?> storeDataToMeasurement(
+      @PathVariable String measurementID,
+      @RequestBody SpQueryResult queryResult,
+      @Parameter(in = ParameterIn.QUERY, description = "should not identical schemas be stored")
+      @RequestParam(value = "ignoreSchemaMismatch", required = false) boolean ignoreSchemaMismatch) {
+    var dataWriter = new DataLakeDataWriter(ignoreSchemaMismatch);
+    try {
+      dataWriter.writeData(measurementID, queryResult);
+    } catch (SpRuntimeException e) {
+      LOG.warn("Could not store event", e);
+      return badRequest(Notifications.error("Could not store event for measurement " + measurementID, e.getMessage()));
+    }
+    return ok();
   }
 
   @DeleteMapping(path = "/measurements")

@@ -24,6 +24,7 @@ import org.apache.streampipes.model.shared.api.Storable;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
 import java.util.Objects;
 
 @TsModel
@@ -44,8 +45,14 @@ public final class Certificate implements Storable {
   private String notAfter;
   private String sigAlgName;
   private String algorithm;
+  private String basicConstraints;
+  private List<String> keyUsages;
+  private List<String> extendedKeyUsages;
+  private List<String> subjectAlternativeNames;
   private String certificateDerBase64;
+
   private CertificateState state;
+
 
   public Certificate() {
   }
@@ -124,6 +131,74 @@ public final class Certificate implements Storable {
 
   public CertificateState getState() {
     return state;
+  }
+
+  public void setSubjectDn(String subjectDn) {
+    this.subjectDn = subjectDn;
+  }
+
+  public void setIssuerDn(String issuerDn) {
+    this.issuerDn = issuerDn;
+  }
+
+  public void setSerialNumber(String serialNumber) {
+    this.serialNumber = serialNumber;
+  }
+
+  public void setNotBefore(String notBefore) {
+    this.notBefore = notBefore;
+  }
+
+  public void setNotAfter(String notAfter) {
+    this.notAfter = notAfter;
+  }
+
+  public void setSigAlgName(String sigAlgName) {
+    this.sigAlgName = sigAlgName;
+  }
+
+  public void setAlgorithm(String algorithm) {
+    this.algorithm = algorithm;
+  }
+
+  public String getBasicConstraints() {
+    return basicConstraints;
+  }
+
+  public void setBasicConstraints(String basicConstraints) {
+    this.basicConstraints = basicConstraints;
+  }
+
+  public List<String> getKeyUsages() {
+    return keyUsages;
+  }
+
+  public void setKeyUsages(List<String> keyUsages) {
+    this.keyUsages = keyUsages;
+  }
+
+  public List<String> getExtendedKeyUsages() {
+    return extendedKeyUsages;
+  }
+
+  public void setExtendedKeyUsages(List<String> extendedKeyUsages) {
+    this.extendedKeyUsages = extendedKeyUsages;
+  }
+
+  public List<String> getSubjectAlternativeNames() {
+    return subjectAlternativeNames;
+  }
+
+  public void setSubjectAlternativeNames(List<String> subjectAlternativeNames) {
+    this.subjectAlternativeNames = subjectAlternativeNames;
+  }
+
+  public void setCertificateDerBase64(String certificateDerBase64) {
+    this.certificateDerBase64 = certificateDerBase64;
+  }
+
+  public void setState(CertificateState state) {
+    this.state = state;
   }
 
   @Override

@@ -44,6 +44,13 @@
                         {{ role.label }}
                     </mat-checkbox>
                 </div>
+                <div fxLayout="column" class="general-options-panel">
+                    <span class="general-options-header">Alternate IDs</span>
+                    <sp-alternate-id-configuration
+                        [alternateIds]="clonedGroup.alternateIds"
+                    >
+                    </sp-alternate-id-configuration>
+                </div>
             </form>
         </div>
     </div>

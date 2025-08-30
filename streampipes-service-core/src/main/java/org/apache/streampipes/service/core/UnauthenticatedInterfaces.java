@@ -42,7 +42,10 @@ public class UnauthenticatedInterfaces {
         "/error",
         "/",
         "/streampipes-backend/",
-        "/streampipes-backend/index.html"
+        "/streampipes-backend/index.html",
+        // anonymous dashboard access is allowed
+        "/api/v3/datalake/dashboard/*/composite",
+        "/api/v3/datalake/dashboard/kiosk/*/*/data"
     );
   }
 }

@@ -20,8 +20,11 @@ Specific implementation of the StreamPipes API's data lake measure endpoints.
 This endpoint allows to consume data stored in StreamPipes' data lake.
 """
 from datetime import datetime
+from json import dumps
+from math import ceil
 from typing import Any, Dict, List, Literal, Optional, Tuple, Type
 
+from pandas import DataFrame
 from pydantic.v1 import BaseModel, Extra, Field, StrictInt, ValidationError, validator
 
 from streampipes.endpoint.endpoint import APIEndpoint
@@ -199,7 +202,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     Consequently, it allows querying metadata about available data sets (see `all()` method).
     The metadata is returned as an instance of [`DataLakeMeasures`][streampipes.model.container.DataLakeMeasures].
 
-    In addition, the endpoint provides direct access to the data stored in the data laka by querying a
+    In addition, the endpoint provides direct access to the data stored in the data lake by querying a
     specific data lake measure using the `get()` method.
 
     Examples
@@ -253,7 +256,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     ```
 
     As you can see, the returned amount of rows per default is `1000`.
-    We can modify this behavior by passing the `limit` paramter.
+    We can modify this behavior by passing the `limit` parameter.
     ```python
     flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate", limit=10).to_pandas()
     len(flow_rate_pd)
@@ -347,7 +350,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         """Queries the specified data lake measure from the API.
 
         By default, the maximum number of returned records is 1000.
-        This behaviour can be influenced by passing the parameter `limit` with a different value
+        This behavior can be influenced by passing the parameter `limit` with a different value
         (see [MeasurementGetQueryConfig][streampipes.endpoint.api.data_lake_measure.MeasurementGetQueryConfig]).
 
         Parameters
@@ -369,7 +372,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         see directly at [DataLakeMeasureEndpoint][streampipes.endpoint.api.data_lake_measure.DataLakeMeasureEndpoint].
         """
 
-        # bild base URL for resource
+        # build base URL for resource
         url = f"{self.build_url()}/{identifier}"
 
         # extend base URL by query parameters
@@ -378,3 +381,56 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
         response = self._make_request(request_method=self._parent_client.request_session.get, url=url)
         return self._resource_cls(**response.json())
+
+    def storeDataToMeasurement(
+        self, identifier: str, df: DataFrame, ignore_schema_mismatch=False, batch_size: int = 10000
+    ) -> None:
+        """Stores data from a pandas DataFrame into the specified data lake measurement.
+
+        The provided DataFrame will be split into chunks and converted into a
+        `QueryResult` and then serialized to JSON before being sent to the
+        StreamPipes Data Lake. The data will be appended to the measurement
+        identified by `identifier`.
+
+        Parameters
+        ----------
+        identifier : str
+            The identifier of the data lake measurement into which the data will be stored.
+        df : pandas.DataFrame
+            The data to be stored, provided as a pandas DataFrame. The first column
+            must be `timestamp` and all timestamp values will be cast to integers.
+        ignore_schema_mismatch: bool
+            Defines if mismatching events should be stored.
+        batch_size:
+            The size of the chunks in which the data gets split. This ensures
+            that requests remain reasonably small
+
+        Returns
+        -------
+        None
+            This method does not return anything.
+
+        Examples
+        --------
+        ```python
+        df = pd.DataFrame({
+            "timestamp": [1672531200000, 1672531260000],
+            "value": [42, 43],
+        })
+        client.dataLakeMeasureApi.storeDataToMeasurement("my-measure-id", df)
+        ```
+        """
+
+        num_chunks = ceil(len(df) / batch_size)
+        for i in range(num_chunks):
+            start = i * batch_size
+            end = (i + 1) * batch_size
+            chunk = df.iloc[start:end].copy()
+            query_result = QueryResult.from_pandas(chunk)
+            self._make_request(
+                request_method=self._parent_client.request_session.post,
+                url=f"{self.build_url()}/{identifier}",
+                params={"ignoreSchemaMismatch": ignore_schema_mismatch},
+                data=dumps(query_result.to_dict(use_source_names=True)),
+                headers={"Content-type": "application/json"},
+            )

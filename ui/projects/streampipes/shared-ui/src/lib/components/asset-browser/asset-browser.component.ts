@@ -46,6 +46,9 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     showResources = false;
 
     @Input()
+    hideAssetChildren = false;
+
+    @Input()
     allResourcesAlias = this.translateService.instant('Resources');
 
     @Input()

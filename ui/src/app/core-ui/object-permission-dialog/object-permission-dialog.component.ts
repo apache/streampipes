@@ -55,6 +55,12 @@ export class ObjectPermissionDialogComponent implements OnInit {
     @Input()
     headerTitle: string;
 
+    @Input()
+    anonymousReadSupported = false;
+
+    @Input()
+    publicLink = '';
+
     parentForm: UntypedFormGroup;
 
     permission: Permission;
@@ -90,17 +96,6 @@ export class ObjectPermissionDialogComponent implements OnInit {
     ngOnInit(): void {
         this.loadUsersAndGroups();
         this.parentForm = this.fb.group({});
-        this.parentForm.valueChanges.subscribe(v => {
-            this.permission.publicElement = v.publicElement;
-            if (v.publicElement) {
-                this.permission.grantedAuthorities = [];
-                this.grantedGroupAuthorities = [];
-                this.grantedUserAuthorities = [];
-            }
-            if (v.owner) {
-                this.permission.ownerSid = v.owner;
-            }
-        });
     }
 
     loadUsersAndGroups() {
@@ -137,6 +132,12 @@ export class ObjectPermissionDialogComponent implements OnInit {
                     Validators.required,
                 ),
             );
+            if (this.anonymousReadSupported) {
+                this.parentForm.addControl(
+                    'readAnonymous',
+                    new UntypedFormControl(this.permission.readAnonymous),
+                );
+            }
             this.filteredUsers = this.userCtrl.valueChanges.pipe(
                 startWith(null),
                 map((username: string | null) => {
@@ -166,12 +167,25 @@ export class ObjectPermissionDialogComponent implements OnInit {
                     this.addUserToSelection(authority);
                 }
             });
-        } else {
-            console.log('No permission entry found for item');
         }
     }
 
     save() {
+        const { owner, publicElement, readAnonymous } =
+            this.parentForm.getRawValue();
+        this.permission.publicElement = publicElement;
+        if (this.anonymousReadSupported) {
+            this.permission.readAnonymous = readAnonymous || false;
+        }
+        if (this.permission.publicElement) {
+            this.permission.grantedAuthorities = [];
+            this.grantedGroupAuthorities = [];
+            this.grantedUserAuthorities = [];
+        }
+        if (owner) {
+            this.permission.ownerSid = owner;
+        }
+
         this.permission.grantedAuthorities = this.grantedUserAuthorities
             .map(u => {
                 return { principalType: u.principalType, sid: u.principalId };

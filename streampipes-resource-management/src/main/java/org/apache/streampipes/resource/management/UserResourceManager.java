@@ -82,7 +82,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
         .getUserStorageAPI()
         .getAllUserAccounts()
         .stream()
-        .filter(u -> u.getRoles().contains(DefaultRole.ROLE_ADMIN))
+        .filter(u -> u.getRoles().contains(DefaultRole.ROLE_ADMIN.name()))
         .findFirst()
         .orElseThrow(IllegalArgumentException::new);
   }

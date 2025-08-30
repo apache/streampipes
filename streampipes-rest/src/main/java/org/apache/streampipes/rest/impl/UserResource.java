@@ -72,25 +72,34 @@ public class UserResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "{principalId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getUserDetails(@PathVariable("principalId") String principalId) {
-    Principal principal = getPrincipalById(principalId);
-    Utils.removeCredentials(principal);
+    if (principalId.equals(getAuthenticatedUserSid()) || isAdmin()) {
+      Principal principal = getPrincipalById(principalId);
+      Utils.removeCredentials(principal);
 
-    if (principal != null) {
-      return ok(principal);
+      if (principal != null) {
+        return ok(principal);
+      } else {
+        return statusMessage(Notifications.error("User not found"));
+      }
     } else {
-      return statusMessage(Notifications.error("User not found"));
+      return badRequest();
     }
   }
 
   @GetMapping(path = "username/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getUserDetailsByName(@PathVariable("username") String username) {
-    Principal principal = getPrincipal(username);
-    Utils.removeCredentials(principal);
+    var authenticatedPrincipal = getPrincipal();
+    if (username.equals(authenticatedPrincipal.getUsername()) || isAdmin()) {
+      Principal principal = getPrincipalByUsername(username);
+      Utils.removeCredentials(principal);
 
-    if (principal != null) {
-      return ok(principal);
+      if (principal != null) {
+        return ok(principal);
+      } else {
+        return statusMessage(Notifications.error("User not found"));
+      }
     } else {
-      return statusMessage(Notifications.error("User not found"));
+      return badRequest();
     }
   }
 
@@ -356,7 +365,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     return getUserStorage().getUserAccount(username);
   }
 
-  private Principal getPrincipal(String username) {
+  private Principal getPrincipalByUsername(String username) {
     return getUserStorage().getUser(username);
   }
 

@@ -30,6 +30,7 @@ public class UserInfo {
   private Set<String> roles;
   private boolean showTutorial;
   private boolean darkMode;
+  private boolean hasAcknowledged;
 
   public UserInfo() {
   }
@@ -72,5 +73,13 @@ public class UserInfo {
 
   public void setDarkMode(boolean darkMode) {
     this.darkMode = darkMode;
+  }
+
+  public boolean isHasAcknowledged() {
+    return hasAcknowledged;
+  }
+
+  public void setHasAcknowledged(boolean hasAcknowledged) {
+    this.hasAcknowledged = hasAcknowledged;
   }
 }

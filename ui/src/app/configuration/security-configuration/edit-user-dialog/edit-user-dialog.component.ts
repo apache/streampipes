@@ -29,6 +29,7 @@ import {
 } from '@streampipes/platform-services';
 import {
     AbstractControl,
+    FormControl,
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
@@ -72,6 +73,7 @@ export class EditUserDialogComponent implements OnInit {
     sendPasswordToUser = false;
     emailChanged = false;
     emailConfigured = false;
+    formAvailable = false;
 
     constructor(
         private dialogRef: DialogRef<EditUserDialogComponent>,
@@ -89,8 +91,6 @@ export class EditUserDialogComponent implements OnInit {
         this.initRoleFilter();
         this.loadInitialData();
         this.cloneUser();
-        this.initForm();
-        this.handleFormChanges();
     }
 
     save() {
@@ -102,6 +102,48 @@ export class EditUserDialogComponent implements OnInit {
                 ? error.error.notifications[0].title
                 : 'Unknown error';
         };
+
+        if (!this.isUserAccount || !this.isExternalProvider) {
+            this.clonedUser.username = this.parentForm.get('username').value;
+        }
+
+        if (!this.isExternalProvider) {
+            this.clonedUser.accountLocked =
+                this.parentForm.get('accountLocked').value;
+            this.clonedUser.accountEnabled =
+                this.parentForm.get('accountEnabled').value;
+        }
+
+        if (this.clonedUser instanceof UserAccount) {
+            this.emailChanged =
+                this.clonedUser.username !== this.user.username &&
+                this.user.username ===
+                    this.currentUserService.getCurrentUser().username &&
+                this.editMode;
+
+            if (!this.isExternalProvider) {
+                this.clonedUser.fullName =
+                    this.parentForm.get('fullName').value;
+            }
+            if (!this.editMode) {
+                if (
+                    this.emailConfigured &&
+                    this.parentForm.get('sendPasswordToUser').value
+                ) {
+                    this.sendPasswordToUser =
+                        this.parentForm.get('sendPasswordToUser').value;
+                } else {
+                    this.clonedUser.password =
+                        this.parentForm.get('password').value;
+                }
+            }
+        } else {
+            const clientSecret = this.parentForm.get('clientSecret').value;
+            if (this.user.clientSecret !== clientSecret) {
+                this.clonedUser.clientSecret = clientSecret;
+                this.clonedUser.secretEncrypted = false;
+            }
+        }
 
         if (this.editMode) {
             const update$ = this.isUserAccount
@@ -150,6 +192,9 @@ export class EditUserDialogComponent implements OnInit {
     private loadInitialData(): void {
         this.mailConfigService.getMailConfig().subscribe(config => {
             this.emailConfigured = config.emailConfigured;
+            this.initForm();
+            this.handleFormChanges();
+            this.formAvailable = true;
         });
 
         this.userGroupService.getAllUserGroups().subscribe(groups => {
@@ -193,18 +238,26 @@ export class EditUserDialogComponent implements OnInit {
             ];
         }
 
-        if (!this.editMode && this.clonedUser instanceof UserAccount) {
-            form['password'] = [this.clonedUser.password, Validators.required];
-            form['repeatPassword'] = [''];
-            form['sendPasswordToUser'] = [this.sendPasswordToUser];
-        }
-
         this.parentForm = this.fb.group(form, {
             validators:
                 this.editMode || !this.isUserAccount
                     ? null
                     : this.checkPasswords,
         });
+
+        if (!this.editMode && this.clonedUser instanceof UserAccount) {
+            if (this.emailConfigured) {
+                this.parentForm.addControl(
+                    'sendPasswordToUser',
+                    new FormControl(this.sendPasswordToUser),
+                );
+            }
+            this.parentForm.addControl(
+                'password',
+                new FormControl(null, [Validators.required]),
+            );
+            this.parentForm.addControl('repeatPassword', new FormControl(null));
+        }
 
         if (this.isExternalProvider) {
             this.parentForm.get('username')?.disable();
@@ -214,67 +267,57 @@ export class EditUserDialogComponent implements OnInit {
 
     private handleFormChanges(): void {
         this.parentForm.valueChanges.subscribe(v => {
-            const raw = this.parentForm.getRawValue();
-            if (!this.isUserAccount || !this.isExternalProvider) {
-                this.clonedUser.username = v.username;
-            }
-
-            if (!this.isExternalProvider) {
-                this.clonedUser.accountLocked = raw.accountLocked;
-                this.clonedUser.accountEnabled = raw.accountEnabled;
-            }
-
-            if (this.clonedUser instanceof UserAccount) {
-                this.emailChanged =
-                    this.clonedUser.username !== this.user.username &&
-                    this.user.username ===
-                        this.currentUserService.getCurrentUser().username &&
-                    this.editMode;
-
-                if (!this.isExternalProvider) {
-                    this.clonedUser.fullName = v.fullName;
-                }
-
-                if (!this.editMode) {
+            if (this.clonedUser instanceof UserAccount && !this.editMode) {
+                if (this.sendPasswordToUser !== v.sendPasswordToUser) {
                     this.sendPasswordToUser = v.sendPasswordToUser;
-
                     if (this.sendPasswordToUser) {
                         this.removePasswordControls();
                     } else {
                         this.addPasswordControlsIfMissing();
-                        this.clonedUser.password = v.password;
                     }
-                }
-            } else {
-                if (this.user.clientSecret !== v.clientSecret) {
-                    this.clonedUser.clientSecret = v.clientSecret;
-                    this.clonedUser.secretEncrypted = false;
                 }
             }
         });
     }
 
     private removePasswordControls(): void {
-        this.parentForm.removeControl('password');
-        this.parentForm.removeControl('repeatPassword');
-        this.parentForm.clearValidators();
+        const pw = this.parentForm.get('password');
+        const rp = this.parentForm.get('repeatPassword');
+        pw.setValue(null);
+        rp.setValue(null);
+
+        pw?.clearValidators();
+        rp?.clearValidators();
+
+        pw?.disable({ emitEvent: false });
+        rp?.disable({ emitEvent: false });
+
+        pw?.updateValueAndValidity({ emitEvent: false });
+        rp?.updateValueAndValidity({ emitEvent: false });
+
+        this.parentForm.setValidators(null);
+        this.parentForm.updateValueAndValidity({ emitEvent: false });
+
         if (this.clonedUser instanceof UserAccount) {
             this.clonedUser.password = undefined;
         }
     }
 
     private addPasswordControlsIfMissing(): void {
-        if (!this.parentForm.get('password')) {
-            this.parentForm.addControl(
-                'password',
-                new UntypedFormControl('', Validators.required),
-            );
-            this.parentForm.addControl(
-                'repeatPassword',
-                new UntypedFormControl(),
-            );
-            this.parentForm.setValidators(this.checkPasswords);
-        }
+        const pw = this.parentForm.get('password');
+        const rp = this.parentForm.get('repeatPassword');
+
+        pw?.enable({ emitEvent: false });
+        rp?.enable({ emitEvent: false });
+
+        pw?.setValidators([Validators.required]);
+        rp?.setValidators([Validators.required]);
+
+        this.parentForm.addValidators(this.checkPasswords);
+
+        pw?.updateValueAndValidity({ emitEvent: false });
+        rp?.updateValueAndValidity({ emitEvent: false });
+        this.parentForm.updateValueAndValidity({ emitEvent: false });
     }
 
     private getUsernameValidators(): ValidatorFn[] {

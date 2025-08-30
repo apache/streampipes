@@ -102,6 +102,9 @@ import { GenericStorageItemsComponent } from './export/export-dialog/generic-sto
 import { TranslateModule } from '@ngx-translate/core';
 import { CertificateConfigurationComponent } from './extensions-service-management/certificate-configuration/certificate-configuration.component';
 import { CertificateDetailsDialogComponent } from './dialog/certificate-details/certificate-details-dialog.component';
+import { AlternateIdConfigurationComponent } from './security-configuration/alternate-id-configuration/alternate-id-configuration.component';
+import { UserAcknowledgmentComponent } from './general-configuration/user-acknowledgement/user-acknowledgment.component';
+import { QuillEditorComponent } from 'ngx-quill';
 
 @NgModule({
     imports: [
@@ -202,6 +205,7 @@ import { CertificateDetailsDialogComponent } from './dialog/certificate-details/
         MatListModule,
         MatDialogModule,
         TranslateModule.forChild({}),
+        QuillEditorComponent,
     ],
     declarations: [
         ServiceConfigsComponent,
@@ -259,6 +263,8 @@ import { CertificateDetailsDialogComponent } from './dialog/certificate-details/
         PipelineElementTypeFilter,
         CertificateConfigurationComponent,
         CertificateDetailsDialogComponent,
+        AlternateIdConfigurationComponent,
+        UserAcknowledgmentComponent,
     ],
     providers: [
         OrderByPipe,

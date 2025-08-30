@@ -20,6 +20,7 @@ package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
 import org.apache.streampipes.service.base.security.UnauthorizedRequestEntryPoint;
 import org.apache.streampipes.service.core.filter.TokenAuthenticationFilter;
 import org.apache.streampipes.service.core.oauth2.CustomOAuth2UserService;
@@ -53,6 +54,7 @@ import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCo
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.ClientRegistrations;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -61,6 +63,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -191,32 +194,56 @@ public class WebSecurityConfig {
   private List<ClientRegistration> getRegistrations() {
     var oauthConfigs = Environments.getEnvironment().getOAuthConfigurations();
 
-    return oauthConfigs.stream().map(config -> {
-          ClientRegistration.Builder builder = this.getBuilder(config.getRegistrationId());
-          builder.scope(config.getScopes());
-          builder.authorizationUri(config.getAuthorizationUri());
-          builder.tokenUri(config.getTokenUri());
-          builder.jwkSetUri(config.getJwkSetUri());
-          builder.issuerUri(config.getIssuerUri());
-          builder.userInfoUri(config.getUserInfoUri());
-          builder.clientSecret(config.getClientSecret());
-          builder.userNameAttributeName(config.getEmailAttributeName());
-          builder.clientName(config.getClientName());
-          builder.clientId(config.getClientId());
+    return oauthConfigs.stream()
+        .map(config -> {
+          ClientRegistration.Builder builder = getBuilder(config);
+
+          builder
+              .registrationId(config.getRegistrationId())
+              .clientId(config.getClientId())
+              .clientSecret(config.getClientSecret())
+              .clientName(config.getClientName())
+              .scope(config.getScopes());
+
+          if (StringUtils.hasText(config.getEmailAttributeName())) {
+            builder.userNameAttributeName(config.getEmailAttributeName());
+          }
+
+          if (StringUtils.hasText(config.getAuthorizationUri())) {
+            builder.authorizationUri(config.getAuthorizationUri());
+          }
+          if (StringUtils.hasText(config.getTokenUri())) {
+            builder.tokenUri(config.getTokenUri());
+          }
+          if (StringUtils.hasText(config.getJwkSetUri())) {
+            builder.jwkSetUri(config.getJwkSetUri());
+          }
+          if (StringUtils.hasText(config.getUserInfoUri())) {
+            builder.userInfoUri(config.getUserInfoUri());
+          }
+          if (StringUtils.hasText(config.getIssuerUri())) {
+            builder.issuerUri(config.getIssuerUri());
+          }
+
           return builder.build();
-        }
-    ).toList();
+        })
+        .toList();
   }
 
-  protected final ClientRegistration.Builder getBuilder(String registrationId) {
-    ClientRegistration.Builder builder = ClientRegistration.withRegistrationId(registrationId);
-    builder.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
-    builder.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE);
-    builder.redirectUri(
-        String.format("%s/streampipes-backend/{action}/oauth2/code/{registrationId}",
+  protected ClientRegistration.Builder getBuilder(OAuthConfiguration config) {
+    ClientRegistration.Builder builder =
+        StringUtils.hasText(config.getIssuerUri())
+            ? ClientRegistrations.fromIssuerLocation(config.getIssuerUri())
+            : ClientRegistration.withRegistrationId(config.getRegistrationId())
+            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE);
+
+    builder
+        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+        .redirectUri(String.format(
+            "%s/streampipes-backend/{action}/oauth2/code/{registrationId}",
             env.getOAuthRedirectUri().getValueOrDefault()
-        )
-    );
+        ));
+
     return builder;
   }
 

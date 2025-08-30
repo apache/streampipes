@@ -25,6 +25,7 @@ import {
 } from '@angular/core';
 import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
 import {
+    ClientDashboardItem,
     DashboardItem,
     DataExplorerWidgetModel,
     DataLakeMeasure,
@@ -46,7 +47,7 @@ export class DashboardSlideViewComponent
 
     currentWidget: DataExplorerWidgetModel;
     currentMeasure: DataLakeMeasure;
-    currentDashboardItem: DashboardItem;
+    currentDashboardItem: ClientDashboardItem;
 
     displayWidget = false;
 
@@ -62,9 +63,7 @@ export class DashboardSlideViewComponent
             this.selectedWidgetIndex = index;
             this.currentWidget = this.configuredWidgets.get(widgetId);
             this.currentMeasure = this.dataLakeMeasures.get(widgetId);
-            this.currentDashboardItem = this.dashboard.widgets[
-                index
-            ] as unknown as DashboardItem;
+            this.currentDashboardItem = this.dashboard.widgets[index];
             this.currentlyConfiguredWidgetId = widgetId;
             this.displayWidget = true;
         });
