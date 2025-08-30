@@ -98,3 +98,7 @@
     background-color: var(--color-bg-2);
     cursor: pointer;
 }
+
+.list-item {
+    --mdc-list-list-item-two-line-container-height: 68px;
+}
