@@ -120,7 +120,7 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
 
     //TODO Currently working on API ENdpoint 
     @PostMapping(
-      path = "/{measurementName}/cleanup",
+      path = "/{elementId}/cleanup",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Sets the retention mechanism for a certain measurement", tags = {"Data Lake"},
@@ -132,14 +132,18 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
               responseCode = "200",
               description = "Successfully stored data")})
   public ResponseEntity<?> setDataLakeRetention(
-      @PathVariable String measurementName,
+      @PathVariable String elementId,
       @RequestBody RetentionTimeConfig retention ){
 
         // If already available kill Cron Job 
 
-      // Save the new setting to the Database
-        DataLakeMeasure measure = new DataLakeMeasure();
-        measure.setMeasureName(measurementName);
+        var measure = this.dataLakeMeasureManagement.getById(elementId);
+        // TODO CHECK IF RETENTION EXISTS
+
+
+        // Save the new setting to the Database
+        //DataLakeMeasure measure = new DataLakeMeasure();
+        //measure.setElementId(measurementID);
         measure.setRetentionTime(retention);
       try {
         this.dataLakeMeasureManagement.updateMeasurement(measure);
