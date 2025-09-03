@@ -53,6 +53,8 @@ public class DataLakeMeasure implements Storable {
 
   private DataLakeMeasureSchemaUpdateStrategy schemaUpdateStrategy = DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA;
 
+  private RetentionTimeConfig retentionTime;
+
   public DataLakeMeasure() {
     super();
   }
@@ -137,6 +139,15 @@ public class DataLakeMeasure implements Storable {
 
   public void setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy schemaUpdateStrategy) {
     this.schemaUpdateStrategy = schemaUpdateStrategy;
+  }
+
+
+  public void setRetentionTime(RetentionTimeConfig retentionTime) {
+    this.retentionTime = retentionTime;
+  }
+
+  public RetentionTimeConfig getRetentionTime() {
+    return retentionTime;
   }
 
   /**
