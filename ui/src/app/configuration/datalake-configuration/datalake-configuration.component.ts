@@ -36,7 +36,7 @@ import {
 import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpConfigurationRoutes } from '../configuration.routes';
-
+import { DataRetentionDialogComponent } from '../dialog/data-retention-dialog/data-retention-dialog.component';
 @Component({
     selector: 'sp-datalake-configuration',
     templateUrl: './datalake-configuration.component.html',
@@ -171,6 +171,21 @@ export class DatalakeConfigurationComponent implements OnInit {
             width: '50vw',
             data: {
                 dataDownloadDialogModel: {
+                    measureName: measurementName,
+                },
+            },
+        });
+    }
+
+    openRetentionDialog(measurementName: string) {
+        console.log('OPEN DATA DIALOG');
+        console.log(measurementName);
+        this.dialogService.open(DataRetentionDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Set Data Retention',
+            width: '50vw',
+            data: {
+                dataRetentionDialogModel: {
                     measureName: measurementName,
                 },
             },
