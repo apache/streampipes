@@ -21,10 +21,13 @@ package org.apache.streampipes.rest.impl.datalake;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.RetentionTimeConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -114,6 +117,53 @@ public class DataLakeMeasureResource extends AbstractAuthGuardedRestResource {
     }
     return badRequest();
   }
+
+    //TODO Currently working on API ENdpoint 
+    @PostMapping(
+      path = "/{measurementName}/cleanup",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Sets the retention mechanism for a certain measurement", tags = {"Data Lake"},
+      responses = {
+          @ApiResponse(
+              responseCode = "400",
+              description = "Can't store the given data to this data lake"),
+          @ApiResponse(
+              responseCode = "200",
+              description = "Successfully stored data")})
+  public ResponseEntity<?> setDataLakeRetention(
+      @PathVariable String measurementName,
+      @RequestBody RetentionTimeConfig retention ){
+
+        // If already available kill Cron Job 
+
+      // Save the new setting to the Database
+        DataLakeMeasure measure = new DataLakeMeasure();
+        measure.setMeasureName(measurementName);
+        measure.setRetentionTime(retention);
+      try {
+        this.dataLakeMeasureManagement.updateMeasurement(measure);
+        return ok();
+      } catch (IllegalArgumentException e) {
+        return badRequest(e.getMessage());
+      //}
+    }
+    //return badRequest();
+
+
+
+      // Setup Cron Job
+
+  
+    //return ok();
+  }
+
+    //TODO Get CRON JOb DATA 
+
+    //TODO Delete Cron Job and Cron Job Data 
+
+
+
 
   @DeleteMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> deleteDataLakeMeasure(@PathVariable("id") String elementId) {
