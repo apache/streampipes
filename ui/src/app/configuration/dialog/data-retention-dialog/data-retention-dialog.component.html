@@ -19,29 +19,24 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div fxFlex="100">
-            <mat-horizontal-stepper #retentionDialogStepper>
-                <mat-step>
-                    <sp-select-data
-                        [dataExplorerDataConfig]="
-                            dataRetentionDialogModel.dataExplorerDataConfig
-                        "
-                        [dataRetentionConfig]="
-                            retentionConfig.dataRetentionConfig
-                        "
-                    >
-                    </sp-select-data>
-                    <ng-template matStepLabel>{{
-                        'Select Retention Intervals' | translate
-                    }}</ng-template>
-                </mat-step>
-                <mat-step>
-                    <div>Test</div>
-                </mat-step>
-            </mat-horizontal-stepper>
+            <!-- Stepper removed, content displayed directly -->
+            <div class="retention-step-content">
+                <sp-select-data
+                    [dataExplorerDataConfig]="
+                        dataRetentionDialogModel.dataExplorerDataConfig
+                    "
+                    [dataRetentionConfig]="retentionConfig.dataRetentionConfig"
+                >
+                </sp-select-data>
+                <div class="step-label">
+                    {{ 'Select Retention Intervals' | translate }}
+                </div>
+            </div>
+
+            <div class="retention-step-content">Test</div>
         </div>
     </div>
 
-    <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
         <button
             mat-button
@@ -52,32 +47,11 @@
         >
             {{ 'Close' | translate }}
         </button>
+
         <button
             mat-button
             mat-raised-button
-            class="mat-basic"
-            style="margin-right: 10px"
-            *ngIf="retentionDialogStepper.selectedIndex === 1"
-            (click)="previousStep()"
-        >
-            {{ 'Previous' | translate }}
-        </button>
-        <button
-            mat-button
-            mat-raised-button
-            *ngIf="retentionDialogStepper.selectedIndex < 1"
             color="accent"
-            (click)="nextStep()"
-            data-cy="download-configuration-next-btn"
-        >
-            {{ 'Next' | translate }}
-        </button>
-        <button
-            mat-button
-            mat-raised-button
-            *ngIf="retentionDialogStepper.selectedIndex === 1"
-            color="accent"
-            (click)="downloadData()"
             data-cy="download-configuration-download-btn"
         >
             {{ 'Start Sync' | translate }}
