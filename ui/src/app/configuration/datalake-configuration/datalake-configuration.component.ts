@@ -60,6 +60,7 @@ export class DatalakeConfigurationComponent implements OnInit {
         'download',
         'truncate',
         'remove',
+        'retention',
     ];
 
     pageSize = 15;
