@@ -27,7 +27,7 @@
         <label *ngIf="downloadProgress.downloadedMBs !== undefined"
             >{{ downloadProgress.downloadedMBs | number: '1.0-2' }} Mb</label
         >
-        <button mat-button color="warn" (click)="cancelDownload()">
+        <button mat-button class="btn-warn" (click)="cancelDownload()">
             {{ 'Cancel' | translate }}
         </button>
     </div>
