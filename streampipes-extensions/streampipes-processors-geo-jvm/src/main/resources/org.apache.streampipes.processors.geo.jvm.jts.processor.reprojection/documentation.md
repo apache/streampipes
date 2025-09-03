@@ -22,41 +22,42 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Change of CRS due reprojection
 
-***
+---
 
 ## Required input
 
-*  WKT String of a JTS Point Geometry
-*  Integer value representing Source EPSG code
-*  Integer value representing Target EPSG code
+- WKT String of a JTS Point Geometry
+- Integer value representing Source EPSG code
+- Integer value representing Target EPSG code
 
-
-***
+---
 
 ## Configuration
 
-Manual Input of  target EPSG Code and WKT will be reporjected.
+Manual Input of target EPSG Code and WKT will be reporjected.
 
 ### 1st parameter
+
 Geometry WKT String
 
 ### 2nd parameter
+
 Source EPSG code
 
 ### 3rd parameter
+
 Target EPSG code
 
-***
+---
 
 ## Output
 
 Update of event with new EPSG udn WKT-Literal in the dependent target epsg.
 
 ### Example
-

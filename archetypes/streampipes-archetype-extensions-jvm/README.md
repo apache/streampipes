@@ -30,9 +30,8 @@ mvn archetype:generate \
  -DartifactId=my-processor-jvm \
  -Dversion=<VERSION>
 ```
-			
+
 ### Variables
 
-* classNamePrefix: Will be used as a prefix to prefix the examples processor and sink
-* packageName: Will be used as the package name
-
+- classNamePrefix: Will be used as a prefix to prefix the examples processor and sink
+- packageName: Will be used as the package name

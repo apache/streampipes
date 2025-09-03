@@ -22,34 +22,37 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 The Split Array processor transforms array fields into multiple individual events, with each array element becoming a separate event. It supports:
-* Array element extraction
-* Context preservation
-* Nested field handling
-* Custom field naming
+
+- Array element extraction
+- Context preservation
+- Nested field handling
+- Custom field naming
 
 This processor is essential for:
-* Converting batch data into individual events
-* Processing array elements independently
-* Distributing array data across streams
-* Enabling element-wise analysis
 
-***
+- Converting batch data into individual events
+- Processing array elements independently
+- Distributing array data across streams
+- Enabling element-wise analysis
+
+---
 
 ## Required input
 
 The processor requires a data stream containing at least one array field. The array can contain elements of any supported data type:
-* Numbers (integer or float)
-* Strings
-* Booleans
-* Objects
-* Nested arrays
 
-***
+- Numbers (integer or float)
+- Strings
+- Booleans
+- Objects
+- Nested arrays
+
+---
 
 ## Configuration
 
@@ -64,12 +67,14 @@ Select one or more fields from the input event that should be preserved in each 
 ## Output
 
 For each element in the input array, the processor creates a new event containing:
-* The array element as a single value in a field named "array_value"
-* All selected fields from the original event
+
+- The array element as a single value in a field named "array_value"
+- All selected fields from the original event
 
 ### Example
 
 #### Input Event
+
 ```json
 {
   "deviceId": "sensor123",
@@ -80,10 +85,12 @@ For each element in the input array, the processor creates a new event containin
 ```
 
 #### Configuration
-* Array Field: measurements
-* Keep Fields: deviceId, timestamp, status
+
+- Array Field: measurements
+- Keep Fields: deviceId, timestamp, status
 
 #### Output Events
+
 ```json
 // First element
 {
@@ -121,22 +128,22 @@ For each element in the input array, the processor creates a new event containin
 ## Use Cases
 
 1. **Batch Processing**
-   * Split batch sensor readings
-   * Process multi-measurement data
-   * Handle grouped observations
-   * Transform batch uploads
+   - Split batch sensor readings
+   - Process multi-measurement data
+   - Handle grouped observations
+   - Transform batch uploads
 
 2. **Data Distribution**
-   * Distribute workload across processors
-   * Enable parallel processing
-   * Balance processing load
-   * Scale data processing
+   - Distribute workload across processors
+   - Enable parallel processing
+   - Balance processing load
+   - Scale data processing
 
 ## Notes
 
-* Output events maintain original event order
-* Empty arrays produce no output events
-* Null array elements are preserved
-* Processing is stateless
-* Memory usage scales with array size
-* Nested fields are handled automatically
+- Output events maintain original event order
+- Empty arrays produce no output events
+- Null array elements are preserved
+- Processing is stateless
+- Memory usage scales with array size
+- Nested fields are handled automatically

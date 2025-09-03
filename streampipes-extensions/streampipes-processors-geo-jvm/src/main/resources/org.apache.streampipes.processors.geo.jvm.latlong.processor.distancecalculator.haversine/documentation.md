@@ -22,34 +22,41 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
+
 Calculates the distance between two latitude/longitude pairs in a single event with the
 <a href="https://en.wikipedia.org/wiki/Haversine_formula" target="_blank">Haversine formula</a>.
 
-***
+---
 
 ## Required inputs
+
 Requires a position of point on the Earth's surface specified by the two geographic coordinates: the longitude and latitude of the point.
 
-***
+---
 
 ## Configuration
 
 ### First Longitude
+
 This is the first geographic coordinate that specifies the east-west position of a point on the Earth's surface.
 
 ### First Latitude
+
 This is the second geographic coordinate that specifies the north-south position of a point on the Earth's surface.
 
 ### Second Longitude
+
 This is the second geographic coordinate that specifies the east-west position of a point on the Earth's surface.
 
 ### Second Latitude
+
 This is the second geographic coordinate that specifies the north-south position of a point on the Earth's surface.
 
 ## Output
+
 {
-  'distance': 12.2
+'distance': 12.2
 }

@@ -22,11 +22,10 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Continuously streams the content from a file
 
-***
-
+---

@@ -22,18 +22,18 @@
     <img src="icon.png" width="150px;"/>
 </p>
 
-***
+---
 
 ## Description
 
 ${pipelineElementDescription}
 Add a detailed description here
 
-***
+---
 
 ## Required input
 
-***
+---
 
 ## Configuration
 

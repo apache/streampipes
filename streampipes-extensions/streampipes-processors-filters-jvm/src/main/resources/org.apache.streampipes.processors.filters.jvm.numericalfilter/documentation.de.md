@@ -22,47 +22,56 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
-Der Numerische-Filter-Prozessor filtert Ereignisse basierend auf numerischen Vergleichen mit einem festgelegten Schwellenwert. Er unterstützt verschiedene Vergleichsoperationen und ist ideal für:
-* Schwellenwertbasierte Ereignisfilterung
-* Bereichsbasierte Datenauswahl
-* Ausreißererkennung
-* Wertbasierte Ereignisweiterleitung
 
-***
+Der Numerische-Filter-Prozessor filtert Ereignisse basierend auf numerischen Vergleichen mit einem festgelegten Schwellenwert. Er unterstützt verschiedene Vergleichsoperationen und ist ideal für:
+
+- Schwellenwertbasierte Ereignisfilterung
+- Bereichsbasierte Datenauswahl
+- Ausreißererkennung
+- Wertbasierte Ereignisweiterleitung
+
+---
 
 ## Erforderliche Eingabe
+
 Ein Datenstrom, der mindestens ein numerisches Feld zur Filterung enthält.
 
-***
+---
 
 ## Konfiguration
 
 ### Feld
-* Wählen Sie das numerische Feld aus, auf das die Filteroperation angewendet werden soll
-* Das Feld muss numerische Werte enthalten
+
+- Wählen Sie das numerische Feld aus, auf das die Filteroperation angewendet werden soll
+- Das Feld muss numerische Werte enthalten
 
 ### Operation
+
 Wählen Sie aus den folgenden Vergleichsoperatoren:
-* **<** (Kleiner als)
-* **<=** (Kleiner als oder gleich)
-* **>** (Größer als)
-* **>=** (Größer als oder gleich)
-* **==** (Gleich)
-* **!=** (Ungleich)
+
+- **<** (Kleiner als)
+- **<=** (Kleiner als oder gleich)
+- **>** (Größer als)
+- **>=** (Größer als oder gleich)
+- **==** (Gleich)
+- **!=** (Ungleich)
 
 ### Schwellenwert
-* Geben Sie den numerischen Schwellenwert für den Vergleich an
-* Der Wert muss eine gültige Zahl sein
+
+- Geben Sie den numerischen Schwellenwert für den Vergleich an
+- Der Wert muss eine gültige Zahl sein
 
 ## Ausgabe
+
 Der Prozessor leitet das Eingabeereignis nur weiter, wenn der numerische Vergleich wahr ergibt.
 
 ### Beispiel
 
 #### Eingabeereignisse
+
 ```json
 {
   "temperature": 25.5,
@@ -79,12 +88,15 @@ Der Prozessor leitet das Eingabeereignis nur weiter, wenn der numerische Verglei
 ```
 
 #### Beispiel 1: Größer-als-Filter
+
 Konfiguration:
-* Feld: temperature
-* Operation: >
-* Schwellenwert: 25.8
+
+- Feld: temperature
+- Operation: >
+- Schwellenwert: 25.8
 
 Ausgabeereignisse:
+
 ```json
 {
   "temperature": 26.0,
@@ -93,12 +105,15 @@ Ausgabeereignisse:
 ```
 
 #### Beispiel 2: Bereichsfilter
+
 Konfiguration:
-* Feld: temperature
-* Operation: >=
-* Schwellenwert: 25.5
+
+- Feld: temperature
+- Operation: >=
+- Schwellenwert: 25.5
 
 Ausgabeereignisse:
+
 ```json
 {
   "temperature": 25.5,
@@ -115,12 +130,15 @@ Ausgabeereignisse:
 ```
 
 #### Beispiel 3: Exakter-Match-Filter
+
 Konfiguration:
-* Feld: temperature
-* Operation: ==
-* Schwellenwert: 25.8
+
+- Feld: temperature
+- Operation: ==
+- Schwellenwert: 25.8
 
 Ausgabeereignisse:
+
 ```json
 {
   "temperature": 25.8,
@@ -131,21 +149,21 @@ Ausgabeereignisse:
 ## Anwendungsfälle
 
 1. **Schwellenwertüberwachung**
-   * Alarmierung bei Überschreitung von Grenzwerten
-   * Filterung normaler Messwerte
-   * Überwachung kritischer Schwellenwerte
-   * Verfolgung von Wertebereichen
+   - Alarmierung bei Überschreitung von Grenzwerten
+   - Filterung normaler Messwerte
+   - Überwachung kritischer Schwellenwerte
+   - Verfolgung von Wertebereichen
 
 2. **Datenqualität**
-   * Entfernung von Ausreißern
-   * Filterung ungültiger Messungen
-   * Sicherstellung von Wertebereichen
-   * Validierung von Sensordaten
+   - Entfernung von Ausreißern
+   - Filterung ungültiger Messungen
+   - Sicherstellung von Wertebereichen
+   - Validierung von Sensordaten
 
 ## Hinweise
 
-* Der Prozessor führt exakte numerische Vergleiche durch
-* Bei Gleichheitsprüfungen wird ein kleiner Epsilon-Wert (0.000001) verwendet, um die Fließkommapräzision zu berücksichtigen
-* Ereignisse, die die Filterbedingung nicht erfüllen, werden verworfen
-* Die ursprüngliche Ereignisstruktur wird in der Ausgabe beibehalten
-* Alle numerischen Typen (Integer, Float, Double) werden unterstützt 
+- Der Prozessor führt exakte numerische Vergleiche durch
+- Bei Gleichheitsprüfungen wird ein kleiner Epsilon-Wert (0.000001) verwendet, um die Fließkommapräzision zu berücksichtigen
+- Ereignisse, die die Filterbedingung nicht erfüllen, werden verworfen
+- Die ursprüngliche Ereignisstruktur wird in der Ausgabe beibehalten
+- Alle numerischen Typen (Integer, Float, Double) werden unterstützt

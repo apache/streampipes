@@ -1,8 +1,9 @@
 ---
 title: Community
 hide_readingtime: true
-menu: {main: {weight: 40}}
+menu: { main: { weight: 40 } }
 ---
+
 <!--
   ~ Licensed to the Apache Software Foundation (ASF) under one or more
   ~ contributor license agreements.  See the NOTICE file distributed with

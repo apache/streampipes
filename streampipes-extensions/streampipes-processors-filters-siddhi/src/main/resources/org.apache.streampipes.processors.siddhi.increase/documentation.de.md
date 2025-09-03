@@ -22,49 +22,60 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
-Der Trendanalyse-Prozessor überwacht numerische Werte und erkennt signifikante Zunahmen oder Abnahmen innerhalb eines konfigurierbaren Zeitfensters. Er:
-* Erkennt prozentuale Wertänderungen
-* Unterstützt sowohl Zunahme- als auch Abnahmeerkennung
-* Verwendet konfigurierbare Zeitfenster
-* Behält die ursprünglichen Ereignisdaten bei
-* Funktioniert mit jedem numerischen Feld
 
-***
+Der Trendanalyse-Prozessor überwacht numerische Werte und erkennt signifikante Zunahmen oder Abnahmen innerhalb eines konfigurierbaren Zeitfensters. Er:
+
+- Erkennt prozentuale Wertänderungen
+- Unterstützt sowohl Zunahme- als auch Abnahmeerkennung
+- Verwendet konfigurierbare Zeitfenster
+- Behält die ursprünglichen Ereignisdaten bei
+- Funktioniert mit jedem numerischen Feld
+
+---
 
 ## Erforderliche Eingabe
+
 Der Prozessor benötigt einen Eingabeereignisstrom mit mindestens einem numerischen Feld zur Trendüberwachung.
 
-***
+---
 
 ## Konfiguration
 
 ### Zu beobachtender Wert
+
 Wählen Sie das numerische Feld aus, das auf Trends überwacht werden soll.
 
 ### Operationstyp
+
 Wählen Sie den zu erkennenden Trendtyp:
-* Zunahme: Erkennt, wenn Werte um den angegebenen Prozentsatz zunehmen
-* Abnahme: Erkennt, wenn Werte um den angegebenen Prozentsatz abnehmen
+
+- Zunahme: Erkennt, wenn Werte um den angegebenen Prozentsatz zunehmen
+- Abnahme: Erkennt, wenn Werte um den angegebenen Prozentsatz abnehmen
 
 ### Prozentuale Änderung
+
 Geben Sie den Prozentschwellenwert für die Trenderkennung an:
-* Bei Zunahme: Werte müssen um diesen Prozentsatz zunehmen
-* Bei Abnahme: Werte müssen um diesen Prozentsatz abnehmen
-* Bereich: 0-500%
-* Schrittweite: 1%
+
+- Bei Zunahme: Werte müssen um diesen Prozentsatz zunehmen
+- Bei Abnahme: Werte müssen um diesen Prozentsatz abnehmen
+- Bereich: 0-500%
+- Schrittweite: 1%
 
 ### Zeitfensterlänge (Sekunden)
+
 Geben Sie die Dauer in Sekunden an, über die der Trend überwacht werden soll.
 
 ## Ausgabe
+
 Der Prozessor gibt das ursprüngliche Ereignis aus, wenn ein signifikanter Trend innerhalb des angegebenen Zeitfensters erkannt wird.
 
 ### Beispiel
 
 #### Eingabeereignis
+
 ```json
 {
   "device_id": "device1",
@@ -75,12 +86,14 @@ Der Prozessor gibt das ursprüngliche Ereignis aus, wenn ein signifikanter Trend
 ```
 
 #### Konfiguration
-* Zu beobachtender Wert: `value`
-* Operationstyp: `Zunahme`
-* Prozentuale Änderung: `10`
-* Zeitfensterlänge: `300`
+
+- Zu beobachtender Wert: `value`
+- Operationstyp: `Zunahme`
+- Prozentuale Änderung: `10`
+- Zeitfensterlänge: `300`
 
 #### Ausgabeereignis
+
 ```json
 {
   "device_id": "device1",
@@ -93,27 +106,27 @@ Der Prozessor gibt das ursprüngliche Ereignis aus, wenn ein signifikanter Trend
 ## Anwendungsfälle
 
 1. **Anomalieerkennung**
-   * Plötzliche Temperaturänderungen erkennen
-   * Druckvariationen überwachen
-   * Ressourcennutzungsspitzen verfolgen
-   * Ungewöhnliche Muster identifizieren
+   - Plötzliche Temperaturänderungen erkennen
+   - Druckvariationen überwachen
+   - Ressourcennutzungsspitzen verfolgen
+   - Ungewöhnliche Muster identifizieren
 
 2. **Leistungsüberwachung**
-   * Systemmetriken verfolgen
-   * Ressourcennutzung überwachen
-   * Leistungstrends analysieren
-   * Verschlechterung erkennen
+   - Systemmetriken verfolgen
+   - Ressourcennutzung überwachen
+   - Leistungstrends analysieren
+   - Verschlechterung erkennen
 
 3. **Qualitätssicherung**
-   * Prozessparameter überwachen
-   * Produktqualitätsmetriken verfolgen
-   * Prozessabweichungen erkennen
-   * Konsistente Ausgabe sicherstellen
+   - Prozessparameter überwachen
+   - Produktqualitätsmetriken verfolgen
+   - Prozessabweichungen erkennen
+   - Konsistente Ausgabe sicherstellen
 
 ## Hinweise
 
-* Der Prozessor erkennt prozentuale Änderungen
-* Das Zeitfenster wird in Sekunden angegeben
-* Die Ausgabe enthält die ursprünglichen Ereignisdaten
-* Der Prozessor funktioniert mit jedem numerischen Feld
-* Ergebnisse werden ausgegeben, wenn der Trend erkannt wird 
+- Der Prozessor erkennt prozentuale Änderungen
+- Das Zeitfenster wird in Sekunden angegeben
+- Die Ausgabe enthält die ursprünglichen Ereignisdaten
+- Der Prozessor funktioniert mit jedem numerischen Feld
+- Ergebnisse werden ausgegeben, wenn der Trend erkannt wird

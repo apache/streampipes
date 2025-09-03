@@ -22,12 +22,12 @@ body:
     attributes:
       value: "
         <p align='center'>
-        
+
         <img src='https://streampipes.apache.org/img/sp-logo-color.png' alt='StreamPipes Logo' title='Apache StreamPipes Logo' width='50%' align='center'/>
         </p>
-        
+
         <br>
-        
+
         Thank you for taking the time to report the issue!
 
         We greatly appreciate the community's efforts to improve StreamPipes.
@@ -91,7 +91,7 @@ body:
       placeholder: >
         Please explain why you think the behavior is incorrect.
         How do you think StreamPipes should have behaved?
-        If available, it is very helpful if you copy and paste the fragment of the logs with the exact error messages. 
+        If available, it is very helpful if you copy and paste the fragment of the logs with the exact error messages.
 
   - type: textarea
     attributes:

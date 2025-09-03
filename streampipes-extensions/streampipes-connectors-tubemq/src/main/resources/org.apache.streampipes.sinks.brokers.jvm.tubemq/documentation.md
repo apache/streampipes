@@ -22,33 +22,31 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Publishes events to Apache TubeMQ (InLong).
 
-***
+---
 
 ## Required Inputs
 
 This sink does not have any requirements and works with any incoming event type.
 
-***
+---
 
 ## Configuration
 
 ### TubeMQ Master Information
 
-This field describes the endpoints of all the TubeMQ masters. 
+This field describes the endpoints of all the TubeMQ masters.
 
 The format should be like `ip1:port1,ip2:port2,ip3:port3`.
-
 
 ### TubeMQ Topic
 
 The topic where events should be sent to.
-
 
 ## Output
 

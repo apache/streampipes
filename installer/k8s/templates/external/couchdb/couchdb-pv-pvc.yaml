@@ -17,12 +17,13 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: {{ .Values.external.couchdb.appName }}
-  name: {{ .Values.external.couchdb.persistence.claimName }}
+    app: { { .Values.external.couchdb.appName } }
+  name: { { .Values.external.couchdb.persistence.claimName } }
 spec:
-  storageClassName: {{ .Values.external.couchdb.persistence.storageClassName }}
+  storageClassName:
+    { { .Values.external.couchdb.persistence.storageClassName } }
   accessModes:
-    - {{ .Values.persistentVolumeAccessModes }}
+    - { { .Values.persistentVolumeAccessModes } }
   resources:
     requests:
-      storage: {{ .Values.external.couchdb.persistence.storageSize }}
+      storage: { { .Values.external.couchdb.persistence.storageSize } }

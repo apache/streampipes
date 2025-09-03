@@ -22,32 +22,35 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 The Measure Time Between Two Sensors processor calculates the time difference between two boolean signals. It supports:
-* Signal timing measurement
-* Event sequence tracking
-* Time difference calculation
-* Signal counting
-* Multiple time units (milliseconds, seconds, minutes)
+
+- Signal timing measurement
+- Event sequence tracking
+- Time difference calculation
+- Signal counting
+- Multiple time units (milliseconds, seconds, minutes)
 
 This processor is essential for:
-* Measuring process times
-* Tracking signal sequences
-* Analyzing delays
-* Monitoring performance
 
-***
+- Measuring process times
+- Tracking signal sequences
+- Analyzing delays
+- Monitoring performance
+
+---
 
 ## Required input
 
 The processor requires a data stream containing:
-* A left boolean field (start signal)
-* A right boolean field (end signal)
 
-***
+- A left boolean field (start signal)
+- A right boolean field (end signal)
+
+---
 
 ## Configuration
 
@@ -62,20 +65,23 @@ Select the boolean field that ends the timer. This signal triggers the output ev
 ### Output Unit
 
 Choose the time unit for the output:
-* **Milliseconds**: Raw time difference
-* **Seconds**: Time difference divided by 1000
-* **Minutes**: Time difference divided by 60000
+
+- **Milliseconds**: Raw time difference
+- **Seconds**: Time difference divided by 1000
+- **Minutes**: Time difference divided by 60000
 
 ## Output
 
 The processor creates a new event containing:
-* All original fields from the input event
-* A "measured_time" field showing the time between signals in the selected unit
-* A "counter" field showing the number of completed measurements
+
+- All original fields from the input event
+- A "measured_time" field showing the time between signals in the selected unit
+- A "counter" field showing the number of completed measurements
 
 ### Example
 
 #### Input Event Stream
+
 ```json
 [
   {
@@ -100,11 +106,13 @@ The processor creates a new event containing:
 ```
 
 #### Configuration
-* Left Field: startSignal
-* Right Field: endSignal
-* Output Unit: Seconds
+
+- Left Field: startSignal
+- Right Field: endSignal
+- Output Unit: Seconds
 
 #### Output Event
+
 ```json
 {
   "deviceId": "machine01",
@@ -119,23 +127,23 @@ The processor creates a new event containing:
 ## Use Cases
 
 1. **Process Timing**
-   * Measure process cycle times
-   * Track signal sequences
-   * Analyze delays
-   * Monitor performance
+   - Measure process cycle times
+   - Track signal sequences
+   - Analyze delays
+   - Monitor performance
 
 2. **Performance Analysis**
-   * Measure response times
-   * Track operation sequences
-   * Analyze system delays
-   * Monitor equipment performance
+   - Measure response times
+   - Track operation sequences
+   - Analyze system delays
+   - Monitor equipment performance
 
 ## Notes
 
-* Only boolean fields can be monitored
-* Processing is stateful
-* Time measurement is based on system time
-* Counter resets at Long.MAX_VALUE
-* Multiple start signals are buffered
-* Output is triggered by end signal
-* Original event fields are preserved
+- Only boolean fields can be monitored
+- Processing is stateful
+- Time measurement is based on system time
+- Counter resets at Long.MAX_VALUE
+- Multiple start signals are buffered
+- Output is triggered by end signal
+- Original event fields are preserved

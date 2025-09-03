@@ -15,9 +15,10 @@
   ~ limitations under the License.
   ~
   -->
+
 ## Websocket API
 
-***
+---
 
 <p align="center"> 
     <img src="icon.png" width="266" class="pe-image-documentation"/>
@@ -27,13 +28,13 @@
 
 Send a message to a connected websocket client
 
-***
+---
 
 ## Required input
 
 This sink does not have any requirements and works with any incoming event type.
 
-***
+---
 
 ## Configuration
 

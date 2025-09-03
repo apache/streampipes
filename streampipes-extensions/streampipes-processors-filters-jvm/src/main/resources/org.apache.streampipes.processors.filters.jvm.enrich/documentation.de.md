@@ -22,47 +22,57 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
+
 Der Durch-Anreicherung-zusammenführen-Prozessor kombiniert zwei Ereignisströme, indem ein Strom mit Eigenschaften des anderen angereichert wird. Er unterstützt:
-* Echtzeit-Anreicherung von Ereignisströmen
-* Verfolgung des letzten Ereigniszustands
-* Benutzerdefinierte Ausgabefeldauswahl
-* Dynamische Ereigniszusammensetzung
-* Zustandsbehaftete Ereignisverarbeitung
+
+- Echtzeit-Anreicherung von Ereignisströmen
+- Verfolgung des letzten Ereigniszustands
+- Benutzerdefinierte Ausgabefeldauswahl
+- Dynamische Ereigniszusammensetzung
+- Zustandsbehaftete Ereignisverarbeitung
 
 Dieser Prozessor ist wichtig für:
-* Anreicherung von Ereignissen mit zusätzlichem Kontext
-* Kombinieren verwandter Datenströme
-* Erstellen einheitlicher Ereignisansichten
-* Aufbau zusammengesetzter Ereignisstrukturen
 
-***
+- Anreicherung von Ereignissen mit zusätzlichem Kontext
+- Kombinieren verwandter Datenströme
+- Erstellen einheitlicher Ereignisansichten
+- Aufbau zusammengesetzter Ereignisstrukturen
+
+---
 
 ## Erforderliche Eingabe
-Der Prozessor benötigt zwei Eingabeströme:
-* Erster Strom: Jeder Ereignisstrom mit mindestens einer Eigenschaft
-* Zweiter Strom: Jeder Ereignisstrom mit mindestens einer Eigenschaft
 
-***
+Der Prozessor benötigt zwei Eingabeströme:
+
+- Erster Strom: Jeder Ereignisstrom mit mindestens einer Eigenschaft
+- Zweiter Strom: Jeder Ereignisstrom mit mindestens einer Eigenschaft
+
+---
 
 ## Konfiguration
 
 ### Stromauswahl
+
 Während der Pipeline-Modellierung können Sie:
-* Auswählen, welcher Strom angereichert werden soll (Strom 1 oder Strom 2)
-* Wählen, welche Felder aus jedem Strom in die Ausgabe aufgenommen werden sollen
-* Der Prozessor behält die Ereignisfrequenz des ausgewählten Stroms bei
+
+- Auswählen, welcher Strom angereichert werden soll (Strom 1 oder Strom 2)
+- Wählen, welche Felder aus jedem Strom in die Ausgabe aufgenommen werden sollen
+- Der Prozessor behält die Ereignisfrequenz des ausgewählten Stroms bei
 
 ## Ausgabe
+
 Der Prozessor erstellt ein neues Ereignis, das die ausgewählten Felder aus beiden Eingabeströmen enthält. Die Ausgabe wird generiert, wenn:
-* Ein neues Ereignis aus dem ausgewählten Strom eintrifft
-* Das letzte Ereignis aus dem anderen Strom verfügbar ist
+
+- Ein neues Ereignis aus dem ausgewählten Strom eintrifft
+- Das letzte Ereignis aus dem anderen Strom verfügbar ist
 
 ### Beispiel
 
 #### Eingabeereignisstrom 1
+
 ```json
 {
   "deviceId": "sensor01",
@@ -72,6 +82,7 @@ Der Prozessor erstellt ein neues Ereignis, das die ausgewählten Felder aus beid
 ```
 
 #### Eingabeereignisstrom 2
+
 ```json
 {
   "location": "room1",
@@ -81,10 +92,12 @@ Der Prozessor erstellt ein neues Ereignis, das die ausgewählten Felder aus beid
 ```
 
 #### Konfiguration
-* Ausgewählter Strom: Strom 1
-* Ausgabefelder: deviceId, temperature, location, humidity
+
+- Ausgewählter Strom: Strom 1
+- Ausgabefelder: deviceId, temperature, location, humidity
 
 #### Ausgabeereignis
+
 ```json
 {
   "deviceId": "sensor01",
@@ -97,22 +110,22 @@ Der Prozessor erstellt ein neues Ereignis, das die ausgewählten Felder aus beid
 ## Anwendungsfälle
 
 1. **Ereignisanreicherung**
-   * Hinzufügen von Kontext zu Sensorablesungen
-   * Kombinieren verwandter Metriken
-   * Erstellen einheitlicher Ansichten
-   * Verbinden von Ereignisströmen
+   - Hinzufügen von Kontext zu Sensorablesungen
+   - Kombinieren verwandter Metriken
+   - Erstellen einheitlicher Ansichten
+   - Verbinden von Ereignisströmen
 
 2. **Datenintegration**
-   * Zusammenführen von Sensordaten
-   * Kombinieren verwandter Ereignisse
-   * Erstellen zusammengesetzter Ereignisse
-   * Aufbau reicher Ereignisstrukturen
+   - Zusammenführen von Sensordaten
+   - Kombinieren verwandter Ereignisse
+   - Erstellen zusammengesetzter Ereignisse
+   - Aufbau reicher Ereignisstrukturen
 
 ## Hinweise
 
-* Ereignisse werden in Echtzeit angereichert
-* Der letzte Ereigniszustand wird aufrechterhalten
-* Ausgabefelder sind konfigurierbar
-* Die ursprüngliche Ereignisstruktur wird beibehalten
-* Ereignisse werden mit der Frequenz des ausgewählten Stroms weitergeleitet
-* Der Zustand wird beim Stoppen der Pipeline gelöscht 
+- Ereignisse werden in Echtzeit angereichert
+- Der letzte Ereigniszustand wird aufrechterhalten
+- Ausgabefelder sind konfigurierbar
+- Die ursprüngliche Ereignisstruktur wird beibehalten
+- Ereignisse werden mit der Frequenz des ausgewählten Stroms weitergeleitet
+- Der Zustand wird beim Stoppen der Pipeline gelöscht

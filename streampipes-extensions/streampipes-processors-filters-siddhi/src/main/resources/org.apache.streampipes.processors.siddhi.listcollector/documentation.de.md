@@ -22,37 +22,44 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
-Der Listensammler-Prozessor aggregiert Werte aus einem angegebenen Feld in einer Liste innerhalb eines konfigurierbaren Batch-Fensters. Er:
-* Sammelt Feldwerte über die Zeit
-* Erstellt eine Liste aller Werte im Fenster
-* Behält die ursprünglichen Ereignisdaten bei
-* Fügt ein neues Listenfeld zur Ausgabe hinzu
-* Funktioniert mit jedem Feldtyp
 
-***
+Der Listensammler-Prozessor aggregiert Werte aus einem angegebenen Feld in einer Liste innerhalb eines konfigurierbaren Batch-Fensters. Er:
+
+- Sammelt Feldwerte über die Zeit
+- Erstellt eine Liste aller Werte im Fenster
+- Behält die ursprünglichen Ereignisdaten bei
+- Fügt ein neues Listenfeld zur Ausgabe hinzu
+- Funktioniert mit jedem Feldtyp
+
+---
 
 ## Erforderliche Eingabe
+
 Der Prozessor benötigt einen Eingabeereignisstrom mit mindestens einem Feld, aus dem Werte gesammelt werden sollen.
 
-***
+---
 
 ## Konfiguration
 
 ### Feld
+
 Wählen Sie das Feld aus, dessen Werte in eine Liste gesammelt werden sollen. Das Feld kann von jedem Datentyp sein.
 
 ### Batch-Fenstergröße
+
 Geben Sie die Anzahl der Ereignisse an, die in jedes Batch-Fenster aufgenommen werden sollen. Der Prozessor sammelt Werte aus dieser Anzahl von Ereignissen, bevor eine neue Liste erstellt wird.
 
 ## Ausgabe
+
 Der Prozessor gibt das ursprüngliche Ereignis mit einem zusätzlichen Feld aus, das die gesammelte Liste von Werten enthält.
 
 ### Beispiel
 
 #### Eingabeereignis
+
 ```json
 {
   "temperature": 25.5,
@@ -61,10 +68,12 @@ Der Prozessor gibt das ursprüngliche Ereignis mit einem zusätzlichen Feld aus,
 ```
 
 #### Konfiguration
-* Feld: `temperature`
-* Batch-Fenstergröße: `5`
+
+- Feld: `temperature`
+- Batch-Fenstergröße: `5`
 
 #### Ausgabeereignis
+
 ```json
 {
   "temperature": 25.5,
@@ -76,27 +85,27 @@ Der Prozessor gibt das ursprüngliche Ereignis mit einem zusätzlichen Feld aus,
 ## Anwendungsfälle
 
 1. **Datenaggregation**
-   * Zeitreihendaten sammeln
-   * Werteverläufe erstellen
-   * Änderungen über die Zeit verfolgen
-   * Datenfenster aufbauen
+   - Zeitreihendaten sammeln
+   - Werteverläufe erstellen
+   - Änderungen über die Zeit verfolgen
+   - Datenfenster aufbauen
 
 2. **Analysevorbereitung**
-   * Daten für statistische Analyse vorbereiten
-   * Eingabe für Trenderkennung erstellen
-   * Daten für Mustererkennung generieren
-   * Merkmalsvektoren aufbauen
+   - Daten für statistische Analyse vorbereiten
+   - Eingabe für Trenderkennung erstellen
+   - Daten für Mustererkennung generieren
+   - Merkmalsvektoren aufbauen
 
 3. **Überwachung**
-   * Werteverteilungen verfolgen
-   * Wertebereiche überwachen
-   * Wertemuster analysieren
-   * Wertemomentaufnahmen erstellen
+   - Werteverteilungen verfolgen
+   - Wertebereiche überwachen
+   - Wertemuster analysieren
+   - Wertemomentaufnahmen erstellen
 
 ## Hinweise
 
-* Der Prozessor erstellt ein neues Listenfeld mit dem ursprünglichen Feldnamen plus "_list"
-* Listen werden nach der angegebenen Anzahl von Ereignissen erstellt
-* Die ursprünglichen Ereignisdaten werden beibehalten
-* Der Prozessor funktioniert mit jedem Feldtyp
-* Listen werden nach jedem Batch-Fenster gelöscht 
+- Der Prozessor erstellt ein neues Listenfeld mit dem ursprünglichen Feldnamen plus "\_list"
+- Listen werden nach der angegebenen Anzahl von Ereignissen erstellt
+- Die ursprünglichen Ereignisdaten werden beibehalten
+- Der Prozessor funktioniert mit jedem Feldtyp
+- Listen werden nach jedem Batch-Fenster gelöscht

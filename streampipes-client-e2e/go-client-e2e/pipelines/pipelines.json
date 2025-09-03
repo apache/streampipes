@@ -3,19 +3,12 @@
     {
       "@class": "org.apache.streampipes.model.graph.DataSinkInvocation",
       "appId": "org.apache.streampipes.sinks.internal.jvm.datalake",
-      "connectedTo": [
-        "jsplumb_1_j3BB"
-      ],
+      "connectedTo": ["jsplumb_1_j3BB"],
       "description": "Stores events in the internal data lake.",
       "dom": "jsplumb_2_Fahe",
       "elementId": "sp:datasinkinvocation:MZnKuj:qULqX",
-      "includedAssets": [
-        "documentation.md",
-        "icon.png"
-      ],
-      "includedLocales": [
-        "strings.en"
-      ],
+      "includedAssets": ["documentation.md", "icon.png"],
+      "includedLocales": ["strings.en"],
       "includesAssets": true,
       "includesLocales": true,
       "internallyManaged": false,
@@ -186,9 +179,7 @@
           "label": "Timestamp Field",
           "optional": false,
           "staticPropertyType": "MappingPropertyUnary",
-          "mapsFromOptions": [
-            "s0::timestamp"
-          ],
+          "mapsFromOptions": ["s0::timestamp"],
           "propertyScope": "NONE",
           "requirementSelector": "r0::timestamp_mapping",
           "selectedProperty": "s0::timestamp"
@@ -355,9 +346,7 @@
         ]
       },
       "uncompleted": false,
-      "category": [
-        "INTERNAL"
-      ]
+      "category": ["INTERNAL"]
     }
   ],
   "description": "",
@@ -366,19 +355,12 @@
     {
       "@class": "org.apache.streampipes.model.graph.DataProcessorInvocation",
       "appId": "org.apache.streampipes.processors.transformation.jvm.booloperator.inverter",
-      "connectedTo": [
-        "jsplumb_0_x6Gz"
-      ],
+      "connectedTo": ["jsplumb_0_x6Gz"],
       "description": "Inverts the boolean value of the selected field",
       "dom": "jsplumb_1_j3BB",
       "elementId": "sp:dataprocessorinvocation:JOqFCM:R0okK",
-      "includedAssets": [
-        "documentation.md",
-        "icon.png"
-      ],
-      "includedLocales": [
-        "strings.en"
-      ],
+      "includedAssets": ["documentation.md", "icon.png"],
+      "includedLocales": ["strings.en"],
       "includesAssets": true,
       "includesLocales": true,
       "internallyManaged": false,
@@ -549,9 +531,7 @@
           "label": "Invert field",
           "optional": false,
           "staticPropertyType": "MappingPropertyUnary",
-          "mapsFromOptions": [
-            "s0::sensor_fault_flags"
-          ],
+          "mapsFromOptions": ["s0::sensor_fault_flags"],
           "propertyScope": "NONE",
           "requirementSelector": "r0::invert-field",
           "selectedProperty": "s0::sensor_fault_flags"
@@ -644,9 +624,7 @@
         ]
       },
       "uncompleted": false,
-      "category": [
-        "BOOLEAN_OPERATOR"
-      ],
+      "category": ["BOOLEAN_OPERATOR"],
       "outputStrategies": [
         {
           "@class": "org.apache.streampipes.model.output.KeepOutputStrategy",

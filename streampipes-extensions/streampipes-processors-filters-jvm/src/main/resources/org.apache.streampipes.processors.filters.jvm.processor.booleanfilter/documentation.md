@@ -22,44 +22,53 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
+
 The Boolean Filter processor filters events based on a boolean field value. It supports:
-* Exact boolean value matching
-* Event forwarding on match
-* Simple true/false filtering
-* State-based event filtering
+
+- Exact boolean value matching
+- Event forwarding on match
+- Simple true/false filtering
+- State-based event filtering
 
 This processor is essential for:
-* Filtering events by boolean state
-* Implementing conditional event routing
-* State-based event processing
-* Boolean condition filtering
 
-***
+- Filtering events by boolean state
+- Implementing conditional event routing
+- State-based event processing
+- Boolean condition filtering
+
+---
 
 ## Required Input
+
 The processor requires a data stream containing at least one boolean field to filter on.
 
-***
+---
 
 ## Configuration
 
 ### Field
+
 Select the boolean field to filter on. The processor will check this field's value against the selected filter value.
 
 ### Field Value
+
 Choose whether to keep events where the field value is:
-* True - Only events with true values are forwarded
-* False - Only events with false values are forwarded
+
+- True - Only events with true values are forwarded
+- False - Only events with false values are forwarded
 
 ## Output
+
 The processor creates a new event containing all original fields from the input event, but only when the selected boolean field matches the configured value.
 
 ### Example
 
 #### Input Event Stream
+
 ```json
 {
   "deviceId": "sensor01",
@@ -68,6 +77,7 @@ The processor creates a new event containing all original fields from the input 
   "timestamp": 1586380104915
 }
 ```
+
 ```json
 {
   "deviceId": "sensor01",
@@ -78,10 +88,12 @@ The processor creates a new event containing all original fields from the input 
 ```
 
 #### Configuration
-* Field: isActive
-* Field Value: True
+
+- Field: isActive
+- Field Value: True
 
 #### Output Event
+
 ```json
 {
   "deviceId": "sensor01",
@@ -94,21 +106,21 @@ The processor creates a new event containing all original fields from the input 
 ## Use Cases
 
 1. **State Filtering**
-   * Filter active/inactive states
-   * Process only enabled devices
-   * Handle operational states
-   * Filter by status flags
+   - Filter active/inactive states
+   - Process only enabled devices
+   - Handle operational states
+   - Filter by status flags
 
 2. **Conditional Processing**
-   * Route events by condition
-   * Filter by boolean flags
-   * Process based on state
-   * Handle boolean triggers
+   - Route events by condition
+   - Filter by boolean flags
+   - Process based on state
+   - Handle boolean triggers
 
 ## Notes
 
-* Only exact boolean matches are supported
-* Events are forwarded unchanged
-* No transformation of values
-* Simple true/false filtering
-* Original event structure preserved
+- Only exact boolean matches are supported
+- Events are forwarded unchanged
+- No transformation of values
+- Simple true/false filtering
+- Original event structure preserved

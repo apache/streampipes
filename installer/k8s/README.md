@@ -21,13 +21,15 @@
 StreamPipes k8s is a helm chart to deploy StreamPipes on Kubernetes.
 
 <!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
+
 **Current version:** 0.98.0-SNAPSHOT
+
 <!-- END do not edit -->
 
 We provide two helm chart templates to get you going:
 
 - **default**: a lightweight template with few pipeline elements, needs less memory
-- **full**:  contains more pipeline elements, requires **>16 GB RAM** (recommended)
+- **full**: contains more pipeline elements, requires **>16 GB RAM** (recommended)
 
 ## Prerequisite
 
@@ -35,9 +37,9 @@ Requires Helm (https://helm.sh/) and an active connection to a kubernetes cluste
 
 Tested with:
 
-* K8s v1.19.3
-* Helm v3.1.2
-* Minikube v1.15.1 (recommended for local testing)
+- K8s v1.19.3
+- Helm v3.1.2
+- Minikube v1.15.1 (recommended for local testing)
 
 > **NOTE**: We experienced some problems with using host path volumes in Docker Desktop environments for persistent
 > storage. Therefore, we suggest to use minikube for local testing.
@@ -54,6 +56,7 @@ minikube start --mount-string ${HOME}/streampipes-k8s:/streampipes-k8s --mount -
 ```
 
 **Start** the a helm chart template by running the following command from the root of this folder:
+
 > **NOTE**: Starting might take a while since we also initially pull all Docker images from Dockerhub.
 
 ```bash
@@ -76,6 +79,7 @@ ui-b94bd9766-rm6zb                             2/2     Running   0          3m27
 ```
 
 For **minikube users**:
+
 > **NOTE**: If you're running Docker Desktop or Minikube with a local k8s cluster, the above step to use your host IP
 > might not work. Luckily, you can port-forward a service port to your localhost using the following command to be able to
 > access the UI either via `http://localhost:8088` or `http://<HOST_IP>:8088` (If you want to use privileged ports such as 80, you need to run this command with sudo to bind to the privileged port).
@@ -101,7 +105,7 @@ rm -rf ${HOME}/streampipes-k8s
 ### Common parameters
 
 | Parameter Name                | Description                                         | Value           |
-|-------------------------------|-----------------------------------------------------|-----------------|
+| ----------------------------- | --------------------------------------------------- | --------------- |
 | deployment                    | Deployment type (lite or full)                      | lite            |
 | preferredBroker               | Preferred broker for deployment                     | "nats"          |
 | monitoringSystem              | Enable monitoring system (true/false)               | false           |
@@ -117,7 +121,7 @@ rm -rf ${HOME}/streampipes-k8s
 ### StreamPipes common parameters
 
 | Parameter Name                                | Description                                             | Value                                    |
-|-----------------------------------------------|---------------------------------------------------------|------------------------------------------|
+| --------------------------------------------- | ------------------------------------------------------- | ---------------------------------------- |
 | streampipes.version                           | StreamPipes version                                     | "0.98.0-SNAPSHOT"                        |
 | streampipes.registry                          | StreamPipes registry URL                                | "apachestreampipes"                      |
 | streampipes.auth.secretName                   | The secret name for storing secrets                     | "sp-secrets"                             |
@@ -155,7 +159,7 @@ rm -rf ${HOME}/streampipes-k8s
 ### Extensions common parameters
 
 | Parameter Name               | Description                               | Value               |
-|------------------------------|-------------------------------------------|---------------------|
+| ---------------------------- | ----------------------------------------- | ------------------- |
 | extensions.iiot.appName      | IIoT extensions application name          | extensions-all-iiot |
 | extensions.iiot.imageName    | IIoT extensions image name                | extensions-all-jvm  |
 | extensions.iiot.port         | Port for the IIoT extensions application  | 8090                |
@@ -167,7 +171,7 @@ rm -rf ${HOME}/streampipes-k8s
 #### Couchdb common parameters
 
 | Parameter Name                                | Description                               | Value                  |
-|-----------------------------------------------|-------------------------------------------|------------------------|
+| --------------------------------------------- | ----------------------------------------- | ---------------------- |
 | external.couchdb.appName                      | CouchDB application name                  | "couchdb"              |
 | external.couchdb.version                      | CouchDB version                           | 3.3.1                  |
 | external.couchdb.user                         | CouchDB admin username                    | "admin"                |
@@ -180,11 +184,10 @@ rm -rf ${HOME}/streampipes-k8s
 | external.couchdb.persistence.claimName        | Name of the CouchDB PersistentVolumeClaim | "couchdb-pvc"          |
 | external.couchdb.persistence.pvName           | Name of the CouchDB PersistentVolume      | "couchdb-pv"           |
 
-
 #### Influxdb common parameters
 
 | Parameter Name                                 | Description                                  | Value                  |
-|------------------------------------------------|----------------------------------------------|------------------------|
+| ---------------------------------------------- | -------------------------------------------- | ---------------------- |
 | external.influxdb.appName                      | InfluxDB application name                    | "influxdb"             |
 | external.influxdb.version                      | InfluxDB version                             | 2.6                    |
 | external.influxdb.username                     | InfluxDB admin username                      | "admin"                |
@@ -211,7 +214,7 @@ rm -rf ${HOME}/streampipes-k8s
 #### Nats common parameters
 
 | Parameter Name                              | Description                                  | Value      |
-|---------------------------------------------|----------------------------------------------|------------|
+| ------------------------------------------- | -------------------------------------------- | ---------- |
 | external.nats.appName                       | NATS application name                        | "nats"     |
 | external.nats.port                          | Port for the NATS service                    | 4222       |
 | external.nats.version                       | NATS version                                 |            |
@@ -223,7 +226,7 @@ rm -rf ${HOME}/streampipes-k8s
 #### Kafka common parameters
 
 | Parameter Name                              | Description                                                                              | Value       |
-|---------------------------------------------|------------------------------------------------------------------------------------------|-------------|
+| ------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------- |
 | external.kafka.appName                      | Kafka application name                                                                   | "kafka"     |
 | external.kafka.version                      | Kafka version                                                                            | 3.9.0       |
 | external.kafka.port                         | Port for the Kafka service                                                               | 9092        |
@@ -235,12 +238,13 @@ rm -rf ${HOME}/streampipes-k8s
 | external.kafka.persistence.storageSize      | Size of the Kafka PV                                                                     | "1Gi"       |
 | external.kafka.persistence.claimName        | Name of the Kafka PersistentVolumeClaim                                                  | "kafka-pvc" |
 | external.kafka.persistence.pvName           | Name of the Kafka PersistentVolume                                                       | "kafka-pv"  |
+
 |
 
 #### Pulsar common parameters
 
 | Parameter Name                               | Description                              | Value        |
-|----------------------------------------------|------------------------------------------|--------------|
+| -------------------------------------------- | ---------------------------------------- | ------------ |
 | external.pulsar.appName                      | pulsar application name                  | "pulsar"     |
 | external.pulsar.version                      | pulsar version                           | 3.0.0        |
 | external.pulsar.port                         | Port for the pulsar service              | 6650         |
@@ -256,7 +260,7 @@ rm -rf ${HOME}/streampipes-k8s
 #### Monitoring - Prometheus
 
 | Parameter Name                          | Description                     | Value                 |
-|-----------------------------------------|---------------------------------|-----------------------|
+| --------------------------------------- | ------------------------------- | --------------------- |
 | prometheus.appName                      | Prometheus application name     | "prometheus"          |
 | prometheus.version                      | Prometheus version              | 2.45.0                |
 | prometheus.port                         | Prometheus port                 | 9090                  |
@@ -277,7 +281,7 @@ rm -rf ${HOME}/streampipes-k8s
 #### Monitoring - Grafana
 
 | Parameter Name                       | Description                | Value         |
-|--------------------------------------|----------------------------|---------------|
+| ------------------------------------ | -------------------------- | ------------- |
 | grafana.appName                      | Grafana application name   | "grafana"     |
 | grafana.version                      | Grafana version            | 10.1.2        |
 | grafana.port                         | Grafana port               | 3000          |
@@ -310,12 +314,12 @@ get to know an open-minded and motivated team working together to build the next
 
 Here are some first steps in case you want to contribute:
 
-* Subscribe to our dev mailing list [dev-subscribe@streampipes.apache.org](dev-subscribe@streampipes.apache.org)
-* Send an email, tell us about your interests and which parts of StreamPipes you'd like to contribute (e.g., core or
+- Subscribe to our dev mailing list [dev-subscribe@streampipes.apache.org](dev-subscribe@streampipes.apache.org)
+- Send an email, tell us about your interests and which parts of StreamPipes you'd like to contribute (e.g., core or
   UI)!
-* Ask for a mentor who helps you to understand the code base and guides you through the first setup steps
-* Find an issue on [GitHub](https://github.com/apache/streampipes/issues) which is tagged with a _good first issue_ tag
-* Have a look at our developer wiki
+- Ask for a mentor who helps you to understand the code base and guides you through the first setup steps
+- Find an issue on [GitHub](https://github.com/apache/streampipes/issues) which is tagged with a _good first issue_ tag
+- Have a look at our developer wiki
   at [https://cwiki.apache.org/confluence/display/STREAMPIPES](https://cwiki.apache.org/confluence/display/STREAMPIPES)
   to learn more about StreamPipes development.
 

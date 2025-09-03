@@ -13,17 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: {{ .Values.streampipes.core.appName }}
-  name: {{ .Values.streampipes.core.persistence.claimName }}
+    app: { { .Values.streampipes.core.appName } }
+  name: { { .Values.streampipes.core.persistence.claimName } }
 spec:
-  storageClassName: {{ .Values.streampipes.core.persistence.storageClassName }}
+  storageClassName:
+    { { .Values.streampipes.core.persistence.storageClassName } }
   accessModes:
-    - {{ .Values.persistentVolumeAccessModes }}
+    - { { .Values.persistentVolumeAccessModes } }
   resources:
     requests:
-      storage: {{ .Values.streampipes.core.persistence.storageSize }}
+      storage: { { .Values.streampipes.core.persistence.storageSize } }

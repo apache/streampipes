@@ -59,7 +59,7 @@ Choose the format that best suits your messaging needs.
 
 ### Silent Period
 
-The *Silent Period* is the duration, expressed in minutes, during which notifications are temporarily disabled after one
+The _Silent Period_ is the duration, expressed in minutes, during which notifications are temporarily disabled after one
 has been sent. This feature is implemented to prevent overwhelming the target with frequent notifications, avoiding
 potential spam behavior.
 

@@ -15,6 +15,7 @@
   ~ limitations under the License.
   ~
   -->
+
 #set( $double_pound = '##' )
 
 ${double_pound} ${classNamePrefix}
@@ -23,17 +24,17 @@ ${double_pound} ${classNamePrefix}
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ${double_pound} Description
 Describe your new data processor here!
 
-***
+---
 
 ${double_pound} Required input
 What are the input requirements of your data processor?
 
-***
+---
 
 ${double_pound} Configuration
 What are the configurations a user has to provide?

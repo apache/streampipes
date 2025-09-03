@@ -22,45 +22,54 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
-Der Schwellenwert-Erkennung-Prozessor überwacht numerische Werte und erkennt, wenn sie definierte Schwellenwerte überschreiten. Er:
-* Vergleicht numerische Werte mit einem Schwellenwert
-* Fügt ein boolesches Flag hinzu, das den Schwellenwertstatus anzeigt
-* Unterstützt verschiedene Vergleichsoperationen
-* Behält alle Eingabedaten bei und fügt Schwellenwertinformationen hinzu
 
-***
+Der Schwellenwert-Erkennung-Prozessor überwacht numerische Werte und erkennt, wenn sie definierte Schwellenwerte überschreiten. Er:
+
+- Vergleicht numerische Werte mit einem Schwellenwert
+- Fügt ein boolesches Flag hinzu, das den Schwellenwertstatus anzeigt
+- Unterstützt verschiedene Vergleichsoperationen
+- Behält alle Eingabedaten bei und fügt Schwellenwertinformationen hinzu
+
+---
 
 ## Erforderliche Eingabe
+
 Der Prozessor benötigt einen Eingabe-Ereignisstrom, der mindestens ein numerisches Feld zur Überwachung enthält.
 
-***
+---
 
 ## Konfiguration
 
 ### Feld
+
 Wählen Sie das numerische Feld aus, das auf Schwellenwertüberschreitung überwacht werden soll.
 
 ### Operation
+
 Wählen Sie aus sechs Vergleichsoperationen:
-* **<** (Kleiner als)
-* **<=** (Kleiner als oder gleich)
-* **>** (Größer als)
-* **>=** (Größer als oder gleich)
-* **==** (Gleich)
-* **!=** (Ungleich)
+
+- **<** (Kleiner als)
+- **<=** (Kleiner als oder gleich)
+- **>** (Größer als)
+- **>=** (Größer als oder gleich)
+- **==** (Gleich)
+- **!=** (Ungleich)
 
 ### Schwellenwert
+
 Geben Sie den numerischen Schwellenwert an, mit dem verglichen werden soll.
 
 ## Ausgabe
+
 Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen booleschen Feld `thresholdDetected` weiter, das anzeigt, ob die Schwellenwertbedingung erfüllt wurde.
 
 ### Beispiel
 
 #### Eingabe-Ereignis
+
 ```json
 {
   "temperature": 25.5,
@@ -70,11 +79,13 @@ Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen booleschen Fel
 ```
 
 #### Konfiguration
-* Feld: `temperature`
-* Operation: `>`
-* Schwellenwert: `25.0`
+
+- Feld: `temperature`
+- Operation: `>`
+- Schwellenwert: `25.0`
 
 #### Ausgabe-Ereignis
+
 ```json
 {
   "temperature": 25.5,
@@ -87,27 +98,27 @@ Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen booleschen Fel
 ## Anwendungsfälle
 
 1. **Überwachung & Alarmierung**
-   * Überwachung von Sensorwerten
-   * Erkennung von Schwellenwertüberschreitungen
-   * Auslösung von Alarmen
-   * Verfolgung von Wertebereichen
+   - Überwachung von Sensorwerten
+   - Erkennung von Schwellenwertüberschreitungen
+   - Auslösung von Alarmen
+   - Verfolgung von Wertebereichen
 
 2. **Qualitätskontrolle**
-   * Überwachung von Prozessparametern
-   * Erkennung von Werten außerhalb des Bereichs
-   * Sicherstellung von Qualitätsstandards
-   * Verfolgung der Einhaltung
+   - Überwachung von Prozessparametern
+   - Erkennung von Werten außerhalb des Bereichs
+   - Sicherstellung von Qualitätsstandards
+   - Verfolgung der Einhaltung
 
 3. **Datenanalyse**
-   * Analyse von Werteverteilungen
-   * Verfolgung von Schwellenwertereignissen
-   * Überwachung von Trends
-   * Identifizierung von Mustern
+   - Analyse von Werteverteilungen
+   - Verfolgung von Schwellenwertereignissen
+   - Überwachung von Trends
+   - Identifizierung von Mustern
 
 ## Hinweise
 
-* Der Prozessor behält alle Eingabefelder bei
-* Das Feld `thresholdDetected` wird immer angehängt
-* Fließkommavergleiche verwenden ein kleines Epsilon (0.000001) für Gleichheit
-* Alle Ereignisse werden weitergeleitet, unabhängig vom Schwellenwertstatus
-* Die Schwellenwertprüfung wird auf dem exakten numerischen Wert durchgeführt 
+- Der Prozessor behält alle Eingabefelder bei
+- Das Feld `thresholdDetected` wird immer angehängt
+- Fließkommavergleiche verwenden ein kleines Epsilon (0.000001) für Gleichheit
+- Alle Ereignisse werden weitergeleitet, unabhängig vom Schwellenwertstatus
+- Die Schwellenwertprüfung wird auf dem exakten numerischen Wert durchgeführt

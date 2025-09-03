@@ -22,18 +22,18 @@
     <img src="icon.png" width="150px;"/>
 </p>
 
-***
+---
 
 ## Description
 
 Numerical Filter Description
 Add a detailed description here
 
-***
+---
 
 ## Required input
 
-***
+---
 
 ## Configuration
 

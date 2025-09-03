@@ -1,13 +1,14 @@
-{  "__inputs": [
-  {
-    "name": "DS_default",
-    "label": "default",
-    "description": "",
-    "type": "datasource",
-    "pluginId": "prometheus",
-    "pluginName": "Prometheus"
-  }
-],
+{
+  "__inputs": [
+    {
+      "name": "DS_default",
+      "label": "default",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -25,7 +26,7 @@
         "type": "dashboard"
       },
       {
-      "datasource": "${DS_default}",
+        "datasource": "${DS_default}",
         "enable": true,
         "expr": "resets(process_uptime_seconds{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}[1m]) > 0",
         "iconColor": "rgba(255, 96, 96, 1)",
@@ -60,7 +61,7 @@
       "panels": [],
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "refId": "A"
         }
       ],
@@ -118,9 +119,7 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -129,7 +128,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "process_uptime_seconds{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}",
@@ -198,9 +197,7 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -209,7 +206,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "process_start_time_seconds{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"} * 1000",
@@ -283,9 +280,7 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -294,7 +289,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "(sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\", job=\"extensions-all-iiot\"}) * 100) / sum(jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\"})",
@@ -332,7 +327,7 @@
             },
             {
               "options": {
-                "from": -1e+32,
+                "from": -1e32,
                 "result": {
                   "text": "N/A"
                 },
@@ -377,9 +372,7 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -388,7 +381,7 @@
       "pluginVersion": "10.1.1",
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "(sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"nonheap\", job=\"extensions-all-iiot\"}) * 100) / sum(jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", area=\"nonheap\", job=\"extensions-all-iiot\"})",
@@ -419,7 +412,7 @@
       "panels": [],
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "refId": "A"
         }
       ],
@@ -475,7 +468,7 @@
       "steppedLine": false,
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\", job=\"extensions-all-iiot\"})",
@@ -491,7 +484,7 @@
           "useBackend": false
         },
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "expr": "sum(jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\", job=\"extensions-all-iiot\"})",
           "format": "time_series",
           "intervalFactor": 2,
@@ -500,7 +493,7 @@
           "step": 2400
         },
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "expr": "sum(jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\", job=\"extensions-all-iiot\"})",
           "format": "time_series",
           "intervalFactor": 2,
@@ -526,10 +519,7 @@
         "values": []
       },
       "y-axis": true,
-      "y_formats": [
-        "mbytes",
-        "short"
-      ],
+      "y_formats": ["mbytes", "short"],
       "yaxes": [
         {
           "format": "bytes",
@@ -597,7 +587,7 @@
       "steppedLine": false,
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"})",
@@ -613,7 +603,7 @@
           "useBackend": false
         },
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "expr": "sum(jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"})",
           "format": "time_series",
           "intervalFactor": 2,
@@ -622,7 +612,7 @@
           "step": 2400
         },
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "expr": "sum(jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"})",
           "format": "time_series",
           "intervalFactor": 2,
@@ -648,10 +638,7 @@
         "values": []
       },
       "y-axis": true,
-      "y_formats": [
-        "mbytes",
-        "short"
-      ],
+      "y_formats": ["mbytes", "short"],
       "yaxes": [
         {
           "format": "bytes",
@@ -683,7 +670,7 @@
       "panels": [],
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "refId": "A"
         }
       ],
@@ -739,7 +726,7 @@
       "steppedLine": false,
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "system_cpu_usage{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}",
@@ -756,7 +743,7 @@
           "useBackend": false
         },
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "expr": "process_cpu_usage{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}",
           "format": "time_series",
           "hide": false,
@@ -765,7 +752,7 @@
           "refId": "B"
         },
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "expr": "avg_over_time(process_cpu_usage{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}[15m])",
           "format": "time_series",
           "hide": false,
@@ -791,10 +778,7 @@
         "values": []
       },
       "y-axis": true,
-      "y_formats": [
-        "short",
-        "short"
-      ],
+      "y_formats": ["short", "short"],
       "yaxes": [
         {
           "decimals": 1,
@@ -859,7 +843,7 @@
       "steppedLine": false,
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "sum by(application, instance) (rate(jvm_gc_pause_seconds_sum{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}[1m])) / on(application, instance) system_cpu_count",
@@ -955,7 +939,7 @@
       "steppedLine": false,
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "jvm_threads_live_threads{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}",
@@ -971,7 +955,7 @@
           "useBackend": false
         },
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "expr": "jvm_threads_daemon_threads{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}",
           "format": "time_series",
           "intervalFactor": 2,
@@ -981,7 +965,7 @@
           "step": 2400
         },
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "expr": "jvm_threads_peak_threads{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}",
           "format": "time_series",
           "intervalFactor": 2,
@@ -990,7 +974,7 @@
           "step": 2400
         },
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "expr": "process_threads{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}",
           "format": "time_series",
           "interval": "",
@@ -1017,10 +1001,7 @@
         "values": []
       },
       "y-axis": true,
-      "y_formats": [
-        "short",
-        "short"
-      ],
+      "y_formats": ["short", "short"],
       "yaxes": [
         {
           "decimals": 0,
@@ -1091,7 +1072,7 @@
       "steppedLine": false,
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "jvm_threads_states_threads{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}",
@@ -1148,7 +1129,7 @@
       "panels": [],
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "refId": "A"
         }
       ],
@@ -1200,7 +1181,7 @@
       "targets": [
         {
           "alias": "",
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "irate(logback_events_total{instance=\"$instance\", application=\"$application\", level=\"info\", job=\"extensions-all-iiot\"}[5m])",
@@ -1290,7 +1271,7 @@
       "targets": [
         {
           "alias": "",
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "irate(logback_events_total{instance=\"$instance\", application=\"$application\", level=\"error\", job=\"extensions-all-iiot\"}[5m])",
@@ -1380,7 +1361,7 @@
       "targets": [
         {
           "alias": "",
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "irate(logback_events_total{instance=\"$instance\", application=\"$application\", level=\"warn\", job=\"extensions-all-iiot\"}[5m])",
@@ -1470,7 +1451,7 @@
       "targets": [
         {
           "alias": "",
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "irate(logback_events_total{instance=\"$instance\", application=\"$application\", level=\"debug\", job=\"extensions-all-iiot\"}[5m])",
@@ -1560,7 +1541,7 @@
       "targets": [
         {
           "alias": "",
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "irate(logback_events_total{instance=\"$instance\", application=\"$application\", level=\"trace\", job=\"extensions-all-iiot\"}[5m])",
@@ -1619,7 +1600,7 @@
       "repeat": "persistence_counts",
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "refId": "A"
         }
       ],
@@ -1679,7 +1660,7 @@
       "steppedLine": false,
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\", job=\"extensions-all-iiot\"}",
@@ -1697,7 +1678,7 @@
           "useBackend": false
         },
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "expr": "jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\", job=\"extensions-all-iiot\"}",
           "format": "time_series",
           "hide": false,
@@ -1709,7 +1690,7 @@
           "step": 1800
         },
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "expr": "jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\", job=\"extensions-all-iiot\"}",
           "format": "time_series",
           "hide": false,
@@ -1738,10 +1719,7 @@
         "values": []
       },
       "y-axis": true,
-      "y_formats": [
-        "mbytes",
-        "short"
-      ],
+      "y_formats": ["mbytes", "short"],
       "yaxes": [
         {
           "format": "bytes",
@@ -1772,7 +1750,7 @@
       "panels": [],
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "refId": "A"
         }
       ],
@@ -1822,7 +1800,7 @@
       "steppedLine": false,
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "rate(jvm_gc_pause_seconds_count{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}[1m])",
@@ -1912,7 +1890,7 @@
       "steppedLine": false,
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "rate(jvm_gc_pause_seconds_sum{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}[1m]) / rate(jvm_gc_pause_seconds_count{application=\"$application\", instance=\"$instance\"}[1m])",
@@ -1927,7 +1905,7 @@
           "useBackend": false
         },
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "expr": "jvm_gc_pause_seconds_max{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}",
           "format": "time_series",
           "hide": false,
@@ -2012,7 +1990,7 @@
       "steppedLine": false,
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "rate(jvm_gc_memory_allocated_bytes_total{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}[1m])",
@@ -2027,7 +2005,7 @@
           "useBackend": false
         },
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "expr": "rate(jvm_gc_memory_promoted_bytes_total{application=\"$application\", instance=\"$instance\", job=\"extensions-all-iiot\"}[1m])",
           "format": "time_series",
           "interval": "",
@@ -2080,7 +2058,7 @@
       "panels": [],
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "refId": "A"
         }
       ],
@@ -2132,7 +2110,7 @@
       "steppedLine": false,
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "irate(http_server_requests_seconds_count{instance=\"$instance\", application=\"$application\", uri!~\".*actuator.*\", job=\"extensions-all-iiot\"}[5m])",
@@ -2221,7 +2199,7 @@
       "steppedLine": false,
       "targets": [
         {
-      "datasource": "${DS_default}",
+          "datasource": "${DS_default}",
           "disableTextWrap": false,
           "editorMode": "builder",
           "expr": "irate(http_server_requests_seconds_sum{instance=\"$instance\", application=\"$application\", exception=\"None\", uri!~\".*actuator.*\", job=\"extensions-all-iiot\"}[5m]) / irate(http_server_requests_seconds_count{instance=\"$instance\", application=\"$application\", exception=\"None\", uri!~\".*actuator.*\"}[5m])",
@@ -2280,7 +2258,7 @@
           "text": "None",
           "value": ""
         },
-      "datasource": "${DS_default}",
+        "datasource": "${DS_default}",
         "definition": "",
         "hide": 0,
         "includeAll": false,
@@ -2305,7 +2283,7 @@
           "text": "localhost:7023",
           "value": "localhost:7023"
         },
-      "datasource": "${DS_default}",
+        "datasource": "${DS_default}",
         "definition": "",
         "hide": 0,
         "includeAll": false,
@@ -2331,7 +2309,7 @@
           "text": "All",
           "value": "$__all"
         },
-      "datasource": "${DS_default}",
+        "datasource": "${DS_default}",
         "definition": "",
         "hide": 2,
         "includeAll": true,
@@ -2357,7 +2335,7 @@
           "text": "All",
           "value": "$__all"
         },
-      "datasource": "${DS_default}",
+        "datasource": "${DS_default}",
         "definition": "",
         "hide": 2,
         "includeAll": true,
@@ -2383,7 +2361,7 @@
           "text": "All",
           "value": "$__all"
         },
-      "datasource": "${DS_default}",
+        "datasource": "${DS_default}",
         "definition": "",
         "hide": 2,
         "includeAll": true,
@@ -2422,17 +2400,7 @@
       "2h",
       "1d"
     ],
-    "time_options": [
-      "5m",
-      "15m",
-      "1h",
-      "6h",
-      "12h",
-      "24h",
-      "2d",
-      "7d",
-      "30d"
-    ]
+    "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
   },
   "timezone": "browser",
   "title": "StreamPipes extensions-all-iiot",

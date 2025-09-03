@@ -22,7 +22,7 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
@@ -33,17 +33,20 @@ the browser at `http://##IP_OF_IO_LINK_MASTER##/web/subscribe`. For detailed ins
 please refer to the ifm documentation.
 
 ### Requirements
+
 The JSON events should include the following information:
+
 - `deviceinfo.serialnumber`
 - Only the pdin value is required for each port (e.g., `port[0]`).
 - The event `timer[1].datachanged` can be used as a trigger.
-Using this adapter, you can create a stream for sensors of the same type.
+  Using this adapter, you can create a stream for sensors of the same type.
 
 ### Restrictions
+
 This version supports a single IO-Link master. If you want to connect multiple masters, they must have the same setup.
 If you have different requirements, please inform us through the mailing list or GitHub discussions.
 
-***
+---
 
 ## Configuration
 
@@ -68,6 +71,7 @@ Choose the type of sensor you want to connect. (**IMPORTANT:** Currently, only t
 ## Output
 
 The output includes all values from the selected sensor type. Here is an example for the `VVB001 sensor`:
+
 ```
 {
     "aPeak": 6.6,

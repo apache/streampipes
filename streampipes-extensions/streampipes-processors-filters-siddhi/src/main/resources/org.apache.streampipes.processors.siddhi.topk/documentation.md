@@ -22,58 +22,73 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
-The Top K Analysis processor collects incoming events in a configurable time window and outputs the top or bottom K events based on a specified count value. It:
-* Aggregates events within a time window
-* Ranks events by their count values
-* Supports both ascending and descending order
-* Preserves original event data
-* Works with any event stream type
 
-***
+The Top K Analysis processor collects incoming events in a configurable time window and outputs the top or bottom K events based on a specified count value. It:
+
+- Aggregates events within a time window
+- Ranks events by their count values
+- Supports both ascending and descending order
+- Preserves original event data
+- Works with any event stream type
+
+---
 
 ## Required Input
-The processor requires an input event stream with:
-* A field containing values to be counted
-* A field containing count values for ranking
 
-***
+The processor requires an input event stream with:
+
+- A field containing values to be counted
+- A field containing count values for ranking
+
+---
 
 ## Configuration
 
 ### Field
+
 Select the field whose values should be counted and ranked.
 
 ### Count Field
+
 Select the field containing the count values used for ranking the events.
 
 ### Batch Window Size
+
 Specify the number of events to include in each batch window.
 
 ### Time Window Scale
+
 Choose the time unit for the batch window:
-* Hours
-* Minutes
-* Seconds
+
+- Hours
+- Minutes
+- Seconds
 
 ### Limit
+
 Specify the maximum number of events to output (K value).
 
 ### Order
+
 Select the ranking order:
-* Ascending: Outputs the bottom K events
-* Descending: Outputs the top K events
+
+- Ascending: Outputs the bottom K events
+- Descending: Outputs the top K events
 
 ## Output
+
 The processor outputs a list of the top or bottom K events from each batch window. Each event in the list contains:
-* The value field from the input event
-* The count value used for ranking
+
+- The value field from the input event
+- The count value used for ranking
 
 ### Example
 
 #### Input Event
+
 ```json
 {
   "device_id": "device1",
@@ -85,14 +100,16 @@ The processor outputs a list of the top or bottom K events from each batch windo
 ```
 
 #### Configuration
-* Field: `device_id`
-* Count Field: `occurrences`
-* Batch Window Size: `60`
-* Time Window Scale: `Seconds`
-* Limit: `3`
-* Order: `Descending`
+
+- Field: `device_id`
+- Count Field: `occurrences`
+- Batch Window Size: `60`
+- Time Window Scale: `Seconds`
+- Limit: `3`
+- Order: `Descending`
 
 #### Output Event
+
 ```json
 {
   "top": [
@@ -115,27 +132,27 @@ The processor outputs a list of the top or bottom K events from each batch windo
 ## Use Cases
 
 1. **Performance Analysis**
-   * Identify top performing sensors
-   * Monitor high-frequency events
-   * Track resource usage patterns
-   * Analyze system bottlenecks
+   - Identify top performing sensors
+   - Monitor high-frequency events
+   - Track resource usage patterns
+   - Analyze system bottlenecks
 
 2. **Anomaly Detection**
-   * Find unusual event patterns
-   * Identify outliers
-   * Monitor system behavior
-   * Detect anomalies
+   - Find unusual event patterns
+   - Identify outliers
+   - Monitor system behavior
+   - Detect anomalies
 
 3. **Resource Optimization**
-   * Identify high-usage resources
-   * Monitor system load
-   * Track performance metrics
-   * Optimize resource allocation
+   - Identify high-usage resources
+   - Monitor system load
+   - Track performance metrics
+   - Optimize resource allocation
 
 ## Notes
 
-* The processor uses a sliding time window for analysis
-* Events are ranked based on their count values
-* The output includes the original event data
-* The time window is configurable in hours, minutes, or seconds
-* The processor supports both top K and bottom K analysis
+- The processor uses a sliding time window for analysis
+- Events are ranked based on their count values
+- The output includes the original event data
+- The time window is configurable in hours, minutes, or seconds
+- The processor supports both top K and bottom K analysis

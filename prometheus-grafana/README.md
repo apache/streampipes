@@ -16,14 +16,14 @@
   ~
   -->
 
-
 ## Prometheus Configuration
+
 In the [prometheus](./prometheus) directory, you can find sample configuration file for Prometheus.
 
 ## Grafana Dashboards
 
 In the [dashboards](./grafana/dashboards) directory, you can find sample grafana dashboards for several StreamPipes components.
 
-
 ## note
+
 The metrics displayed in the [dashboards](./grafana/dashboards) directory dashboards show metrics that have a filter condition related to the job_name, if you change the job_name in the example you must also change the condition in the grafana dashboard.

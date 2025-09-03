@@ -22,29 +22,31 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 The String To State processor transforms string properties into a list of state values. It supports:
-* Multiple string inputs
-* List-based state output
-* Field value preservation
-* State collection
+
+- Multiple string inputs
+- List-based state output
+- Field value preservation
+- State collection
 
 This processor is essential for:
-* Converting strings to states
-* Collecting multiple states
-* Preserving field values
-* Creating state lists
 
-***
+- Converting strings to states
+- Collecting multiple states
+- Preserving field values
+- Creating state lists
+
+---
 
 ## Required input
 
 The processor requires a data stream containing at least one string field to convert into a state.
 
-***
+---
 
 ## Configuration
 
@@ -55,12 +57,14 @@ Select one or more string fields to convert into states. The values of these fie
 ## Output
 
 The processor creates a new event containing:
-* All original fields from the input event
-* A new field named "current_state" containing a list of the selected string field values
+
+- All original fields from the input event
+- A new field named "current_state" containing a list of the selected string field values
 
 ### Example
 
 #### Input Event
+
 ```json
 {
   "deviceId": "sensor01",
@@ -70,9 +74,11 @@ The processor creates a new event containing:
 ```
 
 #### Configuration
-* State Fields: status, mode
+
+- State Fields: status, mode
 
 #### Output Event
+
 ```json
 {
   "deviceId": "sensor01",
@@ -85,22 +91,22 @@ The processor creates a new event containing:
 ## Use Cases
 
 1. **State Collection**
-   * Gather multiple states
-   * Track field values
-   * Monitor statuses
-   * Collect modes
+   - Gather multiple states
+   - Track field values
+   - Monitor statuses
+   - Collect modes
 
 2. **State Analysis**
-   * Analyze state combinations
-   * Track value patterns
-   * Monitor field changes
-   * Process state lists
+   - Analyze state combinations
+   - Track value patterns
+   - Monitor field changes
+   - Process state lists
 
 ## Notes
 
-* Multiple fields can be selected
-* Output is always a list
-* Original fields are preserved
-* Processing is stateless
-* Empty selections result in empty list
-* Field values are preserved as-is
+- Multiple fields can be selected
+- Output is always a list
+- Original fields are preserved
+- Processing is stateless
+- Empty selections result in empty list
+- Field values are preserved as-is

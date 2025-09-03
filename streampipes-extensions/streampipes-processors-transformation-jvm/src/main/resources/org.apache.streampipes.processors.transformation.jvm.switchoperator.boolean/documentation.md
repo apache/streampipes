@@ -38,41 +38,41 @@ This processor appends a new field to the event with the processed output value.
 
 ### Static Properties
 
-* **Switch Field**: Select the boolean field from the input stream that will be used for the switch condition.
-* **Output Type**: Choose the data type of the output value. Available options are:
-    * `String`
-    * `Boolean`
-    * `Integer`
-* **Switch Cases**: Define the different switch conditions and their corresponding output values. Each switch case consists of:
-    * **Case Value**: The boolean value (`true` or `false`) to match against the selected switch field.
-    * **Output Value**: The value to output if this case matches. This value will be converted to the selected `Output Type`.
-* **Default Output Value**: The value to use if none of the defined switch cases match the input or if an error occurs during processing. This value will also be converted to the selected `Output Type`.
+- **Switch Field**: Select the boolean field from the input stream that will be used for the switch condition.
+- **Output Type**: Choose the data type of the output value. Available options are:
+  - `String`
+  - `Boolean`
+  - `Integer`
+- **Switch Cases**: Define the different switch conditions and their corresponding output values. Each switch case consists of:
+  - **Case Value**: The boolean value (`true` or `false`) to match against the selected switch field.
+  - **Output Value**: The value to output if this case matches. This value will be converted to the selected `Output Type`.
+- **Default Output Value**: The value to use if none of the defined switch cases match the input or if an error occurs during processing. This value will also be converted to the selected `Output Type`.
 
 ## Example
 
 Let's say you have an event with a boolean field `isValid` and you want to output a "Status" string based on its value:
 
-| Original Event |
-| :------------- |
+| Original Event        |
+| :-------------------- |
 | `{ "isValid": true }` |
 
 **Configuration:**
 
-* **Switch Field**: `isValid`
-* **Output Type**: `String`
-* **Switch Cases**:
-    * Case Value: `true`, Output Value: `Valid Data`
-    * Case Value: `false`, Output Value: `Invalid Data`
-* **Default Output Value**: `Unknown`
+- **Switch Field**: `isValid`
+- **Output Type**: `String`
+- **Switch Cases**:
+  - Case Value: `true`, Output Value: `Valid Data`
+  - Case Value: `false`, Output Value: `Invalid Data`
+- **Default Output Value**: `Unknown`
 
 **Output Event when `isValid` is `true`:**
 
-| Processed Event |
-| :-------------- |
+| Processed Event                                      |
+| :--------------------------------------------------- |
 | `{ "isValid": true, "switch-output": "Valid Data" }` |
 
 **Output Event when `isValid` is `false`:**
 
-| Processed Event |
-| :-------------- |
+| Processed Event                                         |
+| :------------------------------------------------------ |
 | `{ "isValid": false, "switch-output": "Invalid Data" }` |

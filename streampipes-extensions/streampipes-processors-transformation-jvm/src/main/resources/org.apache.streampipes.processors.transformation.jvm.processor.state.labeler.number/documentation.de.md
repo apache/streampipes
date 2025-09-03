@@ -22,32 +22,35 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
 
 Der Zahlen-Beschriftungs-Prozessor fügt Beschriftungen zu numerischen Werten basierend auf benutzerdefinierten Regeln hinzu. Er unterstützt:
-* Wertbasierte Beschriftung
-* Benutzerdefinierte Regeldefinition
-* Mehrere Bedingungen
-* Standardbeschriftungen
-* Wertvergleich
+
+- Wertbasierte Beschriftung
+- Benutzerdefinierte Regeldefinition
+- Mehrere Bedingungen
+- Standardbeschriftungen
+- Wertvergleich
 
 Dieser Prozessor ist essentiell für:
-* Messungen klassifizieren
-* Kontext zu Daten hinzufügen
-* Muster identifizieren
-* Bedingungen markieren
 
-***
+- Messungen klassifizieren
+- Kontext zu Daten hinzufügen
+- Muster identifizieren
+- Bedingungen markieren
+
+---
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Datenstrom, der enthält:
-* Ein numerisches Wertfeld zur Auswertung
-* Zeitstempelinformationen
 
-***
+- Ein numerisches Wertfeld zur Auswertung
+- Zeitstempelinformationen
+
+---
 
 ## Konfiguration
 
@@ -62,19 +65,22 @@ Gib den Namen des Beschriftungsfelds in der Ausgabe-Nachricht an.
 ### Bedingung
 
 Füge Bedingungen im Format hinzu:
-* `<;5;niedrig` - Als "niedrig" beschriften, wenn der Wert kleiner als 5 ist
-* `<;10;mittel` - Als "mittel" beschriften, wenn der Wert kleiner als 10 ist
-* `*;hoch` - Standardbeschriftung "hoch" für alle anderen Fälle
+
+- `<;5;niedrig` - Als "niedrig" beschriften, wenn der Wert kleiner als 5 ist
+- `<;10;mittel` - Als "mittel" beschriften, wenn der Wert kleiner als 10 ist
+- `*;hoch` - Standardbeschriftung "hoch" für alle anderen Fälle
 
 ## Ausgabe
 
 Der Prozessor erstellt eine neue Nachricht, die enthält:
-* Alle ursprünglichen Felder aus der Eingabe-Nachricht
-* Ein neues Beschriftungsfeld basierend auf den Bedingungen
+
+- Alle ursprünglichen Felder aus der Eingabe-Nachricht
+- Ein neues Beschriftungsfeld basierend auf den Bedingungen
 
 ### Beispiel
 
 #### Eingabe-Nachricht
+
 ```json
 {
   "deviceId": "sensor01",
@@ -84,11 +90,13 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ```
 
 #### Konfiguration
-* Sensorwert: temperature
-* Beschriftungsname: temperature_status
-* Bedingung: "<;20;kalt", "<;30;warm", "*;heiß"
+
+- Sensorwert: temperature
+- Beschriftungsname: temperature_status
+- Bedingung: "<;20;kalt", "<;30;warm", "\*;heiß"
 
 #### Ausgabe-Nachricht
+
 ```json
 {
   "deviceId": "sensor01",
@@ -101,20 +109,20 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ## Anwendungsfälle
 
 1. **Datenklassifizierung**
-   * Messungen klassifizieren
-   * Kontext zu Daten hinzufügen
-   * Muster identifizieren
-   * Bedingungen markieren
+   - Messungen klassifizieren
+   - Kontext zu Daten hinzufügen
+   - Muster identifizieren
+   - Bedingungen markieren
 
 2. **Qualitätskontrolle**
-   * Qualitätsstufen beschriften
-   * Schwellenwerte markieren
-   * Probleme identifizieren
-   * Bedingungen verfolgen
+   - Qualitätsstufen beschriften
+   - Schwellenwerte markieren
+   - Probleme identifizieren
+   - Bedingungen verfolgen
 
 ## Hinweise
 
-* Bedingungen werden in Reihenfolge ausgewertet
-* Standardbeschriftung ist erforderlich
-* Verarbeitung ist zustandslos
-* Mehrere Bedingungen werden unterstützt 
+- Bedingungen werden in Reihenfolge ausgewertet
+- Standardbeschriftung ist erforderlich
+- Verarbeitung ist zustandslos
+- Mehrere Bedingungen werden unterstützt

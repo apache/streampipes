@@ -22,29 +22,31 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 The String Timer processor measures how long a string field maintains a specific value. It supports:
-* String value monitoring
-* Duration measurement
-* Multiple time units
-* Configurable output frequency
+
+- String value monitoring
+- Duration measurement
+- Multiple time units
+- Configurable output frequency
 
 This processor is essential for:
-* Measuring state durations
-* Tracking value persistence
-* Monitoring string states
-* Calculating time periods
 
-***
+- Measuring state durations
+- Tracking value persistence
+- Monitoring string states
+- Calculating time periods
+
+---
 
 ## Required input
 
 The processor requires a data stream containing at least one string field to monitor for value changes.
 
-***
+---
 
 ## Configuration
 
@@ -55,26 +57,30 @@ Select the string field to monitor for value changes. This field will be used to
 ### Output Unit
 
 Choose the time unit for the measured duration:
-* Milliseconds (default)
-* Seconds
-* Minutes
+
+- Milliseconds (default)
+- Seconds
+- Minutes
 
 ### Output Frequency
 
 Define when the processor should emit an output event:
-* On Input Event: Emit for every input event
-* When String Value Changes: Emit only when the string value changes
+
+- On Input Event: Emit for every input event
+- When String Value Changes: Emit only when the string value changes
 
 ## Output
 
 The processor creates a new event containing:
-* All original fields from the input event
-* A measured_time field showing the duration in the selected unit
-* A field_value field showing the previous string value
+
+- All original fields from the input event
+- A measured_time field showing the duration in the selected unit
+- A field_value field showing the previous string value
 
 ### Example
 
 #### Input Event
+
 ```json
 {
   "deviceId": "machine01",
@@ -84,11 +90,13 @@ The processor creates a new event containing:
 ```
 
 #### Configuration
-* String Field: status
-* Output Unit: Seconds
-* Output Frequency: When String Value Changes
+
+- String Field: status
+- Output Unit: Seconds
+- Output Frequency: When String Value Changes
 
 #### Output Event (when status changes from "running" to "stopped")
+
 ```json
 {
   "deviceId": "machine01",
@@ -102,22 +110,21 @@ The processor creates a new event containing:
 ## Use Cases
 
 1. **State Monitoring**
-   * Measure state durations
-   * Track value persistence
-   * Monitor status changes
-   * Calculate time periods
+   - Measure state durations
+   - Track value persistence
+   - Monitor status changes
+   - Calculate time periods
 
 2. **Process Control**
-   * Measure process durations
-   * Track state changes
-   * Monitor operations
-   * Calculate times
+   - Measure process durations
+   - Track state changes
+   - Monitor operations
+   - Calculate times
 
 ## Notes
 
-* Only string fields can be monitored
-* Time measurement is stateful
-* Measurement starts on value change
-* Measurement ends on next change
-* Output depends on frequency setting
-
+- Only string fields can be monitored
+- Time measurement is stateful
+- Measurement starts on value change
+- Measurement ends on next change
+- Output depends on frequency setting

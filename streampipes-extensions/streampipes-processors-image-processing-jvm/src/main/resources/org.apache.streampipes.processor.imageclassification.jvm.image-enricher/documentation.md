@@ -22,7 +22,7 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
@@ -34,4 +34,5 @@ An image and an array with bounding boxes, an array with scores and an array wit
 A box consists of the x and y coordinates in the image as well as the height and width, and the classindex with score
 
 ## Output
+
 A new event containing the image with bounding boxes rendered according to the boxes of the input event

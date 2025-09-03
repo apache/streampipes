@@ -22,34 +22,40 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
-Der Stromstopp-Erkennungs-Prozessor überwacht einen Eingabestrom und löst ein Ereignis aus, wenn für eine bestimmte Dauer keine neuen Ereignisse eintreffen. Er:
-* Erkennt Stromunterbrechungen
-* Überwacht Ereigniseintrittsmuster
-* Löst Alarme bei Stromstopps aus
-* Liefert Zeitstempel der Erkennung
-* Funktioniert mit jedem Ereignisstromtyp
 
-***
+Der Stromstopp-Erkennungs-Prozessor überwacht einen Eingabestrom und löst ein Ereignis aus, wenn für eine bestimmte Dauer keine neuen Ereignisse eintreffen. Er:
+
+- Erkennt Stromunterbrechungen
+- Überwacht Ereigniseintrittsmuster
+- Löst Alarme bei Stromstopps aus
+- Liefert Zeitstempel der Erkennung
+- Funktioniert mit jedem Ereignisstromtyp
+
+---
 
 ## Erforderliche Eingabe
+
 Der Prozessor funktioniert mit jedem Eingabeereignisstrom und benötigt keine spezifischen Felder.
 
-***
+---
 
 ## Konfiguration
 
 ### Zeitfensterlänge (Sekunden)
+
 Geben Sie die Dauer in Sekunden an, die auf Ereignisse gewartet werden soll, bevor die Stopp-Erkennung ausgelöst wird. Wenn innerhalb dieses Zeitfensters keine Ereignisse eintreffen, gibt der Prozessor ein Stopp-Erkennungsereignis aus.
 
 ## Ausgabe
+
 Der Prozessor gibt ein Ereignis mit einem Zeitstempel und einer Nachricht aus, die anzeigt, dass der Strom gestoppt ist.
 
 ### Beispiel
 
 #### Eingabeereignis
+
 ```json
 {
   "sensor_id": "sensor1",
@@ -59,9 +65,11 @@ Der Prozessor gibt ein Ereignis mit einem Zeitstempel und einer Nachricht aus, d
 ```
 
 #### Konfiguration
-* Zeitfensterlänge: `60` (Sekunden)
+
+- Zeitfensterlänge: `60` (Sekunden)
 
 #### Ausgabeereignis
+
 ```json
 {
   "timestamp": 1586380165115,
@@ -72,27 +80,27 @@ Der Prozessor gibt ein Ereignis mit einem Zeitstempel und einer Nachricht aus, d
 ## Anwendungsfälle
 
 1. **Systemüberwachung**
-   * Erkennen von Sensorausfällen
-   * Überwachen der Datenquellengesundheit
-   * Verfolgen der Stromzuverlässigkeit
-   * Identifizieren von Verbindungsproblemen
+   - Erkennen von Sensorausfällen
+   - Überwachen der Datenquellengesundheit
+   - Verfolgen der Stromzuverlässigkeit
+   - Identifizieren von Verbindungsproblemen
 
 2. **Alarmgenerierung**
-   * Alarme bei Stromstopps auslösen
-   * Bei Datenlücken benachrichtigen
-   * Systemgesundheit überwachen
-   * Anomalien erkennen
+   - Alarme bei Stromstopps auslösen
+   - Bei Datenlücken benachrichtigen
+   - Systemgesundheit überwachen
+   - Anomalien erkennen
 
 3. **Qualitätssicherung**
-   * Kontinuierlichen Datenfluss sicherstellen
-   * Datenkonsistenz überwachen
-   * Stromzuverlässigkeit verfolgen
-   * Systemleistung validieren
+   - Kontinuierlichen Datenfluss sicherstellen
+   - Datenkonsistenz überwachen
+   - Stromzuverlässigkeit verfolgen
+   - Systemleistung validieren
 
 ## Hinweise
 
-* Der Prozessor löst aus, wenn für die angegebene Dauer keine Ereignisse eintreffen
-* Die Ausgabe enthält einen Zeitstempel, wann der Stopp erkannt wurde
-* Der Prozessor funktioniert mit jedem Ereignisstromtyp
-* Das Zeitfenster wird in Sekunden angegeben
-* Der Prozessor liefert eine klare Nachricht, die den Stromstopp anzeigt 
+- Der Prozessor löst aus, wenn für die angegebene Dauer keine Ereignisse eintreffen
+- Die Ausgabe enthält einen Zeitstempel, wann der Stopp erkannt wurde
+- Der Prozessor funktioniert mit jedem Ereignisstromtyp
+- Das Zeitfenster wird in Sekunden angegeben
+- Der Prozessor liefert eine klare Nachricht, die den Stromstopp anzeigt

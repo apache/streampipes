@@ -22,40 +22,48 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
-Der Frequenzüberwachungs-Prozessor erkennt, wenn Ereignisse innerhalb eines angegebenen Zeitfensters nicht mehr eintreffen. Er:
-* Überwacht die Ereigniseintrittsfrequenz
-* Erkennt, wenn Ereignisse nicht mehr eintreffen
-* Unterstützt konfigurierbare Zeitfenster
-* Funktioniert mit jedem Eingabeereignisstrom
-* Behält die ursprünglichen Ereignisdaten bei
 
-***
+Der Frequenzüberwachungs-Prozessor erkennt, wenn Ereignisse innerhalb eines angegebenen Zeitfensters nicht mehr eintreffen. Er:
+
+- Überwacht die Ereigniseintrittsfrequenz
+- Erkennt, wenn Ereignisse nicht mehr eintreffen
+- Unterstützt konfigurierbare Zeitfenster
+- Funktioniert mit jedem Eingabeereignisstrom
+- Behält die ursprünglichen Ereignisdaten bei
+
+---
 
 ## Erforderliche Eingabe
+
 Der Prozessor funktioniert mit jedem Eingabeereignisstrom. Es werden keine spezifischen Eingabeanforderungen benötigt.
 
-***
+---
 
 ## Konfiguration
 
 ### Zeitfensterlänge
+
 Geben Sie die Dauer des Zeitfensters in Sekunden an. Wenn innerhalb dieses Fensters keine Ereignisse eintreffen, erkennt der Prozessor eine Frequenzänderung.
 
 ### Zeiteinheit
+
 Wählen Sie die Zeiteinheit für die Fenstergröße:
-* Stunden (Std)
-* Minuten (Min)
-* Sekunden (Sek)
+
+- Stunden (Std)
+- Minuten (Min)
+- Sekunden (Sek)
 
 ## Ausgabe
+
 Der Prozessor gibt das ursprüngliche Ereignis aus, wenn innerhalb des angegebenen Zeitfensters keine Ereignisse eintreffen.
 
 ### Beispiel
 
 #### Eingabeereignis
+
 ```json
 {
   "temperature": 25.5,
@@ -64,36 +72,38 @@ Der Prozessor gibt das ursprüngliche Ereignis aus, wenn innerhalb des angegeben
 ```
 
 #### Konfiguration
-* Zeitfensterlänge: `30`
-* Zeiteinheit: `Sek`
+
+- Zeitfensterlänge: `30`
+- Zeiteinheit: `Sek`
 
 #### Ausgabeereignis
+
 Der Prozessor gibt das letzte empfangene Ereignis aus, wenn innerhalb von 30 Sekunden keine neuen Ereignisse eintreffen.
 
 ## Anwendungsfälle
 
 1. **Systemüberwachung**
-   * Sensorenausfälle erkennen
-   * Datenquellengesundheit überwachen
-   * Verbindungsprobleme identifizieren
-   * Systemverfügbarkeit verfolgen
+   - Sensorenausfälle erkennen
+   - Datenquellengesundheit überwachen
+   - Verbindungsprobleme identifizieren
+   - Systemverfügbarkeit verfolgen
 
 2. **Alarmgenerierung**
-   * Bei Datenlücken Alarme auslösen
-   * Bei Systemausfällen benachrichtigen
-   * Über Dienstunterbrechungen berichten
-   * Datenflusskontinuität überwachen
+   - Bei Datenlücken Alarme auslösen
+   - Bei Systemausfällen benachrichtigen
+   - Über Dienstunterbrechungen berichten
+   - Datenflusskontinuität überwachen
 
 3. **Qualitätssicherung**
-   * Kontinuierlichen Datenfluss sicherstellen
-   * Zuverlässigkeit der Datenerfassung überwachen
-   * Systemleistung verfolgen
-   * Datenquellengesundheit validieren
+   - Kontinuierlichen Datenfluss sicherstellen
+   - Zuverlässigkeit der Datenerfassung überwachen
+   - Systemleistung verfolgen
+   - Datenquellengesundheit validieren
 
 ## Hinweise
 
-* Der Prozessor erkennt das Fehlen von Ereignissen
-* Das Zeitfenster ist in Stunden, Minuten oder Sekunden konfigurierbar
-* Die ursprünglichen Ereignisdaten werden in der Ausgabe beibehalten
-* Der Prozessor funktioniert mit jedem Typ von Eingabeereignis
-* Ergebnisse werden ausgegeben, wenn das Zeitfenster ohne neue Ereignisse abläuft 
+- Der Prozessor erkennt das Fehlen von Ereignissen
+- Das Zeitfenster ist in Stunden, Minuten oder Sekunden konfigurierbar
+- Die ursprünglichen Ereignisdaten werden in der Ausgabe beibehalten
+- Der Prozessor funktioniert mit jedem Typ von Eingabeereignis
+- Ergebnisse werden ausgegeben, wenn das Zeitfenster ohne neue Ereignisse abläuft

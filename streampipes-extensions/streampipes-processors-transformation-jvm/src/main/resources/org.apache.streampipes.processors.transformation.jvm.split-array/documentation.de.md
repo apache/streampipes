@@ -22,34 +22,37 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
 
 Der Array-aufteilen-Prozessor wandelt Array-Felder in mehrere einzelne Nachrichten um, wobei jedes Array-Element zu einer separaten Nachricht wird. Er unterstützt:
-* Array-Element-Extraktion
-* Kontext-Erhaltung
-* Verschachtelte Feldbehandlung
-* Benutzerdefinierte Feldbenennung
+
+- Array-Element-Extraktion
+- Kontext-Erhaltung
+- Verschachtelte Feldbehandlung
+- Benutzerdefinierte Feldbenennung
 
 Dieser Prozessor ist essentiell für:
-* Umwandlung von Batch-Daten in einzelne Nachrichten
-* Unabhängige Verarbeitung von Array-Elementen
-* Verteilung von Array-Daten über Streams
-* Ermöglichung von elementweiser Analyse
 
-***
+- Umwandlung von Batch-Daten in einzelne Nachrichten
+- Unabhängige Verarbeitung von Array-Elementen
+- Verteilung von Array-Daten über Streams
+- Ermöglichung von elementweiser Analyse
+
+---
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Datenstrom, der mindestens ein Array-Feld enthält. Das Array kann Elemente jeden unterstützten Datentyps enthalten:
-* Zahlen (Ganzzahlen oder Fließkommazahlen)
-* Strings
-* Boolesche Werte
-* Objekte
-* Verschachtelte Arrays
 
-***
+- Zahlen (Ganzzahlen oder Fließkommazahlen)
+- Strings
+- Boolesche Werte
+- Objekte
+- Verschachtelte Arrays
+
+---
 
 ## Konfiguration
 
@@ -64,12 +67,14 @@ Wähle ein oder mehrere Felder aus der Eingabe-Nachricht aus, die in jeder Ausga
 ## Ausgabe
 
 Für jedes Element im Eingabe-Array erstellt der Prozessor eine neue Nachricht, die enthält:
-* Das Array-Element als einzelnen Wert in einem Feld namens "array_value"
-* Alle ausgewählten Felder aus der ursprünglichen Nachricht
+
+- Das Array-Element als einzelnen Wert in einem Feld namens "array_value"
+- Alle ausgewählten Felder aus der ursprünglichen Nachricht
 
 ### Beispiel
 
 #### Eingabe-Nachricht
+
 ```json
 {
   "deviceId": "sensor123",
@@ -80,10 +85,12 @@ Für jedes Element im Eingabe-Array erstellt der Prozessor eine neue Nachricht, 
 ```
 
 #### Konfiguration
-* Array-Feld: measurements
-* Beizubehaltende Felder: deviceId, timestamp, status
+
+- Array-Feld: measurements
+- Beizubehaltende Felder: deviceId, timestamp, status
 
 #### Ausgabe-Nachrichten
+
 ```json
 // Erstes Element
 {
@@ -121,22 +128,22 @@ Für jedes Element im Eingabe-Array erstellt der Prozessor eine neue Nachricht, 
 ## Anwendungsfälle
 
 1. **Batch-Verarbeitung**
-   * Aufteilen von Batch-Sensormessungen
-   * Verarbeitung von Multi-Messungsdaten
-   * Handhabung gruppierter Beobachtungen
-   * Umwandlung von Batch-Uploads
+   - Aufteilen von Batch-Sensormessungen
+   - Verarbeitung von Multi-Messungsdaten
+   - Handhabung gruppierter Beobachtungen
+   - Umwandlung von Batch-Uploads
 
 2. **Datenverteilung**
-   * Verteilung der Arbeitslast auf Prozessoren
-   * Ermöglichung paralleler Verarbeitung
-   * Ausgleich der Verarbeitungslast
-   * Skalierung der Datenverarbeitung
+   - Verteilung der Arbeitslast auf Prozessoren
+   - Ermöglichung paralleler Verarbeitung
+   - Ausgleich der Verarbeitungslast
+   - Skalierung der Datenverarbeitung
 
 ## Hinweise
 
-* Ausgabe-Nachrichten behalten die ursprüngliche Reihenfolge bei
-* Leere Arrays erzeugen keine Ausgabe-Nachrichten
-* Null-Array-Elemente werden beibehalten
-* Verarbeitung ist zustandslos
-* Speichernutzung skaliert mit Array-Größe
-* Verschachtelte Felder werden automatisch behandelt 
+- Ausgabe-Nachrichten behalten die ursprüngliche Reihenfolge bei
+- Leere Arrays erzeugen keine Ausgabe-Nachrichten
+- Null-Array-Elemente werden beibehalten
+- Verarbeitung ist zustandslos
+- Speichernutzung skaliert mit Array-Größe
+- Verschachtelte Felder werden automatisch behandelt

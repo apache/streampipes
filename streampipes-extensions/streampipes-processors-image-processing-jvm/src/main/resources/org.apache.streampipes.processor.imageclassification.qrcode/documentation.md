@@ -22,19 +22,19 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 QR Code Reader: Detects a QR Code in an image
 
-***
+---
 
 ## Required input
 
 Input events require to have an image field.
 
-***
+---
 
 ## Configuration
 

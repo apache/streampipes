@@ -17,43 +17,51 @@
   -->
 
 ## TsFile
+
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 stores events in TsFile
 
-***
+---
 
 ## Required input
 
 This sink does not have any requirements and works with any incoming event type.
 
-***
+---
 
 ## Configuration
 
 ### DeviceId
+
 The device id of the TsFile.
 
 ### TsFIleName
+
 The name of the TsFile to create.
 
 ### TimeStamp
+
 To create timeStamp field in TsFile.
 
 ### TsFileGenerationDirectory
+
 The directory where the TsFile will be generated.
 
 ### MaxTsFileSize
+
 The maximum size of the TsFile. The default value is 10MB.
 
 ### MaxFlushDiskSize
+
 The maximum memory cache when writing TSFile
 
 ### Aligned
-This field allows users to choose whether the written data format is aligned or not 
+
+This field allows users to choose whether the written data format is aligned or not

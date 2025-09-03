@@ -1,8 +1,9 @@
 ---
 title: About Goldydocs
 linkTitle: About
-menu: {main: {weight: 10}}
+menu: { main: { weight: 10 } }
 ---
+
 <!--
   ~ Licensed to the Apache Software Foundation (ASF) under one or more
   ~ contributor license agreements.  See the NOTICE file distributed with
@@ -25,8 +26,8 @@ menu: {main: {weight: 10}}
 
 <p class="lead"><img src="https://streampipes.apache.org/img/sp-logo-color.png" class="img-fluid" alt="Apache StreamPipes"> </p>
 
-A self-service (Industrial) IoT toolbox to enable non-technical users to connect, analyze and explore IoT data streams.
-{.mt-5}
+A self-service (Industrial) IoT toolbox to enable non-technical users to
+connect, analyze and explore IoT data streams. {.mt-5}
 
 {{% /blocks/cover %}}
 

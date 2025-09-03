@@ -22,13 +22,15 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Publishes various simulated machine sensor data in a configurable time interval (in milliseconds).
 Sensors are:
-* flowrate
-* pressure
-* waterlevel
-***
+
+- flowrate
+- pressure
+- waterlevel
+
+---

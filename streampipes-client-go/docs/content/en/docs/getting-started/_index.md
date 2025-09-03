@@ -3,6 +3,7 @@ title: Getting Started
 description: Getting Started to use StreamPipes Go.
 weight: 2
 ---
+
 <!--
   // Licensed to the Apache Software Foundation (ASF) under one or more
   // contributor license agreements.  See the NOTICE file distributed with
@@ -21,8 +22,6 @@ weight: 2
   //
   -->
 
-{{% pageinfo %}}
-Getting Started with StreamPipes Go Client.
-{{% /pageinfo %}}
+{{% pageinfo %}} Getting Started with StreamPipes Go Client. {{% /pageinfo %}}
 
 Follow the documentation to get started with StreamPipes Go Client.

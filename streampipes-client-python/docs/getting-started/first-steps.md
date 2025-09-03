@@ -30,6 +30,7 @@ pip install git+https://github.com/apache/streampipes.git#subdirectory=streampip
 ```
 
 ## ⬆️ Setting up StreamPipes
+
 When working with the StreamPipes Python library it is inevitable to have a running StreamPipes instance to connect and interact with.
 In case you don't have a running instance at hand, you can easily set up one on your local machine.
 Hereby you need to consider that StreamPipes supports different message broker (e.g., Kafka, NATS).
@@ -37,28 +38,36 @@ We will demonstrate below how you can easily set up StreamPipes for both support
 <br>
 
 ### 🐳 Start StreamPipes via Docker Compose
+
 The easiest and therefore recommend way to get StreamPipes started is by using [docker compose](https://docs.docker.com/compose/).
 Therefore, you need Docker running. You can check if Docker is ready on your machine by executing.
-````bash
+
+```bash
 docker ps
-````
+```
+
 If this results in an output similar to the following, Docker is ready to continue.
+
 ```
 CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 ...            ...       ...       ...       ...       ...       ...
 ```
+
 Otherwise, you need to start docker first.
 Please read the full guide on how to start StreamPipes with `docker compose` [here](https://streampipes.apache.org/docs/deploy-docker/).
 
 #### Setup StreamPipes with NATS as message broker
+
 The following shows how you can set up a StreamPipes instance that uses [NATS](https://docs.nats.io/) as messaging layer.
 So in this scenario, we will go with `docker-compose.nats.yml`.
 Thereby, when running locally, we need to add the following port mapping entry to `services.nats.ports`:
+
 ```yaml
 - 4222:4222
 ```
 
 After this modification is applied, StreamPipes can simply be started with this command:
+
 ```bash
 docker-compose -f docker-compose.nats.yml up -d
 ```
@@ -66,18 +75,22 @@ docker-compose -f docker-compose.nats.yml up -d
 Once all services are started, you can access StreamPipes via `http://localhost`.
 
 #### Setup StreamPipes with Kafka as message broker
+
 Alternatively, you can use `docker-compose.yml` to start StreamPipes with Kafka as messaging layer.
 When running locally we have to modify `services.kafka.environment` and add the ports to `services.kafka.ports`:
+
 ```yaml
 environment:
   KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
   KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092,OUTSIDE://localhost:9094
   KAFKA_LISTENERS: PLAINTEXT://:9092,OUTSIDE://:9094
-...
+---
 ports:
   - 9094:9094
 ```
+
 Then, you need to execute the following command:
+
 ```bash
 docker-compose -f docker-compose.yml up -d
 ```

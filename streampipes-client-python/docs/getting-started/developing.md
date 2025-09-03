@@ -17,15 +17,17 @@
 -->
 
 ## 📖 Development Guide
+
 This document describes how to easily set up your local dev environment to work on StreamPipes Python 🐍.
 <br>
 
 ### 🚀 First Steps
 
-1) **Set up your Python environment**
+1. **Set up your Python environment**
 
 Create a virtual Python environment using a tool of your choice.
 To manage dependencies, we use [Poetry](https://python-poetry.org/), so please install poetry in your local environment, e.g. via
+
 ```bash
 pip install poetry
 ```
@@ -40,7 +42,7 @@ poetry install --with dev,stubs,docs  # install all optional dependencies relate
 
 <br>
 
-2) **Install pre-commit hook**
+2. **Install pre-commit hook**
 
 The pre-commit hook is run before every commit and takes care about code style,
 linting, type hints, import sorting, etc. It will stop your commit in case the changes do not apply the expected format.
@@ -50,43 +52,47 @@ If you are interested, you can have a deeper look on the underlying library: [pr
 ```bash
 pre-commit install
 ```
+
 The definition of the pre-commit hook can be found in [.pre-commit-config.yaml](https://github.com/apache/streampipes/blob/dev/streampipes-client-python/.pre-commit-config.yaml).
 
 <br>
 
 ### 👏 Conventions
+
 Below we list some conventions that we have agreed on for creating StreamPipes Python.
 Please comply to them when you plan to contribute to this project.
 If you have any other suggestions or would like to discuss them, we would be happy to hear from you on our mailing list [dev@streampipes.apache.org](mailto:dev@streampipes.apache.org)
 or in our [discussions](https://github.com/apache/streampipes/discussions) on GitHub.
 
-1) **Use `numpy` style for Python docstrings** 📄 <br>
-Please stick to the `numpy` [style](https://numpydoc.readthedocs.io/en/latest/format.html) when writing docstrings, as we require this for generating our documentation.
+1. **Use `numpy` style for Python docstrings** 📄 <br>
+   Please stick to the `numpy` [style](https://numpydoc.readthedocs.io/en/latest/format.html) when writing docstrings, as we require this for generating our documentation.
 
-
-2) **Provide tests** ✅ <br>
-We are aiming for broad test coverage for the Python package and
-have therefore set a requirement of at least 90% unit test coverage.
-Therefore, please remember to write (unit) tests already during development.
-If you have problems with writing tests, don't hesitate to ask us for help directly in the PR or
-even before that via our mailing list (see above).
-
+2. **Provide tests** ✅ <br>
+   We are aiming for broad test coverage for the Python package and
+   have therefore set a requirement of at least 90% unit test coverage.
+   Therefore, please remember to write (unit) tests already during development.
+   If you have problems with writing tests, don't hesitate to ask us for help directly in the PR or
+   even before that via our mailing list (see above).
 
 <!---
 TODO: replace link to java file by link to documentation
 --->
-3) **Build a similar API as the Java client provides** 🔄 <br>
-Whenever possible, please try to develop the API of the Python library the same as the [Java client](https://github.com/apache/streampipes/blob/dev/streampipes-client/src/main/java/org/apache/streampipes/client/StreamPipesClient.java) or Java SDK.
-By doing so, we would like to provide a consistent developer experience and the basis for automated testing in the future.
+
+3. **Build a similar API as the Java client provides** 🔄 <br>
+   Whenever possible, please try to develop the API of the Python library the same as the [Java client](https://github.com/apache/streampipes/blob/dev/streampipes-client/src/main/java/org/apache/streampipes/client/StreamPipesClient.java) or Java SDK.
+   By doing so, we would like to provide a consistent developer experience and the basis for automated testing in the future.
 
 ### 📦 Dependency Management
+
 In case you want to add a new dependency to StreamPipes you can use the following command:
+
 ```bash
 poetry add <dep-name>
 ```
 
 If the dependency is only required for development purpose or the documentation,
 please stick to one the following:
+
 ```bash
 poetry add <dep-name> --group dev
 poetry add <dep-name> --group stubs
@@ -95,6 +101,7 @@ poetry add <dep-name> --group docs
 
 In case you want to regenerate the poetry lock file, e.g., in case you manually updated the `pyproject.toml`,
 the following command should be used:
+
 ```bash
 poetry lock --no-update
 ```
@@ -102,14 +109,17 @@ poetry lock --no-update
 After that, you should install the current version of the poetry lock file to keep your local environment consistent (see command above.)
 
 ### 📚Documentation
+
 To build our documentation, we use [Materials for MkDocs](https://squidfunk.github.io/mkdocs-material/).
 All files can be found within the `docs` directory.
 To pre-view your local version of the documentation, you can use the following command:
+
 ```bash
 make livedoc
 ```
 
 ---
+
 ## 🚀 Roadmap
 
 Broadly speaking, we plan to expand or add new aspects/functionality to the library where we are focusing on the following:
@@ -126,8 +136,10 @@ Of course, contributions are always highly appreciated 🔮
 Stay tuned!
 
 ---
+
 ## 👨‍💻 Contributing
-*Before opening a pull request*, review the [Get Involved](https://streampipes.apache.org/community/get-involved/) page.
+
+_Before opening a pull request_, review the [Get Involved](https://streampipes.apache.org/community/get-involved/) page.
 It lists information that is required for contributing to StreamPipes.
 
 When you contribute code, you affirm that the contribution is your original work and that you

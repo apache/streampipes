@@ -22,44 +22,53 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
-Der Gleitender-Durchschnitt-Prozessor glättet numerische Datenströme durch Berechnung des Mittelwerts oder Medians der letzten n Werte. Dieser Prozessor ist wichtig für:
-* Reduzierung von Rauschen in Sensordaten
-* Glättung von Schwankungen
-* Identifizierung von Trends
-* Verbesserung der Datenqualität
 
-***
+Der Gleitender-Durchschnitt-Prozessor glättet numerische Datenströme durch Berechnung des Mittelwerts oder Medians der letzten n Werte. Dieser Prozessor ist wichtig für:
+
+- Reduzierung von Rauschen in Sensordaten
+- Glättung von Schwankungen
+- Identifizierung von Trends
+- Verbesserung der Datenqualität
+
+---
 
 ## Erforderliche Eingabe
+
 Ein numerisches Feld ist im Eingabestrom erforderlich.
 
-***
+---
 
 ## Konfiguration
 
 ### Numerisches Feld
-* Wählen Sie das zu glättende numerische Feld aus
-* Das Feld muss numerische Werte enthalten
+
+- Wählen Sie das zu glättende numerische Feld aus
+- Das Feld muss numerische Werte enthalten
 
 ### N-Wert
-* Gibt die Fenstergröße an (Anzahl der zu berücksichtigenden vorherigen Werte)
-* Größere Werte erzeugen glattere Ausgaben, erhöhen aber die Latenz
-* Kleinere Werte sind reaktionsschneller, können aber mehr Rauschen zeigen
+
+- Gibt die Fenstergröße an (Anzahl der zu berücksichtigenden vorherigen Werte)
+- Größere Werte erzeugen glattere Ausgaben, erhöhen aber die Latenz
+- Kleinere Werte sind reaktionsschneller, können aber mehr Rauschen zeigen
 
 ### Methode
+
 Wählen Sie zwischen zwei Glättungsmethoden:
-* **Mittelwert**: Berechnet den arithmetischen Durchschnitt der letzten n Werte
-* **Median**: Verwendet den mittleren Wert der letzten n Werte (besser für Ausreißer)
+
+- **Mittelwert**: Berechnet den arithmetischen Durchschnitt der letzten n Werte
+- **Median**: Verwendet den mittleren Wert der letzten n Werte (besser für Ausreißer)
 
 ## Ausgabe
+
 Der Prozessor fügt ein neues Feld namens "filterResult" hinzu, das den geglätteten Wert enthält.
 
 ### Beispiel
 
 #### Eingabeereignisse
+
 ```json
 {
   "temperature": 25.5,
@@ -76,11 +85,13 @@ Der Prozessor fügt ein neues Feld namens "filterResult" hinzu, das den geglätt
 ```
 
 #### Konfiguration
-* Numerisches Feld: temperature
-* N-Wert: 3
-* Methode: Mittelwert
+
+- Numerisches Feld: temperature
+- N-Wert: 3
+- Methode: Mittelwert
 
 #### Ausgabeereignisse
+
 ```json
 {
   "temperature": 25.5,
@@ -102,22 +113,22 @@ Der Prozessor fügt ein neues Feld namens "filterResult" hinzu, das den geglätt
 ## Anwendungsfälle
 
 1. **Sensordatenverarbeitung**
-   * Glättung von Temperaturmessungen
-   * Filterung von Rauschen aus Messungen
-   * Stabilisierung von Sensorausgaben
-   * Verbesserung der Datenqualität
+   - Glättung von Temperaturmessungen
+   - Filterung von Rauschen aus Messungen
+   - Stabilisierung von Sensorausgaben
+   - Verbesserung der Datenqualität
 
 2. **Trendanalyse**
-   * Identifizierung langfristiger Muster
-   * Reduzierung kurzfristiger Schwankungen
-   * Hervorhebung signifikanter Änderungen
-   * Überwachung des Systemverhaltens
+   - Identifizierung langfristiger Muster
+   - Reduzierung kurzfristiger Schwankungen
+   - Hervorhebung signifikanter Änderungen
+   - Überwachung des Systemverhaltens
 
 ## Hinweise
 
-* Der Prozessor verwaltet ein gleitendes Fenster der letzten n Werte
-* Die Mittelwertmethode ist empfindlicher gegenüber Ausreißern
-* Die Medianmethode ist robuster gegenüber Ausreißern
-* Die Fenstergröße beeinflusst die Glättungsintensität
-* Originalwerte werden in der Ausgabe beibehalten
-* Die ersten n-1 Ereignisse haben teilweise Fenster 
+- Der Prozessor verwaltet ein gleitendes Fenster der letzten n Werte
+- Die Mittelwertmethode ist empfindlicher gegenüber Ausreißern
+- Die Medianmethode ist robuster gegenüber Ausreißern
+- Die Fenstergröße beeinflusst die Glättungsintensität
+- Originalwerte werden in der Ausgabe beibehalten
+- Die ersten n-1 Ereignisse haben teilweise Fenster

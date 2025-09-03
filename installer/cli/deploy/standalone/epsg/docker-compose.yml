@@ -23,9 +23,9 @@ services:
       - ./../../../../scripts/epsg/EPSG_FINISH.sql:/docker-entrypoint-initdb.d/04_EPSG_FINISH.sql
       - epsg:/var/lib/postgresql/data
     environment:
-       POSTGRES_DB: EPSG
-       POSTGRES_USER: streampipes
-       POSTGRES_PASSWORD: streampipes
+      POSTGRES_DB: EPSG
+      POSTGRES_USER: streampipes
+      POSTGRES_PASSWORD: streampipes
     logging:
       driver: "json-file"
       options:
@@ -40,4 +40,3 @@ volumes:
 networks:
   spnet:
     external: true
-

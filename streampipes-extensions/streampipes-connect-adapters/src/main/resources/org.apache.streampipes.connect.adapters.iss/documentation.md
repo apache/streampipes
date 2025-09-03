@@ -22,12 +22,10 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Shows the live position of the International Space Station (ISS), updated every two seconds.
 
-
-***
-
+---

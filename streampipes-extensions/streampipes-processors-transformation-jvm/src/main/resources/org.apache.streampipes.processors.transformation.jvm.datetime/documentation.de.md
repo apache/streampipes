@@ -22,29 +22,31 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
 
 Der Datumszeit aus String Prozessor konvertiert String-Zeitstempel in Millisekunden-Zeitstempel. Er unterstützt:
-* ISO 8601 Format-Parsing
-* Zeitzonen-Handling
-* String-zu-Millisekunden-Konvertierung
-* Automatische Zeitzonen-Anwendung
+
+- ISO 8601 Format-Parsing
+- Zeitzonen-Handling
+- String-zu-Millisekunden-Konvertierung
+- Automatische Zeitzonen-Anwendung
 
 Dieser Prozessor ist essentiell für:
-* Konvertierung von Zeitstempeln in Millisekunden
-* Standardisierung von Datumsformaten
-* Handhabung von Zeitzonen-Konvertierungen
-* Verarbeitung von ISO 8601 Datumsangaben
 
-***
+- Konvertierung von Zeitstempeln in Millisekunden
+- Standardisierung von Datumsformaten
+- Handhabung von Zeitzonen-Konvertierungen
+- Verarbeitung von ISO 8601 Datumsangaben
+
+---
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Datenstrom, der mindestens ein String-Feld mit einem Zeitstempel im ISO 8601 Format enthält.
 
-***
+---
 
 ## Konfiguration
 
@@ -59,13 +61,15 @@ Wählen Sie die Zeitzone für den Eingabe-Zeitstempel. Diese wird verwendet, wen
 ## Ausgabe
 
 Der Prozessor erstellt ein neues Ereignis, das enthält:
-* Alle ursprünglichen Felder aus dem Eingabe-Ereignis
-* Ein neues Feld namens "timestringInMillis" mit dem Zeitstempel in Millisekunden seit der Epoche
-* Ein neues Feld namens "timeZone" mit der ausgewählten Zeitzone
+
+- Alle ursprünglichen Felder aus dem Eingabe-Ereignis
+- Ein neues Feld namens "timestringInMillis" mit dem Zeitstempel in Millisekunden seit der Epoche
+- Ein neues Feld namens "timeZone" mit der ausgewählten Zeitzone
 
 ### Beispiel
 
 #### Eingabe-Ereignis
+
 ```json
 {
   "deviceId": "sensor01",
@@ -75,10 +79,12 @@ Der Prozessor erstellt ein neues Ereignis, das enthält:
 ```
 
 #### Konfiguration
-* Datumszeit-String: timestamp
-* Zeitzone: UTC
+
+- Datumszeit-String: timestamp
+- Zeitzone: UTC
 
 #### Ausgabe-Ereignis
+
 ```json
 {
   "deviceId": "sensor01",
@@ -92,21 +98,21 @@ Der Prozessor erstellt ein neues Ereignis, das enthält:
 ## Anwendungsfälle
 
 1. **Datenstandardisierung**
-   * Konvertierung von Zeitstempeln in Millisekunden
-   * Standardisierung von Datumsformaten
-   * Handhabung von Zeitzonen-Konvertierungen
-   * Verarbeitung von ISO 8601 Datumsangaben
+   - Konvertierung von Zeitstempeln in Millisekunden
+   - Standardisierung von Datumsformaten
+   - Handhabung von Zeitzonen-Konvertierungen
+   - Verarbeitung von ISO 8601 Datumsangaben
 
 2. **Systemintegration**
-   * Abbildung von Zeitstempeln auf Millisekunden
-   * Konvertierung zwischen Zeitzonen
-   * Standardisierung von Datumsformaten
-   * Verarbeitung zeitbasierter Daten
+   - Abbildung von Zeitstempeln auf Millisekunden
+   - Konvertierung zwischen Zeitzonen
+   - Standardisierung von Datumsformaten
+   - Verarbeitung zeitbasierter Daten
 
 ## Hinweise
 
-* Eingabe muss im ISO 8601 Format sein
-* Zeitzone im Eingabe-String hat Vorrang vor der ausgewählten Zeitzone
-* Ungültige Formate führen zu Verarbeitungsfehlern
-* Verarbeitung ist zustandslos
-* Ausgabe ist immer in Millisekunden seit der Epoche 
+- Eingabe muss im ISO 8601 Format sein
+- Zeitzone im Eingabe-String hat Vorrang vor der ausgewählten Zeitzone
+- Ungültige Formate führen zu Verarbeitungsfehlern
+- Verarbeitung ist zustandslos
+- Ausgabe ist immer in Millisekunden seit der Epoche

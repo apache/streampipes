@@ -22,47 +22,55 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
-The JavaScript Eval processor allows you to write custom JavaScript functions to transform and enrich events. It:
-* Executes user-defined JavaScript code
-* Provides full access to input event data
-* Supports complex data transformations
-* Enables dynamic field creation and modification
 
-***
+The JavaScript Eval processor allows you to write custom JavaScript functions to transform and enrich events. It:
+
+- Executes user-defined JavaScript code
+- Provides full access to input event data
+- Supports complex data transformations
+- Enables dynamic field creation and modification
+
+---
 
 ## Required Input
+
 The processor works with any input event stream. All fields from the input event are available as properties in the JavaScript function.
 
-***
+---
 
 ## Configuration
 
 ### JavaScript Function
+
 You need to provide a JavaScript function that processes the input event and returns a new event object. The function must:
-* Be named `process`
-* Accept a single parameter containing the input event
-* Return a map/object with the output fields
+
+- Be named `process`
+- Accept a single parameter containing the input event
+- Return a map/object with the output fields
 
 Example function structure:
+
 ```javascript
-    function process(event) {
-        // do processing here.
-        // return a map with fields that matched defined output schema.
-        return {id: event.id, tempInCelsius: (event.tempInKelvin - 273.15)};
-    }
+function process(event) {
+  // do processing here.
+  // return a map with fields that matched defined output schema.
+  return { id: event.id, tempInCelsius: event.tempInKelvin - 273.15 };
+}
 ```
 
 The defined output schema must match the event that is returned by the JavaScript function.
 
 ## Output
+
 The processor forwards a new event containing the fields returned by your JavaScript function.
 
 ### Example
 
 #### Input Event
+
 ```json
 {
   "temperature": 25.5,
@@ -72,31 +80,33 @@ The processor forwards a new event containing the fields returned by your JavaSc
 ```
 
 #### Configuration
+
 ```javascript
 function process(event) {
-    // Convert temperature from Celsius to Fahrenheit
-    const tempF = (event.temperature * 9/5) + 32;
-    
-    // Calculate heat index
-    const heatIndex = calculateHeatIndex(tempF, event.humidity);
-    
-    // Return new event with transformed data
-    return {
-        temperature_celsius: event.temperature,
-        temperature_fahrenheit: tempF,
-        humidity: event.humidity,
-        heat_index: heatIndex,
-        timestamp: event.timestamp
-    };
+  // Convert temperature from Celsius to Fahrenheit
+  const tempF = (event.temperature * 9) / 5 + 32;
+
+  // Calculate heat index
+  const heatIndex = calculateHeatIndex(tempF, event.humidity);
+
+  // Return new event with transformed data
+  return {
+    temperature_celsius: event.temperature,
+    temperature_fahrenheit: tempF,
+    humidity: event.humidity,
+    heat_index: heatIndex,
+    timestamp: event.timestamp,
+  };
 }
 
 function calculateHeatIndex(temp, humidity) {
-    // Simplified heat index calculation
-    return temp + (humidity * 0.1);
+  // Simplified heat index calculation
+  return temp + humidity * 0.1;
 }
 ```
 
 #### Output Event
+
 ```json
 {
   "temperature_celsius": 25.5,
@@ -110,28 +120,28 @@ function calculateHeatIndex(temp, humidity) {
 ## Use Cases
 
 1. **Data Transformation**
-   * Unit conversions
-   * Data normalization
-   * Complex calculations
-   * Field restructuring
+   - Unit conversions
+   - Data normalization
+   - Complex calculations
+   - Field restructuring
 
 2. **Data Enrichment**
-   * Adding derived fields
-   * Computing statistics
-   * Combining multiple fields
-   * Creating calculated metrics
+   - Adding derived fields
+   - Computing statistics
+   - Combining multiple fields
+   - Creating calculated metrics
 
 3. **Custom Logic**
-   * Business rules implementation
-   * Conditional transformations
-   * Data validation
-   * Custom algorithms
+   - Business rules implementation
+   - Conditional transformations
+   - Data validation
+   - Custom algorithms
 
 ## Notes
 
-* The JavaScript function runs in a GraalVM JavaScript environment
-* All input fields are accessible as properties of the event object
-* The function must return a valid JavaScript object
-* Error handling should be implemented in the JavaScript code
-* Complex JavaScript operations are supported
-* The function is executed for each incoming event, but state can be kept
+- The JavaScript function runs in a GraalVM JavaScript environment
+- All input fields are accessible as properties of the event object
+- The function must return a valid JavaScript object
+- Error handling should be implemented in the JavaScript code
+- Complex JavaScript operations are supported
+- The function is executed for each incoming event, but state can be kept

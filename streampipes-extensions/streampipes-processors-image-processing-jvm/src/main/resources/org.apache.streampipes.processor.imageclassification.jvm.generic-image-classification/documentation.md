@@ -15,25 +15,26 @@
   ~ limitations under the License.
   ~
   -->
+
 ## Generic Image Classification
 
 <p align="center">
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
-Image  + Classification Description (Generic Model)
+Image + Classification Description (Generic Model)
 
-***
+---
 
 ## Required input
 
 Input events require to have an image field.
 
-***
+---
 
 ## Configuration
 

@@ -22,32 +22,35 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
 
 Der Zustands-Puffer-Prozessor speichert Sensorwerte während bestimmter Zustände zwischen. Er unterstützt:
-* Zustandsbasierte Wertepufferung
-* Zeitstempelverfolgung
-* Sensorwert-Zwischenspeicherung
-* Zustandsüberwachung
+
+- Zustandsbasierte Wertepufferung
+- Zeitstempelverfolgung
+- Sensorwert-Zwischenspeicherung
+- Zustandsüberwachung
 
 Dieser Prozessor ist essentiell für:
-* Zwischenspeichern von Sensorwerten
-* Verfolgen von Zustandsänderungen
-* Überwachen von Bedingungen
-* Speichern von Messungen
 
-***
+- Zwischenspeichern von Sensorwerten
+- Verfolgen von Zustandsänderungen
+- Überwachen von Bedingungen
+- Speichern von Messungen
+
+---
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Datenstrom, der enthält:
-* Ein Zeitstempelfeld
-* Ein Zustandsfeld
-* Mindestens ein Sensorwertfeld zum Zwischenspeichern
 
-***
+- Ein Zeitstempelfeld
+- Ein Zustandsfeld
+- Mindestens ein Sensorwertfeld zum Zwischenspeichern
+
+---
 
 ## Konfiguration
 
@@ -66,13 +69,15 @@ Wähle das Sensorwertfeld aus, das während des aktiven Zustands zwischengespeic
 ## Ausgabe
 
 Der Prozessor erstellt eine neue Nachricht, die enthält:
-* Ein Zeitstempelfeld
-* Eine Liste gepufferter Werte
-* Eine Liste von Zuständen
+
+- Ein Zeitstempelfeld
+- Eine Liste gepufferter Werte
+- Eine Liste von Zuständen
 
 ### Beispiel
 
 #### Eingabe-Nachricht
+
 ```json
 {
   "deviceId": "sensor01",
@@ -83,11 +88,13 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ```
 
 #### Konfiguration
-* Zeitstempel: timestamp
-* Zustand: state
-* Sensorwert zum Zwischenspeichern: temperature
+
+- Zeitstempel: timestamp
+- Zustand: state
+- Sensorwert zum Zwischenspeichern: temperature
 
 #### Ausgabe-Nachricht (wenn sich der Zustand von "active" zu "inactive" ändert)
+
 ```json
 {
   "timestamp": 1586380105915,
@@ -99,21 +106,21 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ## Anwendungsfälle
 
 1. **Zustandsüberwachung**
-   * Sensorwerte zwischenspeichern
-   * Zustandsänderungen verfolgen
-   * Bedingungen überwachen
-   * Messungen speichern
+   - Sensorwerte zwischenspeichern
+   - Zustandsänderungen verfolgen
+   - Bedingungen überwachen
+   - Messungen speichern
 
 2. **Datenanalyse**
-   * Zustandsmuster analysieren
-   * Wertänderungen verfolgen
-   * Bedingungen überwachen
-   * Messungen speichern
+   - Zustandsmuster analysieren
+   - Wertänderungen verfolgen
+   - Bedingungen überwachen
+   - Messungen speichern
 
 ## Hinweise
 
-* Werte werden während aktiver Zustände zwischengespeichert
-* Zeitstempel werden beibehalten
-* Zustandsänderungen lösen Aktualisierungen aus
-* Verarbeitung ist zustandsbehaftet
-* Mehrere Werte können gepuffert werden 
+- Werte werden während aktiver Zustände zwischengespeichert
+- Zeitstempel werden beibehalten
+- Zustandsänderungen lösen Aktualisierungen aus
+- Verarbeitung ist zustandsbehaftet
+- Mehrere Werte können gepuffert werden

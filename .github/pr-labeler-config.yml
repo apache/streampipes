@@ -26,7 +26,6 @@ connect:
               - "streampipes-extensions/streampipes-connect-adapters/**/*"
               - "streampipes-extensions/streampipes-connect-adapters-iiot/**/*"
 
-
 dependencies:
   - any:
       - changed-files:
@@ -74,7 +73,7 @@ javascript:
           - any-glob-to-any-file:
               - "**/*.js"
 
-'pipeline elements':
+"pipeline elements":
   - any:
       - changed-files:
           - any-glob-to-any-file:

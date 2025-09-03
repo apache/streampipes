@@ -22,11 +22,10 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Consumes messages from an Apache RocketMQ broker
 
-***
-
+---

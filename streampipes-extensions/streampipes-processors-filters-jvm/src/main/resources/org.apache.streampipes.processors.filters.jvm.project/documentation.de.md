@@ -22,31 +22,37 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
-Der Projektion-Prozessor ermöglicht es Ihnen, eine Teilmenge von Feldern aus Eingabe-Ereignissen auszuwählen und ein neues Ereignis nur mit den angegebenen Feldern zu erstellen. Dieser Prozessor ist wichtig für:
-* Reduzierung des Datenvolumens
-* Fokussierung auf relevante Felder
-* Datenschutz
-* Stream-Optimierung
 
-***
+Der Projektion-Prozessor ermöglicht es Ihnen, eine Teilmenge von Feldern aus Eingabe-Ereignissen auszuwählen und ein neues Ereignis nur mit den angegebenen Feldern zu erstellen. Dieser Prozessor ist wichtig für:
+
+- Reduzierung des Datenvolumens
+- Fokussierung auf relevante Felder
+- Datenschutz
+- Stream-Optimierung
+
+---
 
 ## Erforderliche Eingabe
+
 Der Prozessor funktioniert mit jedem Eingabe-Ereignisstrom, der ein oder mehrere Felder enthält.
 
-***
+---
 
 ## Konfiguration
+
 Bei der Pipeline-Entwicklung können Sie auswählen, welche Felder im Ausgabe-Ereignis enthalten sein sollen.
 
 ## Ausgabe
+
 Der Prozessor erstellt ein neues Ereignis, das nur die ausgewählten Felder aus dem Eingabe-Ereignis enthält.
 
 ### Beispiel
 
 #### Eingabe-Ereignis
+
 ```json
 {
   "temperature": 25.5,
@@ -59,12 +65,15 @@ Der Prozessor erstellt ein neues Ereignis, das nur die ausgewählten Felder aus 
 ```
 
 #### Konfiguration
+
 Ausgewählte Felder:
-* temperature
-* humidity
-* timestamp
+
+- temperature
+- humidity
+- timestamp
 
 #### Ausgabe-Ereignis
+
 ```json
 {
   "temperature": 25.5,
@@ -76,27 +85,27 @@ Ausgewählte Felder:
 ## Anwendungsfälle
 
 1. **Datenvolumenreduzierung**
-   * Entfernen unnötiger Felder
-   * Reduzierung der Netzwerkbandbreite
-   * Optimierung der Speichernutzung
-   * Verbesserung der Verarbeitungsgeschwindigkeit
+   - Entfernen unnötiger Felder
+   - Reduzierung der Netzwerkbandbreite
+   - Optimierung der Speichernutzung
+   - Verbesserung der Verarbeitungsgeschwindigkeit
 
 2. **Datenschutz**
-   * Entfernen sensibler Felder
-   * Anonymisierung von Daten
-   * Kontrolle der Datenexposition
-   * Einhaltung von Vorschriften
+   - Entfernen sensibler Felder
+   - Anonymisierung von Daten
+   - Kontrolle der Datenexposition
+   - Einhaltung von Vorschriften
 
 3. **Stream-Optimierung**
-   * Fokussierung auf relevante Daten
-   * Reduzierung der nachgelagerten Verarbeitung
-   * Verbesserung der Pipeline-Effizienz
-   * Optimierung der Ressourcennutzung
+   - Fokussierung auf relevante Daten
+   - Reduzierung der nachgelagerten Verarbeitung
+   - Verbesserung der Pipeline-Effizienz
+   - Optimierung der Ressourcennutzung
 
 ## Hinweise
 
-* Der Prozessor behält die ursprünglichen Werte der ausgewählten Felder bei
-* Nicht ausgewählte Felder werden vollständig aus der Ausgabe entfernt
-* Die Reihenfolge der Felder in der Ausgabe kann sich von der Eingabe unterscheiden
-* Alle Feldtypen werden unterstützt
-* Der Prozessor kann mit beliebig vielen Feldern umgehen 
+- Der Prozessor behält die ursprünglichen Werte der ausgewählten Felder bei
+- Nicht ausgewählte Felder werden vollständig aus der Ausgabe entfernt
+- Die Reihenfolge der Felder in der Ausgabe kann sich von der Eingabe unterscheiden
+- Alle Feldtypen werden unterstützt
+- Der Prozessor kann mit beliebig vielen Feldern umgehen

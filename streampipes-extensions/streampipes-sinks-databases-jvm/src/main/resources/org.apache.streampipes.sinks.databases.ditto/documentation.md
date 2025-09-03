@@ -22,19 +22,19 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Forwards events to the Eclipse Ditto API.
 
-***
+---
 
 ## Required input
 
 This sink does not have any requirements and works with any incoming event type.
 
-***
+---
 
 ## Configuration
 
@@ -48,11 +48,11 @@ The endpoint URL of the Ditto instance.
 
 ### Username
 
-The username to authenticate the Ditto endpoint. 
+The username to authenticate the Ditto endpoint.
 
 ### Password
 
-The password to authenticate the Ditto endpoint. 
+The password to authenticate the Ditto endpoint.
 
 ### Thing ID
 

@@ -15,6 +15,7 @@
   ~ limitations under the License.
   ~
   -->
+
 #set( $double_pound = '##' )
 
 ${double_pound} ${classNamePrefix}
@@ -23,12 +24,12 @@ ${double_pound} ${classNamePrefix}
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ${double_pound} Description
 Describe your new adapter here!
 
-***
+---
 
 ${double_pound} Configuration
 What are the configurations a user has to provide?

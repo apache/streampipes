@@ -22,25 +22,23 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Count words on continuous text-based streams.
 
-***
+---
 
 ## Required input
 
-
-***
+---
 
 ## Configuration
 
 Describe the configuration parameters here
 
 ### 1st parameter
-
 
 ### 2nd parameter
 

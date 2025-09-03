@@ -22,19 +22,19 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Displays a notification in the UI panel of StreamPipes.
 
-***
+---
 
 ## Required input
 
 This sink does not have any requirements and works with any incoming event type.
 
-***
+---
 
 ## Configuration
 
@@ -48,7 +48,7 @@ The notification message.
 
 ### Silent Period
 
-The *Silent Period* is the duration, expressed in minutes, during which notifications are temporarily disabled after one
+The _Silent Period_ is the duration, expressed in minutes, during which notifications are temporarily disabled after one
 has been sent. This feature is implemented to prevent overwhelming the target with frequent notifications, avoiding
 potential spam behavior.
 

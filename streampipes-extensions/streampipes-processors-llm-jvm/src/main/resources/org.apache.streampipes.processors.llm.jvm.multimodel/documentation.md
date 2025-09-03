@@ -24,7 +24,7 @@
 
 ### Description
 
-Choose between **OpenAI**, **Anthropic** or **Ollama / Llama** models and keep a *stateless*, *windowed* or *full*
+Choose between **OpenAI**, **Anthropic** or **Ollama / Llama** models and keep a _stateless_, _windowed_ or _full_
 conversation when streaming events through StreamPipes.
 
 ---
@@ -32,11 +32,12 @@ conversation when streaming events through StreamPipes.
 ### Configuration
 
 ### Configuration overview
+
 | Setting               | Purpose                                                                      |
-|-----------------------|------------------------------------------------------------------------------|
+| --------------------- | ---------------------------------------------------------------------------- |
 | **Model Provider**    | `"OpenAI"`, `"Anthropic"` or `"Ollama"`                                      |
 | **Model Name**        | Any model string supported by the chosen provider (lists below)              |
-| **Temperature**       | *0–1* randomness control (higher->more creative, lower-> more deterministic) |
+| **Temperature**       | _0–1_ randomness control (higher->more creative, lower-> more deterministic) |
 | **System Prompt**     | Sets the assistant’s role / rules                                            |
 | **Input Field**       | Event field treated as the user message                                      |
 | **History Mode**      | `"Stateless"`, `"Windowed"`, or `"Full"`                                     |
@@ -51,6 +52,7 @@ conversation when streaming events through StreamPipes.
 ### Ready‑to‑use model names
 
 #### Anthropic
+
 - `claude-3-7-sonnet-20250219`
 - `claude-3-5-sonnet-20241022`
 - `claude-3-5-haiku-20241022`
@@ -62,6 +64,7 @@ conversation when streaming events through StreamPipes.
 - `claude-2.0`
 
 #### OpenAI
+
 - `gpt-3.5-turbo`
 - `gpt-3.5-turbo-1106`
 - `gpt-3.5-turbo-0125`
@@ -91,12 +94,13 @@ conversation when streaming events through StreamPipes.
 - `o3-mini-2025-01-31`
 
 #### Llama suggestions (Ollama)
+
 - `llama3`
 - `llama3:8b`
 - `llama2`
 - `mistral‑7b‑instruct`
 
-*(Add any custom model present in your Ollama instance.)*
+_(Add any custom model present in your Ollama instance.)_
 
 ---
 

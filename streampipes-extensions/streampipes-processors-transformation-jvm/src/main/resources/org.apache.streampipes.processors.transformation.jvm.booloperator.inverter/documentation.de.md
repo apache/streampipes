@@ -22,33 +22,35 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
 
 Der Boolesche Inverter-Prozessor invertiert den Wert eines booleschen Feldes in einem Datenstrom. Er unterstützt:
-* Einzelfeld-Invertierung
-* TRUE zu FALSE Konvertierung
-* FALSE zu TRUE Konvertierung
-* Direkte Wertmodifikation
-* Einfache boolesche Logik
-* Direkte Wertnegation
+
+- Einzelfeld-Invertierung
+- TRUE zu FALSE Konvertierung
+- FALSE zu TRUE Konvertierung
+- Direkte Wertmodifikation
+- Einfache boolesche Logik
+- Direkte Wertnegation
 
 Dieser Prozessor ist essentiell für:
-* Negieren boolescher Bedingungen
-* Invertieren von Steuersignalen
-* Komplementieren von Zustandswerten
-* Umkehren von Logikgattern
-* Erstellen entgegengesetzter Zustände
-* Implementieren von NOT-Operationen
 
-***
+- Negieren boolescher Bedingungen
+- Invertieren von Steuersignalen
+- Komplementieren von Zustandswerten
+- Umkehren von Logikgattern
+- Erstellen entgegengesetzter Zustände
+- Implementieren von NOT-Operationen
+
+---
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Datenstrom, der mindestens ein boolesches Feld zur Invertierung enthält.
 
-***
+---
 
 ## Konfiguration
 
@@ -59,12 +61,14 @@ Wähle das zu invertierende boolesche Feld aus. Der Wert dieses Feldes wird negi
 ## Ausgabe
 
 Der Prozessor erstellt ein neues Ereignis, das enthält:
-* Alle ursprünglichen Felder aus dem Eingabe-Ereignis
-* Das ausgewählte Feld mit invertiertem Wert
+
+- Alle ursprünglichen Felder aus dem Eingabe-Ereignis
+- Das ausgewählte Feld mit invertiertem Wert
 
 ### Beispiel
 
 #### Eingabe-Ereignis
+
 ```json
 {
   "deviceId": "sensor01",
@@ -74,9 +78,11 @@ Der Prozessor erstellt ein neues Ereignis, das enthält:
 ```
 
 #### Konfiguration
-* Invertierendes Feld: isActive
+
+- Invertierendes Feld: isActive
 
 #### Ausgabe-Ereignis
+
 ```json
 {
   "deviceId": "sensor01",
@@ -88,42 +94,42 @@ Der Prozessor erstellt ein neues Ereignis, das enthält:
 ## Anwendungsfälle
 
 1. **Steuerungssysteme**
-   * Invertieren von Steuersignalen
-   * Negieren von Statusflags
-   * Umkehren von Logikgattern
-   * Komplementieren von Zuständen
-   * Erstellen entgegengesetzter Bedingungen
+   - Invertieren von Steuersignalen
+   - Negieren von Statusflags
+   - Umkehren von Logikgattern
+   - Komplementieren von Zuständen
+   - Erstellen entgegengesetzter Bedingungen
 
 2. **Zustandsverwaltung**
-   * Invertieren von Zustandswerten
-   * Negieren von Statusindikatoren
-   * Umkehren von booleschen Flags
-   * Komplementieren von Bedingungen
-   * Erstellen inverser Zustände
+   - Invertieren von Zustandswerten
+   - Negieren von Statusindikatoren
+   - Umkehren von booleschen Flags
+   - Komplementieren von Bedingungen
+   - Erstellen inverser Zustände
 
 3. **Logikoperationen**
-   * Implementieren von NOT-Gattern
-   * Negieren von Bedingungen
-   * Umkehren boolescher Logik
-   * Komplementieren von Ausdrücken
-   * Erstellen entgegengesetzter Zustände
+   - Implementieren von NOT-Gattern
+   - Negieren von Bedingungen
+   - Umkehren boolescher Logik
+   - Komplementieren von Ausdrücken
+   - Erstellen entgegengesetzter Zustände
 
 4. **Signalverarbeitung**
-   * Invertieren digitaler Signale
-   * Negieren binärer Werte
-   * Umkehren boolescher Zustände
-   * Komplementieren von Bedingungen
-   * Erstellen inverser Signale
+   - Invertieren digitaler Signale
+   - Negieren binärer Werte
+   - Umkehren boolescher Zustände
+   - Komplementieren von Bedingungen
+   - Erstellen inverser Signale
 
 ## Hinweise
 
-* Nur boolesche Felder können invertiert werden
-* Invertierung erfolgt direkt
-* Ursprünglicher Wert wird ersetzt
-* Verarbeitung ist zustandslos
-* Mehrere Invertierungen erfordern Verkettung
-* Logikimplikationen beachten
-* Invertierung erfolgt sofort
-* Keine Verzögerung bei der Verarbeitung
-* Keine zusätzlichen Felder werden erstellt
-* Einfache boolesche Negation 
+- Nur boolesche Felder können invertiert werden
+- Invertierung erfolgt direkt
+- Ursprünglicher Wert wird ersetzt
+- Verarbeitung ist zustandslos
+- Mehrere Invertierungen erfordern Verkettung
+- Logikimplikationen beachten
+- Invertierung erfolgt sofort
+- Keine Verzögerung bei der Verarbeitung
+- Keine zusätzlichen Felder werden erstellt
+- Einfache boolesche Negation

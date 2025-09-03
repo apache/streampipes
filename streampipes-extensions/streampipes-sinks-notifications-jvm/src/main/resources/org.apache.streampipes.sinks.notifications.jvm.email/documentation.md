@@ -22,23 +22,23 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 This sink sends an email to a specified receiver.
 
 Before you use this sink, the settings of your email server need to be configured.
-After you've installed the element, navigate to ``Settings``, open the panel ``Sinks Notifications JVM`` and add your
+After you've installed the element, navigate to `Settings`, open the panel `Sinks Notifications JVM` and add your
 mail server and credentials.
 
-***
+---
 
 ## Required input
 
 This sink does not have any requirements and works with any incoming event type.
 
-***
+---
 
 ## Configuration
 
@@ -58,7 +58,7 @@ The mail text.
 
 ### Silent Period
 
-The *Silent Period* is the duration, expressed in minutes, during which notifications are temporarily disabled after one
+The _Silent Period_ is the duration, expressed in minutes, during which notifications are temporarily disabled after one
 has been sent. This feature is implemented to prevent overwhelming the target with frequent notifications, avoiding
 potential spam behavior.
 

@@ -15,39 +15,42 @@
   ~ limitations under the License.
   ~
   -->
+
 ## Statischer Metadaten-Anreicherer
 
 <p align="center">
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
 
 Der Statische Metadaten-Anreicherer-Prozessor fügt vordefinierten Metadatenfeldern zu Nachrichten hinzu. Er unterstützt:
-* Benutzerdefinierte Feldhinzufügung
-* Mehrere Datentypen (String, Boolean, Float, Integer)
-* Feldbezeichnung
-* Feldbeschreibungen
-* Laufzeitbenennung
-* Metadatenanreicherung
+
+- Benutzerdefinierte Feldhinzufügung
+- Mehrere Datentypen (String, Boolean, Float, Integer)
+- Feldbezeichnung
+- Feldbeschreibungen
+- Laufzeitbenennung
+- Metadatenanreicherung
 
 Dieser Prozessor ist essentiell für:
-* Hinzufügen von Kontext zu Daten
-* Anreichern von Nachrichten
-* Erstellen von Metadaten
-* Erstellen von Anmerkungen
-* Standardisieren von Feldern
-* Dokumentieren von Daten
 
-***
+- Hinzufügen von Kontext zu Daten
+- Anreichern von Nachrichten
+- Erstellen von Metadaten
+- Erstellen von Anmerkungen
+- Standardisieren von Feldern
+- Dokumentieren von Daten
+
+---
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Datenstrom, der mit zusätzlichen Metadatenfeldern angereichert werden soll.
 
-***
+---
 
 ## Konfiguration
 
@@ -56,33 +59,41 @@ Der Prozessor benötigt einen Datenstrom, der mit zusätzlichen Metadatenfeldern
 Konfiguriere die Metadatenfelder, die zu jeder Nachricht hinzugefügt werden sollen:
 
 #### Laufzeitname
+
 Gib den Namen ein, der für das Feld in der Ausgabe-Nachricht verwendet wird.
 
 #### Laufzeitwert
+
 Gib den Wert ein, der dem Feld zugewiesen wird.
 
 #### Datentyp
+
 Wähle den Datentyp des Wertes:
-* String: Textwerte
-* Boolean: true/false-Werte
-* Float: Dezimalzahlen
-* Integer: Ganze Zahlen
+
+- String: Textwerte
+- Boolean: true/false-Werte
+- Float: Dezimalzahlen
+- Integer: Ganze Zahlen
 
 #### Bezeichnung (Optional)
+
 Gib eine kurze Bezeichnung an, die das Feld beschreibt.
 
 #### Beschreibung (Optional)
+
 Gib eine detaillierte Beschreibung des Feldes an.
 
 ## Ausgabe
 
 Der Prozessor erstellt eine neue Nachricht, die enthält:
-* Alle ursprünglichen Felder aus der Eingabe-Nachricht
-* Die konfigurierten Metadatenfelder mit ihren Werten
+
+- Alle ursprünglichen Felder aus der Eingabe-Nachricht
+- Die konfigurierten Metadatenfelder mit ihren Werten
 
 ### Beispiel
 
 #### Eingabe-Nachricht
+
 ```json
 {
   "deviceId": "sensor01",
@@ -92,13 +103,15 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ```
 
 #### Konfiguration
-* Laufzeitname: location
-* Laufzeitwert: Building A
-* Datentyp: String
-* Bezeichnung: Sensorstandort
-* Beschreibung: Physischer Standort des Sensors
+
+- Laufzeitname: location
+- Laufzeitwert: Building A
+- Datentyp: String
+- Bezeichnung: Sensorstandort
+- Beschreibung: Physischer Standort des Sensors
 
 #### Ausgabe-Nachricht
+
 ```json
 {
   "deviceId": "sensor01",
@@ -111,27 +124,27 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ## Anwendungsfälle
 
 1. **Datenanreicherung**
-   * Kontext zu Daten hinzufügen
-   * Nachrichten anreichern
-   * Metadaten erstellen
-   * Anmerkungen erstellen
-   * Felder standardisieren
+   - Kontext zu Daten hinzufügen
+   - Nachrichten anreichern
+   - Metadaten erstellen
+   - Anmerkungen erstellen
+   - Felder standardisieren
 
 2. **Dokumentation**
-   * Daten dokumentieren
-   * Beschreibungen hinzufügen
-   * Bezeichnungen erstellen
-   * Metadaten erstellen
-   * Felder standardisieren
+   - Daten dokumentieren
+   - Beschreibungen hinzufügen
+   - Bezeichnungen erstellen
+   - Metadaten erstellen
+   - Felder standardisieren
 
 ## Hinweise
 
-* Mehrere Felder können hinzugefügt werden
-* Datentypen müssen zu Werten passen
-* Bezeichnungen sind optional
-* Beschreibungen sind optional
-* Verarbeitung ist zustandslos
-* Feldnamen müssen eindeutig sein
-* Werte werden automatisch in den ausgewählten Datentyp umgewandelt
-* Ursprüngliche Nachrichtfelder werden beibehalten
-* Metadaten sind über alle Nachrichten hinweg konsistent 
+- Mehrere Felder können hinzugefügt werden
+- Datentypen müssen zu Werten passen
+- Bezeichnungen sind optional
+- Beschreibungen sind optional
+- Verarbeitung ist zustandslos
+- Feldnamen müssen eindeutig sein
+- Werte werden automatisch in den ausgewählten Datentyp umgewandelt
+- Ursprüngliche Nachrichtfelder werden beibehalten
+- Metadaten sind über alle Nachrichten hinweg konsistent

@@ -13,10 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: 'Close and remind stale PRs'
+name: "Close and remind stale PRs"
 on:
   schedule:
-    - cron: '0 1 * * *'
+    - cron: "0 1 * * *"
   workflow_dispatch:
 
 permissions:
@@ -31,9 +31,9 @@ jobs:
           close-pr-message: "Hello there :wave:<br> <br> Unfortunately, we didn't hear back from you regarding your pull request, so we're closing it now. Don't worry, you can always reopen the PR at any time if you wish to continue working on it :raised_hands:.<br> <br> Please note that the branch associated with this pull request will not be deleted, so you can still access your changes and continue to work on them as needed :computer:.<br> <br> Thank you for your contributions to our project, and we hope to see you again soon!"
           days-before-close: 7
           days-before-stale: 21
-          exempt-pr-labels: 'blocked'
-          labels-to-remove-when-unstale: 'stale'
-          only-issue-labels: 'do-not-stale'
+          exempt-pr-labels: "blocked"
+          labels-to-remove-when-unstale: "stale"
+          only-issue-labels: "do-not-stale"
           operations-per-run: 1000
-          stale-pr-label: 'stale'
+          stale-pr-label: "stale"
           stale-pr-message: "Hello there :wave:<br> <br> We noticed that it's been some time since activity occurred on your pull request :thinking:. In order to keep things moving forward, we're marking this PR as _stale_ and giving you 7 days to respond before it's automatically closed :alarm_clock:.<br> <br> Please take a moment to review your pull request and make any necessary updates or changes :man_technologist:. If you need more time or have any questions, please don't hesitate to let us know :speech_balloon:.<br> <br> Thank you for your contributions to our project, and we look forward to hearing back from you soon :pray:."

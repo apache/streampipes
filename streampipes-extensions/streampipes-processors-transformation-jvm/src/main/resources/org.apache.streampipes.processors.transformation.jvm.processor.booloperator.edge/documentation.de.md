@@ -22,30 +22,32 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
 
 Der Signalflanken-Filter-Prozessor erkennt und leitet Nachrichten weiter, wenn sich ein boolesches Signal ändert (Flankenerkennung). Er unterstützt:
-* Steigende Flanke (FALSE -> TRUE)
-* Fallende Flanke (TRUE -> FALSE)
-* Beide Flanken
-* Konfigurierbare Verzögerung
-* Nachrichtenauswahloptionen
+
+- Steigende Flanke (FALSE -> TRUE)
+- Fallende Flanke (TRUE -> FALSE)
+- Beide Flanken
+- Konfigurierbare Verzögerung
+- Nachrichtenauswahloptionen
 
 Dieser Prozessor ist essentiell für:
-* Erkennung von Zustandsübergängen
-* Überwachung von Signaländerungen
-* Auslösen von Aktionen bei Zustandsänderungen
-* Implementierung von flankengesteuerter Logik
 
-***
+- Erkennung von Zustandsübergängen
+- Überwachung von Signaländerungen
+- Auslösen von Aktionen bei Zustandsänderungen
+- Implementierung von flankengesteuerter Logik
+
+---
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Datenstrom, der mindestens ein boolesches Feld zur Überwachung von Zustandsänderungen enthält.
 
-***
+---
 
 ## Konfiguration
 
@@ -57,53 +59,56 @@ Wähle das boolesche Feld aus, das auf Zustandsänderungen überwacht werden sol
 
 Wähle die Art der zu erkennenden Flanke:
 
-* **FALSE -> TRUE**: Steigende Flanke
-  * Wird ausgelöst, wenn sich das Signal von false zu true ändert
-  * Verwendung: Erkennung von Aktivierungsereignissen
-  * Beispiel: Gerät eingeschaltet
+- **FALSE -> TRUE**: Steigende Flanke
+  - Wird ausgelöst, wenn sich das Signal von false zu true ändert
+  - Verwendung: Erkennung von Aktivierungsereignissen
+  - Beispiel: Gerät eingeschaltet
 
-* **TRUE -> FALSE**: Fallende Flanke
-  * Wird ausgelöst, wenn sich das Signal von true zu false ändert
-  * Verwendung: Erkennung von Deaktivierungsereignissen
-  * Beispiel: Gerät ausgeschaltet
+- **TRUE -> FALSE**: Fallende Flanke
+  - Wird ausgelöst, wenn sich das Signal von true zu false ändert
+  - Verwendung: Erkennung von Deaktivierungsereignissen
+  - Beispiel: Gerät ausgeschaltet
 
-* **BEIDE**: Beide Flanken
-  * Wird bei jeder Zustandsänderung ausgelöst
-  * Verwendung: Überwachung aller Übergänge
-  * Beispiel: Jede Zustandsänderung
+- **BEIDE**: Beide Flanken
+  - Wird bei jeder Zustandsänderung ausgelöst
+  - Verwendung: Überwachung aller Übergänge
+  - Beispiel: Jede Zustandsänderung
 
 ### Verzögerung
 
 Gib an, wie viele Nachrichten gewartet werden sollen, bevor das Ergebnis nach einer Flankenerkennung weitergeleitet wird:
-* Minimum: 0 (sofortige Weiterleitung)
-* Verwendung: Entprellen von Signalen
-* Beispiel: 5 Nachrichten warten, um einen stabilen Zustand sicherzustellen
+
+- Minimum: 0 (sofortige Weiterleitung)
+- Verwendung: Entprellen von Signalen
+- Beispiel: 5 Nachrichten warten, um einen stabilen Zustand sicherzustellen
 
 ### Ausgabe-Nachrichtenauswahl
 
 Wähle aus, welche Nachrichten nach der Verzögerung weitergeleitet werden sollen:
 
-* **Erste**: Nur die erste Nachricht nach Flankenerkennung weiterleiten
-  * Verwendung: Einmalige Aktionen
-  * Beispiel: Prozess einmal starten
+- **Erste**: Nur die erste Nachricht nach Flankenerkennung weiterleiten
+  - Verwendung: Einmalige Aktionen
+  - Beispiel: Prozess einmal starten
 
-* **Letzte**: Nur die letzte Nachricht nach Verzögerung weiterleiten
-  * Verwendung: Erfassung des Endzustands
-  * Beispiel: Stabilen Zustand erfassen
+- **Letzte**: Nur die letzte Nachricht nach Verzögerung weiterleiten
+  - Verwendung: Erfassung des Endzustands
+  - Beispiel: Stabilen Zustand erfassen
 
-* **Alle**: Alle Nachrichten während der Verzögerung weiterleiten
-  * Verwendung: Kontinuierliche Überwachung
-  * Beispiel: Zustandsänderungen verfolgen
+- **Alle**: Alle Nachrichten während der Verzögerung weiterleiten
+  - Verwendung: Kontinuierliche Überwachung
+  - Beispiel: Zustandsänderungen verfolgen
 
 ## Ausgabe
 
 Der Prozessor erstellt eine neue Nachricht, die enthält:
-* Alle ursprünglichen Felder aus der Eingabe-Nachricht
-* Die Nachricht wird basierend auf der konfigurierten Verzögerung und Nachrichtenauswahl weitergeleitet
+
+- Alle ursprünglichen Felder aus der Eingabe-Nachricht
+- Die Nachricht wird basierend auf der konfigurierten Verzögerung und Nachrichtenauswahl weitergeleitet
 
 ### Beispiel
 
 #### Eingabe-Nachrichtenstrom
+
 ```json
 [
   {
@@ -125,12 +130,14 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ```
 
 #### Konfiguration 1: Steigende Flanke mit erster Nachricht
-* Boolesches Signal: isActive
-* Signalflanke: FALSE -> TRUE
-* Verzögerung: 0
-* Ausgabe-Nachrichtenauswahl: Erste
+
+- Boolesches Signal: isActive
+- Signalflanke: FALSE -> TRUE
+- Verzögerung: 0
+- Ausgabe-Nachrichtenauswahl: Erste
 
 #### Ausgabe-Nachricht
+
 ```json
 {
   "deviceId": "sensor01",
@@ -140,12 +147,14 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ```
 
 #### Konfiguration 2: Beide Flanken mit letzter Nachricht
-* Boolesches Signal: isActive
-* Signalflanke: BEIDE
-* Verzögerung: 1
-* Ausgabe-Nachrichtenauswahl: Letzte
+
+- Boolesches Signal: isActive
+- Signalflanke: BEIDE
+- Verzögerung: 1
+- Ausgabe-Nachrichtenauswahl: Letzte
 
 #### Ausgabe-Nachricht
+
 ```json
 {
   "deviceId": "sensor01",
@@ -157,24 +166,24 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ## Anwendungsfälle
 
 1. **Geräteüberwachung**
-   * Erkennung von Gerätestromzustandsänderungen
-   * Überwachung der Sensoraktivierung
-   * Verfolgung des Gerätestatus
-   * Erkennung von Systemübergängen
+   - Erkennung von Gerätestromzustandsänderungen
+   - Überwachung der Sensoraktivierung
+   - Verfolgung des Gerätestatus
+   - Erkennung von Systemübergängen
 
 2. **Prozesssteuerung**
-   * Auslösen von Aktionen bei Zustandsänderungen
-   * Überwachung von Prozessübergängen
-   * Erkennung von Phasenänderungen
-   * Verfolgung von Zustandsautomaten
+   - Auslösen von Aktionen bei Zustandsänderungen
+   - Überwachung von Prozessübergängen
+   - Erkennung von Phasenänderungen
+   - Verfolgung von Zustandsautomaten
 
 ## Hinweise
 
-* Nur boolesche Felder können überwacht werden
-* Flankenerkennung ist zustandsbehaftet
-* Verzögerung ist nachrichtenbasiert, nicht zeitbasiert
-* Nachrichtenauswahl beeinflusst das Ausgabeverhalten
-* Verarbeitung ist zustandsbehaftet
-* Flankenerkennung erfolgt sofort
-* Verzögerung beginnt nach Flankenerkennung
-* Nachrichtenauswahl wird nach Verzögerung angewendet 
+- Nur boolesche Felder können überwacht werden
+- Flankenerkennung ist zustandsbehaftet
+- Verzögerung ist nachrichtenbasiert, nicht zeitbasiert
+- Nachrichtenauswahl beeinflusst das Ausgabeverhalten
+- Verarbeitung ist zustandsbehaftet
+- Flankenerkennung erfolgt sofort
+- Verzögerung beginnt nach Flankenerkennung
+- Nachrichtenauswahl wird nach Verzögerung angewendet

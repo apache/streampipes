@@ -22,19 +22,19 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Publishes events to Apache RocketMQ.
 
-***
+---
 
 ## Required input
 
 This sink does not have any requirements and works with any incoming event type.
 
-***
+---
 
 ## Configuration
 
@@ -42,11 +42,9 @@ This sink does not have any requirements and works with any incoming event type.
 
 The endpoint to connect to the broker.
 
-
 ### RocketMQ Topic
 
 The topic where events should be sent to.
-
 
 ## Output
 

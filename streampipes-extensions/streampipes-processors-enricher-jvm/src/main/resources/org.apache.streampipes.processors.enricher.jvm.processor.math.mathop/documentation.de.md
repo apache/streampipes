@@ -22,44 +22,53 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
-Der Mathematische Operation-Prozessor führt arithmetische Berechnungen zwischen zwei numerischen Feldern in einem Ereignis durch. Er:
-* Unterstützt grundlegende arithmetische Operationen (+, -, *, /, %)
-* Funktioniert mit jedem numerischen Feldtyp
-* Behält die ursprünglichen Ereignisdaten bei
-* Fügt Berechnungsergebnisse als neue Felder hinzu
 
-***
+Der Mathematische Operation-Prozessor führt arithmetische Berechnungen zwischen zwei numerischen Feldern in einem Ereignis durch. Er:
+
+- Unterstützt grundlegende arithmetische Operationen (+, -, \*, /, %)
+- Funktioniert mit jedem numerischen Feldtyp
+- Behält die ursprünglichen Ereignisdaten bei
+- Fügt Berechnungsergebnisse als neue Felder hinzu
+
+---
 
 ## Erforderliche Eingabe
+
 Der Prozessor benötigt einen Eingabe-Ereignisstrom, der mindestens zwei numerische Felder für die Durchführung von Berechnungen enthält.
 
-***
+---
 
 ## Konfiguration
 
 ### Linker Operand
+
 Wählen Sie das Feld aus dem Eingabe-Ereignis aus, das als linker Operand in der Berechnung verwendet werden soll.
 
 ### Rechter Operand
+
 Wählen Sie das Feld aus dem Eingabe-Ereignis aus, das als rechter Operand in der Berechnung verwendet werden soll.
 
 ### Operation
+
 Wählen Sie eine der folgenden arithmetischen Operationen:
-* Addition (+)
-* Subtraktion (-)
-* Multiplikation (*)
-* Division (/)
-* Modulo (%)
+
+- Addition (+)
+- Subtraktion (-)
+- Multiplikation (\*)
+- Division (/)
+- Modulo (%)
 
 ## Ausgabe
+
 Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen Feld namens `calculationResult` weiter, das das Ergebnis der arithmetischen Operation enthält.
 
 ### Beispiel
 
 #### Eingabe-Ereignis
+
 ```json
 {
   "temperature": 25.5,
@@ -69,11 +78,13 @@ Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen Feld namens `c
 ```
 
 #### Konfiguration
-* Linker Operand: `temperature`
-* Rechter Operand: `humidity`
-* Operation: `*`
+
+- Linker Operand: `temperature`
+- Rechter Operand: `humidity`
+- Operation: `*`
 
 #### Ausgabe-Ereignis
+
 ```json
 {
   "temperature": 25.5,
@@ -86,28 +97,28 @@ Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen Feld namens `c
 ## Anwendungsfälle
 
 1. **Datentransformation**
-   * Berechnung abgeleiteter Metriken
-   * Einheitenumrechnung
-   * Skalierung von Messwerten
-   * Normalisierung von Werten
+   - Berechnung abgeleiteter Metriken
+   - Einheitenumrechnung
+   - Skalierung von Messwerten
+   - Normalisierung von Werten
 
 2. **Geschäftslogik**
-   * Kostenberechnung
-   * Berechnung von Leistungsmetriken
-   * Auswertung von Geschäftsregeln
-   * Generierung abgeleiteter Werte
+   - Kostenberechnung
+   - Berechnung von Leistungsmetriken
+   - Auswertung von Geschäftsregeln
+   - Generierung abgeleiteter Werte
 
 3. **Sensordatenverarbeitung**
-   * Kombinieren von Sensorwerten
-   * Berechnung von Durchschnitten
-   * Normalisierung von Messungen
-   * Skalierung von Sensorwerten
+   - Kombinieren von Sensorwerten
+   - Berechnung von Durchschnitten
+   - Normalisierung von Messungen
+   - Skalierung von Sensorwerten
 
 ## Hinweise
 
-* Beide Operanden müssen numerische Werte sein
-* Division durch null führt zu einem Fehler
-* Ergebnisse werden als doppelt genaue Fließkommazahlen gespeichert
-* Die ursprüngliche Ereignisstruktur bleibt erhalten
-* Die Berechnung wird für jedes eingehende Ereignis durchgeführt
-* Das Ergebnisfeld heißt immer `calculationResult` 
+- Beide Operanden müssen numerische Werte sein
+- Division durch null führt zu einem Fehler
+- Ergebnisse werden als doppelt genaue Fließkommazahlen gespeichert
+- Die ursprüngliche Ereignisstruktur bleibt erhalten
+- Die Berechnung wird für jedes eingehende Ereignis durchgeführt
+- Das Ergebnisfeld heißt immer `calculationResult`

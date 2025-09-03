@@ -22,47 +22,56 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
-The Numerical Filter processor filters events based on numerical comparisons with a specified threshold. It supports various comparison operations and is ideal for:
-* Threshold-based event filtering
-* Range-based data selection
-* Outlier detection
-* Value-based event routing
 
-***
+The Numerical Filter processor filters events based on numerical comparisons with a specified threshold. It supports various comparison operations and is ideal for:
+
+- Threshold-based event filtering
+- Range-based data selection
+- Outlier detection
+- Value-based event routing
+
+---
 
 ## Required Input
+
 A data stream containing at least one numerical field to filter on.
 
-***
+---
 
 ## Configuration
 
 ### Field
-* Select the numerical field to apply the filter operation on
-* The field must contain numeric values
+
+- Select the numerical field to apply the filter operation on
+- The field must contain numeric values
 
 ### Operation
+
 Choose from the following comparison operators:
-* **<** (Less than)
-* **<=** (Less than or equal)
-* **>** (Greater than)
-* **>=** (Greater than or equal)
-* **==** (Equal)
-* **!=** (Not equal)
+
+- **<** (Less than)
+- **<=** (Less than or equal)
+- **>** (Greater than)
+- **>=** (Greater than or equal)
+- **==** (Equal)
+- **!=** (Not equal)
 
 ### Threshold Value
-* Specify the numerical threshold to compare against
-* The value must be a valid number
+
+- Specify the numerical threshold to compare against
+- The value must be a valid number
 
 ## Output
+
 The processor forwards the input event only if the numerical comparison evaluates to true.
 
 ### Example
 
 #### Input Events
+
 ```json
 {
   "temperature": 25.5,
@@ -79,12 +88,15 @@ The processor forwards the input event only if the numerical comparison evaluate
 ```
 
 #### Example 1: Greater Than Filter
+
 Configuration:
-* Field: temperature
-* Operation: >
-* Threshold Value: 25.8
+
+- Field: temperature
+- Operation: >
+- Threshold Value: 25.8
 
 Output Events:
+
 ```json
 {
   "temperature": 26.0,
@@ -93,12 +105,15 @@ Output Events:
 ```
 
 #### Example 2: Range Filter
+
 Configuration:
-* Field: temperature
-* Operation: >=
-* Threshold Value: 25.5
+
+- Field: temperature
+- Operation: >=
+- Threshold Value: 25.5
 
 Output Events:
+
 ```json
 {
   "temperature": 25.5,
@@ -115,12 +130,15 @@ Output Events:
 ```
 
 #### Example 3: Exact Match Filter
+
 Configuration:
-* Field: temperature
-* Operation: ==
-* Threshold Value: 25.8
+
+- Field: temperature
+- Operation: ==
+- Threshold Value: 25.8
 
 Output Events:
+
 ```json
 {
   "temperature": 25.8,
@@ -131,21 +149,21 @@ Output Events:
 ## Use Cases
 
 1. **Threshold Monitoring**
-   * Alert on values exceeding limits
-   * Filter out normal readings
-   * Monitor critical thresholds
-   * Track value ranges
+   - Alert on values exceeding limits
+   - Filter out normal readings
+   - Monitor critical thresholds
+   - Track value ranges
 
 2. **Data Quality**
-   * Remove outliers
-   * Filter invalid measurements
-   * Ensure value ranges
-   * Validate sensor data
+   - Remove outliers
+   - Filter invalid measurements
+   - Ensure value ranges
+   - Validate sensor data
 
 ## Notes
 
-* The processor performs exact numerical comparisons
-* For equality checks, a small epsilon (0.000001) is used to handle floating-point precision
-* Events that don't match the filter condition are dropped
-* The original event structure is preserved in the output
-* All numerical types (integer, float, double) are supported
+- The processor performs exact numerical comparisons
+- For equality checks, a small epsilon (0.000001) is used to handle floating-point precision
+- Events that don't match the filter condition are dropped
+- The original event structure is preserved in the output
+- All numerical types (integer, float, double) are supported

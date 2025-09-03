@@ -22,14 +22,12 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
+
 Creates a data stream for an InfluxDB measurement.
 
-***
+---
 
 ## Configuration
-
-
-

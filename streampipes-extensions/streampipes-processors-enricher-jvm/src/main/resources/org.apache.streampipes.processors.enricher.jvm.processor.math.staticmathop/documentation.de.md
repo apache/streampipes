@@ -22,24 +22,25 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
 
 Der Statische Mathematik-Prozessor führt arithmetische Berechnungen zwischen einem numerischen Feld und einem statischen Wert durch. Er:
-* Unterstützt grundlegende arithmetische Operationen (+, -, *, /, %)
-* Funktioniert mit jedem numerischen Feldtyp
-* Verwendet einen konfigurierbaren statischen Wert als einen Operanden
-* Aktualisiert das Eingabefeld mit dem Berechnungsergebnis
-* Behält andere Ereignisfelder bei
 
-***
+- Unterstützt grundlegende arithmetische Operationen (+, -, \*, /, %)
+- Funktioniert mit jedem numerischen Feldtyp
+- Verwendet einen konfigurierbaren statischen Wert als einen Operanden
+- Aktualisiert das Eingabefeld mit dem Berechnungsergebnis
+- Behält andere Ereignisfelder bei
+
+---
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Eingabe-Ereignisstrom, der mindestens ein numerisches Feld für die Durchführung von Berechnungen enthält.
 
-***
+---
 
 ## Konfiguration
 
@@ -54,11 +55,12 @@ Gib den statischen numerischen Wert an, der als rechter Operand in der Berechnun
 ### Operation
 
 Wähle eine der folgenden arithmetischen Operationen:
-* Addition (+)
-* Subtraktion (-)
-* Multiplikation (*)
-* Division (/)
-* Modulo (%)
+
+- Addition (+)
+- Subtraktion (-)
+- Multiplikation (\*)
+- Division (/)
+- Modulo (%)
 
 ## Ausgabe
 
@@ -67,6 +69,7 @@ Der Prozessor aktualisiert das ausgewählte Eingabefeld mit dem Ergebnis der ari
 ### Beispiel
 
 #### Eingabe-Ereignis
+
 ```json
 {
   "temperature": 25.5,
@@ -75,11 +78,13 @@ Der Prozessor aktualisiert das ausgewählte Eingabefeld mit dem Ergebnis der ari
 ```
 
 #### Konfiguration
-* Linker Operand: `temperature`
-* Rechter Operand-Wert: `2.0`
-* Operation: `*`
+
+- Linker Operand: `temperature`
+- Rechter Operand-Wert: `2.0`
+- Operation: `*`
 
 #### Ausgabe-Ereignis
+
 ```json
 {
   "temperature": 51.0,
@@ -90,28 +95,28 @@ Der Prozessor aktualisiert das ausgewählte Eingabefeld mit dem Ergebnis der ari
 ## Anwendungsfälle
 
 1. **Einheitenumrechnung**
-   * Umrechnung zwischen Maßeinheiten
-   * Skalierung von Werten
-   * Normalisierung von Daten
-   * Anwendung von Umrechnungsfaktoren
+   - Umrechnung zwischen Maßeinheiten
+   - Skalierung von Werten
+   - Normalisierung von Daten
+   - Anwendung von Umrechnungsfaktoren
 
 2. **Datentransformation**
-   * Anwendung konstanter Offsets
-   * Skalierung von Messungen
-   * Anpassung von Werten
-   * Normalisierung von Bereichen
+   - Anwendung konstanter Offsets
+   - Skalierung von Messungen
+   - Anpassung von Werten
+   - Normalisierung von Bereichen
 
 3. **Signalverarbeitung**
-   * Verstärkung von Signalen
-   * Dämpfung von Werten
-   * Anwendung von Verstärkungen
-   * Signalkonditionierung
+   - Verstärkung von Signalen
+   - Dämpfung von Werten
+   - Anwendung von Verstärkungen
+   - Signalkonditionierung
 
 ## Hinweise
 
-* Der Prozessor aktualisiert das Eingabefeld direkt
-* Alle Berechnungen werden mit doppelter Genauigkeit durchgeführt
-* Division durch null führt zu einem Fehler
-* Die Modulo-Operation funktioniert mit Fließkommazahlen
-* Der ursprüngliche Feldname wird beibehalten
-* Andere Ereignisfelder bleiben unverändert 
+- Der Prozessor aktualisiert das Eingabefeld direkt
+- Alle Berechnungen werden mit doppelter Genauigkeit durchgeführt
+- Division durch null führt zu einem Fehler
+- Die Modulo-Operation funktioniert mit Fließkommazahlen
+- Der ursprüngliche Feldname wird beibehalten
+- Andere Ereignisfelder bleiben unverändert

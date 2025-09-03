@@ -13,17 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: {{ .Values.external.influxdb.appName }}
-  name: {{ .Values.external.influxdb.persistence.claimName }}
+    app: { { .Values.external.influxdb.appName } }
+  name: { { .Values.external.influxdb.persistence.claimName } }
 spec:
-  storageClassName: {{ .Values.external.influxdb.persistence.storageClassName }}
+  storageClassName:
+    { { .Values.external.influxdb.persistence.storageClassName } }
   accessModes:
-    - {{ .Values.persistentVolumeAccessModes }}
+    - { { .Values.persistentVolumeAccessModes } }
   resources:
     requests:
-      storage: {{ .Values.external.influxdb.persistence.storageSize }}
+      storage: { { .Values.external.influxdb.persistence.storageSize } }

@@ -22,13 +22,13 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Consumes events from a NATS broker.
 
-***
+---
 
 ## Configuration
 
@@ -60,4 +60,3 @@ It can be provided as key value pairs separated by colons(:) and commas(,).
 (e.g., io.nats.client.reconnect.max:1, io.nats.client.timeout:1000)
 
 It is an optional configuration.
-

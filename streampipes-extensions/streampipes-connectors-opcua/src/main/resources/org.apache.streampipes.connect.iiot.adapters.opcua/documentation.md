@@ -22,7 +22,7 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
@@ -30,21 +30,22 @@ This adapter reads node values from an OPC-UA server.
 The adapter supports both signed/encrypted and unencrypted communication.
 
 Certificates must be provided directly to the service and cannot be added from the UI or REST APIs.
-To establish connections using a `Sign` or `Sign & Encrypt` security mode, 
+To establish connections using a `Sign` or `Sign & Encrypt` security mode,
 the following environment variables must be provided to the extension service:
 
-* SP_OPCUA_SECURITY_DIR the directory where the keystore and trusted certificates are located
-* SP_OPCUA_KEYSTORE_FILE the keystore file (e.g., keystore.pfx, must be of type PKCS12)
-* SP_OPCUA_KEYSTORE_PASSWORD the password to the keystore
-* SP_OPCUA_APPLICATION_URI the application URI used by the client to identify itself
+- SP_OPCUA_SECURITY_DIR the directory where the keystore and trusted certificates are located
+- SP_OPCUA_KEYSTORE_FILE the keystore file (e.g., keystore.pfx, must be of type PKCS12)
+- SP_OPCUA_KEYSTORE_PASSWORD the password to the keystore
+- SP_OPCUA_APPLICATION_URI the application URI used by the client to identify itself
 
 Certificate requirements:
 
 The X509 certificate must provide the following extras:
-* Key Usage: Certificate Sign
-* Subject Alternative Name: Application URI
-* Basic Constraints: Must provide CA:FALSE when using a self-signed certificate
-* Extended Key Usage: TLS Web Server Authentication, TLS Web Client Authentication
+
+- Key Usage: Certificate Sign
+- Subject Alternative Name: Application URI
+- Basic Constraints: Must provide CA:FALSE when using a self-signed certificate
+- Extended Key Usage: TLS Web Server Authentication, TLS Web Client Authentication
 
 The directory layout of the `SP_OPCUA_SECURITY_DIR` look as follows:
 
@@ -61,11 +62,11 @@ SP_OPC_SECURITY_DIR/
 Trusted certs need to be present in the `pki/trusted/certs` folder.
 Rejected certificates are stored in the `rejected` folder.
 
-***
+---
 
 ## Required Input
 
-***
+---
 
 ## Configuration
 
@@ -100,4 +101,4 @@ Where can the OPC UA server be found?
 Shows all available nodes once namespace index and node ID are given.
 Select as much as you like to query.
 
-***
+---

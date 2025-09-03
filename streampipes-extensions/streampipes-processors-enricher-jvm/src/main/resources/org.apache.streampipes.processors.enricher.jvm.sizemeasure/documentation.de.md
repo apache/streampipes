@@ -22,36 +22,43 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
-Der Größenmessung-Prozessor berechnet und fügt die Größe eingehender Ereignisse hinzu. Er:
-* Misst die Ereignisgröße durch Serialisierung
-* Unterstützt mehrere Größeneinheiten (Bytes, Kilobytes, Megabytes)
-* Behält die ursprünglichen Ereignisdaten bei
-* Fügt Größeninformationen als neues Feld hinzu
 
-***
+Der Größenmessung-Prozessor berechnet und fügt die Größe eingehender Ereignisse hinzu. Er:
+
+- Misst die Ereignisgröße durch Serialisierung
+- Unterstützt mehrere Größeneinheiten (Bytes, Kilobytes, Megabytes)
+- Behält die ursprünglichen Ereignisdaten bei
+- Fügt Größeninformationen als neues Feld hinzu
+
+---
 
 ## Erforderliche Eingabe
+
 Der Prozessor funktioniert mit jedem Eingabe-Ereignisstrom, da er die Größe der gesamten Ereignisstruktur misst.
 
-***
+---
 
 ## Konfiguration
 
 ### Größeneinheit
+
 Wählen Sie die Einheit, in der die Ereignisgröße gemessen werden soll:
-* **Bytes**: Rohgröße in Bytes
-* **Kilobytes**: Größe geteilt durch 1024 (1 KB = 1024 Bytes)
-* **Megabytes**: Größe geteilt durch 1048576 (1 MB = 1024 KB)
+
+- **Bytes**: Rohgröße in Bytes
+- **Kilobytes**: Größe geteilt durch 1024 (1 KB = 1024 Bytes)
+- **Megabytes**: Größe geteilt durch 1048576 (1 MB = 1024 KB)
 
 ## Ausgabe
+
 Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen Feld namens `eventSize` weiter, das die Größe des Ereignisses in der ausgewählten Einheit enthält.
 
 ### Beispiel
 
 #### Eingabe-Ereignis
+
 ```json
 {
   "temperature": 25.5,
@@ -61,9 +68,11 @@ Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen Feld namens `e
 ```
 
 #### Konfiguration
-* Größeneinheit: `Kilobytes`
+
+- Größeneinheit: `Kilobytes`
 
 #### Ausgabe-Ereignis
+
 ```json
 {
   "temperature": 25.5,
@@ -76,29 +85,29 @@ Der Prozessor leitet das Eingabe-Ereignis mit einem zusätzlichen Feld namens `e
 ## Anwendungsfälle
 
 1. **Leistungsüberwachung**
-   * Verfolgung von Ereignisgrößen über die Zeit
-   * Überwachung des Datenvolumens
-   * Identifizierung großer Ereignisse
-   * Optimierung der Datenübertragung
+   - Verfolgung von Ereignisgrößen über die Zeit
+   - Überwachung des Datenvolumens
+   - Identifizierung großer Ereignisse
+   - Optimierung der Datenübertragung
 
 2. **Ressourcenplanung**
-   * Schätzung des Speicherbedarfs
-   * Planung der Netzwerkkapazität
-   * Optimierung der Puffergrößen
-   * Skalierung der Infrastruktur
+   - Schätzung des Speicherbedarfs
+   - Planung der Netzwerkkapazität
+   - Optimierung der Puffergrößen
+   - Skalierung der Infrastruktur
 
 3. **Fehlerbehebung**
-   * Identifizierung überdimensionierter Ereignisse
-   * Verfolgung des Datenwachstums
-   * Überwachung des Serialisierungsaufwands
-   * Behebung von Leistungsproblemen
+   - Identifizierung überdimensionierter Ereignisse
+   - Verfolgung des Datenwachstums
+   - Überwachung des Serialisierungsaufwands
+   - Behebung von Leistungsproblemen
 
 ## Hinweise
 
-* Die Größenmessung umfasst alle Ereignisfelder und Metadaten
-* Die Größe wird durch Java-Serialisierung berechnet
-* Ergebnisse werden als doppelt genaue Fließkommazahlen gespeichert
-* Die ursprüngliche Ereignisstruktur bleibt erhalten
-* Die Größe wird für jedes eingehende Ereignis gemessen
-* Das Ergebnisfeld heißt immer `eventSize`
-* Die Größenmessung fügt etwas Verarbeitungsaufwand hinzu 
+- Die Größenmessung umfasst alle Ereignisfelder und Metadaten
+- Die Größe wird durch Java-Serialisierung berechnet
+- Ergebnisse werden als doppelt genaue Fließkommazahlen gespeichert
+- Die ursprüngliche Ereignisstruktur bleibt erhalten
+- Die Größe wird für jedes eingehende Ereignis gemessen
+- Das Ergebnisfeld heißt immer `eventSize`
+- Die Größenmessung fügt etwas Verarbeitungsaufwand hinzu

@@ -22,29 +22,31 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
 
 Der String-zu-Zustand-Prozessor wandelt String-Eigenschaften in eine Liste von Zustandswerten um. Er unterstützt:
-* Mehrere String-Eingaben
-* Listenbasierte Zustandsausgabe
-* Feldwertbeibehaltung
-* Zustandssammlung
+
+- Mehrere String-Eingaben
+- Listenbasierte Zustandsausgabe
+- Feldwertbeibehaltung
+- Zustandssammlung
 
 Dieser Prozessor ist essentiell für:
-* Konvertieren von Strings in Zustände
-* Sammeln mehrerer Zustände
-* Beibehalten von Feldwerten
-* Erstellen von Zustandslisten
 
-***
+- Konvertieren von Strings in Zustände
+- Sammeln mehrerer Zustände
+- Beibehalten von Feldwerten
+- Erstellen von Zustandslisten
+
+---
 
 ## Erforderliche Eingabe
 
 Der Prozessor benötigt einen Datenstrom, der mindestens ein String-Feld enthält, das in einen Zustand umgewandelt werden soll.
 
-***
+---
 
 ## Konfiguration
 
@@ -55,12 +57,14 @@ Wähle ein oder mehrere String-Felder aus, die in Zustände umgewandelt werden s
 ## Ausgabe
 
 Der Prozessor erstellt eine neue Nachricht, die enthält:
-* Alle ursprünglichen Felder aus der Eingabe-Nachricht
-* Ein neues Feld namens "current_state", das eine Liste der ausgewählten String-Feldwerte enthält
+
+- Alle ursprünglichen Felder aus der Eingabe-Nachricht
+- Ein neues Feld namens "current_state", das eine Liste der ausgewählten String-Feldwerte enthält
 
 ### Beispiel
 
 #### Eingabe-Nachricht
+
 ```json
 {
   "deviceId": "sensor01",
@@ -70,9 +74,11 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ```
 
 #### Konfiguration
-* Zustandsfelder: status, mode
+
+- Zustandsfelder: status, mode
 
 #### Ausgabe-Nachricht
+
 ```json
 {
   "deviceId": "sensor01",
@@ -85,22 +91,22 @@ Der Prozessor erstellt eine neue Nachricht, die enthält:
 ## Anwendungsfälle
 
 1. **Zustandssammlung**
-   * Mehrere Zustände sammeln
-   * Feldwerte verfolgen
-   * Status überwachen
-   * Modi sammeln
+   - Mehrere Zustände sammeln
+   - Feldwerte verfolgen
+   - Status überwachen
+   - Modi sammeln
 
 2. **Zustandsanalyse**
-   * Zustandskombinationen analysieren
-   * Wertmuster verfolgen
-   * Feldänderungen überwachen
-   * Zustandslisten verarbeiten
+   - Zustandskombinationen analysieren
+   - Wertmuster verfolgen
+   - Feldänderungen überwachen
+   - Zustandslisten verarbeiten
 
 ## Hinweise
 
-* Mehrere Felder können ausgewählt werden
-* Ausgabe ist immer eine Liste
-* Ursprüngliche Felder werden beibehalten
-* Verarbeitung ist zustandslos
-* Leere Auswahlen ergeben eine leere Liste
-* Feldwerte werden unverändert beibehalten 
+- Mehrere Felder können ausgewählt werden
+- Ausgabe ist immer eine Liste
+- Ursprüngliche Felder werden beibehalten
+- Verarbeitung ist zustandslos
+- Leere Auswahlen ergeben eine leere Liste
+- Feldwerte werden unverändert beibehalten

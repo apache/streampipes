@@ -3,6 +3,7 @@ title: Quickstart
 description: >
   Quickstart to use StreamPipes Go.
 ---
+
 <!--
   // Licensed to the Apache Software Foundation (ASF) under one or more
   // contributor license agreements.  See the NOTICE file distributed with
@@ -21,22 +22,25 @@ description: >
   //
   -->
 
-{{% pageinfo %}}
-As a quick example, we demonstrate how to set up and configure a StreamPipes Go Client. In addition, we will get the available Data Lake Measures out of StreamPipes.
-{{% /pageinfo %}}
+{{% pageinfo %}} As a quick example, we demonstrate how to set up and configure
+a StreamPipes Go Client. In addition, we will get the available Data Lake
+Measures out of StreamPipes. {{% /pageinfo %}}
 
 ## 1. Prerequisites
 
-Before you start, make sure you have the [First Steps](./first-steps.md) prerequisites below:
+Before you start, make sure you have the [First Steps](./first-steps.md)
+prerequisites below:
 
 - Go environment installed on your machine.
 - Access to a running Apache StreamPipes instance.
 
 ## 2. Configuration
 
-Client requires to configure the connection parameters to connect to your StreamPipes instance.
+Client requires to configure the connection parameters to connect to your
+StreamPipes instance.
 
-It can actually be configured in three ways, but let's choose a straightforward way to start the tutorial.
+It can actually be configured in three ways, but let's choose a straightforward
+way to start the tutorial.
 
 ```go
 clientConfig := config.StreamPipesClientConfig{
@@ -71,7 +75,8 @@ if err != nil {
 dataSeries.Print()
 ```
 
-Upon successful execution, the client will print data resembling the following format:
+Upon successful execution, the client will print data resembling the following
+format:
 
 ```shell
 There are 2 pieces of DataSerie in the DataSeries:

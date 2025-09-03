@@ -22,16 +22,16 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Calculate simple descriptive summary statistics for each selected list property.
 
 The statistics contain:
-* Minimum
-* Maximum
-* Sum
-* Standard Deviation
-* Variance
 
+- Minimum
+- Maximum
+- Sum
+- Standard Deviation
+- Variance

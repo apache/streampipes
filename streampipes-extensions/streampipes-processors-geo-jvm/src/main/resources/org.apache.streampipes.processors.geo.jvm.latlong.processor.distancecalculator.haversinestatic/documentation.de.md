@@ -22,19 +22,19 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
 
 Berechnet die Entfernung mit der <a href="https://en.wikipedia.org/wiki/Haversine_formula" target="_blank">Haversine-Formel</a> zwischen einem festen Standort (z.B. einem Ort) und einem Breiten-/Längengrad-Paar einer Eingabe-Nachricht.
 
-***
+---
 
 ## Erforderliche Eingabe
 
 Benötigt einen Datenstrom, der Breiten- und Längengradwerte bereitstellt.
 
-***
+---
 
 ## Konfiguration
 
@@ -64,4 +64,4 @@ Gibt eine ähnliche Nachricht wie unten aus.
 {
   'distance': 12.5
 }
-``` 
+```

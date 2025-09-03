@@ -22,19 +22,19 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Stores events in a Qdrant vector database. This sink connector allows you to store vector data along with associated metadata in a Qdrant collection.
 
-***
+---
 
 ## Required input
 
 This sink requires an input stream that contains a vector field. The vector field should be a list of float values.
 
-***
+---
 
 ## Configuration
 

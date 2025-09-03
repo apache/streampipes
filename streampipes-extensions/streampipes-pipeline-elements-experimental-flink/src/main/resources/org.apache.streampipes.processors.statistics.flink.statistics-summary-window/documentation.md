@@ -22,28 +22,31 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Calculate simple descriptive summary statistics for a selected property over a defined time interval.
 
-***
+---
 
 ## Required input
+
 Requires a numerical property
 
 ## Configuration
 
-* Define a value to observe
-* Select the time field
-* Group the event streams by an identifier
-* Set the time window size and scale (Seconds, Minutes, Hours)
+- Define a value to observe
+- Select the time field
+- Group the event streams by an identifier
+- Set the time window size and scale (Seconds, Minutes, Hours)
 
 ## Output
+
 The statistics are appended to the event and contain:
-* Minimum
-* Maximum
-* Sum
-* Standard Deviation
-* Variance
+
+- Minimum
+- Maximum
+- Sum
+- Standard Deviation
+- Variance

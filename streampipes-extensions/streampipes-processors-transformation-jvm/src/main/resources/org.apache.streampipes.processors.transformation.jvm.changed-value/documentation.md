@@ -22,31 +22,33 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 The Value Changed processor detects changes in field values and outputs events only when changes occur. It supports:
-* Any data type comparison
-* Dimension-based state tracking
-* Change timestamp tracking
-* State size management
-* Multi-dimensional monitoring
+
+- Any data type comparison
+- Dimension-based state tracking
+- Change timestamp tracking
+- State size management
+- Multi-dimensional monitoring
 
 This processor is essential for:
-* Detecting value changes
-* Tracking state transitions
-* Monitoring field updates
-* Building change logs
-* Implementing change triggers
 
-***
+- Detecting value changes
+- Tracking state transitions
+- Monitoring field updates
+- Building change logs
+- Implementing change triggers
+
+---
 
 ## Required input
 
 The processor requires a data stream containing at least one field to monitor for changes.
 
-***
+---
 
 ## Configuration
 
@@ -57,13 +59,15 @@ Select the field to monitor for changes. The processor will output an event only
 ## Output
 
 The processor creates a new event containing:
-* All original fields from the input event
-* A new field named "change_detected" containing the timestamp when the change occurred
-* Only when the monitored field changes value
+
+- All original fields from the input event
+- A new field named "change_detected" containing the timestamp when the change occurred
+- Only when the monitored field changes value
 
 ### Example
 
 #### Input Event Stream
+
 ```json
 {
   "deviceId": "sensor01",
@@ -72,6 +76,7 @@ The processor creates a new event containing:
   "timestamp": 1586380104915
 }
 ```
+
 ```json
 {
   "deviceId": "sensor01",
@@ -82,9 +87,11 @@ The processor creates a new event containing:
 ```
 
 #### Configuration
-* Keep Fields: value
+
+- Keep Fields: value
 
 #### Output Event
+
 ```json
 {
   "deviceId": "sensor01",
@@ -98,24 +105,24 @@ The processor creates a new event containing:
 ## Use Cases
 
 1. **Change Detection**
-   * Monitor value changes
-   * Track state transitions
-   * Detect field updates
-   * Build change logs
+   - Monitor value changes
+   - Track state transitions
+   - Detect field updates
+   - Build change logs
 
 2. **State Monitoring**
-   * Track state changes
-   * Monitor transitions
-   * Detect updates
-   * Log changes
+   - Track state changes
+   - Monitor transitions
+   - Detect updates
+   - Log changes
 
 ## Notes
 
-* Supports any data type
-* Processing is stateful
-* State size limited to 5000 entries
-* Events only emitted on value changes
-* Original fields are preserved
-* Change timestamps are added
-* Dimension-based state tracking
-* Multi-dimensional monitoring supported
+- Supports any data type
+- Processing is stateful
+- State size limited to 5000 entries
+- Events only emitted on value changes
+- Original fields are preserved
+- Change timestamps are added
+- Dimension-based state tracking
+- Multi-dimensional monitoring supported

@@ -22,13 +22,13 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Consumes messages from an Apache TubeMQ broker.
 
-***
+---
 
 ## Configuration
 
@@ -45,4 +45,3 @@ The topic where events should be sent to.
 ### TubeMQ Consumer Group
 
 The consumer group of the TubeMQ Consumer.
-

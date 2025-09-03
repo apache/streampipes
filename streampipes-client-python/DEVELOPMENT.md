@@ -17,13 +17,15 @@
 -->
 
 # Development Guide
+
 This document describes how to easily set up your local dev environment to work on the
 StreamPipes Python client :snake:.
 
 ### First Steps :rocket:
+
 <br>
 
-1) **Set up your Python environment**
+1. **Set up your Python environment**
 
 Create a virtual Python environment with a tool of your choice.
 As a next step, install all required dependencies for the development, e.g., with `pip`:
@@ -33,12 +35,14 @@ pip install .[dev]  # or alternatively: pip install .[all] to include dependenci
 ```
 
 In case you are on macOS and using `zsh` the following should work for you:
+
 ```
 pip install ."[dev]"
 ```
+
 <br>
 
-2) **Install pre-commit hook**
+2. **Install pre-commit hook**
 
 The pre-commit hook is run before every commit and takes care about code style,
 linting, type hints, import sorting, etc. It will stop your commit in case the changes do not apply the expected format.
@@ -47,30 +51,31 @@ Always check to have the recent version of the pre-commit installed otherwise th
 ```
 pre-commit install
 ```
+
 The definition of the pre-commit hook can be found in [.pre-commit-config.yaml](.pre-commit-config.yaml).
 
 <br>
 
 ### Conventions :clap:
+
 Below we list some conventions that we have agreed on for creating the StreamPipes Python client.
 Please comply to them when you plan to contribute to this project.
 If you have any other suggestions or would like to discuss them, we would be happy to hear from you on our mailing list [dev@streampipes.apache.org](mailto:dev@streampipes.apache.org).
 
-1) **Use `numpy` style for Python docstrings** :page_facing_up: <br>
-Please stick to the `numpy` style when writing docstrings, as we require this for generating our documentation.
+1. **Use `numpy` style for Python docstrings** :page_facing_up: <br>
+   Please stick to the `numpy` style when writing docstrings, as we require this for generating our documentation.
 
-
-2) **Provide tests** :white_check_mark: <br>
-We are aiming for broad test coverage for the Python client and
-have therefore set a requirement of at least 90% unit test coverage.
-Therefore, please remember to write (unit) tests already during development. 
-If you have problems with writing tests, don't hesitate to ask us for help directly in the PR or
-even before that via our mailing list (see above).
-
+2. **Provide tests** :white_check_mark: <br>
+   We are aiming for broad test coverage for the Python client and
+   have therefore set a requirement of at least 90% unit test coverage.
+   Therefore, please remember to write (unit) tests already during development.
+   If you have problems with writing tests, don't hesitate to ask us for help directly in the PR or
+   even before that via our mailing list (see above).
 
 <!---
 TODO: replace link to java file by link to documentation
 --->
-3) **Build a similar API as the Java client provides** :arrows_clockwise: <br>
-Whenever possible, please try to develop the API of the Python client the same as the [Java client](../streampipes-client/src/main/java/org/apache/streampipes/client/StreamPipesClient.java).
-By doing so, we would like to provide a consistent developer experience and the basis for automated testing in the future.
+
+3. **Build a similar API as the Java client provides** :arrows_clockwise: <br>
+   Whenever possible, please try to develop the API of the Python client the same as the [Java client](../streampipes-client/src/main/java/org/apache/streampipes/client/StreamPipesClient.java).
+   By doing so, we would like to provide a consistent developer experience and the basis for automated testing in the future.

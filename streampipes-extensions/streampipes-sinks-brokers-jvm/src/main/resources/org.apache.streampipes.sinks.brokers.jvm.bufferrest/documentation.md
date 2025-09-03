@@ -22,20 +22,20 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 Collects a given amount of events into a JSON array. Once this event count is reached
 the JSON array is posted to the given REST interface.
 
-***
+---
 
 ## Required input
 
 This sink does not have any requirements and works with any incoming event type.
 
-***
+---
 
 ## Configuration
 

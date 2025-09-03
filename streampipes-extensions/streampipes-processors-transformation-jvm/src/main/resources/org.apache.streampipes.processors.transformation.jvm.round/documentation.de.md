@@ -22,24 +22,25 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
 
 Der Zahlenrundungs-Prozessor bietet präzise Kontrolle über die Dezimalstellen in numerischen Daten durch Anwendung verschiedener Rundungsstrategien. Dies ist essentiell für:
-* Sicherstellung konsistenter Genauigkeit in numerischen Daten
-* Reduzierung von Rauschen in Messungen
-* Verbesserung der Lesbarkeit von Daten
-* Erfüllung spezifischer geschäftlicher oder technischer Anforderungen an numerische Genauigkeit
-* Standardisierung numerischer Ausgaben für die weitere Verarbeitung
 
-***
+- Sicherstellung konsistenter Genauigkeit in numerischen Daten
+- Reduzierung von Rauschen in Messungen
+- Verbesserung der Lesbarkeit von Daten
+- Erfüllung spezifischer geschäftlicher oder technischer Anforderungen an numerische Genauigkeit
+- Standardisierung numerischer Ausgaben für die weitere Verarbeitung
+
+---
 
 ## Erforderliche Eingabe
 
 Dieser Prozessor benötigt eine Nachricht, die eine oder mehrere numerische Eigenschaften (Ganzzahlen oder Fließkommazahlen) enthält.
 
-***
+---
 
 ## Konfiguration
 
@@ -50,54 +51,56 @@ Wähle aus, welche numerischen Felder in der Nachricht gerundet werden sollen. E
 ### Anzahl der Stellen
 
 Gib die Anzahl der Dezimalstellen an, die nach dem Runden beibehalten werden sollen. Dies bestimmt die Genauigkeit der Ausgabe:
-* Positive Werte (z.B. 2): Behält so viele Dezimalstellen
-* Null (0): Rundet auf ganze Zahlen
-* Negative Werte (z.B. -2): Rundet auf Zehner, Hunderter, etc.
+
+- Positive Werte (z.B. 2): Behält so viele Dezimalstellen
+- Null (0): Rundet auf ganze Zahlen
+- Negative Werte (z.B. -2): Rundet auf Zehner, Hunderter, etc.
 
 Beispiele:
-* Eingabe: 2.8935, Stellen: 3 → Ausgabe: 2.894
-* Eingabe: 2.8935, Stellen: 2 → Ausgabe: 2.89
-* Eingabe: 2.8935, Stellen: 0 → Ausgabe: 3
-* Eingabe: 285.8935, Stellen: -2 → Ausgabe: 300
+
+- Eingabe: 2.8935, Stellen: 3 → Ausgabe: 2.894
+- Eingabe: 2.8935, Stellen: 2 → Ausgabe: 2.89
+- Eingabe: 2.8935, Stellen: 0 → Ausgabe: 3
+- Eingabe: 285.8935, Stellen: -2 → Ausgabe: 300
 
 ### Rundungsmodus
 
 Wähle die anzuwendende Rundungsstrategie. Jeder Modus behandelt das Runden unterschiedlich, besonders bei Werten zwischen zwei Zahlen:
 
-* **AUFWÄRTS** 
-  * Rundet immer von Null weg
-  * 3.1 → 4, -3.1 → -4
-  * Verwende dies, wenn du sicherstellen musst, dass das Ergebnis nie kleiner im Betrag ist
+- **AUFWÄRTS**
+  - Rundet immer von Null weg
+  - 3.1 → 4, -3.1 → -4
+  - Verwende dies, wenn du sicherstellen musst, dass das Ergebnis nie kleiner im Betrag ist
 
-* **ABWÄRTS**
-  * Rundet immer gegen Null (kürzt ab)
-  * 3.7 → 3, -3.7 → -3
-  * Verwende dies, wenn du sicherstellen musst, dass das Ergebnis nie größer im Betrag ist
+- **ABWÄRTS**
+  - Rundet immer gegen Null (kürzt ab)
+  - 3.7 → 3, -3.7 → -3
+  - Verwende dies, wenn du sicherstellen musst, dass das Ergebnis nie größer im Betrag ist
 
-* **DEKEN**
-  * Rundet immer gegen positive Unendlichkeit
-  * 3.1 → 4, -3.7 → -3
-  * Verwende dies, wenn du sicherstellen musst, dass das Ergebnis nie abnimmt
+- **DEKEN**
+  - Rundet immer gegen positive Unendlichkeit
+  - 3.1 → 4, -3.7 → -3
+  - Verwende dies, wenn du sicherstellen musst, dass das Ergebnis nie abnimmt
 
-* **BODEN**
-  * Rundet immer gegen negative Unendlichkeit
-  * 3.7 → 3, -3.1 → -4
-  * Verwende dies, wenn du sicherstellen musst, dass das Ergebnis nie zunimmt
+- **BODEN**
+  - Rundet immer gegen negative Unendlichkeit
+  - 3.7 → 3, -3.1 → -4
+  - Verwende dies, wenn du sicherstellen musst, dass das Ergebnis nie zunimmt
 
-* **HALB_AUFWÄRTS** (Am häufigsten verwendet)
-  * Rundet zur nächsten Zahl, bei Gleichheit wird aufgerundet
-  * 3.5 → 4, 3.4 → 3, -3.5 → -4
-  * Verwende dies für Standard-Mathematik-Rundung
+- **HALB_AUFWÄRTS** (Am häufigsten verwendet)
+  - Rundet zur nächsten Zahl, bei Gleichheit wird aufgerundet
+  - 3.5 → 4, 3.4 → 3, -3.5 → -4
+  - Verwende dies für Standard-Mathematik-Rundung
 
-* **HALB_ABWÄRTS**
-  * Rundet zur nächsten Zahl, bei Gleichheit wird abgerundet
-  * 3.5 → 3, 3.6 → 4, -3.5 → -3
-  * Verwende dies, wenn Gleichstände abgerundet werden sollen
+- **HALB_ABWÄRTS**
+  - Rundet zur nächsten Zahl, bei Gleichheit wird abgerundet
+  - 3.5 → 3, 3.6 → 4, -3.5 → -3
+  - Verwende dies, wenn Gleichstände abgerundet werden sollen
 
-* **HALB_GERADE** (Banker's Rounding)
-  * Rundet zur nächsten Zahl, bei Gleichheit wird zur geraden Nachbarzahl gerundet
-  * 3.5 → 4, 4.5 → 4, -3.5 → -4
-  * Verwende dies, um kumulative Rundungsfehler in großen Datensätzen zu minimieren
+- **HALB_GERADE** (Banker's Rounding)
+  - Rundet zur nächsten Zahl, bei Gleichheit wird zur geraden Nachbarzahl gerundet
+  - 3.5 → 4, 4.5 → 4, -3.5 → -4
+  - Verwende dies, um kumulative Rundungsfehler in großen Datensätzen zu minimieren
 
 ## Ausgabe
 
@@ -106,27 +109,30 @@ Der Prozessor gibt eine Nachricht mit der gleichen Struktur wie die Eingabe aus,
 ### Beispiel
 
 #### Eingabe-Nachricht
+
 ```json
 {
   "sensorId": "temp01",
   "temperature": 23.4567,
   "pressure": 1013.8935,
-  "humidity": 45.5000
+  "humidity": 45.5
 }
 ```
 
 #### Konfiguration
-* Zu rundende Felder: temperature, pressure
-* Anzahl der Stellen: 2
-* Rundungsmodus: HALF_UP
+
+- Zu rundende Felder: temperature, pressure
+- Anzahl der Stellen: 2
+- Rundungsmodus: HALF_UP
 
 #### Ausgabe-Nachricht
+
 ```json
 {
   "sensorId": "temp01",
   "temperature": 23.46,
   "pressure": 1013.89,
-  "humidity": 45.5000
+  "humidity": 45.5
 }
 ```
 
@@ -136,4 +142,4 @@ Der Prozessor gibt eine Nachricht mit der gleichen Struktur wie die Eingabe aus,
 2. **Finanzberechnungen**: Sicherstellung korrekter Dezimalbehandlung bei Geldwerten
 3. **Wissenschaftliche Analyse**: Kontrolle signifikanter Stellen in experimentellen Daten
 4. **Anzeigeformatierung**: Vorbereitung von Zahlen für Benutzeroberflächen
-5. **Datenspeicherung**: Optimierung numerischer Genauigkeit für Speichereffizienz 
+5. **Datenspeicherung**: Optimierung numerischer Genauigkeit für Speichereffizienz

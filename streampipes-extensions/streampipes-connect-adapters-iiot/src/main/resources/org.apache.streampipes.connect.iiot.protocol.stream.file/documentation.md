@@ -22,7 +22,7 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
@@ -51,6 +51,7 @@ time,temperature
 ```
 
 When creating a new File Stream Adapter:
+
 - Upload the file
 - Select `yes` for `Replay Once`
 - Choose `CSV` as the `Format` with `,` as the `delimiter`, check `Header`
@@ -70,15 +71,18 @@ This section determines the file to be streamed by the adapter. Options include:
 - `Upload new file`: Upload a new file, also available for other adapters. Supports `.csv`, `.json`, and `.xml` file types.
 
 ### Overwrite file time
+
 Enable this option to always pass the current system time as the timestamp when emitting an event. If your file lacks timestamp information, this should be enabled. Conversely, if your file has timestamp information, enabling this option will overwrite it with the current system time. By default, this option is disabled, leaving timestamp information unaffected.
 
 ### Replay Once
+
 Distinguishes between replaying all data contained in the file only once or in a loop until the adapter is manually stopped.
 If enabled, this will cause events from the file to be emitted multiple times. In this case, it is recommended to enable `Overwrite file time` if the resulting stream is to be persisted in StreamPipes, otherwise existing events with the same timestamp will be overwritten.
 
 ### Replay Speed
 
 Configures the event frequency:
-- **Keep original time**: Events are emitted based on the timestamp information in the file. 
-- **Fastest**: All data in the file is replayed as quickly as possible, with no waiting time. 
+
+- **Keep original time**: Events are emitted based on the timestamp information in the file.
+- **Fastest**: All data in the file is replayed as quickly as possible, with no waiting time.
 - **Speed Up Factor**: Adjusts the waiting time of the adapter based on the provided speed up factor, considering the time between two events in the file.

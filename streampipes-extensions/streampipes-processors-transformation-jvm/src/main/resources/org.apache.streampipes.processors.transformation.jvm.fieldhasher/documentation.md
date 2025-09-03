@@ -22,35 +22,39 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 The Field Hasher processor is a data transformation component that applies cryptographic hash functions to string values in a data stream. It can be used to encode sensitive information, generate unique identifiers, or transform data for privacy and security purposes.
 
 The processor supports three widely-used hash algorithms:
-* **MD5** - A 128-bit hash function
-* **SHA1** - A 160-bit hash function
-* **SHA2** - A 256-bit hash function (SHA-256 implementation)
 
-***
+- **MD5** - A 128-bit hash function
+- **SHA1** - A 160-bit hash function
+- **SHA2** - A 256-bit hash function (SHA-256 implementation)
+
+---
 
 ## Required input
 
 This processor requires an event stream that contains at least one field of type string. The string field will be used as input for the hash function.
 
-***
+---
 
 ## Configuration
 
 ### Field
+
 Specifies the string field that will be encoded. This field must exist in the input event stream and must contain string values.
 
 ### Hash Algorithm
+
 Select the hash algorithm to use for encoding the string field. Available options are:
-* **SHA1** - Produces a 40-character hexadecimal hash
-* **SHA2** - Produces a 64-character hexadecimal hash
-* **MD5** - Produces a 32-character hexadecimal hash
+
+- **SHA1** - Produces a 40-character hexadecimal hash
+- **SHA2** - Produces a 64-character hexadecimal hash
+- **MD5** - Produces a 32-character hexadecimal hash
 
 ## Output
 
@@ -59,6 +63,7 @@ The processor modifies the input event by replacing the value of the selected fi
 ### Example
 
 #### Input Event
+
 ```json
 {
   "timestamp": 1617183834000,
@@ -69,10 +74,12 @@ The processor modifies the input event by replacing the value of the selected fi
 ```
 
 #### Configuration
-* Field: user
-* Hash Algorithm: MD5
+
+- Field: user
+- Hash Algorithm: MD5
 
 #### Output Event
+
 ```json
 {
   "timestamp": 1617183834000,
@@ -91,7 +98,7 @@ The processor modifies the input event by replacing the value of the selected fi
 
 ## Notes
 
-* The hash functions are one-way transformations - the original value cannot be recovered from the hash
-* The same input will always produce the same hash value
-* Different hash algorithms provide different levels of collision resistance and output lengths
-* For security-critical applications, consider using SHA2 as it provides stronger cryptographic properties
+- The hash functions are one-way transformations - the original value cannot be recovered from the hash
+- The same input will always produce the same hash value
+- Different hash algorithms provide different levels of collision resistance and output lengths
+- For security-critical applications, consider using SHA2 as it provides stronger cryptographic properties

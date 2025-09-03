@@ -30,8 +30,7 @@ services:
     networks:
       spnet:
 
-volumes:
-  mariadb
+volumes: mariadb
 
 networks:
   spnet:

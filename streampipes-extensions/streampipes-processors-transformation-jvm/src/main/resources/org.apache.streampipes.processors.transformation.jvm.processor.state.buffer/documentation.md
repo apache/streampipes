@@ -22,32 +22,35 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 The State Buffer processor caches sensor values during specific states. It supports:
-* State-based value buffering
-* Timestamp tracking
-* Sensor value caching
-* State monitoring
+
+- State-based value buffering
+- Timestamp tracking
+- Sensor value caching
+- State monitoring
 
 This processor is essential for:
-* Caching sensor values
-* Tracking state changes
-* Monitoring conditions
-* Storing measurements
 
-***
+- Caching sensor values
+- Tracking state changes
+- Monitoring conditions
+- Storing measurements
+
+---
 
 ## Required input
 
 The processor requires a data stream containing:
-* A timestamp field
-* A state field
-* At least one sensor value field to cache
 
-***
+- A timestamp field
+- A state field
+- At least one sensor value field to cache
+
+---
 
 ## Configuration
 
@@ -66,13 +69,15 @@ Select the sensor value field that should be cached while the state is active.
 ## Output
 
 The processor creates a new event containing:
-* A timestamp field
-* A list of buffered values
-* A list of states
+
+- A timestamp field
+- A list of buffered values
+- A list of states
 
 ### Example
 
 #### Input Event
+
 ```json
 {
   "deviceId": "sensor01",
@@ -83,11 +88,13 @@ The processor creates a new event containing:
 ```
 
 #### Configuration
-* Timestamp: timestamp
-* State: state
-* Sensor Value to Cache: temperature
+
+- Timestamp: timestamp
+- State: state
+- Sensor Value to Cache: temperature
 
 #### Output Event (when state changes from "active" to "inactive")
+
 ```json
 {
   "timestamp": 1586380105915,
@@ -99,21 +106,21 @@ The processor creates a new event containing:
 ## Use Cases
 
 1. **State Monitoring**
-   * Cache sensor values
-   * Track state changes
-   * Monitor conditions
-   * Store measurements
+   - Cache sensor values
+   - Track state changes
+   - Monitor conditions
+   - Store measurements
 
 2. **Data Analysis**
-   * Analyze state patterns
-   * Track value changes
-   * Monitor conditions
-   * Store measurements
+   - Analyze state patterns
+   - Track value changes
+   - Monitor conditions
+   - Store measurements
 
 ## Notes
 
-* Values are cached during active states
-* Timestamps are preserved
-* State changes trigger updates
-* Processing is stateful
-* Multiple values can be buffered
+- Values are cached during active states
+- Timestamps are preserved
+- State changes trigger updates
+- Processing is stateful
+- Multiple values can be buffered

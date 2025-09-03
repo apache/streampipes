@@ -22,48 +22,59 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
-Der Zählaggregations-Prozessor führt Zähloperationen auf Ereignisströmen durch. Er:
-* Zählt Vorkommen von Werten innerhalb eines konfigurierbaren Zeitfensters
-* Gruppiert Ereignisse nach einem angegebenen Feld
-* Liefert Echtzeit-Zählstatistiken
-* Unterstützt flexible Zeitfensterkonfigurationen
-* Behält Zeitstempelinformationen bei
 
-***
+Der Zählaggregations-Prozessor führt Zähloperationen auf Ereignisströmen durch. Er:
+
+- Zählt Vorkommen von Werten innerhalb eines konfigurierbaren Zeitfensters
+- Gruppiert Ereignisse nach einem angegebenen Feld
+- Liefert Echtzeit-Zählstatistiken
+- Unterstützt flexible Zeitfensterkonfigurationen
+- Behält Zeitstempelinformationen bei
+
+---
 
 ## Erforderliche Eingabe
-Der Prozessor benötigt einen Eingabeereignisstrom mit:
-* Einem Zeitstempelfeld für fensterbasierte Verarbeitung
-* Mindestens einem Feld zum Zählen der Vorkommen
 
-***
+Der Prozessor benötigt einen Eingabeereignisstrom mit:
+
+- Einem Zeitstempelfeld für fensterbasierte Verarbeitung
+- Mindestens einem Feld zum Zählen der Vorkommen
+
+---
 
 ## Konfiguration
 
 ### Zu zählendes Feld
+
 Wählen Sie das Feld aus dem Eingabeereignis aus, das für das Zählen der Vorkommen verwendet werden soll. Die Werte dieses Felds werden gruppiert und gezählt.
 
 ### Zeitfenstergröße
+
 Geben Sie die Dauer des Zeitfensters für die Aggregation an. Dies bestimmt, wie viele Ereignisse in jeder Zähloperation berücksichtigt werden.
 
 ### Zeitfenster-Skala
+
 Wählen Sie die Zeiteinheit für die Fenstergröße:
-* Stunden
-* Minuten
-* Sekunden
+
+- Stunden
+- Minuten
+- Sekunden
 
 ## Ausgabe
+
 Der Prozessor gibt Ereignisse aus, die enthalten:
-* `timestamp`: Den Zeitstempel des Fensters
-* `value`: Den gezählten Wert
-* `count`: Die Anzahl der Vorkommen innerhalb des Zeitfensters
+
+- `timestamp`: Den Zeitstempel des Fensters
+- `value`: Den gezählten Wert
+- `count`: Die Anzahl der Vorkommen innerhalb des Zeitfensters
 
 ### Beispiel
 
 #### Eingabeereignis
+
 ```json
 {
   "vehicleId": "V123",
@@ -72,11 +83,13 @@ Der Prozessor gibt Ereignisse aus, die enthalten:
 ```
 
 #### Konfiguration
-* Zu zählendes Feld: `vehicleId`
-* Zeitfenstergröße: `5`
-* Zeitfenster-Skala: `Minuten`
+
+- Zu zählendes Feld: `vehicleId`
+- Zeitfenstergröße: `5`
+- Zeitfenster-Skala: `Minuten`
 
 #### Ausgabeereignis
+
 ```json
 {
   "timestamp": 1586380105115,
@@ -88,24 +101,24 @@ Der Prozessor gibt Ereignisse aus, die enthalten:
 ## Anwendungsfälle
 
 1. **Verkehrsanalyse**
-   * Fahrzeugdurchfahrten an Kreuzungen zählen
-   * Verkehrsflussraten überwachen
-   * Fahrzeugfrequenz verfolgen
+   - Fahrzeugdurchfahrten an Kreuzungen zählen
+   - Verkehrsflussraten überwachen
+   - Fahrzeugfrequenz verfolgen
 
 2. **Ereignisüberwachung**
-   * Fehlervorkommen zählen
-   * Systemereignisse verfolgen
-   * Benutzeraktionen überwachen
+   - Fehlervorkommen zählen
+   - Systemereignisse verfolgen
+   - Benutzeraktionen überwachen
 
 3. **Ressourcennutzung**
-   * API-Aufrufe zählen
-   * Dienstanfragen überwachen
-   * Ressourcennutzung verfolgen
+   - API-Aufrufe zählen
+   - Dienstanfragen überwachen
+   - Ressourcennutzung verfolgen
 
 ## Hinweise
 
-* Der Prozessor verwendet gleitende Zeitfenster
-* Zählungen werden am Ende jedes Fensters zurückgesetzt
-* Zeitstempel werden aus den Eingabeereignissen beibehalten
-* Der Prozessor gruppiert Ereignisse nach dem ausgewählten Feld
-* Ergebnisse werden am Ende jedes Zeitfensters ausgegeben 
+- Der Prozessor verwendet gleitende Zeitfenster
+- Zählungen werden am Ende jedes Fensters zurückgesetzt
+- Zeitstempel werden aus den Eingabeereignissen beibehalten
+- Der Prozessor gruppiert Ereignisse nach dem ausgewählten Feld
+- Ergebnisse werden am Ende jedes Zeitfensters ausgegeben

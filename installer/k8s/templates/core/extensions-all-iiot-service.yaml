@@ -16,14 +16,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.extensions.iiot.service.name }}
+  name: { { .Values.extensions.iiot.service.name } }
   labels:
-    name: {{ .Values.extensions.iiot.appName }}
+    name: { { .Values.extensions.iiot.appName } }
 spec:
   selector:
-    app: {{ .Values.extensions.iiot.appName }}
+    app: { { .Values.extensions.iiot.appName } }
   ports:
     - name: main
       protocol: TCP
-      port: {{ .Values.extensions.iiot.port }}
-      targetPort: {{ .Values.extensions.iiot.service.port }}
+      port: { { .Values.extensions.iiot.port } }
+      targetPort: { { .Values.extensions.iiot.service.port } }

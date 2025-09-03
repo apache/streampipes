@@ -18,7 +18,7 @@ services:
     image: dpage/pgadmin4
     volumes:
       - data-pgadmin:/root/.pgadmin
-#      - ./config/pgadmin/data:/root/.pgadmin
+    #      - ./config/pgadmin/data:/root/.pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: user1
       PGADMIN_DEFAULT_PASSWORD: )d,?C3?G7y[@V6}

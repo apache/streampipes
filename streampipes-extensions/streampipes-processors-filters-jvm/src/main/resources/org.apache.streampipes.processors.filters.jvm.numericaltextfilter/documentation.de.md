@@ -22,50 +22,58 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Beschreibung
-Der Numerische-Textfilter-Prozessor kombiniert numerische und textbasierte Filterung in einem einzigen Prozessor. Er leitet Ereignisse nur weiter, wenn sowohl die numerischen als auch die Textbedingungen erfüllt sind. Dieser Prozessor ist ideal für:
-* Komplexe Ereignisfilterung
-* Mehrkriterien-Ereignisauswahl
-* Datenvalidierung
-* Ereignisweiterleitung basierend auf mehreren Bedingungen
 
-***
+Der Numerische-Textfilter-Prozessor kombiniert numerische und textbasierte Filterung in einem einzigen Prozessor. Er leitet Ereignisse nur weiter, wenn sowohl die numerischen als auch die Textbedingungen erfüllt sind. Dieser Prozessor ist ideal für:
+
+- Komplexe Ereignisfilterung
+- Mehrkriterien-Ereignisauswahl
+- Datenvalidierung
+- Ereignisweiterleitung basierend auf mehreren Bedingungen
+
+---
 
 ## Erforderliche Eingabe
-Der Prozessor benötigt einen Eingabeereignisstrom, der enthält:
-* Mindestens ein numerisches Feld für numerische Vergleiche
-* Mindestens ein Textfeld für String-Vergleiche
 
-***
+Der Prozessor benötigt einen Eingabeereignisstrom, der enthält:
+
+- Mindestens ein numerisches Feld für numerische Vergleiche
+- Mindestens ein Textfeld für String-Vergleiche
+
+---
 
 ## Konfiguration
 
 ### Numerischer Filter
-* **Feld**: Wählen Sie das numerische Feld aus, auf das die Filteroperation angewendet werden soll
-* **Operation**: Wählen Sie aus den folgenden Vergleichsoperatoren:
-  * **<** (Kleiner als)
-  * **<=** (Kleiner als oder gleich)
-  * **>** (Größer als)
-  * **>=** (Größer als oder gleich)
-  * **==** (Gleich)
-  * **!=** (Ungleich)
-* **Schwellenwert**: Geben Sie den numerischen Wert für den Vergleich an
+
+- **Feld**: Wählen Sie das numerische Feld aus, auf das die Filteroperation angewendet werden soll
+- **Operation**: Wählen Sie aus den folgenden Vergleichsoperatoren:
+  - **<** (Kleiner als)
+  - **<=** (Kleiner als oder gleich)
+  - **>** (Größer als)
+  - **>=** (Größer als oder gleich)
+  - **==** (Gleich)
+  - **!=** (Ungleich)
+- **Schwellenwert**: Geben Sie den numerischen Wert für den Vergleich an
 
 ### Textfilter
-* **Feld**: Wählen Sie das Textfeld aus, auf das die Filteroperation angewendet werden soll
-* **Operation**: Wählen Sie aus:
-  * **MATCHES**: Exakte String-Übereinstimmung
-  * **CONTAINS**: Teilstring-Übereinstimmung
-* **Schlüsselwort**: Geben Sie den zu vergleichenden Text an
+
+- **Feld**: Wählen Sie das Textfeld aus, auf das die Filteroperation angewendet werden soll
+- **Operation**: Wählen Sie aus:
+  - **MATCHES**: Exakte String-Übereinstimmung
+  - **CONTAINS**: Teilstring-Übereinstimmung
+- **Schlüsselwort**: Geben Sie den zu vergleichenden Text an
 
 ## Ausgabe
+
 Der Prozessor leitet das Eingabeereignis nur weiter, wenn sowohl die numerischen als auch die Textbedingungen wahr ergeben.
 
 ### Beispiel
 
 #### Eingabeereignis
+
 ```json
 {
   "temperature": 25.5,
@@ -75,17 +83,21 @@ Der Prozessor leitet das Eingabeereignis nur weiter, wenn sowohl die numerischen
 ```
 
 #### Konfiguration
+
 Numerischer Filter:
-* Feld: temperature
-* Operation: >
-* Schwellenwert: 20.0
+
+- Feld: temperature
+- Operation: >
+- Schwellenwert: 20.0
 
 Textfilter:
-* Feld: status
-* Operation: MATCHES
-* Schlüsselwort: active
+
+- Feld: status
+- Operation: MATCHES
+- Schlüsselwort: active
 
 #### Ausgabeereignis
+
 ```json
 {
   "temperature": 25.5,
@@ -97,24 +109,24 @@ Textfilter:
 ## Anwendungsfälle
 
 1. **Sensordatenfilterung**
-   * Filterung von Sensorwerten basierend auf Wertebereichen und Status
-   * Überwachung spezifischer Bedingungen in Sensordaten
-   * Validierung von Sensorwerten gegen erwartete Muster
+   - Filterung von Sensorwerten basierend auf Wertebereichen und Status
+   - Überwachung spezifischer Bedingungen in Sensordaten
+   - Validierung von Sensorwerten gegen erwartete Muster
 
 2. **Ereignisvalidierung**
-   * Sicherstellung, dass Ereignisse sowohl numerische als auch kategorische Kriterien erfüllen
-   * Validierung von Geschäftsregeln mit mehreren Bedingungen
-   * Filterung von Ereignissen basierend auf komplexen Kriterien
+   - Sicherstellung, dass Ereignisse sowohl numerische als auch kategorische Kriterien erfüllen
+   - Validierung von Geschäftsregeln mit mehreren Bedingungen
+   - Filterung von Ereignissen basierend auf komplexen Kriterien
 
 3. **Datenqualitätskontrolle**
-   * Filterung ungültiger oder unerwarteter Datenkombinationen
-   * Sicherstellung, dass Daten Qualitätsschwellenwerte erfüllen
-   * Validierung von Daten gegen Geschäftsregeln
+   - Filterung ungültiger oder unerwarteter Datenkombinationen
+   - Sicherstellung, dass Daten Qualitätsschwellenwerte erfüllen
+   - Validierung von Daten gegen Geschäftsregeln
 
 ## Hinweise
 
-* Sowohl numerische als auch Textbedingungen müssen erfüllt sein, damit ein Ereignis weitergeleitet wird
-* Numerische Vergleiche verwenden Fließkommapräzision (0.000001 Toleranz für Gleichheit)
-* Textübereinstimmung berücksichtigt Groß-/Kleinschreibung
-* Der Prozessor behält die ursprüngliche Ereignisstruktur bei
-* Alle Felder aus dem Eingabeereignis werden in der Ausgabe einbezogen 
+- Sowohl numerische als auch Textbedingungen müssen erfüllt sein, damit ein Ereignis weitergeleitet wird
+- Numerische Vergleiche verwenden Fließkommapräzision (0.000001 Toleranz für Gleichheit)
+- Textübereinstimmung berücksichtigt Groß-/Kleinschreibung
+- Der Prozessor behält die ursprüngliche Ereignisstruktur bei
+- Alle Felder aus dem Eingabeereignis werden in der Ausgabe einbezogen

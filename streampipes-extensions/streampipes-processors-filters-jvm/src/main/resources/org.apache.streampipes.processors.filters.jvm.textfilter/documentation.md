@@ -22,41 +22,50 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
-The Text Filter processor filters events based on text field content. It allows you to:
-* Match exact text strings
-* Check for text containment
-* Filter events based on text criteria
-* Route events based on text content
 
-***
+The Text Filter processor filters events based on text field content. It allows you to:
+
+- Match exact text strings
+- Check for text containment
+- Filter events based on text criteria
+- Route events based on text content
+
+---
 
 ## Required Input
+
 The processor requires an input event stream containing at least one text field to filter on.
 
-***
+---
 
 ## Configuration
 
 ### Text Field
+
 Select the field containing the text that should be filtered.
 
 ### Operation
+
 Choose from two filtering operations:
-* **MATCHES**: Exact string matching (case-sensitive)
-* **CONTAINS**: Substring matching (case-sensitive)
+
+- **MATCHES**: Exact string matching (case-sensitive)
+- **CONTAINS**: Substring matching (case-sensitive)
 
 ### Keyword
+
 Specify the text string to match against.
 
 ## Output
+
 The processor forwards the input event only if the text field satisfies the filter condition.
 
 ### Example
 
 #### Input Event
+
 ```json
 {
   "message": "Temperature warning: 25.5°C",
@@ -65,11 +74,13 @@ The processor forwards the input event only if the text field satisfies the filt
 ```
 
 #### Configuration
-* Text Field: `message`
-* Operation: `CONTAINS`
-* Keyword: `warning`
+
+- Text Field: `message`
+- Operation: `CONTAINS`
+- Keyword: `warning`
 
 #### Output Event
+
 ```json
 {
   "message": "Temperature warning: 25.5°C",
@@ -80,27 +91,27 @@ The processor forwards the input event only if the text field satisfies the filt
 ## Use Cases
 
 1. **Event Routing**
-   * Route events based on text content
-   * Filter log messages
-   * Process specific error messages
-   * Handle different event types
+   - Route events based on text content
+   - Filter log messages
+   - Process specific error messages
+   - Handle different event types
 
 2. **Content Filtering**
-   * Filter text-based alerts
-   * Process specific keywords
-   * Extract relevant messages
-   * Filter notifications
+   - Filter text-based alerts
+   - Process specific keywords
+   - Extract relevant messages
+   - Filter notifications
 
 3. **Data Validation**
-   * Validate text content
-   * Ensure required text patterns
-   * Filter invalid messages
-   * Enforce text standards
+   - Validate text content
+   - Ensure required text patterns
+   - Filter invalid messages
+   - Enforce text standards
 
 ## Notes
 
-* Text matching is case-sensitive
-* The processor preserves the original event structure
-* No text transformation is performed
-* Events that don't match the filter are dropped
-* The filter operates on the exact text field value
+- Text matching is case-sensitive
+- The processor preserves the original event structure
+- No text transformation is performed
+- Events that don't match the filter are dropped
+- The filter operates on the exact text field value

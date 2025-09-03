@@ -18,33 +18,37 @@
 
 ## Event Counter
 
-
-
-***
+---
 
 ## Description
+
 Counts the number of events arriving within a time window. An event is emitted every time the time window expires.
 
-***
+---
 
 ## Required input
+
 There is no specific input required.
 
-***
+---
 
 ## Configuration
+
 Time Window: The scale and size of the time window.
 
-### TimeWindowSize  
+### TimeWindowSize
+
 Specifies the size of the time window.
 
 ### Time Window Scale
+
 Specifies the scale/unit of the time window. There are three different time scales to choose from: seconds, minutes or hours.
 
 ## Output
+
 ```
 {
-  'timestamp': 1601301980014, 
+  'timestamp': 1601301980014,
   'count': 12
 }
 ```

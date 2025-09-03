@@ -22,23 +22,21 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 This processor computes city name based on given lat/lng coordinates that are transmitted as fields from an event.
 This processor automatically downloads the file cities1000.zip from <a href="http://download.geonames.org/export/dump/cities1000.zip)" target="_blank">Geonames</a>
- ( This file is provided under the <a href="https://creativecommons.org/licenses/by/4.0/)" target="_blank">CC BY 4.0 license</a>).
+( This file is provided under the <a href="https://creativecommons.org/licenses/by/4.0/)" target="_blank">CC BY 4.0 license</a>).
 
-
-
-***
+---
 
 ## Required inputs
 
 Input event requires to have latitude and longitude values.
 
-***
+---
 
 ## Configuration
 

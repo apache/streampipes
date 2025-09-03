@@ -22,13 +22,13 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 The adapter allows to connect devices supporting DRIVER_NAME.
 
-***
+---
 
 ## Configuration
 

@@ -22,19 +22,19 @@
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
-***
+---
 
 ## Description
 
 The Sensor Limit Alert processor monitors sensor values in real-time and triggers alerts when these values exceed user-defined control or warning limits. This processor is useful in scenarios where continuous monitoring of critical parameters is required, and immediate action is needed when values go out of acceptable ranges.
 
-***
+---
 
 ## Required Input
 
 This processor accepts any event stream containing sensor data. The events must include fields for sensor values and the corresponding upper and lower limits.
 
-***
+---
 
 ## Configuration
 
@@ -58,21 +58,23 @@ Specify the lower warning limit for the sensor. This value indicates when the se
 
 Specify the lower control limit for the sensor. This value defines the minimum threshold, below which an alert is triggered.
 
-***
+---
 
 ## Output
 
 The processor emits events only when the sensor value exceeds the specified limits. The output event includes the original sensor data along with additional fields that indicate:
+
 - **Alert Status**: Whether the sensor value breached a WARNING or control LIMIT.
 - **Limit Breached**: Which specific limit was breached (e.g., "UPPER_CONTROL_LIMIT" or "LOWER_WARNING_LIMIT").
 
 These output events can be used for triggering notifications or other actions in downstream processing.
 
-***
+---
 
 ## Example
 
 ### User Configuration
+
 - Mapping fields for:
   - **Sensor Value**
   - **Upper Control Limit**
@@ -81,6 +83,7 @@ These output events can be used for triggering notifications or other actions in
   - **Lower Control Limit**
 
 ### Input Event
+
 ```
 {
   "timestamp": 1627891234000,
@@ -93,6 +96,7 @@ These output events can be used for triggering notifications or other actions in
 ```
 
 ### Output Event
+
 ```
 {
   "timestamp": 1627891234000,

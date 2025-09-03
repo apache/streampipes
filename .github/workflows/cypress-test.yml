@@ -18,7 +18,7 @@ name: run-cypress-tests
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '51 23 * * *'
+    - cron: "51 23 * * *"
 
 jobs:
   build-streampipes-and-run-e2e-tests:
@@ -30,15 +30,15 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven'
+          distribution: "temurin"
+          java-version: "17"
+          cache: "maven"
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22.x'
-          cache: 'npm'
+          node-version: "22.x"
+          cache: "npm"
           cache-dependency-path: ui/package-lock.json
 
       - name: Build UI
@@ -58,6 +58,6 @@ jobs:
         working-directory: ./installer/compose
         run: sleep 80
 
-      - name: 'UI Tests'
+      - name: "UI Tests"
         working-directory: ./ui
         run: npx cypress run --record --key ${{ secrets.CYPRESS_RECORD_KEY }}  --spec "cypress/tests/**/*.spec.ts"
