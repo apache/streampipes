@@ -35,5 +35,18 @@
         >
             {{ 'monthly' | translate }}
         </mat-radio-button>
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Delete everything older than </mat-label>
+                <input
+                    matInput
+                    type="number"
+                    [(ngModel)]="dataRetentionConfig.olderThanDays"
+                    min="1"
+                    step="1"
+                />
+                <span matSuffix>days</span>
+            </mat-form-field>
+        </div>
     </mat-radio-group>
 </sp-configuration-box>
