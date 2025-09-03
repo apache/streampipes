@@ -109,6 +109,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { DataRetentionDialogComponent } from './dialog/data-retention-dialog/data-retention-dialog.component';
 import { SelectDataComponent } from './dialog/data-retention-dialog/components/select-retention/select-data.component';
 import { SelectDataRetentionComponent } from './dialog/data-retention-dialog/components/select-retention/select-data-retention/select-data-retention.component';
+import { SelectRetentionActionComponent } from './dialog/data-retention-dialog/components/select-retention/select-retention-action/select-retention-action.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -271,6 +272,7 @@ import { SelectDataRetentionComponent } from './dialog/data-retention-dialog/com
         UserAcknowledgmentComponent,
         SelectDataComponent,
         SelectDataRetentionComponent,
+        SelectRetentionActionComponent,
     ],
     providers: [
         OrderByPipe,

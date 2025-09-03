@@ -39,4 +39,5 @@ export interface DataRetentionConfig {
     //missingValueBehaviour: 'ignore' | 'empty';
     interval?: 'daily' | 'monthly';
     measurement?: string;
+    action?: 'delete' | 'save' | 'save and delete';
 }
