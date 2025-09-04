@@ -419,13 +419,9 @@ public class DataLakeResource extends AbstractRestResource {
   public ResponseEntity<?> setDataLakeRetention(
       @PathVariable String elementId,
       @RequestBody RetentionTimeConfig retention ){
-
-        //var dataLakeMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
-         //                                                        .getSchemaManagement(); 
         var measure = this.dataExplorerSchemaManagement.getById(elementId);
         if (measure.getRetentionTime() != null) {
   
-          //TODO Kill CronJob
         }
         measure.setRetentionTime(retention);
       try {
@@ -434,21 +430,9 @@ public class DataLakeResource extends AbstractRestResource {
         return badRequest(e.getMessage());
     }
 
-    //return badRequest();
-
-
-
-      // Setup Cron Job
-
   
     return ok();
   }
-
-    //TODO Get CRON JOb DATA 
-
-    //TODO Delete Cron Job and Cron Job Data 
-
-
 
   private ProvidedRestQueryParams populate(String measurementId, Map<String, String> rawParams) {
     Map<String, String> queryParamMap = new HashMap<>();

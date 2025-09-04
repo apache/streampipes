@@ -1,6 +1,8 @@
 package org.apache.streampipes.service.core.scheduler;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.slf4j.LoggerFactory;
@@ -22,7 +24,7 @@ public class DataLakeScheduler {
     private final IDataExplorerQueryManagement dataExplorerQueryManagement  = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getQueryManagement(this.dataExplorerSchemaManagement);
-  }
+  
 
     public void exportMeasurements(){
 
@@ -30,16 +32,24 @@ public class DataLakeScheduler {
 
     public void deleteMeasurements(DataLakeMeasure m){
 
-        long startDate = System.currentTimeMillis();
+        //long startDate = System.currentTimeMillis();
         // TODO check CALC 
-        long endDate = System.currentTimeMillis() - (1000L*60*60*24*m.getRetentionTime().dataRetentionConfig().olderThanDays());
 
-        this.dataExplorerQueryManagement.deleteData(m.getElementId(), startDate, endDate);
+        
+        //long endDate = System.currentTimeMillis() - (1000L*60*60*24*m.getRetentionTime().dataRetentionConfig().olderThanDays());
+         // Get current instant
+        Instant now = Instant.now();
+
+        // Subtract 30 days
+        Instant DaysAgo = now.minus(m.getRetentionTime().dataRetentionConfig().olderThanDays(), ChronoUnit.DAYS);
+
+        long endDate = DaysAgo.toEpochMilli();
+        this.dataExplorerQueryManagement.deleteData(m.getMeasureName(), null, endDate);
 
     }
 
 
-	@Scheduled(cron = "1 * * * * *")
+	@Scheduled(cron="0 1 0 * * 6") //CronJob Scheduled every Saturday 00:01
 	public void cleanupMeasurements() {
         // Get All Measurements 
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
