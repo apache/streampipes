@@ -12,7 +12,9 @@ import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.slf4j.Logger;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DataLakeScheduler {
 
     private static final Logger log = LoggerFactory.getLogger(DataLakeScheduler.class);
@@ -41,15 +43,16 @@ public class DataLakeScheduler {
         Instant now = Instant.now();
 
         // Subtract 30 days
-        Instant DaysAgo = now.minus(m.getRetentionTime().dataRetentionConfig().olderThanDays(), ChronoUnit.DAYS);
+        //Instant DaysAgo = now.minus(m.getRetentionTime().dataRetentionConfig().olderThanDays(), ChronoUnit.DAYS);
 
-        long endDate = DaysAgo.toEpochMilli();
-        this.dataExplorerQueryManagement.deleteData(m.getMeasureName(), null, endDate);
+        //long endDate = DaysAgo.toEpochMilli();
+       log.info("Current time in millis: " + now.toEpochMilli());
+        this.dataExplorerQueryManagement.deleteData(m.getMeasureName(), null, now.toEpochMilli());
 
     }
 
 
-	@Scheduled(cron="0 1 0 * * 6") //CronJob Scheduled every Saturday 00:01
+	@Scheduled(cron="0 */5 * * * * ")//(cron="0 1 0 * * 6") //CronJob Scheduled every Saturday 00:01
 	public void cleanupMeasurements() {
         // Get All Measurements 
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
@@ -62,7 +65,7 @@ public class DataLakeScheduler {
 
                 //log.info("Start export Measurement");
                 //exportMeasurements();
-                log.info("Start delete Measurement");
+                log.info("Start delete Measurement "+ m.getMeasureName());
                 deleteMeasurements(m);
                 log.info("Measurements successfully deleted");
 

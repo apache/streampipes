@@ -429,7 +429,6 @@ public class DataLakeResource extends AbstractRestResource {
       } catch (IllegalArgumentException e) {
         return badRequest(e.getMessage());
     }
-
   
     return ok();
   }
