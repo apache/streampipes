@@ -25,7 +25,7 @@ $sp-color-sink: #3f51b5;
 
 $sp-color-error: #b71c1c;
 
-html {
+:root {
     --mat-sys-body-medium-size: 10pt;
 
     --color-data-view: rgb(122, 206, 227);
@@ -66,6 +66,16 @@ html {
 
     --mat-tree-node-text-size: var(--mat-sys-body-medium-size);
     --mat-expansion-container-text-size: var(--mat-sys-body-medium-size);
+
+    --mdc-secondary-navigation-tab-container-height: 42px;
+    --mdc-switch-track-height: 20px;
+    --mdc-switch-track-width: 44px;
+    --mat-switch-with-icon-handle-size: 20px;
+    --mdc-switch-state-layer-size: 20px;
+    --mat-switch-unselected-with-icon-handle-horizontal-margin: 0;
+    --mdc-switch-handle-surface-color: var(--color-primary);
+    --mdc-switch-unselected-icon-size: 12px;
+    --mdc-switch-selected-icon-size: 12px;
 }
 
 .dark-mode {
