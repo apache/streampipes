@@ -17,7 +17,7 @@
  */
 
 .menu-text-color {
-    color: var(--color-accent);
+    color: var(--color-primary);
     display: flex;
     align-items: center;
 }
@@ -72,13 +72,13 @@
 
 .sort-selected {
     padding: 3px;
-    background: var(--color-accent);
+    background: var(--color-primary);
     color: white;
 }
 
 .sort-unselected {
     padding: 3px;
-    color: var(--color-accent);
+    color: var(--color-primary);
 }
 
 .panel-outer {
@@ -105,8 +105,8 @@
     padding-right: 5px;
     border-radius: 3px;
     font-size: small;
-    background: var(--color-primary);
-    color: var(--color-accent);
+    background: var(--color-secondary);
+    color: var(--color-primary);
 }
 
 .sort-option {

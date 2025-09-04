@@ -43,11 +43,11 @@
 }
 
 .welcome-primary {
-    color: var(--color-primary);
+    color: var(--color-secondary);
 }
 
 .welcome-accent {
-    color: var(--color-accent);
+    color: var(--color-primary);
 }
 
 .home-margin {
@@ -76,7 +76,7 @@
 
 .mdc-list-item--with-leading-avatar .mat-mdc-list-item-avatar {
     border-radius: 50%;
-    background-color: var(--color-accent);
+    background-color: var(--color-primary);
 }
 
 .pt-0 {

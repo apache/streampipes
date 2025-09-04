@@ -87,7 +87,7 @@ pre[class*='language-'] {
 }
 
 .mat-step-header .mat-step-icon {
-    background-color: customThemeVars.$sp-color-accent;
+    background-color: var(--color-primary);
 }
 
 .opened-nav {
@@ -97,7 +97,7 @@ pre[class*='language-'] {
 }
 
 md-toolbar:not(.md-menu-toolbar) {
-    background: var(--color-primary);
+    background: var(--color-secondary);
 }
 
 .md-list-item-text {
@@ -111,7 +111,7 @@ md-toolbar:not(.md-menu-toolbar) {
 .angular-notifications-icon {
     right: -7px !important;
     top: -7px !important;
-    background: customThemeVars.$sp-color-accent !important;
+    background: var(--color-primary) !important;
 }
 
 .speech-bubble {
@@ -192,7 +192,7 @@ md-content {
 
 .top-nav {
     height: 40px !important;
-    border-bottom: 0px solid customThemeVars.$sp-color-accent;
+    border-bottom: 0px solid var(--color-primary);
 }
 
 .angular-google-map-container {
@@ -202,7 +202,7 @@ md-content {
 .wizard-preview {
     height: 150px !important;
     width: 150px !important;
-    box-shadow: 0 0 2px customThemeVars.$sp-color-accent;
+    box-shadow: 0 0 2px var(--color-primary);
     display: inline-block;
     vertical-align: middle;
     background-color: white;
@@ -217,7 +217,7 @@ md-content {
 }
 
 .wizard-preview-selected {
-    border: 5px solid customThemeVars.$sp-color-accent;
+    border: 5px solid var(--color-primary);
 }
 
 .letter-circle {
@@ -286,11 +286,11 @@ md-content {
 .wizard-inactive {
     background-color: white !important;
     color: black !important;
-    border: 2px solid customThemeVars.$sp-color-accent !important;
+    border: 2px solid var(--color-primary) !important;
 }
 
 .popover {
-    border: 1px solid customThemeVars.$sp-color-accent;
+    border: 1px solid var(--color-primary);
     box-shadow: 0 0px 0px;
     -webkit-bow-shadow: none;
     border-radius: 0px;
@@ -298,11 +298,11 @@ md-content {
 }
 
 .arrow {
-    color: customThemeVars.$sp-color-accent;
+    color: var(--color-primary);
 }
 
 .popover-title {
-    background-color: customThemeVars.$sp-color-accent;
+    background-color: var(--color-primary);
     color: white;
     border-radius: 0px 0px 0 0;
 }
@@ -376,7 +376,7 @@ md-content {
     right: 16px;
     top: 25px;
     color: #ffffff;
-    background-color: customThemeVars.$sp-color-accent;
+    background-color: var(--color-primary);
     vertical-align: middle;
 }
 
@@ -595,7 +595,7 @@ md-content {
     cursor: move;
     height: 150px !important;
     width: 150px !important;
-    box-shadow: 0 0 2px customThemeVars.$sp-color-accent;
+    box-shadow: 0 0 2px var(--color-primary);
     display: inline-block;
     vertical-align: middle;
     background-color: white;
@@ -765,7 +765,7 @@ textarea {
     margin-top: 3px;
     margin-bottom: 3px;
     background: #dfdfdf5e;
-    border-left: 1px solid customThemeVars.$sp-color-accent;
+    border-left: 1px solid var(--color-primary);
 }
 
 label {

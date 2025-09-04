@@ -43,17 +43,9 @@ html {
             density: -2,
         ),
         $overrides: (
-            // TODO switch accent and primary css variables in _custom-variables
-            primary:
-                light-dark(
-                    customThemeVars.$sp-color-accent,
-                    customThemeVars.$sp-color-accent-dark
-                ),
+            primary: light-dark(var(--color-primary), var(--color-primary-dark)),
             secondary:
-                light-dark(
-                    customThemeVars.$sp-color-primary,
-                    customThemeVars.$sp-color-primary-600
-                ),
+                light-dark(var(--color-secondary), var(--color-secondary-dark)),
             on-primary: light-dark(#ccc, #fff),
             primary-container:
                 mat.get-theme-color(mat3theme.$palettes, primary, 95),

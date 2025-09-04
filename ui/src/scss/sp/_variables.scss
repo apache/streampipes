@@ -75,19 +75,18 @@ html {
     --color-bg-main-panel-content: var(--color-bg-0);
     --color-bg-navbar-icon: inherit;
     --color-bg-navbar-icon-selected: inherit;
-    //--color-bg-0: #121212;
-    //--color-bg-1: #282828;
-    //--color-bg-2: #404040;
-    //--color-bg-3: #424242;
-    //--color-bg-4: #5f5f5f;
     --color-bg-dialog: rgb(66, 66, 66);
     --color-shadow: #c4c4c4;
-    --color-pe: #404040;
+    --color-pe: #686868;
     --color-default-text: rgba(255, 255, 255, 0.87);
     --color-secondary-text: #aaa;
     --color-warn: #b36161;
 
     --color-tab-border: #cccccc;
+
+    .pipeline-element-image {
+        filter: brightness(0.9) contrast(1.8) saturate(1.7);
+    }
 }
 
 .light-mode {
@@ -97,11 +96,6 @@ html {
     --color-bg-main-panel-content: var(--color-bg-0);
     --color-bg-navbar-icon: inherit;
     --color-bg-navbar-icon-selected: inherit;
-    //--color-bg-0: #ffffff;
-    //--color-bg-1: #fafafa;
-    //--color-bg-2: #f1f1f1;
-    //--color-bg-3: rgb(224, 224, 224);
-    //--color-bg-4: rgb(212, 212, 212);
     --color-bg-dialog: #ffffff;
     --color-shadow: #555;
     --color-pe: #ffffff;
