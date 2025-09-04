@@ -32,6 +32,8 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.model.datalake.RetentionTimeConfig;
+import org.apache.streampipes.service.core.datalake.DataLakeScheduler;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -400,6 +402,59 @@ public class DataLakeResource extends AbstractRestResource {
   private boolean checkProvidedQueryParams(Map<String, String> providedParams) {
     return SUPPORTED_PARAMS.containsAll(providedParams.keySet());
   }
+
+
+    //TODO Currently working on API ENdpoint 
+    @PostMapping(
+      path = "/{elementId}/cleanup",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Sets the retention mechanism for a certain measurement", tags = {"Data Lake"},
+      responses = {
+          @ApiResponse(
+              responseCode = "400",
+              description = "Can't store the given data to this data lake"),
+          @ApiResponse(
+              responseCode = "200",
+              description = "Successfully stored data")})
+  public ResponseEntity<?> setDataLakeRetention(
+      @PathVariable String elementId,
+      @RequestBody RetentionTimeConfig retention ){
+
+        //var dataLakeMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
+         //                                                        .getSchemaManagement(); 
+        var measure = this.dataExplorerSchemaManagement.getById(elementId);
+        if (measure.getRetentionTime() != null) {
+  
+          //TODO Kill CronJob
+        }
+        measure.setRetentionTime(retention);
+      try {
+        this.dataExplorerSchemaManagement.updateMeasurement(measure);
+      } catch (IllegalArgumentException e) {
+        return badRequest(e.getMessage());
+    }
+
+    // Call to DataLake Scheduler 
+
+    DataLakeScheduler dlScheduler= new DataLakeScheduler(measure,this.dataExplorerSchemaManagement)
+
+
+    //return badRequest();
+
+
+
+      // Setup Cron Job
+
+  
+    return ok();
+  }
+
+    //TODO Get CRON JOb DATA 
+
+    //TODO Delete Cron Job and Cron Job Data 
+
+
 
   private ProvidedRestQueryParams populate(String measurementId, Map<String, String> rawParams) {
     Map<String, String> queryParamMap = new HashMap<>();
