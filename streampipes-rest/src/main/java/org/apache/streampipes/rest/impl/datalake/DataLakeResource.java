@@ -33,7 +33,6 @@ import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.model.datalake.RetentionTimeConfig;
-import org.apache.streampipes.service.core.datalake.DataLakeScheduler;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -434,11 +433,6 @@ public class DataLakeResource extends AbstractRestResource {
       } catch (IllegalArgumentException e) {
         return badRequest(e.getMessage());
     }
-
-    // Call to DataLake Scheduler 
-
-    DataLakeScheduler dlScheduler= new DataLakeScheduler(measure,this.dataExplorerSchemaManagement)
-
 
     //return badRequest();
 
