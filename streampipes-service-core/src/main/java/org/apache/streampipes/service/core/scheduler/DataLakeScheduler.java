@@ -43,16 +43,18 @@ public class DataLakeScheduler {
         Instant now = Instant.now();
 
         // Subtract 30 days
-        //Instant DaysAgo = now.minus(m.getRetentionTime().dataRetentionConfig().olderThanDays(), ChronoUnit.DAYS);
+        Instant DaysAgo = now.minus(m.getRetentionTime().dataRetentionConfig().olderThanDays(), ChronoUnit.DAYS);
 
-        //long endDate = DaysAgo.toEpochMilli();
-       log.info("Current time in millis: " + now.toEpochMilli());
-        this.dataExplorerQueryManagement.deleteData(m.getMeasureName(), null, now.toEpochMilli());
+        long endDate = DaysAgo.toEpochMilli();
+        log.info("Current time in millis: " + now.toEpochMilli());
+        log.info("Current time in millis to delete: " + endDate);
+
+        this.dataExplorerQueryManagement.deleteData(m.getMeasureName(), null, endDate);
 
     }
 
 
-	@Scheduled(cron="0 */5 * * * * ")//(cron="0 1 0 * * 6") //CronJob Scheduled every Saturday 00:01
+	@Scheduled(cron="0 1 0 * * 5")//CronJob Scheduled every Saturday (5) 00:01//(cron="0 */5 * * * * ")//CronJob Scheduled evey 5 min 
 	public void cleanupMeasurements() {
         // Get All Measurements 
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
@@ -67,7 +69,7 @@ public class DataLakeScheduler {
                 //exportMeasurements();
                 log.info("Start delete Measurement "+ m.getMeasureName());
                 deleteMeasurements(m);
-                log.info("Measurements successfully deleted");
+                log.info("Measurements "+m.getMeasureName()+ " successfully deleted");
 
 
             }
