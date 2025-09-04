@@ -18,10 +18,11 @@
 
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
-import { RetentionConfig } from './model/retention-config.model';
 import { DataRetentionDialogModel } from './model/data-retention-dialog.model';
-import { DatalakeRestService } from '@streampipes/platform-services';
-//import { DataExportService } from './services/data-export.service';
+import {
+    DatalakeRestService,
+    RetentionTimeConfig,
+} from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-data-retention-dialog',
@@ -33,7 +34,7 @@ export class DataRetentionDialogComponent implements OnInit {
     @Input() dataRetentionDialogModel: DataRetentionDialogModel;
 
     @Input()
-    retentionConfig: RetentionConfig;
+    retentionConfig: RetentionTimeConfig;
 
     @Input()
     measurementIndex: string;
@@ -41,32 +42,30 @@ export class DataRetentionDialogComponent implements OnInit {
     constructor(
         public dialogRef: DialogRef<DataRetentionDialogComponent>,
         private datalakeRestService: DatalakeRestService,
-        //public dataExportService: DataExportService,
     ) {}
 
     ngOnInit() {
-        console.log('INIT THE RETENTION DIALOG');
-        //const measurementName =
-        //    this.dataRetentionDialogModel.measureName !== undefined
-        //        ? this.dataRetentionDialogModel.measureName
-        //       : this.dataRetentionDialogModel.dataExplorerDataConfig
-        //             .sourceConfigs[0].elementID;
-        //this.measurementName=measurementName
-        this.retentionConfig ??= {
-            dataRetentionConfig: {
-                olderThanDays: 30,
-                interval: 'DAILY',
-                //measurement: measurementName,
-            },
+        this.datalakeRestService
+            .getMeasurement(this.measurementIndex)
+            .subscribe({
+                next: measure => {
+                    console.log('measure received:', measure);
 
-            //TODO format Retention export
-            //formatExportConfig: {
-            //    format: 'csv',
-            //    delimiter: 'comma',
-            //    headerColumnName: 'key',
-            //},
-        };
-        console.log(this.retentionConfig);
+                    if (measure.retentionTime != null) {
+                        this.retentionConfig ??= measure.retentionTime;
+                    } else {
+                        this.retentionConfig ??= RetentionTimeConfig.fromData({
+                            dataRetentionConfig: {
+                                olderThanDays: 30,
+                                interval: 'DAILY',
+                            },
+                        } as RetentionTimeConfig);
+                    }
+                },
+                error: err => {
+                    console.error('Error loading measurement:', err);
+                },
+            });
     }
 
     exitDialog() {
@@ -78,9 +77,6 @@ export class DataRetentionDialogComponent implements OnInit {
     }
 
     setCleanUp() {
-        console.log(this.retentionConfig);
-        console.log(this.measurementIndex);
-
         this.datalakeRestService
             .cleanup(this.measurementIndex, this.retentionConfig)
             .subscribe(data => {
