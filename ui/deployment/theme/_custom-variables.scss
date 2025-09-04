@@ -21,7 +21,6 @@
 :root {
     --color-primary: #1b1464;
     --color-primary-dark: #83a3de;
-    --color-accent: rgb(57, 181, 74);
     --color-secondary: rgb(57, 181, 74);
     --color-secondary-dark: #06c12a;
 
@@ -40,7 +39,6 @@
 .dark-mode {
     --color-primary: var(--color-primary-dark);
     --color-secondary: var(--color-secondary-dark);
-    --color-accent: var(--color-primary-dark);
     --color-navigation-text: #121212;
     --content-box-color: #404040;
 }
