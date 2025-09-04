@@ -43,21 +43,9 @@
     --color-accent: var(--color-primary-dark);
     --color-navigation-text: #121212;
     --content-box-color: #404040;
-    --canvas-color: linear-gradient(
-            90deg,
-            rgba(50, 50, 50, 0.5) 10%,
-            transparent 0%
-        ),
-        linear-gradient(rgba(50, 50, 50, 0.5) 10%, transparent 0%);
 }
 
 .light-mode {
     --color-navigation-text: #ffffff;
     --content-box-color: rgb(156, 156, 156);
-    --canvas-color: linear-gradient(
-            90deg,
-            rgba(208, 208, 208, 0.5) 10%,
-            transparent 0%
-        ),
-        linear-gradient(rgba(208, 208, 208, 0.5) 10%, transparent 0%);
 }
