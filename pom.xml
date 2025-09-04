@@ -1415,6 +1415,7 @@
                         <!-- Git related files -->
                         <exclude>**/.git/**</exclude>
                         <exclude>**/.gitignore</exclude>
+                        <exclude>**/.gitkeep</exclude>
                         <exclude>**/.spignore</exclude>
 
                         <!-- License Files for other licenses -->
