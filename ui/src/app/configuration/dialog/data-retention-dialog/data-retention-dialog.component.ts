@@ -55,7 +55,7 @@ export class DataRetentionDialogComponent implements OnInit {
         this.retentionConfig ??= {
             dataRetentionConfig: {
                 olderThanDays: 30,
-                interval: 'daily',
+                interval: 'DAILY',
                 //measurement: measurementName,
             },
 

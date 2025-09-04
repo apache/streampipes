@@ -22,6 +22,7 @@ import {
     HttpContext,
     HttpParams,
     HttpRequest,
+    HttpHeaders,
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { DataLakeMeasure, SpQueryResult } from '../model/gen/streampipes-model';
@@ -154,12 +155,15 @@ export class DatalakeRestService {
     }
 
     cleanup(index: string, config: any) {
-        const url = this.dataLakeUrl + '/' + index + '/cleanup';
-        const request = new HttpRequest('POST', url, {
-            reportProgress: true,
-            responseType: 'blob',
-            params: this.toHttpParams(config),
+        console.log('cleanup');
+        console.log(config);
+
+        const url = `${this.dataLakeUrl}/${index}/cleanup`;
+
+        const request = new HttpRequest('POST', url, config, {
+            headers: new HttpHeaders({ 'Content-Type': 'application/json' }), // optional if already handled globally
         });
+
         console.log(request);
 
         return this.http.request(request);

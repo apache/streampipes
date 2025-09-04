@@ -23,12 +23,12 @@
             [(ngModel)]="dataRetentionConfig.action"
             data-cy="retention-action-select"
         >
-            <mat-option value="delete" data-cy="action-configuration-delete">
+            <mat-option value="DELETE" data-cy="action-configuration-delete">
                 {{ 'delete' | translate }}
             </mat-option>
 
             <mat-option
-                value="save"
+                value="SAVE"
                 disabled
                 data-cy="retention-configuration-save"
             >
@@ -36,7 +36,7 @@
             </mat-option>
 
             <mat-option
-                value="save and delete"
+                value="SAVEDELETE"
                 disabled
                 data-cy="retention-configuration-save-delete"
             >

@@ -189,6 +189,7 @@ export class DatalakeConfigurationComponent implements OnInit {
                 dataRetentionDialogModel: {
                     measureName: measurementId,
                 },
+                measurementIndex: measurementId,
             },
         });
     }

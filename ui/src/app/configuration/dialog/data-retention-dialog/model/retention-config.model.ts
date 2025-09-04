@@ -39,5 +39,5 @@ import { DataRetentionConfig } from './data-retention-config.model';
 
 export interface RetentionConfig {
     dataRetentionConfig: DataRetentionConfig;
-    //    formatExportConfig: FormatExportConfig;
+    //exportConfig: {};
 }
