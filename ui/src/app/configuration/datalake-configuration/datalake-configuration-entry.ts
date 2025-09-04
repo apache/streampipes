@@ -20,6 +20,7 @@ export class DataLakeConfigurationEntry {
     public pipelines: string[] = [];
     public events = 0;
     public remove = true;
+    public elementId: string;
 
     constructor() {}
 }

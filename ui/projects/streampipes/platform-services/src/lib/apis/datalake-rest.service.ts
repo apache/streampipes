@@ -153,6 +153,18 @@ export class DatalakeRestService {
         return this.buildDownloadRequest(index, qp);
     }
 
+    cleanup(index: string, config: any) {
+        const url = this.dataLakeUrl + '/' + index + '/cleanup';
+        const request = new HttpRequest('POST', url, {
+            reportProgress: true,
+            responseType: 'blob',
+            params: this.toHttpParams(config),
+        });
+        console.log(request);
+
+        return this.http.request(request);
+    }
+
     buildDownloadRequest(index: string, queryParams: any) {
         const url = this.dataLakeUrl + '/measurements/' + index + '/download';
         const request = new HttpRequest('GET', url, {

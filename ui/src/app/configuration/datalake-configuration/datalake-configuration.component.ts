@@ -95,6 +95,7 @@ export class DatalakeConfigurationComponent implements OnInit {
                     .subscribe(inUseMeasurements => {
                         allMeasurements.forEach(measurement => {
                             const entry = new DataLakeConfigurationEntry();
+                            entry.elementId = measurement.elementId;
                             entry.name = measurement.measureName;
                             entry.events = -1;
                             inUseMeasurements.forEach(inUseMeasurement => {
@@ -177,16 +178,16 @@ export class DatalakeConfigurationComponent implements OnInit {
         });
     }
 
-    openRetentionDialog(measurementName: string) {
+    openRetentionDialog(measurementId: string) {
         console.log('OPEN DATA DIALOG');
-        console.log(measurementName);
+        console.log(measurementId);
         this.dialogService.open(DataRetentionDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: 'Set Data Retention',
             width: '50vw',
             data: {
                 dataRetentionDialogModel: {
-                    measureName: measurementName,
+                    measureName: measurementId,
                 },
             },
         });

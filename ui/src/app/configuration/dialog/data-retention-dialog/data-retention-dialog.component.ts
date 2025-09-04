@@ -17,10 +17,10 @@
  */
 
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { MatStepper } from '@angular/material/stepper';
 import { DialogRef } from '@streampipes/shared-ui';
 import { RetentionConfig } from './model/retention-config.model';
 import { DataRetentionDialogModel } from './model/data-retention-dialog.model';
+import { DatalakeRestService } from '@streampipes/platform-services';
 //import { DataExportService } from './services/data-export.service';
 
 @Component({
@@ -32,31 +32,33 @@ import { DataRetentionDialogModel } from './model/data-retention-dialog.model';
 export class DataRetentionDialogComponent implements OnInit {
     @Input() dataRetentionDialogModel: DataRetentionDialogModel;
 
-    @ViewChild('retentionDialogStepper', { static: true })
-    retentionDialogStepper: MatStepper;
-
     @Input()
     retentionConfig: RetentionConfig;
 
+    @Input()
+    measurementIndex: string;
+
     constructor(
         public dialogRef: DialogRef<DataRetentionDialogComponent>,
+        private datalakeRestService: DatalakeRestService,
         //public dataExportService: DataExportService,
     ) {}
 
     ngOnInit() {
         console.log('INIT THE RETENTION DIALOG');
-        const measurementName =
-            this.dataRetentionDialogModel.measureName !== undefined
-                ? this.dataRetentionDialogModel.measureName
-                : this.dataRetentionDialogModel.dataExplorerDataConfig
-                      .sourceConfigs[0].measureName;
-
+        //const measurementName =
+        //    this.dataRetentionDialogModel.measureName !== undefined
+        //        ? this.dataRetentionDialogModel.measureName
+        //       : this.dataRetentionDialogModel.dataExplorerDataConfig
+        //             .sourceConfigs[0].elementID;
+        //this.measurementName=measurementName
         this.retentionConfig ??= {
             dataRetentionConfig: {
                 olderThanDays: 30,
                 interval: 'daily',
-                measurement: measurementName,
+                //measurement: measurementName,
             },
+
             //TODO format Retention export
             //formatExportConfig: {
             //    format: 'csv',
@@ -71,27 +73,18 @@ export class DataRetentionDialogComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    nextStep() {
-        this.retentionDialogStepper.next();
+    close(refreshDataLakeIndex: boolean) {
+        this.dialogRef.close(refreshDataLakeIndex);
     }
 
-    previousStep() {
-        this.retentionDialogStepper.previous();
-    }
-    //TODO Call retention logic
-    //downloadData() {
-    //    if (
-    //        this.exportConfig.dataExportConfig.dataRangeConfiguration ===
-    //        'visible'
-    //    ) {
-    //        this.exportConfig.dataExportConfig.dateRange =
-    //            this.dataDownloadDialogModel.dataExplorerDateRange;
-    //    }
+    setCleanUp() {
+        console.log(this.retentionConfig);
+        console.log(this.measurementIndex);
 
-    //    this.dataExportService.downloadData(
-    //        this.exportConfig,
-    //        this.dataDownloadDialogModel,
-    //    );
-    //    this.downloadDialogStepper.next();
-    // }
+        this.datalakeRestService
+            .cleanup(this.measurementIndex, this.retentionConfig)
+            .subscribe(data => {
+                this.close(true);
+            });
+    }
 }
