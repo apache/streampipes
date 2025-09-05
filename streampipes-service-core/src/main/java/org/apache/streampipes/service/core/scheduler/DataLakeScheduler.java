@@ -17,19 +17,20 @@
  */
 package org.apache.streampipes.service.core.scheduler;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-
-import org.slf4j.LoggerFactory;
-import org.apache.commons.logging.Log;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
 
 @Component
 public class DataLakeScheduler {
@@ -37,45 +38,38 @@ public class DataLakeScheduler {
     private static final Logger LOG = LoggerFactory.getLogger(DataLakeScheduler.class);
 
     private final IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher()
-        .getDataExplorerManager()
-        .getSchemaManagement();
+            .getDataExplorerManager()
+            .getSchemaManagement();
 
-    private final IDataExplorerQueryManagement dataExplorerQueryManagement  = new DataExplorerDispatcher()
-        .getDataExplorerManager()
-        .getQueryManagement(this.dataExplorerSchemaManagement);
-  
+    private final IDataExplorerQueryManagement dataExplorerQueryManagement = new DataExplorerDispatcher()
+            .getDataExplorerManager()
+            .getQueryManagement(this.dataExplorerSchemaManagement);
 
-    public void exportMeasurements(){
-
+    public void exportMeasurements() {
+        // Method body is empty; add functionality as needed
     }
 
-    public void deleteMeasurements(DataLakeMeasure m){
+    public void deleteMeasurements(DataLakeMeasure m) {
         Instant now = Instant.now();
-        Instant DaysAgo = now.minus(m.getRetentionTime().dataRetentionConfig().olderThanDays(), ChronoUnit.DAYS);
+        Instant daysAgo = now.minus(m.getRetentionTime().dataRetentionConfig().olderThanDays(), ChronoUnit.DAYS);
 
-        long endDate = DaysAgo.toEpochMilli();
+        long endDate = daysAgo.toEpochMilli();
         LOG.info("Current time in millis: " + now.toEpochMilli());
         LOG.info("Current time in millis to delete: " + endDate);
 
         this.dataExplorerQueryManagement.deleteData(m.getMeasureName(), null, endDate);
     }
 
-
-	@Scheduled(cron="0 1 0 * * 6")//CronJob Scheduled every Saturday (5) 00:01(cron="0 */5 * * * * ")//CronJob Scheduled evey 5 min
-	public void cleanupMeasurements() {
+    @Scheduled(cron = "0 1 0 * * 6") // CronJob Scheduled every Saturday (5) 00:01
+    public void cleanupMeasurements() {
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         LOG.info("GET ALL Measurements");
         for (DataLakeMeasure m : allMeasurements) {
-            if(m.getRetentionTime() != null){
-                LOG.info("Start delete Measurement "+ m.getMeasureName());
+            if (m.getRetentionTime() != null) {
+                LOG.info("Start delete Measurement " + m.getMeasureName());
                 deleteMeasurements(m);
-                LOG.info("Measurements "+m.getMeasureName()+ " successfully deleted");
-
-
+                LOG.info("Measurements " + m.getMeasureName() + " successfully deleted");
             }
-            
         }
-		
-	}
-    
+    }
 }
