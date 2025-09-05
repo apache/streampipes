@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataLakeScheduler {
 
-    private static final Logger log = LoggerFactory.getLogger(DataLakeScheduler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DataLakeScheduler.class);
 
     private final IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
