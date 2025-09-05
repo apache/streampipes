@@ -26,9 +26,7 @@ import { DataRetentionConfig } from '../../../model/data-retention-config.model'
 @Component({
     selector: 'sp-select-retention-action',
     templateUrl: './select-retention-action.component.html',
-    styleUrls: [
-        './select-retention-action.component.scss',
-    ],
+    styleUrls: ['./select-retention-action.component.scss'],
     standalone: false,
 })
 export class SelectRetentionActionComponent {

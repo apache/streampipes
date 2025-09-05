@@ -20,7 +20,10 @@
     <div class="sp-dialog-content p-15">
         <div fxFlex="100">
             <!-- Stepper removed, content displayed directly -->
-            <div class="retention-step-content">
+            <div
+                class="retention-step-content"
+                *ngIf="retentionConfig?.dataRetentionConfig"
+            >
                 <sp-select-data
                     [dataExplorerDataConfig]="
                         dataRetentionDialogModel.dataExplorerDataConfig
