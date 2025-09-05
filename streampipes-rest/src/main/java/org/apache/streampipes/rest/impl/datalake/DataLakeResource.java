@@ -418,7 +418,7 @@ public class DataLakeResource extends AbstractRestResource {
               description = "Successfully stored data")})
   public ResponseEntity<?> setDataLakeRetention(
       @PathVariable String elementId,
-      @RequestBody RetentionTimeConfig retention ){
+      @RequestBody RetentionTimeConfig retention){
         var measure = this.dataExplorerSchemaManagement.getById(elementId);
         if (measure.getRetentionTime() != null) {
   
