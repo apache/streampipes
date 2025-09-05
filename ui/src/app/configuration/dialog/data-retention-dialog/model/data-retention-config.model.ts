@@ -18,7 +18,6 @@
 
 export interface DataRetentionConfig {
     olderThanDays: number;
-    //missingValueBehaviour: 'ignore' | 'empty';
     interval?: 'DAILY' | 'MONTHLY';
     measurement?: string;
     action?: 'delete' | 'save' | 'save and delete';
