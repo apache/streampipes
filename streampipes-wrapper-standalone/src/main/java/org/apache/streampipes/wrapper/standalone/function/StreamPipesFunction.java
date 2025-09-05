@@ -21,6 +21,8 @@ package org.apache.streampipes.wrapper.standalone.function;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.extensions.api.Limiter.SpRateLimiter;
+import org.apache.streampipes.extensions.api.MemoryManager.SpMemoryManager;
 import org.apache.streampipes.extensions.api.declarer.IFunctionConfig;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
@@ -108,6 +110,9 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   @Override
   public void process(Map<String, Object> rawEvent, String topicName) {
     try {
+      SpRateLimiter.INSTANCE.limit();
+      SpMemoryManager.INSTANCE.allocate(rawEvent.size());
+
       var sourceInfo = sourceInfoMapper.get(topicName);
 
       var event = EventFactory
@@ -117,6 +122,10 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
       increaseCounter(sourceInfo.getSourceId());
     } catch (RuntimeException e) {
       addError(e);
+    } catch (InterruptedException e) {
+        throw new SpRuntimeException(e);
+    } finally {
+        SpMemoryManager.INSTANCE.free(rawEvent.size());
     }
   }
 

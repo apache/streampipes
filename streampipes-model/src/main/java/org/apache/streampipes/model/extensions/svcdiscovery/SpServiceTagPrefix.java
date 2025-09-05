@@ -23,9 +23,16 @@ public enum SpServiceTagPrefix {
   ADAPTER,
   DATA_STREAM,
   DATA_PROCESSOR,
-  DATA_SINK;
+  DATA_SINK,
+  SYSTEM;
+
 
   public String asString() {
     return this.name();
+  }
+
+  private String prefix;
+
+  SpServiceTagPrefix() {
   }
 }
