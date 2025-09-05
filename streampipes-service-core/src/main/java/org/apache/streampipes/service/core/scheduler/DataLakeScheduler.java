@@ -1,6 +1,5 @@
 package org.apache.streampipes.service.core.scheduler;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -33,17 +32,8 @@ public class DataLakeScheduler {
     }
 
     public void deleteMeasurements(DataLakeMeasure m){
-
-        //long startDate = System.currentTimeMillis();
-        // TODO check CALC 
-
-        
-        //long endDate = System.currentTimeMillis() - (1000L*60*60*24*m.getRetentionTime().dataRetentionConfig().olderThanDays());
-         // Get current instant
         Instant now = Instant.now();
-
-        // Subtract 30 days
-        Instant DaysAgo = now.minus(m.getRetentionTime().dataRetentionConfig().olderThanDays(), ChronoUnit.MINUTES);//ChronoUnit.DAYS);
+        Instant DaysAgo = now.minus(m.getRetentionTime().dataRetentionConfig().olderThanDays(), ChronoUnit.DAYS);
 
         long endDate = DaysAgo.toEpochMilli();
         log.info("Current time in millis: " + now.toEpochMilli());
@@ -56,17 +46,10 @@ public class DataLakeScheduler {
 
 	@Scheduled(cron="0 1 0 * * 6")//CronJob Scheduled every Saturday (5) 00:01(cron="0 */5 * * * * ")//CronJob Scheduled evey 5 min
 	public void cleanupMeasurements() {
-        // Get All Measurements 
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         log.info("GET ALL Measurements");
-        // Iterate through all measurements
         for (DataLakeMeasure m : allMeasurements) {
-
-            //var measure = this.dataExplorerSchemaManagement.getById(m.getElementId());
             if(m.getRetentionTime() != null){
-
-                //log.info("Start export Measurement");
-                //exportMeasurements();
                 log.info("Start delete Measurement "+ m.getMeasureName());
                 deleteMeasurements(m);
                 log.info("Measurements "+m.getMeasureName()+ " successfully deleted");
