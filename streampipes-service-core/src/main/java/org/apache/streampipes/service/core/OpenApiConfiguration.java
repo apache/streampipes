@@ -38,28 +38,25 @@ import java.util.Map;
 @Configuration
 public class OpenApiConfiguration {
 
-    @Bean
-    public OpenAPI openApiDocsConfiguration(@Value("${app.version}") String appVersion) {
-        return new OpenAPI()
-            .components(new Components()
-                .addSecuritySchemes("bearerAuth",
-                    new SecurityScheme()
-                        .type(SecurityScheme.Type.HTTP)
-                        .scheme("bearer").bearerFormat("JWT"))
-                .parameters(makeAuthParams()))
-            .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
-            .info(new Info()
-                .title("Apache StreamPipes API")
-                .description("This is the documentation of the Apache StreamPipes developer API.")
-                .version(appVersion)
-                .contact(new Contact().email("dev@streampipes.apache.org"))
-                .license(new License()
-                    .name("Apache 2.0")
-                    .url("http://www.apache.org/licenses/LICENSE-2.0.html")
-                )
-            );
-}
- 
+  @Bean
+  public OpenAPI openApiDocsConfiguration(@Value("${app.version}") String appVersion) {
+    return new OpenAPI()
+        .components(new Components()
+            .addSecuritySchemes("bearerAuth",
+                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT"))
+            .parameters(makeAuthParams()))
+        .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+        .info(new Info()
+            .title("Apache StreamPipes API")
+            .description("This is the documentation of the Apache StreamPipes developer API.")
+            .version(appVersion)
+            .contact(new Contact().email("dev@streampipes.apache.org"))
+            .license(new License()
+                .name("Apache 2.0")
+                .url("http://www.apache.org/licenses/LICENSE-2.0.html")
+            )
+        );
+  }
 
   private Map<String, Parameter> makeAuthParams() {
     var map = new HashMap<String, Parameter>();
