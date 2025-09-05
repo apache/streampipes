@@ -43,7 +43,7 @@ public class DataLakeScheduler {
         Instant now = Instant.now();
 
         // Subtract 30 days
-        Instant DaysAgo = now.minus(m.getRetentionTime().dataRetentionConfig().olderThanDays(), ChronoUnit.DAYS);
+        Instant DaysAgo = now.minus(m.getRetentionTime().dataRetentionConfig().olderThanDays(), ChronoUnit.MINUTES);//ChronoUnit.DAYS);
 
         long endDate = DaysAgo.toEpochMilli();
         log.info("Current time in millis: " + now.toEpochMilli());
@@ -54,7 +54,7 @@ public class DataLakeScheduler {
     }
 
 
-	@Scheduled(cron="0 1 0 * * 5")//CronJob Scheduled every Saturday (5) 00:01//(cron="0 */5 * * * * ")//CronJob Scheduled evey 5 min 
+	@Scheduled(cron="0 1 0 * * 6")//CronJob Scheduled every Saturday (5) 00:01(cron="0 */5 * * * * ")//CronJob Scheduled evey 5 min
 	public void cleanupMeasurements() {
         // Get All Measurements 
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
